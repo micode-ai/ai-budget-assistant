@@ -132,6 +132,16 @@ describe('settingsRegistry', () => {
     );
   });
 
+  // Catches: the Groups door vanishing for a user who hid the `groups` quick
+  // action, or being gated like a feature-flagged row (groups are not flagged).
+  it('keeps a permanent ungated link to /groups', () => {
+    const entry = SETTINGS_ENTRIES.find((e) => e.key === 'groups');
+    expect(entry && isLinkEntry(entry)).toBe(true);
+    expect(entry?.route).toBe('/groups');
+    expect(entry?.adminOnly).toBeUndefined();
+    expect(entry?.requiresFeature).toBeUndefined();
+  });
+
   // Catches: a pane declared with a route that is neither under `/settings/`
   // nor one of the three destinations wave 4 promotes from elsewhere in the
   // app (`/account/list`, `/tags/manage`, `/projects`) — the one route shape a

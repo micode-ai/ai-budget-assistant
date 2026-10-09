@@ -506,7 +506,7 @@ export function ExpensesDesktop() {
           {!collapsed && <FacetRail layout="stack" {...facetRailProps} />}
 
         <View style={styles.mainColumn}>
-          <InboundReceiptsBanner />
+          <InboundReceiptsBanner desktop />
           <UncategorizedBanner onPress={() => setShowCategorize('expense')} />
           <UncategorizedBanner entityType="income" onPress={() => setShowCategorize('income')} />
 

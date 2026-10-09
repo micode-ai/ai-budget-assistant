@@ -12,6 +12,8 @@ El dinero de los grupos se mantiene separado de tus propias finanzas: nada de un
 
 Toca **Grupos** en las acciones rápidas de la pantalla de inicio. Verás tus grupos y tu saldo en cada uno, además de **Nuevo grupo** y **Unirse con enlace**.
 
+En un ordenador (una ventana de navegador de más de unos 1000 píxeles) también encuentras **Grupos** en los enlaces rápidos a la derecha de la pantalla de inicio y en **Ajustes**. Tus grupos aparecen en una tabla, y crear un grupo, añadir un gasto, saldar cuentas y la lista de miembros se abren en una ventana sobre la página.
+
 ## Crear un grupo
 
 1. Toca **Nuevo grupo**.

@@ -267,6 +267,41 @@ only):
 - **The expiry purge must keep running with the flag off.** Turning the feature off must not leave
   stored documents past their retention.
 
+## Desktop
+
+At ≥1024 px web, **ABA-646** gives the inbox, the confirm card and the Expenses-tab banner a desktop
+layout. Nothing here is rendered in CI; it is unverified until someone looks at the deployed build.
+The settings pane (`emailReceipts`) already came through `settingsRegistry` and is unchanged.
+
+- **Decider.** `EmailReceiptsInboxScreen` (`apps/mobile/src/components/inboundMail/`): the native file
+  renders `EmailReceiptsInbox` (or, for `/inbox/email-receipt?id=`, the full-screen
+  `EmailReceiptConfirm`); the `.web.tsx` renders `desktop/EmailReceiptsInboxDesktop` at ≥1024 with that
+  id as `openId`.
+- **Inbox page.** A two-segment control (To confirm / Handled), a refresh button, and a table
+  (merchant, subject with the handled reason beneath, from, date, total). Pending rows have a labelled
+  **Review** button plus dismiss; handled rows have Retry where `canRetry`, plus dismiss. A viewer gets
+  no actions and no openable rows, as on the phone. A rail (300px; under the table below 1440) shows
+  the private address with Copy and a link to the Settings pane. `↑`/`↓`/`Enter` walk and open rows.
+  The From column hides below 1280.
+- **The confirm card is hosted, never reimplemented.** `desktop/EmailReceiptDialog` hosts
+  `EmailReceiptConfirm` in a `DesktopDialogFrame`. `EmailReceiptConfirm` gained optional `onDone`,
+  `onDirtyChange`, `onOpenExpense` and `onEdit`, each defaulting to what the route did before
+  (`router.back()` for `onDone`). There is no `AiUsageBadge`: the extraction was already charged
+  server-side. Esc and a scrim click ask before discarding only when a completed extraction is unsaved
+  (`onDirtyChange(true)`).
+- **"Edit" hands off, never stacks.** The confirm dialog closes and the inbox page opens
+  `CreateDialog kind="expense"` with the prefill.
+- **Deep link.** `/inbox/email-receipt?id=` renders the inbox with that dialog open; closing replaces
+  the route with `/inbox/email-receipts`.
+- **Loading, empty and failed are three states.** A spinner while loading with no rows (never the empty
+  text), `loadFailed` when the load failed with no rows, a banner when it failed with rows held. The
+  pending count on the segment is the number of rows shown, not `pendingCount`, which only `loadCount`
+  refreshes.
+- **Banner.** `InboundReceiptsBanner` takes `desktop` (default false; `ExpensesDesktop` passes it).
+  Same shell as `UncategorizedBanner`, a bold count (`apps/mobile/src/utils/emphasiseCount.ts`, shared
+  with it) and a labelled "Review" pill as the one focus stop. It navigates to the inbox; it does not
+  open a dialog, because the inbox opens one per row and dialogs must not nest.
+
 ## Known gaps
 - **Not activated.** Every production step is manual and none has been run. They are, in order:
   1. check that port 25 is free on the VPS;
@@ -293,9 +328,6 @@ only):
   switches accounts.
 - **PDFs and text bodies are not attached to the saved expense.** `useReceiptSave` attaches only an
   image, as with share-to-capture. Only an image document is previewed and offered for storage.
-- **The desktop web build reuses the phone layouts.** The settings pane comes through
-  `settingsRegistry`, and the inbox and confirm screens are not redesigned for ≥1024 px. The desktop
-  dialog is Phase 2 (`aba-web-designer` → `aba-web-engineer`).
 - **The spec's other Phase 2 items are not built:**
   - more than one receipt per message;
   - following allow-listed e-paragon links;

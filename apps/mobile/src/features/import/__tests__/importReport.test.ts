@@ -1,4 +1,4 @@
-import { rollForwardRenewal, startOfMonth } from '../importReport';
+import { resolveImportReportStatus, rollForwardRenewal, startOfMonth } from '../importReport';
 
 describe('rollForwardRenewal', () => {
   const today = new Date(2026, 9, 8); // 2026-10-08
@@ -22,5 +22,23 @@ describe('rollForwardRenewal', () => {
 describe('startOfMonth', () => {
   it('is the 1st', () => {
     expect(startOfMonth(new Date(2026, 9, 8)).getDate()).toBe(1);
+  });
+});
+
+describe('resolveImportReportStatus', () => {
+  it('keeps a failed load apart from a successful "not enough data" answer', () => {
+    // The import succeeded in both; only the first can be retried. Collapsing them was the defect.
+    expect(resolveImportReportStatus('failed', null)).toBe('failed');
+    expect(resolveImportReportStatus('loaded', { hasEnoughData: false })).toBe('insufficient');
+  });
+  it('is ready only for a loaded report with enough data', () => {
+    expect(resolveImportReportStatus('loaded', { hasEnoughData: true })).toBe('ready');
+  });
+  it('is loading until the request settles, whatever a stale report says', () => {
+    expect(resolveImportReportStatus('loading', null)).toBe('loading');
+    expect(resolveImportReportStatus('loading', { hasEnoughData: true })).toBe('loading');
+  });
+  it('never reports ready without a report, even when the load claims to have finished', () => {
+    expect(resolveImportReportStatus('loaded', null)).toBe('failed');
   });
 });

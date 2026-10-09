@@ -16,7 +16,7 @@ interface RailQuickLinksProps {
   /**
    * Hands a ROUTE up, exactly as the quick-action card and the setup checklist
    * do, so `resolveDialogAction`'s single table stays the only thing that
-   * decides whether a route opens a dialog or navigates. Three of these six
+   * decides whether a route opens a dialog or navigates. Three of these seven
    * destinations are forms and open over the dashboard; the three list screens
    * navigate.
    */
@@ -108,7 +108,7 @@ const createStyles = (theme: Theme) => ({
     gap: theme.spacing[2],
   },
   // The card above it needs no heading (a filled "+ Expense" button says what
-  // it is); six similar-looking rows do, or the rail reads as an unlabelled
+  // it is); seven similar-looking rows do, or the rail reads as an unlabelled
   // list of links dropped between two cards that both explain themselves.
   heading: {
     ...theme.textStyles.bodySmMedium,
@@ -131,7 +131,7 @@ const createStyles = (theme: Theme) => ({
   rowHovered: {
     backgroundColor: theme.colors.surfaceSecondary,
   },
-  // 32px, not the 40px of the phone's shopping-hub sheet rows: six of these
+  // 32px, not the 40px of the phone's shopping-hub sheet rows: seven of these
   // stack in a 300px rail beside the capture card, and at 40px the card alone
   // ran past 340px tall.
   iconWrap: {

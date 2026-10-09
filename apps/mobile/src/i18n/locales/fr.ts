@@ -1394,6 +1394,7 @@ export default {
     applied: 'C\'est fait. Budgets créés : {{budgets}}. Abonnements suivis : {{subscriptions}}.',
     apply: 'Configurer la sélection ({{count}})',
     skip: 'Pas maintenant',
+    loadFailed: 'Votre import est terminé, mais nous n\'avons pas pu créer le rapport.',
   },
   admin: {
     title: 'Panneau d\'administration',
@@ -1875,6 +1876,9 @@ export default {
     linkInvalid: 'Ce lien a expiré ou a déjà été utilisé. Ouvrez le lien du groupe dans votre navigateur et appuyez de nouveau sur « Ouvrir dans l\'appli ».',
     linkAlreadyMember: 'Vous êtes déjà dans ce groupe, il n\'y a donc rien à associer.',
     linkFailed: 'Impossible d\'ouvrir le groupe. Vérifiez votre connexion et réessayez.',
+    colBalance: 'Votre solde',
+    colMyShare: 'Votre part',
+    balancesTitle: 'Soldes',
   },
   trip: {
     splitBetween: 'Répartir entre',
@@ -3093,6 +3097,7 @@ export default {
     openRow: 'Ouvrir la ligne',
     toggleRow: 'Sélectionner / désélectionner la ligne',
     closeDialog: 'Fermer la boîte de dialogue',
+    newGroup: 'Nouveau groupe',
   },
   emailReceipts: {
     title: 'Reçus par e-mail',
@@ -3154,5 +3159,11 @@ export default {
     errorE2ee: 'Les reçus par e-mail ne sont pas disponibles pour les comptes avec chiffrement de bout en bout.',
     errorGeneric: 'Une erreur s\'est produite. Veuillez réessayer.',
     bannerText: 'Reçus par e-mail à confirmer : {{count}}',
+    bannerAction: 'Vérifier',
+    review: 'Vérifier',
+    colMerchant: 'Commerçant',
+    colSubject: 'Objet',
+    colFrom: 'De',
+    colTotal: 'Total',
   },
 } as const;

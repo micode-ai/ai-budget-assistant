@@ -6,6 +6,7 @@ import { useExpenseStore } from '@/stores/expenseStore';
 import { useIncomeStore } from '@/stores/incomeStore';
 import { isCategorizableIncome } from '@/features/categorize/categorizableIncome';
 import { useAccountStore } from '@/stores/accountStore';
+import { emphasiseCount } from '@/utils/emphasiseCount';
 
 interface Props {
   onPress: () => void;
@@ -41,10 +42,7 @@ export function UncategorizedBanner({ onPress, entityType = 'expense' }: Props) 
   // Named, not the bare "Without a category": the desktop screen shows the
   // expense and income banners one above the other.
   const label = t(entityType === 'income' ? 'categorize.bannerTextIncome' : 'categorize.bannerText', { count });
-  const countText = String(count);
-  const at = label.lastIndexOf(countText);
-  const before = at >= 0 ? label.slice(0, at) : label;
-  const after = at >= 0 ? label.slice(at + countText.length) : '';
+  const { before, countText, after, found } = emphasiseCount(label, count);
 
   return (
     <View style={styles.banner}>
@@ -60,7 +58,7 @@ export function UncategorizedBanner({ onPress, entityType = 'expense' }: Props) 
         </View>
         <Text style={styles.text}>
           {before}
-          {at >= 0 ? <Text style={styles.count}>{countText}</Text> : null}
+          {found ? <Text style={styles.count}>{countText}</Text> : null}
           {after}
         </Text>
       </View>

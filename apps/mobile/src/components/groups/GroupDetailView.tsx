@@ -3,12 +3,11 @@ import { View, Text, ScrollView, ActivityIndicator, RefreshControl } from 'react
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stack, router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { useGroupStore } from '@/stores/groupStore';
 import { useGroupDetail } from '@/hooks/useGroupDetail';
+import { useGroupVoidSettlement } from '@/hooks/useGroupVoidSettlement';
 import { useTheme, useStyles, type Theme } from '@/theme';
-import { showAlert } from '@/utils/alert';
 import { isGroupWritable } from '@/features/groups/groupDisplay';
-import type { GroupExpense, GroupSettlement, GroupTransfer } from '@budget/shared-types';
+import type { GroupExpense, GroupTransfer } from '@budget/shared-types';
 import { GroupActivityList } from './GroupActivityList';
 import { GroupBalanceHero } from './GroupBalanceHero';
 import { GroupButton } from './GroupButton';
@@ -23,7 +22,7 @@ export function GroupDetailView({ groupId }: { groupId: string }) {
   const styles = useStyles(createStyles);
   const { detail, activity, hasMore, isLoading, isLoadingMore, loadFailed, reload, loadMore } =
     useGroupDetail(groupId);
-  const voidSettlement = useGroupStore((s) => s.voidSettlement);
+  const confirmVoid = useGroupVoidSettlement(groupId);
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = useCallback(async () => {
@@ -63,23 +62,6 @@ export function GroupDetailView({ groupId }: { groupId: string }) {
 
   const openExpense = (expense: GroupExpense) =>
     router.push({ pathname: `/groups/${groupId}/expense`, params: { expenseId: expense.id } } as never);
-
-  const confirmVoid = (settlement: GroupSettlement) => {
-    showAlert(t('groups.voidConfirmTitle'), t('groups.voidConfirmBody'), [
-      { text: t('common.cancel'), style: 'cancel' },
-      {
-        text: t('groups.voidPayment'),
-        style: 'destructive',
-        onPress: async () => {
-          try {
-            await voidSettlement(groupId, settlement.id);
-          } catch (e) {
-            showAlert(t('errors.error'), e instanceof Error ? e.message : t('errors.unknown'));
-          }
-        },
-      },
-    ]);
-  };
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>

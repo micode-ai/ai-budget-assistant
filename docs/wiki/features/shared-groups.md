@@ -172,6 +172,56 @@ it.
 - **The link-handoff destination is a constant base**; only the minted code is appended.
 - **Copy never promises "the minimum number of transfers"**, because `simplifyDebts` is greedy.
 
+## Desktop
+
+At ≥1024 px web, **ABA-646** gives groups their own layout. Nothing here is rendered in CI; layout,
+hover, focus and theme legibility are unverified until someone looks at the deployed build. The design
+is `docs/superpowers/specs/2026-10-09-desktop-groups-receipts-report-design.md`.
+
+- **Deciders.** `GroupsScreen` and `GroupDetailScreen` (`apps/mobile/src/components/groups/`) each have
+  a native file that renders the phone body and a `.web.tsx` that picks `GroupsDesktop` /
+  `GroupDetailDesktop` on `useIsDesktopWeb()`. The route files stay single: `groups/index`, `new`,
+  `join` use the first, `groups/[id]/index`, `expense`, `settle`, `members` the second. The native
+  file never imports `desktop/`. The phone bodies (`GroupsListView`, `GroupDetailView`,
+  `GroupCreateForm`, ...) keep their names and single definition.
+- **List** (`desktop/GroupsDesktop.tsx`): a toolbar, a per-currency summary strip (never blended,
+  active groups only, dashes until the list has answered) and a table with a sticky header, active
+  groups first. Pure logic is `apps/mobile/src/features/groups/groupListTable.ts`. `n` opens New group;
+  `↑`/`↓` and `Enter` walk and open rows. The Currency column hides below 1280.
+- **Detail** (`desktop/GroupDetailDesktop.tsx`): hero strip, a day-grouped activity table
+  (`GroupActivityTable`, pure logic in `groupActivityTable.ts`) and a 320px rail with who-pays-whom,
+  balances (`GroupBalancesCard`) and the invite link with an **inline QR** and a Copy button (Share is
+  dropped: `Share.share` is unreliable on desktop browsers). One page scroll; the rail is not sticky.
+  "Your share" hides below 1280.
+- **Dialogs host the existing views.** Create, join, expense, settle and members open in
+  `DesktopDialogFrame` dialogs that host `GroupCreateForm`, `GroupJoinView`,
+  `GroupExpenseScreenView`, `GroupSettleView` and `GroupMembersView` unchanged. Overlay state lives in
+  `GroupsDesktop` / `GroupDetailDesktop`; `GroupsDesktopDialogs` / `GroupDetailDialogs` only render it.
+- **Every router call in a hosted view is an optional callback whose default is the old router
+  call.** `onCreated(id)`, `onJoined(id)`, `onAlreadyMember`, `onDone`, `onLeftGroup`, and
+  `useGroupOwnerActions(detail, onGroupGone?)`. The phone passes none, so it is unchanged. A dialog is
+  not a route, so a `router.back()` / `router.replace()` inside one would navigate the page under it
+  away. `GroupExpenseScreenView` takes `withStackTitle` (default true); a hosted copy passes false so
+  the route underneath keeps its title.
+- **Form footer buttons go through a ref handle.** `GroupExpenseForm` and `GroupCreateForm` are
+  `forwardRef` with `GroupFormHandle { submit(); remove?() }` plus `hideActions` and a stable
+  `onStateChange`, so the dialog footer drives the same save the in-form button runs.
+- **Deep links still work.** `/groups/new`, `/join`, `/:id/expense`, `/settle` and `/members` (push,
+  guest page, URL) render the list or detail desktop screen with the matching dialog open
+  (`initialDialog`); closing `router.replace`s to the parent.
+- **A settlement row is not a click target.** Phone: tap voids. Desktop: an explicit **Void** button
+  in the actions cell (revealed on row hover and on its own focus, always focusable), then the same
+  `showAlert` confirm, shared through `useGroupVoidSettlement`. A click that opens a destructive
+  confirm is a hazard with a precise pointer.
+- **No discard confirmation on the group dialogs**, as `TransferDialog`: `useGroupExpenseForm` has no
+  real dirty signal, and inferring one is the spurious confirm `CreateDialog` documents.
+- **`GroupMemberSheet` is a `SheetDialog`.** On the phone it reproduces the old sheet through
+  `sheetStyle` / `handleStyle` / `scrimColor`; on desktop it is a centred dialog. It deliberately does
+  not pass `keyboardAvoiding`, which would change the phone.
+- **Entry points.** The dashboard rail has a seventh quick link (`groups`, in `railQuickLinks.ts`, not
+  gated on edit or account type) and Settings has a permanent `groups` link, so a user who hid the
+  quick action still has a door.
+
 ## Known gaps
 
 - **Line claims** (per-item splitting like receipt-split) are phase 2: a claim changes shares after
@@ -181,7 +231,9 @@ it.
   FX and un-settles itself.
 - **"Count my share in my budget"** — linking a group expense to the user's own Expense with
   receipt-split accounting — is phase 2.
-- **No desktop layout**: at ≥1024 web renders the phone screens in the content area.
+- **Desktop, unverified in a browser:** whether the group expense dialog's "Take a photo" path
+  degrades to a file picker on a desktop browser, and whether the Stack header duplicates the in-page
+  title on `/groups` and `/groups/:id`.
 - **The app join cannot pick an unclaimed name.** `app/groups/join.tsx` only creates a new member by
   name; there is no preview endpoint listing a group's placeholders for an app user, although
   `JoinGroupDto.memberId` is accepted by the API.

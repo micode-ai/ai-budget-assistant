@@ -3,6 +3,8 @@ import {
   DESKTOP_MIN_WIDTH,
   CONTENT_MAX_WIDTH,
   SIDEBAR_WIDTH,
+  FACET_RAIL_MIN_WIDTH,
+  WIDE_TABLE_MIN_WIDTH,
   isDesktopWeb,
 } from '../webLayout.constants';
 
@@ -11,6 +13,13 @@ describe('webLayout constants', () => {
     expect(DESKTOP_MIN_WIDTH).toBe(1024);
     expect(CONTENT_MAX_WIDTH).toBe(1080);
     expect(SIDEBAR_WIDTH).toBe(240);
+  });
+
+  it('keeps the optional-column threshold between desktop and the rail collapse', () => {
+    // Groups/inbox tables hide a column below WIDE_TABLE_MIN_WIDTH and drop their rail under
+    // FACET_RAIL_MIN_WIDTH; an out-of-order pair would hide columns in the wrong band.
+    expect(DESKTOP_MIN_WIDTH).toBeLessThan(WIDE_TABLE_MIN_WIDTH);
+    expect(WIDE_TABLE_MIN_WIDTH).toBeLessThan(FACET_RAIL_MIN_WIDTH);
   });
 });
 

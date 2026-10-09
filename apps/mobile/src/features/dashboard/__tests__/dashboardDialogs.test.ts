@@ -64,12 +64,12 @@ describe('resolveDialogAction', () => {
     expect(new Set(kinds).size).toBe(kinds.length);
   });
 
-  it('keeps the rail quick-links card’s three list screens pages', () => {
+  it('keeps the rail quick-links card’s four list screens pages', () => {
     // These three are places you work, not forms — the settings shell draws
     // the same distinction. Boxing a list screen in a dialog would make its own
     // navigation (a shopping list opens an item, a purchase request opens a
     // vote) happen underneath an overlay it cannot dismiss.
-    for (const route of ['/subscriptions', '/shopping-list', '/purchase-requests']) {
+    for (const route of ['/subscriptions', '/shopping-list', '/purchase-requests', '/groups']) {
       expect(resolveDialogAction(route)).toEqual({ kind: 'navigate', route });
     }
   });

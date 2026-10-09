@@ -5088,6 +5088,8 @@ Group money is kept separate from your own finances: nothing in a group shows up
 
 Tap **Groups** in the quick actions on the home screen. You'll see your groups and your balance in each, plus **New group** and **Join with link**.
 
+On a computer (a browser window wider than about 1000 pixels), **Groups** is also in the quick links on the right of the home screen and in **Settings**. Your groups appear as a table, and creating a group, adding an expense, settling up and the member list open in a window over the page.
+
 ## Creating a group
 
 1. Tap **New group**.
@@ -10221,6 +10223,8 @@ OCR иногда неверно читает цену, выдумывает ст
 
 Нажмите **Группы** в быстрых действиях на главном экране. Вы увидите свои группы и свой баланс в каждой из них, а также **Новая группа** и **Войти по ссылке**.
 
+На компьютере (окно браузера шире примерно 1000 пикселей) **Группы** есть также в быстрых ссылках справа на главном экране и в **Настройках**. Ваши группы показаны таблицей, а создание группы, добавление расхода, расчёт и список участников открываются в окне поверх страницы.
+
 ## Создание группы
 
 1. Нажмите **Новая группа**.
@@ -15324,6 +15328,8 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 Натисніть **Групи** у швидких діях на головному екрані. Ви побачите свої групи і свій баланс у кожній, а також **Нова група** і **Приєднатися за посиланням**.
 
+На комп'ютері (вікно браузера ширше приблизно за 1000 пікселів) **Групи** є також у швидких посиланнях праворуч на головному екрані та в **Налаштуваннях**. Ваші групи показано таблицею, а створення групи, додавання витрати, розрахунок і список учасників відкриваються у вікні поверх сторінки.
+
 ## Створення групи
 
 1. Натисніть **Нова група**.
@@ -20412,6 +20418,8 @@ Pieniądze z grupy są oddzielone od Twoich własnych finansów: nic z grupy nie
 
 Dotknij **Grupy** w szybkich akcjach na ekranie głównym. Zobaczysz swoje grupy i swoje saldo w każdej z nich, a także **Nowa grupa** i **Dołącz z linku**.
 
+Na komputerze (okno przeglądarki szersze niż około 1000 pikseli) **Grupy** znajdziesz też w szybkich linkach po prawej stronie ekranu głównego oraz w **Ustawieniach**. Grupy są wyświetlane w tabeli, a tworzenie grupy, dodawanie wydatku, rozliczanie i lista członków otwierają się w oknie nad stroną.
+
 ## Tworzenie grupy
 
 1. Dotknij **Nowa grupa**.
@@ -25475,6 +25483,8 @@ Gruppengeld bleibt von deinen eigenen Finanzen getrennt: Nichts aus einer Gruppe
 
 Tippe in den Schnellaktionen auf dem Startbildschirm auf **Gruppen**. Du siehst deine Gruppen und deinen Saldo in jeder davon, dazu **Neue Gruppe** und **Per Link beitreten**.
 
+Am Computer (Browserfenster breiter als etwa 1000 Pixel) findest du **Gruppen** auch in den Schnell-Links rechts auf dem Startbildschirm und in den **Einstellungen**. Deine Gruppen erscheinen als Tabelle; eine Gruppe erstellen, eine Ausgabe hinzufügen, abrechnen und die Mitgliederliste öffnen sich in einem Fenster über der Seite.
+
 ## Eine Gruppe erstellen
 
 1. Tippe auf **Neue Gruppe**.
@@ -30527,6 +30537,8 @@ El dinero de los grupos se mantiene separado de tus propias finanzas: nada de un
 
 Toca **Grupos** en las acciones rápidas de la pantalla de inicio. Verás tus grupos y tu saldo en cada uno, además de **Nuevo grupo** y **Unirse con enlace**.
 
+En un ordenador (una ventana de navegador de más de unos 1000 píxeles) también encuentras **Grupos** en los enlaces rápidos a la derecha de la pantalla de inicio y en **Ajustes**. Tus grupos aparecen en una tabla, y crear un grupo, añadir un gasto, saldar cuentas y la lista de miembros se abren en una ventana sobre la página.
+
 ## Crear un grupo
 
 1. Toca **Nuevo grupo**.
@@ -35577,6 +35589,8 @@ L'argent des groupes reste séparé de vos propres finances : rien d'un groupe n
 
 Touchez **Groupes** dans les actions rapides de l'écran d'accueil. Vous voyez vos groupes et votre solde dans chacun, ainsi que **Nouveau groupe** et **Rejoindre avec un lien**.
 
+Sur un ordinateur (fenêtre de navigateur plus large qu'environ 1000 pixels), **Groupes** se trouve aussi dans les liens rapides à droite de l'écran d'accueil et dans **Paramètres**. Vos groupes s'affichent dans un tableau, et la création d'un groupe, l'ajout d'une dépense, le règlement et la liste des membres s'ouvrent dans une fenêtre par-dessus la page.
+
 ## Créer un groupe
 
 1. Touchez **Nouveau groupe**.
@@ -40590,6 +40604,8 @@ OCR часам няправільна чытае цану, выдумляе ра
 ## Дзе знайсці
 
 Націсніце **Групы** ў хуткіх дзеяннях на галоўным экране. Вы ўбачыце свае групы і свой баланс у кожнай, а таксама **Новая група** і **Далучыцца па спасылцы**.
+
+На камп'ютары (акно браўзера шырэйшае за прыблізна 1000 пікселяў) **Групы** ёсць таксама ў хуткіх спасылках справа на галоўным экране і ў **Наладах**. Вашы групы паказаны табліцай, а стварэнне групы, дадаванне выдатку, разлік і спіс удзельнікаў адкрываюцца ў акне паверх старонкі.
 
 ## Стварэнне групы
 
@@ -45730,6 +45746,8 @@ Groepsgeld blijft gescheiden van je eigen financiën: niets uit een groep versch
 ## Waar je het vindt
 
 Tik op **Groepen** in de snelle acties op het startscherm. Je ziet je groepen en je saldo in elke groep, plus **Nieuwe groep** en **Deelnemen met link**.
+
+Op een computer (een browservenster breder dan ongeveer 1000 pixels) staat **Groepen** ook bij de snelle links rechts op het startscherm en in **Instellingen**. Je groepen verschijnen in een tabel, en een groep maken, een uitgave toevoegen, afrekenen en de ledenlijst openen in een venster boven de pagina.
 
 ## Een groep maken
 

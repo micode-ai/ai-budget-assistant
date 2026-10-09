@@ -12,6 +12,8 @@ Gruppengeld bleibt von deinen eigenen Finanzen getrennt: Nichts aus einer Gruppe
 
 Tippe in den Schnellaktionen auf dem Startbildschirm auf **Gruppen**. Du siehst deine Gruppen und deinen Saldo in jeder davon, dazu **Neue Gruppe** und **Per Link beitreten**.
 
+Am Computer (Browserfenster breiter als etwa 1000 Pixel) findest du **Gruppen** auch in den Schnell-Links rechts auf dem Startbildschirm und in den **Einstellungen**. Deine Gruppen erscheinen als Tabelle; eine Gruppe erstellen, eine Ausgabe hinzufügen, abrechnen und die Mitgliederliste öffnen sich in einem Fenster über der Seite.
+
 ## Eine Gruppe erstellen
 
 1. Tippe auf **Neue Gruppe**.

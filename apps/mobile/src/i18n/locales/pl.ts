@@ -1402,6 +1402,7 @@ export default {
     applied: 'Gotowe. Utworzone budżety: {{budgets}}. Śledzone subskrypcje: {{subscriptions}}.',
     apply: 'Ustaw zaznaczone ({{count}})',
     skip: 'Nie teraz',
+    loadFailed: 'Import się zakończył, ale nie udało się przygotować raportu.',
   },
   admin: {
     title: 'Panel administratora',
@@ -1884,6 +1885,9 @@ export default {
     linkInvalid: 'Ten link wygasł albo został już użyty. Otwórz link do grupy w przeglądarce i ponownie dotknij „Otwórz w aplikacji”.',
     linkAlreadyMember: 'Jesteś już w tej grupie, więc nie ma czego łączyć.',
     linkFailed: 'Nie udało się otworzyć grupy. Sprawdź połączenie i spróbuj ponownie.',
+    colBalance: 'Twoje saldo',
+    colMyShare: 'Twój udział',
+    balancesTitle: 'Salda',
   },
   trip: {
     splitBetween: 'Podziel między',
@@ -3108,6 +3112,7 @@ export default {
     openRow: 'Otwórz wiersz',
     toggleRow: 'Zaznacz / odznacz wiersz',
     closeDialog: 'Zamknij okno',
+    newGroup: 'Nowa grupa',
   },
   emailReceipts: {
     title: 'Paragony z e-maila',
@@ -3169,5 +3174,11 @@ export default {
     errorE2ee: 'Paragony z e-maila nie są dostępne dla kont z szyfrowaniem end-to-end.',
     errorGeneric: 'Coś poszło nie tak. Spróbuj ponownie.',
     bannerText: 'Paragony z e-maila do potwierdzenia: {{count}}',
+    bannerAction: 'Przejrzyj',
+    review: 'Przejrzyj',
+    colMerchant: 'Sprzedawca',
+    colSubject: 'Temat',
+    colFrom: 'Od',
+    colTotal: 'Suma',
   },
 } as const;

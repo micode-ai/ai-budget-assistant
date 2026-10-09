@@ -124,9 +124,35 @@ charges a day apart are usually two real purchases; the report cannot tell.
 charges, not three): a three-month statement holds only two or three charges of a monthly
 subscription, and the user confirms each one before anything is tracked.
 
+## Desktop (the post-import report)
+
+At ≥1024 px web, **ABA-646** gives the report (`/settings/import/report`) its own page. Nothing here is
+rendered in CI; it is unverified until someone looks at the deployed build.
+
+- **Decider.** `ImportReportScreen` (`apps/mobile/src/components/import/`): the native file renders
+  `ImportReportView`; the `.web.tsx` renders `desktop/ImportReportDesktop` at ≥1024.
+- **One hook for both.** `apps/mobile/src/hooks/useImportReport.ts` holds the load, the pick sets,
+  `apply` and the `started` / `completed` telemetry; the phone view and the desktop page both read it.
+  Its `status` is `loading | failed | insufficient | ready` (pure `resolveImportReportStatus`). **A
+  failed load and "not enough data" are different states.** The import succeeded in both, but only a
+  failure can be retried. The desktop page shows `importReport.loadFailed` with Retry and Done for the
+  first and the existing `noReport` text for the second; the phone maps both to the screen it has
+  always shown.
+- **Layout.** A centred page capped at 1200px (a departure from fill-the-area, since a two-column
+  report across 1900px is a void): three `SummaryTile`s and the `fxApproximate` footnote, then a main
+  column ("where it went", top merchants) and a 380px side column (subscriptions, budgets,
+  duplicates). Below 1440 the side column drops under the main one.
+- **Sticky action bar.** `position: sticky; bottom: 0` inside the one page scroll: "Set up selected (N)"
+  and Skip, or Done once applied. A plain in-flow footer is the fallback if it misbehaves.
+- **Shared rows, not copies.** `ImportReportCategoryRows` and `PickRow` are exported from
+  `ImportReportView.tsx` with a `desktop` flag (default false); the desktop page uses the same
+  `createImportReportStyles`. No keyboard shortcuts are registered: it is a short one-time form.
+
 ## Known gaps
 
 - ING, Millennium and Pekao are unvalidated against real exports.
+- The desktop report's sticky action bar, and `Space` toggling a `role="checkbox"` row on
+  react-native-web, are unverified in a browser.
 - `AnomalyService.checkExpenseBatch` runs its detectors over every imported expense one by one; on
   a multi-year history that is a very long fire-and-forget pass and may raise alerts about old data.
 

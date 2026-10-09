@@ -10,11 +10,20 @@ import { GroupButton } from './GroupButton';
  * Owner-only controls: guest access, rotate the link, archive, delete. An archived group is
  * read-only, so only Delete remains.
  */
-export function GroupOwnerControls({ detail, writable }: { detail: GroupDetail; writable: boolean }) {
+export function GroupOwnerControls({
+  detail,
+  writable,
+  onGroupGone,
+}: {
+  detail: GroupDetail;
+  writable: boolean;
+  /** Desktop dialog hosting (ABA-646): called after the group is deleted, instead of `router.dismissTo`. */
+  onGroupGone?: () => void;
+}) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
-  const actions = useGroupOwnerActions(detail);
+  const actions = useGroupOwnerActions(detail, onGroupGone);
 
   return (
     <View style={styles.card}>

@@ -12,6 +12,8 @@ L'argent des groupes reste séparé de vos propres finances : rien d'un groupe n
 
 Touchez **Groupes** dans les actions rapides de l'écran d'accueil. Vous voyez vos groupes et votre solde dans chacun, ainsi que **Nouveau groupe** et **Rejoindre avec un lien**.
 
+Sur un ordinateur (fenêtre de navigateur plus large qu'environ 1000 pixels), **Groupes** se trouve aussi dans les liens rapides à droite de l'écran d'accueil et dans **Paramètres**. Vos groupes s'affichent dans un tableau, et la création d'un groupe, l'ajout d'une dépense, le règlement et la liste des membres s'ouvrent dans une fenêtre par-dessus la page.
+
 ## Créer un groupe
 
 1. Touchez **Nouveau groupe**.

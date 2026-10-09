@@ -12,6 +12,8 @@ Groepsgeld blijft gescheiden van je eigen financiën: niets uit een groep versch
 
 Tik op **Groepen** in de snelle acties op het startscherm. Je ziet je groepen en je saldo in elke groep, plus **Nieuwe groep** en **Deelnemen met link**.
 
+Op een computer (een browservenster breder dan ongeveer 1000 pixels) staat **Groepen** ook bij de snelle links rechts op het startscherm en in **Instellingen**. Je groepen verschijnen in een tabel, en een groep maken, een uitgave toevoegen, afrekenen en de ledenlijst openen in een venster boven de pagina.
+
 ## Een groep maken
 
 1. Tik op **Nieuwe groep**.

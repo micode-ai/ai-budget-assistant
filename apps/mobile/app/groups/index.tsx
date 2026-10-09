@@ -1,5 +1,5 @@
-import { GroupsListView } from '@/components/groups/GroupsListView';
+import { GroupsScreen } from '@/components/groups/GroupsScreen';
 
-export default function GroupsScreen() {
-  return <GroupsListView />;
+export default function GroupsRoute() {
+  return <GroupsScreen />;
 }

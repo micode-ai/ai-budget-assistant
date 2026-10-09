@@ -31,6 +31,18 @@ part of the layout's shape; the rest are "whichever shortcuts this user wants" â
 Settings â†’ Widgets already means on the phone, so one settings screen governs both platforms with no
 second list to sync.
 
+**The rail links to the screens that have no tab, Groups included (ABA-646).** `groups` was already a
+`QuickActionKey` the phone strip rendered, but `LINKS_BY_KEY` had no entry, so desktop silently dropped
+it. It is now a **seventh** row (`railQuickLinks.ts`, icon `people-outline`, route `/groups`), last
+because that is the store's key order, and gated on neither edit nor account type: a group is not
+account-scoped, so the account role and `ViewerBlockGuard` never apply to it. Like the three list
+screens it navigates, so `dashboardDialogs` pins `/groups` as a page. The screens it opens are
+documented on [shared-groups](shared-groups.md) (the list and detail pages and their dialogs),
+[inbound-e-receipts](inbound-e-receipts.md) and
+[bank-statement-import](bank-statement-import.md), and their shared dialog frame is
+`apps/mobile/src/components/DesktopDialogFrame.tsx` (new dialogs only; the existing ones were not
+retrofitted).
+
 **Everything decidable lives in a pure module** and is called, never paraphrased inline.
 
 ## Invariants
@@ -45,8 +57,9 @@ purchase-requests row additionally needs the shared account predicate, which has
 `undefined`-is-not-shared trap the attention panel applies.
 
 **A form finishes in a dialog; a place you work is a navigation.** Three forms became dialogs through
-one route-to-dialog table shared with the first-run state, so the two can never disagree. The three
-list screens stay navigations, pinned by a test.
+one route-to-dialog table shared with the first-run state, so the two can never disagree. The four
+list screens (subscriptions, shopping list, purchase requests, groups) stay navigations, pinned by a
+test.
 
 **`useTransferForm` has no default `onSaved`.** Back navigates the *dashboard* away from a dialog,
 and on a first page load with no history does nothing at all, leaving a submitted form open. A

@@ -19,7 +19,17 @@ import { GroupOwnerControls } from './GroupOwnerControls';
 import { GroupPaymentInfoCard } from './GroupPaymentInfoCard';
 
 /** Members: add a placeholder name, rename, my payment details, remove, and the owner controls. */
-export function GroupMembersView({ groupId }: { groupId: string }) {
+export function GroupMembersView({
+  groupId,
+  onLeftGroup,
+}: {
+  groupId: string;
+  /**
+   * Desktop dialog hosting (ABA-646): called when the group is gone for me (I left it, or the
+   * owner deleted it), instead of `router.dismissTo('/groups')`. The phone passes nothing.
+   */
+  onLeftGroup?: () => void;
+}) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -72,6 +82,8 @@ export function GroupMembersView({ groupId }: { groupId: string }) {
     }
   };
 
+  const leave = () => (onLeftGroup ? onLeftGroup() : router.dismissTo('/groups' as never));
+
   const doRemove = async (member: GroupMember) => {
     const isSelf = member.id === detail.myMemberId;
     try {
@@ -80,7 +92,7 @@ export function GroupMembersView({ groupId }: { groupId: string }) {
       const status = (e as { status?: number } | undefined)?.status;
       // Leaving removes my own access, so the follow-up reload of the group is a 404: that is success.
       if (isSelf && status === 404) {
-        router.dismissTo('/groups' as never);
+        leave();
         return;
       }
       showAlert(
@@ -90,7 +102,7 @@ export function GroupMembersView({ groupId }: { groupId: string }) {
       return;
     }
     setSelected(null);
-    if (isSelf) router.dismissTo('/groups' as never);
+    if (isSelf) leave();
   };
 
   const confirmRemove = (member: GroupMember) => {
@@ -197,7 +209,7 @@ export function GroupMembersView({ groupId }: { groupId: string }) {
 
         {detail.isOwner && (
           <View style={styles.gap}>
-            <GroupOwnerControls detail={detail} writable={writable} />
+            <GroupOwnerControls detail={detail} writable={writable} onGroupGone={onLeftGroup} />
           </View>
         )}
       </ScrollView>

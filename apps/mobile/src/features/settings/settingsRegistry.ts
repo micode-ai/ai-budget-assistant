@@ -93,6 +93,7 @@ export type SettingsLinkKey =
   | 'shoppingList'
   | 'purchaseRequests'
   | 'subscriptions'
+  | 'groups'
   | 'import'
   | 'subscription'
   | 'referral'
@@ -210,6 +211,9 @@ export const SETTINGS_ENTRIES: readonly SettingsEntry[] = [
   { kind: 'link', key: 'shoppingList', labelKey: 'shoppingList.title', route: '/shopping-list' },
   { kind: 'link', key: 'purchaseRequests', labelKey: 'purchaseRequests.settingsTitle', route: '/purchase-requests' },
   { kind: 'link', key: 'subscriptions', labelKey: 'subscriptionManager.title', route: '/subscriptions' },
+  // Shared expense groups (ABA-646). A permanent door for a user who hid the
+  // `groups` quick action; groups are not account-scoped, so no account gating.
+  { kind: 'link', key: 'groups', labelKey: 'groups.title', route: '/groups' },
   // A wizard, not a screen: five files driven by `useImportStore`, with a
   // preview and a column mapper that are full-width workspaces. A wizard
   // inside a pane is a trap, so this one is a link permanently.

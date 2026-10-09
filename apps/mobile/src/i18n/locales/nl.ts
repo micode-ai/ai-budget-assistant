@@ -1394,6 +1394,7 @@ export default {
     applied: 'Klaar. Budgetten aangemaakt: {{budgets}}. Abonnementen gevolgd: {{subscriptions}}.',
     apply: 'Selectie instellen ({{count}})',
     skip: 'Niet nu',
+    loadFailed: 'Je import is voltooid, maar het rapport kon niet worden gemaakt.',
   },
   admin: {
     title: 'Beheerpaneel',
@@ -1875,6 +1876,9 @@ export default {
     linkInvalid: 'Deze link is verlopen of al gebruikt. Open de groepslink in je browser en tik opnieuw op "Openen in de app".',
     linkAlreadyMember: 'Je zit al in deze groep, dus er valt niets te koppelen.',
     linkFailed: 'De groep kon niet worden geopend. Controleer je verbinding en probeer het opnieuw.',
+    colBalance: 'Jouw saldo',
+    colMyShare: 'Jouw deel',
+    balancesTitle: 'Saldi',
   },
   trip: {
     splitBetween: 'Verdelen tussen',
@@ -3092,6 +3096,7 @@ export default {
     openRow: 'Rij openen',
     toggleRow: 'Rij selecteren/deselecteren',
     closeDialog: 'Dialoogvenster sluiten',
+    newGroup: 'Nieuwe groep',
   },
   emailReceipts: {
     title: 'Bonnetjes per e-mail',
@@ -3153,5 +3158,11 @@ export default {
     errorE2ee: 'Bonnetjes per e-mail zijn niet beschikbaar voor accounts met end-to-end-versleuteling.',
     errorGeneric: 'Er ging iets mis. Probeer het opnieuw.',
     bannerText: 'Bonnetjes per e-mail om te bevestigen: {{count}}',
+    bannerAction: 'Controleren',
+    review: 'Controleren',
+    colMerchant: 'Winkel',
+    colSubject: 'Onderwerp',
+    colFrom: 'Van',
+    colTotal: 'Totaal',
   },
 } as const;

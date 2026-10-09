@@ -1,8 +1,8 @@
 import { useLocalSearchParams } from 'expo-router';
-import { ImportReportView } from '@/components/import/ImportReportView';
+import { ImportReportScreen } from '@/components/import/ImportReportScreen';
 
 /** Post-import report (ABA-643). The header is registered in app/_layout.tsx. */
-export default function ImportReportScreen() {
+export default function ImportReportRoute() {
   const { batchId } = useLocalSearchParams<{ batchId?: string }>();
-  return <ImportReportView batchId={batchId ?? ''} />;
+  return <ImportReportScreen batchId={batchId ?? ''} />;
 }

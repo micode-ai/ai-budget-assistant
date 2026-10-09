@@ -48,15 +48,16 @@ export type RailQuickLinkId =
   | 'transfers'
   | 'subscriptions'
   | 'shoppingList'
-  | 'purchaseRequests';
+  | 'purchaseRequests'
+  | 'groups';
 
 export interface RailQuickLink {
   id: RailQuickLinkId;
   /**
    * Where tapping the row goes. A ROUTE, never a dialog kind — the card hands
    * this straight to `onOpenRoute`, so `resolveDialogAction`'s single table
-   * stays the only thing that decides what a route opens. Three of these six
-   * resolve to dialogs today; the three list screens navigate.
+   * stays the only thing that decides what a route opens. Three of these seven
+   * resolve to dialogs today; the four list screens navigate.
    */
   route: string;
   /** i18n key for the label. Every key here already exists in all 9 locales. */
@@ -74,7 +75,8 @@ export interface RailQuickLink {
     | 'arrow-forward-circle-outline'
     | 'repeat-outline'
     | 'basket-outline'
-    | 'cart-outline';
+    | 'cart-outline'
+    | 'people-outline';
 }
 
 interface LinkDefinition extends RailQuickLink {
@@ -195,6 +197,24 @@ const LINKS_BY_KEY: ReadonlyMap<QuickActionKey, readonly LinkDefinition[]> = new
         // is already known — the same predicate, and the same reasoning, as
         // the attention panel's own purchase-request row.
         requiresOtherMembers: true,
+      },
+    ],
+  ],
+  [
+    // Shared expense groups (ABA-640). `groups` was already a QuickActionKey the
+    // phone strip renders; this map had no entry, so desktop silently dropped it.
+    // Not gated on either predicate: a group is not account-scoped (the account
+    // role and `ViewerBlockGuard` never apply to it) and it is independent of the
+    // account type. Last, because that is where the store's key order puts it.
+    'groups',
+    [
+      {
+        id: 'groups',
+        route: '/groups',
+        labelKey: 'groups.title',
+        icon: 'people-outline',
+        requiresEdit: false,
+        requiresOtherMembers: false,
       },
     ],
   ],

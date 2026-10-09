@@ -12,6 +12,8 @@ Group money is kept separate from your own finances: nothing in a group shows up
 
 Tap **Groups** in the quick actions on the home screen. You'll see your groups and your balance in each, plus **New group** and **Join with link**.
 
+On a computer (a browser window wider than about 1000 pixels), **Groups** is also in the quick links on the right of the home screen and in **Settings**. Your groups appear as a table, and creating a group, adding an expense, settling up and the member list open in a window over the page.
+
 ## Creating a group
 
 1. Tap **New group**.

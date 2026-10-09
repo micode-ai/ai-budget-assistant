@@ -9,6 +9,7 @@ import { ReceiptExpenseView } from '@/components/receipt/ReceiptExpenseView';
 import { useInboundReceiptStore } from '@/stores/inboundReceiptStore';
 import { api } from '@/services/api';
 import { blobToDocumentUri } from '@/features/inboundMail/documentUri';
+import type { ExpenseCreatePrefill } from '@/components/expenses/create/ExpenseCreateForm';
 
 type Phase =
   | { kind: 'loading' }
@@ -22,11 +23,31 @@ type Phase =
  * is the ordinary receipt save; once the expense exists the store confirms the item
  * against the new expense's client id.
  */
-export function EmailReceiptConfirm({ id }: { id: string }) {
+export function EmailReceiptConfirm({
+  id,
+  onDone,
+  onDirtyChange,
+  onOpenExpense,
+  onEdit,
+}: {
+  id: string;
+  /**
+   * Desktop dialog hosting (ABA-646): every optional prop below defaults to what the route did
+   * before (`router.back()` for `onDone`, `ReceiptExpenseView`'s own defaults for the rest), so the
+   * phone passes none of them and is unchanged. A dialog is not a route to go back from.
+   */
+  onDone?: () => void;
+  /** True while a completed extraction is sitting unsaved; the dialog asks before closing. Stable callback. */
+  onDirtyChange?: (dirty: boolean) => void;
+  onOpenExpense?: (expenseId: string) => void;
+  /** "Edit" on the card; the desktop inbox closes this dialog and opens the manual-entry one. */
+  onEdit?: (prefill: ExpenseCreatePrefill) => void;
+}) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const [phase, setPhase] = useState<Phase>({ kind: 'loading' });
+  const finish = onDone ?? (() => router.back());
 
   const load = useCallback(async () => {
     setPhase({ kind: 'loading' });
@@ -60,7 +81,10 @@ export function EmailReceiptConfirm({ id }: { id: string }) {
     return (
       <SafeAreaView style={styles.container} edges={[]}>
         <ReceiptExpenseView
-          onDone={() => router.back()}
+          onDone={finish}
+          onDirtyChange={onDirtyChange}
+          onOpenExpense={onOpenExpense}
+          onEdit={onEdit}
           inbound={{
             detail: phase.detail,
             documentUri: phase.documentUri,
@@ -79,7 +103,7 @@ export function EmailReceiptConfirm({ id }: { id: string }) {
         ) : (
           <>
             <Text style={styles.message}>{t(`emailReceipts.${phase.messageKey}`)}</Text>
-            <TouchableOpacity style={styles.button} onPress={() => router.back()}>
+            <TouchableOpacity style={styles.button} onPress={finish}>
               <Text style={styles.buttonText}>{t('common.back')}</Text>
             </TouchableOpacity>
           </>

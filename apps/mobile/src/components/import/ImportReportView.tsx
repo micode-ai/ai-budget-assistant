@@ -1,20 +1,11 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { useState } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, Pressable, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
-import { formatCurrency } from '@budget/shared-utils';
-import type { Currency, ImportReportResponse } from '@budget/shared-types';
-import { api } from '@/services/api';
-import { trackAction } from '@/services/telemetry';
+import type { ImportReportResponse } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
-import { useAuthStore } from '@/stores/authStore';
-import { useBudgetStore } from '@/stores/budgetStore';
-import { useCategoryStore } from '@/stores/categoryStore';
-import { useUserSubscriptionStore } from '@/stores/userSubscriptionStore';
-import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
-import { getIntlLocale } from '@/i18n';
-import { rollForwardRenewal, startOfMonth } from '@/features/import/importReport';
+import { useImportReport } from '@/hooks/useImportReport';
 import { exitImportFlow } from '@/features/import/importExit';
 
 /**
@@ -28,128 +19,25 @@ import { exitImportFlow } from '@/features/import/importExit';
 export function ImportReportView({ batchId }: { batchId: string }) {
   const { t } = useTranslation();
   const theme = useTheme();
-  const styles = useStyles(createStyles);
-  const intlLocale = getIntlLocale();
-  const user = useAuthStore((s) => s.user);
-  const categories = useCategoryStore((s) => s.categories);
+  const styles = useStyles(createImportReportStyles);
+  const {
+    status,
+    report,
+    pickedSubs,
+    pickedBudgets,
+    toggleSub,
+    toggleBudget,
+    pickedCount,
+    apply,
+    applying,
+    applied,
+    money,
+    categoryLabel,
+    formatDay,
+    maxCategory,
+  } = useImportReport(batchId);
 
-  const [report, setReport] = useState<ImportReportResponse | null>(null);
-  const [failed, setFailed] = useState(false);
-  const [pickedSubs, setPickedSubs] = useState<Set<number>>(new Set());
-  const [pickedBudgets, setPickedBudgets] = useState<Set<string>>(new Set());
-  const [applying, setApplying] = useState(false);
-  const [applied, setApplied] = useState<{ budgets: number; subs: number } | null>(null);
-  const startedRef = useRef(false);
-
-  useEffect(() => {
-    let cancelled = false;
-    api
-      .getImportReport(batchId)
-      .then((r) => {
-        if (cancelled) return;
-        setReport(r);
-        // Everything suggested starts checked — the one tap applies them all unless unchecked.
-        setPickedSubs(new Set(r.subscriptions.map((_, i) => i)));
-        setPickedBudgets(new Set(r.budgetSuggestions.map((b) => b.categoryId)));
-        if (r.hasEnoughData && !startedRef.current) {
-          startedRef.current = true;
-          trackAction('import_report', 'started');
-        }
-      })
-      .catch((e) => {
-        console.warn('Failed to load import report', e);
-        if (!cancelled) setFailed(true);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [batchId]);
-
-  const base = report?.baseCurrency ?? user?.currencyCode ?? 'USD';
-  const money = useCallback((n: number, cur?: string) => formatCurrency(n, cur ?? base), [base]);
-
-  // A category from an import carries the server id; after a pull the local store holds the same id.
-  const categoryLabel = useCallback(
-    (id: string | null, fallback: string) => {
-      const local = id ? categories.find((c) => c.id === id || c.clientId === id) : undefined;
-      if (local) return getCategoryDisplayName(local, t);
-      return id ? fallback : t('common.uncategorized');
-    },
-    [categories, t],
-  );
-
-  const formatDay = useCallback(
-    (day: string) =>
-      new Date(`${day}T12:00:00`).toLocaleDateString(intlLocale, { day: 'numeric', month: 'short' }),
-    [intlLocale],
-  );
-
-  const toggle = <T,>(set: Set<T>, value: T): Set<T> => {
-    const next = new Set(set);
-    if (next.has(value)) next.delete(value);
-    else next.add(value);
-    return next;
-  };
-
-  const pickedCount = pickedSubs.size + pickedBudgets.size;
-
-  const apply = useCallback(async () => {
-    if (!report || pickedCount === 0) return;
-    setApplying(true);
-    const today = new Date();
-    let budgets = 0;
-    let subs = 0;
-    for (const s of report.budgetSuggestions) {
-      if (!pickedBudgets.has(s.categoryId)) continue;
-      useBudgetStore.getState().addBudget({
-        userId: user?.id || '',
-        name: categoryLabel(s.categoryId, s.name),
-        amount: s.monthlyAmount,
-        currencyCode: base as Currency,
-        period: 'monthly',
-        startDate: startOfMonth(today),
-        categoryAllocations: [
-          {
-            id: '',
-            budgetId: '',
-            categoryId: s.categoryId,
-            amount: s.monthlyAmount,
-            createdAt: today,
-            updatedAt: today,
-            isDeleted: false,
-            syncVersion: 0,
-          },
-        ],
-        alertThreshold: 80,
-        isActive: true,
-      });
-      budgets++;
-    }
-    for (const [i, s] of report.subscriptions.entries()) {
-      if (!pickedSubs.has(i)) continue;
-      try {
-        await useUserSubscriptionStore.getState().createSubscription({
-          name: s.name,
-          amount: s.amount,
-          currencyCode: s.currencyCode,
-          billingCycle: s.billingCycle,
-          nextRenewalDate: rollForwardRenewal(s.nextRenewalDate, s.billingCycle, today),
-          ...(s.categoryId ? { categoryId: s.categoryId } : {}),
-          detectedFrom: s.name,
-        });
-        subs++;
-      } catch (e) {
-        console.warn('Failed to track subscription from import report', e);
-      }
-    }
-    trackAction('import_report', 'completed');
-    setApplied({ budgets, subs });
-    setApplying(false);
-  }, [report, pickedCount, pickedBudgets, pickedSubs, user?.id, base, categoryLabel]);
-
-  const maxCategory = useMemo(() => Math.max(1, ...(report?.categories.map((c) => c.amount) ?? [1])), [report]);
-
-  if (!report && !failed) {
+  if (status === 'loading') {
     return (
       <SafeAreaView style={styles.centered} edges={[]}>
         <ActivityIndicator size="large" color={theme.colors.primary} />
@@ -157,7 +45,9 @@ export function ImportReportView({ batchId }: { batchId: string }) {
     );
   }
 
-  if (failed || !report || !report.hasEnoughData) {
+  // The phone shows the same screen for a failed load and for "not enough data"; the desktop page
+  // tells them apart (see `ImportReportDesktop`).
+  if (status !== 'ready' || !report) {
     return (
       <SafeAreaView style={styles.centered} edges={[]}>
         <Ionicons name="checkmark-circle-outline" size={48} color={theme.colors.success} />
@@ -192,22 +82,14 @@ export function ImportReportView({ batchId }: { batchId: string }) {
         {report.categories.length > 0 && (
           <View style={styles.card}>
             <Text style={styles.cardTitle}>{t('importReport.whereItWent')}</Text>
-            {report.categories.map((c, i) => (
-              <View key={`${c.categoryId ?? 'none'}-${i}`} style={styles.catRow}>
-                <View style={styles.catHead}>
-                  <Text style={styles.catName} numberOfLines={1}>{categoryLabel(c.categoryId, c.name)}</Text>
-                  <Text style={styles.catValue}>{`${money(c.amount)} · ${c.percentage}%`}</Text>
-                </View>
-                <View style={styles.barTrack}>
-                  <View
-                    style={[
-                      styles.barFill,
-                      { width: `${(c.amount / maxCategory) * 100}%`, backgroundColor: c.color ?? theme.colors.primary },
-                    ]}
-                  />
-                </View>
-              </View>
-            ))}
+            <ImportReportCategoryRows
+              categories={report.categories}
+              maxCategory={maxCategory}
+              money={money}
+              categoryLabel={categoryLabel}
+              styles={styles}
+              theme={theme}
+            />
           </View>
         )}
 
@@ -221,7 +103,7 @@ export function ImportReportView({ batchId }: { batchId: string }) {
                 key={`${s.name}-${i}`}
                 picked={pickedSubs.has(i)}
                 disabled={!!applied}
-                onToggle={() => setPickedSubs((p) => toggle(p, i))}
+                onToggle={() => toggleSub(i)}
                 title={s.name}
                 subtitle={t(s.billingCycle === 'weekly' ? 'importReport.perWeekCharge' : 'importReport.perMonthCharge', {
                   value: money(s.amount, s.currencyCode),
@@ -244,7 +126,7 @@ export function ImportReportView({ batchId }: { batchId: string }) {
                 key={b.categoryId}
                 picked={pickedBudgets.has(b.categoryId)}
                 disabled={!!applied}
-                onToggle={() => setPickedBudgets((p) => toggle(p, b.categoryId))}
+                onToggle={() => toggleBudget(b.categoryId)}
                 title={categoryLabel(b.categoryId, b.name)}
                 subtitle={t('importReport.budgetPerMonth', { value: money(b.monthlyAmount) })}
                 styles={styles}
@@ -324,7 +206,58 @@ export function ImportReportView({ batchId }: { batchId: string }) {
   );
 }
 
-function PickRow({
+type ReportStyles = ReturnType<typeof createImportReportStyles>;
+
+/**
+ * "Where it went": one row per category with a share bar. Shared by the phone view and the desktop
+ * page so the rows are defined once. `desktop` (default false) only makes the bar track a little
+ * taller; everything else is identical.
+ */
+export function ImportReportCategoryRows({
+  categories,
+  maxCategory,
+  money,
+  categoryLabel,
+  styles,
+  theme,
+  desktop = false,
+}: {
+  categories: ImportReportResponse['categories'];
+  maxCategory: number;
+  money: (n: number, cur?: string) => string;
+  categoryLabel: (id: string | null, fallback: string) => string;
+  styles: ReportStyles;
+  theme: Theme;
+  desktop?: boolean;
+}) {
+  return (
+    <>
+      {categories.map((c, i) => (
+        <View key={`${c.categoryId ?? 'none'}-${i}`} style={styles.catRow}>
+          <View style={styles.catHead}>
+            <Text style={styles.catName} numberOfLines={1}>{categoryLabel(c.categoryId, c.name)}</Text>
+            <Text style={styles.catValue}>{`${money(c.amount)} · ${c.percentage}%`}</Text>
+          </View>
+          <View style={[styles.barTrack, desktop && styles.barTrackDesktop]}>
+            <View
+              style={[
+                styles.barFill,
+                desktop && styles.barTrackDesktop,
+                { width: `${(c.amount / maxCategory) * 100}%`, backgroundColor: c.color ?? theme.colors.primary },
+              ]}
+            />
+          </View>
+        </View>
+      ))}
+    </>
+  );
+}
+
+/**
+ * One checkbox row (a suggested subscription or budget). `desktop` (default false, so the phone
+ * keeps its `TouchableOpacity` row) draws a hover wash and a keyboard-focus ring.
+ */
+export function PickRow({
   picked,
   disabled,
   onToggle,
@@ -332,24 +265,21 @@ function PickRow({
   subtitle,
   styles,
   theme,
+  desktop = false,
 }: {
   picked: boolean;
   disabled: boolean;
   onToggle: () => void;
   title: string;
   subtitle: string;
-  styles: ReturnType<typeof createStyles>;
+  styles: ReportStyles;
   theme: Theme;
+  desktop?: boolean;
 }) {
-  return (
-    <TouchableOpacity
-      style={styles.pickRow}
-      onPress={onToggle}
-      disabled={disabled}
-      activeOpacity={0.7}
-      accessibilityRole="checkbox"
-      accessibilityState={{ checked: picked, disabled }}
-    >
+  const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const content = (
+    <>
       <Ionicons
         name={picked ? 'checkbox' : 'square-outline'}
         size={22}
@@ -359,12 +289,47 @@ function PickRow({
         <Text style={styles.listName} numberOfLines={1}>{title}</Text>
         <Text style={styles.cardHint}>{subtitle}</Text>
       </View>
+    </>
+  );
+
+  if (desktop) {
+    return (
+      <Pressable
+        style={[
+          styles.pickRow,
+          styles.pickRowDesktop,
+          hovered && !disabled && { backgroundColor: theme.colors.surfaceSecondary },
+          focused && { borderColor: theme.colors.primary },
+        ]}
+        onPress={onToggle}
+        onHoverIn={() => setHovered(true)}
+        onHoverOut={() => setHovered(false)}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        disabled={disabled}
+        accessibilityRole="checkbox"
+        accessibilityState={{ checked: picked, disabled }}
+      >
+        {content}
+      </Pressable>
+    );
+  }
+
+  return (
+    <TouchableOpacity
+      style={styles.pickRow}
+      onPress={onToggle}
+      disabled={disabled}
+      activeOpacity={0.7}
+      accessibilityRole="checkbox"
+      accessibilityState={{ checked: picked, disabled }}
+    >
+      {content}
     </TouchableOpacity>
   );
 }
 
-const createStyles = (theme: Theme) => ({
-  container: { flex: 1, backgroundColor: theme.colors.background },
+export const createImportReportStyles = (theme: Theme) => ({  container: { flex: 1, backgroundColor: theme.colors.background },
   content: { padding: 16, paddingBottom: 24, gap: 12 },
   centered: {
     flex: 1,
@@ -396,7 +361,11 @@ const createStyles = (theme: Theme) => ({
   catValue: { ...theme.textStyles.bodySm, color: theme.colors.textSecondary },
   barTrack: { height: 6, borderRadius: 3, backgroundColor: theme.colors.surfaceSecondary, overflow: 'hidden' as const },
   barFill: { height: 6, borderRadius: 3 },
+  // Desktop only (`desktop` on the shared rows): a slightly taller track.
+  barTrackDesktop: { height: 8, borderRadius: 4 },
   pickRow: { flexDirection: 'row' as const, alignItems: 'center' as const, gap: 12, paddingVertical: 4 },
+  // Desktop only: room for the hover wash and the focus ring, which the phone row has no use for.
+  pickRowDesktop: { paddingHorizontal: 8, borderRadius: theme.borderRadius.md, borderWidth: 1, borderColor: 'transparent' },
   pickText: { flex: 1 },
   listRow: { flexDirection: 'row' as const, alignItems: 'center' as const, gap: 10 },
   rank: { width: 18, ...theme.textStyles.bodyMedium, color: theme.colors.textTertiary },

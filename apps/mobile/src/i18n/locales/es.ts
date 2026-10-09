@@ -1394,6 +1394,7 @@ export default {
     applied: 'Listo. Presupuestos creados: {{budgets}}. Suscripciones en seguimiento: {{subscriptions}}.',
     apply: 'Configurar lo seleccionado ({{count}})',
     skip: 'Ahora no',
+    loadFailed: 'La importación terminó, pero no pudimos crear el informe.',
   },
   admin: {
     title: 'Panel de administración',
@@ -1875,6 +1876,9 @@ export default {
     linkInvalid: 'Este enlace ha caducado o ya se usó. Abre el enlace del grupo en el navegador y pulsa de nuevo «Abrir en la app».',
     linkAlreadyMember: 'Ya estás en este grupo, así que no hay nada que vincular.',
     linkFailed: 'No se pudo abrir el grupo. Revisa tu conexión e inténtalo de nuevo.',
+    colBalance: 'Tu saldo',
+    colMyShare: 'Tu parte',
+    balancesTitle: 'Saldos',
   },
   trip: {
     splitBetween: 'Dividir entre',
@@ -3093,6 +3097,7 @@ export default {
     openRow: 'Abrir fila',
     toggleRow: 'Seleccionar / deseleccionar fila',
     closeDialog: 'Cerrar el diálogo',
+    newGroup: 'Nuevo grupo',
   },
   emailReceipts: {
     title: 'Recibos por e-mail',
@@ -3154,5 +3159,11 @@ export default {
     errorE2ee: 'Los recibos por e-mail no están disponibles para cuentas con cifrado de extremo a extremo.',
     errorGeneric: 'Algo salió mal. Inténtalo de nuevo.',
     bannerText: 'Recibos por e-mail por confirmar: {{count}}',
+    bannerAction: 'Revisar',
+    review: 'Revisar',
+    colMerchant: 'Comercio',
+    colSubject: 'Asunto',
+    colFrom: 'De',
+    colTotal: 'Total',
   },
 } as const;

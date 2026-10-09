@@ -18,7 +18,17 @@ import { GroupButton } from './GroupButton';
  * under their own name; taking over a name a friend already claimed in a browser is only possible
  * with the link code from "Open in the app" on the guest page.
  */
-export function GroupJoinView({ initialLink }: { initialLink?: string }) {
+export function GroupJoinView({
+  initialLink,
+  onJoined,
+  onAlreadyMember,
+}: {
+  initialLink?: string;
+  /** Desktop dialog hosting (ABA-646): replaces `router.replace('/groups/<id>')`. Default is the router call. */
+  onJoined?: (groupId: string) => void;
+  /** Desktop dialog hosting: replaces `router.replace('/groups')` after the "already a member" notice. */
+  onAlreadyMember?: () => void;
+}) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -36,12 +46,14 @@ export function GroupJoinView({ initialLink }: { initialLink?: string }) {
     setSubmitting(true);
     try {
       const detail = await join({ guestToken: token, displayName: name.trim() });
-      router.replace(`/groups/${detail.id}` as never);
+      if (onJoined) onJoined(detail.id);
+      else router.replace(`/groups/${detail.id}` as never);
     } catch (e) {
       const kind = joinErrorKind(e);
       if (kind === 'alreadyMember') {
         showAlert(t('groups.joinTitle'), t('groups.alreadyMember'));
-        router.replace('/groups' as never);
+        if (onAlreadyMember) onAlreadyMember();
+        else router.replace('/groups' as never);
       } else if (kind === 'other') {
         showAlert(t('errors.error'), e instanceof Error ? e.message : t('errors.unknown'));
       } else {

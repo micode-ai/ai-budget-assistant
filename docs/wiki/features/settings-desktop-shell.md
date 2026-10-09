@@ -71,6 +71,11 @@ into the pane block in place the day it is extracted.
 `paddingBottom` puts the last row under the system nav bar — on a three-button device it is not just
 clipped but untappable. `SheetDialog` owns that inset for the sheets it wraps.
 
+**Groups is a permanent link (ABA-646).** `SETTINGS_ENTRIES` has a `link` entry `groups`
+(`groups.title`, `/groups`) after `subscriptions`, so a user who hid the `groups` quick action still has
+a door. Groups are not account-scoped, so the entry carries no gating. Only `SettingsNav` consumes the
+registry, so the phone hub is untouched.
+
 ## Known gaps
 
 - A pane's child routes are **uncapped**: they stretch to the full viewport while the pane they came

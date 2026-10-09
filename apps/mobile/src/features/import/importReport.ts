@@ -41,3 +41,20 @@ export function rollForwardRenewal(nextRenewalDate: string, cycle: 'monthly' | '
 export function startOfMonth(today: Date): Date {
   return new Date(today.getFullYear(), today.getMonth(), 1);
 }
+
+export type ImportReportStatus = 'loading' | 'failed' | 'insufficient' | 'ready';
+
+/**
+ * What the report screen should show. A failed load and a successful "not enough data" answer are
+ * different states and must never collapse into one: the import itself succeeded in both, but only
+ * the first one can be retried and only the second one is a finished answer. `hasEnoughData` is read
+ * only off a report the server actually returned.
+ */
+export function resolveImportReportStatus(
+  loadState: 'loading' | 'failed' | 'loaded',
+  report: { hasEnoughData: boolean } | null,
+): ImportReportStatus {
+  if (loadState === 'loading') return 'loading';
+  if (loadState === 'failed' || !report) return 'failed';
+  return report.hasEnoughData ? 'ready' : 'insufficient';
+}

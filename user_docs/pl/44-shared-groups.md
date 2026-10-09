@@ -12,6 +12,8 @@ Pieniądze z grupy są oddzielone od Twoich własnych finansów: nic z grupy nie
 
 Dotknij **Grupy** w szybkich akcjach na ekranie głównym. Zobaczysz swoje grupy i swoje saldo w każdej z nich, a także **Nowa grupa** i **Dołącz z linku**.
 
+Na komputerze (okno przeglądarki szersze niż około 1000 pikseli) **Grupy** znajdziesz też w szybkich linkach po prawej stronie ekranu głównego oraz w **Ustawieniach**. Grupy są wyświetlane w tabeli, a tworzenie grupy, dodawanie wydatku, rozliczanie i lista członków otwierają się w oknie nad stroną.
+
 ## Tworzenie grupy
 
 1. Dotknij **Nowa grupa**.

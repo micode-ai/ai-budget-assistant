@@ -1398,6 +1398,7 @@ export default {
     applied: 'Done. Budgets created: {{budgets}}. Subscriptions tracked: {{subscriptions}}.',
     apply: 'Set up selected ({{count}})',
     skip: 'Not now',
+    loadFailed: 'Your import finished, but we couldn\'t build the report.',
   },
   admin: {
     title: 'Admin Panel',
@@ -1882,6 +1883,9 @@ export default {
     linkInvalid: 'This link has expired or was already used. Open the group link in your browser and tap "Open in the app" again.',
     linkAlreadyMember: 'You\'re already in this group, so there is nothing to link.',
     linkFailed: 'Couldn\'t open the group. Check your connection and try again.',
+    colBalance: 'Your balance',
+    colMyShare: 'Your share',
+    balancesTitle: 'Balances',
   },
   trip: {
     splitBetween: 'Split between',
@@ -3099,6 +3103,7 @@ export default {
     openRow: 'Open row',
     toggleRow: 'Select / deselect row',
     closeDialog: 'Close dialog',
+    newGroup: 'New group',
   },
   emailReceipts: {
     title: 'E-mail receipts',
@@ -3160,5 +3165,11 @@ export default {
     errorE2ee: 'E-mail receipts are not available for accounts with end-to-end encryption.',
     errorGeneric: 'Something went wrong. Please try again.',
     bannerText: 'E-mail receipts to confirm: {{count}}',
+    bannerAction: 'Review',
+    review: 'Review',
+    colMerchant: 'Merchant',
+    colSubject: 'Subject',
+    colFrom: 'From',
+    colTotal: 'Total',
   },
 } as const;

@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Modal } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Text, TextInput, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { SheetDialog } from '@/components/SheetDialog';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { MAX_MEMBER_NAME_LENGTH } from '@/features/groups/groupSplit';
 import type { GroupMember } from '@budget/shared-types';
 import { GroupButton } from './GroupButton';
+
+/** Only one instance is ever mounted (`GroupMembersView` renders a single sheet). */
+const TITLE_ID = 'group-member-sheet-title';
 
 interface GroupMemberSheetProps {
   member: GroupMember | null;
@@ -18,9 +21,9 @@ interface GroupMemberSheetProps {
 }
 
 /**
- * Bottom sheet for one member: rename and remove. Anchored to the bottom edge, so its padding adds
- * the system navigation bar inset or the last button is untappable on a three-button device
- * (ABA-483).
+ * One member: rename and remove. A bottom sheet on a phone, a centred dialog on desktop web (via
+ * `SheetDialog`, which also owns the system navigation bar inset, ABA-483, so the last button
+ * stays tappable on a three-button device).
  */
 export function GroupMemberSheet({
   member,
@@ -33,7 +36,6 @@ export function GroupMemberSheet({
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
-  const insets = useSafeAreaInsets();
   const [name, setName] = useState('');
   const [saving, setSaving] = useState(false);
 
@@ -57,58 +59,58 @@ export function GroupMemberSheet({
   };
 
   return (
-    <Modal visible transparent animationType="slide" onRequestClose={onClose}>
-      <TouchableOpacity style={styles.backdrop} activeOpacity={1} onPress={onClose}>
-        <TouchableOpacity
-          activeOpacity={1}
-          style={[styles.sheet, { paddingBottom: theme.spacing[6] + insets.bottom }]}
-        >
-          <View style={styles.handle} />
-          <Text style={styles.title}>{member.displayName}</Text>
-          {canRename && (
-            <>
-              <Text style={styles.label}>{t('groups.renameLabel')}</Text>
-              <TextInput
-                style={styles.input}
-                value={name}
-                onChangeText={setName}
-                maxLength={MAX_MEMBER_NAME_LENGTH}
-                placeholderTextColor={theme.colors.textTertiary}
-              />
-              <GroupButton
-                label={t('common.save')}
-                onPress={save}
-                loading={saving}
-                disabled={!changed}
-                style={styles.gap}
-              />
-            </>
-          )}
-          {removeLabel && (
-            <GroupButton
-              label={removeLabel}
-              onPress={() => onRemove(member)}
-              variant="danger"
-              style={styles.gap}
-            />
-          )}
-          <TouchableOpacity style={styles.close} onPress={onClose}>
-            <Text style={styles.closeText}>{t('common.cancel')}</Text>
-          </TouchableOpacity>
-        </TouchableOpacity>
+    <SheetDialog
+      visible
+      onClose={onClose}
+      titleId={TITLE_ID}
+      // Phone pixels must not move (ABA-483 / ABA-646): these three reproduce the sheet this
+      // component drew before it moved onto SheetDialog. The default bottom padding (24 plus the
+      // nav-bar inset) is exactly what it computed by hand, so `padBottom` is not passed.
+      sheetStyle={styles.sheetBox}
+      handleStyle={styles.handle}
+      scrimColor="rgba(0,0,0,0.45)"
+    >
+      <Text nativeID={TITLE_ID} style={styles.title}>
+        {member.displayName}
+      </Text>
+      {canRename && (
+        <>
+          <Text style={styles.label}>{t('groups.renameLabel')}</Text>
+          <TextInput
+            style={styles.input}
+            value={name}
+            onChangeText={setName}
+            maxLength={MAX_MEMBER_NAME_LENGTH}
+            placeholderTextColor={theme.colors.textTertiary}
+          />
+          <GroupButton
+            label={t('common.save')}
+            onPress={save}
+            loading={saving}
+            disabled={!changed}
+            style={styles.gap}
+          />
+        </>
+      )}
+      {removeLabel && (
+        <GroupButton
+          label={removeLabel}
+          onPress={() => onRemove(member)}
+          variant="danger"
+          style={styles.gap}
+        />
+      )}
+      <TouchableOpacity style={styles.close} onPress={onClose}>
+        <Text style={styles.closeText}>{t('common.cancel')}</Text>
       </TouchableOpacity>
-    </Modal>
+    </SheetDialog>
   );
 }
 
 const createStyles = (theme: Theme) => ({
-  backdrop: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.45)',
-    justifyContent: 'flex-end' as const,
-  },
-  sheet: {
-    backgroundColor: theme.colors.surface,
+  // `SheetDialog` owns the scrim, the bottom anchoring and the base sheet box; these are only the
+  // deviations that keep this sheet's phone rendering as it was.
+  sheetBox: {
     borderTopLeftRadius: theme.borderRadius.xl,
     borderTopRightRadius: theme.borderRadius.xl,
     paddingHorizontal: theme.spacing[5],
@@ -116,11 +118,6 @@ const createStyles = (theme: Theme) => ({
   },
   handle: {
     width: 40,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: theme.colors.border,
-    alignSelf: 'center' as const,
-    marginBottom: theme.spacing[4],
   },
   title: {
     ...theme.textStyles.h3,

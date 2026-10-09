@@ -77,6 +77,13 @@ export const CHAT_COLUMN_MAX_WIDTH = 760;
 // feeds.
 export const CHAT_RAIL_WIDTH = 280;
 
+// ABA-646: below this the groups table drops its Currency column and the group
+// activity table drops "Your share", so the 1024-1279 band keeps a readable main
+// column beside the 320px rail. The ONE new threshold that wave added: the rail
+// collapse (1440) reuses FACET_RAIL_MIN_WIDTH, and everything else is a
+// DESKTOP_MIN_WIDTH decision. Judge by eye; nothing renders in CI.
+export const WIDE_TABLE_MIN_WIDTH = 1280;
+
 /** Pure gate — true only on web at desktop width. Native never qualifies. */
 export function isDesktopWeb(width: number): boolean {
   return Platform.OS === 'web' && width >= DESKTOP_MIN_WIDTH;

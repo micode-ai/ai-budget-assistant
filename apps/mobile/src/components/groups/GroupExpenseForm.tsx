@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Platform } from 'react-native';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -13,15 +13,29 @@ import { MAX_DESCRIPTION_LENGTH, type SplitIssue } from '@/features/groups/group
 import type { GroupDetail, GroupExpense } from '@budget/shared-types';
 import { GroupButton } from './GroupButton';
 import { GroupSplitEditor } from './GroupSplitEditor';
+import type { GroupFormHandle, GroupFormState } from './groupFormHandle';
 
 interface GroupExpenseFormProps {
   detail: GroupDetail;
   /** The expense being edited; null for a new one. */
   existing: GroupExpense | null;
+  /**
+   * Desktop dialog hosting (ABA-646). All three are optional and the phone passes none, so its
+   * rendering and its `router.back()` are unchanged: `hideActions` drops the in-scroll Save and
+   * Delete buttons (the dialog's footer drives the form through the ref handle instead),
+   * `onStateChange` reports what that footer's buttons render from (must be a stable callback),
+   * and `onDone` replaces `router.back()`, which a dialog is not a route to go back from.
+   */
+  hideActions?: boolean;
+  onStateChange?: (state: GroupFormState) => void;
+  onDone?: () => void;
 }
 
 /** Add or edit one group expense. */
-export function GroupExpenseForm({ detail, existing }: GroupExpenseFormProps) {
+export const GroupExpenseForm = forwardRef<GroupFormHandle, GroupExpenseFormProps>(function GroupExpenseForm(
+  { detail, existing, hideActions = false, onStateChange, onDone },
+  ref,
+) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -49,8 +63,10 @@ export function GroupExpenseForm({ detail, existing }: GroupExpenseFormProps) {
     ]);
   };
 
+  const finish = () => (onDone ? onDone() : router.back());
+
   const onSave = async () => {
-    if (await form.submit()) router.back();
+    if (await form.submit()) finish();
   };
 
   const onDelete = () => {
@@ -60,11 +76,20 @@ export function GroupExpenseForm({ detail, existing }: GroupExpenseFormProps) {
         text: t('common.delete'),
         style: 'destructive',
         onPress: async () => {
-          if (await form.remove()) router.back();
+          if (await form.remove()) finish();
         },
       },
     ]);
   };
+
+  // Re-created every render so the handle never holds a stale `form`.
+  useImperativeHandle(ref, () => ({ submit: onSave, remove: form.isEditing ? onDelete : undefined }));
+
+  const { isEditing, submitting } = form;
+  const canSubmit = form.validity.ok;
+  useEffect(() => {
+    onStateChange?.({ canSubmit, submitting, isEditing });
+  }, [onStateChange, canSubmit, submitting, isEditing]);
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
@@ -142,14 +167,16 @@ export function GroupExpenseForm({ detail, existing }: GroupExpenseFormProps) {
           onValue={form.setMemberValue}
         />
 
-        <GroupButton
-          label={t('groups.saveExpense')}
-          onPress={onSave}
-          loading={form.submitting}
-          disabled={!form.validity.ok}
-          style={styles.save}
-        />
-        {form.isEditing && (
+        {!hideActions && (
+          <GroupButton
+            label={t('groups.saveExpense')}
+            onPress={onSave}
+            loading={form.submitting}
+            disabled={!form.validity.ok}
+            style={styles.save}
+          />
+        )}
+        {!hideActions && form.isEditing && (
           <GroupButton
             label={t('groups.deleteExpense')}
             onPress={onDelete}
@@ -161,7 +188,7 @@ export function GroupExpenseForm({ detail, existing }: GroupExpenseFormProps) {
       </KeyboardAwareScreen>
     </SafeAreaView>
   );
-}
+});
 
 const createStyles = (theme: Theme) => ({
   container: {

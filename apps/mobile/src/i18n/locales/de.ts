@@ -1394,6 +1394,7 @@ export default {
     applied: 'Fertig. Budgets erstellt: {{budgets}}. Abos verfolgt: {{subscriptions}}.',
     apply: 'Auswahl einrichten ({{count}})',
     skip: 'Nicht jetzt',
+    loadFailed: 'Dein Import ist abgeschlossen, aber der Bericht konnte nicht erstellt werden.',
   },
   admin: {
     title: 'Admin-Panel',
@@ -1875,6 +1876,9 @@ export default {
     linkInvalid: 'Dieser Link ist abgelaufen oder wurde schon benutzt. Öffne den Gruppenlink im Browser und tippe erneut auf „In der App öffnen“.',
     linkAlreadyMember: 'Du bist schon in dieser Gruppe, es gibt also nichts zu verknüpfen.',
     linkFailed: 'Die Gruppe konnte nicht geöffnet werden. Prüfe deine Verbindung und versuche es erneut.',
+    colBalance: 'Dein Saldo',
+    colMyShare: 'Dein Anteil',
+    balancesTitle: 'Salden',
   },
   trip: {
     splitBetween: 'Aufteilen zwischen',
@@ -3092,6 +3096,7 @@ export default {
     openRow: 'Zeile öffnen',
     toggleRow: 'Zeile aus-/abwählen',
     closeDialog: 'Dialog schließen',
+    newGroup: 'Neue Gruppe',
   },
   emailReceipts: {
     title: 'E-Mail-Belege',
@@ -3153,5 +3158,11 @@ export default {
     errorE2ee: 'E-Mail-Belege sind für Konten mit Ende-zu-Ende-Verschlüsselung nicht verfügbar.',
     errorGeneric: 'Etwas ist schiefgelaufen. Bitte versuche es erneut.',
     bannerText: 'E-Mail-Belege zu bestätigen: {{count}}',
+    bannerAction: 'Prüfen',
+    review: 'Prüfen',
+    colMerchant: 'Händler',
+    colSubject: 'Betreff',
+    colFrom: 'Von',
+    colTotal: 'Summe',
   },
 } as const;

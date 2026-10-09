@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -13,9 +13,25 @@ import { showAlert } from '@/utils/alert';
 import { buildCreateGroupDto, MAX_INITIAL_MEMBER_NAMES } from '@/features/groups/groupCreate';
 import { MAX_GROUP_NAME_LENGTH, MAX_MEMBER_NAME_LENGTH } from '@/features/groups/groupSplit';
 import { GroupButton } from './GroupButton';
+import type { GroupFormHandle, GroupFormState } from './groupFormHandle';
+
+interface GroupCreateFormProps {
+  /**
+   * Desktop dialog hosting (ABA-646); the phone passes none of these. `hideActions` drops the
+   * in-scroll button (the dialog footer submits through the ref handle), `onStateChange` reports
+   * what that footer renders from (a stable callback), and `onCreated` replaces
+   * `router.replace('/groups/<id>')`, which would leave a dialog floating over the new route.
+   */
+  hideActions?: boolean;
+  onStateChange?: (state: GroupFormState) => void;
+  onCreated?: (groupId: string) => void;
+}
 
 /** Create a group: name, emoji, currency, my display name, optional placeholder members. */
-export function GroupCreateForm() {
+export const GroupCreateForm = forwardRef<GroupFormHandle, GroupCreateFormProps>(function GroupCreateForm(
+  { hideActions = false, onStateChange, onCreated },
+  ref,
+) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -43,13 +59,21 @@ export function GroupCreateForm() {
     setSubmitting(true);
     try {
       const group = await create(dto);
-      router.replace(`/groups/${group.id}` as never);
+      if (onCreated) onCreated(group.id);
+      else router.replace(`/groups/${group.id}` as never);
     } catch (e) {
       showAlert(t('errors.error'), e instanceof Error ? e.message : t('errors.unknown'));
     } finally {
       setSubmitting(false);
     }
   };
+
+  useImperativeHandle(ref, () => ({ submit: handleCreate }));
+
+  const canSubmit = name.trim().length > 0;
+  useEffect(() => {
+    onStateChange?.({ canSubmit, submitting, isEditing: false });
+  }, [onStateChange, canSubmit, submitting]);
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
@@ -135,17 +159,19 @@ export function GroupCreateForm() {
           <Text style={styles.disclosureText}>{t('groups.disclosure')}</Text>
         </View>
 
-        <GroupButton
-          label={t('groups.createGroup')}
-          onPress={handleCreate}
-          loading={submitting}
-          disabled={name.trim().length === 0}
-          style={styles.submit}
-        />
+        {!hideActions && (
+          <GroupButton
+            label={t('groups.createGroup')}
+            onPress={handleCreate}
+            loading={submitting}
+            disabled={name.trim().length === 0}
+            style={styles.submit}
+          />
+        )}
       </KeyboardAwareScreen>
     </SafeAreaView>
   );
-}
+});
 
 const createStyles = (theme: Theme) => ({
   container: {

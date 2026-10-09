@@ -18,6 +18,11 @@ interface GroupSettleViewProps {
   groupId: string;
   from?: string;
   to?: string;
+  /**
+   * Desktop dialog hosting (ABA-646): replaces every `router.back()` below (a dialog is not a
+   * route to go back from). The phone passes none, so its behaviour is unchanged.
+   */
+  onDone?: () => void;
 }
 
 /**
@@ -26,7 +31,7 @@ interface GroupSettleViewProps {
  * ledger-version check on the server turns a double tap, or two members settling the same
  * transfer, into "Balances changed, please check again".
  */
-export function GroupSettleView({ groupId, from, to }: GroupSettleViewProps) {
+export function GroupSettleView({ groupId, from, to, onDone }: GroupSettleViewProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -36,6 +41,7 @@ export function GroupSettleView({ groupId, from, to }: GroupSettleViewProps) {
   const [submitting, setSubmitting] = useState(false);
   // Once recorded, the transfer drops out of the live detail; keep the screen quiet until it closes.
   const [done, setDone] = useState(false);
+  const finish = () => (onDone ? onDone() : router.back());
 
   if (!detail || done) {
     return (
@@ -57,7 +63,7 @@ export function GroupSettleView({ groupId, from, to }: GroupSettleViewProps) {
       <SafeAreaView style={styles.container} edges={[]}>
         <View style={styles.centered}>
           <Text style={styles.gone}>{t('groups.transferGone')}</Text>
-          <GroupButton label={t('common.back')} onPress={() => router.back()} variant="secondary" />
+          <GroupButton label={t('common.back')} onPress={finish} variant="secondary" />
         </View>
       </SafeAreaView>
     );
@@ -85,11 +91,11 @@ export function GroupSettleView({ groupId, from, to }: GroupSettleViewProps) {
       setDone(true);
       if (!result.ok) {
         showAlert(t('groups.ledgerChanged'));
-        router.back();
+        finish();
         return;
       }
       showAlert(t('groups.settleDone'));
-      router.back();
+      finish();
     } catch (e) {
       showAlert(t('errors.error'), e instanceof Error ? e.message : t('errors.unknown'));
     } finally {

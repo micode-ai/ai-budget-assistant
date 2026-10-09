@@ -1,6 +1,6 @@
 import React from 'react';
-import { EmailReceiptsInbox } from '@/components/inboundMail/EmailReceiptsInbox';
+import { EmailReceiptsInboxScreen } from '@/components/inboundMail/EmailReceiptsInboxScreen';
 
-export default function EmailReceiptsInboxScreen() {
-  return <EmailReceiptsInbox />;
+export default function EmailReceiptsInboxRoute() {
+  return <EmailReceiptsInboxScreen />;
 }

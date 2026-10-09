@@ -14,7 +14,7 @@ function messageOf(e: unknown, fallback: string): string {
  * rotate the link, turn guest access on/off, archive (with a second "archive anyway" step when
  * balances are open) and delete.
  */
-export function useGroupOwnerActions(detail: GroupDetail) {
+export function useGroupOwnerActions(detail: GroupDetail, onGroupGone?: () => void) {
   const { t } = useTranslation();
   const rotateLink = useGroupStore((s) => s.rotateLink);
   const updateGroup = useGroupStore((s) => s.updateGroup);
@@ -84,7 +84,9 @@ export function useGroupOwnerActions(detail: GroupDetail) {
         onPress: () =>
           void run(async () => {
             await removeGroup(detail.id);
-            router.dismissTo('/groups' as never);
+            // A hosted dialog (ABA-646) resolves in place; the route default is unchanged.
+            if (onGroupGone) onGroupGone();
+            else router.dismissTo('/groups' as never);
           }),
       },
     ]);

@@ -32,7 +32,7 @@ const allOn = (overrides: Partial<Record<QuickActionKey, boolean>> = {}) => ({
 const ids = (links: { id: string }[]) => links.map((l) => l.id);
 
 describe('resolveRailQuickLinks', () => {
-  it('returns the six default links in the stored order, with shopping split in two', () => {
+  it('returns the seven default links in the stored order, with shopping split in two', () => {
     const links = resolveRailQuickLinks({
       order: [...QUICK_ACTION_KEYS],
       visibility: allOn(),
@@ -49,6 +49,7 @@ describe('resolveRailQuickLinks', () => {
       'subscriptions',
       'shoppingList',
       'purchaseRequests',
+      'groups',
     ]);
   });
 
@@ -99,7 +100,7 @@ describe('resolveRailQuickLinks', () => {
       canEdit: true,
     });
 
-    expect(ids(links)).toEqual(['exchange', 'transfers', 'shoppingList', 'purchaseRequests']);
+    expect(ids(links)).toEqual(['exchange', 'transfers', 'shoppingList', 'purchaseRequests', 'groups']);
   });
 
   it('drops BOTH shopping rows when the single shopping_hub key is off', () => {
@@ -110,7 +111,7 @@ describe('resolveRailQuickLinks', () => {
       canEdit: true,
     });
 
-    expect(ids(links)).toEqual(['exchange', 'converter', 'transfers', 'subscriptions']);
+    expect(ids(links)).toEqual(['exchange', 'converter', 'transfers', 'subscriptions', 'groups']);
   });
 
   it('hides purchase requests on a personal account but keeps the shopping list', () => {
@@ -153,7 +154,31 @@ describe('resolveRailQuickLinks', () => {
     // The rest are reads, or writes the API grants a viewer on purpose
     // (shopping-list items are collaborative, and any member may vote on a
     // purchase request). Hiding them would deny what the server allows.
-    expect(ids(links)).toEqual(['converter', 'subscriptions', 'shoppingList', 'purchaseRequests']);
+    expect(ids(links)).toEqual(['converter', 'subscriptions', 'shoppingList', 'purchaseRequests', 'groups']);
+  });
+
+  // Catches: gating the groups row like the write rows. Groups are not
+  // account-scoped, so neither a viewer nor a personal account is refused.
+  it('offers groups to a viewer and on a personal account', () => {
+    for (const [accountType, canEdit] of [['shared', false], ['personal', true], ['personal', false]] as const) {
+      const links = resolveRailQuickLinks({
+        order: [...QUICK_ACTION_KEYS],
+        visibility: allOn(),
+        accountType,
+        canEdit,
+      });
+      expect(links.find((l) => l.id === 'groups')?.route).toBe('/groups');
+    }
+  });
+
+  it('drops groups when the user turned the groups action off', () => {
+    const links = resolveRailQuickLinks({
+      order: [...QUICK_ACTION_KEYS],
+      visibility: allOn({ groups: false }),
+      accountType: 'shared',
+      canEdit: true,
+    });
+    expect(ids(links)).not.toContain('groups');
   });
 
   it('renders a duplicated stored key once', () => {
