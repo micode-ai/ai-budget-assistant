@@ -169,7 +169,7 @@ Tippe auf eine beliebige Ausgabe, um die vollstandigen Details anzuzeigen:
 - **Notizen** (falls hinzugefugt)
 - **Hinzugefügt von** — in geteilten Konten; zeigt den Namen des Kontomitglieds, das diesen Eintrag erstellt hat
 - **Synchronisierungsstatus** — Ausstehend, Synchronisiert, Konflikt oder Fehler
-- **Quelle** — Manuelle Eingabe, Spracheingabe, Belegscan, Importiert oder Automatisch erfasst (Buchungen aus Bank-Push oder Bank-Import sind markiert, damit man sie erkennt)
+- **Quelle** — Manuelle Eingabe, Spracheingabe, Belegscan, Importiert oder Automatisch erfasst (Buchungen aus Bank-Push oder Bank-Import sind markiert, damit man sie erkennt) · **Gemeinsame Gruppe** markiert deinen Anteil an einer Gruppenausgabe (siehe Gemeinsame Gruppen), **Mit Gruppe verknüpft** eine Zahlung, die nicht in die Summen eingeht, weil stattdessen dein Anteil zählt
 - **Belegpositionen** — einzelne Artikel (für gescannte Belege oder später über **Positionen extrahieren** gezogen)
 - **Kassenbon-Bild** — Anzeigen, Teilen, in Galerie speichern, Ersetzen oder Löschen des Belegfotos. PDF-Belege zeigen eine Dokumentvorschau zum Öffnen. Wenn noch kein Beleg angehängt ist, tippe auf **Beleg anhängen** — wähle **Foto aufnehmen**, **Aus Galerie** oder **PDF auswählen**. Funktioniert für jede Ausgabe, auch für manuell hinzugefügte. Wurde der Beleg erst nach dem Anlegen der Ausgabe angehängt, tippe in der Belegkarte auf **Positionen extrahieren**, um den Beleg erneut von der KI lesen zu lassen und die Positionen in die Ausgabe zu ziehen (mit Bestätigung, falls bereits Positionen vorhanden sind; jeder Lauf verbraucht eine KI-Anfrage)
 

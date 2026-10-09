@@ -20,6 +20,7 @@ import {
 import { ExpenseItemsSection } from '@/components/expenses/detail/ExpenseItemsSection';
 import { ReceiptSection } from '@/components/expenses/detail/ReceiptSection';
 import { LocationSection } from '@/components/expenses/detail/LocationSection';
+import { canMoveExpenseRow, isMirrorOwnedRow } from '@/features/groups/groupBudgetMirror';
 
 export default function ExpenseDetailScreen() {
   const { t } = useTranslation();
@@ -174,6 +175,7 @@ export default function ExpenseDetailScreen() {
     ocr: t('expenseDetail.sourceOcr'),
     import: t('expenseDetail.sourceImport'),
     notification: t('expenseDetail.sourceNotification'),
+    group: t('groupBudget.sourceGroup'),
   };
 
   const sourceIcon: Record<string, string> = {
@@ -182,7 +184,13 @@ export default function ExpenseDetailScreen() {
     ocr: 'camera-outline',
     import: 'download-outline',
     notification: 'notifications-outline',
+    group: 'people-outline',
   };
+
+  // ABA-661: the server refuses to move a group share row or a payment linked to a group leg
+  // (400 EXPENSE_LINKED), and splitting a share among friends would split a split.
+  const movable = canMoveExpenseRow(expense);
+  const mirrorOwned = isMirrorOwnedRow(expense);
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
@@ -337,7 +345,7 @@ export default function ExpenseDetailScreen() {
               <TouchableOpacity style={styles.copyButton} onPress={handleCopy}>
                 <Ionicons name="copy-outline" size={22} color={theme.colors.secondary} />
               </TouchableOpacity>
-              {canEdit && moveTargets.length > 0 && (
+              {canEdit && movable && moveTargets.length > 0 && (
                 <TouchableOpacity
                   style={styles.moveButton}
                   onPress={() => setShowMovePicker(true)}
@@ -352,7 +360,7 @@ export default function ExpenseDetailScreen() {
                   is NOT excluded here on purpose: the server rejects it, and the
                   split screen says why with `receiptSplit.encrypted`, which teaches
                   more than a button that silently does not exist. */}
-              {canEdit && !expense.isSplitReceivable && (
+              {canEdit && !expense.isSplitReceivable && !mirrorOwned && (
                 <TouchableOpacity
                   style={styles.splitButton}
                   onPress={() =>

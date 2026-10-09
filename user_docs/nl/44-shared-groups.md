@@ -127,6 +127,20 @@ Eigenaarswissels staan in de lijst **Activiteit**, bijvoorbeeld "Anna heeft Bram
 
 Wordt een account door ons supportteam definitief verwijderd, dan staat die persoon in zijn groepen als **Former member** (voormalig lid). Zijn uitgaven en betalingen blijven, zodat de saldi blijven kloppen.
 
+## Je deel in je budget meetellen
+
+Normaal loopt een groep naast je budget: wat je met je kaart betaalt staat in je budget, en de groep houdt alleen bij wie wie wat schuldig is. Wil je in budgetten en analyses zien wat je echt verbruikt hebt, open dan **Leden** en gebruik **Mijn deel in mijn budget meetellen**.
+
+- Tik op **Aanzetten…**, kies de **Rekening** waar je deel in komt en eventueel een **Categorie**, en dan **Aanzetten**. Vanaf dan verschijnt je deel van elke groepsuitgave in die rekening als eigen transactie, gemarkeerd als **Groepsdeel**. Het begint met de uitgaven van deze maand, dus afgesloten budgetten blijven onaangeroerd.
+- Alleen rekeningen waarvan je eigenaar bent en je eigen persoonlijke rekening worden aangeboden: in een gedeelde rekening zou je deel ieders cijfers veranderen. End-to-end versleutelde rekeningen worden ook niet aangeboden, omdat de server je deel er in platte tekst in zou moeten schrijven.
+- Een deel volgt de groep: past iemand de uitgave aan, dan wordt je deel bijgewerkt. Bedrag, valuta en datum kun je in je rekening niet wijzigen, maar categorie, notities en tags zijn van jou. Tik erop op **Uit groep …** om de groep te openen. Een verwijderd deel komt niet terug.
+- Kun je de rekening niet meer gebruiken (je bent alleen nog kijker, hij is gearchiveerd of versleuteld), dan is het meetellen **Gepauzeerd** en wordt er niets toegevoegd tot je een andere rekening kiest of het uitzet.
+- **Uitzetten** haalt de delen uit je rekening en je gekoppelde betalingen tellen weer als gewone uitgaven. In de groep verandert niets.
+
+**Wordt mogelijk dubbel geteld.** Heb je een groepsuitgave met je kaart betaald, of met een overschrijving verrekend, en staat die betaling ook in je rekening, dan zou ze dubbel geteld worden: als betaling en als je deel. Daarom koppelt de app zulke betalingen aan de groep: ze krijgen de markering **Gekoppeld aan groep** en vallen buiten je totalen, en in plaats daarvan telt je deel. Een betaling wordt alleen automatisch gekoppeld als precies één transactie past (zelfde bedrag en valuta, binnen 3 dagen); anders verschijnt ze als **Mogelijke overeenkomst**. Heeft een ander lid de uitgave toegevoegd die jij betaalde, dan wordt nooit automatisch gekoppeld — je krijgt een melding en de vraag „Is dit je kaartbetaling?”. De kaart **Wordt mogelijk dubbel geteld** op het groepsscherm (op een computer in de rechterkolom) toont wat nog niet gekoppeld is. Tik op **Bekijken** om een overeenkomst te **Koppelen**, **Niet deze** te zeggen, zelf te kiezen via **Kies een transactie** of een betaling te **Ontkoppelen**.
+
+**De afweging.** Zolang saldi openstaan, wijkt je portemonnee-saldo af van de bank met wat de groep jou of jij de groep schuldig bent: je deel telt al, het geld dat het verrekent nog niet. Na het verrekenen klopt het weer.
+
 ## Deelnemen aan een groep in de app
 
 Stuurt een vriend je een groepslink en heb je de app, tik dan op het scherm Groepen op **Deelnemen met link** en plak hem in **Groepslink**. De app toont de naam van de groep en de namen die nog niemand heeft gekozen. Tik op je eigen naam, of op **Ik sta niet in de lijst** en vul **Jouw naam in deze groep** in (eerst is dat de naam van je account), en tik op **Deelnemen aan groep**. Is je naam al eerder toegevoegd, kies dan die naam, dan neem je die plek met de bijbehorende geschiedenis over. Kiest iemand de naam vlak voor jou, dan ververst de lijst en kies je opnieuw. Zit je al in de groep, dan biedt de app **Groep openen** aan. Een gearchiveerde groep is alleen-lezen, dus daaraan kun je niet deelnemen. Heb je je naam al in de browser gekozen, gebruik dan **Openen in de app** op de gastpagina, zodat je je geschiedenis houdt.

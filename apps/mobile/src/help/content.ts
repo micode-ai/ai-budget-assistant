@@ -535,7 +535,7 @@ Tap any expense to view its full details:
 - **Notes** (if added)
 - **Added by** — shown in shared accounts; displays the name of the account member who created this entry
 - **Sync Status** — pending, synced, conflict, or error
-- **Source** — Manual Entry, Voice Input, Receipt Scan, Imported, or Auto-captured (bank push or bank import rows are marked so you can tell them apart)
+- **Source** — Manual Entry, Voice Input, Receipt Scan, Imported, or Auto-captured (bank push or bank import rows are marked so you can tell them apart) · **Shared group** marks your share of a group expense (see Shared groups), and **Linked to group** a payment that is left out of totals because your share is counted instead
 - **Receipt Items** — individual items (for scanned receipts, or extracted later via **Extract items**)
 - **Receipt Image** — view, share, save to gallery, replace, or delete the receipt photo. PDF receipts show a document preview with tap-to-open. If no receipt is attached yet, tap **Attach Receipt** to add one — choose **Take Photo**, **Choose from Gallery**, or **Choose PDF**. Works for any expense, including ones added manually. If the receipt was attached after the expense was created, tap **Extract items** in the receipt card to re-run AI reading and pull its line items into the expense (with confirmation if items already exist; each run uses one AI request)
 
@@ -5208,6 +5208,20 @@ Ownership changes appear in the **Activity** list, for example "Ann made Bo the 
 
 If an account is removed permanently by our support team, that person appears in their groups as **Former member**. Their expenses and payments stay, so the balances still add up.
 
+## Counting your share in your budget
+
+Normally a group lives next to your budget: what you pay with your card is in your budget, and the group only tracks who owes whom. If you'd rather see in your budgets and analytics what you actually consumed, open **Members** and use **Count my share in my budget**.
+
+- Tap **Turn on…**, pick the **Account** your share goes into and, if you like, a **Category**, then **Turn on**. From then on, your share of every group expense appears in that account as its own transaction, marked **Group share**. It starts with this month's expenses, so your closed budgets are not touched.
+- Only accounts you own, and your own personal account, are offered: in a shared account your share would change everyone's figures. End-to-end encrypted accounts are not offered either, because the server would have to write your share into them in plain text.
+- A share follows the group: if someone edits the expense, your share is updated. Its amount, currency and date can't be edited in your account, but the category, notes and tags are yours. Tap **From group …** on it to open the group. If you delete a share, it is not added back.
+- If the account stops being one you can use (you became a viewer, it was archived or encrypted), counting is **Paused** and nothing is added until you pick another account or turn it off.
+- **Turn off** removes the shares from your account and makes your linked payments count as ordinary spending again. Nothing in the group changes.
+
+**May be counted twice.** If you paid a group expense by card, or settled up by transfer, and that payment is also in your account, it would be counted twice: once as the payment and once as your share. So the app links such payments to the group: they get the **Linked to group** mark and are left out of your totals, and your share is counted instead. A payment is linked automatically only when exactly one transaction matches it (same amount and currency, within 3 days); otherwise it is offered as a **Possible match**. When another member added the expense you paid, it is never linked automatically — you'll get a notification and the question "Is this your card payment?". The **May be counted twice** card on the group screen (on a computer, in the right column) shows what is not linked yet. Tap **Review** to **Link** a match, say **Not this**, **Pick a transaction** yourself, or **Unlink** a payment.
+
+**The trade-off.** While balances are open, your wallet balance differs from the bank by what the group owes you or you owe it, because your share is counted and the money that settles it isn't yet. It matches again once you settle up.
+
 ## Joining a group in the app
 
 If a friend sends you a group link and you have the app, tap **Join with link** on the Groups screen and paste it into **Group link**. The app shows the group's name and the names nobody has taken yet. Tap your own name, or **I'm not on the list** and type **Your name in this group** (it starts as your account name), then tap **Join group**. If you were already added by name, pick that name so you take over that person's place and history. If someone takes the name a moment before you, the list refreshes and you pick again. If you're already in the group, the app offers **Open group** instead. An archived group is read-only, so it can't be joined. If you already picked your name in a browser, use **Open in the app** on the guest page instead, so you keep your history.
@@ -5755,7 +5769,7 @@ iOS, Android, Web
 - **Заметки** (если добавлены)
 - **Добавил(а)** — отображается в общих счетах; имя участника счёта, создавшего эту запись
 - **Статус синхронизации** — ожидает, синхронизировано, конфликт или ошибка
-- **Источник** — Ручной ввод, Голосовой ввод, Сканирование чека, Импортировано или Автозахват (записи из банковского пуша или импорта помечены, чтобы их было видно)
+- **Источник** — Ручной ввод, Голосовой ввод, Сканирование чека, Импортировано или Автозахват (записи из банковского пуша или импорта помечены, чтобы их было видно) · **Общая группа** — ваша доля расхода группы (см. «Общие группы»), а **Связано с группой** — платёж, который не входит в итоги, потому что вместо него учитывается ваша доля
 - **Позиции чека** — отдельные позиции (для отсканированных чеков или извлечённые позже через **Извлечь позиции**)
 - **Фото чека** — просмотр, пересылка, сохранение в галерею, замена или удаление фото чека. PDF-чеки показываются как документ с возможностью открытия. Если чек ещё не прикреплён, нажмите **Прикрепить чек** — выберите **Сфотографировать**, **Из галереи** или **Выбрать PDF**. Работает для любого расхода, в том числе добавленного вручную. Если чек был прикреплён после создания расхода, нажмите **Извлечь позиции** в карточке чека, чтобы повторно прочитать его ИИ и подтянуть позиции в расход (с подтверждением, если позиции уже есть; каждый запуск тратит один ИИ-запрос)
 
@@ -10394,6 +10408,20 @@ OCR иногда неверно читает цену, выдумывает ст
 
 Если аккаунт удалит насовсем наша служба поддержки, этот человек будет показан в своих группах как **Former member** (бывший участник). Его расходы и платежи останутся, чтобы балансы по-прежнему сходились.
 
+## Учёт вашей доли в бюджете
+
+Обычно группа живёт рядом с вашим бюджетом: то, что вы платите картой, есть в бюджете, а группа только следит, кто кому сколько должен. Если вы хотите видеть в бюджетах и аналитике то, что вы на самом деле потребили, откройте **Участники** и используйте **Учитывать мою долю в бюджете**.
+
+- Нажмите **Включить…**, выберите **Счёт**, куда пойдёт ваша доля, и при желании **Категорию**, затем **Включить**. С этого момента ваша доля каждого расхода группы появляется на этом счёте отдельной операцией с отметкой **Доля группы**. Учёт начинается с расходов текущего месяца, поэтому закрытые бюджеты не затрагиваются.
+- Доступны только счета, где вы владелец, и ваш собственный личный счёт: на общем счёте ваша доля изменила бы цифры всех. Счета со сквозным шифрованием тоже недоступны: серверу пришлось бы записать в них долю открытым текстом.
+- Доля следует за группой: если кто-то изменит расход, ваша доля обновится. Сумму, валюту и дату нельзя изменить на вашем счёте, но категория, заметки и теги — ваши. Нажмите на ней **Из группы …**, чтобы открыть группу. Удалённая доля не возвращается.
+- Если счёт перестанет вам подходить (вы стали наблюдателем, его архивировали или зашифровали), учёт **Приостановлен** и ничего не добавляется, пока вы не выберете другой счёт или не выключите функцию.
+- **Выключить** удаляет доли с вашего счёта, а связанные платежи снова считаются обычными расходами. В группе ничего не меняется.
+
+**Может быть учтено дважды.** Если вы оплатили расход группы картой или рассчитались переводом и этот платёж тоже есть на вашем счёте, он учёлся бы дважды: как платёж и как ваша доля. Поэтому приложение связывает такие платежи с группой: они получают отметку **Связано с группой** и не входят в итоги, а вместо них учитывается ваша доля. Платёж связывается автоматически, только если ему соответствует ровно одна операция (та же сумма и валюта, в пределах 3 дней); иначе он предлагается как **Возможное совпадение**. Если оплаченный вами расход добавил другой участник, он никогда не связывается автоматически — вы получите уведомление и вопрос «Это ваша оплата картой?». Карточка **Может быть учтено дважды** на экране группы (на компьютере — в правой колонке) показывает, что ещё не связано. Нажмите **Посмотреть**, чтобы **Связать** совпадение, ответить **Не то**, самому **Выбрать операцию** или **Отвязать** платёж.
+
+**Компромисс.** Пока балансы не закрыты, баланс кошелька отличается от банка на сумму, которую группа должна вам или вы ей: ваша доля уже учтена, а деньги, которые её закроют, ещё нет. После расчёта он снова совпадёт.
+
 ## Присоединение к группе в приложении
 
 Если друг прислал ссылку на группу, а у вас есть приложение, нажмите **Войти по ссылке** на экране «Группы» и вставьте её в поле **Ссылка на группу**. Приложение покажет название группы и имена, которые пока никто не занял. Нажмите своё имя либо **Меня нет в списке** и введите **Ваше имя в этой группе** (сначала это имя вашего аккаунта), затем нажмите **Присоединиться**. Если вас уже добавили по имени, выберите это имя, и вы займёте это место вместе с историей. Если кто-то займёт имя чуть раньше вас, список обновится, и вы выберете снова. Если вы уже в группе, приложение предложит **Открыть группу**. К группе в архиве, доступной только для чтения, присоединиться нельзя. Если вы уже выбрали своё имя в браузере, нажмите **Открыть в приложении** на гостевой странице, чтобы сохранить историю.
@@ -10952,7 +10980,7 @@ iOS, Android, Web
 - **Нотатки** (якщо додані)
 - **Додав(ла)** — відображається у спільних рахунках; ім'я учасника рахунку, який створив цей запис
 - **Статус синхронізації** — очікує, синхронізовано, конфлікт або помилка
-- **Джерело** — Ручне введення, Голосовий ввід, Сканування чеку, Імпортовано або Автозахоплення (записи з банківського пуша або імпорту позначені, щоб їх було видно)
+- **Джерело** — Ручне введення, Голосовий ввід, Сканування чеку, Імпортовано або Автозахоплення (записи з банківського пуша або імпорту позначені, щоб їх було видно) · **Спільна група** — ваша частка витрати групи (див. «Спільні групи»), а **Пов'язано з групою** — платіж, що не входить до підсумків, бо замість нього враховується ваша частка
 - **Позиції чеку** — окремі позиції (для сканованих чеків або витягнуті пізніше через **Витягти позиції**)
 - **Фото чеку** — перегляд, пересилання, збереження в галерею, заміна або видалення фото чека. PDF-чеки показуються як документ з можливістю відкриття. Якщо чек ще не додано, натисніть **Додати чек** — оберіть **Сфотографувати**, **З галереї** або **Обрати PDF**. Працює для будь-якої витрати, у тому числі доданої вручну. Якщо чек було прикріплено після створення витрати, натисніть **Витягти позиції** в картці чека, щоб повторно прочитати його ШІ та підтягнути позиції у витрату (з підтвердженням, якщо позиції вже є; кожен запуск витрачає один ШІ-запит)
 
@@ -15550,6 +15578,20 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 Якщо акаунт остаточно видалить наша служба підтримки, ця людина показуватиметься у своїх групах як **Former member** (колишній учасник). Її витрати й платежі залишаться, щоб баланси й далі сходилися.
 
+## Облік вашої частки в бюджеті
+
+Зазвичай група живе поруч із вашим бюджетом: те, що ви платите карткою, є в бюджеті, а група лише стежить, хто кому скільки винен. Якщо ви хочете бачити в бюджетах і аналітиці те, що ви насправді спожили, відкрийте **Учасники** і скористайтеся **Враховувати мою частку в бюджеті**.
+
+- Натисніть **Увімкнути…**, оберіть **Рахунок**, куди піде ваша частка, і за бажання **Категорію**, потім **Увімкнути**. Відтоді ваша частка кожної витрати групи з'являється на цьому рахунку окремою операцією з позначкою **Частка групи**. Облік починається з витрат поточного місяця, тож закриті бюджети не зачіпаються.
+- Доступні лише рахунки, де ви власник, і ваш власний особистий рахунок: на спільному рахунку ваша частка змінила б цифри всіх. Рахунки з наскрізним шифруванням теж недоступні: серверу довелося б записати в них частку відкритим текстом.
+- Частка йде за групою: якщо хтось змінить витрату, ваша частка оновиться. Суму, валюту й дату не можна змінити на вашому рахунку, але категорія, нотатки й теги — ваші. Натисніть на ній **З групи …**, щоб відкрити групу. Видалена частка не повертається.
+- Якщо рахунок перестане вам підходити (ви стали глядачем, його архівували або зашифрували), облік **Призупинено** і нічого не додається, доки ви не оберете інший рахунок або не вимкнете функцію.
+- **Вимкнути** видаляє частки з вашого рахунку, а пов'язані платежі знову вважаються звичайними витратами. У групі нічого не змінюється.
+
+**Може бути враховано двічі.** Якщо ви оплатили витрату групи карткою або розрахувалися переказом і цей платіж також є на вашому рахунку, він врахувався б двічі: як платіж і як ваша частка. Тому застосунок пов'язує такі платежі з групою: вони отримують позначку **Пов'язано з групою** і не входять до підсумків, а замість них враховується ваша частка. Платіж пов'язується автоматично, лише якщо йому відповідає рівно одна операція (та сама сума й валюта, у межах 3 днів); інакше він пропонується як **Можливий збіг**. Якщо оплачену вами витрату додав інший учасник, вона ніколи не пов'язується автоматично — ви отримаєте сповіщення і запитання «Це ваша оплата карткою?». Картка **Може бути враховано двічі** на екрані групи (на комп'ютері — у правій колонці) показує, що ще не пов'язано. Натисніть **Переглянути**, щоб **Пов'язати** збіг, відповісти **Не те**, самостійно **Обрати операцію** або **Від'єднати** платіж.
+
+**Компроміс.** Поки баланси відкриті, баланс гаманця відрізняється від банку на суму, яку група винна вам або ви їй: ваша частка вже врахована, а гроші, що її закриють, ще ні. Після розрахунку він знову збігається.
+
 ## Приєднання до групи в застосунку
 
 Якщо друг надіслав посилання на групу, а у вас є застосунок, натисніть **Приєднатися за посиланням** на екрані «Групи» і вставте його в поле **Посилання на групу**. Застосунок покаже назву групи та імена, які ще ніхто не зайняв. Натисніть своє ім'я або **Мене немає в списку** і введіть **Ваше ім'я в цій групі** (спочатку це ім'я вашого облікового запису), потім натисніть **Приєднатися**. Якщо вас уже додали за іменем, оберіть це ім'я, і ви посядете це місце разом з історією. Якщо хтось займе ім'я трохи раніше за вас, список оновиться, і ви оберете знову. Якщо ви вже в групі, застосунок запропонує **Відкрити групу**. До групи в архіві, що доступна лише для читання, приєднатися не можна. Якщо ви вже обрали своє ім'я в браузері, натисніть **Відкрити в застосунку** на гостьовій сторінці, щоб зберегти історію.
@@ -16097,7 +16139,7 @@ Dotknij dowolny wydatek, aby zobaczyc jego pelne szczegoly:
 - **Notatki** (jezeli dodano)
 - **Dodane przez** — w udostępnionych kontach; wyświetla nazwę członka konta, który utworzył ten wpis
 - **Status synchronizacji** — oczekujacy, zsynchronizowany, konflikt lub blad
-- **Źródło** — Ręczne wprowadzanie, Głosowo, Skan paragonu, Zaimportowano lub Autozapis (transakcje z powiadomienia bankowego lub importu są oznaczone, by było widać, skąd pochodzą)
+- **Źródło** — Ręczne wprowadzanie, Głosowo, Skan paragonu, Zaimportowano lub Autozapis (transakcje z powiadomienia bankowego lub importu są oznaczone, by było widać, skąd pochodzą) · **Grupa wspólna** oznacza Twój udział w wydatku grupy (zob. Grupy wspólne), a **Powiązane z grupą** płatność pominiętą w sumach, bo zamiast niej liczy się Twój udział
 - **Pozycje paragonu** — poszczególne pozycje (dla zeskanowanych paragonów lub wyodrębnione później przez **Wyodrębnij pozycje**)
 - **Zdjęcie paragonu** — przeglądanie, udostępnianie, zapisywanie do galerii, podmiana lub usunięcie zdjęcia paragonu. Paragony PDF są pokazywane jako dokument z możliwością otwarcia. Jeśli paragon nie jest jeszcze dołączony, kliknij **Dołącz paragon**, by go dodać — wybierz **Zrób zdjęcie**, **Z galerii** lub **Wybierz PDF**. Działa dla każdego wydatku, w tym dodanego ręcznie. Jeśli paragon został dołączony po utworzeniu wydatku, kliknij **Wyodrębnij pozycje** w karcie paragonu, aby ponownie odczytać go AI i pobrać pozycje do wydatku (z potwierdzeniem, gdy pozycje już istnieją; każde uruchomienie zużywa jedno zapytanie AI)
 
@@ -20691,6 +20733,20 @@ Zmiany właściciela widać na liście **Aktywność**, na przykład „Ania prz
 
 Jeśli konto zostanie trwale usunięte przez nasz zespół wsparcia, ta osoba pojawia się w swoich grupach jako **Former member** (były członek). Jej wydatki i płatności zostają, więc salda nadal się zgadzają.
 
+## Liczenie Twojego udziału w budżecie
+
+Zwykle grupa działa obok Twojego budżetu: to, co płacisz kartą, jest w budżecie, a grupa tylko śledzi, kto komu ile winien. Jeśli wolisz widzieć w budżetach i analizach to, co faktycznie zużyłeś, otwórz **Członkowie** i użyj **Licz mój udział w budżecie**.
+
+- Stuknij **Włącz…**, wybierz **Konto**, do którego trafi Twój udział, i jeśli chcesz **Kategorię**, a potem **Włącz**. Od tej chwili Twój udział w każdym wydatku grupy pojawia się na tym koncie jako osobna transakcja oznaczona **Udział w grupie**. Zaczyna od wydatków z tego miesiąca, więc zamknięte budżety pozostają nietknięte.
+- Dostępne są tylko konta, których jesteś właścicielem, i Twoje własne konto osobiste: na koncie wspólnym Twój udział zmieniłby liczby wszystkich. Konta szyfrowane end-to-end też nie są dostępne, bo serwer musiałby zapisać w nich udział jawnym tekstem.
+- Udział podąża za grupą: gdy ktoś edytuje wydatek, Twój udział się aktualizuje. Kwoty, waluty i daty nie można zmienić na Twoim koncie, ale kategoria, notatki i tagi są Twoje. Stuknij na nim **Z grupy …**, aby otworzyć grupę. Usunięty udział nie wraca.
+- Jeśli konto przestanie być dla Ciebie dostępne (zostałeś przeglądającym, zostało zarchiwizowane lub zaszyfrowane), liczenie jest **Wstrzymane** i nic nie jest dodawane, dopóki nie wybierzesz innego konta lub go nie wyłączysz.
+- **Wyłącz** usuwa udziały z Twojego konta, a powiązane płatności znów liczą się jako zwykłe wydatki. W grupie nic się nie zmienia.
+
+**Może być policzone podwójnie.** Jeśli zapłaciłeś za wydatek grupy kartą albo rozliczyłeś się przelewem i ta płatność jest też na Twoim koncie, zostałaby policzona dwa razy: raz jako płatność i raz jako Twój udział. Dlatego aplikacja powiązuje takie płatności z grupą: dostają oznaczenie **Powiązane z grupą** i nie wliczają się do sum, a zamiast nich liczy się Twój udział. Płatność jest powiązywana automatycznie tylko wtedy, gdy pasuje do niej dokładnie jedna transakcja (ta sama kwota i waluta, do 3 dni); w przeciwnym razie pojawia się jako **Możliwe dopasowanie**. Gdy wydatek, który opłaciłeś, dodał inny członek, nigdy nie jest powiązywany automatycznie — dostaniesz powiadomienie i pytanie „Czy to Twoja płatność kartą?”. Karta **Może być policzone podwójnie** na ekranie grupy (na komputerze w prawej kolumnie) pokazuje, co nie jest jeszcze powiązane. Stuknij **Przejrzyj**, aby **Powiąż** dopasowanie, odpowiedzieć **Nie to**, samodzielnie **Wybierz transakcję** albo **Odłącz** płatność.
+
+**Kompromis.** Dopóki salda są otwarte, saldo portfela różni się od banku o kwotę, którą grupa jest Ci winna lub Ty jej, bo Twój udział jest już liczony, a pieniądze, które go rozliczą, jeszcze nie. Po rozliczeniu znów się zgadza.
+
 ## Dołączanie do grupy w aplikacji
 
 Jeśli znajomy wyśle Ci link do grupy, a masz aplikację, dotknij **Dołącz z linku** na ekranie Grupy i wklej go w pole **Link do grupy**. Aplikacja pokaże nazwę grupy oraz imiona, których nikt jeszcze nie wybrał. Dotknij swojego imienia albo **Nie ma mnie na liście** i wpisz **Twoje imię w tej grupie** (na początku to nazwa Twojego konta), a potem dotknij **Dołącz do grupy**. Jeśli ktoś dopisał Cię już z imienia, wybierz to imię, a przejmiesz to miejsce wraz z historią. Gdy ktoś zajmie imię chwilę przed Tobą, lista odświeży się i wybierzesz ponownie. Jeśli jesteś już w grupie, aplikacja zaproponuje **Otwórz grupę**. Do zarchiwizowanej grupy, która jest tylko do odczytu, nie można dołączyć. Jeśli swoje imię wybrano już w przeglądarce, użyj **Otwórz w aplikacji** na stronie dla gości, żeby zachować historię.
@@ -21238,7 +21294,7 @@ Tippe auf eine beliebige Ausgabe, um die vollstandigen Details anzuzeigen:
 - **Notizen** (falls hinzugefugt)
 - **Hinzugefügt von** — in geteilten Konten; zeigt den Namen des Kontomitglieds, das diesen Eintrag erstellt hat
 - **Synchronisierungsstatus** — Ausstehend, Synchronisiert, Konflikt oder Fehler
-- **Quelle** — Manuelle Eingabe, Spracheingabe, Belegscan, Importiert oder Automatisch erfasst (Buchungen aus Bank-Push oder Bank-Import sind markiert, damit man sie erkennt)
+- **Quelle** — Manuelle Eingabe, Spracheingabe, Belegscan, Importiert oder Automatisch erfasst (Buchungen aus Bank-Push oder Bank-Import sind markiert, damit man sie erkennt) · **Gemeinsame Gruppe** markiert deinen Anteil an einer Gruppenausgabe (siehe Gemeinsame Gruppen), **Mit Gruppe verknüpft** eine Zahlung, die nicht in die Summen eingeht, weil stattdessen dein Anteil zählt
 - **Belegpositionen** — einzelne Artikel (für gescannte Belege oder später über **Positionen extrahieren** gezogen)
 - **Kassenbon-Bild** — Anzeigen, Teilen, in Galerie speichern, Ersetzen oder Löschen des Belegfotos. PDF-Belege zeigen eine Dokumentvorschau zum Öffnen. Wenn noch kein Beleg angehängt ist, tippe auf **Beleg anhängen** — wähle **Foto aufnehmen**, **Aus Galerie** oder **PDF auswählen**. Funktioniert für jede Ausgabe, auch für manuell hinzugefügte. Wurde der Beleg erst nach dem Anlegen der Ausgabe angehängt, tippe in der Belegkarte auf **Positionen extrahieren**, um den Beleg erneut von der KI lesen zu lassen und die Positionen in die Ausgabe zu ziehen (mit Bestätigung, falls bereits Positionen vorhanden sind; jeder Lauf verbraucht eine KI-Anfrage)
 
@@ -25807,6 +25863,20 @@ Inhaberwechsel erscheinen in der Liste **Aktivität**, zum Beispiel „Anna hat 
 
 Wird ein Konto von unserem Support dauerhaft entfernt, erscheint diese Person in ihren Gruppen als **Former member** (ehemaliges Mitglied). Ihre Ausgaben und Zahlungen bleiben erhalten, damit die Salden weiter stimmen.
 
+## Deinen Anteil im Budget zählen
+
+Normalerweise läuft eine Gruppe neben deinem Budget: Was du mit der Karte zahlst, steht im Budget, und die Gruppe verfolgt nur, wer wem was schuldet. Möchtest du in Budgets und Auswertungen sehen, was du tatsächlich verbraucht hast, öffne **Mitglieder** und nutze **Meinen Anteil im Budget zählen**.
+
+- Tippe auf **Einschalten…**, wähle das **Konto** für deinen Anteil und, wenn du willst, eine **Kategorie**, dann **Einschalten**. Ab dann erscheint dein Anteil an jeder Gruppenausgabe in diesem Konto als eigene Buchung mit der Markierung **Gruppenanteil**. Es beginnt mit den Ausgaben dieses Monats, abgeschlossene Budgets bleiben unberührt.
+- Angeboten werden nur Konten, die dir gehören, und dein eigenes persönliches Konto: In einem gemeinsamen Konto würde dein Anteil die Zahlen aller ändern. Ende-zu-Ende-verschlüsselte Konten werden ebenfalls nicht angeboten, weil der Server deinen Anteil im Klartext hineinschreiben müsste.
+- Ein Anteil folgt der Gruppe: Ändert jemand die Ausgabe, wird dein Anteil angepasst. Betrag, Währung und Datum kannst du in deinem Konto nicht ändern, Kategorie, Notizen und Tags gehören aber dir. Tippe darauf auf **Aus Gruppe …**, um die Gruppe zu öffnen. Ein gelöschter Anteil kommt nicht zurück.
+- Kannst du das Konto nicht mehr nutzen (du bist nur noch Betrachter, es wurde archiviert oder verschlüsselt), ist das Zählen **Pausiert** und nichts wird hinzugefügt, bis du ein anderes Konto wählst oder es ausschaltest.
+- **Ausschalten** entfernt die Anteile aus deinem Konto, und deine verknüpften Zahlungen zählen wieder als normale Ausgaben. In der Gruppe ändert sich nichts.
+
+**Wird evtl. doppelt gezählt.** Hast du eine Gruppenausgabe mit der Karte bezahlt oder per Überweisung ausgeglichen und steht diese Zahlung auch in deinem Konto, würde sie doppelt gezählt: einmal als Zahlung und einmal als dein Anteil. Deshalb verknüpft die App solche Zahlungen mit der Gruppe: Sie erhalten die Markierung **Mit Gruppe verknüpft** und fallen aus deinen Summen heraus, stattdessen zählt dein Anteil. Automatisch verknüpft wird nur, wenn genau eine Buchung passt (gleicher Betrag und gleiche Währung, innerhalb von 3 Tagen); sonst erscheint sie als **Möglicher Treffer**. Hat ein anderes Mitglied die von dir bezahlte Ausgabe hinzugefügt, wird nie automatisch verknüpft — du bekommst eine Benachrichtigung und die Frage „Ist das deine Kartenzahlung?“. Die Karte **Wird evtl. doppelt gezählt** auf dem Gruppenbildschirm (am Computer in der rechten Spalte) zeigt, was noch nicht verknüpft ist. Tippe auf **Ansehen**, um einen Treffer zu **Verknüpfen**, **Nicht diese** zu sagen, selbst eine **Buchung auswählen** oder eine Zahlung zu **Trennen**.
+
+**Der Kompromiss.** Solange Salden offen sind, weicht dein Wallet-Saldo von der Bank um den Betrag ab, den die Gruppe dir oder du ihr schuldest: Dein Anteil ist schon gezählt, das Geld, das ihn ausgleicht, noch nicht. Nach dem Ausgleich stimmt er wieder.
+
 ## Einer Gruppe in der App beitreten
 
 Schickt dir ein Freund einen Gruppenlink und du hast die App, tippe auf dem Gruppen-Bildschirm auf **Per Link beitreten** und füge ihn in **Gruppenlink** ein. Die App zeigt den Namen der Gruppe und die Namen, die noch niemand gewählt hat. Tippe auf deinen Namen oder auf **Ich stehe nicht in der Liste** und gib **Dein Name in dieser Gruppe** ein (zuerst ist es dein Kontoname), dann tippe auf **Gruppe beitreten**. Wurdest du schon mit Namen eingetragen, wähle diesen Namen, dann übernimmst du den Platz samt Verlauf. Wenn jemand den Namen kurz vor dir vergibt, aktualisiert sich die Liste und du wählst neu. Bist du schon in der Gruppe, bietet die App stattdessen **Gruppe öffnen** an. Einer archivierten Gruppe, die schreibgeschützt ist, kann man nicht beitreten. Hast du deinen Namen schon im Browser gewählt, nutze auf der Gästeseite **In der App öffnen**, damit dein Verlauf erhalten bleibt.
@@ -26354,7 +26424,7 @@ Toca cualquier gasto para ver sus detalles completos:
 - **Notas** (si se agregaron)
 - **Agregado por** — en cuentas compartidas; muestra el nombre del miembro de la cuenta que creó esta entrada
 - **Estado de sincronizacion** — pendiente, sincronizado, conflicto o error
-- **Fuente** — Entrada manual, Entrada de voz, Escaneo de recibo, Importado o Captura automática (los registros de una notificación bancaria o de una importación están marcados para que se distingan)
+- **Fuente** — Entrada manual, Entrada de voz, Escaneo de recibo, Importado o Captura automática (los registros de una notificación bancaria o de una importación están marcados para que se distingan) · **Grupo compartido** marca tu parte de un gasto del grupo (ver Grupos compartidos), y **Vinculado al grupo** un pago que queda fuera de los totales porque en su lugar se cuenta tu parte
 - **Articulos del recibo** — articulos individuales (para recibos escaneados, o extraídos después mediante **Extraer artículos**)
 - **Imagen del recibo** — ver, compartir, guardar en galería, reemplazar o eliminar la foto del recibo. Los recibos PDF muestran una vista previa del documento para abrir. Si aun no hay recibo adjunto, toca **Adjuntar recibo** — elige **Tomar foto**, **Desde la galería** o **Elegir PDF**. Funciona para cualquier gasto, incluidos los agregados manualmente. Si el recibo se adjuntó después de crear el gasto, toca **Extraer artículos** en la tarjeta del recibo para que la IA lo vuelva a leer y añada sus líneas al gasto (con confirmación si ya hay artículos; cada ejecución consume una petición de IA)
 
@@ -30912,6 +30982,20 @@ Los cambios de propietario aparecen en la lista **Actividad**, por ejemplo «Ana
 
 Si nuestro equipo de soporte elimina una cuenta de forma permanente, esa persona aparece en sus grupos como **Former member** (antiguo miembro). Sus gastos y pagos se conservan, así que los saldos siguen cuadrando.
 
+## Contar tu parte en tu presupuesto
+
+Normalmente un grupo vive junto a tu presupuesto: lo que pagas con tarjeta está en tu presupuesto y el grupo solo lleva quién debe a quién. Si prefieres ver en tus presupuestos y análisis lo que realmente consumiste, abre **Miembros** y usa **Contar mi parte en mi presupuesto**.
+
+- Toca **Activar…**, elige la **Cuenta** a la que va tu parte y, si quieres, una **Categoría**, y luego **Activar**. A partir de entonces tu parte de cada gasto del grupo aparece en esa cuenta como una transacción propia, marcada **Parte de grupo**. Empieza con los gastos de este mes, así que tus presupuestos cerrados no se tocan.
+- Solo se ofrecen las cuentas que te pertenecen y tu propia cuenta personal: en una cuenta compartida tu parte cambiaría las cifras de todos. Tampoco se ofrecen las cuentas con cifrado de extremo a extremo, porque el servidor tendría que escribir tu parte en ellas en texto plano.
+- Una parte sigue al grupo: si alguien edita el gasto, tu parte se actualiza. Su importe, moneda y fecha no se pueden editar en tu cuenta, pero la categoría, las notas y las etiquetas son tuyas. Toca **Del grupo …** en ella para abrir el grupo. Si borras una parte, no vuelve.
+- Si dejas de poder usar la cuenta (pasaste a solo lectura, se archivó o se cifró), el conteo queda **En pausa** y no se añade nada hasta que elijas otra cuenta o lo desactives.
+- **Desactivar** quita las partes de tu cuenta y tus pagos vinculados vuelven a contar como gastos normales. En el grupo no cambia nada.
+
+**Puede contarse dos veces.** Si pagaste un gasto del grupo con tarjeta, o saldaste con una transferencia, y ese pago también está en tu cuenta, se contaría dos veces: una como pago y otra como tu parte. Por eso la app vincula esos pagos al grupo: reciben la marca **Vinculado al grupo** y quedan fuera de tus totales, y en su lugar se cuenta tu parte. Un pago se vincula automáticamente solo cuando coincide exactamente una transacción (mismo importe y moneda, en 3 días); si no, se ofrece como **Posible coincidencia**. Cuando otro miembro añadió el gasto que pagaste tú, nunca se vincula automáticamente: recibirás una notificación y la pregunta «¿Es tu pago con tarjeta?». La tarjeta **Puede contarse dos veces** de la pantalla del grupo (en un ordenador, en la columna derecha) muestra lo que aún no está vinculado. Toca **Revisar** para **Vincular** una coincidencia, decir **No es este**, **Elegir una transacción** tú mismo o **Desvincular** un pago.
+
+**La contrapartida.** Mientras haya saldos abiertos, el saldo de tu cartera difiere del banco en lo que el grupo te debe o tú le debes: tu parte ya cuenta y el dinero que la salda aún no. Vuelve a coincidir cuando liquidáis.
+
 ## Unirse a un grupo desde la app
 
 Si un amigo te envía el enlace de un grupo y tienes la app, toca **Unirse con enlace** en la pantalla Grupos y pégalo en **Enlace del grupo**. La app muestra el nombre del grupo y los nombres que nadie ha elegido todavía. Toca tu nombre, o **No estoy en la lista** y escribe **Tu nombre en este grupo** (al principio es el nombre de tu cuenta), y luego toca **Unirse al grupo**. Si ya te añadieron por nombre, elige ese nombre y ocuparás ese lugar con su historial. Si alguien elige el nombre justo antes que tú, la lista se actualiza y eliges de nuevo. Si ya estás en el grupo, la app te ofrece **Abrir grupo**. A un grupo archivado, que es de solo lectura, no se puede unir nadie. Si ya elegiste tu nombre en el navegador, usa **Abrir en la app** en la página para invitados, así conservas tu historial.
@@ -31459,7 +31543,7 @@ Appuyez sur une depense pour afficher ses details complets :
 - **Notes** (si ajoutees)
 - **Ajouté par** — dans les comptes partagés; affiche le nom du membre du compte qui a créé cette entrée
 - **Statut de synchronisation** — en attente, synchronise, conflit ou erreur
-- **Source** — Saisie manuelle, Saisie vocale, Scan de reçu, Importé ou Capture automatique (les écritures issues d'une notification bancaire ou d'un import sont marquées pour qu'on les distingue)
+- **Source** — Saisie manuelle, Saisie vocale, Scan de reçu, Importé ou Capture automatique (les écritures issues d'une notification bancaire ou d'un import sont marquées pour qu'on les distingue) · **Groupe partagé** marque votre part d'une dépense du groupe (voir Groupes partagés), et **Lié au groupe** un paiement exclu des totaux car votre part est comptée à la place
 - **Articles du reçu** — articles individuels (pour les reçus scannés, ou extraits plus tard via **Extraire les articles**)
 - **Photo du reçu** — afficher, partager, enregistrer dans la galerie, remplacer ou supprimer la photo du reçu. Les reçus PDF affichent un aperçu de document qui s'ouvre au toucher. Si aucun reçu n'est encore joint, touchez **Joindre un reçu** pour en ajouter un — choisissez **Prendre une photo**, **Depuis la galerie** ou **Choisir un PDF**. Fonctionne pour toute dépense, y compris celles créées à la main. Si le reçu a été joint après la création de la dépense, touchez **Extraire les articles** dans la carte du reçu pour le relire par l'IA et en intégrer les lignes à la dépense (avec confirmation si des articles existent déjà ; chaque lecture consomme une requête IA)
 
@@ -36015,6 +36099,20 @@ Les changements de propriétaire apparaissent dans la liste **Activité**, par e
 
 Si un compte est supprimé définitivement par notre équipe d'assistance, cette personne apparaît dans ses groupes sous le nom **Former member** (ancien membre). Ses dépenses et paiements restent, pour que les soldes tombent toujours juste.
 
+## Compter votre part dans votre budget
+
+Normalement, un groupe vit à côté de votre budget : ce que vous payez par carte est dans votre budget, et le groupe suit seulement qui doit quoi à qui. Si vous préférez voir dans vos budgets et analyses ce que vous avez réellement consommé, ouvrez **Membres** et utilisez **Compter ma part dans mon budget**.
+
+- Touchez **Activer…**, choisissez le **Compte** qui reçoit votre part et, si vous voulez, une **Catégorie**, puis **Activer**. Dès lors, votre part de chaque dépense du groupe apparaît dans ce compte comme une opération distincte, marquée **Part de groupe**. Cela commence avec les dépenses de ce mois-ci, vos budgets clôturés ne sont donc pas touchés.
+- Seuls les comptes dont vous êtes propriétaire et votre propre compte personnel sont proposés : dans un compte partagé, votre part changerait les chiffres de tous. Les comptes chiffrés de bout en bout ne sont pas proposés non plus, car le serveur devrait y écrire votre part en clair.
+- Une part suit le groupe : si quelqu'un modifie la dépense, votre part est mise à jour. Son montant, sa devise et sa date ne sont pas modifiables dans votre compte, mais la catégorie, les notes et les tags sont à vous. Touchez **Du groupe …** pour ouvrir le groupe. Une part supprimée ne revient pas.
+- Si vous ne pouvez plus utiliser le compte (vous n'êtes plus que lecteur, il a été archivé ou chiffré), le comptage est **En pause** et rien n'est ajouté tant que vous ne choisissez pas un autre compte ou ne le désactivez pas.
+- **Désactiver** retire les parts de votre compte, et vos paiements liés comptent de nouveau comme des dépenses ordinaires. Rien ne change dans le groupe.
+
+**Peut être compté deux fois.** Si vous avez payé une dépense du groupe par carte, ou réglé par virement, et que ce paiement figure aussi dans votre compte, il serait compté deux fois : comme paiement et comme votre part. L'app lie donc ces paiements au groupe : ils reçoivent la marque **Lié au groupe** et sont exclus de vos totaux, votre part étant comptée à la place. Un paiement n'est lié automatiquement que si exactement une opération correspond (même montant et même devise, à 3 jours près) ; sinon il est proposé comme **Correspondance possible**. Quand un autre membre a ajouté la dépense que vous avez payée, elle n'est jamais liée automatiquement : vous recevez une notification et la question « Est-ce votre paiement par carte ? ». La carte **Peut être compté deux fois** de l'écran du groupe (sur ordinateur, dans la colonne de droite) montre ce qui n'est pas encore lié. Touchez **Vérifier** pour **Lier** une correspondance, répondre **Pas celle-ci**, **Choisir une opération** vous-même ou **Délier** un paiement.
+
+**Le compromis.** Tant que des soldes sont ouverts, le solde de votre portefeuille diffère de la banque de ce que le groupe vous doit ou que vous lui devez : votre part est déjà comptée, l'argent qui la règle pas encore. Il concorde de nouveau une fois réglé.
+
 ## Rejoindre un groupe dans l'appli
 
 Si un ami vous envoie le lien d'un groupe et que vous avez l'appli, touchez **Rejoindre avec un lien** sur l'écran Groupes et collez-le dans **Lien du groupe**. L'appli affiche le nom du groupe et les noms que personne n'a encore pris. Touchez votre nom, ou **Je ne suis pas dans la liste** puis saisissez **Votre nom dans ce groupe** (au départ, le nom de votre compte), et touchez **Rejoindre le groupe**. Si l'on vous a déjà ajouté par votre nom, choisissez-le pour reprendre cette place avec son historique. Si quelqu'un prend le nom juste avant vous, la liste se rafraîchit et vous choisissez de nouveau. Si vous êtes déjà dans le groupe, l'appli propose **Ouvrir le groupe**. Un groupe archivé est en lecture seule : on ne peut pas le rejoindre. Si vous avez déjà choisi votre nom dans le navigateur, utilisez **Ouvrir dans l'appli** sur la page invité, pour garder votre historique.
@@ -36562,7 +36660,7 @@ iOS, Android, Web
 - **Нататкі** (калі дададзены)
 - **Дадаў(ла)** — адлюстроўваецца ў агульных рахунках; імя ўдзельніка рахунку, які стварыў гэты запіс
 - **Статус сінхранізацыі** — чакае, сінхранізавана, канфлікт або памылка
-- **Крыніца** — Ручны ўвод, Галасавы ўвод, Сканаванне чэка, Імпартавана або Аўтазахват (запісы з банкаўскага пуша або імпарту пазначаныя, каб іх было відаць)
+- **Крыніца** — Ручны ўвод, Галасавы ўвод, Сканаванне чэка, Імпартавана або Аўтазахват (запісы з банкаўскага пуша або імпарту пазначаныя, каб іх было відаць) · **Агульная група** — ваша доля выдатку групы (гл. «Агульныя групы»), а **Звязана з групай** — плацёж, які не ўваходзіць у вынікі, бо замест яго ўлічваецца ваша доля
 - **Пазіцыі чэка** — асобныя пазіцыі (для адсканаваных чэкаў або выцягнутыя пазней праз **Выцягнуць пазіцыі**)
 - **Фота чэка** — прагляд, перасылка, захаванне ў галерэю, замена або выдаленне фота чэка. PDF-чэкі паказваюцца як дакумент з магчымасцю адкрыцця. Калі чэк яшчэ не дададзены, націсніце **Дадаць чэк** — выберыце **Сфатаграфаваць**, **З галерэі** або **Выбраць PDF**. Працуе для любога выдатку, у тым ліку дададзенага ўручную. Калі чэк быў прымацаваны пасля стварэння выдатку, націсніце **Выцягнуць пазіцыі** ў картцы чэка, каб паўторна прачытаць яго ШІ і падцягнуць пазіцыі ў выдатак (з пацвярджэннем, калі пазіцыі ўжо ёсць; кожны запуск выдаткоўвае адзін ШІ-запыт)
 
@@ -41082,6 +41180,20 @@ OCR часам няправільна чытае цану, выдумляе ра
 
 Калі акаўнт канчаткова выдаліць наша служба падтрымкі, гэты чалавек будзе паказаны ў сваіх групах як **Former member** (былы ўдзельнік). Яго выдаткі і плацяжы застануцца, каб балансы па-ранейшаму сыходзіліся.
 
+## Улік вашай долі ў бюджэце
+
+Звычайна група жыве побач з вашым бюджэтам: тое, што вы плаціце карткай, ёсць у бюджэце, а група толькі сочыць, хто каму колькі вінен. Калі вы хочаце бачыць у бюджэтах і аналітыцы тое, што вы насамрэч спажылі, адкрыйце **Удзельнікі** і скарыстайцеся **Улічваць маю долю ў бюджэце**.
+
+- Націсніце **Уключыць…**, выберыце **Рахунак**, куды пойдзе ваша доля, і пры жаданні **Катэгорыю**, потым **Уключыць**. З гэтага моманту ваша доля кожнага выдатку групы з'яўляецца на гэтым рахунку асобнай аперацыяй з пазнакай **Доля групы**. Улік пачынаецца з выдаткаў бягучага месяца, таму закрытыя бюджэты не закранаюцца.
+- Даступныя толькі рахункі, дзе вы ўладальнік, і ваш уласны асабісты рахунак: на агульным рахунку ваша доля змяніла б лічбы ўсіх. Рахункі са скразным шыфраваннем таксама недаступныя: серверу давялося б запісаць у іх долю адкрытым тэкстам.
+- Доля ідзе за групай: калі хтосьці зменіць выдатак, ваша доля абновіцца. Суму, валюту і дату нельга змяніць на вашым рахунку, але катэгорыя, нататкі і тэгі — вашы. Націсніце на ёй **З групы …**, каб адкрыць групу. Выдаленая доля не вяртаецца.
+- Калі рахунак перастане вам падыходзіць (вы сталі назіральнікам, яго архівавалі або зашыфравалі), улік **Прыпынены** і нічога не дадаецца, пакуль вы не выберыце іншы рахунак або не выключыце функцыю.
+- **Выключыць** выдаляе долі з вашага рахунку, а звязаныя плацяжы зноў лічацца звычайнымі выдаткамі. У групе нічога не мяняецца.
+
+**Можа быць улічана двойчы.** Калі вы аплацілі выдатак групы карткай або разлічыліся пераводам і гэты плацёж таксама ёсць на вашым рахунку, ён улічыўся б двойчы: як плацёж і як ваша доля. Таму праграма звязвае такія плацяжы з групай: яны атрымліваюць пазнаку **Звязана з групай** і не ўваходзяць у вынікі, а замест іх улічваецца ваша доля. Плацёж звязваецца аўтаматычна, толькі калі яму адпавядае роўна адна аперацыя (тая ж сума і валюта, у межах 3 дзён); інакш ён прапануецца як **Магчымае супадзенне**. Калі аплачаны вамі выдатак дадаў іншы ўдзельнік, ён ніколі не звязваецца аўтаматычна — вы атрымаеце апавяшчэнне і пытанне «Гэта ваша аплата карткай?». Картка **Можа быць улічана двойчы** на экране групы (на камп'ютары — у правай калонцы) паказвае, што яшчэ не звязана. Націсніце **Паглядзець**, каб **Звязаць** супадзенне, адказаць **Не тое**, самому **Выбраць аперацыю** або **Адвязаць** плацёж.
+
+**Кампраміс.** Пакуль балансы адкрытыя, баланс кашалька адрозніваецца ад банка на суму, якую група вінна вам або вы ёй: ваша доля ўжо ўлічана, а грошы, якія яе закрыюць, яшчэ не. Пасля разліку ён зноў супадзе.
+
 ## Далучэнне да групы ў праграме
 
 Калі сябар даслаў спасылку на групу, а ў вас ёсць праграма, націсніце **Далучыцца па спасылцы** на экране «Групы» і ўстаўце яе ў поле **Спасылка на групу**. Праграма пакажа назву групы і імёны, якія пакуль ніхто не заняў. Націсніце сваё імя або **Мяне няма ў спісе** і ўвядзіце **Ваша імя ў гэтай групе** (спачатку гэта імя вашага ўліковага запісу), потым націсніце **Далучыцца**. Калі вас ужо дадалі па імені, абярыце гэтае імя, і вы зоймеце гэтае месца разам з гісторыяй. Калі хтосьці зоймет імя крыху раней за вас, спіс абновіцца, і вы абярэце зноў. Калі вы ўжо ў групе, праграма прапануе **Адкрыць групу**. Да групы ў архіве, даступнай толькі для чытання, далучыцца нельга. Калі вы ўжо выбралі сваё імя ў браўзеры, націсніце **Адкрыць у праграме** на старонцы для гасцей, каб захаваць гісторыю.
@@ -41629,7 +41741,7 @@ Tik op een uitgave om de volledige details te bekijken:
 - **Notities** (indien toegevoegd)
 - **Toegevoegd door** — wordt getoond in gedeelde accounts; toont de naam van het accountlid dat deze post heeft aangemaakt
 - **Synchronisatiestatus** — in behandeling, gesynchroniseerd, conflict of fout
-- **Bron** — Handmatige invoer, Spraakinvoer, Bon scannen, Geïmporteerd of Automatisch vastgelegd (boekingen uit een bankmelding of import zijn gemarkeerd, zodat je ze herkent)
+- **Bron** — Handmatige invoer, Spraakinvoer, Bon scannen, Geïmporteerd of Automatisch vastgelegd (boekingen uit een bankmelding of import zijn gemarkeerd, zodat je ze herkent) · **Gedeelde groep** markeert je deel van een groepsuitgave (zie Gedeelde groepen), en **Gekoppeld aan groep** een betaling die buiten de totalen valt omdat in plaats daarvan je deel telt
 - **Bonitems** — afzonderlijke items (voor gescande bonnen, of later geëxtraheerd via **Artikelen extraheren**)
 - **Bonafbeelding** — bekijk, deel, sla op in galerij, vervang of verwijder de bonfoto. Pdf-bonnen tonen een documentvoorbeeld dat je kunt aantikken om te openen. Als er nog geen bon is gekoppeld, tik dan op **Bon toevoegen** om er een toe te voegen — kies **Foto maken**, **Kies uit galerij** of **Kies pdf**. Werkt voor elke uitgave, ook voor handmatig toegevoegde. Is de bon pas na het aanmaken van de uitgave gekoppeld, tik dan op **Artikelen extraheren** in de bonkaart om de bon opnieuw door AI te laten lezen en de regels in de uitgave te zetten (met bevestiging als er al items zijn; elke lezing verbruikt één AI-verzoek)
 
@@ -46274,6 +46386,20 @@ Verwijdert de eigenaar zijn account, dan verdwijnt de groep niet. Hij gaat autom
 Eigenaarswissels staan in de lijst **Activiteit**, bijvoorbeeld "Anna heeft Bram eigenaar gemaakt". De browserpagina laat ze niet zien.
 
 Wordt een account door ons supportteam definitief verwijderd, dan staat die persoon in zijn groepen als **Former member** (voormalig lid). Zijn uitgaven en betalingen blijven, zodat de saldi blijven kloppen.
+
+## Je deel in je budget meetellen
+
+Normaal loopt een groep naast je budget: wat je met je kaart betaalt staat in je budget, en de groep houdt alleen bij wie wie wat schuldig is. Wil je in budgetten en analyses zien wat je echt verbruikt hebt, open dan **Leden** en gebruik **Mijn deel in mijn budget meetellen**.
+
+- Tik op **Aanzetten…**, kies de **Rekening** waar je deel in komt en eventueel een **Categorie**, en dan **Aanzetten**. Vanaf dan verschijnt je deel van elke groepsuitgave in die rekening als eigen transactie, gemarkeerd als **Groepsdeel**. Het begint met de uitgaven van deze maand, dus afgesloten budgetten blijven onaangeroerd.
+- Alleen rekeningen waarvan je eigenaar bent en je eigen persoonlijke rekening worden aangeboden: in een gedeelde rekening zou je deel ieders cijfers veranderen. End-to-end versleutelde rekeningen worden ook niet aangeboden, omdat de server je deel er in platte tekst in zou moeten schrijven.
+- Een deel volgt de groep: past iemand de uitgave aan, dan wordt je deel bijgewerkt. Bedrag, valuta en datum kun je in je rekening niet wijzigen, maar categorie, notities en tags zijn van jou. Tik erop op **Uit groep …** om de groep te openen. Een verwijderd deel komt niet terug.
+- Kun je de rekening niet meer gebruiken (je bent alleen nog kijker, hij is gearchiveerd of versleuteld), dan is het meetellen **Gepauzeerd** en wordt er niets toegevoegd tot je een andere rekening kiest of het uitzet.
+- **Uitzetten** haalt de delen uit je rekening en je gekoppelde betalingen tellen weer als gewone uitgaven. In de groep verandert niets.
+
+**Wordt mogelijk dubbel geteld.** Heb je een groepsuitgave met je kaart betaald, of met een overschrijving verrekend, en staat die betaling ook in je rekening, dan zou ze dubbel geteld worden: als betaling en als je deel. Daarom koppelt de app zulke betalingen aan de groep: ze krijgen de markering **Gekoppeld aan groep** en vallen buiten je totalen, en in plaats daarvan telt je deel. Een betaling wordt alleen automatisch gekoppeld als precies één transactie past (zelfde bedrag en valuta, binnen 3 dagen); anders verschijnt ze als **Mogelijke overeenkomst**. Heeft een ander lid de uitgave toegevoegd die jij betaalde, dan wordt nooit automatisch gekoppeld — je krijgt een melding en de vraag „Is dit je kaartbetaling?”. De kaart **Wordt mogelijk dubbel geteld** op het groepsscherm (op een computer in de rechterkolom) toont wat nog niet gekoppeld is. Tik op **Bekijken** om een overeenkomst te **Koppelen**, **Niet deze** te zeggen, zelf te kiezen via **Kies een transactie** of een betaling te **Ontkoppelen**.
+
+**De afweging.** Zolang saldi openstaan, wijkt je portemonnee-saldo af van de bank met wat de groep jou of jij de groep schuldig bent: je deel telt al, het geld dat het verrekent nog niet. Na het verrekenen klopt het weer.
 
 ## Deelnemen aan een groep in de app
 

@@ -169,7 +169,7 @@ Tap any expense to view its full details:
 - **Notes** (if added)
 - **Added by** — shown in shared accounts; displays the name of the account member who created this entry
 - **Sync Status** — pending, synced, conflict, or error
-- **Source** — Manual Entry, Voice Input, Receipt Scan, Imported, or Auto-captured (bank push or bank import rows are marked so you can tell them apart)
+- **Source** — Manual Entry, Voice Input, Receipt Scan, Imported, or Auto-captured (bank push or bank import rows are marked so you can tell them apart) · **Shared group** marks your share of a group expense (see Shared groups), and **Linked to group** a payment that is left out of totals because your share is counted instead
 - **Receipt Items** — individual items (for scanned receipts, or extracted later via **Extract items**)
 - **Receipt Image** — view, share, save to gallery, replace, or delete the receipt photo. PDF receipts show a document preview with tap-to-open. If no receipt is attached yet, tap **Attach Receipt** to add one — choose **Take Photo**, **Choose from Gallery**, or **Choose PDF**. Works for any expense, including ones added manually. If the receipt was attached after the expense was created, tap **Extract items** in the receipt card to re-run AI reading and pull its line items into the expense (with confirmation if items already exist; each run uses one AI request)
 

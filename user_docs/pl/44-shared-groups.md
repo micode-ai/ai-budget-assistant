@@ -127,6 +127,20 @@ Zmiany właściciela widać na liście **Aktywność**, na przykład „Ania prz
 
 Jeśli konto zostanie trwale usunięte przez nasz zespół wsparcia, ta osoba pojawia się w swoich grupach jako **Former member** (były członek). Jej wydatki i płatności zostają, więc salda nadal się zgadzają.
 
+## Liczenie Twojego udziału w budżecie
+
+Zwykle grupa działa obok Twojego budżetu: to, co płacisz kartą, jest w budżecie, a grupa tylko śledzi, kto komu ile winien. Jeśli wolisz widzieć w budżetach i analizach to, co faktycznie zużyłeś, otwórz **Członkowie** i użyj **Licz mój udział w budżecie**.
+
+- Stuknij **Włącz…**, wybierz **Konto**, do którego trafi Twój udział, i jeśli chcesz **Kategorię**, a potem **Włącz**. Od tej chwili Twój udział w każdym wydatku grupy pojawia się na tym koncie jako osobna transakcja oznaczona **Udział w grupie**. Zaczyna od wydatków z tego miesiąca, więc zamknięte budżety pozostają nietknięte.
+- Dostępne są tylko konta, których jesteś właścicielem, i Twoje własne konto osobiste: na koncie wspólnym Twój udział zmieniłby liczby wszystkich. Konta szyfrowane end-to-end też nie są dostępne, bo serwer musiałby zapisać w nich udział jawnym tekstem.
+- Udział podąża za grupą: gdy ktoś edytuje wydatek, Twój udział się aktualizuje. Kwoty, waluty i daty nie można zmienić na Twoim koncie, ale kategoria, notatki i tagi są Twoje. Stuknij na nim **Z grupy …**, aby otworzyć grupę. Usunięty udział nie wraca.
+- Jeśli konto przestanie być dla Ciebie dostępne (zostałeś przeglądającym, zostało zarchiwizowane lub zaszyfrowane), liczenie jest **Wstrzymane** i nic nie jest dodawane, dopóki nie wybierzesz innego konta lub go nie wyłączysz.
+- **Wyłącz** usuwa udziały z Twojego konta, a powiązane płatności znów liczą się jako zwykłe wydatki. W grupie nic się nie zmienia.
+
+**Może być policzone podwójnie.** Jeśli zapłaciłeś za wydatek grupy kartą albo rozliczyłeś się przelewem i ta płatność jest też na Twoim koncie, zostałaby policzona dwa razy: raz jako płatność i raz jako Twój udział. Dlatego aplikacja powiązuje takie płatności z grupą: dostają oznaczenie **Powiązane z grupą** i nie wliczają się do sum, a zamiast nich liczy się Twój udział. Płatność jest powiązywana automatycznie tylko wtedy, gdy pasuje do niej dokładnie jedna transakcja (ta sama kwota i waluta, do 3 dni); w przeciwnym razie pojawia się jako **Możliwe dopasowanie**. Gdy wydatek, który opłaciłeś, dodał inny członek, nigdy nie jest powiązywany automatycznie — dostaniesz powiadomienie i pytanie „Czy to Twoja płatność kartą?”. Karta **Może być policzone podwójnie** na ekranie grupy (na komputerze w prawej kolumnie) pokazuje, co nie jest jeszcze powiązane. Stuknij **Przejrzyj**, aby **Powiąż** dopasowanie, odpowiedzieć **Nie to**, samodzielnie **Wybierz transakcję** albo **Odłącz** płatność.
+
+**Kompromis.** Dopóki salda są otwarte, saldo portfela różni się od banku o kwotę, którą grupa jest Ci winna lub Ty jej, bo Twój udział jest już liczony, a pieniądze, które go rozliczą, jeszcze nie. Po rozliczeniu znów się zgadza.
+
 ## Dołączanie do grupy w aplikacji
 
 Jeśli znajomy wyśle Ci link do grupy, a masz aplikację, dotknij **Dołącz z linku** na ekranie Grupy i wklej go w pole **Link do grupy**. Aplikacja pokaże nazwę grupy oraz imiona, których nikt jeszcze nie wybrał. Dotknij swojego imienia albo **Nie ma mnie na liście** i wpisz **Twoje imię w tej grupie** (na początku to nazwa Twojego konta), a potem dotknij **Dołącz do grupy**. Jeśli ktoś dopisał Cię już z imienia, wybierz to imię, a przejmiesz to miejsce wraz z historią. Gdy ktoś zajmie imię chwilę przed Tobą, lista odświeży się i wybierzesz ponownie. Jeśli jesteś już w grupie, aplikacja zaproponuje **Otwórz grupę**. Do zarchiwizowanej grupy, która jest tylko do odczytu, nie można dołączyć. Jeśli swoje imię wybrano już w przeglądarce, użyj **Otwórz w aplikacji** na stronie dla gości, żeby zachować historię.

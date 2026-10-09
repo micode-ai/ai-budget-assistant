@@ -4352,7 +4352,7 @@ Dotknij dowolny wydatek, aby zobaczyc jego pelne szczegoly:
 - **Notatki** (jezeli dodano)
 - **Dodane przez** — w udostępnionych kontach; wyświetla nazwę członka konta, który utworzył ten wpis
 - **Status synchronizacji** — oczekujacy, zsynchronizowany, konflikt lub blad
-- **Źródło** — Ręczne wprowadzanie, Głosowo, Skan paragonu, Zaimportowano lub Autozapis (transakcje z powiadomienia bankowego lub importu są oznaczone, by było widać, skąd pochodzą)
+- **Źródło** — Ręczne wprowadzanie, Głosowo, Skan paragonu, Zaimportowano lub Autozapis (transakcje z powiadomienia bankowego lub importu są oznaczone, by było widać, skąd pochodzą) · **Grupa wspólna** oznacza Twój udział w wydatku grupy (zob. Grupy wspólne), a **Powiązane z grupą** płatność pominiętą w sumach, bo zamiast niej liczy się Twój udział
 - **Pozycje paragonu** — poszczególne pozycje (dla zeskanowanych paragonów lub wyodrębnione później przez **Wyodrębnij pozycje**)
 - **Zdjęcie paragonu** — przeglądanie, udostępnianie, zapisywanie do galerii, podmiana lub usunięcie zdjęcia paragonu. Paragony PDF są pokazywane jako dokument z możliwością otwarcia. Jeśli paragon nie jest jeszcze dołączony, kliknij **Dołącz paragon**, by go dodać — wybierz **Zrób zdjęcie**, **Z galerii** lub **Wybierz PDF**. Działa dla każdego wydatku, w tym dodanego ręcznie. Jeśli paragon został dołączony po utworzeniu wydatku, kliknij **Wyodrębnij pozycje** w karcie paragonu, aby ponownie odczytać go AI i pobrać pozycje do wydatku (z potwierdzeniem, gdy pozycje już istnieją; każde uruchomienie zużywa jedno zapytanie AI)
 
@@ -7128,6 +7128,7 @@ Aby połączyć: **Ustawienia → Czat-boty**.
 |---|---|
 | `/link KOD` | Połącz komunikator z aplikacją |
 | `/expense 50 obiad` | Dodaj wydatek |
+| `/group 120 pizza` | Dodaj wydatek do wspólnej grupy |
 | `/income 3000 wynagrodzenie` | Dodaj dochód |
 | `/category expense Jedzenie` | Utwórz kategorię |
 | `/usage` | Sprawdź użycie AI |
@@ -7137,6 +7138,10 @@ Aby połączyć: **Ustawienia → Czat-boty**.
 | `/help` | Pokaż wszystkie polecenia |
 
 > W **WhatsApp** i **Slacku** polecenia działają z `/` lub bez. Możesz też wpisać tylko kwotę i opis: `50 obiad`.
+
+## Wydatek we wspólnej grupie
+
+Wyślij `/group 120 pizza`, aby dodać wydatek do jednej ze swoich wspólnych grup (w WhatsAppie i Slacku działa też `group 120 pizza`). Jeśli należysz do kilku grup, bot zapyta, do której — wybierz ją z listy. Potem sprawdź kartę: grupa, kwota, opis, *płacisz ty*, *po równo* — i dotknij **Potwierdź** albo **Anuluj**, żeby nic nie dodawać. Płacącym jesteś zawsze ty, a wydatek zawsze dzieli się po równo między wszystkich członków; jeśli płacił ktoś inny albo podział ma być inny, dodaj wydatek w aplikacji. Aby podać inną walutę, wpisz ją po kwocie (`/group 25 EUR taksówka`): wydatek zostanie przeliczony na walutę grupy po dzisiejszym kursie, a jeśli kursu nie ma, bot o tym poinformuje i niczego nie doda. Zarchiwizowane grupy nie są proponowane, a to nie zużywa zapytań AI.
 
 ## Skanowanie paragonów
 
@@ -8652,6 +8657,8 @@ Pieniądze z grupy są oddzielone od Twoich własnych finansów: nic z grupy nie
 
 Dotknij **Grupy** w szybkich akcjach na ekranie głównym. Zobaczysz swoje grupy i swoje saldo w każdej z nich, a także **Nowa grupa** i **Dołącz z linku**.
 
+Na komputerze (okno przeglądarki szersze niż około 1000 pikseli) **Grupy** znajdziesz też w szybkich linkach po prawej stronie ekranu głównego oraz w **Ustawieniach**. Grupy są wyświetlane w tabeli, a tworzenie grupy, dodawanie wydatku, rozliczanie i lista członków otwierają się w oknie nad stroną.
+
 ## Tworzenie grupy
 
 1. Dotknij **Nowa grupa**.
@@ -8678,18 +8685,22 @@ Link otwiera prostą stronę w przeglądarce — bez instalacji i bez rejestracj
 Następnie może:
 
 - **Dodaj wydatek** — wypełnić *Za co?*, kwotę, datę i płatnika, wybrać **Po równo** (zaznaczyć, kto się dzieli) albo **Dokładne kwoty** (wpisać, ile winna jest każda osoba) i dotknąć **Dodaj wydatek**. Wydatek dodany przez siebie może usunąć przyciskiem **Usuń**.
-- **Rozliczyć się** — przy przelewie, którego dotyczy, dotknąć **Oznacz jako zapłacone** (gdy zapłacił) albo **Oznacz jako otrzymane** (gdy dostał pieniądze). Płatność zapisaną przez pomyłkę może anulować przyciskiem **Cofnij** osoba, która ją zapisała, albo osoba, która ją otrzymała.
+- **Rozliczyć się** — przy przelewie, którego dotyczy, dotknąć **Oznacz jako zapłacone** (gdy zapłacił) albo **Oznacz jako otrzymane** (gdy dostał pieniądze). Płatność zapisaną przez pomyłkę może anulować przyciskiem **Cofnij** osoba, która ją zapisała, albo osoba, która ją otrzymała. Kwota jest wypełniona proponowaną płatnością i można ją zmienić, żeby zapłacić część.
 - **Twoje dane do płatności** — wybrać metodę, wpisać konto lub identyfikator i dotknąć **Zapisz**. Te dane widzi tylko osoba, która mu płaci, w swojej linii przelewu, w miarę możliwości z gotowym przyciskiem Revolut lub PayPal.
 - **To nie ja / zapomnij to urządzenie** — wylogowuje tę przeglądarkę z jego imienia, na wspólnym telefonie lub komputerze.
 - **Masz kod odzyskiwania?** — na nowym urządzeniu wpisać **Kod odzyskiwania** i dotknąć **Przywróć**.
 
-Jeśli ktoś straci zarówno dane przeglądarki, jak i kod odzyskiwania, może dołączyć ponownie pod nieco innym imieniem albo właściciel grupy może zresetować link (patrz niżej), aby wszyscy wybrali swoje imiona od nowa.
+Jeśli ktoś straci zarówno dane przeglądarki, jak i kod odzyskiwania, może dołączyć ponownie pod nieco innym imieniem albo właściciel grupy może zresetować link (patrz niżej), aby wszyscy wybrali swoje imiona od nowa. Właściciel może też zwolnić tylko to jedno imię: zobacz **Zresetuj logowanie tej osoby** w sekcji Członkowie.
 
 Strona w kilku przydatnych momentach poleca też aplikację — dla powiadomień, odczytywania papierowych paragonów czy przypomnień — ale nic na stronie jej nie wymaga.
 
+### Dzielenie paragonu pozycja po pozycji
+
+Gdy paragon został dodany do grupy pozycja po pozycji, strona przez tydzień pokazuje go w sekcji **Podziel paragon**. Otwórz go, zaznacz, co było Twoje, i stuknij **Zapisz moje pozycje**. Pozycja zaznaczona przez kilka osób dzieli się między nie po równo, a to, czego nikt nie zaznaczy, zostaje u osoby, która płaciła. Przy każdej zaznaczonej pozycji widać **Twoją część**, a **Twoja część tego paragonu** pokazuje sumę. Pozycja oznaczona jako **podzielone przez** z imieniem została podzielona ręcznie przez osobę, która płaciła, i nie można jej tu zmienić. Po tygodniu albo gdy osoba, która płaciła, zamknie paragon, tylko ona lub właściciel grupy mogą zmienić, kto co miał. Dopóki paragon jest dzielony, w sekcji **Kto komu płaci** widać uwagę, że kwoty mogą się jeszcze zmienić. Płatność, która już została zapisana, zostaje bez zmian: jeśli Twoja część zmieni się później, po prostu znów pojawi się niewielkie saldo.
+
 ### Przejście z przeglądarki do aplikacji
 
-W sekcji **Zachowaj tę grupę w aplikacji** znajomy może dotknąć **Kontynuuj w aplikacji w przeglądarce** (albo **Otwórz w aplikacji** na Androidzie, jeśli aplikacja jest już zainstalowana). Po zalogowaniu lub założeniu konta grupa z całą historią przechodzi na to konto — nic nie ginie. Ten link działa tylko raz i tylko przez kilka minut. Jeśli najpierw zainstaluje aplikację z Google Play, powinien potem ponownie otworzyć link do grupy w przeglądarce i dotknąć **Otwórz w aplikacji**.
+W sekcji **Zachowaj tę grupę w aplikacji** znajomy może dotknąć **Kontynuuj w aplikacji w przeglądarce** (albo **Otwórz w aplikacji** na Androidzie, jeśli aplikacja jest już zainstalowana). Po zalogowaniu lub założeniu konta grupa z całą historią przechodzi na to konto — nic nie ginie. Ten link działa tylko raz i tylko przez kilka minut. Jeśli najpierw zainstaluje aplikację z Google Play, powinien potem ponownie otworzyć link do grupy w przeglądarce i dotknąć **Otwórz w aplikacji**. Jeśli jesteś już w tej grupie w aplikacji pod innym imieniem, aplikacja zaproponuje zamiast tego **Połącz „Ania” ze swoim kontem** (z Twoim imieniem z przeglądarki): imię z przeglądarki i wszystko, co pod nim jest, przechodzi na Twoje imię w aplikacji, a saldo nikogo innego się nie zmienia.
 
 ## Korzystanie z grupy w aplikacji
 
@@ -8697,9 +8708,29 @@ Ekran grupy pokazuje, czy **Należy Ci się**, czy **Jesteś winien(-na)** (albo
 
 **Dodaj wydatek** otwiera formularz wydatku: **Kwota**, **Opis**, **Data**, **Płatnik** i **Podział**: **Po równo**, **Dokładne kwoty**, **Procenty** albo **Udziały**. **Zeskanuj paragon** odczytuje papierowy paragon i uzupełnia za Ciebie kwotę, opis i datę. Osoba, która dodała wydatek, osoba, która go zapłaciła, oraz właściciel grupy mogą go edytować lub usunąć. Usunięty wydatek zostaje w historii, oznaczony jako usunięty.
 
+Wydatek możesz też dodać z bota w Telegramie, WhatsAppie lub Slacku: wyślij `/group 120 pizza`, wybierz grupę i potwierdź — płacisz ty, a wydatek dzieli się po równo między wszystkich (zobacz Boty czatowe).
+
+## Wydatki według pozycji
+
+Gdy każdy miał coś innego, dodaj wydatek pozycja po pozycji zamiast dzielić całą kwotę. W **Dodaj wydatek** włącz **Według pozycji (podział po liniach paragonu)**. W **Pozycje paragonu** wpisz każdą **Pozycję** z jej **Ceną** i, jeśli był, **Rabatem**; **Dodaj pozycję** dodaje kolejną. **Rabat na paragon (opcjonalnie)** na cały paragon rozkłada się proporcjonalnie. **Skanuj paragon** wypełni pozycje za Ciebie. **Kwota** to to, co zapłacono: jeśli jest większa niż pozycje (kaucja za butelkę, napiwek), **reszta zostaje u płacącego**; **Użyj sumy pozycji jako kwoty** przepisuje sumę pozycji do kwoty.
+
+Stuknij wydatek według pozycji na liście aktywności (jest oznaczony **Według pozycji · otwarte do** jakiejś daty), aby otworzyć **Podziel paragon**. Przez tydzień każdy zaznacza w **Moje pozycje**, co miał, i stuka **Zapisz moje pozycje**; znajomi w przeglądarce robią to samo na stronie grupy. Pozycja zaznaczona przez kilka osób dzieli się między nie po równo, a to, czego nikt nie zaznaczy, zostaje u osoby, która zapłaciła. **Twoja część pozycji** pokazuje, ile wychodzi z Twoich zaznaczeń.
+
+Płacący, osoba, która dodała wydatek, i właściciel grupy widzą też **Wszyscy**: mogą wybrać, kto miał każdą pozycję, użyć **Podziel w %**, aby podzielić pozycję nierówno (to, czego nie rozdzielą, zostaje u płacącego), i stuknąć **Zapisz podział**. Mogą wcześniej **Zamknąć wybór** albo **Otworzyć ponownie na 7 dni**. Po tygodniu albo po zamknięciu wyboru tylko oni mogą zmienić, kto co miał. Dopóki paragon jest dzielony, ekran rozliczenia i **Kto komu płaci** informują, że kwoty mogą się jeszcze zmienić. Płatność, która już została zrobiona, zostaje bez zmian: jeśli czyjś udział zmieni się później, po prostu znowu pojawi się małe saldo.
+
+Na komputerze **Podziel paragon** otwiera się w oknie nad stroną grupy.
+
+## Wydatki w innej walucie
+
+Każda grupa prowadzi rozliczenia w jednej walucie — tej wybranej przy jej tworzeniu. Wydatek zapłacony w innej walucie i tak można dodać. W aplikacji stuknij walutę obok pola **Kwota** i wybierz tę, w której płaciłeś. Wiersz **Kurs wymiany** pokaże wtedy dzisiejszy kurs (np. *1 EUR =* 4,32 w walucie grupy) i to, ile wydatek będzie liczony; zmień kurs, jeśli znasz ten, po którym faktycznie zapłaciłeś. W przeglądarce znajomi wybierają **Walutę** pod kwotą.
+
+Wydatek jest przeliczany na walutę grupy jeden raz, przy zapisie, i to przeliczona kwota trafia do sald. Później już się nie zmienia, nawet gdy kursy się ruszają, więc rozliczona grupa pozostaje rozliczona. Historia pokazuje obie kwoty, np. „12,00 € → 51,80 zł”. Gdy później zmienisz kwotę, użyty zostanie ten sam kurs; gdy zmienisz walutę — nowy. Jeśli kurs jest niedostępny, aplikacja poprosi o jego wpisanie, a strona w przeglądarce — o ponowną próbę później albo wpisanie kwoty w walucie grupy. Przy podziale **Dokładne kwoty** wpisz część każdej osoby w walucie, w której płaciłeś. Płatności są zawsze w walucie grupy.
+
 ## Rozliczanie
 
 W linii **Kto komu ile**, która Cię dotyczy, dotknij **Rozlicz**. Jeśli osoba, której płacisz, dodała dane do płatności, zobaczysz przycisk lub instrukcję zapłaty. Wybierz **Jak zapłacono?**, a potem dotknij **Zapłaciłem(-am)** — albo **Otrzymałem(-am)**, jeśli to Tobie się płaci (przydatne, gdy znajomy oddał gotówkę i już nie wrócił do linku).
+
+Nie trzeba płacić wszystkiego naraz. Pole **Kwota** otwiera się z proponowaną płatnością; zmień ją, żeby zapisać część. Nie może być większa niż to, co jesteście sobie winni, więc płatność zawsze tylko zbliża oba salda do zera. Żeby zapłacić komuś, kogo nie ma w Twojej linii **Kto komu ile**, albo zapisać pieniądze otrzymane od kogoś, dotknij **Zapisz płatność** na ekranie grupy (na komputerze — na pasku narzędzi), wybierz osobę i wpisz kwotę.
 
 Płatność liczy się od razu, dla wszystkich. Jeśli zapisano ją przez pomyłkę, otwórz ją na liście aktywności i dotknij **Unieważnij płatność**: zostaje w historii, oznaczona jako unieważniona, a salda wracają. Jeśli ktoś inny zmienił grupę w czasie Twojego rozliczania, zobaczysz „Salda się zmieniły” — sprawdź liczby i spróbuj ponownie.
 
@@ -8714,6 +8745,14 @@ Dotknij **Członkowie**, aby zobaczyć wszystkich. Osoby oznaczone **Jeszcze nie
 
 Członek usunięty przez właściciela nie może wrócić przez link.
 
+Jeśli ktoś stracił dostęp w przeglądarce albo ktoś inny wybrał jego imię, właściciel może dotknąć tego członka, wybrać **Zresetuj logowanie tej osoby** i potwierdzić. Imię znów staje się wolne w linku, a ten, kto nadal korzysta ze starej przeglądarki, traci do niego dostęp. Nikogo innego to nie dotyczy, a wydatki i saldo członka pozostają bez zmian. Opcja jest dostępna tylko dla znajomych, którzy korzystają z grupy w przeglądarce i już wybrali swoje imię. Reset widać na liście **Aktywność** w aplikacji; strona w przeglądarce go nie pokazuje.
+
+### Łączenie dwóch członków
+
+Czasem jedna osoba trafia do grupy dwa razy — na przykład „Ania” z przeglądarki i „Ania”, która potem dołączyła w aplikacji, albo „Ania (2)” po utracie danych przeglądarki. Dotknij jednej z nich w **Członkowie**, wybierz **Połącz z…** i wskaż drugie imię. Potwierdzenie pokazuje, jakie saldo będzie miało pozostałe imię. Wszystko, co połączone imię zapłaciło, było winne i rozliczyło, przechodzi na pozostałe, płatność między nimi dwiema zostaje anulowana (to były pieniądze przełożone z jednej kieszeni do drugiej), a saldo nikogo innego nie zmienia się ani o grosz. Połączenia nie da się cofnąć.
+
+Właściciel może połączyć dwa imiona z przeglądarki albo imię z przeglądarki ze swoim. Każdy może połączyć ze swoim imieniem imię, którego nikt jeszcze nie wybrał. Nie można połączyć dwóch osób, które obie korzystają z aplikacji, i nikt nie może przenieść salda na cudze konto w aplikacji — ta osoba musi zrobić to sama. Połączenie widać w **Aktywności** w aplikacji i na stronie w przeglądarce.
+
 ### Opcje właściciela
 
 Osoba, która utworzyła grupę, widzi też **Opcje właściciela**:
@@ -8723,15 +8762,39 @@ Osoba, która utworzyła grupę, widzi też **Opcje właściciela**:
 - **Zarchiwizuj grupę** — grupa staje się tylko do odczytu dla wszystkich, ale końcowe salda pozostają widoczne. Jeśli salda nie są jeszcze rozliczone, potwierdzisz to przyciskiem **Zarchiwizuj mimo to**.
 - **Usuń grupę** — usuwa grupę i całą jej historię dla wszystkich. Tego nie można cofnąć.
 
-Jeśli właściciel usunie swoje konto, jego grupy też zostaną usunięte.
+### Przekazanie grupy
+
+Właściciel nie może opuścić grupy, dopóki jest jej właścicielem. Aby wyjść, otwórz **Członkowie**, dotknij członka, który korzysta z aplikacji, wybierz **Przekaż własność** i potwierdź. Ta osoba zostaje właścicielem i dostaje powiadomienie; ty zostajesz zwykłym członkiem i możesz potem jak zwykle wybrać **Opuść grupę** (twoje saldo musi najpierw wynosić zero). Właścicielem mogą zostać tylko członkowie korzystający z aplikacji, a nie znajomi, którzy używają grupy tylko w przeglądarce.
+
+Jeśli właściciel usunie swoje konto, grupa nie znika. Przechodzi automatycznie na członka, który dołączył najwcześniej spośród korzystających z aplikacji. Jeśli nikt inny w grupie nie korzysta z aplikacji, grupa dalej działa dla wszystkich (także dodawanie wydatków i rozliczanie), ale przez jakiś czas nie ma właściciela: ekran grupy o tym informuje, a opcje właściciela są niedostępne. Tylko członek, który był już w grupie i korzystał z aplikacji, zanim straciła właściciela, może dotknąć **Zostać właścicielem**; kto dołączy później, nie może jej przejąć. Jeśli usuniesz własne konto, Twoje imię w każdej grupie zmieni się na „Former member”, a Twoje dane do płatności tam zostaną usunięte; wydatki i salda pozostaną bez zmian.
+
+Zmiany właściciela widać na liście **Aktywność**, na przykład „Ania przekazał(a) własność osobie Bartek”. Strona w przeglądarce ich nie pokazuje.
+
+Jeśli konto zostanie trwale usunięte przez nasz zespół wsparcia, ta osoba pojawia się w swoich grupach jako **Former member** (były członek). Jej wydatki i płatności zostają, więc salda nadal się zgadzają.
+
+## Liczenie Twojego udziału w budżecie
+
+Zwykle grupa działa obok Twojego budżetu: to, co płacisz kartą, jest w budżecie, a grupa tylko śledzi, kto komu ile winien. Jeśli wolisz widzieć w budżetach i analizach to, co faktycznie zużyłeś, otwórz **Członkowie** i użyj **Licz mój udział w budżecie**.
+
+- Stuknij **Włącz…**, wybierz **Konto**, do którego trafi Twój udział, i jeśli chcesz **Kategorię**, a potem **Włącz**. Od tej chwili Twój udział w każdym wydatku grupy pojawia się na tym koncie jako osobna transakcja oznaczona **Udział w grupie**. Zaczyna od wydatków z tego miesiąca, więc zamknięte budżety pozostają nietknięte.
+- Dostępne są tylko konta, których jesteś właścicielem, i Twoje własne konto osobiste: na koncie wspólnym Twój udział zmieniłby liczby wszystkich. Konta szyfrowane end-to-end też nie są dostępne, bo serwer musiałby zapisać w nich udział jawnym tekstem.
+- Udział podąża za grupą: gdy ktoś edytuje wydatek, Twój udział się aktualizuje. Kwoty, waluty i daty nie można zmienić na Twoim koncie, ale kategoria, notatki i tagi są Twoje. Stuknij na nim **Z grupy …**, aby otworzyć grupę. Usunięty udział nie wraca.
+- Jeśli konto przestanie być dla Ciebie dostępne (zostałeś przeglądającym, zostało zarchiwizowane lub zaszyfrowane), liczenie jest **Wstrzymane** i nic nie jest dodawane, dopóki nie wybierzesz innego konta lub go nie wyłączysz.
+- **Wyłącz** usuwa udziały z Twojego konta, a powiązane płatności znów liczą się jako zwykłe wydatki. W grupie nic się nie zmienia.
+
+**Może być policzone podwójnie.** Jeśli zapłaciłeś za wydatek grupy kartą albo rozliczyłeś się przelewem i ta płatność jest też na Twoim koncie, zostałaby policzona dwa razy: raz jako płatność i raz jako Twój udział. Dlatego aplikacja powiązuje takie płatności z grupą: dostają oznaczenie **Powiązane z grupą** i nie wliczają się do sum, a zamiast nich liczy się Twój udział. Płatność jest powiązywana automatycznie tylko wtedy, gdy pasuje do niej dokładnie jedna transakcja (ta sama kwota i waluta, do 3 dni); w przeciwnym razie pojawia się jako **Możliwe dopasowanie**. Gdy wydatek, który opłaciłeś, dodał inny członek, nigdy nie jest powiązywany automatycznie — dostaniesz powiadomienie i pytanie „Czy to Twoja płatność kartą?”. Karta **Może być policzone podwójnie** na ekranie grupy (na komputerze w prawej kolumnie) pokazuje, co nie jest jeszcze powiązane. Stuknij **Przejrzyj**, aby **Powiąż** dopasowanie, odpowiedzieć **Nie to**, samodzielnie **Wybierz transakcję** albo **Odłącz** płatność.
+
+**Kompromis.** Dopóki salda są otwarte, saldo portfela różni się od banku o kwotę, którą grupa jest Ci winna lub Ty jej, bo Twój udział jest już liczony, a pieniądze, które go rozliczą, jeszcze nie. Po rozliczeniu znów się zgadza.
 
 ## Dołączanie do grupy w aplikacji
 
-Jeśli znajomy wyśle Ci link do grupy, a masz aplikację, dotknij **Dołącz z linku** na ekranie Grupy, wklej go w pole **Link do grupy**, wpisz **Twoje imię w tej grupie** i dotknij **Dołącz do grupy**. Jeśli Twoje imię zostało już wybrane w przeglądarce, nie dołączaj ponownie: otwórz link w przeglądarce i dotknij **Otwórz w aplikacji**, żeby zachować swoją historię.
+Jeśli znajomy wyśle Ci link do grupy, a masz aplikację, dotknij **Dołącz z linku** na ekranie Grupy i wklej go w pole **Link do grupy**. Aplikacja pokaże nazwę grupy oraz imiona, których nikt jeszcze nie wybrał. Dotknij swojego imienia albo **Nie ma mnie na liście** i wpisz **Twoje imię w tej grupie** (na początku to nazwa Twojego konta), a potem dotknij **Dołącz do grupy**. Jeśli ktoś dopisał Cię już z imienia, wybierz to imię, a przejmiesz to miejsce wraz z historią. Gdy ktoś zajmie imię chwilę przed Tobą, lista odświeży się i wybierzesz ponownie. Jeśli jesteś już w grupie, aplikacja zaproponuje **Otwórz grupę**. Do zarchiwizowanej grupy, która jest tylko do odczytu, nie można dołączyć. Jeśli swoje imię wybrano już w przeglądarce, użyj **Otwórz w aplikacji** na stronie dla gości, żeby zachować historię.
 
 ## Powiadomienia
 
 Gdy ktoś inny doda wydatek lub płatność, dostajesz powiadomienie — najwyżej jedno na grupę co kilka minut. Dotknięcie otwiera grupę. Wyłączysz je w **Ustawienia → Powiadomienia → Aktywność w grupach**.
+
+**Przypomnienia o saldzie.** Dopóki masz coś do oddania w grupie albo ktoś jest Ci winien, raz w tygodniu dostajesz przypomnienie — pierwsze tydzień po powstaniu salda i najwyżej cztery dla tego samego salda. Jeśli to Ty masz oddać, otwiera ekran rozliczenia z proponowaną płatnością i możesz zapłacić część kwoty; jeśli ktoś jest Ci winien, otwiera **Zapisz płatność**, a link do grupy możesz udostępnić, żeby przypomnieć innym. Dostajesz najwyżej jedno przypomnienie dziennie — dla grupy z największym saldem. O kwotach poniżej 1,00 nie przypominamy, a po rozliczeniu licznik zaczyna się od nowa. Znajomi, którzy korzystają z grupy tylko w przeglądarce, nie dostają przypomnień. Wyłączysz je w **Ustawienia → Powiadomienia → Przypomnienia o saldach w grupach**; to osobny przełącznik niż Aktywność w grupach.
 
 ## Prywatność
 
@@ -8739,3 +8802,7 @@ Gdy ktoś inny doda wydatek lub płatność, dostajesz powiadomienie — najwyż
 - Dane grupy **nie są szyfrowane end-to-end**, nawet jeśli używasz szyfrowania end-to-end dla swoich danych, bo znajomi czytają je w zwykłej przeglądarce.
 - Strona nigdy nie pokazuje niczyjego adresu e-mail ani tego, czy ktoś korzysta z aplikacji. Twoje dane do płatności widzi tylko osoba, która Ci płaci.
 - Jeśli link wycieknie, użyj **Zresetuj link** albo wyłącz **Dostęp przez link dla gości**.
+
+## Tryb offline
+
+Grupy wymagają połączenia z serwerem. Dopóki aplikacja nie może się z nim połączyć, widać o tym informację, a przyciski zmieniające dane (nowa grupa, dołączenie, dodanie wydatku, rozliczenie, członkowie itp.) są wyłączone. To, co już jest na ekranie, nadal możesz czytać. Wszystko odblokuje się samo, gdy tylko wróci połączenie.

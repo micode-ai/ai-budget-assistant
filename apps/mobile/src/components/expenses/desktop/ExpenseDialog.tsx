@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '@budget/shared-utils';
 import { showAlert } from '@/utils/alert';
 import { useTheme, useStyles, type Theme } from '@/theme';
+import { canMoveExpenseRow } from '@/features/groups/groupBudgetMirror';
 import {
   ExpenseDetailsCard,
   type ExpenseDetailsCardHandle,
@@ -214,7 +215,7 @@ export function ExpenseDialog({
                   <Ionicons name="pencil" size={18} color={theme.colors.primary} />
                 </Pressable>
               )}
-              {canEdit && !isEditing && onMove && (
+              {canEdit && !isEditing && onMove && (isIncome || canMoveExpenseRow(row.expense)) && (
                 <Pressable
                   onPress={onMove}
                   accessibilityRole="button"
@@ -277,6 +278,7 @@ export function ExpenseDialog({
                   onSaved={() => setIsEditing(false)}
                   isTripAccount={isTripAccount}
                   tripMembers={tripMembers}
+                  onNavigateAway={onClose}
                 />
 
                 {/* Mirrors `app/expense/[id].tsx:300-307` exactly — same three

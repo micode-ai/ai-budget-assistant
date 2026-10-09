@@ -16,6 +16,7 @@ import { WIDE_TABLE_MIN_WIDTH } from '@/components/webLayout.constants';
 import type { GroupExpense, GroupTransfer } from '@budget/shared-types';
 import { GroupBalanceHero } from '../GroupBalanceHero';
 import { GroupBalancesCard } from '../GroupBalancesCard';
+import { GroupBudgetLinksCard } from '../GroupBudgetLinksCard';
 import { GroupErrorState } from '../GroupErrorState';
 import { GroupShareCard } from '../GroupShareCard';
 import { GroupTransfersCard } from '../GroupTransfersCard';
@@ -29,7 +30,7 @@ const RAIL_WIDTH = 320;
 
 interface Props {
   groupId: string;
-  /** Set by the child routes (`/expense`, `/settle`, `/members`): open that dialog over the page. */
+  /** Set by the child routes (`/expense`, `/settle`, `/members`, `/claims`, `/budget-links`): open that dialog over the page. */
   initialDialog?: GroupDetailDialogState;
 }
 
@@ -228,6 +229,8 @@ export function GroupDetailDesktop({ groupId, initialDialog }: Props) {
           <View style={styles.rail}>
             <GroupTransfersCard detail={detail} canSettle={writable} onSettle={openSettle} />
             <GroupBalancesCard detail={detail} />
+            {/* ABA-661: "may be counted twice"; nothing while the budget mirror is off. */}
+            <GroupBudgetLinksCard groupId={groupId} onReview={() => setDialog({ kind: 'budgetLinks' })} />
             {writable && <GroupShareCard detail={detail} desktop />}
           </View>
         </View>

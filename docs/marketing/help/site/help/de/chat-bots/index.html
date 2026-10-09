@@ -20,7 +20,7 @@
 <link rel="alternate" hreflang="be" href="https://ai-budget.pl/help/be/chat-bots/">
 <link rel="alternate" hreflang="nl" href="https://ai-budget.pl/help/nl/chat-bots/">
 <link rel="alternate" hreflang="x-default" href="https://ai-budget.pl/help/en/chat-bots/">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "alternateName": ["MiCode Sp. z o.o.", "MiCode"], "taxID": "5833510147", "url": "https://mi-code.pl/", "sameAs": ["https://mi-code.pl/", "https://github.com/micode-ai", "https://www.wikidata.org/wiki/Q141551004"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Chat-Bots — Telegram, WhatsApp & Slack | AI Budget Assistant", "description": "Verwalte deine Finanzen direkt aus Telegram, WhatsApp oder Slack. Chatte mit KI, füge Ausgaben hinzu, scanne Belege und sende Sprachnachrichten — ohne die App zu öffnen.", "inLanguage": "de", "datePublished": "2026-06-19", "dateModified": "2026-09-03", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/de/chat-bots/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/de/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/de/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Hilfe", "item": "https://ai-budget.pl/help/de/"}, {"@type": "ListItem", "position": 3, "name": "Chat-Bots — Telegram, WhatsApp & Slack | AI Budget Assistant", "item": "https://ai-budget.pl/help/de/chat-bots/"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "alternateName": ["MiCode Sp. z o.o.", "MiCode"], "taxID": "5833510147", "url": "https://mi-code.pl/", "sameAs": ["https://mi-code.pl/", "https://github.com/micode-ai", "https://www.wikidata.org/wiki/Q141551004"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Chat-Bots — Telegram, WhatsApp & Slack | AI Budget Assistant", "description": "Verwalte deine Finanzen direkt aus Telegram, WhatsApp oder Slack. Chatte mit KI, füge Ausgaben hinzu, scanne Belege und sende Sprachnachrichten — ohne die App zu öffnen.", "inLanguage": "de", "datePublished": "2026-06-19", "dateModified": "2026-10-09", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/de/chat-bots/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/de/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/de/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Hilfe", "item": "https://ai-budget.pl/help/de/"}, {"@type": "ListItem", "position": 3, "name": "Chat-Bots — Telegram, WhatsApp & Slack | AI Budget Assistant", "item": "https://ai-budget.pl/help/de/chat-bots/"}]}]}</script>
 <style>
 :root{--o:#B45309;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
 *{box-sizing:border-box}
@@ -148,6 +148,10 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <td>Ausgabe hinzufügen</td>
 </tr>
 <tr>
+<td><code>/group 120 Pizza</code></td>
+<td>Ausgabe zu einer gemeinsamen Gruppe hinzufügen</td>
+</tr>
+<tr>
 <td><code>/income 3000 Gehalt</code></td>
 <td>Einnahme hinzufügen</td>
 </tr>
@@ -176,6 +180,8 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <blockquote>
 <p>Bei <strong>WhatsApp</strong> und <strong>Slack</strong> funktionieren Befehle mit oder ohne <code>/</code>. Du kannst auch einfach Betrag und Beschreibung eingeben: <code>50 Mittagessen</code>.</p>
 </blockquote>
+<h2>Ausgabe zu einer gemeinsamen Gruppe hinzufügen</h2>
+<p>Sende <code>/group 120 Pizza</code>, um eine Ausgabe zu einer deiner gemeinsamen Gruppen hinzuzufügen (in WhatsApp und Slack geht auch <code>group 120 Pizza</code>). Bist du in mehreren Gruppen, fragt der Bot, in welche – wähle sie aus der Liste. Prüfe dann die Karte: Gruppe, Betrag, Beschreibung, <em>bezahlt von dir</em>, <em>zu gleichen Teilen</em> – und tippe auf <strong>Bestätigen</strong>, oder auf <strong>Abbrechen</strong>, um nichts hinzuzufügen. Du bist immer der Zahler, und die Ausgabe wird immer zu gleichen Teilen auf alle Mitglieder aufgeteilt; für einen anderen Zahler oder eine andere Aufteilung füge sie in der App hinzu. Für eine andere Währung schreibe sie hinter den Betrag (<code>/group 25 EUR Taxi</code>): Die Ausgabe wird zum heutigen Kurs in die Gruppenwährung umgerechnet; gibt es keinen Kurs, sagt der Bot das und fügt nichts hinzu. Archivierte Gruppen werden nicht angeboten, und es werden keine KI-Anfragen verbraucht.</p>
 <h2>Belegscan</h2>
 <ol>
 <li>Fotografiere einen Beleg und sende ihn dem Bot</li>

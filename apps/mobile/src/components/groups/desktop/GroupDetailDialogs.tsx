@@ -1,3 +1,4 @@
+import { GroupBudgetLinksDialog } from './GroupBudgetLinksDialog';
 import { GroupClaimsDialog } from './GroupClaimsDialog';
 import { GroupExpenseDialog } from './GroupExpenseDialog';
 import { GroupMembersDialog } from './GroupMembersDialog';
@@ -8,7 +9,9 @@ export type GroupDetailDialogState =
   | { kind: 'settle'; from?: string; to?: string }
   | { kind: 'members' }
   /** ABA-656: an itemised expense's lines. Without an id (a malformed deep link) nothing opens. */
-  | { kind: 'claims'; expenseId?: string };
+  | { kind: 'claims'; expenseId?: string }
+  /** ABA-661: the "may be counted twice" list of the budget mirror. */
+  | { kind: 'budgetLinks' };
 
 interface Props {
   groupId: string;
@@ -36,6 +39,8 @@ export function GroupDetailDialogs({ groupId, dialog, onClose, onLeftGroup, onSw
       return <GroupSettleDialog groupId={groupId} from={dialog.from} to={dialog.to} onClose={onClose} />;
     case 'members':
       return <GroupMembersDialog groupId={groupId} onClose={onClose} onLeftGroup={onLeftGroup} />;
+    case 'budgetLinks':
+      return <GroupBudgetLinksDialog groupId={groupId} onClose={onClose} />;
     case 'claims':
       if (!dialog.expenseId) return null;
       return (

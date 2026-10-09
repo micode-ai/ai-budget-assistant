@@ -9,6 +9,7 @@ import { useExpensesScreenData, type ActiveTab } from '@/features/expenses/useEx
 import { rowId, facetValue, type ActiveFacets, type LedgerRow } from '@/features/expenses/desktopTable';
 import { trimToVisible } from '@/features/expenses/desktopSelection';
 import { getMoveTargets } from '@/features/expenses/moveTargets';
+import { canMoveExpenseRow } from '@/features/groups/groupBudgetMirror';
 import { useDesktopShortcut } from '@/hooks/useDesktopShortcuts';
 import { ExpenseMapView } from '@/components/map/ExpenseMapView';
 import { buildExpenseMapPoints } from '@/components/map/buildMapPoints';
@@ -629,7 +630,8 @@ export function ExpensesDesktop() {
             handleDuplicate();
           }}
           onMove={
-            canMove && menuState.row.kind === 'expense'
+            // ABA-661: a group share row or a group-linked payment cannot be moved (400 EXPENSE_LINKED).
+            canMove && menuState.row.kind === 'expense' && canMoveExpenseRow(menuState.row.expense)
               ? (() => {
                   const id = menuState.row.expense.id;
                   return () => setMoveExpenseId(id);
@@ -651,7 +653,7 @@ export function ExpensesDesktop() {
         tripMembers={tripMembers}
         dialogInitialEditing={dialogInitialEditing}
         onMoveSelected={
-          canMove && selectedRow?.kind === 'expense'
+          canMove && selectedRow?.kind === 'expense' && canMoveExpenseRow(selectedRow.expense)
             ? () => {
                 const id = selectedRow.expense.id;
                 closeDialog();

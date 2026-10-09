@@ -3899,7 +3899,7 @@ Tik op een uitgave om de volledige details te bekijken:
 - **Notities** (indien toegevoegd)
 - **Toegevoegd door** — wordt getoond in gedeelde accounts; toont de naam van het accountlid dat deze post heeft aangemaakt
 - **Synchronisatiestatus** — in behandeling, gesynchroniseerd, conflict of fout
-- **Bron** — Handmatige invoer, Spraakinvoer, Bon scannen, Geïmporteerd of Automatisch vastgelegd (boekingen uit een bankmelding of import zijn gemarkeerd, zodat je ze herkent)
+- **Bron** — Handmatige invoer, Spraakinvoer, Bon scannen, Geïmporteerd of Automatisch vastgelegd (boekingen uit een bankmelding of import zijn gemarkeerd, zodat je ze herkent) · **Gedeelde groep** markeert je deel van een groepsuitgave (zie Gedeelde groepen), en **Gekoppeld aan groep** een betaling die buiten de totalen valt omdat in plaats daarvan je deel telt
 - **Bonitems** — afzonderlijke items (voor gescande bonnen, of later geëxtraheerd via **Artikelen extraheren**)
 - **Bonafbeelding** — bekijk, deel, sla op in galerij, vervang of verwijder de bonfoto. Pdf-bonnen tonen een documentvoorbeeld dat je kunt aantikken om te openen. Als er nog geen bon is gekoppeld, tik dan op **Bon toevoegen** om er een toe te voegen — kies **Foto maken**, **Kies uit galerij** of **Kies pdf**. Werkt voor elke uitgave, ook voor handmatig toegevoegde. Is de bon pas na het aanmaken van de uitgave gekoppeld, tik dan op **Artikelen extraheren** in de bonkaart om de bon opnieuw door AI te laten lezen en de regels in de uitgave te zetten (met bevestiging als er al items zijn; elke lezing verbruikt één AI-verzoek)
 
@@ -6701,6 +6701,7 @@ Om te verbinden: **Instellingen → Chatbots**.
 |---|---|
 | `/link CODE` | Koppel je messenger aan de app |
 | `/expense 50 lunch` | Voeg een uitgave toe |
+| `/group 120 pizza` | Voeg een uitgave toe aan een gedeelde groep |
 | `/income 3000 salary` | Voeg inkomsten toe |
 | `/category expense Food` | Maak een categorie aan |
 | `/usage` | Bekijk AI-verzoekgebruik en limieten |
@@ -6710,6 +6711,10 @@ Om te verbinden: **Instellingen → Chatbots**.
 | `/help` | Toon alle commando's |
 
 > In **WhatsApp** en **Slack** werken commando's met of zonder de voorloop-`/`. Je kunt ook gewoon een bedrag en omschrijving typen: `50 lunch`.
+
+## Een uitgave aan een gedeelde groep toevoegen
+
+Stuur `/group 120 pizza` om een uitgave toe te voegen aan een van je gedeelde groepen (in WhatsApp en Slack werkt ook `group 120 pizza`). Zit je in meerdere groepen, dan vraagt de bot welke — kies die uit de lijst. Controleer daarna de kaart: groep, bedrag, omschrijving, *betaald door jou*, *gelijk verdeeld* — en tik op **Bevestigen**, of op **Annuleren** om niets toe te voegen. Jij bent altijd de betaler en de uitgave wordt altijd gelijk verdeeld over alle leden; voor een andere betaler of een andere verdeling voeg je hem toe in de app. Voor een andere valuta zet je die na het bedrag (`/group 25 EUR taxi`): de uitgave wordt tegen de koers van vandaag omgerekend naar de valuta van de groep, en als er geen koers is, meldt de bot dat en voegt hij niets toe. Gearchiveerde groepen worden niet aangeboden, en het kost geen AI-verzoeken.
 
 ## Bonnen scannen
 
@@ -8250,6 +8255,8 @@ Groepsgeld blijft gescheiden van je eigen financiën: niets uit een groep versch
 
 Tik op **Groepen** in de snelle acties op het startscherm. Je ziet je groepen en je saldo in elke groep, plus **Nieuwe groep** en **Deelnemen met link**.
 
+Op een computer (een browservenster breder dan ongeveer 1000 pixels) staat **Groepen** ook bij de snelle links rechts op het startscherm en in **Instellingen**. Je groepen verschijnen in een tabel, en een groep maken, een uitgave toevoegen, afrekenen en de ledenlijst openen in een venster boven de pagina.
+
 ## Een groep maken
 
 1. Tik op **Nieuwe groep**.
@@ -8276,18 +8283,22 @@ De link opent een eenvoudige pagina in hun browser — niets installeren, niet r
 Daarna kunnen ze:
 
 - **Uitgave toevoegen** — *Waarvoor?*, het bedrag, de datum en wie betaald heeft invullen, kiezen voor **Gelijk verdeeld** (aanvinken wie meedoet) of **Exacte bedragen** (invullen wat ieder schuldig is) en op **Uitgave toevoegen** tikken. Een uitgave die ze zelf hebben toegevoegd, kunnen ze met **Verwijderen** weghalen.
-- **Verrekenen** — bij een betaling die hen aangaat op **Markeren als betaald** tikken (als zij betaald hebben) of op **Markeren als ontvangen** (als zij het geld kregen). Een per ongeluk vastgelegde betaling kan met **Ongedaan maken** worden teruggedraaid door wie hem vastlegde of door wie hem ontving.
+- **Verrekenen** — bij een betaling die hen aangaat op **Markeren als betaald** tikken (als zij betaald hebben) of op **Markeren als ontvangen** (als zij het geld kregen). Een per ongeluk vastgelegde betaling kan met **Ongedaan maken** worden teruggedraaid door wie hem vastlegde of door wie hem ontving. Het bedrag is ingevuld met de voorgestelde betaling en kan worden aangepast om een deel te betalen.
 - **Jouw betaalgegevens** — een methode kiezen, een rekening of gebruikersnaam invullen en op **Opslaan** tikken. Alleen wie hen moet betalen ziet deze gegevens, op zijn eigen betaalregel, waar mogelijk met een kant-en-klare Revolut- of PayPal-knop.
 - **Dat ben ik niet / dit apparaat vergeten** — meldt deze browser af van hun naam, bijvoorbeeld op een gedeelde telefoon of computer.
 - **Heb je een herstelcode?** — op een nieuw apparaat de **Herstelcode** invullen en op **Herstellen** tikken.
 
-Raakt iemand zowel zijn browsergegevens als zijn herstelcode kwijt, dan kan hij opnieuw deelnemen onder een iets andere naam, of de eigenaar van de groep stelt de link opnieuw in (zie hieronder) zodat iedereen zijn naam opnieuw kiest.
+Raakt iemand zowel zijn browsergegevens als zijn herstelcode kwijt, dan kan hij opnieuw deelnemen onder een iets andere naam, of de eigenaar van de groep stelt de link opnieuw in (zie hieronder) zodat iedereen zijn naam opnieuw kiest. De eigenaar kan ook alleen die ene naam vrijgeven: zie **Aanmelding van deze persoon resetten** onder Leden.
 
 Op een paar handige momenten raadt de pagina ook de app aan — voor meldingen, het lezen van papieren bonnen of herinneringen — maar niets op de pagina vereist hem.
 
+### Een bon regel voor regel verdelen
+
+Als een bon regel voor regel aan de groep is toegevoegd, toont de pagina hem een week lang onder **Een bon verdelen**. Open hem, vink aan wat jij had en tik op **Mijn items opslaan**. Een regel die meerdere mensen aanvinken, wordt gelijk tussen hen verdeeld, en wat niemand aanvinkt, blijft bij degene die betaalde. Elke regel die je aanvinkte toont **jouw deel**, en **Jouw deel van deze bon** toont het totaal. Een regel met **verdeeld door** en een naam is met de hand verdeeld door degene die betaalde en kan hier niet worden gewijzigd. Na een week, of zodra degene die betaalde de bon sluit, kunnen alleen die persoon of de eigenaar van de groep nog wijzigen wie wat had. Zolang een bon nog wordt verdeeld, meldt **Wie betaalt wie** dat bedragen nog kunnen veranderen. Een betaling die al is vastgelegd, blijft zoals ze is: verandert jouw deel daarna, dan verschijnt er gewoon weer een klein saldo.
+
 ### Van de browser naar de app
 
-Onder **Bewaar deze groep in de app** kan een vriend op **Doorgaan in de browser-app** tikken (of op Android op **Openen in de app**, als de app al geïnstalleerd is). Na het inloggen of een account aanmaken gaat de groep met de volledige geschiedenis naar dat account — er gaat niets verloren. Deze link werkt maar één keer en maar een paar minuten. Installeert hij eerst de app uit Google Play, dan opent hij daarna de groepslink opnieuw in de browser en tikt op **Openen in de app**.
+Onder **Bewaar deze groep in de app** kan een vriend op **Doorgaan in de browser-app** tikken (of op Android op **Openen in de app**, als de app al geïnstalleerd is). Na het inloggen of een account aanmaken gaat de groep met de volledige geschiedenis naar dat account — er gaat niets verloren. Deze link werkt maar één keer en maar een paar minuten. Installeert hij eerst de app uit Google Play, dan opent hij daarna de groepslink opnieuw in de browser en tikt op **Openen in de app**. Zit je in de app al onder een andere naam in de groep, dan biedt de app in plaats daarvan **“Ania” samenvoegen met je account** aan (met je browsernaam): die naam en alles eronder gaan naar je app-naam, en niemand anders zijn saldo verandert.
 
 ## Een groep gebruiken in de app
 
@@ -8295,9 +8306,29 @@ Het groepsscherm toont of **Je krijgt nog** of **Je bent verschuldigd** (of **Al
 
 **Uitgave toevoegen** opent het formulier: **Bedrag**, **Omschrijving**, **Datum**, **Betaald door** en **Verdeling**: **Gelijk**, **Exacte bedragen**, **Percentages** of **Delen**. **Bon scannen** leest een papieren bon en vult bedrag, omschrijving en datum voor je in. Wie een uitgave heeft toegevoegd, wie hem heeft betaald en de eigenaar van de groep kunnen hem bewerken of verwijderen. Een verwijderde uitgave blijft in de geschiedenis staan, gemarkeerd als verwijderd.
 
+Je kunt ook een uitgave toevoegen via de Telegram-, WhatsApp- of Slack-bot: stuur `/group 120 pizza`, kies de groep en bevestig — jij bent de betaler en het wordt gelijk verdeeld over iedereen (zie Chatbots).
+
+## Uitgaven per artikel
+
+Als iedereen iets anders had, voeg de uitgave dan regel voor regel toe in plaats van het totaal te verdelen. Zet in **Uitgave toevoegen** **Per artikel (verdelen per bonregel)** aan. Vul onder **Bonregels** elk **Artikel** in met zijn **Prijs** en, als die er was, zijn **Korting**; **Regel toevoegen** voegt er meer toe. Een **Korting op de bon (optioneel)** op de hele bon wordt naar verhouding verdeeld. **Bon scannen** vult de regels voor je in. Het **Bedrag** is wat er betaald is: is het hoger dan de regels (statiegeld, een fooi), dan **blijft de rest bij wie betaalde**; **Gebruik het totaal van de regels als bedrag** neemt het totaal van de regels over.
+
+Tik in de activiteitenlijst op een uitgave per artikel (gemarkeerd met **Per artikel · open tot** een datum) om **Bon verdelen** te openen. Een week lang vinkt iedereen onder **Mijn regels** aan wat hij had en tikt op **Mijn regels opslaan**; vrienden in de browser doen hetzelfde op de groepspagina. Een regel die door meerdere mensen is aangevinkt, wordt gelijk tussen hen verdeeld, en wat niemand aanvinkt, blijft bij wie betaalde. **Jouw deel van de regels** toont wat jouw vinkjes opleveren.
+
+Wie betaalde, wie de uitgave toevoegde en de eigenaar van de groep zien ook **Iedereen**: daar kiezen ze wie elke regel had, verdelen ze een regel ongelijk met **Verdelen in %** (wat niet is toegewezen, blijft bij wie betaalde) en tikken op **Verdeling opslaan**. Ze kunnen eerder **Claimen sluiten** of **7 dagen heropenen**. Na de week, of zodra het claimen gesloten is, kunnen alleen zij nog wijzigen wie wat had. Zolang een bon nog wordt verdeeld, melden het afrekenscherm en **Wie betaalt wie** dat bedragen nog kunnen veranderen. Een betaling die al is gedaan, blijft zoals ze is: verandert een deel later, dan verschijnt er gewoon weer een klein saldo.
+
+Op een computer opent **Bon verdelen** in een venster boven de groepspagina.
+
+## Uitgaven in een andere valuta
+
+Elke groep houdt de rekening bij in één valuta, die bij het aanmaken is gekozen. Een uitgave in een andere valuta kun je toch toevoegen. Tik in de app op de valuta naast **Bedrag** en kies die waarin je hebt betaald. De rij **Wisselkoers** toont dan de koers van vandaag (bijvoorbeeld *1 EUR =* 4,32 in de groepsvaluta) en hoeveel de uitgave telt; pas de koers aan als je weet welke je echt hebt betaald. In de browser kiezen vrienden de **Valuta** onder het bedrag.
+
+De uitgave wordt één keer, bij het opslaan, omgerekend naar de groepsvaluta, en dat omgerekende bedrag gebruiken de saldi. Het verandert daarna nooit meer, ook niet als koersen bewegen, dus een verrekende groep blijft verrekend. De geschiedenis toont beide bedragen, bijvoorbeeld '€ 12,00 → 51,80 zł'. Pas je later het bedrag aan, dan wordt dezelfde koers gebruikt; pas je de valuta aan, dan wordt een nieuwe koers genomen. Is er geen koers beschikbaar, dan vraagt de app je hem in te vullen, en de browserpagina om het later opnieuw te proberen of het bedrag in de groepsvaluta in te voeren. Bij **Exacte bedragen** vul je ieders deel in de valuta in waarin je hebt betaald. Betalingen zijn altijd in de groepsvaluta.
+
 ## Verrekenen
 
 Tik in een regel van **Wie betaalt wie** die jou aangaat op **Verrekenen**. Heeft de persoon die je betaalt betaalgegevens ingevuld, dan zie je een knop of instructies om te betalen. Kies **Hoe is er betaald?** en tik op **Ik heb betaald** — of op **Ik heb het ontvangen** als jij degene bent die betaald wordt (handig als een vriend je contant betaalde en nooit meer op de link terugkwam).
+
+Je hoeft niet alles in één keer te betalen. Het **Bedrag** opent met de voorgestelde betaling; pas het aan om een deel vast te leggen. Het kan niet hoger zijn dan wat jullie elkaar schuldig zijn, dus een betaling brengt beide saldi altijd alleen dichter bij nul. Wil je iemand betalen die niet in jouw regel van **Wie betaalt wie** staat, of geld vastleggen dat je van iemand kreeg, tik dan op het groepsscherm op **Betaling vastleggen** (op de computer in de werkbalk), kies de persoon en vul het bedrag in.
 
 Een betaling telt meteen, voor iedereen. Is hij per ongeluk vastgelegd, open hem dan in de activiteitenlijst en tik op **Betaling ongeldig maken**: hij blijft in de geschiedenis staan, gemarkeerd als ongeldig, en de saldi gaan terug. Heeft iemand anders de groep gewijzigd terwijl jij verrekende, dan zie je „De saldi zijn gewijzigd” — controleer de bedragen en probeer het opnieuw.
 
@@ -8312,6 +8343,14 @@ Tik op **Leden** om iedereen te zien. Leden met **Nog niet toegetreden** hebben 
 
 Een lid dat door de eigenaar is verwijderd, kan niet via de link terugkomen.
 
+Is iemand de toegang in de browser kwijt, of heeft iemand anders zijn naam gekozen, dan kan de eigenaar op dat lid tikken, **Aanmelding van deze persoon resetten** kiezen en bevestigen. De naam is dan weer vrij in de link, en wie de oude browser nog gebruikt, verliest de toegang. Verder verandert er voor niemand iets, en de uitgaven en het saldo van het lid blijven precies zoals ze waren. Dit wordt alleen aangeboden voor vrienden die de groep in de browser gebruiken en hun naam al hebben gekozen. De reset verschijnt in de app in de lijst **Activiteit**; de browserpagina toont hem niet.
+
+### Twee leden samenvoegen
+
+Soms staat één persoon twee keer in de groep — bijvoorbeeld “Ania” uit de browser en “Ania” die later via de app meedeed, of “Ania (2)” nadat haar browsergegevens weg waren. Tik in **Leden** op een van beiden, kies **Samenvoegen met…** en kies de andere naam. De bevestiging toont welk saldo de overgebleven naam krijgt. Alles wat de samengevoegde naam betaald heeft, schuldig was en verrekend heeft, gaat naar de overgebleven naam, een betaling tussen die twee wordt geannuleerd (dat was geld van de ene zak naar de andere), en niemand anders zijn saldo verandert ook maar een cent. Samenvoegen kan niet ongedaan worden gemaakt.
+
+De eigenaar kan twee browsernamen samenvoegen, of een browsernaam met de eigen naam. Iedereen kan een naam die nog niemand gekozen heeft met de eigen naam samenvoegen. Twee mensen die allebei de app gebruiken, kunnen niet worden samengevoegd, en niemand kan een saldo op het app-account van een ander zetten — dat moet die persoon zelf doen. De samenvoeging verschijnt onder **Activiteit** in de app en op de browserpagina.
+
 ### Eigenaarsopties
 
 Wie de groep heeft gemaakt, ziet ook **Eigenaarsopties**:
@@ -8321,15 +8360,39 @@ Wie de groep heeft gemaakt, ziet ook **Eigenaarsopties**:
 - **Groep archiveren** — de groep wordt voor iedereen alleen-lezen, maar de eindsaldi blijven zichtbaar. Staan er nog saldi open, dan bevestig je met **Toch archiveren**.
 - **Groep verwijderen** — verwijdert de groep en de hele geschiedenis voor iedereen. Dit kan niet ongedaan worden gemaakt.
 
-Verwijdert de eigenaar zijn eigen account, dan worden zijn groepen ook verwijderd.
+### De groep overdragen
+
+De eigenaar kan een groep niet verlaten zolang hij de eigenaar is. Om te vertrekken open je **Leden**, tik je op een lid dat de app gebruikt, kies je **Eigenaar maken** en bevestig je. Diegene wordt eigenaar en krijgt een melding; jij blijft gewoon lid en kunt daarna zoals altijd **Groep verlaten** kiezen (je saldo moet eerst nul zijn). Alleen leden die de app gebruiken kunnen eigenaar worden, niet vrienden die de groep alleen in de browser gebruiken.
+
+Verwijdert de eigenaar zijn account, dan verdwijnt de groep niet. Hij gaat automatisch naar het lid dat als eerste lid werd onder wie de app gebruikt. Gebruikt verder niemand in de groep de app, dan blijft de groep voor iedereen werken (ook uitgaven toevoegen en afrekenen), maar heeft hij een tijdje geen eigenaar: het groepsscherm meldt dat, en de eigenaarsopties zijn niet beschikbaar. Alleen een lid dat al in de groep zat en de app gebruikte voordat die geen eigenaar meer had, kan op **Eigenaar worden** tikken; wie later lid wordt, kan hem niet overnemen. Verwijder je je eigen account, dan wordt je naam in elke groep "Former member" en worden je betaalgegevens daar gewist; uitgaven en saldo's blijven zoals ze zijn.
+
+Eigenaarswissels staan in de lijst **Activiteit**, bijvoorbeeld "Anna heeft Bram eigenaar gemaakt". De browserpagina laat ze niet zien.
+
+Wordt een account door ons supportteam definitief verwijderd, dan staat die persoon in zijn groepen als **Former member** (voormalig lid). Zijn uitgaven en betalingen blijven, zodat de saldi blijven kloppen.
+
+## Je deel in je budget meetellen
+
+Normaal loopt een groep naast je budget: wat je met je kaart betaalt staat in je budget, en de groep houdt alleen bij wie wie wat schuldig is. Wil je in budgetten en analyses zien wat je echt verbruikt hebt, open dan **Leden** en gebruik **Mijn deel in mijn budget meetellen**.
+
+- Tik op **Aanzetten…**, kies de **Rekening** waar je deel in komt en eventueel een **Categorie**, en dan **Aanzetten**. Vanaf dan verschijnt je deel van elke groepsuitgave in die rekening als eigen transactie, gemarkeerd als **Groepsdeel**. Het begint met de uitgaven van deze maand, dus afgesloten budgetten blijven onaangeroerd.
+- Alleen rekeningen waarvan je eigenaar bent en je eigen persoonlijke rekening worden aangeboden: in een gedeelde rekening zou je deel ieders cijfers veranderen. End-to-end versleutelde rekeningen worden ook niet aangeboden, omdat de server je deel er in platte tekst in zou moeten schrijven.
+- Een deel volgt de groep: past iemand de uitgave aan, dan wordt je deel bijgewerkt. Bedrag, valuta en datum kun je in je rekening niet wijzigen, maar categorie, notities en tags zijn van jou. Tik erop op **Uit groep …** om de groep te openen. Een verwijderd deel komt niet terug.
+- Kun je de rekening niet meer gebruiken (je bent alleen nog kijker, hij is gearchiveerd of versleuteld), dan is het meetellen **Gepauzeerd** en wordt er niets toegevoegd tot je een andere rekening kiest of het uitzet.
+- **Uitzetten** haalt de delen uit je rekening en je gekoppelde betalingen tellen weer als gewone uitgaven. In de groep verandert niets.
+
+**Wordt mogelijk dubbel geteld.** Heb je een groepsuitgave met je kaart betaald, of met een overschrijving verrekend, en staat die betaling ook in je rekening, dan zou ze dubbel geteld worden: als betaling en als je deel. Daarom koppelt de app zulke betalingen aan de groep: ze krijgen de markering **Gekoppeld aan groep** en vallen buiten je totalen, en in plaats daarvan telt je deel. Een betaling wordt alleen automatisch gekoppeld als precies één transactie past (zelfde bedrag en valuta, binnen 3 dagen); anders verschijnt ze als **Mogelijke overeenkomst**. Heeft een ander lid de uitgave toegevoegd die jij betaalde, dan wordt nooit automatisch gekoppeld — je krijgt een melding en de vraag „Is dit je kaartbetaling?”. De kaart **Wordt mogelijk dubbel geteld** op het groepsscherm (op een computer in de rechterkolom) toont wat nog niet gekoppeld is. Tik op **Bekijken** om een overeenkomst te **Koppelen**, **Niet deze** te zeggen, zelf te kiezen via **Kies een transactie** of een betaling te **Ontkoppelen**.
+
+**De afweging.** Zolang saldi openstaan, wijkt je portemonnee-saldo af van de bank met wat de groep jou of jij de groep schuldig bent: je deel telt al, het geld dat het verrekent nog niet. Na het verrekenen klopt het weer.
 
 ## Deelnemen aan een groep in de app
 
-Stuurt een vriend je een groepslink en heb je de app, tik dan op het scherm Groepen op **Deelnemen met link**, plak hem in **Groepslink**, vul **Jouw naam in deze groep** in en tik op **Deelnemen aan groep**. Heb je je naam al in de browser gekozen, neem dan niet nog eens deel: open de link in de browser en tik op **Openen in de app**, zodat je je geschiedenis houdt.
+Stuurt een vriend je een groepslink en heb je de app, tik dan op het scherm Groepen op **Deelnemen met link** en plak hem in **Groepslink**. De app toont de naam van de groep en de namen die nog niemand heeft gekozen. Tik op je eigen naam, of op **Ik sta niet in de lijst** en vul **Jouw naam in deze groep** in (eerst is dat de naam van je account), en tik op **Deelnemen aan groep**. Is je naam al eerder toegevoegd, kies dan die naam, dan neem je die plek met de bijbehorende geschiedenis over. Kiest iemand de naam vlak voor jou, dan ververst de lijst en kies je opnieuw. Zit je al in de groep, dan biedt de app **Groep openen** aan. Een gearchiveerde groep is alleen-lezen, dus daaraan kun je niet deelnemen. Heb je je naam al in de browser gekozen, gebruik dan **Openen in de app** op de gastpagina, zodat je je geschiedenis houdt.
 
 ## Meldingen
 
 Als iemand anders een uitgave of betaling toevoegt, krijg je een melding — hooguit één per groep per paar minuten. Tikken opent de groep. Uitzetten kan onder **Instellingen → Meldingen → Groepsactiviteit**.
+
+**Saldoherinneringen.** Zolang je in een groep geld schuldig bent, of iemand jou iets schuldig is, krijg je één keer per week een herinnering — de eerste een week nadat het saldo ontstond, en hooguit vier voor hetzelfde saldo. Ben jij iets schuldig, dan opent ze het afrekenscherm op de voorgestelde betaling en kun je ook een deel betalen; krijg je nog geld, dan opent ze **Betaling vastleggen** en kun je de groepslink delen om de anderen eraan te herinneren. Je krijgt hooguit één herinnering per dag, voor de groep met het grootste saldo. Voor saldi onder 1,00 sturen we nooit een herinnering, en zodra een saldo is vereffend begint de telling opnieuw. Vrienden die de groep alleen in de browser gebruiken, krijgen nooit herinneringen. Uitzetten kan onder **Instellingen → Meldingen → Herinneringen voor groepssaldi**; dit staat los van Groepsactiviteit.
 
 ## Privacy
 
@@ -8337,3 +8400,7 @@ Als iemand anders een uitgave of betaling toevoegt, krijg je een melding — hoo
 - Groepsgegevens zijn **niet end-to-end versleuteld**, ook niet als je end-to-end-versleuteling voor je eigen gegevens gebruikt, omdat vrienden ze in een gewone browser lezen.
 - De pagina toont nooit iemands e-mailadres en ook niet of iemand de app gebruikt. Jouw betaalgegevens ziet alleen degene die jou betaalt.
 - Is de link uitgelekt, gebruik dan **Link opnieuw instellen** of zet **Toegang via de gastlink** uit.
+
+## Offline
+
+Groepen hebben een verbinding met de server nodig. Zolang de app die niet kan bereiken, meldt een balk dat en zijn de knoppen die iets wijzigen (nieuwe groep, deelnemen, uitgave toevoegen, afrekenen, leden enzovoort) uitgeschakeld. Wat al op het scherm staat, kun je gewoon lezen. Zodra de verbinding terug is, wordt alles vanzelf weer actief.

@@ -55,6 +55,11 @@ Mobile:
 - `apps/mobile/src/hooks/useGroupLinkDeepLink.ts` — a link code stashed while signed out
 - `apps/mobile/src/features/groups/groupMerge.ts` — who the member sheet offers a merge with, the confirm's
   preview, the link-code merge offer (ABA-657)
+- Count my share in my budget (ABA-661): `apps/mobile/src/features/groups/groupBudgetMirror.ts` (pure),
+  `apps/mobile/src/stores/groupBudgetStore.ts`, `apps/mobile/src/components/groups/GroupBudgetMirrorCard.tsx`,
+  `apps/mobile/src/components/groups/GroupBudgetLinksCard.tsx`, `apps/mobile/src/components/groups/GroupBudgetLinksView.tsx`,
+  `apps/mobile/src/components/groups/GroupTransactionBanner.tsx`, `apps/mobile/app/groups/[id]/budget-links.tsx`,
+  `apps/mobile/src/components/groups/desktop/GroupBudgetLinksDialog.tsx`
 - Entry: the `groups` quick action (`apps/mobile/src/stores/quickActionStore.ts`); the activity push opens
   `/groups/:id`, the balance reminder `/groups/:id/settle` (`apps/mobile/src/services/notifications.ts`
   through `apps/mobile/src/features/groups/groupPush.ts`)
@@ -757,7 +762,7 @@ focusable, left out of the keyboard `order` (so `Enter` cannot land on one).
 ## Count my share in my budget (ABA-660, server)
 
 Phase-2 spec section H2, user decision of 2026-10-09: the **consumption mirror**, opt-in per group.
-Server only; the app UI is ABA-661 (task H3), so nothing can turn it on yet. Files:
+The app half is ABA-661 (task H3, *The app* below). Server files:
 `apps/api/src/modules/groups/group-budget-mirror.ts` (pure: share-row plan, the two-tier matcher, the
 accounting check), `apps/api/src/modules/groups/group-budget-mirror.service.ts`
 (`GroupBudgetMirrorService`), `apps/api/src/modules/groups/group-budget-mirror.cron.ts` (the sweep),
@@ -853,6 +858,65 @@ that do not fit the kind), 404 `LEG_NOT_FOUND` (not my leg in this group's windo
 404 `SUGGESTION_NOT_FOUND` / `LINK_NOT_FOUND` (re-scoped to my member row). Rate limits: reads 60/min,
 on/off 10/min, link writes 20/min. Shared types also gained `ExpenseSource` `'group'` and
 `Expense.groupExpenseId?`.
+
+**The app (ABA-661, task H3).** Phone and desktop web; nothing is rendered in CI, so layout, focus and
+theme legibility are unverified until someone looks at a device and the deployed build.
+- **The opt-in** is `GroupBudgetMirrorCard` in `GroupMembersView` under *My payment details*, so the desktop
+  members dialog (which hosts that view unchanged) has it too. It draws nothing as a status until
+  `GET budget-mirror` has answered (spinner, or a retry on failure). Off: an intro and *Turn on…*; the editor
+  lists the target accounts as radios and the target account's expense categories as chips (*No category*
+  first), then *Turn on* / *Save changes*. Active: the account, `from` and `shareRowCount`. Paused: the
+  `pausedReason` copy (`pausedReasonKey`). *Turn off* is offered whenever it is on, even in an archived group
+  (the routes have no `GroupActiveGuard`), and confirms that the shares are removed and linked payments count
+  again. Both honest limits are always printed on the card: the wallet-vs-bank trade-off and "an unlinked
+  payment is counted twice".
+- **Which accounts are offered** (`mirrorAccountCandidates` + `splitByEncryption`): active, not an archived
+  trip, and either `myRole === 'owner'` or an editor's `personal` account whose loaded member list has at most
+  one member (unknown count: offered, the server decides with 403 `MIRROR_ACCOUNT_SHARED_NEEDS_OWNER`). Local
+  account rows carry no encryption tier, so the editor asks `GET /encryption/account/:id/status` per
+  candidate when it opens and lists tier >= 1 accounts by name as *not offered*, with the reason (the server
+  writes the share's description in plain text). A failed tier lookup offers the account; the server refuses
+  it with `MIRROR_ACCOUNT_ENCRYPTED`. Every server code maps to `groupBudget.error_<reason>`
+  (`mirrorErrorReason`, pinned by a test that every reason key exists in `en`).
+- **Reading another account than the current one.** The category chips and the manual-link candidates read
+  `/categories`, `/expenses` and `/incomes` of the MIRROR's account through
+  `groupsApi.getAccount*For(accountId, ...)`, which pass `X-Account-Id` explicitly; `http-client.ts` now keeps
+  an explicit header instead of overwriting it with the current account (every other call is unchanged).
+- **"May be counted twice"**: `GroupBudgetLinksCard` on the group page (phone: under the hero; desktop: a rail
+  card after the balances), rendered only once the links view answered and only while the mirror is not off.
+  *Review* opens `GroupBudgetLinksView`: the phone route `/groups/:id/budget-links` (header registered in
+  `app/_layout.tsx`), on desktop the `budgetLinks` dialog (`GroupBudgetLinksDialog`, hosting the same view with
+  `withStackTitle={false}`; the deep link opens it through `initialDialog`). The view groups `suggestions`
+  under their `unlinked` leg (`doubleCountLegs`, newest first, nothing the server sent dropped), with *Link* /
+  *Not this* per suggestion, *Pick a transaction* (my rows of that account within +-30 days of the leg,
+  linkable by the server's rule, closest first, at most 30: `manualLinkCandidates`), and the links with their
+  origin and *Unlink* (confirmed: the pair is never suggested again). A leg another member created
+  (`addedByOther`) is labelled "added by <name>" and its suggestion is worded as a question ("Ann added an
+  expense paid by you. Is this your card payment?"); `shareRows` with `addedByOther` are listed as *Shares from
+  expenses others added*, tappable to the expense when the mirror's account is the current one. **Paused shows
+  only the pause** and "nothing is linked or suggested while paused": the server sends empty lists then, and an
+  empty list must not read as "all clear". Every write is a `GroupButton write` (offline-gated); a failed link
+  write reloads the view (a stale suggestion is the usual cause).
+- **The rows themselves** arrive through the normal expense/income pull, never from the group store; after an
+  on/off/link write `groupBudgetStore` forces `hydrateTransactions` when the mirror's account is the current
+  one. `groupTransactionMark(row, kind)`: `share` = `source === 'group'`; `linked` = `isSplitReceivable`
+  WITHOUT `isDebt` on an expense (a receipt-split receivable has both), or `isSplitReceivable` on an income
+  (receipt splits never set it there). Marked in `ExpenseListItem` / `IncomeListItem` (icon + *Group share* /
+  *Linked to group*, the receivable badge suppressed for a linked leg) and in the desktop `TransactionTable`.
+  `GroupTransactionBanner` sits at the top of `ExpenseDetailsCard` and `IncomeDetailsCard`, so the phone screen
+  and the desktop dialog both get it: a share row links *From group <name>* (the row has no group id, so
+  `resolveShareRowGroup` matches the longest group name prefixing its `"<group>: <description>"`; ambiguous or
+  rewritten opens `/groups`), a linked payment says why it is out of the totals.
+- **Read-only fields.** On a share row `ExpenseDetailsCard` shows the amount as text ("follows the group"),
+  the date read-only and no *start recurring*, and `stripMirrorOwnedFields` drops `amount`/`currencyCode`/`date`
+  from the update (the server ignores them anyway, ABA-660). *Move to account* is hidden for a share row and a
+  linked payment on the phone screen, the desktop dialog header and the row context menu
+  (`canMoveExpenseRow`; the server answers 400 `EXPENSE_LINKED`); *Split with friends* is hidden on a share row.
+  Bulk operations need no gate: they only set the category, append tags or delete, and the server applies all
+  three to a share row (a deleted share is respected and not recreated).
+- **State** lives in `groupBudgetStore` keyed by group id (mirror view, links view, a `failed` flag), so the
+  members dialog and the page under it read one copy; reset on sign-out in `authSessionActions.ts`. i18n:
+  namespace `groupBudget` (84 keys x 9 locales).
 
 **Invariants from the security review (ABA-660 follow-up).** Server side, `apps/api` only.
 - **Only legs I wrote are ever auto-linked (H1).** Tier 1 requires `CashLeg.authoredByMe`: the group
@@ -1050,9 +1114,8 @@ split, trips) can adopt the hook later. A failed request while offline stays `co
   provider's at entry time (no history), not at the expense date; and the guest's post-add flash names the
   group currency but not the two figures (the redirect carries only a flash code), which the history row
   then shows.
-- **"Count my share in my budget" (ABA-660) is server-only and dark**: no client can turn it on until
-  the UI (ABA-661, task H3: the opt-in, the "may be counted twice" card, read-only `group` rows) ships.
-  Unverified against a real Postgres (the migration `20261019000000_group_budget_mirror` has not run here;
+- **"Count my share in my budget" (ABA-660 server, ABA-661 app)**: the app UI is built but nothing renders
+  in CI, and the share-row group link is a name-prefix match (a rewritten description loses it). Unverified against a real Postgres (the migration `20261019000000_group_budget_mirror` has not run here;
   the specs use an in-memory Prisma with rollback), and the `groupCashLink: { is: null }` /
   `splitParticipants: { none: ... }` relation filters are exercised only by that fake. Known limits: share
   rows do not fire budget threshold pushes, anomaly checks or the Family Feed (they are written by the
@@ -1141,6 +1204,10 @@ split, trips) can adopt the hook later. A failed request while offline stays `co
 - [ABA-659](https://github.com/micode-ai/ai-budget-assistant/issues/689) — phase-2 task H1:
   `Income.isSplitReceivable` (server, SQLite, pull mapping, backup restore) and its exclusion from every
   income total on the server and the device, behaviour-neutral until the budget mirror sets it.
+- [ABA-661](https://github.com/micode-ai/ai-budget-assistant/issues/691) — phase-2 task H3, the budget mirror in
+  the app (phone + desktop): the opt-in card in Members, the "may be counted twice" card, screen and dialog
+  with accept/reject/manual link/unlink, read-only `group` rows with a *From group* banner, *Group share* /
+  *Linked to group* marks in lists and the desktop table, move hidden for both.
 - [ABA-660](https://github.com/micode-ai/ai-budget-assistant/issues/690) — phase-2 task H2, the budget mirror on
   the server: opt-in per member (`budgetMirrorFrom`/`budgetAccountId`/`budgetCategoryId`), one `source: 'group'`
   share row per group expense, cash legs linked and excluded with `isSplitReceivable` (`GroupCashLink`), the

@@ -20,7 +20,7 @@
 <link rel="alternate" hreflang="be" href="https://ai-budget.pl/help/be/chat-bots/">
 <link rel="alternate" hreflang="nl" href="https://ai-budget.pl/help/nl/chat-bots/">
 <link rel="alternate" hreflang="x-default" href="https://ai-budget.pl/help/en/chat-bots/">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "alternateName": ["MiCode Sp. z o.o.", "MiCode"], "taxID": "5833510147", "url": "https://mi-code.pl/", "sameAs": ["https://mi-code.pl/", "https://github.com/micode-ai", "https://www.wikidata.org/wiki/Q141551004"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Chatbots — Telegram, WhatsApp y Slack | AI Budget Assistant", "description": "Gestiona tus finanzas directamente desde Telegram, WhatsApp o Slack. Chatea con IA, añade gastos, escanea recibos y envía mensajes de voz — sin abrir la app.", "inLanguage": "es", "datePublished": "2026-06-19", "dateModified": "2026-09-03", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/es/chat-bots/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/es/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/es/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Ayuda", "item": "https://ai-budget.pl/help/es/"}, {"@type": "ListItem", "position": 3, "name": "Chatbots — Telegram, WhatsApp y Slack | AI Budget Assistant", "item": "https://ai-budget.pl/help/es/chat-bots/"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "alternateName": ["MiCode Sp. z o.o.", "MiCode"], "taxID": "5833510147", "url": "https://mi-code.pl/", "sameAs": ["https://mi-code.pl/", "https://github.com/micode-ai", "https://www.wikidata.org/wiki/Q141551004"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Chatbots — Telegram, WhatsApp y Slack | AI Budget Assistant", "description": "Gestiona tus finanzas directamente desde Telegram, WhatsApp o Slack. Chatea con IA, añade gastos, escanea recibos y envía mensajes de voz — sin abrir la app.", "inLanguage": "es", "datePublished": "2026-06-19", "dateModified": "2026-10-09", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/es/chat-bots/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/es/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/es/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Ayuda", "item": "https://ai-budget.pl/help/es/"}, {"@type": "ListItem", "position": 3, "name": "Chatbots — Telegram, WhatsApp y Slack | AI Budget Assistant", "item": "https://ai-budget.pl/help/es/chat-bots/"}]}]}</script>
 <style>
 :root{--o:#B45309;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
 *{box-sizing:border-box}
@@ -148,6 +148,10 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <td>Añadir un gasto</td>
 </tr>
 <tr>
+<td><code>/group 120 pizza</code></td>
+<td>Añadir un gasto a un grupo compartido</td>
+</tr>
+<tr>
 <td><code>/income 3000 salario</code></td>
 <td>Añadir un ingreso</td>
 </tr>
@@ -176,6 +180,8 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <blockquote>
 <p>En <strong>WhatsApp</strong> y <strong>Slack</strong> los comandos funcionan con o sin <code>/</code>. También puedes escribir solo un importe y descripción: <code>50 almuerzo</code>.</p>
 </blockquote>
+<h2>Añadir un gasto a un grupo compartido</h2>
+<p>Envía <code>/group 120 pizza</code> para añadir un gasto a uno de tus grupos compartidos (en WhatsApp y Slack también vale <code>group 120 pizza</code>). Si estás en varios grupos, el bot te pregunta a cuál: elígelo de la lista. Después revisa la tarjeta (grupo, importe, descripción, <em>pagado por ti</em>, <em>a partes iguales</em>) y toca <strong>Confirmar</strong>, o <strong>Cancelar</strong> para no añadir nada. Tú siempre eres quien paga y el gasto siempre se divide a partes iguales entre todos los miembros; si pagó otra persona o quieres otro reparto, añádelo en la app. Para indicar otra moneda, escríbela tras el importe (<code>/group 25 EUR taxi</code>): el gasto se convierte a la moneda del grupo al tipo de hoy y, si no hay tipo disponible, el bot te lo dice y no añade nada. Los grupos archivados no aparecen y esto no consume solicitudes de IA.</p>
 <h2>Escaneo de recibos</h2>
 <ol>
 <li>Saca una foto del recibo y envíala al bot</li>

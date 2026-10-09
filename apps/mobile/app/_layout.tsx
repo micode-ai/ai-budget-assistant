@@ -905,6 +905,13 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="groups/[id]/budget-links"
+          options={{
+            headerShown: true,
+            title: t('groupBudget.linksTitle'),
+          }}
+        />
+        <Stack.Screen
           name="groups/join"
           options={{
             headerShown: true,

@@ -14,6 +14,7 @@ import { getIntlLocale } from '@/i18n';
 import type { Currency, Income, Tag } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
+import { GroupTransactionBanner } from '@/components/groups/GroupTransactionBanner';
 
 export interface IncomeDetailsCardHandle {
   triggerSave: () => void;
@@ -87,6 +88,8 @@ export const IncomeDetailsCard = forwardRef<IncomeDetailsCardHandle, IncomeDetai
 
     return (
       <>
+        {/* ABA-661: a settlement received and linked to its group leg; nothing for any other income. */}
+        <GroupTransactionBanner row={income} kind="income" />
         {/* Amount Card */}
         <View style={styles.amountCard}>
           {isEditing ? (

@@ -127,6 +127,20 @@ Ownership changes appear in the **Activity** list, for example "Ann made Bo the 
 
 If an account is removed permanently by our support team, that person appears in their groups as **Former member**. Their expenses and payments stay, so the balances still add up.
 
+## Counting your share in your budget
+
+Normally a group lives next to your budget: what you pay with your card is in your budget, and the group only tracks who owes whom. If you'd rather see in your budgets and analytics what you actually consumed, open **Members** and use **Count my share in my budget**.
+
+- Tap **Turn on…**, pick the **Account** your share goes into and, if you like, a **Category**, then **Turn on**. From then on, your share of every group expense appears in that account as its own transaction, marked **Group share**. It starts with this month's expenses, so your closed budgets are not touched.
+- Only accounts you own, and your own personal account, are offered: in a shared account your share would change everyone's figures. End-to-end encrypted accounts are not offered either, because the server would have to write your share into them in plain text.
+- A share follows the group: if someone edits the expense, your share is updated. Its amount, currency and date can't be edited in your account, but the category, notes and tags are yours. Tap **From group …** on it to open the group. If you delete a share, it is not added back.
+- If the account stops being one you can use (you became a viewer, it was archived or encrypted), counting is **Paused** and nothing is added until you pick another account or turn it off.
+- **Turn off** removes the shares from your account and makes your linked payments count as ordinary spending again. Nothing in the group changes.
+
+**May be counted twice.** If you paid a group expense by card, or settled up by transfer, and that payment is also in your account, it would be counted twice: once as the payment and once as your share. So the app links such payments to the group: they get the **Linked to group** mark and are left out of your totals, and your share is counted instead. A payment is linked automatically only when exactly one transaction matches it (same amount and currency, within 3 days); otherwise it is offered as a **Possible match**. When another member added the expense you paid, it is never linked automatically — you'll get a notification and the question "Is this your card payment?". The **May be counted twice** card on the group screen (on a computer, in the right column) shows what is not linked yet. Tap **Review** to **Link** a match, say **Not this**, **Pick a transaction** yourself, or **Unlink** a payment.
+
+**The trade-off.** While balances are open, your wallet balance differs from the bank by what the group owes you or you owe it, because your share is counted and the money that settles it isn't yet. It matches again once you settle up.
+
 ## Joining a group in the app
 
 If a friend sends you a group link and you have the app, tap **Join with link** on the Groups screen and paste it into **Group link**. The app shows the group's name and the names nobody has taken yet. Tap your own name, or **I'm not on the list** and type **Your name in this group** (it starts as your account name), then tap **Join group**. If you were already added by name, pick that name so you take over that person's place and history. If someone takes the name a moment before you, the list refreshes and you pick again. If you're already in the group, the app offers **Open group** instead. An archived group is read-only, so it can't be joined. If you already picked your name in a browser, use **Open in the app** on the guest page instead, so you keep your history.

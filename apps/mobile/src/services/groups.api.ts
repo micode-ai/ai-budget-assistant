@@ -1,16 +1,24 @@
 import type {
+  Category,
+  CreateGroupCashLinkDto,
   CreateGroupDto,
   CreateGroupExpenseDto,
   CreateGroupSettlementDto,
   GroupActivityPage,
+  GroupBudgetLinksView,
+  GroupBudgetMirrorView,
   GroupDetail,
   GroupExpenseItemsView,
   GroupFxPreview,
   GroupJoinPreview,
   GroupMember,
   GroupSummary,
+  Expense,
+  Income,
   JoinGroupDto,
+  PaginatedResponse,
   LinkGuestDto,
+  SetGroupBudgetMirrorDto,
   SetGroupClaimsDto,
   UpdateGroupDto,
   UpdateGroupExpenseDto,
@@ -154,6 +162,72 @@ export const groupsApi = {
   voidGroupSettlement(groupId: string, settlementId: string) {
     return httpClient.request<GroupDetail>(`/groups/${groupId}/settlements/${settlementId}`, {
       method: 'DELETE',
+    });
+  },
+  // ---- Count my share in my budget (ABA-660 server, ABA-661 app) ----
+  getGroupBudgetMirror(groupId: string) {
+    return httpClient.request<GroupBudgetMirrorView>(`/groups/${groupId}/budget-mirror`);
+  },
+  /**
+   * Turn on, or switch the account / category. 404 ACCOUNT_NOT_FOUND, 403 MIRROR_ACCOUNT_READ_ONLY /
+   * MIRROR_ACCOUNT_ENCRYPTED / MIRROR_ACCOUNT_ARCHIVED, 404 CATEGORY_NOT_FOUND.
+   */
+  setGroupBudgetMirror(groupId: string, dto: SetGroupBudgetMirrorDto) {
+    return httpClient.request<GroupBudgetMirrorView>(`/groups/${groupId}/budget-mirror`, {
+      method: 'PUT',
+      body: json(dto),
+    });
+  },
+  /** Removes the share rows and unlinks every payment, in one transaction on the server. */
+  deleteGroupBudgetMirror(groupId: string) {
+    return httpClient.request<void>(`/groups/${groupId}/budget-mirror`, { method: 'DELETE' });
+  },
+  getGroupBudgetLinks(groupId: string) {
+    return httpClient.request<GroupBudgetLinksView>(`/groups/${groupId}/budget-links`);
+  },
+  /** 409 MIRROR_OFF / LEG_ALREADY_LINKED / ROW_NOT_LINKABLE, 404 LEG_NOT_FOUND / ROW_NOT_FOUND, 400 LINK_INVALID. */
+  createGroupBudgetLink(groupId: string, dto: CreateGroupCashLinkDto) {
+    return httpClient.request<GroupBudgetLinksView>(`/groups/${groupId}/budget-links`, {
+      method: 'POST',
+      body: json(dto),
+    });
+  },
+  acceptGroupBudgetSuggestion(groupId: string, suggestionId: string) {
+    return httpClient.request<GroupBudgetLinksView>(
+      `/groups/${groupId}/budget-links/suggestions/${suggestionId}/accept`,
+      { method: 'POST' },
+    );
+  },
+  rejectGroupBudgetSuggestion(groupId: string, suggestionId: string) {
+    return httpClient.request<GroupBudgetLinksView>(
+      `/groups/${groupId}/budget-links/suggestions/${suggestionId}/reject`,
+      { method: 'POST' },
+    );
+  },
+  /** Unlinking (even an automatic link) also stops that pair from being suggested again. */
+  deleteGroupBudgetLink(groupId: string, linkId: string) {
+    return httpClient.request<GroupBudgetLinksView>(`/groups/${groupId}/budget-links/${linkId}`, {
+      method: 'DELETE',
+    });
+  },
+  /**
+   * Reads of the mirror's TARGET account, which need not be the current one: the account picker's
+   * categories and the manual link's candidate rows. The explicit header wins over the current
+   * account in `http-client.ts`; the server checks membership as for any account-scoped read.
+   */
+  getAccountCategoriesFor(accountId: string) {
+    return httpClient.request<Category[]>('/categories', { headers: { 'X-Account-Id': accountId } });
+  },
+  getAccountExpensesFor(accountId: string, startDate: string, endDate: string) {
+    const q = new URLSearchParams({ limit: '1000', startDate, endDate });
+    return httpClient.request<PaginatedResponse<Expense>>(`/expenses?${q.toString()}`, {
+      headers: { 'X-Account-Id': accountId },
+    });
+  },
+  getAccountIncomesFor(accountId: string, startDate: string, endDate: string) {
+    const q = new URLSearchParams({ limit: '1000', startDate, endDate });
+    return httpClient.request<PaginatedResponse<Income>>(`/incomes?${q.toString()}`, {
+      headers: { 'X-Account-Id': accountId },
     });
   },
 };

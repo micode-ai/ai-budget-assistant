@@ -11,6 +11,7 @@ import { canRecordPayment } from '@/features/groups/groupMath';
 import type { GroupExpense, GroupTransfer } from '@budget/shared-types';
 import { GroupActivityList } from './GroupActivityList';
 import { GroupBalanceHero } from './GroupBalanceHero';
+import { GroupBudgetLinksCard } from './GroupBudgetLinksCard';
 import { GroupButton } from './GroupButton';
 import { GroupOfflineBanner } from './GroupOfflineBanner';
 import { GroupOrphanBanner } from './GroupOrphanBanner';
@@ -86,6 +87,13 @@ export function GroupDetailView({ groupId }: { groupId: string }) {
         <GroupOrphanBanner detail={detail} />
 
         <GroupBalanceHero detail={detail} />
+
+        {/* ABA-661: only while "count my share in my budget" is on; renders nothing otherwise. */}
+        <GroupBudgetLinksCard
+          groupId={groupId}
+          onReview={() => router.push(`/groups/${groupId}/budget-links` as never)}
+          style={styles.gap}
+        />
 
         {writable && (
           <View style={styles.buttonRow}>

@@ -90,7 +90,11 @@ export class HttpClient {
       }
 
       const accountId = this.accountIdGetter?.();
-      if (accountId) {
+      // A caller that names the account explicitly (a read of ANOTHER account than the current one,
+      // e.g. the group budget mirror's target account, ABA-661) keeps it; everything else gets the
+      // current account, as before.
+      const explicit = (headers as Record<string, string>)['X-Account-Id'];
+      if (accountId && !explicit) {
         (headers as Record<string, string>)['X-Account-Id'] = accountId;
       }
     }

@@ -127,6 +127,20 @@ Los cambios de propietario aparecen en la lista **Actividad**, por ejemplo «Ana
 
 Si nuestro equipo de soporte elimina una cuenta de forma permanente, esa persona aparece en sus grupos como **Former member** (antiguo miembro). Sus gastos y pagos se conservan, así que los saldos siguen cuadrando.
 
+## Contar tu parte en tu presupuesto
+
+Normalmente un grupo vive junto a tu presupuesto: lo que pagas con tarjeta está en tu presupuesto y el grupo solo lleva quién debe a quién. Si prefieres ver en tus presupuestos y análisis lo que realmente consumiste, abre **Miembros** y usa **Contar mi parte en mi presupuesto**.
+
+- Toca **Activar…**, elige la **Cuenta** a la que va tu parte y, si quieres, una **Categoría**, y luego **Activar**. A partir de entonces tu parte de cada gasto del grupo aparece en esa cuenta como una transacción propia, marcada **Parte de grupo**. Empieza con los gastos de este mes, así que tus presupuestos cerrados no se tocan.
+- Solo se ofrecen las cuentas que te pertenecen y tu propia cuenta personal: en una cuenta compartida tu parte cambiaría las cifras de todos. Tampoco se ofrecen las cuentas con cifrado de extremo a extremo, porque el servidor tendría que escribir tu parte en ellas en texto plano.
+- Una parte sigue al grupo: si alguien edita el gasto, tu parte se actualiza. Su importe, moneda y fecha no se pueden editar en tu cuenta, pero la categoría, las notas y las etiquetas son tuyas. Toca **Del grupo …** en ella para abrir el grupo. Si borras una parte, no vuelve.
+- Si dejas de poder usar la cuenta (pasaste a solo lectura, se archivó o se cifró), el conteo queda **En pausa** y no se añade nada hasta que elijas otra cuenta o lo desactives.
+- **Desactivar** quita las partes de tu cuenta y tus pagos vinculados vuelven a contar como gastos normales. En el grupo no cambia nada.
+
+**Puede contarse dos veces.** Si pagaste un gasto del grupo con tarjeta, o saldaste con una transferencia, y ese pago también está en tu cuenta, se contaría dos veces: una como pago y otra como tu parte. Por eso la app vincula esos pagos al grupo: reciben la marca **Vinculado al grupo** y quedan fuera de tus totales, y en su lugar se cuenta tu parte. Un pago se vincula automáticamente solo cuando coincide exactamente una transacción (mismo importe y moneda, en 3 días); si no, se ofrece como **Posible coincidencia**. Cuando otro miembro añadió el gasto que pagaste tú, nunca se vincula automáticamente: recibirás una notificación y la pregunta «¿Es tu pago con tarjeta?». La tarjeta **Puede contarse dos veces** de la pantalla del grupo (en un ordenador, en la columna derecha) muestra lo que aún no está vinculado. Toca **Revisar** para **Vincular** una coincidencia, decir **No es este**, **Elegir una transacción** tú mismo o **Desvincular** un pago.
+
+**La contrapartida.** Mientras haya saldos abiertos, el saldo de tu cartera difiere del banco en lo que el grupo te debe o tú le debes: tu parte ya cuenta y el dinero que la salda aún no. Vuelve a coincidir cuando liquidáis.
+
 ## Unirse a un grupo desde la app
 
 Si un amigo te envía el enlace de un grupo y tienes la app, toca **Unirse con enlace** en la pantalla Grupos y pégalo en **Enlace del grupo**. La app muestra el nombre del grupo y los nombres que nadie ha elegido todavía. Toca tu nombre, o **No estoy en la lista** y escribe **Tu nombre en este grupo** (al principio es el nombre de tu cuenta), y luego toca **Unirse al grupo**. Si ya te añadieron por nombre, elige ese nombre y ocuparás ese lugar con su historial. Si alguien elige el nombre justo antes que tú, la lista se actualiza y eliges de nuevo. Si ya estás en el grupo, la app te ofrece **Abrir grupo**. A un grupo archivado, que es de solo lectura, no se puede unir nadie. Si ya elegiste tu nombre en el navegador, usa **Abrir en la app** en la página para invitados, así conservas tu historial.

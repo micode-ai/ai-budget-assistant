@@ -3889,7 +3889,7 @@ Tap any expense to view its full details:
 - **Notes** (if added)
 - **Added by** — shown in shared accounts; displays the name of the account member who created this entry
 - **Sync Status** — pending, synced, conflict, or error
-- **Source** — Manual Entry, Voice Input, Receipt Scan, Imported, or Auto-captured (bank push or bank import rows are marked so you can tell them apart)
+- **Source** — Manual Entry, Voice Input, Receipt Scan, Imported, or Auto-captured (bank push or bank import rows are marked so you can tell them apart) · **Shared group** marks your share of a group expense (see Shared groups), and **Linked to group** a payment that is left out of totals because your share is counted instead
 - **Receipt Items** — individual items (for scanned receipts, or extracted later via **Extract items**)
 - **Receipt Image** — view, share, save to gallery, replace, or delete the receipt photo. PDF receipts show a document preview with tap-to-open. If no receipt is attached yet, tap **Attach Receipt** to add one — choose **Take Photo**, **Choose from Gallery**, or **Choose PDF**. Works for any expense, including ones added manually. If the receipt was attached after the expense was created, tap **Extract items** in the receipt card to re-run AI reading and pull its line items into the expense (with confirmation if items already exist; each run uses one AI request)
 
@@ -6711,6 +6711,7 @@ To connect: **Settings → Chat Bots**.
 |---|---|
 | `/link CODE` | Link your messenger to the app |
 | `/expense 50 lunch` | Add an expense |
+| `/group 120 pizza` | Add an expense to a shared group |
 | `/income 3000 salary` | Add an income |
 | `/category expense Food` | Create a category |
 | `/usage` | View AI request usage and limits |
@@ -6720,6 +6721,10 @@ To connect: **Settings → Chat Bots**.
 | `/help` | Show all commands |
 
 > In **WhatsApp** and **Slack**, commands work with or without the leading `/`. You can also just type an amount and description: `50 lunch`.
+
+## Adding an expense to a shared group
+
+Send `/group 120 pizza` to add an expense to one of your shared groups (in WhatsApp and Slack, `group 120 pizza` works too). If you are in several groups, the bot asks which one — pick it from the list. Then check the card: group, amount, description, *paid by you*, *split equally* — and tap **Confirm**, or **Cancel** to add nothing. You are always the payer and the expense is always split equally among all members; for another payer or a different split, add it in the app. To enter another currency, put it after the amount (`/group 25 EUR taxi`): the expense is converted into the group currency at today's rate, and if no rate is available the bot says so and adds nothing. Archived groups are not offered, and this does not use AI requests.
 
 ## Receipt Scanning
 
@@ -8267,6 +8272,8 @@ Group money is kept separate from your own finances: nothing in a group shows up
 
 Tap **Groups** in the quick actions on the home screen. You'll see your groups and your balance in each, plus **New group** and **Join with link**.
 
+On a computer (a browser window wider than about 1000 pixels), **Groups** is also in the quick links on the right of the home screen and in **Settings**. Your groups appear as a table, and creating a group, adding an expense, settling up and the member list open in a window over the page.
+
 ## Creating a group
 
 1. Tap **New group**.
@@ -8293,18 +8300,22 @@ The link opens a simple page in their browser — no install, no sign-up.
 From there they can:
 
 - **Add an expense** — fill in *What for?*, the amount, the date and who paid, choose **Equally** (tick who shares it) or **Exact amounts** (enter what each person owes), and tap **Add expense**. They can **Delete** an expense they added themselves.
-- **Settle up** — on a transfer that involves them, tap **Mark as paid** (when they paid) or **Mark as received** (when they got the money). A payment recorded by mistake can be cancelled with **Undo** by the person who recorded it or the person who received it.
+- **Settle up** — on a transfer that involves them, tap **Mark as paid** (when they paid) or **Mark as received** (when they got the money). A payment recorded by mistake can be cancelled with **Undo** by the person who recorded it or the person who received it. The amount is filled in with the suggested payment and can be changed to pay part of it.
 - **Your payment details** — choose a method and enter an account or handle, then **Save**. Only the person who pays them sees these details, on their own transfer line, with a ready Revolut or PayPal button where possible.
 - **Not me / forget this device** — signs this browser out of their name, for a shared phone or computer.
 - **Have a restore code?** — on a new device, enter the **Restore code** and tap **Restore**.
 
-If someone loses both their browser data and their restore code, they can join again under a slightly different name, or the group owner can reset the link (see below) so everyone picks their name again.
+If someone loses both their browser data and their restore code, they can join again under a slightly different name, or the group owner can reset the link (see below) so everyone picks their name again. The owner can also free just that one name: see **Reset this person's login** under Members.
 
 The page also suggests the app at a few useful moments — for notifications, reading paper receipts, or reminders — but nothing on the page requires it.
 
+### Dividing a receipt line by line
+
+When a receipt was added to the group line by line, the page shows it under **Divide a receipt** for a week. Open it, tick what you had and tap **Save my items**. A line ticked by several people is split equally between them, and whatever nobody ticks stays with the person who paid. Each line you ticked shows **your part**, and **Your part of this receipt** shows the total. A line marked **split by** and a name was divided by hand by the person who paid and can't be changed here. After a week, or once the person who paid closes the receipt, only they or the group owner can change who had what. While a receipt is still being divided, **Who pays whom** notes that amounts may still change. A payment that was already made stays as it is: if your part changes afterwards, a small balance simply shows up again.
+
 ### Moving from the browser to the app
 
-Under **Keep this group in the app**, a friend can tap **Continue in the browser app** (or **Open in the app** on Android, if the app is already installed). After signing in or creating an account, the group and its whole history move to that account — nothing is lost. This link works once and only for a few minutes. If they install the app from Google Play first, they should open the group link in the browser again afterwards and tap **Open in the app**.
+Under **Keep this group in the app**, a friend can tap **Continue in the browser app** (or **Open in the app** on Android, if the app is already installed). After signing in or creating an account, the group and its whole history move to that account — nothing is lost. This link works once and only for a few minutes. If they install the app from Google Play first, they should open the group link in the browser again afterwards and tap **Open in the app**. If you are already in the group in the app under another name, the app offers **Merge “Ania” into your account** instead (with your browser name): the browser name and everything under it move to your app name, and nobody else's balance changes.
 
 ## Using a group in the app
 
@@ -8312,9 +8323,29 @@ The group screen shows whether **You are owed** or **You owe** (or **All settled
 
 **Add expense** opens the expense form: **Amount**, **Description**, **Date**, **Paid by**, and **Split**: **Equally**, **Exact amounts**, **Percentages** or **Shares**. **Scan receipt** reads a paper receipt and fills in the amount, description and date for you. The person who added an expense, the person who paid it and the group owner can edit or delete it. A deleted expense stays in the history, marked as deleted.
 
+You can also add an expense from the Telegram, WhatsApp or Slack bot: send `/group 120 pizza`, pick the group and confirm — you are the payer and it is split equally among everyone (see Chat Bots).
+
+## Itemised expenses
+
+When everyone had something different, add the expense line by line instead of splitting the total. In **Add expense**, turn on **Itemised (split by receipt lines)**. Under **Receipt lines**, enter each **Item** with its **Price** and, if there was one, its **Discount**; tap **Add line** for more. A **Receipt discount (optional)** on the whole receipt is shared out in proportion. **Scan receipt** fills the lines in for you. The **Amount** is what was paid: if it is more than the lines (a bottle deposit, a tip), **The rest … stays with the payer**; **Use the lines total as the amount** copies the lines total into it.
+
+Tap an itemised expense in the activity list (it is marked **Itemised · open until** a date) to open **Divide the receipt**. For a week, everyone ticks what they had under **My lines** and taps **Save my lines**; friends in the browser do the same on the group page. A line ticked by several people is split equally between them, and whatever nobody ticks stays with the person who paid. **Your part of the lines** shows what your ticks come to.
+
+The person who paid, the person who added the expense and the group owner also see **Everyone**: they can pick who had each line, use **Split by %** to divide a line unevenly (what is not given out stays with the payer), and tap **Save claims**. They can **Close claims** early, or **Reopen for 7 days**. After the week, or once claims are closed, only they can change who had what. While a receipt is still being divided, the settle screen and **Who pays whom** say that amounts may still change. A payment that was already made stays as it is: if a share changes afterwards, a small balance simply shows up again.
+
+On a computer, **Divide the receipt** opens in a window over the group page.
+
+## Expenses in another currency
+
+Each group keeps its accounts in one currency, the one chosen when it was created. An expense paid in another currency can still be added. In the app, tap the currency next to the **Amount** and pick the one you paid in. The **Exchange rate** row then shows today's rate (for example *1 EUR =* 4.32 in the group currency) and what the expense will count as; change the rate if you know the one you actually paid. In the browser, friends pick the **Currency** under the amount.
+
+The expense is converted into the group currency once, when it is saved, and the converted amount is what the balances use. It never changes afterwards, even when exchange rates move, so a group that is settled stays settled. The history shows both figures, for example "€12.00 → 51.80 zł". If you later change the amount, the same rate is used again; if you change the currency, a new rate is taken. When no rate is available, the app asks you to enter one, and the browser page asks to try again later or to enter the amount in the group currency. With **Exact amounts**, enter each person's part in the currency you paid in. Payments are always in the group currency.
+
 ## Settling up
 
 On a line of **Who pays whom** that involves you, tap **Settle**. If the person you're paying added payment details, you'll see a button or instructions to pay them. Choose **How was it paid?**, then tap **I paid** — or **I received it** if you're the one being paid (useful when a friend paid you in cash and never came back to the link).
+
+You don't have to pay everything at once. The **Amount** opens at the suggested payment; change it to record part of it. It can't be more than what's owed between the two of you, so a payment only ever brings both balances closer to zero. To pay someone who isn't on your **Who pays whom** line, or to record money you got from someone, tap **Record a payment** on the group screen (on a computer, in the toolbar), pick the person, and enter the amount.
 
 A payment counts right away, for everyone. If one was recorded by mistake, open it in the activity list and tap **Void payment**: it stays in the history, marked as voided, and the balances go back. If someone else changed the group while you were settling, you'll see "Balances changed" — check the numbers and try again.
 
@@ -8329,6 +8360,14 @@ Tap **Members** to see everyone. Members marked **Not joined yet** haven't picke
 
 A member removed by the owner can't rejoin through the link.
 
+If someone lost access in the browser, or someone else picked their name, the owner can tap that member and choose **Reset this person's login**, then confirm. The name becomes free on the link again, and whoever still uses the old browser loses access to it. Nobody else is affected, and the member's expenses and balance stay exactly as they were. This is offered only for friends who use the group from the browser and have already picked their name. The reset appears in the **Activity** list in the app; the browser page doesn't show it.
+
+### Merging two members
+
+Sometimes one person ends up in the group twice — for example "Ania" from the browser and "Ania" who later joined in the app, or "Ania (2)" after she lost her browser data. Tap one of them in **Members**, choose **Merge with…** and pick the other name. The confirmation shows the balance the remaining name will have. Everything the merged name paid, owed and settled moves to the remaining one, a payment between the two of them is cancelled (it was money moving from one pocket to the other), and nobody else's balance changes by a single cent. A merge can't be undone.
+
+The owner can merge two browser names, or a browser name into their own. Anyone can merge a name nobody has picked yet into their own name. Two people who both use the app can't be merged, and nobody can move a balance onto someone else's app account — that person has to do it themselves. The merge shows up in **Activity** in the app and on the browser page.
+
 ### Owner controls
 
 The person who created the group also sees **Owner controls**:
@@ -8338,15 +8377,39 @@ The person who created the group also sees **Owner controls**:
 - **Archive group** — the group becomes read-only for everyone, but the final balances stay visible. If balances are still open, you'll be asked to confirm with **Archive anyway**.
 - **Delete group** — deletes the group and its whole history for everyone. This can't be undone.
 
-If the owner deletes their own account, their groups are deleted too.
+### Handing the group over
+
+The owner can't leave a group while they own it. To leave, open **Members**, tap a member who uses the app and choose **Make owner**, then confirm. They become the owner and get a notification; you stay an ordinary member and can then **Leave group** as usual (your balance must be zero first). Only members who use the app can become the owner, not friends who use the group only from the browser.
+
+If the owner deletes their account, the group does not disappear. It passes automatically to the member who joined earliest among those who use the app. If nobody else in the group uses the app, the group keeps working for everyone (adding expenses and settling up included) but has no owner for a while: the group screen says so, and the owner controls are unavailable. Only a member who was already in the group, using the app, before it lost its owner can tap **Become the owner**; someone who joins afterwards cannot take it over. If you delete your own account, your name in every group becomes "Former member" and your payment details there are removed; the expenses and balances stay as they are.
+
+Ownership changes appear in the **Activity** list, for example "Ann made Bo the owner". The browser page doesn't show them.
+
+If an account is removed permanently by our support team, that person appears in their groups as **Former member**. Their expenses and payments stay, so the balances still add up.
+
+## Counting your share in your budget
+
+Normally a group lives next to your budget: what you pay with your card is in your budget, and the group only tracks who owes whom. If you'd rather see in your budgets and analytics what you actually consumed, open **Members** and use **Count my share in my budget**.
+
+- Tap **Turn on…**, pick the **Account** your share goes into and, if you like, a **Category**, then **Turn on**. From then on, your share of every group expense appears in that account as its own transaction, marked **Group share**. It starts with this month's expenses, so your closed budgets are not touched.
+- Only accounts you own, and your own personal account, are offered: in a shared account your share would change everyone's figures. End-to-end encrypted accounts are not offered either, because the server would have to write your share into them in plain text.
+- A share follows the group: if someone edits the expense, your share is updated. Its amount, currency and date can't be edited in your account, but the category, notes and tags are yours. Tap **From group …** on it to open the group. If you delete a share, it is not added back.
+- If the account stops being one you can use (you became a viewer, it was archived or encrypted), counting is **Paused** and nothing is added until you pick another account or turn it off.
+- **Turn off** removes the shares from your account and makes your linked payments count as ordinary spending again. Nothing in the group changes.
+
+**May be counted twice.** If you paid a group expense by card, or settled up by transfer, and that payment is also in your account, it would be counted twice: once as the payment and once as your share. So the app links such payments to the group: they get the **Linked to group** mark and are left out of your totals, and your share is counted instead. A payment is linked automatically only when exactly one transaction matches it (same amount and currency, within 3 days); otherwise it is offered as a **Possible match**. When another member added the expense you paid, it is never linked automatically — you'll get a notification and the question "Is this your card payment?". The **May be counted twice** card on the group screen (on a computer, in the right column) shows what is not linked yet. Tap **Review** to **Link** a match, say **Not this**, **Pick a transaction** yourself, or **Unlink** a payment.
+
+**The trade-off.** While balances are open, your wallet balance differs from the bank by what the group owes you or you owe it, because your share is counted and the money that settles it isn't yet. It matches again once you settle up.
 
 ## Joining a group in the app
 
-If a friend sends you a group link and you have the app, tap **Join with link** on the Groups screen, paste it into **Group link**, enter **Your name in this group** and tap **Join group**. If you already picked your name in the browser, don't join again: open the link in the browser and tap **Open in the app**, so you keep your history.
+If a friend sends you a group link and you have the app, tap **Join with link** on the Groups screen and paste it into **Group link**. The app shows the group's name and the names nobody has taken yet. Tap your own name, or **I'm not on the list** and type **Your name in this group** (it starts as your account name), then tap **Join group**. If you were already added by name, pick that name so you take over that person's place and history. If someone takes the name a moment before you, the list refreshes and you pick again. If you're already in the group, the app offers **Open group** instead. An archived group is read-only, so it can't be joined. If you already picked your name in a browser, use **Open in the app** on the guest page instead, so you keep your history.
 
 ## Notifications
 
 When someone else adds an expense or a payment, you get a notification — at most one per group every few minutes. Tapping it opens the group. Turn it off under **Settings → Notifications → Group activity**.
+
+**Balance reminders.** While you owe money in a group, or someone owes you, you get a reminder once a week — the first one a week after the balance opened, and at most four for the same balance. If you owe, it opens the settle screen on the suggested payment, and you can pay part of it; if you are owed, it opens **Record a payment**, and you can share the group link to remind the others. You get at most one reminder a day, for the group with the largest balance. Balances under 1.00 are never reminded about, and once a balance is settled the count starts again. Friends who use the group only from the browser never get reminders. Turn them off under **Settings → Notifications → Group balance reminders**; this is separate from Group activity.
 
 ## Privacy
 
@@ -8354,3 +8417,7 @@ When someone else adds an expense or a payment, you get a notification — at mo
 - Group data is **not end-to-end encrypted**, even if you use end-to-end encryption for your own data, because friends read it in an ordinary browser.
 - The page never shows anyone's email or whether they use the app. Your payment details are shown only to the person who is paying you.
 - If the link leaks, use **Reset the link**, or turn off **Guest link access**.
+
+## Offline
+
+Groups need a connection to the server. While the app can't reach it, a banner says so and the buttons that change something (new group, join, add expense, settle, members and the like) are disabled. You can still read what's already on screen. Everything unlocks by itself as soon as the connection is back.

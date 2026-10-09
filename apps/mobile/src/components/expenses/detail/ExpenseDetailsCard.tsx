@@ -35,6 +35,8 @@ import { categoryLabel } from '@/utils/entityLabel';
 import { formatDate, formatCurrency, generateUUID, SUPPORTED_CURRENCIES } from '@budget/shared-utils';
 import { getIntlLocale } from '@/i18n';
 import { useTheme, useStyles, type Theme } from '@/theme';
+import { GroupTransactionBanner } from '@/components/groups/GroupTransactionBanner';
+import { isMirrorOwnedRow, stripMirrorOwnedFields } from '@/features/groups/groupBudgetMirror';
 import type { Currency, Expense, ExpenseCategorySplit, ShareType, Tag } from '@budget/shared-types';
 
 export interface ExpenseDetailsCardHandle {
@@ -50,11 +52,13 @@ interface ExpenseDetailsCardProps {
    * card a complete no-op there. */
   isTripAccount?: boolean;
   tripMembers?: { userId: string; name: string }[];
+  /** Runs before the group banner's link opens a group (the desktop dialog closes itself first). */
+  onNavigateAway?: () => void;
 }
 
 export const ExpenseDetailsCard = forwardRef<ExpenseDetailsCardHandle, ExpenseDetailsCardProps>(
   function ExpenseDetailsCard(
-    { expense, isEditing, onSaved, isTripAccount = false, tripMembers = [] },
+    { expense, isEditing, onSaved, isTripAccount = false, tripMembers = [], onNavigateAway },
     ref,
   ) {
     const { t } = useTranslation();
@@ -63,6 +67,9 @@ export const ExpenseDetailsCard = forwardRef<ExpenseDetailsCardHandle, ExpenseDe
     const { updateExpense, setExpenseProject } = useExpenseStore();
     const { getExpenseCategories, getCategoryById } = useCategoryStore();
     const { projects } = useProjectStore();
+    // ABA-661: a budget-mirror share row. Its amount, currency and date follow the group (the server
+    // ignores edits to them), so they are shown read-only and never sent; the rest is the user's.
+    const mirrorOwned = isMirrorOwnedRow(expense);
 
     // Edit form state
     const [editAmount, setEditAmount] = useState(expense?.amount?.toString() || '');
@@ -212,7 +219,7 @@ export const ExpenseDetailsCard = forwardRef<ExpenseDetailsCardHandle, ExpenseDe
         // generator the create form uses for the same field.
         const startingRecurring = !expense.isRecurring && recurring.isRecurring;
 
-        updateExpense(expense.id, {
+        updateExpense(expense.id, stripMirrorOwnedFields({
           amount: numericAmount,
           currencyCode: editCurrencyCode,
           description: editDescription.trim(),
@@ -227,7 +234,7 @@ export const ExpenseDetailsCard = forwardRef<ExpenseDetailsCardHandle, ExpenseDe
               }
             : {}),
           ...(isTripAccount ? { splitType: tripSplitType, shares: tripShares } : {}),
-        });
+        }, mirrorOwned));
 
         if (isTripAccount) {
           // Advance the persisted mirror to what was just saved, so a future
@@ -289,8 +296,17 @@ export const ExpenseDetailsCard = forwardRef<ExpenseDetailsCardHandle, ExpenseDe
 
     return (
       <View style={styles.detailsCard}>
+        <GroupTransactionBanner row={expense} kind="expense" onNavigate={onNavigateAway} />
+        {isEditing && mirrorOwned && (
+          <View style={styles.detailRow}>
+            <Text style={styles.detailLabel}>{t('expenseDetail.amount')}</Text>
+            <Text style={styles.detailValue}>
+              {formatCurrency(expense.amount, expense.currencyCode)} · {t('groupBudget.followsGroup')}
+            </Text>
+          </View>
+        )}
         {/* Amount — only shown as editable field in edit mode; AmountCard handles view-mode display */}
-        {isEditing && (
+        {isEditing && !mirrorOwned && (
           <View style={styles.detailRow}>
             <Text style={styles.detailLabel}>{t('expenseDetail.amount')}</Text>
             <View style={styles.amountEditRow}>
@@ -391,7 +407,7 @@ export const ExpenseDetailsCard = forwardRef<ExpenseDetailsCardHandle, ExpenseDe
         {/* Date */}
         <View style={styles.detailRow}>
           <Text style={styles.detailLabel}>{t('expenseDetail.date')}</Text>
-          {isEditing ? (
+          {isEditing && !mirrorOwned ? (
             <>
               <TouchableOpacity
                 style={styles.datePickerButton}
@@ -512,7 +528,7 @@ export const ExpenseDetailsCard = forwardRef<ExpenseDetailsCardHandle, ExpenseDe
             its own banner + Stop Recurring button instead (app/expense/[id].tsx),
             and a debt/repayment row can't be recurring, same rule the create
             form applies. */}
-        {isEditing && !expense.isRecurring && !expense.isDebt && !expense.isDebtRepayment && (
+        {isEditing && !mirrorOwned && !expense.isRecurring && !expense.isDebt && !expense.isDebtRepayment && (
           <View style={styles.detailRow}>
             <RecurringExpenseFields {...recurring} />
           </View>

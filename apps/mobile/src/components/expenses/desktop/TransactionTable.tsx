@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { formatCurrency, formatDate } from '@budget/shared-utils';
 import { getIntlLocale } from '@/i18n';
 import { useTheme, useStyles, type Theme } from '@/theme';
+import { groupTransactionMark } from '@/features/groups/groupBudgetMirror';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { groupByDay, rangeBetween, rowId, type LedgerRow, type DayGroup } from '@/features/expenses/desktopTable';
 import { computeHeaderCheckState } from '@/features/expenses/desktopSelection';
@@ -512,6 +513,18 @@ export function TransactionTable({
                               same mark on desktop. Only these two sources get
                               a badge, for the same reason: manual/voice/ocr
                               need no disambiguation in the feed. */}
+                          {/* ABA-661: a budget-mirror share row, or a payment linked to a
+                              group leg (left out of totals), on both sides of the table. */}
+                          {(() => {
+                            const mark = row.kind === 'income'
+                              ? groupTransactionMark(row.income, 'income')
+                              : groupTransactionMark(row.expense, 'expense');
+                            return mark ? (
+                              <Text style={styles.sourceBadge} numberOfLines={1}>
+                                {mark === 'share' ? t('groupBudget.badgeShare') : t('groupBudget.badgeLinked')}
+                              </Text>
+                            ) : null;
+                          })()}
                           {!isIncome &&
                           (row.expense.source === 'import' || row.expense.source === 'notification') ? (
                             <Text style={styles.sourceBadge} numberOfLines={1}>

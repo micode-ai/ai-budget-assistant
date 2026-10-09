@@ -3884,7 +3884,7 @@ Appuyez sur une depense pour afficher ses details complets :
 - **Notes** (si ajoutees)
 - **Ajouté par** — dans les comptes partagés; affiche le nom du membre du compte qui a créé cette entrée
 - **Statut de synchronisation** — en attente, synchronise, conflit ou erreur
-- **Source** — Saisie manuelle, Saisie vocale, Scan de reçu, Importé ou Capture automatique (les écritures issues d'une notification bancaire ou d'un import sont marquées pour qu'on les distingue)
+- **Source** — Saisie manuelle, Saisie vocale, Scan de reçu, Importé ou Capture automatique (les écritures issues d'une notification bancaire ou d'un import sont marquées pour qu'on les distingue) · **Groupe partagé** marque votre part d'une dépense du groupe (voir Groupes partagés), et **Lié au groupe** un paiement exclu des totaux car votre part est comptée à la place
 - **Articles du reçu** — articles individuels (pour les reçus scannés, ou extraits plus tard via **Extraire les articles**)
 - **Photo du reçu** — afficher, partager, enregistrer dans la galerie, remplacer ou supprimer la photo du reçu. Les reçus PDF affichent un aperçu de document qui s'ouvre au toucher. Si aucun reçu n'est encore joint, touchez **Joindre un reçu** pour en ajouter un — choisissez **Prendre une photo**, **Depuis la galerie** ou **Choisir un PDF**. Fonctionne pour toute dépense, y compris celles créées à la main. Si le reçu a été joint après la création de la dépense, touchez **Extraire les articles** dans la carte du reçu pour le relire par l'IA et en intégrer les lignes à la dépense (avec confirmation si des articles existent déjà ; chaque lecture consomme une requête IA)
 
@@ -6656,6 +6656,7 @@ Pour connecter : **Paramètres → Chatbots**.
 |---|---|
 | `/link CODE` | Lier la messagerie à l'application |
 | `/expense 50 déjeuner` | Ajouter une dépense |
+| `/group 120 pizza` | Ajouter une dépense à un groupe partagé |
 | `/income 3000 salaire` | Ajouter un revenu |
 | `/usage` | Voir l'utilisation IA |
 | `/account` | Changer de compte actif |
@@ -6664,6 +6665,10 @@ Pour connecter : **Paramètres → Chatbots**.
 | `/help` | Afficher toutes les commandes |
 
 > Sur **WhatsApp** et **Slack**, les commandes fonctionnent avec ou sans `/`. Vous pouvez aussi simplement taper un montant et une description : `50 déjeuner`.
+
+## Ajouter une dépense à un groupe partagé
+
+Envoyez `/group 120 pizza` pour ajouter une dépense à l'un de vos groupes partagés (dans WhatsApp et Slack, `group 120 pizza` fonctionne aussi). Si vous faites partie de plusieurs groupes, le bot vous demande lequel : choisissez-le dans la liste. Vérifiez ensuite la carte — groupe, montant, description, *payé par vous*, *à parts égales* — et appuyez sur **Confirmer**, ou sur **Annuler** pour ne rien ajouter. C'est toujours vous qui payez et la dépense est toujours partagée à parts égales entre tous les membres ; pour un autre payeur ou une autre répartition, ajoutez-la dans l'appli. Pour une autre devise, indiquez-la après le montant (`/group 25 EUR taxi`) : la dépense est convertie dans la devise du groupe au taux du jour, et si aucun taux n'est disponible, le bot vous le dit et n'ajoute rien. Les groupes archivés ne sont pas proposés, et cela ne consomme pas de requêtes IA.
 
 ## Scan de reçus
 
@@ -8146,6 +8151,8 @@ L'argent des groupes reste séparé de vos propres finances : rien d'un groupe n
 
 Touchez **Groupes** dans les actions rapides de l'écran d'accueil. Vous voyez vos groupes et votre solde dans chacun, ainsi que **Nouveau groupe** et **Rejoindre avec un lien**.
 
+Sur un ordinateur (fenêtre de navigateur plus large qu'environ 1000 pixels), **Groupes** se trouve aussi dans les liens rapides à droite de l'écran d'accueil et dans **Paramètres**. Vos groupes s'affichent dans un tableau, et la création d'un groupe, l'ajout d'une dépense, le règlement et la liste des membres s'ouvrent dans une fenêtre par-dessus la page.
+
 ## Créer un groupe
 
 1. Touchez **Nouveau groupe**.
@@ -8172,18 +8179,22 @@ Le lien ouvre une page simple dans leur navigateur, sans installation ni inscrip
 Ensuite, ils peuvent :
 
 - **Ajouter une dépense** : remplir *Pour quoi ?*, le montant, la date et qui a payé, choisir **À parts égales** (cocher qui la partage) ou **Montants exacts** (saisir ce que doit chaque personne), puis toucher **Ajouter la dépense**. Ils peuvent **Supprimer** une dépense qu'ils ont eux-mêmes ajoutée.
-- **Régler** : sur un virement qui les concerne, toucher **Marquer comme payé** (s'ils ont payé) ou **Marquer comme reçu** (s'ils ont reçu l'argent). Un paiement enregistré par erreur peut être annulé avec **Annuler** par la personne qui l'a enregistré ou par celle qui l'a reçu.
+- **Régler** : sur un virement qui les concerne, toucher **Marquer comme payé** (s'ils ont payé) ou **Marquer comme reçu** (s'ils ont reçu l'argent). Un paiement enregistré par erreur peut être annulé avec **Annuler** par la personne qui l'a enregistré ou par celle qui l'a reçu. Le montant est prérempli avec le paiement suggéré et peut être modifié pour n'en payer qu'une partie.
 - **Vos coordonnées de paiement** : choisir une méthode, saisir un compte ou un identifiant, puis **Enregistrer**. Seule la personne qui doit les payer voit ces coordonnées, sur sa propre ligne de virement, avec un bouton Revolut ou PayPal prêt à l'emploi quand c'est possible.
 - **Ce n'est pas moi / oublier cet appareil** : déconnecte ce navigateur de leur nom, sur un téléphone ou un ordinateur partagé.
 - **Vous avez un code de restauration ?** : sur un nouvel appareil, saisir le **Code de restauration** et toucher **Restaurer**.
 
-Si quelqu'un perd à la fois les données de son navigateur et son code de restauration, il peut rejoindre le groupe sous un nom légèrement différent, ou le propriétaire du groupe peut réinitialiser le lien (voir plus bas) pour que chacun choisisse à nouveau son nom.
+Si quelqu'un perd à la fois les données de son navigateur et son code de restauration, il peut rejoindre le groupe sous un nom légèrement différent, ou le propriétaire du groupe peut réinitialiser le lien (voir plus bas) pour que chacun choisisse à nouveau son nom. Le propriétaire peut aussi libérer uniquement ce nom : voir **Réinitialiser la connexion de cette personne** dans Membres.
 
 La page suggère aussi l'appli à quelques moments utiles — pour les notifications, la lecture des tickets papier ou les rappels —, mais rien sur la page ne l'exige.
 
+### Partager un ticket ligne par ligne
+
+Quand un ticket a été ajouté au groupe ligne par ligne, la page l’affiche pendant une semaine sous **Partager un ticket**. Ouvrez-le, cochez ce que vous avez pris et touchez **Enregistrer mes articles**. Une ligne cochée par plusieurs personnes est partagée à parts égales entre elles, et ce que personne ne coche reste à la personne qui a payé. Chaque ligne cochée affiche **votre part**, et **Votre part de ce ticket** affiche le total. Une ligne marquée **réparti par** suivi d’un nom a été répartie à la main par la personne qui a payé et ne peut pas être modifiée ici. Après une semaine, ou dès que la personne qui a payé clôt le ticket, seule elle ou le propriétaire du groupe peut changer qui a pris quoi. Tant qu’un ticket est en cours de partage, **Qui paie qui** indique que les montants peuvent encore changer. Un paiement déjà enregistré reste tel quel : si votre part change ensuite, un petit solde réapparaît simplement.
+
 ### Passer du navigateur à l'appli
 
-Sous **Gardez ce groupe dans l'appli**, un ami peut toucher **Continuer dans l'appli du navigateur** (ou **Ouvrir dans l'appli** sur Android, si l'appli est déjà installée). Après connexion ou création d'un compte, le groupe et tout son historique passent sur ce compte : rien n'est perdu. Ce lien ne fonctionne qu'une fois et seulement quelques minutes. S'il installe d'abord l'appli depuis Google Play, il doit ensuite rouvrir le lien du groupe dans le navigateur et toucher **Ouvrir dans l'appli**.
+Sous **Gardez ce groupe dans l'appli**, un ami peut toucher **Continuer dans l'appli du navigateur** (ou **Ouvrir dans l'appli** sur Android, si l'appli est déjà installée). Après connexion ou création d'un compte, le groupe et tout son historique passent sur ce compte : rien n'est perdu. Ce lien ne fonctionne qu'une fois et seulement quelques minutes. S'il installe d'abord l'appli depuis Google Play, il doit ensuite rouvrir le lien du groupe dans le navigateur et toucher **Ouvrir dans l'appli**. Si vous êtes déjà dans le groupe dans l'appli sous un autre nom, l'appli propose à la place **Fusionner « Ania » dans votre compte** (avec votre nom du navigateur) : ce nom et tout ce qu'il contient passent sur votre nom dans l'appli, et le solde des autres ne change pas.
 
 ## Utiliser un groupe dans l'appli
 
@@ -8191,9 +8202,29 @@ L'écran du groupe indique si **On vous doit** ou si **Vous devez** (ou **Tout e
 
 **Ajouter une dépense** ouvre le formulaire : **Montant**, **Description**, **Date**, **Payé par** et **Répartition** : **À parts égales**, **Montants exacts**, **Pourcentages** ou **Parts**. **Scanner un ticket** lit un ticket papier et remplit pour vous le montant, la description et la date. La personne qui a ajouté une dépense, celle qui l'a payée et le propriétaire du groupe peuvent la modifier ou la supprimer. Une dépense supprimée reste dans l'historique, marquée comme supprimée.
 
+Vous pouvez aussi ajouter une dépense depuis le bot Telegram, WhatsApp ou Slack : envoyez `/group 120 pizza`, choisissez le groupe et confirmez — vous êtes le payeur et la dépense est partagée à parts égales entre tous (voir Bots de messagerie).
+
+## Dépenses par articles
+
+Quand chacun a pris quelque chose de différent, ajoutez la dépense ligne par ligne au lieu de partager le total. Dans **Ajouter une dépense**, activez **Par articles (partager par lignes du ticket)**. Sous **Lignes du ticket**, saisissez chaque **Article** avec son **Prix** et, s'il y en avait une, sa **Remise** ; **Ajouter une ligne** en ajoute d'autres. Une **Remise sur le ticket (facultatif)** sur l'ensemble du ticket est répartie au prorata. **Scanner un ticket** remplit les lignes pour vous. Le **Montant** est ce qui a été payé : s'il dépasse les lignes (une consigne, un pourboire), **le reste reste à la charge de qui a payé** ; **Utiliser le total des lignes comme montant** recopie le total des lignes.
+
+Touchez une dépense par articles dans la liste d'activité (elle porte la mention **Par articles · ouvert jusqu'au** une date) pour ouvrir **Partager le ticket**. Pendant une semaine, chacun coche sous **Mes lignes** ce qu'il a pris et touche **Enregistrer mes lignes** ; les amis dans le navigateur font de même sur la page du groupe. Une ligne cochée par plusieurs personnes est partagée à parts égales entre elles, et ce que personne ne coche reste à la charge de qui a payé. **Votre part des lignes** indique ce que donnent vos coches.
+
+La personne qui a payé, celle qui a ajouté la dépense et le propriétaire du groupe voient aussi **Tout le monde** : ils y choisissent qui a pris chaque ligne, utilisent **Partager en %** pour partager une ligne de façon inégale (ce qui n'est pas attribué reste à la charge de qui a payé) et touchent **Enregistrer le partage**. Ils peuvent **Clore le choix** plus tôt ou **Rouvrir pour 7 jours**. Après la semaine, ou une fois le choix clos, eux seuls peuvent changer qui a pris quoi. Tant qu'un ticket est en cours de partage, l'écran de règlement et **Qui paie qui** préviennent que les montants peuvent encore changer. Un paiement déjà fait reste tel quel : si une part change ensuite, un petit solde réapparaît simplement.
+
+Sur ordinateur, **Partager le ticket** s'ouvre dans une fenêtre au-dessus de la page du groupe.
+
+## Dépenses dans une autre devise
+
+Chaque groupe tient ses comptes dans une seule devise, celle choisie à sa création. Une dépense payée dans une autre devise peut quand même être ajoutée. Dans l'appli, touchez la devise à côté de **Montant** et choisissez celle que vous avez utilisée. La ligne **Taux de change** affiche alors le taux du jour (par exemple *1 EUR =* 4,32 dans la devise du groupe) et ce que comptera la dépense ; modifiez le taux si vous connaissez celui réellement payé. Dans le navigateur, vos amis choisissent la **Devise** sous le montant.
+
+La dépense est convertie dans la devise du groupe une seule fois, à l'enregistrement, et c'est ce montant converti qu'utilisent les soldes. Il ne change plus ensuite, même quand les taux bougent : un groupe réglé reste réglé. L'historique affiche les deux montants, par exemple « 12,00 € → 51,80 zł ». Si vous changez ensuite le montant, le même taux est réutilisé ; si vous changez la devise, un nouveau taux est pris. Quand aucun taux n'est disponible, l'appli vous demande de le saisir, et la page du navigateur de réessayer plus tard ou de saisir le montant dans la devise du groupe. Avec **Montants exacts**, saisissez la part de chacun dans la devise de paiement. Les paiements sont toujours dans la devise du groupe.
+
 ## Régler
 
 Sur une ligne de **Qui paie qui** qui vous concerne, touchez **Régler**. Si la personne que vous payez a renseigné ses coordonnées de paiement, vous verrez un bouton ou des instructions pour la payer. Choisissez **Comment a-t-il été payé ?**, puis touchez **J'ai payé**, ou **Je l'ai reçu** si c'est vous qui êtes payé (pratique quand un ami vous a payé en espèces et n'est jamais revenu sur le lien).
+
+Pas besoin de tout payer d'un coup. Le **Montant** s'ouvre sur le paiement suggéré ; modifiez-le pour en enregistrer une partie. Il ne peut pas dépasser ce qui est dû entre vous deux : un paiement ne fait donc que rapprocher les deux soldes de zéro. Pour payer quelqu'un qui n'est pas sur votre ligne de **Qui paie qui**, ou pour enregistrer de l'argent reçu de quelqu'un, touchez **Enregistrer un paiement** sur l'écran du groupe (sur ordinateur, dans la barre d'outils), choisissez la personne et saisissez le montant.
 
 Un paiement compte immédiatement, pour tout le monde. S'il a été enregistré par erreur, ouvrez-le dans la liste d'activité et touchez **Annuler le paiement** : il reste dans l'historique, marqué comme annulé, et les soldes reviennent en arrière. Si quelqu'un d'autre a modifié le groupe pendant votre règlement, vous verrez « Les soldes ont changé » : vérifiez les chiffres et réessayez.
 
@@ -8208,6 +8239,14 @@ Touchez **Membres** pour voir tout le monde. Les membres marqués **Pas encore r
 
 Un membre retiré par le propriétaire ne peut pas revenir par le lien.
 
+Si quelqu'un a perdu l'accès dans le navigateur, ou si quelqu'un d'autre a pris son nom, le propriétaire peut toucher ce membre, choisir **Réinitialiser la connexion de cette personne** et confirmer. Le nom redevient libre dans le lien, et quiconque utilise encore l'ancien navigateur en perd l'accès. Personne d'autre n'est concerné, et les dépenses et le solde du membre restent exactement comme avant. L'option n'est proposée que pour les amis qui utilisent le groupe depuis le navigateur et ont déjà choisi leur nom. La réinitialisation apparaît dans la liste **Activité** de l'appli ; la page du navigateur ne l'affiche pas.
+
+### Fusionner deux membres
+
+Il arrive qu'une personne se retrouve deux fois dans le groupe — par exemple « Ania » du navigateur et « Ania » qui a rejoint plus tard dans l'appli, ou « Ania (2) » après avoir perdu ses données de navigateur. Touchez l'un des deux dans **Membres**, choisissez **Fusionner avec…** puis l'autre nom. La confirmation indique le solde qu'aura le nom restant. Tout ce que le nom fusionné a payé, devait et réglé passe sur le nom restant, un paiement entre les deux est annulé (c'était de l'argent passé d'une poche à l'autre), et le solde des autres ne bouge pas d'un centime. Une fusion est irréversible.
+
+Le propriétaire peut fusionner deux noms du navigateur, ou un nom du navigateur dans le sien. Chacun peut fusionner dans son propre nom un nom que personne n'a encore choisi. Deux personnes qui utilisent toutes les deux l'appli ne peuvent pas être fusionnées, et personne ne peut faire passer un solde sur le compte d'appli de quelqu'un d'autre : cette personne doit le faire elle-même. La fusion apparaît dans **Activité** dans l'appli et sur la page du navigateur.
+
 ### Options du propriétaire
 
 La personne qui a créé le groupe voit aussi les **Options du propriétaire** :
@@ -8217,15 +8256,39 @@ La personne qui a créé le groupe voit aussi les **Options du propriétaire** :
 - **Archiver le groupe** : le groupe passe en lecture seule pour tous, mais les soldes finaux restent visibles. Si des soldes restent ouverts, vous confirmerez avec **Archiver quand même**.
 - **Supprimer le groupe** : supprime le groupe et tout son historique pour tout le monde. C'est irréversible.
 
-Si le propriétaire supprime son propre compte, ses groupes sont également supprimés.
+### Transmettre le groupe
+
+Le propriétaire ne peut pas quitter un groupe tant qu'il en est propriétaire. Pour partir, ouvrez **Membres**, touchez un membre qui utilise l'appli, choisissez **Nommer propriétaire** et confirmez. Cette personne devient propriétaire et reçoit une notification ; vous restez un membre ordinaire et pouvez ensuite **Quitter le groupe** comme d'habitude (votre solde doit d'abord être à zéro). Seuls les membres qui utilisent l'appli peuvent devenir propriétaires, pas les amis qui n'utilisent le groupe que dans le navigateur.
+
+Si le propriétaire supprime son compte, le groupe ne disparaît pas. Il passe automatiquement au membre arrivé le plus tôt parmi ceux qui utilisent l'appli. Si personne d'autre dans le groupe n'utilise l'appli, le groupe continue de fonctionner pour tous (ajout de dépenses et règlements compris), mais reste un moment sans propriétaire : l'écran du groupe l'indique et les options du propriétaire sont indisponibles. Seul un membre qui était déjà dans le groupe, avec l'appli, avant qu'il perde son propriétaire peut appuyer sur **Devenir propriétaire** ; une personne qui rejoint après ne peut pas le reprendre. Si vous supprimez votre propre compte, votre nom dans chaque groupe devient « Former member » et vos coordonnées de paiement y sont effacées ; les dépenses et les soldes restent inchangés.
+
+Les changements de propriétaire apparaissent dans la liste **Activité**, par exemple « Anne a nommé Paul propriétaire ». La page du navigateur ne les affiche pas.
+
+Si un compte est supprimé définitivement par notre équipe d'assistance, cette personne apparaît dans ses groupes sous le nom **Former member** (ancien membre). Ses dépenses et paiements restent, pour que les soldes tombent toujours juste.
+
+## Compter votre part dans votre budget
+
+Normalement, un groupe vit à côté de votre budget : ce que vous payez par carte est dans votre budget, et le groupe suit seulement qui doit quoi à qui. Si vous préférez voir dans vos budgets et analyses ce que vous avez réellement consommé, ouvrez **Membres** et utilisez **Compter ma part dans mon budget**.
+
+- Touchez **Activer…**, choisissez le **Compte** qui reçoit votre part et, si vous voulez, une **Catégorie**, puis **Activer**. Dès lors, votre part de chaque dépense du groupe apparaît dans ce compte comme une opération distincte, marquée **Part de groupe**. Cela commence avec les dépenses de ce mois-ci, vos budgets clôturés ne sont donc pas touchés.
+- Seuls les comptes dont vous êtes propriétaire et votre propre compte personnel sont proposés : dans un compte partagé, votre part changerait les chiffres de tous. Les comptes chiffrés de bout en bout ne sont pas proposés non plus, car le serveur devrait y écrire votre part en clair.
+- Une part suit le groupe : si quelqu'un modifie la dépense, votre part est mise à jour. Son montant, sa devise et sa date ne sont pas modifiables dans votre compte, mais la catégorie, les notes et les tags sont à vous. Touchez **Du groupe …** pour ouvrir le groupe. Une part supprimée ne revient pas.
+- Si vous ne pouvez plus utiliser le compte (vous n'êtes plus que lecteur, il a été archivé ou chiffré), le comptage est **En pause** et rien n'est ajouté tant que vous ne choisissez pas un autre compte ou ne le désactivez pas.
+- **Désactiver** retire les parts de votre compte, et vos paiements liés comptent de nouveau comme des dépenses ordinaires. Rien ne change dans le groupe.
+
+**Peut être compté deux fois.** Si vous avez payé une dépense du groupe par carte, ou réglé par virement, et que ce paiement figure aussi dans votre compte, il serait compté deux fois : comme paiement et comme votre part. L'app lie donc ces paiements au groupe : ils reçoivent la marque **Lié au groupe** et sont exclus de vos totaux, votre part étant comptée à la place. Un paiement n'est lié automatiquement que si exactement une opération correspond (même montant et même devise, à 3 jours près) ; sinon il est proposé comme **Correspondance possible**. Quand un autre membre a ajouté la dépense que vous avez payée, elle n'est jamais liée automatiquement : vous recevez une notification et la question « Est-ce votre paiement par carte ? ». La carte **Peut être compté deux fois** de l'écran du groupe (sur ordinateur, dans la colonne de droite) montre ce qui n'est pas encore lié. Touchez **Vérifier** pour **Lier** une correspondance, répondre **Pas celle-ci**, **Choisir une opération** vous-même ou **Délier** un paiement.
+
+**Le compromis.** Tant que des soldes sont ouverts, le solde de votre portefeuille diffère de la banque de ce que le groupe vous doit ou que vous lui devez : votre part est déjà comptée, l'argent qui la règle pas encore. Il concorde de nouveau une fois réglé.
 
 ## Rejoindre un groupe dans l'appli
 
-Si un ami vous envoie le lien d'un groupe et que vous avez l'appli, touchez **Rejoindre avec un lien** sur l'écran Groupes, collez-le dans **Lien du groupe**, saisissez **Votre nom dans ce groupe** et touchez **Rejoindre le groupe**. Si vous avez déjà choisi votre nom dans le navigateur, ne rejoignez pas une seconde fois : ouvrez le lien dans le navigateur et touchez **Ouvrir dans l'appli**, pour garder votre historique.
+Si un ami vous envoie le lien d'un groupe et que vous avez l'appli, touchez **Rejoindre avec un lien** sur l'écran Groupes et collez-le dans **Lien du groupe**. L'appli affiche le nom du groupe et les noms que personne n'a encore pris. Touchez votre nom, ou **Je ne suis pas dans la liste** puis saisissez **Votre nom dans ce groupe** (au départ, le nom de votre compte), et touchez **Rejoindre le groupe**. Si l'on vous a déjà ajouté par votre nom, choisissez-le pour reprendre cette place avec son historique. Si quelqu'un prend le nom juste avant vous, la liste se rafraîchit et vous choisissez de nouveau. Si vous êtes déjà dans le groupe, l'appli propose **Ouvrir le groupe**. Un groupe archivé est en lecture seule : on ne peut pas le rejoindre. Si vous avez déjà choisi votre nom dans le navigateur, utilisez **Ouvrir dans l'appli** sur la page invité, pour garder votre historique.
 
 ## Notifications
 
 Quand quelqu'un d'autre ajoute une dépense ou un paiement, vous recevez une notification — au plus une par groupe toutes les quelques minutes. La toucher ouvre le groupe. Vous pouvez la désactiver dans **Paramètres → Notifications → Activité des groupes**.
+
+**Rappels de solde.** Tant que vous devez de l'argent dans un groupe, ou qu'on vous en doit, vous recevez un rappel une fois par semaine — le premier une semaine après l'apparition du solde, et quatre au plus pour le même solde. Si c'est vous qui devez, il ouvre l'écran de règlement sur le paiement suggéré, et vous pouvez en payer une partie ; si on vous doit, il ouvre **Enregistrer un paiement**, et vous pouvez partager le lien du groupe pour le rappeler aux autres. Vous recevez au plus un rappel par jour, pour le groupe au solde le plus élevé. Aucun rappel pour un solde inférieur à 1,00, et une fois un solde réglé le compte repart de zéro. Les amis qui n'utilisent le groupe que dans le navigateur ne reçoivent jamais de rappels. Vous pouvez les désactiver dans **Paramètres → Notifications → Rappels de soldes des groupes** ; c'est distinct d'Activité des groupes.
 
 ## Confidentialité
 
@@ -8233,3 +8296,7 @@ Quand quelqu'un d'autre ajoute une dépense ou un paiement, vous recevez une not
 - Les données du groupe **ne sont pas chiffrées de bout en bout**, même si vous utilisez le chiffrement de bout en bout pour vos propres données, car vos amis les lisent dans un navigateur ordinaire.
 - La page n'affiche jamais l'adresse e-mail de quiconque, ni le fait que quelqu'un utilise l'appli. Vos coordonnées de paiement ne sont visibles que par la personne qui vous paie.
 - Si le lien a fuité, utilisez **Réinitialiser le lien** ou désactivez **Accès par le lien invité**.
+
+## Hors ligne
+
+Les groupes nécessitent une connexion au serveur. Tant que l’app ne peut pas l’atteindre, un bandeau l’indique et les boutons qui modifient quelque chose (nouveau groupe, rejoindre, ajouter une dépense, régler, membres, etc.) sont désactivés. Vous pouvez toujours lire ce qui est déjà affiché. Tout se réactive tout seul dès le retour de la connexion.

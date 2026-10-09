@@ -7,6 +7,7 @@ import { getIntlLocale } from '@/i18n';
 import { useTranslation } from 'react-i18next';
 import type { Expense } from '@budget/shared-types';
 import { useTheme } from '@/theme';
+import { groupTransactionMark } from '@/features/groups/groupBudgetMirror';
 
 interface Props {
   item: Expense;
@@ -19,6 +20,8 @@ interface Props {
 export function ExpenseListItem({ item, isMultiSelect, isSelected, onToggleSelect, onLongPress }: Props) {
   const theme = useTheme();
   const { t } = useTranslation();
+  // ABA-661: a budget-mirror share row, or a payment linked to a group leg (left out of totals).
+  const groupMark = groupTransactionMark(item, 'expense');
 
   return (
     <TouchableOpacity
@@ -58,6 +61,10 @@ export function ExpenseListItem({ item, isMultiSelect, isSelected, onToggleSelec
             style={{ width: 24, height: 24 }}
             resizeMode="contain"
           />
+        ) : groupMark === 'share' ? (
+          <Ionicons name="people-outline" size={24} color={theme.colors.primary} />
+        ) : groupMark === 'linked' ? (
+          <Ionicons name="link-outline" size={24} color={theme.colors.textSecondary} />
         ) : item.isSplitReceivable ? (
           <Ionicons name="warning-outline" size={24} color={theme.colors.textSecondary} />
         ) : (
@@ -76,6 +83,11 @@ export function ExpenseListItem({ item, isMultiSelect, isSelected, onToggleSelec
         <Text style={[styles.date, { color: theme.colors.textTertiary }]}>
           {formatDate(item.date, undefined, getIntlLocale())}
         </Text>
+        {groupMark && (
+          <Text style={[styles.sourceBadge, { color: theme.colors.textTertiary }]}>
+            {groupMark === 'share' ? t('groupBudget.badgeShare') : t('groupBudget.badgeLinked')}
+          </Text>
+        )}
         {(item.source === 'import' || item.source === 'notification') && (
           <Text style={[styles.sourceBadge, { color: theme.colors.textTertiary }]}>
             {item.source === 'import'
@@ -85,7 +97,7 @@ export function ExpenseListItem({ item, isMultiSelect, isSelected, onToggleSelec
         )}
       </View>
       <View style={styles.amountContainer}>
-        {item.isSplitReceivable && (
+        {item.isSplitReceivable && groupMark !== 'linked' && (
           <Text style={[styles.receivableBadge, { color: theme.colors.textSecondary }]}>
             {t('expenses.receivable')}
           </Text>

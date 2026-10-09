@@ -20,7 +20,7 @@
 <link rel="alternate" hreflang="be" href="https://ai-budget.pl/help/be/chat-bots/">
 <link rel="alternate" hreflang="nl" href="https://ai-budget.pl/help/nl/chat-bots/">
 <link rel="alternate" hreflang="x-default" href="https://ai-budget.pl/help/en/chat-bots/">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "alternateName": ["MiCode Sp. z o.o.", "MiCode"], "taxID": "5833510147", "url": "https://mi-code.pl/", "sameAs": ["https://mi-code.pl/", "https://github.com/micode-ai", "https://www.wikidata.org/wiki/Q141551004"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Чат-боты — Telegram, WhatsApp і Slack | AI Budget Assistant", "description": "Кіруйце фінансамі прама з Telegram, WhatsApp або Slack. Размаўляйце з ШІ, дадавайце выдаткі, скануйце чэкі і адпраўляйце галасавыя — без адкрыцця прыкладання.", "inLanguage": "be", "datePublished": "2026-06-19", "dateModified": "2026-09-03", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/be/chat-bots/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/be/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/be/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Галоўная", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Дапамога", "item": "https://ai-budget.pl/help/be/"}, {"@type": "ListItem", "position": 3, "name": "Чат-боты — Telegram, WhatsApp і Slack | AI Budget Assistant", "item": "https://ai-budget.pl/help/be/chat-bots/"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "alternateName": ["MiCode Sp. z o.o.", "MiCode"], "taxID": "5833510147", "url": "https://mi-code.pl/", "sameAs": ["https://mi-code.pl/", "https://github.com/micode-ai", "https://www.wikidata.org/wiki/Q141551004"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Чат-боты — Telegram, WhatsApp і Slack | AI Budget Assistant", "description": "Кіруйце фінансамі прама з Telegram, WhatsApp або Slack. Размаўляйце з ШІ, дадавайце выдаткі, скануйце чэкі і адпраўляйце галасавыя — без адкрыцця прыкладання.", "inLanguage": "be", "datePublished": "2026-06-19", "dateModified": "2026-10-09", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/be/chat-bots/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/be/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/be/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Галоўная", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Дапамога", "item": "https://ai-budget.pl/help/be/"}, {"@type": "ListItem", "position": 3, "name": "Чат-боты — Telegram, WhatsApp і Slack | AI Budget Assistant", "item": "https://ai-budget.pl/help/be/chat-bots/"}]}]}</script>
 <style>
 :root{--o:#B45309;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
 *{box-sizing:border-box}
@@ -139,6 +139,10 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <td>Дадаць выдатак</td>
 </tr>
 <tr>
+<td><code>/group 120 піца</code></td>
+<td>Дадаць выдатак у агульную групу</td>
+</tr>
+<tr>
 <td><code>/income 3000 заплата</code></td>
 <td>Дадаць даход</td>
 </tr>
@@ -167,6 +171,8 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <blockquote>
 <p>У <strong>WhatsApp</strong> і <strong>Slack</strong> каманды працуюць з <code>/</code> або без яго. Можна таксама проста напісаць суму і апісанне: <code>50 абед</code>.</p>
 </blockquote>
+<h2>Выдатак у агульную групу</h2>
+<p>Адпраўце <code>/group 120 піца</code>, каб дадаць выдатак у адну з вашых агульных груп (у WhatsApp і Slack можна і без слэша: <code>group 120 піца</code>). Калі вы ўваходзіце ў некалькі груп, бот спытае, у якую, — выберыце яе са спіса. Потым праверце картку: група, сума, апісанне, <em>плацілі вы</em>, <em>пароўну</em> — і націсніце <strong>Пацвердзіць</strong> або <strong>Адмяніць</strong>, каб нічога не дадаваць. Плацельшчык — заўсёды вы, а выдатак заўсёды дзеліцца пароўну паміж усімі ўдзельнікамі; калі плаціў хтосьці іншы або дзяліць трэба інакш, дадайце выдатак у праграме. Каб пазначыць іншую валюту, напішыце яе пасля сумы (<code>/group 25 EUR таксі</code>): выдатак пералічыцца ў валюту групы па сённяшнім курсе, а калі курсу няма, бот паведаміць пра гэта і нічога не дадасць. Архіўныя групы ў спісе не паказваюцца, запыты ШІ на гэта не марнуюцца.</p>
 <h2>Сканаванне чэкаў</h2>
 <ol>
 <li>Зрабіце фота чэка і адпраўце боту</li>

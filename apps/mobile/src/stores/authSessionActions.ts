@@ -25,6 +25,7 @@ import { useMerchantRulesStore } from './merchantRulesStore';
 import { useShareIntakeStore } from './shareIntakeStore';
 import { useShoppingListTemplateStore } from './shoppingListTemplateStore';
 import { useGroupStore } from './groupStore';
+import { useGroupBudgetStore } from './groupBudgetStore';
 import { useInboundReceiptStore } from './inboundReceiptStore';
 import { useChatStore } from './chatStore';
 import { useScenarioStore } from './scenarioStore';
@@ -666,6 +667,7 @@ export async function logoutAction(set: AuthStoreSet): Promise<void> {
     useShareIntakeStore.getState().reset();
     useShoppingListTemplateStore.getState().reset();
     useGroupStore.getState().reset();
+    useGroupBudgetStore.getState().reset();
     // E-mail receipts (ABA-644): the address, the pending items and the feature gate are
     // per user - the next person to sign in must not see another's inbox.
     useInboundReceiptStore.getState().reset();

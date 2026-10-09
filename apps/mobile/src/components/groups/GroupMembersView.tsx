@@ -14,6 +14,7 @@ import { canMakeOwner, canResetClaim, claimResetErrorReason, ownerErrorReason } 
 import { MAX_MEMBER_NAME_LENGTH } from '@/features/groups/groupSplit';
 import { canMergeMember, mergedBalancePreview, mergeErrorReason, mergePair, mergePartners } from '@/features/groups/groupMerge';
 import type { GroupMember } from '@budget/shared-types';
+import { GroupBudgetMirrorCard } from './GroupBudgetMirrorCard';
 import { GroupButton } from './GroupButton';
 import { GroupOfflineBanner } from './GroupOfflineBanner';
 import { GroupErrorState } from './GroupErrorState';
@@ -23,7 +24,8 @@ import { GroupPaymentInfoCard } from './GroupPaymentInfoCard';
 
 /**
  * Members: add a placeholder name, rename, my payment details, remove, make owner (ABA-650), reset a
- * guest's browser login (ABA-651), merge two members (ABA-657), and the owner controls. Hosted unchanged by the desktop members dialog, so every change here is on both.
+ * guest's browser login (ABA-651), merge two members (ABA-657), count my share in my budget (ABA-661),
+ * and the owner controls. Hosted unchanged by the desktop members dialog, so every change here is on both.
  */
 export function GroupMembersView({
   groupId,
@@ -345,6 +347,13 @@ ${t('groups.mergeIrreversible')}`,
         {me && (
           <View style={styles.gap}>
             <GroupPaymentInfoCard groupId={groupId} member={me} editable={writable} />
+          </View>
+        )}
+
+        {/* ABA-661: my own setting, so only on my row's screen; an app user is always a member here. */}
+        {me && (
+          <View style={styles.gap}>
+            <GroupBudgetMirrorCard groupId={groupId} canTurnOn={writable} />
           </View>
         )}
 

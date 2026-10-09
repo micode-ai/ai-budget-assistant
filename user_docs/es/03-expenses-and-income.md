@@ -169,7 +169,7 @@ Toca cualquier gasto para ver sus detalles completos:
 - **Notas** (si se agregaron)
 - **Agregado por** — en cuentas compartidas; muestra el nombre del miembro de la cuenta que creó esta entrada
 - **Estado de sincronizacion** — pendiente, sincronizado, conflicto o error
-- **Fuente** — Entrada manual, Entrada de voz, Escaneo de recibo, Importado o Captura automática (los registros de una notificación bancaria o de una importación están marcados para que se distingan)
+- **Fuente** — Entrada manual, Entrada de voz, Escaneo de recibo, Importado o Captura automática (los registros de una notificación bancaria o de una importación están marcados para que se distingan) · **Grupo compartido** marca tu parte de un gasto del grupo (ver Grupos compartidos), y **Vinculado al grupo** un pago que queda fuera de los totales porque en su lugar se cuenta tu parte
 - **Articulos del recibo** — articulos individuales (para recibos escaneados, o extraídos después mediante **Extraer artículos**)
 - **Imagen del recibo** — ver, compartir, guardar en galería, reemplazar o eliminar la foto del recibo. Los recibos PDF muestran una vista previa del documento para abrir. Si aun no hay recibo adjunto, toca **Adjuntar recibo** — elige **Tomar foto**, **Desde la galería** o **Elegir PDF**. Funciona para cualquier gasto, incluidos los agregados manualmente. Si el recibo se adjuntó después de crear el gasto, toca **Extraer artículos** en la tarjeta del recibo para que la IA lo vuelva a leer y añada sus líneas al gasto (con confirmación si ya hay artículos; cada ejecución consume una petición de IA)
 
