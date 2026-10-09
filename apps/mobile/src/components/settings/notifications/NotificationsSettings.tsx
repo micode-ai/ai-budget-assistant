@@ -207,7 +207,6 @@ export function NotificationsSettings() {
       await api.updateNotificationPreferences({ inflationShield: value });
     } catch (e) {
       setNotifInflationShield(!value);
-      setNotifMonthlyWrapped(!value);
       showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
     }
   };
