@@ -891,6 +891,13 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="groups/[id]/claims"
+          options={{
+            headerShown: true,
+            title: t('groups.claimsTitle'),
+          }}
+        />
+        <Stack.Screen
           name="groups/[id]/members"
           options={{
             headerShown: true,

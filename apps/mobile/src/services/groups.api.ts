@@ -4,12 +4,14 @@ import type {
   CreateGroupSettlementDto,
   GroupActivityPage,
   GroupDetail,
+  GroupExpenseItemsView,
   GroupFxPreview,
   GroupJoinPreview,
   GroupMember,
   GroupSummary,
   JoinGroupDto,
   LinkGuestDto,
+  SetGroupClaimsDto,
   UpdateGroupDto,
   UpdateGroupExpenseDto,
   UpdateGroupMemberDto,
@@ -101,6 +103,31 @@ export const groupsApi = {
   /** ABA-654: the provider rate for the form (1 `currency` in the group currency); `rate` null when unknown. */
   getGroupFxPreview(groupId: string, currency: string) {
     return httpClient.request<GroupFxPreview>(`/groups/${groupId}/fx-preview?currency=${encodeURIComponent(currency)}`);
+  },
+  /** ABA-656: an itemised expense's lines, claims, the caller's part and the claim window. */
+  getGroupExpenseItems(groupId: string, expenseId: string) {
+    return httpClient.request<GroupExpenseItemsView>(`/groups/${groupId}/expenses/${expenseId}/items`);
+  },
+  /** The caller's full set of claimed lines. 409 CLAIMS_CLOSED, 404 a foreign line. */
+  setMyGroupClaims(groupId: string, expenseId: string, itemIds: string[]) {
+    return httpClient.request<GroupExpenseItemsView>(`/groups/${groupId}/expenses/${expenseId}/claims/me`, {
+      method: 'PUT',
+      body: json({ itemIds }),
+    });
+  },
+  /** Payer, creator or owner: set the listed members' claims and shares. 403 otherwise, 400 CLAIM_SHARE_INVALID. */
+  setGroupClaims(groupId: string, expenseId: string, dto: SetGroupClaimsDto) {
+    return httpClient.request<GroupExpenseItemsView>(`/groups/${groupId}/expenses/${expenseId}/claims`, {
+      method: 'PUT',
+      body: json(dto),
+    });
+  },
+  /** Payer, creator or owner: close the claim window now, or `reopen` it for another 7 days. */
+  closeGroupClaims(groupId: string, expenseId: string, reopen?: boolean) {
+    return httpClient.request<GroupExpenseItemsView>(`/groups/${groupId}/expenses/${expenseId}/claims/close`, {
+      method: 'POST',
+      body: json(reopen ? { reopen: true } : {}),
+    });
   },
   deleteGroupExpense(groupId: string, expenseId: string) {
     return httpClient.request<GroupDetail>(`/groups/${groupId}/expenses/${expenseId}`, { method: 'DELETE' });

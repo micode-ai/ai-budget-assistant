@@ -27,6 +27,11 @@ interface LineShareEditorProps {
   canEdit: boolean;
   onChangeShare: (participantId: string, bp: number) => void;
   onReset: () => void;
+  /**
+   * The remainder row's label. Defaults to "You" (receipt-split: the viewer IS the payer). Shared
+   * groups (ABA-656) pass the payer's name, since whoever edits there need not be the payer.
+   */
+  remainderLabel?: string;
 }
 
 /**
@@ -52,6 +57,7 @@ export function LineShareEditor({
   canEdit,
   onChangeShare,
   onReset,
+  remainderLabel,
 }: LineShareEditorProps) {
   const { t } = useTranslation();
   const styles = useStyles(createStyles);
@@ -148,7 +154,7 @@ export function LineShareEditor({
           line that adds up to more than itself. */}
       <View style={[styles.row, styles.payerRow]}>
         <Text style={[styles.name, styles.payerName]} numberOfLines={1}>
-          {t('receiptSplit.shareYou')}
+          {remainderLabel ?? t('receiptSplit.shareYou')}
         </Text>
         <Text style={styles.payerValue}>{percentLabel(remainderBp)}</Text>
         <Text style={styles.counterpart}>

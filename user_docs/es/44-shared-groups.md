@@ -63,6 +63,16 @@ La pantalla del grupo muestra si **Te deben** o **Debes** (o **Todo saldado**), 
 
 **Añadir gasto** abre el formulario: **Importe**, **Descripción**, **Fecha**, **Pagado por** y **División**: **A partes iguales**, **Importes exactos**, **Porcentajes** o **Partes**. **Escanear recibo** lee un ticket en papel y rellena por ti el importe, la descripción y la fecha. Quien añadió el gasto, quien lo pagó y el propietario del grupo pueden editarlo o eliminarlo. Un gasto eliminado sigue en el historial, marcado como eliminado.
 
+## Gastos por artículos
+
+Cuando cada uno tomó algo distinto, añade el gasto línea por línea en lugar de dividir el total. En **Añadir gasto**, activa **Por artículos (dividir por líneas del ticket)**. En **Líneas del ticket**, escribe cada **Artículo** con su **Precio** y, si lo hubo, su **Descuento**; **Añadir línea** añade más. Un **Descuento del ticket (opcional)** sobre todo el ticket se reparte en proporción. **Escanear recibo** rellena las líneas por ti. El **Importe** es lo que se pagó: si es mayor que las líneas (un envase retornable, una propina), **el resto se queda con quien pagó**; **Usar el total de las líneas como importe** copia el total de las líneas.
+
+Toca un gasto por artículos en la lista de actividad (aparece marcado **Por artículos · abierto hasta el** una fecha) para abrir **Dividir el ticket**. Durante una semana, cada uno marca en **Mis líneas** lo que tomó y toca **Guardar mis líneas**; los amigos en el navegador hacen lo mismo en la página del grupo. Una línea marcada por varias personas se divide a partes iguales entre ellas, y lo que nadie marque se queda con quien pagó. **Tu parte de las líneas** muestra lo que suman tus marcas.
+
+Quien pagó, quien añadió el gasto y el propietario del grupo también ven **Todos**: allí eligen quién tomó cada línea, usan **Dividir en %** para repartir una línea de forma desigual (lo que no se reparte se queda con quien pagó) y tocan **Guardar reparto**. Pueden **Cerrar reparto** antes o **Reabrir 7 días**. Pasada la semana, o una vez cerrado, solo ellos pueden cambiar quién tomó qué. Mientras un ticket se está dividiendo, la pantalla de liquidar y **Quién paga a quién** avisan de que los importes aún pueden cambiar. Un pago ya hecho se queda como está: si una parte cambia después, simplemente vuelve a aparecer un pequeño saldo.
+
+En el ordenador, **Dividir el ticket** se abre en una ventana sobre la página del grupo.
+
 ## Gastos en otra moneda
 
 Cada grupo lleva sus cuentas en una moneda, la elegida al crearlo. Aun así se puede añadir un gasto pagado en otra moneda. En la app, toca la moneda junto a **Importe** y elige la que usaste. La fila **Tipo de cambio** muestra entonces el tipo de hoy (por ejemplo *1 EUR =* 4,32 en la moneda del grupo) y cuánto contará el gasto; cambia el tipo si conoces el que pagaste de verdad. En el navegador, tus amigos eligen la **Moneda** debajo del importe.

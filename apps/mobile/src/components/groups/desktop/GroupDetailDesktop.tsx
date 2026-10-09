@@ -11,6 +11,7 @@ import { resolveNextFocusedRow } from '@/features/expenses/rowKeyboardNav';
 import { canModifyExpense, isGroupWritable, liveMembers } from '@/features/groups/groupDisplay';
 import { canRecordPayment } from '@/features/groups/groupMath';
 import { groupActivityByDay } from '@/features/groups/groupActivityTable';
+import { expenseRowTarget } from '@/features/groups/groupItems';
 import { WIDE_TABLE_MIN_WIDTH } from '@/components/webLayout.constants';
 import type { GroupExpense, GroupTransfer } from '@budget/shared-types';
 import { GroupBalanceHero } from '../GroupBalanceHero';
@@ -68,6 +69,8 @@ export function GroupDetailDesktop({ groupId, initialDialog }: Props) {
   }, [focusedRowId, order]);
 
   const openExpense = (expense: GroupExpense) => setDialog({ kind: 'expense', expenseId: expense.id });
+  // ABA-656: an itemised expense opens its lines; every member may claim, so this is not gated on edit rights.
+  const openClaims = (expense: GroupExpense) => setDialog({ kind: 'claims', expenseId: expense.id });
   const openSettle = (transfer: GroupTransfer) =>
     setDialog({ kind: 'settle', from: transfer.fromMemberId, to: transfer.toMemberId });
 
@@ -104,7 +107,9 @@ export function GroupDetailDesktop({ groupId, initialDialog }: Props) {
       const row = days.flatMap((d) => d.rows).find((r) => r.id === focusedRowId);
       if (!row || row.item.kind !== 'expense') return;
       const e = row.item.expense;
-      if (writable && e.deletedAt === null && canModifyExpense(detail, e)) openExpense(e);
+      const target = expenseRowTarget(e, canModifyExpense(detail, e), writable);
+      if (target === 'claims') openClaims(e);
+      else if (target === 'edit') openExpense(e);
     },
     { enabled: keyboardNavEnabled, description: t('shortcuts.openRow') },
   );
@@ -215,6 +220,7 @@ export function GroupDetailDesktop({ groupId, initialDialog }: Props) {
               onFocusRow={setFocusedRowId}
               onLoadMore={() => void loadMore().catch(() => undefined)}
               onOpenExpense={openExpense}
+              onOpenClaims={openClaims}
               onVoidSettlement={confirmVoid}
             />
           </View>
@@ -227,7 +233,13 @@ export function GroupDetailDesktop({ groupId, initialDialog }: Props) {
         </View>
       </ScrollView>
 
-      <GroupDetailDialogs groupId={groupId} dialog={dialog} onClose={closeDialog} onLeftGroup={onLeftGroup} />
+      <GroupDetailDialogs
+        groupId={groupId}
+        dialog={dialog}
+        onClose={closeDialog}
+        onLeftGroup={onLeftGroup}
+        onSwitch={setDialog}
+      />
     </View>
   );
 }

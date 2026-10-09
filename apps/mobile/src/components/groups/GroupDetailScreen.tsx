@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { GroupDetailView } from './GroupDetailView';
 
-export type GroupDetailDialogKind = 'expense' | 'settle' | 'members';
+export type GroupDetailDialogKind = 'expense' | 'settle' | 'members' | 'claims';
 
 export interface GroupDetailScreenProps {
   groupId: string;

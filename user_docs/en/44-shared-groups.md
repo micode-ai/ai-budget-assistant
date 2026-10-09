@@ -63,6 +63,16 @@ The group screen shows whether **You are owed** or **You owe** (or **All settled
 
 **Add expense** opens the expense form: **Amount**, **Description**, **Date**, **Paid by**, and **Split**: **Equally**, **Exact amounts**, **Percentages** or **Shares**. **Scan receipt** reads a paper receipt and fills in the amount, description and date for you. The person who added an expense, the person who paid it and the group owner can edit or delete it. A deleted expense stays in the history, marked as deleted.
 
+## Itemised expenses
+
+When everyone had something different, add the expense line by line instead of splitting the total. In **Add expense**, turn on **Itemised (split by receipt lines)**. Under **Receipt lines**, enter each **Item** with its **Price** and, if there was one, its **Discount**; tap **Add line** for more. A **Receipt discount (optional)** on the whole receipt is shared out in proportion. **Scan receipt** fills the lines in for you. The **Amount** is what was paid: if it is more than the lines (a bottle deposit, a tip), **The rest … stays with the payer**; **Use the lines total as the amount** copies the lines total into it.
+
+Tap an itemised expense in the activity list (it is marked **Itemised · open until** a date) to open **Divide the receipt**. For a week, everyone ticks what they had under **My lines** and taps **Save my lines**; friends in the browser do the same on the group page. A line ticked by several people is split equally between them, and whatever nobody ticks stays with the person who paid. **Your part of the lines** shows what your ticks come to.
+
+The person who paid, the person who added the expense and the group owner also see **Everyone**: they can pick who had each line, use **Split by %** to divide a line unevenly (what is not given out stays with the payer), and tap **Save claims**. They can **Close claims** early, or **Reopen for 7 days**. After the week, or once claims are closed, only they can change who had what. While a receipt is still being divided, the settle screen and **Who pays whom** say that amounts may still change. A payment that was already made stays as it is: if a share changes afterwards, a small balance simply shows up again.
+
+On a computer, **Divide the receipt** opens in a window over the group page.
+
 ## Expenses in another currency
 
 Each group keeps its accounts in one currency, the one chosen when it was created. An expense paid in another currency can still be added. In the app, tap the currency next to the **Amount** and pick the one you paid in. The **Exchange rate** row then shows today's rate (for example *1 EUR =* 4.32 in the group currency) and what the expense will count as; change the rate if you know the one you actually paid. In the browser, friends pick the **Currency** under the amount.

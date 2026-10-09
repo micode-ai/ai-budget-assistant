@@ -65,6 +65,9 @@ export function GroupDetailView({ groupId }: { groupId: string }) {
 
   const openExpense = (expense: GroupExpense) =>
     router.push({ pathname: `/groups/${groupId}/expense`, params: { expenseId: expense.id } } as never);
+  // ABA-656: an itemised expense's lines, where each member ticks what they had.
+  const openClaims = (expense: GroupExpense) =>
+    router.push({ pathname: `/groups/${groupId}/claims`, params: { expenseId: expense.id } } as never);
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
@@ -131,6 +134,7 @@ export function GroupDetailView({ groupId }: { groupId: string }) {
             canWrite={writable}
             onLoadMore={() => void loadMore().catch(() => undefined)}
             onOpenExpense={openExpense}
+            onOpenClaims={openClaims}
             onVoidSettlement={confirmVoid}
           />
         </View>

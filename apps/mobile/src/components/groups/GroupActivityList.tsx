@@ -8,6 +8,7 @@ import { fromDateInputValue } from '@/utils/dateInput';
 import { canModifyExpense, canVoidSettlement, memberName } from '@/features/groups/groupDisplay';
 import { describeGroupEvent } from '@/features/groups/groupOwnership';
 import { fxAmountParts } from '@/features/groups/groupFx';
+import { claimWindow, expenseRowTarget } from '@/features/groups/groupItems';
 import type {
   GroupActivityItem,
   GroupDetail,
@@ -24,6 +25,8 @@ interface GroupActivityListProps {
   canWrite: boolean;
   onLoadMore: () => void;
   onOpenExpense: (expense: GroupExpense) => void;
+  /** ABA-656: an itemised expense opens its claims instead (every member may claim). */
+  onOpenClaims?: (expense: GroupExpense) => void;
   onVoidSettlement: (settlement: GroupSettlement) => void;
 }
 
@@ -48,6 +51,7 @@ export function GroupActivityList({
   canWrite,
   onLoadMore,
   onOpenExpense,
+  onOpenClaims,
   onVoidSettlement,
 }: GroupActivityListProps) {
   const { t } = useTranslation();
@@ -64,7 +68,12 @@ export function GroupActivityList({
           if (item.kind === 'expense') {
             const e = item.expense;
             const struck = e.deletedAt !== null;
-            const editable = canWrite && !struck && canModifyExpense(detail, e);
+            const target = onOpenClaims
+              ? expenseRowTarget(e, canModifyExpense(detail, e), canWrite)
+              : canWrite && !struck && canModifyExpense(detail, e)
+                ? 'edit'
+                : null;
+            const win = claimWindow(e);
             // ABA-654: an expense entered in another currency shows what was entered above the
             // stored group-currency figure ("12.00 EUR ->" over "51.80 PLN"). Both are as stored.
             const fx = fxAmountParts(e, detail.currencyCode);
@@ -72,8 +81,8 @@ export function GroupActivityList({
               <TouchableOpacity
                 key={`e-${e.id}`}
                 style={styles.row}
-                disabled={!editable}
-                onPress={() => onOpenExpense(e)}
+                disabled={target === null}
+                onPress={() => (target === 'claims' && onOpenClaims ? onOpenClaims(e) : onOpenExpense(e))}
                 activeOpacity={0.7}
               >
                 <View style={styles.rowInfo}>
@@ -84,6 +93,16 @@ export function GroupActivityList({
                     {t('groups.paidBy', { payer: memberName(detail, e.paidByMemberId) })} · {formatDay(e.date)}
                     {struck ? ` · ${t('groups.deletedTag')}` : ''}
                   </Text>
+                  {e.itemized && !struck && (
+                    <Text style={[styles.rowMeta, win.open && styles.badgeOpen]} numberOfLines={1}>
+                      {t('groups.itemizedBadge')} ·{' '}
+                      {win.open && win.until
+                        ? t('groups.itemizedOpenUntil', {
+                            date: win.until.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+                          })
+                        : t('groups.itemizedClosed')}
+                    </Text>
+                  )}
                 </View>
                 <View style={styles.amountCol} accessibilityLabel={fx ? fx.line : undefined}>
                   {fx && <Text style={[styles.rowOriginal, struck && styles.struck]}>{`${fx.original} →`}</Text>}
@@ -192,6 +211,9 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.caption,
     color: theme.colors.textTertiary,
     marginTop: theme.spacing[0.5],
+  },
+  badgeOpen: {
+    color: theme.colors.primary,
   },
   rowAmount: {
     ...theme.textStyles.bodyMedium,

@@ -63,6 +63,16 @@ Het groepsscherm toont of **Je krijgt nog** of **Je bent verschuldigd** (of **Al
 
 **Uitgave toevoegen** opent het formulier: **Bedrag**, **Omschrijving**, **Datum**, **Betaald door** en **Verdeling**: **Gelijk**, **Exacte bedragen**, **Percentages** of **Delen**. **Bon scannen** leest een papieren bon en vult bedrag, omschrijving en datum voor je in. Wie een uitgave heeft toegevoegd, wie hem heeft betaald en de eigenaar van de groep kunnen hem bewerken of verwijderen. Een verwijderde uitgave blijft in de geschiedenis staan, gemarkeerd als verwijderd.
 
+## Uitgaven per artikel
+
+Als iedereen iets anders had, voeg de uitgave dan regel voor regel toe in plaats van het totaal te verdelen. Zet in **Uitgave toevoegen** **Per artikel (verdelen per bonregel)** aan. Vul onder **Bonregels** elk **Artikel** in met zijn **Prijs** en, als die er was, zijn **Korting**; **Regel toevoegen** voegt er meer toe. Een **Korting op de bon (optioneel)** op de hele bon wordt naar verhouding verdeeld. **Bon scannen** vult de regels voor je in. Het **Bedrag** is wat er betaald is: is het hoger dan de regels (statiegeld, een fooi), dan **blijft de rest bij wie betaalde**; **Gebruik het totaal van de regels als bedrag** neemt het totaal van de regels over.
+
+Tik in de activiteitenlijst op een uitgave per artikel (gemarkeerd met **Per artikel · open tot** een datum) om **Bon verdelen** te openen. Een week lang vinkt iedereen onder **Mijn regels** aan wat hij had en tikt op **Mijn regels opslaan**; vrienden in de browser doen hetzelfde op de groepspagina. Een regel die door meerdere mensen is aangevinkt, wordt gelijk tussen hen verdeeld, en wat niemand aanvinkt, blijft bij wie betaalde. **Jouw deel van de regels** toont wat jouw vinkjes opleveren.
+
+Wie betaalde, wie de uitgave toevoegde en de eigenaar van de groep zien ook **Iedereen**: daar kiezen ze wie elke regel had, verdelen ze een regel ongelijk met **Verdelen in %** (wat niet is toegewezen, blijft bij wie betaalde) en tikken op **Verdeling opslaan**. Ze kunnen eerder **Claimen sluiten** of **7 dagen heropenen**. Na de week, of zodra het claimen gesloten is, kunnen alleen zij nog wijzigen wie wat had. Zolang een bon nog wordt verdeeld, melden het afrekenscherm en **Wie betaalt wie** dat bedragen nog kunnen veranderen. Een betaling die al is gedaan, blijft zoals ze is: verandert een deel later, dan verschijnt er gewoon weer een klein saldo.
+
+Op een computer opent **Bon verdelen** in een venster boven de groepspagina.
+
 ## Uitgaven in een andere valuta
 
 Elke groep houdt de rekening bij in één valuta, die bij het aanmaken is gekozen. Een uitgave in een andere valuta kun je toch toevoegen. Tik in de app op de valuta naast **Bedrag** en kies die waarin je hebt betaald. De rij **Wisselkoers** toont dan de koers van vandaag (bijvoorbeeld *1 EUR =* 4,32 in de groepsvaluta) en hoeveel de uitgave telt; pas de koers aan als je weet welke je echt hebt betaald. In de browser kiezen vrienden de **Valuta** onder het bedrag.

@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Platform, Switch } from 'react-native';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -11,16 +11,30 @@ import { useGroupExpenseForm } from '@/hooks/useGroupExpenseForm';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { showAlert } from '@/utils/alert';
 import { MAX_DESCRIPTION_LENGTH, type SplitIssue } from '@/features/groups/groupSplit';
-import type { GroupDetail, GroupExpense } from '@budget/shared-types';
+import type { ItemsIssue } from '@/features/groups/groupItems';
+import type { GroupDetail, GroupExpense, GroupExpenseItemsView } from '@budget/shared-types';
 import { GroupButton } from './GroupButton';
 import { GroupOfflineBanner } from './GroupOfflineBanner';
+import { GroupItemsEditor } from './GroupItemsEditor';
 import { GroupSplitEditor } from './GroupSplitEditor';
 import type { GroupFormHandle, GroupFormState } from './groupFormHandle';
+
+const ITEM_ISSUES: string[] = [
+  'itemsEmpty',
+  'itemsTooMany',
+  'itemName',
+  'itemPrice',
+  'itemLineDiscount',
+  'itemDiscount',
+  'itemsExceedAmount',
+];
 
 interface GroupExpenseFormProps {
   detail: GroupDetail;
   /** The expense being edited; null for a new one. */
   existing: GroupExpense | null;
+  /** ABA-656: the stored lines of an edited itemised expense (loaded by the caller first). */
+  existingItems?: GroupExpenseItemsView | null;
   /**
    * Desktop dialog hosting (ABA-646). All three are optional and the phone passes none, so its
    * rendering and its `router.back()` are unchanged: `hideActions` drops the in-scroll Save and
@@ -35,17 +49,22 @@ interface GroupExpenseFormProps {
 
 /** Add or edit one group expense. */
 export const GroupExpenseForm = forwardRef<GroupFormHandle, GroupExpenseFormProps>(function GroupExpenseForm(
-  { detail, existing, hideActions = false, onStateChange, onDone },
+  { detail, existing, existingItems = null, hideActions = false, onStateChange, onDone },
   ref,
 ) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
-  const form = useGroupExpenseForm(detail, existing);
+  const form = useGroupExpenseForm(detail, existing, existingItems);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showCurrencyPicker, setShowCurrencyPicker] = useState(false);
 
+  const itemsIssue: ItemsIssue | null =
+    form.itemized && form.validity.issue !== null && ITEM_ISSUES.includes(form.validity.issue)
+      ? (form.validity.issue as ItemsIssue)
+      : null;
   const splitIssue: SplitIssue | null =
+    !form.itemized &&
     form.amount > 0 &&
     form.validity.issue !== null &&
     !['amount', 'description', 'payer', 'rate'].includes(form.validity.issue)
@@ -217,16 +236,45 @@ export const GroupExpenseForm = forwardRef<GroupFormHandle, GroupExpenseFormProp
           })}
         </View>
 
-        <GroupSplitEditor
-          members={form.members}
-          draft={form.draft}
-          amount={form.amount}
-          currencyCode={form.currency}
-          issue={splitIssue}
-          onSplitType={form.setSplitType}
-          onToggleMember={form.toggleMember}
-          onValue={form.setMemberValue}
-        />
+        {/* ABA-656: itemised = members claim the receipt's lines afterwards; chosen on a new expense only. */}
+        {form.canChooseItemized && (
+          <View style={styles.itemizeRow}>
+            <Text style={styles.itemizeLabel}>{t('groups.itemizeToggle')}</Text>
+            <Switch
+              value={form.itemized}
+              onValueChange={form.setItemized}
+              trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
+              accessibilityLabel={t('groups.itemizeToggle')}
+            />
+          </View>
+        )}
+
+        {form.itemized ? (
+          <GroupItemsEditor
+            lines={form.lines}
+            discountText={form.discountText}
+            amount={form.amount}
+            linesTotal={form.linesTotal}
+            currencyCode={form.currency}
+            issue={itemsIssue}
+            onAdd={form.addLine}
+            onChange={form.updateLine}
+            onRemove={form.removeLine}
+            onDiscount={form.setDiscountText}
+            onUseTotal={() => form.setAmountText(String(form.linesTotal))}
+          />
+        ) : (
+          <GroupSplitEditor
+            members={form.members}
+            draft={form.draft}
+            amount={form.amount}
+            currencyCode={form.currency}
+            issue={splitIssue}
+            onSplitType={form.setSplitType}
+            onToggleMember={form.toggleMember}
+            onValue={form.setMemberValue}
+          />
+        )}
 
         {!hideActions && (
           <GroupButton
@@ -398,6 +446,22 @@ const createStyles = (theme: Theme) => ({
   chipTextActive: {
     color: theme.colors.primary,
     fontWeight: '600' as const,
+  },
+  itemizeRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[3],
+    marginTop: theme.spacing[5],
+    padding: theme.spacing[3],
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+  },
+  itemizeLabel: {
+    ...theme.textStyles.bodyMedium,
+    color: theme.colors.textPrimary,
+    flex: 1,
   },
   save: {
     marginTop: theme.spacing[6],

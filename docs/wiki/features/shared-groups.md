@@ -37,12 +37,15 @@ Shared types: `packages/shared-types/src/entities/group.ts`, `packages/shared-ty
 
 Mobile:
 - `apps/mobile/app/groups/` — `index`, `new`, `join`, `link`, and `[id]/` (`index`, `expense`,
-  `settle`, `members`)
+  `settle`, `members`, `claims`)
 - `apps/mobile/src/components/groups/` — the screen bodies
 - `apps/mobile/src/stores/groupStore.ts`, `apps/mobile/src/services/groups.api.ts` — in-memory,
   server-only; reset on sign-out from `apps/mobile/src/stores/authSessionActions.ts`
 - `apps/mobile/src/features/groups/` — pure helpers (split validation, display, pay links, link codes,
-  `groupFx.ts` for the currency chip and the two-figure rows)
+  `groupFx.ts` for the currency chip and the two-figure rows, `groupItems.ts` for the line editor, the
+  claim window and the "your part" preview)
+- `apps/mobile/src/components/groups/GroupClaimsView.tsx`, `apps/mobile/src/components/groups/GroupItemsEditor.tsx`,
+  `apps/mobile/src/hooks/useGroupExpenseItems.ts` — itemised expenses and claims (ABA-656)
 - `apps/mobile/src/hooks/useGroupLinkDeepLink.ts` — a link code stashed while signed out
 - Entry: the `groups` quick action (`apps/mobile/src/stores/quickActionStore.ts`); the activity push opens
   `/groups/:id`, the balance reminder `/groups/:id/settle` (`apps/mobile/src/services/notifications.ts`
@@ -337,8 +340,46 @@ optional basket `discountAmount`, and each member claims the lines they had (`Gr
   flash `claimed`. Guests claim equal shares only and never create itemised expenses. `Sec-Fetch-Site`,
   `Referrer-Policy: same-origin` and the CSP are unchanged. 11 strings x 9 locales in
   `group-guest-page-i18n.ts`.
-- **Dark for app clients until ABA-656.** No app screen creates itemised expenses or claims yet; the API returns
-  the new fields and the routes exist.
+- **App UI (ABA-656).** Pure logic in `apps/mobile/src/features/groups/groupItems.ts` (unit-tested; nothing renders
+  in CI).
+  - *Creating.* `GroupExpenseForm` has an **Itemised (split by receipt lines)** switch on a NEW expense only (an
+    edit keeps the expense's kind: the server refuses items on a plain expense and a split on an itemised one). On,
+    `GroupItemsEditor` replaces `GroupSplitEditor`: name, price and line discount per line, a receipt discount, the
+    lines total, "the rest stays with the payer" and **Use the lines total as the amount**. `validateItemDrafts`
+    mirrors the server's `validateItemLines` (1..100 lines, names 1..120, 2-decimal prices, line discount at most its
+    line, receipt discount strictly below the lines' net, net minus discount at most the amount), so Save is disabled
+    with a reason; a 400 `ITEMS_INVALID` that still gets through is an alert. The body sends `items` and
+    `discountAmount` and NO `splitType`/`shares`; on an edit `items` is the full list with each kept line's `id`, and
+    an empty receipt discount is `null`.
+  - *Scanning.* The form's existing scan now also maps `receiptItems` through `linesFromScan`: a negative line is a
+    discount folded into the line above (capped at that line, the rest to the receipt discount), zero lines are
+    dropped, names trimmed to 120, at most 100. Filled straight in when itemised; otherwise kept, so switching the
+    toggle on after a scan prefills the lines (unless some were typed).
+  - *Editing an itemised expense.* `GroupExpenseScreenView` loads `GET .../items` first (`useGroupExpenseItems`)
+    and renders the form only once the lines have answered, never an empty editor for a receipt it has not read.
+  - *Claims.* `GroupClaimsView` (phone route `app/groups/[id]/claims.tsx?expenseId=`, header *Divide the receipt*):
+    the expense, the window (*Open for claims until 16 Oct · Days left: 7*, or *Claims are closed*), the caller's
+    total, and two tabs. **My lines** ticks lines into a draft and **Save my lines** sends the full set to
+    `PUT .../claims/me`; the "your part" figures of an unsaved draft come from `previewMyParts` (receipt-split's
+    rule: equal slices with the newcomer counted, the caller's explicit share on a hand-split line, the basket
+    scaling) and are replaced by the server's `myPart` after the save. A hand-split line is read-only there, as on
+    the guest page (ticking it would give nothing). **Everyone** (only when `canManageClaims` and the group is
+    active) toggles members per line with chips and opens receipt-split's `LineShareEditor` for percentages (its
+    new optional `remainderLabel` names the payer instead of "You"; receipt-split passes nothing and is unchanged);
+    **Save claims** sends one `PUT .../claims` entry per live member with their full line set and full `shareBp`
+    map (`buildManagedClaims`; an over-allocated line blocks it). **Close claims** (confirm) / **Reopen for 7 days**
+    call `POST .../claims/close`. 409 `CLAIMS_CLOSED` reloads the view and says so; 429 `CLAIMS_BUSY` and 400
+    `CLAIM_SHARE_INVALID` are worded alerts. Every write is a `GroupButton write` (offline-gated) and reloads the
+    group afterwards, since claims move balances. Removing a member who still holds claims on an open receipt
+    (409 `MEMBER_HAS_OPEN_CLAIMS`) has its own message in the members screen.
+  - *Rows.* An itemised row (phone `GroupActivityList`, desktop `GroupActivityTable`) carries *Itemised · open
+    until 16 Oct* (or *claims closed*) under its meta, and tapping it opens the claims for **every** member
+    (`expenseRowTarget`: claims are not gated on edit rights, and an archived group shows them read-only). The
+    claims screen has **Edit expense** for whoever may modify it. `GroupExpense` has no line count, so the badge
+    shows none.
+  - *Settle note.* `GroupOpenClaimsNote` ("Some receipts are still being divided, so amounts may still change")
+    shows while `GroupDetail.hasOpenItemClaims` in `GroupSettleView` (phone screen and the desktop dialog, which
+    hosts it) and in `GroupTransfersCard` (phone detail and desktop rail), as the guest page's *Who pays whom* does.
 
 **Members.** Removal is soft and requires a zero balance. The owner cannot leave while they own
 the group: they transfer it first (below), then leave like anyone else. A member the
@@ -615,6 +656,13 @@ is `docs/superpowers/specs/2026-10-09-desktop-groups-receipts-report-design.md`.
 - **`GroupMemberSheet` is a `SheetDialog`.** On the phone it reproduces the old sheet through
   `sheetStyle` / `handleStyle` / `scrimColor`; on desktop it is a centred dialog. It deliberately does
   not pass `keyboardAvoiding`, which would change the phone.
+- **Claims dialog (ABA-656).** `desktop/GroupClaimsDialog.tsx` hosts `GroupClaimsView` unchanged
+  (`withStackTitle={false}`, with its in-body buttons, since they depend on the tab the view is in). An itemised
+  row's click, its `Enter` and a `receipt-outline` action in the actions cell (revealed on hover and on its own
+  focus, like the pencil, which stays for editing) open it; `/groups/:id/claims?expenseId=` opens it through
+  `initialDialog={kind: 'claims'}`. **Edit expense** inside it calls `onEditExpense`, which `GroupDetailDialogs`
+  turns into `onSwitch({kind: 'expense'})`: the dialog is replaced, never a route push under it. The actions cell
+  is now a row so the two icons sit side by side.
 - **Entry points.** The dashboard rail has a seventh quick link (`groups`, in `railQuickLinks.ts`, not
   gated on edit or account type) and Settings has a permanent `groups` link, so a user who hid the
   quick action still has a door.
@@ -672,14 +720,18 @@ split, trips) can adopt the hook later. A failed request while offline stays `co
 
 ## Known gaps
 
-- **Line claims (ABA-655) have no app UI yet**: the item editor, `GroupClaimsView` and the desktop claims
-  dialog are ABA-656. The server, the migration `20261016000000_group_expense_items` and the guest form are
+- **Line claims (ABA-655), server side**: the migration `20261016000000_group_expense_items` and the guest form are
   unverified against real Postgres and in a browser (mocked Prisma and server-rendered-HTML tests only); the
   concurrent-claim serialisation relies on the row lock and is not exercised by a test against a real database.
   A removed member's claims stay as stored: a later re-derivation may move their (settled) share and leave a
   small stray balance on a removed row, which `computeGroupLedger` keeps rather than drops. The group-delete
   cascade now also runs through `group_item_claims.member_id` (`NO ACTION`), the same unverified class as the
   shares.
+- **ABA-656 UI is unverified on a device and in a desktop browser**: the itemise switch, the line editor, the
+  scan prefill, the claims screen and dialog, the row badge and the settle note have only pure-helper tests
+  (nothing renders in CI). The "your part" preview of an unsaved draft mirrors the server's rounding only
+  approximately (each line rounded for display; the total floors once, as the server does). The managers' editor
+  lists live members only. `GroupExpense` carries no line count, so rows cannot say "N lines" without an API change.
 - **The group currency itself** is still changeable only while the group has no expenses (unchanged by
   ABA-654: changing it would need every stored conversion re-based).
 - **ABA-654 is unverified on a device, in a desktop browser and against real Postgres**: the currency
@@ -747,6 +799,10 @@ split, trips) can adopt the hook later. A failed request while offline stays `co
   payer as a participant, shares materialised inside the ledger transaction, the 7-day lock rule (then payer,
   creator or owner; close/reopen), settlements never touched, `hasOpenItemClaims`, the app routes, and a no-JS
   guest claim form.
+- [ABA-656](https://github.com/micode-ai/ai-budget-assistant/issues/686) — the app UI for line items and claims,
+  phone and desktop: the itemise switch and line editor in the expense form (typed or prefilled from the scan),
+  `GroupClaimsView` (my lines with a preview; everyone, percentages, close/reopen for the payer, creator and owner)
+  on its own route and in a desktop dialog, the itemised row badge, and the open-claims note on the settle surfaces.
 - [ABA-653](https://github.com/micode-ai/ai-budget-assistant/issues/683) — weekly balance reminder
   pushes to app-user debtors and creditors (`GroupReminderCron`, 17:00 UTC; episode columns on the
   member row; at most 4 per open balance, one per user per day), `User.notifyGroupReminders` and its

@@ -5139,6 +5139,16 @@ The group screen shows whether **You are owed** or **You owe** (or **All settled
 
 **Add expense** opens the expense form: **Amount**, **Description**, **Date**, **Paid by**, and **Split**: **Equally**, **Exact amounts**, **Percentages** or **Shares**. **Scan receipt** reads a paper receipt and fills in the amount, description and date for you. The person who added an expense, the person who paid it and the group owner can edit or delete it. A deleted expense stays in the history, marked as deleted.
 
+## Itemised expenses
+
+When everyone had something different, add the expense line by line instead of splitting the total. In **Add expense**, turn on **Itemised (split by receipt lines)**. Under **Receipt lines**, enter each **Item** with its **Price** and, if there was one, its **Discount**; tap **Add line** for more. A **Receipt discount (optional)** on the whole receipt is shared out in proportion. **Scan receipt** fills the lines in for you. The **Amount** is what was paid: if it is more than the lines (a bottle deposit, a tip), **The rest … stays with the payer**; **Use the lines total as the amount** copies the lines total into it.
+
+Tap an itemised expense in the activity list (it is marked **Itemised · open until** a date) to open **Divide the receipt**. For a week, everyone ticks what they had under **My lines** and taps **Save my lines**; friends in the browser do the same on the group page. A line ticked by several people is split equally between them, and whatever nobody ticks stays with the person who paid. **Your part of the lines** shows what your ticks come to.
+
+The person who paid, the person who added the expense and the group owner also see **Everyone**: they can pick who had each line, use **Split by %** to divide a line unevenly (what is not given out stays with the payer), and tap **Save claims**. They can **Close claims** early, or **Reopen for 7 days**. After the week, or once claims are closed, only they can change who had what. While a receipt is still being divided, the settle screen and **Who pays whom** say that amounts may still change. A payment that was already made stays as it is: if a share changes afterwards, a small balance simply shows up again.
+
+On a computer, **Divide the receipt** opens in a window over the group page.
+
 ## Expenses in another currency
 
 Each group keeps its accounts in one currency, the one chosen when it was created. An expense paid in another currency can still be added. In the app, tap the currency next to the **Amount** and pick the one you paid in. The **Exchange rate** row then shows today's rate (for example *1 EUR =* 4.32 in the group currency) and what the expense will count as; change the rate if you know the one you actually paid. In the browser, friends pick the **Currency** under the amount.
@@ -10302,6 +10312,16 @@ OCR иногда неверно читает цену, выдумывает ст
 
 **Добавить расход** открывает форму: **Сумма**, **Описание**, **Дата**, **Плательщик** и **Разделение**: **Поровну**, **Точные суммы**, **Проценты** или **Доли**. **Сканировать чек** читает бумажный чек и сам заполняет сумму, описание и дату. Изменить или удалить расход могут тот, кто его добавил, тот, кто за него заплатил, и владелец группы. Удалённый расход остаётся в истории с пометкой «удалён».
 
+## Расходы по позициям
+
+Если каждый брал своё, добавьте расход по позициям, а не делите всю сумму. В **Добавить расход** включите **По позициям (делить по строкам чека)**. В **Позиции чека** введите каждую **Позицию** с её **Ценой** и, если была, **Скидкой**; **Добавить позицию** добавляет ещё одну. **Скидка на чек (необязательно)** на весь чек распределяется пропорционально. **Сканировать чек** заполнит позиции за вас. **Сумма** — это то, что заплатили: если она больше позиций (залог за бутылку, чаевые), **остаток остаётся за плательщиком**; **Взять сумму позиций как сумму расхода** подставляет сумму позиций.
+
+Нажмите на расход по позициям в списке активности (он помечен **По позициям · открыто до** какой-то даты), чтобы открыть **Разделить чек**. В течение недели каждый отмечает в **Мои позиции**, что брал, и нажимает **Сохранить мои позиции**; друзья в браузере делают то же самое на странице группы. Позиция, которую отметили несколько человек, делится между ними поровну, а всё, что никто не отметил, остаётся за тем, кто платил. **Ваша часть позиций** показывает, сколько выходит по вашим отметкам.
+
+Плательщик, тот, кто добавил расход, и владелец группы видят ещё вкладку **Все**: там можно выбрать, у кого была каждая позиция, нажать **Разделить в %**, чтобы поделить позицию неравно (то, что не роздано, остаётся за плательщиком), и нажать **Сохранить разделение**. Они могут **Закрыть выбор** раньше или **Открыть снова на 7 дней**. После недели или после закрытия выбора менять, кто что брал, могут только они. Пока чек ещё делится, экран расчёта и **Кто кому платит** предупреждают, что суммы могут измениться. Уже сделанный платёж остаётся как есть: если чья-то доля потом изменится, просто снова появится небольшой баланс.
+
+На компьютере **Разделить чек** открывается в окне поверх страницы группы.
+
 ## Расходы в другой валюте
 
 Каждая группа ведёт расчёты в одной валюте — той, что выбрали при создании. Расход, оплаченный в другой валюте, всё равно можно добавить. В приложении нажмите на валюту рядом с полем **Сумма** и выберите ту, в которой платили. Строка **Курс обмена** покажет сегодняшний курс (например, *1 EUR =* 4,32 в валюте группы) и то, сколько составит расход; измените курс, если знаете тот, по которому платили на самом деле. В браузере друзья выбирают **Валюту** под суммой.
@@ -15435,6 +15455,16 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 **Додати витрату** відкриває форму: **Сума**, **Опис**, **Дата**, **Платник** і **Розподіл**: **Порівну**, **Точні суми**, **Відсотки** або **Частки**. **Сканувати чек** читає паперовий чек і сам заповнює суму, опис і дату. Змінити чи видалити витрату можуть той, хто її додав, той, хто за неї заплатив, і власник групи. Видалена витрата лишається в історії з позначкою «видалено».
 
+## Витрати за позиціями
+
+Якщо кожен брав своє, додайте витрату за позиціями, а не діліть усю суму. У **Додати витрату** увімкніть **За позиціями (ділити за рядками чека)**. У **Позиції чека** введіть кожну **Позицію** з її **Ціною** і, якщо була, **Знижкою**; **Додати позицію** додає ще одну. **Знижка на чек (необов'язково)** на весь чек розподіляється пропорційно. **Сканувати чек** заповнить позиції за вас. **Сума** — це те, що заплатили: якщо вона більша за позиції (застава за пляшку, чайові), **залишок лишається за платником**; **Взяти суму позицій як суму витрати** підставляє суму позицій.
+
+Торкніться витрати за позиціями у списку активності (вона позначена **За позиціями · відкрито до** якоїсь дати), щоб відкрити **Розділити чек**. Протягом тижня кожен позначає в **Мої позиції**, що брав, і торкається **Зберегти мої позиції**; друзі в браузері роблять те саме на сторінці групи. Позиція, яку позначили кілька людей, ділиться між ними порівну, а все, що ніхто не позначив, лишається за тим, хто платив. **Ваша частина позицій** показує, скільки виходить за вашими позначками.
+
+Платник, той, хто додав витрату, і власник групи бачать ще вкладку **Усі**: там можна вибрати, у кого була кожна позиція, торкнутися **Розділити у %**, щоб поділити позицію нерівно (те, що не роздано, лишається за платником), і торкнутися **Зберегти розподіл**. Вони можуть **Закрити вибір** раніше або **Відкрити знову на 7 днів**. Після тижня або після закриття вибору змінювати, хто що брав, можуть лише вони. Поки чек ще ділиться, екран розрахунку та **Хто кому платить** попереджають, що суми можуть змінитися. Уже зроблений платіж лишається як є: якщо чиясь частка потім зміниться, просто знову з'явиться невеликий баланс.
+
+На комп'ютері **Розділити чек** відкривається у вікні поверх сторінки групи.
+
 ## Витрати в іншій валюті
 
 Кожна група веде розрахунки в одній валюті — тій, яку вибрали під час створення. Витрату, оплачену в іншій валюті, однаково можна додати. У застосунку натисніть на валюту поруч із полем **Сума** й виберіть ту, якою платили. Рядок **Курс обміну** покаже сьогоднішній курс (наприклад, *1 EUR =* 4,32 у валюті групи) і те, скільки становитиме витрата; змініть курс, якщо знаєте той, за яким платили насправді. У браузері друзі вибирають **Валюту** під сумою.
@@ -20553,6 +20583,16 @@ Ekran grupy pokazuje, czy **Należy Ci się**, czy **Jesteś winien(-na)** (albo
 
 **Dodaj wydatek** otwiera formularz wydatku: **Kwota**, **Opis**, **Data**, **Płatnik** i **Podział**: **Po równo**, **Dokładne kwoty**, **Procenty** albo **Udziały**. **Zeskanuj paragon** odczytuje papierowy paragon i uzupełnia za Ciebie kwotę, opis i datę. Osoba, która dodała wydatek, osoba, która go zapłaciła, oraz właściciel grupy mogą go edytować lub usunąć. Usunięty wydatek zostaje w historii, oznaczony jako usunięty.
 
+## Wydatki według pozycji
+
+Gdy każdy miał coś innego, dodaj wydatek pozycja po pozycji zamiast dzielić całą kwotę. W **Dodaj wydatek** włącz **Według pozycji (podział po liniach paragonu)**. W **Pozycje paragonu** wpisz każdą **Pozycję** z jej **Ceną** i, jeśli był, **Rabatem**; **Dodaj pozycję** dodaje kolejną. **Rabat na paragon (opcjonalnie)** na cały paragon rozkłada się proporcjonalnie. **Skanuj paragon** wypełni pozycje za Ciebie. **Kwota** to to, co zapłacono: jeśli jest większa niż pozycje (kaucja za butelkę, napiwek), **reszta zostaje u płacącego**; **Użyj sumy pozycji jako kwoty** przepisuje sumę pozycji do kwoty.
+
+Stuknij wydatek według pozycji na liście aktywności (jest oznaczony **Według pozycji · otwarte do** jakiejś daty), aby otworzyć **Podziel paragon**. Przez tydzień każdy zaznacza w **Moje pozycje**, co miał, i stuka **Zapisz moje pozycje**; znajomi w przeglądarce robią to samo na stronie grupy. Pozycja zaznaczona przez kilka osób dzieli się między nie po równo, a to, czego nikt nie zaznaczy, zostaje u osoby, która zapłaciła. **Twoja część pozycji** pokazuje, ile wychodzi z Twoich zaznaczeń.
+
+Płacący, osoba, która dodała wydatek, i właściciel grupy widzą też **Wszyscy**: mogą wybrać, kto miał każdą pozycję, użyć **Podziel w %**, aby podzielić pozycję nierówno (to, czego nie rozdzielą, zostaje u płacącego), i stuknąć **Zapisz podział**. Mogą wcześniej **Zamknąć wybór** albo **Otworzyć ponownie na 7 dni**. Po tygodniu albo po zamknięciu wyboru tylko oni mogą zmienić, kto co miał. Dopóki paragon jest dzielony, ekran rozliczenia i **Kto komu płaci** informują, że kwoty mogą się jeszcze zmienić. Płatność, która już została zrobiona, zostaje bez zmian: jeśli czyjś udział zmieni się później, po prostu znowu pojawi się małe saldo.
+
+Na komputerze **Podziel paragon** otwiera się w oknie nad stroną grupy.
+
 ## Wydatki w innej walucie
 
 Każda grupa prowadzi rozliczenia w jednej walucie — tej wybranej przy jej tworzeniu. Wydatek zapłacony w innej walucie i tak można dodać. W aplikacji stuknij walutę obok pola **Kwota** i wybierz tę, w której płaciłeś. Wiersz **Kurs wymiany** pokaże wtedy dzisiejszy kurs (np. *1 EUR =* 4,32 w walucie grupy) i to, ile wydatek będzie liczony; zmień kurs, jeśli znasz ten, po którym faktycznie zapłaciłeś. W przeglądarce znajomi wybierają **Walutę** pod kwotą.
@@ -25646,6 +25686,16 @@ Der Gruppenbildschirm zeigt, ob **Dir steht zu** oder **Du schuldest** (oder **A
 
 **Ausgabe hinzufügen** öffnet das Ausgabenformular: **Betrag**, **Beschreibung**, **Datum**, **Bezahlt von** und **Aufteilung**: **Gleichmäßig**, **Genaue Beträge**, **Prozent** oder **Anteile**. **Beleg scannen** liest einen Papierbeleg und füllt Betrag, Beschreibung und Datum für dich aus. Wer eine Ausgabe hinzugefügt hat, wer sie bezahlt hat, und der Gruppenbesitzer können sie bearbeiten oder löschen. Eine gelöschte Ausgabe bleibt im Verlauf, als gelöscht markiert.
 
+## Ausgaben nach Positionen
+
+Wenn alle etwas anderes hatten, füge die Ausgabe Position für Position hinzu, statt den Gesamtbetrag zu teilen. Schalte in **Ausgabe hinzufügen** **Nach Positionen (nach Bonzeilen teilen)** ein. Gib unter **Bonpositionen** jede **Position** mit ihrem **Preis** und, falls es einen gab, ihrem **Rabatt** ein; **Position hinzufügen** fügt weitere hinzu. Ein **Rabatt auf den Bon (optional)** für den ganzen Bon wird anteilig verteilt. **Beleg scannen** füllt die Positionen für dich aus. Der **Betrag** ist das, was bezahlt wurde: Ist er höher als die Positionen (Flaschenpfand, Trinkgeld), **bleibt der Rest bei der zahlenden Person**; **Summe der Positionen als Betrag übernehmen** trägt die Summe der Positionen ein.
+
+Tippe in der Aktivitätsliste auf eine Ausgabe nach Positionen (markiert mit **Nach Positionen · offen bis** einem Datum), um **Bon aufteilen** zu öffnen. Eine Woche lang hakt jede Person unter **Meine Positionen** ab, was sie hatte, und tippt auf **Meine Positionen speichern**; Freunde im Browser machen dasselbe auf der Gruppenseite. Eine Position, die mehrere abhaken, wird gleichmäßig unter ihnen geteilt, und was niemand abhakt, bleibt bei der Person, die bezahlt hat. **Dein Anteil an den Positionen** zeigt, was deine Häkchen ergeben.
+
+Die zahlende Person, wer die Ausgabe hinzugefügt hat, und die Person, der die Gruppe gehört, sehen außerdem **Alle**: Dort wählen sie, wer welche Position hatte, teilen eine Position mit **In % aufteilen** ungleich auf (was nicht vergeben ist, bleibt bei der zahlenden Person) und tippen auf **Aufteilung speichern**. Sie können die **Auswahl schließen** oder sie **für 7 Tage wieder öffnen**. Nach der Woche oder nach dem Schließen können nur noch sie ändern, wer was hatte. Solange ein Bon noch aufgeteilt wird, weisen der Begleichen-Bildschirm und **Wer zahlt wem** darauf hin, dass sich Beträge noch ändern können. Eine bereits geleistete Zahlung bleibt, wie sie ist: Ändert sich ein Anteil später, taucht einfach wieder ein kleiner Saldo auf.
+
+Am Computer öffnet sich **Bon aufteilen** in einem Fenster über der Gruppenseite.
+
 ## Ausgaben in einer anderen Währung
 
 Jede Gruppe rechnet in einer Währung ab, der beim Erstellen gewählten. Eine Ausgabe in einer anderen Währung lässt sich trotzdem eintragen. Tippe in der App auf die Währung neben **Betrag** und wähle die, in der du bezahlt hast. Die Zeile **Wechselkurs** zeigt dann den heutigen Kurs (zum Beispiel *1 EUR =* 4,32 in der Gruppenwährung) und wie viel die Ausgabe zählt; ändere den Kurs, wenn du den tatsächlich gezahlten kennst. Im Browser wählen Freunde die **Währung** unter dem Betrag.
@@ -30728,6 +30778,16 @@ La pantalla del grupo muestra si **Te deben** o **Debes** (o **Todo saldado**), 
 
 **Añadir gasto** abre el formulario: **Importe**, **Descripción**, **Fecha**, **Pagado por** y **División**: **A partes iguales**, **Importes exactos**, **Porcentajes** o **Partes**. **Escanear recibo** lee un ticket en papel y rellena por ti el importe, la descripción y la fecha. Quien añadió el gasto, quien lo pagó y el propietario del grupo pueden editarlo o eliminarlo. Un gasto eliminado sigue en el historial, marcado como eliminado.
 
+## Gastos por artículos
+
+Cuando cada uno tomó algo distinto, añade el gasto línea por línea en lugar de dividir el total. En **Añadir gasto**, activa **Por artículos (dividir por líneas del ticket)**. En **Líneas del ticket**, escribe cada **Artículo** con su **Precio** y, si lo hubo, su **Descuento**; **Añadir línea** añade más. Un **Descuento del ticket (opcional)** sobre todo el ticket se reparte en proporción. **Escanear recibo** rellena las líneas por ti. El **Importe** es lo que se pagó: si es mayor que las líneas (un envase retornable, una propina), **el resto se queda con quien pagó**; **Usar el total de las líneas como importe** copia el total de las líneas.
+
+Toca un gasto por artículos en la lista de actividad (aparece marcado **Por artículos · abierto hasta el** una fecha) para abrir **Dividir el ticket**. Durante una semana, cada uno marca en **Mis líneas** lo que tomó y toca **Guardar mis líneas**; los amigos en el navegador hacen lo mismo en la página del grupo. Una línea marcada por varias personas se divide a partes iguales entre ellas, y lo que nadie marque se queda con quien pagó. **Tu parte de las líneas** muestra lo que suman tus marcas.
+
+Quien pagó, quien añadió el gasto y el propietario del grupo también ven **Todos**: allí eligen quién tomó cada línea, usan **Dividir en %** para repartir una línea de forma desigual (lo que no se reparte se queda con quien pagó) y tocan **Guardar reparto**. Pueden **Cerrar reparto** antes o **Reabrir 7 días**. Pasada la semana, o una vez cerrado, solo ellos pueden cambiar quién tomó qué. Mientras un ticket se está dividiendo, la pantalla de liquidar y **Quién paga a quién** avisan de que los importes aún pueden cambiar. Un pago ya hecho se queda como está: si una parte cambia después, simplemente vuelve a aparecer un pequeño saldo.
+
+En el ordenador, **Dividir el ticket** se abre en una ventana sobre la página del grupo.
+
 ## Gastos en otra moneda
 
 Cada grupo lleva sus cuentas en una moneda, la elegida al crearlo. Aun así se puede añadir un gasto pagado en otra moneda. En la app, toca la moneda junto a **Importe** y elige la que usaste. La fila **Tipo de cambio** muestra entonces el tipo de hoy (por ejemplo *1 EUR =* 4,32 en la moneda del grupo) y cuánto contará el gasto; cambia el tipo si conoces el que pagaste de verdad. En el navegador, tus amigos eligen la **Moneda** debajo del importe.
@@ -35808,6 +35868,16 @@ L'écran du groupe indique si **On vous doit** ou si **Vous devez** (ou **Tout e
 
 **Ajouter une dépense** ouvre le formulaire : **Montant**, **Description**, **Date**, **Payé par** et **Répartition** : **À parts égales**, **Montants exacts**, **Pourcentages** ou **Parts**. **Scanner un ticket** lit un ticket papier et remplit pour vous le montant, la description et la date. La personne qui a ajouté une dépense, celle qui l'a payée et le propriétaire du groupe peuvent la modifier ou la supprimer. Une dépense supprimée reste dans l'historique, marquée comme supprimée.
 
+## Dépenses par articles
+
+Quand chacun a pris quelque chose de différent, ajoutez la dépense ligne par ligne au lieu de partager le total. Dans **Ajouter une dépense**, activez **Par articles (partager par lignes du ticket)**. Sous **Lignes du ticket**, saisissez chaque **Article** avec son **Prix** et, s'il y en avait une, sa **Remise** ; **Ajouter une ligne** en ajoute d'autres. Une **Remise sur le ticket (facultatif)** sur l'ensemble du ticket est répartie au prorata. **Scanner un ticket** remplit les lignes pour vous. Le **Montant** est ce qui a été payé : s'il dépasse les lignes (une consigne, un pourboire), **le reste reste à la charge de qui a payé** ; **Utiliser le total des lignes comme montant** recopie le total des lignes.
+
+Touchez une dépense par articles dans la liste d'activité (elle porte la mention **Par articles · ouvert jusqu'au** une date) pour ouvrir **Partager le ticket**. Pendant une semaine, chacun coche sous **Mes lignes** ce qu'il a pris et touche **Enregistrer mes lignes** ; les amis dans le navigateur font de même sur la page du groupe. Une ligne cochée par plusieurs personnes est partagée à parts égales entre elles, et ce que personne ne coche reste à la charge de qui a payé. **Votre part des lignes** indique ce que donnent vos coches.
+
+La personne qui a payé, celle qui a ajouté la dépense et le propriétaire du groupe voient aussi **Tout le monde** : ils y choisissent qui a pris chaque ligne, utilisent **Partager en %** pour partager une ligne de façon inégale (ce qui n'est pas attribué reste à la charge de qui a payé) et touchent **Enregistrer le partage**. Ils peuvent **Clore le choix** plus tôt ou **Rouvrir pour 7 jours**. Après la semaine, ou une fois le choix clos, eux seuls peuvent changer qui a pris quoi. Tant qu'un ticket est en cours de partage, l'écran de règlement et **Qui paie qui** préviennent que les montants peuvent encore changer. Un paiement déjà fait reste tel quel : si une part change ensuite, un petit solde réapparaît simplement.
+
+Sur ordinateur, **Partager le ticket** s'ouvre dans une fenêtre au-dessus de la page du groupe.
+
 ## Dépenses dans une autre devise
 
 Chaque groupe tient ses comptes dans une seule devise, celle choisie à sa création. Une dépense payée dans une autre devise peut quand même être ajoutée. Dans l'appli, touchez la devise à côté de **Montant** et choisissez celle que vous avez utilisée. La ligne **Taux de change** affiche alors le taux du jour (par exemple *1 EUR =* 4,32 dans la devise du groupe) et ce que comptera la dépense ; modifiez le taux si vous connaissez celui réellement payé. Dans le navigateur, vos amis choisissent la **Devise** sous le montant.
@@ -40851,6 +40921,16 @@ OCR часам няправільна чытае цану, выдумляе ра
 Экран групы паказвае, **Вам вінны** ці **Вы вінны** (або **Усё разлічана**), **Ваша доля ў гэтым месяцы**, план **Хто каму колькі** і спіс **Актыўнасць**.
 
 **Дадаць выдатак** адкрывае форму: **Сума**, **Апісанне**, **Дата**, **Плацельшчык** і **Падзел**: **Параўну**, **Дакладныя сумы**, **Працэнты** або **Долі**. **Сканіраваць чэк** чытае папяровы чэк і сам запаўняе суму, апісанне і дату. Змяніць ці выдаліць выдатак могуць той, хто яго дадаў, той, хто за яго заплаціў, і ўладальнік групы. Выдалены выдатак застаецца ў гісторыі з пазнакай «выдалены».
+
+## Выдаткі па пазіцыях
+
+Калі кожны браў сваё, дадайце выдатак па пазіцыях, а не дзяліце ўсю суму. У **Дадаць выдатак** уключыце **Па пазіцыях (дзяліць па радках чэка)**. У **Пазіцыі чэка** увядзіце кожную **Пазіцыю** з яе **Коштам** і, калі была, **Зніжкай**; **Дадаць пазіцыю** дадае яшчэ адну. **Зніжка на чэк (неабавязкова)** на ўвесь чэк размяркоўваецца прапарцыйна. **Сканіраваць чэк** запоўніць пазіцыі за вас. **Сума** — гэта тое, што заплацілі: калі яна большая за пазіцыі (заклад за бутэльку, чаявыя), **рэшта застаецца за плацельшчыкам**; **Узяць суму пазіцый як суму выдатку** падстаўляе суму пазіцый.
+
+Націсніце на выдатак па пазіцыях у спісе актыўнасці (ён пазначаны **Па пазіцыях · адкрыта да** нейкай даты), каб адкрыць **Падзяліць чэк**. На працягу тыдня кожны адзначае ў **Мае пазіцыі**, што браў, і націскае **Захаваць мае пазіцыі**; сябры ў браўзеры робяць тое ж самае на старонцы групы. Пазіцыя, якую адзначылі некалькі чалавек, дзеліцца паміж імі пароўну, а ўсё, што ніхто не адзначыў, застаецца за тым, хто плаціў. **Ваша частка пазіцый** паказвае, колькі выходзіць па вашых адзнаках.
+
+Плацельшчык, той, хто дадаў выдатак, і ўладальнік групы бачаць яшчэ ўкладку **Усе**: там можна выбраць, у каго была кожная пазіцыя, націснуць **Падзяліць у %**, каб падзяліць пазіцыю няроўна (тое, што не раздадзена, застаецца за плацельшчыкам), і націснуць **Захаваць падзел**. Яны могуць **Зачыніць выбар** раней або **Адкрыць зноў на 7 дзён**. Пасля тыдня або пасля зачынення выбару змяняць, хто што браў, могуць толькі яны. Пакуль чэк яшчэ дзеліцца, экран разліку і **Хто каму плаціць** папярэджваюць, што сумы могуць змяніцца. Ужо зроблены плацёж застаецца як ёсць: калі чыясьці доля потым зменіцца, проста зноў з'явіцца невялікі баланс.
+
+На камп'ютары **Падзяліць чэк** адкрываецца ў акне паверх старонкі групы.
 
 ## Выдаткі ў іншай валюце
 
@@ -46021,6 +46101,16 @@ Onder **Bewaar deze groep in de app** kan een vriend op **Doorgaan in de browser
 Het groepsscherm toont of **Je krijgt nog** of **Je bent verschuldigd** (of **Alles verrekend**), **Jouw deel deze maand**, het plan **Wie betaalt wie** en de lijst **Activiteit**.
 
 **Uitgave toevoegen** opent het formulier: **Bedrag**, **Omschrijving**, **Datum**, **Betaald door** en **Verdeling**: **Gelijk**, **Exacte bedragen**, **Percentages** of **Delen**. **Bon scannen** leest een papieren bon en vult bedrag, omschrijving en datum voor je in. Wie een uitgave heeft toegevoegd, wie hem heeft betaald en de eigenaar van de groep kunnen hem bewerken of verwijderen. Een verwijderde uitgave blijft in de geschiedenis staan, gemarkeerd als verwijderd.
+
+## Uitgaven per artikel
+
+Als iedereen iets anders had, voeg de uitgave dan regel voor regel toe in plaats van het totaal te verdelen. Zet in **Uitgave toevoegen** **Per artikel (verdelen per bonregel)** aan. Vul onder **Bonregels** elk **Artikel** in met zijn **Prijs** en, als die er was, zijn **Korting**; **Regel toevoegen** voegt er meer toe. Een **Korting op de bon (optioneel)** op de hele bon wordt naar verhouding verdeeld. **Bon scannen** vult de regels voor je in. Het **Bedrag** is wat er betaald is: is het hoger dan de regels (statiegeld, een fooi), dan **blijft de rest bij wie betaalde**; **Gebruik het totaal van de regels als bedrag** neemt het totaal van de regels over.
+
+Tik in de activiteitenlijst op een uitgave per artikel (gemarkeerd met **Per artikel · open tot** een datum) om **Bon verdelen** te openen. Een week lang vinkt iedereen onder **Mijn regels** aan wat hij had en tikt op **Mijn regels opslaan**; vrienden in de browser doen hetzelfde op de groepspagina. Een regel die door meerdere mensen is aangevinkt, wordt gelijk tussen hen verdeeld, en wat niemand aanvinkt, blijft bij wie betaalde. **Jouw deel van de regels** toont wat jouw vinkjes opleveren.
+
+Wie betaalde, wie de uitgave toevoegde en de eigenaar van de groep zien ook **Iedereen**: daar kiezen ze wie elke regel had, verdelen ze een regel ongelijk met **Verdelen in %** (wat niet is toegewezen, blijft bij wie betaalde) en tikken op **Verdeling opslaan**. Ze kunnen eerder **Claimen sluiten** of **7 dagen heropenen**. Na de week, of zodra het claimen gesloten is, kunnen alleen zij nog wijzigen wie wat had. Zolang een bon nog wordt verdeeld, melden het afrekenscherm en **Wie betaalt wie** dat bedragen nog kunnen veranderen. Een betaling die al is gedaan, blijft zoals ze is: verandert een deel later, dan verschijnt er gewoon weer een klein saldo.
+
+Op een computer opent **Bon verdelen** in een venster boven de groepspagina.
 
 ## Uitgaven in een andere valuta
 

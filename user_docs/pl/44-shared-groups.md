@@ -63,6 +63,16 @@ Ekran grupy pokazuje, czy **Należy Ci się**, czy **Jesteś winien(-na)** (albo
 
 **Dodaj wydatek** otwiera formularz wydatku: **Kwota**, **Opis**, **Data**, **Płatnik** i **Podział**: **Po równo**, **Dokładne kwoty**, **Procenty** albo **Udziały**. **Zeskanuj paragon** odczytuje papierowy paragon i uzupełnia za Ciebie kwotę, opis i datę. Osoba, która dodała wydatek, osoba, która go zapłaciła, oraz właściciel grupy mogą go edytować lub usunąć. Usunięty wydatek zostaje w historii, oznaczony jako usunięty.
 
+## Wydatki według pozycji
+
+Gdy każdy miał coś innego, dodaj wydatek pozycja po pozycji zamiast dzielić całą kwotę. W **Dodaj wydatek** włącz **Według pozycji (podział po liniach paragonu)**. W **Pozycje paragonu** wpisz każdą **Pozycję** z jej **Ceną** i, jeśli był, **Rabatem**; **Dodaj pozycję** dodaje kolejną. **Rabat na paragon (opcjonalnie)** na cały paragon rozkłada się proporcjonalnie. **Skanuj paragon** wypełni pozycje za Ciebie. **Kwota** to to, co zapłacono: jeśli jest większa niż pozycje (kaucja za butelkę, napiwek), **reszta zostaje u płacącego**; **Użyj sumy pozycji jako kwoty** przepisuje sumę pozycji do kwoty.
+
+Stuknij wydatek według pozycji na liście aktywności (jest oznaczony **Według pozycji · otwarte do** jakiejś daty), aby otworzyć **Podziel paragon**. Przez tydzień każdy zaznacza w **Moje pozycje**, co miał, i stuka **Zapisz moje pozycje**; znajomi w przeglądarce robią to samo na stronie grupy. Pozycja zaznaczona przez kilka osób dzieli się między nie po równo, a to, czego nikt nie zaznaczy, zostaje u osoby, która zapłaciła. **Twoja część pozycji** pokazuje, ile wychodzi z Twoich zaznaczeń.
+
+Płacący, osoba, która dodała wydatek, i właściciel grupy widzą też **Wszyscy**: mogą wybrać, kto miał każdą pozycję, użyć **Podziel w %**, aby podzielić pozycję nierówno (to, czego nie rozdzielą, zostaje u płacącego), i stuknąć **Zapisz podział**. Mogą wcześniej **Zamknąć wybór** albo **Otworzyć ponownie na 7 dni**. Po tygodniu albo po zamknięciu wyboru tylko oni mogą zmienić, kto co miał. Dopóki paragon jest dzielony, ekran rozliczenia i **Kto komu płaci** informują, że kwoty mogą się jeszcze zmienić. Płatność, która już została zrobiona, zostaje bez zmian: jeśli czyjś udział zmieni się później, po prostu znowu pojawi się małe saldo.
+
+Na komputerze **Podziel paragon** otwiera się w oknie nad stroną grupy.
+
 ## Wydatki w innej walucie
 
 Każda grupa prowadzi rozliczenia w jednej walucie — tej wybranej przy jej tworzeniu. Wydatek zapłacony w innej walucie i tak można dodać. W aplikacji stuknij walutę obok pola **Kwota** i wybierz tę, w której płaciłeś. Wiersz **Kurs wymiany** pokaże wtedy dzisiejszy kurs (np. *1 EUR =* 4,32 w walucie grupy) i to, ile wydatek będzie liczony; zmień kurs, jeśli znasz ten, po którym faktycznie zapłaciłeś. W przeglądarce znajomi wybierają **Walutę** pod kwotą.

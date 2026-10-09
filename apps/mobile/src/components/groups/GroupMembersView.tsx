@@ -97,6 +97,7 @@ export function GroupMembersView({
       await removeMember(groupId, member.id);
     } catch (e) {
       const status = (e as { status?: number } | undefined)?.status;
+      const code = (e as { code?: string } | undefined)?.code;
       // Leaving removes my own access, so the follow-up reload of the group is a 404: that is success.
       if (isSelf && status === 404) {
         leave();
@@ -104,7 +105,14 @@ export function GroupMembersView({
       }
       showAlert(
         t('errors.error'),
-        status === 409 ? t('groups.removeNeedsZero') : e instanceof Error ? e.message : t('errors.unknown'),
+        // ABA-656: they still hold lines on a receipt that is open for claims (server ABA-655 H1).
+        code === 'MEMBER_HAS_OPEN_CLAIMS'
+          ? t('groups.removeHasOpenClaims')
+          : status === 409
+            ? t('groups.removeNeedsZero')
+            : e instanceof Error
+              ? e.message
+              : t('errors.unknown'),
       );
       return;
     }

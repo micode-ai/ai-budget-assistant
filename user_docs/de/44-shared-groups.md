@@ -63,6 +63,16 @@ Der Gruppenbildschirm zeigt, ob **Dir steht zu** oder **Du schuldest** (oder **A
 
 **Ausgabe hinzufügen** öffnet das Ausgabenformular: **Betrag**, **Beschreibung**, **Datum**, **Bezahlt von** und **Aufteilung**: **Gleichmäßig**, **Genaue Beträge**, **Prozent** oder **Anteile**. **Beleg scannen** liest einen Papierbeleg und füllt Betrag, Beschreibung und Datum für dich aus. Wer eine Ausgabe hinzugefügt hat, wer sie bezahlt hat, und der Gruppenbesitzer können sie bearbeiten oder löschen. Eine gelöschte Ausgabe bleibt im Verlauf, als gelöscht markiert.
 
+## Ausgaben nach Positionen
+
+Wenn alle etwas anderes hatten, füge die Ausgabe Position für Position hinzu, statt den Gesamtbetrag zu teilen. Schalte in **Ausgabe hinzufügen** **Nach Positionen (nach Bonzeilen teilen)** ein. Gib unter **Bonpositionen** jede **Position** mit ihrem **Preis** und, falls es einen gab, ihrem **Rabatt** ein; **Position hinzufügen** fügt weitere hinzu. Ein **Rabatt auf den Bon (optional)** für den ganzen Bon wird anteilig verteilt. **Beleg scannen** füllt die Positionen für dich aus. Der **Betrag** ist das, was bezahlt wurde: Ist er höher als die Positionen (Flaschenpfand, Trinkgeld), **bleibt der Rest bei der zahlenden Person**; **Summe der Positionen als Betrag übernehmen** trägt die Summe der Positionen ein.
+
+Tippe in der Aktivitätsliste auf eine Ausgabe nach Positionen (markiert mit **Nach Positionen · offen bis** einem Datum), um **Bon aufteilen** zu öffnen. Eine Woche lang hakt jede Person unter **Meine Positionen** ab, was sie hatte, und tippt auf **Meine Positionen speichern**; Freunde im Browser machen dasselbe auf der Gruppenseite. Eine Position, die mehrere abhaken, wird gleichmäßig unter ihnen geteilt, und was niemand abhakt, bleibt bei der Person, die bezahlt hat. **Dein Anteil an den Positionen** zeigt, was deine Häkchen ergeben.
+
+Die zahlende Person, wer die Ausgabe hinzugefügt hat, und die Person, der die Gruppe gehört, sehen außerdem **Alle**: Dort wählen sie, wer welche Position hatte, teilen eine Position mit **In % aufteilen** ungleich auf (was nicht vergeben ist, bleibt bei der zahlenden Person) und tippen auf **Aufteilung speichern**. Sie können die **Auswahl schließen** oder sie **für 7 Tage wieder öffnen**. Nach der Woche oder nach dem Schließen können nur noch sie ändern, wer was hatte. Solange ein Bon noch aufgeteilt wird, weisen der Begleichen-Bildschirm und **Wer zahlt wem** darauf hin, dass sich Beträge noch ändern können. Eine bereits geleistete Zahlung bleibt, wie sie ist: Ändert sich ein Anteil später, taucht einfach wieder ein kleiner Saldo auf.
+
+Am Computer öffnet sich **Bon aufteilen** in einem Fenster über der Gruppenseite.
+
 ## Ausgaben in einer anderen Währung
 
 Jede Gruppe rechnet in einer Währung ab, der beim Erstellen gewählten. Eine Ausgabe in einer anderen Währung lässt sich trotzdem eintragen. Tippe in der App auf die Währung neben **Betrag** und wähle die, in der du bezahlt hast. Die Zeile **Wechselkurs** zeigt dann den heutigen Kurs (zum Beispiel *1 EUR =* 4,32 in der Gruppenwährung) und wie viel die Ausgabe zählt; ändere den Kurs, wenn du den tatsächlich gezahlten kennst. Im Browser wählen Freunde die **Währung** unter dem Betrag.

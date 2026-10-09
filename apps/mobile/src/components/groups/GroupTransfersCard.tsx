@@ -6,6 +6,7 @@ import { useStyles, type Theme } from '@/theme';
 import { useConnectivity } from '@/hooks/useConnectivity';
 import { memberName } from '@/features/groups/groupDisplay';
 import type { GroupDetail, GroupTransfer } from '@budget/shared-types';
+import { GroupOpenClaimsNote } from './GroupOpenClaimsNote';
 
 interface GroupTransfersCardProps {
   detail: GroupDetail;
@@ -27,6 +28,8 @@ export function GroupTransfersCard({ detail, canSettle, onSettle }: GroupTransfe
       ) : (
         <>
           <Text style={styles.hint}>{t('groups.transfersHint')}</Text>
+          {/* ABA-656: as the guest page's "Who pays whom" does. */}
+          <GroupOpenClaimsNote detail={detail} />
           {detail.suggestedTransfers.map((transfer) => {
             const involvesMe =
               transfer.fromMemberId === detail.myMemberId || transfer.toMemberId === detail.myMemberId;

@@ -19,6 +19,7 @@ import { SETTLE_METHODS, buildGroupPayLink } from '@/features/groups/groupPay';
 import type { SettleMethod } from '@budget/shared-types';
 import { GroupButton } from './GroupButton';
 import { GroupOfflineBanner } from './GroupOfflineBanner';
+import { GroupOpenClaimsNote } from './GroupOpenClaimsNote';
 import { GroupErrorState } from './GroupErrorState';
 
 interface GroupSettleViewProps {
@@ -152,6 +153,8 @@ export function GroupSettleView({ groupId, from, to, onDone }: GroupSettleViewPr
     <SafeAreaView style={styles.container} edges={['bottom']}>
       <ScrollView contentContainerStyle={styles.content}>
         <GroupOfflineBanner />
+        {/* ABA-656: a receipt is still being divided, so this amount may still move. */}
+        <GroupOpenClaimsNote detail={detail} />
         {record && (
           <>
             <Text style={styles.label}>

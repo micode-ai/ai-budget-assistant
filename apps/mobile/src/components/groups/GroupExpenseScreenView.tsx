@@ -5,6 +5,7 @@ import { Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useGroupStore } from '@/stores/groupStore';
 import { useGroupDetail } from '@/hooks/useGroupDetail';
+import { useGroupExpenseItems } from '@/hooks/useGroupExpenseItems';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import type { GroupExpense } from '@budget/shared-types';
 import { GroupErrorState } from './GroupErrorState';
@@ -46,8 +47,12 @@ export const GroupExpenseScreenView = forwardRef<GroupFormHandle, GroupExpenseSc
       : undefined;
     const existing: GroupExpense | null = found && found.kind === 'expense' ? found.expense : null;
 
+    // ABA-656: an itemised expense is edited with its stored lines, which live behind their own route.
+    const itemized = !!existing?.itemized;
+    const items = useGroupExpenseItems(groupId, expenseId, itemized);
+
     const title = expenseId ? t('groups.expenseEditTitle') : t('groups.expenseAddTitle');
-    const ready = !!detail && (!expenseId || !!existing);
+    const ready = !!detail && (!expenseId || !!existing) && (!itemized || !!items.view);
 
     return (
       <SafeAreaView style={styles.container} edges={[]}>
@@ -59,12 +64,15 @@ export const GroupExpenseScreenView = forwardRef<GroupFormHandle, GroupExpenseSc
             ref={ref}
             detail={detail}
             existing={existing}
+            existingItems={itemized ? items.view : null}
             hideActions={hideActions}
             onStateChange={onStateChange}
             onDone={onDone}
           />
         ) : loadFailed || (detail && expenseId && !existing) ? (
           <GroupErrorState onRetry={reload} />
+        ) : items.loadFailed ? (
+          <GroupErrorState onRetry={() => void items.reload()} />
         ) : (
           <View style={styles.centered}>
             <ActivityIndicator color={theme.colors.primary} />

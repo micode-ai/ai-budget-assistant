@@ -9,6 +9,7 @@ import { fromDateInputValue } from '@/utils/dateInput';
 import { canModifyExpense, canVoidSettlement, memberName } from '@/features/groups/groupDisplay';
 import { describeGroupEvent } from '@/features/groups/groupOwnership';
 import { fxAmountParts } from '@/features/groups/groupFx';
+import { claimWindow, expenseRowTarget } from '@/features/groups/groupItems';
 import type { ActivityDay, ActivityTableRow } from '@/features/groups/groupActivityTable';
 import type { GroupDetail, GroupExpense, GroupSettlement } from '@budget/shared-types';
 
@@ -27,6 +28,8 @@ interface Props {
   onFocusRow: (id: string) => void;
   onLoadMore: () => void;
   onOpenExpense: (expense: GroupExpense) => void;
+  /** ABA-656: an itemised expense's row opens its claims (for every member, read-only when archived). */
+  onOpenClaims: (expense: GroupExpense) => void;
   onVoidSettlement: (settlement: GroupSettlement) => void;
 }
 
@@ -57,6 +60,7 @@ export function GroupActivityTable({
   onFocusRow,
   onLoadMore,
   onOpenExpense,
+  onOpenClaims,
   onVoidSettlement,
 }: Props) {
   const { t } = useTranslation();
@@ -86,18 +90,21 @@ export function GroupActivityTable({
       const e = row.item.expense;
       const struck = e.deletedAt !== null;
       const editable = canWrite && !struck && canModifyExpense(detail, e);
+      const target = expenseRowTarget(e, canModifyExpense(detail, e), canWrite);
+      const win = claimWindow(e);
       // ABA-654: the original amount as a secondary line above the stored group figure.
       const fx = fxAmountParts(e, detail.currencyCode);
       return (
         <Pressable
           key={row.id}
-          disabled={!editable}
+          disabled={target === null}
           onPress={() => {
             onFocusRow(row.id);
-            onOpenExpense(e);
+            if (target === 'claims') onOpenClaims(e);
+            else onOpenExpense(e);
           }}
           {...hoverProps}
-          accessibilityRole={editable ? 'button' : undefined}
+          accessibilityRole={target !== null ? 'button' : undefined}
           style={[styles.row, hovered && styles.rowHovered, keyboardFocused && styles.rowKeyboardFocused]}
         >
           <View style={styles.cellDate}>
@@ -108,6 +115,17 @@ export function GroupActivityTable({
               {e.description}
             </Text>
             {struck && <Text style={styles.tag}>{t('groups.deletedTag')}</Text>}
+            {/* ABA-656: itemised, and whether members can still claim. */}
+            {e.itemized && !struck && (
+              <Text style={[styles.tag, win.open && styles.tagOpen]} numberOfLines={1}>
+                {t('groups.itemizedBadge')} ·{' '}
+                {win.open && win.until
+                  ? t('groups.itemizedOpenUntil', {
+                      date: win.until.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+                    })
+                  : t('groups.itemizedClosed')}
+              </Text>
+            )}
           </View>
           <View style={styles.cellPaidBy}>
             <Text style={styles.cellText} numberOfLines={1}>
@@ -126,6 +144,21 @@ export function GroupActivityTable({
           </View>
           {shareCell}
           <View style={styles.cellActions}>
+            {e.itemized && !struck && (
+              <Pressable
+                onPress={() => {
+                  onFocusRow(row.id);
+                  onOpenClaims(e);
+                }}
+                onFocus={() => setFocusedControlId(row.id)}
+                onBlur={() => setFocusedControlId((cur) => (cur === row.id ? null : cur))}
+                accessibilityRole="button"
+                accessibilityLabel={t('groups.claimsTitle')}
+                style={{ opacity: revealed ? 1 : 0, padding: 4, borderRadius: 4 }}
+              >
+                <Ionicons name="receipt-outline" size={16} color={theme.colors.textSecondary} />
+              </Pressable>
+            )}
             {editable && (
               <Pressable
                 onPress={() => {
@@ -349,7 +382,7 @@ const createStyles = (theme: Theme) => ({
   cellPaidBy: { width: 110, paddingRight: theme.spacing[2] },
   cellAmount: { width: 110 },
   cellShare: { width: 110 },
-  cellActions: { width: 64, alignItems: 'flex-end' as const },
+  cellActions: { width: 64, flexDirection: 'row' as const, justifyContent: 'flex-end' as const, alignItems: 'center' as const },
   alignRight: { textAlign: 'right' as const },
   tabular: { fontVariant: ['tabular-nums' as const] },
   descriptionText: {
@@ -372,6 +405,9 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.caption,
     color: theme.colors.textTertiary,
     marginTop: 1,
+  },
+  tagOpen: {
+    color: theme.colors.primary,
   },
   eventRow: {
     cursor: 'default',

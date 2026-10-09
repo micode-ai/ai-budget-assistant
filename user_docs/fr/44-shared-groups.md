@@ -63,6 +63,16 @@ L'écran du groupe indique si **On vous doit** ou si **Vous devez** (ou **Tout e
 
 **Ajouter une dépense** ouvre le formulaire : **Montant**, **Description**, **Date**, **Payé par** et **Répartition** : **À parts égales**, **Montants exacts**, **Pourcentages** ou **Parts**. **Scanner un ticket** lit un ticket papier et remplit pour vous le montant, la description et la date. La personne qui a ajouté une dépense, celle qui l'a payée et le propriétaire du groupe peuvent la modifier ou la supprimer. Une dépense supprimée reste dans l'historique, marquée comme supprimée.
 
+## Dépenses par articles
+
+Quand chacun a pris quelque chose de différent, ajoutez la dépense ligne par ligne au lieu de partager le total. Dans **Ajouter une dépense**, activez **Par articles (partager par lignes du ticket)**. Sous **Lignes du ticket**, saisissez chaque **Article** avec son **Prix** et, s'il y en avait une, sa **Remise** ; **Ajouter une ligne** en ajoute d'autres. Une **Remise sur le ticket (facultatif)** sur l'ensemble du ticket est répartie au prorata. **Scanner un ticket** remplit les lignes pour vous. Le **Montant** est ce qui a été payé : s'il dépasse les lignes (une consigne, un pourboire), **le reste reste à la charge de qui a payé** ; **Utiliser le total des lignes comme montant** recopie le total des lignes.
+
+Touchez une dépense par articles dans la liste d'activité (elle porte la mention **Par articles · ouvert jusqu'au** une date) pour ouvrir **Partager le ticket**. Pendant une semaine, chacun coche sous **Mes lignes** ce qu'il a pris et touche **Enregistrer mes lignes** ; les amis dans le navigateur font de même sur la page du groupe. Une ligne cochée par plusieurs personnes est partagée à parts égales entre elles, et ce que personne ne coche reste à la charge de qui a payé. **Votre part des lignes** indique ce que donnent vos coches.
+
+La personne qui a payé, celle qui a ajouté la dépense et le propriétaire du groupe voient aussi **Tout le monde** : ils y choisissent qui a pris chaque ligne, utilisent **Partager en %** pour partager une ligne de façon inégale (ce qui n'est pas attribué reste à la charge de qui a payé) et touchent **Enregistrer le partage**. Ils peuvent **Clore le choix** plus tôt ou **Rouvrir pour 7 jours**. Après la semaine, ou une fois le choix clos, eux seuls peuvent changer qui a pris quoi. Tant qu'un ticket est en cours de partage, l'écran de règlement et **Qui paie qui** préviennent que les montants peuvent encore changer. Un paiement déjà fait reste tel quel : si une part change ensuite, un petit solde réapparaît simplement.
+
+Sur ordinateur, **Partager le ticket** s'ouvre dans une fenêtre au-dessus de la page du groupe.
+
 ## Dépenses dans une autre devise
 
 Chaque groupe tient ses comptes dans une seule devise, celle choisie à sa création. Une dépense payée dans une autre devise peut quand même être ajoutée. Dans l'appli, touchez la devise à côté de **Montant** et choisissez celle que vous avez utilisée. La ligne **Taux de change** affiche alors le taux du jour (par exemple *1 EUR =* 4,32 dans la devise du groupe) et ce que comptera la dépense ; modifiez le taux si vous connaissez celui réellement payé. Dans le navigateur, vos amis choisissent la **Devise** sous le montant.
