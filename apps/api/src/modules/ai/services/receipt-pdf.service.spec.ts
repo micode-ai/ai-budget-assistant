@@ -17,9 +17,18 @@ import {
   ReceiptPdfService,
 } from './receipt-pdf.service';
 
-/** renderToPngs writes the PDF to a temp dir first; wait until it reaches spawn. */
-async function spawned() {
-  for (let i = 0; i < 200 && mockSpawn.mock.calls.length === 0; i++) await new Promise((r) => setImmediate(r));
+/**
+ * renderToPngs writes the PDF to a real temp dir first; wait until it reaches spawn. Poll by wall
+ * time, not by a fixed number of event-loop turns: on a slow disk (Windows, a loaded CI box) the
+ * mkdtemp + writeFile can outlast 200 setImmediate turns, the test then emits `close` before the
+ * service listens, and the test hangs until Jest's 5 s timeout.
+ */
+async function spawned(maxMs = 4000) {
+  const start = Date.now();
+  while (mockSpawn.mock.calls.length === 0 && Date.now() - start < maxMs) {
+    await new Promise((r) => setTimeout(r, 5));
+  }
+  if (mockSpawn.mock.calls.length === 0) throw new Error('renderToPngs never reached spawn');
 }
 
 function fakeProc() {
