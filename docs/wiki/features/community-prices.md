@@ -6,7 +6,11 @@
 
 A crowdsourced, **k-anonymized** "where's cheapest" grocery database built from all accounts' OCR'd
 receipt line items — a data moat with a network effect. Opt-in, **free to read on every tier** (ABA-642), and
-**dark in production** behind the `COMMUNITY_PRICE_READ_ENABLED` kill switch (default OFF).
+**live in production since 2026-10-10**: reads need both `COMMUNITY_PRICE_READ_ENABLED` and
+`COMMUNITY_CORRELATION_ENABLED` (each defaults OFF in code; prod sets both). It was turned on before
+the planned three-week fill, so most searches return nothing until several shoppers confirm a store.
+The `community-prices-live` What's New entry is deliberately still not shipped. Rollback: set either
+flag to `false` and force-recreate `api`.
 
 ## Entry points
 
