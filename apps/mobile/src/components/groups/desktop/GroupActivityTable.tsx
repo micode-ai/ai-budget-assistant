@@ -78,13 +78,15 @@ export function GroupActivityTable({
       onHoverIn: () => setHoveredId(row.id),
       onHoverOut: () => setHoveredId((cur) => (cur === row.id ? null : cur)),
     };
-    const shareCell = showMyShare ? (
-      <View style={styles.cellShare}>
-        <Text style={[styles.cellText, styles.alignRight, styles.tabular]}>
-          {row.myShare !== null ? formatCurrency(row.myShare, detail.currencyCode) : ''}
-        </Text>
-      </View>
-    ) : null;
+    // A deleted expense or voided payment no longer counts, so its share is struck like its amount.
+    const shareCell = (struck: boolean) =>
+      showMyShare ? (
+        <View style={styles.cellShare}>
+          <Text style={[styles.cellText, styles.alignRight, styles.tabular, struck && styles.struck]}>
+            {row.myShare !== null ? formatCurrency(row.myShare, detail.currencyCode) : ''}
+          </Text>
+        </View>
+      ) : null;
 
     if (row.item.kind === 'expense') {
       const e = row.item.expense;
@@ -142,7 +144,7 @@ export function GroupActivityTable({
               {formatCurrency(e.amount, detail.currencyCode)}
             </Text>
           </View>
-          {shareCell}
+          {shareCell(struck)}
           <View style={styles.cellActions}>
             {e.itemized && !struck && (
               <Pressable
@@ -241,7 +243,7 @@ export function GroupActivityTable({
             {formatCurrency(s.amount, detail.currencyCode)}
           </Text>
         </View>
-        {shareCell}
+        {shareCell(struck)}
         <View style={styles.cellActions}>
           {voidable && (
             <Pressable
