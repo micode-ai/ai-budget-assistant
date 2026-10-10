@@ -666,6 +666,25 @@ User note about this receipt: "${safeNote}"`;
 
     let discount = rawDiscount;
 
+    // Deposits are a handful of 0.50 charges, never the basket. A model that
+    // returns something the size of the receipt has read the wrong number, and
+    // feeding that to the split gate would widen the tolerance rather than
+    // explain a gap — the opposite of why it is passed at all.
+    //
+    // Normalized BEFORE the discount check below, which needs it: a Polish
+    // receipt's "DO ZAPŁATY" total includes the deposit printed under
+    // "Suma PLN", so without it a correct discount fails the check and is
+    // replaced by `subtotal − total` — understated by exactly the deposit.
+    const rawDeposit =
+      typeof parsed.deposit === 'number' && Number.isFinite(parsed.deposit) ? Math.abs(parsed.deposit) : null;
+    let deposit = rawDeposit !== null && rawDeposit > 0 ? rawDeposit : null;
+    if (deposit !== null && total !== null && deposit >= total) {
+      this.logger.warn(`[OCR] Deposit ${deposit} >= total ${total} — discarding implausible deposit`);
+      deposit = null;
+    }
+    parsed.deposit = deposit;
+    const depositPaid = deposit ?? 0;
+
     if (discount !== null && total !== null && discount >= total) {
       this.logger.warn(`[OCR] Discount ${discount} >= total ${total} — discarding implausible discount`);
       discount = null;
@@ -675,23 +694,26 @@ User note about this receipt: "${safeNote}"`;
       // Math invariant has two valid forms:
       //   (a) tax-exclusive (US-style): subtotal − discount + tax = total
       //   (b) tax-inclusive (EU-style, e.g. Polish VAT embedded in prices):
-      //       subtotal − discount = total (tax is informational; total may
-      //       additionally include small fees like packaging deposits)
+      //       subtotal − discount = total (tax is informational)
+      // and in both the total additionally carries the packaging deposit.
+      // Leaving it out is not a rounding matter: an 8-can deposit is 4.00,
+      // over the tolerance on a small basket, and the derivation below then
+      // overwrote a correctly read discount with one short by the deposit.
       const tolerance = Math.max(0.5, Math.abs(total) * 0.03);
-      const exclExpected = subtotal - (discount ?? 0) + tax;
-      const inclExpected = subtotal - (discount ?? 0);
+      const exclExpected = subtotal - (discount ?? 0) + tax + depositPaid;
+      const inclExpected = subtotal - (discount ?? 0) + depositPaid;
       const exclOk = Math.abs(exclExpected - total) <= tolerance;
       const inclOk = Math.abs(inclExpected - total) <= tolerance;
 
       if (!exclOk && !inclOk) {
         let derived: number | null = null;
-        if (subtotal > total + 0.01) {
-          derived = Math.round((subtotal - total) * 100) / 100;
-        } else if (subtotal + tax > total + 0.01) {
-          derived = Math.round((subtotal + tax - total) * 100) / 100;
+        if (subtotal + depositPaid > total + 0.01) {
+          derived = Math.round((subtotal + depositPaid - total) * 100) / 100;
+        } else if (subtotal + tax + depositPaid > total + 0.01) {
+          derived = Math.round((subtotal + tax + depositPaid - total) * 100) / 100;
         }
         if (derived !== null && derived > 0.01 && derived < subtotal) {
-          this.logger.log(`[OCR] Discount reconciled: model=${rawDiscount} -> derived=${derived} (subtotal=${subtotal}, tax=${tax}, total=${total})`);
+          this.logger.log(`[OCR] Discount reconciled: model=${rawDiscount} -> derived=${derived} (subtotal=${subtotal}, tax=${tax}, deposit=${depositPaid}, total=${total})`);
           discount = derived;
         } else {
           if (discount !== null) {
@@ -703,19 +725,6 @@ User note about this receipt: "${safeNote}"`;
     }
 
     parsed.discount = discount;
-
-    // Deposits are a handful of 0.50 charges, never the basket. A model that
-    // returns something the size of the receipt has read the wrong number, and
-    // feeding that to the split gate would widen the tolerance rather than
-    // explain a gap — the opposite of why it is passed at all.
-    const rawDeposit =
-      typeof parsed.deposit === 'number' && Number.isFinite(parsed.deposit) ? Math.abs(parsed.deposit) : null;
-    let deposit = rawDeposit !== null && rawDeposit > 0 ? rawDeposit : null;
-    if (deposit !== null && total !== null && deposit >= total) {
-      this.logger.warn(`[OCR] Deposit ${deposit} >= total ${total} — discarding implausible deposit`);
-      deposit = null;
-    }
-    parsed.deposit = deposit;
 
     if (parsed.items && parsed.items.length > 0) {
       // Some receipts print discounts as their own line ("OPUST PIWO ... -8,00") and the

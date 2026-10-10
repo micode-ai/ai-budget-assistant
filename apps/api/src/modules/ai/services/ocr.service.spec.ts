@@ -175,6 +175,39 @@ describe('OcrService', () => {
       expect(result.discount).toBeNull();
     });
 
+    it('keeps a correct discount when a large deposit is part of the total', () => {
+      // Biedronka-style: lines gross, OPUSTY ŁĄCZNIE subtracted to reach
+      // "Suma PLN", then a can deposit added to reach "DO ZAPŁATY". A deposit
+      // above the 3% tolerance used to fail the check, and the discount was
+      // overwritten by `subtotal − total` — short by exactly the deposit.
+      const result = normalize({
+        items: [{ description: 'Goods', totalPrice: 100 }],
+        subtotal: 100,
+        // VAT-inclusive: tax is informational, and large enough that the
+        // tax-exclusive form cannot accidentally pass either.
+        tax: 8,
+        discount: 40,
+        deposit: 5,
+        total: 65,
+      });
+
+      expect(result.discount).toBe(40);
+      expect(result.deposit).toBe(5);
+    });
+
+    it('derives a missing discount net of the deposit', () => {
+      const result = normalize({
+        items: [{ description: 'Goods', totalPrice: 100 }],
+        subtotal: 100,
+        tax: 4,
+        discount: null,
+        deposit: 5,
+        total: 65,
+      });
+
+      expect(result.discount).toBe(40);
+    });
+
     it('keeps a real discount that gross lines actually need', () => {
       // Biedronka: 152,20 of goods, OPUSTY ŁĄCZNIE -55,05, 1,00 kaucja, 98,15 due.
       const result = normalize({

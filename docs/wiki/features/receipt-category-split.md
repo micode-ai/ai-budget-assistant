@@ -162,6 +162,14 @@ by construction, destroying the only signal that a reading is bad.
 wording always blamed the quantity column and so sent the second pass to re-check the one column
 already right.
 
+**The discount check counts the deposit (ABA-664).** `validateAndNormalizeReceipt` checks
+`subtotal − discount (+ tax) + deposit = total` and, when that fails, derives the discount as
+`subtotal (+ tax) + deposit − total`. The deposit is normalized first for that reason. Without it, a
+correctly read discount on a receipt whose deposit exceeds the 3% tolerance (a multi-can pack) was
+overwritten by `subtotal − total`, short by exactly the deposit — and the split then failed its 5%
+gate by that same amount, filing the whole receipt under one category. One- or two-bottle deposits
+hid it by fitting inside the tolerance.
+
 **A discount the lines already reflect is dropped.** `isDiscountAlreadyInLines` clears a `discount`
 only when the lines reconcile WITHOUT it and fail WITH it — the narrow inverse of the derivation
 above, so it can only ever drop a figure the lines contradict, never invent one. It exists because
@@ -207,4 +215,4 @@ hand-constructed, so a new constructor dependency silently arrived as `undefined
 (the re-read tracked as its own AI-COGS line, `ocr_reread`) · ABA-529 (category budgets attribute
 splits — see [category-id-resolution](category-id-resolution.md) and the budget attribution util) ·
 ABA-601 (standard names for proposals; the overall category vetoed by the split) · ABA-602
-(a moved expense unlearns its product rules).
+(a moved expense unlearns its product rules) · ABA-664 (the discount check counts the deposit).
