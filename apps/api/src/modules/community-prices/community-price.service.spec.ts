@@ -533,6 +533,38 @@ describe('CommunityPriceService', () => {
 
     const written = (prisma: any) => prisma.communityPriceObservation.upsert.mock.calls.map((c: any[]) => c[0]);
 
+    describe('contributeRescannedReceipt (re-scan backfill)', () => {
+      it('takes the lines from the fresh server OCR, not the saved rows, and reports the outcome', async () => {
+        const { svc, prisma } = make({
+          expense: {
+            findFirst: jest.fn().mockResolvedValue({ account: { encryptionEnabled: false }, items: [] }),
+            count: jest.fn().mockResolvedValue(20),
+          },
+        });
+        await expect(svc.contributeRescannedReceipt(ACCOUNT, USER, EXPENSE, token(), LINES)).resolves.toBe('contributed');
+        expect(written(prisma).map((w: any) => w.create.canonicalName)).toEqual(['Mleko 1L', 'Chleb', 'Masło']);
+      });
+
+      it('still drops a line that is not in the token, and still requires the saved expense', async () => {
+        const { svc, prisma } = make();
+        const extra = [...LINES, { canonicalName: 'Injected', quantity: 1, totalPrice: 0.01 }];
+        await svc.contributeRescannedReceipt(ACCOUNT, USER, EXPENSE, token(), extra);
+        expect(written(prisma).map((w: any) => w.create.canonicalName)).not.toContain('Injected');
+
+        const gone = make({ expense: { findFirst: jest.fn().mockResolvedValue(null), count: jest.fn() } });
+        await expect(gone.svc.contributeRescannedReceipt(ACCOUNT, USER, EXPENSE, token(), LINES)).resolves.toBe('no_expense');
+      });
+
+      it('keeps every gate: no consent and a too-old receipt are refused', async () => {
+        const noConsent = make({
+          user: { findUnique: jest.fn().mockResolvedValue({ contributeCommunityPrices: false, createdAt: new Date(0) }) },
+        });
+        await expect(noConsent.svc.contributeRescannedReceipt(ACCOUNT, USER, EXPENSE, token(), LINES)).resolves.toBe('no_consent');
+        const { svc } = make();
+        await expect(svc.contributeRescannedReceipt(ACCOUNT, USER, EXPENSE, token({ d: isoDaysAgo(20) }), LINES)).resolves.toBe('too_old');
+      });
+    });
+
     describe('attestation gate', () => {
       it('no token: nothing is read and nothing is written (a forged source:ocr expense contributes nothing)', async () => {
         const { svc, prisma } = make();

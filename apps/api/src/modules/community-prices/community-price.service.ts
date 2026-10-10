@@ -43,6 +43,29 @@ import type { CommunityBaseline } from '../price-history/receipt-check.util';
 // Read-path cache: anonymous aggregate data, so the key is global (not per-account).
 const READ_CACHE_TTL_SEC = 300;
 
+/** One receipt line as the server's own OCR read it (the re-scan backfill's source). */
+export interface AttestedLineInput {
+  canonicalName: string | null | undefined;
+  quantity: number | string;
+  totalPrice: number | string;
+}
+
+/** What happened to one receipt on the contribution path. */
+export type ContributionOutcome =
+  | 'contributed'
+  | 'disabled'
+  | 'no_attestation'
+  | 'bad_attestation'
+  | 'too_old'
+  | 'no_consent'
+  | 'no_expense'
+  | 'encrypted'
+  | 'no_lines'
+  | 'not_eligible'
+  | 'already_seen'
+  | 'rate_limited'
+  | 'failed';
+
 // ── Anti-abuse hardening (ABA-335 security audit, ABA-642 anti-Sybil) ────────
 // Only lines the SERVER'S OWN OCR read can contribute: the scan response carries a
 // server-signed `scanAttestation` (see scan-attestation.util.ts), the client hands
@@ -598,14 +621,44 @@ export class CommunityPriceService implements OnModuleInit {
     expenseId: string,
     scanAttestation?: string | null,
   ): Promise<void> {
+    await this.contribute(accountId, userId, expenseId, scanAttestation);
+  }
+
+  /**
+   * Re-scan backfill (admin, `ReceiptRescanService`): contribute an ALREADY-SAVED
+   * receipt that the server has just read again with its own OCR. Every gate of
+   * `recordContribution` applies unchanged (consent, recency, eligibility, one
+   * receipt once, rate limits); the only difference is where the lines come from —
+   * the fresh server OCR, still intersected with the token's hashes, instead of the
+   * saved rows, whose names a second read rarely reproduces byte for byte. Returns
+   * the outcome so the backfill can report it and stop paying for OCR once a
+   * contributor's daily limit is reached.
+   */
+  async contributeRescannedReceipt(
+    accountId: string,
+    userId: string,
+    expenseId: string,
+    scanAttestation: string,
+    serverLines: AttestedLineInput[],
+  ): Promise<ContributionOutcome> {
+    return this.contribute(accountId, userId, expenseId, scanAttestation, serverLines);
+  }
+
+  private async contribute(
+    accountId: string,
+    userId: string,
+    expenseId: string,
+    scanAttestation?: string | null,
+    serverLines?: AttestedLineInput[],
+  ): Promise<ContributionOutcome> {
     try {
       const salt = this.salt();
-      if (!salt) return; // no (or a < 32 char) salt -> never derive a key with a weak/no secret
-      if (!scanAttestation) return; // no server-signed scan -> nothing can contribute
+      if (!salt) return 'disabled'; // no (or a < 32 char) salt -> never derive a key with a weak/no secret
+      if (!scanAttestation) return 'no_attestation'; // no server-signed scan -> nothing can contribute
 
       const now = new Date();
       const att = verifyScanAttestation(salt, scanAttestation, { userId, accountId, now });
-      if (!att) return;
+      if (!att) return 'bad_attestation';
 
       // Recency gate: the receipt date must be within [now - 14 d, now + 1 d]. Two
       // calendar weeks of persistence therefore take two real calendar weeks.
@@ -615,18 +668,18 @@ export class CommunityPriceService implements OnModuleInit {
         receiptMs < now.getTime() - MAX_RECEIPT_AGE_DAYS * DAY_MS ||
         receiptMs > now.getTime() + MAX_RECEIPT_FUTURE_DAYS * DAY_MS
       ) {
-        return;
+        return 'too_old';
       }
 
-      if (!att.m || att.m.length > MAX_LABEL_LEN) return;
+      if (!att.m || att.m.length > MAX_LABEL_LEN) return 'bad_attestation';
       const [lat, lng] = att.loc;
-      if (lat === 0 && lng === 0) return; // null-island convention (absent location)
+      if (lat === 0 && lng === 0) return 'bad_attestation'; // null-island convention (absent location)
 
       const user = await this.prisma.user.findUnique({
         where: { id: userId },
         select: { contributeCommunityPrices: true, createdAt: true },
       });
-      if (!user?.contributeCommunityPrices) return; // consent gate
+      if (!user?.contributeCommunityPrices) return 'no_consent'; // consent gate
 
       const expense = await this.prisma.expense.findFirst({
         where: { id: expenseId, accountId, isDeleted: false },
@@ -638,15 +691,16 @@ export class CommunityPriceService implements OnModuleInit {
           },
         },
       });
-      if (!expense) return;
-      if (expense.account.encryptionEnabled) return; // canonicalName would be ciphertext
+      if (!expense) return 'no_expense';
+      if (expense.account.encryptionEnabled) return 'encrypted'; // canonicalName would be ciphertext
 
       // Intersect the saved lines with the attested hashes.
       const attested = new Set(att.h);
       const ignored = await this.getIgnoredNames(accountId);
       const lines: Array<{ canonicalName: string; price: number }> = [];
-      for (const item of expense.items) {
-        const name = item.canonicalName as string;
+      for (const item of serverLines ?? expense.items) {
+        const name = item.canonicalName;
+        if (!name) continue;
         if (name.length > MAX_LABEL_LEN) continue; // no oversized free text into the shared corpus
         const quantity = Number(item.quantity);
         const totalPrice = Number(item.totalPrice);
@@ -657,7 +711,7 @@ export class CommunityPriceService implements OnModuleInit {
         if (!(price > 0)) continue;
         lines.push({ canonicalName: name, price });
       }
-      if (lines.length === 0) return;
+      if (lines.length === 0) return 'no_lines';
 
       // Anti-Sybil eligibility, per PERSON: tenure and real usage across ALL accounts.
       const accountAgeDays = (now.getTime() - user.createdAt.getTime()) / DAY_MS;
@@ -670,7 +724,7 @@ export class CommunityPriceService implements OnModuleInit {
           this.intEnv('COMMUNITY_MIN_CONTRIBUTOR_EXPENSES', MIN_CONTRIBUTOR_EXPENSES),
         )
       ) {
-        return;
+        return 'not_eligible';
       }
 
       // Trusted, evaluated NOW and stored as a coarse boolean: long tenure, or really
@@ -697,7 +751,7 @@ export class CommunityPriceService implements OnModuleInit {
       try {
         await this.prisma.communityReceiptSeen.create({ data: { contentKey, weekStart } });
       } catch (e: any) {
-        if (e?.code === 'P2002') return;
+        if (e?.code === 'P2002') return 'already_seen';
         throw e;
       }
 
@@ -714,14 +768,14 @@ export class CommunityPriceService implements OnModuleInit {
         const weekly = daily > RATE_LIMIT_DAILY ? 0 : await this.cache.incrementWindow(`cp:rl:w:${contributorKey}`, 7 * DAY_MS);
         if (daily > RATE_LIMIT_DAILY || weekly > RATE_LIMIT_WEEKLY) {
           await releaseSeen();
-          return;
+          return 'rate_limited';
         }
       } catch (e) {
         await releaseSeen();
         this.logger.warn(
           `recordContribution skipped (rate limiter unavailable): ${e instanceof Error ? e.message : String(e)}`,
         );
-        return;
+        return 'rate_limited';
       }
 
       const city = await this.geocoding.reverseGeocode(lat, lng).catch(() => null);
@@ -771,10 +825,12 @@ export class CommunityPriceService implements OnModuleInit {
           throw e;
         }
       }
+      return 'contributed';
     } catch (e) {
       this.logger.warn(
         `recordContribution failed for expense ${expenseId}: ${e instanceof Error ? e.message : String(e)}`,
       );
+      return 'failed';
     }
   }
 

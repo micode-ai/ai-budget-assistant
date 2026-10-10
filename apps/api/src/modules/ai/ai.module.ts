@@ -41,10 +41,13 @@ import { InsightsModule } from '../insights/insights.module';
 import { ShoppingListModule } from '../shopping-list/shopping-list.module';
 import { PriceHistoryModule } from '../price-history/price-history.module';
 import { MerchantRulesModule } from '../merchant-rules/merchant-rules.module';
+import { AdminGuard } from '../admin/admin.guard';
+import { ReceiptRescanService } from './services/receipt-rescan.service';
+import { ReceiptRescanAdminController } from './receipt-rescan.admin.controller';
 
 @Module({
   imports: [EmbeddingModule, SubscriptionsModule, ExpensesModule, IncomesModule, BudgetsModule, CategoriesModule, AnalyticsModule, DebtsModule, AccountsModule, CurrencyExchangeModule, InsightsModule, ShoppingListModule, PriceHistoryModule, MerchantRulesModule, GeocodingModule, CommunityPriceModule],
-  controllers: [AiController],
+  controllers: [AiController, ReceiptRescanAdminController],
   providers: [
     WhisperService,
     ChatService,
@@ -71,6 +74,8 @@ import { MerchantRulesModule } from '../merchant-rules/merchant-rules.module';
     AiShoppingToolsService,
     AiUndoToolsService,
     PromptBuilder,
+    ReceiptRescanService,
+    AdminGuard,
   ],
   exports: [
     WhisperService,

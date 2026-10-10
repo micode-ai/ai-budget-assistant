@@ -65,6 +65,26 @@ Spec: `docs/superpowers/specs/2026-10-09-community-prices-anti-sybil-design.md`.
 - **Legacy rows are kept, never read** (`attested = false`); store pins are create-only and
   attested-only.
 
+## Re-scan backfill (ABA-662)
+
+A receipt saved before its owner consented carried no attestation, so it never contributed.
+`POST /admin/community-prices/rescan` (`JwtAuthGuard` + `AdminGuard`, body `{emails?, dryRun?}`;
+`GET` returns the last report) starts a background run in `ReceiptRescanService`
+(`apps/api/src/modules/ai/services/receipt-rescan.service.ts`): every stored receipt IMAGE from the
+last 14 days of a consenting user on a non-E2EE account is read again by `OcrService.parseReceipt`,
+which issues a fresh attestation exactly as a live scan does, and handed to
+`contributeRescannedReceipt`. Every gate of the live path still applies; the one difference is
+that the lines come from the fresh OCR (still intersected with the token's hashes) rather than the
+saved rows, whose names a second read rarely reproduces byte for byte. A run stops OCR for a user
+after 6 contributions or the first `rate_limited` (the daily limit), marks finished receipts in
+Redis for 15 days so a re-run only pays for the rest, and refuses to run twice at once. Since
+`iat` is the run time, a whole backfill lands in ONE ingest week — it cannot satisfy the two-week
+persistence gate by itself.
+
+Prod since 2026-10-10: `COMMUNITY_PRICE_K=2` (test-period override of the default 5, at the
+owner's request with three consenting family accounts) — revert to unset once real users fill
+the map.
+
 ## Invariants
 
 **Never filter reads without `attested: true`.** Pre-ABA-642 rows are still in the tables.
