@@ -8,6 +8,46 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.34.0 - 2026-10-10
+
+**Shared expense groups (new)**
+
+- **Split ongoing costs with friends by a link.** Create a group for a flat, a trip or a
+  team, share the link or QR code, and friends without the app join from a browser.
+  Balances and a short "who pays whom" plan update after every expense (ABA-640). Join
+  under a name that is already on the list from the app too (ABA-647).
+- **Expenses in another currency** are converted into the group's currency once, at the
+  rate on the day you save, and show both amounts (ABA-654).
+- **Itemised expenses**: add a receipt's lines and let each member tick what they had;
+  whatever nobody claims stays with the payer (ABA-655, ABA-656).
+- **Pay part of a debt** or a custom amount, never more than is owed (ABA-652).
+- **Owner tools**: hand the group to another member before leaving, reset one guest's
+  login, and merge two members without changing anyone's balance (ABA-650, ABA-651,
+  ABA-657).
+- **Count my share in my budget**: your share of each group expense can be added to one
+  of your accounts, so budgets and analytics show what you consumed (ABA-659, ABA-660,
+  ABA-661).
+- **Weekly reminders** about an open balance, at most four, switchable in notification
+  settings (ABA-653).
+- **Offline**, group screens stay readable and block changes until you are back online
+  (ABA-648).
+- Groups have their own desktop web layout (ABA-646).
+
+**Insights and first run**
+
+- **Month in review**: a monthly Wrapped card deck, with a push on the 1st of the month
+  (ABA-641).
+- **A new account starts with a bank statement import** and shows a three-month money
+  report a minute later (ABA-643).
+
+**Already working before this update** (server-side, live for every app version)
+
+- **Add an expense to a group from Telegram, WhatsApp and Slack** (ABA-658).
+- **A large Monefy import commits in one go**, keeps repeated purchases and drops
+  transfers between your own accounts (ABA-637).
+
+---
+
 ## 1.33.0 - 2026-10-01
 
 **Shopping list**
