@@ -81,9 +81,13 @@ Redis for 15 days so a re-run only pays for the rest, and refuses to run twice a
 `iat` is the run time, a whole backfill lands in ONE ingest week — it cannot satisfy the two-week
 persistence gate by itself.
 
-Prod since 2026-10-10: `COMMUNITY_PRICE_K=2` (test-period override of the default 5, at the
-owner's request with three consenting family accounts) — revert to unset once real users fill
-the map.
+Prod since 2026-10-10: `COMMUNITY_PRICE_K=2`, `COMMUNITY_MIN_PERSISTENCE_WEEKS=1` and
+`COMMUNITY_TRUSTED_TENURE_DAYS=25` (test-period overrides of the defaults 5, 2 and 60, at the
+owner's request with three consenting family accounts; the already-written rows of one of them
+were set `trusted = true` by hand, matched on the recomputed `contributorKey`) — remove all three
+once real users fill the map. The first backfill run contributed
+7 of 12 candidate receipts (5 failed the attestation gates); receipts on encrypted accounts are
+never candidates.
 
 ## Invariants
 
