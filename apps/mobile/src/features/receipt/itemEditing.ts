@@ -20,20 +20,27 @@ export function reindexAfterRemoval(
 }
 
 /**
- * The secondary line under a scanned receipt line on the confirm card —
- * `2 × 3,49 zł`, `0.437 × 12,99 zł` for a weighed line, or `×2` when OCR read
- * a quantity but no unit price. Mirrors the saved expense's item row
- * (`ExpenseItemsSection`), so the count reads the same before and after
- * saving. `null` when OCR returned no usable quantity — nothing to show.
- * Rounds to 3 dp to scrub float noise from weighed quantities.
+ * The secondary line under a receipt line — `2 × 3,49 zł`, `0.437 × 12,99 zł`
+ * for a weighed line, or `×2` when there is no unit price. Used by both the
+ * confirm card (`ReceiptItemsEditor`) and the saved expense's item row
+ * (`ExpenseItemsSection`), so the count reads the same before and after saving.
+ *
+ * A unit price of 0 counts as missing: the API stores an unread unit price as
+ * 0 (`unitPrice ?? 0`), so a saved row can't tell "OCR didn't read it" from a
+ * real zero — and a real 0.00 unit price never reaches a positive total.
+ * Without a unit price, quantity 1 says nothing and returns `null`, as does a
+ * missing quantity. Accepts strings because Prisma `Decimal`s arrive as JSON
+ * strings. Rounds to 3 dp to scrub float noise from weighed quantities.
  */
 export function formatItemQuantityLine(
-  quantity: number | undefined,
-  unitPrice: number | undefined,
+  quantity: number | string | null | undefined,
+  unitPrice: number | string | null | undefined,
   formatMoney: (amount: number) => string,
 ): string | null {
-  if (quantity == null || !Number.isFinite(quantity) || quantity <= 0) return null;
-  const qty = Math.round(quantity * 1000) / 1000;
-  if (unitPrice == null || !Number.isFinite(unitPrice)) return `×${qty}`;
-  return `${qty} × ${formatMoney(unitPrice)}`;
+  const q = quantity == null || quantity === '' ? NaN : Number(quantity);
+  if (!Number.isFinite(q) || q <= 0) return null;
+  const qty = Math.round(q * 1000) / 1000;
+  const price = unitPrice == null || unitPrice === '' ? NaN : Number(unitPrice);
+  if (!Number.isFinite(price) || price <= 0) return qty === 1 ? null : `×${qty}`;
+  return `${qty} × ${formatMoney(price)}`;
 }

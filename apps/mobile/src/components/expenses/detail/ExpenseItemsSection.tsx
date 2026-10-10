@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { showAlert } from '@/utils/alert';
 import { parseAmount } from '@/utils/amount';
+import { formatItemQuantityLine } from '@/features/receipt/itemEditing';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '@budget/shared-utils';
@@ -112,9 +113,12 @@ export function ExpenseItemsSection({ expenseId, currencyCode }: ExpenseItemsSec
             <View key={item.id} style={styles.itemRow}>
               <View style={styles.itemInfo}>
                 <Text style={styles.itemName} numberOfLines={1}>{item.description}</Text>
-                <Text style={styles.itemMeta}>
-                  {item.quantity} x {formatCurrency(item.unitPrice, currencyCode)}
-                </Text>
+                {(() => {
+                  const quantityLine = formatItemQuantityLine(item.quantity, item.unitPrice, (amount) =>
+                    formatCurrency(amount, currencyCode),
+                  );
+                  return quantityLine ? <Text style={styles.itemMeta}>{quantityLine}</Text> : null;
+                })()}
               </View>
               <View style={styles.itemActions}>
                 <Text style={styles.itemTotal}>{formatCurrency(item.totalPrice, currencyCode)}</Text>

@@ -59,6 +59,19 @@ describe('formatItemQuantityLine', () => {
     expect(formatItemQuantityLine(3, undefined, money)).toBe('×3');
   });
 
+  it('treats a stored 0 unit price as unread, not as a real price', () => {
+    expect(formatItemQuantityLine(2, 0, money)).toBe('×2');
+  });
+
+  it('shows nothing for quantity 1 without a unit price', () => {
+    expect(formatItemQuantityLine(1, 0, money)).toBeNull();
+    expect(formatItemQuantityLine(1, undefined, money)).toBeNull();
+  });
+
+  it('accepts Decimal values serialized as strings', () => {
+    expect(formatItemQuantityLine('2.000', '3.49', money)).toBe('2 × 3.49 zł');
+  });
+
   it('returns null when there is no usable quantity', () => {
     expect(formatItemQuantityLine(undefined, 3, money)).toBeNull();
     expect(formatItemQuantityLine(0, 3, money)).toBeNull();

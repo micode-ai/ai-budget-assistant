@@ -14,11 +14,15 @@ deleted, or added by hand. Shared by the phone screen and the desktop `ReceiptDi
 - The editor holds only "which row is expanded" and its draft; every committed change goes through
   `onEditItem` / `onAddItem` / `onRemoveItem`, which recompute the category split.
 - A collapsed row shows the name, the total and, under the name, a quantity line from
-  `formatItemQuantityLine`: `2 × 3,49 zł`, `0.437 × …` for a weighed line, `×N` when OCR read no
-  unit price, nothing when OCR read no quantity. It is shown for quantity 1 too, matching the saved
-  expense's item row (`src/components/expenses/detail/ExpenseItemsSection.tsx`).
+  `formatItemQuantityLine`: `2 × 3,49 zł`, `0.437 × …` for a weighed line, `×N` when there is no
+  unit price, nothing when there is no quantity (or quantity 1 and no unit price). The saved
+  expense's item row (`src/components/expenses/detail/ExpenseItemsSection.tsx`) renders through the
+  same helper.
 
 ## Invariants
+- A unit price of 0 is shown as "no unit price", never as `N × 0,00`: the API stores an unread unit
+  price as 0 (`expenses.service.ts`, `unitPrice ?? 0`), so a saved row cannot distinguish the two,
+  and old expenses carry that 0. The fix is display-only; no data is rewritten.
 - The quantity line uses the same `qty × unit price` shape as the saved expense's row — the count
   must read the same before and after saving.
 - Weighed quantities are rounded to 3 decimals for display only; the stored value is untouched.
@@ -28,3 +32,5 @@ deleted, or added by hand. Shared by the phone screen and the desktop `ReceiptDi
 
 ## History
 - ABA-663 — quantity line added; before it, quantity and unit price were visible only inside a row's edit form.
+  Follow-up: the saved expense row moved onto the same helper, so old expenses whose unit price was
+  never read stop showing `N x 0,00`.
