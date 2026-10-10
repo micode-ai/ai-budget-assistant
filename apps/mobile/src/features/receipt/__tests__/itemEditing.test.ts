@@ -1,4 +1,4 @@
-import { reindexAfterRemoval } from '../itemEditing';
+import { reindexAfterRemoval, formatItemQuantityLine } from '../itemEditing';
 
 describe('reindexAfterRemoval', () => {
   it('drops the removed index and shifts every key above it down by one', () => {
@@ -37,5 +37,31 @@ describe('reindexAfterRemoval', () => {
   it('removing an index with no entry only shifts higher keys', () => {
     const itemCategories = { 0: 'cat-a', 2: 'cat-c' };
     expect(reindexAfterRemoval(itemCategories, 1)).toEqual({ 0: 'cat-a', 1: 'cat-c' });
+  });
+});
+
+describe('formatItemQuantityLine', () => {
+  const money = (n: number) => `${n.toFixed(2)} zł`;
+
+  it('shows quantity × unit price', () => {
+    expect(formatItemQuantityLine(2, 3.49, money)).toBe('2 × 3.49 zł');
+  });
+
+  it('shows a single unit too, matching the saved expense row', () => {
+    expect(formatItemQuantityLine(1, 5, money)).toBe('1 × 5.00 zł');
+  });
+
+  it('scrubs float noise from a weighed quantity', () => {
+    expect(formatItemQuantityLine(0.43700000001, 12.99, money)).toBe('0.437 × 12.99 zł');
+  });
+
+  it('shows just the count when OCR read no unit price', () => {
+    expect(formatItemQuantityLine(3, undefined, money)).toBe('×3');
+  });
+
+  it('returns null when there is no usable quantity', () => {
+    expect(formatItemQuantityLine(undefined, 3, money)).toBeNull();
+    expect(formatItemQuantityLine(0, 3, money)).toBeNull();
+    expect(formatItemQuantityLine(NaN, 3, money)).toBeNull();
   });
 });

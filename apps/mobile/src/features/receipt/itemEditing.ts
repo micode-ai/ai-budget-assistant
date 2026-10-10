@@ -18,3 +18,22 @@ export function reindexAfterRemoval(
   }
   return next;
 }
+
+/**
+ * The secondary line under a scanned receipt line on the confirm card —
+ * `2 × 3,49 zł`, `0.437 × 12,99 zł` for a weighed line, or `×2` when OCR read
+ * a quantity but no unit price. Mirrors the saved expense's item row
+ * (`ExpenseItemsSection`), so the count reads the same before and after
+ * saving. `null` when OCR returned no usable quantity — nothing to show.
+ * Rounds to 3 dp to scrub float noise from weighed quantities.
+ */
+export function formatItemQuantityLine(
+  quantity: number | undefined,
+  unitPrice: number | undefined,
+  formatMoney: (amount: number) => string,
+): string | null {
+  if (quantity == null || !Number.isFinite(quantity) || quantity <= 0) return null;
+  const qty = Math.round(quantity * 1000) / 1000;
+  if (unitPrice == null || !Number.isFinite(unitPrice)) return `×${qty}`;
+  return `${qty} × ${formatMoney(unitPrice)}`;
+}

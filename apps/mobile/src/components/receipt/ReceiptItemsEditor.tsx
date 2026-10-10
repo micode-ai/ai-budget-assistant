@@ -6,6 +6,7 @@ import { formatCurrency } from '@budget/shared-utils';
 import type { Currency } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { parseAmount } from '@/utils/amount';
+import { formatItemQuantityLine } from '@/features/receipt/itemEditing';
 import type { ReceiptItem } from '@/features/receipt/useReceiptScanner';
 
 type EditableItemFields = Pick<ReceiptItem, 'description' | 'quantity' | 'unitPrice' | 'totalPrice'>;
@@ -165,6 +166,9 @@ export default function ReceiptItemsEditor({ items, currencyCode, onEditItem, on
       <Text style={styles.itemsTitle}>{t('receipt.items', { count: items.length })}</Text>
       {items.map((item, index) => {
         const isExpanded = expandedIndex === index;
+        const quantityLine = formatItemQuantityLine(item.quantity, item.unitPrice, (amount) =>
+          formatCurrency(amount, (currencyCode || 'USD') as Currency),
+        );
         return (
           <View key={index}>
             <View style={styles.itemRow}>
@@ -173,9 +177,12 @@ export default function ReceiptItemsEditor({ items, currencyCode, onEditItem, on
                 onPress={() => (isExpanded ? closeEditors() : startEdit(index, item))}
                 activeOpacity={0.7}
               >
-                <Text style={styles.itemDescription} numberOfLines={1}>
-                  {item.description}
-                </Text>
+                <View style={styles.itemInfo}>
+                  <Text style={styles.itemDescription} numberOfLines={1}>
+                    {item.description}
+                  </Text>
+                  {quantityLine && <Text style={styles.itemMeta}>{quantityLine}</Text>}
+                </View>
                 <Text style={styles.itemPrice}>
                   {formatCurrency(item.totalPrice, (currencyCode || 'USD') as Currency)}
                 </Text>
@@ -231,11 +238,18 @@ const createStyles = (theme: Theme) => ({
     justifyContent: 'space-between' as const,
     alignItems: 'center' as const,
   },
+  itemInfo: {
+    flex: 1,
+    marginRight: theme.spacing[3],
+  },
   itemDescription: {
     fontSize: 14,
     color: theme.colors.textPrimary,
-    flex: 1,
-    marginRight: theme.spacing[3],
+  },
+  itemMeta: {
+    fontSize: 12,
+    color: theme.colors.textSecondary,
+    marginTop: 2,
   },
   itemPrice: {
     fontSize: 14,

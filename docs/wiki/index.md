@@ -58,6 +58,7 @@ the section you came for — it states what must not break and why. A missing se
 ### Receipts
 - [receipt-duplicate-warning](features/receipt-duplicate-warning.md) — warning before the same receipt
   is recorded twice (same file before OCR, same receipt after)
+- [receipt-confirm-items](features/receipt-confirm-items.md) — the editable line-item list on the receipt confirm card, with quantity
 - [receipt-price-check](features/receipt-price-check.md) — comparing each scanned line against the
   median of what this user paid for it before, at that store
 - [inbound-e-receipts](features/inbound-e-receipts.md) — forwarding e-receipts to a private
