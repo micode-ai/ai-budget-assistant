@@ -18,6 +18,11 @@ export type CategoryKind = 'expense' | 'income';
  * own copy — the incomes one matched names across EVERY account, and accepted
  * any account's UUID (ABA-566).
  *
+ * `fallbackName` is the category's name, sent beside its id by a client that
+ * pushes the id first. It is used only when the id resolves to nothing — the
+ * category may not have reached the server yet — and it goes through the same
+ * name path, so an id that does resolve is never second-guessed by a name.
+ *
  * Returns `null` when nothing matches. Callers on a PATCH path must use
  * `resolveCategoryIdForUpdate` instead, because `null` there means "erase the
  * category" and would destroy data (see that function).
@@ -27,6 +32,7 @@ export async function resolveExpenseCategoryId(
   categoryId: string | undefined | null,
   accountId: string,
   kind: CategoryKind = 'expense',
+  fallbackName?: string | null,
 ): Promise<string | null> {
   if (!categoryId) return null;
 
@@ -49,6 +55,10 @@ export async function resolveExpenseCategoryId(
       select: { id: true },
     });
     if (byClientId) return byClientId.id;
+
+    if (fallbackName && fallbackName !== categoryId) {
+      return resolveExpenseCategoryId(prisma, fallbackName, accountId, kind);
+    }
 
     logger.warn(
       `Unresolvable category id ${categoryId} for account ${accountId} - neither a category of this account nor a known clientId`,

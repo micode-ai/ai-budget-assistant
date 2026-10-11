@@ -62,8 +62,12 @@ export class ExpensesService {
    * If it's a category name, find or create by name.
    * If it's a mobile default ID (e.g. "default-exp-food---drinks"), extract name and fuzzy match.
    */
-  private async resolveCategoryId(categoryId: string | undefined | null, accountId: string): Promise<string | null> {
-    return resolveExpenseCategoryId(this.prisma, categoryId, accountId);
+  private async resolveCategoryId(
+    categoryId: string | undefined | null,
+    accountId: string,
+    fallbackName?: string | null,
+  ): Promise<string | null> {
+    return resolveExpenseCategoryId(this.prisma, categoryId, accountId, 'expense', fallbackName);
   }
 
   /**
@@ -198,7 +202,7 @@ export class ExpensesService {
       });
       const isNew = !existing;
 
-      const resolvedCategoryId = await this.resolveCategoryId(dto.categoryId, accountId);
+      const resolvedCategoryId = await this.resolveCategoryId(dto.categoryId, accountId, dto.categoryName);
       // ABA-660: `group` rows are written only by the budget mirror; a client cannot mint one.
       const source = dto.source === 'group' ? 'manual' : dto.source;
 

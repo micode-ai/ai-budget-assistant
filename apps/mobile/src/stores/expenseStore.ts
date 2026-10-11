@@ -35,6 +35,7 @@ import { filterConsumption } from '@/utils/consumption';
 import { categoryLabel } from '@/utils/entityLabel';
 import { pullAndMergeExpenses, syncPendingExpenses as doSync, resetExpenseSyncThrottle } from './expenseSync';
 import { useAccountStore } from './accountStore';
+import { categoryPushRef } from '@/features/categories/categoryPushRef';
 import { useCategoryStore } from './categoryStore';
 import { useGamificationStore } from './gamificationStore';
 
@@ -323,7 +324,9 @@ export const useExpenseStore = create<ExpenseState>()(
                 name: (encPayload.locationName as string | null | undefined) ?? undefined,
               }
             : undefined,
-          categoryId: resolveCatId(newExpense.categoryId),
+          // Id first, the name only as the server's fallback (ABA-668). Splits
+          // and items below still go by name: their DTOs carry no fallback.
+          ...categoryPushRef(newExpense.categoryId, newExpense.categoryId ? catStore.getCategoryById(newExpense.categoryId) : null),
           tagIds: tagIds?.length ? tagIds : undefined,
           projectId: projectId || undefined,
           date: newExpense.date instanceof Date ? newExpense.date.toISOString() : newExpense.date,

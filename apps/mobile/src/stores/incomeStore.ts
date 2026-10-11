@@ -12,6 +12,7 @@ import {
 } from '@/db/incomeRepository';
 import { insertIncomeTag, getTagsForIncome } from '@/db/tagRepository';
 import { getCategoryById as getCategoryFromDb, upsertCategory } from '@/db/categoryRepository';
+import { categoryPushRef } from '@/features/categories/categoryPushRef';
 import { setLastSyncTime } from '@/db/syncMetadataRepository';
 import { withTransaction } from '@/db/client';
 import { api } from '@/services/api';
@@ -341,12 +342,11 @@ export const useIncomeStore = create<IncomeState>()(
         }
       }
 
-      // Resolve category ID to name for the server (local IDs don't exist on server)
-      let resolvedCategoryId: string | undefined = newIncome.categoryId;
-      if (newIncome.categoryId) {
-        const cat = await getCategoryFromDb(newIncome.categoryId);
-        resolvedCategoryId = cat?.name || newIncome.categoryId;
-      }
+      // Id first, name only as the server's fallback (ABA-668) — see categoryPushRef.
+      const categoryRef = categoryPushRef(
+        newIncome.categoryId,
+        newIncome.categoryId ? await getCategoryFromDb(newIncome.categoryId) : null,
+      );
 
       // Fire-and-forget server sync with encryption
       maybeEncrypt('income', {
@@ -361,7 +361,7 @@ export const useIncomeStore = create<IncomeState>()(
           currencyCode: newIncome.currencyCode,
           description: encPayload.description ?? newIncome.description,
           notes: encPayload.notes ?? newIncome.notes,
-          categoryId: resolvedCategoryId,
+          ...categoryRef,
           date: newIncome.date instanceof Date ? newIncome.date.toISOString() : newIncome.date,
           source: newIncome.source,
           tagIds: tagIds?.length ? tagIds : undefined,
@@ -496,11 +496,10 @@ export const useIncomeStore = create<IncomeState>()(
         try {
           const tags = await getTagsForIncome(income.id);
           const tagIds = tags.map(t => t.id);
-          let resolvedCategoryId: string | undefined = income.categoryId;
-          if (income.categoryId) {
-            const cat = await getCategoryFromDb(income.categoryId);
-            resolvedCategoryId = cat?.name || income.categoryId;
-          }
+          const categoryRef = categoryPushRef(
+            income.categoryId,
+            income.categoryId ? await getCategoryFromDb(income.categoryId) : null,
+          );
           const { payload: encPayload, encryptedPayload, encryptionKeyVersion } = await maybeEncrypt('income', {
             description: income.description,
             notes: income.notes,
@@ -513,7 +512,7 @@ export const useIncomeStore = create<IncomeState>()(
             currencyCode: income.currencyCode,
             description: encPayload.description ?? income.description,
             notes: encPayload.notes ?? income.notes,
-            categoryId: resolvedCategoryId,
+            ...categoryRef,
             date: income.date instanceof Date ? income.date.toISOString() : String(income.date),
             tagIds: tagIds.length ? tagIds : undefined,
             isDebt: income.isDebt || undefined,

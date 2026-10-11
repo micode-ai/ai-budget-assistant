@@ -71,6 +71,13 @@ collides with `@@unique([accountId, name, type])`. A server PK of the other kind
 A clean "no NULL categories" query does not rule this out: the rows had a category, just one of
 the wrong type.
 
+**A transaction's category is pushed by id, the name only as a fallback (ABA-668).** The income
+create and resend paths and the expense create path send `categoryId` plus `categoryName`
+(`categoryPushRef` in `apps/mobile/src/features/categories/`). The server uses the name only when
+the id resolves neither as a PK nor as a `clientId` — a category that has not reached it yet — so
+an id that resolves is never second-guessed by a name. A seeded `default-*` id is not a UUID and
+still goes as the name. Expense splits, receipt items and budget allocations are still name-only.
+
 **Resolve the value as a `clientId` before giving up.** The mobile sends its own local id as
 `clientId` on create, so the resolver falls back to matching it that way. `BudgetsService.resolveCategoryId`
 needs the same fallback — without it an allocation is silently dropped and a category budget
@@ -136,3 +143,5 @@ entirely uncategorized. A test mock for `useCategoryStore` must expose `isInitia
 - **ABA-666** — the name lookup ignored `type` and `isDeleted`: a deleted expense category
   shadowed a same-named live income category, and re-pushed incomes were filed under it. Reported
   by a customer as income categories vanishing after every refresh.
+- **ABA-668** — the app pushes a transaction's category by id with the name as a fallback, instead of
+  replacing the id with the name.

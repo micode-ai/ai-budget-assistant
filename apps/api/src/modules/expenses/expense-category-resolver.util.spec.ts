@@ -159,6 +159,59 @@ describe('resolveExpenseCategoryId — same name on two rows', () => {
   });
 });
 
+describe('resolveExpenseCategoryId — id with a name fallback', () => {
+  const LIVE = '9b2d4e6f-1a3c-4e5f-8a7b-0c1d2e3f4a5b';
+  const UNKNOWN = '0f0e0d0c-0b0a-4908-8706-050403020100';
+
+  function dbLike(rows: Array<Record<string, any>>) {
+    return {
+      category: {
+        findUnique: jest.fn().mockImplementation(({ where }: any) =>
+          Promise.resolve(rows.find((r) => r.id === where.id) ?? null),
+        ),
+        findFirst: jest.fn().mockImplementation(({ where }: any) =>
+          Promise.resolve(
+            rows.find(
+              (r) =>
+                r.accountId === where.accountId &&
+                (where.clientId === undefined || r.clientId === where.clientId) &&
+                (where.type === undefined || r.type === where.type) &&
+                (where.name === undefined || r.name.toLowerCase() === where.name.equals.toLowerCase()),
+            ) ?? null,
+          ),
+        ),
+        create: jest.fn().mockResolvedValue({ id: 'created' }),
+      },
+    } as any;
+  }
+
+  it('takes the id and ignores the name when the id resolves', async () => {
+    const prisma = dbLike([
+      { id: LIVE, accountId: 'acc-1', name: 'Salary', type: 'income' },
+      { id: 'other', accountId: 'acc-1', name: 'Bonus', type: 'income' },
+    ]);
+
+    await expect(resolveExpenseCategoryId(prisma, LIVE, 'acc-1', 'income', 'Bonus')).resolves.toBe(LIVE);
+  });
+
+  it('falls back to the name when the id has not reached the server yet', async () => {
+    const prisma = dbLike([{ id: LIVE, accountId: 'acc-1', name: 'Salary', type: 'income' }]);
+
+    await expect(resolveExpenseCategoryId(prisma, UNKNOWN, 'acc-1', 'income', 'salary')).resolves.toBe(LIVE);
+  });
+
+  it('creates the category from the name when nothing else matches', async () => {
+    const prisma = dbLike([]);
+
+    await expect(resolveExpenseCategoryId(prisma, UNKNOWN, 'acc-1', 'income', 'Salary')).resolves.toBe('created');
+    expect(prisma.category.create).toHaveBeenCalledWith({ data: { accountId: 'acc-1', name: 'Salary', type: 'income' } });
+  });
+
+  it('still returns null for an unknown id sent without a name', async () => {
+    await expect(resolveExpenseCategoryId(dbLike([]), UNKNOWN, 'acc-1', 'income')).resolves.toBeNull();
+  });
+});
+
 describe('resolveCategoryIdForUpdate', () => {
   it('leaves the field untouched when the caller sent nothing', async () => {
     const prisma = makePrisma();

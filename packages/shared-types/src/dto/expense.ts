@@ -31,6 +31,8 @@ export interface CreateExpenseDto {
   description?: string;
   notes?: string;
   categoryId?: string;
+  /** Fallback for `categoryId` only, used when the id does not resolve (ABA-668). */
+  categoryName?: string;
   date: string;
   time?: string;
   location?: {

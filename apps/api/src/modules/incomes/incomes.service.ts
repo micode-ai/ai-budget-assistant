@@ -48,13 +48,17 @@ export class IncomesService {
    * so an income could be filed under another account's category (ABA-566).
    * `kind: 'income'` keeps auto-created categories on the income side.
    */
-  private async resolveCategoryId(categoryId: string | undefined | null, accountId: string): Promise<string | null> {
-    return resolveExpenseCategoryId(this.prisma, categoryId, accountId, 'income');
+  private async resolveCategoryId(
+    categoryId: string | undefined | null,
+    accountId: string,
+    fallbackName?: string | null,
+  ): Promise<string | null> {
+    return resolveExpenseCategoryId(this.prisma, categoryId, accountId, 'income', fallbackName);
   }
 
   async create(accountId: string, userId: string, dto: CreateIncomeDto) {
     const result = await this.prisma.$transaction(async (tx: PrismaClient) => {
-      const resolvedCategoryId = await this.resolveCategoryId(dto.categoryId, accountId);
+      const resolvedCategoryId = await this.resolveCategoryId(dto.categoryId, accountId, dto.categoryName);
 
       const incomeData = {
         accountId,

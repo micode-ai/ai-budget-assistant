@@ -36,6 +36,15 @@ export class CreateIncomeDto {
   @IsString()
   categoryId?: string;
 
+  /**
+   * The category's name, as a fallback for `categoryId` only. A current client
+   * sends the id first and this beside it, so a category that has not reached
+   * the server yet still resolves; an id that does resolve always wins.
+   */
+  @IsOptional()
+  @IsString()
+  categoryName?: string;
+
   @IsDateString()
   date: string;
 
