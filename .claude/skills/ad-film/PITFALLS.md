@@ -5,7 +5,7 @@ defect that cost a re-do, write it here as *symptom → cause and fix* before th
 Read it at the start of every film and paste the relevant rows into the scene brief.
 
 Collected from `receipt-journey`, `real-salary`, `shared-family`, `oddam-pietnastego`, `kto-placi`
-(and their `-en` copies), `paragon-anime` (the anime house style), `sprawa-pieniedzy` (noir), `na-glos` (1930s cartoon), `rpg-subskrypcje` (8-bit RPG), `import-typo` (kinetic typography), `okna-95` (90s OS), 2026-09/10.
+(and their `-en` copies), `paragon-anime` (the anime house style), `sprawa-pieniedzy` (noir), `na-glos` (1930s cartoon), `rpg-subskrypcje` (8-bit RPG), `import-typo` (kinetic typography), `okna-95` (90s OS), `cien-podwojny` (shadow puppets), 2026-09/10.
 
 ## Story and timing
 
@@ -127,3 +127,18 @@ Collected from `receipt-journey`, `real-salary`, `shared-family`, `oddam-pietnas
 | A claim the feature can't back ("AI reads your PDF", "the app cancels the subscription") | Check the gate and the actor: AI PDF reading is Pro, the tracker only reminds — the user cancels. Say who does what on screen ("MICHAŁ anuluje…"). |
 | A real-world UI parody drifts toward a trademark | Use the era's grammar only (bevels, title bars, an hourglass), our own product name, our own sounds. |
 
+## Shadow puppets (from `cien-podwojny`)
+
+| Symptom | Cause and fix |
+|---|---|
+| A figure vanishes against the house or the bed | Ink on ink: a silhouette in front of an ink set has no edge. Pass `{ rim: SH.LIGHT }` to `SH.puppet` (a light outline under the puppet), or keep a strip of screen light between figure and set. |
+| Two puppets read as one blob (the baker and his double, a couple in bed, a family sitting up) | Silhouettes merge wherever they touch. Measure the placed figures' x-extents and keep ≥ 20 px of light between figures that must read separately; a front-view puppet is wider than it looks (the baker at s 0.95 is ~270 px). |
+| The payer looks like the villain (a black mask with white eye slits) | Glasses punched as filled holes read as a burglar's mask in silhouette. Cut the glasses as RIMS (rings), not slots. |
+| The son reads as an owl or a cat | His cat-ear headband plus dot-eye holes, without a body below, make an animal head. Take the headband off when he sits up or sleeps. |
+| Arms raised "to wake up" read as cheering | Sitting-up poses reach forward/out (≤ the head top), never straight up. |
+| The magnifier crops the payoff text | An optical zoom of a 170–420 px phone is wider than the lens. Lay the payoff out at large size IN lens coordinates (`SH.lensPush` / `lensRows`), at the FINAL radius — the pop only scales it, or the lines re-wrap and touch during the pop. |
+| The turn's flash looks like a dim | A full-frame translucent overlay greys the ink. Light the turn additively ('lighter') around the source, under the ink, and keep the room warmer afterwards. |
+| The proscenium frame slides during a camera push | `SH.frame` must draw under the identity transform; a punch-in whose fixed point lies below the frame bottom shows past the canvas (white strip) — keep the fixed point inside the frame. |
+| cues_check fails by 90–210 ms although the picture is on the beat | The detector catches the FIRST change in the window: a coin's flight, a hop, a rise toward the event, or a hard cut inside its baseline window. Make the sync region cover only the EVENT (the coin's resting band, the bubble), let the object hold still before it vanishes, and cap the baseline (a cut is not boil). |
+| The action reads as the app doing it ("the app removed the charge") | A bare rod or a disembodied effect after the phone shot gets credited to the app. Put the family's hand on the rod — the app only warns. |
+| A shared set or cast value in the storyboard is physically impossible (arms crossing, figures overlapping) | The storyboard was written from numbers, not from the placed figures. Before briefing scene agents, place every figure of the shared geometry once in a test frame and look. |

@@ -42,7 +42,7 @@ for a campaign.
 - **Plan a magnifier** for every payoff UI state (a chip, a pill, a total) — a character's phone is
   too small to read at feed size (PITFALLS.md, Readability).
 
-## 1c. House styles — pick one in the brief (the five character styles here, three more in 1d)
+## 1c. House styles — pick one in the brief (the five character styles here, four more in 1d)
 
 | | **Ink** (default) | **Pencil** | **Anime** | **Noir** | **1930s cartoon** |
 |---|---|---|---|---|---|
@@ -53,7 +53,7 @@ for a campaign.
 
 All five styles share sections 1b (story rules), 2–3 (brand and truth), 4 (where deliverables go) and 6 (done means: deliverables + Story + copy). Reference pencil film: `D:\Work\tools\films\pencil-test-2\`. Known pencil issues: the script `cj` pair can read as "g" (prefer the sans hand for words with "cj"), the script middle dot sits low. Anime: present the likeness sheet and style frames before any scene is written (PITFALLS.md, Characters). Noir: show a costume look-test sheet first (`D:\Work\tools\films\paragon-anime\tools\noir-sheet.cjs` made the one that was approved).
 
-## 1d. Three more house styles (no shared character rig)
+## 1d. Four more house styles (no shared character rig)
 
 Each has a reference project to copy; all keep the harness (cues authored in beats in `tools/gen-cues.py`, `src/strings.js` with PL + EN tables, an `-en` copy project with the `lang` default changed, HyperFrames render, `tools/deliver.cjs`) and a score written by a background agent from `audio/synth.py` of the previous film.
 
@@ -62,6 +62,7 @@ Each has a reference project to copy; all keep the harness (cues authored in bea
 | **8-bit RPG** | A Pokémon-style turn-based battle: the feature is the item that wins (subscriptions as monsters, the app as the menu choice); the family as pixel sprites — the party faces the camera (eyes visible), the son fights beside the hero, the ending is a castle, a treasure chest and Princess Kasia | `D:\Work\tools\films\rpg-subskrypcje\` | `src/engine/pix.js`: draw with ordinary canvas shapes on a NATIVE 360x640 canvas, `PIX.quantize()` snaps every pixel to an NES-like palette, `PIX.present()` scales 3x nearest-neighbour. Pixel text = a system font (bold 11-17 px Consolas/Tahoma) with its alpha thresholded, so Polish diacritics survive (stock NES fonts lack them). Chiptune score (2 pulses, triangle, noise) |
 | **Kinetic typography** | A fast, text-only explainer: words and numbers slam in on the beat; best for counts, steps and "before/after" (bank import: 351 transactions sorted into categories) | `D:\Work\tools\films\import-typo\` | `src/engine/typo.js`: `TYPO.word` (slam with overshoot, strike-through, maxW), `TYPO.count`, `TYPO.chip`, `TYPO.lineRain`; Segoe UI Black on a dark warm ground, brand orange for numbers. Modern house / future-garage score with a dead stop and a drop at the turn |
 | **90s desktop OS** | A parody of a mid-90s operating system: the app's alerts as a cascade of exclamation dialogs that the turn tidies into one window; an installer wizard as the end card | `D:\Work\tools\films\okna-95\` | `src/engine/os95.js`: teal desktop, grey 4-px bevels, navy title bars, dialogs, icons, cursor, progress bar, taskbar. Our own "AI Budżet 95" — never a real OS name, logo, wallpaper or startup sound. Cheesy General-MIDI score |
+| **Shadow puppets** | A fairy tale told by Lotte Reiniger-style silhouettes on an amber backlit screen: the feature as a story beat (a duplicate charge = a shadow that grows an identical double); the phone is the ONLY colour, so the turn is light, not motion; the family's hand on a rod does the action (the app only warns); Yoka the family's dog (miniature schnauzer) as a background reaction | `D:\Work\tools\films\cien-podwojny\` (EN `-en`) | `src/engine/shadow.js` (`SH.screen/frame/ground/puppet/cartouche/phone/push/alertRows/magnifier/lensPush/lensRows/coin/bubble`): ink polygons on one offscreen layer, cut-outs punched with `destination-out`, pins + rods, a 1/8-size upscaled penumbra (a full-frame blur cost 70 ms), `{ rim }` for a figure over an ink set; `src/cast.js` = POLYGON cast (Michał, Kasia, son, Yoka, baker) with group-tagged parts posed by `CAST.pose`, `sleep` = the standing figure turned a quarter under a blanket, `wake` = the upper body on the mattress; `src/sets.js` baked silhouette sets with front layers drawn over puppets; the look test for all four craft styles (shadow, paper, woodcut, clay) is `D:\Work\tools\films\craft-sheet\`. Music-box score (celesta, pizzicato). Tests: `tools/engine-test.cjs`, `cast-sheet.cjs`, `sets-test.cjs`, `double-check.cjs`, `seek-check.cjs` |
 
 ## 2. Brand brief — paste into the film's art bible
 
