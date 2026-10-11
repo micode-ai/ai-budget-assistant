@@ -5,7 +5,7 @@ defect that cost a re-do, write it here as *symptom → cause and fix* before th
 Read it at the start of every film and paste the relevant rows into the scene brief.
 
 Collected from `receipt-journey`, `real-salary`, `shared-family`, `oddam-pietnastego`, `kto-placi`
-(and their `-en` copies), `paragon-anime` (the anime house style), `sprawa-pieniedzy` (noir), `na-glos` (1930s cartoon), `rpg-subskrypcje` (8-bit RPG), `import-typo` (kinetic typography), `okna-95` (90s OS), `cien-podwojny` (shadow puppets), 2026-09/10.
+(and their `-en` copies), `paragon-anime` (the anime house style), `sprawa-pieniedzy` (noir), `na-glos` (1930s cartoon), `rpg-subskrypcje` (8-bit RPG), `import-typo` (kinetic typography), `okna-95` (90s OS), `cien-podwojny` (shadow puppets), `tarcza-papier` (cut paper), 2026-09/10.
 
 ## Story and timing
 
@@ -144,3 +144,21 @@ Collected from `receipt-journey`, `real-salary`, `shared-family`, `oddam-pietnas
 | cues_check fails by 90–210 ms although the picture is on the beat | The detector catches the FIRST change in the window: a coin's flight, a hop, a rise toward the event, or a hard cut inside its baseline window. Make the sync region cover only the EVENT (the coin's resting band, the bubble), let the object hold still before it vanishes, and cap the baseline (a cut is not boil). |
 | The action reads as the app doing it ("the app removed the charge") | A bare rod or a disembodied effect after the phone shot gets credited to the app. Put the family's hand on the rod — the app only warns. |
 | A shared set or cast value in the storyboard is physically impossible (arms crossing, figures overlapping) | The storyboard was written from numbers, not from the placed figures. Before briefing scene agents, place every figure of the shared geometry once in a test frame and look. |
+
+## Cut paper (from `tarcza-papier`)
+
+| Symptom | Cause and fix |
+|---|---|
+| Storyboard positions collide (a headline over the window, a phone floating in the air, an arrow missing its target) | Numbers typed into a storyboard are not placed figures. Put every shared position in ONE file (`src/geometry.js`), render one key frame per shot from it (`tools/geometry.cjs`) and LOOK before the scene brief; scenes read GEO, never retype numbers. It caught three collisions before any scene agent started. |
+| A product moves "by itself" (packs fly into the basket) | Reads as the app acting — the app only suggests. Put a hand at the object on its cue (a `reach` pose; the object leaves FROM the hand). |
+| A metaphor over-claims ("the shield stops the price arrow" = "the app stops inflation") | Keep the metaphor true to the feature: the shield guards the family's STOCK while the arrow keeps climbing; the price rises again and they are covered. |
+| A visible sum that a viewer can check does not add up (+1,50 × 4 ≠ ~12 zł) — and then "fixed" to a sum the APP does not compute (gap × qty, while Inflation Shield halves the end-gap) | On-screen arithmetic must follow the feature's own formula, read from the code/wiki, not the obvious one: here gap × qty / 2 ≈ the estimate (a sharp viewer's gap × qty then over-reads, never under-reads, the claim). Test it in `truth-test.cjs`; the final reviewer caught the first version. |
+| Text on a big standing page is legible at 1080 but not in the feed (~25 %) | Size it for the feed: a page scaled from the phone screen (1.4×) put the push body at ~5 px in the feed. Give the page an absolute width so the body is ≥ ~38 px at 1080 and pin it with `tools/feed-check.cjs` (reads the scene's `pushRect(T)`). |
+| The amount wraps alone onto the next line („~12,00 / zł”) | Format money like the app does: a no-break space between amount and currency (Intl uses U+00A0); test the format. |
+| A lens line falls outside the circle at a different radius | Lay lens text out circle-aware (each line wraps to the chord at its height), shrink when it cannot fit, never split the last short line (`nowrap`), test at every radius the storyboard uses. |
+| A pop-up/fold shows sheared text or too few in-betweens | Draw text only at fold ≥ 0.8; check the easing gives ≥ 5 visible mid-fold drawings (a pure ease-out overshoots to ~1 in 4). |
+| A continuing cut jumps (the same kitchen, different paper edges) | Two shot files drew the same figures with different seeds / lean. Share seeds across a continuing cut and test the last/first drawings with `tools/cut-check.cjs`. |
+| A per-letter jiggle done by overriding `ctx.translate` | Fragile monkey-patching of the canvas API; add the option to the engine (`PA.letters({ jitter })`). |
+| An action that is only implied ("he reads the paper": a newspaper standing on the table edge in front of a man with no hands) | The user could not tell what he was doing. An action needs its body: a pose that does it (`CAST michal('read')`: both hands up at the shoulders) and the prop IN the hands, with the hands drawn again over the prop so they grip it; the face peeks over. Pinned in `cast-sheet.cjs` (the paper sits at the reading hands). |
+| A member of the agreed cast is simply missing (the son never appeared) | The cast list lives in the series spec, but scenes are briefed shot by shot and nobody checked the sum. Check the cast per shot in the storyboard, and pin it (`cast-sheet.cjs`: every home shot's GEO has `syn`). |
+| A comment inserted mid-line (`a: 1, // note b: 2,`) silently drops the rest of the object | Happened three times in this film via sed/patch scripts; the key-parity check in `truth-test.cjs` and a page error caught them. Put comments on their own line. |

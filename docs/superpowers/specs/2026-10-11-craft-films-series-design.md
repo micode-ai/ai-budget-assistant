@@ -101,6 +101,52 @@ colour. Captions in silhouette cartouches; cap height ≥ 48–56 px, nothing mu
 - The double must read as "the same" — identical puppet, mirrored timing, not a different villain.
 - The phone screen is tiny in a wide shot: the payoff needs the magnifier.
 
+## Film 2 — "Tarcza z papieru" (cut paper)
+
+Approved in conversation 2026-10-11. Film 1 shipped (ABA-665); its lessons in `ad-film/PITFALLS.md` apply from
+the start (app strings read from the app's source and guarded by a truth test; shared geometry placed once before
+scene agents; bed/sitting poses in profile).
+
+### Truth (from `docs/wiki/features/inflation-shield.md`, `user_docs/pl/40-inflation-shield.md`, the app strings)
+
+- The forecast comes ONLY from the user's own scanned receipts; free on every tier; no AI.
+- It recommends stocking up only on **long-shelf-life** goods (`isStockpileable`); never milk or other perishables.
+  The example product is whole-bean coffee („Kawa ziarnista”).
+- Every saving is an **estimate** — always „~” and „szacunkowo” (the engine halves the end-gap on purpose).
+- The **push never carries money**: title `inflationShieldTitle` „Czas na zapasy?”, body `inflationShieldBody`
+  „Ceny "Kawa ziarnista" rosną o ok. 6%/miesiąc — to dobry moment, żeby zrobić zapas.” (server template, verbatim).
+- In-app copy (mobile `inflationShield.*`, verbatim, laid out as `app/inflation-shield/index.tsx` does): `title`
+  „Tarcza antyinflacyjna”; a card with the product name „Kawa ziarnista” and „+6%” in its header, then `buyAheadTip`
+  filled with `units` only — „Kup 4 szt teraz — oszczędź ~12,00 zł”, then `atStore` „w {{store}}”; the hero
+  `savedSoFar` · `estimated` — „Dotychczas zaoszczędzono · szacunkowo”.
+- The app **suggests**; the family buys. Example values: +6%/month, 4 pcs, ~12 zł, a generic store name.
+
+### Beats (~30 s, turn at 12.0)
+
+| t | Picture | Yoka |
+|---|---|---|
+| 0–4 s | A paper kitchen; Michał at breakfast reads a newspaper whose headline is cut-out letters „CENY ROSNĄ!” (frame 0 is the cover) | lying under the table |
+| 4–8 s | Paper price tags on the coffee shelf peel off and stack, each higher; a paper arrow climbs; Kasia frowns | runs off with a scrap of the newspaper |
+| 8–12 s | Kasia opens the drawer of their receipts; the paper receipts fly into the phone; caption „Z Twoich paragonów” | — |
+| **12 s turn** | The phone unfolds like a pop-up book: push „Czas na zapasy?”, the body in a lens | ears up |
+| 13–21 s | The card „Kawa ziarnista +6%” / „Kup 4 szt teraz — oszczędź ~12,00 zł” in a lens; Michał puts 4 packs in a paper basket; the climbing price arrow hits a paper shield | — |
+| 21–25 s | The shelf tag climbs again — the family's pantry already holds 4 packs; „Dotychczas zaoszczędzono · szacunkowo — ~12,00 zł” | asleep on the newspaper scrap |
+| 27–30 s | Poster: „AI Budżet — Tarcza antyinflacyjna”, „Pobierz za darmo”, Google Play · przeglądarka | — |
+
+### Look
+
+Cut paper (the approved look test, `craft-sheet` `paper`): flat coloured paper layers with soft drop shadows, paper
+grain, torn edges, a light fibre edge; newspaper collage letters; a pop-up-book unfold for the phone. The phone and the
+app UI are drawn as the app looks (white cards, brand orange). Captions on torn paper strips.
+
+### Build
+
+Project `D:\Work\tools\films\tarcza-papier\` (+ `-en`), harness copied from `cien-podwojny` (tests included); engine
+`src/engine/paper.js` from `craft-sheet/styles.js` `paper` (layers, wobble, grain, shadow; phone, push, lens, cards);
+the polygon cast reused with a paper renderer; new sets: kitchen, coffee shelf, pantry. Score: a light paper ragtime
+(piano, pizzicato, paper rustles). Truth test reads `inflationShield*` from the server and the mobile locales.
+Deliverables per `ad-film` §4/§6 under `docs/marketing/creatives/antinflation/renders/` (the existing Inflation Shield campaign folder).
+
 ## After each film
 
 Add the style row to `ad-film` SKILL.md §1d, every re-do-costing defect to `PITFALLS.md`, and update
