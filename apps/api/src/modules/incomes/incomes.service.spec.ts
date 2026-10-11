@@ -86,7 +86,7 @@ describe('IncomesService.create', () => {
     // accepted ANY account's category id (ABA-566).
     expect(tx.category.findUnique).toHaveBeenCalledWith({
       where: { id: '11111111-1111-4111-8111-111111111111' },
-      select: { id: true, accountId: true },
+      select: { id: true, accountId: true, type: true },
     });
     const createArgs = tx.income.upsert.mock.calls[0][0].create;
     expect(createArgs.categoryId).toBeNull();
@@ -103,10 +103,12 @@ describe('IncomesService.create', () => {
       categoryId: 'Salary',
     });
 
-    // Scoped to the account. Without the filter this matched a same-named
-    // category belonging to somebody else entirely (ABA-566).
+    // Scoped to the account (ABA-566: without it this matched a same-named
+    // category of somebody else entirely) and to income categories, live ones
+    // first (ABA-666: a deleted same-named EXPENSE category won the lookup).
     expect(tx.category.findFirst).toHaveBeenCalledWith({
-      where: { accountId: 'acc-1', name: { equals: 'Salary', mode: 'insensitive' } },
+      where: { accountId: 'acc-1', type: 'income', name: { equals: 'Salary', mode: 'insensitive' } },
+      orderBy: { isDeleted: 'asc' },
     });
     const createArgs = tx.income.upsert.mock.calls[0][0].create;
     expect(createArgs.categoryId).toBe('cat-salary');

@@ -60,6 +60,17 @@ the id, `null` only for an explicit clear, or `undefined` meaning leave the stor
 A categorisation that fails to arrive can be retried; one that is erased cannot. `ExpenseBulkService`
 omits the field for the same reason rather than writing `null` across up to 500 rows.
 
+**A name resolves within its own type, a live row first (ABA-666).** The mobile pushes a
+category by NAME on the income create and pending-sync paths (`incomeStore`), and an account can
+hold one name twice — a deleted expense category beside a live income one. The name lookup used
+to filter by account only, so `findFirst` returned the deleted expense row and every re-pushed
+income was filed under it; the phone pulled that id, found no income category for it, and showed
+the income uncategorized again after each re-assignment. The lookup now filters `type` and orders
+`isDeleted: 'asc'`; a deleted row of the same kind is still reused, because auto-creating beside it
+collides with `@@unique([accountId, name, type])`. A server PK of the other kind is unresolvable.
+A clean "no NULL categories" query does not rule this out: the rows had a category, just one of
+the wrong type.
+
 **Resolve the value as a `clientId` before giving up.** The mobile sends its own local id as
 `clientId` on create, so the resolver falls back to matching it that way. `BudgetsService.resolveCategoryId`
 needs the same fallback — without it an allocation is silently dropped and a category budget
@@ -122,3 +133,6 @@ entirely uncategorized. A test mock for `useCategoryStore` must expose `isInitia
 - **ABA-575** — the convergence was unreachable on a populated device; the uncategorized filter
   and the uncategorized label made to agree. Reported with a screen recording: every imported
   expense read "Bez kategorii" while the filter named after that label returned nothing.
+- **ABA-666** — the name lookup ignored `type` and `isDeleted`: a deleted expense category
+  shadowed a same-named live income category, and re-pushed incomes were filed under it. Reported
+  by a customer as income categories vanishing after every refresh.

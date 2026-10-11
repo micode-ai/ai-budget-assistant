@@ -91,6 +91,74 @@ describe('resolveExpenseCategoryId', () => {
   });
 });
 
+/**
+ * ABA-666. Production: an account held a DELETED expense category and a live
+ * income category with the same name. The mobile re-pushes pending incomes
+ * with the category NAME, the unfiltered name lookup returned the deleted
+ * expense row, and every re-assigned income was filed under it. This mock
+ * filters like the database does, so a where clause that ignores `type` or
+ * `isDeleted` picks the wrong row here as it did in production.
+ */
+describe('resolveExpenseCategoryId — same name on two rows', () => {
+  const ROWS: Array<Record<string, any>> = [
+    // Older row first, as a heap scan with no ORDER BY would return it.
+    { id: 'deleted-expense', accountId: 'acc-1', name: 'Salary', type: 'expense', isDeleted: true },
+    { id: 'live-income', accountId: 'acc-1', name: 'Salary', type: 'income', isDeleted: false },
+  ];
+
+  function dbLike(rows = ROWS) {
+    const matches = (row: any, where: any) =>
+      (where.accountId === undefined || row.accountId === where.accountId) &&
+      (where.clientId === undefined || row.clientId === where.clientId) &&
+      (where.type === undefined || row.type === where.type) &&
+      (where.isDeleted === undefined || row.isDeleted === where.isDeleted) &&
+      (where.name === undefined || row.name.toLowerCase() === where.name.equals.toLowerCase());
+    return {
+      category: {
+        findUnique: jest.fn().mockImplementation(({ where }: any) =>
+          Promise.resolve(rows.find((r) => r.id === where.id) ?? null),
+        ),
+        findFirst: jest.fn().mockImplementation(({ where, orderBy }: any) => {
+          let found = rows.filter((r) => matches(r, where));
+          if (orderBy?.isDeleted === 'asc') found = [...found].sort((a, b) => Number(a.isDeleted) - Number(b.isDeleted));
+          return Promise.resolve(found[0] ?? null);
+        }),
+        create: jest.fn().mockResolvedValue({ id: 'created' }),
+      },
+    } as any;
+  }
+
+  it('files an income pushed by name under the live income category, not the deleted expense one', async () => {
+    const prisma = dbLike();
+
+    await expect(resolveExpenseCategoryId(prisma, 'salary', 'acc-1', 'income')).resolves.toBe('live-income');
+    expect(prisma.category.create).not.toHaveBeenCalled();
+  });
+
+  it('prefers a live row of the same kind over a deleted one', async () => {
+    const prisma = dbLike([
+      { id: 'deleted-income', accountId: 'acc-1', name: 'Salary', type: 'income', isDeleted: true },
+      { id: 'live-income', accountId: 'acc-1', name: 'Salary', type: 'income', isDeleted: false },
+    ]);
+
+    await expect(resolveExpenseCategoryId(prisma, 'Salary', 'acc-1', 'income')).resolves.toBe('live-income');
+  });
+
+  it('reuses a deleted row of the same kind rather than colliding with it on create', async () => {
+    const prisma = dbLike([ROWS[0]]);
+
+    await expect(resolveExpenseCategoryId(prisma, 'Salary', 'acc-1', 'expense')).resolves.toBe('deleted-expense');
+    expect(prisma.category.create).not.toHaveBeenCalled();
+  });
+
+  it('refuses a server PK of the other kind', async () => {
+    const prisma = dbLike([{ ...ROWS[0], id: UUID_A }, ROWS[1]]);
+
+    await expect(resolveExpenseCategoryId(prisma, UUID_A, 'acc-1', 'income')).resolves.toBeNull();
+    await expect(resolveExpenseCategoryId(prisma, UUID_A, 'acc-1', 'expense')).resolves.toBe(UUID_A);
+  });
+});
+
 describe('resolveCategoryIdForUpdate', () => {
   it('leaves the field untouched when the caller sent nothing', async () => {
     const prisma = makePrisma();

@@ -33,9 +33,11 @@ export async function resolveExpenseCategoryId(
   if (UUID_RE.test(categoryId)) {
     const owned = await prisma.category.findUnique({
       where: { id: categoryId },
-      select: { id: true, accountId: true },
+      select: { id: true, accountId: true, type: true },
     });
-    if (owned?.accountId === accountId) return owned.id;
+    // An income can never sit in an expense category or vice versa; a PK of
+    // the other kind is treated as unresolvable rather than stored.
+    if (owned?.accountId === accountId && (!owned.type || owned.type === kind)) return owned.id;
 
     // Not a server PK of this account. The mobile addresses a category by its
     // LOCAL id for the row's whole life and sends that same value as
@@ -54,9 +56,19 @@ export async function resolveExpenseCategoryId(
     return null;
   }
 
-  // Try exact name match scoped to this account.
+  // Exact name match scoped to this account AND this kind, a live row before a
+  // deleted one. The mobile pushes a category by NAME on its pending-sync path,
+  // and an account can hold the same name twice — e.g. a deleted expense
+  // category beside a live income one. Unfiltered, `findFirst` returned the
+  // deleted expense row, and every income re-sent with that name was filed
+  // under it: the phone then pulled an id it has no income category for and
+  // showed the incomes uncategorised again after each re-assignment (ABA-666).
+  // A deleted row is still matched as a last resort rather than excluded:
+  // `@@unique([accountId, name, type])` would make the auto-create below
+  // collide with it.
   const category = await prisma.category.findFirst({
-    where: { accountId, name: { equals: categoryId, mode: 'insensitive' } },
+    where: { accountId, type: kind, name: { equals: categoryId, mode: 'insensitive' } },
+    orderBy: { isDeleted: 'asc' },
   });
   if (category) return category.id;
 
@@ -68,6 +80,7 @@ export async function resolveExpenseCategoryId(
       const matched = await prisma.category.findFirst({
         where: {
           accountId,
+          type: kind,
           isDeleted: false,
           AND: words.map((word) => ({ name: { contains: word, mode: 'insensitive' as const } })),
         },
