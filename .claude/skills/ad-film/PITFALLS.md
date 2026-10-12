@@ -172,3 +172,13 @@ Collected from `receipt-journey`, `real-salary`, `shared-family`, `oddam-pietnas
 | Seek is not deterministic with sprite caches | A cache key built from raw float geometry flips an edge pixel between forward and backward seeks. Normalise geometry to the bbox (1/256 px) before hashing; key plaques by their exact text + size. |
 | Chain clinks before a slam steal the slam's onset in the sync check | End the preparatory SFX before the event's sync region, or exclude it from the region. |
 | The push amount reads „43,00 PLN” in the film but the phone shows „43.00 PLN” | The server cron fills `{amount}` with `Number(amount).toFixed(2)` — a dot, not the locale comma. Read the FILLER, not just the template; the truth test pins it. The in-app screen uses `formatCurrency` (pl-PL comma; EUR as de-DE „47,47 €”). |
+
+## Clay (from `ulepione-z-paragonu`)
+
+| Symptom | Cause and fix |
+|---|---|
+| A clay frame costs seconds (blur filters per piece: core shadow, contact shadow, specular) | Never blur per frame. Bake each figure pose / prop / set piece once into an offscreen sprite keyed by pose + seed + scale and blit it; animate by transforming sprites; draw text (receipt, screen, lens) directly so it stays crisp. A busy frame went to ~1.5 ms. |
+| A sprite cached under a rounded radius but drawn with the exact one breaks seek determinism | Key AND build the sprite on the same rounded value (`CL.roll`); `seek-check.cjs` caught it. |
+| Home shots waste the top half of the frame (wall, window) and the family, bowls and flying balls are tiny in the feed | Push the camera in (~1.25×, capped by the width that keeps every cast member in frame) per shot, framed on the subject; captions, bubbles and lenses stay in screen space; the same camera across a continuing cut (cut-check 0 %). Re-place the set in world px to fit the push-in. The director's review caught it after delivery. |
+| A HyperFrames render comes out ~6 dB quieter than the score (master −22.3 LUFS from a −16.1 WAV); render.log says "Audio lowered by 6.2 dB to stay under −1 dBTP" although the WAV's true peak is −1.9 | A near-full-scale onset in the first ~25 ms sits in the AAC encoder's priming window; HyperFrames' pad/trim pass re-encodes to AAC, measures +4.7 dBTP there, and lowers the WHOLE track. Make the first ~70 ms of the score soft (×0.45 to 25 ms, back to 1 by 70 ms), then check render.log for "Audio lowered". |
+| A "the app saved it" beat shows a word before the tap | Nothing may say saved before the user's tap: a wordless tick appears only after „Zapisz wydatek”, and the truth test checks the cue order. |
