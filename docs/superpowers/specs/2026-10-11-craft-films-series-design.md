@@ -151,3 +151,79 @@ Deliverables per `ad-film` §4/§6 under `docs/marketing/creatives/antinflation/
 
 Add the style row to `ad-film` SKILL.md §1d, every re-do-costing defect to `PITFALLS.md`, and update
 the memory note `project_yoka_dog_character.md` with what is done.
+
+## Film 3 — "Kronika daniny" (woodcut)
+
+Approved in conversation 2026-10-12. Films 1–2 shipped (ABA-665, ABA-667); their PITFALLS rows apply (app strings read
+from the app's source by a truth test; shared geometry placed once before scenes; an implied action needs a pose and a
+prop in the hands; every cast member present where the story says so; feed-size text only in a lens or a big page).
+
+### Truth (from `docs/wiki/features/subscription-manager.md`, `user_docs/pl/29-subscription-manager.md`, the app strings)
+
+- Subscriptions are **not detected automatically** — the user lists them (by hand, or from Fat Finder). The film shows
+  Michał writing them down once.
+- A push **3 days before** each renewal. Server templates, verbatim: `subscriptionReminderTitle` „{name} odnawia się za
+  3 dni”, `subscriptionReminderBody` „{amount} {currencyCode} zostanie pobrane za {name}” → „Kino+ odnawia się za 3 dni”
+  / „43,00 PLN zostanie pobrane za Kino+”.
+- The screen (`apps/mobile/app/subscriptions/index.tsx`, mobile `subscriptionManager.*`): header `monthlyTotal`
+  „Miesięczny koszt” with the sum of ACTIVE subscriptions' monthly equivalents and `activeCount`; rows with name,
+  amount · cycle, `renewalInDays` „Odnawia się za 3 dni” (warning colour at ≤ 3 days); an inactive row shows
+  `inactive` „Nieaktywna” and leaves the total.
+- **The app does not cancel anything.** The family cancels the service itself and marks it inactive in the app.
+- Example values (invented names, no real brands): Kino+ 43,00 · Muzyka 23,99 · Siłownia 129,00 · Chmura 9,99, all
+  monthly → 205,98 zł; without Kino+ → 162,98 zł.
+
+### Beats (~30 s, turn at 12.0)
+
+| t | Picture | Yoka |
+|---|---|---|
+| 0–4 s | Cover: a woodcut of the family's little castle; cartouche „Kronika rodu. Rok 2026.” | asleep by the gate |
+| 4–8 s | Each month hooded "tribute collectors" come to the gate, a plaque on each (Kino+, Muzyka, Siłownia, Chmura); red coin trickles leave the family chest | barks at each stranger |
+| 8–12 s | Michał writes the collectors into the chronicle — the phone; cartouche „Spisz ich raz.” | — |
+| **12 s turn** | The phone lights red; lens on the push „Kino+ odnawia się za 3 dni” / „43,00 PLN zostanie pobrane za Kino+” | ears up |
+| 13–21 s | „Kino+? Nikt tego nie ogląda.” Michał himself closes the gate on the Kino+ collector; lens on the screen: Kino+ „Nieaktywna”, „Miesięczny koszt” 205,98 → 162,98 zł | chases the collector to the gate |
+| 21–27 s | The chest no longer leaks; the family at the table; cartouche „Wiesz, kto i kiedy przyjdzie.” | asleep |
+| 27–30 s | Poster: „AI Budżet — Menedżer subskrypcji”, „Pobierz za darmo”, ai-budget.pl · Android · przeglądarka | — |
+
+### Look and build
+
+Two-colour lino print (the approved `craft-sheet` `woodcut`): black + one red on ivory paper, gouged black masses,
+hatched light areas, carved ground strokes, a chronicle border; red only for money, the phone and the app. Project
+`D:\Work\tools\films\kronika-daniny\` (+ `-en`), harness copied from `tarcza-papier`; engine `src/engine/woodcut.js`
+from `craft-sheet/styles.js` `woodcut`. Score: a medieval chronicle tune (recorder/shawm, lute, frame drum). Truth test
+reads the two push templates and `subscriptionManager.*`. Deliverables under `docs/marketing/creatives/subscription-tracker/renders/`.
+
+## Film 4 — "Ulepione z paragonu" (clay)
+
+Approved in conversation 2026-10-12.
+
+### Truth (from `docs/wiki/features/receipt-category-split.md`, `user_docs/pl/04-voice-and-receipt.md`, the app strings)
+
+- One scanned receipt is split across categories by its own lines; the confirm screen shows `receipt.scannedTitle`
+  „Paragon zeskanowany”, `receipt.totalAmount` „Łączna kwota”, a chip row titled `receiptCategorySplit.title`
+  „Podział na kategorie”, the action `receiptCategorySplit.edit` „Zmień kategorie”, and `receipt.saveExpense`
+  „Zapisz wydatek”. Nothing is saved before that tap.
+- A correction is remembered for the next scan of the same product. When the lines do not add up to the total, the app
+  refuses to split (not shown, never contradicted).
+- Example: `PARAGON FISKALNY`, `SUMA PLN 240,00` = Spożywcze 180 · Chemia domowa 35 · Zdrowie 25 (no alcohol: the son
+  is in the shot). No shop name.
+
+### Beats (~30 s, turn at 12.0)
+
+| t | Picture | Yoka |
+|---|---|---|
+| 0–4 s | Cover: a clay shop; Kasia and the son at the till; the till squeezes out an endless receipt | pulls the leash to the door |
+| 4–9 s | At home the receipt reaches the floor, „PARAGON FISKALNY … SUMA 240,00”; Kasia: „Jedzenie, chemia, apteka… wszystko w jednym?” | asleep on the rug |
+| 9–12 s | Kasia photographs the receipt with the phone | — |
+| **12 s turn** | The receipt's lines peel off as clay rolls and roll into three labelled clay bowls | opens one eye |
+| 13–21 s | Lens: „Paragon zeskanowany”, chips „Podział na kategorie” Spożywcze 180 · Chemia domowa 35 · Zdrowie 25, „Łączna kwota 240 zł”; Kasia taps „Zapisz wydatek” | — |
+| 21–27 s | The son moves one ball to another bowl („Zmień kategorie”); cartouche „Zapamięta na następny raz.” | asleep |
+| 27–30 s | Poster: „AI Budżet — Podział paragonu na kategorie”, „Zeskanuj pierwszy paragon”, ai-budget.pl · Android · przeglądarka | — |
+
+### Look and build
+
+Clay (the approved `craft-sheet` `clay`): soft volume, key light, specular, thumbprints, contact shadows; a pastel set.
+Project `D:\Work\tools\films\ulepione-z-paragonu\` (+ `-en`), harness copied from `tarcza-papier`; engine
+`src/engine/clay.js` from `craft-sheet/styles.js` `clay`, cached per static piece (blur filters are expensive). Score: a
+bouncy stop-motion tune (marimba, tuba, kazoo, squelches). Truth test reads `receipt.*` and `receiptCategorySplit.*`.
+Deliverables under `docs/marketing/creatives/receipt-auto-split-categories/renders/`.

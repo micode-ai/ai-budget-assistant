@@ -162,3 +162,13 @@ Collected from `receipt-journey`, `real-salary`, `shared-family`, `oddam-pietnas
 | An action that is only implied ("he reads the paper": a newspaper standing on the table edge in front of a man with no hands) | The user could not tell what he was doing. An action needs its body: a pose that does it (`CAST michal('read')`: both hands up at the shoulders) and the prop IN the hands, with the hands drawn again over the prop so they grip it; the face peeks over. Pinned in `cast-sheet.cjs` (the paper sits at the reading hands). |
 | A member of the agreed cast is simply missing (the son never appeared) | The cast list lives in the series spec, but scenes are briefed shot by shot and nobody checked the sum. Check the cast per shot in the storyboard, and pin it (`cast-sheet.cjs`: every home shot's GEO has `syn`). |
 | A comment inserted mid-line (`a: 1, // note b: 2,`) silently drops the rest of the object | Happened three times in this film via sed/patch scripts; the key-parity check in `truth-test.cjs` and a page error caught them. Put comments on their own line. |
+
+## Woodcut (from `kronika-daniny`)
+
+| Symptom | Cause and fix |
+|---|---|
+| A gate shot reads as one black tangle (portcullis, a hooded figure and the dog merge; the lever invisible) | Woodcut black masses have no tonal separation. Keep a mid-tone (hatched) passage behind a grille, thin bars with WIDE ivory gaps, the figure behind it hatched rather than solid, a plaque in a bar gap, and the actor's mechanism big and in front (a lever post gripped and pulled). Guard it: no bar pixels over the plaque text at hold frames (`sets-test.cjs`). The director's review caught it after delivery. |
+| A push-in crops the family at the frame edge | Check every cast member's bbox inside x 60–1020 at every push-in frame (`sets-test.cjs` guard); drop the push-in when the subject is the whole family. |
+| Seek is not deterministic with sprite caches | A cache key built from raw float geometry flips an edge pixel between forward and backward seeks. Normalise geometry to the bbox (1/256 px) before hashing; key plaques by their exact text + size. |
+| Chain clinks before a slam steal the slam's onset in the sync check | End the preparatory SFX before the event's sync region, or exclude it from the region. |
+| The push amount reads „43,00 PLN” in the film but the phone shows „43.00 PLN” | The server cron fills `{amount}` with `Number(amount).toFixed(2)` — a dot, not the locale comma. Read the FILLER, not just the template; the truth test pins it. The in-app screen uses `formatCurrency` (pl-PL comma; EUR as de-DE „47,47 €”). |
