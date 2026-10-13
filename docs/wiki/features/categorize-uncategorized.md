@@ -35,8 +35,8 @@ uncategorized expenses, relies on.
 - `packages/shared-types/src/dto/ai.ts` — `CategorizeCandidateExpense`, `CategorizeSuggestionGroup`,
   `CategorizeSuggestionsResponse`
 
-Design: `docs/superpowers/specs/2026-09-24-categorize-uncategorized-design.md`. Income extension
-(ABA-595) design: `docs/contracts/categorize-uncategorized-incomes.md`.
+Design: `docs/superpowers/specs/2026-09-24-categorize-uncategorized-design.md`. Income extension:
+ABA-595.
 
 **Income entry points**, mirroring every expense one above:
 - `apps/api/src/modules/ai/services/categorize-income-suggestions.service.ts` —

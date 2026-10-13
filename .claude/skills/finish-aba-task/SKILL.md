@@ -11,7 +11,7 @@ you have just edited:
 
 1. Create a GitHub issue `ABA-{N}` describing what was done.
 2. **Ingest into the wiki** — update or create the page(s) for the features you touched, and
-   append one line to `docs/wiki/log.md`.
+   add one line to the `## Ingests` section of `docs/wiki/log.md`.
 3. Update `CLAUDE.md` **only if a repo-wide rule changed** (see step 4 — it is the schema now, not
    the content store).
 4. Update user docs (`user_docs/<lang>/NN-slug.md`) for all 9 locales — if the change is
@@ -72,8 +72,10 @@ if you have not this session. Then:
    pointer in its place — two or three sentences naming the page and carrying only the invariants
    worth seeing without opening it. This is how the migration progresses: one feature per task, by
    whoever touches it.
-4. **Append one line to `docs/wiki/log.md`**: date, ABA link, what was learned, pages touched. One
-   line. The detail belongs on the page, the reasoning in the issue.
+4. **Add one line to `docs/wiki/log.md` at the END of its `## Ingests` section** (just above
+   `## Queries`), shaped `- YYYY-MM-DD · [ABA-N](issue url) — …`: date, ABA link, what was learned,
+   pages touched. One line. The detail belongs on the page, the reasoning in the issue. Never append
+   to the end of the file — that is `## Lint passes`, and 87 ingest lines once piled up there.
 
 Page template:
 

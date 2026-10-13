@@ -43,7 +43,7 @@ order — this is what makes clearing the search box restore the exact pre-searc
 special-casing in the screen. Scoped to the current UI language only (`helpContent[lang]`, the
 same set the screen already resolves) — no fallback to English hits, since every locale is a full
 translation of the same section set, not a thinner one. Matching is plain case-insensitive
-substring, deliberately not fuzzy — the corpus is small (~40 articles) and local. Zero matches
+substring, deliberately not fuzzy — the corpus is small and local. Zero matches
 renders an empty state with a button into the AI chat tab, since the app can usually answer the
 same question conversationally.
 
@@ -96,5 +96,5 @@ expect a large, boring diff and check it is only that.
 
 ABA-284 (the public help center) · ABA-288 (mobile rendering: portrait screenshots overflow without
 the shared `article img` constraint) · ABA-342 (help↔blog internal linking, real `lastmod` dates) ·
-ABA-366 (PageSpeed and contrast pass) · ABA-606 (in-app search bar over the ~40-article list —
+ABA-366 (PageSpeed and contrast pass) · ABA-606 (in-app search bar over the article list —
 in-app only, public help center search deferred as a separate idea).

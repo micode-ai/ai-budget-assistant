@@ -28,6 +28,9 @@ dashboard.
   `POST /ai/categorize-uncategorized` batch classifier
 - [merchant-category-rules](features/merchant-category-rules.md) — the learned per-account
   merchant → category table
+- [shared-groups](features/shared-groups.md) — the one module that is NOT account-scoped
+  (`GroupMemberGuard` replaces `AccountContextGuard`)
+- [inbound-e-receipts](features/inbound-e-receipts.md) — the internal routes the SMTP container calls
 
 ## Key concepts
 
@@ -48,6 +51,8 @@ reached 48, and `CLAUDE.md`'s own note records it being wrong at 44, 45 and 47 a
 | `AccountRoleGuard` + `@RequireRole('owner'\|'editor')` | DI-based, for the narrower owner/editor cases |
 | `SubscriptionTierGuard` + `@RequireTier` | Paid-tier gating |
 | `TripArchivedGuard` | Blocks writes to an archived trip account |
+| `GroupMemberGuard` / `GroupOwnerGuard` / `GroupActiveGuard` | Expense groups only, in place of the account stack — see [shared-groups](features/shared-groups.md) |
+| `AdminGuard` | The `ADMIN_EMAILS` list; admin routes only |
 
 **Health.** `GET /api/v1/health` runs `SELECT 1`. It is what Docker's `HEALTHCHECK` and the uptime
 workflow watch — and therefore what they *cannot* see: a missing column makes real queries fail while
@@ -60,13 +65,14 @@ workflow watch — and therefore what they *cannot* see: a missing column makes 
 middleware for months. There is no `AccountContextMiddleware` class anywhere in the repo. It is
 `implements CanActivate`, and it is what sets `req.monthAnchorDay`.
 
-**`ViewerBlockGuard` is the one to reach for on a write.** It is used by 20 controllers and was
-entirely absent from this page, which described owner-only `AccountRoleGuard` as though it were the
+**`ViewerBlockGuard` is the one to reach for on a write.** Most write controllers use it, and it was
+once entirely absent from this page, which described owner-only `AccountRoleGuard` as though it were the
 write rule.
 
 **Everything that escapes the `/api/v1` prefix is in one file.** Not just the bot webhooks:
 `webhooks/stripe`, `telegram/webhook`, `whatsapp/webhook`, `slack/events`, `slack/interactivity`,
-`slack/install`, `slack/oauth/callback`, and the whole guest subtree as a single wildcard `s/(.*)`.
+`slack/install`, `slack/oauth/callback`, and the three guest subtrees as wildcards — `s/(.*)`
+(receipt split), `sl/(.*)` (shopping list) and `g/(.*)` (expense groups).
 Adding a route to an excluded controller without checking that file is how every scanned QR 404'd in
 production — see [receipt-split](features/receipt-split.md).
 
@@ -86,7 +92,10 @@ Secured by signature verification or by an unguessable token, never by a session
 | `GET\|POST /whatsapp/webhook` | HMAC-SHA256 over the raw body, `WHATSAPP_APP_SECRET` |
 | `POST /slack/events`, `/slack/interactivity` | `v0=` HMAC-SHA256, `SLACK_SIGNING_SECRET`, 5-min replay window |
 | `GET /slack/install`, `/slack/oauth/callback` | Single-use CSRF state in Redis |
-| `/s/**` (guest links) | A 128-bit token in the path, plus throttling |
+| `/s/**` (receipt-split guest links) | A 128-bit token in the path, plus throttling |
+| `/sl/**` (shopping-list share link) | A token in the path — see [shopping-list](features/shopping-list.md) |
+| `/g/**` (expense-group guest page) | A token in the path; the guest's identity only from the hashed `abg_m` cookie secret, never a form field — see [shared-groups](features/shared-groups.md) |
+| `/api/v1/internal/inbound-mail/*` | `InternalSecretGuard`: the `X-Inbound-Secret` header AND a TCP peer inside `INBOUND_MAIL_INTERNAL_CIDR`, read from the socket — see [inbound-e-receipts](features/inbound-e-receipts.md) |
 
 `main.ts` registers `express.urlencoded({ verify })` alongside the JSON parser so `rawBody` exists
 on the urlencoded Slack interactivity endpoint.
@@ -101,7 +110,12 @@ Business logic → `modules/<feature>/`, but check this wiki's feature pages fir
 
 Read against the code on 2026-09-22. Wrong: the module count and its list (35, actually 48 — now
 deleted rather than updated); `AccountContextGuard` described as middleware, which is what the
-filename suggests and the code contradicts; `ViewerBlockGuard` missing entirely although 20
+filename suggests and the code contradicts; `ViewerBlockGuard` missing entirely although most write
 controllers use it; and the prefix-exclusion list presented as "WhatsApp and Slack" when it also
 covers Stripe, Telegram, two Slack OAuth routes and the entire guest subtree. NestJS 10 and Prisma 5
 checked and correct.
+
+Re-read 2026-10-13 (ABA-671): the prefix exclusions had grown `sl/(.*)` and `g/(.*)`, and the
+unauthenticated surface the group guest page and the internal inbound-mail routes — all added; the
+group guards and `AdminGuard` added to the guard table; the controller count for `ViewerBlockGuard`
+removed (it was already stale, 22 not 20).

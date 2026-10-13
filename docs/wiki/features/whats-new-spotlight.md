@@ -68,5 +68,4 @@ PR**, at the same review weight as its i18n, help and schema updates.
 
 ## History
 
-ABA-470 (the mechanism) · ABA-530 (copy moved into the nine locale files). Contract:
-`docs/contracts/whats-new-spotlight.md`.
+ABA-470 (the mechanism) · ABA-530 (copy moved into the nine locale files).

@@ -25,7 +25,6 @@ plus a `?` cheat sheet that lists whatever is live.
 - `apps/mobile/src/hooks/useDesktopShortcuts.ts` — the only file touching `document`
 - `apps/mobile/src/components/shortcuts/ShortcutsHelpOverlay.tsx`
 - `apps/mobile/src/components/WebShell.web.tsx` — mounts the single listener
-- Contract: `docs/contracts/desktop-keyboard-shortcuts.md`
 
 ## Key concepts
 

@@ -6,9 +6,7 @@
 
 Lets the user say "undo", "cancel that", "delete the last one" (in any language) in AI chat — mobile
 or any of the three bots — to revert the single most recent write it confirmed in that conversation:
-a just-created expense, income, or debt, a debt repayment, or a savings-goal balance update. Product
-idea: `docs/product-ideas/chat-undo-last-action.md`. Plan/contracts:
-`docs/plans/chat-undo-last-action-plan.md`, `docs/contracts/chat-undo-last-action.md`.
+a just-created expense, income, or debt, a debt repayment, or a savings-goal balance update.
 
 ## Entry points
 
@@ -71,8 +69,8 @@ working as intended, not a bug.
 
 **The entity table for `create_debt`/`record_debt_repayment` depends on direction, not the action
 name.** `debts.service.ts` puts a "lent" debt/repayment on `Expense` and a "borrowed" one on
-`Income` (or the reverse for the repayment) — see `resolveUndoEntity`'s table in
-`docs/contracts/chat-undo-last-action.md`. Getting this backwards would soft-delete the wrong kind
+`Income` (or the reverse for the repayment) — see `resolveUndoEntity` in
+`apps/api/src/modules/ai/services/ai-undo-tools.service.ts`. Getting this backwards would soft-delete the wrong kind
 of row.
 
 **Scope is exactly 5 action types, per-conversation, not per-device/user.** `create_budget` and

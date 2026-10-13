@@ -22,7 +22,6 @@ columns that receipt OCR fills in.
 - Mobile: `components/analytics/QuickInsights.tsx` (`onOpenSavings`), `SavingsDetailSheet.tsx`,
   `hooks/useSavingsDetail.ts`, `components/chat/ActionResultCard.tsx`
   (`DepositTotalResult`, `DiscountTotalResult`)
-- Contract: `docs/contracts/quick-insights-savings-drilldown.md`
 
 ## Key concepts
 

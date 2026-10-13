@@ -202,8 +202,7 @@ user made in production. See `web-build-and-hosting.md`.
 
 A public, unauthenticated link so someone with no account — "can you grab milk on your way
 home" — can see one list and check items off, without becoming a member. Reuses the isolation
-pattern of receipt-split's `GuestController` (`docs/contracts/shopping-list-guest-share-link.md`
-has the full contract), but is its own self-contained implementation — own `sl/(.*)` prefix
+pattern of receipt-split's `GuestController`, but is its own self-contained implementation — own `sl/(.*)` prefix
 exclusion, own i18n/HTML helpers, no shared code with the receipt-split guest surface.
 
 **One token per list, on the list row itself** (`ShoppingList.guestToken`), not a participant

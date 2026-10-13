@@ -23,8 +23,6 @@ the in-app nudge banner.
 - `apps/api/src/common/bot-i18n/shared-messages.ts` — the `categorize*` keys (identical across all
   three bots post markup-conversion, per the ABA-462 bot-i18n convention)
 
-Design: `docs/plans/bot-categorize-command-plan.md`,
-`docs/contracts/bot-categorize-command.md`.
 
 ## Key concepts
 

@@ -39,7 +39,7 @@ Migration: `20260621000000_add_google_auth` (`User.googleId String? @unique`, `p
 - **Acquisition fields are written in `googleLogin` too.** A Google signup never passes through `register()`/`verifyEmail()`, so omitting them there makes every Google signup read as unattributed.
 
 ## Known gaps
-- The code-flow rate limits (`resetRequestAttempts`, `emailChangeVerifyAttempts`, …) are in-memory `Map`s on `AuthService`, reset on every deploy and not shared between instances — tracked as tech-debt `auth-rate-limit-in-memory-maps` (`docs/tech-debt/auth-rate-limit-in-memory-maps.md`). The fix pattern exists: `CacheService.incrementWindow`.
+- The code-flow rate limits (`resetRequestAttempts`, `emailChangeVerifyAttempts`, …) are in-memory `Map`s on `AuthService`, reset on every deploy and not shared between instances — tracked as tech-debt `auth-rate-limit-in-memory-maps`. The fix pattern exists: `CacheService.incrementWindow`.
 - `EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID` is read nowhere — native sign-in uses the web OAuth client through the relay.
 
 ## Cross-references

@@ -4,7 +4,9 @@
 Checks only what a script can know for certain:
 
   * every markdown link between wiki pages resolves to a file that exists;
-  * every backticked path that looks like a repo path exists on disk;
+  * every backticked path that looks like a repo path exists on disk AND is in the repo -- a
+    gitignored, untracked file exists only on one machine, so the page cites it in vain and CI
+    (a fresh checkout) reports it as missing while the local run stays clean;
   * every page under features/ is reachable from index.md (no orphans).
 
 Deliberately does NOT check counts. A page should not state a count in the first
@@ -17,6 +19,7 @@ Exit code 1 on any finding, so this can run in CI.
 from __future__ import annotations
 
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -36,6 +39,24 @@ PATH_RE = re.compile(
 )
 
 
+def local_only(paths: set[str]) -> set[str]:
+    """The cited paths that are gitignored and untracked (empty when git is unavailable)."""
+    if not paths:
+        return set()
+    try:
+        ignored = subprocess.run(
+            # bytes, not text: on Windows text mode turns "\n" into "\r\n" and git then sees "path\r"
+            ["git", "check-ignore", "--no-index", "--stdin"], cwd=ROOT,
+            input="\n".join(sorted(paths)).encode(), capture_output=True, check=False,
+        ).stdout.decode().split()
+        tracked = subprocess.run(
+            ["git", "ls-files", "--", *ignored], cwd=ROOT, capture_output=True, text=True, check=False,
+        ).stdout.split() if ignored else []
+    except OSError:
+        return set()
+    return set(ignored) - set(tracked)
+
+
 def main() -> int:
     if not WIKI.is_dir():
         print(f"no wiki at {WIKI}")
@@ -43,6 +64,7 @@ def main() -> int:
 
     pages = sorted(WIKI.rglob("*.md"))
     findings: list[str] = []
+    cites: list[tuple[str, str]] = []
 
     for page in pages:
         rel = page.relative_to(ROOT).as_posix()
@@ -63,6 +85,13 @@ def main() -> int:
             # Paths are written relative to the repo root.
             if not (ROOT / cited).exists():
                 findings.append(f"{rel}: cited path does not exist -> {cited}")
+            else:
+                cites.append((rel, cited))
+
+    hidden = local_only({c for _, c in cites})
+    for rel, cited in cites:
+        if cited in hidden:
+            findings.append(f"{rel}: cited path is gitignored, not in the repo -> {cited}")
 
     index = WIKI / "index.md"
     if index.exists():
