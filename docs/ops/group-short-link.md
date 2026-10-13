@@ -5,8 +5,12 @@ page stays on the API host; this is a redirect, **not** a proxy (a proxy would m
 origin and every existing guest's host-only cookie would stop being sent). `APP_PUBLIC_URL` is never
 changed: it builds the `s/` and `sl/` links and the guest controller's own-origin check.
 
-Status: **built, NOT yet activated** (2026-10-09). Until both steps below are done the app keeps
-handing out `https://api.ai-budget.pl/g/<token>` links and nothing changes.
+Status: **active since 2026-10-13** (ABA-649). The nginx block is in the apex server of
+`/opt/shared-nginx/conf.d/ai-budget.conf` (backup `ai-budget.conf.bak.groupshort.*`), verified with
+the checks below and a live group token (302 → 200), then `GROUP_SHARE_BASE_URL=https://ai-budget.pl`
+was set (backup `.env.production.bak.groupshort.*`) and `api` force-recreated. Here `conf.d` is
+bind-mounted as a DIRECTORY and `nginx -s reload` applied the change; the single-file gotcha below
+did not bite. The steps stay as the procedure for a rebuild.
 
 Pieces:
 

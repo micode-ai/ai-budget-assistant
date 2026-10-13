@@ -1059,7 +1059,7 @@ id leaves the service.
   before that date.
 - The daily series (`groupsCreated`, `guestsJoined`, `guestsLinked`) is bucketed by UTC day.
 
-## Short link on the apex (ABA-649, built, not yet activated)
+## Short link on the apex (ABA-649, active since 2026-10-13)
 
 `https://ai-budget.pl/g/<token>` is an nginx **302 redirect** (not a proxy) to
 `https://api.ai-budget.pl/g/<token>`: a proxy would move the page to a new origin and drop every
@@ -1069,8 +1069,8 @@ and `Cache-Control: no-store`. The API side is `GROUP_SHARE_BASE_URL`, read only
 `GroupsService.buildGuestUrl`; unset keeps today's links (`APP_PUBLIC_URL`, else the API host), and
 `APP_PUBLIC_URL` (which builds `s/` and `sl/` and the origin check) is never changed for it. Snippet
 `docker/nginx/apex-group-short-link.conf`; apply/verify/rollback in `docs/ops/group-short-link.md`.
-**Not yet activated:** the nginx block must go live and be verified before the env is set, or new
-links 404.
+**Activated 2026-10-13** in that order — the nginx block live and verified first, then the env;
+the reverse order makes every new link 404. Old `api.ai-budget.pl/g/...` links keep working.
 
 ## Offline write gating (ABA-648)
 
