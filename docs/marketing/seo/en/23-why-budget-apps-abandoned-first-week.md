@@ -1,6 +1,6 @@
 ---
-title: "Why Most Budgeting Apps Get Deleted in the First Week"
-meta_description: "Most new budgeting apps get deleted within days. Here's the real reason it happens, and the one-screen fix that keeps people past day one."
+title: "Why You Quit Budgeting Apps in a Week (and the Fix)"
+meta_description: "Most people delete a budgeting app within days, and willpower is rarely why. What goes wrong in week one, and the one-screen fix that keeps you going."
 target_keyword: "why budgeting apps get deleted"
 slug: "why-budget-apps-abandoned-first-week"
 pair: "app-abandonment"

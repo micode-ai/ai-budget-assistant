@@ -1,6 +1,6 @@
 ---
-title: "Jak podzielić rachunek ze znajomymi: 3 sposoby"
-meta_description: "Po równo, po pozycjach albo prosto z paragonu. Znajomi płacą przez link bez instalowania aplikacji: BLIK, Revolut lub PayPal. Za darmo."
+title: "Jak podzielić rachunek ze znajomymi: 3 sposoby + link BLIK"
+meta_description: "Po równo, po pozycjach albo ze zdjęcia paragonu. Każdy dostaje link ze swoją kwotą i płaci BLIK-iem, Revolutem lub PayPalem, bez instalowania aplikacji."
 target_keyword: "jak podzielić rachunek"
 slug: "jak-podzielic-rachunek"
 pair: "split-bill"

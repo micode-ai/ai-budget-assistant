@@ -157,7 +157,7 @@ Paga antes las deudas con intereses altos, porque eso da una rentabilidad garant
 - [Tu inflación personal: cómo calcularla](/blog/es/inflacion-personal/)
 - [Tu año financiero, resumido: qué revela](/blog/es/resumen-del-ano-financiero/)
 - [Haz acopio antes de que suban los precios: tu escudo](/blog/es/escudo-antiinflacion/)
-- [Alerta de tipo de cambio: aviso al llegar a tu objetivo](/blog/es/alerta-tipo-cambio/)
+- [Alerta de tipo de cambio gratis: aviso a tu cotización](/blog/es/alerta-tipo-cambio/)
 - [Presupuesto en dos monedas: cómo no perder el control](/blog/es/presupuesto-en-dos-monedas/)
 - [Presupuesto de Navidad: cuánto cuesta y cómo ahorrarlo](/blog/es/presupuesto-de-navidad/)
 - [Black Friday: detecta ofertas falsas y no gastes de más](/blog/es/black-friday-ofertas-falsas/)

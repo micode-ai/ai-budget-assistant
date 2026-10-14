@@ -1,6 +1,6 @@
 ---
-title: "Mapa wydatków: zobacz, gdzie znikają pieniądze"
-meta_description: "Wyciąg pokazuje, ile wydałeś, ale nie gdzie. Zobacz, jak mapa wydatków zamienia twoje wydatki w obraz i co ujawnia, czego zwykła lista nie pokaże."
+title: "Mapa wydatków: zobacz na mapie, gdzie wydajesz pieniądze"
+meta_description: "Wyciąg mówi, ile wydałeś, ale nie gdzie. Mapa wydatków przypina każdy zakup do sklepu, więc od razu widać miejsca, w których pieniądze znikają najszybciej."
 target_keyword: "mapa wydatków"
 slug: "mapa-wydatkow"
 pair: "expense-map"

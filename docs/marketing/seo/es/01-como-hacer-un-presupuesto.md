@@ -150,7 +150,7 @@ El objetivo es de tres a seis meses de gastos esenciales. Si te parece lejano, e
 
 ## Guías relacionadas
 
-- [Presupuesto compartido en pareja: un plan sin discusiones](/blog/es/presupuesto-compartido-en-pareja/)
+- [Presupuesto en pareja: 3 modelos para repartir gastos](/blog/es/presupuesto-compartido-en-pareja/)
 - [Método de sobres: el sistema que frena el gasto](/blog/es/metodo-de-sobres/)
 - [La regla 50/30/20: una guía práctica](/blog/es/regla-50-30-20/)
 - [Categorías de gastos que de verdad funcionan](/blog/es/categorias-de-gastos/)

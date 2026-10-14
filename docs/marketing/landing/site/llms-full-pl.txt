@@ -1635,7 +1635,7 @@ Najpierw spłać zadłużenie z wysokim oprocentowaniem, bo to gwarantowany „z
 - [Black Friday: fałszywe promocje i jak nie przepłacić](/blog/pl/black-friday-promocje/)
 - [Zwrot podatku z PIT: na co go przeznaczyć? Plan](/blog/pl/zwrot-podatku-na-co-przeznaczyc/)
 
-## Jak podzielić rachunek ze znajomymi: 3 sposoby
+## Jak podzielić rachunek ze znajomymi: 3 sposoby + link BLIK
 URL: https://ai-budget.pl/blog/pl/jak-podzielic-rachunek/
 
 Kolacja się kończy, kelner przynosi jeden rachunek, a przy stole zapada cisza, bo wszyscy czekają, aż ktoś inny wyciągnie kartę. Zwykle w końcu płaci jedna osoba, bo tak jest szybciej, a potem przez tydzień pisze do sześciu ludzi z prośbą o przelew. Jedna osoba zapomina. Druga pyta "a ile właściwie miałam dopłacić?". Trzecia obiecuje "jutro wysyłam" i słuch po niej ginie. Nikt nie chciał być niemiły, ale rachunek za 340 zł rozpłynął się w grupowym czacie i nikt już nie pamięta, ile faktycznie zebrano.
@@ -2391,10 +2391,10 @@ Kontrola wydatków odpowiada na pytanie, ile i na co już wydałeś. Budżet to 
 
 - [Jak zaimportować wyciąg bankowy do budżetu](/blog/pl/jak-zaimportowac-wyciag-bankowy/)
 - [Najlepsze aplikacje do budżetu w 2026 roku](/blog/pl/najlepsze-aplikacje-do-budzetu/)
-- [Mapa wydatków: zobacz, gdzie znikają pieniądze](/blog/pl/mapa-wydatkow/)
+- [Mapa wydatków: zobacz na mapie, gdzie wydajesz pieniądze](/blog/pl/mapa-wydatkow/)
 - [Automatyczne zapisywanie wydatków bez wysiłku](/blog/pl/automatyczne-zapisywanie-wydatkow/)
 - [Skanowanie paragonów: liczą się pozycje, nie suma](/blog/pl/skanowanie-paragonow/)
-- [Jak podzielić rachunek ze znajomymi: 3 sposoby](/blog/pl/jak-podzielic-rachunek/)
+- [Jak podzielić rachunek ze znajomymi: 3 sposoby + link BLIK](/blog/pl/jak-podzielic-rachunek/)
 - [Dlaczego usuwamy aplikacje do budżetu po tygodniu](/blog/pl/dlaczego-usuwamy-aplikacje-do-budzetu/)
 - [Alternatywa dla Monefy: przenieś dane razem z kategoriami](/blog/pl/zmiana-z-monefy-wallet-money-manager/)
 - [Budżet domowy w Excelu: szablon i kiedy przestaje wystarczać](/blog/pl/budzet-domowy-w-excelu/)
@@ -2412,7 +2412,7 @@ Kontrola wydatków odpowiada na pytanie, ile i na co już wydałeś. Budżet to 
 - [Import wyciągu PDF z Alior Banku do budżetu](/blog/pl/import-wyciagu-alior-bank/)
 - [Import wyciągu PDF z Erste Bank Polska do budżetu](/blog/pl/import-wyciagu-erste-bank/)
 
-## Mapa wydatków: zobacz, gdzie znikają pieniądze
+## Mapa wydatków: zobacz na mapie, gdzie wydajesz pieniądze
 URL: https://ai-budget.pl/blog/pl/mapa-wydatkow/
 
 Wyciąg bankowy to dobry zapis i kiepska mapa. Mówi, ile wydałeś i kiedy, ale prawie nigdy gdzie. "Płatność kartą, 42,10 zł" może być sklepem przy biurze, tym koło rodziców albo miejscem, które odwiedziłeś raz w podróży i już nigdy tam nie wróciłeś. Najbardziej ludzkie pytanie o pieniądze, gdzie one właściwie idą, to dokładnie to, na które lista transakcji odpowiada najgorzej.

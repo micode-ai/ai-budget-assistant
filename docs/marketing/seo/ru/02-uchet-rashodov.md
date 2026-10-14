@@ -152,12 +152,12 @@ AI Budget Assistant работает по принципу офлайн-преж
 
 ## Похожие руководства
 
-- [Импорт банковской выписки в приложение бюджета](/blog/ru/import-bankovskoy-vypiski/)
+- [Импорт банковской выписки CSV и PDF в приложение бюджета](/blog/ru/import-bankovskoy-vypiski/)
 - [Лучшие приложения для бюджета в 2026 году](/blog/ru/luchshie-prilozheniya-dlya-byudzheta/)
 - [Карта расходов: куда уходят ваши деньги](/blog/ru/karta-raskhodov/)
 - [Автоматический учёт расходов без ручного ввода](/blog/ru/avtomaticheskiy-uchet-raskhodov/)
 - [Сканирование чеков: важны позиции, а не сумма](/blog/ru/skanirovanie-chekov/)
-- [Как разделить счёт с друзьями: 3 способа](/blog/ru/kak-razdelit-schet-s-druzyami/)
+- [Как разделить счёт с друзьями: 3 способа и ссылка на оплату](/blog/ru/kak-razdelit-schet-s-druzyami/)
 - [Почему приложения для бюджета удаляют за неделю](/blog/ru/pochemu-udalyayut-prilozheniya-dlya-byudzheta/)
 - [Альтернатива Monefy: переход без потери категорий](/blog/ru/perehod-s-monefy-wallet-moneymanager/)
 - [Шаблон бюджета в Excel: структура и её пределы](/blog/ru/shablon-byudzheta-v-excel/)

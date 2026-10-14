@@ -82,7 +82,7 @@ Busca una que te deje registrar rápido, para que de verdad lo hagas, y que mues
 
 *Artículos relacionados: [Cómo ahorrar dinero](/blog/es/como-ahorrar-dinero/) | [Control de gastos: la app que lo simplifica](/blog/es/control-de-gastos/)*
 
-## Alerta de tipo de cambio: aviso al llegar a tu objetivo
+## Alerta de tipo de cambio gratis: aviso a tu cotización
 URL: https://ai-budget.pl/blog/es/alerta-tipo-cambio/
 
 Si conviertes una moneda en otra con regularidad, porque trabajas en remoto y cobras en dólares, porque vives en el extranjero y envías dinero a casa cada mes, o porque estás planeando un viaje y quieres cambiar una suma grande antes de salir, ya conoces esa sensación. Abres la app del banco o un buscador, miras el tipo de cambio, suspiras porque todavía no es el momento, y la cierras. Al día siguiente, lo mismo. Y al otro también.
@@ -682,7 +682,7 @@ Paga antes las deudas con intereses altos, porque eso da una rentabilidad garant
 - [Tu inflación personal: cómo calcularla](/blog/es/inflacion-personal/)
 - [Tu año financiero, resumido: qué revela](/blog/es/resumen-del-ano-financiero/)
 - [Haz acopio antes de que suban los precios: tu escudo](/blog/es/escudo-antiinflacion/)
-- [Alerta de tipo de cambio: aviso al llegar a tu objetivo](/blog/es/alerta-tipo-cambio/)
+- [Alerta de tipo de cambio gratis: aviso a tu cotización](/blog/es/alerta-tipo-cambio/)
 - [Presupuesto en dos monedas: cómo no perder el control](/blog/es/presupuesto-en-dos-monedas/)
 - [Presupuesto de Navidad: cuánto cuesta y cómo ahorrarlo](/blog/es/presupuesto-de-navidad/)
 - [Black Friday: detecta ofertas falsas y no gastes de más](/blog/es/black-friday-ofertas-falsas/)
@@ -959,7 +959,7 @@ El objetivo es de tres a seis meses de gastos esenciales. Si te parece lejano, e
 
 ## Guías relacionadas
 
-- [Presupuesto compartido en pareja: un plan sin discusiones](/blog/es/presupuesto-compartido-en-pareja/)
+- [Presupuesto en pareja: 3 modelos para repartir gastos](/blog/es/presupuesto-compartido-en-pareja/)
 - [Método de sobres: el sistema que frena el gasto](/blog/es/metodo-de-sobres/)
 - [La regla 50/30/20: una guía práctica](/blog/es/regla-50-30-20/)
 - [Categorías de gastos que de verdad funcionan](/blog/es/categorias-de-gastos/)
@@ -2636,7 +2636,7 @@ Después. Enseñar una lista de precios antes de que alguien haya visto qué hac
 
 *Artículos relacionados: [Control de gastos sin apuntarlo todo a mano](/blog/es/control-de-gastos/) | [Mejores apps de presupuesto en 2026: guía honesta](/blog/es/mejores-apps-de-presupuesto/) | [Cómo te ayuda la IA a gestionar tus finanzas](/blog/es/ia-para-las-finanzas/)*
 
-## Presupuesto compartido en pareja: un plan sin discusiones
+## Presupuesto en pareja: 3 modelos para repartir gastos
 URL: https://ai-budget.pl/blog/es/presupuesto-compartido-en-pareja/
 
 El dinero es uno de los motivos más habituales de conflicto en las parejas, y la mayoría de esas discusiones no van realmente sobre dinero. Van sobre transparencia, sobre justicia y sobre ese resentimiento silencioso que se acumula cuando una persona siente que lo controla todo y la otra no tiene ni idea de cómo van las cosas. Un presupuesto compartido en pareja no consiste en vigilar en qué gasta el otro. Consiste en poneros de acuerdo sobre adónde vais juntos, para que el día a día deje de ser una fuente de fricción.

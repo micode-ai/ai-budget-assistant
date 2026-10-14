@@ -151,7 +151,7 @@ Streef naar drie tot zes maanden aan noodzakelijke uitgaven. Voelt dat ver weg, 
 - [Samen budgetteren met je partner zonder ruzie](/blog/nl/samen-budgetteren/)
 - [Enveloppenmethode: het systeem tegen te veel uitgeven](/blog/nl/enveloppenmethode/)
 - [De 50/30/20-regel: een praktische gids](/blog/nl/50-30-20-regel/)
-- [Uitgavencategorieën die echt werken in je budget](/blog/nl/uitgavencategorieen/)
+- [Uitgavencategorieën: een complete startlijst voor je budget](/blog/nl/uitgavencategorieen/)
 - [Gezinsbudget met kinderen dat echt werkt](/blog/nl/gezinsbudget-met-kinderen/)
 - [Hoe AI je helpt met budgetteren (eerlijk uitgelegd)](/blog/nl/ai-voor-je-budget/)
 - [Nieuw schooljaar: wat kosten schoolspullen echt](/blog/nl/schoolspullen-kosten/)

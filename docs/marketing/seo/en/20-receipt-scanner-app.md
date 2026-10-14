@@ -1,6 +1,6 @@
 ---
-title: "Receipt Scanner App That Reads Every Line Item"
-meta_description: "Most receipt scanner apps keep a photo and a total. Scan the whole receipt instead: every product and price, so you see what is getting more expensive."
+title: "Receipt Scanner App That Reads Every Item, Not Just Totals"
+meta_description: "Snap a receipt or a PDF and get every product and price, not only the total. See which items are getting more expensive and where your money goes."
 target_keyword: "receipt scanner app"
 slug: "receipt-scanner-app"
 pair: "receipts"

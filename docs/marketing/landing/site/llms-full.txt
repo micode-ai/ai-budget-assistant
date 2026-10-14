@@ -966,7 +966,7 @@ When you start noticing regular gaps in your logging, when the other person in y
 
 *Related articles: [Expense tracker: how to keep up with spending](/blog/en/expense-tracker/) | [Best budgeting apps in 2026](/blog/en/best-budgeting-apps/) | [How to import a bank statement into a budget app](/blog/en/import-bank-statement/)*
 
-## Exchange Rate Alert: Get Notified at Your Target Rate
+## Free Exchange Rate Alert: Get Notified at Your Target Rate
 URL: https://ai-budget.pl/blog/en/exchange-rate-alert/
 
 If you regularly convert one currency into another, because you work remotely and get paid in dollars, because you live abroad and send money home every month, or because you are planning a trip and want to exchange a larger sum before you leave, you already know the feeling. You open your banking app or a search bar, check the rate, sigh that it is not quite there yet, and close it. The next day, the same thing. And the day after that.
@@ -1115,7 +1115,7 @@ A small one is fine for genuine one-offs, but watch its size. If more than about
 
 *Related articles: [An expense tracker that actually sticks](/blog/en/expense-tracker/) | [How to save money on groceries](/blog/en/save-money-on-groceries/)*
 
-## Expense Map: See Where Your Money Actually Goes
+## Expense Map: See Every Purchase Pinned on a Map
 URL: https://ai-budget.pl/blog/en/expense-map/
 
 A bank statement is a good record and a poor map. It tells you what you spent and when, but almost never where. "Card payment, 42.10" could be the shop by your office, the one near your parents, or a place you visited once on a trip and never returned to. The single most human question about your money, where does it actually go, is the one a list of transactions answers worst.
@@ -1333,11 +1333,11 @@ Tracking answers how much you have already spent and on what. A budget is a plan
 
 - [How to Import a Bank Statement Into a Budget App](/blog/en/import-bank-statement/)
 - [Best Budgeting Apps in 2026: An Honest Buyer's Guide](/blog/en/best-budgeting-apps/)
-- [Expense Map: See Where Your Money Actually Goes](/blog/en/expense-map/)
+- [Expense Map: See Every Purchase Pinned on a Map](/blog/en/expense-map/)
 - [Automatic Expense Tracking: Stop Typing Every Purchase](/blog/en/automatic-expense-tracking/)
-- [Receipt Scanner App That Reads Every Line Item](/blog/en/receipt-scanner-app/)
+- [Receipt Scanner App That Reads Every Item, Not Just Totals](/blog/en/receipt-scanner-app/)
 - [How to Split Bills With Friends and Get Paid Back](/blog/en/split-bill-with-friends/)
-- [Why Most Budgeting Apps Get Deleted in the First Week](/blog/en/why-budget-apps-abandoned-first-week/)
+- [Why You Quit Budgeting Apps in a Week (and the Fix)](/blog/en/why-budget-apps-abandoned-first-week/)
 - [Monefy alternative: switch and keep your categories](/blog/en/switch-from-monefy-wallet-moneymanager/)
 - [Excel Budget Template: A Real Structure You Can Copy Today](/blog/en/excel-budget-template/)
 - [Free Budgeting App: What 'Free' Actually Means](/blog/en/free-budgeting-app/)
@@ -1927,10 +1927,10 @@ Pay down high-interest debt first, because that gives a guaranteed return equal 
 - [Emergency Fund: How Much You Need and How to Build It](/blog/en/emergency-fund/)
 - [How to Track Subscriptions Before They Drain You](/blog/en/track-subscriptions/)
 - [How to Pay Off Debt: Snowball vs Avalanche](/blog/en/pay-off-debt/)
-- [Your Personal Inflation Rate: How to Calculate It](/blog/en/personal-inflation-rate/)
+- [Personal Inflation Rate: Calculate Yours From Receipts](/blog/en/personal-inflation-rate/)
 - [Your Financial Year, Wrapped: What It Reveals](/blog/en/financial-wrapped-year-in-review/)
 - [Stock Up Before Prices Rise: an Inflation Shield](/blog/en/inflation-shield-stock-up/)
-- [Exchange Rate Alert: Get Notified at Your Target Rate](/blog/en/exchange-rate-alert/)
+- [Free Exchange Rate Alert: Get Notified at Your Target Rate](/blog/en/exchange-rate-alert/)
 - [Multi-Currency Budgeting: Track Money in Two Currencies](/blog/en/multi-currency-budgeting/)
 - [How Much Does Christmas Cost? A Step-by-Step Budget](/blog/en/christmas-budget/)
 - [Are Black Friday Deals Real? How to Check Before You Buy](/blog/en/black-friday-deals-real/)
@@ -2505,7 +2505,7 @@ An app keeps the plan visible, which is what keeps you going. AI Budget Assistan
 
 *Related articles: [How to budget your money step by step](/blog/en/how-to-budget/) | [How to save money](/blog/en/how-to-save-money/)*
 
-## Your Personal Inflation Rate: How to Calculate It
+## Personal Inflation Rate: Calculate Yours From Receipts
 URL: https://ai-budget.pl/blog/en/personal-inflation-rate/
 
 Every month a national statistics office publishes one inflation number, and every month it feels wrong. The news says prices rose three percent, but your grocery bill is up far more than that, your coffee costs a third extra, and the same basket that used to fit in one bag now empties your wallet. You are not imagining it. The headline figure is an average of a basket that probably does not match yours.
@@ -2586,7 +2586,7 @@ Enough to compare two clear periods. Three months against the previous three is 
 
 *Related articles: [How to Save Money](/blog/en/how-to-save-money/) | [How to Save Money on Groceries Without Coupons](/blog/en/save-money-on-groceries/)*
 
-## Receipt Scanner App That Reads Every Line Item
+## Receipt Scanner App That Reads Every Item, Not Just Totals
 URL: https://ai-budget.pl/blog/en/receipt-scanner-app/
 
 You photographed the receipt, the app saved the amount and the date, and that was it. You know you spent $52.40 at the grocery store on Tuesday. You do not know how much of that was milk, how much was meat, and how much was a one-off purchase you will never make again. Most receipt scanner apps stop exactly there: a photo plus a total, treated as a closed case.
@@ -3292,7 +3292,7 @@ No. It is your own money that was withheld or prepaid and is being returned. Tre
 **Can I plan a refund if I don't know the exact amount?**
 Yes. Use a conservative estimate and plan in percentages rather than fixed amounts. If the real refund is higher, the extra goes to the same priorities in the same order.
 
-## Why Most Budgeting Apps Get Deleted in the First Week
+## Why You Quit Budgeting Apps in a Week (and the Fix)
 URL: https://ai-budget.pl/blog/en/why-budget-apps-abandoned-first-week/
 
 You download a budgeting app on a Sunday night, full of intent. You poke around the settings, maybe add a category or two, and then close it. Tuesday comes and goes. By Thursday you've forgotten it's even on your phone, and the following weekend it's the first thing your finger swipes toward when you're clearing out apps you don't use.

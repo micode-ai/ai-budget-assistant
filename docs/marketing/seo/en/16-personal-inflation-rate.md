@@ -1,6 +1,6 @@
 ---
-title: "Your Personal Inflation Rate: How to Calculate It"
-meta_description: "The headline inflation number is an average of a basket you may not buy. Learn how to calculate your personal inflation rate from your own receipts."
+title: "Personal Inflation Rate: Calculate Yours From Receipts"
+meta_description: "The official CPI averages a basket you may not buy. Calculate your own inflation rate by hand in a few steps, or let your scanned receipts do it."
 target_keyword: "personal inflation rate"
 slug: "personal-inflation-rate"
 pair: "inflation"

@@ -131,6 +131,20 @@ days old. The same rank-without-clicks pattern held for the app-migration articl
 versions at 5–7.5, zero clicks), retitled around "Monefy alternative" rather than joined by a new
 "alternatives" page, which would have competed with it.
 
+The 2026-10-14 snapshot (28 days to 2026-10-12): 32 clicks, 3.3K impressions, CTR 1%, position 18 —
+**lower than the September window**, and the clicks still come mostly from Poland. Two pages draw
+impressions from B2B intent we cannot serve: `/fr/` from "logiciel d'analyse des dépenses avec IA"
+(company spend-analytics software) and the NL bank-import article from accountants importing into
+Twinfield / Exact Online. Most impressions on the top-10 pages are anonymised long-tail queries,
+so a retitle there targets general appeal rather than one query. ABA-673 rewrote the snippets of
+twelve top-10, zero-click pages and records their baseline in the issue; re-measure the same
+twelve around 2026-11-12, and leave them unchanged until then so the result is readable.
+
+**Search Console can be read from a session through the Chrome extension** (the user's own signed-in
+browser): the performance URL takes `resource_id=sc-domain%3Aai-budget.pl`, `breakdown=query|page|country`
+and an exact-page filter `page=!<encoded url>`. Set rows per page to 500 by clicking the control —
+a scripted `.click()` on the option does nothing — then read the visible table's `tbody tr`.
+
 ## Known gaps
 
 - The three generators keep parallel notions of the language list and of which topics exist;
@@ -161,4 +175,5 @@ pointed at the Polish homepage for every language) · ABA-571/572 (diacritics, m
 ABA-574 (wave 5) · ABA-584 (the ABA-435 re-measure, FR snippet) · ABA-638 (SEO/GEO/AEO pass:
 `llms.txt` facts, named author, per-article OG, calculators, Excel template, help FAQPage, comparison
 and per-bank pages — content-plan Wave 12) · ABA-645 (iOS visitors sent to the web app, not Play) ·
-ABA-672 (lightbox screenshots as WebP, shared groups added to `llms*.txt` and `featureList`).
+ABA-672 (lightbox screenshots as WebP, shared groups added to `llms*.txt` and `featureList`) ·
+ABA-673 (snippet rewrite of twelve top-10, zero-click pages; CTR baseline in the issue).

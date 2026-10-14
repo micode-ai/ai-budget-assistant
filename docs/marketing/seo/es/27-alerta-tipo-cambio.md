@@ -1,6 +1,6 @@
 ---
-title: "Alerta de tipo de cambio: aviso al llegar a tu objetivo"
-meta_description: "Fija un tipo de cambio objetivo y recibe una notificación push en cuanto se alcance. Revisado cada hora, gratis en AI Budget Assistant."
+title: "Alerta de tipo de cambio gratis: aviso a tu cotización"
+meta_description: "Elige un par de divisas y un tipo objetivo, y recibe un aviso push en cuanto se alcance. Revisado cada hora, gratis en AI Budget Assistant."
 target_keyword: "alerta de tipo de cambio"
 slug: "alerta-tipo-cambio"
 pair: "rate-alert"

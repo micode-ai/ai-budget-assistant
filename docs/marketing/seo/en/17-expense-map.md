@@ -1,6 +1,6 @@
 ---
-title: "Expense Map: See Where Your Money Actually Goes"
-meta_description: "A statement shows what you spent, not where. Learn how an expense map turns your spending into a picture and what it reveals a plain list cannot."
+title: "Expense Map: See Every Purchase Pinned on a Map"
+meta_description: "A statement says what you spent, never where. An expense map pins each purchase to its shop, so your spending hotspots show at a glance."
 target_keyword: "expense map"
 slug: "expense-map"
 pair: "expense-map"

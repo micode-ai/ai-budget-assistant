@@ -156,10 +156,10 @@ Kontrola wydatków odpowiada na pytanie, ile i na co już wydałeś. Budżet to 
 
 - [Jak zaimportować wyciąg bankowy do budżetu](/blog/pl/jak-zaimportowac-wyciag-bankowy/)
 - [Najlepsze aplikacje do budżetu w 2026 roku](/blog/pl/najlepsze-aplikacje-do-budzetu/)
-- [Mapa wydatków: zobacz, gdzie znikają pieniądze](/blog/pl/mapa-wydatkow/)
+- [Mapa wydatków: zobacz na mapie, gdzie wydajesz pieniądze](/blog/pl/mapa-wydatkow/)
 - [Automatyczne zapisywanie wydatków bez wysiłku](/blog/pl/automatyczne-zapisywanie-wydatkow/)
 - [Skanowanie paragonów: liczą się pozycje, nie suma](/blog/pl/skanowanie-paragonow/)
-- [Jak podzielić rachunek ze znajomymi: 3 sposoby](/blog/pl/jak-podzielic-rachunek/)
+- [Jak podzielić rachunek ze znajomymi: 3 sposoby + link BLIK](/blog/pl/jak-podzielic-rachunek/)
 - [Dlaczego usuwamy aplikacje do budżetu po tygodniu](/blog/pl/dlaczego-usuwamy-aplikacje-do-budzetu/)
 - [Alternatywa dla Monefy: przenieś dane razem z kategoriami](/blog/pl/zmiana-z-monefy-wallet-money-manager/)
 - [Budżet domowy w Excelu: szablon i kiedy przestaje wystarczać](/blog/pl/budzet-domowy-w-excelu/)

@@ -1,6 +1,6 @@
 ---
-title: "Presupuesto compartido en pareja: un plan sin discusiones"
-meta_description: "Crea un presupuesto compartido en pareja que aguante la vida real: modelos que funcionan, dinero personal y una vista común que ambos veis en tiempo real."
+title: "Presupuesto en pareja: 3 modelos para repartir gastos"
+meta_description: "¿Todo en común, proporcional a los ingresos o lo tuyo, lo mío y lo nuestro? Compara los 3 modelos, el dinero personal de cada uno y cómo llevarlo juntos."
 target_keyword: "presupuesto compartido en pareja"
 slug: "presupuesto-compartido-en-pareja"
 pair: "shared-budget"

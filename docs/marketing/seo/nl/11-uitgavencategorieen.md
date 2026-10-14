@@ -1,6 +1,6 @@
 ---
-title: "Uitgavencategorieën die echt werken in je budget"
-meta_description: "De juiste uitgavencategorieën zijn de ruggengraat van je budget. Een kant-en-klare startlijst, veelgemaakte fouten en hoe je categorieën slim inzet."
+title: "Uitgavencategorieën: een complete startlijst voor je budget"
+meta_description: "Hoeveel categorieën heb je nodig voor inkomsten en uitgaven? Een kant-en-klare lijst met vaste, variabele en periodieke posten, plus veelgemaakte fouten."
 target_keyword: "uitgavencategorieën"
 slug: "uitgavencategorieen"
 pair: "categories"

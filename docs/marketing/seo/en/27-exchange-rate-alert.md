@@ -1,6 +1,6 @@
 ---
-title: "Exchange Rate Alert: Get Notified at Your Target Rate"
-meta_description: "Set a target exchange rate and get a push notification once it is hit. Checked hourly, free in AI Budget Assistant, no subscription required."
+title: "Free Exchange Rate Alert: Get Notified at Your Target Rate"
+meta_description: "Pick a currency pair and a target rate, and get a push the moment it is hit. Checked every hour, free in AI Budget Assistant, no subscription needed."
 target_keyword: "exchange rate alert"
 slug: "exchange-rate-alert"
 pair: "rate-alert"
