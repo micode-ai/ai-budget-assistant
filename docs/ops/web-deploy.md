@@ -106,6 +106,21 @@ On the VPS:
    }
    ```
 
+   **The live file has moved past this sketch.** This container now serves the apex landing, blog
+   and help, and the file has gained gzip, `error_page 404`, a 1-year asset rule (ABA-361), and
+   since ABA-672 (2026-10-14) `Cache-Control "no-cache"` on `/index.html` — `no-store` kept the
+   homepage out of the back/forward cache, `no-cache` still revalidates every load — plus
+   `webp|avif` in the asset regex (the landing screenshots are WebP).
+
+   **Editing it: back up, edit, then `docker restart ai-budget-web-prod` — a reload is not
+   enough.** The file is a single-file bind mount, and at some earlier edit it was replaced rather
+   than rewritten, so the container was still bound to the old inode: in ABA-672 the host file was
+   correct, `nginx -t` and `nginx -s reload` succeeded, and the container kept serving the old
+   header. Check what the container actually sees with
+   `docker exec ai-budget-web-prod grep -n Cache-Control /etc/nginx/conf.d/default.conf`, and
+   verify with `curl -sI https://ai-budget.pl/ | grep -i cache-control`. The restart is a ~1 s
+   blip of the apex only.
+
 3. `/opt/ai-budget-web/docker-compose.yml`:
 
    ```yaml

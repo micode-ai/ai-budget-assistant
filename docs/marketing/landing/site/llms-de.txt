@@ -20,6 +20,7 @@
 - Umzug von Monefy, Wallet by BudgetBakers und Money Manager mit den eigenen Kategorien
 - Rechnung teilen: Freunde erhalten einen Gast-Link mit ihrem Anteil, ohne die App zu installieren
 - Reisekasse: gemeinsames Konto auf Zeit mit Aufteilung und Abrechnung
+- Gemeinsame Ausgabengruppen (WG, Reise, Einkäufe): Freunde ohne Konto machen per Browser-Link mit, sehen, wer wem was schuldet, und gleichen ab
 - Gemeinsame Einkaufslisten
 - Persönlicher Inflationsindex und Inflation Shield aus den eigenen Kassenbon-Preisen
 - Financial Wrapped: Jahresrückblick in Karten

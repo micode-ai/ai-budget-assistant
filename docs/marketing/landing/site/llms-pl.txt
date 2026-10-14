@@ -20,6 +20,7 @@
 - Przeprowadzka z Monefy, Wallet by BudgetBakers i Money Manager razem z własnymi kategoriami
 - Dzielenie rachunku: znajomi dostają link gościa ze swoją częścią, bez instalowania aplikacji
 - Portfel wyjazdowy: tymczasowe wspólne konto z podziałem kosztów i rozliczeniem
+- Wspólne grupy wydatków (mieszkanie, wyjazd, zakupy): znajomi bez konta dołączają przez link w przeglądarce, widzą, kto komu ile winien, i się rozliczają
 - Wspólne listy zakupów
 - Osobisty wskaźnik inflacji i Tarcza antyinflacyjna z cen z własnych paragonów
 - Financial Wrapped: podsumowanie roku w kartach

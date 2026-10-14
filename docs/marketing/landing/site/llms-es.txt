@@ -20,6 +20,7 @@
 - Cambio desde Monefy, Wallet by BudgetBakers y Money Manager conservando tus categorías
 - Dividir cuentas: tus amigos reciben un enlace de invitado con su parte, sin instalar la app
 - Monedero de viaje: cuenta compartida temporal con reparto de gastos y liquidación
+- Grupos de gastos compartidos (piso, viaje, compras): amigos sin cuenta participan desde un enlace en el navegador, ven quién debe a quién y liquidan
 - Listas de la compra compartidas
 - Índice de inflación personal e Inflation Shield con los precios de tus propios tickets
 - Financial Wrapped: resumen del año en tarjetas

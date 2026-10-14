@@ -1046,7 +1046,7 @@ footer .wrap{padding:30px 22px;display:flex;flex-direction:column;align-items:ce
 .lbcb{position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;pointer-events:none}
 .lb{display:none;position:fixed;inset:0;background:rgba(10,10,12,.82);z-index:50;align-items:center;justify-content:center;padding:24px}
 .lbcb:checked + .lb{display:flex}.lb .bg{position:absolute;inset:0;cursor:default}
-.lb img{position:relative;max-height:86vh;max-width:360px;width:100%;border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.lb picture{display:contents}.lb img{position:relative;max-height:86vh;max-width:360px;width:100%;border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
 .lb .x{position:absolute;top:16px;right:22px;color:#fff;font-size:34px;font-weight:700;z-index:2;cursor:pointer;line-height:1}
 .cc{position:fixed;left:16px;right:16px;bottom:16px;max-width:560px;margin:0 auto;background:#1a1a1d;color:#fff;border-radius:14px;padding:16px 18px;box-shadow:0 12px 40px rgba(0,0,0,.35);z-index:60;font-size:14px;display:none}
 .cc.show{display:block}.cc p{margin:0 0 12px;line-height:1.5}
@@ -1402,6 +1402,7 @@ def jsonld(lang, langs):
              "Migration from Monefy, Wallet by BudgetBakers and Money Manager, keeping your own categories",
              "Bill splitting: friends get a guest link with their share, no app install needed",
              "Trip wallet: temporary shared account with multi-way splits and settle-up",
+             "Shared expense groups (flat, trip, groceries): friends without an account join from a browser link, see who owes whom and settle up",
              "Shared shopping lists",
              "Personal inflation index and Inflation Shield from your own receipt prices",
              "Financial Wrapped: a year-in-review card deck",
@@ -1481,7 +1482,8 @@ def page(lang, langs):
                   f'<span class="see">{html.escape(t["see"])} &rarr;</span></label>')
         lbs += (f'<input class="lbcb" type="checkbox" id="{cid}">'
                 f'<div class="lb"><label class="bg" for="{cid}"></label><label class="x" for="{cid}">&times;</label>'
-                f'<img loading="lazy" width="{iw}" height="{ih}" src="{BASE}/assets/screens/{lang}/{shot}" alt="{html.escape(h)} - AI Budget Assistant"></div>')
+                f'<picture><source type="image/webp" srcset="{BASE}/assets/screens/{lang}/{os.path.splitext(shot)[0]}.webp">'
+                f'<img loading="lazy" width="{iw}" height="{ih}" src="{BASE}/assets/screens/{lang}/{shot}" alt="{html.escape(h)} - AI Budget Assistant"></picture></div>')
     faq = "".join(f'<div class="qa"><h3>{html.escape(q)}</h3><p>{html.escape(a)}</p></div>' for q, a in t["faq"])
     fb = "".join(
         f'<li><a href="/blog/{lang}/{BLOG_IDX[(lang, pr)][0]}/">{html.escape(BLOG_IDX[(lang, pr)][1])}</a></li>'
@@ -1520,7 +1522,11 @@ def copy_assets(langs):
                 print("  MISSING screenshot:", lang, shot); continue
             img = Image.open(src).convert("RGB")
             nw = 540; nh = round(img.height * nw / img.width)
-            img.resize((nw, nh), Image.LANCZOS).save(os.path.join(dst, shot), "PNG", optimize=True)
+            small = img.resize((nw, nh), Image.LANCZOS)
+            small.save(os.path.join(dst, shot), "PNG", optimize=True)
+            # The lightbox serves this WebP through <picture>; the PNG stays as the fallback and as
+            # the URL the image sitemap and the SoftwareApplication screenshots cite.
+            small.save(os.path.join(dst, base + ".webp"), "WEBP", quality=82, method=6)
 
 def legal_page(lang, kind):
     L = "pl" if lang == "pl" else "en"
@@ -1605,6 +1611,7 @@ LLMS_TXT_I18N = {
             "Umzug von Monefy, Wallet by BudgetBakers und Money Manager mit den eigenen Kategorien",
             "Rechnung teilen: Freunde erhalten einen Gast-Link mit ihrem Anteil, ohne die App zu installieren",
             "Reisekasse: gemeinsames Konto auf Zeit mit Aufteilung und Abrechnung",
+            "Gemeinsame Ausgabengruppen (WG, Reise, Einkäufe): Freunde ohne Konto machen per Browser-Link mit, sehen, wer wem was schuldet, und gleichen ab",
             "Gemeinsame Einkaufslisten",
             "Persönlicher Inflationsindex und Inflation Shield aus den eigenen Kassenbon-Preisen",
             "Financial Wrapped: Jahresrückblick in Karten",
@@ -1647,6 +1654,7 @@ LLMS_TXT_I18N = {
             "Overstappen van Monefy, Wallet by BudgetBakers en Money Manager met je eigen categorieën",
             "Rekening delen: vrienden krijgen een gastlink met hun deel, zonder de app te installeren",
             "Reisportemonnee: tijdelijke gedeelde rekening met verdeling en verrekening",
+            "Gedeelde uitgavengroepen (huis, reis, boodschappen): vrienden zonder account doen mee via een browserlink, zien wie wie wat schuldig is en rekenen af",
             "Gedeelde boodschappenlijsten",
             "Persoonlijke inflatie-index en Inflation Shield op basis van je eigen bonprijzen",
             "Financial Wrapped: jaaroverzicht in kaarten",
@@ -1689,6 +1697,7 @@ LLMS_TXT_I18N = {
             "Przeprowadzka z Monefy, Wallet by BudgetBakers i Money Manager razem z własnymi kategoriami",
             "Dzielenie rachunku: znajomi dostają link gościa ze swoją częścią, bez instalowania aplikacji",
             "Portfel wyjazdowy: tymczasowe wspólne konto z podziałem kosztów i rozliczeniem",
+            "Wspólne grupy wydatków (mieszkanie, wyjazd, zakupy): znajomi bez konta dołączają przez link w przeglądarce, widzą, kto komu ile winien, i się rozliczają",
             "Wspólne listy zakupów",
             "Osobisty wskaźnik inflacji i Tarcza antyinflacyjna z cen z własnych paragonów",
             "Financial Wrapped: podsumowanie roku w kartach",
@@ -1729,6 +1738,7 @@ LLMS_TXT_I18N = {
             "Переезд из Monefy, Wallet by BudgetBakers и Money Manager вместе со своими категориями",
             "Разделение счёта: друзья получают гостевую ссылку со своей долей, без установки приложения",
             "Кошелёк поездки: временный общий счёт с разделением расходов и взаиморасчётом",
+            "Общие группы расходов (квартира, поездка, продукты): друзья без аккаунта участвуют по ссылке в браузере, видят, кто кому должен, и рассчитываются",
             "Общие списки покупок",
             "Личный индекс инфляции и Inflation Shield по ценам из ваших чеков",
             "Financial Wrapped: итоги года в карточках",
@@ -1771,6 +1781,7 @@ LLMS_TXT_I18N = {
             "Cambio desde Monefy, Wallet by BudgetBakers y Money Manager conservando tus categorías",
             "Dividir cuentas: tus amigos reciben un enlace de invitado con su parte, sin instalar la app",
             "Monedero de viaje: cuenta compartida temporal con reparto de gastos y liquidación",
+            "Grupos de gastos compartidos (piso, viaje, compras): amigos sin cuenta participan desde un enlace en el navegador, ven quién debe a quién y liquidan",
             "Listas de la compra compartidas",
             "Índice de inflación personal e Inflation Shield con los precios de tus propios tickets",
             "Financial Wrapped: resumen del año en tarjetas",
@@ -1814,6 +1825,7 @@ LLMS_TXT_I18N = {
             "Migration depuis Monefy, Wallet by BudgetBakers et Money Manager en gardant vos catégories",
             "Partage d'addition : vos amis reçoivent un lien invité avec leur part, sans installer l'appli",
             "Cagnotte de voyage : compte partagé temporaire avec répartition des dépenses et règlement",
+            "Groupes de dépenses partagées (colocation, voyage, courses) : les amis sans compte participent depuis un lien dans le navigateur, voient qui doit quoi à qui et règlent",
             "Listes de courses partagées",
             "Indice d'inflation personnel et Inflation Shield à partir des prix de vos propres tickets",
             "Financial Wrapped : le bilan de l'année en cartes",
@@ -1856,6 +1868,7 @@ LLMS_TXT_I18N = {
             "Переїзд з Monefy, Wallet by BudgetBakers і Money Manager разом із власними категоріями",
             "Розділення рахунку: друзі отримують гостьове посилання зі своєю часткою, без встановлення застосунку",
             "Гаманець подорожі: тимчасовий спільний рахунок з розподілом витрат і взаєморозрахунком",
+            "Спільні групи витрат (квартира, подорож, продукти): друзі без акаунта долучаються за посиланням у браузері, бачать, хто кому винен, і розраховуються",
             "Спільні списки покупок",
             "Особистий індекс інфляції та Inflation Shield за цінами з ваших чеків",
             "Financial Wrapped: підсумки року в картках",
@@ -1899,6 +1912,7 @@ LLMS_TXT_I18N = {
             "Пераезд з Monefy, Wallet by BudgetBakers і Money Manager разам з уласнымі катэгорыямі",
             "Падзел рахунку: сябры атрымліваюць гасцявую спасылку са сваёй доляй, без усталявання дадатку",
             "Кашалёк паездкі: часовы агульны рахунак з падзелам выдаткаў і ўзаемаразлікам",
+            "Агульныя групы выдаткаў (кватэра, паездка, прадукты): сябры без акаўнта далучаюцца па спасылцы ў браўзеры, бачаць, хто каму вінен, і разлічваюцца",
             "Агульныя спісы пакупак",
             "Асабісты індэкс інфляцыі і Inflation Shield па цэнах з вашых чэкаў",
             "Financial Wrapped: вынікі года ў картках",
@@ -2146,6 +2160,7 @@ def build():
             f"- Migration from Monefy, Wallet by BudgetBakers and Money Manager, keeping your own categories\n"
             f"- Bill splitting: friends get a guest link with their share, no app install needed\n"
             f"- Trip wallet: temporary shared account with multi-way splits and settle-up\n"
+            f"- Shared expense groups (flat, trip, groceries): friends without an account join from a browser link, see who owes whom and settle up\n"
             f"- Shared shopping lists\n"
             f"- Personal inflation index and Inflation Shield from your own receipt prices\n"
             f"- Financial Wrapped: a year-in-review card deck\n"

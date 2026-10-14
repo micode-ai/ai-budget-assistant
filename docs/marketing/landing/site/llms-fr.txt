@@ -20,6 +20,7 @@
 - Migration depuis Monefy, Wallet by BudgetBakers et Money Manager en gardant vos catégories
 - Partage d'addition : vos amis reçoivent un lien invité avec leur part, sans installer l'appli
 - Cagnotte de voyage : compte partagé temporaire avec répartition des dépenses et règlement
+- Groupes de dépenses partagées (colocation, voyage, courses) : les amis sans compte participent depuis un lien dans le navigateur, voient qui doit quoi à qui et règlent
 - Listes de courses partagées
 - Indice d'inflation personnel et Inflation Shield à partir des prix de vos propres tickets
 - Financial Wrapped : le bilan de l'année en cartes

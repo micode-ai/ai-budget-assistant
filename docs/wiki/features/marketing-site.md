@@ -99,6 +99,11 @@ Help pages keep the Organization as author — they are product documentation.
 `<!-- calculator:503020 -->` / `<!-- calculator:emergency -->` line and rendered by `calc_html` —
 never as a separate `/tools/` page competing for the same query.
 
+**Lightbox screenshots ship as WebP with a PNG fallback (ABA-672).** `copy_assets()` writes both
+from the same 540px resize, and the lightbox wraps the `<img>` in `<picture>`; `.lb picture` is
+`display:contents` so the flex lightbox lays out as before. The image sitemap and the
+`SoftwareApplication.screenshot` URLs keep citing the PNG — do not drop the PNG to save space.
+
 **Hand-made downloads live in `docs/marketing/seo/assets/<lang>/`**, because `site/` is wiped on
 every build; `build_blog.py` copies them in. The Excel template is written by
 `build_excel_template.py`, run by hand — an `.xlsx` is a zip with timestamps, so regenerating it
@@ -137,10 +142,15 @@ versions at 5–7.5, zero clicks), retitled around "Monefy alternative" rather t
   delete the app item as non-notable — press coverage as "described at URL" is what keeps it. mi-code.pl spells the company
   "MiCode Sp. z o.o." and has no `@id`, so the two sites still meet only through `alternateName`
   and the shared URL.
-- Below-fold lightbox images are not served as WebP/AVIF.
 - The app has no `aggregateRating` (no verified rating source).
 - `llms.txt`, `LLMS_TXT_I18N` and `featureList` are three hand-maintained copies of the same
-  feature list; nothing cross-checks them against each other or against the product.
+  feature list; nothing cross-checks them against each other or against the product. A shipped
+  feature is missing from all three until someone adds it by hand — shared groups (ABA-640) went
+  unlisted for four days.
+- Response headers are not in any generator: they come from the VPS-only inner nginx config
+  (`/opt/ai-budget-web/default.conf`, runbook `docs/ops/web-deploy.md`). Until ABA-672 it sent the
+  homepage `no-store`, keeping it out of the back/forward cache, and gave `.webp` no cache header;
+  an edit there needs a container restart, not just a reload.
 
 ## History
 
@@ -150,4 +160,5 @@ ABA-281 (internal linking, index schema) · ABA-320 (pricing driven from one JSO
 pointed at the Polish homepage for every language) · ABA-571/572 (diacritics, meta budgets) ·
 ABA-574 (wave 5) · ABA-584 (the ABA-435 re-measure, FR snippet) · ABA-638 (SEO/GEO/AEO pass:
 `llms.txt` facts, named author, per-article OG, calculators, Excel template, help FAQPage, comparison
-and per-bank pages — content-plan Wave 12) · ABA-645 (iOS visitors sent to the web app, not Play).
+and per-bank pages — content-plan Wave 12) · ABA-645 (iOS visitors sent to the web app, not Play) ·
+ABA-672 (lightbox screenshots as WebP, shared groups added to `llms*.txt` and `featureList`).

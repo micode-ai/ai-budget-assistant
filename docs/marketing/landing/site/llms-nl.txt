@@ -20,6 +20,7 @@
 - Overstappen van Monefy, Wallet by BudgetBakers en Money Manager met je eigen categorieën
 - Rekening delen: vrienden krijgen een gastlink met hun deel, zonder de app te installeren
 - Reisportemonnee: tijdelijke gedeelde rekening met verdeling en verrekening
+- Gedeelde uitgavengroepen (huis, reis, boodschappen): vrienden zonder account doen mee via een browserlink, zien wie wie wat schuldig is en rekenen af
 - Gedeelde boodschappenlijsten
 - Persoonlijke inflatie-index en Inflation Shield op basis van je eigen bonprijzen
 - Financial Wrapped: jaaroverzicht in kaarten
