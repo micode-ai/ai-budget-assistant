@@ -119,6 +119,31 @@ def parse_doc(path):
             desc = ln[2:].strip(); break
     return title, desc, raw
 
+META_MAX, TITLE_MAX = 155, 60
+TITLE_SUFFIX = " | AI Budget Assistant"
+
+def meta_snippet(desc):
+    """The `> ` lead line doubles as the in-app section intro, so it is written for reading, not
+    for a search snippet, and half of them ran past 160 characters (ABA-676). Keep whole sentences
+    that fit META_MAX; if even the first sentence does not, cut at a word boundary with an
+    ellipsis. The page body still shows the full line."""
+    if len(desc) <= META_MAX:
+        return desc
+    out = ""
+    for sent in re.split(r"(?<=[.!?])\s+", desc):
+        cand = f"{out} {sent}".strip()
+        if len(cand) > META_MAX:
+            break
+        out = cand
+    if out:
+        return out
+    return desc[:META_MAX - 1].rsplit(" ", 1)[0].rstrip(",;:-") + "…"
+
+def page_title(title):
+    """Brand suffix only when it still fits; a long section name keeps all of its own words."""
+    full = title + TITLE_SUFFIX
+    return full if len(full) <= TITLE_MAX else title
+
 def word_count(md):
     return len(re.findall(r"\S+", md))
 
@@ -216,8 +241,8 @@ def build():
         lang, slug = a["lang"], a["slug"]
         url = f"{SITE}/help/{lang}/{slug}/"
         og = f"/help/{lang}/assets/og-default.png"
-        title = f'{a["title"]} | AI Budget Assistant'
-        desc = a["desc"] or a["title"]
+        title = page_title(a["title"])
+        desc = meta_snippet(a["desc"] or a["title"])
         thin = a["words"] < THIN_WORDS
         robots = "noindex,follow" if thin else "index,follow,max-image-preview:large"
         # hreflang alternates: same slug across langs that have it

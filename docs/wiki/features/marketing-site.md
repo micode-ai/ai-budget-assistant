@@ -126,6 +126,11 @@ every build; `build_blog.py` copies them in. The Excel template is written by
 `build_excel_template.py`, run by hand — an `.xlsx` is a zip with timestamps, so regenerating it
 per build would commit a changed binary every time.
 
+**Help snippets are fitted by the generator, not by editing `user_docs` (ABA-676).** The `> ` lead
+line is both the meta description and the in-app section intro, so `meta_snippet()` keeps whole
+sentences up to 155 characters and `page_title()` drops the brand suffix when it would push a
+title past 60. Shortening the lead line itself would change the app.
+
 **Help pages get FAQPage from question-shaped headings too** (`help_faq` in `build_help.py`), since
 help is written as task guides and its questions sit in headings, not in a bold FAQ block.
 
@@ -147,6 +152,10 @@ language stub; the 404s are pre-rename slugs; 36 of the 40 "Discovered — not i
 days old. The same rank-without-clicks pattern held for the app-migration article (all nine
 versions at 5–7.5, zero clicks), retitled around "Monefy alternative" rather than joined by a new
 "alternatives" page, which would have competed with it.
+
+The 2026-10-15 page-indexing report: 670 indexed, 104 not — 42 "Discovered" are the newest
+article waves, "Crawled" is mostly admin fonts, the 8 404s are legacy URLs (old numbered Polish
+slugs, `.html` legal pages). Nothing broken.
 
 The 2026-10-14 snapshot (28 days to 2026-10-12): 32 clicks, 3.3K impressions, CTR 1%, position 18 —
 **lower than the September window**, and the clicks still come mostly from Poland. Two pages draw
@@ -192,4 +201,5 @@ and per-bank pages — content-plan Wave 12) · ABA-645 (iOS visitors sent to th
 ABA-672 (lightbox screenshots as WebP, shared groups added to `llms*.txt` and `featureList`) ·
 ABA-673 (snippet rewrite of twelve top-10, zero-click pages; CTR baseline in the issue) ·
 ABA-674 (one `FEATURES_EN` list with a translation-length check; one company spelling) ·
-ABA-675 (Polish push: article 47 on living on 2000 zł, answer-first rework of 29 and 14).
+ABA-675 (Polish push: article 47 on living on 2000 zł, answer-first rework of 29 and 14) ·
+ABA-676 (help snippets fitted to length; site-wide on-page and GSC indexing audit clean).
