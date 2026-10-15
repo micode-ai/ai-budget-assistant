@@ -81,11 +81,21 @@ exists locally and nowhere else.
 
 **`llms.txt` and `featureList` state product facts that answer engines repeat verbatim (ABA-638).**
 They had drifted badly — a model name, a missing currency, six of nine bank parsers, end-to-end
-encryption presented as the default — in all nine languages at once, because the English
-`llms.txt` in `build()`, `LLMS_TXT_I18N` and the JSON-LD `featureList` are three hand-written
-copies. Check a claim against the wiki before adding it, and never list a feature that is
-flag-gated off in production (receipt price-check alerts, Community Price Map). Do not name the AI
-model; it goes stale.
+encryption presented as the default — in all nine languages at once, because they were three
+hand-written copies. Since ABA-674 there is one English list, `FEATURES_EN` in `build_landing.py`:
+`llms.txt` renders it and `featureList` is it plus two product facts. Each `LLMS_TXT_I18N[lang]
+["features"]` translates it item for item, and `check_feature_lists()` stops the build when a
+translation's length differs — so a new feature goes in at the same index in all nine lists. The
+check keeps the lists in step; it cannot see a translation that says something else. Check a
+claim against the wiki before adding it, and never list a feature that is flag-gated off in
+production (receipt price-check alerts, Community Price Map). Do not name the AI model; it goes
+stale.
+
+**The company is "MiCode Sp. z o.o." everywhere we generate (ABA-674)** — `COMPANY` in both the
+landing and blog generators, matching mi-code.pl and Wikidata Q141551004; "MICODE sp. z o.o." is
+kept in `alternateName`. Answer engines join mentions of an entity by name, so a second spelling
+splits it. The privacy/terms texts and the cookie policy's data-controller line are legal
+documents and were deliberately not changed.
 
 **Articles have a named author.** `AUTHOR`/`author_node()` in `build_blog.py` is one `Person` with
 the stable `@id` `/#author`, referenced by every article's `author`; the about page (in
@@ -153,14 +163,11 @@ a scripted `.click()` on the option does nothing — then read the visible table
   profile lists (`ORG_SAMEAS` / `APP_SAMEAS`, duplicated in the landing and blog generators),
   each ending in its Wikidata item: MiCode Sp. z o.o. is Q141551004, the app Q141551014 (created
   2026-09-24; not to be confused with Q110126846 "Micode", a French YouTuber). Wikidata may still
-  delete the app item as non-notable — press coverage as "described at URL" is what keeps it. mi-code.pl spells the company
-  "MiCode Sp. z o.o." and has no `@id`, so the two sites still meet only through `alternateName`
-  and the shared URL.
+  delete the app item as non-notable — press coverage as "described at URL" is what keeps it.
+  mi-code.pl has no `@id`, so the two sites meet only through the shared name and URL.
 - The app has no `aggregateRating` (no verified rating source).
-- `llms.txt`, `LLMS_TXT_I18N` and `featureList` are three hand-maintained copies of the same
-  feature list; nothing cross-checks them against each other or against the product. A shipped
-  feature is missing from all three until someone adds it by hand — shared groups (ABA-640) went
-  unlisted for four days.
+- Nothing checks `FEATURES_EN` against the product: a shipped feature is missing until someone adds
+  it by hand — shared groups (ABA-640) went unlisted for four days.
 - Response headers are not in any generator: they come from the VPS-only inner nginx config
   (`/opt/ai-budget-web/default.conf`, runbook `docs/ops/web-deploy.md`). Until ABA-672 it sent the
   homepage `no-store`, keeping it out of the back/forward cache, and gave `.webp` no cache header;
@@ -176,4 +183,5 @@ ABA-574 (wave 5) · ABA-584 (the ABA-435 re-measure, FR snippet) · ABA-638 (SEO
 `llms.txt` facts, named author, per-article OG, calculators, Excel template, help FAQPage, comparison
 and per-bank pages — content-plan Wave 12) · ABA-645 (iOS visitors sent to the web app, not Play) ·
 ABA-672 (lightbox screenshots as WebP, shared groups added to `llms*.txt` and `featureList`) ·
-ABA-673 (snippet rewrite of twelve top-10, zero-click pages; CTR baseline in the issue).
+ABA-673 (snippet rewrite of twelve top-10, zero-click pages; CTR baseline in the issue) ·
+ABA-674 (one `FEATURES_EN` list with a translation-length check; one company spelling).

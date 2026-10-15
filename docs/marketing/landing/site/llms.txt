@@ -49,5 +49,5 @@
 
 - [Web app](https://app.ai-budget.pl): sign in and use AI Budget Assistant in the browser
 - [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant): Android app
-- [Company: MICODE sp. z o.o.](https://mi-code.pl/): the company behind the app
+- [Company: MiCode Sp. z o.o.](https://mi-code.pl/): the company behind the app
 - [Sitemap](https://ai-budget.pl/sitemap.xml): all indexable URLs

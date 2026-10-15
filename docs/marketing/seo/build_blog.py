@@ -4,7 +4,7 @@ Build static, crawlable, MULTILINGUAL HTML blog pages from the SEO markdown.
 
 ai-budget.pl apex is a static landing; this blog lives at /blog and shares the
 landing's header (brand + language dropdown + Log in -> app.ai-budget.pl) and
-footer (MICODE sp. z o.o. logo).
+footer (MiCode Sp. z o.o. logo).
 
 SEO-safe i18n: each language at /blog/<lang>/<slug>/ + /blog/<lang>/; hreflang
 pairs articles by the `pair` frontmatter key (x-default = en); sitemap lists every
@@ -22,7 +22,7 @@ OUT = os.path.join(ROOT, "site")
 SITE = "https://ai-budget.pl"
 APP = "https://app.ai-budget.pl"
 PLAY = "https://play.google.com/store/apps/details?id=com.budget.assistant"
-COMPANY = "MICODE sp. z o.o."
+COMPANY = "MiCode Sp. z o.o."  # as mi-code.pl and Wikidata Q141551004 spell it (ABA-674)
 COMPANY_URL = "https://mi-code.pl/"
 YEAR = "2026"
 # Startup Fame "Featured" badge (verification requires a link to https://startupfa.me).
@@ -206,7 +206,7 @@ APP_SAMEAS = [
 ]
 ORG_SAMEAS = ["https://mi-code.pl/", "https://github.com/micode-ai",
               "https://www.wikidata.org/wiki/Q141551004"]
-ORG_ALT_NAMES = ["MiCode Sp. z o.o.", "MiCode"]
+ORG_ALT_NAMES = ["MICODE sp. z o.o.", "MiCode"]
 ORG_TAX_ID = "5833510147"  # NIP, as published on mi-code.pl
 GA_ID = "G-WMEFHYETVX"
 CONSENT = {
@@ -294,15 +294,15 @@ AUTHOR_ID = f"{SITE}/#author"
 def author_url(lang):
     return f"{SITE}{about_url(lang)}#author"
 AUTHOR_BIO = {
-    "en": "Mikhail Peraviortkin is the founder of MICODE sp. z o.o., the company behind AI Budget Assistant, and writes the guides on this blog.",
-    "pl": "Mikhail Peraviortkin jest założycielem MICODE sp. z o.o., firmy, która tworzy AI Budget Assistant, i autorem poradników na tym blogu.",
-    "de": "Mikhail Peraviortkin ist Gründer von MICODE sp. z o.o., dem Unternehmen hinter AI Budget Assistant, und schreibt die Ratgeber in diesem Blog.",
-    "es": "Mikhail Peraviortkin es el fundador de MICODE sp. z o.o., la empresa que desarrolla AI Budget Assistant, y escribe las guías de este blog.",
-    "fr": "Mikhail Peraviortkin est le fondateur de MICODE sp. z o.o., la société qui développe AI Budget Assistant, et rédige les guides de ce blog.",
-    "ru": "Mikhail Peraviortkin — основатель MICODE sp. z o.o., компании, которая создаёт AI Budget Assistant, и автор руководств в этом блоге.",
-    "ua": "Mikhail Peraviortkin — засновник MICODE sp. z o.o., компанії, що створює AI Budget Assistant, і автор посібників у цьому блозі.",
-    "be": "Mikhail Peraviortkin — заснавальнік MICODE sp. z o.o., кампаніі, якая стварае AI Budget Assistant, і аўтар дапаможнікаў у гэтым блогу.",
-    "nl": "Mikhail Peraviortkin is de oprichter van MICODE sp. z o.o., het bedrijf achter AI Budget Assistant, en schrijft de gidsen op deze blog.",
+    "en": "Mikhail Peraviortkin is the founder of MiCode Sp. z o.o., the company behind AI Budget Assistant, and writes the guides on this blog.",
+    "pl": "Mikhail Peraviortkin jest założycielem MiCode Sp. z o.o., firmy, która tworzy AI Budget Assistant, i autorem poradników na tym blogu.",
+    "de": "Mikhail Peraviortkin ist Gründer von MiCode Sp. z o.o., dem Unternehmen hinter AI Budget Assistant, und schreibt die Ratgeber in diesem Blog.",
+    "es": "Mikhail Peraviortkin es el fundador de MiCode Sp. z o.o., la empresa que desarrolla AI Budget Assistant, y escribe las guías de este blog.",
+    "fr": "Mikhail Peraviortkin est le fondateur de MiCode Sp. z o.o., la société qui développe AI Budget Assistant, et rédige les guides de ce blog.",
+    "ru": "Mikhail Peraviortkin — основатель MiCode Sp. z o.o., компании, которая создаёт AI Budget Assistant, и автор руководств в этом блоге.",
+    "ua": "Mikhail Peraviortkin — засновник MiCode Sp. z o.o., компанії, що створює AI Budget Assistant, і автор посібників у цьому блозі.",
+    "be": "Mikhail Peraviortkin — заснавальнік MiCode Sp. z o.o., кампаніі, якая стварае AI Budget Assistant, і аўтар дапаможнікаў у гэтым блогу.",
+    "nl": "Mikhail Peraviortkin is de oprichter van MiCode Sp. z o.o., het bedrijf achter AI Budget Assistant, en schrijft de gidsen op deze blog.",
 }
 AUTHOR_LABEL = {"en": "Author", "pl": "Autor", "de": "Autor", "es": "Autor", "fr": "Auteur",
                 "ru": "Автор", "ua": "Автор", "be": "Аўтар", "nl": "Auteur"}

@@ -49,5 +49,5 @@
 
 - [app.ai-budget.pl](https://app.ai-budget.pl): zaloguj się i korzystaj z AI Budget Assistant w przeglądarce
 - [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant): aplikacja na Androida
-- [MICODE sp. z o.o.](https://mi-code.pl/): firma stojąca za aplikacją
+- [MiCode Sp. z o.o.](https://mi-code.pl/): firma stojąca za aplikacją
 - [Sitemap](https://ai-budget.pl/sitemap.xml): wszystkie indeksowalne adresy URL

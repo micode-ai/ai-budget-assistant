@@ -11,7 +11,7 @@ Features:
   hierarchy, internal link to blog, static HTML + inline CSS.
 - Clickable feature cards -> pure-CSS (:target) lightbox showing the per-language
   app screenshot (from feature_graphics/marketing/<lang>/, resized for web).
-- Footer with the MICODE sp. z o.o. company logo + copyright (like eksiegowyai.pl).
+- Footer with the MiCode Sp. z o.o. company logo + copyright (like eksiegowyai.pl).
 
 BASE/ROBOTS gate the noindex /preview build vs the apex cutover:
   preview: LANDING_BASE=preview ROBOTS="noindex,follow"
@@ -35,7 +35,7 @@ FEAT = os.path.join(ROOT, "..", "feature_graphics", "by-language")  # clean raw 
 SITE = "https://ai-budget.pl"
 APP = "https://app.ai-budget.pl"
 PLAY = "https://play.google.com/store/apps/details?id=com.budget.assistant"
-COMPANY = "MICODE sp. z o.o."
+COMPANY = "MiCode Sp. z o.o."  # as mi-code.pl and Wikidata Q141551004 spell it (ABA-674)
 COMPANY_URL = "https://mi-code.pl/"
 YEAR = "2026"
 # Startup Fame "Featured" badge (verification requires a link to https://startupfa.me).
@@ -219,7 +219,7 @@ APP_SAMEAS = [
 ]
 ORG_SAMEAS = ["https://mi-code.pl/", "https://github.com/micode-ai",
               "https://www.wikidata.org/wiki/Q141551004"]
-ORG_ALT_NAMES = ["MiCode Sp. z o.o.", "MiCode"]
+ORG_ALT_NAMES = ["MICODE sp. z o.o.", "MiCode"]
 ORG_TAX_ID = "5833510147"  # NIP, as published on mi-code.pl
 GA_ID = "G-WMEFHYETVX"
 CONSENT = {
@@ -288,10 +288,10 @@ LEGAL_TITLES = {
  "privacy": {"en": "Privacy Policy - AI Budget Assistant", "pl": "Polityka prywatności - AI Budget Assistant"},
  "terms": {"en": "Terms of Service - AI Budget Assistant", "pl": "Regulamin - AI Budget Assistant"}}
 LEGAL_DESC = {
- "privacy": {"en": "Privacy Policy for AI Budget Assistant by MICODE sp. z o.o.",
-             "pl": "Polityka prywatności AI Budget Assistant, MICODE sp. z o.o."},
- "terms": {"en": "Terms of Service for AI Budget Assistant by MICODE sp. z o.o.",
-           "pl": "Regulamin AI Budget Assistant, MICODE sp. z o.o."}}
+ "privacy": {"en": "Privacy Policy for AI Budget Assistant by MiCode Sp. z o.o.",
+             "pl": "Polityka prywatności AI Budget Assistant, MiCode Sp. z o.o."},
+ "terms": {"en": "Terms of Service for AI Budget Assistant by MiCode Sp. z o.o.",
+           "pl": "Regulamin AI Budget Assistant, MiCode Sp. z o.o."}}
 
 def about_url(lang):
     return "/about/" if lang == "pl" else f"/{lang}/about/"
@@ -624,66 +624,66 @@ PRICING = {
 
 ABOUT = {
  "en": ("About - AI Budget Assistant",
-        "About AI Budget Assistant, a personal and family finance app with an AI assistant, built by MICODE sp. z o.o.",
+        "About AI Budget Assistant, a personal and family finance app with an AI assistant, built by MiCode Sp. z o.o.",
         "About AI Budget Assistant",
         "<h2>What is AI Budget Assistant</h2><p>AI Budget Assistant is a personal and family finance app that brings expenses, budgets, savings goals, debts and bank import into one place, with an AI assistant that does the tedious data entry for you. Add expenses by voice or a photo of a receipt, ask questions in plain language, and share one budget with your family in real time. It works on Android and on the web, in 9 languages.</p>"
-        "<h2>Who is behind it</h2><p>The app is built and operated by <strong>MICODE sp. z o.o.</strong>, a software company based in Poland (see <a href=\"https://mi-code.pl/\">mi-code.pl</a>). We build practical, privacy-respecting tools that help people manage money without spreadsheets.</p>"
+        "<h2>Who is behind it</h2><p>The app is built and operated by <strong>MiCode Sp. z o.o.</strong>, a software company based in Poland (see <a href=\"https://mi-code.pl/\">mi-code.pl</a>). We build practical, privacy-respecting tools that help people manage money without spreadsheets.</p>"
         "<h2>Our approach</h2><p>We focus on three things: making data entry effortless with AI, letting families budget together in real time, and keeping your financial data private. The core features are free; advanced tools are available on Pro.</p>"
         f"<h2>Contact</h2><p>Questions or feedback: <a href=\"mailto:perevertkinma@gmail.com\">perevertkinma@gmail.com</a>. Get the app on <a href=\"{play_url('body', 'en')}\">Google Play</a> or open the <a href=\"https://app.ai-budget.pl\">web version</a>. Read our <a href=\"/blog/en/\">blog</a> for budgeting guides.</p>"),
  "pl": ("O nas - AI Budget Assistant",
-        "O AI Budget Assistant, aplikacji do finansów osobistych i rodzinnych z asystentem AI, stworzonej przez MICODE sp. z o.o.",
+        "O AI Budget Assistant, aplikacji do finansów osobistych i rodzinnych z asystentem AI, stworzonej przez MiCode Sp. z o.o.",
         "O AI Budget Assistant",
         "<h2>Czym jest AI Budget Assistant</h2><p>AI Budget Assistant to aplikacja do finansów osobistych i rodzinnych, która łączy wydatki, budżety, cele oszczędnościowe, długi i import z banku w jednym miejscu, a asystent AI wykonuje za Ciebie żmudne wpisywanie danych. Dodawaj wydatki głosem lub zdjęciem paragonu, pytaj zwykłym językiem i prowadź wspólny budżet z rodziną na żywo. Działa na Androidzie i w przeglądarce, w 9 językach.</p>"
-        "<h2>Kto za tym stoi</h2><p>Aplikację tworzy i prowadzi <strong>MICODE sp. z o.o.</strong>, polska firma programistyczna (zobacz <a href=\"https://mi-code.pl/\">mi-code.pl</a>). Budujemy praktyczne narzędzia szanujące prywatność, które pomagają zarządzać pieniędzmi bez arkuszy kalkulacyjnych.</p>"
+        "<h2>Kto za tym stoi</h2><p>Aplikację tworzy i prowadzi <strong>MiCode Sp. z o.o.</strong>, polska firma programistyczna (zobacz <a href=\"https://mi-code.pl/\">mi-code.pl</a>). Budujemy praktyczne narzędzia szanujące prywatność, które pomagają zarządzać pieniędzmi bez arkuszy kalkulacyjnych.</p>"
         "<h2>Nasze podejście</h2><p>Skupiamy się na trzech rzeczach: bezwysiłkowym wpisywaniu danych dzięki AI, wspólnym budżecie rodziny na żywo i prywatności Twoich danych finansowych. Podstawowe funkcje są darmowe; zaawansowane narzędzia dostępne są w planie Pro.</p>"
         f"<h2>Kontakt</h2><p>Pytania lub opinie: <a href=\"mailto:perevertkinma@gmail.com\">perevertkinma@gmail.com</a>. Pobierz aplikację z <a href=\"{play_url('body', 'pl')}\">Google Play</a> lub otwórz <a href=\"https://app.ai-budget.pl\">wersję webową</a>. Czytaj nasz <a href=\"/blog/pl/\">blog</a> z poradnikami.</p>"),
  "de": ("Über uns - AI Budget Assistant",
-        "Über AI Budget Assistant, eine App für persönliche und Familienfinanzen mit KI-Assistent, von MICODE sp. z o.o.",
+        "Über AI Budget Assistant, eine App für persönliche und Familienfinanzen mit KI-Assistent, von MiCode Sp. z o.o.",
         "Über AI Budget Assistant",
         "<h2>Was ist AI Budget Assistant</h2><p>AI Budget Assistant ist eine App für persönliche und Familienfinanzen, die Ausgaben, Budgets, Sparziele, Schulden und Bankimport an einem Ort vereint, mit einem KI-Assistenten, der die mühsame Dateneingabe für dich übernimmt. Erfasse Ausgaben per Sprache oder Beleg-Foto, stelle Fragen in normaler Sprache und führe ein gemeinsames Budget mit deiner Familie in Echtzeit. Verfügbar auf Android und im Web, in 9 Sprachen.</p>"
-        "<h2>Wer dahintersteht</h2><p>Die App wird von <strong>MICODE sp. z o.o.</strong> entwickelt und betrieben, einem Softwareunternehmen aus Polen (siehe <a href=\"https://mi-code.pl/\">mi-code.pl</a>). Wir bauen praktische, datenschutzfreundliche Werkzeuge, die beim Geldmanagement ohne Tabellen helfen.</p>"
+        "<h2>Wer dahintersteht</h2><p>Die App wird von <strong>MiCode Sp. z o.o.</strong> entwickelt und betrieben, einem Softwareunternehmen aus Polen (siehe <a href=\"https://mi-code.pl/\">mi-code.pl</a>). Wir bauen praktische, datenschutzfreundliche Werkzeuge, die beim Geldmanagement ohne Tabellen helfen.</p>"
         "<h2>Unser Ansatz</h2><p>Wir konzentrieren uns auf drei Dinge: müheloses Erfassen von Daten mit KI, gemeinsames Budgetieren der Familie in Echtzeit und den Schutz deiner Finanzdaten. Die Kernfunktionen sind kostenlos; erweiterte Werkzeuge gibt es mit Pro.</p>"
         f"<h2>Kontakt</h2><p>Fragen oder Feedback: <a href=\"mailto:perevertkinma@gmail.com\">perevertkinma@gmail.com</a>. Hol dir die App bei <a href=\"{play_url('body', 'de')}\">Google Play</a> oder öffne die <a href=\"https://app.ai-budget.pl\">Web-Version</a>. Lies unseren <a href=\"/blog/de/\">Blog</a> mit Budget-Ratgebern.</p>"),
  "es": ("Acerca de - AI Budget Assistant",
-        "Acerca de AI Budget Assistant, una app de finanzas personales y familiares con asistente de IA, de MICODE sp. z o.o.",
+        "Acerca de AI Budget Assistant, una app de finanzas personales y familiares con asistente de IA, de MiCode Sp. z o.o.",
         "Acerca de AI Budget Assistant",
         "<h2>Qué es AI Budget Assistant</h2><p>AI Budget Assistant es una app de finanzas personales y familiares que reúne gastos, presupuestos, metas de ahorro, deudas e importación bancaria en un solo lugar, con un asistente de IA que hace por ti el tedioso registro de datos. Añade gastos por voz o con una foto del recibo, pregunta en lenguaje natural y gestiona un presupuesto compartido con tu familia en tiempo real. Funciona en Android y en la web, en 9 idiomas.</p>"
-        "<h2>Quién está detrás</h2><p>La app está desarrollada y operada por <strong>MICODE sp. z o.o.</strong>, una empresa de software de Polonia (ver <a href=\"https://mi-code.pl/\">mi-code.pl</a>). Creamos herramientas prácticas y respetuosas con la privacidad que ayudan a gestionar el dinero sin hojas de cálculo.</p>"
+        "<h2>Quién está detrás</h2><p>La app está desarrollada y operada por <strong>MiCode Sp. z o.o.</strong>, una empresa de software de Polonia (ver <a href=\"https://mi-code.pl/\">mi-code.pl</a>). Creamos herramientas prácticas y respetuosas con la privacidad que ayudan a gestionar el dinero sin hojas de cálculo.</p>"
         "<h2>Nuestro enfoque</h2><p>Nos centramos en tres cosas: registrar datos sin esfuerzo con IA, presupuestar en familia en tiempo real y mantener privados tus datos financieros. Las funciones básicas son gratuitas; las herramientas avanzadas están en Pro.</p>"
         f"<h2>Contacto</h2><p>Preguntas o comentarios: <a href=\"mailto:perevertkinma@gmail.com\">perevertkinma@gmail.com</a>. Consigue la app en <a href=\"{play_url('body', 'es')}\">Google Play</a> o abre la <a href=\"https://app.ai-budget.pl\">versión web</a>. Lee nuestro <a href=\"/blog/es/\">blog</a> con guías de presupuesto.</p>"),
  "fr": ("À propos - AI Budget Assistant",
-        "À propos d'AI Budget Assistant, une appli de finances personnelles et familiales avec assistant IA, de MICODE sp. z o.o.",
+        "À propos d'AI Budget Assistant, une appli de finances personnelles et familiales avec assistant IA, de MiCode Sp. z o.o.",
         "À propos d'AI Budget Assistant",
         "<h2>Qu'est-ce qu'AI Budget Assistant</h2><p>AI Budget Assistant est une appli de finances personnelles et familiales qui réunit dépenses, budgets, objectifs d'épargne, dettes et import bancaire au même endroit, avec un assistant IA qui se charge de la saisie fastidieuse à votre place. Ajoutez des dépenses à la voix ou par photo de reçu, posez des questions en langage courant et gérez un budget partagé avec votre famille en temps réel. Disponible sur Android et sur le web, en 9 langues.</p>"
-        "<h2>Qui est derrière</h2><p>L'appli est développée et exploitée par <strong>MICODE sp. z o.o.</strong>, une société de logiciels basée en Pologne (voir <a href=\"https://mi-code.pl/\">mi-code.pl</a>). Nous créons des outils pratiques et respectueux de la vie privée pour gérer son argent sans tableur.</p>"
+        "<h2>Qui est derrière</h2><p>L'appli est développée et exploitée par <strong>MiCode Sp. z o.o.</strong>, une société de logiciels basée en Pologne (voir <a href=\"https://mi-code.pl/\">mi-code.pl</a>). Nous créons des outils pratiques et respectueux de la vie privée pour gérer son argent sans tableur.</p>"
         "<h2>Notre approche</h2><p>Nous nous concentrons sur trois choses : une saisie sans effort grâce à l'IA, un budget familial partagé en temps réel et la confidentialité de vos données financières. Les fonctions de base sont gratuites ; les outils avancés sont disponibles avec Pro.</p>"
         f"<h2>Contact</h2><p>Questions ou retours : <a href=\"mailto:perevertkinma@gmail.com\">perevertkinma@gmail.com</a>. Téléchargez l'appli sur <a href=\"{play_url('body', 'fr')}\">Google Play</a> ou ouvrez la <a href=\"https://app.ai-budget.pl\">version web</a>. Lisez notre <a href=\"/blog/fr/\">blog</a> avec des guides budgétaires.</p>"),
  "ru": ("О нас - AI Budget Assistant",
-        "О приложении AI Budget Assistant - финансы для себя и семьи с ИИ-ассистентом, от MICODE sp. z o.o.",
+        "О приложении AI Budget Assistant - финансы для себя и семьи с ИИ-ассистентом, от MiCode Sp. z o.o.",
         "О AI Budget Assistant",
         "<h2>Что такое AI Budget Assistant</h2><p>AI Budget Assistant - приложение для личных и семейных финансов, которое объединяет расходы, бюджеты, цели накоплений, долги и импорт из банка в одном месте, а ИИ-ассистент берёт на себя рутинный ввод данных. Добавляйте траты голосом или фото чека, задавайте вопросы обычным языком и ведите общий бюджет с семьёй в реальном времени. Работает на Android и в вебе, на 9 языках.</p>"
-        "<h2>Кто за этим стоит</h2><p>Приложение разрабатывает и поддерживает <strong>MICODE sp. z o.o.</strong>, софтверная компания из Польши (см. <a href=\"https://mi-code.pl/\">mi-code.pl</a>). Мы делаем практичные инструменты с уважением к приватности, которые помогают управлять деньгами без таблиц.</p>"
+        "<h2>Кто за этим стоит</h2><p>Приложение разрабатывает и поддерживает <strong>MiCode Sp. z o.o.</strong>, софтверная компания из Польши (см. <a href=\"https://mi-code.pl/\">mi-code.pl</a>). Мы делаем практичные инструменты с уважением к приватности, которые помогают управлять деньгами без таблиц.</p>"
         "<h2>Наш подход</h2><p>Мы сосредоточены на трёх вещах: лёгкий ввод данных с помощью ИИ, общий семейный бюджет в реальном времени и приватность ваших финансовых данных. Базовые функции бесплатны; продвинутые инструменты доступны в Pro.</p>"
         f"<h2>Контакт</h2><p>Вопросы или отзывы: <a href=\"mailto:perevertkinma@gmail.com\">perevertkinma@gmail.com</a>. Скачайте приложение в <a href=\"{play_url('body', 'ru')}\">Google Play</a> или откройте <a href=\"https://app.ai-budget.pl\">веб-версию</a>. Читайте наш <a href=\"/blog/ru/\">блог</a> с гайдами по бюджету.</p>"),
  "ua": ("Про нас - AI Budget Assistant",
-        "Про застосунок AI Budget Assistant - фінанси для себе та родини з ШІ-асистентом, від MICODE sp. z o.o.",
+        "Про застосунок AI Budget Assistant - фінанси для себе та родини з ШІ-асистентом, від MiCode Sp. z o.o.",
         "Про AI Budget Assistant",
         "<h2>Що таке AI Budget Assistant</h2><p>AI Budget Assistant - застосунок для особистих і сімейних фінансів, який поєднує витрати, бюджети, цілі заощаджень, борги та імпорт із банку в одному місці, а ШІ-асистент бере на себе рутинне введення даних. Додавайте витрати голосом або фото чека, ставте запитання звичайною мовою та ведіть спільний бюджет із родиною в реальному часі. Працює на Android і у вебі, 9 мовами.</p>"
-        "<h2>Хто за цим стоїть</h2><p>Застосунок розробляє та підтримує <strong>MICODE sp. z o.o.</strong>, софтверна компанія з Польщі (див. <a href=\"https://mi-code.pl/\">mi-code.pl</a>). Ми створюємо практичні інструменти з повагою до приватності, які допомагають керувати грошима без таблиць.</p>"
+        "<h2>Хто за цим стоїть</h2><p>Застосунок розробляє та підтримує <strong>MiCode Sp. z o.o.</strong>, софтверна компанія з Польщі (див. <a href=\"https://mi-code.pl/\">mi-code.pl</a>). Ми створюємо практичні інструменти з повагою до приватності, які допомагають керувати грошима без таблиць.</p>"
         "<h2>Наш підхід</h2><p>Ми зосереджені на трьох речах: легке введення даних за допомогою ШІ, спільний сімейний бюджет у реальному часі та приватність ваших фінансових даних. Базові функції безкоштовні; розширені інструменти доступні в Pro.</p>"
         f"<h2>Контакт</h2><p>Запитання чи відгуки: <a href=\"mailto:perevertkinma@gmail.com\">perevertkinma@gmail.com</a>. Завантажте застосунок у <a href=\"{play_url('body', 'ua')}\">Google Play</a> або відкрийте <a href=\"https://app.ai-budget.pl\">веб-версію</a>. Читайте наш <a href=\"/blog/ua/\">блог</a> з гайдами щодо бюджету.</p>"),
  "be": ("Пра нас - AI Budget Assistant",
-        "Пра дадатак AI Budget Assistant - фінансы для сябе і сям'і з ШІ-памочнікам, ад MICODE sp. z o.o.",
+        "Пра дадатак AI Budget Assistant - фінансы для сябе і сям'і з ШІ-памочнікам, ад MiCode Sp. z o.o.",
         "Пра AI Budget Assistant",
         "<h2>Што такое AI Budget Assistant</h2><p>AI Budget Assistant - дадатак для асабістых і сямейных фінансаў, які аб'ядноўвае выдаткі, бюджэты, мэты зберажэнняў, даўгі і імпарт з банка ў адным месцы, а ШІ-памочнік бярэ на сябе руцінны ўвод даных. Дадавайце выдаткі голасам або фота чэка, задавайце пытанні звычайнай мовай і вядзіце агульны бюджэт з сям'ёй у рэальным часе. Працуе на Android і ў вебе, на 9 мовах.</p>"
-        "<h2>Хто за гэтым стаіць</h2><p>Дадатак распрацоўвае і падтрымлівае <strong>MICODE sp. z o.o.</strong>, софтверная кампанія з Польшчы (гл. <a href=\"https://mi-code.pl/\">mi-code.pl</a>). Мы ствараем практычныя інструменты з павагай да прыватнасці, якія дапамагаюць кіраваць грашыма без табліц.</p>"
+        "<h2>Хто за гэтым стаіць</h2><p>Дадатак распрацоўвае і падтрымлівае <strong>MiCode Sp. z o.o.</strong>, софтверная кампанія з Польшчы (гл. <a href=\"https://mi-code.pl/\">mi-code.pl</a>). Мы ствараем практычныя інструменты з павагай да прыватнасці, якія дапамагаюць кіраваць грашыма без табліц.</p>"
         "<h2>Наш падыход</h2><p>Мы засяроджаны на трох рэчах: лёгкі ўвод даных з дапамогай ШІ, агульны сямейны бюджэт у рэальным часе і прыватнасць вашых фінансавых даных. Базавыя функцыі бясплатныя; пашыраныя інструменты даступныя ў Pro.</p>"
         f"<h2>Кантакт</h2><p>Пытанні ці водгукі: <a href=\"mailto:perevertkinma@gmail.com\">perevertkinma@gmail.com</a>. Спампуйце дадатак у <a href=\"{play_url('body', 'be')}\">Google Play</a> або адкрыйце <a href=\"https://app.ai-budget.pl\">веб-версію</a>. Чытайце наш <a href=\"/blog/be/\">блог</a> з гайдамі па бюджэце.</p>"),
  "nl": ("Over ons - AI Budget Assistant",
-        "Over AI Budget Assistant, een app voor persoonlijke en gezinsfinanciën met een AI-assistent, van MICODE sp. z o.o.",
+        "Over AI Budget Assistant, een app voor persoonlijke en gezinsfinanciën met een AI-assistent, van MiCode Sp. z o.o.",
         "Over AI Budget Assistant",
         "<h2>Wat is AI Budget Assistant</h2><p>AI Budget Assistant is een app voor persoonlijke en gezinsfinanciën die uitgaven, budgetten, spaardoelen, schulden en bankimport op één plek samenbrengt, met een AI-assistent die het saaie invoeren voor je doet. Voeg uitgaven toe met spraak of een bonfoto, stel vragen in gewone taal en beheer een gedeeld budget met je gezin in realtime. Werkt op Android en op het web, in 9 talen.</p>"
-        "<h2>Wie erachter zit</h2><p>De app wordt gebouwd en beheerd door <strong>MICODE sp. z o.o.</strong>, een softwarebedrijf uit Polen (zie <a href=\"https://mi-code.pl/\">mi-code.pl</a>). We bouwen praktische, privacyvriendelijke tools die helpen geld te beheren zonder spreadsheets.</p>"
+        "<h2>Wie erachter zit</h2><p>De app wordt gebouwd en beheerd door <strong>MiCode Sp. z o.o.</strong>, een softwarebedrijf uit Polen (zie <a href=\"https://mi-code.pl/\">mi-code.pl</a>). We bouwen praktische, privacyvriendelijke tools die helpen geld te beheren zonder spreadsheets.</p>"
         "<h2>Onze aanpak</h2><p>We richten ons op drie dingen: moeiteloos gegevens invoeren met AI, samen met het gezin budgetteren in realtime en de privacy van je financiële gegevens. De kernfuncties zijn gratis; geavanceerde tools zijn beschikbaar met Pro.</p>"
         f"<h2>Contact</h2><p>Vragen of feedback: <a href=\"mailto:perevertkinma@gmail.com\">perevertkinma@gmail.com</a>. Download de app in <a href=\"{play_url('body', 'nl')}\">Google Play</a> of open de <a href=\"https://app.ai-budget.pl\">webversie</a>. Lees onze <a href=\"/blog/nl/\">blog</a> met budgetgidsen.</p>"),
 }
@@ -1394,31 +1394,9 @@ def jsonld(lang, langs):
          "publisher": {"@id": f"{SITE}/#organization"},
          "downloadUrl": PLAY, "sameAs": APP_SAMEAS,
          "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
-         "featureList": [
-             "Voice expense capture via AI transcription",
-             "Receipt scanning with OCR",
-             "Bank notification auto-capture (Android, 40+ European banks)",
-             "Bank statement import: Wise, mBank, PKO BP, ING, Millennium, Pekao, Revolut, Erste, Alior, plus AI import for any other bank",
-             "Migration from Monefy, Wallet by BudgetBakers and Money Manager, keeping your own categories",
-             "Bill splitting: friends get a guest link with their share, no app install needed",
-             "Trip wallet: temporary shared account with multi-way splits and settle-up",
-             "Shared expense groups (flat, trip, groceries): friends without an account join from a browser link, see who owes whom and settle up",
-             "Shared shopping lists",
-             "Personal inflation index and Inflation Shield from your own receipt prices",
-             "Financial Wrapped: a year-in-review card deck",
-             "Debt tracking with due-date reminders",
-             "Exchange-rate alerts",
-             "AI chat assistant for natural language financial questions",
-             "Shared family accounts with role-based access",
-             "Category budgets with period tracking and overspend alerts",
-             "Savings goals with contribution history",
-             "Subscription manager with renewal reminders",
-             "Telegram, WhatsApp and Slack bots",
-             "Offline-first, with optional end-to-end encryption",
+         "featureList": FEATURES_EN + [
              "Multi-currency: USD, EUR, PLN, GBP, UAH, RUB, BYN",
              "9 interface languages",
-             "Safe-to-spend daily limit calculation",
-             "Spending anomaly detection",
          ],
          "screenshot": [
              {"@type": "ImageObject", "url": f"{SITE}/assets/screens/{lang}/01-home.png", "name": "Home dashboard"},
@@ -1584,6 +1562,39 @@ LLMS_FULL_INTRO = {
 }
 # Languages that get a llms-full-<lang>.txt sibling, beyond the canonical English one.
 LLMS_FULL_LANGS = ["de", "nl", "pl", "ru", "es", "fr", "ua", "be"]
+
+# The ONE English feature list (ABA-674). llms.txt renders it under "## Key Features", the
+# SoftwareApplication featureList is this plus two product facts, and every
+# LLMS_TXT_I18N[<lang>]["features"] translates it item for item -- check_feature_lists() fails
+# the build when a translation has a different length. They used to be three hand-kept copies
+# that drifted (ABA-638), and a shipped feature went missing from all of them (ABA-672). Check a
+# claim against the wiki before adding it, never list a flag-gated-off feature, and never name
+# the AI model. A new item goes at the same index in all nine lists.
+FEATURES_EN = [
+    "Voice expense capture: log expenses by speaking naturally, transcribed by AI",
+    "Receipt scanning: photograph a receipt to extract amount, merchant and category via OCR",
+    "Bank notification capture: Android app intercepts bank push notifications and creates expenses on-device (40+ European banks, no credentials required)",
+    "Bank import: CSV and PDF statements from Wise, mBank, PKO BP, ING, Millennium, Pekao, Revolut, Erste, Alior; statements from any other bank are read by the AI import",
+    "Migration from Monefy, Wallet by BudgetBakers and Money Manager, keeping your own categories",
+    "Bill splitting: friends get a guest link with their share, no app install needed",
+    "Trip wallet: temporary shared account with multi-way splits and settle-up",
+    "Shared expense groups (flat, trip, groceries): friends without an account join from a browser link, see who owes whom and settle up",
+    "Shared shopping lists",
+    "Personal inflation index and Inflation Shield from your own receipt prices",
+    "Financial Wrapped: a year-in-review card deck",
+    "Debt tracking with due-date reminders",
+    "Exchange-rate alerts",
+    "AI chat assistant: ask financial questions and give commands in natural language",
+    "Shared family accounts with owner/editor/viewer roles and live activity feed",
+    "Group purchase voting and approval workflows",
+    "Category budgets with history, alerts and period tracking",
+    "Savings goals with contribution log",
+    "Subscription manager with renewal reminders and auto-charge simulation",
+    "Telegram, WhatsApp and Slack bots",
+    "Offline-first architecture; optional end-to-end encryption",
+    "Safe-to-spend engine: daily spendable amount from balance minus upcoming obligations",
+    "Anomaly detection: duplicate charges, price increases, spending spikes",
+]
 
 # Localized llms-<lang>.txt manifests (product summary, mirrors the canonical English
 # llms.txt written inline in build()). ADDITIVE ONLY: the English llms.txt is untouched by
@@ -1941,6 +1952,14 @@ LLMS_TXT_I18N = {
     },
 }
 
+def check_feature_lists():
+    """Fail the build when a translated feature list is not item-for-item with FEATURES_EN."""
+    bad = {l: len(v["features"]) for l, v in LLMS_TXT_I18N.items() if len(v["features"]) != len(FEATURES_EN)}
+    if bad:
+        raise SystemExit(f"LLMS_TXT_I18N features out of step with FEATURES_EN ({len(FEATURES_EN)}): {bad}")
+
+check_feature_lists()
+
 def write_llms_txt_localized(lang):
     """llms-<lang>.txt: a localized sibling of the canonical (English) llms.txt written
     inline in build(). Purely additive -- does not touch llms.txt itself, so this can only
@@ -2153,29 +2172,8 @@ def build():
             f"- Languages: English, Polish, German, Spanish, French, Russian, Ukrainian, Belarusian, Dutch\n"
             f"- Currencies: USD, EUR, PLN, GBP, UAH, RUB, BYN\n\n"
             f"## Key Features\n\n"
-            f"- Voice expense capture: log expenses by speaking naturally, transcribed by AI\n"
-            f"- Receipt scanning: photograph a receipt to extract amount, merchant and category via OCR\n"
-            f"- Bank notification capture: Android app intercepts bank push notifications and creates expenses on-device (40+ European banks, no credentials required)\n"
-            f"- Bank import: CSV and PDF statements from Wise, mBank, PKO BP, ING, Millennium, Pekao, Revolut, Erste, Alior; statements from any other bank are read by the AI import\n"
-            f"- Migration from Monefy, Wallet by BudgetBakers and Money Manager, keeping your own categories\n"
-            f"- Bill splitting: friends get a guest link with their share, no app install needed\n"
-            f"- Trip wallet: temporary shared account with multi-way splits and settle-up\n"
-            f"- Shared expense groups (flat, trip, groceries): friends without an account join from a browser link, see who owes whom and settle up\n"
-            f"- Shared shopping lists\n"
-            f"- Personal inflation index and Inflation Shield from your own receipt prices\n"
-            f"- Financial Wrapped: a year-in-review card deck\n"
-            f"- Debt tracking with due-date reminders\n"
-            f"- Exchange-rate alerts\n"
-            f"- AI chat assistant: ask financial questions and give commands in natural language\n"
-            f"- Shared family accounts with owner/editor/viewer roles and live activity feed\n"
-            f"- Group purchase voting and approval workflows\n"
-            f"- Category budgets with history, alerts and period tracking\n"
-            f"- Savings goals with contribution log\n"
-            f"- Subscription manager with renewal reminders and auto-charge simulation\n"
-            f"- Telegram, WhatsApp and Slack bots\n"
-            f"- Offline-first architecture; optional end-to-end encryption\n"
-            f"- Safe-to-spend engine: daily spendable amount from balance minus upcoming obligations\n"
-            f"- Anomaly detection: duplicate charges, price increases, spending spikes\n\n"
+            + "".join(f"- {feat}\n" for feat in FEATURES_EN)
+            + "\n"
             f"## Documentation\n\n"
             f"- [Blog]({SITE}/blog/en/): budgeting, expense-tracking and saving guides in 9 languages\n"
             f"- [Help center]({SITE}/help/en/): how to use every feature of the app\n"
