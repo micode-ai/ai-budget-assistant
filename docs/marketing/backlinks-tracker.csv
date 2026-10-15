@@ -59,4 +59,4 @@ Tier,Site,Submit URL,Link type,Week,Status,Date submitted,Live URL,Notes
 2,r/PolskaFinanse,https://www.reddit.com/r/PolskaFinanse/,nofollow,W2,todo,,,Read sidebar rules first (unverified). Post 2(c) with disclosure.
 3,wykop.pl,https://wykop.pl/,nofollow,W3,todo,,,Disclosed maker entry; lead with a free article. Rules unverified.
 3,Polish Facebook budget groups,(per group),nofollow,W3,todo,,,Ask admin first; most ban ads. Not indexed - low GEO value.
-1,Wikidata Q141551014 (enrich),https://www.wikidata.org/wiki/Q141551014,n/a,W1,todo,,,Add P577 2026-04 + country Poland; later P973 to press coverage.
+1,Wikidata Q141551014 (enrich),https://www.wikidata.org/wiki/Q141551014,n/a,W1,done,2026-10-15,https://www.wikidata.org/wiki/Q141551014,P577 2026-04 (ref llms.txt) + P495 Poland added 2026-10-15; later P973 to press coverage.

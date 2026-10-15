@@ -178,7 +178,7 @@ a scripted `.click()` on the option does nothing — then read the visible table
 - `sameAs` still lacks LinkedIn and Crunchbase. The Organization and the app carry separate
   profile lists (`ORG_SAMEAS` / `APP_SAMEAS`, duplicated in the landing and blog generators),
   each ending in its Wikidata item: MiCode Sp. z o.o. is Q141551004, the app Q141551014 (created
-  2026-09-24; not to be confused with Q110126846 "Micode", a French YouTuber). Wikidata may still
+  2026-09-24; P577 April 2026 and P495 Poland added 2026-10-15; not to be confused with Q110126846 "Micode", a French YouTuber). Wikidata may still
   delete the app item as non-notable — press coverage as "described at URL" is what keeps it.
   mi-code.pl has no `@id`, so the two sites meet only through the shared name and URL.
 - The app has no `aggregateRating` (no verified rating source).
