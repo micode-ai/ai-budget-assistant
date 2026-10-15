@@ -346,7 +346,7 @@ CLUSTERS = {
     "expenses": ["bank-import", "best-apps", "expense-map", "auto-capture", "receipts", "split-bill", "app-abandonment", "switch-apps", "excel-budget", "free-app",
                  "vs-monefy", "vs-wallet", "vs-ynab", "vs-moneymanager",
                  "import-revolut", "import-mbank", "import-pko", "import-ing", "import-millennium", "import-pekao", "import-alior", "import-erste"],
-    "saving": ["groceries", "emergency-fund", "subscriptions", "debt", "inflation", "wrapped", "inflation-shield", "rate-alert", "multi-currency", "christmas", "black-friday", "tax-refund"],
+    "saving": ["groceries", "emergency-fund", "subscriptions", "debt", "inflation", "wrapped", "inflation-shield", "rate-alert", "multi-currency", "christmas", "black-friday", "tax-refund", "live-on-2000"],
 }
 def category_of(pair):
     """The pillar a topic belongs to; a pillar is its own category."""

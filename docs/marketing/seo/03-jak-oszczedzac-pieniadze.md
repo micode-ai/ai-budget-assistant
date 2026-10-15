@@ -176,3 +176,4 @@ Najpierw spłać zadłużenie z wysokim oprocentowaniem, bo to gwarantowany „z
 - [Ile kosztują święta? Budżet na Boże Narodzenie krok po kroku](/blog/pl/budzet-na-swieta/)
 - [Black Friday: fałszywe promocje i jak nie przepłacić](/blog/pl/black-friday-promocje/)
 - [Zwrot podatku z PIT: na co go przeznaczyć? Plan](/blog/pl/zwrot-podatku-na-co-przeznaczyc/)
+- [Jak przeżyć za 2000 zł miesięcznie w 2026? Realny budżet](/blog/pl/jak-przezyc-za-2000-zl-miesiecznie/)

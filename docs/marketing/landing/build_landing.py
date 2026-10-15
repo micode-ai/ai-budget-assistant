@@ -1090,7 +1090,7 @@ def lp(lang):
     return f"{BASE}/{lang}/"
 
 BLOG_SRC = os.path.join(ROOT, "..", "seo")
-FROM_BLOG_PAIRS = ["black-friday", "christmas", "tax-refund", "budget", "split-bill", "auto-capture", "receipts", "ai-budget", "inflation", "expense-map", "family", "shared-budget", "bank-import", "import-revolut", "import-mbank", "import-pko", "import-ing", "import-millennium", "import-pekao", "import-alior", "import-erste", "best-apps", "vs-monefy", "vs-wallet", "vs-ynab", "vs-moneymanager", "saving"]  # curated homepage -> article internal links (every list item renders; no truncation). USP + high-intent topics first. The seasonal `christmas` and `black-friday` are included, at the front, on the owner's explicit request (every blog article should appear here); `school` stays absent for now.
+FROM_BLOG_PAIRS = ["black-friday", "christmas", "tax-refund", "live-on-2000", "budget", "split-bill", "auto-capture", "receipts", "ai-budget", "inflation", "expense-map", "family", "shared-budget", "bank-import", "import-revolut", "import-mbank", "import-pko", "import-ing", "import-millennium", "import-pekao", "import-alior", "import-erste", "best-apps", "vs-monefy", "vs-wallet", "vs-ynab", "vs-moneymanager", "saving"]  # curated homepage -> article internal links (every list item renders; no truncation). USP + high-intent topics first. The seasonal `christmas` and `black-friday` are included, at the front, on the owner's explicit request (every blog article should appear here); `school` stays absent for now.
 
 def _blog_front(path):
     raw = open(path, encoding="utf-8").read()

@@ -10,6 +10,8 @@ date: "2026-09-20"
 
 # Darmowa aplikacja do budżetu domowego: co to naprawdę znaczy
 
+**Jaka darmowa aplikacja do budżetu domowego jest najlepsza?** Taka, której darmowy plan zostaje użyteczny na stałe, a nie wygasa po kilku dniach. Z aplikacji, które porównujemy, na stałe darmowy start mają AI Budget Assistant (bez karty, z limitem 50 zapytań AI miesięcznie, 3 kontami i jednym członkiem na koncie), Monefy (darmowa podstawa) i Wallet by BudgetBakers (start za darmo), a YNAB jest płatny po 34 dniach próby. Poniżej tabela, a potem wyjaśnienie, co to "za darmo" naprawdę znaczy.
+
 Szukasz darmowej aplikacji do budżetu domowego, bo nie chcesz płacić, zanim się przekonasz, że nawyk w ogóle się przyjmie. Rozsądne podejście. Problem w tym, że słowo "darmowa" w tym kontekście kryje co najmniej cztery różne modele biznesowe, i tylko jeden z nich znaczy dokładnie to, czego się spodziewasz. Ten tekst pokazuje, co "za darmo" naprawdę obejmuje, na co sprawdzić przed zaufaniem takiej etykiecie, i gdzie w tym wszystkim mieści się darmowy plan AI Budget Assistant - jako jeden uczciwy przykład, nie jedyna słuszna odpowiedź.
 
 ## Cztery rzeczy, które może znaczyć "za darmo"
@@ -36,15 +38,34 @@ To właśnie ukrywa etykieta "za darmo": nie to, czy w końcu zapłacisz, ale z 
 
 ## Gdzie w tym wszystkim jest darmowy plan AI Budget Assistant
 
-Uczciwie: AI Budget Assistant to drugi typ z listy powyżej - za darmo na zawsze, z konkretnym sufitem, a nie okres próbny z terminem. Start bez podawania karty, w przeglądarce na ai-budget.pl albo w aplikacji na Androida. W darmowym planie masz dodawanie wydatków głosem, zdjęciem paragonu i - na Androidzie - z samego powiadomienia banku bez dotykania telefonu, jednorazowy import wyciągu bankowego zamiast ręcznego przepisywania i wspólne konto dla całej rodziny czy pary.
+Uczciwie: AI Budget Assistant to drugi typ z listy powyżej - za darmo na zawsze, z konkretnym sufitem, a nie okres próbny z terminem. Start bez podawania karty, w przeglądarce na ai-budget.pl albo w aplikacji na Androida.
 
-Sufit też jest konkretny, a nie ukryty: czat z asystentem AI ma miesięczny limit zapytań w darmowym planie, a kilka głębszych funkcji opartych na AI - dokładniejsze analizy wydatków, roczne podsumowanie - jest zarezerwowanych dla planu płatnego. Ten sam zestaw pytań z listy wyżej stosuje się do AI Budget Assistant dokładnie tak samo jak do każdej innej aplikacji na tej liście - sprawdź, co naprawdę obejmuje darmowy plan, zanim zbudujesz na nim comiesięczny nawyk. Szerszy zestaw kryteriów wyboru samej aplikacji, nie tylko cennika, znajdziesz w [naszym przewodniku po najlepszych aplikacjach do budżetu](/blog/pl/najlepsze-aplikacje-do-budzetu/).
+**Co jest za darmo:** śledzenie wydatków, czat z asystentem AI, dodawanie wydatków głosem i zdjęciem paragonu, na Androidzie także z powiadomienia banku, import wyciągu bankowego (CSV/PDF) zamiast ręcznego przepisywania, wykrywanie anomalii, raporty PDF i Excel oraz zaszyfrowane kopie zapasowe. Wszystko to mieści się w limicie **50 zapytań AI miesięcznie** (wiadomość na czacie to 1 zapytanie, skan paragonu 2) i w **3 kontach**.
+
+**Co jest płatne (Pro, 4,99 USD miesięcznie lub 29,99 USD rocznie, z 7-dniowym okresem próbnym):** 300 zapytań AI miesięcznie, do 5 kont i do 5 członków na konto, czyli prawdziwy wspólny budżet z partnerem lub rodziną, oraz zaawansowane funkcje AI: Historia wydatków, Fat Finder i Wnioski AI. W darmowym planie na koncie jest tylko jedna osoba, więc wspólne konto wymaga Pro.
+
+Ten sam zestaw pytań z listy wyżej stosuje się do AI Budget Assistant dokładnie tak samo jak do każdej innej aplikacji - sprawdź, co naprawdę obejmuje darmowy plan, zanim zbudujesz na nim comiesięczny nawyk. Szerszy zestaw kryteriów wyboru samej aplikacji, nie tylko cennika, znajdziesz w [naszym przewodniku po najlepszych aplikacjach do budżetu](/blog/pl/najlepsze-aplikacje-do-budzetu/).
+
+## Darmowe aplikacje do budżetu domowego: porównanie
+
+| Aplikacja | Co jest za darmo | Co jest płatne |
+|---|---|---|
+| AI Budget Assistant | Plan darmowy bez karty: 3 konta, 1 członek, 50 zapytań AI miesięcznie, import wyciągów, raporty CSV/PDF/Excel | Pro 4,99 USD/mies. lub 29,99 USD/rok (7 dni próby): wspólne konta do 5 osób, 300 zapytań AI, zaawansowane funkcje AI |
+| Monefy | Darmowa podstawa | Opcjonalny Premium, według centrum pomocy z nielimitowaną liczbą kont |
+| Wallet by BudgetBakers | Start za darmo | Premium z okresem próbnym; eksport danych jest płatny |
+| YNAB | Tylko 34-dniowy okres próbny, bez karty | 14,99 USD miesięcznie lub 109 USD rocznie |
+| Money Manager (Realbyte) | Darmowy z zakupami w aplikacji | Subskrypcja z synchronizacją danych: 2,49 USD miesięcznie lub 19,99 USD rocznie (amerykański App Store) |
+
+Dane o innych aplikacjach pochodzą z ich publicznych stron według stanu na październik 2026, więc przed decyzją sprawdź aktualne cenniki. Szczegóły w osobnych porównaniach: [Monefy](/blog/pl/monefy-porownanie-ai-budget-assistant/), [Wallet](/blog/pl/wallet-budgetbakers-porownanie-ai-budget-assistant/), [YNAB](/blog/pl/ynab-alternatywa-porownanie/) i [Money Manager](/blog/pl/money-manager-porownanie-ai-budget-assistant/).
 
 Jeśli najważniejszy jest dla ciebie zerowy koszt i zero firmy w tle, [arkusz, który zbudujesz sam](/blog/pl/budzet-domowy-w-excelu/), jest najbardziej dosłownie darmową opcją z możliwych: bez rejestracji, bez limitów i bez żadnego modelu biznesowego, któremu trzeba by zaufać. Kosztem jest oczywiście to, że każdy wpis musisz wpisać ręcznie samodzielnie.
 
 Możesz zainstalować aplikację na Androida z [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant) albo od razu, bez instalowania czegokolwiek, zacząć w przeglądarce na [ai-budget.pl](https://ai-budget.pl).
 
 ## FAQ: darmowa aplikacja do budżetu domowego
+
+**Jaka jest najlepsza darmowa aplikacja do budżetu domowego?**
+Zależy, czego potrzebujesz od darmowego planu. Do samego zapisywania wydatków wystarczy darmowa podstawa Monefy. Jeśli chcesz wpisywać wydatki głosem, zdjęciem paragonu albo czatem i importować wyciągi bankowe bez karty, darmowy plan AI Budget Assistant to pokrywa, w limicie 50 zapytań AI miesięcznie i dla jednej osoby na koncie. Wspólny budżet dla pary wymaga w nim planu Pro. Jeśli ma kosztować dosłownie zero i nie wymagać żadnej firmy, zostaje [arkusz w Excelu](/blog/pl/budzet-domowy-w-excelu/).
 
 **Czy istnieje naprawdę darmowa aplikacja do budżetu domowego bez żadnych limitów?**
 Prawdziwie darmowa, bez jakiegokolwiek limitu, na dłuższą metę prawie nigdy nie istnieje jako trwały biznes, bo ktoś musi zapłacić za serwery i wsparcie. Istnieje za to uczciwy wariant "za darmo na zawsze, z rozsądnym sufitem" albo model finansowany reklamami. Kombinacja "bez żadnych limitów, na zawsze" i "firma w tle, bez reklam" to ta, przy której warto być podejrzliwym.

@@ -406,6 +406,8 @@ Kiedy zauważasz regularne luki w zapisach, kiedy druga osoba w budżecie przest
 ## Budżet domowy z dziećmi, który się spina
 URL: https://ai-budget.pl/blog/pl/budzet-domowy-z-dziecmi/
 
+**Jak zaplanować budżet rodziny z dziećmi?** Zacznij od dochodu netto, odejmij koszty stałe, a resztę podziel na życie na co dzień, nieregularne wydatki dzieci odkładane co miesiąc w funduszach celowych, oszczędności i niewielki bufor. Poniżej przykładowy budżet 4-osobowej rodziny w złotych, z założeniami, który możesz przeliczyć na własne liczby.
+
 Dzieci dorzucają do budżetu i koszt, i komplikacje. Wydaje teraz dwoje dorosłych zamiast jednego, a do tego dochodzą nieregularne wydatki, które trudno zaplanować: buty, które nagle za małe, składka na wycieczkę, niespodziewana wizyta u lekarza. W tym poradniku pokażę, jak ułożyć budżet rodzinny, który radzi sobie z tą nieregularnością, daje obojgu rodzicom ten sam obraz i po drodze uczy dzieci o pieniądzach.
 
 Sednem jest jedno: budżet rodziny musi być wspólny i odporny na nierówne miesiące. Reszta to szczegóły.
@@ -417,6 +419,35 @@ Przed dziećmi budżet jest względnie gładki. Większość kosztów jest miesi
 Te grudkowate koszty rozsadzają budżet, bo nie mieszczą się w żadnym pojedynczym miesiącu. Ubrania, które dzieci szybko wyrastają. Szkoła: podręczniki, wycieczki, składki. Zajęcia dodatkowe i sport. Wydatki medyczne, które nie pytają o kalendarz. Każdy z osobna wydaje się jednorazowy, ale razem są przewidywalne, jeśli spojrzeć na cały rok. Pierwszym krokiem jest przestać udawać, że są niespodziankami.
 
 Druga zmiana jest organizacyjna. Teraz wydatki dotyczące dzieci robi dwoje ludzi, często niezależnie. Jedno kupuje buty, drugie płaci za zajęcia, a jeśli nie widzą tego samego obrazu, oboje gubią się w tym, co już wydane.
+
+## Jak zaplanować budżet 4-osobowej rodziny?
+
+Poniższy przykład to model do przeliczenia, a nie statystyka: widełki są orientacyjne i bardzo zależą od miasta, wieku dzieci i stylu życia. Nie opieramy ich na żadnych danych zewnętrznych, więc wstaw własne kwoty z ostatnich trzech miesięcy.
+
+**Założenia:** dwoje dorosłych i dwoje dzieci (np. 7 i 12 lat), wspólny dochód netto 11 000 zł miesięcznie, mieszkanie wynajmowane lub z kredytem, jedno auto.
+
+| Kategoria | Orientacyjnie (zł/mies.) | Uwagi |
+|---|---|---|
+| Mieszkanie: czynsz lub rata, media, internet | 3 000 - 4 000 | Największa pozycja, stała |
+| Jedzenie i chemia domowa | 2 000 - 2 800 | Najbardziej elastyczna z dużych pozycji |
+| Transport (auto, paliwo, ubezpieczenie lub bilety) | 700 - 1 200 | |
+| Dzieci: zajęcia, szkoła, kieszonkowe | 400 - 900 | Stałe i bieżące koszty |
+| Fundusz celowy na nieregularne wydatki dzieci | 300 - 600 | Wyprawka, ubrania, buty, lekarz, wycieczki |
+| Zdrowie i leki | 150 - 400 | |
+| Telefony, subskrypcje | 150 - 300 | |
+| Przyjemności, wyjścia, prezenty | 300 - 800 | |
+| Oszczędności i poduszka finansowa | 500 - 1 100 | Najpierw odłóż, potem wydawaj |
+| Bufor na niespodzianki | 200 - 400 | |
+
+Dolne końce widełek sumują się do około 7 700 zł, górne do około 12 500 zł, a środki do około 10 100 zł. Przy dochodzie 11 000 zł nie da się więc wybrać górnej kwoty w każdej kategorii naraz: jeśli w jednej wydajecie więcej, w innej coś ustępuje. Po to jest budżet: nie żeby zakazać wydatków, ale żeby świadomie wybrać, gdzie ustępujecie.
+
+**Jak przeliczyć to na swoją rodzinę:**
+
+1. Wpiszcie dochód netto obojga rodziców z typowego miesiąca, bez premii.
+2. Zapiszcie koszty stałe: czynsz lub rata, media, ubezpieczenia, abonamenty.
+3. Zsumujcie roczne wydatki dzieci (wyprawka, ubrania, obóz, prezenty), podzielcie przez 12 i wpiszcie jako fundusz celowy.
+4. Z reszty wydzielcie oszczędności, zanim ustalicie kwoty na jedzenie i przyjemności.
+5. Po dwóch-trzech miesiącach porównajcie plan z rzeczywistymi wydatkami i poprawcie widełki, bo pierwsza wersja prawie nigdy nie jest trafna.
 
 ## Budujcie budżet rodzinny razem
 
@@ -444,7 +475,7 @@ AI Budget Assistant ma wspólne konta rodzinne stworzone dokładnie do tego. Obo
 
 Role pozwalają dopasować dostęp. Oboje rodzice mogą być edytorami, którzy dodają i zmieniają transakcje, a starsze dziecko może dostać dostęp obserwatora, by widzieć budżet i się uczyć, bez możliwości jego zmiany. Możecie też ustawić cele oszczędnościowe widoczne dla całej rodziny, od funduszu na wakacje po cel samego dziecka, i razem oglądać rosnący postęp. A ponieważ wydatek dodaje się głosem, zdjęciem paragonu albo zwykłym zdaniem do asystenta, zapisywanie jest na tyle szybkie, że oboje rodzice faktycznie to robią.
 
-AI Budget Assistant jest darmowy na start, działa w przeglądarce na [ai-budget.pl](https://ai-budget.pl) bez podawania karty, oraz na [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant) na Androida. Jeśli chcecie, żeby oboje rodzice widzieli ten sam obraz, możecie być na nim w kilka minut. Po więcej o ustawianiu wspólnego budżetu we dwoje zajrzyjcie do poradnika o [wspólnym budżecie dla par](/blog/pl/wspolny-budzet-dla-par/).
+AI Budget Assistant jest darmowy na start (w darmowym planie na koncie jest jedna osoba, więc wspólne konto dla obojga rodziców wymaga planu Pro, do 5 członków na konto), działa w przeglądarce na [ai-budget.pl](https://ai-budget.pl) bez podawania karty, oraz na [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant) na Androida. Jeśli chcecie, żeby oboje rodzice widzieli ten sam obraz, możecie być na nim w kilka minut. Po więcej o ustawianiu wspólnego budżetu we dwoje zajrzyjcie do poradnika o [wspólnym budżecie dla par](/blog/pl/wspolny-budzet-dla-par/).
 
 ---
 
@@ -454,9 +485,13 @@ AI Budget Assistant jest darmowy na start, działa w przeglądarce na [ai-budget
 
 Zacznij od kosztów stałych, potem zaplanuj nieregularne wydatki dzieci, odkładając na nie po trochu co miesiąc w funduszach celowych: wyprawka szkolna, ubrania, zajęcia. Najważniejsze, by oboje rodzice widzieli ten sam budżet w czasie rzeczywistym, dzięki czemu decyzje o wydatkach podejmujecie razem, a nie w niewiedzy.
 
+**Jak zaplanować budżet 4-osobowej rodziny?**
+
+Zacznij od dochodu netto i kosztów stałych (mieszkanie zwykle zajmuje największą część), potem wydziel oszczędności, fundusz celowy na nieregularne wydatki dzieci, jedzenie i przyjemności, a na końcu mały bufor. Przykładowe widełki dla rodziny z dwójką dzieci i dochodem 11 000 zł netto znajdziesz w tabeli wyżej. Traktuj je jako punkt wyjścia i popraw po dwóch-trzech miesiącach, gdy zobaczysz, ile naprawdę wydajecie.
+
 **Jak oboje rodzice mogą śledzić jeden budżet?**
 
-Potrzebujecie wspólnego konta, do którego każde z was loguje się z własnego telefonu i widzi te same żywe liczby. AI Budget Assistant ma wspólne konta rodzinne z rolami, więc oboje rodzice mogą dodawać transakcje, a starsze dziecko może dostać podgląd. Gdy jedno coś kupi, drugie widzi to natychmiast, bez ręcznego uzgadniania.
+Potrzebujecie wspólnego konta, do którego każde z was loguje się z własnego telefonu i widzi te same żywe liczby. AI Budget Assistant ma wspólne konta rodzinne z rolami (wymagają planu Pro), więc oboje rodzice mogą dodawać transakcje, a starsze dziecko może dostać podgląd. Gdy jedno coś kupi, drugie widzi to natychmiast, bez ręcznego uzgadniania.
 
 **Ile odkładać na wydatki dzieci?**
 
@@ -673,6 +708,8 @@ Nie. To narzędzie do śledzenia sald, przeliczania sum i przypominania o dobrym
 ## Darmowa aplikacja do budżetu domowego: co to znaczy
 URL: https://ai-budget.pl/blog/pl/darmowa-aplikacja-do-budzetu-domowego/
 
+**Jaka darmowa aplikacja do budżetu domowego jest najlepsza?** Taka, której darmowy plan zostaje użyteczny na stałe, a nie wygasa po kilku dniach. Z aplikacji, które porównujemy, na stałe darmowy start mają AI Budget Assistant (bez karty, z limitem 50 zapytań AI miesięcznie, 3 kontami i jednym członkiem na koncie), Monefy (darmowa podstawa) i Wallet by BudgetBakers (start za darmo), a YNAB jest płatny po 34 dniach próby. Poniżej tabela, a potem wyjaśnienie, co to "za darmo" naprawdę znaczy.
+
 Szukasz darmowej aplikacji do budżetu domowego, bo nie chcesz płacić, zanim się przekonasz, że nawyk w ogóle się przyjmie. Rozsądne podejście. Problem w tym, że słowo "darmowa" w tym kontekście kryje co najmniej cztery różne modele biznesowe, i tylko jeden z nich znaczy dokładnie to, czego się spodziewasz. Ten tekst pokazuje, co "za darmo" naprawdę obejmuje, na co sprawdzić przed zaufaniem takiej etykiecie, i gdzie w tym wszystkim mieści się darmowy plan AI Budget Assistant - jako jeden uczciwy przykład, nie jedyna słuszna odpowiedź.
 
 ## Cztery rzeczy, które może znaczyć "za darmo"
@@ -699,15 +736,34 @@ To właśnie ukrywa etykieta "za darmo": nie to, czy w końcu zapłacisz, ale z 
 
 ## Gdzie w tym wszystkim jest darmowy plan AI Budget Assistant
 
-Uczciwie: AI Budget Assistant to drugi typ z listy powyżej - za darmo na zawsze, z konkretnym sufitem, a nie okres próbny z terminem. Start bez podawania karty, w przeglądarce na ai-budget.pl albo w aplikacji na Androida. W darmowym planie masz dodawanie wydatków głosem, zdjęciem paragonu i - na Androidzie - z samego powiadomienia banku bez dotykania telefonu, jednorazowy import wyciągu bankowego zamiast ręcznego przepisywania i wspólne konto dla całej rodziny czy pary.
+Uczciwie: AI Budget Assistant to drugi typ z listy powyżej - za darmo na zawsze, z konkretnym sufitem, a nie okres próbny z terminem. Start bez podawania karty, w przeglądarce na ai-budget.pl albo w aplikacji na Androida.
 
-Sufit też jest konkretny, a nie ukryty: czat z asystentem AI ma miesięczny limit zapytań w darmowym planie, a kilka głębszych funkcji opartych na AI - dokładniejsze analizy wydatków, roczne podsumowanie - jest zarezerwowanych dla planu płatnego. Ten sam zestaw pytań z listy wyżej stosuje się do AI Budget Assistant dokładnie tak samo jak do każdej innej aplikacji na tej liście - sprawdź, co naprawdę obejmuje darmowy plan, zanim zbudujesz na nim comiesięczny nawyk. Szerszy zestaw kryteriów wyboru samej aplikacji, nie tylko cennika, znajdziesz w [naszym przewodniku po najlepszych aplikacjach do budżetu](/blog/pl/najlepsze-aplikacje-do-budzetu/).
+**Co jest za darmo:** śledzenie wydatków, czat z asystentem AI, dodawanie wydatków głosem i zdjęciem paragonu, na Androidzie także z powiadomienia banku, import wyciągu bankowego (CSV/PDF) zamiast ręcznego przepisywania, wykrywanie anomalii, raporty PDF i Excel oraz zaszyfrowane kopie zapasowe. Wszystko to mieści się w limicie **50 zapytań AI miesięcznie** (wiadomość na czacie to 1 zapytanie, skan paragonu 2) i w **3 kontach**.
+
+**Co jest płatne (Pro, 4,99 USD miesięcznie lub 29,99 USD rocznie, z 7-dniowym okresem próbnym):** 300 zapytań AI miesięcznie, do 5 kont i do 5 członków na konto, czyli prawdziwy wspólny budżet z partnerem lub rodziną, oraz zaawansowane funkcje AI: Historia wydatków, Fat Finder i Wnioski AI. W darmowym planie na koncie jest tylko jedna osoba, więc wspólne konto wymaga Pro.
+
+Ten sam zestaw pytań z listy wyżej stosuje się do AI Budget Assistant dokładnie tak samo jak do każdej innej aplikacji - sprawdź, co naprawdę obejmuje darmowy plan, zanim zbudujesz na nim comiesięczny nawyk. Szerszy zestaw kryteriów wyboru samej aplikacji, nie tylko cennika, znajdziesz w [naszym przewodniku po najlepszych aplikacjach do budżetu](/blog/pl/najlepsze-aplikacje-do-budzetu/).
+
+## Darmowe aplikacje do budżetu domowego: porównanie
+
+| Aplikacja | Co jest za darmo | Co jest płatne |
+|---|---|---|
+| AI Budget Assistant | Plan darmowy bez karty: 3 konta, 1 członek, 50 zapytań AI miesięcznie, import wyciągów, raporty CSV/PDF/Excel | Pro 4,99 USD/mies. lub 29,99 USD/rok (7 dni próby): wspólne konta do 5 osób, 300 zapytań AI, zaawansowane funkcje AI |
+| Monefy | Darmowa podstawa | Opcjonalny Premium, według centrum pomocy z nielimitowaną liczbą kont |
+| Wallet by BudgetBakers | Start za darmo | Premium z okresem próbnym; eksport danych jest płatny |
+| YNAB | Tylko 34-dniowy okres próbny, bez karty | 14,99 USD miesięcznie lub 109 USD rocznie |
+| Money Manager (Realbyte) | Darmowy z zakupami w aplikacji | Subskrypcja z synchronizacją danych: 2,49 USD miesięcznie lub 19,99 USD rocznie (amerykański App Store) |
+
+Dane o innych aplikacjach pochodzą z ich publicznych stron według stanu na październik 2026, więc przed decyzją sprawdź aktualne cenniki. Szczegóły w osobnych porównaniach: [Monefy](/blog/pl/monefy-porownanie-ai-budget-assistant/), [Wallet](/blog/pl/wallet-budgetbakers-porownanie-ai-budget-assistant/), [YNAB](/blog/pl/ynab-alternatywa-porownanie/) i [Money Manager](/blog/pl/money-manager-porownanie-ai-budget-assistant/).
 
 Jeśli najważniejszy jest dla ciebie zerowy koszt i zero firmy w tle, [arkusz, który zbudujesz sam](/blog/pl/budzet-domowy-w-excelu/), jest najbardziej dosłownie darmową opcją z możliwych: bez rejestracji, bez limitów i bez żadnego modelu biznesowego, któremu trzeba by zaufać. Kosztem jest oczywiście to, że każdy wpis musisz wpisać ręcznie samodzielnie.
 
 Możesz zainstalować aplikację na Androida z [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant) albo od razu, bez instalowania czegokolwiek, zacząć w przeglądarce na [ai-budget.pl](https://ai-budget.pl).
 
 ## FAQ: darmowa aplikacja do budżetu domowego
+
+**Jaka jest najlepsza darmowa aplikacja do budżetu domowego?**
+Zależy, czego potrzebujesz od darmowego planu. Do samego zapisywania wydatków wystarczy darmowa podstawa Monefy. Jeśli chcesz wpisywać wydatki głosem, zdjęciem paragonu albo czatem i importować wyciągi bankowe bez karty, darmowy plan AI Budget Assistant to pokrywa, w limicie 50 zapytań AI miesięcznie i dla jednej osoby na koncie. Wspólny budżet dla pary wymaga w nim planu Pro. Jeśli ma kosztować dosłownie zero i nie wymagać żadnej firmy, zostaje [arkusz w Excelu](/blog/pl/budzet-domowy-w-excelu/).
 
 **Czy istnieje naprawdę darmowa aplikacja do budżetu domowego bez żadnych limitów?**
 Prawdziwie darmowa, bez jakiegokolwiek limitu, na dłuższą metę prawie nigdy nie istnieje jako trwały biznes, bo ktoś musi zapłacić za serwery i wsparcie. Istnieje za to uczciwy wariant "za darmo na zawsze, z rozsądnym sufitem" albo model finansowany reklamami. Kombinacja "bez żadnych limitów, na zawsze" i "firma w tle, bez reklam" to ta, przy której warto być podejrzliwym.
@@ -1634,6 +1690,7 @@ Najpierw spłać zadłużenie z wysokim oprocentowaniem, bo to gwarantowany „z
 - [Ile kosztują święta? Budżet na Boże Narodzenie krok po kroku](/blog/pl/budzet-na-swieta/)
 - [Black Friday: fałszywe promocje i jak nie przepłacić](/blog/pl/black-friday-promocje/)
 - [Zwrot podatku z PIT: na co go przeznaczyć? Plan](/blog/pl/zwrot-podatku-na-co-przeznaczyc/)
+- [Jak przeżyć za 2000 zł miesięcznie w 2026? Realny budżet](/blog/pl/jak-przezyc-za-2000-zl-miesiecznie/)
 
 ## Jak podzielić rachunek ze znajomymi: 3 sposoby + link BLIK
 URL: https://ai-budget.pl/blog/pl/jak-podzielic-rachunek/
@@ -1885,6 +1942,84 @@ Docelowo 3-6 miesięcy niezbędnych wydatków. Jeśli to zbyt odległy cel, zacz
 - [AI w zarządzaniu finansami: jak naprawdę pomaga](/blog/pl/ai-w-zarzadzaniu-finansami/)
 - [Wyprawka szkolna: ile kosztuje i jak ją rozplanować](/blog/pl/wyprawka-szkolna-ile-kosztuje/)
 - [Budżet przy nieregularnych dochodach: co działa](/blog/pl/budzet-przy-nieregularnych-dochodach/)
+
+## Jak przeżyć za 2000 zł miesięcznie w 2026? Realny budżet
+URL: https://ai-budget.pl/blog/pl/jak-przezyc-za-2000-zl-miesiecznie/
+
+Da się, ale tylko przy bardzo konkretnych założeniach: jedna osoba, mieszkanie w pokoju lub w małym mieście, gotowanie w domu i brak rat do spłacenia. Przy samodzielnym wynajmie kawalerki w dużym mieście 2000 zł zwykle nie wystarcza nawet na samo mieszkanie z rachunkami. Poniżej realistyczny podział, który możesz zmieniać pod swoją sytuację.
+
+## Ile wydawać na co przy 2000 zł miesięcznie?
+
+Poniższa tabela to orientacyjne widełki dla jednej osoby, w złotych, na rok 2026. Nie pochodzą z jednego źródła statystycznego, to typowy zakres cen, który warto sprawdzić dla swojego miasta i swoich rachunków.
+
+| Kategoria | Orientacyjnie | Uwagi |
+|---|---|---|
+| Mieszkanie: pokój lub małe miasto | 700–1000 zł | Pokój we współdzielonym mieszkaniu albo tanie mieszkanie w mniejszej miejscowości, z opłatami |
+| Jedzenie | 500–700 zł | Gotowanie w domu, planowanie zakupów, mało jedzenia na mieście |
+| Transport | 80–200 zł | Bilet miesięczny albo rower; samochód zwykle się w tym budżecie nie mieści |
+| Rachunki i media | 100–250 zł | Prąd, ogrzewanie, woda; często część czynszu za pokój |
+| Telefon i internet | 40–80 zł | Tani abonament lub prepaid |
+| Higiena, środki czystości, drobiazgi | 60–120 zł | |
+| Bufor i nieprzewidziane wydatki | 100–200 zł | Leki, naprawa, nagły bilet |
+
+Suma środkowych wartości wychodzi blisko 2000 zł, więc zostaje niewiele miejsca. Jeśli płacisz za samodzielne mieszkanie w dużym mieście, pozycja „mieszkanie” sama może zjeść większość pensji, a reszta budżetu przestaje się spinać.
+
+## Co zakładamy w tym wyliczeniu?
+
+- Jedna dorosła osoba, bez dzieci i bez utrzymywania kogokolwiek.
+- 2000 zł to kwota, którą naprawdę masz do dyspozycji miesięcznie (po podatkach i składkach).
+- Brak rat kredytu, pożyczek i karty z zadłużeniem.
+- Pokój we współdzielonym mieszkaniu albo mniejsze miasto. W największych miastach koszt samodzielnego wynajmu bywa tak wysoki, że ten scenariusz się nie zamyka.
+- Brak większych jednorazowych wydatków (dentysta, naprawa, nowy sprzęt) poza małym buforem.
+
+Jeśli którekolwiek z założeń jest u Ciebie inne, przesuwaj kwoty w tabeli. Najwięcej zmienia mieszkanie, bo to największa pozycja i najtrudniej ją obciąć w trakcie miesiąca. Artykuł jest ogólnym omówieniem i nie stanowi spersonalizowanej porady finansowej.
+
+## Jak zaplanować jedzenie, żeby zmieścić się w 500–700 zł?
+
+Jedzenie to jedyna duża kategoria, którą realnie kontrolujesz w ciągu miesiąca. Co zwykle działa:
+
+1. **Plan na tydzień i lista zakupów.** Kupujesz to, co planujesz ugotować, a nie to, co się trafi.
+2. **Gotowanie większych porcji.** Jeden obiad na dwa dni obniża koszt jednego posiłku.
+3. **Mniej jedzenia na mieście i dostaw.** To zwykle największy „niewidoczny” wydatek.
+4. **Porównywanie cen i promocje na produkty, które i tak kupujesz.** Nie kupuj czegoś tylko dlatego, że jest w promocji.
+
+Więcej konkretów znajdziesz w poradniku [jak oszczędzać na jedzeniu](/blog/pl/jak-oszczedzac-na-jedzeniu/).
+
+## Czy przy 2000 zł da się coś odłożyć?
+
+Rzadko dużo, ale warto zacząć od małej kwoty. Klasyczny podział [50/30/20](/blog/pl/zasada-50-30-20/) przy takim dochodzie jest w praktyce nie do zastosowania, bo same potrzeby zajmują znacznie więcej niż połowę. Zamiast tego ustal minimalną, stałą kwotę (nawet 50–100 zł) i traktuj ją jak rachunek, który płacisz sobie. Cel na start to mała [poduszka finansowa](/blog/pl/poduszka-finansowa/), żeby jeden nieplanowany wydatek nie rozwalił całego miesiąca.
+
+## Jak nie wyjść na minus przed końcem miesiąca?
+
+Przy takim budżecie problemem rzadko jest jeden duży wydatek, częściej dziesiątki małych, o których się zapomina. Pomaga prosta rutyna:
+
+- **Zapisuj wydatki od razu.** Dodasz je głosem albo zdjęciem paragonu, zamiast liczyć z pamięci w ostatnim tygodniu.
+- **Ustaw budżety na kategorie.** W AI Budget Assistant możesz ustawić limit na jedzenie czy transport i dostać powiadomienie, gdy wydasz 50%, 80% i 100% limitu.
+- **Patrz na kwotę „bezpieczną do wydania dziś”.** Aplikacja liczy, ile możesz wydać dziś, żeby dotrwać do końca miesiąca lub do następnej wpłaty, po odjęciu subskrypcji i cyklicznych wydatków. To prosta liczba zamiast arkusza.
+- **Zaimportuj wyciąg z banku.** Jeśli nie chcesz wpisywać wszystkiego ręcznie, zaimportuj plik z wyciągu z polskiego banku i zobacz, na co naprawdę idą pieniądze. Zobacz [jak zaimportować wyciąg bankowy](/blog/pl/jak-zaimportowac-wyciag-bankowy/).
+
+Możesz to wypróbować w przeglądarce na [ai-budget.pl](https://ai-budget.pl) albo zainstalować aplikację na Androida z [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant).
+
+## Co obciąć w pierwszej kolejności?
+
+Zacznij od rzeczy, które kosztują regularnie, a rzadko dają realną wartość: nieużywanych subskrypcji, jedzenia na mieście, zbędnych opłat bankowych. Sprawdź je w poradniku [jak zarządzać subskrypcjami](/blog/pl/jak-zarzadzac-subskrypcjami/). Kilkadziesiąt złotych miesięcznie z kilku takich źródeł to przy 2000 zł odczuwalna różnica. Mieszkanie warto renegocjować lub zmienić dopiero wtedy, gdy to realne, bo to największa dźwignia, ale też największy koszt zmiany.
+
+## FAQ: życie za 2000 zł miesięcznie
+
+**Czy da się przeżyć za 2000 zł miesięcznie w 2026 roku?**
+Tak, jednej osobie, jeśli mieszka w pokoju lub w mniejszym mieście, gotuje w domu i nie spłaca rat. W dużym mieście przy samodzielnym wynajmie kawalerki zwykle jest to bardzo trudne albo niemożliwe.
+
+**Ile zostaje na jedzenie przy 2000 zł?**
+Zwykle 500–700 zł miesięcznie, czyli około 17–23 zł dziennie. To wymaga planowania zakupów i ograniczenia jedzenia na mieście.
+
+**Czy 2000 zł wystarczy na wynajem mieszkania?**
+Na pokój we współdzielonym mieszkaniu zwykle tak, choć zostaje niewiele. Na samodzielną kawalerkę w dużym mieście zwykle nie, bo mieszkanie z opłatami pochłonie większość kwoty.
+
+**Jak kontrolować wydatki, żeby dotrwać do końca miesiąca?**
+Zapisuj wydatki na bieżąco, ustaw limity na kategorie i śledź, ile możesz wydać dziennie. Aplikacja budżetowa, taka jak AI Budget Assistant, pozwala dodawać wydatki głosem lub zdjęciem paragonu i ostrzega o przekroczeniu limitów.
+
+**Czy da się coś odłożyć z 2000 zł?**
+Zwykle niewiele, ale nawet stała kwota 50–100 zł miesięcznie buduje poduszkę. Ważniejsze od wysokości jest to, że odkładasz regularnie.
 
 ## Jak spłacić długi: kula śnieżna czy lawina
 URL: https://ai-budget.pl/blog/pl/jak-splacic-dlugi/

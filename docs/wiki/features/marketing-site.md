@@ -97,6 +97,13 @@ kept in `alternateName`. Answer engines join mentions of an entity by name, so a
 splits it. The privacy/terms texts and the cookie policy's data-controller line are legal
 documents and were deliberately not changed.
 
+**Tier claims in articles are checked against the code, not against other articles (ABA-675).**
+Articles 14 and 29 both presented shared family accounts as free, and 29 put Financial Wrapped
+behind the paid plan — both wrong. What a tier includes lives in `subscriptions.service.ts`
+(`TRIAL_REQUEST_LIMITS`, `MEMBER_LIMITS`, the 7-day `trial_period_days`), `AccountLimitGuard`,
+the `@RequireTier` routes and `user_docs/<lang>/12-subscription.md`; copy that repeats an older
+article repeats its mistakes.
+
 **Articles have a named author.** `AUTHOR`/`author_node()` in `build_blog.py` is one `Person` with
 the stable `@id` `/#author`, referenced by every article's `author`; the about page (in
 `build_landing.py`) is where the node is described and carries `id="author"` for the byline link.
@@ -184,4 +191,5 @@ ABA-574 (wave 5) · ABA-584 (the ABA-435 re-measure, FR snippet) · ABA-638 (SEO
 and per-bank pages — content-plan Wave 12) · ABA-645 (iOS visitors sent to the web app, not Play) ·
 ABA-672 (lightbox screenshots as WebP, shared groups added to `llms*.txt` and `featureList`) ·
 ABA-673 (snippet rewrite of twelve top-10, zero-click pages; CTR baseline in the issue) ·
-ABA-674 (one `FEATURES_EN` list with a translation-length check; one company spelling).
+ABA-674 (one `FEATURES_EN` list with a translation-length check; one company spelling) ·
+ABA-675 (Polish push: article 47 on living on 2000 zł, answer-first rework of 29 and 14).

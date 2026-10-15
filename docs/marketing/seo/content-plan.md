@@ -205,6 +205,7 @@ Wave 5 notes (`multi-currency`, topic 31):
 | 38 | `import-revolut` | 9 | How to import a Revolut statement |
 | 39–45 | `import-mbank` … `import-erste` | pl only | One guide per Polish bank parser; export steps generic where the bank's own help could not be fetched |
 | 46 | `tax-refund` | 9 | What to do with a tax refund; per-market deadlines only where an official source confirmed them (DE has none) |
+| 47 | `live-on-2000` | pl only | "Jak przeżyć za 2000 zł miesięcznie (2026)" — GSC query at position 7.5 with no dedicated page; ranges, no sourced statistics |
 
 Wave 12 notes:
 - **Comparison pages and cannibalisation.** Topic 24 (`switch-apps`) ranks for "<app> alternative" and answers *how to move*. The `vs-*` pages answer *which fits me*, lead with a table, and link to topic 24 for the move instead of repeating it. Re-measure topic 24 four weeks after publication; if it drops, merge rather than keep both.
