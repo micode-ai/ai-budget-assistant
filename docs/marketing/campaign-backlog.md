@@ -55,6 +55,10 @@ google-signin · bank-import.
 
 ---
 
+**Готово 2026-10-15:** **Wspólne grupy (ABA-640)** — фильм в стиле немого кино «Kto komu ile?» (PL + EN, 30 с) + Story 9:16/4:5, тексты для поста, TikTok и YouTube Shorts: `creatives/shared-groups/renders/{pl,en}/`, `copy/feature-shared-groups-silent-film-{pl,en}.md`. Проект `D:/Work/tools/films/kto-komu-ile`.
+
+**Готово 2026-10-16:** **Чек-контроль (пункт 2) к Black Friday** — фильм «Super Okazja!» в стиле VHS-телемагазина (PL + EN, 30 с; ведущие Edward и Weronika — карикатуры с их согласия) + Story 9:16/4:5, тексты для поста, TikTok и YouTube Shorts: `creatives/receipt-price-check/renders/{pl,en}/`, `copy/feature-receipt-price-check-vhs-film-{pl,en}.md`. Проект `D:/Work/tools/films/super-okazja`. Публиковать до 27.11.2026.
+
 ## Не рекламировали — очередь
 
 | # | Фича | Хук | Готовность | Статус |

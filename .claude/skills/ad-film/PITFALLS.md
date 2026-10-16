@@ -5,7 +5,7 @@ defect that cost a re-do, write it here as *symptom → cause and fix* before th
 Read it at the start of every film and paste the relevant rows into the scene brief.
 
 Collected from `receipt-journey`, `real-salary`, `shared-family`, `oddam-pietnastego`, `kto-placi`
-(and their `-en` copies), `paragon-anime` (the anime house style), `sprawa-pieniedzy` (noir), `na-glos` (1930s cartoon), `rpg-subskrypcje` (8-bit RPG), `import-typo` (kinetic typography), `okna-95` (90s OS), `cien-podwojny` (shadow puppets), `tarcza-papier` (cut paper), `kto-komu-ile` (1920s silent film), 2026-09/10.
+(and their `-en` copies), `paragon-anime` (the anime house style), `sprawa-pieniedzy` (noir), `na-glos` (1930s cartoon), `rpg-subskrypcje` (8-bit RPG), `import-typo` (kinetic typography), `okna-95` (90s OS), `cien-podwojny` (shadow puppets), `tarcza-papier` (cut paper), `kto-komu-ile` (1920s silent film), `super-okazja` (VHS teleshopping), 2026-09/10.
 
 ## Story and timing
 
@@ -205,3 +205,26 @@ Collected from `receipt-journey`, `real-salary`, `shared-family`, `oddam-pietnas
 | A patch script turned a 40 KB scene into 4.9 MB | `s.index('})();')` matched an earlier IIFE, the slice was empty, and `str.replace('', new)` inserted the text between every character. Anchor on `rindex`/a unique marker and assert the slice is non-empty before replacing. |
 | The EN copy project still rendered Polish in `tools/shot.cjs` sheets | The standalone harness has no HyperFrames runtime, so the `lang` composition variable is never read. Set the default in `strings.js` (`lang: 'en'`) as well as in `index.html`. |
 | The app screen in the film painted the owed amount in brand orange; the real app shows it green | The engine author guessed the colour. Read the real component (`GroupBalanceHero.tsx`: owed → `success`, owes → `danger`, settled → only a grey label) before drawing any app state; brand orange only where the app uses it. |
+
+## VHS teleshopping (from `super-okazja`)
+
+| Symptom | Cause and fix |
+|---|---|
+| The grade cost 300 ms on the rewind, 130–280 ms elsewhere | ~14 full-frame passes (a separate soft-luma pass, two chroma ghosts, an oversized grain fill, scanlines and vignette apart, and, likely, a CPU-backed (willReadFrequently) chroma canvas that made the downscale read the whole GPU frame back). Merge: draw the geometry bands FROM the squeezed soft copy, pre-ghost the tiny chroma canvas on itself, bake scanlines × vignette into one multiply, one dark noise texture `'screen'`ed (lift + grain + chroma noise), bloom only over the red bbox, keep the readback canvas tiny and GPU-side. ~5 passes. |
+| Timings jumped 70 → 300 ms between identical runs | Other processes (playwright, dev servers) contending for the GPU/CPU; even the ungraded panel went 3 → 120 ms. Measure with a GPU sync (`V.sync`) and take the MIN of many drawings, not one cached frame. |
+| The Host's face blew out to white under the studio lights | Additive light cones at 0.22 over pale anime skin. Cones ≤ 0.1 alpha. |
+| The Host's hair read as a loaf / a hat with a yellow band; the mullet read as long hair down the cheeks | A symmetric dome with the frosted tips as one band; a mullet wider than the jaw. Build the quiff from a back volume + an asymmetric front wave with a forelock curl, frost as a ragged band clipped INSIDE each lock; keep the mullet narrower than the jaw (only the nape flip shows). |
+| Kasia's open coat showed a bare-skin stripe to the waist | A cream sweater between the coat panels reads as skin. Give the knit a clear colour (dusty blue) and rib lines. |
+| Receipt prices overprinted the long product name (`14Rg99`) | 380 px paper for `Kawa ziarnista 1 kg` + `47,99 A` at 26 px Consolas. Widen to 440 (measure the longest line). |
+| A phone held out to the side floated with a single dangling finger | The figure's hold puts the wrist at the phone's lower corner (1.04 w below centre); beyond the arm's reach the IK clamps and the hand hides behind the phone, leaving only the thumb. Hold the phone in front of the torso; give hold poses a longer forearm (`L1 300, L2 330`). |
+| The payoff lens lines crossed Kasia's face | Corner-to-corner lines from a phone beside the face. Put the panel on the far side of the phone from the face, or join to the near edge (`join: 'near'`). |
+| The mic did not reach the mouth in `shout` | The far wrist at local y 400 is chest height; the mic grille sits ~146 units up the fist's axis. Wrist ~[-176, 300], handAng 0.36 puts the grille at the mouth corner. |
+| Props in a fist (mic, basket handle) | The figure bakes the hand into its sprite. Recompute the hand from the pose (`CAST.heldProp`), draw the prop, then re-draw the same hand (`CAST.hand` with angle π − a and the mirror toggled for facing −1) over it. |
+| The app's scan screen was going to show brand brackets and app strings | The app opens the SYSTEM camera (ImagePicker); the brackets were an earlier film's invention. Draw a generic camera; the app's own UI starts at the processing state. |
+| Kasia's elbows "moved in a weird way" (user): flat across the chest at shoulder height while carrying, pointing INTO the torso on a hanging arm, folded over the chest with a remote | The IK bend sign is relative to the shoulder→wrist direction, so a per-pose `bend: 1` puts the elbow below for a wrist out to the side but ABOVE / inside for a wrist across the body. `src/cast.js` `armIK` chooses the elbow side from the BODY by the wrist's direction, changes side only through a ±10° crossover band (continuous), and soft-clamps the reach (tanh past 92 % of L1+L2). Never fix an elbow with a per-pose sign. |
+| The sync check failed by 166 ms on the REWIND although the picture tore on the cue drawing | The `flash` sync region measures whole-frame BRIGHTNESS; a rewind tear changes structure, not mean luminance. Give the cue drawing a brightness event too (a one-drawing white head-switch flash, a 0.55). |
+| The English version printed „PLN 8.00” | The app's `formatCurrency` formats PLN with pl-PL + „zł” in EVERY UI language. Copy the formatter, not the language: „8,00 zł” in EN too. |
+| A hanging „%” sale sign in the aisle next to the app's „costs more than usual” | Reads as „the promotion was not applied”, which the price-check copy rule forbids. No sale signs anywhere near the product the card talks about; the TV shop's shouting is the fictional channel's, never the shelf's. |
+| An English caption ran edge to edge (outside x 60–1020) | Teletext Consolas is wide; a 30-character line overflows. Count characters per line for the EN table too, and re-snap the EN copy before rendering. |
+| The counter jumped at a cut | One tape = one counter: write the formula once in the brief (forward from START, backwards at 40× during REW, forward again from where REW stopped) and have every scene compute it, not copy a value. |
+| An old snapshot looked like an unfixed drawing | `t1.167.png` from an earlier grid survived next to the new `t1.166.png`. Delete `.snaps/NN-*` before re-snapping a fix. |
