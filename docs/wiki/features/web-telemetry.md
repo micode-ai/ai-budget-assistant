@@ -88,6 +88,15 @@ it. A date window bounds the range but not the row count, and ~100 daily users �
 90 days is ~1.8M objects against a 768 MB heap — the shape of failure that OOM-killed this container
 once already.
 
+**The funnel leaves internal accounts out by default.** `ADMIN_EMAILS` accounts (parsed by
+`admin/admin-emails.util.ts`, the same list `AdminGuard` uses) are resolved to ids and filtered with
+`userId notIn` before the row ceiling applies; `?includeInternal=true` and the admin page's toggle
+restore them. The default exists because in the first six weeks (2026-09-04 → 10-17) one internal
+account held 82% of all web sessions across 11 users, so the unfiltered funnel mostly measured the
+team. An unset or unmatched list must add **no** filter — never a `notIn: []` that reads as a
+deliberate clause. The response reports `internalExcluded`, `excludedAccounts` and `users`, so the
+page always says which population it shows.
+
 **Two privacy policies must be updated together.** The marketing one under
 `docs/marketing/landing/legal/`, and the one the app actually links, which lives on the **`gh-pages`
 branch** and is hand-maintained. Disclosing only in the marketing copy means a user accepts, at
@@ -99,9 +108,17 @@ registration, a policy omitting the data category being collected.
 - `chat_message` never reports `failed` (`sendMessage` swallows its own errors), so `completed` only
   means a message was submitted.
 - `expense_receipt`'s save failures report neither terminal event and land in derived `abandoned`.
+- **`started` means different things per flow** — read the funnel with the call site open.
+  `chat_message` fires `started` on chat-screen mount, so started→completed is "opened chat →
+  sent a message", not a broken send. `import_bank` fires `started` only on the **preview** screen,
+  so a user who opened `settings/import/index` but never got a parsed file reports nothing at all.
+- **Only `ADMIN_EMAILS` counts as internal.** A test account outside that list is still in the
+  funnel.
 - No pre-login telemetry (needs a public throttled endpoint with its own abuse design), no mobile
   telemetry (needs a Play Data-safety decision), no cohort breakdowns.
 
 ## History
 
-ABA-497 · ABA-645 (`ios_install` flow) · ABA-643 (`import_report` flow).
+ABA-497 · ABA-645 (`ios_install` flow) · ABA-643 (`import_report` flow) ·
+[ABA-680](https://github.com/micode-ai/ai-budget-assistant/issues/710) (internal accounts excluded
+from the funnel).

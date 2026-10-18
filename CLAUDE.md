@@ -269,7 +269,7 @@ See `.env.example`:
 - `FIREBASE_PROJECT_ID`, `FIREBASE_PRIVATE_KEY`, `FIREBASE_CLIENT_EMAIL` — push notifications
 - `EXPO_PUBLIC_API_URL` — API URL for mobile app
 - `STRIPE_SECRET_KEY` — Stripe API key (apiVersion pinned to `2026-01-28.clover`, must match SDK in `package-lock.json`)
-- `ADMIN_EMAILS` — comma-separated emails with admin access. It is the ONLY admin check (`AdminGuard`, `AdminGateway`, the `isAdmin` flag on `/users/me`); there is no role column.
+- `ADMIN_EMAILS` — comma-separated emails with admin access. It is the ONLY admin check (`AdminGuard`, `AdminGateway`, the `isAdmin` flag on `/users/me`); there is no role column. It also defines an "internal" account: the admin telemetry funnel leaves these out by default (ABA-680). Parse it with `admin/admin-emails.util.ts`.
 - `TELEGRAM_WEBHOOK_URL`, `TELEGRAM_WEBHOOK_SECRET` — webhook mode for the assistant bot when the URL is set (registers `<url>/telegram/webhook`), long-polling otherwise. The secret is Telegram's `secret_token`; when it is unset the bot registers a random per-process one, so the public webhook never runs unauthenticated (ABA-626).
 - `NEXT_PUBLIC_SOCKET_URL` — admin dashboard Socket.io base URL (default `http://localhost:3000`), next to `NEXT_PUBLIC_API_URL`.
 - `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` — the **user-facing assistant bot** (`MiCodeAIBudgetAssistantBot`, `TelegramBotService`): expenses, chat, voice, photo. `TELEGRAM_CHAT_ID` is now legacy/unused by the API (ops moved to the ops bot below).

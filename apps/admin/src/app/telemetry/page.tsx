@@ -27,6 +27,9 @@ const HINTS = {
   lastScreens: "The screen each session ended on, most frequent first. This is where people leave.",
   webOnly:
     "Signed-in web sessions only. Mobile sends nothing — the native client is a deliberate no-op — so these numbers are not app-wide.",
+  internal:
+    "Accounts listed in ADMIN_EMAILS are the team's own use. They are left out by default because on a channel this small one internal account can outweigh every real user put together.",
+  users: "Distinct signed-in users behind the figures on this page.",
 };
 
 function InfoHint({ text }: { text: string }) {
@@ -110,7 +113,8 @@ function ScreenTable({
 
 export default function TelemetryPage() {
   const [days, setDays] = useState<number>(30);
-  const { data, isLoading, isError, refetch } = useTelemetryFunnel(days);
+  const [includeInternal, setIncludeInternal] = useState(false);
+  const { data, isLoading, isError, refetch } = useTelemetryFunnel(days, includeInternal);
 
   if (isError) {
     return (
@@ -157,7 +161,16 @@ export default function TelemetryPage() {
             Product telemetry
             <InfoHint text={HINTS.webOnly} />
           </h1>
-          <div className="ml-auto flex gap-1">
+          <div className="ml-auto flex items-center gap-1">
+            <Button
+              variant={includeInternal ? "default" : "outline"}
+              size="sm"
+              aria-pressed={includeInternal}
+              onClick={() => setIncludeInternal((v) => !v)}
+              className="mr-2"
+            >
+              Include internal accounts
+            </Button>
             {WINDOWS.map((w) => (
               <Button
                 key={w}
@@ -176,6 +189,13 @@ export default function TelemetryPage() {
           answers what a signed-in web user did <em>before</em> writing anything.
         </p>
 
+        <p className="text-sm text-muted-foreground flex items-center gap-1.5">
+          {data.internalExcluded
+            ? `Internal accounts excluded (${data.excludedAccounts} from ADMIN_EMAILS).`
+            : "Internal accounts included — these figures count the team's own use."}
+          <InfoHint text={HINTS.internal} />
+        </p>
+
         {data.truncated && (
           <div className="rounded-md border border-amber-500/40 bg-amber-500/10 p-3 text-sm">
             <strong>Partial window.</strong> This window holds more events than one
@@ -185,7 +205,8 @@ export default function TelemetryPage() {
           </div>
         )}
 
-        <div className="grid gap-4 sm:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <Stat label="Users" value={String(data.users)} hint={HINTS.users} />
           <Stat
             label="Sessions with a screen view"
             value={String(sessions)}

@@ -4,18 +4,14 @@ import {
   ExecutionContext,
   ForbiddenException,
 } from '@nestjs/common';
+import { parseAdminEmails } from './admin-emails.util';
 
 @Injectable()
 export class AdminGuard implements CanActivate {
   private readonly adminEmails: Set<string>;
 
   constructor() {
-    this.adminEmails = new Set(
-      (process.env.ADMIN_EMAILS || '')
-        .split(',')
-        .map((e) => e.trim().toLowerCase())
-        .filter(Boolean),
-    );
+    this.adminEmails = new Set(parseAdminEmails());
   }
 
   canActivate(context: ExecutionContext): boolean {

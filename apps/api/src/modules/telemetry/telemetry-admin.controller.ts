@@ -14,7 +14,7 @@ export class TelemetryAdminController {
   constructor(private readonly service: TelemetryService) {}
 
   @Get('funnel')
-  async funnel(@Query('days') days?: string) {
-    return this.service.getFunnel(Number(days));
+  async funnel(@Query('days') days?: string, @Query('includeInternal') includeInternal?: string) {
+    return this.service.getFunnel(Number(days), { includeInternal: includeInternal === 'true' });
   }
 }

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { IngestTelemetryDto } from './dto';
 import { sanitizeEvents, FUNNEL_STATUSES, FunnelStatus } from './telemetry.validator';
+import { parseAdminEmails } from '../admin/admin-emails.util';
 import type {
   TelemetryFunnelResponse,
   TelemetryFunnelRow,
@@ -31,6 +32,13 @@ const MAX_WINDOW_DAYS = 90; // never longer than what retention keeps
 const MAX_FUNNEL_ROWS = 200_000;
 
 const FUNNEL_STATUS_SET: ReadonlySet<string> = new Set(FUNNEL_STATUSES);
+
+export interface FunnelOptions {
+  /** Count `ADMIN_EMAILS` accounts too. Off by default. */
+  includeInternal?: boolean;
+  /** Row ceiling; a parameter so a spec can hit it with two rows. */
+  maxRows?: number;
+}
 
 export { MAX_FUNNEL_ROWS };
 
@@ -67,10 +75,11 @@ export class TelemetryService {
    */
   async getFunnel(
     days: number,
-    maxRows: number = MAX_FUNNEL_ROWS,
+    { includeInternal = false, maxRows = MAX_FUNNEL_ROWS }: FunnelOptions = {},
   ): Promise<TelemetryFunnelResponse> {
     const window = Math.min(Math.max(Math.trunc(days) || 30, 1), MAX_WINDOW_DAYS);
     const since = new Date(Date.now() - window * 86_400_000);
+    const internalIds = includeInternal ? [] : await this.internalUserIds();
 
     // `take` is not optional: see MAX_FUNNEL_ROWS. `desc` so that when the
     // ceiling bites we keep the NEWEST rows — a funnel of the last three weeks
@@ -78,8 +87,18 @@ export class TelemetryService {
     // leaves the per-session last-screen fold correct, since dropping the
     // oldest rows cannot change which screen a session ended on.
     const rows = await this.prisma.telemetryEvent.findMany({
-      where: { createdAt: { gte: since } },
-      select: { name: true, screen: true, props: true, sessionId: true, createdAt: true },
+      where: {
+        createdAt: { gte: since },
+        ...(internalIds.length > 0 ? { userId: { notIn: internalIds } } : {}),
+      },
+      select: {
+        userId: true,
+        name: true,
+        screen: true,
+        props: true,
+        sessionId: true,
+        createdAt: true,
+      },
       orderBy: { createdAt: 'desc' },
       take: maxRows,
     });
@@ -89,8 +108,10 @@ export class TelemetryService {
     const screens = new Map<string, number>();
     // The latest screen_view seen per session, so far.
     const lastPerSession = new Map<string, { screen: string; at: number }>();
+    const users = new Set<string>();
 
     for (const row of rows) {
+      users.add(row.userId);
       if (row.name === 'screen_view') {
         if (!row.screen) continue;
         screens.set(row.screen, (screens.get(row.screen) ?? 0) + 1);
@@ -125,9 +146,27 @@ export class TelemetryService {
     return {
       days: window,
       truncated,
+      internalExcluded: !includeInternal,
+      excludedAccounts: internalIds.length,
+      users: users.size,
       flows: Array.from(flows.values()),
       screens: byViewsDesc(screens),
       lastScreens: byViewsDesc(lastScreens),
     };
+  }
+
+  /**
+   * The accounts behind `ADMIN_EMAILS` — the team's own use, which otherwise
+   * dominates a channel this small. Resolved to ids so the event query filters
+   * on an indexed column instead of joining users.
+   */
+  private async internalUserIds(): Promise<string[]> {
+    const emails = parseAdminEmails();
+    if (emails.length === 0) return [];
+    const users = await this.prisma.user.findMany({
+      where: { email: { in: emails, mode: 'insensitive' } },
+      select: { id: true },
+    });
+    return users.map((u) => u.id);
   }
 }

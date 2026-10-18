@@ -37,6 +37,16 @@ export interface TelemetryFunnelResponse {
    * than a smaller window honestly labelled.
    */
   truncated: boolean;
+  /**
+   * Whether `ADMIN_EMAILS` accounts were left out. On by default: in the first
+   * weeks one internal account held 82% of all web sessions, so an unfiltered
+   * funnel mostly measured the team's own use.
+   */
+  internalExcluded: boolean;
+  /** How many internal accounts the filter removed (0 when it is off). */
+  excludedAccounts: number;
+  /** Distinct signed-in users behind the figures below. */
+  users: number;
   flows: TelemetryFunnelRow[];
   /** Most-viewed screens in the window. */
   screens: TelemetryScreenRow[];

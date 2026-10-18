@@ -1,6 +1,7 @@
 import { TelemetryService, MAX_FUNNEL_ROWS } from './telemetry.service';
 
 type Row = {
+  userId?: string;
   name: string;
   screen: string | null;
   props: unknown;
@@ -8,11 +9,14 @@ type Row = {
   createdAt: Date;
 };
 
-function makeService(rows: Row[]) {
+function makeService(rows: Row[], internalUsers: { id: string }[] = []) {
   const prisma = {
     telemetryEvent: {
       createMany: jest.fn(),
       findMany: jest.fn().mockResolvedValue(rows),
+    },
+    user: {
+      findMany: jest.fn().mockResolvedValue(internalUsers),
     },
   };
   return { service: new TelemetryService(prisma as never), prisma };
@@ -168,12 +172,77 @@ describe('TelemetryService.getFunnel', () => {
       { name: 'screen_view', screen: 'expense/new', props: null, sessionId: 'b', createdAt: at(0) },
     ];
 
-    const atCeiling = await makeService(rows).service.getFunnel(30, 2);
+    const atCeiling = await makeService(rows).service.getFunnel(30, { maxRows: 2 });
     expect(atCeiling.truncated).toBe(true);
     // Truncated or not, the aggregation still has to be correct.
     expect(atCeiling.screens).toEqual([{ screen: 'expense/new', views: 2 }]);
 
-    const underCeiling = await makeService(rows).service.getFunnel(30, 3);
+    const underCeiling = await makeService(rows).service.getFunnel(30, { maxRows: 3 });
     expect(underCeiling.truncated).toBe(false);
+  });
+});
+
+// One internal account held 82% of web sessions in the first six weeks, so the
+// default funnel leaves ADMIN_EMAILS accounts out. These pin the default, the
+// opt-in, and that an empty list never turns into a filter that matches nothing.
+describe('TelemetryService.getFunnel — internal accounts', () => {
+  const original = process.env.ADMIN_EMAILS;
+  afterEach(() => {
+    process.env.ADMIN_EMAILS = original;
+  });
+
+  it('excludes ADMIN_EMAILS accounts by default', async () => {
+    process.env.ADMIN_EMAILS = ' Owner@Example.com ,qa@example.com';
+    const { service, prisma } = makeService([], [{ id: 'u-owner' }, { id: 'u-qa' }]);
+
+    const out = await service.getFunnel(30);
+
+    expect(prisma.user.findMany.mock.calls[0][0].where.email).toEqual({
+      in: ['owner@example.com', 'qa@example.com'],
+      mode: 'insensitive',
+    });
+    expect(prisma.telemetryEvent.findMany.mock.calls[0][0].where.userId).toEqual({
+      notIn: ['u-owner', 'u-qa'],
+    });
+    expect(out.internalExcluded).toBe(true);
+    expect(out.excludedAccounts).toBe(2);
+  });
+
+  it('counts everyone when asked to include internal accounts', async () => {
+    process.env.ADMIN_EMAILS = 'owner@example.com';
+    const { service, prisma } = makeService([], [{ id: 'u-owner' }]);
+
+    const out = await service.getFunnel(30, { includeInternal: true });
+
+    expect(prisma.user.findMany).not.toHaveBeenCalled();
+    expect(prisma.telemetryEvent.findMany.mock.calls[0][0].where.userId).toBeUndefined();
+    expect(out.internalExcluded).toBe(false);
+    expect(out.excludedAccounts).toBe(0);
+  });
+
+  it('adds no user filter when ADMIN_EMAILS is unset or matches no account', async () => {
+    process.env.ADMIN_EMAILS = '';
+    const unset = makeService([]);
+    await unset.service.getFunnel(30);
+    expect(unset.prisma.user.findMany).not.toHaveBeenCalled();
+    expect(unset.prisma.telemetryEvent.findMany.mock.calls[0][0].where.userId).toBeUndefined();
+
+    process.env.ADMIN_EMAILS = 'ghost@example.com';
+    const noMatch = makeService([], []);
+    await noMatch.service.getFunnel(30);
+    expect(noMatch.prisma.telemetryEvent.findMany.mock.calls[0][0].where.userId).toBeUndefined();
+  });
+
+  it('reports the distinct users behind the figures', async () => {
+    process.env.ADMIN_EMAILS = '';
+    const { service } = makeService([
+      { userId: 'a', name: 'screen_view', screen: 'expenses', props: null, sessionId: 's1', createdAt: at(0) },
+      { userId: 'a', name: 'screen_view', screen: 'expenses', props: null, sessionId: 's2', createdAt: at(1) },
+      { userId: 'b', name: 'session_start', screen: null, props: null, sessionId: 's3', createdAt: at(2) },
+    ]);
+
+    const out = await service.getFunnel(30);
+
+    expect(out.users).toBe(2);
   });
 });
