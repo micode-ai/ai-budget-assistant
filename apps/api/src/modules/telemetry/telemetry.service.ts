@@ -1,12 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { IngestTelemetryDto } from './dto';
-import { sanitizeEvents, FUNNEL_STATUSES, FunnelStatus } from './telemetry.validator';
+import {
+  sanitizeEvents,
+  FUNNEL_STATUSES,
+  FunnelStatus,
+  FORM_FACTORS,
+  FormFactor,
+} from './telemetry.validator';
 import { parseAdminEmails } from '../admin/admin-emails.util';
 import type {
   TelemetryFunnelResponse,
   TelemetryFunnelRow,
   TelemetryScreenRow,
+  TelemetryFormFactorRow,
 } from '@budget/shared-types';
 
 const KNOWN_PLATFORMS = new Set(['web', 'ios', 'android']);
@@ -38,6 +45,15 @@ export interface FunnelOptions {
   includeInternal?: boolean;
   /** Row ceiling; a parameter so a spec can hit it with two rows. */
   maxRows?: number;
+  /** Only sessions on this device class (ABA-683). Absent: every session. */
+  formFactor?: FormFactor;
+}
+
+const FORM_FACTOR_SET: ReadonlySet<string> = new Set(FORM_FACTORS);
+
+/** A query-string value narrowed to a known device class, else undefined (no filter). */
+export function parseFormFactor(value: unknown): FormFactor | undefined {
+  return typeof value === 'string' && FORM_FACTOR_SET.has(value) ? (value as FormFactor) : undefined;
 }
 
 export { MAX_FUNNEL_ROWS };
@@ -75,7 +91,7 @@ export class TelemetryService {
    */
   async getFunnel(
     days: number,
-    { includeInternal = false, maxRows = MAX_FUNNEL_ROWS }: FunnelOptions = {},
+    { includeInternal = false, maxRows = MAX_FUNNEL_ROWS, formFactor }: FunnelOptions = {},
   ): Promise<TelemetryFunnelResponse> {
     const window = Math.min(Math.max(Math.trunc(days) || 30, 1), MAX_WINDOW_DAYS);
     const since = new Date(Date.now() - window * 86_400_000);
@@ -104,6 +120,45 @@ export class TelemetryService {
     });
     const truncated = rows.length >= maxRows;
 
+    // A session's device class and display mode are its LATEST stamped values:
+    // rows are newest first, so the first one seen wins. Events from before the
+    // client stamped them (or from an API that dropped the key) read `unknown`.
+    const sessionFactor = new Map<string, string>();
+    const sessionStandalone = new Map<string, boolean>();
+    const sessionUser = new Map<string, string>();
+    for (const row of rows) {
+      sessionUser.set(row.sessionId, row.userId);
+      const props = (row.props ?? {}) as Record<string, unknown>;
+      if (!sessionFactor.has(row.sessionId) && typeof props.formFactor === 'string') {
+        sessionFactor.set(row.sessionId, props.formFactor);
+      }
+      if (!sessionStandalone.has(row.sessionId) && typeof props.display === 'string') {
+        sessionStandalone.set(row.sessionId, props.display === 'standalone');
+      }
+    }
+    const factorOf = (sessionId: string) => sessionFactor.get(sessionId) ?? 'unknown';
+
+    // The breakdown always covers every session, filter or not: it is what
+    // tells the reader how much each slice weighs.
+    const breakdown = new Map<string, TelemetryFormFactorRow & { userIds: Set<string> }>();
+    for (const [sessionId, userId] of sessionUser) {
+      const key = factorOf(sessionId);
+      const entry = breakdown.get(key) ?? {
+        formFactor: key,
+        sessions: 0,
+        users: 0,
+        standaloneSessions: 0,
+        userIds: new Set<string>(),
+      };
+      entry.sessions += 1;
+      entry.userIds.add(userId);
+      if (sessionStandalone.get(sessionId)) entry.standaloneSessions += 1;
+      breakdown.set(key, entry);
+    }
+    const formFactors: TelemetryFormFactorRow[] = Array.from(breakdown.values())
+      .map(({ userIds, ...row }) => ({ ...row, users: userIds.size }))
+      .sort((a, b) => b.sessions - a.sessions);
+
     const flows = new Map<string, TelemetryFunnelRow>();
     const screens = new Map<string, number>();
     // The latest screen_view seen per session, so far.
@@ -111,6 +166,7 @@ export class TelemetryService {
     const users = new Set<string>();
 
     for (const row of rows) {
+      if (formFactor && factorOf(row.sessionId) !== formFactor) continue;
       users.add(row.userId);
       if (row.name === 'screen_view') {
         if (!row.screen) continue;
@@ -149,6 +205,8 @@ export class TelemetryService {
       internalExcluded: !includeInternal,
       excludedAccounts: internalIds.length,
       users: users.size,
+      formFactor: formFactor ?? null,
+      formFactors,
       flows: Array.from(flows.values()),
       screens: byViewsDesc(screens),
       lastScreens: byViewsDesc(lastScreens),

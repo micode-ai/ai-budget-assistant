@@ -23,6 +23,16 @@ export interface TelemetryFunnelRow {
   failed: number;
 }
 
+export interface TelemetryFormFactorRow {
+  /** `phone` | `tablet` | `desktop`, or `unknown` for sessions recorded before
+   *  the web client stamped a device class. */
+  formFactor: string;
+  sessions: number;
+  users: number;
+  /** Sessions run from the installed PWA rather than a browser tab. */
+  standaloneSessions: number;
+}
+
 export interface TelemetryScreenRow {
   screen: string;
   views: number;
@@ -47,6 +57,10 @@ export interface TelemetryFunnelResponse {
   excludedAccounts: number;
   /** Distinct signed-in users behind the figures below. */
   users: number;
+  /** The device class the figures are filtered to, or null for every session (ABA-683). */
+  formFactor: 'phone' | 'tablet' | 'desktop' | null;
+  /** Sessions and users per device class across the whole window, unfiltered. */
+  formFactors: TelemetryFormFactorRow[];
   flows: TelemetryFunnelRow[];
   /** Most-viewed screens in the window. */
   screens: TelemetryScreenRow[];

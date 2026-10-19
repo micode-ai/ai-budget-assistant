@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useTelemetryFunnel } from "@/hooks/use-telemetry-funnel";
+import { useTelemetryFunnel, type FormFactorFilter } from "@/hooks/use-telemetry-funnel";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PageSkeleton } from "@/components/common/loading-skeleton";
@@ -15,9 +15,10 @@ import {
   TooltipProvider,
 } from "@/components/ui/tooltip";
 import { Info } from "lucide-react";
-import type { TelemetryScreenRow } from "@budget/shared-types";
+import type { TelemetryFormFactorRow, TelemetryScreenRow } from "@budget/shared-types";
 
 const WINDOWS = [7, 30, 90] as const;
+const FORM_FACTOR_FILTERS: readonly FormFactorFilter[] = ["all", "phone", "tablet", "desktop"];
 
 const HINTS = {
   flows:
@@ -30,6 +31,8 @@ const HINTS = {
   internal:
     "Accounts listed in ADMIN_EMAILS are the team's own use. They are left out by default because on a channel this small one internal account can outweigh every real user put together.",
   users: "Distinct signed-in users behind the figures on this page.",
+  devices:
+    "Sessions per device class, from the window width: phone below 768px, tablet up to 1023px, desktop from 1024px (where the desktop layout starts). A session counts in the class of its latest event. 'unknown' is a session recorded before the device class was collected. 'Installed' is a session run from the home-screen PWA rather than a browser tab. This table always covers every session, whichever device filter is selected.",
 };
 
 function InfoHint({ text }: { text: string }) {
@@ -60,6 +63,46 @@ function Stat({ label, value, hint }: { label: string; value: string; hint?: str
       </CardHeader>
       <CardContent>
         <div className="text-2xl font-bold">{value}</div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function DeviceTable({ rows }: { rows: TelemetryFormFactorRow[] }) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-1.5">
+          Devices
+          <InfoHint text={HINTS.devices} />
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Device</TableHead>
+              <TableHead className="text-right">Sessions</TableHead>
+              <TableHead className="text-right">Users</TableHead>
+              <TableHead className="text-right">Installed</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {rows.map((row) => (
+              <TableRow key={row.formFactor}>
+                <TableCell className="font-medium">{row.formFactor}</TableCell>
+                <TableCell className="text-right">{row.sessions}</TableCell>
+                <TableCell className="text-right">{row.users}</TableCell>
+                <TableCell className="text-right">{row.standaloneSessions}</TableCell>
+              </TableRow>
+            ))}
+            {rows.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={4}>No sessions in this window.</TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
       </CardContent>
     </Card>
   );
@@ -114,7 +157,8 @@ function ScreenTable({
 export default function TelemetryPage() {
   const [days, setDays] = useState<number>(30);
   const [includeInternal, setIncludeInternal] = useState(false);
-  const { data, isLoading, isError, refetch } = useTelemetryFunnel(days, includeInternal);
+  const [formFactor, setFormFactor] = useState<FormFactorFilter>("all");
+  const { data, isLoading, isError, refetch } = useTelemetryFunnel(days, includeInternal, formFactor);
 
   if (isError) {
     return (
@@ -188,6 +232,21 @@ export default function TelemetryPage() {
           Sign-ups, activation and retention live on Investor metrics. This page
           answers what a signed-in web user did <em>before</em> writing anything.
         </p>
+
+        <div className="flex flex-wrap items-center gap-1">
+          <span className="mr-1 text-sm text-muted-foreground">Device:</span>
+          {FORM_FACTOR_FILTERS.map((f) => (
+            <Button
+              key={f}
+              variant={f === formFactor ? "default" : "outline"}
+              size="sm"
+              aria-pressed={f === formFactor}
+              onClick={() => setFormFactor(f)}
+            >
+              {f}
+            </Button>
+          ))}
+        </div>
 
         <p className="text-sm text-muted-foreground flex items-center gap-1.5">
           {data.internalExcluded
@@ -270,6 +329,8 @@ export default function TelemetryPage() {
             </Table>
           </CardContent>
         </Card>
+
+        <DeviceTable rows={data.formFactors ?? []} />
 
         <div className="grid gap-4 lg:grid-cols-2">
           <ScreenTable title="Most viewed screens" hint={HINTS.screens} rows={data?.screens ?? []} />

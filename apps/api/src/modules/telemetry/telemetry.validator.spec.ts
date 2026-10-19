@@ -170,3 +170,28 @@ describe('sanitizeEvents', () => {
     expect(sanitizeEvents({ name: 'session_start' })).toEqual([]);
   });
 });
+
+// ABA-683: the web client stamps a coarse device class and display mode on every event.
+describe('sanitizeEvents — device props', () => {
+  it('keeps a known form factor and display mode beside the flow props', () => {
+    const [event] = sanitizeEvents([
+      {
+        name: 'action',
+        props: { flow: 'expense_manual', status: 'started', formFactor: 'phone', display: 'standalone' },
+      },
+    ]);
+    expect(event?.props).toEqual({
+      flow: 'expense_manual',
+      status: 'started',
+      formFactor: 'phone',
+      display: 'standalone',
+    });
+  });
+
+  it('drops a raw size or an unknown class rather than storing it', () => {
+    const [event] = sanitizeEvents([
+      { name: 'screen_view', screen: 'expenses', props: { formFactor: '1280x720', display: 'kiosk', width: 1280 } },
+    ]);
+    expect(event?.props).toBeNull();
+  });
+});

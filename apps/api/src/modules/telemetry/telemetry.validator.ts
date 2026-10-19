@@ -30,6 +30,10 @@ const EVENT_NAMES: ReadonlySet<string> = new Set<TelemetryEventName>([
 export const FUNNEL_STATUSES = ['started', 'completed', 'failed', 'abandoned'] as const;
 export type FunnelStatus = (typeof FUNNEL_STATUSES)[number];
 
+/** The one list of device classes; the funnel's filter validates against it too. */
+export const FORM_FACTORS = ['phone', 'tablet', 'desktop'] as const;
+export type FormFactor = (typeof FORM_FACTORS)[number];
+
 /** Allow-listed prop keys and, for string keys, their enumerated values. */
 const STRING_PROPS: Record<string, ReadonlySet<string>> = {
   flow: new Set([
@@ -45,6 +49,11 @@ const STRING_PROPS: Record<string, ReadonlySet<string>> = {
     'import_report',
   ]),
   status: new Set(FUNNEL_STATUSES),
+  // ABA-683: a coarse device class and the display mode, stamped by the web
+  // client on every event. Three buckets of window width, never the raw size or
+  // the user agent, so the pair cannot fingerprint anyone.
+  formFactor: new Set(FORM_FACTORS),
+  display: new Set(['standalone', 'browser']),
 };
 const NUMBER_PROPS: ReadonlySet<string> = new Set(['ms']);
 

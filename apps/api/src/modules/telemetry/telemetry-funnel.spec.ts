@@ -1,4 +1,4 @@
-import { TelemetryService, MAX_FUNNEL_ROWS } from './telemetry.service';
+import { TelemetryService, MAX_FUNNEL_ROWS, parseFormFactor } from './telemetry.service';
 
 type Row = {
   userId?: string;
@@ -246,3 +246,66 @@ describe('TelemetryService.getFunnel — internal accounts', () => {
     expect(out.users).toBe(2);
   });
 });
+
+// ABA-683: sessions split by device class. A session's class is its latest stamped value.
+describe('TelemetryService.getFunnel — form factor', () => {
+  const original = process.env.ADMIN_EMAILS;
+  beforeEach(() => {
+    process.env.ADMIN_EMAILS = '';
+  });
+  afterEach(() => {
+    process.env.ADMIN_EMAILS = original;
+  });
+
+  // Newest first, as the query returns them.
+  const rows: Row[] = [
+    { userId: 'u1', name: 'action', screen: null, props: { flow: 'expense_manual', status: 'completed', formFactor: 'phone', display: 'standalone' }, sessionId: 'p', createdAt: at(9) },
+    { userId: 'u1', name: 'action', screen: null, props: { flow: 'expense_manual', status: 'started', formFactor: 'phone', display: 'standalone' }, sessionId: 'p', createdAt: at(8) },
+    { userId: 'u2', name: 'action', screen: null, props: { flow: 'expense_manual', status: 'started', formFactor: 'desktop', display: 'browser' }, sessionId: 'd', createdAt: at(7) },
+    { userId: 'u2', name: 'screen_view', screen: 'expenses', props: { formFactor: 'desktop', display: 'browser' }, sessionId: 'd', createdAt: at(6) },
+    { userId: 'u3', name: 'screen_view', screen: 'expenses', props: null, sessionId: 'old', createdAt: at(1) },
+  ];
+
+  it('breaks sessions and users down by device class, unstamped ones as unknown', async () => {
+    const out = await makeService(rows).service.getFunnel(30);
+
+    expect(out.formFactor).toBeNull();
+    expect(out.formFactors).toEqual(
+      expect.arrayContaining([
+        { formFactor: 'phone', sessions: 1, users: 1, standaloneSessions: 1 },
+        { formFactor: 'desktop', sessions: 1, users: 1, standaloneSessions: 0 },
+        { formFactor: 'unknown', sessions: 1, users: 1, standaloneSessions: 0 },
+      ]),
+    );
+    expect(out.users).toBe(3);
+  });
+
+  it('filters the funnel to one class but keeps the breakdown whole', async () => {
+    const out = await makeService(rows).service.getFunnel(30, { formFactor: 'phone' });
+
+    expect(out.formFactor).toBe('phone');
+    expect(out.flows).toEqual([{ flow: 'expense_manual', started: 1, completed: 1, abandoned: 0, failed: 0 }]);
+    expect(out.screens).toEqual([]);
+    expect(out.users).toBe(1);
+    expect(out.formFactors).toHaveLength(3);
+  });
+
+  it('classes a session by its latest stamp when it crossed a breakpoint', async () => {
+    const resized: Row[] = [
+      { userId: 'u1', name: 'screen_view', screen: 'expenses', props: { formFactor: 'desktop' }, sessionId: 's', createdAt: at(5) },
+      { userId: 'u1', name: 'screen_view', screen: 'index', props: { formFactor: 'tablet' }, sessionId: 's', createdAt: at(1) },
+    ];
+    const out = await makeService(resized).service.getFunnel(30);
+
+    expect(out.formFactors).toEqual([{ formFactor: 'desktop', sessions: 1, users: 1, standaloneSessions: 0 }]);
+  });
+});
+
+describe('parseFormFactor', () => {
+  it('accepts the three classes and ignores anything else', () => {
+    expect(parseFormFactor('tablet')).toBe('tablet');
+    expect(parseFormFactor('unknown')).toBeUndefined();
+    expect(parseFormFactor(undefined)).toBeUndefined();
+  });
+});
+

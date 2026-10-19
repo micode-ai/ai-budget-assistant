@@ -16,3 +16,12 @@ export type TelemetryFlow =
   | 'import_report';
 
 export type TelemetryStatus = 'started' | 'completed' | 'failed' | 'abandoned';
+
+/** Coarse device class, from the window width alone (ABA-683). Never the raw
+ *  dimensions or the user agent: those fingerprint, a three-way bucket does not.
+ *  Must match `STRING_PROPS.formFactor` in the API validator. */
+export type TelemetryFormFactor = 'phone' | 'tablet' | 'desktop';
+
+/** Installed PWA (`standalone`) or a browser tab. Must match
+ *  `STRING_PROPS.display` in the API validator. */
+export type TelemetryDisplay = 'standalone' | 'browser';

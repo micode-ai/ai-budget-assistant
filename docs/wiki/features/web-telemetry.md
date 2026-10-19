@@ -37,6 +37,14 @@ report is shown, `completed` when its suggestions are applied. `ios_install` (AB
 iPhone install card is shown, `completed` on a standalone iOS launch — the ratio is the install rate
 of the guide.
 
+**Every event carries the device class (ABA-683).** `formFactor` (`phone` below 768 px, `tablet`
+to 1023, `desktop` from `DESKTOP_MIN_WIDTH` = 1024, where the desktop shell starts) and `display`
+(`standalone` for the installed PWA, else `browser`) ride in each event's `props`, read at push time.
+The funnel classes a session by its LATEST stamped value, so a window resized across a breakpoint
+counts once, where it ended; unstamped sessions read `unknown`. `GET /admin/telemetry/funnel` takes
+`?formFactor=` to filter, and always returns the unfiltered `formFactors` breakdown (sessions, users,
+installed sessions) so the reader sees how much each slice weighs.
+
 **`abandoned` is derived on read**, as `max(stored, started − completed − failed)`. A screen that
 has been left cannot run code to report itself.
 
@@ -97,6 +105,12 @@ team. An unset or unmatched list must add **no** filter — never a `notIn: []` 
 deliberate clause. The response reports `internalExcluded`, `excludedAccounts` and `users`, so the
 page always says which population it shows.
 
+**Device fields go in `props`, never at the top level of the batch.** The global `ValidationPipe` is
+`forbidNonWhitelisted`, and web and API deploy independently: a new top-level field reaching an API
+one deploy behind is a 400 that loses the whole batch, while an unknown prop key is dropped by the
+allow-list and the event kept. That is also why ABA-683 needed no migration. Only the three buckets
+and the two display values exist — never the raw width or the user agent, which would fingerprint.
+
 **Two privacy policies must be updated together.** The marketing one under
 `docs/marketing/landing/legal/`, and the one the app actually links, which lives on the **`gh-pages`
 branch** and is hand-maintained. Disclosing only in the marketing copy means a user accepts, at
@@ -114,8 +128,8 @@ registration, a policy omitting the data category being collected.
   so a user who opened `settings/import/index` but never got a parsed file reports nothing at all.
 - **A session is one page load** (or a sign-out), not a visit. There is no reload in the app's own
   code, so a burst of one-screen sessions minutes apart is the browser reloading the tab — most
-  likely a phone browser discarding it while the user switches apps. Nothing records the form factor
-  (`platform` is always `web`), so phone-browser and desktop use cannot be told apart.
+  likely a phone browser discarding it while the user switches apps. The device class (ABA-683) now
+  makes that testable: such bursts should cluster under `phone`.
 - **Event times are flush times**, quantized to the 15 s flush interval: the server's `createdAt`
   is used and the client `ts` is advisory. Order inside one batch is preserved, sub-15 s timing is not.
 - **Verified against real rows (2026-10-18):** for one user, `completed` counts for `expense_manual`
@@ -130,4 +144,5 @@ registration, a policy omitting the data category being collected.
 
 ABA-497 · ABA-645 (`ios_install` flow) · ABA-643 (`import_report` flow) ·
 [ABA-680](https://github.com/micode-ai/ai-budget-assistant/issues/710) (internal accounts excluded
-from the funnel).
+from the funnel) · [ABA-683](https://github.com/micode-ai/ai-budget-assistant/issues/713) (device
+class and display mode on every event).

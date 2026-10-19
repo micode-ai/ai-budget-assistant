@@ -9,6 +9,7 @@ import {
   trackAction,
   flushTelemetry,
   resetTelemetry,
+  formFactorForWidth,
 } from '../telemetry.web';
 
 /**
@@ -168,5 +169,50 @@ describe('telemetry (web)', () => {
     expect(body.events).toHaveLength(40);
     expect(body.events[0].screen).toBe('expense/5');
     expect(body.events[39].screen).toBe('expense/44');
+  });
+
+  // ABA-683: a coarse device class on every event, never raw dimensions.
+  it('buckets the window width into phone, tablet and desktop at the layout breakpoints', () => {
+    expect(formFactorForWidth(390)).toBe('phone');
+    expect(formFactorForWidth(767)).toBe('phone');
+    expect(formFactorForWidth(768)).toBe('tablet');
+    expect(formFactorForWidth(1023)).toBe('tablet');
+    expect(formFactorForWidth(1024)).toBe('desktop');
+  });
+
+  it('stamps every event with the form factor and display mode, keeping its own props', async () => {
+    Object.defineProperty(window, 'innerWidth', { configurable: true, value: 1280 });
+    startTelemetrySession();
+    trackAction('expense_manual', 'started');
+
+    flushTelemetry();
+    await flushMicrotasks();
+
+    const body = JSON.parse(fetchMock.mock.calls[0][1].body);
+    expect(body.events[0].props).toEqual({ formFactor: 'desktop', display: 'browser' });
+    expect(body.events[1].props).toEqual({
+      flow: 'expense_manual',
+      status: 'started',
+      formFactor: 'desktop',
+      display: 'browser',
+    });
+    // No raw size and no new top-level field: an API a deploy behind must accept the batch.
+    expect(Object.keys(body).sort()).toEqual(['events', 'platform', 'sessionId']);
+    expect(JSON.stringify(body)).not.toContain('1280');
+  });
+
+  it('reports an installed PWA as standalone', async () => {
+    Object.defineProperty(window, 'innerWidth', { configurable: true, value: 390 });
+    const matchMedia = jest.fn().mockReturnValue({ matches: true });
+    Object.defineProperty(window, 'matchMedia', { configurable: true, value: matchMedia });
+    trackScreen('expenses');
+
+    flushTelemetry();
+    await flushMicrotasks();
+
+    const body = JSON.parse(fetchMock.mock.calls[0][1].body);
+    expect(body.events[0].props).toEqual({ formFactor: 'phone', display: 'standalone' });
+    expect(matchMedia).toHaveBeenCalledWith('(display-mode: standalone)');
+    Object.defineProperty(window, 'matchMedia', { configurable: true, value: undefined });
   });
 });

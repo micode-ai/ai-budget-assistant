@@ -1,7 +1,16 @@
 import { secureStorage } from '@/services/secureStorage';
-import type { TelemetryFlow, TelemetryStatus } from './telemetry.types';
+import { DESKTOP_MIN_WIDTH } from '@/components/webLayout.constants';
+import type {
+  TelemetryDisplay,
+  TelemetryFlow,
+  TelemetryFormFactor,
+  TelemetryStatus,
+} from './telemetry.types';
 
 export type { TelemetryFlow, TelemetryStatus };
+
+/** Below this a window is a phone; from here to `DESKTOP_MIN_WIDTH` a tablet. */
+const TABLET_MIN_WIDTH = 768;
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000/api/v1';
 const FLUSH_INTERVAL_MS = 15_000;
@@ -26,11 +35,40 @@ function newSessionId(): string {
   return `${Date.now().toString(36)}-${random}`;
 }
 
+/** The desktop bucket starts exactly where the desktop layout does, so a
+ *  `desktop` event is one the person saw in the desktop shell. */
+export function formFactorForWidth(width: number): TelemetryFormFactor {
+  if (width >= DESKTOP_MIN_WIDTH) return 'desktop';
+  if (width >= TABLET_MIN_WIDTH) return 'tablet';
+  return 'phone';
+}
+
+function currentDisplay(): TelemetryDisplay {
+  if (typeof window === 'undefined') return 'browser';
+  const isIosStandalone = (window.navigator as { standalone?: boolean }).standalone === true;
+  const isStandalone =
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(display-mode: standalone)').matches;
+  return isIosStandalone || isStandalone ? 'standalone' : 'browser';
+}
+
+/**
+ * Stamped on EVERY event rather than sent once per batch at the top level:
+ * the API's global ValidationPipe is `forbidNonWhitelisted`, so a new top-level
+ * field reaching an API one deploy behind would 400 and lose the whole batch,
+ * while an unknown prop key is dropped by the allow-list and the event kept.
+ * Per event also keeps a session that is resized across a breakpoint honest.
+ */
+function deviceProps(): { formFactor: TelemetryFormFactor; display: TelemetryDisplay } {
+  const width = typeof window === 'undefined' ? DESKTOP_MIN_WIDTH : window.innerWidth;
+  return { formFactor: formFactorForWidth(width), display: currentDisplay() };
+}
+
 function push(event: BufferedEvent): void {
   // Drop the oldest rather than grow without bound: a lost statistic is
   // strictly preferable to unbounded memory in a long-lived tab.
   if (buffer.length >= MAX_BUFFERED) buffer.shift();
-  buffer.push(event);
+  buffer.push({ ...event, props: { ...event.props, ...deviceProps() } });
   ensureTimers();
 }
 
