@@ -159,6 +159,8 @@ the section you came for — it states what must not break and why. A missing se
   wired, why nothing renders a component, and how module-scope side effects leak between files
 - [mobile-screen-decompositions](features/mobile-screen-decompositions.md) — which hook or component owns each split screen today
 - [share-image-card](features/share-image-card.md) — the one WebView-canvas mechanism behind every shareable image
+- [claude-code-mods](features/claude-code-mods.md) — the four Claude Code mods every MiCode project
+  loads: prod radar, VPS/git guard, read-only prod SQL with consent, the commit-time wiki reminder
 
 ### Money movement and lists
 - [debts](features/debts.md) — lent/borrowed money as flagged expenses/incomes, repayments, the

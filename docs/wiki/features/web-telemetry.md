@@ -112,6 +112,15 @@ registration, a policy omitting the data category being collected.
   `chat_message` fires `started` on chat-screen mount, so started→completed is "opened chat →
   sent a message", not a broken send. `import_bank` fires `started` only on the **preview** screen,
   so a user who opened `settings/import/index` but never got a parsed file reports nothing at all.
+- **A session is one page load** (or a sign-out), not a visit. There is no reload in the app's own
+  code, so a burst of one-screen sessions minutes apart is the browser reloading the tab — most
+  likely a phone browser discarding it while the user switches apps. Nothing records the form factor
+  (`platform` is always `web`), so phone-browser and desktop use cannot be told apart.
+- **Event times are flush times**, quantized to the 15 s flush interval: the server's `createdAt`
+  is used and the client `ts` is advisory. Order inside one batch is preserved, sub-15 s timing is not.
+- **Verified against real rows (2026-10-18):** for one user, `completed` counts for `expense_manual`
+  and `income_manual` equalled the expense and income rows actually saved, exactly — the once-per-mount
+  guard holds in practice.
 - **Only `ADMIN_EMAILS` counts as internal.** A test account outside that list is still in the
   funnel.
 - No pre-login telemetry (needs a public throttled endpoint with its own abuse design), no mobile
