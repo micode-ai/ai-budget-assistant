@@ -511,6 +511,18 @@ Turn any expense into an auto-logging series — on the create form, or later on
 
 An expense that's already part of a series shows a **Part of a recurring series** banner on its details screen instead of the toggle, with the period (e.g., "Repeats Monthly"). Tap **Stop Recurring** to end the series — past copies stay, only future auto-logging stops.
 
+### Faster Ways to Add Expenses
+
+Typing every expense by hand is the slowest way in. After you have added about ten expenses by hand, the app shows a one-time suggestion with faster options — each one opens its own screen:
+
+- **Scan a receipt** — take a photo; the amount, shop and items are filled in
+- **Say it** — speak the expense and it is written down for you
+- **Telegram or WhatsApp** — send the bot a message, a voice note or a receipt photo
+- **Import a bank statement** — bring in many transactions at once from a file
+- **Bank notifications** (Android) — payment alerts from your bank app become expenses
+
+The suggestion appears only once, and not at all if you already use one of these ways. Tap **Not now** to close it; every option stays available from its usual place in the app.
+
 ## Adding Income
 
 ### Step-by-step
@@ -5745,6 +5757,18 @@ iOS, Android, Web
 
 Расход, который уже входит в серию, показывает на экране деталей баннер **Часть повторяющейся серии** вместо переключателя, с указанием периода (например, «Повторяется Ежемесячно»). Нажмите **Остановить повтор**, чтобы завершить серию — уже созданные копии сохраняются, останавливается только будущее автоматическое добавление.
 
+### Быстрые способы добавить расход
+
+Вводить каждый расход вручную — самый медленный путь. Когда вы добавите вручную около десяти расходов, приложение один раз подскажет более быстрые способы — каждый открывает свой экран:
+
+- **Сканировать чек** — сфотографируйте; сумма, магазин и позиции заполнятся сами
+- **Сказать голосом** — продиктуйте расход, и он запишется сам
+- **Telegram или WhatsApp** — отправьте боту сообщение, голосовое или фото чека
+- **Импорт банковской выписки** — загрузите сразу много операций из файла
+- **Уведомления банка** (Android) — уведомления об оплате из приложения банка превращаются в расходы
+
+Подсказка появляется только один раз и не появляется вовсе, если вы уже пользуетесь одним из этих способов. Нажмите **Не сейчас**, чтобы закрыть её; каждый способ остаётся доступен на своём обычном месте в приложении.
+
 ## Добавление дохода
 
 ### Пошагово: Добавление дохода
@@ -10956,6 +10980,18 @@ iOS, Android, Web
 
 Витрата, яка вже є частиною серії, показує на екрані деталей банер **Частина серії, що повторюється** замість перемикача, із зазначенням періоду (наприклад, «Повторюється Щомісяця»). Натисніть **Зупинити повторення**, щоб завершити серію — вже створені копії залишаються, зупиняється лише майбутнє автоматичне додавання.
 
+### Швидші способи додати витрату
+
+Вводити кожну витрату вручну — найповільніший шлях. Коли ви додасте вручну близько десяти витрат, застосунок один раз підкаже швидші способи — кожен відкриває свій екран:
+
+- **Сканувати чек** — сфотографуйте; сума, магазин і позиції заповняться самі
+- **Сказати голосом** — продиктуйте витрату, і її буде записано за вас
+- **Telegram або WhatsApp** — надішліть боту повідомлення, голосове чи фото чека
+- **Імпорт банківської виписки** — завантажте одразу багато операцій із файлу
+- **Сповіщення банку** (Android) — сповіщення про оплату з банківського застосунку стають витратами
+
+Підказка з'являється лише один раз і не з'являється зовсім, якщо ви вже користуєтеся одним із цих способів. Натисніть **Не зараз**, щоб закрити її; кожен спосіб і далі доступний на своєму звичному місці в застосунку.
+
 ## Додавання доходу
 
 ### Покроково: Додати дохід
@@ -16115,6 +16151,18 @@ Zamień dowolny wydatek w automatycznie rejestrowaną serię — w formularzu tw
 
 Wydatek, który jest już częścią serii, pokazuje na ekranie szczegółów baner **Część serii cyklicznej** zamiast przełącznika, wraz z okresem (np. „Powtarza się Co miesiąc"). Dotknij **Zatrzymaj powtarzanie**, aby zakończyć serię — już utworzone kopie pozostają, zatrzymuje się tylko przyszłe automatyczne rejestrowanie.
 
+### Szybsze sposoby dodawania wydatków
+
+Wpisywanie każdego wydatku ręcznie to najwolniejsza droga. Gdy dodasz ręcznie około dziesięciu wydatków, aplikacja jednorazowo podpowie szybsze sposoby — każdy otwiera swój ekran:
+
+- **Zeskanuj paragon** — zrób zdjęcie; kwota, sklep i pozycje uzupełnią się same
+- **Powiedz to** — podyktuj wydatek, a zostanie zapisany za Ciebie
+- **Telegram lub WhatsApp** — wyślij botowi wiadomość, notatkę głosową lub zdjęcie paragonu
+- **Zaimportuj wyciąg z banku** — dodaj wiele transakcji naraz z pliku
+- **Powiadomienia z banku** (Android) — powiadomienia o płatnościach z aplikacji banku stają się wydatkami
+
+Podpowiedź pojawia się tylko raz i wcale, jeśli już korzystasz z któregoś z tych sposobów. Stuknij **Nie teraz**, aby ją zamknąć; każdy sposób pozostaje dostępny w swoim zwykłym miejscu w aplikacji.
+
 ## Dodawanie przychodu
 
 ### Krok po kroku
@@ -21270,6 +21318,18 @@ Verwandle jede Ausgabe in eine automatisch protokollierte Serie — im Erstellun
 
 Eine Ausgabe, die bereits Teil einer Serie ist, zeigt auf ihrer Detailseite statt des Schalters ein Banner **Teil einer wiederkehrenden Serie** mit dem Zeitraum (z. B. „Wiederholt sich Monatlich"). Tippe auf **Wiederholung stoppen**, um die Serie zu beenden — bereits erstellte Kopien bleiben erhalten, nur das künftige automatische Protokollieren endet.
 
+### Schnellere Wege, Ausgaben zu erfassen
+
+Jede Ausgabe von Hand einzutippen ist der langsamste Weg. Wenn du etwa zehn Ausgaben von Hand erfasst hast, zeigt die App einmalig schnellere Möglichkeiten — jede öffnet ihren eigenen Bildschirm:
+
+- **Beleg scannen** — mach ein Foto; Betrag, Geschäft und Positionen werden ausgefüllt
+- **Einfach sagen** — sprich die Ausgabe ein, sie wird für dich notiert
+- **Telegram oder WhatsApp** — schick dem Bot eine Nachricht, Sprachnachricht oder ein Belegfoto
+- **Kontoauszug importieren** — viele Buchungen auf einmal aus einer Datei übernehmen
+- **Bank-Benachrichtigungen** (Android) — Zahlungsmeldungen deiner Banking-App werden zu Ausgaben
+
+Der Hinweis erscheint nur einmal und gar nicht, wenn du bereits einen dieser Wege nutzt. Tippe auf **Nicht jetzt**, um ihn zu schließen; jede Möglichkeit bleibt an ihrer gewohnten Stelle in der App verfügbar.
+
 ## Einkommen hinzufugen
 
 ### Schritt fur Schritt
@@ -26400,6 +26460,18 @@ Convierte cualquier gasto en una serie que se registra automáticamente — en e
 
 Un gasto que ya forma parte de una serie muestra en su pantalla de detalles un aviso **Parte de una serie recurrente** en lugar del interruptor, con el período (por ejemplo, «Se repite Mensual»). Toca **Detener repetición** para terminar la serie — las copias ya creadas se mantienen, solo se detiene el registro automático futuro.
 
+### Formas más rápidas de añadir gastos
+
+Escribir cada gasto a mano es la forma más lenta. Cuando hayas añadido unos diez gastos a mano, la app te mostrará una sola vez opciones más rápidas — cada una abre su propia pantalla:
+
+- **Escanear un ticket** — haz una foto; el importe, la tienda y los artículos se rellenan solos
+- **Dilo en voz alta** — dicta el gasto y se anota por ti
+- **Telegram o WhatsApp** — envía al bot un mensaje, una nota de voz o la foto de un ticket
+- **Importar un extracto bancario** — añade muchas operaciones a la vez desde un archivo
+- **Notificaciones del banco** (Android) — los avisos de pago de la app de tu banco se convierten en gastos
+
+La sugerencia aparece una sola vez, y nunca si ya usas alguna de estas formas. Toca **Ahora no** para cerrarla; cada opción sigue disponible en su lugar habitual de la app.
+
 ## Agregar ingresos
 
 ### Paso a paso
@@ -31519,6 +31591,18 @@ Transformez n'importe quelle dépense en une série enregistrée automatiquement
 
 Une dépense qui fait déjà partie d'une série affiche, sur son écran de détails, une bannière **Fait partie d'une série récurrente** à la place de l'interrupteur, avec la période (par ex. « Se répète Mensuel »). Appuyez sur **Arrêter la répétition** pour mettre fin à la série — les copies déjà créées restent, seul l'enregistrement automatique futur s'arrête.
 
+### Des façons plus rapides d’ajouter des dépenses
+
+Saisir chaque dépense à la main est la voie la plus lente. Après une dizaine de dépenses saisies à la main, l’application vous propose une seule fois des options plus rapides — chacune ouvre son propre écran :
+
+- **Scanner un ticket** — prenez une photo ; montant, magasin et articles se remplissent seuls
+- **Le dire à voix haute** — dictez la dépense, elle est notée pour vous
+- **Telegram ou WhatsApp** — envoyez au bot un message, une note vocale ou la photo d’un ticket
+- **Importer un relevé bancaire** — ajoutez de nombreuses opérations d’un coup depuis un fichier
+- **Notifications bancaires** (Android) — les alertes de paiement de votre appli bancaire deviennent des dépenses
+
+La suggestion n’apparaît qu’une fois, et jamais si vous utilisez déjà l’une de ces options. Touchez **Pas maintenant** pour la fermer ; chaque option reste disponible à son emplacement habituel dans l’application.
+
 ## Ajouter un revenu
 
 ### Etape par etape
@@ -36636,6 +36720,18 @@ iOS, Android, Web
 
 Выдатак, які ўжо ўваходзіць у серыю, паказвае на экране дэталяў банер **Частка паўтаральнай серыі** замест пераключальніка, з указаннем перыяду (напрыклад, «Паўтараецца Штомесяц»). Націсніце **Спыніць паўтарэнне**, каб завяршыць серыю — ужо створаныя копіі застаюцца, спыняецца толькі будучае аўтаматычнае даданне.
 
+### Хутчэйшыя спосабы дадаць выдатак
+
+Уводзіць кожны выдатак уручную — самы павольны шлях. Калі вы дададзіце ўручную каля дзесяці выдаткаў, праграма адзін раз падкажа хутчэйшыя спосабы — кожны адкрывае свой экран:
+
+- **Сканаваць чэк** — сфатаграфуйце; сума, крама і пазіцыі запоўняцца самі
+- **Сказаць голасам** — прадыктуйце выдатак, і ён запішацца сам
+- **Telegram або WhatsApp** — адпраўце боту паведамленне, галасавое ці фота чэка
+- **Імпарт банкаўскай выпіскі** — загрузіце адразу шмат аперацый з файла
+- **Апавяшчэнні банка** (Android) — апавяшчэнні пра аплату з праграмы банка ператвараюцца ў выдаткі
+
+Падказка з'яўляецца толькі адзін раз і не з'яўляецца зусім, калі вы ўжо карыстаецеся адным з гэтых спосабаў. Націсніце **Не зараз**, каб закрыць яе; кожны спосаб застаецца даступным на сваім звычайным месцы ў праграме.
+
 ## Даданне даходу
 
 ### Пакрокава: Даданне даходу
@@ -41716,6 +41812,18 @@ Maak van elke uitgave een automatisch geregistreerde reeks — in het aanmaakfor
 > **Tip:** Je hoeft dit niet meteen te beslissen bij het toevoegen van de uitgave. Open een uitgave die nog geen deel uitmaakt van een reeks, tik op **Bewerken**, zet **Herhalen** aan, kies een periode en sla op — dezelfde schakelaar als in het aanmaakformulier.
 
 Een uitgave die al deel uitmaakt van een reeks toont op het detailscherm een banner **Onderdeel van een terugkerende reeks** in plaats van de schakelaar, met de periode (bijv. "Herhaalt Maandelijks"). Tik op **Herhaling stoppen** om de reeks te beëindigen — al gemaakte kopieën blijven staan, alleen de toekomstige automatische registratie stopt.
+
+### Snellere manieren om uitgaven toe te voegen
+
+Elke uitgave met de hand intypen is de langzaamste weg. Als je ongeveer tien uitgaven met de hand hebt toegevoegd, toont de app eenmalig snellere opties — elke optie opent een eigen scherm:
+
+- **Bonnetje scannen** — maak een foto; bedrag, winkel en artikelen worden ingevuld
+- **Zeg het hardop** — spreek de uitgave in en die wordt voor je genoteerd
+- **Telegram of WhatsApp** — stuur de bot een bericht, spraakbericht of foto van een bonnetje
+- **Bankafschrift importeren** — voeg veel transacties tegelijk toe uit een bestand
+- **Bankmeldingen** (Android) — betaalmeldingen uit je bankapp worden uitgaven
+
+De suggestie verschijnt maar één keer, en helemaal niet als je al een van deze manieren gebruikt. Tik op **Niet nu** om hem te sluiten; elke optie blijft beschikbaar op de gewone plek in de app.
 
 ## Inkomsten toevoegen
 

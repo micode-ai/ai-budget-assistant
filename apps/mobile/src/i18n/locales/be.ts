@@ -2750,6 +2750,19 @@ export default {
     actionLater: 'Пазней',
     releaseNotesLabel: 'Што новага',
   },
+  // ABA-682: the one-time suggestion after repeated manual entry.
+  captureSuggestion: {
+    title: 'Хутчэйшыя спосабы дадаць выдатак',
+    body: 'Вы ўводзіце выдаткі ўручную. Любы з гэтых спосабаў зробіць гэта за вас:',
+    notNow: 'Не зараз',
+    options: {
+      receipt: { title: 'Сканаваць чэк', body: 'Сфатаграфуйце: сума, крама і пазіцыі запоўняцца самі' },
+      voice: { title: 'Сказаць голасам', body: 'Прадыктуйце выдатак, і ён запішацца сам' },
+      bots: { title: 'Telegram або WhatsApp', body: 'Адпраўце боту паведамленне, галасавое ці фота чэка' },
+      import: { title: 'Імпарт банкаўскай выпіскі', body: 'Загрузіце адразу шмат аперацый з файла' },
+      notifications: { title: 'Апавяшчэнні банка', body: 'Ператварайце апавяшчэнні пра аплату з праграмы банка ў выдаткі' },
+    },
+  },
   whatsNew: {
     title: 'Што новага',
     spotlightNewBadge: 'Новае',

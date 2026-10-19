@@ -4463,6 +4463,18 @@ Zamień dowolny wydatek w automatycznie rejestrowaną serię — w formularzu tw
 
 Wydatek, który jest już częścią serii, pokazuje na ekranie szczegółów baner **Część serii cyklicznej** zamiast przełącznika, wraz z okresem (np. „Powtarza się Co miesiąc"). Dotknij **Zatrzymaj powtarzanie**, aby zakończyć serię — już utworzone kopie pozostają, zatrzymuje się tylko przyszłe automatyczne rejestrowanie.
 
+### Szybsze sposoby dodawania wydatków
+
+Wpisywanie każdego wydatku ręcznie to najwolniejsza droga. Gdy dodasz ręcznie około dziesięciu wydatków, aplikacja jednorazowo podpowie szybsze sposoby — każdy otwiera swój ekran:
+
+- **Zeskanuj paragon** — zrób zdjęcie; kwota, sklep i pozycje uzupełnią się same
+- **Powiedz to** — podyktuj wydatek, a zostanie zapisany za Ciebie
+- **Telegram lub WhatsApp** — wyślij botowi wiadomość, notatkę głosową lub zdjęcie paragonu
+- **Zaimportuj wyciąg z banku** — dodaj wiele transakcji naraz z pliku
+- **Powiadomienia z banku** (Android) — powiadomienia o płatnościach z aplikacji banku stają się wydatkami
+
+Podpowiedź pojawia się tylko raz i wcale, jeśli już korzystasz z któregoś z tych sposobów. Stuknij **Nie teraz**, aby ją zamknąć; każdy sposób pozostaje dostępny w swoim zwykłym miejscu w aplikacji.
+
 ## Dodawanie przychodu
 
 ### Krok po kroku

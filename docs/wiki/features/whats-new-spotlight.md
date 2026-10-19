@@ -63,7 +63,8 @@ PR**, at the same review weight as its i18n, help and schema updates.
 ## Known gaps
 
 - Entries are curated by hand; nothing checks that a shipped feature got one.
-- The spotlight competes for the same attention as the store-rating prompt and the invite nudge,
+- The spotlight competes for the same attention as the store-rating prompt, the invite nudge and the
+  [faster-capture suggestion](faster-capture-suggestion.md),
   which fire on different paths deliberately — but nothing coordinates the three.
 
 ## History

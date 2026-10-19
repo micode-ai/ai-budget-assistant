@@ -2782,6 +2782,19 @@ export default {
     actionLater: 'Później',
     releaseNotesLabel: 'Co nowego',
   },
+  // ABA-682: the one-time suggestion after repeated manual entry.
+  captureSuggestion: {
+    title: 'Szybsze sposoby dodawania wydatków',
+    body: 'Wpisujesz wydatki ręcznie. Każdy z tych sposobów zrobi to za Ciebie:',
+    notNow: 'Nie teraz',
+    options: {
+      receipt: { title: 'Zeskanuj paragon', body: 'Zrób zdjęcie: kwota, sklep i pozycje uzupełnią się same' },
+      voice: { title: 'Powiedz to', body: 'Podyktuj wydatek, a zostanie zapisany za Ciebie' },
+      bots: { title: 'Telegram lub WhatsApp', body: 'Wyślij botowi wiadomość, notatkę głosową lub zdjęcie paragonu' },
+      import: { title: 'Zaimportuj wyciąg z banku', body: 'Dodaj wiele transakcji naraz z pliku' },
+      notifications: { title: 'Powiadomienia z banku', body: 'Zamieniaj powiadomienia o płatnościach z aplikacji banku w wydatki' },
+    },
+  },
   whatsNew: {
     title: 'Co nowego',
     spotlightNewBadge: 'Nowość',

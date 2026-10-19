@@ -2772,6 +2772,19 @@ export default {
     actionLater: 'Plus tard',
     releaseNotesLabel: 'Nouveautés',
   },
+  // ABA-682: the one-time suggestion after repeated manual entry.
+  captureSuggestion: {
+    title: 'Des façons plus rapides d’ajouter des dépenses',
+    body: 'Vous saisissez vos dépenses à la main. Chacune de ces options le fait pour vous :',
+    notNow: 'Pas maintenant',
+    options: {
+      receipt: { title: 'Scanner un ticket', body: 'Prenez une photo : montant, magasin et articles se remplissent seuls' },
+      voice: { title: 'Le dire à voix haute', body: 'Dictez la dépense, elle est notée pour vous' },
+      bots: { title: 'Telegram ou WhatsApp', body: 'Envoyez au bot un message, une note vocale ou la photo d’un ticket' },
+      import: { title: 'Importer un relevé bancaire', body: 'Ajoutez de nombreuses opérations d’un coup depuis un fichier' },
+      notifications: { title: 'Notifications bancaires', body: 'Transformez les alertes de paiement de votre appli bancaire en dépenses' },
+    },
+  },
   whatsNew: {
     title: 'Nouveautés',
     spotlightNewBadge: 'Nouveau',

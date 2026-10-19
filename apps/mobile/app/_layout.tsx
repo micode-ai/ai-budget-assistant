@@ -12,6 +12,7 @@ import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { AiUsageBadge } from '@/components/AiUsageBadge';
 import { UpdatePrompt } from '@/components/UpdatePrompt';
 import { WhatsNewSpotlight } from '@/components/whatsNew/WhatsNewSpotlight';
+import { FasterCaptureSuggestion } from '@/components/captureSuggestion/FasterCaptureSuggestion';
 import { UpgradeGate } from '@/components/UpgradeGate';
 import { AlertDialogHost } from '@/components/AlertDialogHost';
 import { WebShell } from '@/components/WebShell';
@@ -951,6 +952,7 @@ function RootNavigator() {
       </WebShell>
       <UpdatePrompt />
       <WhatsNewSpotlight gateOpen={coldStartGateReady} />
+      <FasterCaptureSuggestion />
       <UpgradeGate />
       <AlertDialogHost />
       <StatusBar style={theme.isDark ? 'light' : 'dark'} />

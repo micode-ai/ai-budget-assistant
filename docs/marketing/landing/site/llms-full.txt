@@ -3865,6 +3865,18 @@ Turn any expense into an auto-logging series — on the create form, or later on
 
 An expense that's already part of a series shows a **Part of a recurring series** banner on its details screen instead of the toggle, with the period (e.g., "Repeats Monthly"). Tap **Stop Recurring** to end the series — past copies stay, only future auto-logging stops.
 
+### Faster Ways to Add Expenses
+
+Typing every expense by hand is the slowest way in. After you have added about ten expenses by hand, the app shows a one-time suggestion with faster options — each one opens its own screen:
+
+- **Scan a receipt** — take a photo; the amount, shop and items are filled in
+- **Say it** — speak the expense and it is written down for you
+- **Telegram or WhatsApp** — send the bot a message, a voice note or a receipt photo
+- **Import a bank statement** — bring in many transactions at once from a file
+- **Bank notifications** (Android) — payment alerts from your bank app become expenses
+
+The suggestion appears only once, and not at all if you already use one of these ways. Tap **Not now** to close it; every option stays available from its usual place in the app.
+
 ## Adding Income
 
 ### Step-by-step

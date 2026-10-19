@@ -2772,6 +2772,19 @@ export default {
     actionLater: 'Later',
     releaseNotesLabel: 'Wat is er nieuw',
   },
+  // ABA-682: the one-time suggestion after repeated manual entry.
+  captureSuggestion: {
+    title: 'Snellere manieren om uitgaven toe te voegen',
+    body: 'Je typt je uitgaven met de hand in. Elk van deze manieren doet dat voor je:',
+    notNow: 'Niet nu',
+    options: {
+      receipt: { title: 'Bonnetje scannen', body: 'Maak een foto: bedrag, winkel en artikelen worden ingevuld' },
+      voice: { title: 'Zeg het hardop', body: 'Spreek de uitgave in en die wordt voor je genoteerd' },
+      bots: { title: 'Telegram of WhatsApp', body: 'Stuur de bot een bericht, spraakbericht of foto van een bonnetje' },
+      import: { title: 'Bankafschrift importeren', body: 'Voeg veel transacties tegelijk toe uit een bestand' },
+      notifications: { title: 'Bankmeldingen', body: 'Maak van betaalmeldingen uit je bankapp uitgaven' },
+    },
+  },
   whatsNew: {
     title: 'Wat is er nieuw',
     spotlightNewBadge: 'Nieuw',

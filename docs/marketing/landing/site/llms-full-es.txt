@@ -3880,6 +3880,18 @@ Convierte cualquier gasto en una serie que se registra automáticamente — en e
 
 Un gasto que ya forma parte de una serie muestra en su pantalla de detalles un aviso **Parte de una serie recurrente** en lugar del interruptor, con el período (por ejemplo, «Se repite Mensual»). Toca **Detener repetición** para terminar la serie — las copias ya creadas se mantienen, solo se detiene el registro automático futuro.
 
+### Formas más rápidas de añadir gastos
+
+Escribir cada gasto a mano es la forma más lenta. Cuando hayas añadido unos diez gastos a mano, la app te mostrará una sola vez opciones más rápidas — cada una abre su propia pantalla:
+
+- **Escanear un ticket** — haz una foto; el importe, la tienda y los artículos se rellenan solos
+- **Dilo en voz alta** — dicta el gasto y se anota por ti
+- **Telegram o WhatsApp** — envía al bot un mensaje, una nota de voz o la foto de un ticket
+- **Importar un extracto bancario** — añade muchas operaciones a la vez desde un archivo
+- **Notificaciones del banco** (Android) — los avisos de pago de la app de tu banco se convierten en gastos
+
+La sugerencia aparece una sola vez, y nunca si ya usas alguna de estas formas. Toca **Ahora no** para cerrarla; cada opción sigue disponible en su lugar habitual de la app.
+
 ## Agregar ingresos
 
 ### Paso a paso

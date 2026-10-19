@@ -43,6 +43,8 @@ import { MerchantInput } from '@/components/MerchantInput';
 import { DatePicker } from '@/components/DatePicker';
 import { captureCurrentLocation, type CapturedLocation } from '@/services/locationCapture';
 import { trackAction } from '@/services/telemetry';
+import { useCaptureSuggestionStore } from '@/stores/captureSuggestionStore';
+import { hasUsedFasterCapture } from '@/features/captureSuggestion/captureSuggestion';
 
 function getContrastTextColor(hexColor: string | undefined): string {
   if (!hexColor || typeof hexColor !== 'string') return '#ffffff';
@@ -244,6 +246,11 @@ export function ExpenseCreateForm({ initial, onDone }: ExpenseCreateFormProps) {
       }
 
       trackAction('expense_manual', 'completed');
+      // ABA-682: counts toward the one-time "faster ways" suggestion, which is
+      // mounted at the root and appears over whatever screen onDone returns to.
+      useCaptureSuggestionStore
+        .getState()
+        .recordManualSave(hasUsedFasterCapture(useExpenseStore.getState().expenses));
       onDone();
     } catch {
       trackAction('expense_manual', 'failed');

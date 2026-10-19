@@ -47,6 +47,9 @@ const STRING_PROPS: Record<string, ReadonlySet<string>> = {
     'rate_alert_create',
     'ios_install',
     'import_report',
+    // ABA-682: `started` when the one-time faster-capture suggestion appears,
+    // `completed` when one of its options is chosen.
+    'capture_suggestion',
   ]),
   status: new Set(FUNNEL_STATUSES),
   // ABA-683: a coarse device class and the display mode, stamped by the web

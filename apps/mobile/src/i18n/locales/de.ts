@@ -2772,6 +2772,19 @@ export default {
     actionLater: 'Später',
     releaseNotesLabel: 'Was ist neu',
   },
+  // ABA-682: the one-time suggestion after repeated manual entry.
+  captureSuggestion: {
+    title: 'Schnellere Wege, Ausgaben zu erfassen',
+    body: 'Du tippst deine Ausgaben von Hand ein. Jeder dieser Wege nimmt dir das ab:',
+    notNow: 'Nicht jetzt',
+    options: {
+      receipt: { title: 'Beleg scannen', body: 'Mach ein Foto: Betrag, Geschäft und Positionen werden ausgefüllt' },
+      voice: { title: 'Einfach sagen', body: 'Sprich die Ausgabe ein, sie wird für dich notiert' },
+      bots: { title: 'Telegram oder WhatsApp', body: 'Schick dem Bot eine Nachricht, Sprachnachricht oder ein Belegfoto' },
+      import: { title: 'Kontoauszug importieren', body: 'Viele Buchungen auf einmal aus einer Datei übernehmen' },
+      notifications: { title: 'Bank-Benachrichtigungen', body: 'Zahlungsmeldungen deiner Banking-App werden zu Ausgaben' },
+    },
+  },
   whatsNew: {
     title: 'Neuigkeiten',
     spotlightNewBadge: 'Neu',

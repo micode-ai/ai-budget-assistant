@@ -2779,6 +2779,19 @@ export default {
     actionLater: 'Later',
     releaseNotesLabel: "What's new",
   },
+  // ABA-682: the one-time suggestion after repeated manual entry.
+  captureSuggestion: {
+    title: 'Faster ways to add expenses',
+    body: 'You\'ve been typing your expenses in by hand. Any of these can do the typing for you:',
+    notNow: 'Not now',
+    options: {
+      receipt: { title: 'Scan a receipt', body: 'Take a photo: the amount, shop and items fill themselves in' },
+      voice: { title: 'Say it', body: 'Speak the expense and it is written down for you' },
+      bots: { title: 'Telegram or WhatsApp', body: 'Send the bot a message, a voice note or a receipt photo' },
+      import: { title: 'Import a bank statement', body: 'Bring in many transactions at once from a file' },
+      notifications: { title: 'Bank notifications', body: 'Turn your bank app\'s payment alerts into expenses' },
+    },
+  },
   whatsNew: {
     title: "What's New",
     spotlightNewBadge: 'New',

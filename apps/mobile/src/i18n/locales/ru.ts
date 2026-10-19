@@ -2782,6 +2782,19 @@ export default {
     actionLater: 'Позже',
     releaseNotesLabel: 'Что нового',
   },
+  // ABA-682: the one-time suggestion after repeated manual entry.
+  captureSuggestion: {
+    title: 'Быстрые способы добавить расход',
+    body: 'Вы вводите расходы вручную. Любой из этих способов сделает это за вас:',
+    notNow: 'Не сейчас',
+    options: {
+      receipt: { title: 'Сканировать чек', body: 'Сфотографируйте: сумма, магазин и позиции заполнятся сами' },
+      voice: { title: 'Сказать голосом', body: 'Продиктуйте расход, и он запишется сам' },
+      bots: { title: 'Telegram или WhatsApp', body: 'Отправьте боту сообщение, голосовое или фото чека' },
+      import: { title: 'Импорт банковской выписки', body: 'Загрузите сразу много операций из файла' },
+      notifications: { title: 'Уведомления банка', body: 'Превращайте уведомления об оплате из приложения банка в расходы' },
+    },
+  },
   whatsNew: {
     title: 'Что нового',
     spotlightNewBadge: 'Новое',

@@ -3864,6 +3864,18 @@ Verwandle jede Ausgabe in eine automatisch protokollierte Serie — im Erstellun
 
 Eine Ausgabe, die bereits Teil einer Serie ist, zeigt auf ihrer Detailseite statt des Schalters ein Banner **Teil einer wiederkehrenden Serie** mit dem Zeitraum (z. B. „Wiederholt sich Monatlich"). Tippe auf **Wiederholung stoppen**, um die Serie zu beenden — bereits erstellte Kopien bleiben erhalten, nur das künftige automatische Protokollieren endet.
 
+### Schnellere Wege, Ausgaben zu erfassen
+
+Jede Ausgabe von Hand einzutippen ist der langsamste Weg. Wenn du etwa zehn Ausgaben von Hand erfasst hast, zeigt die App einmalig schnellere Möglichkeiten — jede öffnet ihren eigenen Bildschirm:
+
+- **Beleg scannen** — mach ein Foto; Betrag, Geschäft und Positionen werden ausgefüllt
+- **Einfach sagen** — sprich die Ausgabe ein, sie wird für dich notiert
+- **Telegram oder WhatsApp** — schick dem Bot eine Nachricht, Sprachnachricht oder ein Belegfoto
+- **Kontoauszug importieren** — viele Buchungen auf einmal aus einer Datei übernehmen
+- **Bank-Benachrichtigungen** (Android) — Zahlungsmeldungen deiner Banking-App werden zu Ausgaben
+
+Der Hinweis erscheint nur einmal und gar nicht, wenn du bereits einen dieser Wege nutzt. Tippe auf **Nicht jetzt**, um ihn zu schließen; jede Möglichkeit bleibt an ihrer gewohnten Stelle in der App verfügbar.
+
 ## Einkommen hinzufugen
 
 ### Schritt fur Schritt

@@ -139,6 +139,8 @@ the section you came for — it states what must not break and why. A missing se
 - [last-active-tracking](features/last-active-tracking.md) — `lastSyncAt` as the activity stamp, set on every authenticated request, throttled through Redis
 
 ### Telling users about things, and asking them for something
+- [faster-capture-suggestion](features/faster-capture-suggestion.md) — the one-time nudge toward receipt,
+  voice, bots and import after ten manual expenses
 - [whats-new-spotlight](features/whats-new-spotlight.md) — the one-time nudge for already-shipped
   features
 - [referral-program](features/referral-program.md) — the share link, and the one moment the app

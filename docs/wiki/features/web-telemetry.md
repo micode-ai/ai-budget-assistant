@@ -35,7 +35,8 @@ never `usePathname()`'s resolved path.
 from the validator is silently dropped. `import_report` (ABA-643): `started` when the post-import
 report is shown, `completed` when its suggestions are applied. `ios_install` (ABA-645): `started` when the
 iPhone install card is shown, `completed` on a standalone iOS launch — the ratio is the install rate
-of the guide.
+of the guide. `capture_suggestion` (ABA-682): `started` when the one-time faster-capture suggestion appears,
+`completed` when one of its options is chosen — see [faster-capture-suggestion](faster-capture-suggestion.md).
 
 **Every event carries the device class (ABA-683).** `formFactor` (`phone` below 768 px, `tablet`
 to 1023, `desktop` from `DESKTOP_MIN_WIDTH` = 1024, where the desktop shell starts) and `display`

@@ -145,6 +145,18 @@ Maak van elke uitgave een automatisch geregistreerde reeks — in het aanmaakfor
 
 Een uitgave die al deel uitmaakt van een reeks toont op het detailscherm een banner **Onderdeel van een terugkerende reeks** in plaats van de schakelaar, met de periode (bijv. "Herhaalt Maandelijks"). Tik op **Herhaling stoppen** om de reeks te beëindigen — al gemaakte kopieën blijven staan, alleen de toekomstige automatische registratie stopt.
 
+### Snellere manieren om uitgaven toe te voegen
+
+Elke uitgave met de hand intypen is de langzaamste weg. Als je ongeveer tien uitgaven met de hand hebt toegevoegd, toont de app eenmalig snellere opties — elke optie opent een eigen scherm:
+
+- **Bonnetje scannen** — maak een foto; bedrag, winkel en artikelen worden ingevuld
+- **Zeg het hardop** — spreek de uitgave in en die wordt voor je genoteerd
+- **Telegram of WhatsApp** — stuur de bot een bericht, spraakbericht of foto van een bonnetje
+- **Bankafschrift importeren** — voeg veel transacties tegelijk toe uit een bestand
+- **Bankmeldingen** (Android) — betaalmeldingen uit je bankapp worden uitgaven
+
+De suggestie verschijnt maar één keer, en helemaal niet als je al een van deze manieren gebruikt. Tik op **Niet nu** om hem te sluiten; elke optie blijft beschikbaar op de gewone plek in de app.
+
 ## Inkomsten toevoegen
 
 ### Stap voor stap

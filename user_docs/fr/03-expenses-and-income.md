@@ -145,6 +145,18 @@ Transformez n'importe quelle dépense en une série enregistrée automatiquement
 
 Une dépense qui fait déjà partie d'une série affiche, sur son écran de détails, une bannière **Fait partie d'une série récurrente** à la place de l'interrupteur, avec la période (par ex. « Se répète Mensuel »). Appuyez sur **Arrêter la répétition** pour mettre fin à la série — les copies déjà créées restent, seul l'enregistrement automatique futur s'arrête.
 
+### Des façons plus rapides d’ajouter des dépenses
+
+Saisir chaque dépense à la main est la voie la plus lente. Après une dizaine de dépenses saisies à la main, l’application vous propose une seule fois des options plus rapides — chacune ouvre son propre écran :
+
+- **Scanner un ticket** — prenez une photo ; montant, magasin et articles se remplissent seuls
+- **Le dire à voix haute** — dictez la dépense, elle est notée pour vous
+- **Telegram ou WhatsApp** — envoyez au bot un message, une note vocale ou la photo d’un ticket
+- **Importer un relevé bancaire** — ajoutez de nombreuses opérations d’un coup depuis un fichier
+- **Notifications bancaires** (Android) — les alertes de paiement de votre appli bancaire deviennent des dépenses
+
+La suggestion n’apparaît qu’une fois, et jamais si vous utilisez déjà l’une de ces options. Touchez **Pas maintenant** pour la fermer ; chaque option reste disponible à son emplacement habituel dans l’application.
+
 ## Ajouter un revenu
 
 ### Etape par etape

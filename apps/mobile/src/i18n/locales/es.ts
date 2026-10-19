@@ -2772,6 +2772,19 @@ export default {
     actionLater: 'Más tarde',
     releaseNotesLabel: 'Novedades',
   },
+  // ABA-682: the one-time suggestion after repeated manual entry.
+  captureSuggestion: {
+    title: 'Formas más rápidas de añadir gastos',
+    body: 'Estás escribiendo tus gastos a mano. Cualquiera de estas opciones lo hace por ti:',
+    notNow: 'Ahora no',
+    options: {
+      receipt: { title: 'Escanear un ticket', body: 'Haz una foto: el importe, la tienda y los artículos se rellenan solos' },
+      voice: { title: 'Dilo en voz alta', body: 'Dicta el gasto y se anota por ti' },
+      bots: { title: 'Telegram o WhatsApp', body: 'Envía al bot un mensaje, una nota de voz o la foto de un ticket' },
+      import: { title: 'Importar un extracto bancario', body: 'Añade muchas operaciones a la vez desde un archivo' },
+      notifications: { title: 'Notificaciones del banco', body: 'Convierte los avisos de pago de la app de tu banco en gastos' },
+    },
+  },
   whatsNew: {
     title: 'Novedades',
     spotlightNewBadge: 'Nuevo',

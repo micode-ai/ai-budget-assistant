@@ -2782,6 +2782,19 @@ export default {
     actionLater: 'Пізніше',
     releaseNotesLabel: 'Що нового',
   },
+  // ABA-682: the one-time suggestion after repeated manual entry.
+  captureSuggestion: {
+    title: 'Швидші способи додати витрату',
+    body: 'Ви вводите витрати вручну. Будь-який із цих способів зробить це за вас:',
+    notNow: 'Не зараз',
+    options: {
+      receipt: { title: 'Сканувати чек', body: 'Сфотографуйте: сума, магазин і позиції заповняться самі' },
+      voice: { title: 'Сказати голосом', body: 'Продиктуйте витрату, і її буде записано за вас' },
+      bots: { title: 'Telegram або WhatsApp', body: 'Надішліть боту повідомлення, голосове чи фото чека' },
+      import: { title: 'Імпорт банківської виписки', body: 'Завантажте одразу багато операцій із файлу' },
+      notifications: { title: 'Сповіщення банку', body: 'Перетворюйте сповіщення про оплату з банківського застосунку на витрати' },
+    },
+  },
   whatsNew: {
     title: 'Що нового',
     spotlightNewBadge: 'Нове',
