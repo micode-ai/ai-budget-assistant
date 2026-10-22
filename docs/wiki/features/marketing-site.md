@@ -166,6 +166,17 @@ so a retitle there targets general appeal rather than one query. ABA-673 rewrote
 twelve top-10, zero-click pages and records their baseline in the issue; re-measure the same
 twelve around 2026-11-12, and leave them unchanged until then so the result is readable.
 
+The 2026-10-22 re-measure of the ABA-584 rewrites (28 days to 2026-10-20, ABA-685): site 26 clicks,
+3.14K impressions, position 26.9 — the third falling window in a row. **None of the September
+snippet rewrites moved CTR.** `/fr/` fell 29.2→43.1 (500→232 impressions); "ai budget" sits at 9.5
+with no clicks; the three 09-27 snippet rewrites (pl split-bill, ru split-bill, en receipt-scanner)
+still have no clicks while their impressions fell by two thirds to seven eighths at about the same
+position — so the loss is demand or SERP-level, not the snippet. The EN blog drop of 2026-09-18 did
+**not** recover: 124 impressions in 9 days against 282 in the drop window and 562 before it, and
+import-bank-statement lost its ranking (7.8→37.2). The one positive: the Monefy migration article,
+retitled "Monefy alternative", earned its first two clicks (113 impressions, position 7.0). Lesson:
+at this traffic, a snippet rewrite on its own is not a lever; check intent and ranking first.
+
 **Search Console can be read from a session through the Chrome extension** (the user's own signed-in
 browser): the performance URL takes `resource_id=sc-domain%3Aai-budget.pl`, `breakdown=query|page|country`
 and an exact-page filter `page=!<encoded url>`. Set rows per page to 500 by clicking the control —
@@ -202,4 +213,5 @@ ABA-672 (lightbox screenshots as WebP, shared groups added to `llms*.txt` and `f
 ABA-673 (snippet rewrite of twelve top-10, zero-click pages; CTR baseline in the issue) ·
 ABA-674 (one `FEATURES_EN` list with a translation-length check; one company spelling) ·
 ABA-675 (Polish push: article 47 on living on 2000 zł, answer-first rework of 29 and 14) ·
-ABA-676 (help snippets fitted to length; site-wide on-page and GSC indexing audit clean).
+ABA-676 (help snippets fitted to length; site-wide on-page and GSC indexing audit clean) ·
+ABA-685 (the ABA-584 re-measure: no snippet rewrite moved CTR; EN blog drop not recovered).
