@@ -26,6 +26,7 @@ import argparse
 import datetime as dt
 import json
 import os
+import re
 import sys
 import urllib.parse
 from collections import defaultdict
@@ -103,7 +104,50 @@ def fetch(session, today):
             # Property totals come from a date-only query: Search Console counts a
             # search once per property but once per page in a page breakdown.
             "by_date": query(session, start, end, ["date"]),
-            "by_date_page": query(session, start, end, ["date", "page"])}
+            "by_date_page": query(session, start, end, ["date", "page"]),
+            "changes": site_changes(start, end)}
+
+
+# What changed on the public site, read next to the series (ABA-690). The
+# September step sat a few days after nine footer badges were added, and nobody
+# set the two side by side for a month. A commit counts as a "site" change when it
+# touches the landing or blog (pages, generators, content), as a "help" change when
+# it touches only help content; ad films, copy decks and the rest of docs/marketing
+# never reach a page and are left out. Help changes ride along with most app
+# features, so the report counts them instead of listing them.
+SITE_PREFIXES = ("docs/marketing/landing/", "docs/marketing/seo/", "docs/marketing/help/build_help.py")
+HELP_PREFIXES = ("user_docs/", "docs/marketing/help/")
+
+
+def classify(files):
+    if any(f.startswith(SITE_PREFIXES) for f in files):
+        return "site"
+    if any(f.startswith(HELP_PREFIXES) for f in files):
+        return "help"
+    return None
+
+
+def site_changes(start, end):
+    """[(date, kind, subject)] of commits that changed public pages; [] without git."""
+    import subprocess
+    try:
+        out = subprocess.run(
+            ["git", "log", f"--since={start.isoformat()} 00:00", f"--until={end.isoformat()} 23:59:59",
+             "--date=short", "--name-only", "--format=%x1e%ad%x09%s", "--",
+             "docs/marketing", "user_docs"],
+            capture_output=True, text=True, encoding="utf-8", check=True,
+            # pathspecs are relative to cwd, so run from the repo root, not scripts/
+            cwd=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))).stdout
+    except (OSError, subprocess.CalledProcessError):
+        return []
+    changes = []
+    for record in out.split("\x1e")[1:]:
+        lines = [l for l in record.splitlines() if l.strip()]
+        day, subject = lines[0].split("\t", 1)
+        kind = classify(lines[1:])
+        if kind:
+            changes.append([day, kind, subject])
+    return changes
 
 
 # ---------- aggregation (pure) ----------
@@ -230,6 +274,27 @@ def render(snap):
         out.append(f"| {s} | " + " | ".join(fmt_pos(position(c)) for c in sections[s][-SHOWN_WEEKS:]) + " |")
     out.append("")
 
+    out += ["## What changed on the site", "",
+            "Commits that changed the landing or blog, by the week they landed; help-only commits "
+            "are counted. A change shows in Search Console days to weeks later, not in its own week.", ""]
+    start = dt.date.fromisoformat(snap["start"])
+    by_week = defaultdict(list)
+    for change in snap.get("changes", []):
+        if len(change) == 3:  # [day, kind, subject]
+            by_week[week_of(change[0], start)].append(change)
+    first_shown = len(labels) - len(shown)
+    for w in range(len(labels) - 1, first_shown - 1, -1):
+        site = sorted((c for c in by_week.get(w, []) if c[1] == "site"), reverse=True)
+        help_ids = sorted({m for c in by_week.get(w, []) if c[1] == "help"
+                           for m in re.findall(r"ABA-\d+", c[2])})
+        help_n = sum(1 for c in by_week.get(w, []) if c[1] == "help")
+        out.append(f"**Week of {labels[w]}**" + ("" if site or help_n else " — none"))
+        out += [f"- {day[5:]} {subject[:110]}" for day, _, subject in site]
+        if help_n:
+            out.append(f"- help content: {help_n} commit{'s' if help_n > 1 else ''}"
+                       + (f" ({', '.join(help_ids)})" if help_ids else ""))
+        out.append("")
+
     lost = losers(pages)
     out += ["## Pages that lost the most impressions", "",
             "Last week against the page's own previous four-week mean.", ""]
@@ -254,6 +319,9 @@ def main():
     if args.from_json:
         with open(args.from_json, encoding="utf-8") as f:
             snap = json.load(f)
+        if "changes" not in snap:  # a snapshot saved before ABA-690 lists none
+            snap["changes"] = site_changes(dt.date.fromisoformat(snap["start"]),
+                                           dt.date.fromisoformat(snap["end"]))
     else:
         snap = fetch(session_from_key(args.key_file), dt.date.today())
     if args.json:

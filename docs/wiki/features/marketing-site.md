@@ -202,7 +202,7 @@ service account `gsc-reader@aibudgetassistant-492217.iam.gserviceaccount.com` (G
 `aibudgetassistant-492217`, a Restricted user on `sc-domain:ai-budget.pl`). `gsc-snapshot.yml` runs it
 every Wednesday, comments on the "Search Console weekly" issue and sends a drop alert to the ops
 Telegram channel; locally `python scripts/gsc-snapshot.py --key-file <key.json>` gives the same report,
-and `--from-json` re-renders a saved snapshot. Two rules the script encodes: the site total comes
+and `--from-json` re-renders a saved snapshot. The report ends with what changed on the site each week (ABA-690): landing and blog commits listed, help-only commits counted, ad films and copy decks left out — so a step in the series can be read against the edits that preceded it. Two rules the script encodes: the site total comes
 from a date-only query, because a page breakdown counts one search once per page; and a week is
 reported only once its Sunday is three days old, because the last days are still being revised.
 The key is the `GSC_SERVICE_ACCOUNT_JSON` repo secret; to rotate it, add a key to the service
@@ -248,4 +248,4 @@ ABA-676 (help snippets fitted to length; site-wide on-page and GSC indexing audi
 ABA-685 (the ABA-584 re-measure: no snippet rewrite moved CTR; EN blog drop not recovered) ·
 ABA-686 (diagnosis of the decline: site-wide ranking loss from 2026-09-15, followed footer badges, growing not-indexed queue) ·
 ABA-688 (weekly Search Console API snapshot per section with a drop alert) ·
-ABA-689 (per-section sitemaps submitted separately).
+ABA-689 (per-section sitemaps submitted separately) · ABA-690 (site changes listed next to the weekly series).
