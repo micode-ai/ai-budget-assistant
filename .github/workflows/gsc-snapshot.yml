@@ -1,0 +1,95 @@
+name: Search Console Weekly
+
+# Weekly Search Console snapshot (ABA-688): impressions, clicks and position per
+# site section and week, posted to one long-lived issue, with a Telegram alert
+# to the ops channel when a section's impressions fall sharply. The September
+# 2026 decline (ABA-686) was a one-day step that 28-day totals hid for a month.
+#
+# Reads the Search Console API with a read-only service account; no model call.
+# Until the GSC_SERVICE_ACCOUNT_JSON secret exists the job skips with a notice
+# rather than failing every week. Setup: docs/wiki/features/marketing-site.md.
+
+on:
+  schedule:
+    - cron: '0 6 * * 3' # Wednesday 06:00 UTC: GSC lags ~2 days, so Mon–Sun of last week is settled
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check the credentials are configured
+        id: creds
+        env:
+          KEY: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
+        run: |
+          if [ -z "$KEY" ]; then
+            echo "::notice::GSC_SERVICE_ACCOUNT_JSON is not set; skipping the snapshot."
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.creds.outputs.ok == 'true'
+
+      - uses: actions/setup-python@v5
+        if: steps.creds.outputs.ok == 'true'
+        with:
+          python-version: '3.12'
+
+      - name: Take the snapshot
+        if: steps.creds.outputs.ok == 'true'
+        env:
+          GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
+        run: |
+          pip install --quiet google-auth requests
+          python scripts/gsc-snapshot.py --json snapshot.json --out report.md --alerts alerts.txt
+          cat report.md
+
+      # The issue comments are the durable weekly record; the raw rows are kept for
+      # 90 days so a week can be re-rendered or broken down further.
+      - uses: actions/upload-artifact@v4
+        if: steps.creds.outputs.ok == 'true'
+        with:
+          name: gsc-snapshot
+          path: snapshot.json
+          retention-days: 90
+
+      - name: Post to the Search Console issue
+        if: steps.creds.outputs.ok == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TITLE="Search Console weekly"
+          NUM=$(gh issue list --state open --search "$TITLE in:title" --json number,title \
+                  -q ".[] | select(.title == \"$TITLE\") | .number" | head -1)
+          if [ -n "$NUM" ]; then
+            gh issue comment "$NUM" --body-file report.md
+            echo "commented on #$NUM"
+          else
+            gh issue create --title "$TITLE" --body-file report.md
+          fi
+
+      - name: Alert the ops channel on a sharp drop
+        if: steps.creds.outputs.ok == 'true'
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.OPS_TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.OPS_TELEGRAM_CHAT_ID }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          if [ ! -s alerts.txt ]; then echo "no alerts"; exit 0; fi
+          if [ -z "$TELEGRAM_BOT_TOKEN" ] || [ -z "$TELEGRAM_CHAT_ID" ]; then
+            echo "::warning::alerts found but OPS_TELEGRAM_* is not set"; cat alerts.txt; exit 0
+          fi
+          MESSAGE=$(printf '*[AI Budget]* Search Console: impressions dropped sharply last week\n%s\n%s' \
+                      "$(sed 's/^/• /' alerts.txt)" "$RUN_URL")
+          curl -sS -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            -d "chat_id=${TELEGRAM_CHAT_ID}" \
+            -d "parse_mode=Markdown" \
+            -d "disable_web_page_preview=true" \
+            --data-urlencode "text=${MESSAGE}" > /dev/null

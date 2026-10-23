@@ -188,7 +188,19 @@ week while new waves keep landing in nine languages. **Read a decline from the w
 section** (GSC `breakdown=date` with a page filter lists every day, no row control needed), not
 from 28-day totals, which hide the step.
 
-**Search Console can be read from a session through the Chrome extension** (the user's own signed-in
+**Search Console is read through its API first (ABA-688).** `scripts/gsc-snapshot.py` pulls 12
+Monday–Sunday weeks per section (site, landing, help, blog, blog per language) with the read-only
+service account `gsc-reader@aibudgetassistant-492217.iam.gserviceaccount.com` (Google Cloud project
+`aibudgetassistant-492217`, a Restricted user on `sc-domain:ai-budget.pl`). `gsc-snapshot.yml` runs it
+every Wednesday, comments on the "Search Console weekly" issue and sends a drop alert to the ops
+Telegram channel; locally `python scripts/gsc-snapshot.py --key-file <key.json>` gives the same report,
+and `--from-json` re-renders a saved snapshot. Two rules the script encodes: the site total comes
+from a date-only query, because a page breakdown counts one search once per page; and a week is
+reported only once its Sunday is three days old, because the last days are still being revised.
+The key is the `GSC_SERVICE_ACCOUNT_JSON` repo secret; to rotate it, add a key to the service
+account, replace the secret and delete the old key.
+
+**Search Console can also be read from a session through the Chrome extension** (the user's own signed-in
 browser): the performance URL takes `resource_id=sc-domain%3Aai-budget.pl`, `breakdown=query|page|country`
 and an exact-page filter `page=!<encoded url>`. Set rows per page to 500 by clicking the control —
 a scripted `.click()` on the option does nothing — then read the visible table's `tbody tr`.
@@ -226,4 +238,5 @@ ABA-674 (one `FEATURES_EN` list with a translation-length check; one company spe
 ABA-675 (Polish push: article 47 on living on 2000 zł, answer-first rework of 29 and 14) ·
 ABA-676 (help snippets fitted to length; site-wide on-page and GSC indexing audit clean) ·
 ABA-685 (the ABA-584 re-measure: no snippet rewrite moved CTR; EN blog drop not recovered) ·
-ABA-686 (diagnosis of the decline: site-wide ranking loss from 2026-09-15, followed footer badges, growing not-indexed queue).
+ABA-686 (diagnosis of the decline: site-wide ranking loss from 2026-09-15, followed footer badges, growing not-indexed queue) ·
+ABA-688 (weekly Search Console API snapshot per section with a drop alert).
