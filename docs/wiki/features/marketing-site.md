@@ -188,6 +188,14 @@ week while new waves keep landing in nine languages. **Read a decline from the w
 section** (GSC `breakdown=date` with a page filter lists every day, no row control needed), not
 from 28-day totals, which hide the step.
 
+**Sitemaps are submitted per section (ABA-689).** The apex build writes `/sitemap.xml` (every URL,
+the one robots.txt names) and the same entries split into `/sitemaps/landing.xml`,
+`/sitemaps/blog-<lang>.xml` and `/sitemaps/help-<lang>.xml`, each submitted in Search Console on its
+own — Pages → "All submitted pages" then filters the indexing report to one section and language.
+The blog and help generators' own `sitemap.xml` files are inputs to the apex build and are never
+deployed. A new section or language gets its split file automatically; it still has to be
+submitted in Search Console by hand.
+
 **Search Console is read through its API first (ABA-688).** `scripts/gsc-snapshot.py` pulls 12
 Monday–Sunday weeks per section (site, landing, help, blog, blog per language) with the read-only
 service account `gsc-reader@aibudgetassistant-492217.iam.gserviceaccount.com` (Google Cloud project
@@ -239,4 +247,5 @@ ABA-675 (Polish push: article 47 on living on 2000 zł, answer-first rework of 2
 ABA-676 (help snippets fitted to length; site-wide on-page and GSC indexing audit clean) ·
 ABA-685 (the ABA-584 re-measure: no snippet rewrite moved CTR; EN blog drop not recovered) ·
 ABA-686 (diagnosis of the decline: site-wide ranking loss from 2026-09-15, followed footer badges, growing not-indexed queue) ·
-ABA-688 (weekly Search Console API snapshot per section with a drop alert).
+ABA-688 (weekly Search Console API snapshot per section with a drop alert) ·
+ABA-689 (per-section sitemaps submitted separately).

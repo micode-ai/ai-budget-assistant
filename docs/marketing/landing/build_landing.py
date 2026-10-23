@@ -2152,6 +2152,22 @@ def build():
                         sm.append(m.group(0))
         sm.append('</urlset>')
         open(os.path.join(OUT, "sitemap.xml"), "w", encoding="utf-8", newline="\n").write("\n".join(sm))
+        # The same <url> blocks split per section into /sitemaps/<section>.xml (ABA-689), each
+        # submitted to Search Console on its own, so the Pages report can be filtered to one
+        # section and language. /sitemap.xml stays the complete list robots.txt names; a URL
+        # listed in two sitemaps is allowed.
+        split_dir = os.path.join(OUT, "sitemaps")
+        os.makedirs(split_dir, exist_ok=True)
+        for old in os.listdir(split_dir):
+            os.remove(os.path.join(split_dir, old))
+        groups = {}
+        for block in sm[2:-1]:
+            path = re.search(r"<loc>([^<]+)</loc>", block).group(1)[len(SITE):]
+            m = re.match(r"/(blog|help)/([a-z]{2})/", path)
+            groups.setdefault(f"{m.group(1)}-{m.group(2)}" if m else "landing", []).append(block)
+        for name, blocks in sorted(groups.items()):
+            open(os.path.join(split_dir, name + ".xml"), "w", encoding="utf-8", newline="\n").write(
+                "\n".join(sm[:2] + blocks + ["</urlset>"]))
         # robots.txt — allow all, with explicit named AI-crawler groups (documents intent
         # and prevents a future Disallow under User-agent:* from accidentally catching them).
         ai_bots = ["GPTBot", "OAI-SearchBot", "ChatGPT-User", "ClaudeBot", "anthropic-ai",
