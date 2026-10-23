@@ -50,13 +50,16 @@ YEAR = "2026"
 # Root-relative like build_blog.py's own /assets/mi_code_logo.svg, so one string works from all
 # three sites on the apex; it deliberately ignores LANDING_BASE (only the local preview build
 # sets that, and there the file 404s rather than being wrong).
+# Every directory badge carries rel="nofollow noopener" (ABA-687): a badge given in exchange for a
+# listing is a reciprocal link under Google's link-spam policy, and these sit in the footer of every
+# page. The listing's link to us is what we want; ours back to them must not pass ranking signals.
 STARTUP_FAME_BADGE = (
-    '<a href="https://startupfa.me/s/ai-budget?utm_source=ai-budget.pl" target="_blank" rel="noopener">'
+    '<a href="https://startupfa.me/s/ai-budget?utm_source=ai-budget.pl" target="_blank" rel="nofollow noopener">'
     '<img class="b-sf" src="/assets/startup-fame-badge.webp" '
     'alt="AI Budget - Featured on Startup Fame" width="108" height="34" loading="lazy"></a>'
 )
 PEERPUSH_BADGE = (
-    '<a href="https://peerpush.com/p/ai-budget-assistant" target="_blank" rel="noopener">'
+    '<a href="https://peerpush.com/p/ai-budget-assistant" target="_blank" rel="nofollow noopener">'
     '<img class="b-pp" src="https://peerpush.com/p/ai-budget-assistant/badge.png" '
     'alt="AI Budget Assistant on PeerPush" width="120" height="34" loading="lazy"></a>'
 )
@@ -67,7 +70,7 @@ PEERPUSH_BADGE = (
 # matching the Startup Fame badge beside it. Their third option, the "image badge", is a
 # 512x512 square app icon at width=250 -- a logo, not a badge -- so it is deliberately unused.
 BEST_AI_BRANDS_BADGE = (
-    '<a href="https://bestaibrands.com/ai-budget-assistant" target="_blank" rel="noopener" '
+    '<a href="https://bestaibrands.com/ai-budget-assistant" target="_blank" rel="nofollow noopener" '
     'style="text-decoration:none;">'
     '<div style="display:inline-flex;flex-direction:column;align-items:center;background:#fff;'
     'border:1px solid #eee;border-radius:12px;padding:8px 32px;height:54px;'
@@ -84,7 +87,7 @@ BEST_AI_BRANDS_BADGE = (
 # 111x43, NOT the 111x42 their snippet states: the SVG's own viewBox is 0 0 111 43, so 42 would
 # squash it by a pixel. Do not "correct" it back.
 FIRSTO_BADGE = (
-    '<a href="https://firsto.co/projects/ai-budget-assistant" target="_blank" rel="noopener">'
+    '<a href="https://firsto.co/projects/ai-budget-assistant" target="_blank" rel="nofollow noopener">'
     '<img class="b-fo" src="https://firsto.co/images/badges/find-us-on-firsto.svg" '
     'alt="AI Budget Assistant | Firsto Launch" width="88" height="34" loading="lazy"></a>'
 )
@@ -98,7 +101,7 @@ FIRSTO_BADGE = (
 # emitted into HTML. 182x43 is the SVG's own viewBox; their snippet's bare width=250 upscales it
 # to 250x59 and states no height at all, so it would also shift layout while loading.
 FAZIER_BADGE = (
-    '<a href="https://fazier.com/launches/ai-budget.pl" target="_blank" rel="noopener">'
+    '<a href="https://fazier.com/launches/ai-budget.pl" target="_blank" rel="nofollow noopener">'
     '<img class="b-fz" src="https://fazier.com/api/v1//public/badges/launch_badges.svg'
     '?badge_type=featured&amp;theme=light" '
     'alt="AI Budget Assistant on Fazier" width="144" height="34" loading="lazy"></a>'
@@ -114,7 +117,7 @@ FAZIER_BADGE = (
 # then rendered at the row's uniform height by .b-ls (see the .f-badge CSS).
 # badge-light.svg because the footer ground is #fafafb; a badge-dark.svg exists too.
 LAUNCHSTAG_BADGE = (
-    '<a href="https://launchstag.com/p/tool-1789044587266" target="_blank" rel="noopener">'
+    '<a href="https://launchstag.com/p/tool-1789044587266" target="_blank" rel="nofollow noopener">'
     '<img class="b-ls" src="https://launchstag.com/badge-light.svg" '
     'alt="AI Budget Assistant - Featured on Launchstag" width="109" height="34" '
     'loading="lazy"></a>'
@@ -130,7 +133,7 @@ LAUNCHSTAG_BADGE = (
 # treatment every other badge in this row gets (no CLS, no inline style).
 # 582x152 native, rendered at the row's uniform height by .b-un.
 UNEED_BADGE = (
-    '<a href="https://www.uneed.best/tool/ai-budget-assistant" target="_blank" rel="noopener">'
+    '<a href="https://www.uneed.best/tool/ai-budget-assistant" target="_blank" rel="nofollow noopener">'
     '<img class="b-un" src="https://www.uneed.best/EMBED3B.png" '
     'alt="AI Budget Assistant - Launching Soon on Uneed" width="130" height="34" '
     'loading="lazy"></a>'
@@ -152,7 +155,7 @@ UNEED_BADGE = (
 # URL before this reaches production: a badge linking to a 404 is worse than no badge (the ABA-487
 # rule that deleted the placeholder App Store link).
 TOOLS_CAFE_BADGE = (
-    '<a href="https://tools.cafe/p/tool-1789322958894" target="_blank" rel="noopener">'
+    '<a href="https://tools.cafe/p/tool-1789322958894" target="_blank" rel="nofollow noopener">'
     '<img class="b-tc" src="https://tools.cafe/b/light.svg" '
     'alt="AI Budget Assistant - Featured on tools.cafe" width="109" height="34" '
     'loading="lazy"></a>'
@@ -171,7 +174,7 @@ TOOLS_CAFE_BADGE = (
 # sizing algorithm and scales it cleanly at 34px (and at 29px). Do not "fix" this by self-hosting a
 # viewBox-patched copy; nothing is broken.
 SELL_WITH_BOOST_BADGE = (
-    '<a href="https://sellwithboost.com" target="_blank" rel="noopener">'
+    '<a href="https://sellwithboost.com" target="_blank" rel="nofollow noopener">'
     '<img class="b-swb" src="https://sellwithboost.com/badge/listing.svg" '
     'alt="AI Budget Assistant - Listed on Sell With Boost" width="136" height="34" '
     'loading="lazy"></a>'
@@ -186,7 +189,7 @@ SELL_WITH_BOOST_BADGE = (
 # ai-budget.pl, which is what gets a listing verified) and scales to the row's uniform
 # 34px — 126px is 200/54 at that height, and the file carries a matching viewBox.
 LIFTO_BADGE = (
-    '<a href="https://liftoapp.com/product/ai-budget-assistant" target="_blank" rel="noopener">'
+    '<a href="https://liftoapp.com/product/ai-budget-assistant" target="_blank" rel="nofollow noopener">'
     '<img class="b-lf" src="https://liftoapp.com/badges/featured-dark.svg" '
     'alt="AI Budget Assistant - Featured on Lifto" width="126" height="34" '
     'loading="lazy"></a>'
@@ -199,7 +202,7 @@ LIFTO_BADGE = (
 # Access-Control-Allow-Origin: *, so it stays remotely hosted -- self-hosting would freeze it.
 ALPHASHOT_BADGE = (
     '<a href="https://alphashot.com/products/ai-budget-assistant?utm_source=alphashot'
-    '&amp;utm_medium=badge&amp;utm_campaign=embed" target="_blank" rel="noopener">'
+    '&amp;utm_medium=badge&amp;utm_campaign=embed" target="_blank" rel="nofollow noopener">'
     '<img class="b-as" src="https://alphashot.com/badge/ai-budget-assistant.svg" '
     'alt="AI Budget Assistant - Featured on AlphaShot" width="130" height="34" '
     'loading="lazy"></a>'

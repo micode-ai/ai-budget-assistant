@@ -17,7 +17,7 @@ One edit per file covers all three sites.
 ## Key concepts
 
 **The `href` is used exactly as the vendor specifies; everything presentational follows this row's
-conventions** — a scoped size class, real `width`/`height`, `loading="lazy"`, `rel="noopener"`, no
+conventions** — a scoped size class, real `width`/`height`, `loading="lazy"`, `rel="nofollow noopener"`, no
 `title` duplicating `alt`, no inline `style`, and a descriptive product-naming `alt`. That split is
 what stops a row of vendor snippets turning one footer into as many styles as it has badges.
 
@@ -63,6 +63,12 @@ guard in `web-deploy.yml`, because `docs/marketing` is gitignored.
 `width`/`height` pair that squashes or upscales their own `viewBox`; one ships a bare width with no
 height at all. Use the native ratio.
 
+**Every badge link is `rel="nofollow noopener"` (ABA-687).** The badges sit in the footer of every
+page (~790), and a badge given in exchange for a listing is a reciprocal link under Google's
+link-spam policy. They had been followed links until ABA-686 tied the site's 2026-09-15 ranking
+step to the week most of them were added (correlation, not proof). A new badge copies the same
+`rel`, whatever the directory's own snippet says.
+
 ## Known gaps
 
 - One badge reads "Launching Soon" and its listing is now live, so the premise has expired; it is
@@ -73,13 +79,10 @@ height at all. Use the native ratio.
   re-measure. Only once neither row fits do the four options reopen — drop one, escape the width
   cap, shrink again, or a third row.
 
-- **Every badge is a followed link on every page** (`rel="noopener"` only, ~790 pages). A badge
-  given in exchange for a listing is a reciprocal link under Google's link-spam policy. Most were
-  added 2026-09-10..15, just before the site's 09-15 ranking step (ABA-686). Correlation only, but
-  `nofollow`/`sponsored` would remove the risk; check first whether a listing un-verifies without a
-  followed link back.
+- Some directories may downgrade or un-verify a listing whose badge is no longer followed (ABA-687);
+  if one does, drop that badge rather than re-follow it.
 
 ## History
 
 ABA-367 (the first badge) and the additions since, each of which re-ran the width arithmetic —
-ABA-493, 524, 525, 526, 527, 528, 539, 543, 544, 580. ABA-686 flagged the followed-link risk.
+ABA-493, 524, 525, 526, 527, 528, 539, 543, 544, 580. ABA-686 flagged the followed-link risk; ABA-687 made every badge `nofollow`.
