@@ -92,4 +92,6 @@ jobs:
             -d "chat_id=${TELEGRAM_CHAT_ID}" \
             -d "parse_mode=Markdown" \
             -d "disable_web_page_preview=true" \
-            --data-urlencode "text=${MESSAGE}" > /dev/null
+            --data-urlencode "text=${MESSAGE}" > tg.json
+          # Telegram answers 200 with {"ok":false} on a bad chat id or markup; say so.
+          grep -q '"ok":true' tg.json && echo "alert sent" || echo "::warning::Telegram did not accept the alert: $(cat tg.json)"
