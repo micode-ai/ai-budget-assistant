@@ -177,6 +177,17 @@ import-bank-statement lost its ranking (7.8→37.2). The one positive: the Monef
 retitled "Monefy alternative", earned its first two clicks (113 impressions, position 7.0). Lesson:
 at this traffic, a snippet rewrite on its own is not a lever; check intent and ranking first.
 
+The ABA-686 diagnosis (2026-10-23) of that decline: **site-wide and ranking-level, not technical** —
+pages indexed, canonicals and robots correct, no manual action. Site impressions peaked at
+1.6–1.8K/week in early September (after Google's August spam update) and fell from a sharp step on
+2026-09-15, then again during and after the September spam update (09-24 → 10-08). The PL blog
+recovered in October; the EN blog did not, losing rank on most pages at once (positions 8–14 →
+33–66), with queries anonymised. Two signals to act on: nine followed directory-badge links in
+every footer (`features/directory-badges.md`), and "Discovered – not indexed" doubling to 89 in a
+week while new waves keep landing in nine languages. **Read a decline from the weekly series per
+section** (GSC `breakdown=date` with a page filter lists every day, no row control needed), not
+from 28-day totals, which hide the step.
+
 **Search Console can be read from a session through the Chrome extension** (the user's own signed-in
 browser): the performance URL takes `resource_id=sc-domain%3Aai-budget.pl`, `breakdown=query|page|country`
 and an exact-page filter `page=!<encoded url>`. Set rows per page to 500 by clicking the control —
@@ -214,4 +225,5 @@ ABA-673 (snippet rewrite of twelve top-10, zero-click pages; CTR baseline in the
 ABA-674 (one `FEATURES_EN` list with a translation-length check; one company spelling) ·
 ABA-675 (Polish push: article 47 on living on 2000 zł, answer-first rework of 29 and 14) ·
 ABA-676 (help snippets fitted to length; site-wide on-page and GSC indexing audit clean) ·
-ABA-685 (the ABA-584 re-measure: no snippet rewrite moved CTR; EN blog drop not recovered).
+ABA-685 (the ABA-584 re-measure: no snippet rewrite moved CTR; EN blog drop not recovered) ·
+ABA-686 (diagnosis of the decline: site-wide ranking loss from 2026-09-15, followed footer badges, growing not-indexed queue).

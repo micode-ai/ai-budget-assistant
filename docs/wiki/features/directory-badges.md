@@ -73,7 +73,13 @@ height at all. Use the native ratio.
   re-measure. Only once neither row fits do the four options reopen — drop one, escape the width
   cap, shrink again, or a third row.
 
+- **Every badge is a followed link on every page** (`rel="noopener"` only, ~790 pages). A badge
+  given in exchange for a listing is a reciprocal link under Google's link-spam policy. Most were
+  added 2026-09-10..15, just before the site's 09-15 ranking step (ABA-686). Correlation only, but
+  `nofollow`/`sponsored` would remove the risk; check first whether a listing un-verifies without a
+  followed link back.
+
 ## History
 
 ABA-367 (the first badge) and the additions since, each of which re-ran the width arithmetic —
-ABA-493, 524, 525, 526, 527, 528, 539, 543, 544, 580.
+ABA-493, 524, 525, 526, 527, 528, 539, 543, 544, 580. ABA-686 flagged the followed-link risk.
