@@ -9,12 +9,12 @@ import {
   Optional,
 } from '@nestjs/common';
 import { createHash, randomBytes, randomUUID } from 'crypto';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
 import { CacheService } from '../../common/cache/cache.service';
 import { logFireAndForget } from '../../common/utils/fire-and-forget';
 import { NotificationsService } from '../notifications/notifications.service';
 import { ExchangeRateService } from '../currency-exchange/exchange-rate.service';
-import { getRatesSafe, unitRate } from '../../common/utils/fx';
 import * as ni18n from '../notifications/notification-i18n';
 import {
   computeGroupLedger,
@@ -27,23 +27,13 @@ import {
 import { isAdoptionEligible, MAX_GROUPS_OWNED } from './group-ownership.service';
 import { GroupMergeService } from './group-merge.service';
 import { GroupBudgetMirrorService } from './group-budget-mirror.service';
-import {
-  convertAtRate,
-  isAllowedEntryCurrency,
-  planExpenseFxEdit,
-  resolveConvertedShares,
-  type ConversionResult,
-  type FxRateSource,
-} from './group-fx';
-import {
-  claimWindowEnd,
-  computeItemizedShares,
-  isClaimsOpen,
-  validateItemLines,
-  type ClaimRow,
-  type ItemRow,
-  type LinesRejection,
-} from './group-items';
+import { GroupFxService, FX_MANUAL_RATE_FACTOR, MAX_SHARES } from './group-fx.service';
+import { GroupSettlementsService } from './group-settlements.service';
+import { GroupItemizedExpenseService } from './group-itemized-expense.service';
+import type { GroupActor, GroupLedgerPorts } from './group-ledger-ports';
+import { toMember, toExpense, toSettlement } from './group-mappers';
+import { isP2002, toDateOnly } from './group-util';
+import { isClaimsOpen } from './group-items';
 import {
   AddGroupMemberDto,
   CreateGroupDto,
@@ -94,10 +84,8 @@ export const MAX_MEMBERS = 50;
  */
 export const LINK_CODE_MERGE_RETRY_SECONDS = 600;
 export const MAX_EXPENSES = 5000;
-/** ABA-654 review M2: the widest a manual rate may sit from the provider's, either way. */
-export const FX_MANUAL_RATE_FACTOR = 3;
+export { FX_MANUAL_RATE_FACTOR, MAX_SHARES };
 
-export const MAX_SHARES = 20;
 export const PUSH_COALESCE_SECONDS = 600;
 
 // ABA-649: GROUP_SHARE_BASE_URL (the apex short link, an nginx 302 to the API guest page) applies to
@@ -107,18 +95,15 @@ const guestLinkBase = () =>
   (process.env.GROUP_SHARE_BASE_URL || process.env.APP_PUBLIC_URL || 'https://api.ai-budget.pl').replace(/\/+$/, '');
 
 const nameKeyOf = (name: string) => name.trim().toLowerCase();
-const isP2002 = (e: unknown) => (e as { code?: string })?.code === 'P2002';
-const toDateOnly = (d: string) => new Date(`${d}T00:00:00.000Z`);
 
-interface Actor {
-  id: string;
-  userId: string | null;
-  isOwner: boolean;
-}
+type Actor = GroupActor;
 
 @Injectable()
-export class GroupsService {
+export class GroupsService implements GroupLedgerPorts {
   private readonly logger = new Logger(GroupsService.name);
+  private readonly fx: GroupFxService;
+  private readonly settlements: GroupSettlementsService;
+  private readonly itemized: GroupItemizedExpenseService;
 
   constructor(
     private readonly prisma: PrismaService,
@@ -132,7 +117,18 @@ export class GroupsService {
     // ABA-660: post-commit reconcile of members who count their share in their budget. Optional only
     // so specs that never mirror can omit it; the module always provides it.
     @Optional() private readonly mirror?: GroupBudgetMirrorService,
-  ) {}
+  ) {
+    // Plain collaborators built here rather than injected: the write services call back into this
+    // facade's ledger primitives, and GroupItemsService already injects GroupsService.
+    this.fx = new GroupFxService(prisma, rates);
+    this.settlements = new GroupSettlementsService(prisma, this);
+    this.itemized = new GroupItemizedExpenseService(prisma, this, this.fx);
+  }
+
+  /** Post-commit reconcile of members who count their share in their budget (ABA-660). */
+  afterLedgerWrite(groupId: string): void {
+    this.mirror?.afterLedgerWrite(groupId);
+  }
 
   // ---------------------------------------------------------------- helpers
 
@@ -155,7 +151,7 @@ export class GroupsService {
   }
 
   /** Re-resolves incoming member ids; every one must be a live member of THIS group. */
-  private async assertLiveMembers(groupId: string, ids: string[], db: any = this.prisma): Promise<void> {
+  async assertLiveMembers(groupId: string, ids: string[], db: Prisma.TransactionClient = this.prisma): Promise<void> {
     const unique = [...new Set(ids)];
     const found = await db.expenseGroupMember.findMany({
       where: { id: { in: unique }, groupId, removedAt: null },
@@ -172,7 +168,7 @@ export class GroupsService {
    * `ledgerVersion` (a ledger change, which also stales any open settle form); a claim change that
    * moves no share locks without bumping.
    */
-  async lockGroup(tx: any, groupId: string, bump = true): Promise<void> {
+  async lockGroup(tx: Prisma.TransactionClient, groupId: string, bump = true): Promise<void> {
     const g = await tx.expenseGroup.update({
       where: { id: groupId },
       data: bump ? { ledgerVersion: { increment: 1 } } : { updatedAt: new Date() },
@@ -208,92 +204,30 @@ export class GroupsService {
         select: { id: true, fromMemberId: true, toMemberId: true, amount: true },
       }),
     ]);
-    const ledgerExpenses: (LedgerExpense & { date: Date })[] = expenses.map((e: any) => ({
+    const ledgerExpenses: (LedgerExpense & { date: Date })[] = expenses.map((e) => ({
       id: e.id,
       paidByMemberId: e.paidByMemberId,
       amount: Number(e.amount),
       date: e.date,
-      shares: e.shares.map((s: any) => ({ memberId: s.memberId, shareAmount: Number(s.shareAmount) })),
+      shares: e.shares.map((s) => ({ memberId: s.memberId, shareAmount: Number(s.shareAmount) })),
     }));
-    const ledgerSettlements: LedgerSettlement[] = settlements.map((s: any) => ({
+    const ledgerSettlements: LedgerSettlement[] = settlements.map((s) => ({
       id: s.id,
       fromMemberId: s.fromMemberId,
       toMemberId: s.toMemberId,
       amount: Number(s.amount),
     }));
     const ledger = computeGroupLedger(
-      members.map((m: any) => ({ id: m.id })),
+      members.map((m) => ({ id: m.id })),
       ledgerExpenses,
       ledgerSettlements,
     );
     // ABA-655: an itemised expense still open for claims means the balances may still move.
     const now = new Date();
-    const hasOpenItemClaims = expenses.some((e: any) =>
+    const hasOpenItemClaims = expenses.some((e) =>
       isClaimsOpen({ itemized: e.itemized === true, claimsOpenUntil: e.claimsOpenUntil ?? null }, now),
     );
     return { members, ledgerExpenses, ledger, hasOpenItemClaims };
-  }
-
-  private toMember(m: any): GroupMember {
-    // Never expose userId: only isAppUser / isClaimed.
-    return {
-      id: m.id,
-      groupId: m.groupId,
-      displayName: m.displayName,
-      isAppUser: !!m.userId,
-      isClaimed: !!m.claimTokenHash,
-      paymentMethod: m.paymentMethod ?? null,
-      paymentHandle: m.paymentHandle ?? null,
-      removedAt: m.removedAt ? new Date(m.removedAt).toISOString() : null,
-      createdAt: new Date(m.createdAt).toISOString(),
-    };
-  }
-
-  private toExpense(e: any): GroupExpense {
-    return {
-      id: e.id,
-      groupId: e.groupId,
-      description: e.description,
-      amount: Number(e.amount),
-      date: new Date(e.date).toISOString().slice(0, 10),
-      paidByMemberId: e.paidByMemberId,
-      splitType: e.splitType,
-      createdByMemberId: e.createdByMemberId,
-      shares: (e.shares ?? []).map((s: any) => ({
-        memberId: s.memberId,
-        shareValue: s.shareValue == null ? null : Number(s.shareValue),
-        shareAmount: Number(s.shareAmount),
-      })),
-      // ABA-654: the figures as ENTERED. Null = entered in the group currency. Read as stored, never re-converted.
-      originalAmount: e.originalAmount == null ? null : Number(e.originalAmount),
-      originalCurrency: e.originalCurrency ?? null,
-      fxRate: e.fxRate == null ? null : Number(e.fxRate),
-      fxRateSource: e.fxRateSource ?? null,
-      fxRateAt: e.fxRateAt ? new Date(e.fxRateAt).toISOString() : null,
-      // ABA-655: lines are fetched separately (GET .../items); the shares above are already resolved.
-      itemized: e.itemized === true,
-      discountAmount: e.discountAmount == null ? null : Number(e.discountAmount),
-      claimsOpenUntil: e.claimsOpenUntil ? new Date(e.claimsOpenUntil).toISOString() : null,
-      deletedAt: e.deletedAt ? new Date(e.deletedAt).toISOString() : null,
-      deletedByMemberId: e.deletedByMemberId ?? null,
-      createdAt: new Date(e.createdAt).toISOString(),
-      updatedAt: new Date(e.updatedAt).toISOString(),
-    };
-  }
-
-  private toSettlement(s: any): GroupSettlement {
-    return {
-      id: s.id,
-      groupId: s.groupId,
-      fromMemberId: s.fromMemberId,
-      toMemberId: s.toMemberId,
-      amount: Number(s.amount),
-      method: s.method ?? null,
-      recordedByMemberId: s.recordedByMemberId,
-      voidedAt: s.voidedAt ? new Date(s.voidedAt).toISOString() : null,
-      voidedByMemberId: s.voidedByMemberId ?? null,
-      createdAt: new Date(s.createdAt).toISOString(),
-    };
   }
 
   private async fireGroupActivityPush(
@@ -338,7 +272,7 @@ export class GroupsService {
       .catch(logFireAndForget(this.logger, 'GroupsService.notifyMembers'));
   }
 
-  private notifyActivity(groupId: string, actorMemberId: string): void {
+  notifyActivity(groupId: string, actorMemberId: string): void {
     void this.prisma.expenseGroup
       .findUnique({ where: { id: groupId }, select: { name: true } })
       .then((g: { name: string } | null) => (g ? this.fireGroupActivityPush(groupId, g.name, actorMemberId) : undefined))
@@ -351,9 +285,9 @@ export class GroupsService {
     const group = await this.prisma.expenseGroup.findUnique({ where: { id: groupId } });
     if (!group) throw new NotFoundException('Group not found');
     const { members, ledgerExpenses, ledger, hasOpenItemClaims } = await this.loadState(groupId);
-    const me = members.find((m: any) => m.id === memberId);
+    const me = members.find((m) => m.id === memberId);
     if (!me) throw new NotFoundException('Group not found');
-    const ownerMember = members.find((m: any) => m.userId && m.userId === group.ownerUserId);
+    const ownerMember = members.find((m) => m.userId && m.userId === group.ownerUserId);
     return {
       id: group.id,
       name: group.name,
@@ -367,7 +301,7 @@ export class GroupsService {
       // ABA-650 review: only a member who was live BEFORE the orphaning may adopt (see isAdoptionEligible).
       canAdopt: group.ownerUserId === null && group.status === 'active' && isAdoptionEligible(me, group.orphanedAt),
       myMemberId: me.id,
-      members: members.map((m: any) => this.toMember(m)),
+      members: members.map((m) => toMember(m)),
       balances: ledger.balances,
       suggestedTransfers: ledger.suggestedTransfers,
       ledgerVersion: group.ledgerVersion,
@@ -385,7 +319,7 @@ export class GroupsService {
       orderBy: { createdAt: 'desc' },
     });
     return Promise.all(
-      memberships.map(async (m: any) => {
+      memberships.map(async (m) => {
         const { members, ledger } = await this.loadState(m.group.id);
         return {
           id: m.group.id,
@@ -436,8 +370,8 @@ export class GroupsService {
     ]);
     const eventViews = await this.toEventViews(groupId, events);
     const all: GroupActivityItem[] = [
-      ...expenses.map((e: any) => ({ kind: 'expense' as const, at: new Date(e.createdAt).toISOString(), expense: this.toExpense(e) })),
-      ...settlements.map((s: any) => ({ kind: 'settlement' as const, at: new Date(s.createdAt).toISOString(), settlement: this.toSettlement(s) })),
+      ...expenses.map((e) => ({ kind: 'expense' as const, at: new Date(e.createdAt).toISOString(), expense: toExpense(e) })),
+      ...settlements.map((s) => ({ kind: 'settlement' as const, at: new Date(s.createdAt).toISOString(), settlement: toSettlement(s) })),
       ...eventViews.map((ev) => ({ kind: 'event' as const, at: ev.createdAt, event: ev })),
     ].sort((a, b) => (a.at < b.at ? 1 : a.at > b.at ? -1 : 0));
     const items = all.slice(0, take);
@@ -448,7 +382,7 @@ export class GroupsService {
   private async toEventViews(groupId: string, events: any[]): Promise<GroupMemberEventView[]> {
     if (events.length === 0) return [];
     const ids = [
-      ...new Set(events.flatMap((e: any) => [e.actorMemberId, e.targetMemberId]).filter((x: unknown): x is string => !!x)),
+      ...new Set(events.flatMap((e) => [e.actorMemberId, e.targetMemberId]).filter((x: unknown): x is string => !!x)),
     ];
     const rows = ids.length
       ? await this.prisma.expenseGroupMember.findMany({
@@ -457,7 +391,7 @@ export class GroupsService {
         })
       : [];
     const names = new Map<string, string>(rows.map((r: { id: string; displayName: string }) => [r.id, r.displayName]));
-    return events.map((e: any) => ({
+    return events.map((e) => ({
       id: e.id,
       kind: e.kind,
       actorMemberId: e.actorMemberId ?? null,
@@ -505,7 +439,7 @@ export class GroupsService {
       },
       include: { members: { select: { id: true, userId: true } } },
     });
-    const me = group.members.find((m: any) => m.userId === userId);
+    const me = group.members.find((m) => m.userId === userId);
     return this.getDetail(group.id, me!.id);
   }
 
@@ -589,8 +523,8 @@ export class GroupsService {
    * enforces MAX_MEMBERS. Concurrent joins/adds on the same group serialize on that lock, so the
    * count-then-write can no longer overshoot the cap.
    */
-  private async withMemberSlot<T>(groupId: string, fn: (tx: any) => Promise<T>): Promise<T> {
-    return this.prisma.$transaction(async (tx: any) => {
+  private async withMemberSlot<T>(groupId: string, fn: (tx: Prisma.TransactionClient) => Promise<T>): Promise<T> {
+    return this.prisma.$transaction(async (tx) => {
       await tx.expenseGroup.update({ where: { id: groupId }, data: { updatedAt: new Date() } });
       const count = await tx.expenseGroupMember.count({ where: { groupId, removedAt: null } });
       if (count >= MAX_MEMBERS) {
@@ -654,7 +588,7 @@ export class GroupsService {
 
   async rotateLink(groupId: string): Promise<{ guestUrl: string }> {
     const token = this.newToken();
-    await this.prisma.$transaction(async (tx: any) => {
+    await this.prisma.$transaction(async (tx) => {
       await tx.expenseGroup.update({ where: { id: groupId }, data: { guestToken: token } });
       // Rotation is the "the link leaked" remedy: every device re-identifies.
       await tx.expenseGroupMember.updateMany({
@@ -686,7 +620,7 @@ export class GroupsService {
     // ABA-660: the ledger rows cascade away with the group, so every member's mirror is torn down
     // first, in the same transaction: share rows removed, linked legs counted again.
     const mirror = this.mirror;
-    await this.prisma.$transaction(async (tx: any) => {
+    await this.prisma.$transaction(async (tx) => {
       await mirror.teardownGroup(tx, groupId);
       await tx.expenseGroup.delete({ where: { id: groupId } });
     });
@@ -697,7 +631,7 @@ export class GroupsService {
   async addMember(groupId: string, memberId: string, dto: AddGroupMemberDto): Promise<GroupMember> {
     await this.resolveActor(groupId, memberId);
     const m = await this.createMember(groupId, dto.displayName, null);
-    return this.toMember(m);
+    return toMember(m);
   }
 
   async updateMember(groupId: string, memberId: string, targetId: string, dto: UpdateGroupMemberDto): Promise<GroupMember> {
@@ -719,10 +653,10 @@ export class GroupsService {
       if (dto.paymentMethod !== undefined) data.paymentMethod = dto.paymentMethod;
       if (dto.paymentHandle !== undefined) data.paymentHandle = dto.paymentHandle;
     }
-    if (Object.keys(data).length === 0) return this.toMember(target);
+    if (Object.keys(data).length === 0) return toMember(target);
     try {
       const updated = await this.prisma.expenseGroupMember.update({ where: { id: target.id }, data });
-      return this.toMember(updated);
+      return toMember(updated);
     } catch (e) {
       if (isP2002(e)) {
         throw new ConflictException({ code: 'MEMBER_NAME_TAKEN', message: 'A member with that name already exists' });
@@ -749,7 +683,7 @@ export class GroupsService {
     // the check re-runs under them, so a concurrent claim change either commits before the check
     // (and is seen) or runs after and finds the member gone. A removed member's claims are in any
     // case treated as unclaimed by GroupItemsService, which is the safety net for the rest.
-    await this.prisma.$transaction(async (tx: any) => {
+    await this.prisma.$transaction(async (tx) => {
       // ABA-657 review H1: the group row's lock first (a no-op: removal changes no figure), then the
       // member is re-checked live and the zero-balance rule runs on the ledger as the lock protects it,
       // so an expense that committed after the old pre-check can no longer leave a removed payer.
@@ -807,7 +741,7 @@ export class GroupsService {
       new ConflictException({ code: 'NOT_CLAIMED', message: 'Nobody has signed in as this member' });
     if (!target.claimTokenHash) throw notClaimed();
 
-    const updated = await this.prisma.$transaction(async (tx: any) => {
+    const updated = await this.prisma.$transaction(async (tx) => {
       const res = await tx.expenseGroupMember.updateMany({
         where: { id: target.id, groupId, userId: null, removedAt: null, claimTokenHash: target.claimTokenHash },
         // Payout details go too (ABA-651 review): the next person to pick this name must not inherit
@@ -827,110 +761,25 @@ export class GroupsService {
       });
       return tx.expenseGroupMember.findFirst({ where: { id: target.id, groupId } });
     });
-    return this.toMember(updated);
+    if (!updated) throw notClaimed();
+    return toMember(updated);
   }
 
   // --------------------------------------------------------------- expenses
 
-  private resolveShares(amount: number, splitType: string, shares: GroupExpenseShareInputDto[]) {
-    const ids = shares.map((s) => s.memberId);
-    if (new Set(ids).size !== ids.length) throw new BadRequestException('Duplicate share member');
-    if (ids.length === 0 || ids.length > MAX_SHARES) throw new BadRequestException('Invalid number of shares');
-    try {
-      return resolveGroupShares(amount, splitType as any, shares);
-    } catch (e) {
-      throw new BadRequestException(e instanceof Error ? e.message : 'Invalid split');
-    }
+  // ------------------------------------------------------------ settlements
+
+  createSettlement(groupId: string, memberId: string, dto: CreateGroupSettlementDto): Promise<GroupDetail> {
+    return this.settlements.create(groupId, memberId, dto);
   }
 
-  private async groupCurrencyOf(groupId: string): Promise<string> {
-    const g = await this.prisma.expenseGroup.findUnique({ where: { id: groupId }, select: { currencyCode: true } });
-    if (!g) throw new NotFoundException('Group not found');
-    return g.currencyCode;
+  voidSettlement(groupId: string, memberId: string, settlementId: string): Promise<GroupDetail> {
+    return this.settlements.void(groupId, memberId, settlementId);
   }
 
-  private fxUnavailable(): BadRequestException {
-    return new BadRequestException({
-      code: 'FX_RATE_UNAVAILABLE',
-      message: 'No exchange rate is available for that currency right now. Enter the rate or try again later.',
-    });
-  }
-
-  private assertEntryCurrency(code: string, groupCurrency: string): void {
-    if (!isAllowedEntryCurrency(code, groupCurrency)) {
-      throw new BadRequestException({ code: 'CURRENCY_UNSUPPORTED', message: 'That currency is not supported' });
-    }
-  }
-
-  /** The provider's current unit rate (1 `currency` in `groupCurrency`), or null when unknown. */
-  private async providerRate(currency: string, groupCurrency: string): Promise<number | null> {
-    if (currency === groupCurrency) return 1;
-    return unitRate(currency, groupCurrency, await getRatesSafe(this.rates, groupCurrency));
-  }
-
-  /**
-   * ABA-654: converts ONCE, at write time. A manual rate wins; otherwise the provider's rate at entry
-   * time (it has no history). An unknown rate is a 400 FX_RATE_UNAVAILABLE, never a silently
-   * unconverted amount.
-   */
-  private async convertEntry(
-    entryAmount: number,
-    currency: string,
-    groupCurrency: string,
-    manualRate?: number,
-  ): Promise<Extract<ConversionResult, { ok: true }>> {
-    this.assertEntryCurrency(currency, groupCurrency);
-    let rate: number | null;
-    let source: FxRateSource;
-    if (currency !== groupCurrency && manualRate !== undefined) {
-      // ABA-654 review M2: a manual rate is bounded to within 3x of the provider's in either direction
-      // (it exists for a cash exchange or a card's own rate, not for moving a debt). With no provider
-      // rate for the pair there is nothing to compare against and the manual rate stands.
-      const reference = await this.providerRate(currency, groupCurrency);
-      if (reference !== null && (manualRate > reference * FX_MANUAL_RATE_FACTOR || manualRate < reference / FX_MANUAL_RATE_FACTOR)) {
-        throw new BadRequestException({
-          code: 'FX_RATE_IMPLAUSIBLE',
-          message: 'That exchange rate is far from the current market rate. Check it and try again.',
-        });
-      }
-      rate = manualRate;
-      source = 'manual';
-    } else {
-      rate = await this.providerRate(currency, groupCurrency);
-      source = 'provider';
-    }
-    if (rate === null) throw this.fxUnavailable();
-    return this.checked(convertAtRate(entryAmount, currency, groupCurrency, rate, source, new Date()));
-  }
-
-  private checked(r: ConversionResult): Extract<ConversionResult, { ok: true }> {
-    if (!r.ok) {
-      throw new BadRequestException({ code: 'FX_AMOUNT_OUT_OF_RANGE', message: 'The converted amount is out of range' });
-    }
-    return r;
-  }
-
-  /** The usual id / count / split checks, then the FX-aware resolution (exact values as weights). */
-  private resolveFxShares(
-    amount: number,
-    originalAmount: number | null,
-    splitType: string,
-    shares: GroupExpenseShareInputDto[],
-  ) {
-    if (originalAmount === null) return this.resolveShares(amount, splitType, shares);
-    this.resolveShares(originalAmount, splitType, shares);
-    try {
-      return resolveConvertedShares(amount, originalAmount, splitType as any, shares);
-    } catch (e) {
-      throw new BadRequestException(e instanceof Error ? e.message : 'Invalid split');
-    }
-  }
-
-  /** GET /groups/:groupId/fx-preview?currency= — the provider rate the app's form shows (ABA-654). */
-  async fxPreview(groupId: string, currency: string): Promise<GroupFxPreview> {
-    const groupCurrency = await this.groupCurrencyOf(groupId);
-    this.assertEntryCurrency(currency, groupCurrency);
-    return { groupCurrency, currencyCode: currency, rate: await this.providerRate(currency, groupCurrency) };
+  /** GET /groups/:groupId/fx-preview?currency= (ABA-654). */
+  fxPreview(groupId: string, currency: string): Promise<GroupFxPreview> {
+    return this.fx.fxPreview(groupId, currency);
   }
 
   async createExpense(groupId: string, memberId: string, dto: CreateGroupExpenseDto): Promise<GroupDetail> {
@@ -946,7 +795,7 @@ export class GroupsService {
     if (count >= MAX_EXPENSES) {
       throw new BadRequestException({ code: 'EXPENSE_LIMIT', message: `A group has at most ${MAX_EXPENSES} expenses` });
     }
-    if (dto.items !== undefined) return this.createItemizedExpense(groupId, actor.id, dto);
+    if (dto.items !== undefined) return this.itemized.create(groupId, actor.id, dto);
     if (dto.discountAmount !== undefined) {
       throw new BadRequestException({ code: 'EXPENSE_NOT_ITEMIZED', message: 'A discount needs line items' });
     }
@@ -954,13 +803,13 @@ export class GroupsService {
     const splitType = dto.splitType;
     const shares = dto.shares;
     await this.assertLiveMembers(groupId, [dto.paidByMemberId, ...shares.map((s) => s.memberId)]);
-    const groupCurrency = await this.groupCurrencyOf(groupId);
+    const groupCurrency = await this.fx.groupCurrencyOf(groupId);
     // `dto.amount` is in the ENTRY currency; the ledger stores the converted figure (ABA-654).
-    const conv = await this.convertEntry(dto.amount, dto.currencyCode ?? groupCurrency, groupCurrency, dto.fxRate);
-    const resolved = this.resolveFxShares(conv.amount, conv.fx.originalAmount, splitType, shares);
+    const conv = await this.fx.convertEntry(dto.amount, dto.currencyCode ?? groupCurrency, groupCurrency, dto.fxRate);
+    const resolved = this.fx.resolveFxShares(conv.amount, conv.fx.originalAmount, splitType, shares);
 
     try {
-      await this.prisma.$transaction(async (tx: any) => {
+      await this.prisma.$transaction(async (tx) => {
         await this.lockGroup(tx, groupId);
         await this.assertLiveMembers(groupId, [dto.paidByMemberId, ...shares.map((s) => s.memberId)], tx);
         await tx.groupExpense.create({
@@ -1003,7 +852,7 @@ export class GroupsService {
     if (!actor.isOwner && expense.createdByMemberId !== actor.id && expense.paidByMemberId !== actor.id) {
       throw new ForbiddenException('Only the creator, the payer or the owner can edit this expense');
     }
-    if (expense.itemized) return this.updateItemizedExpense(groupId, actor.id, expense, dto);
+    if (expense.itemized) return this.itemized.update(groupId, actor.id, expense, dto);
     if (dto.items !== undefined || dto.discountAmount !== undefined) {
       throw new BadRequestException({ code: 'EXPENSE_NOT_ITEMIZED', message: 'This expense has no line items' });
     }
@@ -1018,7 +867,7 @@ export class GroupsService {
     }
     const rawShares: GroupExpenseShareInputDto[] =
       dto.shares ??
-      expense.shares.map((s: any) => ({
+      expense.shares.map((s) => ({
         memberId: s.memberId,
         value: s.shareValue == null ? undefined : Number(s.shareValue),
       }));
@@ -1027,41 +876,10 @@ export class GroupsService {
 
     // ABA-654 edit rule: a new amount reuses the stored rate, a new currency fetches a new one (or
     // takes the override), anything else touches no figures. Never a "refresh the rate" re-conversion.
-    const groupCurrency = await this.groupCurrencyOf(groupId);
-    const stored = {
-      amount: Number(expense.amount),
-      originalAmount: expense.originalAmount == null ? null : Number(expense.originalAmount),
-      originalCurrency: expense.originalCurrency ?? null,
-      fxRate: expense.fxRate == null ? null : Number(expense.fxRate),
-    };
-    if (dto.currencyCode !== undefined) this.assertEntryCurrency(dto.currencyCode, groupCurrency);
-    const plan = planExpenseFxEdit(stored, groupCurrency, dto);
-    let amount: number;
-    let originalAmount: number | null;
-    let fxData: Record<string, unknown> = {};
-    if (plan.kind === 'keep') {
-      amount = stored.amount;
-      originalAmount = stored.originalCurrency ? stored.originalAmount : null;
-    } else if (plan.kind === 'reuse') {
-      const r = this.checked(
-        convertAtRate(plan.entryAmount, stored.originalCurrency as string, groupCurrency, stored.fxRate as number, 'provider', new Date()),
-      );
-      // Only the amounts move; the rate, its source and its timestamp stay as first recorded.
-      amount = r.amount;
-      originalAmount = r.fx.originalAmount;
-      fxData = { originalAmount };
-    } else {
-      const r =
-        plan.kind === 'group'
-          ? await this.convertEntry(plan.entryAmount, groupCurrency, groupCurrency)
-          : await this.convertEntry(plan.entryAmount, plan.currency, groupCurrency, plan.kind === 'manual' ? plan.rate : undefined);
-      amount = r.amount;
-      originalAmount = r.fx.originalAmount;
-      fxData = { ...r.fx };
-    }
-    const resolved = this.resolveFxShares(amount, originalAmount, splitType, rawShares);
+    const { amount, originalAmount, fxData } = await this.fx.resolveEditFigures(groupId, expense, dto);
+    const resolved = this.fx.resolveFxShares(amount, originalAmount, splitType, rawShares);
 
-    await this.prisma.$transaction(async (tx: any) => {
+    await this.prisma.$transaction(async (tx) => {
       await this.lockGroup(tx, groupId);
       await this.assertLiveMembers(groupId, [paidBy, ...rawShares.map((s) => s.memberId)], tx);
       // Shares are fully deleted and recreated, never patched.
@@ -1100,356 +918,11 @@ export class GroupsService {
     if (!actor.isOwner && expense.createdByMemberId !== actor.id && expense.paidByMemberId !== actor.id) {
       throw new ForbiddenException('Only the creator, the payer or the owner can delete this expense');
     }
-    await this.prisma.$transaction(async (tx: any) => {
+    await this.prisma.$transaction(async (tx) => {
       await this.lockGroup(tx, groupId);
       await tx.groupExpense.update({
         where: { id: expense.id },
         data: { deletedAt: new Date(), deletedByMemberId: actor.id },
-      });
-    });
-    this.mirror?.afterLedgerWrite(groupId);
-    return this.getDetail(groupId, actor.id);
-  }
-
-  // ------------------------------------------------------- itemised (ABA-655)
-
-  private linesRejected(reason: LinesRejection): BadRequestException {
-    return new BadRequestException({
-      code: 'ITEMS_INVALID',
-      reason,
-      message: 'The line items do not fit the amount paid',
-    });
-  }
-
-  /**
-   * An itemised expense: lines (entry currency), no claims yet, so the payer holds the whole amount
-   * until people claim. Claims are open for CLAIM_WINDOW_DAYS. Stored as an exact split with the
-   * resolved shares, so the ledger reads it like any other expense.
-   */
-  private async createItemizedExpense(groupId: string, actorId: string, dto: CreateGroupExpenseDto): Promise<GroupDetail> {
-    if (dto.splitType !== undefined || dto.shares !== undefined) {
-      throw new BadRequestException({ code: 'EXPENSE_ITEMIZED', message: 'An itemised expense is split by its claims' });
-    }
-    const items = dto.items as GroupExpenseItemInputDto[];
-    if (items.some((i) => i.id !== undefined)) throw new BadRequestException('New lines carry no id');
-    await this.assertLiveMembers(groupId, [dto.paidByMemberId]);
-    const groupCurrency = await this.groupCurrencyOf(groupId);
-    const conv = await this.convertEntry(dto.amount, dto.currencyCode ?? groupCurrency, groupCurrency, dto.fxRate);
-    const billTotal = conv.fx.originalAmount ?? conv.amount;
-    const discountAmount = dto.discountAmount ? dto.discountAmount : null;
-    const bad = validateItemLines(items, billTotal, discountAmount);
-    if (bad) throw this.linesRejected(bad);
-
-    const rows: (ItemRow & { name: string; position: number })[] = items.map((i, position) => ({
-      id: randomUUID(),
-      name: i.name,
-      totalPrice: i.totalPrice,
-      lineDiscount: i.lineDiscount ? i.lineDiscount : null,
-      position,
-    }));
-    const shares = computeItemizedShares(
-      { amount: conv.amount, originalAmount: conv.fx.originalAmount, discountAmount, paidByMemberId: dto.paidByMemberId },
-      rows,
-      [],
-    );
-    const now = new Date();
-    try {
-      await this.prisma.$transaction(async (tx: any) => {
-        await this.lockGroup(tx, groupId);
-        await this.assertLiveMembers(groupId, [dto.paidByMemberId], tx);
-        await tx.groupExpense.create({
-          data: {
-            groupId,
-            description: dto.description,
-            amount: conv.amount,
-            ...conv.fx,
-            date: toDateOnly(dto.date),
-            paidByMemberId: dto.paidByMemberId,
-            splitType: 'exact',
-            createdByMemberId: actorId,
-            clientRequestId: dto.clientRequestId,
-            itemized: true,
-            discountAmount,
-            claimsOpenUntil: claimWindowEnd(now),
-            items: {
-              create: rows.map((r) => ({
-                id: r.id,
-                name: r.name,
-                totalPrice: r.totalPrice,
-                lineDiscount: r.lineDiscount,
-                position: r.position,
-              })),
-            },
-            shares: {
-              create: shares.map((s) => ({ memberId: s.memberId, shareValue: s.shareValue, shareAmount: s.shareAmount })),
-            },
-          },
-        });
-        });
-    } catch (e) {
-      if (isP2002(e)) return this.getDetail(groupId, actorId);
-      throw e;
-    }
-    this.notifyActivity(groupId, actorId);
-    this.mirror?.afterLedgerWrite(groupId);
-    return this.getDetail(groupId, actorId);
-  }
-
-  /** The figures, lines and payer of an itemised edit, derived from `expense` and its stored lines. */
-  private async planItemizedUpdate(groupId: string, expense: any, storedItems: any[], dto: UpdateGroupExpenseDto) {
-    const paidBy: string = dto.paidByMemberId ?? expense.paidByMemberId;
-    const groupCurrency = await this.groupCurrencyOf(groupId);
-    const stored = {
-      amount: Number(expense.amount),
-      originalAmount: expense.originalAmount == null ? null : Number(expense.originalAmount),
-      originalCurrency: expense.originalCurrency ?? null,
-      fxRate: expense.fxRate == null ? null : Number(expense.fxRate),
-    };
-    if (dto.currencyCode !== undefined) this.assertEntryCurrency(dto.currencyCode, groupCurrency);
-    const plan = planExpenseFxEdit(stored, groupCurrency, dto);
-    let amount: number;
-    let originalAmount: number | null;
-    let fxData: Record<string, unknown> = {};
-    if (plan.kind === 'keep') {
-      amount = stored.amount;
-      originalAmount = stored.originalCurrency ? stored.originalAmount : null;
-    } else if (plan.kind === 'reuse') {
-      const r = this.checked(
-        convertAtRate(plan.entryAmount, stored.originalCurrency as string, groupCurrency, stored.fxRate as number, 'provider', new Date()),
-      );
-      amount = r.amount;
-      originalAmount = r.fx.originalAmount;
-      fxData = { originalAmount };
-    } else {
-      const r =
-        plan.kind === 'group'
-          ? await this.convertEntry(plan.entryAmount, groupCurrency, groupCurrency)
-          : await this.convertEntry(plan.entryAmount, plan.currency, groupCurrency, plan.kind === 'manual' ? plan.rate : undefined);
-      amount = r.amount;
-      originalAmount = r.fx.originalAmount;
-      fxData = { ...r.fx };
-    }
-    const discountAmount =
-      dto.discountAmount !== undefined
-        ? dto.discountAmount || null
-        : expense.discountAmount == null
-          ? null
-          : Number(expense.discountAmount);
-
-    const storedIds = new Set<string>(storedItems.map((i) => i.id));
-    let next: (ItemRow & { name: string; position: number; isNew: boolean })[];
-    if (dto.items !== undefined) {
-      const seen = new Set<string>();
-      for (const i of dto.items) {
-        if (i.id === undefined) continue;
-        // Re-scoped: a line id from another expense (or group) is not this expense's line.
-        if (!storedIds.has(i.id) || seen.has(i.id)) throw new NotFoundException('Item not found');
-        seen.add(i.id);
-      }
-      next = dto.items.map((i, position) => ({
-        id: i.id ?? randomUUID(),
-        name: i.name,
-        totalPrice: i.totalPrice,
-        lineDiscount: i.lineDiscount ? i.lineDiscount : null,
-        position,
-        isNew: i.id === undefined,
-      }));
-    } else {
-      next = storedItems.map((i) => ({
-        id: i.id,
-        name: i.name,
-        totalPrice: Number(i.totalPrice),
-        lineDiscount: i.lineDiscount == null ? null : Number(i.lineDiscount),
-        position: i.position,
-        isNew: false,
-      }));
-    }
-    const bad = validateItemLines(next, originalAmount ?? amount, discountAmount);
-    if (bad) throw this.linesRejected(bad);
-    const keptIds = next.filter((i) => !i.isNew).map((i) => i.id);
-    const removedIds = [...storedIds].filter((id) => !keptIds.includes(id));
-    return { paidBy, amount, originalAmount, fxData, discountAmount, next, keptIds, removedIds };
-  }
-
-  /**
-   * Edits an itemised expense (creator, payer or owner: the caller checked). `splitType`/`shares` are
-   * refused: the shares are the claims' result. Figures follow the ABA-654 edit rule. `items` replaces
-   * the line list (an `id` keeps a line and its claims, a missing line is deleted and its claims go
-   * with it, which prunes stale claims in storage). The shares are re-derived from the claims inside
-   * the same transaction that bumps `ledgerVersion`, after taking the expense row's lock.
-   */
-  private async updateItemizedExpense(
-    groupId: string,
-    actorId: string,
-    expense: any,
-    dto: UpdateGroupExpenseDto,
-  ): Promise<GroupDetail> {
-    if (dto.splitType !== undefined || dto.shares !== undefined) {
-      throw new BadRequestException({ code: 'EXPENSE_ITEMIZED', message: 'An itemised expense is split by its claims' });
-    }
-    const paidBy = dto.paidByMemberId ?? expense.paidByMemberId;
-    if (dto.paidByMemberId !== undefined) await this.assertLiveMembers(groupId, [paidBy]);
-
-    // Planned once outside the transaction so a bad request fails before any lock is taken, then
-    // planned AGAIN from the row as it is under the lock (ABA-655 review M4).
-    const loadItems = (db: any): Promise<any[]> =>
-      db.groupExpenseItem.findMany({ where: { groupExpenseId: expense.id }, orderBy: { position: 'asc' } });
-    await this.planItemizedUpdate(groupId, expense, await loadItems(this.prisma), dto);
-
-
-    await this.prisma.$transaction(async (tx: any) => {
-      // The group row's lock first (the member merge and every other ledger write), then the expense
-      // row's, so a concurrent claim change serialises behind this edit.
-      await this.lockGroup(tx, groupId);
-      await tx.groupExpense.update({ where: { id: expense.id }, data: { updatedAt: new Date() } });
-      // Re-read under the lock: a delete (or any edit) that committed while we waited must win. A
-      // deleted expense is a 404 here, never revived by this write, and the figures, lines and
-      // payer are all re-derived from this fresh row and its stored lines.
-      const fresh = await tx.groupExpense.findFirst({
-        where: { id: expense.id, groupId, deletedAt: null, itemized: true },
-      });
-      if (!fresh) throw new NotFoundException('Expense not found');
-      const { paidBy, amount, originalAmount, fxData, discountAmount, next, keptIds, removedIds } = await this.planItemizedUpdate(
-        groupId,
-        fresh,
-        await loadItems(tx),
-        dto,
-      );
-      // The payer is re-checked under the lock even when the edit does not name one: a merge or removal
-      // that committed while we waited must not leave the expense paid by a soft-removed member.
-      await this.assertLiveMembers(groupId, [paidBy], tx);
-      if (removedIds.length) {
-        // Cascades the lines' claims: stale claims are pruned in storage, not only in the recompute.
-        await tx.groupExpenseItem.deleteMany({ where: { id: { in: removedIds }, groupExpenseId: expense.id } });
-      }
-      if (dto.items !== undefined) {
-        for (const i of next) {
-          const data = { name: i.name, totalPrice: i.totalPrice, lineDiscount: i.lineDiscount ?? null, position: i.position };
-          if (i.isNew) await tx.groupExpenseItem.create({ data: { id: i.id, groupExpenseId: expense.id, ...data } });
-          else await tx.groupExpenseItem.update({ where: { id: i.id }, data });
-        }
-      }
-      const claims: ClaimRow[] = keptIds.length
-        ? (await tx.groupItemClaim.findMany({ where: { itemId: { in: keptIds } } })).map((c: any) => ({
-            itemId: c.itemId,
-            memberId: c.memberId,
-            shareBp: c.shareBp ?? null,
-          }))
-        : [];
-      const shares = computeItemizedShares({ amount, originalAmount, discountAmount, paidByMemberId: paidBy }, next, claims);
-      await tx.groupExpenseShare.deleteMany({ where: { groupExpenseId: expense.id } });
-      await tx.groupExpense.update({
-        where: { id: expense.id },
-        data: {
-          description: dto.description ?? fresh.description,
-          amount,
-          ...fxData,
-          discountAmount,
-          date: dto.date ? toDateOnly(dto.date) : fresh.date,
-          paidByMemberId: paidBy,
-          shares: {
-            create: shares.map((s) => ({ memberId: s.memberId, shareValue: s.shareValue, shareAmount: s.shareAmount })),
-          },
-        },
-      });
-    });
-    this.notifyActivity(groupId, actorId);
-    this.mirror?.afterLedgerWrite(groupId);
-    return this.getDetail(groupId, actorId);
-  }
-
-  // ------------------------------------------------------------ settlements
-
-  async createSettlement(groupId: string, memberId: string, dto: CreateGroupSettlementDto): Promise<GroupDetail> {
-    const actor = await this.resolveActor(groupId, memberId);
-
-    const dup = await this.prisma.groupSettlement.findFirst({
-      where: { groupId, clientRequestId: dto.clientRequestId },
-      select: { id: true },
-    });
-    if (dup) return this.getDetail(groupId, actor.id);
-
-    if (dto.fromMemberId === dto.toMemberId) throw new BadRequestException('from and to must differ');
-    if (actor.id !== dto.fromMemberId && actor.id !== dto.toMemberId) {
-      throw new ForbiddenException('You can only settle a transfer you are part of');
-    }
-    await this.assertLiveMembers(groupId, [dto.fromMemberId, dto.toMemberId]);
-
-    const group = await this.prisma.expenseGroup.findUnique({
-      where: { id: groupId },
-      select: { ledgerVersion: true },
-    });
-    if (!group) throw new NotFoundException('Group not found');
-    if (group.ledgerVersion !== dto.ledgerVersion) {
-      throw new ConflictException({ code: 'LEDGER_CHANGED', message: 'Balances changed, refresh and retry' });
-    }
-
-    // ABA-652: validated against the CURRENT balances before any write. A payment may be partial or
-    // go to a creditor who is not the suggested one, but it can only shrink both balances, never
-    // flip a sign, so nobody can record "I paid 1000" to become a creditor.
-    const { ledger } = await this.loadState(groupId);
-    const check = validateSettlement(dto, ledger.balances);
-    if (!check.ok) {
-      throw new BadRequestException({
-        code: 'SETTLEMENT_EXCEEDS_BALANCE',
-        reason: check.reason,
-        message: 'That payment is larger than what is owed between these two members',
-      });
-    }
-
-    try {
-      await this.prisma.$transaction(async (tx: any) => {
-        const cas = await tx.expenseGroup.updateMany({
-          where: { id: groupId, ledgerVersion: dto.ledgerVersion },
-          data: { ledgerVersion: { increment: 1 } },
-        });
-        if (cas.count === 0) {
-          throw new ConflictException({ code: 'LEDGER_CHANGED', message: 'Balances changed, refresh and retry' });
-        }
-        // The CAS above holds the group row's lock: re-check, on what it protects, that the group is
-        // still active and both parties are still live (a merge or removal may have run first).
-        const locked = await tx.expenseGroup.findUnique({ where: { id: groupId }, select: { status: true } });
-        if (!locked || locked.status !== 'active') {
-          throw new ForbiddenException({ code: 'GROUP_ARCHIVED', message: 'This group is archived and read-only' });
-        }
-        await this.assertLiveMembers(groupId, [dto.fromMemberId, dto.toMemberId], tx);
-        await tx.groupSettlement.create({
-          data: {
-            groupId,
-            fromMemberId: dto.fromMemberId,
-            toMemberId: dto.toMemberId,
-            // Clamped to min(owed, owed-to): the cent of tolerance never flips a sign.
-            amount: check.amount,
-            method: dto.method ?? null,
-            recordedByMemberId: actor.id,
-            clientRequestId: dto.clientRequestId,
-          },
-        });
-      });
-    } catch (e) {
-      if (isP2002(e)) return this.getDetail(groupId, actor.id);
-      throw e;
-    }
-    this.notifyActivity(groupId, actor.id);
-    this.mirror?.afterLedgerWrite(groupId);
-    return this.getDetail(groupId, actor.id);
-  }
-
-  async voidSettlement(groupId: string, memberId: string, settlementId: string): Promise<GroupDetail> {
-    const actor = await this.resolveActor(groupId, memberId);
-    const s = await this.prisma.groupSettlement.findFirst({
-      where: { id: settlementId, groupId, voidedAt: null },
-      select: { id: true, recordedByMemberId: true, toMemberId: true },
-    });
-    if (!s) throw new NotFoundException('Settlement not found');
-    if (!actor.isOwner && s.recordedByMemberId !== actor.id && s.toMemberId !== actor.id) {
-      throw new ForbiddenException('Only the recorder, the receiver or the owner can void this payment');
-    }
-    await this.prisma.$transaction(async (tx: any) => {
-      await this.lockGroup(tx, groupId);
-      await tx.groupSettlement.update({
-        where: { id: s.id },
-        data: { voidedAt: new Date(), voidedByMemberId: actor.id },
       });
     });
     this.mirror?.afterLedgerWrite(groupId);
@@ -1461,7 +934,7 @@ export class GroupsService {
   /** The guest row's current net balance in the group currency, for the merge offer (numbers only). */
   private async guestNet(groupId: string, memberId: string): Promise<{ balance: number; currencyCode: string } | null> {
     try {
-      const [{ ledger }, currencyCode] = await Promise.all([this.loadState(groupId), this.groupCurrencyOf(groupId)]);
+      const [{ ledger }, currencyCode] = await Promise.all([this.loadState(groupId), this.fx.groupCurrencyOf(groupId)]);
       const bal = ledger.balances.find((b) => b.memberId === memberId)?.netAmount ?? 0;
       return { balance: Math.round(bal * 100) / 100, currencyCode };
     } catch {

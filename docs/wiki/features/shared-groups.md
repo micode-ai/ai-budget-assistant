@@ -15,8 +15,15 @@ abuse is bounded by hard caps and write ceilings, not a paywall.
 
 API (`apps/api/src/modules/groups/`):
 - `apps/api/src/modules/groups/groups.controller.ts` — the authenticated app routes under `/groups`
-- `apps/api/src/modules/groups/groups.service.ts` — every ledger write, the caps, link-code
-  redemption, the `group_activity` push
+- `apps/api/src/modules/groups/groups.service.ts` — the facade the controllers inject: lifecycle,
+  membership, plain expense writes, link-code redemption, the `group_activity` push, and the ledger
+  primitives (`resolveActor`, `lockGroup`, `assertLiveMembers`, `loadState`)
+- `apps/api/src/modules/groups/group-fx.service.ts` — write-time entry-currency conversion, share
+  resolution and the edit rule's DB half (`resolveEditFigures`), shared by plain and itemised edits
+- `apps/api/src/modules/groups/group-itemized-expense.service.ts` — itemised create/plan/edit (ABA-655)
+- `apps/api/src/modules/groups/group-settlements.service.ts` — record and void a payment (ABA-652)
+- `apps/api/src/modules/groups/group-ledger-ports.ts`, `group-mappers.ts`, `group-util.ts` — the
+  `GroupLedgerPorts` type, the Prisma-typed row mappers, `isP2002`/`toDateOnly`
 - `apps/api/src/modules/groups/group-guest.controller.ts` — the public `/g/:token` surface
 - `apps/api/src/modules/groups/group-guest.service.ts` — cookie identity, CSRF, origin check,
   write ceilings; delegates ledger writes to `GroupsService`, never re-implements them
@@ -253,7 +260,7 @@ Copy: four push strings × 9 locales in `notification-i18n.ts`; the amount print
 (currency code, like debt reminders). Related: [debt-reminders](debt-reminders.md).
 
 **Multi-currency (ABA-654).** The group currency is the **ledger currency**; an expense may be entered
-in another one and is converted **once, at write time**, by `GroupsService` over the pure
+in another one and is converted **once, at write time**, by `GroupFxService` over the pure
 `apps/api/src/modules/groups/group-fx.ts`. `GroupExpense.amount` is always the group-currency figure the
 ledger sums; five nullable columns hold what was entered: `originalAmount`, `originalCurrency`, `fxRate`
 (the value of ONE original unit in the group currency, `Decimal(18,8)`), `fxRateSource`
@@ -611,6 +618,12 @@ in `GroupActivityList` and, on desktop, in `GroupActivityTable` as a system row:
 focusable, left out of the keyboard `order` (so `Enter` cannot land on one).
 
 ## Invariants
+
+- **`GroupsService` stays the facade; its write collaborators are built by it, not injected.** The
+  settlements and itemised-expense services call back into its ledger primitives (through the
+  `GroupLedgerPorts` type), and `GroupItemsService` already injects `GroupsService` — making them
+  providers would be an injection cycle. A new ledger write goes in a collaborator, not back into the
+  1.5k-line class (`groups-service-god-file`).
 
 - **Groups must not move into `Account`/`Expense`.** The model is standalone on purpose (above);
   a group LEDGER write never creates an `Expense` or `Income` row — that is what keeps every personal
