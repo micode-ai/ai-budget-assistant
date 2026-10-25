@@ -156,6 +156,8 @@ fires once per pair regardless of which side arrived first.
 - `contentMatch.ts` (client skip of a push that arrives after a receipt) is still exact-payee; a
   push it lets through is caught by the server's loose pairing instead.
 
+- **The description carries an English suffix in every language.** `captureService.ts` writes `${merchant} (auto-captured)`, so a Polish transactions list shows „Sklep Osiedlowy (aut…” under the one-line ellipsis; the merchant line below it is clean. The in-app toast after a capture (`_toastHandler`) is never registered, so nothing confirms a capture except the row appearing. Found while verifying the ABA-694 advert.
+
 ## History
 
 ABA-294 (the listener and the PL templates — merchant-rule category resolution shipped here too,
