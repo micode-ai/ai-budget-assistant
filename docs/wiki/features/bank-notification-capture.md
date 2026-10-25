@@ -61,6 +61,8 @@ written offline-first through `expenseStore.addExpense` with an `externalRef` of
 `@@unique([accountId, externalRef])` — which is what stops two devices on one account booking the
 same push twice.
 
+**The description is the merchant alone** (`description.ts`, `capturedExpenseDescription`); with no parsed merchant it is the localized source label `expenseDetail.sourceNotification` („Autozapis” / „Auto-captured”). It used to be `${merchant} (auto-captured)` in English in every language, which the one-line list row truncated to „Sklep Osiedlowy (aut…” and which only repeated the row's own source badge (ABA-695). Old rows keep the old text: it is user-editable, so there is no backfill.
+
 **Two tiers of reconciliation** against the same charge arriving by another route. Both use one
 payee predicate — `expensePayee()` (merchant, else description, lowercased and trimmed) plus
 `DUP_DAY_MS` — shared with the `duplicate_charge` anomaly detector.
@@ -156,7 +158,7 @@ fires once per pair regardless of which side arrived first.
 - `contentMatch.ts` (client skip of a push that arrives after a receipt) is still exact-payee; a
   push it lets through is caught by the server's loose pairing instead.
 
-- **The description carries an English suffix in every language.** `captureService.ts` writes `${merchant} (auto-captured)`, so a Polish transactions list shows „Sklep Osiedlowy (aut…” under the one-line ellipsis; the merchant line below it is clean. The in-app toast after a capture (`_toastHandler`) is never registered, so nothing confirms a capture except the row appearing. Found while verifying the ABA-694 advert.
+- **Nothing confirms a capture except the row appearing.** The in-app toast handler in `captureService.ts` (`_toastHandler`) is never registered. Found while verifying the ABA-694 advert.
 
 ## History
 
@@ -166,4 +168,4 @@ ABA-296 (two-tier dedup, `POST /expenses/merge`) · ABA-297 (New-Arch emission, 
 PKO template) · ABA-387 (the spend gate, percentage masking, the `EUR` and `brutto` fixes) · ABA-597
 (documentation-only: this page previously understated the category resolution above, found while
 investigating why merchant rules weren't yet applied at receipt-scan time) · ABA-625 (receipt scans
-are paired loosely with pushes and offered as a merge; Tier 1 no longer runs for `ocr`).
+are paired loosely with pushes and offered as a merge; Tier 1 no longer runs for `ocr`). · ABA-695 (the description drops the English `(auto-captured)` suffix: merchant alone, else the localized source label)

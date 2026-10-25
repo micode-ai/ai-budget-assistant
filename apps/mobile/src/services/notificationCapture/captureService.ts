@@ -24,7 +24,14 @@ import { useMerchantRulesStore } from '@/stores/merchantRulesStore';
 import { useAuthStore } from '@/stores/authStore';
 import { sha256SimpleHex } from './dedup';
 import { contentMatchesExisting } from './contentMatch';
+import { capturedExpenseDescription } from './description';
+import i18n from '@/i18n';
 import { captureCurrentLocation } from '@/services/locationCapture';
+
+/** The row's own source label ("Autozapis" / "Auto-captured"), used as the description when no merchant was parsed. */
+function sourceLabel(): string {
+  return i18n.t('expenseDetail.sourceNotification');
+}
 
 /** In-app toast callback — injected by the settings screen / app root to avoid hard dep on UI. */
 let _toastHandler: ((message: string, expenseId: string) => void) | null = null;
@@ -143,9 +150,7 @@ async function handleBankNotification(payload: BankNotificationPayload): Promise
         userId,
         amount,
         currencyCode: currencyCode as any,
-        description: merchant
-          ? `${merchant} (auto-captured)`
-          : `Bank notification (auto-captured)`,
+        description: capturedExpenseDescription(merchant, sourceLabel()),
         merchant: merchant ?? undefined,
         date: occurredAt,
         categoryId,
