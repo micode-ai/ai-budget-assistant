@@ -15,6 +15,8 @@ export interface WalletBalanceTotals {
   totalExchangedOut: number;
   totalTransferredIn: number;
   totalTransferredOut: number;
+  /** Signed true-up corrections (wallet_adjustments). Optional: absent means none. */
+  totalAdjustments?: number;
 }
 
 export interface WalletBalanceRow extends WalletBalanceTotals {
@@ -44,12 +46,14 @@ export function buildWalletBalanceRow(
     totals.totalExchangedIn -
     totals.totalExchangedOut +
     totals.totalTransferredIn -
-    totals.totalTransferredOut;
+    totals.totalTransferredOut +
+    (totals.totalAdjustments ?? 0);
 
   return {
     currencyCode,
     initialAmount,
     ...totals,
+    totalAdjustments: totals.totalAdjustments ?? 0,
     currentBalance,
   };
 }

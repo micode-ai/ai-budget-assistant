@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException, Optional } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException, Optional } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { PrismaService } from '../../database/prisma.service';
 import { calendarPartsInTimezone } from '../../common/utils/timezone';
@@ -6,7 +6,7 @@ import { EXCLUDE_SPLIT_RECEIVABLE } from '../../common/utils/expense-filters';
 import { accountCurrencyKey, buildWalletBalanceRow } from './wallet-balance.util';
 import { resolveWalletCurrencies } from '../../common/utils/wallet-currencies';
 import { WalletCurrencyService } from './wallet-currency.service';
-import { SetWalletBalanceDto } from './dto';
+import { SetWalletBalanceDto, CreateWalletAdjustmentDto } from './dto';
 import { logFireAndForget } from '../../common/utils/fire-and-forget';
 
 @Injectable()
@@ -128,6 +128,17 @@ export class WalletService {
       _sum: { toAmount: true },
     });
 
+    // True-up corrections: wallet-only, never part of spend or income totals.
+    const adjustmentTotals = await this.prisma.walletAdjustment.groupBy({
+      by: ['currencyCode'],
+      where: { accountId, isDeleted: false },
+      _sum: { delta: true },
+    });
+    const adjustmentMap = new Map<string, number>();
+    for (const a of adjustmentTotals) {
+      adjustmentMap.set(a.currencyCode, Number(a._sum.delta || 0));
+    }
+
     // Build income map
     const incomeMap = new Map<string, number>();
     for (const i of incomeTotals) {
@@ -178,6 +189,7 @@ export class WalletService {
         ...exchangeOutMap.keys(),
         ...transferInMap.keys(),
         ...transferOutMap.keys(),
+        ...adjustmentMap.keys(),
       ],
     );
 
@@ -191,10 +203,88 @@ export class WalletService {
         totalExchangedOut: exchangeOutMap.get(r.currencyCode) || 0,
         totalTransferredIn: transferInMap.get(r.currencyCode) || 0,
         totalTransferredOut: transferOutMap.get(r.currencyCode) || 0,
+        totalAdjustments: adjustmentMap.get(r.currencyCode) || 0,
       }),
     );
 
     return { balances };
+  }
+
+  /**
+   * True-up: record the signed difference between the balance the user really has and the one
+   * the wallet computes. Writes a `WalletAdjustment`, never an Expense/Income, so no spend,
+   * budget or analytics figure moves. A zero difference writes nothing.
+   */
+  async createAdjustment(accountId: string, userId: string, dto: CreateWalletAdjustmentDto) {
+    const currencyCode = dto.currencyCode.toUpperCase();
+    const { balances } = await this.getSummary(accountId, userId);
+    const row = balances.find((b: { currencyCode: string }) => b.currencyCode === currencyCode);
+    if (!row) {
+      throw new BadRequestException('Unknown wallet currency for this account');
+    }
+
+    const balanceBefore = Math.round(row.currentBalance * 100) / 100;
+    const balanceAfter = Math.round(dto.actualBalance * 100) / 100;
+    const delta = Math.round((balanceAfter - balanceBefore) * 100) / 100;
+
+    const adjustment =
+      delta === 0
+        ? null
+        : await this.prisma.walletAdjustment.create({
+            data: { accountId, userId, currencyCode, delta, balanceBefore, balanceAfter },
+          });
+
+    return {
+      adjustment: adjustment ? this.toAdjustmentResponse(adjustment) : null,
+      untrackedThisMonth: await this.untrackedThisMonth(accountId, currencyCode),
+    };
+  }
+
+  async listAdjustments(accountId: string) {
+    const rows = await this.prisma.walletAdjustment.findMany({
+      where: { accountId, isDeleted: false },
+      orderBy: { createdAt: 'desc' },
+    });
+    return rows.map((r: Parameters<WalletService['toAdjustmentResponse']>[0]) =>
+      this.toAdjustmentResponse(r),
+    );
+  }
+
+  /** Sum of the money-went-missing corrections (negative deltas) this month, as a positive number. */
+  private async untrackedThisMonth(accountId: string, currencyCode: string): Promise<number> {
+    const now = new Date();
+    const monthStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
+    const agg = await this.prisma.walletAdjustment.aggregate({
+      where: {
+        accountId,
+        currencyCode,
+        isDeleted: false,
+        delta: { lt: 0 },
+        createdAt: { gte: monthStart },
+      },
+      _sum: { delta: true },
+    });
+    return Math.abs(Number(agg._sum.delta || 0));
+  }
+
+  private toAdjustmentResponse(r: {
+    id: string;
+    accountId: string;
+    currencyCode: string;
+    delta: unknown;
+    balanceBefore: unknown;
+    balanceAfter: unknown;
+    createdAt: Date;
+  }) {
+    return {
+      id: r.id,
+      accountId: r.accountId,
+      currencyCode: r.currencyCode,
+      delta: Number(r.delta),
+      balanceBefore: Number(r.balanceBefore),
+      balanceAfter: Number(r.balanceAfter),
+      createdAt: r.createdAt.toISOString(),
+    };
   }
 
   /**
@@ -238,6 +328,7 @@ export class WalletService {
       exchangeIn,
       transfersOut,
       transfersIn,
+      adjustments,
     ] = await Promise.all([
       this.prisma.walletBalance.findMany({
         // Deleted rows included on purpose — see getSummary.
@@ -274,6 +365,11 @@ export class WalletService {
         by: ['toAccountId', 'toCurrency'],
         where: { toAccountId: { in: accountIds }, isDeleted: false, countAsIncome: false },
         _sum: { toAmount: true },
+      }),
+      this.prisma.walletAdjustment.groupBy({
+        by: ['accountId', 'currencyCode'],
+        where: { accountId: { in: accountIds }, isDeleted: false },
+        _sum: { delta: true },
       }),
     ]);
 
@@ -337,6 +433,13 @@ export class WalletService {
       (r) => r._sum.toAmount,
     );
 
+    const adjustmentMap = toMap(
+      adjustments as unknown as Grouped[],
+      (r) => r.accountId as string,
+      (r) => r.currencyCode as string,
+      (r) => r._sum.delta,
+    );
+
     const rowsByAccount = new Map<
       string,
       { currencyCode: string; isDeleted: boolean; initialAmount: number }[]
@@ -370,6 +473,7 @@ export class WalletService {
             totalExchangedOut: exchangeOutMap.get(key) || 0,
             totalTransferredIn: transferInMap.get(key) || 0,
             totalTransferredOut: transferOutMap.get(key) || 0,
+            totalAdjustments: adjustmentMap.get(key) || 0,
           });
         }),
       );
@@ -502,7 +606,7 @@ export class WalletService {
     // Last day of the user's current month
     const end = new Date(Date.UTC(curYear, curMonth, 0, 23, 59, 59, 999));
 
-    const [incomes, expenses, exchanges, transfersOut, transfersIn] = await Promise.all([
+    const [incomes, expenses, exchanges, transfersOut, transfersIn, adjustmentRows] = await Promise.all([
       this.prisma.income.findMany({
         where: { accountId, isDeleted: false, ...EXCLUDE_SPLIT_RECEIVABLE, date: { gte: start, lte: end } },
         select: { date: true, amount: true, currencyCode: true },
@@ -523,6 +627,10 @@ export class WalletService {
       this.prisma.accountTransfer.findMany({
         where: { toAccountId: accountId, isDeleted: false, countAsIncome: false, date: { gte: start, lte: end } },
         select: { date: true, toAmount: true, toCurrency: true },
+      }),
+      this.prisma.walletAdjustment.findMany({
+        where: { accountId, isDeleted: false, createdAt: { gte: start, lte: end } },
+        select: { createdAt: true, delta: true, currencyCode: true },
       }),
     ]);
 
@@ -549,15 +657,31 @@ export class WalletService {
     for (const r of transfersOut) add(r.date, r.fromCurrency, -Number(r.fromAmount));
     for (const r of transfersIn) add(r.date, r.toCurrency, Number(r.toAmount));
 
+    // True-ups move the balance, so they are part of the delta, but are also reported on their own
+    // so the chart can draw them in a separate colour.
+    const adjustmentMonthMap = new Map<string, Record<string, number>>();
+    for (const r of adjustmentRows) {
+      const delta = Number(r.delta);
+      add(r.createdAt, r.currencyCode, delta);
+      const key = monthKey(new Date(r.createdAt));
+      const bucket = adjustmentMonthMap.get(key) ?? {};
+      bucket[r.currencyCode] = (bucket[r.currencyCode] ?? 0) + delta;
+      adjustmentMonthMap.set(key, bucket);
+    }
+
     // Emit one entry per month in the window, chronological, including empty months
-    const result: { month: string; deltas: Record<string, number> }[] = [];
+    const result: {
+      month: string;
+      deltas: Record<string, number>;
+      adjustments: Record<string, number>;
+    }[] = [];
     for (let i = 0; i < cappedMonths; i++) {
       const d = new Date(Date.UTC(start.getUTCFullYear(), start.getUTCMonth() + i, 1));
       const key = monthKey(d);
       const m = monthMap.get(key);
       const deltas: Record<string, number> = {};
       if (m) for (const [c, v] of m) deltas[c] = v;
-      result.push({ month: key, deltas });
+      result.push({ month: key, deltas, adjustments: adjustmentMonthMap.get(key) ?? {} });
     }
 
     return { months: result, currencies: Array.from(currencySet) };

@@ -6,6 +6,9 @@ import type {
   WalletSummaryResponse,
   AllWalletSummariesResponse,
   WalletMonthlyHistoryResponse,
+  CreateWalletAdjustmentDto,
+  WalletAdjustmentResponse,
+  CreateWalletAdjustmentResult,
   ExchangeRatesResponse,
   DebtSummaryResponse,
   CreateExchangeRateWatchDto,
@@ -13,6 +16,17 @@ import type {
 import { httpClient } from './http-client';
 
 export const walletApi = {
+  createWalletAdjustment(dto: CreateWalletAdjustmentDto) {
+    return httpClient.request<CreateWalletAdjustmentResult>('/wallet/adjustments', {
+      method: 'POST',
+      body: JSON.stringify(dto),
+    });
+  },
+
+  getWalletAdjustments() {
+    return httpClient.request<WalletAdjustmentResponse[]>('/wallet/adjustments');
+  },
+
   getWalletBalances() {
     return httpClient.request<WalletBalance[]>('/wallet');
   },

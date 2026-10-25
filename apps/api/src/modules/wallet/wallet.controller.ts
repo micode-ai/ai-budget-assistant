@@ -14,7 +14,8 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
 import { ViewerBlockGuard } from '../accounts/guards/account-role.guard';
 import { AuthenticatedRequest } from '../../common/types';
-import { SetWalletBalanceDto } from './dto';
+import { TripArchivedGuard } from '../accounts/guards/trip-archived.guard';
+import { SetWalletBalanceDto, CreateWalletAdjustmentDto } from './dto';
 
 @Controller('wallet')
 @UseGuards(JwtAuthGuard, AccountContextGuard)
@@ -25,6 +26,17 @@ export class WalletController {
   @UseGuards(new ViewerBlockGuard())
   async setBalance(@Req() req: AuthenticatedRequest, @Body() dto: SetWalletBalanceDto) {
     return this.walletService.setBalance(req.accountId, req.user.id, dto);
+  }
+
+  @Post('adjustments')
+  @UseGuards(new ViewerBlockGuard(), TripArchivedGuard)
+  async createAdjustment(@Req() req: AuthenticatedRequest, @Body() dto: CreateWalletAdjustmentDto) {
+    return this.walletService.createAdjustment(req.accountId, req.user.id, dto);
+  }
+
+  @Get('adjustments')
+  async listAdjustments(@Req() req: AuthenticatedRequest) {
+    return this.walletService.listAdjustments(req.accountId);
   }
 
   @Get()

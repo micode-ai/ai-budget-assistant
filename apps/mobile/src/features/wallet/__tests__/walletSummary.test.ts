@@ -65,3 +65,14 @@ describe('buildWalletSummary', () => {
     });
   });
 });
+
+describe('buildWalletSummary adjustments', () => {
+  it('adds signed true-ups to the balance and reports them separately', () => {
+    const [pln] = buildWalletSummary(
+      [{ currencyCode: 'PLN', initialAmount: 100, isDeleted: false }],
+      { ...NO_TOTALS, adjustments: { PLN: -42 } },
+    );
+    expect(pln.totalAdjustments).toBe(-42);
+    expect(pln.currentBalance).toBe(58);
+  });
+});

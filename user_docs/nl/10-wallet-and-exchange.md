@@ -221,6 +221,18 @@ In een gedeeld account zien alle leden de overboekingen die het raken, wie ze oo
 - **V: Beïnvloedt een overboeking mijn portemonnee-saldo?**
   **A:** Ja. De portemonnee van het bronaccount neemt af en de portemonnee van het doelaccount neemt toe met de overgeboekte bedragen.
 
+## Saldo corrigeren
+
+Als het saldo in je portemonnee niet meer klopt met het geld dat je echt hebt — door kleine aankopen die je niet hebt vastgelegd — hoef je ze niet te zoeken:
+
+1. Open **Instellingen** > **Portemonnee** en tik op **Corrigeren** op de valutakaart
+2. Vul het **werkelijke saldo** in — de app toont het verschil
+3. Tik op **Correctie opslaan**
+
+Het verschil wordt opgeslagen als saldocorrectie. Het is geen uitgave en geen inkomen, dus budgetten en analyses veranderen niet. Ontbreekt er geld, dan laat de app zien hoeveel deze maand niet is vastgelegd en biedt **Herinneringen voor bijhouden instellen** aan.
+
+> **Let op:** voor een saldocorrectie is een internetverbinding nodig. Kijkers en gearchiveerde reisrekeningen kunnen het saldo niet corrigeren.
+
 ---
 
 *Zie ook: [Dashboard](./02-dashboard.md) | [Instellingen](./11-settings.md)*

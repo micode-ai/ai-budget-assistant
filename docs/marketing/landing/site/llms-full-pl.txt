@@ -5785,6 +5785,18 @@ Na koncie współdzielonym każdy członek widzi przelewy, które go dotyczą, n
 - **P: Czy przelew między kontami wpływa na saldo portfela?**
   **O:** Tak. Przelew zmniejsza saldo portfela na koncie źródłowym (Wysłano przelewem) i zwiększa saldo na koncie docelowym (Otrzymano przelewem). Łączna suma środków na wszystkich kontach pozostaje bez zmian.
 
+## Korekta salda
+
+Jeśli saldo w portfelu rozjechało się z pieniędzmi, które naprawdę masz — przez drobne zakupy, których nie zapisałeś — nie musisz ich szukać:
+
+1. Otwórz **Ustawienia** > **Portfel** i stuknij **Popraw** na karcie waluty
+2. Wpisz **rzeczywiste saldo** — aplikacja pokaże różnicę
+3. Stuknij **Zapisz korektę**
+
+Różnica zapisuje się jako korekta salda. Nie jest wydatkiem ani przychodem, więc budżety i analityka się nie zmieniają. Jeśli brakuje pieniędzy, aplikacja pokaże, ile w tym miesiącu nie zostało zapisane, i zaproponuje **Ustaw przypomnienia o zapisywaniu**.
+
+> **Uwaga:** korekta salda wymaga połączenia z internetem. Obserwatorzy i zarchiwizowane konta podróży nie mogą korygować salda.
+
 ---
 
 *Zobacz takze: [Pulpit](./02-dashboard.md) | [Ustawienia](./11-settings.md)*

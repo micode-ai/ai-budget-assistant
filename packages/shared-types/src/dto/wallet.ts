@@ -141,6 +141,8 @@ export interface WalletMonthlyDeltaPoint {
   month: string;
   /** Net balance change during this month, per currency code */
   deltas: Record<string, number>;
+  /** The part of `deltas` that came from balance corrections, per currency. */
+  adjustments?: Record<string, number>;
 }
 
 export interface WalletMonthlyHistoryResponse {
@@ -156,3 +158,27 @@ export interface CreateExchangeRateWatchDto {
 }
 
 export type ExchangeRateWatchResponse = ExchangeRateWatch;
+
+export interface CreateWalletAdjustmentDto {
+  currencyCode: string;
+  /** The balance the user really has; the server computes the difference. */
+  actualBalance: number;
+}
+
+export interface WalletAdjustmentResponse {
+  id: string;
+  accountId: string;
+  currencyCode: string;
+  /** Signed: real minus computed. Negative means money went untracked. */
+  delta: number;
+  balanceBefore: number;
+  balanceAfter: number;
+  createdAt: string;
+}
+
+export interface CreateWalletAdjustmentResult {
+  /** `null` when the balance already matched. */
+  adjustment: WalletAdjustmentResponse | null;
+  /** Money that went missing this month in this currency, as a positive number. */
+  untrackedThisMonth: number;
+}

@@ -12,6 +12,7 @@ describe('WalletService.getMonthlyBalanceHistory', () => {
 
   function makeService() {
     const prisma = {
+      walletAdjustment: { findMany: jest.fn().mockResolvedValue([]), groupBy: jest.fn().mockResolvedValue([]), aggregate: jest.fn().mockResolvedValue({ _sum: { delta: null } }), create: jest.fn() },
       income: { findMany: jest.fn().mockResolvedValue([{ date: thisMonth, amount: 100, currencyCode: 'PLN' }]) },
       expense: { findMany: jest.fn().mockResolvedValue([{ date: lastMonth, amount: 30, currencyCode: 'PLN' }]) },
       currencyExchange: { findMany: jest.fn().mockResolvedValue([]) },
@@ -50,6 +51,7 @@ describe('WalletService.getMonthlyBalanceHistory', () => {
 
     function svc(incomes: unknown[] = [], expenses: unknown[] = []) {
       const prisma = {
+      walletAdjustment: { findMany: jest.fn().mockResolvedValue([]), groupBy: jest.fn().mockResolvedValue([]), aggregate: jest.fn().mockResolvedValue({ _sum: { delta: null } }), create: jest.fn() },
         income: { findMany: jest.fn().mockResolvedValue(incomes) },
         expense: { findMany: jest.fn().mockResolvedValue(expenses) },
         currencyExchange: { findMany: jest.fn().mockResolvedValue([]) },
@@ -108,6 +110,7 @@ describe('WalletService.getSummary', () => {
     transfersIn?: unknown[];
   }) {
     const prisma = {
+      walletAdjustment: { findMany: jest.fn().mockResolvedValue([]), groupBy: jest.fn().mockResolvedValue([]), aggregate: jest.fn().mockResolvedValue({ _sum: { delta: null } }), create: jest.fn() },
       walletBalance: { findMany: jest.fn().mockResolvedValue(data.walletBalances ?? []) },
       income: { groupBy: jest.fn().mockResolvedValue(data.incomeTotals ?? []) },
       expense: { groupBy: jest.fn().mockResolvedValue(data.expenseTotals ?? []) },
@@ -269,6 +272,7 @@ describe('WalletService.getBalanceHistory', () => {
     summaryBalances: { currencyCode: string; currentBalance: number }[];
   }) {
     const prisma = {
+      walletAdjustment: { findMany: jest.fn().mockResolvedValue([]), groupBy: jest.fn().mockResolvedValue([]), aggregate: jest.fn().mockResolvedValue({ _sum: { delta: null } }), create: jest.fn() },
       income: { findMany: jest.fn().mockResolvedValue(data.incomes ?? []) },
       expense: { findMany: jest.fn().mockResolvedValue(data.expenses ?? []) },
       currencyExchange: { findMany: jest.fn().mockResolvedValue(data.exchanges ?? []) },
@@ -446,6 +450,7 @@ describe('WalletService.getSummariesForAccounts', () => {
     transfersIn?: unknown[];
   }) {
     const prisma = {
+      walletAdjustment: { findMany: jest.fn().mockResolvedValue([]), groupBy: jest.fn().mockResolvedValue([]), aggregate: jest.fn().mockResolvedValue({ _sum: { delta: null } }), create: jest.fn() },
       accountMember: { findMany: jest.fn().mockResolvedValue(data.memberships ?? []) },
       walletBalance: { findMany: jest.fn().mockResolvedValue(data.walletBalances ?? []) },
       income: { groupBy: jest.fn().mockResolvedValue(data.incomeTotals ?? []) },
@@ -580,6 +585,7 @@ describe('WalletService currency derivation', () => {
     ) => (list ?? []).map((r) => ({ [field]: r.currencyCode, _sum: { amount: r.amount } }));
 
     const prisma = {
+      walletAdjustment: { findMany: jest.fn().mockResolvedValue([]), groupBy: jest.fn().mockResolvedValue([]), aggregate: jest.fn().mockResolvedValue({ _sum: { delta: null } }), create: jest.fn() },
       walletBalance: { findMany: jest.fn().mockResolvedValue(rows) },
       income: { groupBy: jest.fn().mockResolvedValue(groupSum(opts.income, 'currencyCode')) },
       expense: { groupBy: jest.fn().mockResolvedValue(groupSum(opts.expense, 'currencyCode')) },
@@ -667,5 +673,67 @@ describe('WalletService currency derivation', () => {
     const balances = res.accounts[0].balances;
 
     expect(balances.find((b) => b.currencyCode === 'USD')?.currentBalance).toBe(700);
+  });
+});
+
+describe('WalletService.createAdjustment (true-up)', () => {
+  function make(currentBalance: number, untracked = 0) {
+    const create = jest.fn().mockImplementation(async ({ data }) => ({
+      id: 'adj1',
+      createdAt: new Date('2026-10-25T10:00:00Z'),
+      ...data,
+    }));
+    const prisma = {
+      walletBalance: {
+        findMany: jest.fn().mockResolvedValue([{ currencyCode: 'PLN', isDeleted: false, initialAmount: currentBalance }]),
+      },
+      income: { groupBy: jest.fn().mockResolvedValue([]) },
+      expense: { groupBy: jest.fn().mockResolvedValue([]) },
+      currencyExchange: { groupBy: jest.fn().mockResolvedValue([]) },
+      accountTransfer: { groupBy: jest.fn().mockResolvedValue([]) },
+      walletAdjustment: {
+        groupBy: jest.fn().mockResolvedValue([]),
+        create,
+        aggregate: jest.fn().mockResolvedValue({ _sum: { delta: -untracked } }),
+      },
+    };
+    return { service: new WalletService(prisma as never), prisma, create };
+  }
+
+  it('stores the signed difference and reports untracked spend this month', async () => {
+    const { service, create } = make(100, 42);
+    const res = await service.createAdjustment('a1', 'u1', { currencyCode: 'pln', actualBalance: 58 });
+    expect(create.mock.calls[0][0].data).toMatchObject({
+      accountId: 'a1',
+      userId: 'u1',
+      currencyCode: 'PLN',
+      delta: -42,
+      balanceBefore: 100,
+      balanceAfter: 58,
+    });
+    expect(res.adjustment?.delta).toBe(-42);
+    expect(res.untrackedThisMonth).toBe(42);
+  });
+
+  it('writes nothing when the balance already matches', async () => {
+    const { service, create } = make(100);
+    const res = await service.createAdjustment('a1', 'u1', { currencyCode: 'PLN', actualBalance: 100 });
+    expect(create).not.toHaveBeenCalled();
+    expect(res.adjustment).toBeNull();
+  });
+
+  it('rejects a currency the account does not hold', async () => {
+    const { service } = make(100);
+    await expect(
+      service.createAdjustment('a1', 'u1', { currencyCode: 'USD', actualBalance: 5 }),
+    ).rejects.toThrow('Unknown wallet currency');
+  });
+
+  it('adds adjustments to the balance', async () => {
+    const { service, prisma } = make(100);
+    prisma.walletAdjustment.groupBy.mockResolvedValue([{ currencyCode: 'PLN', _sum: { delta: -10 } }]);
+    const { balances } = await service.getSummary('a1');
+    expect(balances[0].totalAdjustments).toBe(-10);
+    expect(balances[0].currentBalance).toBe(90);
   });
 });

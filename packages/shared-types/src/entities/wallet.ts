@@ -90,5 +90,7 @@ export interface WalletSummary {
   totalExchangedOut: number;
   totalTransferredIn: number;
   totalTransferredOut: number;
+  /** Signed balance corrections ("true-ups"). Absent from older servers; read as 0. */
+  totalAdjustments?: number;
   currentBalance: number;
 }

@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { getIntlLocale } from '@/i18n';
 import { WalletBalanceCard } from '@/components/wallet/WalletBalanceCard';
+import { CorrectBalanceSheet } from '@/components/wallet/CorrectBalanceSheet';
 
 export default function WalletScreen() {
   const [refreshing, setRefreshing] = useState(false);
@@ -25,6 +26,7 @@ export default function WalletScreen() {
   const styles = useStyles(createStyles);
 
   const [displayCurrency, setDisplayCurrency] = useState(userCurrency);
+  const [correcting, setCorrecting] = useState<{ currencyCode: string; currentBalance: number } | null>(null);
 
   const handleEditBalance = (currencyCode: string) => {
     const balance = walletBalances.find((b) => b.currencyCode === currencyCode && !b.isDeleted);
@@ -194,7 +196,35 @@ export default function WalletScreen() {
                         </Text>
                       </View>
                     )}
+                    {!!summary.totalAdjustments && (
+                      <View style={styles.detailRow}>
+                        <Text style={styles.detailLabel}>{t('wallet.correctBalance.title')}</Text>
+                        <Text
+                          style={[
+                            styles.detailValue,
+                            { color: summary.totalAdjustments > 0 ? theme.colors.success : theme.colors.danger },
+                          ]}
+                        >
+                          {summary.totalAdjustments > 0 ? '+' : ''}
+                          {formatCurrency(summary.totalAdjustments, summary.currencyCode)}
+                        </Text>
+                      </View>
+                    )}
                   </View>
+                  {canEdit && (
+                    <TouchableOpacity
+                      style={styles.correctButton}
+                      onPress={() =>
+                        setCorrecting({
+                          currencyCode: summary.currencyCode,
+                          currentBalance: summary.currentBalance,
+                        })
+                      }
+                      accessibilityRole="button"
+                    >
+                      <Text style={styles.correctButtonText}>{t('wallet.correctAction')}</Text>
+                    </TouchableOpacity>
+                  )}
                 </TouchableOpacity>
               ))}
             </View>
@@ -310,6 +340,13 @@ export default function WalletScreen() {
           </>
         )}
       </ScrollView>
+      {correcting && (
+        <CorrectBalanceSheet
+          currencyCode={correcting.currencyCode}
+          currentBalance={correcting.currentBalance}
+          onClose={() => setCorrecting(null)}
+        />
+      )}
     </SafeAreaView>
   );
 }
@@ -395,6 +432,12 @@ const createStyles = (theme: Theme) => ({
     marginTop: theme.spacing[2],
     textAlign: 'center' as const,
   },
+  correctButton: {
+    alignSelf: 'flex-start' as const,
+    marginTop: theme.spacing[3],
+    paddingVertical: theme.spacing[1],
+  },
+  correctButtonText: { ...theme.textStyles.bodyMedium, color: theme.colors.primary },
   primaryButton: {
     backgroundColor: theme.colors.primary,
     borderRadius: theme.borderRadius.lg,

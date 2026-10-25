@@ -5183,6 +5183,18 @@ In einem gemeinsamen Konto sehen alle Mitglieder die Überweisungen, die es ber�
 - **F: Beeinflusst eine Uberweisung meinen Geldborsensaldo?**
   **A:** Ja. Beim sendenden Konto wird der Saldo um den uberwiesenen Betrag reduziert ("Ubertragen gesendet"), beim empfangenden Konto wird er entsprechend erhoht ("Ubertragen erhalten"). Der Gesamtsaldo uber alle Konten bleibt gleich.
 
+## Saldo korrigieren
+
+Wenn der Saldo der Geldbörse nicht mehr zu deinem echten Geld passt — wegen kleiner Käufe, die du nicht erfasst hast —, musst du sie nicht suchen:
+
+1. Öffne **Einstellungen** > **Geldbörse** und tippe auf der Währungskarte auf **Korrigieren**
+2. Gib den **tatsächlichen Saldo** ein — die App zeigt die Differenz
+3. Tippe auf **Korrektur speichern**
+
+Die Differenz wird als Saldokorrektur gespeichert. Sie ist weder Ausgabe noch Einnahme, daher bleiben Budgets und Analysen unverändert. Fehlt Geld, zeigt die App, wie viel diesen Monat nicht erfasst wurde, und bietet **Erinnerungen zum Erfassen einrichten** an.
+
+> **Hinweis:** Zum Korrigieren ist eine Internetverbindung nötig. Betrachter und archivierte Reisekonten können den Saldo nicht korrigieren.
+
 ---
 
 *Siehe auch: [Ubersicht](./02-dashboard.md) | [Einstellungen](./11-settings.md)*

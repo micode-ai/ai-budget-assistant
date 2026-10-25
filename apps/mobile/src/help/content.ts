@@ -1883,6 +1883,18 @@ In a shared account, every member sees the transfers that touch it, whoever reco
 - **Q: Does a transfer affect my wallet balance?**
   **A:** Yes. The source account's wallet decreases and the destination account's wallet increases by the transferred amounts.
 
+## Correcting a Balance
+
+If the wallet has drifted from the money you really have — small purchases you never logged — you do not need to hunt for them:
+
+1. Go to **Settings** > **Wallet** and tap **Correct** on the currency card
+2. Type the **real balance** — the app shows the difference
+3. Tap **Save correction**
+
+The difference is recorded as a balance adjustment. It is not an expense or an income, so budgets and analytics stay unchanged. If money went missing, the app tells you how much went untracked this month and offers **Set up tracking reminders**.
+
+> **Note:** Correcting a balance needs an internet connection. Viewers and archived trip accounts cannot correct a balance.
+
 ---
 
 *See also: Dashboard | Settings*
@@ -7115,6 +7127,18 @@ iOS, Android, Web
 - **В: Считается ли перевод между счетами расходом или доходом?**
   **О:** Нет. Переводы между счетами отдельны от расходов и доходов — они просто перемещают средства между вашими счетами.
 
+## Исправление баланса
+
+Если баланс в кошельке разошёлся с реальными деньгами — из-за мелких покупок, которые вы не записали, — искать их не нужно:
+
+1. Откройте **Настройки** > **Кошелёк** и нажмите **Исправить** на карточке валюты
+2. Введите **реальный баланс** — приложение покажет разницу
+3. Нажмите **Сохранить корректировку**
+
+Разница сохраняется как корректировка баланса. Это не расход и не доход, поэтому бюджеты и аналитика не меняются. Если денег оказалось меньше, приложение покажет, сколько вы не записали в этом месяце, и предложит **Настроить напоминания о записях**.
+
+> **Примечание:** для исправления баланса нужно подключение к интернету. Наблюдатели и архивные счета поездок исправлять баланс не могут.
+
 ---
 
 *См. также: Главная | Настройки*
@@ -12346,6 +12370,18 @@ iOS, Android, Web
 - **П:** Чи впливає переказ на баланс гаманця?
   **В:** Так. Переказ зменшує баланс рахунку-відправника та збільшує баланс рахунку-отримувача. Загальний баланс по всіх рахунках залишається незмінним (за винятком різниці курсів при переказі між різними валютами).
 
+## Виправлення балансу
+
+Якщо баланс у гаманці розійшовся з реальними грошима — через дрібні покупки, які ви не записали, — шукати їх не потрібно:
+
+1. Відкрийте **Налаштування** > **Гаманець** і натисніть **Виправити** на картці валюти
+2. Введіть **реальний баланс** — застосунок покаже різницю
+3. Натисніть **Зберегти коригування**
+
+Різниця зберігається як коригування балансу. Це не витрата і не дохід, тому бюджети й аналітика не змінюються. Якщо грошей виявилося менше, застосунок покаже, скільки ви не записали цього місяця, і запропонує **Налаштувати нагадування про записи**.
+
+> **Примітка:** для виправлення балансу потрібне підключення до інтернету. Спостерігачі та архівні рахунки поїздок виправляти баланс не можуть.
+
 ---
 
 *Див. також: Головна | Налаштування*
@@ -17511,6 +17547,18 @@ Na koncie współdzielonym każdy członek widzi przelewy, które go dotyczą, n
 - **P: Czy przelew między kontami wpływa na saldo portfela?**
   **O:** Tak. Przelew zmniejsza saldo portfela na koncie źródłowym (Wysłano przelewem) i zwiększa saldo na koncie docelowym (Otrzymano przelewem). Łączna suma środków na wszystkich kontach pozostaje bez zmian.
 
+## Korekta salda
+
+Jeśli saldo w portfelu rozjechało się z pieniędzmi, które naprawdę masz — przez drobne zakupy, których nie zapisałeś — nie musisz ich szukać:
+
+1. Otwórz **Ustawienia** > **Portfel** i stuknij **Popraw** na karcie waluty
+2. Wpisz **rzeczywiste saldo** — aplikacja pokaże różnicę
+3. Stuknij **Zapisz korektę**
+
+Różnica zapisuje się jako korekta salda. Nie jest wydatkiem ani przychodem, więc budżety i analityka się nie zmieniają. Jeśli brakuje pieniędzy, aplikacja pokaże, ile w tym miesiącu nie zostało zapisane, i zaproponuje **Ustaw przypomnienia o zapisywaniu**.
+
+> **Uwaga:** korekta salda wymaga połączenia z internetem. Obserwatorzy i zarchiwizowane konta podróży nie mogą korygować salda.
+
 ---
 
 *Zobacz takze: Pulpit | Ustawienia*
@@ -22675,6 +22723,18 @@ In einem gemeinsamen Konto sehen alle Mitglieder die Überweisungen, die es ber�
 - **F: Beeinflusst eine Uberweisung meinen Geldborsensaldo?**
   **A:** Ja. Beim sendenden Konto wird der Saldo um den uberwiesenen Betrag reduziert ("Ubertragen gesendet"), beim empfangenden Konto wird er entsprechend erhoht ("Ubertragen erhalten"). Der Gesamtsaldo uber alle Konten bleibt gleich.
 
+## Saldo korrigieren
+
+Wenn der Saldo der Geldbörse nicht mehr zu deinem echten Geld passt — wegen kleiner Käufe, die du nicht erfasst hast —, musst du sie nicht suchen:
+
+1. Öffne **Einstellungen** > **Geldbörse** und tippe auf der Währungskarte auf **Korrigieren**
+2. Gib den **tatsächlichen Saldo** ein — die App zeigt die Differenz
+3. Tippe auf **Korrektur speichern**
+
+Die Differenz wird als Saldokorrektur gespeichert. Sie ist weder Ausgabe noch Einnahme, daher bleiben Budgets und Analysen unverändert. Fehlt Geld, zeigt die App, wie viel diesen Monat nicht erfasst wurde, und bietet **Erinnerungen zum Erfassen einrichten** an.
+
+> **Hinweis:** Zum Korrigieren ist eine Internetverbindung nötig. Betrachter und archivierte Reisekonten können den Saldo nicht korrigieren.
+
 ---
 
 *Siehe auch: Ubersicht | Einstellungen*
@@ -27818,6 +27878,18 @@ Los saldos de la billetera se recalculan automaticamente tras editar o eliminar.
 - **P: Una transferencia afecta el saldo de mi billetera?**
   **R:** Si. La cuenta origen vera una **Transferencia saliente** que reduce su saldo, y la cuenta destino vera una **Transferencia entrante** que aumenta su saldo. El saldo total entre ambas cuentas se mantiene igual (salvo diferencias por tasa de cambio si las monedas difieren).
 
+## Corregir el saldo
+
+Si el saldo de la billetera ya no coincide con el dinero que tienes de verdad — por pequeñas compras que no registraste —, no hace falta buscarlas:
+
+1. Abre **Ajustes** > **Billetera** y toca **Corregir** en la tarjeta de la divisa
+2. Escribe el **saldo real** — la app muestra la diferencia
+3. Toca **Guardar corrección**
+
+La diferencia se guarda como un ajuste de saldo. No es un gasto ni un ingreso, así que los presupuestos y la analítica no cambian. Si falta dinero, la app te dice cuánto quedó sin registrar este mes y ofrece **Configurar recordatorios de registro**.
+
+> **Nota:** para corregir el saldo hace falta conexión a internet. Los observadores y las cuentas de viaje archivadas no pueden corregir el saldo.
+
 ---
 
 *Ver tambien: Panel | Ajustes*
@@ -32946,6 +33018,18 @@ Dans un compte partagé, tous les membres voient les transferts qui le concernen
 
 - **Q : Un transfert affecte-t-il le solde du portefeuille ?**
   **R :** Oui. Le compte source voit son solde diminue du montant envoye (Transfert sortant), et le compte destination voit son solde augmente du montant recu (Transfert entrant). Le solde total tous comptes confondus reste inchange si la devise est la meme.
+
+## Corriger le solde
+
+Si le solde du portefeuille ne correspond plus à l'argent que vous avez réellement — à cause de petits achats non saisis —, inutile de les chercher :
+
+1. Ouvrez **Paramètres** > **Portefeuille** et touchez **Corriger** sur la carte de la devise
+2. Saisissez le **solde réel** — l'application affiche la différence
+3. Touchez **Enregistrer la correction**
+
+La différence est enregistrée comme un ajustement de solde. Ce n'est ni une dépense ni un revenu : les budgets et les analyses ne changent pas. S'il manque de l'argent, l'application indique combien n'a pas été saisi ce mois-ci et propose **Configurer les rappels de suivi**.
+
+> **Remarque :** la correction du solde nécessite une connexion internet. Les lecteurs et les comptes de voyage archivés ne peuvent pas corriger le solde.
 
 ---
 
@@ -38078,6 +38162,18 @@ iOS, Android, Web
 - **П: Ці лічыцца перавод паміж рахункамі выдаткам або даходам?**
   **А:** Не. Пераводы паміж рахункамі аддзелены ад выдаткаў і даходаў — яны проста перамяшчаюць сродкі паміж вашымі рахункамі.
 
+## Выпраўленне балансу
+
+Калі баланс у кашальку разышоўся з рэальнымі грашыма — праз дробныя пакупкі, якія вы не запісалі, — шукаць іх не трэба:
+
+1. Адкрыйце **Налады** > **Кашалёк** і націсніце **Выправіць** на картцы валюты
+2. Увядзіце **рэальны баланс** — праграма пакажа розніцу
+3. Націсніце **Захаваць карэкціроўку**
+
+Розніца захоўваецца як карэкціроўка балансу. Гэта не расход і не даход, таму бюджэты і аналітыка не мяняюцца. Калі грошай аказалася менш, праграма пакажа, колькі вы не запісалі ў гэтым месяцы, і прапануе **Наладзіць напаміны пра запісы**.
+
+> **Заўвага:** для выпраўлення балансу патрэбна падключэнне да інтэрнэту. Назіральнікі і архіўныя рахункі паездак выпраўляць баланс не могуць.
+
 ---
 
 *Гл. таксама: Галоўная | Налады*
@@ -43168,6 +43264,18 @@ In een gedeeld account zien alle leden de overboekingen die het raken, wie ze oo
 
 - **V: Beïnvloedt een overboeking mijn portemonnee-saldo?**
   **A:** Ja. De portemonnee van het bronaccount neemt af en de portemonnee van het doelaccount neemt toe met de overgeboekte bedragen.
+
+## Saldo corrigeren
+
+Als het saldo in je portemonnee niet meer klopt met het geld dat je echt hebt — door kleine aankopen die je niet hebt vastgelegd — hoef je ze niet te zoeken:
+
+1. Open **Instellingen** > **Portemonnee** en tik op **Corrigeren** op de valutakaart
+2. Vul het **werkelijke saldo** in — de app toont het verschil
+3. Tik op **Correctie opslaan**
+
+Het verschil wordt opgeslagen als saldocorrectie. Het is geen uitgave en geen inkomen, dus budgetten en analyses veranderen niet. Ontbreekt er geld, dan laat de app zien hoeveel deze maand niet is vastgelegd en biedt **Herinneringen voor bijhouden instellen** aan.
+
+> **Let op:** voor een saldocorrectie is een internetverbinding nodig. Kijkers en gearchiveerde reisrekeningen kunnen het saldo niet corrigeren.
 
 ---
 

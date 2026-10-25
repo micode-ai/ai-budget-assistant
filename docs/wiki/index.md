@@ -167,6 +167,8 @@ the section you came for — it states what must not break and why. A missing se
 ### Money movement and lists
 - [debts](features/debts.md) — lent/borrowed money as flagged expenses/incomes, repayments, the
   contact as a plain name
+- [wallet-balance-true-up](features/wallet-balance-true-up.md) — typing the real balance records one
+  signed adjustment that moves only the wallet, never spend or budgets
 - [wallet-currencies](features/wallet-currencies.md) — which currencies get a balance card, and why a
   hidden one stays hidden
 - [account-transfers](features/account-transfers.md) — moving money between accounts, and the only

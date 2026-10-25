@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { Platform } from 'react-native';
 import { MMKV } from 'react-native-mmkv';
 import { subscribeWithSelector } from 'zustand/middleware';
-import type { WalletBalance, CurrencyExchange, AccountTransfer, WalletSummary, Currency, WalletMonthlyDeltaPoint } from '@budget/shared-types';
+import type { CreateWalletAdjustmentResult, WalletBalance, CurrencyExchange, AccountTransfer, WalletSummary, Currency, WalletMonthlyDeltaPoint } from '@budget/shared-types';
 import {
   loadAllWalletBalances,
   getExpenseTotalsByCurrency,
@@ -56,6 +56,17 @@ function sumByCurrency<T>(
 // paints numbers on open instead of after a round trip. The current account is not
 // served from here — `walletSummary` below is computed locally and is exact.
 const accountSummariesStorage = new MMKV({ id: 'wallet-account-summaries' });
+
+const adjustmentKey = (accountId: string) => `adjustments:${accountId}`;
+
+function loadCachedAdjustmentTotals(accountId: string): Record<string, number> {
+  try {
+    const raw = accountSummariesStorage.getString(adjustmentKey(accountId));
+    return raw ? (JSON.parse(raw) as Record<string, number>) : {};
+  } catch {
+    return {};
+  }
+}
 const ACCOUNT_SUMMARIES_KEY = 'account_summaries';
 
 function loadCachedAccountSummaries(): Record<string, WalletSummary[]> {
@@ -90,8 +101,16 @@ interface WalletState {
    * balance, for the moment it took the pull to land.
    */
   lastPullAt: number | null;
+  /**
+   * Signed true-up totals per currency for the current account, from `GET /wallet/adjustments`.
+   * Cached in MMKV so the offline native summary still includes them.
+   */
+  adjustmentTotals: Record<string, number>;
 
   // Actions
+  refreshAdjustments: () => Promise<void>;
+  /** Online-only: the server computes the difference from its own balance. */
+  addAdjustment: (currencyCode: string, actualBalance: number) => Promise<CreateWalletAdjustmentResult>;
   loadWallet: () => Promise<void>;
   loadAccountSummaries: () => Promise<void>;
   loadMonthlyHistory: (months: 6 | 12) => Promise<void>;
@@ -180,6 +199,7 @@ export const useWalletStore = create<WalletState>()(
     isLoading: false,
     error: null,
     lastPullAt: null,
+    adjustmentTotals: {},
 
     loadAccountSummaries: async () => {
       try {
@@ -220,7 +240,7 @@ export const useWalletStore = create<WalletState>()(
 
         if (_walletAccountId !== accountId) {
           _walletAccountId = accountId;
-          set({ walletBalances: [], exchanges: [], transfers: [], walletSummary: [], monthlyHistory: [], lastPullAt: null });
+          set({ walletBalances: [], exchanges: [], transfers: [], walletSummary: [], monthlyHistory: [], lastPullAt: null, adjustmentTotals: loadCachedAdjustmentTotals(accountId) });
         }
 
         // 1. Load from local DB
@@ -244,10 +264,36 @@ export const useWalletStore = create<WalletState>()(
 
         // 4. Sync from server
         await syncWalletFromServer(set, get, accountId);
+        // True-ups live only on the server; pull their totals so the offline summary matches.
+        void get().refreshAdjustments();
       } catch (e) {
         console.error('Failed to load wallet:', e);
         set({ error: 'Failed to load wallet', isLoading: false });
       }
+    },
+
+    refreshAdjustments: async () => {
+      const accountId = useAccountStore.getState().currentAccountId;
+      if (!accountId) return;
+      try {
+        const rows = await api.getWalletAdjustments();
+        if (useAccountStore.getState().currentAccountId !== accountId) return;
+        const totals = sumByCurrency(rows, (r) => r.currencyCode, (r) => r.delta);
+        accountSummariesStorage.set(adjustmentKey(accountId), JSON.stringify(totals));
+        set({ adjustmentTotals: totals });
+        const summary = await get().computeWalletSummary();
+        if (useAccountStore.getState().currentAccountId !== accountId) return;
+        set({ walletSummary: summary });
+      } catch (e) {
+        // Expected offline; the cached totals stay in force (ABA-157).
+        console.warn('Wallet adjustments fetch failed, keeping cached totals:', e);
+      }
+    },
+
+    addAdjustment: async (currencyCode, actualBalance) => {
+      const result = await api.createWalletAdjustment({ currencyCode, actualBalance });
+      await get().refreshAdjustments();
+      return result;
     },
 
     setInitialBalance: (currencyCode, amount) => setInitialBalanceAction(set, get, currencyCode, amount),
@@ -376,7 +422,15 @@ export const useWalletStore = create<WalletState>()(
           initialAmount: b.initialAmount,
           isDeleted: !!b.isDeleted,
         })),
-        { incomeTotals, expenseTotals, exchangedIn, exchangedOut, transferredIn, transferredOut },
+        {
+          incomeTotals,
+          expenseTotals,
+          exchangedIn,
+          exchangedOut,
+          transferredIn,
+          transferredOut,
+          adjustments: get().adjustmentTotals,
+        },
       );
     },
 
@@ -390,7 +444,7 @@ export const useWalletStore = create<WalletState>()(
       // next user must not see the previous one's figures.
       accountSummariesStorage.delete(ACCOUNT_SUMMARIES_KEY);
       _walletAccountId = null;
-      set({ walletBalances: [], exchanges: [], transfers: [], walletSummary: [], accountSummaries: {}, monthlyHistory: [], selectedMonths: 6, isHistoryLoading: false, isLoading: false, error: null, lastPullAt: null });
+      set({ walletBalances: [], exchanges: [], transfers: [], walletSummary: [], accountSummaries: {}, monthlyHistory: [], selectedMonths: 6, isHistoryLoading: false, isLoading: false, error: null, lastPullAt: null, adjustmentTotals: {} });
     },
   })),
 );

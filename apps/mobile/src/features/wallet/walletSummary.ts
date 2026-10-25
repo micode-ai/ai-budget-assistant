@@ -11,6 +11,8 @@ export interface WalletMovementTotals {
   exchangedOut: CurrencyTotals;
   transferredIn: CurrencyTotals;
   transferredOut: CurrencyTotals;
+  /** Signed true-up corrections; optional so existing callers stay valid. */
+  adjustments?: CurrencyTotals;
 }
 
 export interface WalletBalanceRowInput {
@@ -40,6 +42,7 @@ export function buildWalletSummary(
     ...Object.keys(totals.exchangedOut),
     ...Object.keys(totals.transferredIn),
     ...Object.keys(totals.transferredOut),
+    ...Object.keys(totals.adjustments ?? {}),
   ]);
 
   return resolved.map((r) => {
@@ -49,6 +52,7 @@ export function buildWalletSummary(
     const totalExchangedOut = totals.exchangedOut[r.currencyCode] || 0;
     const totalTransferredIn = totals.transferredIn[r.currencyCode] || 0;
     const totalTransferredOut = totals.transferredOut[r.currencyCode] || 0;
+    const totalAdjustments = totals.adjustments?.[r.currencyCode] || 0;
 
     return {
       currencyCode: r.currencyCode as Currency,
@@ -59,6 +63,7 @@ export function buildWalletSummary(
       totalExchangedOut,
       totalTransferredIn,
       totalTransferredOut,
+      totalAdjustments,
       currentBalance:
         r.initialAmount +
         totalIncomes -
@@ -66,7 +71,8 @@ export function buildWalletSummary(
         totalExchangedIn -
         totalExchangedOut +
         totalTransferredIn -
-        totalTransferredOut,
+        totalTransferredOut +
+        totalAdjustments,
     };
   });
 }

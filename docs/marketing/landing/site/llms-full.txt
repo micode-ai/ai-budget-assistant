@@ -5199,6 +5199,18 @@ In a shared account, every member sees the transfers that touch it, whoever reco
 - **Q: Does a transfer affect my wallet balance?**
   **A:** Yes. The source account's wallet decreases and the destination account's wallet increases by the transferred amounts.
 
+## Correcting a Balance
+
+If the wallet has drifted from the money you really have — small purchases you never logged — you do not need to hunt for them:
+
+1. Go to **Settings** > **Wallet** and tap **Correct** on the currency card
+2. Type the **real balance** — the app shows the difference
+3. Tap **Save correction**
+
+The difference is recorded as a balance adjustment. It is not an expense or an income, so budgets and analytics stay unchanged. If money went missing, the app tells you how much went untracked this month and offers **Set up tracking reminders**.
+
+> **Note:** Correcting a balance needs an internet connection. Viewers and archived trip accounts cannot correct a balance.
+
 ---
 
 *See also: [Dashboard](./02-dashboard.md) | [Settings](./11-settings.md)*

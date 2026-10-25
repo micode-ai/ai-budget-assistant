@@ -5178,6 +5178,18 @@ Dans un compte partagé, tous les membres voient les transferts qui le concernen
 - **Q : Un transfert affecte-t-il le solde du portefeuille ?**
   **R :** Oui. Le compte source voit son solde diminue du montant envoye (Transfert sortant), et le compte destination voit son solde augmente du montant recu (Transfert entrant). Le solde total tous comptes confondus reste inchange si la devise est la meme.
 
+## Corriger le solde
+
+Si le solde du portefeuille ne correspond plus à l'argent que vous avez réellement — à cause de petits achats non saisis —, inutile de les chercher :
+
+1. Ouvrez **Paramètres** > **Portefeuille** et touchez **Corriger** sur la carte de la devise
+2. Saisissez le **solde réel** — l'application affiche la différence
+3. Touchez **Enregistrer la correction**
+
+La différence est enregistrée comme un ajustement de solde. Ce n'est ni une dépense ni un revenu : les budgets et les analyses ne changent pas. S'il manque de l'argent, l'application indique combien n'a pas été saisi ce mois-ci et propose **Configurer les rappels de suivi**.
+
+> **Remarque :** la correction du solde nécessite une connexion internet. Les lecteurs et les comptes de voyage archivés ne peuvent pas corriger le solde.
+
 ---
 
 *Voir aussi : [Tableau de bord](./02-dashboard.md) | [Parametres](./11-settings.md)*

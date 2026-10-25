@@ -223,6 +223,18 @@ Los saldos de la billetera se recalculan automaticamente tras editar o eliminar.
 - **P: Una transferencia afecta el saldo de mi billetera?**
   **R:** Si. La cuenta origen vera una **Transferencia saliente** que reduce su saldo, y la cuenta destino vera una **Transferencia entrante** que aumenta su saldo. El saldo total entre ambas cuentas se mantiene igual (salvo diferencias por tasa de cambio si las monedas difieren).
 
+## Corregir el saldo
+
+Si el saldo de la billetera ya no coincide con el dinero que tienes de verdad — por pequeñas compras que no registraste —, no hace falta buscarlas:
+
+1. Abre **Ajustes** > **Billetera** y toca **Corregir** en la tarjeta de la divisa
+2. Escribe el **saldo real** — la app muestra la diferencia
+3. Toca **Guardar corrección**
+
+La diferencia se guarda como un ajuste de saldo. No es un gasto ni un ingreso, así que los presupuestos y la analítica no cambian. Si falta dinero, la app te dice cuánto quedó sin registrar este mes y ofrece **Configurar recordatorios de registro**.
+
+> **Nota:** para corregir el saldo hace falta conexión a internet. Los observadores y las cuentas de viaje archivadas no pueden corregir el saldo.
+
 ---
 
 *Ver tambien: [Panel](./02-dashboard.md) | [Ajustes](./11-settings.md)*

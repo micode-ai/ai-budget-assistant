@@ -216,6 +216,7 @@ model User {
   ownedAccounts          Account[]               @relation("OwnedAccounts")
   accountMembers         AccountMember[]
   walletBalances         WalletBalance[]
+  walletAdjustments      WalletAdjustment[]
   currencyExchanges      CurrencyExchange[]
   accountTransfers       AccountTransfer[]
   subscription           Subscription?
@@ -394,6 +395,7 @@ model Account {
   categories                     Category[]
   syncLogs                       SyncLog[]
   walletBalances                 WalletBalance[]
+  walletAdjustments              WalletAdjustment[]
   currencyExchanges              CurrencyExchange[]
   transfersOut                   AccountTransfer[]               @relation("TransfersOut")
   transfersIn                    AccountTransfer[]               @relation("TransfersIn")
@@ -1234,6 +1236,26 @@ model WalletBalance {
   @@unique([accountId, clientId])
   @@index([accountId])
   @@map("wallet_balances")
+}
+
+/// A "true-up": the user typed the real balance and the signed difference was recorded.
+/// Deliberately NOT an Expense/Income, so no spend/budget/analytics total ever sees it.
+model WalletAdjustment {
+  id            String   @id @default(uuid())
+  accountId     String   @map("account_id")
+  userId        String   @map("user_id")
+  currencyCode  String   @map("currency_code")
+  delta         Decimal  @db.Decimal(12, 2)
+  balanceBefore Decimal  @map("balance_before") @db.Decimal(12, 2)
+  balanceAfter  Decimal  @map("balance_after") @db.Decimal(12, 2)
+  isDeleted     Boolean  @default(false) @map("is_deleted")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([accountId, currencyCode])
+  @@map("wallet_adjustments")
 }
 
 model CurrencyExchange {
