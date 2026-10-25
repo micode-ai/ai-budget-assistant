@@ -8,6 +8,45 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.35.0 - 2026-10-25
+
+**Wallet**
+
+- **Correct a balance by entering the real amount.** When a wallet's balance has drifted
+  from what is actually in the account, type the real figure and the app records the
+  difference as a correction that changes the wallet only, never your spending or income
+  totals (ABA-692).
+
+**Faster capture**
+
+- **A one-time tip after repeated manual entry.** After ten expenses typed by hand, the app
+  suggests a faster way in once: scanning a receipt, voice, the chat bots, a statement
+  import, or bank notifications on Android. Anyone already using one of them never sees it
+  (ABA-682).
+
+**Fixes**
+
+- **Categories stay put after an edit syncs.** The app now sends a transaction's category by
+  id, with the name only as a fallback, so a category that shares its name with another one
+  can no longer be swapped in on sync (ABA-668).
+- **Receipt lines show their quantity** on the confirm card and on the saved expense
+  (`2 × 3,49 zł`); a line whose unit price was never read shows `×2` instead of
+  `2 × 0,00 zł` (ABA-663).
+- **Expenses captured from bank notifications** (Android) are described by the shop name
+  alone, without an English "(auto-captured)" suffix in every language (ABA-695).
+
+**Already working before this update** (server-side, live for every app version)
+
+- **Income categories no longer vanish after re-assignment**: a category sent by name is
+  matched within its own type and live categories win over deleted ones (ABA-666).
+- **Receipts with a packaging deposit split by category correctly** — the deposit is counted
+  when the discount is checked (ABA-664).
+- **Community prices**: reads are switched on (they appear once enough receipts are in), and
+  recent receipts of consenting users are re-read so they count (ABA-642, ABA-662).
+- **A shorter group link**: `ai-budget.pl/g/…` (ABA-649).
+
+---
+
 ## 1.34.0 - 2026-10-10
 
 **Shared expense groups (new)**
