@@ -169,6 +169,7 @@ Bekijk en beheer al je uitgaven- en inkomstencategorieën op één plek.
 - **Een categorie verwijderen** — veeg op een categorie naar links of tik op het verwijderpictogram om deze te verwijderen
 - **Verwijderen is geblokkeerd** als de categorie gerelateerde uitgaven, inkomsten of budgetten heeft — je moet die records eerst opnieuw toewijzen of verwijderen
 - **Systeemcategorieën** kunnen ook worden verwijderd als ze geen gerelateerde records hebben
+- **Subcategorieën** — kies bij het maken of bewerken van een uitgavencategorie een **Hoofdcategorie** om deze onder een andere te plaatsen. Er zijn maar twee niveaus: een categorie die al subcategorieën heeft, kan zelf geen subcategorie worden, en de hoofdcategorie moet een uitgavencategorie van hetzelfde account zijn. Categoriekiezers tonen subcategorieën gegroepeerd onder hun hoofdcategorie. Een categorie met subcategorieën kan pas worden verwijderd als die zijn verplaatst of verwijderd.
 
 > **Opmerking:** Het verwijderen van een categorie is permanent en kan niet ongedaan worden gemaakt.
 

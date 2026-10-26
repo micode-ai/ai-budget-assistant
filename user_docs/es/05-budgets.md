@@ -66,6 +66,7 @@ Toca cualquier presupuesto para ver sus detalles completos:
   - Punto de color + nombre de categoría
   - Gastado / asignado
   - Barra de progreso por categoría (verde/amarillo/rojo)
+- **Subcategorías** — si una categoría asignada tiene subcategorías (por ejemplo Alimentación con Pan y Queso), su línea suma todo el grupo y muestra debajo un desglose por subcategoría, más una fila **Sin subcategoría** para los gastos registrados directamente en la categoría principal. El gasto de una subcategoría que también tiene su propia asignación cuenta en ambas líneas, pero el total general del presupuesto cuenta cada gasto una sola vez. La estructura actual de categorías se aplica también a periodos pasados, así que mover una categoría cambia las cifras anteriores.
 - **Período** — el rango de tiempo del presupuesto
 - **Umbral de alerta** — el punto de activación de la notificación (por ejemplo, 80%)
 - **Días restantes** — cuántos días quedan en el período actual

@@ -97,6 +97,7 @@ Grocery-store receipts often mix several kinds of items in one trip — food, ho
 - Bottle and can deposits are recognised and shown as their own category, so you can see how much of your spending is packaging you can get back.
 - This also counts toward your category budgets — a budget on a category that only ever shows up inside a receipt split, like Alcohol or a deposit budget, finally tracks correctly, and a Groceries budget no longer counts the household items or the deposit from the same receipt.
 - Sometimes none of your existing categories fit a group of items. When that happens, the app suggests a brand-new category, shown as a chip marked with a **+** (for example, "+ Household chemicals 10"). Nothing is created yet — tap **Change categories** to reassign its items to one of your existing categories instead, or leave it as suggested. The new category is only actually created once you save the receipt.
+- The app no longer invents a category that duplicates one you already have — a translation, a synonym or a part of an existing category (for example "Bread" next to "Groceries"). Such items go to your existing category or its subcategory; a new category is suggested only for a genuinely new kind of spending, and the app never creates subcategories for you.
 
 Works the same way whether you scan through the app or through the Telegram, WhatsApp, or Slack bots.
 

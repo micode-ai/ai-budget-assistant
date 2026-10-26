@@ -156,6 +156,7 @@ Visualiza y gestiona todas tus categorias de gastos e ingresos en un solo lugar.
 - **Eliminar una categoria** — desliza hacia la izquierda sobre una categoria o toca el icono de eliminar
 - **La eliminacion esta bloqueada** si la categoria tiene gastos, ingresos o presupuestos relacionados — primero debes reasignar o eliminar esos registros
 - **Las categorias del sistema** tambien pueden eliminarse si no tienen registros relacionados
+- **Subcategorías** — al crear o editar una categoría de gastos, elige una **Categoría principal** para colocarla dentro de otra. Solo hay dos niveles: una categoría que ya tiene subcategorías no puede convertirse en subcategoría, y la categoría principal debe ser una categoría de gastos de la misma cuenta. Los selectores de categoría muestran las subcategorías agrupadas bajo su categoría principal. Una categoría con subcategorías no se puede eliminar hasta que se muevan o se eliminen.
 
 > **Nota:** Eliminar una categoria es permanente y no se puede deshacer.
 

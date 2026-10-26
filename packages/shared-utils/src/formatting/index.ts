@@ -266,6 +266,18 @@ export {
   type CategoryAttribution,
 } from './category-attribution';
 
+// Deposit category name recognition (mirror of the API util)
+export { isDepositCategoryName } from './deposit-category';
+
+// Category tree — two-level hierarchy roll-up (mirror of the API util)
+export {
+  expandAllocatedCategoryIds,
+  rollUpAllocationSpend,
+  sortCategoriesAsTree,
+  type TreeCategory,
+  type AllocationRollUp,
+} from './category-tree';
+
 // ---------------------------------------------------------------------------
 // Safe-to-spend cashflow formula (single source of truth for API + mobile
 // offline fallback — must stay pure / no I/O).

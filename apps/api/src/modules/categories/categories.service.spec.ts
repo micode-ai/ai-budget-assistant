@@ -405,3 +405,131 @@ describe('CategoriesService.remove', () => {
     expect(prisma.category.update).toHaveBeenCalledWith({ where: { id: 'sys-cat' }, data: { isDeleted: true } });
   });
 });
+
+describe('CategoriesService parent validation (two-level hierarchy)', () => {
+  // Parent lookups carry `OR: [{id},{clientId}]` + isDeleted:false; the target
+  // category lookup is resolveCategory (AND form). Route them separately.
+  function setup(opts: { parent?: any; target?: any; children?: number } = {}) {
+    const ctx = makeService();
+    ctx.prisma.category.findFirst.mockImplementation(({ where }: any) => {
+      if (where?.AND) return Promise.resolve(opts.target ?? null);
+      if (where?.OR && where?.accountId) return Promise.resolve(opts.parent ?? null);
+      return Promise.resolve(null);
+    });
+    ctx.prisma.category.count.mockResolvedValue(opts.children ?? 0);
+    return ctx;
+  }
+  const top = { id: 'p-1', clientId: 'p-local', accountId: 'acc-1', name: 'Food', type: 'expense', parentId: null };
+
+  it('create stores the RESOLVED parent PK when given a clientId', async () => {
+    const { service, prisma } = setup({ parent: top });
+    await service.create('acc-1', 'user-1', { name: 'Cafe', type: 'expense', parentId: 'p-local' });
+    expect(prisma.category.findFirst).toHaveBeenCalledWith({
+      where: { accountId: 'acc-1', isDeleted: false, OR: [{ id: 'p-local' }, { clientId: 'p-local' }] },
+    });
+    expect(prisma.category.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({ parentId: 'p-1' }),
+    });
+  });
+
+  it.each([
+    ['the parent already has a parent', { ...top, parentId: 'root' }],
+    ['the parent is in another account / missing', null],
+    ['the parent type differs', { ...top, type: 'income' }],
+    ['the parent is a deposit category', { ...top, name: 'Deposit' }],
+  ])('create rejects when %s', async (_label, parent) => {
+    const { service, prisma } = setup({ parent });
+    await expect(
+      service.create('acc-1', 'user-1', { name: 'Cafe', type: 'expense', parentId: 'p-1' }),
+    ).rejects.toThrow('Invalid parent category');
+    expect(prisma.category.create).not.toHaveBeenCalled();
+  });
+
+  it('update rejects giving a parent to a category with live children', async () => {
+    const target = { id: 'cat-1', accountId: 'acc-1', name: 'Mid', type: 'expense', parentId: null };
+    const { service, prisma } = setup({ parent: top, target, children: 2 });
+    await expect(service.update('acc-1', 'cat-1', { parentId: 'p-1' })).rejects.toThrow('Invalid parent category');
+    expect(prisma.category.update).not.toHaveBeenCalled();
+  });
+
+  it('update rejects parentId equal to its own id', async () => {
+    const target = { id: 'p-1', accountId: 'acc-1', name: 'Food', type: 'expense', parentId: null };
+    const { service, prisma } = setup({ parent: top, target });
+    await expect(service.update('acc-1', 'p-1', { parentId: 'p-1' })).rejects.toThrow('Invalid parent category');
+    expect(prisma.category.update).not.toHaveBeenCalled();
+  });
+
+  it('update writes the resolved parent PK', async () => {
+    const target = { id: 'cat-1', accountId: 'acc-1', name: 'Cafe', type: 'expense', parentId: null };
+    const { service, prisma } = setup({ parent: top, target });
+    await service.update('acc-1', 'cat-1', { parentId: 'p-local' });
+    expect(prisma.category.update).toHaveBeenCalledWith({ where: { id: 'cat-1' }, data: { parentId: 'p-1' } });
+  });
+
+  it('update with parentId null clears it', async () => {
+    const target = { id: 'cat-1', accountId: 'acc-1', name: 'Cafe', type: 'expense', parentId: 'p-1' };
+    const { service, prisma } = setup({ target });
+    await service.update('acc-1', 'cat-1', { parentId: null });
+    expect(prisma.category.update).toHaveBeenCalledWith({ where: { id: 'cat-1' }, data: { parentId: null } });
+  });
+
+  it('update without the field leaves parentId untouched', async () => {
+    const target = { id: 'cat-1', accountId: 'acc-1', name: 'Cafe', type: 'expense', parentId: 'p-1' };
+    const { service, prisma } = setup({ target });
+    await service.update('acc-1', 'cat-1', { color: '#000' });
+    expect(prisma.category.update.mock.calls[0][0].data).not.toHaveProperty('parentId');
+  });
+
+  it('create rejects a deposit category becoming a child', async () => {
+    const { service, prisma } = setup({ parent: top });
+    await expect(
+      service.create('acc-1', 'user-1', { name: 'Deposit', type: 'expense', parentId: 'p-1' }),
+    ).rejects.toThrow('Invalid parent category');
+    expect(prisma.category.create).not.toHaveBeenCalled();
+  });
+
+  it('update rejects giving a parent to a system category (cross-tenant)', async () => {
+    const target = { id: 'sys-1', accountId: null, name: 'Cafe', type: 'expense', parentId: null };
+    const { service, prisma } = setup({ parent: top, target });
+    await expect(service.update('acc-1', 'sys-1', { parentId: 'p-1' })).rejects.toThrow('Invalid parent category');
+    expect(prisma.category.update).not.toHaveBeenCalled();
+  });
+
+  it('update rejects giving a parent to a deposit category', async () => {
+    const target = { id: 'cat-1', accountId: 'acc-1', name: 'Deposit', type: 'expense', parentId: null };
+    const { service, prisma } = setup({ parent: top, target });
+    await expect(service.update('acc-1', 'cat-1', { parentId: 'p-1' })).rejects.toThrow('Invalid parent category');
+    expect(prisma.category.update).not.toHaveBeenCalled();
+  });
+
+  it('revive writes the resolved parent PK', async () => {
+    const { service, prisma } = setup({ parent: top });
+    prisma.category.findFirst.mockImplementation(({ where }: any) =>
+      Promise.resolve(
+        where?.OR && where?.isDeleted === false
+          ? top
+          : { id: 'cat-old', name: 'Cafe', type: 'expense', isDeleted: true },
+      ),
+    );
+    await service.create('acc-1', 'user-1', { name: 'Cafe', type: 'expense', parentId: 'p-local' });
+    expect(prisma.category.update).toHaveBeenCalledWith({
+      where: { id: 'cat-old' },
+      data: expect.objectContaining({ isDeleted: false, parentId: 'p-1' }),
+    });
+  });
+
+  it('revive rejects a deposit category becoming a child', async () => {
+    const { service, prisma } = setup({ parent: top });
+    prisma.category.findFirst.mockImplementation(({ where }: any) =>
+      Promise.resolve(
+        where?.OR && where?.isDeleted === false
+          ? top
+          : { id: 'cat-old', name: 'Deposit', type: 'expense', isDeleted: true },
+      ),
+    );
+    await expect(
+      service.create('acc-1', 'user-1', { name: 'Deposit', type: 'expense', parentId: 'p-1' }),
+    ).rejects.toThrow('Invalid parent category');
+    expect(prisma.category.update).not.toHaveBeenCalled();
+  });
+});

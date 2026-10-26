@@ -4,6 +4,7 @@ import { PrismaService } from '../../database/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
 
 const mockPrisma = {
+  category: { findMany: jest.fn() },
   budget: { findMany: jest.fn() },
   expense: { aggregate: jest.fn(), groupBy: jest.fn(), findMany: jest.fn() },
   budgetAlert: {
@@ -50,6 +51,7 @@ describe('BudgetAlertService — category thresholds', () => {
     mockPrisma.expense.aggregate.mockResolvedValue({ _sum: { amount: 0 } });
     mockPrisma.expense.groupBy.mockResolvedValue([]);
     mockPrisma.expense.findMany.mockResolvedValue([]);
+    mockPrisma.category.findMany.mockResolvedValue([]);
     mockPrisma.budgetAlert.createMany.mockResolvedValue({ count: 1 });
     mockPrisma.budgetAlert.update.mockResolvedValue({});
     mockNotifications.sendToUser.mockResolvedValue(true);
@@ -74,6 +76,31 @@ describe('BudgetAlertService — category thresholds', () => {
     }).compile();
 
     service = module.get<BudgetAlertService>(BudgetAlertService);
+  });
+
+  it('fires a PARENT allocation alert when a child spend crosses 80%', async () => {
+    mockPrisma.category.findMany.mockResolvedValue([
+      { id: 'cat-1', parentId: null, isDeleted: false, name: 'Food', color: null },
+      { id: 'cat-child', parentId: 'cat-1', isDeleted: false, name: 'Cafe', color: null },
+    ]);
+    mockPrisma.budget.findMany.mockResolvedValue([makeBudget()]);
+    mockPrisma.expense.findMany.mockResolvedValue([
+      { amount: 85, categoryId: 'cat-child', categorySplits: [] },
+    ]);
+
+    await service.checkBudgetsForAccount('acc-1', 'PLN');
+
+    const parentCalls = mockNotifications.sendToUser.mock.calls.filter(
+      (c: any[]) => c[3]?.categoryId === 'cat-1',
+    );
+    expect(parentCalls.map((c: any[]) => c[3].thresholdPercentage)).toEqual([50, 80]);
+    expect(mockPrisma.budgetAlert.createMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: [expect.objectContaining({ categoryId: 'cat-1', thresholdPercentage: 80, currentSpent: 85 })],
+      }),
+    );
+    const where = mockPrisma.expense.findMany.mock.calls[0][0].where;
+    expect(where.OR[0]).toEqual({ categoryId: { in: ['cat-1', 'cat-child'] } });
   });
 
   it('fires no category alert when category spend is 0%', async () => {

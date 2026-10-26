@@ -296,6 +296,19 @@ describe('finalizeReceipt category splits', () => {
     return service.finalizeReceipt({ ...TWO_ITEM_RECEIPT, ...overrides }, [], 'acc-1', 'user-1');
   }
 
+  it('selects parentId and passes the tree to the classifier', async () => {
+    const cats = [
+      { id: 'c-alc', name: 'Alkohol', parentId: null },
+      { id: 'c-beer', name: 'Piwo', parentId: 'c-alc' },
+    ];
+    prisma.category.findMany.mockResolvedValue(cats);
+    await runFixture();
+    expect(prisma.category.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ select: { id: true, name: true, parentId: true } }),
+    );
+    expect(categorySplitterMock.classify).toHaveBeenCalledWith(expect.objectContaining({ categories: cats }));
+  });
+
   it('always exposes categorySplits, even when classification finds nothing', async () => {
     const result = await runFixture();
     expect(categorySplitterMock.classify).toHaveBeenCalled();

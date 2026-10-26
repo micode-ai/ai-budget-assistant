@@ -156,6 +156,7 @@ Zeige und verwalte alle deine Ausgaben- und Einnahmenkategorien an einem Ort.
 - **Kategorie loschen** — wische eine Kategorie nach links oder tippe auf das Loschsymbol
 - **Loschen gesperrt**, wenn die Kategorie zugehorige Ausgaben, Einnahmen oder Budgets hat — diese Datensatze mussen zuerst neu zugewiesen oder geloscht werden
 - **Systemkategorien** konnen ebenfalls geloscht werden, sofern keine zugehorigen Datensatze vorhanden sind
+- **Unterkategorien** — beim Erstellen oder Bearbeiten einer Ausgabenkategorie wählst du eine **Oberkategorie**, um sie unter einer anderen einzuordnen. Es gibt nur zwei Ebenen: Eine Kategorie, die bereits Unterkategorien hat, kann nicht selbst Unterkategorie werden, und die Oberkategorie muss eine Ausgabenkategorie desselben Kontos sein. Kategorieauswahlen zeigen Unterkategorien unter ihrer Oberkategorie gruppiert. Eine Kategorie mit Unterkategorien kann erst gelöscht werden, wenn diese verschoben oder entfernt sind.
 
 > **Hinweis:** Das Loschen einer Kategorie ist dauerhaft und kann nicht ruckgangig gemacht werden.
 

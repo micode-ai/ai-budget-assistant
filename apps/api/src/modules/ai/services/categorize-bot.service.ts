@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CategorizeSuggestionsService } from './categorize-suggestions.service';
 import { CategoriesService } from '../../categories/categories.service';
 import { ExpenseBulkService } from '../../expenses/expense-bulk.service';
+import { findEquivalentCategory } from '../../../common/utils/category-equivalence';
 import { BotCategorizeStep, buildBotSteps } from '../utils/categorize-bot-plan.util';
 
 export interface BotCategorizePlan {
@@ -59,10 +60,23 @@ export class CategorizeBotService {
     let categoryName = step.name;
 
     if (step.isNew) {
-      const category = await this.categoriesService.create(accountId, userId, {
-        name: step.name,
-        type: 'expense',
-      });
+      // A proposal that only translates or re-cases a category the account
+      // already has must reuse it (its own id/name), not mint a duplicate.
+      const existing = (await this.categoriesService.findAll(accountId)) as Array<{
+        id: string;
+        name: string;
+        type?: string | null;
+      }>;
+      const equivalent = findEquivalentCategory(
+        step.name,
+        existing.filter((c) => !c.type || c.type === 'expense'),
+      );
+      const category =
+        equivalent ??
+        (await this.categoriesService.create(accountId, userId, {
+          name: step.name,
+          type: 'expense',
+        }));
       categoryId = category.id;
       categoryName = category.name;
     }

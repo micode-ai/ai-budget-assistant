@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { useCategoryStore } from '../stores/categoryStore';
 import { getCategoryDisplayName } from '../utils/categoryDisplayName';
 import { useTheme, useStyles, type Theme } from '../theme';
-import { formatCurrency } from '@budget/shared-utils';
+import { formatCurrency, sortCategoriesAsTree } from '@budget/shared-utils';
 import { CreateCategoryModal } from './CreateCategoryModal';
 
 export interface BudgetAllocationRow {
@@ -108,10 +108,10 @@ export const BudgetCategoryEditor: React.FC<BudgetCategoryEditorProps> = ({
       {showCategoryPicker && (
         <View style={styles.pickerContainer}>
           <View style={styles.categoryGrid}>
-            {availableCategories.map((cat) => (
+            {sortCategoriesAsTree(availableCategories).map(({ category: cat, depth }) => (
               <TouchableOpacity
                 key={cat.id}
-                style={styles.categoryChip}
+                style={[styles.categoryChip, depth === 1 && styles.childCategoryChip]}
                 onPress={() => addCategory(cat.id)}
               >
                 <View style={[styles.chipColorDot, { backgroundColor: cat.color || '#6B7280' }]} />
@@ -216,6 +216,7 @@ const createStyles = (theme: Theme) => ({
     flexWrap: 'wrap' as const,
     gap: theme.spacing[2],
   },
+  childCategoryChip: { marginLeft: theme.spacing[3] },
   categoryChip: {
     flexDirection: 'row' as const,
     alignItems: 'center' as const,

@@ -270,6 +270,7 @@ export async function remapCategoryId(
   );
   await executeSql('UPDATE expenses SET category_id = ? WHERE category_id = ?', [newId, oldId]);
   await executeSql('UPDATE incomes SET category_id = ? WHERE category_id = ?', [newId, oldId]);
+  await executeSql('UPDATE categories SET parent_id = ? WHERE parent_id = ?', [newId, oldId]);
   await executeSql('UPDATE budget_categories SET category_id = ? WHERE category_id = ?', [newId, oldId]);
   await executeSql('UPDATE expense_category_splits SET category_id = ? WHERE category_id = ?', [newId, oldId]);
 }

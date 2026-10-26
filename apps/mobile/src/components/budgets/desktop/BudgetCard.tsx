@@ -6,6 +6,7 @@ import { getIntlLocale } from '@/i18n';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { formatBudgetPeriodRange } from '@/features/budgets/periodNav';
 import { DEFAULT_ALERT_THRESHOLD, type ClassifiedBudget } from '@/features/budgets/budgetGrouping';
+import { SubcategoryBreakdownRows } from '@/components/budgets/SubcategoryBreakdownRows';
 import { SegmentedProgressBar } from '@/components/shared/SegmentedProgressBar';
 
 interface Props {
@@ -109,6 +110,22 @@ export function BudgetCard({ classified, now, anchorDay, onPress }: Props) {
         barColor={barColor}
         currencyCode={budget.currencyCode}
       />
+
+      {(progress?.categoryBreakdown ?? [])
+        .filter((c) => (c.subcategories?.length ?? 0) > 0)
+        .map((c) => (
+          <View key={c.categoryId} style={styles.subBlock}>
+            <View style={styles.subHeader}>
+              <Text style={styles.subParentName} numberOfLines={1}>
+                {c.categoryName}
+              </Text>
+              <Text style={styles.subParentAmount}>
+                {formatCurrency(c.spent, budget.currencyCode)}
+              </Text>
+            </View>
+            <SubcategoryBreakdownRows category={c} currencyCode={budget.currencyCode} compact />
+          </View>
+        ))}
 
       {progress && progress.remaining > 0 && (
         <Text style={styles.remainingText}>
@@ -233,6 +250,28 @@ const createStyles = (theme: Theme) => ({
   ofText: {
     ...theme.textStyles.bodyMedium,
     color: theme.colors.textTertiary,
+  },
+  subBlock: {
+    marginTop: theme.spacing[3],
+    paddingTop: theme.spacing[3],
+    borderTopWidth: 1,
+    borderTopColor: theme.colors.border,
+  },
+  subHeader: {
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+  },
+  subParentName: {
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.textPrimary,
+    flex: 1,
+  },
+  subParentAmount: {
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.textPrimary,
+    fontVariant: ['tabular-nums' as const],
   },
   remainingText: {
     ...theme.textStyles.bodySmMedium,

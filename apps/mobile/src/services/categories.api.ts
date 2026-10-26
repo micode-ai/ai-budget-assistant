@@ -23,7 +23,17 @@ export const categoriesApi = {
     });
   },
 
-  updateCategory(id: string, data: { name?: string; icon?: string; color?: string; coicopDivision?: CoicopDivision | null }) {
+  updateCategory(
+    id: string,
+    data: {
+      name?: string;
+      icon?: string;
+      color?: string;
+      coicopDivision?: CoicopDivision | null;
+      /** A server id or a clientId; `null` clears the parent. */
+      parentId?: string | null;
+    },
+  ) {
     return httpClient.request<Category>(`/categories/${id}`, {
       method: 'PATCH',
       body: JSON.stringify(data),

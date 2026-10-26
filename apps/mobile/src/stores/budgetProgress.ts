@@ -13,7 +13,12 @@
  * around that shared formula so the mobile UI can render offline.
  */
 import type { Budget, BudgetProgress, BudgetCategoryProgress } from '@budget/shared-types';
-import { projectBudgetSpend, computeBudgetPeriod } from '@budget/shared-utils';
+import {
+  projectBudgetSpend,
+  computeBudgetPeriod,
+  expandAllocatedCategoryIds,
+  rollUpAllocationSpend,
+} from '@budget/shared-utils';
 import { useExpenseStore } from './expenseStore';
 import { useCategoryStore } from './categoryStore';
 import { useExchangeRateStore } from './exchangeRateStore';
@@ -55,8 +60,12 @@ export function computeBudgetProgress(
   const allocations = budget.categoryAllocations || [];
   const hasMultiCategory = allocations.length > 0;
 
+  const allocIds = allocations.map((a) => a.categoryId);
+  const categories = useCategoryStore.getState().categories;
+  // Expanded set: an allocated parent also counts its subcategories. Each
+  // expense part is still summed once, so the overall `spent` never doubles.
   const categorySet = hasMultiCategory
-    ? new Set(allocations.map((a) => a.categoryId))
+    ? expandAllocatedCategoryIds(allocIds, categories)
     : null;
 
   const attribution = attributeBudgetSpend(periodExpenses, categorySet);
@@ -101,10 +110,21 @@ export function computeBudgetProgress(
   // Per-category breakdown for multi-category budgets
   let categoryBreakdown: BudgetCategoryProgress[] | undefined;
   if (hasMultiCategory) {
-    const categoriesState = useCategoryStore.getState();
+    const rolled = rollUpAllocationSpend(attribution.byCategory, allocIds, categories);
+    const catById = new Map(categories.map((c) => [c.id, c]));
     categoryBreakdown = allocations.map((alloc) => {
-      const catSpent = attribution.byCategory.get(alloc.categoryId) ?? 0;
-      const cat = categoriesState.categories.find((c) => c.id === alloc.categoryId);
+      const roll = rolled.get(alloc.categoryId);
+      const catSpent = roll?.spent ?? 0;
+      const cat = catById.get(alloc.categoryId);
+      const subcategories = (roll?.children ?? []).map((ch) => {
+        const child = catById.get(ch.categoryId);
+        return {
+          categoryId: ch.categoryId,
+          categoryName: categoryLabel(child),
+          categoryColor: child?.color,
+          spent: ch.spent,
+        };
+      });
       return {
         categoryId: alloc.categoryId,
         categoryName: categoryLabel(cat),
@@ -114,6 +134,8 @@ export function computeBudgetProgress(
         remaining: Math.max(0, alloc.amount - catSpent),
         percentageUsed: alloc.amount > 0 ? (catSpent / alloc.amount) * 100 : 0,
         isOverBudget: catSpent > alloc.amount,
+        ownSpent: roll?.ownSpent ?? catSpent,
+        subcategories,
       };
     });
   }

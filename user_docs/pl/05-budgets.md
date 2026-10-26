@@ -66,6 +66,7 @@ Dotknij dowolny budżet, aby zobaczyć pełne szczegóły:
   - Kolorowa kropka + nazwa kategorii
   - Wydano / przydzielono
   - Pasek postępu kategorii (zielony/żółty/czerwony)
+- **Podkategorie** — jeśli przydzielona kategoria ma podkategorie (np. Jedzenie z Pieczywem i Serem), jej linia sumuje całą grupę i pokazuje poniżej podział na podkategorie oraz wiersz **Bez podkategorii** dla wydatków przypisanych bezpośrednio do kategorii nadrzędnej. Wydatki w podkategorii, która ma też własny przydział, liczą się w obu liniach, ale łączna suma budżetu liczy każdy wydatek tylko raz. Obecna struktura kategorii obowiązuje także dla minionych okresów, więc przeniesienie kategorii zmienia wcześniejsze kwoty.
 - **Okres** — zakres czasowy budżetu
 - **Próg powiadomienia** — punkt wyzwalania powiadomienia (np. 80%)
 - **Pozostało dni** — ile dni pozostało w bieżącym okresie

@@ -363,3 +363,58 @@ describe('ReceiptCategorySplitService — the deposit category is not assignable
     expect(result.proposals).toEqual([{ name: 'Zakupy spożywcze', itemIndexes: [0, 1] }]);
   });
 });
+
+describe('ReceiptCategorySplitService — category tree', () => {
+  const TREE = [
+    { id: 'c-beer', name: 'Piwo', parentId: 'c-alc' },
+    { id: 'c-alc', name: 'Alkohol', parentId: null },
+    { id: 'c-food', name: 'Groceries', parentId: null },
+  ];
+
+  it('renders a child as "Parent > Child" and a parent plainly, the enum keeps own names', async () => {
+    const { service, create } = makeService({ completion: { assignments: [] } });
+    await service.classify({ accountId: 'a1', items: ITEMS, categories: TREE });
+
+    const call = create.mock.calls[0][0];
+    const prompt = call.messages[0].content as string;
+    expect(prompt).toContain('Alkohol > Piwo');
+    expect(prompt).toMatch(/^Alkohol$/m);
+    const names = call.response_format.json_schema.schema.properties.assignments.items.properties.category.enum;
+    expect(names.sort()).toEqual(['Alkohol', 'Groceries', 'Piwo']);
+  });
+
+  it('assigns a child by its own name', async () => {
+    const { service } = makeService({ completion: { assignments: [{ line: 2, category: 'Piwo' }] } });
+    const result = await service.classify({ accountId: 'a1', items: ITEMS, categories: TREE });
+    expect(result.assignments.get(1)).toBe('c-beer');
+  });
+
+  it('assigns the lines of an equivalent proposal to the existing category instead', async () => {
+    const { service } = makeService({
+      completion: { assignments: [], newCategories: [{ name: 'Zakupy spożywcze', lines: [1, 2] }] },
+    });
+    const result = await service.classify({ accountId: 'a1', items: ITEMS, categories: TREE });
+    expect(result.proposals).toEqual([]);
+    expect(result.assignments.get(0)).toBe('c-food');
+    expect(result.assignments.get(1)).toBe('c-food');
+  });
+
+  it('still returns a proposal with no equivalent', async () => {
+    const { service } = makeService({
+      completion: { assignments: [], newCategories: [{ name: 'Pet food', lines: [1] }] },
+    });
+    const result = await service.classify({ accountId: 'a1', items: ITEMS, categories: TREE });
+    expect(result.proposals).toEqual([{ name: 'Pet food', itemIndexes: [0] }]);
+  });
+
+  it('tells the model to prefer the most specific category and never overlap', async () => {
+    const { service, create } = makeService();
+    await service.classify({ accountId: 'a1', items: ITEMS, categories: TREE });
+    const prompt = create.mock.calls[0][0].messages[0].content as string;
+    expect(prompt).not.toMatch(/even when a broad category could hold it/);
+    expect(prompt).toMatch(/most specific listed category/);
+    expect(prompt).toMatch(/subcategory over its parent/);
+    expect(prompt).toMatch(/never a part, synonym or translation of a listed category/i);
+    expect(prompt).toMatch(/never a subcategory/i);
+  });
+});

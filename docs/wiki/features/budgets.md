@@ -1,7 +1,7 @@
 # Budgets
 
 *Hub: [api](../api.md) · [mobile-app](../mobile-app.md) · related:
-[receipt-category-split](receipt-category-split.md)*
+[receipt-category-split](receipt-category-split.md), [category-hierarchy](category-hierarchy.md)*
 
 ## What this is
 
@@ -92,6 +92,13 @@ the same `[50, 80, 100]` thresholds as the overall budget, checked at the end of
 match category alerts. Mark before send, roll back on failure — the same pattern as the overall
 alerts. Reuses the `budget_alert` type and `notifyBudgetAlerts` preference.
 
+**Allocations roll up through the category tree.** A budget's allocated category ids are expanded
+with each allocated parent's live children before attribution, on the server (`budget-category-tree.util.ts`,
+`budgets.service.ts`, `budget-alert.service.ts`) and on the phone (`budgetProgress.ts`). A child's money
+appears in both lines only when parent AND child are each allocated; overall spent counts each expense
+once. The CURRENT tree applies to history and alerts, so re-parenting moves past figures. See
+[category-hierarchy](category-hierarchy.md).
+
 **Planned expenses and split receivables never count.** `getProgress` and `getHistory` filter
 `isPlanned: false` (purchase requests' planned expenses) and spread `EXCLUDE_SPLIT_RECEIVABLE` — a
 friend's share of a split bill is money owed back, not spend.
@@ -119,4 +126,5 @@ over a `budgets` array. The public `useBudgetStore` API is unchanged across its 
 ## History
 
 ABA-171 (period util) · ABA-314 (category threshold alerts) · ABA-383 (financial month, wave 1) ·
-ABA-523 (projection) · ABA-529 (split-aware progress) · ABA-537 (store split).
+ABA-523 (projection) · ABA-529 (split-aware progress) · ABA-537 (store split) · category
+hierarchy roll-up [ABA-696](https://github.com/micode-ai/ai-budget-assistant/issues/729).

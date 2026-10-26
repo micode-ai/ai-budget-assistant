@@ -66,6 +66,7 @@ Appuyez sur un budget pour voir ses détails complets :
   - Point de couleur + nom de catégorie
   - Dépensé / alloué
   - Barre de progression par catégorie (vert/jaune/rouge)
+- **Sous-catégories** — si une catégorie allouée a des sous-catégories (par exemple Alimentation avec Pain et Fromage), sa ligne additionne tout le groupe et affiche dessous une répartition par sous-catégorie, plus une ligne **Sans sous-catégorie** pour les dépenses classées directement dans la catégorie parente. Une dépense d'une sous-catégorie également allouée séparément compte dans les deux lignes, mais le total global du budget ne compte chaque dépense qu'une seule fois. La structure actuelle des catégories s'applique aussi aux périodes passées : déplacer une catégorie modifie donc les chiffres antérieurs.
 - **Période** — la plage temporelle du budget
 - **Seuil d'alerte** — le point de déclenchement de la notification (par ex. 80 %)
 - **Jours restants** — combien de jours restent dans la période en cours

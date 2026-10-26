@@ -32,7 +32,7 @@ import { useRecurringExpenseFields } from '@/hooks/useRecurringExpenseFields';
 import * as tripExpenseShareRepository from '@/db/tripExpenseShareRepository';
 import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
 import { categoryLabel } from '@/utils/entityLabel';
-import { formatDate, formatCurrency, generateUUID, SUPPORTED_CURRENCIES } from '@budget/shared-utils';
+import { formatDate, formatCurrency, generateUUID, SUPPORTED_CURRENCIES, sortCategoriesAsTree } from '@budget/shared-utils';
 import { getIntlLocale } from '@/i18n';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { GroupTransactionBanner } from '@/components/groups/GroupTransactionBanner';
@@ -440,11 +440,12 @@ export const ExpenseDetailsCard = forwardRef<ExpenseDetailsCardHandle, ExpenseDe
           <Text style={styles.detailLabel}>{t('expenseDetail.category')}</Text>
           {isEditing ? (
             <View style={styles.categoryGrid}>
-              {getExpenseCategories().map((cat) => (
+              {sortCategoriesAsTree(getExpenseCategories()).map(({ category: cat, depth }) => (
                 <TouchableOpacity
                   key={cat.id}
                   style={[
                     styles.categoryChip,
+                    depth === 1 && styles.childCategoryChip,
                     editCategory === cat.id && {
                       backgroundColor: cat.color,
                       borderColor: cat.color,
@@ -746,6 +747,7 @@ const createStyles = (theme: Theme) => ({
     gap: theme.spacing[2],
     marginTop: theme.spacing[1],
   },
+  childCategoryChip: { marginLeft: theme.spacing[3] },
   categoryChip: {
     width: '31%' as const,
     paddingHorizontal: theme.spacing[2],

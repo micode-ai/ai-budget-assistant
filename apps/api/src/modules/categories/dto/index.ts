@@ -45,7 +45,7 @@ export class UpdateCategoryDto {
 
   @IsOptional()
   @IsString()
-  parentId?: string;
+  parentId?: string | null;
 
   @IsOptional()
   @IsString()

@@ -8,6 +8,10 @@ import { logCacheUsage } from '../utils/log-cache-usage';
 import { sanitizeForPrompt } from '../utils/sanitize';
 import { depositCategoryName, isDepositCategoryName } from '../../../common/utils/deposit-category';
 import { getDefaultCategories } from '../../accounts/default-categories';
+import { sortCategoriesAsTree } from '../../../common/utils/category-tree';
+import { findEquivalentCategory } from '../../../common/utils/category-equivalence';
+
+type TreeCategory = { id: string; name: string; parentId?: string | null };
 
 export interface ClassifyLine {
   index: number;
@@ -147,7 +151,7 @@ export class ReceiptCategorySplitService {
   async classify(params: {
     accountId: string;
     items: ClassifyLine[];
-    categories: Array<{ id: string; name: string }>;
+    categories: TreeCategory[];
     language?: string;
   }): Promise<ClassifyResult> {
     const { accountId, items, categories, language } = params;
@@ -213,11 +217,20 @@ export class ReceiptCategorySplitService {
 
   private async classifyWithModel(
     lines: ClassifyLine[],
-    categories: Array<{ id: string; name: string }>,
+    categories: TreeCategory[],
     language?: string,
   ): Promise<ClassifyResult> {
     const numbered = lines.map((line, i) => `${i + 1}. ${sanitizeForPrompt(line.label)}`).join('\n');
-    const categoryNames = categories.map((c) => c.name).join(', ');
+    // A child is DISPLAYED as "Parent > Child"; the model still answers with a
+    // category's own name, so the response enum below stays the plain names.
+    const nameById = new Map(categories.map((c) => [c.id, c.name]));
+    const categoryNames = sortCategoriesAsTree(categories)
+      .map(({ category, depth }) =>
+        depth === 1 && category.parentId && nameById.has(category.parentId)
+          ? `${nameById.get(category.parentId)} > ${category.name}`
+          : category.name,
+      )
+      .join('\n');
     // Standard spending categories this account does not have yet, in the
     // owner's language: the names a new category should take instead of the
     // model inventing one. Income defaults and the deposit name are not
@@ -235,14 +248,16 @@ export class ReceiptCategorySplitService {
 Lines:
 ${numbered}
 
-Categories: ${categoryNames}
+Categories (a child is shown as "Parent > Child"; answer with the category's own name, e.g. just "Child"):
+${categoryNames}
 Standard category names (for a new category): ${standardNames}
 
 Put each confidently classified line in "assignments" (its line number and one of the categories above), and each group of lines that needs a new category in "newCategories" (the new name and its line numbers).
 Use only the category names listed, spelled exactly as given.
 Omit a line entirely if you are not confident.
-Assign a line only to a listed category whose meaning genuinely covers that product. A category that merely shares a generic word with it is NOT a fit — food or everyday shopping never belongs in, say, a building-supplies category just because both are "purchases" ("Zakupy …"). When no listed category genuinely fits a group of ordinary lines, put them in "newCategories" under one of the standard category names above (or, if none fits, a short name in ${languageName(language)}) instead of forcing them into a listed one.
-Alcohol, tobacco, household chemicals, cosmetics, pet supplies and baby goods are each a separate kind of spending. NEVER put such a line in a general groceries or food category. Assign it to a listed category that names its kind, and when no listed category names it, group those lines into a new one in "newCategories" — up to ${MAX_PROPOSED_CATEGORIES}, each named in ${languageName(language)} as a short noun phrase, never restating a listed name. Beer, wine and spirits are alcohol, not groceries. Lines that genuinely fit a listed category go in "assignments"; leave "newCategories" empty when every line fits a listed category.
+Assign each line to the most specific listed category that covers it: a subcategory over its parent when one fits, otherwise the parent (milk goes to a groceries category when there is no dairy subcategory). A category that merely shares a generic word with the product is NOT a fit — food or everyday shopping never belongs in, say, a building-supplies category just because both are "purchases" ("Zakupy …").
+Propose a new category in "newCategories" only for a kind of spending that no listed category covers — never a part, synonym or translation of a listed category, and never a subcategory. When a group of ordinary lines fits no listed category, use one of the standard category names above (or, if none fits, a short name in ${languageName(language)}).
+Alcohol, tobacco, household chemicals, cosmetics, pet supplies and baby goods are each a separate kind of spending. NEVER put such a line in a general groceries or food category. Assign it to a listed category (or its subcategory) that names its kind, and when no listed category names it, group those lines into a new one in "newCategories" — up to ${MAX_PROPOSED_CATEGORIES}, each named in ${languageName(language)} as a short noun phrase. Beer, wine and spirits are alcohol, not groceries. Lines that fit a listed category go in "assignments"; leave "newCategories" empty when every line fits a listed category.
 Do not return any amounts, prices, totals or percentages.`;
 
     const response = await this.openai.chat.completions.create({
@@ -255,7 +270,13 @@ Do not return any amounts, prices, totals or percentages.`;
     logCacheUsage(this.logger, 'receipt-category-split', response.usage);
     const parsed = JSON.parse(response.choices[0]?.message?.content || '{}');
     const assignments = this.validateAssignments(parsed?.assignments, lines, categories);
-    const proposals = this.validateProposals(parsed?.newCategories, lines, categories, new Set(assignments.keys()));
+    const proposals = this.validateProposals(
+      parsed?.newCategories,
+      lines,
+      categories,
+      new Set(assignments.keys()),
+      assignments,
+    );
     return { assignments, proposals };
   }
 
@@ -266,7 +287,7 @@ Do not return any amounts, prices, totals or percentages.`;
   private validateAssignments(
     raw: unknown,
     lines: ClassifyLine[],
-    categories: Array<{ id: string; name: string }>,
+    categories: TreeCategory[],
   ): Map<number, string> {
     const result = new Map<number, string>();
     if (!Array.isArray(raw)) return result;
@@ -295,12 +316,14 @@ Do not return any amounts, prices, totals or percentages.`;
   private validateProposals(
     raw: unknown,
     lines: ClassifyLine[],
-    categories: Array<{ id: string; name: string }>,
+    categories: TreeCategory[],
     claimed: Set<number>,
+    assignments: Map<number, string>,
   ): ProposedCategory[] {
     if (!Array.isArray(raw)) return [];
 
-    const taken = new Set(categories.map((c) => c.name.trim().toLowerCase()));
+    // Names proposed earlier in this response, so a repeat is dropped.
+    const taken = new Set<string>();
     const result: ProposedCategory[] = [];
 
     for (const entry of raw) {
@@ -315,6 +338,20 @@ Do not return any amounts, prices, totals or percentages.`;
       // A name with no letter at all is a number, a code or punctuation.
       if (!/\p{L}/u.test(name)) continue;
       if (taken.has(name.toLowerCase())) continue;
+      // A proposal that restates, translates or equals a listed category is not
+      // new: its unclaimed lines go to that category instead of being dropped.
+      const equivalent = findEquivalentCategory(name, categories);
+      if (equivalent) {
+        for (const rawLine of Array.isArray(entry?.lines) ? entry.lines : []) {
+          const lineNumber = Number(rawLine);
+          if (!Number.isInteger(lineNumber) || lineNumber < 1 || lineNumber > lines.length) continue;
+          const index = lines[lineNumber - 1].index;
+          if (claimed.has(index)) continue;
+          claimed.add(index);
+          assignments.set(index, equivalent.id);
+        }
+        continue;
+      }
       // The deposit category is ours and is appended by the finalizer, so a
       // proposal must never mint a second one. `taken` cannot catch this: the
       // real deposit category is filtered out of the list handed to the model

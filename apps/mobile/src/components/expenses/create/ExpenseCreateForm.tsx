@@ -33,7 +33,7 @@ import { useDebtExpenseFields } from '@/hooks/useDebtExpenseFields';
 import { useRecurringExpenseFields } from '@/hooks/useRecurringExpenseFields';
 import { useCategorySplitEditor } from '@/hooks/useCategorySplitEditor';
 import { insertSplit } from '@/db/splitRepository';
-import { SUPPORTED_CURRENCIES, generateUUID, formatDate } from '@budget/shared-utils';
+import { SUPPORTED_CURRENCIES, generateUUID, formatDate, sortCategoriesAsTree } from '@budget/shared-utils';
 import type { Currency, ExpenseCategorySplit, ShareType } from '@budget/shared-types';
 import { getIntlLocale } from '@/i18n';
 import { useTheme, useStyles, type Theme } from '@/theme';
@@ -375,11 +375,12 @@ export function ExpenseCreateForm({ initial, onDone }: ExpenseCreateFormProps) {
           <View style={styles.fieldContainer}>
             <Text style={styles.fieldLabel}>{t('expenseNew.category')}</Text>
             <View style={styles.categoryGrid}>
-              {getExpenseCategories().map((cat) => (
+              {sortCategoriesAsTree(getExpenseCategories()).map(({ category: cat, depth }) => (
                 <TouchableOpacity
                   key={cat.id}
                   style={[
                     styles.categoryChip,
+                    depth === 1 && styles.childCategoryChip,
                     selectedCategory === cat.id && cat.color && {
                       backgroundColor: cat.color,
                       borderColor: cat.color,
@@ -572,6 +573,7 @@ const createStyles = (theme: Theme) => ({
     alignItems: 'center' as const,
     justifyContent: 'center' as const,
   },
+  childCategoryChip: { marginLeft: theme.spacing[3] },
   addCategoryChip: {
     borderStyle: 'dashed' as const,
     borderColor: theme.colors.primary,

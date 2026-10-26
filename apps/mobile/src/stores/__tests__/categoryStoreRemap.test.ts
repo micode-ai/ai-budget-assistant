@@ -42,6 +42,7 @@ const mockUpsert = jest.fn();
 const mockRemap = jest.fn();
 const mockGetByClientId = jest.fn();
 const mockGetById = jest.fn();
+const mockDeleteDb = jest.fn().mockResolvedValue(undefined);
 jest.mock('@/db/categoryRepository', () => ({
   getCategoryByNameExcludingId: jest.fn().mockResolvedValue(null),
   mergeCategoryInto: jest.fn().mockResolvedValue(undefined),
@@ -51,7 +52,7 @@ jest.mock('@/db/categoryRepository', () => ({
   getCategoryByClientId: (...a: any[]) => mockGetByClientId(...a),
   getCategoryById: (...a: any[]) => mockGetById(...a),
   categoryExistsById: jest.fn().mockResolvedValue(true),
-  deleteCategory: jest.fn().mockResolvedValue(undefined),
+  deleteCategory: (...a: any[]) => mockDeleteDb(...a),
   getCategoryByNameFromDb: jest.fn().mockResolvedValue(null),
 }));
 
@@ -125,5 +126,44 @@ describe('categoryStore.createCategory — adopts the server id', () => {
 
     expect(mockRemap).not.toHaveBeenCalled();
     expect(created.id).toBe(created.clientId);
+  });
+});
+
+describe('categoryStore.createCategory — hierarchy needs the server', () => {
+  const parent = { id: 'p1', name: 'Food', type: 'expense', accountId: 'acc-1' } as any;
+  const refusal = (status: number) => Object.assign(new Error('refused'), { status });
+
+  it.each([400, 409])('rolls the local row back and rethrows on a %i', async (status) => {
+    useCategoryStore.setState({ categories: [parent], isInitialized: true, isLoading: false });
+    mockGetAll.mockResolvedValue([parent, { id: 'x', name: 'Kawa' }]);
+    (api.createCategory as jest.Mock).mockRejectedValue(refusal(status));
+
+    await expect(
+      useCategoryStore.getState().createCategory('Kawa', 'expense', undefined, undefined, 'p1'),
+    ).rejects.toMatchObject({ status });
+
+    expect(mockDeleteDb).toHaveBeenCalledTimes(1);
+    expect(useCategoryStore.getState().categories).toEqual([parent]);
+  });
+
+  it('rolls back a create that carries a parent when the server is unreachable', async () => {
+    useCategoryStore.setState({ categories: [parent], isInitialized: true, isLoading: false });
+    (api.createCategory as jest.Mock).mockRejectedValue(new TypeError('Network request failed'));
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+
+    await expect(
+      useCategoryStore.getState().createCategory('Kawa', 'expense', undefined, undefined, 'p1'),
+    ).rejects.toThrow('Network request failed');
+
+    expect(mockDeleteDb).toHaveBeenCalledTimes(1);
+    expect(useCategoryStore.getState().categories).toEqual([parent]);
+    warn.mockRestore();
+  });
+
+  it('still keeps a parentless create when offline', async () => {
+    (api.createCategory as jest.Mock).mockRejectedValue(new TypeError('Network request failed'));
+    const created = await useCategoryStore.getState().createCategory('Kawa', 'expense');
+    expect(created.name).toBe('Kawa');
+    expect(mockDeleteDb).not.toHaveBeenCalled();
   });
 });

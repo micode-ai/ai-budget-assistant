@@ -4035,6 +4035,7 @@ Kassenbons vom Supermarkt enthalten oft mehrere Arten von Artikeln in einem Eink
 - Pfand für Flaschen und Dosen wird erkannt und als eigene Kategorie angezeigt, damit du siehst, wie viel deiner Ausgaben aus Verpackung besteht, die du zurückbekommst.
 - Das zählt jetzt auch für deine Kategorie-Budgets — ein Budget für eine Kategorie, die nur innerhalb einer Beleg-Aufteilung vorkommt, etwa Alkohol oder Pfand, wird endlich korrekt erfasst, und ein Lebensmittel-Budget zählt die Haushaltsartikel oder das Pfand vom selben Beleg nicht mehr mit.
 - Manchmal passt keine deiner bestehenden Kategorien zu einer Gruppe von Artikeln. In diesem Fall schlägt die App eine brandneue Kategorie vor, angezeigt als Chip mit einem **+**-Zeichen (zum Beispiel „+ Haushaltschemie 10"). Sie wird noch nicht angelegt — tippe auf **Kategorien ändern**, um ihre Artikel stattdessen einer bestehenden Kategorie zuzuweisen oder sie wie vorgeschlagen zu belassen. Die neue Kategorie wird erst angelegt, wenn du den Beleg speicherst.
+- Die App erfindet keine Kategorie mehr, die eine vorhandene doppelt — eine Übersetzung, ein Synonym oder einen Teil einer bestehenden Kategorie (z. B. „Brot“ neben „Lebensmittel“). Solche Artikel landen in deiner bestehenden Kategorie oder deren Unterkategorie; eine neue Kategorie wird nur für eine wirklich neue Art von Ausgaben vorgeschlagen, und Unterkategorien legt die App nie selbst an.
 
 Funktioniert genauso, egal ob du über die App oder über die Telegram-, WhatsApp- oder Slack-Bots scannst.
 
@@ -4265,6 +4266,7 @@ Tippe auf ein beliebiges Budget, um die vollständigen Details zu sehen:
   - Farbpunkt + Kategoriename
   - Ausgegeben / zugeteilt
   - Kategoriefortschrittsbalken (grün/gelb/rot)
+- **Unterkategorien** — hat eine zugeteilte Kategorie Unterkategorien (z. B. Lebensmittel mit Brot und Käse), summiert ihre Zeile die ganze Gruppe und zeigt darunter eine Aufschlüsselung nach Unterkategorie sowie eine Zeile **Ohne Unterkategorie** für Ausgaben, die direkt der Oberkategorie zugeordnet sind. Ausgaben in einer Unterkategorie, die auch einzeln zugeteilt ist, zählen in beiden Zeilen, die Gesamtsumme des Budgets zählt jede Ausgabe aber nur einmal. Die aktuelle Kategoriestruktur gilt auch für vergangene Zeiträume, daher ändert das Verschieben einer Kategorie frühere Werte.
 - **Zeitraum** — der Zeitbereich des Budgets
 - **Warnschwelle** — der Benachrichtigungsauslösepunkt (z.B. 80%)
 - **Verbleibende Tage** — wie viele Tage im aktuellen Zeitraum verbleiben
@@ -5356,6 +5358,7 @@ Zeige und verwalte alle deine Ausgaben- und Einnahmenkategorien an einem Ort.
 - **Kategorie loschen** — wische eine Kategorie nach links oder tippe auf das Loschsymbol
 - **Loschen gesperrt**, wenn die Kategorie zugehorige Ausgaben, Einnahmen oder Budgets hat — diese Datensatze mussen zuerst neu zugewiesen oder geloscht werden
 - **Systemkategorien** konnen ebenfalls geloscht werden, sofern keine zugehorigen Datensatze vorhanden sind
+- **Unterkategorien** — beim Erstellen oder Bearbeiten einer Ausgabenkategorie wählst du eine **Oberkategorie**, um sie unter einer anderen einzuordnen. Es gibt nur zwei Ebenen: Eine Kategorie, die bereits Unterkategorien hat, kann nicht selbst Unterkategorie werden, und die Oberkategorie muss eine Ausgabenkategorie desselben Kontos sein. Kategorieauswahlen zeigen Unterkategorien unter ihrer Oberkategorie gruppiert. Eine Kategorie mit Unterkategorien kann erst gelöscht werden, wenn diese verschoben oder entfernt sind.
 
 > **Hinweis:** Das Loschen einer Kategorie ist dauerhaft und kann nicht ruckgangig gemacht werden.
 

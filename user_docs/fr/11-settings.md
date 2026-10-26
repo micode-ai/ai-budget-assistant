@@ -156,6 +156,7 @@ Visualisez et gerez toutes vos categories de depenses et de revenus en un seul e
 - **Supprimer une categorie** — faites glisser vers la gauche sur une categorie ou appuyez sur l'icone de suppression
 - **La suppression est bloquee** si la categorie a des depenses, des revenus ou des budgets associes — vous devez d'abord reassigner ou supprimer ces enregistrements
 - **Les categories systeme** peuvent egalement etre supprimees si elles n'ont aucun enregistrement associe
+- **Sous-catégories** — lors de la création ou de la modification d'une catégorie de dépenses, choisissez une **Catégorie parente** pour la ranger sous une autre. Il n'y a que deux niveaux : une catégorie qui a déjà des sous-catégories ne peut pas devenir elle-même une sous-catégorie, et la catégorie parente doit être une catégorie de dépenses du même compte. Les sélecteurs de catégorie affichent les sous-catégories regroupées sous leur parente. Une catégorie ayant des sous-catégories ne peut pas être supprimée tant qu'elles n'ont pas été déplacées ou supprimées.
 
 > **Note :** La suppression d'une categorie est definitive et ne peut pas etre annulee.
 

@@ -97,6 +97,7 @@ Kassabonnen van de supermarkt combineren vaak meerdere soorten aankopen in één
 - Statiegeld voor flessen en blikjes wordt herkend en als eigen categorie weergegeven, zodat je ziet hoeveel van je uitgaven verpakking is die je terugkrijgt.
 - Dit telt nu ook mee voor je categoriebudgetten — een budget op een categorie die alleen binnen een bonverdeling voorkomt, zoals Alcohol of statiegeld, wordt eindelijk correct bijgehouden, en een Boodschappen-budget telt de huishoudelijke producten of het statiegeld van dezelfde bon niet meer mee.
 - Soms past geen van je bestaande categorieën bij een groep items. In dat geval stelt de app een gloednieuwe categorie voor, weergegeven als een chip met een **+**-teken (bijvoorbeeld "+ Schoonmaakmiddelen 10"). Die wordt nog niet aangemaakt — tik op **Categorieën wijzigen** om de items ervan aan een bestaande categorie toe te wijzen, of hem te laten zoals voorgesteld. De nieuwe categorie wordt pas echt aangemaakt zodra je de bon opslaat.
+- De app verzint geen categorie meer die een bestaande dubbel doet: een vertaling, een synoniem of een deel van een bestaande categorie (bijvoorbeeld "Brood" naast "Boodschappen"). Zulke items gaan naar je bestaande categorie of de subcategorie ervan; een nieuwe categorie wordt alleen voorgesteld voor een echt nieuw soort uitgave, en subcategorieën maakt de app nooit zelf aan.
 
 Werkt hetzelfde of je nu scant via de app of via de Telegram-, WhatsApp- of Slack-bots.
 

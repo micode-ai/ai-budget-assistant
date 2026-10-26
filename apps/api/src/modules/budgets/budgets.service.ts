@@ -8,6 +8,8 @@ import { shiftFinancialMonth } from '../../common/utils/financial-month';
 import { logFireAndForget } from '../../common/utils/fire-and-forget';
 import { attributeToCategories, attributableAmountForCategories } from '../../common/utils/category-attribution';
 import { EXCLUDE_SPLIT_RECEIVABLE, categoryOrSplitFilter } from '../../common/utils/expense-filters';
+import { expandAllocatedCategoryIds, rollUpAllocationSpend } from '../../common/utils/category-tree';
+import { loadExpenseCategoryTree, BudgetTreeCategory } from './budget-category-tree.util';
 
 export { computeBudgetPeriod };
 
@@ -275,6 +277,8 @@ export class BudgetsService {
       isOverBudget: boolean;
     }[] = [];
 
+    const tree = categoryIds ? await this.loadCategoryTree(accountId) : [];
+
     for (let i = 0; i < periodsCount; i++) {
       // Step back i periods. Never use setMonth() here: on the 31st it rolls
       // forward into the next month and silently repeats a period.
@@ -322,9 +326,11 @@ export class BudgetsService {
         });
         actual = Number(spent._sum?.amount || 0);
       } else {
-        const categorySet = new Set<string>(categoryIds);
+        // Current tree for every period: a child's money counts under its
+        // parent allocation even in a period before the child existed.
+        const categorySet = expandAllocatedCategoryIds(categoryIds, tree);
 
-        Object.assign(whereExpenses, categoryOrSplitFilter(categoryIds));
+        Object.assign(whereExpenses, categoryOrSplitFilter([...categorySet]));
 
         const rows = await this.prisma.expense.findMany({
           where: whereExpenses,
@@ -360,6 +366,10 @@ export class BudgetsService {
 
     // Return in chronological order (oldest first)
     return results.reverse();
+  }
+
+  private async loadCategoryTree(accountId: string): Promise<BudgetTreeCategory[]> {
+    return loadExpenseCategoryTree(this.prisma, accountId);
   }
 
   /**
@@ -412,6 +422,7 @@ export class BudgetsService {
     let spentAmount: number;
     let dailyTotals: number[];
     let spendingMap: Map<string, number> | null = null;
+    let tree: BudgetTreeCategory[] = [];
 
     // Branch on `categoryIds` itself rather than on a derived set:
     // `strictNullChecks` is on and TypeScript cannot correlate a derived
@@ -433,9 +444,13 @@ export class BudgetsService {
       });
       dailyTotals = dailyGroups.map((g) => Number(g._sum?.amount || 0));
     } else {
-      const categorySet = new Set<string>(categoryIds);
+      tree = await this.loadCategoryTree(accountId);
+      // Allocated ids plus their live children: an expense filed under a child
+      // counts against the parent allocation. Each attributed part is still
+      // summed once below, so a child allocated on its own is not doubled.
+      const categorySet = expandAllocatedCategoryIds(categoryIds, tree);
 
-      Object.assign(whereExpenses, categoryOrSplitFilter(categoryIds));
+      Object.assign(whereExpenses, categoryOrSplitFilter([...categorySet]));
 
       const rows = await this.prisma.expense.findMany({
         where: whereExpenses,
@@ -520,8 +535,16 @@ export class BudgetsService {
       // driven by the same `allocations.length > 0`.
       const spending = spendingMap ?? new Map<string, number>();
 
+      const rollUp = rollUpAllocationSpend(
+        spending,
+        allocations.map((a: any) => a.categoryId),
+        tree,
+      );
+      const treeById = new Map(tree.map((c) => [c.id, c]));
+
       categoryBreakdown = allocations.map((alloc: any) => {
-        const catSpent = spending.get(alloc.categoryId) || 0;
+        const line = rollUp.get(alloc.categoryId);
+        const catSpent = line?.spent ?? 0;
         const catAllocated = Number(alloc.amount);
         return {
           categoryId: alloc.categoryId,
@@ -532,6 +555,13 @@ export class BudgetsService {
           remaining: Math.max(0, catAllocated - catSpent),
           percentageUsed: catAllocated > 0 ? (catSpent / catAllocated) * 100 : 0,
           isOverBudget: catSpent > catAllocated,
+          ownSpent: line?.ownSpent ?? 0,
+          subcategories: (line?.children ?? []).map((c) => ({
+            categoryId: c.categoryId,
+            categoryName: treeById.get(c.categoryId)?.name ?? 'Unknown',
+            categoryColor: treeById.get(c.categoryId)?.color ?? undefined,
+            spent: c.spent,
+          })),
         };
       });
     }

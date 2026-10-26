@@ -30,9 +30,13 @@ function makePrisma(opts: { existing?: Array<{ id: string; name: string; type: s
     return { id: row.id };
   });
 
-  const prisma: any = { category: { findFirst, create } };
+  const findMany = jest.fn(async ({ where }: any) =>
+    existing.filter((c) => c.type === where.type).map((c) => ({ id: c.id, name: c.name })),
+  );
 
-  return { prisma, findFirst, create, existing };
+  const prisma: any = { category: { findFirst, findMany, create } };
+
+  return { prisma, findFirst, findMany, create, existing };
 }
 
 const preload = (prisma: any, rows: any[], cache = new Map<string, string | null>()) =>
@@ -75,6 +79,17 @@ describe('preloadCategories', () => {
 
     expect(create).not.toHaveBeenCalled();
     expect(cache.get('expense:food')).toBe('cat-food');
+  });
+
+  it('maps a translated name onto the existing equivalent category', async () => {
+    const { prisma, create } = makePrisma({
+      existing: [{ id: 'cat-groceries', name: 'Groceries', type: 'expense' }],
+    });
+
+    const cache = await preload(prisma, [{ kind: 'expense', suggestedCategoryName: 'Zakupy spożywcze' }]);
+
+    expect(create).not.toHaveBeenCalled();
+    expect(cache.get('expense:zakupy spożywcze')).toBe('cat-groceries');
   });
 
   it('resolves a repeated name once, however many rows use it', async () => {

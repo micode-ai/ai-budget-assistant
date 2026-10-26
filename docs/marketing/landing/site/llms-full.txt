@@ -4036,6 +4036,7 @@ Grocery-store receipts often mix several kinds of items in one trip — food, ho
 - Bottle and can deposits are recognised and shown as their own category, so you can see how much of your spending is packaging you can get back.
 - This also counts toward your category budgets — a budget on a category that only ever shows up inside a receipt split, like Alcohol or a deposit budget, finally tracks correctly, and a Groceries budget no longer counts the household items or the deposit from the same receipt.
 - Sometimes none of your existing categories fit a group of items. When that happens, the app suggests a brand-new category, shown as a chip marked with a **+** (for example, "+ Household chemicals 10"). Nothing is created yet — tap **Change categories** to reassign its items to one of your existing categories instead, or leave it as suggested. The new category is only actually created once you save the receipt.
+- The app no longer invents a category that duplicates one you already have — a translation, a synonym or a part of an existing category (for example "Bread" next to "Groceries"). Such items go to your existing category or its subcategory; a new category is suggested only for a genuinely new kind of spending, and the app never creates subcategories for you.
 
 Works the same way whether you scan through the app or through the Telegram, WhatsApp, or Slack bots.
 
@@ -4267,6 +4268,7 @@ Tap any budget to see its full details:
   - Color dot + category name
   - Spent / allocated amounts
   - Per-category progress bar (green/yellow/red based on usage)
+- **Subcategories** — if a category you allocated has subcategories (for example Groceries with Bread and Cheese), its line adds up the whole group and shows a breakdown by subcategory underneath, plus a **Without subcategory** row for spending filed directly under the parent. Spending in a subcategory that is also allocated on its own counts in both lines, but the budget's overall total counts every expense only once. The current category structure is used for past periods too, so moving a category changes earlier figures.
 - **Period** — the budget's time range
 - **Alert Threshold** — the notification trigger point (e.g., 80%)
 - **Days Remaining** — how many days left in the current period
@@ -5385,6 +5387,7 @@ View and manage all your expense and income categories in one place.
 - **Delete a category** — swipe left on a category or tap the delete icon to remove it
 - **Deletion is blocked** if the category has any related expenses, incomes, or budgets — you must reassign or delete those records first
 - **System categories** can also be deleted if they have no related records
+- **Subcategories** — when you create or edit an expense category, choose a **Parent category** to file it under another one. There are two levels only: a category that already has subcategories cannot become a subcategory itself, and a parent must be an expense category of the same account. Category pickers show subcategories grouped under their parent. A category with subcategories cannot be deleted until they are moved or removed.
 
 > **Note:** Deleting a category is permanent and cannot be undone.
 

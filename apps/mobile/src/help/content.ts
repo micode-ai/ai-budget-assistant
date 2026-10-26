@@ -688,6 +688,7 @@ Grocery-store receipts often mix several kinds of items in one trip — food, ho
 - Bottle and can deposits are recognised and shown as their own category, so you can see how much of your spending is packaging you can get back.
 - This also counts toward your category budgets — a budget on a category that only ever shows up inside a receipt split, like Alcohol or a deposit budget, finally tracks correctly, and a Groceries budget no longer counts the household items or the deposit from the same receipt.
 - Sometimes none of your existing categories fit a group of items. When that happens, the app suggests a brand-new category, shown as a chip marked with a **+** (for example, "+ Household chemicals 10"). Nothing is created yet — tap **Change categories** to reassign its items to one of your existing categories instead, or leave it as suggested. The new category is only actually created once you save the receipt.
+- The app no longer invents a category that duplicates one you already have — a translation, a synonym or a part of an existing category (for example "Bread" next to "Groceries"). Such items go to your existing category or its subcategory; a new category is suggested only for a genuinely new kind of spending, and the app never creates subcategories for you.
 
 Works the same way whether you scan through the app or through the Telegram, WhatsApp, or Slack bots.
 
@@ -924,6 +925,7 @@ Tap any budget to see its full details:
   - Color dot + category name
   - Spent / allocated amounts
   - Per-category progress bar (green/yellow/red based on usage)
+- **Subcategories** — if a category you allocated has subcategories (for example Groceries with Bread and Cheese), its line adds up the whole group and shows a breakdown by subcategory underneath, plus a **Without subcategory** row for spending filed directly under the parent. Spending in a subcategory that is also allocated on its own counts in both lines, but the budget's overall total counts every expense only once. The current category structure is used for past periods too, so moving a category changes earlier figures.
 - **Period** — the budget's time range
 - **Alert Threshold** — the notification trigger point (e.g., 80%)
 - **Days Remaining** — how many days left in the current period
@@ -2075,6 +2077,7 @@ View and manage all your expense and income categories in one place.
 - **Delete a category** — swipe left on a category or tap the delete icon to remove it
 - **Deletion is blocked** if the category has any related expenses, incomes, or budgets — you must reassign or delete those records first
 - **System categories** can also be deleted if they have no related records
+- **Subcategories** — when you create or edit an expense category, choose a **Parent category** to file it under another one. There are two levels only: a category that already has subcategories cannot become a subcategory itself, and a parent must be an expense category of the same account. Category pickers show subcategories grouped under their parent. A category with subcategories cannot be deleted until they are moved or removed.
 
 > **Note:** Deleting a category is permanent and cannot be undone.
 
@@ -5946,6 +5949,7 @@ iOS, Android, Web
 - Залог за бутылки и банки распознаётся и показывается как отдельная категория, чтобы вы видели, какая часть ваших расходов — это упаковка, которую можно вернуть.
 - Это также учитывается в ваших бюджетах по категориям — бюджет на категорию, которая встречается только внутри разделения чека, например Алкоголь или залог, наконец-то учитывается правильно, а бюджет Продукты больше не включает хозтовары или залог с того же чека.
 - Иногда ни одна из ваших существующих категорий не подходит для группы товаров. В этом случае приложение предлагает совершенно новую категорию — она показывается как чип, отмеченный значком **+** (например, «+ Бытовая химия 10»). Пока она не создаётся — нажмите **Изменить категории**, чтобы перенести её позиции в существующую категорию или оставить как предложено. Новая категория действительно создаётся только после сохранения чека.
+- Приложение больше не придумывает категории, дублирующие уже существующие: перевод, синоним или часть существующей категории (например, «Хлеб» рядом с «Продукты»). Такие позиции попадают в вашу существующую категорию или её подкатегорию; новая категория предлагается только для действительно нового вида трат, а подкатегории приложение само никогда не создаёт.
 
 Работает одинаково — как при сканировании в приложении, так и через ботов в Telegram, WhatsApp или Slack.
 
@@ -6181,6 +6185,7 @@ iOS, Android, Web
   - Цветная точка + название категории
   - Потрачено / выделено
   - Индикатор прогресса (зелёный/жёлтый/красный)
+- **Подкатегории** — если у выделенной категории есть подкатегории (например, Продукты с Хлебом и Сыром), её строка суммирует всю группу и ниже показывает разбивку по подкатегориям, а также строку **Без подкатегории** для расходов, записанных прямо в родительскую категорию. Расход в подкатегории, у которой есть и собственное выделение, учитывается в обеих строках, но общий итог бюджета считает каждый расход один раз. Текущая структура категорий применяется и к прошлым периодам, поэтому перенос категории меняет прежние суммы.
 - **Период** — временной диапазон бюджета
 - **Порог уведомления** — точка срабатывания уведомления (например, 80%)
 - **Дней осталось** — сколько дней осталось в текущем периоде
@@ -7319,6 +7324,7 @@ Email обновляется мгновенно, выдаются новые т�
 - **Удаление категории** — смахните влево по категории или нажмите значок удаления
 - **Удаление заблокировано**, если с категорией связаны расходы, доходы или бюджеты — сначала необходимо переназначить или удалить эти записи
 - **Системные категории** также можно удалить, если с ними не связаны никакие записи
+- **Подкатегории** — при создании или редактировании категории расходов выберите **Родительскую категорию**, чтобы поместить её внутрь другой. Уровней только два: категория, у которой уже есть подкатегории, сама не может стать подкатегорией, а родительская должна быть категорией расходов того же счёта. В выборе категорий подкатегории сгруппированы под родительской. Категорию с подкатегориями нельзя удалить, пока они не перенесены или не удалены.
 
 > **Примечание:** Удаление категории необратимо.
 
@@ -11181,6 +11187,7 @@ iOS, Android, Web
 - Застава за пляшки та банки розпізнається і показується як окрема категорія, щоб ви бачили, яка частина ваших витрат — це упаковка, яку можна повернути.
 - Це також враховується у ваших бюджетах за категоріями — бюджет на категорію, яка з'являється лише всередині розподілу чека, наприклад Алкоголь або застава, нарешті враховується правильно, а бюджет Продукти більше не включає побутові товари чи заставу з того самого чека.
 - Іноді жодна з ваших наявних категорій не підходить для групи товарів. У такому разі додаток пропонує зовсім нову категорію — вона показується як чип, позначений значком **+** (наприклад, «+ Побутова хімія 10»). Поки що вона не створюється — натисніть **Змінити категорії**, щоб перенести її позиції до наявної категорії або залишити як запропоновано. Нова категорія справді створюється лише після збереження чека.
+- Застосунок більше не вигадує категорії, що дублюють наявні: переклад, синонім або частину наявної категорії (наприклад, «Хліб» поряд із «Продукти»). Такі позиції потрапляють до вашої наявної категорії або її підкатегорії; нова категорія пропонується лише для справді нового виду витрат, а підкатегорії застосунок сам ніколи не створює.
 
 Працює однаково незалежно від того, скануєте ви в додатку чи через ботів Telegram, WhatsApp або Slack.
 
@@ -11416,6 +11423,7 @@ iOS, Android, Web
   - Кольорова точка + назва категорії
   - Витрачено / виділено
   - Індикатор прогресу (зелений/жовтий/червоний)
+- **Підкатегорії** — якщо в виділеної категорії є підкатегорії (наприклад, Продукти з Хлібом і Сиром), її рядок підсумовує всю групу й нижче показує розбивку за підкатегоріями, а також рядок **Без підкатегорії** для витрат, записаних прямо в батьківську категорію. Витрата в підкатегорії, що має й власне виділення, враховується в обох рядках, але загальна сума бюджету враховує кожну витрату один раз. Поточна структура категорій застосовується й до минулих періодів, тому переміщення категорії змінює попередні суми.
 - **Період** — часовий діапазон бюджету
 - **Поріг сповіщення** — точка спрацювання сповіщення (наприклад, 80%)
 - **Днів залишилось** — скільки днів залишилось у поточному періоді
@@ -12549,6 +12557,7 @@ iOS, Android, Web
 - **Видалення категорії** — свайп вліво по категорії або натисніть іконку видалення
 - **Видалення заблоковано**, якщо з категорією пов'язані витрати, доходи або бюджети — спочатку потрібно переназначити або видалити ці записи
 - **Системні категорії** також можна видалити, якщо з ними не пов'язані жодні записи
+- **Підкатегорії** — під час створення чи редагування категорії витрат виберіть **Батьківську категорію**, щоб розмістити її всередині іншої. Рівнів лише два: категорія, що вже має підкатегорії, сама не може стати підкатегорією, а батьківська має бути категорією витрат того ж рахунку. У виборі категорій підкатегорії згруповані під батьківською. Категорію з підкатегоріями не можна видалити, доки їх не переміщено або не видалено.
 
 > **Примітка:** Видалення категорії є незворотним.
 
@@ -16364,6 +16373,7 @@ Paragony z sklepów spożywczych często łączą różne rodzaje zakupów w jed
 - Kaucje za butelki i puszki są rozpoznawane i pokazywane jako osobna kategoria, dzięki czemu widzisz, jaka część Twoich wydatków to opakowania, które możesz odzyskać.
 - To liczy się też do Twoich budżetów kategorii — budżet na kategorię, która pojawia się wyłącznie w podziałach paragonów, na przykład Alkohol albo kaucja, w końcu jest liczony poprawnie, a budżet Spożywcze przestaje uwzględniać artykuły gospodarstwa domowego czy kaucję z tego samego paragonu.
 - Czasem żadna z Twoich istniejących kategorii nie pasuje do grupy pozycji. W takim przypadku aplikacja proponuje zupełnie nową kategorię, pokazaną jako chip oznaczony znakiem **+** (na przykład „+ Chemia gospodarcza 10"). Nie jest ona jeszcze utworzona — dotknij **Zmień kategorie**, aby przypisać jej pozycje do istniejącej kategorii albo zostawić ją tak, jak zaproponowano. Nowa kategoria zostaje faktycznie utworzona dopiero po zapisaniu paragonu.
+- Aplikacja nie tworzy już kategorii, które dublują istniejące — tłumaczenia, synonimu ani części istniejącej kategorii (np. „Pieczywo” obok „Jedzenia”). Takie pozycje trafiają do istniejącej kategorii lub jej podkategorii; nowa kategoria jest proponowana tylko dla naprawdę nowego rodzaju wydatków, a podkategorii aplikacja nigdy nie tworzy sama.
 
 Działa tak samo niezależnie od tego, czy skanujesz w aplikacji, czy przez bota Telegram, WhatsApp lub Slack.
 
@@ -16599,6 +16609,7 @@ Dotknij dowolny budżet, aby zobaczyć pełne szczegóły:
   - Kolorowa kropka + nazwa kategorii
   - Wydano / przydzielono
   - Pasek postępu kategorii (zielony/żółty/czerwony)
+- **Podkategorie** — jeśli przydzielona kategoria ma podkategorie (np. Jedzenie z Pieczywem i Serem), jej linia sumuje całą grupę i pokazuje poniżej podział na podkategorie oraz wiersz **Bez podkategorii** dla wydatków przypisanych bezpośrednio do kategorii nadrzędnej. Wydatki w podkategorii, która ma też własny przydział, liczą się w obu liniach, ale łączna suma budżetu liczy każdy wydatek tylko raz. Obecna struktura kategorii obowiązuje także dla minionych okresów, więc przeniesienie kategorii zmienia wcześniejsze kwoty.
 - **Okres** — zakres czasowy budżetu
 - **Próg powiadomienia** — punkt wyzwalania powiadomienia (np. 80%)
 - **Pozostało dni** — ile dni pozostało w bieżącym okresie
@@ -17726,6 +17737,7 @@ Przegladaj wszystkie swoje kategorie wydatkow i przychodow oraz zarzadzaj nimi w
 - **Usun kategorie** — przesuń palcem w lewo po kategorii lub dotknij ikony usuwania
 - **Usuwanie jest zablokowane**, jezeli kategoria ma powiazane wydatki, przychody lub budzety — najpierw musisz je przepisac lub usunac
 - **Kategorie systemowe** rowniez mozna usunac, jezeli nie maja powiazanych rekordow
+- **Podkategorie** — podczas tworzenia lub edycji kategorii wydatków wybierz **Kategorię nadrzędną**, aby umieścić ją pod inną. Są tylko dwa poziomy: kategoria, która ma już podkategorie, nie może sama stać się podkategorią, a kategoria nadrzędna musi być kategorią wydatków tego samego konta. Listy wyboru kategorii pokazują podkategorie pod ich kategorią nadrzędną. Kategorii z podkategoriami nie można usunąć, dopóki nie zostaną przeniesione lub usunięte.
 
 > **Uwaga:** Usuniecie kategorii jest trwale i nie mozna go cofnac.
 
@@ -21543,6 +21555,7 @@ Kassenbons vom Supermarkt enthalten oft mehrere Arten von Artikeln in einem Eink
 - Pfand für Flaschen und Dosen wird erkannt und als eigene Kategorie angezeigt, damit du siehst, wie viel deiner Ausgaben aus Verpackung besteht, die du zurückbekommst.
 - Das zählt jetzt auch für deine Kategorie-Budgets — ein Budget für eine Kategorie, die nur innerhalb einer Beleg-Aufteilung vorkommt, etwa Alkohol oder Pfand, wird endlich korrekt erfasst, und ein Lebensmittel-Budget zählt die Haushaltsartikel oder das Pfand vom selben Beleg nicht mehr mit.
 - Manchmal passt keine deiner bestehenden Kategorien zu einer Gruppe von Artikeln. In diesem Fall schlägt die App eine brandneue Kategorie vor, angezeigt als Chip mit einem **+**-Zeichen (zum Beispiel „+ Haushaltschemie 10"). Sie wird noch nicht angelegt — tippe auf **Kategorien ändern**, um ihre Artikel stattdessen einer bestehenden Kategorie zuzuweisen oder sie wie vorgeschlagen zu belassen. Die neue Kategorie wird erst angelegt, wenn du den Beleg speicherst.
+- Die App erfindet keine Kategorie mehr, die eine vorhandene doppelt — eine Übersetzung, ein Synonym oder einen Teil einer bestehenden Kategorie (z. B. „Brot“ neben „Lebensmittel“). Solche Artikel landen in deiner bestehenden Kategorie oder deren Unterkategorie; eine neue Kategorie wird nur für eine wirklich neue Art von Ausgaben vorgeschlagen, und Unterkategorien legt die App nie selbst an.
 
 Funktioniert genauso, egal ob du über die App oder über die Telegram-, WhatsApp- oder Slack-Bots scannst.
 
@@ -21778,6 +21791,7 @@ Tippe auf ein beliebiges Budget, um die vollständigen Details zu sehen:
   - Farbpunkt + Kategoriename
   - Ausgegeben / zugeteilt
   - Kategoriefortschrittsbalken (grün/gelb/rot)
+- **Unterkategorien** — hat eine zugeteilte Kategorie Unterkategorien (z. B. Lebensmittel mit Brot und Käse), summiert ihre Zeile die ganze Gruppe und zeigt darunter eine Aufschlüsselung nach Unterkategorie sowie eine Zeile **Ohne Unterkategorie** für Ausgaben, die direkt der Oberkategorie zugeordnet sind. Ausgaben in einer Unterkategorie, die auch einzeln zugeteilt ist, zählen in beiden Zeilen, die Gesamtsumme des Budgets zählt jede Ausgabe aber nur einmal. Die aktuelle Kategoriestruktur gilt auch für vergangene Zeiträume, daher ändert das Verschieben einer Kategorie frühere Werte.
 - **Zeitraum** — der Zeitbereich des Budgets
 - **Warnschwelle** — der Benachrichtigungsauslösepunkt (z.B. 80%)
 - **Verbleibende Tage** — wie viele Tage im aktuellen Zeitraum verbleiben
@@ -22902,6 +22916,7 @@ Zeige und verwalte alle deine Ausgaben- und Einnahmenkategorien an einem Ort.
 - **Kategorie loschen** — wische eine Kategorie nach links oder tippe auf das Loschsymbol
 - **Loschen gesperrt**, wenn die Kategorie zugehorige Ausgaben, Einnahmen oder Budgets hat — diese Datensatze mussen zuerst neu zugewiesen oder geloscht werden
 - **Systemkategorien** konnen ebenfalls geloscht werden, sofern keine zugehorigen Datensatze vorhanden sind
+- **Unterkategorien** — beim Erstellen oder Bearbeiten einer Ausgabenkategorie wählst du eine **Oberkategorie**, um sie unter einer anderen einzuordnen. Es gibt nur zwei Ebenen: Eine Kategorie, die bereits Unterkategorien hat, kann nicht selbst Unterkategorie werden, und die Oberkategorie muss eine Ausgabenkategorie desselben Kontos sein. Kategorieauswahlen zeigen Unterkategorien unter ihrer Oberkategorie gruppiert. Eine Kategorie mit Unterkategorien kann erst gelöscht werden, wenn diese verschoben oder entfernt sind.
 
 > **Hinweis:** Das Loschen einer Kategorie ist dauerhaft und kann nicht ruckgangig gemacht werden.
 
@@ -26697,6 +26712,7 @@ Los recibos del supermercado a menudo mezclan varios tipos de artículos en una 
 - Los depósitos de botellas y latas se reconocen y se muestran como su propia categoría, para que puedas ver cuánto de tu gasto es envase que puedes recuperar.
 - Esto también cuenta ahora para tus presupuestos por categoría — un presupuesto de una categoría que solo aparece dentro de una división de recibo, como Alcohol o el depósito, por fin se contabiliza correctamente, y un presupuesto de Alimentación deja de contar los artículos del hogar o el depósito del mismo recibo.
 - A veces ninguna de tus categorías existentes encaja con un grupo de artículos. En ese caso, la aplicación sugiere una categoría totalmente nueva, mostrada como un chip marcado con un **+** (por ejemplo, "+ Productos de limpieza 10"). Todavía no se crea — toca **Cambiar categorías** para reasignar sus artículos a una categoría existente, o dejarla tal como se sugirió. La nueva categoría solo se crea de verdad cuando guardas el recibo.
+- La app ya no inventa una categoría que duplique una que ya tienes: una traducción, un sinónimo o una parte de una categoría existente (por ejemplo «Pan» junto a «Alimentación»). Esos artículos van a tu categoría existente o a su subcategoría; solo se sugiere una categoría nueva para un tipo de gasto realmente nuevo, y la app nunca crea subcategorías por ti.
 
 Funciona igual tanto si escaneas desde la aplicación como desde los bots de Telegram, WhatsApp o Slack.
 
@@ -26932,6 +26948,7 @@ Toca cualquier presupuesto para ver sus detalles completos:
   - Punto de color + nombre de categoría
   - Gastado / asignado
   - Barra de progreso por categoría (verde/amarillo/rojo)
+- **Subcategorías** — si una categoría asignada tiene subcategorías (por ejemplo Alimentación con Pan y Queso), su línea suma todo el grupo y muestra debajo un desglose por subcategoría, más una fila **Sin subcategoría** para los gastos registrados directamente en la categoría principal. El gasto de una subcategoría que también tiene su propia asignación cuenta en ambas líneas, pero el total general del presupuesto cuenta cada gasto una sola vez. La estructura actual de categorías se aplica también a periodos pasados, así que mover una categoría cambia las cifras anteriores.
 - **Período** — el rango de tiempo del presupuesto
 - **Umbral de alerta** — el punto de activación de la notificación (por ejemplo, 80%)
 - **Días restantes** — cuántos días quedan en el período actual
@@ -28057,6 +28074,7 @@ Visualiza y gestiona todas tus categorias de gastos e ingresos en un solo lugar.
 - **Eliminar una categoria** — desliza hacia la izquierda sobre una categoria o toca el icono de eliminar
 - **La eliminacion esta bloqueada** si la categoria tiene gastos, ingresos o presupuestos relacionados — primero debes reasignar o eliminar esos registros
 - **Las categorias del sistema** tambien pueden eliminarse si no tienen registros relacionados
+- **Subcategorías** — al crear o editar una categoría de gastos, elige una **Categoría principal** para colocarla dentro de otra. Solo hay dos niveles: una categoría que ya tiene subcategorías no puede convertirse en subcategoría, y la categoría principal debe ser una categoría de gastos de la misma cuenta. Los selectores de categoría muestran las subcategorías agrupadas bajo su categoría principal. Una categoría con subcategorías no se puede eliminar hasta que se muevan o se eliminen.
 
 > **Nota:** Eliminar una categoria es permanente y no se puede deshacer.
 
@@ -31840,6 +31858,7 @@ Les tickets de supermarché mélangent souvent plusieurs types d'articles en un 
 - Les consignes sur les bouteilles et les canettes sont reconnues et affichées comme leur propre catégorie, afin que vous puissiez voir quelle part de vos dépenses correspond à un emballage que vous pouvez récupérer.
 - Cela compte désormais aussi dans vos budgets par catégorie — un budget sur une catégorie qui n'apparaît que dans une répartition de reçu, comme Alcool ou la consigne, est enfin comptabilisé correctement, et un budget Alimentation ne compte plus les produits ménagers ni la consigne du même reçu.
 - Parfois, aucune de vos catégories existantes ne correspond à un groupe d'articles. Dans ce cas, l'application suggère une toute nouvelle catégorie, affichée sous forme de puce marquée d'un **+** (par exemple, « + Produits d'entretien 10 »). Elle n'est pas encore créée — appuyez sur **Modifier les catégories** pour réattribuer ses articles à une catégorie existante, ou la laisser telle quelle. La nouvelle catégorie n'est réellement créée que lorsque vous enregistrez le reçu.
+- L'application n'invente plus de catégorie qui double une catégorie existante : traduction, synonyme ou partie d'une catégorie existante (par exemple « Pain » à côté de « Alimentation »). Ces articles vont dans votre catégorie existante ou sa sous-catégorie ; une nouvelle catégorie n'est proposée que pour un type de dépense réellement nouveau, et l'application ne crée jamais de sous-catégories à votre place.
 
 Fonctionne de la même façon que vous scanniez depuis l'application ou depuis les bots Telegram, WhatsApp ou Slack.
 
@@ -32075,6 +32094,7 @@ Appuyez sur un budget pour voir ses détails complets :
   - Point de couleur + nom de catégorie
   - Dépensé / alloué
   - Barre de progression par catégorie (vert/jaune/rouge)
+- **Sous-catégories** — si une catégorie allouée a des sous-catégories (par exemple Alimentation avec Pain et Fromage), sa ligne additionne tout le groupe et affiche dessous une répartition par sous-catégorie, plus une ligne **Sans sous-catégorie** pour les dépenses classées directement dans la catégorie parente. Une dépense d'une sous-catégorie également allouée séparément compte dans les deux lignes, mais le total global du budget ne compte chaque dépense qu'une seule fois. La structure actuelle des catégories s'applique aussi aux périodes passées : déplacer une catégorie modifie donc les chiffres antérieurs.
 - **Période** — la plage temporelle du budget
 - **Seuil d'alerte** — le point de déclenchement de la notification (par ex. 80 %)
 - **Jours restants** — combien de jours restent dans la période en cours
@@ -33198,6 +33218,7 @@ Visualisez et gerez toutes vos categories de depenses et de revenus en un seul e
 - **Supprimer une categorie** — faites glisser vers la gauche sur une categorie ou appuyez sur l'icone de suppression
 - **La suppression est bloquee** si la categorie a des depenses, des revenus ou des budgets associes — vous devez d'abord reassigner ou supprimer ces enregistrements
 - **Les categories systeme** peuvent egalement etre supprimees si elles n'ont aucun enregistrement associe
+- **Sous-catégories** — lors de la création ou de la modification d'une catégorie de dépenses, choisissez une **Catégorie parente** pour la ranger sous une autre. Il n'y a que deux niveaux : une catégorie qui a déjà des sous-catégories ne peut pas devenir elle-même une sous-catégorie, et la catégorie parente doit être une catégorie de dépenses du même compte. Les sélecteurs de catégorie affichent les sous-catégories regroupées sous leur parente. Une catégorie ayant des sous-catégories ne peut pas être supprimée tant qu'elles n'ont pas été déplacées ou supprimées.
 
 > **Note :** La suppression d'une categorie est definitive et ne peut pas etre annulee.
 
@@ -36981,6 +37002,7 @@ iOS, Android, Web
 - Закладзь за бутэлькі і банкі распазнаецца і паказваецца як асобная катэгорыя, каб вы бачылі, якая частка вашых выдаткаў — гэта ўпакоўка, якую можна вярнуць.
 - Гэта таксама ўлічваецца ў вашых бюджэтах па катэгорыях — бюджэт на катэгорыю, якая сустракаецца толькі ўнутры падзелу чэка, напрыклад Алкаголь ці закладзь, нарэшце ўлічваецца правільна, а бюджэт Прадукты больш не ўключае гаспадарчыя тавары ці закладзь з таго ж чэка.
 - Часам ніводная з вашых наяўных катэгорый не падыходзіць для групы тавараў. У такім выпадку праграма прапануе зусім новую катэгорыю — яна паказваецца як чып, пазначаны значком **+** (напрыклад, «+ Бытавая хімія 10»). Пакуль яна не ствараецца — націсніце **Змяніць катэгорыі**, каб перанесці яе пазіцыі ў наяўную катэгорыю або пакінуць як прапанавана. Новая катэгорыя сапраўды ствараецца толькі пасля захавання чэка.
+- Праграма больш не прыдумвае катэгорыі, што дубліруюць наяўныя: пераклад, сінонім або частку наяўнай катэгорыі (напрыклад, «Хлеб» побач з «Прадукты»). Такія пазіцыі трапляюць у вашу наяўную катэгорыю або яе падкатэгорыю; новая катэгорыя прапануецца толькі для сапраўды новага віду трат, а падкатэгорыі праграма сама ніколі не стварае.
 
 Працуе аднолькава незалежна ад таго, ці скануеце вы ў праграме, ці праз ботаў Telegram, WhatsApp або Slack.
 
@@ -37216,6 +37238,7 @@ iOS, Android, Web
   - Каляровая кропка + назва катэгорыі
   - Выдаткавана / выдзелена
   - Індыкатар прагрэсу (зялёны/жоўты/чырвоны)
+- **Падкатэгорыі** — калі ў выдзеленай катэгорыі ёсць падкатэгорыі (напрыклад, Прадукты з Хлебам і Сырам), яе радок сумуе ўсю групу і ніжэй паказвае разбіўку па падкатэгорыях, а таксама радок **Без падкатэгорыі** для выдаткаў, запісаных проста ў бацькоўскую катэгорыю. Выдатак у падкатэгорыі, якая мае і ўласнае выдзяленне, улічваецца ў абодвух радках, але агульны вынік бюджэту лічыць кожны выдатак адзін раз. Бягучая структура катэгорый ужываецца і да мінулых перыядаў, таму перамяшчэнне катэгорыі змяняе ранейшыя сумы.
 - **Перыяд** — часавы дыяпазон бюджэту
 - **Парог апавяшчэння** — кропка спрацоўвання апавяшчэння (напрыклад, 80%)
 - **Дзён засталося** — колькі дзён засталося ў бягучым перыядзе
@@ -38341,6 +38364,7 @@ iOS, Android, Web
 - **Выдаленне катэгорыі** — правядзіце ўлева па катэгорыі або націсніце значок выдалення
 - **Выдаленне заблакавана**, калі з катэгорыяй звязаны расходы, даходы або бюджэты — спачатку трэба перапрызначыць або выдаліць гэтыя запісы
 - **Сістэмныя катэгорыі** таксама можна выдаліць, калі з імі не звязаны ніякія запісы
+- **Падкатэгорыі** — пры стварэнні ці рэдагаванні катэгорыі расходаў абярыце **Бацькоўскую катэгорыю**, каб змясціць яе ўнутр іншай. Узроўняў толькі два: катэгорыя, якая ўжо мае падкатэгорыі, сама не можа стаць падкатэгорыяй, а бацькоўская мусіць быць катэгорыяй расходаў таго ж рахунку. У выбары катэгорый падкатэгорыі згрупаваны пад бацькоўскай. Катэгорыю з падкатэгорыямі нельга выдаліць, пакуль іх не перамешчаны або не выдалены.
 
 > **Заўвага:** Выдаленне катэгорыі з'яўляецца незваротным.
 
@@ -42086,6 +42110,7 @@ Kassabonnen van de supermarkt combineren vaak meerdere soorten aankopen in één
 - Statiegeld voor flessen en blikjes wordt herkend en als eigen categorie weergegeven, zodat je ziet hoeveel van je uitgaven verpakking is die je terugkrijgt.
 - Dit telt nu ook mee voor je categoriebudgetten — een budget op een categorie die alleen binnen een bonverdeling voorkomt, zoals Alcohol of statiegeld, wordt eindelijk correct bijgehouden, en een Boodschappen-budget telt de huishoudelijke producten of het statiegeld van dezelfde bon niet meer mee.
 - Soms past geen van je bestaande categorieën bij een groep items. In dat geval stelt de app een gloednieuwe categorie voor, weergegeven als een chip met een **+**-teken (bijvoorbeeld "+ Schoonmaakmiddelen 10"). Die wordt nog niet aangemaakt — tik op **Categorieën wijzigen** om de items ervan aan een bestaande categorie toe te wijzen, of hem te laten zoals voorgesteld. De nieuwe categorie wordt pas echt aangemaakt zodra je de bon opslaat.
+- De app verzint geen categorie meer die een bestaande dubbel doet: een vertaling, een synoniem of een deel van een bestaande categorie (bijvoorbeeld "Brood" naast "Boodschappen"). Zulke items gaan naar je bestaande categorie of de subcategorie ervan; een nieuwe categorie wordt alleen voorgesteld voor een echt nieuw soort uitgave, en subcategorieën maakt de app nooit zelf aan.
 
 Werkt hetzelfde of je nu scant via de app of via de Telegram-, WhatsApp- of Slack-bots.
 
@@ -42321,6 +42346,7 @@ Tik op een budget om de volledige details te zien:
   - Kleurstip + categorienaam
   - Uitgegeven / toegewezen bedragen
   - Voortgangsbalk per categorie (groen/geel/rood op basis van gebruik)
+- **Subcategorieën** — heeft een toegewezen categorie subcategorieën (bijvoorbeeld Boodschappen met Brood en Kaas), dan telt de regel de hele groep op en toont eronder een uitsplitsing per subcategorie, plus een rij **Zonder subcategorie** voor uitgaven die direct onder de hoofdcategorie vallen. Uitgaven in een subcategorie die ook apart is toegewezen tellen in beide regels mee, maar het totaal van het budget telt elke uitgave maar één keer. De huidige categoriestructuur geldt ook voor eerdere periodes, dus een categorie verplaatsen wijzigt eerdere bedragen.
 - **Periode** — het tijdsbereik van het budget
 - **Waarschuwingsdrempel** — het meldingstriggerpunt (bijv. 80%)
 - **Resterende dagen** — hoeveel dagen er nog over zijn in de huidige periode
@@ -43457,6 +43483,7 @@ Bekijk en beheer al je uitgaven- en inkomstencategorieën op één plek.
 - **Een categorie verwijderen** — veeg op een categorie naar links of tik op het verwijderpictogram om deze te verwijderen
 - **Verwijderen is geblokkeerd** als de categorie gerelateerde uitgaven, inkomsten of budgetten heeft — je moet die records eerst opnieuw toewijzen of verwijderen
 - **Systeemcategorieën** kunnen ook worden verwijderd als ze geen gerelateerde records hebben
+- **Subcategorieën** — kies bij het maken of bewerken van een uitgavencategorie een **Hoofdcategorie** om deze onder een andere te plaatsen. Er zijn maar twee niveaus: een categorie die al subcategorieën heeft, kan zelf geen subcategorie worden, en de hoofdcategorie moet een uitgavencategorie van hetzelfde account zijn. Categoriekiezers tonen subcategorieën gegroepeerd onder hun hoofdcategorie. Een categorie met subcategorieën kan pas worden verwijderd als die zijn verplaatst of verwijderd.
 
 > **Opmerking:** Het verwijderen van een categorie is permanent en kan niet ongedaan worden gemaakt.
 

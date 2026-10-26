@@ -4051,6 +4051,7 @@ Los recibos del supermercado a menudo mezclan varios tipos de artículos en una 
 - Los depósitos de botellas y latas se reconocen y se muestran como su propia categoría, para que puedas ver cuánto de tu gasto es envase que puedes recuperar.
 - Esto también cuenta ahora para tus presupuestos por categoría — un presupuesto de una categoría que solo aparece dentro de una división de recibo, como Alcohol o el depósito, por fin se contabiliza correctamente, y un presupuesto de Alimentación deja de contar los artículos del hogar o el depósito del mismo recibo.
 - A veces ninguna de tus categorías existentes encaja con un grupo de artículos. En ese caso, la aplicación sugiere una categoría totalmente nueva, mostrada como un chip marcado con un **+** (por ejemplo, "+ Productos de limpieza 10"). Todavía no se crea — toca **Cambiar categorías** para reasignar sus artículos a una categoría existente, o dejarla tal como se sugirió. La nueva categoría solo se crea de verdad cuando guardas el recibo.
+- La app ya no inventa una categoría que duplique una que ya tienes: una traducción, un sinónimo o una parte de una categoría existente (por ejemplo «Pan» junto a «Alimentación»). Esos artículos van a tu categoría existente o a su subcategoría; solo se sugiere una categoría nueva para un tipo de gasto realmente nuevo, y la app nunca crea subcategorías por ti.
 
 Funciona igual tanto si escaneas desde la aplicación como desde los bots de Telegram, WhatsApp o Slack.
 
@@ -4281,6 +4282,7 @@ Toca cualquier presupuesto para ver sus detalles completos:
   - Punto de color + nombre de categoría
   - Gastado / asignado
   - Barra de progreso por categoría (verde/amarillo/rojo)
+- **Subcategorías** — si una categoría asignada tiene subcategorías (por ejemplo Alimentación con Pan y Queso), su línea suma todo el grupo y muestra debajo un desglose por subcategoría, más una fila **Sin subcategoría** para los gastos registrados directamente en la categoría principal. El gasto de una subcategoría que también tiene su propia asignación cuenta en ambas líneas, pero el total general del presupuesto cuenta cada gasto una sola vez. La estructura actual de categorías se aplica también a periodos pasados, así que mover una categoría cambia las cifras anteriores.
 - **Período** — el rango de tiempo del presupuesto
 - **Umbral de alerta** — el punto de activación de la notificación (por ejemplo, 80%)
 - **Días restantes** — cuántos días quedan en el período actual
@@ -5373,6 +5375,7 @@ Visualiza y gestiona todas tus categorias de gastos e ingresos en un solo lugar.
 - **Eliminar una categoria** — desliza hacia la izquierda sobre una categoria o toca el icono de eliminar
 - **La eliminacion esta bloqueada** si la categoria tiene gastos, ingresos o presupuestos relacionados — primero debes reasignar o eliminar esos registros
 - **Las categorias del sistema** tambien pueden eliminarse si no tienen registros relacionados
+- **Subcategorías** — al crear o editar una categoría de gastos, elige una **Categoría principal** para colocarla dentro de otra. Solo hay dos niveles: una categoría que ya tiene subcategorías no puede convertirse en subcategoría, y la categoría principal debe ser una categoría de gastos de la misma cuenta. Los selectores de categoría muestran las subcategorías agrupadas bajo su categoría principal. Una categoría con subcategorías no se puede eliminar hasta que se muevan o se eliminen.
 
 > **Nota:** Eliminar una categoria es permanente y no se puede deshacer.
 

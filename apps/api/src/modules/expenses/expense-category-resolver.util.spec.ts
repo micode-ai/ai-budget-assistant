@@ -12,6 +12,7 @@ function makePrisma(overrides: {
   byName?: any;
   byDefaultWords?: any;
   created?: any;
+  live?: any[];
 } = {}) {
   const category = {
     findUnique: jest.fn().mockResolvedValue(overrides.findUniqueResult ?? null),
@@ -22,6 +23,7 @@ function makePrisma(overrides: {
       if (where?.AND) return Promise.resolve(overrides.byDefaultWords ?? null);
       return Promise.resolve(overrides.byName ?? null);
     }),
+    findMany: jest.fn().mockResolvedValue(overrides.live ?? []),
     create: jest
       .fn()
       .mockImplementation(({ data }: any) =>
@@ -77,6 +79,18 @@ describe('resolveExpenseCategoryId', () => {
     expect(prismaInc.category.create).toHaveBeenCalledWith({
       data: { accountId: 'acc-1', name: 'Premia', type: 'income' },
     });
+  });
+
+  it('reuses an equivalent translated category instead of auto-creating', async () => {
+    const prisma = makePrisma({ live: [{ id: 'cat-groceries', name: 'Groceries' }] });
+
+    await expect(resolveExpenseCategoryId(prisma, 'Zakupy spożywcze', 'acc-1')).resolves.toBe('cat-groceries');
+    expect(prisma.category.create).not.toHaveBeenCalled();
+    expect(prisma.category.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({ accountId: 'acc-1', type: 'expense', isDeleted: false }),
+      }),
+    );
   });
 
   it('scopes the name lookup to the account, so another account cannot be matched', async () => {
@@ -180,6 +194,7 @@ describe('resolveExpenseCategoryId — id with a name fallback', () => {
             ) ?? null,
           ),
         ),
+        findMany: jest.fn().mockResolvedValue([]),
         create: jest.fn().mockResolvedValue({ id: 'created' }),
       },
     } as any;

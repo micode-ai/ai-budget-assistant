@@ -4031,6 +4031,7 @@ Les tickets de supermarché mélangent souvent plusieurs types d'articles en un 
 - Les consignes sur les bouteilles et les canettes sont reconnues et affichées comme leur propre catégorie, afin que vous puissiez voir quelle part de vos dépenses correspond à un emballage que vous pouvez récupérer.
 - Cela compte désormais aussi dans vos budgets par catégorie — un budget sur une catégorie qui n'apparaît que dans une répartition de reçu, comme Alcool ou la consigne, est enfin comptabilisé correctement, et un budget Alimentation ne compte plus les produits ménagers ni la consigne du même reçu.
 - Parfois, aucune de vos catégories existantes ne correspond à un groupe d'articles. Dans ce cas, l'application suggère une toute nouvelle catégorie, affichée sous forme de puce marquée d'un **+** (par exemple, « + Produits d'entretien 10 »). Elle n'est pas encore créée — appuyez sur **Modifier les catégories** pour réattribuer ses articles à une catégorie existante, ou la laisser telle quelle. La nouvelle catégorie n'est réellement créée que lorsque vous enregistrez le reçu.
+- L'application n'invente plus de catégorie qui double une catégorie existante : traduction, synonyme ou partie d'une catégorie existante (par exemple « Pain » à côté de « Alimentation »). Ces articles vont dans votre catégorie existante ou sa sous-catégorie ; une nouvelle catégorie n'est proposée que pour un type de dépense réellement nouveau, et l'application ne crée jamais de sous-catégories à votre place.
 
 Fonctionne de la même façon que vous scanniez depuis l'application ou depuis les bots Telegram, WhatsApp ou Slack.
 
@@ -4261,6 +4262,7 @@ Appuyez sur un budget pour voir ses détails complets :
   - Point de couleur + nom de catégorie
   - Dépensé / alloué
   - Barre de progression par catégorie (vert/jaune/rouge)
+- **Sous-catégories** — si une catégorie allouée a des sous-catégories (par exemple Alimentation avec Pain et Fromage), sa ligne additionne tout le groupe et affiche dessous une répartition par sous-catégorie, plus une ligne **Sans sous-catégorie** pour les dépenses classées directement dans la catégorie parente. Une dépense d'une sous-catégorie également allouée séparément compte dans les deux lignes, mais le total global du budget ne compte chaque dépense qu'une seule fois. La structure actuelle des catégories s'applique aussi aux périodes passées : déplacer une catégorie modifie donc les chiffres antérieurs.
 - **Période** — la plage temporelle du budget
 - **Seuil d'alerte** — le point de déclenchement de la notification (par ex. 80 %)
 - **Jours restants** — combien de jours restent dans la période en cours
@@ -5351,6 +5353,7 @@ Visualisez et gerez toutes vos categories de depenses et de revenus en un seul e
 - **Supprimer une categorie** — faites glisser vers la gauche sur une categorie ou appuyez sur l'icone de suppression
 - **La suppression est bloquee** si la categorie a des depenses, des revenus ou des budgets associes — vous devez d'abord reassigner ou supprimer ces enregistrements
 - **Les categories systeme** peuvent egalement etre supprimees si elles n'ont aucun enregistrement associe
+- **Sous-catégories** — lors de la création ou de la modification d'une catégorie de dépenses, choisissez une **Catégorie parente** pour la ranger sous une autre. Il n'y a que deux niveaux : une catégorie qui a déjà des sous-catégories ne peut pas devenir elle-même une sous-catégorie, et la catégorie parente doit être une catégorie de dépenses du même compte. Les sélecteurs de catégorie affichent les sous-catégories regroupées sous leur parente. Une catégorie ayant des sous-catégories ne peut pas être supprimée tant qu'elles n'ont pas été déplacées ou supprimées.
 
 > **Note :** La suppression d'une categorie est definitive et ne peut pas etre annulee.
 

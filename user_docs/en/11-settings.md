@@ -169,6 +169,7 @@ View and manage all your expense and income categories in one place.
 - **Delete a category** — swipe left on a category or tap the delete icon to remove it
 - **Deletion is blocked** if the category has any related expenses, incomes, or budgets — you must reassign or delete those records first
 - **System categories** can also be deleted if they have no related records
+- **Subcategories** — when you create or edit an expense category, choose a **Parent category** to file it under another one. There are two levels only: a category that already has subcategories cannot become a subcategory itself, and a parent must be an expense category of the same account. Category pickers show subcategories grouped under their parent. A category with subcategories cannot be deleted until they are moved or removed.
 
 > **Note:** Deleting a category is permanent and cannot be undone.
 

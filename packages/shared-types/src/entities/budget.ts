@@ -11,6 +11,13 @@ export interface BudgetCategoryAllocation {
   syncVersion: number;
 }
 
+export interface BudgetSubcategorySpend {
+  categoryId: string;
+  categoryName: string;
+  categoryColor?: string;
+  spent: number;
+}
+
 export interface BudgetCategoryProgress {
   categoryId: string;
   categoryName: string;
@@ -20,6 +27,10 @@ export interface BudgetCategoryProgress {
   remaining: number;
   percentageUsed: number;
   isOverBudget: boolean;
+  /** The category's own spend, excluding subcategories. */
+  ownSpent?: number;
+  /** Subcategories with spend, largest first; `spent` already includes them. */
+  subcategories?: BudgetSubcategorySpend[];
 }
 
 export interface Budget {

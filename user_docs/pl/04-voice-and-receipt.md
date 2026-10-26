@@ -97,6 +97,7 @@ Paragony z sklepów spożywczych często łączą różne rodzaje zakupów w jed
 - Kaucje za butelki i puszki są rozpoznawane i pokazywane jako osobna kategoria, dzięki czemu widzisz, jaka część Twoich wydatków to opakowania, które możesz odzyskać.
 - To liczy się też do Twoich budżetów kategorii — budżet na kategorię, która pojawia się wyłącznie w podziałach paragonów, na przykład Alkohol albo kaucja, w końcu jest liczony poprawnie, a budżet Spożywcze przestaje uwzględniać artykuły gospodarstwa domowego czy kaucję z tego samego paragonu.
 - Czasem żadna z Twoich istniejących kategorii nie pasuje do grupy pozycji. W takim przypadku aplikacja proponuje zupełnie nową kategorię, pokazaną jako chip oznaczony znakiem **+** (na przykład „+ Chemia gospodarcza 10"). Nie jest ona jeszcze utworzona — dotknij **Zmień kategorie**, aby przypisać jej pozycje do istniejącej kategorii albo zostawić ją tak, jak zaproponowano. Nowa kategoria zostaje faktycznie utworzona dopiero po zapisaniu paragonu.
+- Aplikacja nie tworzy już kategorii, które dublują istniejące — tłumaczenia, synonimu ani części istniejącej kategorii (np. „Pieczywo” obok „Jedzenia”). Takie pozycje trafiają do istniejącej kategorii lub jej podkategorii; nowa kategoria jest proponowana tylko dla naprawdę nowego rodzaju wydatków, a podkategorii aplikacja nigdy nie tworzy sama.
 
 Działa tak samo niezależnie od tego, czy skanujesz w aplikacji, czy przez bota Telegram, WhatsApp lub Slack.
 

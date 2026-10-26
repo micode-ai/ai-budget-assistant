@@ -4634,6 +4634,7 @@ Paragony z sklepów spożywczych często łączą różne rodzaje zakupów w jed
 - Kaucje za butelki i puszki są rozpoznawane i pokazywane jako osobna kategoria, dzięki czemu widzisz, jaka część Twoich wydatków to opakowania, które możesz odzyskać.
 - To liczy się też do Twoich budżetów kategorii — budżet na kategorię, która pojawia się wyłącznie w podziałach paragonów, na przykład Alkohol albo kaucja, w końcu jest liczony poprawnie, a budżet Spożywcze przestaje uwzględniać artykuły gospodarstwa domowego czy kaucję z tego samego paragonu.
 - Czasem żadna z Twoich istniejących kategorii nie pasuje do grupy pozycji. W takim przypadku aplikacja proponuje zupełnie nową kategorię, pokazaną jako chip oznaczony znakiem **+** (na przykład „+ Chemia gospodarcza 10"). Nie jest ona jeszcze utworzona — dotknij **Zmień kategorie**, aby przypisać jej pozycje do istniejącej kategorii albo zostawić ją tak, jak zaproponowano. Nowa kategoria zostaje faktycznie utworzona dopiero po zapisaniu paragonu.
+- Aplikacja nie tworzy już kategorii, które dublują istniejące — tłumaczenia, synonimu ani części istniejącej kategorii (np. „Pieczywo” obok „Jedzenia”). Takie pozycje trafiają do istniejącej kategorii lub jej podkategorii; nowa kategoria jest proponowana tylko dla naprawdę nowego rodzaju wydatków, a podkategorii aplikacja nigdy nie tworzy sama.
 
 Działa tak samo niezależnie od tego, czy skanujesz w aplikacji, czy przez bota Telegram, WhatsApp lub Slack.
 
@@ -4864,6 +4865,7 @@ Dotknij dowolny budżet, aby zobaczyć pełne szczegóły:
   - Kolorowa kropka + nazwa kategorii
   - Wydano / przydzielono
   - Pasek postępu kategorii (zielony/żółty/czerwony)
+- **Podkategorie** — jeśli przydzielona kategoria ma podkategorie (np. Jedzenie z Pieczywem i Serem), jej linia sumuje całą grupę i pokazuje poniżej podział na podkategorie oraz wiersz **Bez podkategorii** dla wydatków przypisanych bezpośrednio do kategorii nadrzędnej. Wydatki w podkategorii, która ma też własny przydział, liczą się w obu liniach, ale łączna suma budżetu liczy każdy wydatek tylko raz. Obecna struktura kategorii obowiązuje także dla minionych okresów, więc przeniesienie kategorii zmienia wcześniejsze kwoty.
 - **Okres** — zakres czasowy budżetu
 - **Próg powiadomienia** — punkt wyzwalania powiadomienia (np. 80%)
 - **Pozostało dni** — ile dni pozostało w bieżącym okresie
@@ -5958,6 +5960,7 @@ Przegladaj wszystkie swoje kategorie wydatkow i przychodow oraz zarzadzaj nimi w
 - **Usun kategorie** — przesuń palcem w lewo po kategorii lub dotknij ikony usuwania
 - **Usuwanie jest zablokowane**, jezeli kategoria ma powiazane wydatki, przychody lub budzety — najpierw musisz je przepisac lub usunac
 - **Kategorie systemowe** rowniez mozna usunac, jezeli nie maja powiazanych rekordow
+- **Podkategorie** — podczas tworzenia lub edycji kategorii wydatków wybierz **Kategorię nadrzędną**, aby umieścić ją pod inną. Są tylko dwa poziomy: kategoria, która ma już podkategorie, nie może sama stać się podkategorią, a kategoria nadrzędna musi być kategorią wydatków tego samego konta. Listy wyboru kategorii pokazują podkategorie pod ich kategorią nadrzędną. Kategorii z podkategoriami nie można usunąć, dopóki nie zostaną przeniesione lub usunięte.
 
 > **Uwaga:** Usuniecie kategorii jest trwale i nie mozna go cofnac.
 

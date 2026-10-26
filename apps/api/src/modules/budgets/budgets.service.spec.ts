@@ -513,6 +513,7 @@ describe('BudgetsService.getProgress — category budgets count splits', () => {
           isDeleted: false,
         }),
       },
+      category: { findMany: jest.fn().mockResolvedValue([]) },
       expense: {
         findMany: jest.fn().mockResolvedValue(rows),
         aggregate: jest.fn().mockResolvedValue({ _sum: { amount: 0 } }),
@@ -641,6 +642,7 @@ describe('BudgetsService.getHistory — periods count splits too', () => {
 
   it('reports a split-only category’s share in each period', async () => {
     const prisma: any = {
+      category: { findMany: jest.fn().mockResolvedValue([]) },
       budget: {
         findFirst: jest.fn().mockResolvedValue({
           id: 'b1',
@@ -702,5 +704,131 @@ describe('BudgetsService.getHistory — periods count splits too', () => {
 
     expect(history[0].actual).toBe(120);
     expect(prisma.expense.findMany).not.toHaveBeenCalled();
+  });
+});
+
+describe('BudgetsService — parent allocation rolls up subcategories', () => {
+  const P = 'cat-parent';
+  const C = 'cat-child';
+  const tree = [
+    { id: P, parentId: null, isDeleted: false, name: 'Food', color: '#111' },
+    { id: C, parentId: P, isDeleted: false, name: 'Cafe', color: '#222' },
+  ];
+  const row = (categoryId: string, amount: number, date = '2026-09-05T00:00:00Z') => ({
+    amount,
+    date: new Date(date),
+    categoryId,
+    categorySplits: [],
+  });
+
+  function makeService(prisma: any) {
+    const gamification: any = { checkAchievements: jest.fn().mockResolvedValue(undefined) };
+    const cache: any = { delByPrefix: jest.fn().mockResolvedValue(undefined) };
+    return new BudgetsService(prisma, gamification, cache);
+  }
+
+  function prismaFor(allocIds: string[], rows: any[]) {
+    return {
+      budget: {
+        findFirst: jest.fn().mockResolvedValue({
+          id: 'b1',
+          amount: 1000,
+          currencyCode: 'PLN',
+          period: 'monthly',
+          startDate: new Date('2026-01-01T00:00:00Z'),
+          endDate: null,
+          categoryAllocations: allocIds.map((id) => ({
+            categoryId: id,
+            amount: 500,
+            category: { name: id },
+          })),
+          isActive: true,
+          isDeleted: false,
+        }),
+      },
+      category: { findMany: jest.fn().mockResolvedValue(tree) },
+      expense: {
+        findMany: jest.fn().mockResolvedValue(rows),
+        aggregate: jest.fn().mockResolvedValue({ _sum: { amount: 0 } }),
+        groupBy: jest.fn().mockResolvedValue([]),
+      },
+    } as any;
+  }
+
+  it('counts a child expense in the parent line and lists the child', async () => {
+    const prisma = prismaFor([P], [row(P, 40), row(C, 25)]);
+
+    const progress = await makeService(prisma).getProgress('acc-1', 'b1');
+
+    const line = progress.categoryBreakdown![0];
+    expect(line.spent).toBe(65);
+    expect(line.ownSpent).toBe(40);
+    expect(line.subcategories).toEqual([
+      { categoryId: C, categoryName: 'Cafe', categoryColor: '#222', spent: 25 },
+    ]);
+  });
+
+  it('fetches child-only expenses (filter gets the expanded ids)', async () => {
+    const prisma = prismaFor([P], [row(C, 25)]);
+
+    await makeService(prisma).getProgress('acc-1', 'b1');
+
+    const where = prisma.expense.findMany.mock.calls[0][0].where;
+    expect(where.OR[0]).toEqual({ categoryId: { in: [P, C] } });
+  });
+
+  it('counts an unallocated child of an allocated parent in the total once', async () => {
+    const prisma = prismaFor([P], [row(C, 25)]);
+
+    const progress = await makeService(prisma).getProgress('acc-1', 'b1');
+
+    expect(progress.spent).toBe(25);
+  });
+
+  it('counts the child once overall when parent and child are both allocated, both lines show it', async () => {
+    const prisma = prismaFor([P, C], [row(P, 40), row(C, 25)]);
+
+    const progress = await makeService(prisma).getProgress('acc-1', 'b1');
+
+    const byId = new Map(progress.categoryBreakdown!.map((l: any) => [l.categoryId, l.spent]));
+    expect(progress.spent).toBe(65);
+    expect(byId.get(P)).toBe(65);
+    expect(byId.get(C)).toBe(25);
+  });
+
+  it('a receipt split into a parent part and a child part counts both in the parent line, once overall', async () => {
+    // Same fixture and numbers as the phone's budgetProgressTree.test.ts.
+    const receipt = {
+      amount: 100,
+      date: new Date('2026-09-05T00:00:00Z'),
+      categoryId: P,
+      categorySplits: [
+        { categoryId: P, amount: 60 },
+        { categoryId: C, amount: 40 },
+      ],
+    };
+    const prisma = prismaFor([P], [receipt]);
+
+    const progress = await makeService(prisma).getProgress('acc-1', 'b1');
+
+    const line = progress.categoryBreakdown![0];
+    expect(progress.spent).toBe(100);
+    expect(line.spent).toBe(100);
+    expect(line.ownSpent).toBe(60);
+    expect(line.subcategories).toEqual([
+      { categoryId: C, categoryName: 'Cafe', categoryColor: '#222', spent: 40 },
+    ]);
+  });
+
+  it('getHistory actual for a past period includes the child money', async () => {
+    const prisma = prismaFor([P], [row(C, 25)]);
+
+    const history = await makeService(prisma).getHistory('acc-1', 'b1', 2);
+
+    expect(history).toHaveLength(2);
+    expect(history.every((h: any) => h.actual === 25)).toBe(true);
+    expect(prisma.expense.findMany.mock.calls[0][0].where.OR[0]).toEqual({
+      categoryId: { in: [P, C] },
+    });
   });
 });

@@ -215,6 +215,8 @@ the section you came for — it states what must not break and why. A missing se
 ### Budgets
 - [budgets](features/budgets.md) — periods, the financial month, split-aware progress, the
   projection, threshold pushes
+- [category-hierarchy](features/category-hierarchy.md) — the two-level category tree, budget roll-up,
+  the equivalence check that stops automatic duplicates
 
 ### Pricing and revenue
 - [subscription-pricing](features/subscription-pricing.md) — where prices live, displayed vs

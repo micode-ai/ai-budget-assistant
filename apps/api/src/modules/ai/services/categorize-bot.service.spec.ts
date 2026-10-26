@@ -90,5 +90,27 @@ describe('CategorizeBotService', () => {
       });
       expect(result).toEqual({ categoryName: 'hardware', count: 1 });
     });
+
+    it('uses an equivalent existing category instead of creating a translated duplicate', async () => {
+      const { service, categoriesService, expenseBulk } = setup({}, [
+        { id: 'cat-groceries', name: 'Groceries', type: 'expense' } as any,
+        { id: 'cat-salary-ish', name: 'Zakupy spożywcze', type: 'income' } as any,
+      ]);
+      expenseBulk.bulkUpdate.mockResolvedValue({ updated: 1 });
+
+      const result = await service.applyStep('acc-1', 'user-1', {
+        categoryId: null,
+        name: 'Zakupy spożywcze',
+        isNew: true,
+        expenseIds: ['e3'],
+      });
+
+      expect(categoriesService.create).not.toHaveBeenCalled();
+      expect(expenseBulk.bulkUpdate).toHaveBeenCalledWith('acc-1', {
+        ids: ['e3'],
+        categoryId: 'cat-groceries',
+      });
+      expect(result).toEqual({ categoryName: 'Groceries', count: 1 });
+    });
   });
 });

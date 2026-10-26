@@ -66,6 +66,7 @@ Tap any budget to see its full details:
   - Color dot + category name
   - Spent / allocated amounts
   - Per-category progress bar (green/yellow/red based on usage)
+- **Subcategories** — if a category you allocated has subcategories (for example Groceries with Bread and Cheese), its line adds up the whole group and shows a breakdown by subcategory underneath, plus a **Without subcategory** row for spending filed directly under the parent. Spending in a subcategory that is also allocated on its own counts in both lines, but the budget's overall total counts every expense only once. The current category structure is used for past periods too, so moving a category changes earlier figures.
 - **Period** — the budget's time range
 - **Alert Threshold** — the notification trigger point (e.g., 80%)
 - **Days Remaining** — how many days left in the current period

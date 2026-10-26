@@ -187,3 +187,24 @@ const CATEGORIES: Record<string, DefaultCategory[]> = {
 export function getDefaultCategories(language: string): DefaultCategory[] {
   return CATEGORIES[language] || CATEGORIES.en;
 }
+
+let slotByName: Map<string, number> | null = null;
+
+/**
+ * Index of a name in ANY locale's default list, or null. The lists are
+ * index-aligned across all nine locales (same concept at the same index), so
+ * two names with the same slot are the same category in different languages.
+ */
+export function defaultCategorySlot(name: string): number | null {
+  if (!slotByName) {
+    slotByName = new Map();
+    for (const list of Object.values(CATEGORIES)) {
+      list.forEach((c, i) => {
+        const key = c.name.normalize('NFC').trim().toLowerCase();
+        if (!slotByName!.has(key)) slotByName!.set(key, i);
+      });
+    }
+  }
+  const slot = slotByName.get(name.normalize('NFC').trim().toLowerCase());
+  return slot === undefined ? null : slot;
+}

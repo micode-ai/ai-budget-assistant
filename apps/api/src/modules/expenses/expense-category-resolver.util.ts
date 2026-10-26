@@ -1,5 +1,6 @@
 import { Logger } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
+import { findEquivalentCategory } from '../../common/utils/category-equivalence';
 
 const logger = new Logger('CategoryResolver');
 
@@ -101,6 +102,15 @@ export async function resolveExpenseCategoryId(
 
   // Auto-create category if it looks like a real name (not a default ID).
   if (!categoryId.startsWith('default-')) {
+    // Same meaning under another name or language (Zakupy spożywcze vs
+    // Groceries) must reuse the account's category, not add a second one.
+    const live = await prisma.category.findMany({
+      where: { accountId, type: kind, isDeleted: false },
+      select: { id: true, name: true },
+    });
+    const equivalent = findEquivalentCategory(categoryId, live);
+    if (equivalent) return equivalent.id;
+
     const created = await prisma.category.create({
       data: { accountId, name: categoryId, type: kind },
     });

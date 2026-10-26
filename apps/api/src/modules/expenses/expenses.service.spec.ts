@@ -444,6 +444,7 @@ function makeCategorizedItemsCreateService() {
   const prisma: any = {
     category: {
       findFirst: jest.fn().mockResolvedValue({ id: 'c-alc' }),
+      findMany: jest.fn().mockResolvedValue([]),
       findUnique: jest.fn().mockResolvedValue(null),
       // resolveCategoryId auto-creates when a name-style id matches nothing.
       // Returning a name-derived id lets a test tell two resolutions apart.

@@ -49,10 +49,10 @@ interface CategoryState {
   getCategoryByName: (name: string, type: 'expense' | 'income') => Category | undefined;
   getExpenseCategories: () => Category[];
   getIncomeCategories: () => Category[];
-  createCategory: (name: string, type: 'expense' | 'income', icon?: string, color?: string) => Promise<Category>;
+  createCategory: (name: string, type: 'expense' | 'income', icon?: string, color?: string, parentId?: string) => Promise<Category>;
   syncFromServer: (serverCategories: any[]) => Promise<void>;
   deleteCategory: (id: string) => Promise<void>;
-  updateCategory: (id: string, data: { name?: string; color?: string; icon?: string }) => Promise<void>;
+  updateCategory: (id: string, data: { name?: string; color?: string; icon?: string; parentId?: string | null }) => Promise<void>;
 }
 
 /**
@@ -283,7 +283,7 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
     return get().categories.filter(c => c.type === 'income' && !c.isDeleted);
   },
 
-  createCategory: async (name: string, type: 'expense' | 'income', icon?: string, color?: string) => {
+  createCategory: async (name: string, type: 'expense' | 'income', icon?: string, color?: string, parentId?: string) => {
     const accountId = useAccountStore.getState().currentAccountId;
     const userId = useAuthStore.getState().user?.id;
     if (!accountId || !userId) throw new Error('No account or user');
@@ -309,6 +309,7 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
       color: color || '#6B7280',
       type,
       isSystem: false,
+      parentId,
       createdAt: now,
       updatedAt: now,
       isDeleted: false,
@@ -322,8 +323,9 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
     // list and silently drop this category from any split still being built
     // around it. Fall back to appending it to the current list instead — the
     // `existing` check above already ruled out a duplicate.
+    const previousList = get().categories;
     const categories = await getAllCategories(accountId);
-    set({ categories: categories.length > 0 ? categories : [...get().categories, category] });
+    set({ categories: categories.length > 0 ? categories : [...previousList, category] });
 
     // AWAITED, not fire-and-forget (was the opposite before). Discarding the
     // response left the local row on its device id forever while the server
@@ -341,6 +343,7 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
         icon,
         color,
         type,
+        parentId,
         clientId: id,
         encryptedPayload,
         encryptionKeyVersion,
@@ -351,7 +354,21 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
         await get().syncFromServer([created]);
         return { ...category, id: created.id, clientId: id };
       }
-    } catch {
+    } catch (error: any) {
+      // A server REFUSAL (400 'Invalid parent category', 409) is authoritative
+      // and never succeeds on retry: keeping the local row would leave a child
+      // the phone rolls into its parent while the server has no such link.
+      // A hierarchy edit also cannot be queued (categories are not in
+      // syncQueue; an offline-created category reaches the server parentless,
+      // via an expense's fallbackName), so a TRANSPORT failure on a create that
+      // carries a parent is undone too. Plain offline creates stand.
+      const refused = error?.status === 400 || error?.status === 409;
+      if (refused || parentId) {
+        await deleteCategoryFromDb(id);
+        set({ categories: previousList });
+        if (!refused) console.warn('createCategory with a parent needs a connection', error);
+        throw error;
+      }
       // Offline / server unavailable — the local row above is the source of
       // truth until the next successful sync.
     }
@@ -484,7 +501,7 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
     }));
   },
 
-  updateCategory: async (id: string, data: { name?: string; color?: string; icon?: string }) => {
+  updateCategory: async (id: string, data: { name?: string; color?: string; icon?: string; parentId?: string | null }) => {
     // Save locally FIRST (Sentry/prod-nginx 2026-09: 13 of 15 PATCH
     // /categories/:id calls in 72h returned 404). Locally-created and seeded
     // rows carry a device-generated id and Category has no clientId for the
@@ -494,12 +511,17 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
     // silently vanished on the next reload: the "my category edits disappear
     // after restart" report.
     const current = get().categories.find((c) => c.id === id);
-    const merged = { ...current, ...data, updatedAt: new Date() };
+    // `data` goes to the server as-is (`parentId: null` is how a parent is
+    // cleared there); locally the row stores "no parent" as `undefined`.
+    const { parentId: dataParentId, ...dataRest } = data;
+    const localData: Partial<Category> = { ...dataRest };
+    if ('parentId' in data) localData.parentId = dataParentId ?? undefined;
+    const merged = { ...current, ...localData, updatedAt: new Date() };
     set((state) => ({
       categories: state.categories.map((c) => (c.id === id ? (merged as typeof c) : c)),
     }));
     if (current) {
-      await upsertCategory({ ...current, ...data, updatedAt: new Date() });
+      await upsertCategory({ ...current, ...localData, updatedAt: new Date() });
       // Native only — on web the read-back is empty (see loadCategories' guard)
       // and must not wipe the in-memory list we just updated.
       const accountId = useAccountStore.getState().currentAccountId;
@@ -521,7 +543,15 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
       // write above has to be undone: leaving it would show two categories
       // under one name until the next pull silently reverted the edit, and the
       // local row would disagree with the server in the meantime (ABA-565).
-      if (error?.status === 409 && current) {
+      // 400 on a parent change is the same kind of answer: the server judged
+      // the hierarchy invalid ('Invalid parent category'), so a retry cannot
+      // succeed and the local parent must not outlive the refusal.
+      // A parent change that did not reach the server (transport failure or
+      // any non-404 answer) is undone as well: categories have no push queue,
+      // so the next pull would silently revert it anyway.
+      const parentChanged =
+        'parentId' in data && (data.parentId ?? undefined) !== (current?.parentId ?? undefined);
+      if ((error?.status === 409 || (parentChanged && error?.status !== 404)) && current) {
         await upsertCategory(current);
         set((state) => ({
           categories: state.categories.map((c) => (c.id === id ? (current as typeof c) : c)),

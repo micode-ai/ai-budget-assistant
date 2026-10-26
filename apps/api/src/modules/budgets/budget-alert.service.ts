@@ -5,6 +5,8 @@ import * as ni18n from '../notifications/notification-i18n';
 import { computeBudgetPeriod } from './budget-period.util';
 import { EXCLUDE_SPLIT_RECEIVABLE, categoryOrSplitFilter } from '../../common/utils/expense-filters';
 import { attributeToCategories } from '../../common/utils/category-attribution';
+import { expandAllocatedCategoryIds, rollUpAllocationSpend } from '../../common/utils/category-tree';
+import { loadExpenseCategoryTree, BudgetTreeCategory } from './budget-category-tree.util';
 
 const THRESHOLDS = [50, 80, 100];
 
@@ -67,6 +69,7 @@ export class BudgetAlertService {
       allocations.length > 0 ? allocations.map((a: any) => a.categoryId) : null;
     let spent: number;
     let categorySpentMap: Map<string, number> | undefined;
+    let tree: BudgetTreeCategory[] = [];
 
     // Branch on `categoryIds` itself rather than on a derived set:
     // `strictNullChecks` is on and TypeScript cannot correlate a derived
@@ -93,12 +96,15 @@ export class BudgetAlertService {
       // same categoryOrSplitFilter over the same allocation ids) — computed
       // once here and handed down below, rather than run twice per expense
       // write against a pool capped at connection_limit=10.
+      tree = await loadExpenseCategoryTree(this.prisma, accountId);
+      // Keyed by LEAF category id after expansion, so summing the map counts
+      // each attributed part exactly once (a child is never added twice).
       categorySpentMap = await this.computeCategorySpend(
         accountId,
         budget,
         periodStart,
         periodEnd,
-        categoryIds,
+        [...expandAllocatedCategoryIds(categoryIds, tree)],
       );
       spent = 0;
       for (const amount of categorySpentMap.values()) spent += amount;
@@ -184,7 +190,7 @@ export class BudgetAlertService {
       }
     }
 
-    await this.checkCategoryThresholds(accountId, budget, periodStart, periodEnd, categorySpentMap);
+    await this.checkCategoryThresholds(accountId, budget, periodStart, periodEnd, categorySpentMap, tree);
   }
 
   /**
@@ -243,6 +249,7 @@ export class BudgetAlertService {
     periodStart: Date,
     periodEnd: Date,
     precomputedSpentMap?: Map<string, number>,
+    precomputedTree?: BudgetTreeCategory[],
   ): Promise<void> {
     const allocations = (budget.categoryAllocations || []).filter((a: any) => !a.isDeleted);
     if (allocations.length === 0) return;
@@ -252,9 +259,19 @@ export class BudgetAlertService {
     // `checkBudgetThresholds` already ran this exact query (same ids — both
     // derive from `budget.categoryAllocations` filtered the same way) to get
     // its own overall total; reuse it rather than asking Postgres again.
+    const tree = precomputedTree ?? (await loadExpenseCategoryTree(this.prisma, accountId));
     const spentMap =
       precomputedSpentMap ??
-      (await this.computeCategorySpend(accountId, budget, periodStart, periodEnd, allocationCategoryIds));
+      (await this.computeCategorySpend(
+        accountId,
+        budget,
+        periodStart,
+        periodEnd,
+        [...expandAllocatedCategoryIds(allocationCategoryIds, tree)],
+      ));
+    // A parent allocation reads its own plus its children spend; the alert
+    // row is still recorded under the PARENT categoryId.
+    const rollUp = rollUpAllocationSpend(spentMap, allocationCategoryIds, tree);
 
     for (const allocation of allocations) {
       const categoryId: string = allocation.categoryId;
@@ -262,7 +279,7 @@ export class BudgetAlertService {
       const allocated = Number(allocation.amount);
       if (allocated <= 0) continue;
 
-      const spent = spentMap.get(categoryId) ?? 0;
+      const spent = rollUp.get(categoryId)?.spent ?? 0;
       const percentUsed = (spent / allocated) * 100;
 
       for (const threshold of THRESHOLDS) {

@@ -4,6 +4,7 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
+  ScrollView,
 } from 'react-native';
 import { showAlert } from '@/utils/alert';
 import { SheetDialog } from '@/components/SheetDialog';
@@ -14,6 +15,8 @@ import { useCategoryStore } from '@/stores/categoryStore';
 import { useAccountStore } from '@/stores/accountStore';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import type { Category } from '@budget/shared-types';
+import { sortCategoriesAsTree } from '@budget/shared-utils';
+import { eligibleParents, hasLiveChildren } from '@/features/categories/parentCandidates';
 import { SettingsScreenScroll } from '../SettingsScreenScroll';
 
 
@@ -93,6 +96,9 @@ export function CategoriesSettings() {
 
   const expenseCategories = getExpenseCategories();
   const incomeCategories = getIncomeCategories();
+  // Expense rows render as a tree, children indented under their parent.
+  const expenseTree = sortCategoriesAsTree(expenseCategories);
+  const incomeTree = incomeCategories.map((category) => ({ category, depth: 0 as const }));
 
   // Modal state
   const [modalVisible, setModalVisible] = useState(false);
@@ -102,6 +108,18 @@ export function CategoriesSettings() {
   const [selectedColor, setSelectedColor] = useState(PRESET_COLORS[0]);
   const [selectedIcon, setSelectedIcon] = useState<string | undefined>(undefined);
   const [isSaving, setIsSaving] = useState(false);
+  const [selectedParentId, setSelectedParentId] = useState<string | undefined>(undefined);
+  const [parentListOpen, setParentListOpen] = useState(false);
+
+  // Hierarchy applies to expense categories only; a category with children
+  // cannot itself get a parent, so the row is hidden for it entirely.
+  const parentOptions =
+    modalType === 'expense' ? eligibleParents(expenseCategories, editingCategory, 'expense') : [];
+  const showParentRow =
+    modalType === 'expense' &&
+    !(editingCategory && hasLiveChildren(expenseCategories, editingCategory.id)) &&
+    parentOptions.length > 0;
+  const selectedParent = parentOptions.find((c) => c.id === selectedParentId);
 
   const openCreateModal = (type: 'expense' | 'income') => {
     setEditingCategory(null);
@@ -109,6 +127,8 @@ export function CategoriesSettings() {
     setName('');
     setSelectedColor(PRESET_COLORS[0]);
     setSelectedIcon(undefined);
+    setSelectedParentId(undefined);
+    setParentListOpen(false);
     setModalVisible(true);
   };
 
@@ -118,6 +138,8 @@ export function CategoriesSettings() {
     setName(category.name);
     setSelectedColor(category.color || PRESET_COLORS[0]);
     setSelectedIcon(category.icon || undefined);
+    setSelectedParentId(category.parentId || undefined);
+    setParentListOpen(false);
     setModalVisible(true);
   };
 
@@ -127,6 +149,8 @@ export function CategoriesSettings() {
     setName('');
     setSelectedColor(PRESET_COLORS[0]);
     setSelectedIcon(undefined);
+    setSelectedParentId(undefined);
+    setParentListOpen(false);
   };
 
   const handleSave = async () => {
@@ -139,9 +163,23 @@ export function CategoriesSettings() {
     setIsSaving(true);
     try {
       if (editingCategory) {
-        await updateCategory(editingCategory.id, { name: trimmed, color: selectedColor, icon: selectedIcon });
+        const parentChanged =
+          showParentRow && (selectedParentId ?? null) !== (editingCategory.parentId ?? null);
+        await updateCategory(editingCategory.id, {
+          name: trimmed,
+          color: selectedColor,
+          icon: selectedIcon,
+          // Only sent when the user changed it; `null` clears the parent.
+          ...(parentChanged ? { parentId: selectedParentId ?? null } : {}),
+        });
       } else {
-        await createCategory(trimmed, modalType, selectedIcon, selectedColor);
+        await createCategory(
+          trimmed,
+          modalType,
+          selectedIcon,
+          selectedColor,
+          showParentRow ? selectedParentId : undefined,
+        );
       }
       closeModal();
     } catch (error: any) {
@@ -155,6 +193,8 @@ export function CategoriesSettings() {
             ? t('categories.nameTakenByDeleted', { name: trimmed })
             : t('categories.nameTaken', { name: trimmed }),
         );
+      } else if (error?.status === 400 && showParentRow) {
+        showAlert(t('common.error'), t('categories.parentInvalid'));
       } else {
         showAlert(t('common.error'), t('errors.saveFailed'));
       }
@@ -198,8 +238,8 @@ export function CategoriesSettings() {
     );
   };
 
-  const renderCategory = (category: Category) => (
-    <View key={category.id} style={styles.row}>
+  const renderCategory = (category: Category, depth: 0 | 1) => (
+    <View key={category.id} style={[styles.row, depth === 1 && styles.childRow]}>
       <TouchableOpacity
         style={styles.rowContent}
         onPress={canEdit ? () => openEditModal(category) : undefined}
@@ -229,7 +269,11 @@ export function CategoriesSettings() {
     </View>
   );
 
-  const renderSection = (title: string, items: Category[], type: 'expense' | 'income') => (
+  const renderSection = (
+    title: string,
+    items: { category: Category; depth: 0 | 1 }[],
+    type: 'expense' | 'income',
+  ) => (
     <>
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionTitle}>{title}</Text>
@@ -243,9 +287,9 @@ export function CategoriesSettings() {
         {items.length === 0 ? (
           <Text style={styles.empty}>{t('categories.empty')}</Text>
         ) : (
-          items.map((cat, i) => (
+          items.map(({ category: cat, depth }, i) => (
             <React.Fragment key={cat.id}>
-              {renderCategory(cat)}
+              {renderCategory(cat, depth)}
               {i < items.length - 1 && <View style={styles.divider} />}
             </React.Fragment>
           ))
@@ -257,8 +301,8 @@ export function CategoriesSettings() {
   return (
     <>
       <SettingsScreenScroll style={styles.scrollView} contentContainerStyle={styles.content}>
-        {renderSection(t('categories.expenseCategories'), expenseCategories, 'expense')}
-        {renderSection(t('categories.incomeCategories'), incomeCategories, 'income')}
+        {renderSection(t('categories.expenseCategories'), expenseTree, 'expense')}
+        {renderSection(t('categories.incomeCategories'), incomeTree, 'income')}
       </SettingsScreenScroll>
 
       <SheetDialog
@@ -309,6 +353,50 @@ export function CategoriesSettings() {
             );
           })}
         </View>
+
+        {showParentRow && (
+          <View style={styles.parentBlock}>
+            <TouchableOpacity
+              style={styles.parentRow}
+              onPress={() => setParentListOpen((o) => !o)}
+              accessibilityRole="button"
+              accessibilityState={{ expanded: parentListOpen }}
+            >
+              <Text style={styles.parentLabel}>{t('categories.parent')}</Text>
+              <Text style={styles.parentValue} numberOfLines={1}>
+                {selectedParent ? selectedParent.name : t('categories.parentNone')}
+              </Text>
+              <Ionicons
+                name={parentListOpen ? 'chevron-up' : 'chevron-down'}
+                size={18}
+                color={theme.colors.textTertiary}
+              />
+            </TouchableOpacity>
+            {parentListOpen && (
+              <ScrollView style={styles.parentList} nestedScrollEnabled>
+                {[undefined, ...parentOptions].map((opt) => {
+                  const isSel = opt?.id === selectedParentId;
+                  return (
+                    <TouchableOpacity
+                      key={opt?.id ?? 'none'}
+                      style={styles.parentOption}
+                      onPress={() => {
+                        setSelectedParentId(opt?.id);
+                        setParentListOpen(false);
+                      }}
+                    >
+                      <Text style={[styles.parentOptionText, isSel && { color: theme.colors.primary }]}>
+                        {opt ? opt.name : t('categories.parentNone')}
+                      </Text>
+                      {isSel && <Ionicons name="checkmark" size={16} color={theme.colors.primary} />}
+                    </TouchableOpacity>
+                  );
+                })}
+              </ScrollView>
+            )}
+            <Text style={styles.parentHint}>{t('categories.parentHint')}</Text>
+          </View>
+        )}
 
         <View style={styles.colorGrid}>
           {PRESET_COLORS.map((color) => (
@@ -370,6 +458,44 @@ const createStyles = (theme: Theme) => ({
     flexDirection: 'row' as const,
     alignItems: 'center' as const,
     paddingVertical: theme.spacing[1],
+  },
+  childRow: { paddingLeft: theme.spacing[6] },
+  parentBlock: { marginBottom: theme.spacing[4] },
+  parentRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderRadius: theme.borderRadius.lg,
+    paddingVertical: theme.spacing[3],
+    paddingHorizontal: theme.spacing[4],
+  },
+  parentLabel: { ...theme.textStyles.body, color: theme.colors.textSecondary },
+  parentValue: {
+    ...theme.textStyles.body,
+    flex: 1,
+    textAlign: 'right' as const,
+    color: theme.colors.textPrimary,
+  },
+  parentList: {
+    marginTop: theme.spacing[1],
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    maxHeight: 220,
+  },
+  parentOption: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'space-between' as const,
+    paddingVertical: theme.spacing[3],
+    paddingHorizontal: theme.spacing[4],
+  },
+  parentOptionText: { ...theme.textStyles.body, color: theme.colors.textPrimary },
+  parentHint: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textTertiary,
+    marginTop: theme.spacing[1],
   },
   rowContent: {
     flex: 1,

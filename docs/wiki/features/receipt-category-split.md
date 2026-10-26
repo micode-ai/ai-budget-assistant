@@ -1,6 +1,6 @@
 # Receipt category auto-split
 
-*Hub: [ai-features](../ai-features.md) · [api](../api.md)*
+*Hub: [ai-features](../ai-features.md) · [api](../api.md) · related: [category-hierarchy](category-hierarchy.md)*
 
 ## What this is
 
@@ -76,7 +76,23 @@ an existing category or an already-accepted proposal, and each line number must 
 unclaimed. An **assignment always wins a contested line**, because `validateAssignments` runs first
 and seeds the `claimed` set. At most `MAX_PROPOSED_CATEGORIES` (3) survive one scan; the length
 check sits at the top of the loop, so a 4th valid proposal is dropped outright. Names are requested
-in the account owner's language, not generated in English and translated after.
+in the **scanning user's** language (`receipt-finalizer.service.ts` passes the caller's
+`user.language`), not generated in English and translated after — and NOT in the owner's language,
+unlike the deposit name. A user who switches UI language therefore seeds the account with
+categories in several languages (one production account held three deposit categories, one per
+language). Before the category-hierarchy redesign `validateProposals` rejected only an exact name
+match, so a translation of an existing category, a synonym or a part of one all passed; it now
+reroutes an equal or translated proposal to the existing category. Redesign:
+`docs/superpowers/specs/2026-10-26-category-hierarchy-design.md`.
+
+**The prompt carries the category tree and forbids overlap (category hierarchy).** Categories are
+listed as `Parent > Child`, and the response enum is every category's own name, so a line may land on
+a child or a parent. The prompt tells the model never to propose a part, synonym, translation or
+subcategory of an existing category, only a genuinely new top-level kind of spending. Server side, a
+proposal that duplicates an existing category (equality or translation, via `findEquivalentCategory`)
+is rerouted: its lines go to that category instead of a new one being created. A proposal with no
+known target keeps the old fallback. The classifier never creates a subcategory. See
+[category-hierarchy](category-hierarchy.md).
 
 **Standard names first, and no forced fits (ABA-601).** The prompt lists the default category
 names (`getDefaultCategories`, owner language, expense-type, deposit and already-present names
@@ -204,6 +220,9 @@ confidently wrong two times out of three.
   has line items).
 - Invented item NAMES on a reading whose arithmetic happens to reconcile are undetectable — one
   receipt stored two wholly fabricated line names whose prices summed to exactly the total.
+- **Semantic overlap is model-only.** A subcategory-like proposal ("bread" when no bread
+  subcategory exists) or a synonym ("beer" beside "alcohol") is stopped by the prompt alone; the validator catches only
+  equal names and translations.
 
 ## History
 
@@ -215,4 +234,5 @@ hand-constructed, so a new constructor dependency silently arrived as `undefined
 (the re-read tracked as its own AI-COGS line, `ocr_reread`) · ABA-529 (category budgets attribute
 splits — see [category-id-resolution](category-id-resolution.md) and the budget attribution util) ·
 ABA-601 (standard names for proposals; the overall category vetoed by the split) · ABA-602
-(a moved expense unlearns its product rules) · ABA-664 (the discount check counts the deposit).
+(a moved expense unlearns its product rules) · ABA-664 (the discount check counts the deposit) ·
+[ABA-696](https://github.com/micode-ai/ai-budget-assistant/issues/729) (category hierarchy; tree in the prompt, equivalence, rerouted proposals).

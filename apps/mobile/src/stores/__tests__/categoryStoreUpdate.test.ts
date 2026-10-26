@@ -176,3 +176,63 @@ describe('categoryStore.updateCategory — local-first persistence', () => {
     );
   });
 });
+
+
+describe('categoryStore.updateCategory — parent category', () => {
+  it('sends parentId and stores it locally', async () => {
+    mockGetAll.mockResolvedValue([{ ...localCategory(), parentId: 'P' }]);
+    (api.updateCategory as jest.Mock).mockResolvedValueOnce({});
+
+    await useCategoryStore.getState().updateCategory('local-uuid-1', { parentId: 'P' });
+
+    expect(api.updateCategory).toHaveBeenCalledWith('local-uuid-1', { parentId: 'P' });
+    expect(mockUpsert).toHaveBeenCalledWith(
+      expect.objectContaining({ id: 'local-uuid-1', parentId: 'P' }),
+    );
+    expect(useCategoryStore.getState().categories[0].parentId).toBe('P');
+  });
+
+  it('sends parentId null and clears it locally and remotely', async () => {
+    const child = { ...localCategory(), parentId: 'P' } as Category;
+    useCategoryStore.setState({ categories: [child] });
+    mockGetAll.mockResolvedValue([localCategory()]);
+    (api.updateCategory as jest.Mock).mockResolvedValueOnce({});
+
+    await useCategoryStore.getState().updateCategory('local-uuid-1', { parentId: null });
+
+    expect(api.updateCategory).toHaveBeenCalledWith('local-uuid-1', { parentId: null });
+    expect(mockUpsert).toHaveBeenCalledWith(
+      expect.not.objectContaining({ parentId: 'parent-1' }),
+    );
+    expect(useCategoryStore.getState().categories[0].parentId).toBeUndefined();
+  });
+
+  it('rolls the local parent back when the server answers 400', async () => {
+    (api.updateCategory as jest.Mock).mockRejectedValueOnce(
+      Object.assign(new Error('Invalid parent category'), { status: 400 }),
+    );
+
+    await expect(
+      useCategoryStore.getState().updateCategory('local-uuid-1', { parentId: 'P' }),
+    ).rejects.toThrow('Invalid parent category');
+
+    expect(useCategoryStore.getState().categories[0].parentId).toBeUndefined();
+    const lastWrite = mockUpsert.mock.calls[mockUpsert.mock.calls.length - 1][0];
+    expect(lastWrite.id).toBe('local-uuid-1');
+    expect(lastWrite.parentId).toBeUndefined();
+  });
+});
+
+describe('categoryStore.updateCategory — a re-parent needs the server', () => {
+  it('rolls the parent change back when the server is unreachable', async () => {
+    (api.updateCategory as jest.Mock).mockRejectedValueOnce(new TypeError('Network request failed'));
+
+    await expect(
+      useCategoryStore.getState().updateCategory('local-uuid-1', { parentId: 'parent-1' }),
+    ).rejects.toThrow('Network request failed');
+
+    expect(useCategoryStore.getState().categories[0].parentId).toBeUndefined();
+    expect(mockUpsert).toHaveBeenLastCalledWith(expect.not.objectContaining({ parentId: 'parent-1' }));
+  });
+
+});

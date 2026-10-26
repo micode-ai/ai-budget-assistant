@@ -66,6 +66,7 @@ Tik op een budget om de volledige details te zien:
   - Kleurstip + categorienaam
   - Uitgegeven / toegewezen bedragen
   - Voortgangsbalk per categorie (groen/geel/rood op basis van gebruik)
+- **Subcategorieën** — heeft een toegewezen categorie subcategorieën (bijvoorbeeld Boodschappen met Brood en Kaas), dan telt de regel de hele groep op en toont eronder een uitsplitsing per subcategorie, plus een rij **Zonder subcategorie** voor uitgaven die direct onder de hoofdcategorie vallen. Uitgaven in een subcategorie die ook apart is toegewezen tellen in beide regels mee, maar het totaal van het budget telt elke uitgave maar één keer. De huidige categoriestructuur geldt ook voor eerdere periodes, dus een categorie verplaatsen wijzigt eerdere bedragen.
 - **Periode** — het tijdsbereik van het budget
 - **Waarschuwingsdrempel** — het meldingstriggerpunt (bijv. 80%)
 - **Resterende dagen** — hoeveel dagen er nog over zijn in de huidige periode

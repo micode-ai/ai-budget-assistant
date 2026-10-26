@@ -303,7 +303,7 @@ export class ReceiptFinalizerService {
 
       const categories = await this.prisma.category.findMany({
         where: { OR: [{ isSystem: true }, { accountId }], type: 'expense', isDeleted: false },
-        select: { id: true, name: true },
+        select: { id: true, name: true, parentId: true },
       });
       if (categories.length === 0) {
         this.logger.log(`[CategorySplit] ${accountId}: skipped no_categories`);
@@ -327,12 +327,11 @@ export class ReceiptFinalizerService {
       }
 
       // A new category has to earn its place in the user's taxonomy. The model
-      // is told to propose a distinct kind of spending even when a broad
-      // category could hold it — otherwise a supermarket receipt files entirely
-      // under "Groceries" and tells the user nothing — but it cannot judge
-      // whether the group is worth a category, because by contract it never
-      // sees an amount. The server can: a group below this share of the receipt
-      // is clutter, and its lines are left unassigned rather than given a
+      // is told to assign to the most specific existing category and to propose
+      // one only for a kind of spending nothing listed covers, but it cannot
+      // judge whether the group is worth a category, because by contract it
+      // never sees an amount. The server can: a group below this share of the
+      // receipt is clutter, and its lines are left unassigned rather than given a
       // category that exists to hold three zloty.
       const amountByIndex = new Map(allLines.map((line) => [line.index, line.amount]));
       const materialProposals = proposals.filter((proposal) => {

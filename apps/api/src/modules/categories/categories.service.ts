@@ -1,8 +1,9 @@
-import { Injectable, NotFoundException, ConflictException, ForbiddenException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException, ForbiddenException, BadRequestException } from '@nestjs/common';
 import type { Category } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
 import { EmbeddingService } from '../ai/services/embedding.service';
 import { CacheService } from '../../common/cache/cache.service';
+import { isDepositCategoryName } from '../../common/utils/deposit-category';
 
 @Injectable()
 export class CategoriesService {
@@ -16,6 +17,39 @@ export class CategoriesService {
     if (!accountId) return;
     void this.cacheService.delByPrefix(`chat:get_category_breakdown:${accountId}:`);
     void this.cacheService.delByPrefix(`chat:get_expenses:${accountId}:`);
+  }
+
+  /**
+   * Two-level hierarchy guard. `parentId` may be a server id or a mobile
+   * clientId; returns the RESOLVED server PK, which is what must be written.
+   * `categoryId` is the resolved PK of the category being edited (null on
+   * create).
+   */
+  private async assertValidParent(
+    accountId: string,
+    categoryId: string | null,
+    parentId: string,
+    type: string,
+    childName: string,
+  ): Promise<string> {
+    const invalid = () => new BadRequestException('Invalid parent category');
+    const parent = await this.prisma.category.findFirst({
+      where: { accountId, isDeleted: false, OR: [{ id: parentId }, { clientId: parentId }] },
+    });
+    // The deposit category is never a parent AND never a child.
+    if (isDepositCategoryName(childName)) throw invalid();
+    if (!parent) throw invalid();
+    if (categoryId && parent.id === categoryId) throw invalid();
+    if (parent.parentId != null) throw invalid();
+    if (parent.type !== type) throw invalid();
+    if (isDepositCategoryName(parent.name)) throw invalid();
+    if (categoryId) {
+      const liveChildren = await this.prisma.category.count({
+        where: { parentId: categoryId, isDeleted: false },
+      });
+      if (liveChildren > 0) throw invalid();
+    }
+    return parent.id;
   }
 
   async findAll(accountId: string) {
@@ -41,13 +75,17 @@ export class CategoriesService {
   private async reuseExisting(existing: Category, accountId: string, userId: string, dto: any) {
     if (!existing.isDeleted) return existing;
 
+    const parentId =
+      typeof dto.parentId === 'string' && dto.parentId
+        ? await this.assertValidParent(accountId, existing.id, dto.parentId, existing.type, existing.name)
+        : dto.parentId;
     const revived = await this.prisma.category.update({
       where: { id: existing.id },
       data: {
         isDeleted: false,
         icon: dto.icon,
         color: dto.color,
-        parentId: dto.parentId,
+        parentId,
         userId,
       },
     });
@@ -85,6 +123,11 @@ export class CategoriesService {
     });
     if (existing) return this.reuseExisting(existing, accountId, userId, dto);
 
+    const parentId =
+      typeof dto.parentId === 'string' && dto.parentId
+        ? await this.assertValidParent(accountId, null, dto.parentId, type, dto.name)
+        : dto.parentId;
+
     try {
       const created = await this.prisma.category.create({
         data: {
@@ -94,7 +137,7 @@ export class CategoriesService {
           icon: dto.icon,
           color: dto.color,
           type,
-          parentId: dto.parentId,
+          parentId,
           clientId: dto.clientId ?? undefined,
         },
       });
@@ -173,6 +216,15 @@ export class CategoriesService {
     // A division picked here is the user's own answer (ABA-617): marked 'user'
     // so it is told apart from a seed-icon or classifier guess.
     if (rest.coicopDivision !== undefined) rest.coicopSource = 'user';
+
+    // parentId: a non-empty string is validated and rewritten to the resolved
+    // PK; null clears it; an absent field leaves the stored value untouched.
+    if (typeof rest.parentId === 'string' && rest.parentId) {
+      // A system category (accountId null) is global; a parent is one account's
+      // row, so linking them would be a cross-tenant write.
+      if (category.accountId == null) throw new BadRequestException('Invalid parent category');
+      rest.parentId = await this.assertValidParent(accountId, category.id, rest.parentId, rest.type ?? category.type, rest.name ?? category.name);
+    }
 
     // `@@unique([accountId, name, type])` covers BOTH columns this PATCH can
     // change, so a rename — or a type switch — onto another of the account's

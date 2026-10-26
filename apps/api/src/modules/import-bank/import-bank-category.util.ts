@@ -1,4 +1,5 @@
 import { PrismaService } from '../../database/prisma.service';
+import { findEquivalentCategory } from '../../common/utils/category-equivalence';
 
 /**
  * Cache key for a resolved category. Includes the type: the same name can
@@ -69,6 +70,15 @@ export async function preloadCategories(
     });
     if (existing) {
       cache.set(key, existing.id);
+      continue;
+    }
+    const live = await prisma.category.findMany({
+      where: { accountId, type, isDeleted: false },
+      select: { id: true, name: true },
+    });
+    const equivalent = findEquivalentCategory(name, live);
+    if (equivalent) {
+      cache.set(key, equivalent.id);
       continue;
     }
     try {

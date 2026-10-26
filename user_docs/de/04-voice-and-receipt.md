@@ -97,6 +97,7 @@ Kassenbons vom Supermarkt enthalten oft mehrere Arten von Artikeln in einem Eink
 - Pfand für Flaschen und Dosen wird erkannt und als eigene Kategorie angezeigt, damit du siehst, wie viel deiner Ausgaben aus Verpackung besteht, die du zurückbekommst.
 - Das zählt jetzt auch für deine Kategorie-Budgets — ein Budget für eine Kategorie, die nur innerhalb einer Beleg-Aufteilung vorkommt, etwa Alkohol oder Pfand, wird endlich korrekt erfasst, und ein Lebensmittel-Budget zählt die Haushaltsartikel oder das Pfand vom selben Beleg nicht mehr mit.
 - Manchmal passt keine deiner bestehenden Kategorien zu einer Gruppe von Artikeln. In diesem Fall schlägt die App eine brandneue Kategorie vor, angezeigt als Chip mit einem **+**-Zeichen (zum Beispiel „+ Haushaltschemie 10"). Sie wird noch nicht angelegt — tippe auf **Kategorien ändern**, um ihre Artikel stattdessen einer bestehenden Kategorie zuzuweisen oder sie wie vorgeschlagen zu belassen. Die neue Kategorie wird erst angelegt, wenn du den Beleg speicherst.
+- Die App erfindet keine Kategorie mehr, die eine vorhandene doppelt — eine Übersetzung, ein Synonym oder einen Teil einer bestehenden Kategorie (z. B. „Brot“ neben „Lebensmittel“). Solche Artikel landen in deiner bestehenden Kategorie oder deren Unterkategorie; eine neue Kategorie wird nur für eine wirklich neue Art von Ausgaben vorgeschlagen, und Unterkategorien legt die App nie selbst an.
 
 Funktioniert genauso, egal ob du über die App oder über die Telegram-, WhatsApp- oder Slack-Bots scannst.
 

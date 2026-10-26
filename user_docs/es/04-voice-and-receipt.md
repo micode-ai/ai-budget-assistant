@@ -97,6 +97,7 @@ Los recibos del supermercado a menudo mezclan varios tipos de artículos en una 
 - Los depósitos de botellas y latas se reconocen y se muestran como su propia categoría, para que puedas ver cuánto de tu gasto es envase que puedes recuperar.
 - Esto también cuenta ahora para tus presupuestos por categoría — un presupuesto de una categoría que solo aparece dentro de una división de recibo, como Alcohol o el depósito, por fin se contabiliza correctamente, y un presupuesto de Alimentación deja de contar los artículos del hogar o el depósito del mismo recibo.
 - A veces ninguna de tus categorías existentes encaja con un grupo de artículos. En ese caso, la aplicación sugiere una categoría totalmente nueva, mostrada como un chip marcado con un **+** (por ejemplo, "+ Productos de limpieza 10"). Todavía no se crea — toca **Cambiar categorías** para reasignar sus artículos a una categoría existente, o dejarla tal como se sugirió. La nueva categoría solo se crea de verdad cuando guardas el recibo.
+- La app ya no inventa una categoría que duplique una que ya tienes: una traducción, un sinónimo o una parte de una categoría existente (por ejemplo «Pan» junto a «Alimentación»). Esos artículos van a tu categoría existente o a su subcategoría; solo se sugiere una categoría nueva para un tipo de gasto realmente nuevo, y la app nunca crea subcategorías por ti.
 
 Funciona igual tanto si escaneas desde la aplicación como desde los bots de Telegram, WhatsApp o Slack.
 

@@ -10,6 +10,9 @@ function makeService(overrides: {
   const category = {
     findUnique: jest.fn().mockResolvedValue(overrides.categoryFindUnique ?? null),
     findFirst: jest.fn().mockResolvedValue(overrides.categoryFindFirst ?? null),
+    // Equivalence lookup before auto-create (expense-category-resolver.util.ts);
+    // no live category exists here, so the create path still runs.
+    findMany: jest.fn().mockResolvedValue([]),
     create: jest.fn().mockResolvedValue(overrides.categoryCreate ?? { id: 'new-cat', name: 'Freelance', type: 'income' }),
   };
 

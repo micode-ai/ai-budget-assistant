@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import type { Category } from '@budget/shared-types';
+import { sortCategoriesAsTree } from '@budget/shared-utils';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { proposedKey, isProposedKey, proposedName } from '@/features/receipt/proposedCategory';
 
@@ -147,12 +148,12 @@ export default function ItemCategorySheet({ visible, items, categories, proposed
                           </TouchableOpacity>
                         );
                       })}
-                      {categories.map((cat) => {
+                      {sortCategoriesAsTree(categories).map(({ category: cat, depth }) => {
                         const selected = cat.id === item.categoryId;
                         return (
                           <TouchableOpacity
                             key={cat.id}
-                            style={styles.pickerRow}
+                            style={[styles.pickerRow, depth === 1 && styles.childPickerRow]}
                             onPress={() => {
                               onChange(item.index, cat.id);
                               setExpandedIndex(null);
@@ -255,6 +256,7 @@ const createStyles = (theme: Theme) => ({
   pickerList: {
     paddingLeft: theme.spacing[3],
   },
+  childPickerRow: { paddingLeft: theme.spacing[5] },
   pickerRow: {
     flexDirection: 'row' as const,
     alignItems: 'center' as const,

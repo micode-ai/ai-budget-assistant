@@ -66,6 +66,7 @@ Tippe auf ein beliebiges Budget, um die vollständigen Details zu sehen:
   - Farbpunkt + Kategoriename
   - Ausgegeben / zugeteilt
   - Kategoriefortschrittsbalken (grün/gelb/rot)
+- **Unterkategorien** — hat eine zugeteilte Kategorie Unterkategorien (z. B. Lebensmittel mit Brot und Käse), summiert ihre Zeile die ganze Gruppe und zeigt darunter eine Aufschlüsselung nach Unterkategorie sowie eine Zeile **Ohne Unterkategorie** für Ausgaben, die direkt der Oberkategorie zugeordnet sind. Ausgaben in einer Unterkategorie, die auch einzeln zugeteilt ist, zählen in beiden Zeilen, die Gesamtsumme des Budgets zählt jede Ausgabe aber nur einmal. Die aktuelle Kategoriestruktur gilt auch für vergangene Zeiträume, daher ändert das Verschieben einer Kategorie frühere Werte.
 - **Zeitraum** — der Zeitbereich des Budgets
 - **Warnschwelle** — der Benachrichtigungsauslösepunkt (z.B. 80%)
 - **Verbleibende Tage** — wie viele Tage im aktuellen Zeitraum verbleiben

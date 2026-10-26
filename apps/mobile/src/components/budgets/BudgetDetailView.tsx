@@ -1,4 +1,5 @@
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { SubcategoryBreakdownRows } from '@/components/budgets/SubcategoryBreakdownRows';
 import { showAlert } from '@/utils/alert';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -249,6 +250,7 @@ export function BudgetDetailView({
                     ]}
                   />
                 </View>
+                <SubcategoryBreakdownRows category={cat} currencyCode={budget.currencyCode} />
               </View>
             );
           };
