@@ -389,16 +389,21 @@ export class ReceiptFinalizerService {
       // a shared account must converge on one deposit category regardless of
       // which member scanned. Query only runs when there is actually a
       // deposit to name.
+      //
+      // An existing deposit category is found in ANY language, not only the
+      // owner's current one: the UI language can change at any time, and an
+      // exact-name lookup minted a new deposit category on every switch (one
+      // production account held three, one per language). The owner-language
+      // name only breaks a tie, and only names a category that does not exist.
       let depositGroup: { categoryId: string; categoryName: string } | null = null;
       if (hasDeposit) {
         const depositName = depositCategoryName(await this.resolveOwnerLanguage(accountId));
-        const existingDeposit = categories.find(
-          (c) => c.name.trim().toLowerCase() === depositName.toLowerCase(),
-        );
-        depositGroup = {
-          categoryId: existingDeposit ? existingDeposit.id : proposedKey(depositName),
-          categoryName: depositName,
-        };
+        const deposits = categories.filter((c) => isDepositCategoryName(c.name));
+        const existingDeposit =
+          deposits.find((c) => c.name.trim().toLowerCase() === depositName.toLowerCase()) ?? deposits[0];
+        depositGroup = existingDeposit
+          ? { categoryId: existingDeposit.id, categoryName: existingDeposit.name }
+          : { categoryId: proposedKey(depositName), categoryName: depositName };
       }
 
       const splits = buildCategorySplits({

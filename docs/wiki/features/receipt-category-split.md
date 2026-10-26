@@ -69,6 +69,12 @@ from the **account owner's** language (via `findFirst` filtered on `role: 'owner
 alphabetically `editor` precedes `owner`), so a shared account converges on one deposit category
 regardless of who scanned.
 
+**An existing deposit category is found in any language** (`isDepositCategoryName`), never by the
+owner's current-language name alone — the owner-language name only breaks a tie between several and
+names a category that does not exist yet. The UI language can be switched at any time; the old
+exact-name lookup minted a new deposit category on every switch, and one production account ended
+up with three, one per language. Switching language must never create or orphan data.
+
 **Category proposals.** When no existing category fits, the model may return
 `newCategories: [{name, lines}]`. `validateProposals` holds them to the same never-trust-only-drop
 posture: the name must normalize to 2–30 characters containing at least one letter, must not match

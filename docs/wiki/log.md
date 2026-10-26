@@ -256,6 +256,7 @@ Newest last within each section.
 - 2026-10-25 · [ABA-695](https://github.com/micode-ai/ai-budget-assistant/issues/727) — an auto-captured expense's description is now the merchant alone (else the localized source label), not `${merchant} (auto-captured)` in English in every language; payee dedup is unaffected because both sides prefer the merchant. Pages: [bank-notification-capture](features/bank-notification-capture.md).
 
 - 2026-10-26 · [ABA-696](https://github.com/micode-ai/ai-budget-assistant/issues/729) — category hierarchy: two-level tree, budget roll-up, equivalence check on automatic creation, classifier sees the tree; new page `features/category-hierarchy.md`.
+- 2026-10-26 · [ABA-697](https://github.com/micode-ai/ai-budget-assistant/issues/730) — a UI language switch minted a new deposit category per language: the finalizer matched the owner's current-language name only; it now reuses a deposit category in any language. Page: `features/receipt-category-split.md`.
 
 ## Queries
 

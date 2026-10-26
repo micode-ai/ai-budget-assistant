@@ -616,6 +616,37 @@ describe('finalizeReceipt category splits', () => {
       expect(splits.find((s: any) => s.categoryName === 'Kaucja').categoryId).toBe('c-dep');
     });
 
+    it('reuses an existing deposit category named in another language after the owner switched language', async () => {
+      // The owner now reads English, but the account's deposit category was
+      // created while they read Polish. Switching the UI language must not
+      // mint a second deposit category ("Deposit" beside "Kaucja").
+      prisma.accountMember.findFirst.mockResolvedValue({ user: { language: 'en' } });
+      prisma.category.findMany.mockResolvedValue([
+        { id: 'c-food', name: 'Groceries' },
+        { id: 'c-dep', name: 'Kaucja' },
+      ]);
+
+      const { splits } = await (service as any).runCategorySplit('a1', RECEIPT_WITH_DEPOSIT, 'u1');
+
+      const deposit = splits.find((s: any) => s.categoryId === 'c-dep');
+      expect(deposit).toBeDefined();
+      expect(deposit.categoryName).toBe('Kaucja');
+      expect(splits.map((s: any) => s.categoryName)).not.toContain('Deposit');
+    });
+
+    it('prefers the deposit category in the owner language when several exist', async () => {
+      prisma.accountMember.findFirst.mockResolvedValue({ user: { language: 'en' } });
+      prisma.category.findMany.mockResolvedValue([
+        { id: 'c-food', name: 'Groceries' },
+        { id: 'c-dep-pl', name: 'Kaucja' },
+        { id: 'c-dep-en', name: 'Deposit' },
+      ]);
+
+      const { splits } = await (service as any).runCategorySplit('a1', RECEIPT_WITH_DEPOSIT, 'u1');
+
+      expect(splits.find((s: any) => s.categoryName === 'Deposit').categoryId).toBe('c-dep-en');
+    });
+
     it('is not subject to the 10% materiality floor that governs proposals', async () => {
       // 4.5 of 204.5 is 2.2%. A model proposal that small is dropped; a deposit
       // is not a proposal — it is a printed, named block of the receipt.
