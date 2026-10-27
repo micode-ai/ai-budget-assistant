@@ -70,6 +70,10 @@ Przejrzyj i popraw ewentualne szczegoly, a nastepnie:
 - Dotknij **Zapisz wydatek**, aby potwierdzic
 - Dotknij **Skanuj ponownie**, aby sprobowac z innym zdjeciem
 
+### Powiększanie paragonu
+
+Stuknij małe zdjęcie paragonu na ekranie potwierdzenia — albo paragon w szczegółach wydatku — aby otworzyć go na pełnym ekranie. Na telefonie rozsuń dwa palce, aby powiększyć (do 5×), stuknij dwukrotnie, aby powiększyć to miejsce, i stuknij dwukrotnie ponownie, aby zobaczyć cały paragon; po powiększeniu przesuwaj go jednym palcem. W przeglądarce kółko myszy powiększa w miejscu kursora, przeciąganie przesuwa obraz, dwukrotne kliknięcie powiększa lub pomniejsza, a w rogu są przyciski **+**, **−** i „Dopasuj do ekranu”. Paragon zawsze otwiera się w całości. Paragony PDF otwierają się jak dotąd.
+
 ### Wskazowki dla najlepszych wynikow
 
 - Fotografuj w dobrym oswietleniu — unikaj cieni i odblaskow

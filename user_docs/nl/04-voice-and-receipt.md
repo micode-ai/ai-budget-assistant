@@ -70,6 +70,10 @@ Controleer en corrigeer eventuele details en daarna:
 - Tik op **Uitgave opslaan** om te bevestigen
 - Tik op **Opnieuw scannen** om een andere foto te proberen
 
+### Inzoomen op de bon
+
+Tik op het bevestigingsscherm op de kleine foto van de bon – of op de bon in de details van een uitgave – om hem schermvullend te openen. Op een telefoon zoom je in door te knijpen (tot 5×), dubbeltikken zoomt in op die plek en nogmaals dubbeltikken toont weer de hele bon; als je bent ingezoomd, verschuif je hem met één vinger. In de browser zoomt het muiswiel in waar de aanwijzer staat, slepen verschuift de afbeelding, dubbelklikken zoomt in of uit, en in de hoek staan de knoppen **+**, **−** en ‘Aanpassen aan scherm’. De bon opent altijd volledig zichtbaar. Pdf-bonnen openen zoals voorheen.
+
 ### Tips voor het beste resultaat
 
 - Fotografeer bij goed licht — vermijd schaduwen en weerkaatsing

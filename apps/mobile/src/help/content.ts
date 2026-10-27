@@ -661,6 +661,10 @@ Review and correct any details, then:
 - Tap **Save Expense** to confirm
 - Tap **Scan Again** to try a different photo
 
+### Zooming In on the Receipt
+
+Tap the small receipt photo on the confirmation screen — or the receipt on an expense's detail screen — to open it full screen. On a phone, pinch to zoom in (up to 5×), double-tap to zoom in on that spot and double-tap again to see the whole receipt, and drag with one finger to move around while zoomed. In the browser, scroll the mouse wheel to zoom where the pointer is, drag to move, double-click to zoom in or out, or use the **+**, **−** and fit buttons in the corner. The receipt always opens showing the whole page. PDF receipts open as before.
+
 ### Tips for Best Results
 
 - Photograph in good lighting — avoid shadows and glare
@@ -5927,6 +5931,10 @@ iOS, Android, Web
 - Нажмите **Сохранить расход**, чтобы подтвердить
 - Нажмите **Сканировать снова**, чтобы попробовать другое фото
 
+### Увеличение чека
+
+Нажмите на маленькое фото чека на экране подтверждения — или на чек в карточке расхода, — чтобы открыть его на весь экран. На телефоне разведите два пальца, чтобы увеличить (до 5×), дважды коснитесь, чтобы приблизить это место, и ещё раз дважды коснитесь, чтобы снова увидеть чек целиком; в увеличенном виде перемещайте его одним пальцем. В браузере колесо мыши увеличивает в точке под курсором, перетаскивание сдвигает изображение, двойной щелчок приближает или отдаляет, а в углу есть кнопки **+**, **−** и «По размеру экрана». Чек всегда открывается целиком. Чеки в PDF открываются как раньше.
+
 ### Советы для лучших результатов
 
 - Фотографируйте при хорошем освещении — избегайте теней и бликов
@@ -11170,6 +11178,10 @@ iOS, Android, Web
 - Натисніть **Зберегти витрату**, щоб підтвердити
 - Натисніть **Сканувати знову**, щоб спробувати з іншим фото
 
+### Збільшення чека
+
+Торкніться маленького фото чека на екрані підтвердження — або чека в картці витрати, — щоб відкрити його на весь екран. На телефоні розведіть два пальці, щоб збільшити (до 5×), двічі торкніться, щоб наблизити це місце, і ще раз двічі торкніться, щоб знову побачити чек повністю; у збільшеному вигляді переміщуйте його одним пальцем. У браузері коліщатко миші збільшує в точці під курсором, перетягування зсуває зображення, подвійне клацання наближає або віддаляє, а в куті є кнопки **+**, **−** і «За розміром екрана». Чек завжди відкривається повністю. Чеки у PDF відкриваються як раніше.
+
 ### Поради для найкращих результатів
 
 - Фотографуйте при хорошому освітленні — уникайте тіней та відблисків
@@ -16361,6 +16373,10 @@ Przejrzyj i popraw ewentualne szczegoly, a nastepnie:
 - Dotknij **Zapisz wydatek**, aby potwierdzic
 - Dotknij **Skanuj ponownie**, aby sprobowac z innym zdjeciem
 
+### Powiększanie paragonu
+
+Stuknij małe zdjęcie paragonu na ekranie potwierdzenia — albo paragon w szczegółach wydatku — aby otworzyć go na pełnym ekranie. Na telefonie rozsuń dwa palce, aby powiększyć (do 5×), stuknij dwukrotnie, aby powiększyć to miejsce, i stuknij dwukrotnie ponownie, aby zobaczyć cały paragon; po powiększeniu przesuwaj go jednym palcem. W przeglądarce kółko myszy powiększa w miejscu kursora, przeciąganie przesuwa obraz, dwukrotne kliknięcie powiększa lub pomniejsza, a w rogu są przyciski **+**, **−** i „Dopasuj do ekranu”. Paragon zawsze otwiera się w całości. Paragony PDF otwierają się jak dotąd.
+
 ### Wskazowki dla najlepszych wynikow
 
 - Fotografuj w dobrym oswietleniu — unikaj cieni i odblaskow
@@ -21548,6 +21564,10 @@ Uberprufe und korrigiere Details, dann:
 - Tippe auf **Ausgabe speichern**, um zu bestatigen
 - Tippe auf **Erneut scannen**, um ein anderes Foto zu versuchen
 
+### Den Beleg vergrößern
+
+Tippe auf dem Bestätigungsbildschirm auf das kleine Belegfoto – oder in den Details einer Ausgabe auf den Beleg –, um ihn im Vollbild zu öffnen. Auf dem Handy vergrößerst du mit zwei Fingern (bis 5×), ein Doppeltipp zoomt an dieser Stelle hinein, ein weiterer Doppeltipp zeigt wieder den ganzen Beleg, und im vergrößerten Zustand verschiebst du ihn mit einem Finger. Im Browser zoomt das Mausrad an der Stelle des Zeigers, Ziehen verschiebt das Bild, ein Doppelklick zoomt hinein oder heraus, und in der Ecke gibt es die Schaltflächen **+**, **−** und „An Bildschirm anpassen“. Der Beleg öffnet sich immer vollständig sichtbar. PDF-Belege öffnen sich wie bisher.
+
 ### Tipps fur beste Ergebnisse
 
 - Fotografiere bei guter Beleuchtung — vermeide Schatten und Blendung
@@ -26710,6 +26730,10 @@ Revisa y corrige cualquier detalle, luego:
 - Toca **Guardar gasto** para confirmar
 - Toca **Escanear de nuevo** para probar con otra foto
 
+### Ampliar el recibo
+
+Toca la pequeña foto del recibo en la pantalla de confirmación —o el recibo en el detalle de un gasto— para abrirlo a pantalla completa. En el móvil, pellizca para ampliar (hasta 5×), toca dos veces para ampliar ese punto y vuelve a tocar dos veces para ver el recibo entero; con el recibo ampliado, arrástralo con un dedo para moverte. En el navegador, la rueda del ratón amplía donde está el puntero, arrastrar mueve la imagen, el doble clic amplía o reduce, y en la esquina tienes los botones **+**, **−** y «Ajustar a la pantalla». El recibo siempre se abre mostrando la página entera. Los recibos en PDF se abren como antes.
+
 ### Consejos para mejores resultados
 
 - Fotografa con buena iluminacion — evita sombras y reflejos
@@ -31861,6 +31885,10 @@ Verifiez et corrigez les details, puis :
 - Appuyez sur **Enregistrer la depense** pour confirmer
 - Appuyez sur **Scanner a nouveau** pour essayer une autre photo
 
+### Zoomer sur le ticket
+
+Touchez la petite photo du ticket sur l’écran de confirmation — ou le ticket dans le détail d’une dépense — pour l’ouvrir en plein écran. Sur téléphone, pincez pour zoomer (jusqu’à 5×), touchez deux fois pour zoomer sur cet endroit et encore deux fois pour revoir tout le ticket, et faites-le glisser d’un doigt pour vous déplacer une fois zoomé. Dans le navigateur, la molette de la souris zoome à l’endroit du pointeur, glisser déplace l’image, un double-clic zoome ou dézoome, et les boutons **+**, **−** et « Ajuster à l’écran » se trouvent dans le coin. Le ticket s’ouvre toujours en entier. Les tickets PDF s’ouvrent comme avant.
+
 ### Conseils pour de meilleurs resultats
 
 - Photographiez dans un bon eclairage — evitez les ombres et les reflets
@@ -37010,6 +37038,10 @@ iOS, Android, Web
 - Націсніце **Захаваць выдатак**, каб пацвердзіць
 - Націсніце **Сканаваць зноў**, каб паспрабаваць іншае фота
 
+### Павелічэнне чэка
+
+Націсніце на маленькае фота чэка на экране пацвярджэння — або на чэк у картцы выдатку, — каб адкрыць яго на ўвесь экран. На тэлефоне развядзіце два пальцы, каб павялічыць (да 5×), двойчы дакраніцеся, каб наблізіць гэта месца, і яшчэ раз двойчы дакраніцеся, каб зноў убачыць чэк цалкам; у павялічаным выглядзе перамяшчайце яго адным пальцам. У браўзеры кола мышы павялічвае ў пункце пад курсорам, перацягванне зрушвае выяву, двайны пстрык набліжае або аддаляе, а ў куце ёсць кнопкі **+**, **−** і «Па памеры экрана». Чэк заўсёды адкрываецца цалкам. Чэкі ў PDF адкрываюцца як раней.
+
 ### Парады для лепшых вынікаў
 
 - Фатаграфуйце пры добрым асвятленні — пазбягайце ценяў і адбліскаў
@@ -42122,6 +42154,10 @@ Na de AI-analyse zie je:
 Controleer en corrigeer eventuele details en daarna:
 - Tik op **Uitgave opslaan** om te bevestigen
 - Tik op **Opnieuw scannen** om een andere foto te proberen
+
+### Inzoomen op de bon
+
+Tik op het bevestigingsscherm op de kleine foto van de bon – of op de bon in de details van een uitgave – om hem schermvullend te openen. Op een telefoon zoom je in door te knijpen (tot 5×), dubbeltikken zoomt in op die plek en nogmaals dubbeltikken toont weer de hele bon; als je bent ingezoomd, verschuif je hem met één vinger. In de browser zoomt het muiswiel in waar de aanwijzer staat, slepen verschuift de afbeelding, dubbelklikken zoomt in of uit, en in de hoek staan de knoppen **+**, **−** en ‘Aanpassen aan scherm’. De bon opent altijd volledig zichtbaar. Pdf-bonnen openen zoals voorheen.
 
 ### Tips voor het beste resultaat
 

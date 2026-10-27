@@ -8,7 +8,8 @@
 
 Three edits on an existing transaction that do not go through the ordinary field update: linking it
 to a project, changing its currency, and pulling line items out of a receipt attached after the
-expense was created.
+expense was created. Also the full-screen receipt viewer with zoom, shared by the expense detail and
+the scan confirm card.
 
 ## Entry points
 
@@ -17,6 +18,11 @@ expense was created.
 - `apps/mobile/src/components/income/detail/IncomeDetailsCard.tsx` — the income equivalent
 - `apps/mobile/src/components/expenses/detail/ReceiptSection.tsx` — "Extract items"
 - `apps/mobile/src/components/expenses/detail/ExpenseItemsSection.tsx`
+- `apps/mobile/src/components/receipt/ReceiptImageViewer.tsx` (phone) /
+  `ReceiptImageViewer.web.tsx` (web) — the zoomable viewer, opened from `ReceiptSection` and from
+  the preview on `apps/mobile/src/components/receipt/ReceiptConfirmCard.tsx`
+- `apps/mobile/src/features/receipt/receiptZoom.ts` — the zoom/pan math, tested in
+  `apps/mobile/src/features/receipt/__tests__/receiptZoom.test.ts`
 - `expenseStore.setExpenseProject`, `apps/mobile/src/db/projectRepository.ts`
   (`addExpenseToProject` / `removeExpenseFromProject`), `apps/mobile/src/components/ProjectPicker.tsx`
 - API: `ExpensesService.create` / `update` (the `projectId` branches),
@@ -53,7 +59,45 @@ the shared `isMergeableDuplicate` / `alertAction` / `mergeTargets` in
 `apps/mobile/src/features/dashboard/attentionActions.ts`. Expense rows show an origin badge for
 `import` and `notification` sources (`ExpenseListItem`, desktop `TransactionTable`).
 
+**The receipt viewer zooms.** Tapping the receipt thumbnail (or "View image") on the expense
+detail, or the small preview on the scan confirm card, opens `ReceiptImageViewer` (`{ visible, uri,
+onClose }`). On the phone: pinch from 1× (fit) up to 5×, double-tap toggles fit and 2.5× around
+the tap point, one-finger pan when zoomed, built on `react-native-gesture-handler` +
+`react-native-reanimated` with no new dependency. On web (component-level `.web.tsx` split): the
+mouse wheel zooms around the cursor, drag pans, double-click toggles, a touch double-tap and a
+two-finger pinch work on touch screens, and corner buttons zoom in, out and back to fit. PDFs keep
+their old behaviour (share/open) in both places. All the arithmetic — fit size, scale clamp, edge
+clamp, zoom around a point, the double-tap toggle, the wheel step — lives in the pure
+`receiptZoom.ts`, whose functions are `'worklet'`s so the phone runs them on the UI thread inside
+gesture callbacks; there is no component renderer in this repo, so that module carries the tests.
+
 ## Invariants
+
+**The viewer never lets the receipt leave the screen and always opens at fit.** Scale is clamped
+to 1×–5×, and translation is clamped per axis so the scaled image never shows empty space beside
+it (an axis narrower than the screen stays centred). The zoomable surface is mounted only while
+the viewer is visible and keyed on the uri, so reopening — or a new image — starts from fit with
+fresh state; do not hoist the zoom state above that mount.
+
+**Zoom is a transform over the same bitmap.** The viewer renders the file URI the screen already
+holds (the materialized receipt, or the downscaled scan copy), laid out at screen size with
+`contain`, and scales it with a transform — it never decodes a larger bitmap or builds a `data:`
+URL ([receipt-image-memory](receipt-image-memory.md)). The price is that 5× magnifies a stored
+800px-wide copy, not the original photo.
+
+**The phone viewer has its own `GestureHandlerRootView` inside the `Modal`.** On Android the
+app-level root does not reach the modal window, and without it no gesture fires. The close button
+and the web corner buttons are offset by the safe-area insets; the modal is
+`statusBarTranslucent`/`navigationBarTranslucent`, so without the insets they would sit under the
+system bars.
+
+**On web, a touch double-tap toggles the zoom exactly once.** The web viewer detects a touch
+double-tap from pointer events, but Chrome Android and iOS Safari may also fire `dblclick`, which
+would zoom straight back out. `shouldHandleDoubleClick` in `receiptZoom.ts` drops a `dblclick` that
+is touch-generated or comes within 500 ms of a touch toggle; a drag or either finger of a pinch is
+never counted as a tap. The wheel is captured on the whole overlay, so the page behind never
+scrolls while the viewer is open.
+
 
 **Never set the project through the generic `updateExpense(id, updates)`.** The field is not a
 column, and `undefined` is dropped from the JSON body, so clearing is impossible that way.
@@ -74,4 +118,4 @@ synced yet; an explicit `null` clears it.
 
 ABA-379 (expense currency editable; income followed under tech-debt `income-currency-not-editable`)
 · ABA-568 (receipt item regeneration, the merge suggestion, origin badges) · ABA-625 (the
-suggestion's pairing rules rewritten).
+suggestion's pairing rules rewritten) · receipt zoom viewer ([ABA-700](https://github.com/micode-ai/ai-budget-assistant/issues/733)).

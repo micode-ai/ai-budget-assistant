@@ -3423,4 +3423,11 @@ export default {
     colFrom: 'From',
     colTotal: 'Total',
   },
+  receiptViewer: {
+    open: 'Open receipt image',
+    close: 'Close',
+    zoomIn: 'Zoom in',
+    zoomOut: 'Zoom out',
+    fit: 'Fit to screen',
+  },
 } as const;

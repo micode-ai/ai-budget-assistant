@@ -3417,4 +3417,11 @@ export default {
     colFrom: 'De',
     colTotal: 'Total',
   },
+  receiptViewer: {
+    open: 'Ouvrir l’image du ticket',
+    close: 'Fermer',
+    zoomIn: 'Zoom avant',
+    zoomOut: 'Zoom arrière',
+    fit: 'Ajuster à l’écran',
+  },
 } as const;

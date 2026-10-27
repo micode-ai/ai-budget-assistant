@@ -70,6 +70,10 @@ Review and correct any details, then:
 - Tap **Save Expense** to confirm
 - Tap **Scan Again** to try a different photo
 
+### Zooming In on the Receipt
+
+Tap the small receipt photo on the confirmation screen — or the receipt on an expense's detail screen — to open it full screen. On a phone, pinch to zoom in (up to 5×), double-tap to zoom in on that spot and double-tap again to see the whole receipt, and drag with one finger to move around while zoomed. In the browser, scroll the mouse wheel to zoom where the pointer is, drag to move, double-click to zoom in or out, or use the **+**, **−** and fit buttons in the corner. The receipt always opens showing the whole page. PDF receipts open as before.
+
 ### Tips for Best Results
 
 - Photograph in good lighting — avoid shadows and glare

@@ -3432,4 +3432,11 @@ export default {
     colFrom: 'Od',
     colTotal: 'Suma',
   },
+  receiptViewer: {
+    open: 'Otwórz zdjęcie paragonu',
+    close: 'Zamknij',
+    zoomIn: 'Powiększ',
+    zoomOut: 'Pomniejsz',
+    fit: 'Dopasuj do ekranu',
+  },
 } as const;

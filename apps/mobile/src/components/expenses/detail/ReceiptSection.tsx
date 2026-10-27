@@ -4,7 +4,6 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  Modal,
   ActivityIndicator,
   InteractionManager,
 } from 'react-native';
@@ -18,6 +17,7 @@ import * as Sharing from 'expo-sharing';
 import * as MediaLibrary from 'expo-media-library';
 import { compressAndEncodeImage } from '@/features/receipt/receiptImage';
 import { materializeReceipt, releaseReceipt } from '@/features/receipt/receiptImageCache';
+import { ReceiptImageViewer } from '@/components/receipt/ReceiptImageViewer';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { api } from '@/services/api';
 import { useTheme, useStyles, type Theme } from '@/theme';
@@ -310,20 +310,11 @@ export function ReceiptSection({
         )}
       </View>
 
-      <Modal visible={imageViewVisible} transparent animationType="fade">
-        <View style={styles.imageModalOverlay}>
-          <TouchableOpacity style={styles.imageModalClose} onPress={() => setImageViewVisible(false)}>
-            <Ionicons name="close-circle" size={36} color="#fff" />
-          </TouchableOpacity>
-          {imageViewVisible && receiptUri && (
-            <Image
-              source={{ uri: receiptUri }}
-              style={styles.imageModalFull}
-              resizeMode="contain"
-            />
-          )}
-        </View>
-      </Modal>
+      <ReceiptImageViewer
+        visible={imageViewVisible && !isPdf}
+        uri={receiptUri}
+        onClose={() => setImageViewVisible(false)}
+      />
     </>
   );
 }
@@ -398,21 +389,5 @@ const createStyles = (theme: Theme) => ({
     fontSize: 14,
     color: theme.colors.textTertiary,
     marginTop: theme.spacing[2],
-  },
-  imageModalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.9)' as const,
-    justifyContent: 'center' as const,
-    alignItems: 'center' as const,
-  },
-  imageModalClose: {
-    position: 'absolute' as const,
-    top: 50,
-    right: 20,
-    zIndex: 10,
-  },
-  imageModalFull: {
-    width: '95%' as const,
-    height: '80%' as const,
   },
 });

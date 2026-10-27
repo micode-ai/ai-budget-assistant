@@ -70,6 +70,10 @@ Revisa y corrige cualquier detalle, luego:
 - Toca **Guardar gasto** para confirmar
 - Toca **Escanear de nuevo** para probar con otra foto
 
+### Ampliar el recibo
+
+Toca la pequeña foto del recibo en la pantalla de confirmación —o el recibo en el detalle de un gasto— para abrirlo a pantalla completa. En el móvil, pellizca para ampliar (hasta 5×), toca dos veces para ampliar ese punto y vuelve a tocar dos veces para ver el recibo entero; con el recibo ampliado, arrástralo con un dedo para moverte. En el navegador, la rueda del ratón amplía donde está el puntero, arrastrar mueve la imagen, el doble clic amplía o reduce, y en la esquina tienes los botones **+**, **−** y «Ajustar a la pantalla». El recibo siempre se abre mostrando la página entera. Los recibos en PDF se abren como antes.
+
 ### Consejos para mejores resultados
 
 - Fotografa con buena iluminacion — evita sombras y reflejos

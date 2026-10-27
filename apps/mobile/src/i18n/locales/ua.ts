@@ -3432,4 +3432,11 @@ export default {
     colFrom: 'Від',
     colTotal: 'Сума',
   },
+  receiptViewer: {
+    open: 'Відкрити зображення чека',
+    close: 'Закрити',
+    zoomIn: 'Збільшити',
+    zoomOut: 'Зменшити',
+    fit: 'За розміром екрана',
+  },
 } as const;

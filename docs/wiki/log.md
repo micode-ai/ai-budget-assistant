@@ -260,6 +260,7 @@ Newest last within each section.
 - 2026-10-27 · [ABA-698](https://github.com/micode-ai/ai-budget-assistant/issues/731) — category system keys: standard categories are identified by a language-independent key (catalog pair, server-owned, partial unique index, backfill) and shown in the UI language unless renamed; new page `features/category-system-keys.md`; a spec importing `apps/api/scripts/` moved `dist/main.js` and took the first deploy down.
 - 2026-10-27 · [ABA-699](https://github.com/micode-ai/ai-budget-assistant/issues/732) — category hierarchy follow-ups: analytics donuts roll up and drill into subcategories (phone and desktop), income categories get the hierarchy, drag and drop in Settings → Categories to nest and un-nest; remaining gaps recorded. Page: `features/category-hierarchy.md`.
 - 2026-10-27 · [ABA-699](https://github.com/micode-ai/ai-budget-assistant/issues/732) — fix: a second category drag on web hit-tested from the row's old place (react-native-web onLayout fires on resize only) and the post-drag click opened the edit form; invariants on `features/category-hierarchy.md`.
+- 2026-10-27 · [ABA-700](https://github.com/micode-ai/ai-budget-assistant/issues/733) — receipt zoom viewer: pinch, double-tap and pan on the phone, wheel, drag, double-click and +/−/fit buttons on web, shared by the expense detail and the scan confirm card; math in the tested pure `receiptZoom.ts`. Page: [expense-detail-editing](features/expense-detail-editing.md).
 
 ## Queries
 

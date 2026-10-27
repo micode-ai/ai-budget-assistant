@@ -3416,4 +3416,11 @@ export default {
     colFrom: 'Von',
     colTotal: 'Summe',
   },
+  receiptViewer: {
+    open: 'Belegbild öffnen',
+    close: 'Schließen',
+    zoomIn: 'Vergrößern',
+    zoomOut: 'Verkleinern',
+    fit: 'An Bildschirm anpassen',
+  },
 } as const;

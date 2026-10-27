@@ -3400,4 +3400,11 @@ export default {
     colFrom: 'Ад',
     colTotal: 'Сума',
   },
+  receiptViewer: {
+    open: 'Адкрыць выяву чэка',
+    close: 'Закрыць',
+    zoomIn: 'Павялічыць',
+    zoomOut: 'Паменшыць',
+    fit: 'Па памеры экрана',
+  },
 } as const;

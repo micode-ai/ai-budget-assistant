@@ -4008,6 +4008,10 @@ Uberprufe und korrigiere Details, dann:
 - Tippe auf **Ausgabe speichern**, um zu bestatigen
 - Tippe auf **Erneut scannen**, um ein anderes Foto zu versuchen
 
+### Den Beleg vergrößern
+
+Tippe auf dem Bestätigungsbildschirm auf das kleine Belegfoto – oder in den Details einer Ausgabe auf den Beleg –, um ihn im Vollbild zu öffnen. Auf dem Handy vergrößerst du mit zwei Fingern (bis 5×), ein Doppeltipp zoomt an dieser Stelle hinein, ein weiterer Doppeltipp zeigt wieder den ganzen Beleg, und im vergrößerten Zustand verschiebst du ihn mit einem Finger. Im Browser zoomt das Mausrad an der Stelle des Zeigers, Ziehen verschiebt das Bild, ein Doppelklick zoomt hinein oder heraus, und in der Ecke gibt es die Schaltflächen **+**, **−** und „An Bildschirm anpassen“. Der Beleg öffnet sich immer vollständig sichtbar. PDF-Belege öffnen sich wie bisher.
+
 ### Tipps fur beste Ergebnisse
 
 - Fotografiere bei guter Beleuchtung — vermeide Schatten und Blendung

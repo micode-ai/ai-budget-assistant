@@ -49,7 +49,10 @@ base64 to a cache file so Fresco can sample the bitmap to its on-screen size (a 
 200pt thumbnail decode at full resolution) and so the multi-MB string does not sit in component
 state. The filename carries a revision counter because `<Image>` caches by URI and a reused path
 shows the previous photo after a replace. Web keeps the data URL — `expo-file-system/next` `File`
-has no working web implementation, and the threshold is a Play requirement.
+has no working web implementation, and the threshold is a Play requirement. The zoomable receipt
+viewer follows the same rule: it takes the uri the screen already holds and zooms with a transform,
+so it decodes no larger bitmap than the static viewer did
+([expense-detail-editing](expense-detail-editing.md)).
 
 **Do not add a blanket `-keep class **` to ProGuard** — it would drop the app under the DEX
 coverage bar. Only two narrow keep rules exist.

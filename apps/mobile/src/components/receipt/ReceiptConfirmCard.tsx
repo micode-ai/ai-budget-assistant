@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +11,7 @@ import PriceFindingsCard from '@/components/receipt/PriceFindingsCard';
 import DuplicateReceiptBanner from '@/components/receipt/DuplicateReceiptBanner';
 import CategorySplitChips from '@/components/receipt/CategorySplitChips';
 import ReceiptItemsEditor from '@/components/receipt/ReceiptItemsEditor';
+import { ReceiptImageViewer } from '@/components/receipt/ReceiptImageViewer';
 import type { ReceiptItem, ScannedReceipt } from '@/features/receipt/useReceiptScanner';
 
 type EditableItemFields = Pick<ReceiptItem, 'description' | 'quantity' | 'unitPrice' | 'totalPrice'>;
@@ -81,14 +83,29 @@ export default function ReceiptConfirmCard({
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
+  const [viewerVisible, setViewerVisible] = useState(false);
+  const canView = !isPdf && !!imageUri;
 
   return (
     <View style={styles.confirmContainer}>
       <Text style={styles.confirmTitle}>{t('receipt.scannedTitle')}</Text>
 
-      {!isPdf && imageUri && (
-        <Image source={{ uri: imageUri }} style={styles.receiptImage} />
+      {canView && (
+        <TouchableOpacity
+          onPress={() => setViewerVisible(true)}
+          activeOpacity={0.8}
+          accessibilityRole="imagebutton"
+          accessibilityLabel={t('receiptViewer.open')}
+        >
+          <Image source={{ uri: imageUri }} style={styles.receiptImage} />
+        </TouchableOpacity>
       )}
+
+      <ReceiptImageViewer
+        visible={viewerVisible && canView}
+        uri={imageUri}
+        onClose={() => setViewerVisible(false)}
+      />
 
       <DuplicateReceiptBanner
         match={scannedReceipt?.possibleDuplicate}
