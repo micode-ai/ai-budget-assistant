@@ -8,6 +8,41 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.36.0 - 2026-10-27
+
+**Categories: subcategories**
+
+- **Subcategories.** File a category under another one, e.g. Bread, Cheese and Snacks under
+  Groceries, or Beer and Wine under Alcohol. In a budget, the parent's line counts its
+  subcategories too and shows their breakdown underneath; category pickers list
+  subcategories under their parent (ABA-696).
+- **Drag and drop in Settings → Categories.** Long-press a category and drop it on another
+  one to make it a subcategory; drop it on the line between top-level categories to move it
+  back. Name, colour and icon are never changed by a move (ABA-699).
+- **Income categories get subcategories too**, with the same parent picker and grouped
+  pickers (ABA-699).
+
+**Analytics**
+
+- **Tap a category to see its subcategories.** The spending and income donuts show each
+  parent as one slice that includes its subcategories; tapping it opens that category's
+  own breakdown, with "All categories" to go back (ABA-699).
+
+**Languages**
+
+- **Standard categories follow the app language.** Groceries, Transport, Gifts and the
+  other built-in categories are shown in the language you pick, and switch with it; a
+  category you renamed keeps your name in every language (ABA-698).
+
+**Already working before this update** (server-side, live for every app version)
+
+- **No more duplicate categories from receipts and bots**: an automatically proposed
+  category that already exists (in any language, or as a subcategory) reuses it (ABA-696).
+- **The deposit category is found in any language** after a language switch, so receipt
+  deposits no longer create a second one (ABA-697, ABA-698).
+
+---
+
 ## 1.35.0 - 2026-10-25
 
 **Wallet**
