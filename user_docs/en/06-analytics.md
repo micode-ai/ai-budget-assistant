@@ -47,6 +47,7 @@ Each insight card has severity: critical (red), warning (yellow), or info (blue)
 - Color-coded in a green/teal palette to distinguish from expense charts
 - Uncategorized income is grouped as "Other"
 - Appears above the spending trend chart
+- Income categories work the same way: parents show the total of their subcategories, and tapping one drills into it.
 
 ### Spending Trend (Bar Chart)
 
@@ -57,7 +58,8 @@ Each insight card has severity: critical (red), warning (yellow), or info (blue)
 
 - Category breakdown with percentages
 - Color-coded by category
-- Tap a slice to explore that category's expenses
+- Tap a slice of a parent category (marked ›) to drill into its subcategories; tapping a slice without subcategories only highlights it
+- **Subcategories roll up** — the donut shows top-level categories only, and a parent's amount includes its subcategories. Parents with subcategories are marked with ›. Tap one (the slice or its row) to redraw the donut for that parent: its subcategories, plus “<Parent> (no subcategory)” for spending recorded on the parent itself. Tap the breadcrumb “All categories › <Parent>” to go back. The drill resets whenever the analytics data is rebuilt — a new or edited transaction, a sync, a language change, or a change of period, account or currency. Spending on a deleted subcategory stays a separate top-level slice, because the app does not keep deleted categories on the device. “vs average” chips for a parent use the rolled-up amount. The same works on the desktop web analytics cards.
 
 ### Budget vs Actual (Grouped Bar Chart)
 

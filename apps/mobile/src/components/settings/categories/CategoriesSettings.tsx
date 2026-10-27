@@ -20,6 +20,12 @@ import { eligibleParents, hasLiveChildren } from '@/features/categories/parentCa
 import { categoryEditPayload } from '@/features/categories/categoryEditPayload';
 import { categoryLabel } from '@/utils/entityLabel';
 import { SettingsScreenScroll } from '../SettingsScreenScroll';
+import {
+  CategoryDragList,
+  CategoryDragScope,
+  type CategoryRowTouch,
+  type CategoryTreeItem,
+} from './CategoryDragList';
 
 
 /**
@@ -100,7 +106,7 @@ export function CategoriesSettings() {
   const incomeCategories = getIncomeCategories();
   // Expense rows render as a tree, children indented under their parent.
   const expenseTree = sortCategoriesAsTree(expenseCategories);
-  const incomeTree = incomeCategories.map((category) => ({ category, depth: 0 as const }));
+  const incomeTree = sortCategoriesAsTree(incomeCategories);
 
   // Modal state
   const [modalVisible, setModalVisible] = useState(false);
@@ -115,14 +121,15 @@ export function CategoriesSettings() {
   const [isSaving, setIsSaving] = useState(false);
   const [selectedParentId, setSelectedParentId] = useState<string | undefined>(undefined);
   const [parentListOpen, setParentListOpen] = useState(false);
+  // A lifted row freezes the page scroll (phone); a plain swipe still scrolls.
+  const [dragging, setDragging] = useState(false);
 
-  // Hierarchy applies to expense categories only; a category with children
-  // cannot itself get a parent, so the row is hidden for it entirely.
-  const parentOptions =
-    modalType === 'expense' ? eligibleParents(expenseCategories, editingCategory, 'expense') : [];
+  // A category with children cannot itself get a parent, so the row is hidden
+  // for it entirely. Parents are always of the edited category's own type.
+  const sameTypeCategories = modalType === 'expense' ? expenseCategories : incomeCategories;
+  const parentOptions = eligibleParents(sameTypeCategories, editingCategory, modalType);
   const showParentRow =
-    modalType === 'expense' &&
-    !(editingCategory && hasLiveChildren(expenseCategories, editingCategory.id)) &&
+    !(editingCategory && hasLiveChildren(sameTypeCategories, editingCategory.id)) &&
     parentOptions.length > 0;
   const selectedParent = parentOptions.find((c) => c.id === selectedParentId);
 
@@ -250,11 +257,14 @@ export function CategoriesSettings() {
     );
   };
 
-  const renderCategory = (category: Category, depth: 0 | 1) => (
-    <View key={category.id} style={[styles.row, depth === 1 && styles.childRow]}>
+  const renderCategory = ({ category, depth }: CategoryTreeItem, touch: CategoryRowTouch) => (
+    <View style={[styles.row, depth === 1 && styles.childRow]}>
       <TouchableOpacity
         style={styles.rowContent}
-        onPress={canEdit ? () => openEditModal(category) : undefined}
+        onPress={touch.onPress}
+        onLongPress={touch.onLongPress}
+        onPressOut={touch.onPressOut}
+        delayLongPress={touch.delayLongPress}
         activeOpacity={canEdit ? 0.7 : 1}
       >
         <View style={[styles.colorDot, { backgroundColor: category.color || theme.colors.textTertiary }]} />
@@ -283,7 +293,7 @@ export function CategoriesSettings() {
 
   const renderSection = (
     title: string,
-    items: { category: Category; depth: 0 | 1 }[],
+    items: CategoryTreeItem[],
     type: 'expense' | 'income',
   ) => (
     <>
@@ -295,16 +305,20 @@ export function CategoriesSettings() {
           </TouchableOpacity>
         )}
       </View>
+      {canEdit && items.length > 0 && (
+        <Text style={styles.dragHint}>{t('categories.dragHint')}</Text>
+      )}
       <View style={styles.card}>
         {items.length === 0 ? (
           <Text style={styles.empty}>{t('categories.empty')}</Text>
         ) : (
-          items.map(({ category: cat, depth }, i) => (
-            <React.Fragment key={cat.id}>
-              {renderCategory(cat, depth)}
-              {i < items.length - 1 && <View style={styles.divider} />}
-            </React.Fragment>
-          ))
+          <CategoryDragList
+            type={type}
+            tree={items}
+            canEdit={canEdit}
+            onRowPress={openEditModal}
+            renderRow={renderCategory}
+          />
         )}
       </View>
     </>
@@ -312,10 +326,16 @@ export function CategoriesSettings() {
 
   return (
     <>
-      <SettingsScreenScroll style={styles.scrollView} contentContainerStyle={styles.content}>
-        {renderSection(t('categories.expenseCategories'), expenseTree, 'expense')}
-        {renderSection(t('categories.incomeCategories'), incomeTree, 'income')}
-      </SettingsScreenScroll>
+      <CategoryDragScope onDraggingChange={setDragging}>
+        <SettingsScreenScroll
+          style={styles.scrollView}
+          contentContainerStyle={styles.content}
+          scrollEnabled={!dragging}
+        >
+          {renderSection(t('categories.expenseCategories'), expenseTree, 'expense')}
+          {renderSection(t('categories.incomeCategories'), incomeTree, 'income')}
+        </SettingsScreenScroll>
+      </CategoryDragScope>
 
       <SheetDialog
         visible={modalVisible}
@@ -461,6 +481,11 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.bodyMedium,
     color: theme.colors.textSecondary,
   },
+  dragHint: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textTertiary,
+    marginBottom: theme.spacing[2],
+  },
   card: {
     backgroundColor: theme.colors.surface,
     borderRadius: theme.borderRadius.lg,
@@ -535,11 +560,6 @@ const createStyles = (theme: Theme) => ({
     borderRadius: theme.borderRadius.sm,
   },
   badgeText: { ...theme.textStyles.bodySm, color: theme.colors.primary, fontSize: 10 },
-  divider: {
-    height: 1,
-    backgroundColor: theme.colors.divider,
-    marginVertical: theme.spacing[2],
-  },
   empty: {
     ...theme.textStyles.body,
     color: theme.colors.textTertiary,

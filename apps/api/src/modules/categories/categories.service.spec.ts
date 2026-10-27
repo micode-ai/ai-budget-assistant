@@ -445,6 +445,22 @@ describe('CategoriesService parent validation (two-level hierarchy)', () => {
     expect(prisma.category.create).not.toHaveBeenCalled();
   });
 
+  it('accepts an income parent for an income category', async () => {
+    const { service, prisma } = setup({ parent: { ...top, type: 'income', name: 'Salary' } });
+    await service.create('acc-1', 'user-1', { name: 'Bonus', type: 'income', parentId: 'p-local' });
+    expect(prisma.category.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({ parentId: 'p-1' }),
+    });
+  });
+
+  it('rejects an expense parent for an income category', async () => {
+    const { service, prisma } = setup({ parent: top });
+    await expect(
+      service.create('acc-1', 'user-1', { name: 'Bonus', type: 'income', parentId: 'p-1' }),
+    ).rejects.toThrow('Invalid parent category');
+    expect(prisma.category.create).not.toHaveBeenCalled();
+  });
+
   it('update rejects giving a parent to a category with live children', async () => {
     const target = { id: 'cat-1', accountId: 'acc-1', name: 'Mid', type: 'expense', parentId: null };
     const { service, prisma } = setup({ parent: top, target, children: 2 });

@@ -20,7 +20,7 @@
 <link rel="alternate" hreflang="be" href="https://ai-budget.pl/help/be/analytics/">
 <link rel="alternate" hreflang="nl" href="https://ai-budget.pl/help/nl/analytics/">
 <link rel="alternate" hreflang="x-default" href="https://ai-budget.pl/help/en/analytics/">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MiCode Sp. z o.o.", "alternateName": ["MICODE sp. z o.o.", "MiCode"], "taxID": "5833510147", "url": "https://mi-code.pl/", "sameAs": ["https://mi-code.pl/", "https://github.com/micode-ai", "https://www.wikidata.org/wiki/Q141551004"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Analityka | AI Budget Assistant", "description": "Wizualizuj wzorce wydatkow za pomoca interaktywnych wykresow.", "inLanguage": "pl", "datePublished": "2026-06-19", "dateModified": "2026-09-22", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/pl/analytics/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/pl/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Strona główna", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Pomoc", "item": "https://ai-budget.pl/help/pl/"}, {"@type": "ListItem", "position": 3, "name": "Analityka | AI Budget Assistant", "item": "https://ai-budget.pl/help/pl/analytics/"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MiCode Sp. z o.o.", "alternateName": ["MICODE sp. z o.o.", "MiCode"], "taxID": "5833510147", "url": "https://mi-code.pl/", "sameAs": ["https://mi-code.pl/", "https://github.com/micode-ai", "https://www.wikidata.org/wiki/Q141551004"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Analityka | AI Budget Assistant", "description": "Wizualizuj wzorce wydatkow za pomoca interaktywnych wykresow.", "inLanguage": "pl", "datePublished": "2026-06-19", "dateModified": "2026-10-27", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/pl/analytics/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/pl/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Strona główna", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Pomoc", "item": "https://ai-budget.pl/help/pl/"}, {"@type": "ListItem", "position": 3, "name": "Analityka | AI Budget Assistant", "item": "https://ai-budget.pl/help/pl/analytics/"}]}]}</script>
 <style>
 :root{--o:#B45309;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
 *{box-sizing:border-box}
@@ -131,6 +131,7 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li>Kodowany kolorami w palecie zielono-morskiej, odrozniajac sie od wykresow wydatkow</li>
 <li>Przychody bez kategorii sa grupowane jako „Inne&rdquo;</li>
 <li>Pojawia sie powyzej wykresu trendu wydatkow</li>
+<li>Kategorie przychodów działają tak samo: kategorie główne pokazują sumę swoich podkategorii, a dotknięcie otwiera widok szczegółowy.</li>
 </ul>
 <h3>Trend wydatkow (wykres slupkowy)</h3>
 <ul>
@@ -141,7 +142,8 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <ul>
 <li>Podzial na kategorie z procentami</li>
 <li>Kodowany kolorami wedlug kategorii</li>
-<li>Dotknij fragment, aby zbadac wydatki tej kategorii</li>
+<li>Dotknij fragmentu kategorii głównej (oznaczonej ›), aby zobaczyć jej podkategorie; fragment bez podkategorii zostaje po dotknięciu tylko wyróżniony</li>
+<li><strong>Podkategorie są sumowane</strong> — wykres pokazuje tylko kategorie główne, a kwota kategorii głównej obejmuje jej podkategorie. Kategorie główne z podkategoriami są oznaczone ›. Dotknij jednej z nich (fragmentu wykresu lub jej wiersza), aby przerysować wykres dla tej kategorii: jej podkategorie oraz „<Kategoria> (bez podkategorii)” dla wydatków zapisanych bezpośrednio na kategorii głównej. Dotknij ścieżki „Wszystkie kategorie › <Kategoria>”, aby wrócić. Widok szczegółowy resetuje się za każdym razem, gdy dane analiz są przeliczane: po dodaniu lub edycji transakcji, synchronizacji, zmianie języka albo zmianie okresu, konta lub waluty. Wydatki na usuniętej podkategorii pozostają osobnym fragmentem najwyższego poziomu, ponieważ aplikacja nie przechowuje usuniętych kategorii na urządzeniu. Znaczniki „vs średnia” dla kategorii głównej używają skumulowanej kwoty. To samo działa na kartach analiz w wersji webowej na komputer.</li>
 </ul>
 <h3>Budzet vs Rzeczywistosc (grupowany wykres slupkowy)</h3>
 <ul>

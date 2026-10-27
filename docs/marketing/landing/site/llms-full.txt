@@ -4384,6 +4384,7 @@ Each insight card has severity: critical (red), warning (yellow), or info (blue)
 - Color-coded in a green/teal palette to distinguish from expense charts
 - Uncategorized income is grouped as "Other"
 - Appears above the spending trend chart
+- Income categories work the same way: parents show the total of their subcategories, and tapping one drills into it.
 
 ### Spending Trend (Bar Chart)
 
@@ -4394,7 +4395,8 @@ Each insight card has severity: critical (red), warning (yellow), or info (blue)
 
 - Category breakdown with percentages
 - Color-coded by category
-- Tap a slice to explore that category's expenses
+- Tap a slice of a parent category (marked ›) to drill into its subcategories; tapping a slice without subcategories only highlights it
+- **Subcategories roll up** — the donut shows top-level categories only, and a parent's amount includes its subcategories. Parents with subcategories are marked with ›. Tap one (the slice or its row) to redraw the donut for that parent: its subcategories, plus “<Parent> (no subcategory)” for spending recorded on the parent itself. Tap the breadcrumb “All categories › <Parent>” to go back. The drill resets whenever the analytics data is rebuilt — a new or edited transaction, a sync, a language change, or a change of period, account or currency. Spending on a deleted subcategory stays a separate top-level slice, because the app does not keep deleted categories on the device. “vs average” chips for a parent use the rolled-up amount. The same works on the desktop web analytics cards.
 
 ### Budget vs Actual (Grouped Bar Chart)
 
@@ -5387,7 +5389,9 @@ View and manage all your expense and income categories in one place.
 - **Delete a category** — swipe left on a category or tap the delete icon to remove it
 - **Deletion is blocked** if the category has any related expenses, incomes, or budgets — you must reassign or delete those records first
 - **System categories** can also be deleted if they have no related records
-- **Subcategories** — when you create or edit an expense category, choose a **Parent category** to file it under another one. There are two levels only: a category that already has subcategories cannot become a subcategory itself, and a parent must be an expense category of the same account. Category pickers show subcategories grouped under their parent. A category with subcategories cannot be deleted until they are moved or removed.
+- **Subcategories** — when you create or edit a category, choose a **Parent category** to file it under another one. There are two levels only: a category that already has subcategories cannot become a subcategory itself, and a parent must be a category of the same type (expense or income) in the same account. Category pickers show subcategories grouped under their parent. A category with subcategories cannot be deleted until they are moved or removed.
+- **Subcategories for income** — income categories can have subcategories too. When you create or edit an income category, choose a **Parent category** (income categories only). Income pickers (new income, income details, voice) show subcategories grouped under their parent.
+- **Drag and drop to organise** — long-press a category (on desktop web, press and drag) and drop it on a top-level category to make it a subcategory. To move a subcategory back to the top level, drop it on the line between two top-level categories. The list order does not change. A message explains why a drop is refused: a category that already has subcategories cannot become a subcategory, nothing can be dropped onto a subcategory, expense and income categories cannot be mixed, and the deposit category stays outside the hierarchy. Drag and drop needs an internet connection (offline, a long-press shows a message), viewers cannot drag, and there is no auto-scroll at the screen edges — drag within the visible list.
 - **Standard categories follow your app language** — a category the app created for you (such as Groceries or Deposit) is shown in the language you currently use, so switching the app language renames it on screen without creating a duplicate. If you rename a standard category yourself, your name is kept in every language. Categories you created yourself always show exactly what you typed.
 
 > **Note:** Deleting a category is permanent and cannot be undone.

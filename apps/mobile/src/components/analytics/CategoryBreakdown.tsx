@@ -1,10 +1,13 @@
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '@budget/shared-utils';
 import { InteractiveDonutChart } from '@/components/interactive-charts';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import type { CategorySpending } from '@/features/analytics/useAnalytics';
+import { drillView } from '@/features/analytics/categoryDrillView';
+import { useDrillParent } from '@/features/analytics/useDrillParent';
+import { CategoryDrillBreadcrumb } from './CategoryDrillBreadcrumb';
 
 interface Props {
   categorySpending: CategorySpending[];
@@ -22,6 +25,11 @@ export function CategoryBreakdown({ categorySpending, currency }: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
+  const { drillParentId, setDrillParentId } = useDrillParent(categorySpending);
+  const { rows, parent } = drillView(categorySpending, drillParentId);
+  const drill = (row: CategorySpending) => {
+    if (row.children && row.children.length > 0) setDrillParentId(row.categoryId);
+  };
 
   return (
     <>
@@ -37,14 +45,20 @@ export function CategoryBreakdown({ categorySpending, currency }: Props) {
           </View>
         ) : (
           <View style={styles.chartContainer}>
+            {parent && (
+              <CategoryDrillBreadcrumb parentName={parent.name} onBack={() => setDrillParentId(null)} />
+            )}
             <InteractiveDonutChart
-              data={categorySpending.map((c) => ({
+              key={parent?.categoryId ?? 'top'}
+              data={rows.map((c) => ({
                 label: c.name,
                 value: c.amount,
                 color: c.color,
                 id: c.categoryId || undefined,
               }))}
               size={160}
+              centerLabel={parent ? parent.name : undefined}
+              onSectionPress={parent ? undefined : (_item, index) => drill(rows[index])}
               formatValue={formatChartValue}
               showLegend={true}
             />
@@ -56,15 +70,22 @@ export function CategoryBreakdown({ categorySpending, currency }: Props) {
       {categorySpending.length > 0 && (
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{t('analytics.categoryDetails')}</Text>
-          {categorySpending.map((category, index) => {
+          {rows.map((category, index) => {
             const delta = category.vsAverage;
             const showChip = delta != null && Math.abs(delta) >= 5;
             const isAbove = delta != null && delta > 0;
+            const drillable = !parent && !!category.children && category.children.length > 0;
+            const Row = drillable ? TouchableOpacity : View;
             return (
-              <View key={category.categoryId || index} style={styles.categoryItem}>
+              <Row
+                key={`${category.categoryId ?? 'none'}-${index}`}
+                style={styles.categoryItem}
+                {...(drillable ? { onPress: () => drill(category), accessibilityRole: 'button' as const } : {})}
+              >
                 <View style={styles.categoryInfo}>
                   <View style={[styles.categoryDot, { backgroundColor: category.color }]} />
                   <Text style={styles.categoryName}>{category.name}</Text>
+                  {drillable && <Text style={styles.chevron}>›</Text>}
                 </View>
                 <View style={styles.categoryValues}>
                   <Text style={styles.categoryAmount}>
@@ -85,7 +106,7 @@ export function CategoryBreakdown({ categorySpending, currency }: Props) {
                     </View>
                   )}
                 </View>
-              </View>
+              </Row>
             );
           })}
         </View>
@@ -149,6 +170,10 @@ const createStyles = (theme: Theme) => ({
   categoryName: {
     ...theme.textStyles.bodyLarge,
     color: theme.colors.textPrimary,
+  },
+  chevron: {
+    ...theme.textStyles.bodyLarge,
+    color: theme.colors.textTertiary,
   },
   categoryValues: {
     alignItems: 'flex-end' as const,

@@ -20,7 +20,7 @@
 <link rel="alternate" hreflang="be" href="https://ai-budget.pl/help/be/analytics/">
 <link rel="alternate" hreflang="nl" href="https://ai-budget.pl/help/nl/analytics/">
 <link rel="alternate" hreflang="x-default" href="https://ai-budget.pl/help/en/analytics/">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MiCode Sp. z o.o.", "alternateName": ["MICODE sp. z o.o.", "MiCode"], "taxID": "5833510147", "url": "https://mi-code.pl/", "sameAs": ["https://mi-code.pl/", "https://github.com/micode-ai", "https://www.wikidata.org/wiki/Q141551004"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Аналітика | AI Budget Assistant", "description": "Візуалізуйте свої патерни витрат за допомогою інтерактивних графіків.", "inLanguage": "uk", "datePublished": "2026-06-19", "dateModified": "2026-09-22", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/ua/analytics/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/ua/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/ua/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Головна", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Довідка", "item": "https://ai-budget.pl/help/ua/"}, {"@type": "ListItem", "position": 3, "name": "Аналітика | AI Budget Assistant", "item": "https://ai-budget.pl/help/ua/analytics/"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MiCode Sp. z o.o.", "alternateName": ["MICODE sp. z o.o.", "MiCode"], "taxID": "5833510147", "url": "https://mi-code.pl/", "sameAs": ["https://mi-code.pl/", "https://github.com/micode-ai", "https://www.wikidata.org/wiki/Q141551004"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Аналітика | AI Budget Assistant", "description": "Візуалізуйте свої патерни витрат за допомогою інтерактивних графіків.", "inLanguage": "uk", "datePublished": "2026-06-19", "dateModified": "2026-10-27", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/ua/analytics/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/ua/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/ua/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Головна", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Довідка", "item": "https://ai-budget.pl/help/ua/"}, {"@type": "ListItem", "position": 3, "name": "Аналітика | AI Budget Assistant", "item": "https://ai-budget.pl/help/ua/analytics/"}]}]}</script>
 <style>
 :root{--o:#B45309;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
 *{box-sizing:border-box}
@@ -131,6 +131,7 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li>Кольорова палітра у зелено-бірюзових тонах для візуального відрізнення від діаграм витрат</li>
 <li>Некатегоризовані доходи об&rsquo;єднуються в «Інші»</li>
 <li>Розташована вище графіка тенденції витрат</li>
+<li>Категорії доходів працюють так само: основні показують суму своїх підкатегорій, а натискання відкриває деталізацію.</li>
 </ul>
 <h3>Тенденція витрат (стовпчаста діаграма)</h3>
 <ul>
@@ -141,7 +142,8 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <ul>
 <li>Розподіл за категоріями з відсотками</li>
 <li>Кольорове позначення за категоріями</li>
-<li>Натисніть сегмент, щоб дослідити витрати цієї категорії</li>
+<li>Натисніть на сегмент основної категорії (позначена ›), щоб відкрити її підкатегорії; сегмент без підкатегорій під час натискання лише виділяється</li>
+<li><strong>Підкатегорії підсумовуються</strong> — діаграма показує лише основні категорії, а сума основної категорії включає її підкатегорії. Основні категорії з підкатегоріями позначено значком ›. Натисніть на таку категорію (сегмент або рядок), і діаграма перемалюється для неї: її підкатегорії плюс «&lt;Категорія&gt; (без підкатегорії)» для витрат, записаних безпосередньо на основну категорію. Натисніть на ланцюжок «Усі категорії › &lt;Категорія&gt;», щоб повернутися. Деталізація скидається щоразу, коли дані аналітики перераховуються: під час нової чи зміненої операції, синхронізації, зміни мови або зміни періоду, рахунку чи валюти. Витрати видаленої підкатегорії залишаються окремим сегментом верхнього рівня, бо застосунок не зберігає видалені категорії на пристрої. Позначки «vs середнє» для основної категорії використовують сумарну величину. Те саме працює на картках аналітики у вебверсії для комп&rsquo;ютера.</li>
 </ul>
 <h3>Бюджет vs Факт (групована стовпчаста діаграма)</h3>
 <ul>

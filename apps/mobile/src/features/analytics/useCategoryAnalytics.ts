@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { useFilteredTransactions } from './useFilteredTransactions';
 import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
 import { categoryLabel } from '@/utils/entityLabel';
+import { buildParentOf, normalizeCategoryKeys } from './buildParentOf';
+import { rollUpCategoryTotals } from './categoryRollup';
 import { groupExpensesByCategory, computeVsAverage } from './categoryGrouping';
 import type { TimeRange, CategorySpending } from './useAnalytics';
 
@@ -61,30 +63,49 @@ export function useCategoryAnalytics(
           })
         : [];
 
-    const getCategoryVsAverage = (categoryId: string | null, currentAmount: number): number | null => {
-      if (timeRange !== 'month') return null;
-      const monthlyTotals = trailingMonthMaps.map((m) => m.get(categoryId) || 0);
-      return computeVsAverage(currentAmount, monthlyTotals);
-    };
+    // Legacy name-keyed spend is re-keyed to its category id first (current and
+    // trailing alike), so a parent's old name-keyed rows merge into its node
+    // instead of showing as a second top-level slice with the same label.
+    const nodes = rollUpCategoryTotals(
+      normalizeCategoryKeys(categoryMap, categories),
+      trailingMonthMaps.map((map) => normalizeCategoryKeys(map, categories)),
+      buildParentOf(categories),
+    );
+    const findCategory = (id: string | null) =>
+      id ? categories.find((c) => c.id === id) || categories.find((c) => c.name === id) : undefined;
+    const vsAverage = (amount: number, trailing: number[]) =>
+      timeRange === 'month' ? computeVsAverage(amount, trailing) : null;
 
-    const result: CategorySpending[] = [];
-    let colorIndex = 0;
-    categoryMap.forEach((amount, categoryId) => {
-      const category = categoryId
-        ? categories.find((c) => c.id === categoryId) || categories.find((c) => c.name === categoryId)
-        : undefined;
-      result.push({
-        categoryId,
-        name: category ? getCategoryDisplayName(category, t) : categoryLabel(category),
-        amount,
-        percentage: (amount / total) * 100,
-        color: category?.color || CATEGORY_COLORS[colorIndex % CATEGORY_COLORS.length],
-        vsAverage: getCategoryVsAverage(categoryId, amount),
+    return nodes.map((node, colorIndex): CategorySpending => {
+      const category = findCategory(node.categoryId);
+      const color = category?.color || CATEGORY_COLORS[colorIndex % CATEGORY_COLORS.length];
+      const name = category ? getCategoryDisplayName(category, t) : categoryLabel(category);
+      const children: CategorySpending[] = node.children.map((child) => {
+        const childCategory = findCategory(child.categoryId);
+        return {
+          categoryId: child.categoryId,
+          name: child.isParentSelf
+            ? t('analytics.parentNoSubcategory', { name })
+            : childCategory
+              ? getCategoryDisplayName(childCategory, t)
+              : categoryLabel(childCategory),
+          amount: child.amount,
+          percentage: node.amount > 0 ? (child.amount / node.amount) * 100 : 0,
+          color: child.isParentSelf ? color : childCategory?.color || color,
+          vsAverage: vsAverage(child.amount, child.trailing),
+          isParentSelf: child.isParentSelf || undefined,
+        };
       });
-      colorIndex++;
+      return {
+        categoryId: node.categoryId,
+        name,
+        amount: node.amount,
+        percentage: (node.amount / total) * 100,
+        color,
+        vsAverage: vsAverage(node.amount, node.trailing),
+        ...(children.length > 0 ? { children } : {}),
+      };
     });
-
-    return result.sort((a, b) => b.amount - a.amount);
   }, [filteredExpenses, expenses, categories, t, getAmount, toDisplayCurrency, timeRange, dateRange, currencyCode]);
 
   return { categorySpending };

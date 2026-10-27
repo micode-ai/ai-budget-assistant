@@ -19,7 +19,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { useTagStore } from '@/stores/tagStore';
 import { TagPicker } from '@/components/TagPicker';
-import { SUPPORTED_CURRENCIES, formatDate } from '@budget/shared-utils';
+import { SUPPORTED_CURRENCIES, formatDate, sortCategoriesAsTree } from '@budget/shared-utils';
 import type { Currency } from '@budget/shared-types';
 import { getIntlLocale } from '@/i18n';
 import { useTheme, useStyles, type Theme } from '@/theme';
@@ -230,11 +230,12 @@ export function IncomeCreateForm({ initial, onDone, onOpenVoice, onOpenReceipt }
           <View style={styles.fieldContainer}>
             <Text style={styles.fieldLabel}>{t('incomeNew.category')}</Text>
             <View style={styles.categoryGrid}>
-              {getIncomeCategories().map((cat) => (
+              {sortCategoriesAsTree(getIncomeCategories()).map(({ category: cat, depth }) => (
                 <TouchableOpacity
                   key={cat.id}
                   style={[
                     styles.categoryChip,
+                    depth === 1 && styles.childCategoryChip,
                     selectedCategory === cat.id && {
                       backgroundColor: cat.color,
                       borderColor: cat.color,
@@ -498,6 +499,7 @@ const createStyles = (theme: Theme) => ({
     flexWrap: 'wrap' as const,
     gap: theme.spacing[2],
   },
+  childCategoryChip: { marginLeft: theme.spacing[3] },
   categoryChip: {
     width: '31%' as const,
     paddingHorizontal: theme.spacing[2],

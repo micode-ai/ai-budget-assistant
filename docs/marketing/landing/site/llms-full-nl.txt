@@ -4393,6 +4393,7 @@ Elke inzichtkaart heeft een ernst: kritiek (rood), waarschuwing (geel) of info (
 - Kleurgecodeerd in een groen/teal palet om het te onderscheiden van uitgavengrafieken
 - Niet-gecategoriseerde inkomsten worden gegroepeerd als "Overig"
 - Verschijnt boven de uitgaventrendgrafiek
+- Inkomstencategorieën werken op dezelfde manier: hoofdcategorieën tonen het totaal van hun subcategorieën, en tikken opent de detailweergave.
 
 ### Uitgaventrend (staafdiagram)
 
@@ -4403,7 +4404,8 @@ Elke inzichtkaart heeft een ernst: kritiek (rood), waarschuwing (geel) of info (
 
 - Categorie-uitsplitsing met percentages
 - Kleurgecodeerd per categorie
-- Tik op een segment om de uitgaven van die categorie te verkennen
+- Tik op het segment van een hoofdcategorie (gemarkeerd met ›) om haar subcategorieën te openen; een segment zonder subcategorieën wordt bij het tikken alleen gemarkeerd
+- **Subcategorieën worden opgeteld** — het diagram toont alleen hoofdcategorieën, en het bedrag van een hoofdcategorie omvat haar subcategorieën. Hoofdcategorieën met subcategorieën zijn gemarkeerd met ›. Tik erop (op het segment of de rij) om het diagram voor die hoofdcategorie opnieuw te tekenen: haar subcategorieën, plus „<Hoofdcategorie> (geen subcategorie)” voor uitgaven die op de hoofdcategorie zelf zijn geboekt. Tik op het kruimelpad „Alle categorieën › <Hoofdcategorie>” om terug te gaan. De detailweergave wordt gereset zodra de analysegegevens opnieuw worden berekend: een nieuwe of gewijzigde transactie, een synchronisatie, een taalwissel of een wijziging van periode, account of valuta. Uitgaven op een verwijderde subcategorie blijven een eigen segment op het hoogste niveau, omdat de app verwijderde categorieën niet op het apparaat bewaart. De chips „vs gemiddelde” gebruiken voor een hoofdcategorie het opgetelde bedrag. Hetzelfde werkt op de analysekaarten van de desktopwebversie.
 
 ### Budget versus werkelijk (gegroepeerd staafdiagram)
 
@@ -5381,7 +5383,9 @@ Bekijk en beheer al je uitgaven- en inkomstencategorieën op één plek.
 - **Een categorie verwijderen** — veeg op een categorie naar links of tik op het verwijderpictogram om deze te verwijderen
 - **Verwijderen is geblokkeerd** als de categorie gerelateerde uitgaven, inkomsten of budgetten heeft — je moet die records eerst opnieuw toewijzen of verwijderen
 - **Systeemcategorieën** kunnen ook worden verwijderd als ze geen gerelateerde records hebben
-- **Subcategorieën** — kies bij het maken of bewerken van een uitgavencategorie een **Hoofdcategorie** om deze onder een andere te plaatsen. Er zijn maar twee niveaus: een categorie die al subcategorieën heeft, kan zelf geen subcategorie worden, en de hoofdcategorie moet een uitgavencategorie van hetzelfde account zijn. Categoriekiezers tonen subcategorieën gegroepeerd onder hun hoofdcategorie. Een categorie met subcategorieën kan pas worden verwijderd als die zijn verplaatst of verwijderd.
+- **Subcategorieën** — kies bij het maken of bewerken van een categorie een **Hoofdcategorie** om deze onder een andere te plaatsen. Er zijn maar twee niveaus: een categorie die al subcategorieën heeft, kan zelf geen subcategorie worden, en de hoofdcategorie moet van hetzelfde type (uitgaven of inkomsten) en van hetzelfde account zijn. Categoriekiezers tonen subcategorieën gegroepeerd onder hun hoofdcategorie. Een categorie met subcategorieën kan pas worden verwijderd als die zijn verplaatst of verwijderd.
+- **Subcategorieën voor inkomsten** — ook inkomstencategorieën kunnen subcategorieën hebben. Kies bij het maken of bewerken van een inkomstencategorie een **Hoofdcategorie** (alleen inkomstencategorieën). De inkomstenkeuzelijsten (nieuwe inkomsten, inkomstendetails, spraak) tonen subcategorieën gegroepeerd onder hun hoofdcategorie.
+- **Slepen en neerzetten om te ordenen** — houd een categorie ingedrukt (op de desktopwebversie: indrukken en slepen) en zet haar neer op een hoofdcategorie om er een subcategorie van te maken. Om een subcategorie terug naar het hoogste niveau te verplaatsen, zet je haar neer op de lijn tussen twee hoofdcategorieën. De volgorde van de lijst verandert niet. Een melding legt uit waarom neerzetten wordt geweigerd: een categorie die al subcategorieën heeft kan geen subcategorie worden, op een subcategorie kan niets worden neergezet, uitgaven- en inkomstencategorieën kunnen niet worden gemengd, en de statiegeldcategorie blijft buiten de hiërarchie. Slepen vereist een internetverbinding (offline toont lang indrukken een melding), kijkers kunnen niet slepen, en aan de schermranden scrolt de lijst niet automatisch — sleep binnen de zichtbare lijst.
 - **Standaardcategorieën volgen de taal van de app** — een categorie die de app voor je heeft gemaakt (zoals Boodschappen of Statiegeld) wordt getoond in de taal die je nu gebruikt, dus een taalwissel verandert de naam op het scherm zonder een duplicaat te maken. Geef je zelf een standaardcategorie een andere naam, dan blijft jouw naam in elke taal behouden. Categorieën die je zelf hebt gemaakt tonen altijd precies wat je hebt getypt.
 
 > **Opmerking:** Het verwijderen van een categorie is permanent en kan niet ongedaan worden gemaakt.

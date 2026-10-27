@@ -47,6 +47,7 @@ Kazda karta wnioskow ma poziom waznosci: krytyczny (czerwony), ostrzezenie (zolt
 - Kodowany kolorami w palecie zielono-morskiej, odrozniajac sie od wykresow wydatkow
 - Przychody bez kategorii sa grupowane jako „Inne"
 - Pojawia sie powyzej wykresu trendu wydatkow
+- Kategorie przychodów działają tak samo: kategorie główne pokazują sumę swoich podkategorii, a dotknięcie otwiera widok szczegółowy.
 
 ### Trend wydatkow (wykres slupkowy)
 
@@ -57,7 +58,8 @@ Kazda karta wnioskow ma poziom waznosci: krytyczny (czerwony), ostrzezenie (zolt
 
 - Podzial na kategorie z procentami
 - Kodowany kolorami wedlug kategorii
-- Dotknij fragment, aby zbadac wydatki tej kategorii
+- Dotknij fragmentu kategorii głównej (oznaczonej ›), aby zobaczyć jej podkategorie; fragment bez podkategorii zostaje po dotknięciu tylko wyróżniony
+- **Podkategorie są sumowane** — wykres pokazuje tylko kategorie główne, a kwota kategorii głównej obejmuje jej podkategorie. Kategorie główne z podkategoriami są oznaczone ›. Dotknij jednej z nich (fragmentu wykresu lub jej wiersza), aby przerysować wykres dla tej kategorii: jej podkategorie oraz „<Kategoria> (bez podkategorii)” dla wydatków zapisanych bezpośrednio na kategorii głównej. Dotknij ścieżki „Wszystkie kategorie › <Kategoria>”, aby wrócić. Widok szczegółowy resetuje się za każdym razem, gdy dane analiz są przeliczane: po dodaniu lub edycji transakcji, synchronizacji, zmianie języka albo zmianie okresu, konta lub waluty. Wydatki na usuniętej podkategorii pozostają osobnym fragmentem najwyższego poziomu, ponieważ aplikacja nie przechowuje usuniętych kategorii na urządzeniu. Znaczniki „vs średnia” dla kategorii głównej używają skumulowanej kwoty. To samo działa na kartach analiz w wersji webowej na komputer.
 
 ### Budzet vs Rzeczywistosc (grupowany wykres slupkowy)
 

@@ -47,6 +47,7 @@ Elke inzichtkaart heeft een ernst: kritiek (rood), waarschuwing (geel) of info (
 - Kleurgecodeerd in een groen/teal palet om het te onderscheiden van uitgavengrafieken
 - Niet-gecategoriseerde inkomsten worden gegroepeerd als "Overig"
 - Verschijnt boven de uitgaventrendgrafiek
+- Inkomstencategorieën werken op dezelfde manier: hoofdcategorieën tonen het totaal van hun subcategorieën, en tikken opent de detailweergave.
 
 ### Uitgaventrend (staafdiagram)
 
@@ -57,7 +58,8 @@ Elke inzichtkaart heeft een ernst: kritiek (rood), waarschuwing (geel) of info (
 
 - Categorie-uitsplitsing met percentages
 - Kleurgecodeerd per categorie
-- Tik op een segment om de uitgaven van die categorie te verkennen
+- Tik op het segment van een hoofdcategorie (gemarkeerd met ›) om haar subcategorieën te openen; een segment zonder subcategorieën wordt bij het tikken alleen gemarkeerd
+- **Subcategorieën worden opgeteld** — het diagram toont alleen hoofdcategorieën, en het bedrag van een hoofdcategorie omvat haar subcategorieën. Hoofdcategorieën met subcategorieën zijn gemarkeerd met ›. Tik erop (op het segment of de rij) om het diagram voor die hoofdcategorie opnieuw te tekenen: haar subcategorieën, plus „<Hoofdcategorie> (geen subcategorie)” voor uitgaven die op de hoofdcategorie zelf zijn geboekt. Tik op het kruimelpad „Alle categorieën › <Hoofdcategorie>” om terug te gaan. De detailweergave wordt gereset zodra de analysegegevens opnieuw worden berekend: een nieuwe of gewijzigde transactie, een synchronisatie, een taalwissel of een wijziging van periode, account of valuta. Uitgaven op een verwijderde subcategorie blijven een eigen segment op het hoogste niveau, omdat de app verwijderde categorieën niet op het apparaat bewaart. De chips „vs gemiddelde” gebruiken voor een hoofdcategorie het opgetelde bedrag. Hetzelfde werkt op de analysekaarten van de desktopwebversie.
 
 ### Budget versus werkelijk (gegroepeerd staafdiagram)
 

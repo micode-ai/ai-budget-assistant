@@ -7,9 +7,9 @@ export function hasLiveChildren(categories: Category[], categoryId: string): boo
 }
 
 /**
- * Categories the edited one may be filed under: live, top-level, expense, not
+ * Categories the edited one may be filed under: live, top-level, of the given type, not
  * itself and not the deposit category. Empty when the hierarchy does not apply
- * to it at all - an income, a deposit, or a category that already has children
+ * to it at all - a deposit, or a category that already has children
  * (the tree is two levels deep, so a parent cannot get a parent).
  */
 export function eligibleParents(
@@ -17,14 +17,13 @@ export function eligibleParents(
   editing: Pick<Category, 'id' | 'name'> | null,
   type: 'expense' | 'income',
 ): Category[] {
-  if (type !== 'expense') return [];
   if (editing && (hasLiveChildren(categories, editing.id) || isDepositCategoryName(editing.name))) {
     return [];
   }
   return categories.filter(
     (c) =>
       !c.isDeleted &&
-      c.type === 'expense' &&
+      c.type === type &&
       !c.parentId &&
       c.id !== editing?.id &&
       !isDepositCategoryName(c.name),

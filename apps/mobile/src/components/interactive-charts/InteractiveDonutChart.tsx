@@ -12,6 +12,8 @@ interface InteractiveDonutChartProps {
   formatValue?: (value: number) => string;
   showLegend?: boolean;
   innerRadius?: number;
+  /** Overrides the default "Total" centre label (e.g. a drilled parent's name). */
+  centerLabel?: string;
 }
 
 const DEFAULT_COLORS = [
@@ -34,6 +36,7 @@ export function InteractiveDonutChart({
   formatValue = (v) => v.toFixed(0),
   showLegend = true,
   innerRadius,
+  centerLabel,
 }: InteractiveDonutChartProps) {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -82,7 +85,7 @@ export function InteractiveDonutChart({
           focusOnPress
           centerLabelComponent={() => (
             <View style={styles.centerContent}>
-              <Text style={styles.centerLabel}>{t('drillDown.total')}</Text>
+              <Text style={styles.centerLabel}>{centerLabel ?? t('drillDown.total')}</Text>
               <Text style={styles.centerValue}>{formatValue(total)}</Text>
             </View>
           )}

@@ -21,7 +21,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { api } from '@/services/api';
 import type { Currency } from '@budget/shared-types';
-import { SUPPORTED_CURRENCIES } from '@budget/shared-utils';
+import { SUPPORTED_CURRENCIES, sortCategoriesAsTree } from '@budget/shared-utils';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { useSubscriptionStore } from '@/stores/subscriptionStore';
 import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
@@ -346,11 +346,12 @@ export default function VoiceIncomeScreen() {
               <View style={styles.fieldGroup}>
                 <Text style={styles.fieldLabel}>{t('incomeVoice.category')}</Text>
                 <View style={styles.categoryGrid}>
-                  {getIncomeCategories().map((cat) => (
+                  {sortCategoriesAsTree(getIncomeCategories()).map(({ category: cat, depth }) => (
                     <TouchableOpacity
                       key={cat.id}
                       style={[
                         styles.categoryChip,
+                        depth === 1 && styles.childCategoryChip,
                         editCategory === cat.id && {
                           backgroundColor: cat.color,
                           borderColor: cat.color,
@@ -587,6 +588,7 @@ const createStyles = (theme: Theme) => ({
     flexWrap: 'wrap' as const,
     gap: theme.spacing[2],
   },
+  childCategoryChip: { marginLeft: theme.spacing[3] },
   categoryChip: {
     width: '31%' as const,
     paddingHorizontal: theme.spacing[2],

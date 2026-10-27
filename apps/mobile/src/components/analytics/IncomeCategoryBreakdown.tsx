@@ -1,9 +1,12 @@
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '@budget/shared-utils';
 import { InteractiveDonutChart } from '@/components/interactive-charts';
 import { useStyles, type Theme } from '@/theme';
 import type { IncomeCategorySpending } from '@/features/analytics/useAnalytics';
+import { drillView } from '@/features/analytics/categoryDrillView';
+import { useDrillParent } from '@/features/analytics/useDrillParent';
+import { CategoryDrillBreadcrumb } from './CategoryDrillBreadcrumb';
 
 interface Props {
   incomeByCategory: IncomeCategorySpending[];
@@ -20,35 +23,55 @@ const formatChartValue = (value: number) => {
 export function IncomeCategoryBreakdown({ incomeByCategory, currency }: Props) {
   const { t } = useTranslation();
   const styles = useStyles(createStyles);
+  const { drillParentId, setDrillParentId } = useDrillParent(incomeByCategory);
+  const { rows, parent } = drillView(incomeByCategory, drillParentId);
+  const drill = (row: IncomeCategorySpending) => {
+    if (row.children && row.children.length > 0) setDrillParentId(row.categoryId);
+  };
 
   return (
     <View style={styles.section}>
       <Text style={styles.sectionTitle}>{t('analytics.byIncomeCategory')}</Text>
       <View style={styles.chartContainer}>
+        {parent && (
+          <CategoryDrillBreadcrumb parentName={parent.name} onBack={() => setDrillParentId(null)} />
+        )}
         <InteractiveDonutChart
-          data={incomeByCategory.map((c) => ({
+          key={parent?.categoryId ?? 'top'}
+          data={rows.map((c) => ({
             label: c.name,
             value: c.amount,
             color: c.color,
             id: c.categoryId || undefined,
           }))}
           size={160}
+          centerLabel={parent ? parent.name : undefined}
+          onSectionPress={parent ? undefined : (_item, index) => drill(rows[index])}
           formatValue={formatChartValue}
           showLegend={true}
         />
       </View>
-      {incomeByCategory.map((category, index) => (
-        <View key={category.categoryId || index} style={styles.row}>
+      {rows.map((category, index) => {
+        const drillable = !parent && !!category.children && category.children.length > 0;
+        const Row = drillable ? TouchableOpacity : View;
+        return (
+        <Row
+          key={`${category.categoryId ?? 'none'}-${index}`}
+          style={styles.row}
+          {...(drillable ? { onPress: () => drill(category), accessibilityRole: 'button' as const } : {})}
+        >
           <View style={styles.rowInfo}>
             <View style={[styles.dot, { backgroundColor: category.color }]} />
             <Text style={styles.rowName}>{category.name}</Text>
+            {drillable && <Text style={styles.chevron}>›</Text>}
           </View>
           <View style={styles.rowValues}>
             <Text style={styles.rowAmount}>{formatCurrency(category.amount, currency)}</Text>
             <Text style={styles.rowPercent}>{category.percentage.toFixed(0)}%</Text>
           </View>
-        </View>
-      ))}
+        </Row>
+        );
+      })}
     </View>
   );
 }
@@ -95,6 +118,10 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.bodyLarge,
     color: theme.colors.textPrimary,
     flexShrink: 1,
+  },
+  chevron: {
+    ...theme.textStyles.bodyLarge,
+    color: theme.colors.textTertiary,
   },
   rowValues: {
     alignItems: 'flex-end' as const,

@@ -20,7 +20,7 @@
 <link rel="alternate" hreflang="be" href="https://ai-budget.pl/help/be/analytics/">
 <link rel="alternate" hreflang="nl" href="https://ai-budget.pl/help/nl/analytics/">
 <link rel="alternate" hreflang="x-default" href="https://ai-budget.pl/help/en/analytics/">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MiCode Sp. z o.o.", "alternateName": ["MICODE sp. z o.o.", "MiCode"], "taxID": "5833510147", "url": "https://mi-code.pl/", "sameAs": ["https://mi-code.pl/", "https://github.com/micode-ai", "https://www.wikidata.org/wiki/Q141551004"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Аналитика | AI Budget Assistant", "description": "Визуализируйте структуру расходов с помощью интерактивных графиков.", "inLanguage": "ru", "datePublished": "2026-06-19", "dateModified": "2026-09-22", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/ru/analytics/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/ru/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/ru/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Главная", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Помощь", "item": "https://ai-budget.pl/help/ru/"}, {"@type": "ListItem", "position": 3, "name": "Аналитика | AI Budget Assistant", "item": "https://ai-budget.pl/help/ru/analytics/"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MiCode Sp. z o.o.", "alternateName": ["MICODE sp. z o.o.", "MiCode"], "taxID": "5833510147", "url": "https://mi-code.pl/", "sameAs": ["https://mi-code.pl/", "https://github.com/micode-ai", "https://www.wikidata.org/wiki/Q141551004"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Аналитика | AI Budget Assistant", "description": "Визуализируйте структуру расходов с помощью интерактивных графиков.", "inLanguage": "ru", "datePublished": "2026-06-19", "dateModified": "2026-10-27", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/ru/analytics/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/ru/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/ru/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Главная", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Помощь", "item": "https://ai-budget.pl/help/ru/"}, {"@type": "ListItem", "position": 3, "name": "Аналитика | AI Budget Assistant", "item": "https://ai-budget.pl/help/ru/analytics/"}]}]}</script>
 <style>
 :root{--o:#B45309;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
 *{box-sizing:border-box}
@@ -131,6 +131,7 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li>Цветовая палитра в зелёно-бирюзовых тонах для визуального отличия от диаграмм расходов</li>
 <li>Некатегоризированные доходы объединяются в «Другие»</li>
 <li>Находится выше графика динамики расходов</li>
+<li>Категории доходов работают так же: основные показывают сумму своих подкатегорий, а нажатие открывает детализацию.</li>
 </ul>
 <h3>Динамика расходов (Столбчатый график)</h3>
 <ul>
@@ -141,7 +142,8 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <ul>
 <li>Разбивка по категориям с процентами</li>
 <li>Цветовая маркировка по категориям</li>
-<li>Нажмите на сегмент, чтобы изучить расходы этой категории</li>
+<li>Нажмите на сегмент основной категории (отмечена ›), чтобы открыть её подкатегории; сегмент без подкатегорий при нажатии только выделяется</li>
+<li><strong>Подкатегории суммируются</strong> — диаграмма показывает только основные категории, а сумма основной категории включает её подкатегории. Основные категории с подкатегориями отмечены значком ›. Нажмите на такую категорию (сегмент или строку), и диаграмма перерисуется для неё: её подкатегории плюс «&lt;Категория&gt; (без подкатегории)» для расходов, записанных прямо на основную категорию. Нажмите на цепочку «Все категории › &lt;Категория&gt;», чтобы вернуться. Детализация сбрасывается всякий раз, когда данные аналитики пересчитываются: при новой или изменённой операции, синхронизации, смене языка или смене периода, счёта или валюты. Расходы удалённой подкатегории остаются отдельным сегментом верхнего уровня, потому что приложение не хранит удалённые категории на устройстве. Метки «vs среднее» для основной категории используют суммарную величину. То же работает на карточках аналитики в веб-версии для компьютера.</li>
 </ul>
 <h3>Бюджет vs Факт (Группированный столбчатый график)</h3>
 <ul>

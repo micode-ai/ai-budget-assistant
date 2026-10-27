@@ -33,6 +33,10 @@ export interface CategorySpending {
   percentage: number;
   color: string;
   vsAverage: number | null;
+  /** Subcategories rolled into this row; non-empty means drillable. */
+  children?: CategorySpending[];
+  /** Synthetic "(no subcategory)" slice carrying a parent's own spend. */
+  isParentSelf?: boolean;
 }
 
 export interface AnalyticsSummary {
@@ -134,6 +138,8 @@ export interface IncomeCategorySpending {
   amount: number;
   percentage: number;
   color: string;
+  children?: IncomeCategorySpending[];
+  isParentSelf?: boolean;
 }
 
 // ─── Composition hook ────────────────────────────────────────────────────────

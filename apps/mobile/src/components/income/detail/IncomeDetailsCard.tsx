@@ -9,7 +9,7 @@ import { useIncomeStore } from '@/stores/incomeStore';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { getTagsForIncome } from '@/db/tagRepository';
 import { TagChip } from '@/components/TagChip';
-import { formatCurrency, formatDate, SUPPORTED_CURRENCIES } from '@budget/shared-utils';
+import { formatCurrency, formatDate, SUPPORTED_CURRENCIES, sortCategoriesAsTree } from '@budget/shared-utils';
 import { getIntlLocale } from '@/i18n';
 import type { Currency, Income, Tag } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
@@ -203,11 +203,12 @@ export const IncomeDetailsCard = forwardRef<IncomeDetailsCardHandle, IncomeDetai
             <Text style={styles.detailLabel}>{t('incomeDetail.category')}</Text>
             {isEditing ? (
               <View style={styles.categoryGrid}>
-                {getIncomeCategories().map((cat) => (
+                {sortCategoriesAsTree(getIncomeCategories()).map(({ category: cat, depth }) => (
                   <TouchableOpacity
                     key={cat.id}
                     style={[
                       styles.categoryChip,
+                      depth === 1 && styles.childCategoryChip,
                       editCategory === cat.id && {
                         backgroundColor: cat.color,
                         borderColor: cat.color,
@@ -423,6 +424,7 @@ const createStyles = (theme: Theme) => ({
     gap: theme.spacing[2],
     marginTop: theme.spacing[1],
   },
+  childCategoryChip: { marginLeft: theme.spacing[3] },
   categoryChip: {
     width: '31%' as const,
     paddingHorizontal: theme.spacing[2],

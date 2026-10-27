@@ -37,6 +37,30 @@ whose only duplicate check was an exact name match. Design:
 
 ## Key concepts
 
+**Analytics drill-down.** The by-category donut and the income donut show top-level categories only;
+a parent's amount includes its subcategories (`categoryRollup.ts`, `buildParentOf.ts`). Tapping a
+parent (slice or row, marked "›") redraws the donut for it (`categoryDrillView.ts`): its
+subcategories plus "<Parent> (no subcategory)" for spend recorded on the parent itself. The
+breadcrumb `CategoryDrillBreadcrumb` ("All categories › <Parent>") goes back. The drill state is
+`useDrillParent.ts`, which resets whenever the rolled-up rows are rebuilt — a new or edited
+transaction, a sync, a language change, or a period/account/currency change, not only the last
+three. The donut (phone) and the whole card (desktop) are keyed on the drill level, so a focused
+slice or an expanded "Show all" never carries over into or out of a drill. Legacy name-keyed spend
+is re-keyed to its category id first (`normalizeCategoryKeys`), so a parent never shows twice. A
+deleted subcategory's spend stays a top-level slice: the device does not keep deleted category
+rows, so its parent cannot be found. "vs average" chips for a parent use the rolled-up amount.
+Desktop web does the same in `BreakdownGrid`/`BreakdownCard`.
+All under `apps/mobile/src/features/analytics/` and `components/analytics/`.
+
+**Drag and drop in Settings → Categories.** `CategoryDragList.tsx` (pure-JS `PanResponder`):
+long-press (phone) or press-and-drag (desktop) a category; drop on a top-level category to nest it,
+or drop a subcategory on the line between top-level categories to un-nest it. The list order does
+not change. Page scroll is frozen while a drag is in progress. A release commits only the target
+that was highlighted at that moment — never one recomputed from the release point. Rows carry a
+permanent transparent 1px border, so the hover highlight never resizes a row and shifts the measured
+hit boxes. A refused drop shows a message. Needs a connection (offline long-press shows a message,
+status from `useConnectivityStore`); viewers cannot drag.
+
 **Two levels, server-enforced.** `assertValidParent` rejects a parent that has a parent itself, a
 parent from another account, a parent of a different type, and re-parenting a category that already
 has children. Deleting a parent stays blocked (409) while it has children.
@@ -83,23 +107,35 @@ system key, with the name-slot comparison kept for keyless rows — see
   roll the local change back and surface the save-failed message on a transport failure, and on a
   400/409 refusal. A parentless offline create still stands. A real category push queue is a
   follow-up. `remapCategoryId` also re-points children's `parent_id`.
-- **Expense categories only in the UI.** `parentId` is accepted for income categories by the API,
-  but no income parent picker or grouping exists.
+- **Income categories have the hierarchy too.** The category form's parent picker offers income
+  parents for an income category; the income pickers (create, detail, voice) group children under
+  their parent.
+- **A drag-and-drop drop sends only `parentId`**, never the whole category, so a colour or icon is
+  never overwritten. Refusals mirror `assertValidParent` and live in
+  `features/categories/categoryDrop.ts`: a category with subcategories, a drop onto a subcategory,
+  expense onto income (or the reverse), and the deposit category on either side.
+- **Analytics roll-up never changes totals.** Top-level amounts sum to the input total; uncategorised
+  spend and spend on an unknown or deleted parent stay top-level; a parent with no own spend gets no
+  "(no subcategory)" slice. This holds for a malformed tree too: `buildParentOf` returns a parent only
+  when it is live, top-level and not the row itself, and `rollUpCategoryTotals` itself ignores a
+  self-parent or a parent that is not top-level — otherwise that spend would silently vanish.
 
 ## Known gaps
 
 - Semantic overlap (a subcategory-like proposal such as "bread" when no subcategory exists, or a
   synonym such as "beer" beside "alcohol") is enforced by the classifier prompt alone; the validator catches only
   equality and translations.
-- The analytics by-category donut does not roll up; only budgets do (the category form's
-  `parentHint` says so).
+- No auto-scroll at the screen edges while dragging a category; the user drags within the visible
+  list.
+- The drag gesture layer (`CategoryDragList.tsx`) has no automated test — the repo has no renderer.
+  Only the pure drop rules are covered.
 - `resolveExpenseCategoryId` applies the equivalence check on the expense name-fallback path too, so
   an offline-created category that is a translation of an existing one (e.g. "Продукты" beside
   "Groceries") lands in the existing category instead of becoming a second one.
 - No in-app "merge categories" feature; the affected account was cleaned up by a one-off script.
-- Income categories have no hierarchy UI.
 - Product rules are still keyed on the printed line and miss on respelled prints.
 
 ## History
 
 [ABA-696](https://github.com/micode-ai/ai-budget-assistant/issues/729) — the feature · 2026-10-26 design spec.
+[ABA-699](https://github.com/micode-ai/ai-budget-assistant/issues/732) — analytics drill-down, income hierarchy, drag and drop · 2026-10-27 follow-ups spec.

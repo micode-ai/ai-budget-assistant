@@ -47,6 +47,7 @@ Chaque carte d'apercu a un niveau de gravite : critique (rouge), avertissement (
 - Code couleur dans une palette vert/bleu-vert pour se distinguer des graphiques de depenses
 - Les revenus sans categorie sont regroupes sous « Autres »
 - Apparait au-dessus du graphique de tendance des depenses
+- Les catégories de revenus fonctionnent de la même façon : les catégories principales affichent le total de leurs sous-catégories, et un appui ouvre le détail.
 
 ### Tendance des depenses (Graphique en barres)
 
@@ -57,7 +58,8 @@ Chaque carte d'apercu a un niveau de gravite : critique (rouge), avertissement (
 
 - Repartition par categorie avec pourcentages
 - Code couleur par categorie
-- Appuyez sur un segment pour explorer les depenses de cette categorie
+- Appuyez sur le segment d'une catégorie principale (marquée ›) pour afficher ses sous-catégories ; un segment sans sous-catégories est seulement mis en surbrillance
+- **Les sous-catégories sont cumulées** — le graphique n'affiche que les catégories principales, et le montant d'une catégorie principale inclut ses sous-catégories. Les catégories principales ayant des sous-catégories sont marquées ›. Appuyez sur l'une d'elles (le segment ou sa ligne) pour redessiner le graphique de cette catégorie : ses sous-catégories, plus « <Principale> (sans sous-catégorie) » pour les dépenses enregistrées sur la catégorie principale elle-même. Appuyez sur le fil d'Ariane « Toutes les catégories › <Principale> » pour revenir. Le détail se réinitialise chaque fois que les données d'analyse sont recalculées : une transaction nouvelle ou modifiée, une synchronisation, un changement de langue, ou un changement de période, de compte ou de devise. Les dépenses d'une sous-catégorie supprimée restent un segment distinct de premier niveau, car l'application ne conserve pas les catégories supprimées sur l'appareil. Les pastilles « vs moyenne » d'une catégorie principale utilisent le montant cumulé. Cela fonctionne aussi sur les cartes d'analyse de la version web de bureau.
 
 ### Budget vs Reel (Graphique en barres groupees)
 

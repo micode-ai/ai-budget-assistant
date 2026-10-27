@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '@budget/shared-utils';
 import { InteractiveDonutChart } from '@/components/interactive-charts';
 import { useTheme, useStyles, type Theme } from '@/theme';
+import { CategoryDrillBreadcrumb } from '../CategoryDrillBreadcrumb';
 
 /**
  * One normalised row for the generic desktop breakdown card. `CategoryBreakdown`,
@@ -40,6 +41,8 @@ export interface BreakdownRow {
   /** A budget ceiling to compare `amount` against (Project's per-row budget
    *  bar). `undefined`/`0` renders no footer. */
   budget?: number;
+  /** Drillable category row: shows a chevron and fires `onRowPress`. */
+  hasChildren?: boolean;
 }
 
 export type BreakdownCardSize = 'primary' | 'secondary';
@@ -63,6 +66,10 @@ export interface BreakdownCardProps {
    *  `'primary'`, which never collapses. Defaults to 5, matching the design
    *  brief's "top 5 + show all". */
   collapsedRowCount?: number;
+  /** Called for `hasChildren` rows (list row or donut slice). */
+  onRowPress?: (row: BreakdownRow) => void;
+  /** Set while drilled into a parent: renders the breadcrumb above the donut. */
+  drill?: { parentName: string; onBack: () => void };
 }
 
 const PRIMARY_CHART_SIZE = 160;
@@ -122,6 +129,8 @@ export function BreakdownCard({
   size = 'secondary',
   chartSize,
   collapsedRowCount = DEFAULT_COLLAPSED_ROW_COUNT,
+  onRowPress,
+  drill,
 }: BreakdownCardProps) {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -153,6 +162,7 @@ export function BreakdownCard({
       ) : (
         <>
           <View style={styles.chartContainer}>
+            {drill && <CategoryDrillBreadcrumb parentName={drill.parentName} onBack={drill.onBack} />}
             <InteractiveDonutChart
               data={rows.map((row, index) => ({
                 label: row.name,
@@ -161,6 +171,15 @@ export function BreakdownCard({
                 id: row.id,
               }))}
               size={donutSize}
+              centerLabel={drill ? drill.parentName : undefined}
+              onSectionPress={
+                onRowPress
+                  ? (_item, index) => {
+                      const r = rows[index];
+                      if (r?.hasChildren) onRowPress(r);
+                    }
+                  : undefined
+              }
               formatValue={formatChartValue}
               showLegend
             />
@@ -175,10 +194,16 @@ export function BreakdownCard({
               const hasBudget = budget != null && budget > 0;
               const isOverBudget = hasBudget && row.amount > budget;
 
+              const drillable = !!row.hasChildren && !!onRowPress;
+              const RowWrap = drillable ? TouchableOpacity : View;
+
               return (
-                <View
-                  key={row.id}
+                <RowWrap
+                  key={`${row.id}-${index}`}
                   style={[styles.row, index > 0 && styles.rowDivider]}
+                  {...(drillable
+                    ? { onPress: () => onRowPress?.(row), accessibilityRole: 'button' as const }
+                    : {})}
                 >
                   <View style={styles.rowHeader}>
                     <View style={styles.rowInfo}>
@@ -186,6 +211,7 @@ export function BreakdownCard({
                       <Text style={styles.rowName} numberOfLines={1}>
                         {row.name}
                       </Text>
+                      {drillable && <Text style={styles.chevron}>›</Text>}
                     </View>
                     <View style={styles.rowValues}>
                       <Text style={styles.rowAmount}>{formatCurrency(row.amount, currency)}</Text>
@@ -237,7 +263,7 @@ export function BreakdownCard({
                       </Text>
                     </View>
                   )}
-                </View>
+                </RowWrap>
               );
             })}
           </View>
@@ -318,6 +344,10 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.bodyLarge,
     color: theme.colors.textPrimary,
     flexShrink: 1,
+  },
+  chevron: {
+    ...theme.textStyles.bodyLarge,
+    color: theme.colors.textTertiary,
   },
   rowValues: {
     alignItems: 'flex-end' as const,

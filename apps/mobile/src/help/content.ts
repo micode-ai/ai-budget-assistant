@@ -1046,6 +1046,7 @@ Each insight card has severity: critical (red), warning (yellow), or info (blue)
 - Color-coded in a green/teal palette to distinguish from expense charts
 - Uncategorized income is grouped as "Other"
 - Appears above the spending trend chart
+- Income categories work the same way: parents show the total of their subcategories, and tapping one drills into it.
 
 ### Spending Trend (Bar Chart)
 
@@ -1056,7 +1057,8 @@ Each insight card has severity: critical (red), warning (yellow), or info (blue)
 
 - Category breakdown with percentages
 - Color-coded by category
-- Tap a slice to explore that category's expenses
+- Tap a slice of a parent category (marked ›) to drill into its subcategories; tapping a slice without subcategories only highlights it
+- **Subcategories roll up** — the donut shows top-level categories only, and a parent's amount includes its subcategories. Parents with subcategories are marked with ›. Tap one (the slice or its row) to redraw the donut for that parent: its subcategories, plus “<Parent> (no subcategory)” for spending recorded on the parent itself. Tap the breadcrumb “All categories › <Parent>” to go back. The drill resets whenever the analytics data is rebuilt — a new or edited transaction, a sync, a language change, or a change of period, account or currency. Spending on a deleted subcategory stays a separate top-level slice, because the app does not keep deleted categories on the device. “vs average” chips for a parent use the rolled-up amount. The same works on the desktop web analytics cards.
 
 ### Budget vs Actual (Grouped Bar Chart)
 
@@ -2077,7 +2079,9 @@ View and manage all your expense and income categories in one place.
 - **Delete a category** — swipe left on a category or tap the delete icon to remove it
 - **Deletion is blocked** if the category has any related expenses, incomes, or budgets — you must reassign or delete those records first
 - **System categories** can also be deleted if they have no related records
-- **Subcategories** — when you create or edit an expense category, choose a **Parent category** to file it under another one. There are two levels only: a category that already has subcategories cannot become a subcategory itself, and a parent must be an expense category of the same account. Category pickers show subcategories grouped under their parent. A category with subcategories cannot be deleted until they are moved or removed.
+- **Subcategories** — when you create or edit a category, choose a **Parent category** to file it under another one. There are two levels only: a category that already has subcategories cannot become a subcategory itself, and a parent must be a category of the same type (expense or income) in the same account. Category pickers show subcategories grouped under their parent. A category with subcategories cannot be deleted until they are moved or removed.
+- **Subcategories for income** — income categories can have subcategories too. When you create or edit an income category, choose a **Parent category** (income categories only). Income pickers (new income, income details, voice) show subcategories grouped under their parent.
+- **Drag and drop to organise** — long-press a category (on desktop web, press and drag) and drop it on a top-level category to make it a subcategory. To move a subcategory back to the top level, drop it on the line between two top-level categories. The list order does not change. A message explains why a drop is refused: a category that already has subcategories cannot become a subcategory, nothing can be dropped onto a subcategory, expense and income categories cannot be mixed, and the deposit category stays outside the hierarchy. Drag and drop needs an internet connection (offline, a long-press shows a message), viewers cannot drag, and there is no auto-scroll at the screen edges — drag within the visible list.
 - **Standard categories follow your app language** — a category the app created for you (such as Groceries or Deposit) is shown in the language you currently use, so switching the app language renames it on screen without creating a duplicate. If you rename a standard category yourself, your name is kept in every language. Categories you created yourself always show exactly what you typed.
 
 > **Note:** Deleting a category is permanent and cannot be undone.
@@ -6307,6 +6311,7 @@ iOS, Android, Web
 - Цветовая палитра в зелёно-бирюзовых тонах для визуального отличия от диаграмм расходов
 - Некатегоризированные доходы объединяются в «Другие»
 - Находится выше графика динамики расходов
+- Категории доходов работают так же: основные показывают сумму своих подкатегорий, а нажатие открывает детализацию.
 
 ### Динамика расходов (Столбчатый график)
 
@@ -6317,7 +6322,8 @@ iOS, Android, Web
 
 - Разбивка по категориям с процентами
 - Цветовая маркировка по категориям
-- Нажмите на сегмент, чтобы изучить расходы этой категории
+- Нажмите на сегмент основной категории (отмечена ›), чтобы открыть её подкатегории; сегмент без подкатегорий при нажатии только выделяется
+- **Подкатегории суммируются** — диаграмма показывает только основные категории, а сумма основной категории включает её подкатегории. Основные категории с подкатегориями отмечены значком ›. Нажмите на такую категорию (сегмент или строку), и диаграмма перерисуется для неё: её подкатегории плюс «<Категория> (без подкатегории)» для расходов, записанных прямо на основную категорию. Нажмите на цепочку «Все категории › <Категория>», чтобы вернуться. Детализация сбрасывается всякий раз, когда данные аналитики пересчитываются: при новой или изменённой операции, синхронизации, смене языка или смене периода, счёта или валюты. Расходы удалённой подкатегории остаются отдельным сегментом верхнего уровня, потому что приложение не хранит удалённые категории на устройстве. Метки «vs среднее» для основной категории используют суммарную величину. То же работает на карточках аналитики в веб-версии для компьютера.
 
 ### Бюджет vs Факт (Группированный столбчатый график)
 
@@ -7325,7 +7331,9 @@ Email обновляется мгновенно, выдаются новые т�
 - **Удаление категории** — смахните влево по категории или нажмите значок удаления
 - **Удаление заблокировано**, если с категорией связаны расходы, доходы или бюджеты — сначала необходимо переназначить или удалить эти записи
 - **Системные категории** также можно удалить, если с ними не связаны никакие записи
-- **Подкатегории** — при создании или редактировании категории расходов выберите **Родительскую категорию**, чтобы поместить её внутрь другой. Уровней только два: категория, у которой уже есть подкатегории, сама не может стать подкатегорией, а родительская должна быть категорией расходов того же счёта. В выборе категорий подкатегории сгруппированы под родительской. Категорию с подкатегориями нельзя удалить, пока они не перенесены или не удалены.
+- **Подкатегории** — при создании или редактировании категории выберите **Родительскую категорию**, чтобы поместить её внутрь другой. Уровней только два: категория, у которой уже есть подкатегории, сама не может стать подкатегорией, а родительская должна быть того же типа (расходы или доходы) и того же счёта. В выборе категорий подкатегории сгруппированы под родительской. Категорию с подкатегориями нельзя удалить, пока они не перенесены или не удалены.
+- **Подкатегории для доходов** — у категорий доходов тоже могут быть подкатегории. При создании или редактировании категории дохода выберите **Родительскую категорию** (только среди категорий доходов). Выбор категории в доходах (новый доход, детали дохода, голосовой ввод) показывает подкатегории, сгруппированные под основной.
+- **Перетаскивание для наведения порядка** — нажмите и удерживайте категорию (в веб-версии для компьютера — нажмите и перетащите) и опустите её на основную категорию, чтобы сделать подкатегорией. Чтобы вернуть подкатегорию на верхний уровень, опустите её на линию между двумя основными категориями. Порядок списка не меняется. Сообщение объяснит, почему перенос отклонён: категория, у которой есть подкатегории, не может стать подкатегорией, на подкатегорию нельзя ничего перенести, категории расходов и доходов нельзя смешивать, а категория залога остаётся вне иерархии. Для перетаскивания нужен интернет (без сети долгое нажатие покажет сообщение), наблюдатели перетаскивать не могут, а у краёв экрана список не прокручивается сам — перетаскивайте в пределах видимой части списка.
 - **Стандартные категории следуют языку приложения** — категория, созданная приложением (например, «Продукты» или «Залог»), показывается на текущем языке, поэтому смена языка меняет её название на экране и не создаёт дубликат. Если вы сами переименуете стандартную категорию, ваше название сохранится на всех языках. Категории, созданные вами, всегда показываются так, как вы их назвали.
 
 > **Примечание:** Удаление категории необратимо.
@@ -11546,6 +11554,7 @@ iOS, Android, Web
 - Кольорова палітра у зелено-бірюзових тонах для візуального відрізнення від діаграм витрат
 - Некатегоризовані доходи об'єднуються в «Інші»
 - Розташована вище графіка тенденції витрат
+- Категорії доходів працюють так само: основні показують суму своїх підкатегорій, а натискання відкриває деталізацію.
 
 ### Тенденція витрат (стовпчаста діаграма)
 
@@ -11556,7 +11565,8 @@ iOS, Android, Web
 
 - Розподіл за категоріями з відсотками
 - Кольорове позначення за категоріями
-- Натисніть сегмент, щоб дослідити витрати цієї категорії
+- Натисніть на сегмент основної категорії (позначена ›), щоб відкрити її підкатегорії; сегмент без підкатегорій під час натискання лише виділяється
+- **Підкатегорії підсумовуються** — діаграма показує лише основні категорії, а сума основної категорії включає її підкатегорії. Основні категорії з підкатегоріями позначено значком ›. Натисніть на таку категорію (сегмент або рядок), і діаграма перемалюється для неї: її підкатегорії плюс «<Категорія> (без підкатегорії)» для витрат, записаних безпосередньо на основну категорію. Натисніть на ланцюжок «Усі категорії › <Категорія>», щоб повернутися. Деталізація скидається щоразу, коли дані аналітики перераховуються: під час нової чи зміненої операції, синхронізації, зміни мови або зміни періоду, рахунку чи валюти. Витрати видаленої підкатегорії залишаються окремим сегментом верхнього рівня, бо застосунок не зберігає видалені категорії на пристрої. Позначки «vs середнє» для основної категорії використовують сумарну величину. Те саме працює на картках аналітики у вебверсії для комп'ютера.
 
 ### Бюджет vs Факт (групована стовпчаста діаграма)
 
@@ -12559,7 +12569,9 @@ iOS, Android, Web
 - **Видалення категорії** — свайп вліво по категорії або натисніть іконку видалення
 - **Видалення заблоковано**, якщо з категорією пов'язані витрати, доходи або бюджети — спочатку потрібно переназначити або видалити ці записи
 - **Системні категорії** також можна видалити, якщо з ними не пов'язані жодні записи
-- **Підкатегорії** — під час створення чи редагування категорії витрат виберіть **Батьківську категорію**, щоб розмістити її всередині іншої. Рівнів лише два: категорія, що вже має підкатегорії, сама не може стати підкатегорією, а батьківська має бути категорією витрат того ж рахунку. У виборі категорій підкатегорії згруповані під батьківською. Категорію з підкатегоріями не можна видалити, доки їх не переміщено або не видалено.
+- **Підкатегорії** — під час створення чи редагування категорії виберіть **Батьківську категорію**, щоб розмістити її всередині іншої. Рівнів лише два: категорія, що вже має підкатегорії, сама не може стати підкатегорією, а батьківська має бути того ж типу (витрати чи доходи) й того ж рахунку. У виборі категорій підкатегорії згруповані під батьківською. Категорію з підкатегоріями не можна видалити, доки їх не переміщено або не видалено.
+- **Підкатегорії для доходів** — категорії доходів також можуть мати підкатегорії. Під час створення чи редагування категорії доходу виберіть **Батьківську категорію** (лише серед категорій доходів). Вибір категорії в доходах (новий дохід, деталі доходу, голосове введення) показує підкатегорії, згруповані під основною.
+- **Перетягування для впорядкування** — натисніть і утримуйте категорію (у вебверсії для комп'ютера — натисніть і перетягніть) та опустіть її на основну категорію, щоб зробити підкатегорією. Щоб повернути підкатегорію на верхній рівень, опустіть її на лінію між двома основними категоріями. Порядок списку не змінюється. Повідомлення пояснить, чому перенесення відхилено: категорія, що має підкатегорії, не може стати підкатегорією, на підкатегорію нічого не можна перенести, категорії витрат і доходів не можна змішувати, а категорія застави залишається поза ієрархією. Для перетягування потрібен інтернет (без мережі довге натискання покаже повідомлення), спостерігачі не можуть перетягувати, а біля країв екрана список не прокручується сам — перетягуйте в межах видимої частини списку.
 - **Стандартні категорії слідують мові застосунку** — категорія, створена застосунком (наприклад, «Продукти» або «Застава»), показується поточною мовою, тому зміна мови змінює її назву на екрані й не створює дублікат. Якщо ви самі перейменуєте стандартну категорію, ваша назва збережеться всіма мовами. Категорії, створені вами, завжди показуються так, як ви їх назвали.
 
 > **Примітка:** Видалення категорії є незворотним.
@@ -16733,6 +16745,7 @@ Kazda karta wnioskow ma poziom waznosci: krytyczny (czerwony), ostrzezenie (zolt
 - Kodowany kolorami w palecie zielono-morskiej, odrozniajac sie od wykresow wydatkow
 - Przychody bez kategorii sa grupowane jako „Inne"
 - Pojawia sie powyzej wykresu trendu wydatkow
+- Kategorie przychodów działają tak samo: kategorie główne pokazują sumę swoich podkategorii, a dotknięcie otwiera widok szczegółowy.
 
 ### Trend wydatkow (wykres slupkowy)
 
@@ -16743,7 +16756,8 @@ Kazda karta wnioskow ma poziom waznosci: krytyczny (czerwony), ostrzezenie (zolt
 
 - Podzial na kategorie z procentami
 - Kodowany kolorami wedlug kategorii
-- Dotknij fragment, aby zbadac wydatki tej kategorii
+- Dotknij fragmentu kategorii głównej (oznaczonej ›), aby zobaczyć jej podkategorie; fragment bez podkategorii zostaje po dotknięciu tylko wyróżniony
+- **Podkategorie są sumowane** — wykres pokazuje tylko kategorie główne, a kwota kategorii głównej obejmuje jej podkategorie. Kategorie główne z podkategoriami są oznaczone ›. Dotknij jednej z nich (fragmentu wykresu lub jej wiersza), aby przerysować wykres dla tej kategorii: jej podkategorie oraz „<Kategoria> (bez podkategorii)” dla wydatków zapisanych bezpośrednio na kategorii głównej. Dotknij ścieżki „Wszystkie kategorie › <Kategoria>”, aby wrócić. Widok szczegółowy resetuje się za każdym razem, gdy dane analiz są przeliczane: po dodaniu lub edycji transakcji, synchronizacji, zmianie języka albo zmianie okresu, konta lub waluty. Wydatki na usuniętej podkategorii pozostają osobnym fragmentem najwyższego poziomu, ponieważ aplikacja nie przechowuje usuniętych kategorii na urządzeniu. Znaczniki „vs średnia” dla kategorii głównej używają skumulowanej kwoty. To samo działa na kartach analiz w wersji webowej na komputer.
 
 ### Budzet vs Rzeczywistosc (grupowany wykres slupkowy)
 
@@ -17740,7 +17754,9 @@ Przegladaj wszystkie swoje kategorie wydatkow i przychodow oraz zarzadzaj nimi w
 - **Usun kategorie** — przesuń palcem w lewo po kategorii lub dotknij ikony usuwania
 - **Usuwanie jest zablokowane**, jezeli kategoria ma powiazane wydatki, przychody lub budzety — najpierw musisz je przepisac lub usunac
 - **Kategorie systemowe** rowniez mozna usunac, jezeli nie maja powiazanych rekordow
-- **Podkategorie** — podczas tworzenia lub edycji kategorii wydatków wybierz **Kategorię nadrzędną**, aby umieścić ją pod inną. Są tylko dwa poziomy: kategoria, która ma już podkategorie, nie może sama stać się podkategorią, a kategoria nadrzędna musi być kategorią wydatków tego samego konta. Listy wyboru kategorii pokazują podkategorie pod ich kategorią nadrzędną. Kategorii z podkategoriami nie można usunąć, dopóki nie zostaną przeniesione lub usunięte.
+- **Podkategorie** — podczas tworzenia lub edycji kategorii wybierz **Kategorię nadrzędną**, aby umieścić ją pod inną. Są tylko dwa poziomy: kategoria, która ma już podkategorie, nie może sama stać się podkategorią, a kategoria nadrzędna musi być tego samego typu (wydatki lub przychody) i z tego samego konta. Listy wyboru kategorii pokazują podkategorie pod ich kategorią nadrzędną. Kategorii z podkategoriami nie można usunąć, dopóki nie zostaną przeniesione lub usunięte.
+- **Podkategorie przychodów** — kategorie przychodów również mogą mieć podkategorie. Podczas tworzenia lub edycji kategorii przychodów wybierz **Kategorię nadrzędną** (tylko kategorie przychodów). Selektory przychodów (nowy przychód, szczegóły przychodu, głos) pokazują podkategorie zgrupowane pod kategorią główną.
+- **Przeciąganie, aby uporządkować** — przytrzymaj kategorię (w wersji webowej na komputer: naciśnij i przeciągnij) i upuść ją na kategorii głównej, aby zrobić z niej podkategorię. Aby przenieść podkategorię z powrotem na najwyższy poziom, upuść ją na linii między dwiema kategoriami głównymi. Kolejność listy się nie zmienia. Komunikat wyjaśnia, dlaczego upuszczenie zostało odrzucone: kategoria, która ma podkategorie, nie może stać się podkategorią, nic nie można upuścić na podkategorii, nie można mieszać kategorii wydatków i przychodów, a kategoria kaucji pozostaje poza hierarchią. Przeciąganie wymaga połączenia z internetem (offline długie przytrzymanie pokazuje komunikat), obserwatorzy nie mogą przeciągać, a przy krawędziach ekranu lista nie przewija się automatycznie — przeciągaj w obrębie widocznej listy.
 - **Standardowe kategorie podążają za językiem aplikacji** — kategoria utworzona przez aplikację (np. Zakupy spożywcze lub Kaucja) jest pokazywana w aktualnie używanym języku, więc zmiana języka zmienia jej nazwę na ekranie bez tworzenia duplikatu. Jeśli sam zmienisz nazwę standardowej kategorii, Twoja nazwa zostanie we wszystkich językach. Kategorie utworzone przez Ciebie zawsze pokazują dokładnie to, co wpisałeś.
 
 > **Uwaga:** Usuniecie kategorii jest trwale i nie mozna go cofnac.
@@ -21916,6 +21932,7 @@ Jede Einblickkarte hat einen Schweregrad: Kritisch (rot), Warnung (gelb) oder In
 - Farbcodiert in einem Grün/Blaugrün-Schema zur Unterscheidung von Ausgabendiagrammen
 - Nicht kategorisierte Einnahmen werden als „Sonstige" zusammengefasst
 - Erscheint oberhalb des Ausgabentrends
+- Einnahmenkategorien funktionieren genauso: Hauptkategorien zeigen die Summe ihrer Unterkategorien, und ein Tippen öffnet die Detailansicht.
 
 ### Ausgabentrend (Balkendiagramm)
 
@@ -21926,7 +21943,8 @@ Jede Einblickkarte hat einen Schweregrad: Kritisch (rot), Warnung (gelb) oder In
 
 - Kategorieaufschlusselung mit Prozentsatzen
 - Farbcodiert nach Kategorie
-- Tippe auf ein Segment, um die Ausgaben dieser Kategorie zu erkunden
+- Tippe auf das Segment einer Hauptkategorie (mit › markiert), um ihre Unterkategorien zu öffnen; ein Segment ohne Unterkategorien wird beim Tippen nur hervorgehoben
+- **Unterkategorien werden zusammengerechnet** — das Diagramm zeigt nur Hauptkategorien, und der Betrag einer Hauptkategorie enthält ihre Unterkategorien. Hauptkategorien mit Unterkategorien sind mit › markiert. Tippe darauf (auf das Segment oder die Zeile), und das Diagramm wird für diese Hauptkategorie neu gezeichnet: ihre Unterkategorien plus „<Hauptkategorie> (ohne Unterkategorie)“ für Ausgaben, die direkt auf der Hauptkategorie erfasst wurden. Tippe auf die Pfadleiste „Alle Kategorien › <Hauptkategorie>“, um zurückzugehen. Die Detailansicht wird zurückgesetzt, sobald die Analysedaten neu berechnet werden – bei einer neuen oder geänderten Buchung, einer Synchronisierung, einem Sprachwechsel oder einer Änderung von Zeitraum, Konto oder Währung. Ausgaben einer gelöschten Unterkategorie bleiben ein eigenes Segment auf oberster Ebene, da die App gelöschte Kategorien nicht auf dem Gerät speichert. Die Chips „vs. Durchschnitt“ nutzen für Hauptkategorien den zusammengerechneten Betrag. Dasselbe funktioniert auf den Analyse-Karten der Desktop-Webversion.
 
 ### Budget vs. Tatsachlich (Gruppiertes Balkendiagramm)
 
@@ -22920,7 +22938,9 @@ Zeige und verwalte alle deine Ausgaben- und Einnahmenkategorien an einem Ort.
 - **Kategorie loschen** — wische eine Kategorie nach links oder tippe auf das Loschsymbol
 - **Loschen gesperrt**, wenn die Kategorie zugehorige Ausgaben, Einnahmen oder Budgets hat — diese Datensatze mussen zuerst neu zugewiesen oder geloscht werden
 - **Systemkategorien** konnen ebenfalls geloscht werden, sofern keine zugehorigen Datensatze vorhanden sind
-- **Unterkategorien** — beim Erstellen oder Bearbeiten einer Ausgabenkategorie wählst du eine **Oberkategorie**, um sie unter einer anderen einzuordnen. Es gibt nur zwei Ebenen: Eine Kategorie, die bereits Unterkategorien hat, kann nicht selbst Unterkategorie werden, und die Oberkategorie muss eine Ausgabenkategorie desselben Kontos sein. Kategorieauswahlen zeigen Unterkategorien unter ihrer Oberkategorie gruppiert. Eine Kategorie mit Unterkategorien kann erst gelöscht werden, wenn diese verschoben oder entfernt sind.
+- **Unterkategorien** — beim Erstellen oder Bearbeiten einer Kategorie wählst du eine **Oberkategorie**, um sie unter einer anderen einzuordnen. Es gibt nur zwei Ebenen: Eine Kategorie, die bereits Unterkategorien hat, kann nicht selbst Unterkategorie werden, und die Oberkategorie muss eine Kategorie desselben Typs (Ausgabe oder Einnahme) und desselben Kontos sein. Kategorieauswahlen zeigen Unterkategorien unter ihrer Oberkategorie gruppiert. Eine Kategorie mit Unterkategorien kann erst gelöscht werden, wenn diese verschoben oder entfernt sind.
+- **Unterkategorien für Einnahmen** — auch Einnahmenkategorien können Unterkategorien haben. Wähle beim Erstellen oder Bearbeiten einer Einnahmenkategorie eine **Oberkategorie** (nur Einnahmenkategorien). Die Einnahmen-Auswahlen (neue Einnahme, Einnahmedetails, Sprache) zeigen Unterkategorien gruppiert unter ihrer Hauptkategorie.
+- **Ziehen und Ablegen zum Ordnen** — halte eine Kategorie gedrückt (in der Desktop-Webversion: drücken und ziehen) und lege sie auf einer Hauptkategorie ab, um sie zur Unterkategorie zu machen. Um eine Unterkategorie wieder auf die oberste Ebene zu bringen, lege sie auf der Linie zwischen zwei Hauptkategorien ab. Die Reihenfolge der Liste ändert sich nicht. Eine Meldung erklärt, warum ein Ablegen abgelehnt wird: Eine Kategorie mit Unterkategorien kann nicht selbst Unterkategorie werden, auf einer Unterkategorie kann nichts abgelegt werden, Ausgaben- und Einnahmenkategorien lassen sich nicht mischen, und die Pfandkategorie bleibt außerhalb der Hierarchie. Ziehen und Ablegen braucht eine Internetverbindung (offline zeigt langes Drücken eine Meldung), Betrachter können nicht ziehen, und am Bildschirmrand scrollt die Liste nicht automatisch — ziehe innerhalb der sichtbaren Liste.
 - **Standardkategorien folgen der App-Sprache** — eine von der App angelegte Kategorie (z. B. Lebensmittel oder Pfand) wird in der aktuell verwendeten Sprache angezeigt. Ein Sprachwechsel ändert also ihren Namen auf dem Bildschirm, ohne ein Duplikat zu erzeugen. Benennst du eine Standardkategorie selbst um, bleibt dein Name in jeder Sprache erhalten. Selbst angelegte Kategorien zeigen immer genau das, was du eingegeben hast.
 
 > **Hinweis:** Das Loschen einer Kategorie ist dauerhaft und kann nicht ruckgangig gemacht werden.
@@ -27074,6 +27094,7 @@ Cada tarjeta de informacion tiene un nivel de severidad: critico (rojo), adverte
 - Codificado en colores en una paleta verde/turquesa para distinguirlo de los graficos de gastos
 - Los ingresos sin categoria se agrupan como "Otros"
 - Aparece encima del grafico de tendencia de gastos
+- Las categorías de ingresos funcionan igual: las principales muestran el total de sus subcategorías y al tocarlas se entra en el detalle.
 
 ### Tendencia de gastos (Grafico de barras)
 
@@ -27084,7 +27105,8 @@ Cada tarjeta de informacion tiene un nivel de severidad: critico (rojo), adverte
 
 - Desglose por categoria con porcentajes
 - Codigo de colores por categoria
-- Toca un segmento para explorar los gastos de esa categoria
+- Toca el segmento de una categoría principal (marcada con ›) para ver sus subcategorías; un segmento sin subcategorías solo se resalta al tocarlo
+- **Las subcategorías se suman** — el gráfico muestra solo las categorías principales, y el importe de una categoría principal incluye sus subcategorías. Las categorías principales con subcategorías llevan la marca ›. Toca una (el segmento o su fila) para redibujar el gráfico de esa categoría: sus subcategorías, más «<Principal> (sin subcategoría)» para el gasto registrado en la propia categoría principal. Toca la ruta «Todas las categorías › <Principal>» para volver. El detalle se restablece cada vez que se recalculan los datos de análisis: una transacción nueva o editada, una sincronización, un cambio de idioma o un cambio de periodo, cuenta o moneda. El gasto de una subcategoría eliminada sigue siendo un segmento propio de primer nivel, porque la aplicación no guarda en el dispositivo las categorías eliminadas. Los indicadores «vs. media» de una categoría principal usan el importe acumulado. Lo mismo funciona en las tarjetas de análisis de la versión web de escritorio.
 
 ### Presupuesto vs. Real (Grafico de barras agrupadas)
 
@@ -28079,7 +28101,9 @@ Visualiza y gestiona todas tus categorias de gastos e ingresos en un solo lugar.
 - **Eliminar una categoria** — desliza hacia la izquierda sobre una categoria o toca el icono de eliminar
 - **La eliminacion esta bloqueada** si la categoria tiene gastos, ingresos o presupuestos relacionados — primero debes reasignar o eliminar esos registros
 - **Las categorias del sistema** tambien pueden eliminarse si no tienen registros relacionados
-- **Subcategorías** — al crear o editar una categoría de gastos, elige una **Categoría principal** para colocarla dentro de otra. Solo hay dos niveles: una categoría que ya tiene subcategorías no puede convertirse en subcategoría, y la categoría principal debe ser una categoría de gastos de la misma cuenta. Los selectores de categoría muestran las subcategorías agrupadas bajo su categoría principal. Una categoría con subcategorías no se puede eliminar hasta que se muevan o se eliminen.
+- **Subcategorías** — al crear o editar una categoría, elige una **Categoría principal** para colocarla dentro de otra. Solo hay dos niveles: una categoría que ya tiene subcategorías no puede convertirse en subcategoría, y la categoría principal debe ser del mismo tipo (gastos o ingresos) y de la misma cuenta. Los selectores de categoría muestran las subcategorías agrupadas bajo su categoría principal. Una categoría con subcategorías no se puede eliminar hasta que se muevan o se eliminen.
+- **Subcategorías de ingresos** — las categorías de ingresos también pueden tener subcategorías. Al crear o editar una categoría de ingresos, elige una **Categoría principal** (solo de ingresos). Los selectores de ingresos (nuevo ingreso, detalle del ingreso, voz) muestran las subcategorías agrupadas bajo su categoría principal.
+- **Arrastrar y soltar para organizar** — mantén pulsada una categoría (en la web de escritorio, pulsa y arrastra) y suéltala sobre una categoría principal para convertirla en subcategoría. Para devolver una subcategoría al nivel superior, suéltala sobre la línea entre dos categorías principales. El orden de la lista no cambia. Un mensaje explica por qué se rechaza un soltado: una categoría que ya tiene subcategorías no puede ser subcategoría, no se puede soltar nada sobre una subcategoría, no se pueden mezclar categorías de gastos e ingresos, y la categoría de depósito queda fuera de la jerarquía. Arrastrar y soltar requiere conexión a internet (sin conexión, la pulsación larga muestra un mensaje), los lectores no pueden arrastrar y no hay desplazamiento automático en los bordes de la pantalla: arrastra dentro de la lista visible.
 - **Las categorías estándar siguen el idioma de la aplicación** — una categoría creada por la aplicación (como Supermercado o Depósito) se muestra en el idioma que usas ahora, así que cambiar el idioma cambia su nombre en pantalla sin crear un duplicado. Si renombras tú mismo una categoría estándar, se conserva tu nombre en todos los idiomas. Las categorías que creaste tú siempre muestran exactamente lo que escribiste.
 
 > **Nota:** Eliminar una categoria es permanente y no se puede deshacer.
@@ -32221,6 +32245,7 @@ Chaque carte d'apercu a un niveau de gravite : critique (rouge), avertissement (
 - Code couleur dans une palette vert/bleu-vert pour se distinguer des graphiques de depenses
 - Les revenus sans categorie sont regroupes sous « Autres »
 - Apparait au-dessus du graphique de tendance des depenses
+- Les catégories de revenus fonctionnent de la même façon : les catégories principales affichent le total de leurs sous-catégories, et un appui ouvre le détail.
 
 ### Tendance des depenses (Graphique en barres)
 
@@ -32231,7 +32256,8 @@ Chaque carte d'apercu a un niveau de gravite : critique (rouge), avertissement (
 
 - Repartition par categorie avec pourcentages
 - Code couleur par categorie
-- Appuyez sur un segment pour explorer les depenses de cette categorie
+- Appuyez sur le segment d'une catégorie principale (marquée ›) pour afficher ses sous-catégories ; un segment sans sous-catégories est seulement mis en surbrillance
+- **Les sous-catégories sont cumulées** — le graphique n'affiche que les catégories principales, et le montant d'une catégorie principale inclut ses sous-catégories. Les catégories principales ayant des sous-catégories sont marquées ›. Appuyez sur l'une d'elles (le segment ou sa ligne) pour redessiner le graphique de cette catégorie : ses sous-catégories, plus « <Principale> (sans sous-catégorie) » pour les dépenses enregistrées sur la catégorie principale elle-même. Appuyez sur le fil d'Ariane « Toutes les catégories › <Principale> » pour revenir. Le détail se réinitialise chaque fois que les données d'analyse sont recalculées : une transaction nouvelle ou modifiée, une synchronisation, un changement de langue, ou un changement de période, de compte ou de devise. Les dépenses d'une sous-catégorie supprimée restent un segment distinct de premier niveau, car l'application ne conserve pas les catégories supprimées sur l'appareil. Les pastilles « vs moyenne » d'une catégorie principale utilisent le montant cumulé. Cela fonctionne aussi sur les cartes d'analyse de la version web de bureau.
 
 ### Budget vs Reel (Graphique en barres groupees)
 
@@ -33224,7 +33250,9 @@ Visualisez et gerez toutes vos categories de depenses et de revenus en un seul e
 - **Supprimer une categorie** — faites glisser vers la gauche sur une categorie ou appuyez sur l'icone de suppression
 - **La suppression est bloquee** si la categorie a des depenses, des revenus ou des budgets associes — vous devez d'abord reassigner ou supprimer ces enregistrements
 - **Les categories systeme** peuvent egalement etre supprimees si elles n'ont aucun enregistrement associe
-- **Sous-catégories** — lors de la création ou de la modification d'une catégorie de dépenses, choisissez une **Catégorie parente** pour la ranger sous une autre. Il n'y a que deux niveaux : une catégorie qui a déjà des sous-catégories ne peut pas devenir elle-même une sous-catégorie, et la catégorie parente doit être une catégorie de dépenses du même compte. Les sélecteurs de catégorie affichent les sous-catégories regroupées sous leur parente. Une catégorie ayant des sous-catégories ne peut pas être supprimée tant qu'elles n'ont pas été déplacées ou supprimées.
+- **Sous-catégories** — lors de la création ou de la modification d'une catégorie, choisissez une **Catégorie parente** pour la ranger sous une autre. Il n'y a que deux niveaux : une catégorie qui a déjà des sous-catégories ne peut pas devenir elle-même une sous-catégorie, et la catégorie parente doit être du même type (dépenses ou revenus) et du même compte. Les sélecteurs de catégorie affichent les sous-catégories regroupées sous leur parente. Une catégorie ayant des sous-catégories ne peut pas être supprimée tant qu'elles n'ont pas été déplacées ou supprimées.
+- **Sous-catégories pour les revenus** — les catégories de revenus peuvent aussi avoir des sous-catégories. Lors de la création ou de la modification d'une catégorie de revenus, choisissez une **Catégorie parente** (catégories de revenus uniquement). Les sélecteurs de revenus (nouveau revenu, détail du revenu, voix) affichent les sous-catégories regroupées sous leur catégorie parente.
+- **Glisser-déposer pour organiser** — appuyez longuement sur une catégorie (sur le web de bureau, appuyez et faites glisser) et déposez-la sur une catégorie principale pour en faire une sous-catégorie. Pour ramener une sous-catégorie au niveau principal, déposez-la sur la ligne entre deux catégories principales. L'ordre de la liste ne change pas. Un message explique pourquoi un dépôt est refusé : une catégorie qui a déjà des sous-catégories ne peut pas devenir une sous-catégorie, rien ne peut être déposé sur une sous-catégorie, les catégories de dépenses et de revenus ne se mélangent pas, et la catégorie de consigne reste en dehors de la hiérarchie. Le glisser-déposer nécessite une connexion internet (hors ligne, l'appui long affiche un message), les lecteurs ne peuvent pas glisser, et il n'y a pas de défilement automatique aux bords de l'écran : faites glisser dans la liste visible.
 - **Les catégories standard suivent la langue de l'application** — une catégorie créée par l'application (comme Courses ou Consigne) s'affiche dans la langue que vous utilisez actuellement : changer de langue modifie donc son nom à l'écran sans créer de doublon. Si vous renommez vous-même une catégorie standard, votre nom est conservé dans toutes les langues. Les catégories que vous avez créées affichent toujours exactement ce que vous avez saisi.
 
 > **Note :** La suppression d'une categorie est definitive et ne peut pas etre annulee.
@@ -37366,6 +37394,7 @@ iOS, Android, Web
 - Каляровая палітра ў зелёна-блакітных тонах для адрознення ад дыяграм выдаткаў
 - Некатэгарызаваныя даходы аб'ядноўваюцца ў «Іншыя»
 - Знаходзіцца вышэй графіка дынамікі выдаткаў
+- Катэгорыі даходаў працуюць гэтак жа: асноўныя паказваюць суму сваіх падкатэгорый, а націсканне адкрывае дэталізацыю.
 
 ### Дынаміка выдаткаў (Слупковы графік)
 
@@ -37376,7 +37405,8 @@ iOS, Android, Web
 
 - Разбіўка па катэгорыях з адсоткамі
 - Каляровая маркіроўка па катэгорыях
-- Націсніце на сегмент, каб даследаваць выдаткі гэтай катэгорыі
+- Націсніце на сегмент асноўнай катэгорыі (пазначана ›), каб адкрыць яе падкатэгорыі; сегмент без падкатэгорый пры націсканні толькі вылучаецца
+- **Падкатэгорыі сумуюцца** — дыяграма паказвае толькі асноўныя катэгорыі, а сума асноўнай катэгорыі ўключае яе падкатэгорыі. Асноўныя катэгорыі з падкатэгорыямі пазначаны значком ›. Націсніце на такую катэгорыю (сегмент або радок), і дыяграма перамалюецца для яе: яе падкатэгорыі плюс «<Катэгорыя> (без падкатэгорыі)» для выдаткаў, запісаных непасрэдна на асноўную катэгорыю. Націсніце на ланцужок «Усе катэгорыі › <Катэгорыя>», каб вярнуцца. Дэталізацыя скідаецца кожны раз, калі даныя аналітыкі пералічваюцца: пры новай ці змененай аперацыі, сінхранізацыі, змене мовы або змене перыяду, рахунку ці валюты. Выдаткі выдаленай падкатэгорыі застаюцца асобным сегментам верхняга ўзроўню, бо праграма не захоўвае выдаленыя катэгорыі на прыладзе. Пазнакі «vs сярэдняе» для асноўнай катэгорыі выкарыстоўваюць сумарную велічыню. Тое ж працуе на картках аналітыкі ў вэб-версіі для кампутара.
 
 ### Бюджэт vs Факт (Групаваны слупковы графік)
 
@@ -38371,7 +38401,9 @@ iOS, Android, Web
 - **Выдаленне катэгорыі** — правядзіце ўлева па катэгорыі або націсніце значок выдалення
 - **Выдаленне заблакавана**, калі з катэгорыяй звязаны расходы, даходы або бюджэты — спачатку трэба перапрызначыць або выдаліць гэтыя запісы
 - **Сістэмныя катэгорыі** таксама можна выдаліць, калі з імі не звязаны ніякія запісы
-- **Падкатэгорыі** — пры стварэнні ці рэдагаванні катэгорыі расходаў абярыце **Бацькоўскую катэгорыю**, каб змясціць яе ўнутр іншай. Узроўняў толькі два: катэгорыя, якая ўжо мае падкатэгорыі, сама не можа стаць падкатэгорыяй, а бацькоўская мусіць быць катэгорыяй расходаў таго ж рахунку. У выбары катэгорый падкатэгорыі згрупаваны пад бацькоўскай. Катэгорыю з падкатэгорыямі нельга выдаліць, пакуль іх не перамешчаны або не выдалены.
+- **Падкатэгорыі** — пры стварэнні ці рэдагаванні катэгорыі абярыце **Бацькоўскую катэгорыю**, каб змясціць яе ўнутр іншай. Узроўняў толькі два: катэгорыя, якая ўжо мае падкатэгорыі, сама не можа стаць падкатэгорыяй, а бацькоўская мусіць быць таго ж тыпу (расходы ці даходы) і таго ж рахунку. У выбары катэгорый падкатэгорыі згрупаваны пад бацькоўскай. Катэгорыю з падкатэгорыямі нельга выдаліць, пакуль іх не перамешчаны або не выдалены.
+- **Падкатэгорыі для даходаў** — у катэгорый даходаў таксама могуць быць падкатэгорыі. Пры стварэнні ці рэдагаванні катэгорыі даходу абярыце **Бацькоўскую катэгорыю** (толькі сярод катэгорый даходаў). Выбар катэгорыі ў даходах (новы доход, дэталі даходу, галасавы ўвод) паказвае падкатэгорыі, згрупаваныя пад асноўнай.
+- **Перацягванне для ўпарадкавання** — націсніце і ўтрымлівайце катэгорыю (у вэб-версіі для кампутара — націсніце і перацягніце) і апусціце яе на асноўную катэгорыю, каб зрабіць падкатэгорыяй. Каб вярнуць падкатэгорыю на верхні ўзровень, апусціце яе на лінію паміж дзвюма асноўнымі катэгорыямі. Парадак спісу не змяняецца. Паведамленне патлумачыць, чаму перанос адхілены: катэгорыя, у якой ёсць падкатэгорыі, не можа стаць падкатэгорыяй, на падкатэгорыю нічога нельга перанесці, катэгорыі выдаткаў і даходаў нельга змешваць, а катэгорыя заставы застаецца па-за іерархіяй. Для перацягвання патрэбны інтэрнэт (без сеткі доўгае націсканне пакажа паведамленне), назіральнікі не могуць перацягваць, а ля краёў экрана спіс не пракручваецца сам — перацягвайце ў межах бачнай часткі спісу.
 - **Стандартныя катэгорыі ідуць за мовай праграмы** — катэгорыя, створаная праграмай (напрыклад, «Прадукты» або «Заклад»), паказваецца бягучай мовай, таму змена мовы мяняе яе назву на экране і не стварае дублікат. Калі вы самі перайменуеце стандартную катэгорыю, ваша назва застанецца ўсімі мовамі. Катэгорыі, створаныя вамі, заўсёды паказваюцца так, як вы іх назвалі.
 
 > **Заўвага:** Выдаленне катэгорыі з'яўляецца незваротным.
@@ -42475,6 +42507,7 @@ Elke inzichtkaart heeft een ernst: kritiek (rood), waarschuwing (geel) of info (
 - Kleurgecodeerd in een groen/teal palet om het te onderscheiden van uitgavengrafieken
 - Niet-gecategoriseerde inkomsten worden gegroepeerd als "Overig"
 - Verschijnt boven de uitgaventrendgrafiek
+- Inkomstencategorieën werken op dezelfde manier: hoofdcategorieën tonen het totaal van hun subcategorieën, en tikken opent de detailweergave.
 
 ### Uitgaventrend (staafdiagram)
 
@@ -42485,7 +42518,8 @@ Elke inzichtkaart heeft een ernst: kritiek (rood), waarschuwing (geel) of info (
 
 - Categorie-uitsplitsing met percentages
 - Kleurgecodeerd per categorie
-- Tik op een segment om de uitgaven van die categorie te verkennen
+- Tik op het segment van een hoofdcategorie (gemarkeerd met ›) om haar subcategorieën te openen; een segment zonder subcategorieën wordt bij het tikken alleen gemarkeerd
+- **Subcategorieën worden opgeteld** — het diagram toont alleen hoofdcategorieën, en het bedrag van een hoofdcategorie omvat haar subcategorieën. Hoofdcategorieën met subcategorieën zijn gemarkeerd met ›. Tik erop (op het segment of de rij) om het diagram voor die hoofdcategorie opnieuw te tekenen: haar subcategorieën, plus „<Hoofdcategorie> (geen subcategorie)” voor uitgaven die op de hoofdcategorie zelf zijn geboekt. Tik op het kruimelpad „Alle categorieën › <Hoofdcategorie>” om terug te gaan. De detailweergave wordt gereset zodra de analysegegevens opnieuw worden berekend: een nieuwe of gewijzigde transactie, een synchronisatie, een taalwissel of een wijziging van periode, account of valuta. Uitgaven op een verwijderde subcategorie blijven een eigen segment op het hoogste niveau, omdat de app verwijderde categorieën niet op het apparaat bewaart. De chips „vs gemiddelde” gebruiken voor een hoofdcategorie het opgetelde bedrag. Hetzelfde werkt op de analysekaarten van de desktopwebversie.
 
 ### Budget versus werkelijk (gegroepeerd staafdiagram)
 
@@ -43491,7 +43525,9 @@ Bekijk en beheer al je uitgaven- en inkomstencategorieën op één plek.
 - **Een categorie verwijderen** — veeg op een categorie naar links of tik op het verwijderpictogram om deze te verwijderen
 - **Verwijderen is geblokkeerd** als de categorie gerelateerde uitgaven, inkomsten of budgetten heeft — je moet die records eerst opnieuw toewijzen of verwijderen
 - **Systeemcategorieën** kunnen ook worden verwijderd als ze geen gerelateerde records hebben
-- **Subcategorieën** — kies bij het maken of bewerken van een uitgavencategorie een **Hoofdcategorie** om deze onder een andere te plaatsen. Er zijn maar twee niveaus: een categorie die al subcategorieën heeft, kan zelf geen subcategorie worden, en de hoofdcategorie moet een uitgavencategorie van hetzelfde account zijn. Categoriekiezers tonen subcategorieën gegroepeerd onder hun hoofdcategorie. Een categorie met subcategorieën kan pas worden verwijderd als die zijn verplaatst of verwijderd.
+- **Subcategorieën** — kies bij het maken of bewerken van een categorie een **Hoofdcategorie** om deze onder een andere te plaatsen. Er zijn maar twee niveaus: een categorie die al subcategorieën heeft, kan zelf geen subcategorie worden, en de hoofdcategorie moet van hetzelfde type (uitgaven of inkomsten) en van hetzelfde account zijn. Categoriekiezers tonen subcategorieën gegroepeerd onder hun hoofdcategorie. Een categorie met subcategorieën kan pas worden verwijderd als die zijn verplaatst of verwijderd.
+- **Subcategorieën voor inkomsten** — ook inkomstencategorieën kunnen subcategorieën hebben. Kies bij het maken of bewerken van een inkomstencategorie een **Hoofdcategorie** (alleen inkomstencategorieën). De inkomstenkeuzelijsten (nieuwe inkomsten, inkomstendetails, spraak) tonen subcategorieën gegroepeerd onder hun hoofdcategorie.
+- **Slepen en neerzetten om te ordenen** — houd een categorie ingedrukt (op de desktopwebversie: indrukken en slepen) en zet haar neer op een hoofdcategorie om er een subcategorie van te maken. Om een subcategorie terug naar het hoogste niveau te verplaatsen, zet je haar neer op de lijn tussen twee hoofdcategorieën. De volgorde van de lijst verandert niet. Een melding legt uit waarom neerzetten wordt geweigerd: een categorie die al subcategorieën heeft kan geen subcategorie worden, op een subcategorie kan niets worden neergezet, uitgaven- en inkomstencategorieën kunnen niet worden gemengd, en de statiegeldcategorie blijft buiten de hiërarchie. Slepen vereist een internetverbinding (offline toont lang indrukken een melding), kijkers kunnen niet slepen, en aan de schermranden scrolt de lijst niet automatisch — sleep binnen de zichtbare lijst.
 - **Standaardcategorieën volgen de taal van de app** — een categorie die de app voor je heeft gemaakt (zoals Boodschappen of Statiegeld) wordt getoond in de taal die je nu gebruikt, dus een taalwissel verandert de naam op het scherm zonder een duplicaat te maken. Geef je zelf een standaardcategorie een andere naam, dan blijft jouw naam in elke taal behouden. Categorieën die je zelf hebt gemaakt tonen altijd precies wat je hebt getypt.
 
 > **Opmerking:** Het verwijderen van een categorie is permanent en kan niet ongedaan worden gemaakt.

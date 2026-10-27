@@ -29,8 +29,13 @@ describe('eligibleParents', () => {
     expect(eligibleParents(list, { id: 'A', name: 'A' }, 'expense').map((c) => c.id)).toEqual(['C']);
   });
 
-  it('is empty for income and for a deposit category being edited', () => {
-    expect(eligibleParents(all, null, 'income')).toEqual([]);
+  it('eligibleParents returns income parents for an income category', () => {
+    const list = [...all, cat('Bonus', { type: 'income', parentId: 'Salary' }), cat('Rent', { type: 'income' })];
+    expect(eligibleParents(list, { id: 'Rent', name: 'Rent' }, 'income').map((c) => c.id)).toEqual(['Salary']);
+    expect(eligibleParents(list, null, 'income').map((c) => c.id)).toEqual(['Salary', 'Rent']);
+  });
+
+  it('is empty for a deposit category being edited', () => {
     expect(eligibleParents(all, { id: 'Pfand', name: 'Pfand' }, 'expense')).toEqual([]);
   });
 

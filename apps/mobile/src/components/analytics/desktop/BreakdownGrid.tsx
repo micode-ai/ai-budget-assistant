@@ -8,6 +8,8 @@ import type {
   ProjectSpending,
   IncomeCategorySpending,
 } from '@/features/analytics/useAnalytics';
+import { drillView } from '@/features/analytics/categoryDrillView';
+import { useDrillParent } from '@/features/analytics/useDrillParent';
 import { BreakdownCard, type BreakdownRow } from './BreakdownCard';
 
 function categoryToRows(categorySpending: CategorySpending[]): BreakdownRow[] {
@@ -18,6 +20,7 @@ function categoryToRows(categorySpending: CategorySpending[]): BreakdownRow[] {
     percentage: c.percentage,
     color: c.color,
     delta: c.vsAverage,
+    hasChildren: !!c.children && c.children.length > 0,
   }));
 }
 
@@ -59,6 +62,7 @@ function incomeToRows(incomeByCategory: IncomeCategorySpending[]): BreakdownRow[
     amount: c.amount,
     percentage: c.percentage,
     color: c.color,
+    hasChildren: !!c.children && c.children.length > 0,
   }));
 }
 
@@ -100,16 +104,36 @@ export function BreakdownGrid({
   const { t } = useTranslation();
   const styles = useStyles(createStyles);
 
+  const expenseDrill = useDrillParent(categorySpending);
+  const incomeDrill = useDrillParent(incomeByCategory);
+  const expenseView = drillView(categorySpending, expenseDrill.drillParentId);
+  const incomeView = drillView(incomeByCategory, incomeDrill.drillParentId);
+  const expenseCardRows = categoryToRows(expenseView.rows);
+  const incomeCardRows = incomeToRows(incomeView.rows);
+
   const hasMerchant = merchantSpending.length > 0;
   const showMerchantInRowA = isWideGrid && hasMerchant;
 
   // At the narrow band Merchant moves down to join the secondaries group;
   // at the wide band it stays with Category in row A above.
-  const secondaries: { key: string; title: string; rows: BreakdownRow[] }[] = [
+  const secondaries: {
+    key: string;
+    title: string;
+    rows: BreakdownRow[];
+    onRowPress?: (row: BreakdownRow) => void;
+    drill?: { parentName: string; onBack: () => void };
+    /** Drill level the card shows; keys the card so donut focus and "Show all"
+     *  reset on drill in/out instead of carrying a stale slice. */
+    drillKey?: string | null;
+  }[] = [
     ...(!isWideGrid && hasMerchant ? [{ key: 'merchant', title: t('analytics.byMerchant'), rows: merchantToRows(merchantSpending) }] : []),
     ...(tagSpending.length > 0 ? [{ key: 'tag', title: t('analytics.byTag'), rows: tagToRows(tagSpending) }] : []),
     ...(projectSpending.length > 0 ? [{ key: 'project', title: t('analytics.byProject'), rows: projectToRows(projectSpending) }] : []),
-    ...(incomeByCategory.length > 0 ? [{ key: 'income', title: t('analytics.byIncomeCategory'), rows: incomeToRows(incomeByCategory) }] : []),
+    ...(incomeByCategory.length > 0 ? [{ key: 'income', title: t('analytics.byIncomeCategory'), rows: incomeCardRows,
+      onRowPress: (row: BreakdownRow) => incomeDrill.setDrillParentId(row.id),
+      drill: incomeView.parent ? { parentName: incomeView.parent.name, onBack: () => incomeDrill.setDrillParentId(null) } : undefined,
+      drillKey: incomeView.parent?.categoryId ?? null,
+    }] : []),
   ];
 
   const secondaryBasis = isWideGrid ? '33%' : '50%';
@@ -118,7 +142,12 @@ export function BreakdownGrid({
     <View style={styles.breakdownGrid}>
       <View style={styles.breakdownRow}>
         <View style={[styles.breakdownTile, { flexBasis: isWideGrid ? '66%' : '100%', flexGrow: 1, flexShrink: 1, minWidth: 0 }]}>
-          <BreakdownCard title={t('analytics.spendingByCategory')} rows={categoryToRows(categorySpending)} currency={currency} size="primary" />
+          <BreakdownCard key={expenseView.parent?.categoryId ?? 'top'} title={t('analytics.spendingByCategory')} rows={expenseCardRows}
+            currency={currency}
+            size="primary"
+            onRowPress={(row) => expenseDrill.setDrillParentId(row.id)}
+            drill={expenseView.parent ? { parentName: expenseView.parent.name, onBack: () => expenseDrill.setDrillParentId(null) } : undefined}
+          />
         </View>
         {showMerchantInRowA && (
           <View style={[styles.breakdownTile, { flexBasis: '33%', flexGrow: 1, flexShrink: 1, minWidth: 0 }]}>
@@ -131,7 +160,7 @@ export function BreakdownGrid({
         <View style={styles.breakdownRow}>
           {secondaries.map((s) => (
             <View key={s.key} style={[styles.breakdownTile, { flexBasis: secondaryBasis, flexGrow: 1, flexShrink: 1, minWidth: 0 }]}>
-              <BreakdownCard title={s.title} rows={s.rows} currency={currency} size="secondary" />
+              <BreakdownCard key={s.drillKey ?? 'top'} title={s.title} rows={s.rows} currency={currency} size="secondary" onRowPress={s.onRowPress} drill={s.drill} />
             </View>
           ))}
         </View>

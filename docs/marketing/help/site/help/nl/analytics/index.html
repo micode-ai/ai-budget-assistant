@@ -20,7 +20,7 @@
 <link rel="alternate" hreflang="be" href="https://ai-budget.pl/help/be/analytics/">
 <link rel="alternate" hreflang="nl" href="https://ai-budget.pl/help/nl/analytics/">
 <link rel="alternate" hreflang="x-default" href="https://ai-budget.pl/help/en/analytics/">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MiCode Sp. z o.o.", "alternateName": ["MICODE sp. z o.o.", "MiCode"], "taxID": "5833510147", "url": "https://mi-code.pl/", "sameAs": ["https://mi-code.pl/", "https://github.com/micode-ai", "https://www.wikidata.org/wiki/Q141551004"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Analyse | AI Budget Assistant", "description": "Visualiseer je uitgavenpatronen met interactieve grafieken.", "inLanguage": "nl", "datePublished": "2026-06-19", "dateModified": "2026-09-22", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/nl/analytics/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/nl/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/nl/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Help", "item": "https://ai-budget.pl/help/nl/"}, {"@type": "ListItem", "position": 3, "name": "Analyse | AI Budget Assistant", "item": "https://ai-budget.pl/help/nl/analytics/"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MiCode Sp. z o.o.", "alternateName": ["MICODE sp. z o.o.", "MiCode"], "taxID": "5833510147", "url": "https://mi-code.pl/", "sameAs": ["https://mi-code.pl/", "https://github.com/micode-ai", "https://www.wikidata.org/wiki/Q141551004"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Analyse | AI Budget Assistant", "description": "Visualiseer je uitgavenpatronen met interactieve grafieken.", "inLanguage": "nl", "datePublished": "2026-06-19", "dateModified": "2026-10-27", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/nl/analytics/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/nl/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/nl/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Help", "item": "https://ai-budget.pl/help/nl/"}, {"@type": "ListItem", "position": 3, "name": "Analyse | AI Budget Assistant", "item": "https://ai-budget.pl/help/nl/analytics/"}]}]}</script>
 <style>
 :root{--o:#B45309;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
 *{box-sizing:border-box}
@@ -131,6 +131,7 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li>Kleurgecodeerd in een groen/teal palet om het te onderscheiden van uitgavengrafieken</li>
 <li>Niet-gecategoriseerde inkomsten worden gegroepeerd als &ldquo;Overig&rdquo;</li>
 <li>Verschijnt boven de uitgaventrendgrafiek</li>
+<li>Inkomstencategorieën werken op dezelfde manier: hoofdcategorieën tonen het totaal van hun subcategorieën, en tikken opent de detailweergave.</li>
 </ul>
 <h3>Uitgaventrend (staafdiagram)</h3>
 <ul>
@@ -141,7 +142,8 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <ul>
 <li>Categorie-uitsplitsing met percentages</li>
 <li>Kleurgecodeerd per categorie</li>
-<li>Tik op een segment om de uitgaven van die categorie te verkennen</li>
+<li>Tik op het segment van een hoofdcategorie (gemarkeerd met ›) om haar subcategorieën te openen; een segment zonder subcategorieën wordt bij het tikken alleen gemarkeerd</li>
+<li><strong>Subcategorieën worden opgeteld</strong> — het diagram toont alleen hoofdcategorieën, en het bedrag van een hoofdcategorie omvat haar subcategorieën. Hoofdcategorieën met subcategorieën zijn gemarkeerd met ›. Tik erop (op het segment of de rij) om het diagram voor die hoofdcategorie opnieuw te tekenen: haar subcategorieën, plus „<Hoofdcategorie> (geen subcategorie)” voor uitgaven die op de hoofdcategorie zelf zijn geboekt. Tik op het kruimelpad „Alle categorieën › <Hoofdcategorie>” om terug te gaan. De detailweergave wordt gereset zodra de analysegegevens opnieuw worden berekend: een nieuwe of gewijzigde transactie, een synchronisatie, een taalwissel of een wijziging van periode, account of valuta. Uitgaven op een verwijderde subcategorie blijven een eigen segment op het hoogste niveau, omdat de app verwijderde categorieën niet op het apparaat bewaart. De chips „vs gemiddelde” gebruiken voor een hoofdcategorie het opgetelde bedrag. Hetzelfde werkt op de analysekaarten van de desktopwebversie.</li>
 </ul>
 <h3>Budget versus werkelijk (gegroepeerd staafdiagram)</h3>
 <ul>

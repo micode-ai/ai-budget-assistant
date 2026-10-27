@@ -47,6 +47,7 @@ Jede Einblickkarte hat einen Schweregrad: Kritisch (rot), Warnung (gelb) oder In
 - Farbcodiert in einem Grün/Blaugrün-Schema zur Unterscheidung von Ausgabendiagrammen
 - Nicht kategorisierte Einnahmen werden als „Sonstige" zusammengefasst
 - Erscheint oberhalb des Ausgabentrends
+- Einnahmenkategorien funktionieren genauso: Hauptkategorien zeigen die Summe ihrer Unterkategorien, und ein Tippen öffnet die Detailansicht.
 
 ### Ausgabentrend (Balkendiagramm)
 
@@ -57,7 +58,8 @@ Jede Einblickkarte hat einen Schweregrad: Kritisch (rot), Warnung (gelb) oder In
 
 - Kategorieaufschlusselung mit Prozentsatzen
 - Farbcodiert nach Kategorie
-- Tippe auf ein Segment, um die Ausgaben dieser Kategorie zu erkunden
+- Tippe auf das Segment einer Hauptkategorie (mit › markiert), um ihre Unterkategorien zu öffnen; ein Segment ohne Unterkategorien wird beim Tippen nur hervorgehoben
+- **Unterkategorien werden zusammengerechnet** — das Diagramm zeigt nur Hauptkategorien, und der Betrag einer Hauptkategorie enthält ihre Unterkategorien. Hauptkategorien mit Unterkategorien sind mit › markiert. Tippe darauf (auf das Segment oder die Zeile), und das Diagramm wird für diese Hauptkategorie neu gezeichnet: ihre Unterkategorien plus „<Hauptkategorie> (ohne Unterkategorie)“ für Ausgaben, die direkt auf der Hauptkategorie erfasst wurden. Tippe auf die Pfadleiste „Alle Kategorien › <Hauptkategorie>“, um zurückzugehen. Die Detailansicht wird zurückgesetzt, sobald die Analysedaten neu berechnet werden – bei einer neuen oder geänderten Buchung, einer Synchronisierung, einem Sprachwechsel oder einer Änderung von Zeitraum, Konto oder Währung. Ausgaben einer gelöschten Unterkategorie bleiben ein eigenes Segment auf oberster Ebene, da die App gelöschte Kategorien nicht auf dem Gerät speichert. Die Chips „vs. Durchschnitt“ nutzen für Hauptkategorien den zusammengerechneten Betrag. Dasselbe funktioniert auf den Analyse-Karten der Desktop-Webversion.
 
 ### Budget vs. Tatsachlich (Gruppiertes Balkendiagramm)
 

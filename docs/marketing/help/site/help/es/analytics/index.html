@@ -20,7 +20,7 @@
 <link rel="alternate" hreflang="be" href="https://ai-budget.pl/help/be/analytics/">
 <link rel="alternate" hreflang="nl" href="https://ai-budget.pl/help/nl/analytics/">
 <link rel="alternate" hreflang="x-default" href="https://ai-budget.pl/help/en/analytics/">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MiCode Sp. z o.o.", "alternateName": ["MICODE sp. z o.o.", "MiCode"], "taxID": "5833510147", "url": "https://mi-code.pl/", "sameAs": ["https://mi-code.pl/", "https://github.com/micode-ai", "https://www.wikidata.org/wiki/Q141551004"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Analisis | AI Budget Assistant", "description": "Visualiza tus patrones de gasto con graficos interactivos.", "inLanguage": "es", "datePublished": "2026-06-19", "dateModified": "2026-09-22", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/es/analytics/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/es/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/es/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Ayuda", "item": "https://ai-budget.pl/help/es/"}, {"@type": "ListItem", "position": 3, "name": "Analisis | AI Budget Assistant", "item": "https://ai-budget.pl/help/es/analytics/"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MiCode Sp. z o.o.", "alternateName": ["MICODE sp. z o.o.", "MiCode"], "taxID": "5833510147", "url": "https://mi-code.pl/", "sameAs": ["https://mi-code.pl/", "https://github.com/micode-ai", "https://www.wikidata.org/wiki/Q141551004"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Analisis | AI Budget Assistant", "description": "Visualiza tus patrones de gasto con graficos interactivos.", "inLanguage": "es", "datePublished": "2026-06-19", "dateModified": "2026-10-27", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/es/analytics/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/es/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/es/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Ayuda", "item": "https://ai-budget.pl/help/es/"}, {"@type": "ListItem", "position": 3, "name": "Analisis | AI Budget Assistant", "item": "https://ai-budget.pl/help/es/analytics/"}]}]}</script>
 <style>
 :root{--o:#B45309;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
 *{box-sizing:border-box}
@@ -131,6 +131,7 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li>Codificado en colores en una paleta verde/turquesa para distinguirlo de los graficos de gastos</li>
 <li>Los ingresos sin categoria se agrupan como &ldquo;Otros&rdquo;</li>
 <li>Aparece encima del grafico de tendencia de gastos</li>
+<li>Las categorías de ingresos funcionan igual: las principales muestran el total de sus subcategorías y al tocarlas se entra en el detalle.</li>
 </ul>
 <h3>Tendencia de gastos (Grafico de barras)</h3>
 <ul>
@@ -141,7 +142,8 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <ul>
 <li>Desglose por categoria con porcentajes</li>
 <li>Codigo de colores por categoria</li>
-<li>Toca un segmento para explorar los gastos de esa categoria</li>
+<li>Toca el segmento de una categoría principal (marcada con ›) para ver sus subcategorías; un segmento sin subcategorías solo se resalta al tocarlo</li>
+<li><strong>Las subcategorías se suman</strong> — el gráfico muestra solo las categorías principales, y el importe de una categoría principal incluye sus subcategorías. Las categorías principales con subcategorías llevan la marca ›. Toca una (el segmento o su fila) para redibujar el gráfico de esa categoría: sus subcategorías, más «<Principal> (sin subcategoría)» para el gasto registrado en la propia categoría principal. Toca la ruta «Todas las categorías › <Principal>» para volver. El detalle se restablece cada vez que se recalculan los datos de análisis: una transacción nueva o editada, una sincronización, un cambio de idioma o un cambio de periodo, cuenta o moneda. El gasto de una subcategoría eliminada sigue siendo un segmento propio de primer nivel, porque la aplicación no guarda en el dispositivo las categorías eliminadas. Los indicadores «vs. media» de una categoría principal usan el importe acumulado. Lo mismo funciona en las tarjetas de análisis de la versión web de escritorio.</li>
 </ul>
 <h3>Presupuesto vs. Real (Grafico de barras agrupadas)</h3>
 <ul>

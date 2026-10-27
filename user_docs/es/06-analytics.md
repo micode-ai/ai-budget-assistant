@@ -47,6 +47,7 @@ Cada tarjeta de informacion tiene un nivel de severidad: critico (rojo), adverte
 - Codificado en colores en una paleta verde/turquesa para distinguirlo de los graficos de gastos
 - Los ingresos sin categoria se agrupan como "Otros"
 - Aparece encima del grafico de tendencia de gastos
+- Las categorías de ingresos funcionan igual: las principales muestran el total de sus subcategorías y al tocarlas se entra en el detalle.
 
 ### Tendencia de gastos (Grafico de barras)
 
@@ -57,7 +58,8 @@ Cada tarjeta de informacion tiene un nivel de severidad: critico (rojo), adverte
 
 - Desglose por categoria con porcentajes
 - Codigo de colores por categoria
-- Toca un segmento para explorar los gastos de esa categoria
+- Toca el segmento de una categoría principal (marcada con ›) para ver sus subcategorías; un segmento sin subcategorías solo se resalta al tocarlo
+- **Las subcategorías se suman** — el gráfico muestra solo las categorías principales, y el importe de una categoría principal incluye sus subcategorías. Las categorías principales con subcategorías llevan la marca ›. Toca una (el segmento o su fila) para redibujar el gráfico de esa categoría: sus subcategorías, más «<Principal> (sin subcategoría)» para el gasto registrado en la propia categoría principal. Toca la ruta «Todas las categorías › <Principal>» para volver. El detalle se restablece cada vez que se recalculan los datos de análisis: una transacción nueva o editada, una sincronización, un cambio de idioma o un cambio de periodo, cuenta o moneda. El gasto de una subcategoría eliminada sigue siendo un segmento propio de primer nivel, porque la aplicación no guarda en el dispositivo las categorías eliminadas. Los indicadores «vs. media» de una categoría principal usan el importe acumulado. Lo mismo funciona en las tarjetas de análisis de la versión web de escritorio.
 
 ### Presupuesto vs. Real (Grafico de barras agrupadas)
 
