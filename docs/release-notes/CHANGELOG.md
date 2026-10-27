@@ -8,6 +8,17 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.37.0 - 2026-10-28
+
+**Receipts**
+
+- **Zoom into a receipt.** Open a receipt photo from a transaction or from the scan
+  confirmation screen to view it full screen. On the phone, pinch to zoom up to 5×, double-tap
+  to zoom in on that spot and back, and drag to move around; on the web, use the mouse wheel,
+  drag, double-click or the +/−/fit buttons. PDF receipts are unchanged (ABA-700).
+
+---
+
 ## 1.36.0 - 2026-10-27
 
 **Categories: subcategories**
