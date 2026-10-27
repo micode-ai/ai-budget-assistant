@@ -4,6 +4,7 @@ import { PrismaService } from '../../database/prisma.service';
 import { EmbeddingService } from '../ai/services/embedding.service';
 import { CacheService } from '../../common/cache/cache.service';
 import { isDepositCategoryName } from '../../common/utils/deposit-category';
+import { createOrReuseKeyed, matchKeyedCategory } from '../../common/utils/category-key.util';
 
 @Injectable()
 export class CategoriesService {
@@ -79,16 +80,29 @@ export class CategoriesService {
       typeof dto.parentId === 'string' && dto.parentId
         ? await this.assertValidParent(accountId, existing.id, dto.parentId, existing.type, existing.name)
         : dto.parentId;
-    const revived = await this.prisma.category.update({
-      where: { id: existing.id },
-      data: {
-        isDeleted: false,
-        icon: dto.icon,
-        color: dto.color,
-        parentId,
-        userId,
-      },
-    });
+    let revived: Category;
+    try {
+      revived = await this.prisma.category.update({
+        where: { id: existing.id },
+        data: {
+          isDeleted: false,
+          icon: dto.icon,
+          color: dto.color,
+          parentId,
+          userId,
+        },
+      });
+    } catch (e: any) {
+      // The revived row keeps its system key; a live row now holding the same
+      // key trips the partial unique. That live row IS the answer.
+      if (e?.code !== 'P2002') throw e;
+      const live = await this.prisma.category.findMany({
+        where: { accountId, type: existing.type, isDeleted: false },
+      });
+      const winner = matchKeyedCategory(existing.name, existing.type as 'expense' | 'income', live);
+      if (!winner) throw e;
+      return winner;
+    }
     // Fire-and-forget: refresh embedding so semantic match picks it up.
     void this.embeddingService.embedAndStore('category', revived.id, revived.name);
     this.invalidateChatCache(accountId);
@@ -112,6 +126,16 @@ export class CategoriesService {
       if (byClientId) return byClientId;
     }
 
+    // The key rule runs over LIVE rows first: a live row that means the same
+    // thing (same key in any language, or same name) always beats a soft-deleted
+    // row with the exact name, which would otherwise be revived into a second
+    // live category of the same meaning or into a key collision.
+    const liveRows = await this.prisma.category.findMany({
+      where: { accountId, type, isDeleted: false },
+    });
+    const liveMatch = matchKeyedCategory(dto.name, type, liveRows ?? []);
+    if (liveMatch) return liveMatch;
+
     // @@unique([accountId, name, type]) does not exclude soft-deleted rows, so
     // ANY existing row with this name+type blocks the insert — look for it
     // without filtering isDeleted. Only checking for soft-deleted ones (what
@@ -129,17 +153,18 @@ export class CategoriesService {
         : dto.parentId;
 
     try {
-      const created = await this.prisma.category.create({
-        data: {
-          accountId,
-          userId,
-          name: dto.name,
-          icon: dto.icon,
-          color: dto.color,
-          type,
-          parentId,
-          clientId: dto.clientId ?? undefined,
-        },
+      // The key rule lives in createOrReuseKeyed: a catalog name (in any
+      // language) returns the account's live keyed row, otherwise the new row
+      // gets the key. Key fields on `dto` are never read.
+      const created = await createOrReuseKeyed(this.prisma, {
+        accountId,
+        userId,
+        name: dto.name,
+        icon: dto.icon,
+        color: dto.color,
+        type,
+        parentId,
+        clientId: dto.clientId ?? undefined,
       });
       void this.embeddingService.embedAndStore('category', created.id, created.name);
       this.invalidateChatCache(accountId);
@@ -212,7 +237,13 @@ export class CategoriesService {
       throw new ForbiddenException('coicopDivision can only be set on an account category');
     }
 
-    const { clientId: _ignoredClientId, ...rest } = dto ?? {};
+    // systemKey / nameCustomized are server-owned: never taken from a client.
+    const {
+      clientId: _ignoredClientId,
+      systemKey: _ignoredSystemKey,
+      nameCustomized: _ignoredNameCustomized,
+      ...rest
+    } = dto ?? {};
     // A division picked here is the user's own answer (ABA-617): marked 'user'
     // so it is told apart from a seed-icon or classifier guess.
     if (rest.coicopDivision !== undefined) rest.coicopSource = 'user';
@@ -249,11 +280,25 @@ export class CategoriesService {
       if (clash) throw this.nameConflict(name, type, clash.isDeleted);
     }
 
+    // Any rename of a keyed row is the user's own wording: stop the display
+    // name following the UI language, whichever client sent the rename.
+    const data: Record<string, unknown> = { ...rest };
+    if (category.systemKey && rest.name !== undefined && rest.name !== category.name) {
+      data.nameCustomized = true;
+    }
+
+    // Keys are type-scoped: switching type detaches the row from its catalog
+    // entry, so the display name goes back to being the stored name.
+    if (category.systemKey && rest.type !== undefined && rest.type !== category.type) {
+      data.systemKey = null;
+      data.nameCustomized = false;
+    }
+
     let updated: Category;
     try {
       updated = await this.prisma.category.update({
         where: { id: category.id },
-        data: rest,
+        data,
       });
     } catch (e: any) {
       // A concurrent write took the name between the probe and this update.

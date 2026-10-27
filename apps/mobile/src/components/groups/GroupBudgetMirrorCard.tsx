@@ -17,6 +17,7 @@ import {
   splitByEncryption,
 } from '@/features/groups/groupBudgetMirror';
 import { GroupButton } from './GroupButton';
+import { categoryLabel } from '@/utils/entityLabel';
 
 /**
  * "Count my share in my budget" (ABA-661), in the members screen's "my settings" (so the desktop
@@ -273,7 +274,7 @@ export function GroupBudgetMirrorCard({ groupId, canTurnOn }: { groupId: string;
                         accessibilityState={{ selected: active }}
                       >
                         <Text style={[styles.chipText, active && styles.chipTextActive]} numberOfLines={1}>
-                          {c.name}
+                          {categoryLabel(c)}
                         </Text>
                       </TouchableOpacity>
                     );

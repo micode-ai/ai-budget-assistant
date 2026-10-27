@@ -130,6 +130,7 @@ describe('ExpenseBulkService.bulkUpdate merchant-rule learning', () => {
     const prisma: any = {
       expense: { findMany: jest.fn().mockResolvedValue(owned) },
       category: {
+        findMany: jest.fn().mockResolvedValue([]),
         findFirst: jest.fn().mockResolvedValue({ id: 'cat-1' }),
         findUnique: jest.fn().mockResolvedValue({ id: 'cat-1', accountId: 'acc' }),
       },

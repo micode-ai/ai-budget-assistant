@@ -170,6 +170,7 @@ View and manage all your expense and income categories in one place.
 - **Deletion is blocked** if the category has any related expenses, incomes, or budgets — you must reassign or delete those records first
 - **System categories** can also be deleted if they have no related records
 - **Subcategories** — when you create or edit an expense category, choose a **Parent category** to file it under another one. There are two levels only: a category that already has subcategories cannot become a subcategory itself, and a parent must be an expense category of the same account. Category pickers show subcategories grouped under their parent. A category with subcategories cannot be deleted until they are moved or removed.
+- **Standard categories follow your app language** — a category the app created for you (such as Groceries or Deposit) is shown in the language you currently use, so switching the app language renames it on screen without creating a duplicate. If you rename a standard category yourself, your name is kept in every language. Categories you created yourself always show exactly what you typed.
 
 > **Note:** Deleting a category is permanent and cannot be undone.
 

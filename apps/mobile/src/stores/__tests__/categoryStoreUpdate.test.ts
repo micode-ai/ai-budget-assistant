@@ -236,3 +236,53 @@ describe('categoryStore.updateCategory — a re-parent needs the server', () => 
   });
 
 });
+
+describe('categoryStore.updateCategory — system keys', () => {
+  const keyed = (): Category =>
+    ({ ...localCategory(), id: 'cat-k', name: 'Groceries', systemKey: 'groceries', nameCustomized: false }) as Category;
+
+  beforeEach(() => {
+    useCategoryStore.setState({ categories: [keyed()] });
+    mockGetAll.mockResolvedValue([]);
+    (api.updateCategory as jest.Mock).mockResolvedValue({});
+  });
+
+  it('marks a keyed category renamed locally when its name changes', async () => {
+    await useCategoryStore.getState().updateCategory('cat-k', { name: 'Biedronka' });
+
+    expect(mockUpsert).toHaveBeenCalledWith(
+      expect.objectContaining({ id: 'cat-k', name: 'Biedronka', systemKey: 'groceries', nameCustomized: true }),
+    );
+    expect(useCategoryStore.getState().categories[0].nameCustomized).toBe(true);
+    // Server-owned: never sent.
+    expect(api.updateCategory).toHaveBeenCalledWith('cat-k', { name: 'Biedronka' });
+  });
+
+  it('leaves the flag alone on a colour-only edit', async () => {
+    await useCategoryStore.getState().updateCategory('cat-k', { color: '#ABCDEF' });
+
+    expect(mockUpsert).toHaveBeenCalledWith(expect.objectContaining({ id: 'cat-k', nameCustomized: false }));
+    expect(useCategoryStore.getState().categories[0].nameCustomized).toBe(false);
+  });
+
+  it('does not treat re-sending the stored name as a rename (mirrors the server)', async () => {
+    await useCategoryStore.getState().updateCategory('cat-k', { name: 'Groceries', color: '#ABCDEF' });
+
+    expect(useCategoryStore.getState().categories[0].nameCustomized).toBe(false);
+  });
+});
+
+describe('categoryStore — labels follow a language switch', () => {
+  it('hands out a new categories array (same rows) on languageChanged, so memos keyed on it recompute', () => {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const i18next = require('i18next').default ?? require('i18next');
+    const rows = [localCategory()];
+    useCategoryStore.setState({ categories: rows });
+
+    i18next.emit('languageChanged', 'pl');
+
+    const after = useCategoryStore.getState().categories;
+    expect(after).not.toBe(rows);
+    expect(after).toEqual(rows);
+  });
+});

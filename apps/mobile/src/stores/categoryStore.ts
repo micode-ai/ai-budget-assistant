@@ -1,8 +1,10 @@
 import { create } from 'zustand';
+import i18next from 'i18next';
 import { Platform } from 'react-native';
 import type { Category } from '@budget/shared-types';
-import { generateUUID } from '@budget/shared-utils';
-import { getAllCategories, upsertCategory, deleteCategory as deleteCategoryFromDb, categoryExistsById, getCategoryByClientId, getCategoryById, remapCategoryId, getCategoryByNameExcludingId, mergeCategoryInto, countCategoryReferences } from '@/db/categoryRepository';
+import { generateUUID, catalogKeyForName } from '@budget/shared-utils';
+import { getAllCategories, upsertCategory, deleteCategory as deleteCategoryFromDb, categoryExistsById, getCategoryByClientId, getCategoryById, remapCategoryId, getCategoryByNameExcludingId, getKeyConvergenceCandidates, mergeCategoryInto, countCategoryReferences } from '@/db/categoryRepository';
+import { CATEGORY_SEEDS, seedForKey, seedForName } from '@/features/categories/categorySeeds';
 import { setLastSyncTime } from '@/db/syncMetadataRepository';
 import { useAccountStore } from './accountStore';
 import { useAuthStore } from './authStore';
@@ -14,29 +16,49 @@ import { maybeEncrypt, maybeDecrypt } from '@/services/encryptionHelper';
 // color-patch loop on every `loadCategories` call (used to cost 60-600ms each).
 const _seededAccounts = new Set<string>();
 
-export const DEFAULT_EXPENSE_CATEGORIES = [
-  { name: 'Food & Dining', icon: 'restaurant', color: '#E53E3E' },
-  { name: 'Transport', icon: 'car', color: '#2C9E96' },
-  { name: 'Shopping', icon: 'cart', color: '#2B8ABD' },
-  { name: 'Entertainment', icon: 'game-controller', color: '#3A8C6E' },
-  { name: 'Health & Fitness', icon: 'fitness', color: '#D4A017' },
-  { name: 'Bills & Utilities', icon: 'flash', color: '#9B59B6' },
-  { name: 'Education', icon: 'school', color: '#1A8C76' },
-  { name: 'Travel', icon: 'airplane', color: '#B8860B' },
-  { name: 'Groceries', icon: 'basket', color: '#27AE60' },
-  { name: 'Coffee & Drinks', icon: 'cafe', color: '#A0522D' },
-  { name: 'Subscriptions', icon: 'repeat', color: '#7D3C98' },
-  { name: 'Clothing', icon: 'shirt', color: '#C0392B' },
-  { name: 'Personal Care', icon: 'happy', color: '#2471A3' },
-];
+/**
+ * A local row this device seeded itself (`default-exp-*` / `default-inc-*`),
+ * standing for `key`, that a pulled server row with the same key may absorb.
+ *
+ * Deliberately narrow: only the app's own seeds, never a row the user renamed
+ * (flagged, or a keyless seed whose name no longer maps to the key). Anything
+ * else with the same key is left alone - folding re-points expenses, and keys
+ * must never move money on their own.
+ */
+function isConvergibleSeed(local: Category, key: string, type: 'expense' | 'income'): boolean {
+  if (!local.id.startsWith('default-')) return false;
+  if (local.nameCustomized) return false;
+  if (local.systemKey) return local.systemKey === key;
+  return catalogKeyForName(local.name, type) === key;
+}
 
-export const DEFAULT_INCOME_CATEGORIES = [
-  { name: 'Salary', icon: 'cash', color: '#27AE60' },
-  { name: 'Freelance', icon: 'laptop', color: '#2ECC71' },
-  { name: 'Investments', icon: 'trending-up', color: '#1ABC9C' },
-  { name: 'Gifts', icon: 'gift', color: '#E74C3C' },
-  { name: 'Other Income', icon: 'ellipsis-horizontal', color: '#95A5A6' },
-];
+/**
+ * Whether a live row other than `seed` and `keyedId` holds exactly the seed's
+ * name and type - either a server row in this pull (it may not be written yet)
+ * or a non-seed row already stored here. Same equality as the legacy name
+ * convergence (`getCategoryByNameExcludingId`), which is what then pairs them.
+ */
+async function hasExactNameTwin(
+  seed: Category,
+  keyedId: string,
+  type: 'expense' | 'income',
+  accountId: string,
+  serverCategories: any[],
+): Promise<boolean> {
+  const inPull = serverCategories.some(
+    (c) =>
+      c &&
+      c.id !== keyedId &&
+      c.id !== seed.id &&
+      !c.isDeleted &&
+      (c.type === 'income' ? 'income' : 'expense') === type &&
+      (!c.accountId || c.accountId === accountId) &&
+      c.name === seed.name,
+  );
+  if (inPull) return true;
+  const stored = await getCategoryByNameExcludingId(accountId, seed.name, type, seed.id);
+  return !!stored && stored.id !== keyedId && !stored.id.startsWith('default-');
+}
 
 interface CategoryState {
   categories: Category[];
@@ -75,7 +97,15 @@ async function findServerCategoryTwin(
   try {
     const serverCategories = await api.getCategories();
     const twin = serverCategories.find(
-      (c: any) => !c.isDeleted && c.type === category.type && c.name === category.name && c.id !== category.id,
+      (c: any) =>
+        !c.isDeleted &&
+        c.type === category.type &&
+        c.id !== category.id &&
+        // By key too - but never for this device's own seed: a seed reaching
+        // this point has no references, and its key twin is the account's real
+        // standard category, which deleting the seed must not take with it.
+        (c.name === category.name ||
+          (!!category.systemKey && !category.id.startsWith('default-') && c.systemKey === category.systemKey)),
     );
     return twin ? { id: twin.id } : null;
   } catch {
@@ -173,49 +203,49 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
         }
       }
 
-      // Ensure all default categories exist (check by deterministic ID to avoid re-creating deleted system categories)
+      // Ensure all default categories exist (check by deterministic ID to avoid
+      // re-creating deleted system categories). The seed set, its ids and its
+      // look live in categorySeeds.ts; names come from the catalog.
       let seeded = false;
       const now = new Date();
 
-      for (const cat of DEFAULT_EXPENSE_CATEGORIES) {
-        const id = `default-exp-${cat.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}`;
-        const exists = await categoryExistsById(id);
-        if (!exists) {
-          await upsertCategory({
-            id,
-            accountId,
-            name: cat.name,
-            icon: cat.icon,
-            color: cat.color,
-            type: 'expense',
-            isSystem: true,
-            createdAt: now,
-            updatedAt: now,
-            isDeleted: false,
-            syncVersion: 0,
-          });
-          seeded = true;
+      for (const seed of CATEGORY_SEEDS) {
+        const live = categories.find((c) => c.id === seed.id);
+        if (live) {
+          // A seed row from a build before system keys: label it in place, but
+          // only while its name is still the standard one - a seed the user
+          // renamed stays theirs (keyless shows `name`).
+          if (!live.systemKey && catalogKeyForName(live.name, seed.type) === seed.key) {
+            await upsertCategory({ ...live, systemKey: seed.key, nameCustomized: false });
+            seeded = true;
+          }
+          continue;
         }
-      }
-      for (const cat of DEFAULT_INCOME_CATEGORIES) {
-        const id = `default-inc-${cat.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}`;
-        const exists = await categoryExistsById(id);
-        if (!exists) {
-          await upsertCategory({
-            id,
-            accountId,
-            name: cat.name,
-            icon: cat.icon,
-            color: cat.color,
-            type: 'income',
-            isSystem: true,
-            createdAt: now,
-            updatedAt: now,
-            isDeleted: false,
-            syncVersion: 0,
-          });
-          seeded = true;
-        }
+        const exists = await categoryExistsById(seed.id);
+        if (exists) continue;
+        // The server's row for this key already arrived with the pull above:
+        // a live seed beside it would be a duplicate. Write the seed id as a
+        // TOMBSTONE instead of nothing, so deleting the server's category later
+        // cannot bring the seed back - the exists check above is what keeps a
+        // deleted standard category deleted. Invisible: lists read only
+        // `is_deleted = 0`, and categories are never pushed from SQLite.
+        const delivered = categories.some((c) => c.systemKey === seed.key && c.type === seed.type);
+        await upsertCategory({
+          id: seed.id,
+          accountId,
+          name: seed.name,
+          icon: seed.icon,
+          color: seed.color,
+          type: seed.type,
+          isSystem: true,
+          systemKey: seed.key,
+          nameCustomized: false,
+          createdAt: now,
+          updatedAt: now,
+          isDeleted: delivered,
+          syncVersion: 0,
+        });
+        if (!delivered) seeded = true;
       }
 
       if (seeded) {
@@ -223,14 +253,11 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
       }
 
       // Patch categories that are missing a color (e.g. synced from server without color)
-      const colorMap = new Map<string, string>([
-        ...DEFAULT_EXPENSE_CATEGORIES.map(c => [`expense:${c.name}`, c.color] as [string, string]),
-        ...DEFAULT_INCOME_CATEGORIES.map(c => [`income:${c.name}`, c.color] as [string, string]),
-      ]);
       let patched = false;
       for (const cat of categories) {
         if (!cat.color) {
-          const fallback = colorMap.get(`${cat.type}:${cat.name}`);
+          const type = cat.type === 'income' ? 'income' : 'expense';
+          const fallback = (seedForKey(cat.systemKey, type) ?? seedForName(cat.name, type))?.color;
           if (fallback) {
             await upsertCategory({ ...cat, color: fallback });
             cat.color = fallback;
@@ -291,7 +318,14 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
     // The server enforces a (accountId, name, type) unique. Return the category
     // that already exists locally, which is also what the server does for a
     // duplicate create.
-    const existing = get().getCategoryByName(name, type);
+    // A standard name in any language is the account's keyed category when it
+    // has one: the server answers such a create with that row, which this
+    // device already holds under another name ("Zakupy spożywcze" vs a typed
+    // "Groceries").
+    const key = catalogKeyForName(name, type);
+    const existing =
+      get().getCategoryByName(name, type) ??
+      (key ? get().categories.find((c) => c.systemKey === key && c.type === type && !c.isDeleted) : undefined);
     if (existing) return existing;
 
     const now = new Date();
@@ -416,12 +450,45 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
         type: cat.type || 'expense',
         isSystem: cat.isSystem ?? false,
         parentId: cat.parentId || undefined,
+        // Server-owned. A row that does not carry the field (an older server,
+        // an embedded copy) keeps what this device has; an explicit null
+        // (the server cleared the key) clears it.
+        systemKey: cat.systemKey !== undefined ? cat.systemKey : existingCategory?.systemKey ?? null,
+        nameCustomized:
+          cat.nameCustomized !== undefined ? !!cat.nameCustomized : existingCategory?.nameCustomized ?? false,
         createdAt: new Date(cat.createdAt),
         updatedAt: new Date(cat.updatedAt),
         isDeleted: cat.isDeleted ?? false,
         syncVersion: cat.syncVersion || 0,
       };
       await upsertCategory(entity);
+
+      // Seed convergence by KEY, before the name match below: the app's own
+      // seed and the server's row of one standard concept often hold
+      // different names (English seed, server row in the account's language),
+      // which the name match can never pair. Runs whatever the clientId - a
+      // seed is never the row a clientId points at.
+      const entityType: 'expense' | 'income' = entity.type === 'income' ? 'income' : 'expense';
+      if (entity.systemKey && accountIdForRow && !entity.isDeleted) {
+        const sameKey = await getKeyConvergenceCandidates(
+          accountIdForRow,
+          entity.systemKey,
+          entityType,
+          entity.id,
+        );
+        for (const local of sameKey) {
+          if (!isConvergibleSeed(local, entity.systemKey, entityType)) continue;
+          // An exact-name twin wins over the key. Where the server backfill
+          // keyed one row of a concept and left a keyless duplicate ("Zakupy
+          // spożywcze" keyed, "Groceries" keyless), the seed "Groceries" has
+          // always paired with the keyless row by name - folding it into the
+          // keyed row instead would re-point its expenses, i.e. move money.
+          // Leave it for the legacy name convergence below (or the clientId
+          // remap) to pair as before.
+          if (await hasExactNameTwin(local, entity.id, entityType, accountIdForRow, serverCategories)) continue;
+          await mergeCategoryInto(local.id, entity.id);
+        }
+      }
 
       // Legacy convergence (ABA-566). The branch above only fires when the
       // server row carries a clientId, which rows created before that support
@@ -516,6 +583,11 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
     const { parentId: dataParentId, ...dataRest } = data;
     const localData: Partial<Category> = { ...dataRest };
     if ('parentId' in data) localData.parentId = dataParentId ?? undefined;
+    // Mirror the server: renaming a keyed category (a name that differs from
+    // the stored one) pins the user's name in every language.
+    if (current?.systemKey && data.name !== undefined && data.name !== current.name) {
+      localData.nameCustomized = true;
+    }
     const merged = { ...current, ...localData, updatedAt: new Date() };
     set((state) => ({
       categories: state.categories.map((c) => (c.id === id ? (merged as typeof c) : c)),
@@ -563,7 +635,10 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
         const serverCategories = await api.getCategories();
         const names = new Set([current?.name, data.name].filter(Boolean) as string[]);
         const twin = serverCategories.find(
-          (c: any) => !c.isDeleted && c.type === merged.type && names.has(c.name),
+          (c: any) =>
+            !c.isDeleted &&
+            c.type === merged.type &&
+            (names.has(c.name) || (!!current?.systemKey && c.systemKey === current.systemKey)),
         );
         if (twin) {
           await api.updateCategory(twin.id, data);
@@ -575,3 +650,30 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
     }
   },
 }));
+
+/**
+ * Category LABELS follow the UI language (`categoryLabel`), but most screens
+ * memoise derived data (tables, breakdowns, budget progress) on the
+ * `categories` array. A language switch changes no row, so nothing would
+ * recompute and the old language would linger until the data next changed.
+ * Hand out a new array reference on `languageChanged` - same rows - so every
+ * memo keyed on it recomputes, and bump the budget version.
+ */
+export function refreshCategoryLabels(): void {
+  const { categories } = useCategoryStore.getState();
+  if (categories.length === 0) return;
+  useCategoryStore.setState({ categories: [...categories] });
+  // Budget progress carries category labels too (budgetProgress.ts), and the
+  // budget screens re-render on `budgetVersion`. Required lazily: budgetStore
+  // sits on an import cycle with this module (via authStore), so a top-level
+  // import or a module-scope subscription there would run before this store
+  // exists.
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { useBudgetStore } = require('./budgetStore');
+    useBudgetStore.setState({ budgetVersion: (useBudgetStore.getState().budgetVersion || 0) + 1 });
+  } catch {
+    // Budgets not loadable here (tests that mock the store graph) - nothing to refresh.
+  }
+}
+i18next.on('languageChanged', refreshCategoryLabels);

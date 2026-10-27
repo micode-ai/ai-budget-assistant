@@ -417,4 +417,40 @@ describe('ReceiptCategorySplitService — category tree', () => {
     expect(prompt).toMatch(/never a part, synonym or translation of a listed category/i);
     expect(prompt).toMatch(/never a subcategory/i);
   });
+
+  it('excludes a standard name whose key the account already has under another language', async () => {
+    const { service, create } = makeService({ completion: { assignments: [] } });
+
+    await service.classify({
+      accountId: 'a1',
+      items: ITEMS,
+      categories: [
+        { id: 'k1', name: 'Sklepik', systemKey: 'groceries' },
+        { id: 'k2', name: 'My transport', systemKey: 'transport' },
+      ] as any,
+      language: 'pl',
+    });
+
+    const prompt = create.mock.calls[0][0].messages[0].content as string;
+    const standardLine = prompt.split(/\r?\n/).find((l) => l.startsWith('Standard category names'))!;
+    expect(standardLine).not.toContain('Zakupy spożywcze');
+    expect(standardLine).not.toContain('Transport');
+    expect(standardLine).toContain('Rozrywka');
+  });
+
+  it('never assigns a line to a keyed deposit row, whatever its name', async () => {
+    const { service, create } = makeService({
+      rules: new Map([['chleb', 'c-dep']]),
+      completion: { assignments: [{ line: 1, category: 'Groceries' }] },
+    });
+
+    const result = await service.classify({
+      accountId: 'a1',
+      items: ITEMS,
+      categories: [...CATEGORIES, { id: 'c-dep', name: 'Zwrotne butelki', systemKey: 'deposit' }] as any,
+    });
+
+    expect(result.assignments.get(0)).not.toBe('c-dep');
+    expect(JSON.stringify(create.mock.calls[0][0])).not.toContain('Zwrotne butelki');
+  });
 });

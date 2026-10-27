@@ -17,6 +17,8 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import type { Category } from '@budget/shared-types';
 import { sortCategoriesAsTree } from '@budget/shared-utils';
 import { eligibleParents, hasLiveChildren } from '@/features/categories/parentCandidates';
+import { categoryEditPayload } from '@/features/categories/categoryEditPayload';
+import { categoryLabel } from '@/utils/entityLabel';
 import { SettingsScreenScroll } from '../SettingsScreenScroll';
 
 
@@ -105,6 +107,9 @@ export function CategoriesSettings() {
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [modalType, setModalType] = useState<'expense' | 'income'>('expense');
   const [name, setName] = useState('');
+  // What the edit form opened with (the DISPLAY name). `name` is sent only when
+  // the text differs from this - see categoryEditPayload.
+  const [prefilledName, setPrefilledName] = useState('');
   const [selectedColor, setSelectedColor] = useState(PRESET_COLORS[0]);
   const [selectedIcon, setSelectedIcon] = useState<string | undefined>(undefined);
   const [isSaving, setIsSaving] = useState(false);
@@ -135,7 +140,9 @@ export function CategoriesSettings() {
   const openEditModal = (category: Category) => {
     setEditingCategory(category);
     setModalType(category.type as 'expense' | 'income');
-    setName(category.name);
+    const shown = categoryLabel(category);
+    setName(shown);
+    setPrefilledName(shown);
     setSelectedColor(category.color || PRESET_COLORS[0]);
     setSelectedIcon(category.icon || undefined);
     setSelectedParentId(category.parentId || undefined);
@@ -165,13 +172,18 @@ export function CategoriesSettings() {
       if (editingCategory) {
         const parentChanged =
           showParentRow && (selectedParentId ?? null) !== (editingCategory.parentId ?? null);
-        await updateCategory(editingCategory.id, {
-          name: trimmed,
-          color: selectedColor,
-          icon: selectedIcon,
-          // Only sent when the user changed it; `null` clears the parent.
-          ...(parentChanged ? { parentId: selectedParentId ?? null } : {}),
-        });
+        await updateCategory(
+          editingCategory.id,
+          categoryEditPayload({
+            prefilledName,
+            typedName: trimmed,
+            color: selectedColor,
+            icon: selectedIcon,
+            // Only sent when the user changed it; `null` clears the parent.
+            parentChanged,
+            parentId: selectedParentId ?? null,
+          }),
+        );
       } else {
         await createCategory(
           trimmed,
@@ -206,7 +218,7 @@ export function CategoriesSettings() {
   const handleDelete = (category: Category) => {
     showAlert(
       t('categories.deleteConfirmTitle'),
-      t('categories.deleteConfirmMessage', { name: category.name }),
+      t('categories.deleteConfirmMessage', { name: categoryLabel(category) }),
       [
         { text: t('common.cancel'), style: 'cancel' },
         {
@@ -253,7 +265,7 @@ export function CategoriesSettings() {
           style={styles.icon}
         />
         <View style={styles.nameContainer}>
-          <Text style={styles.name}>{category.name}</Text>
+          <Text style={styles.name}>{categoryLabel(category)}</Text>
           {category.isSystem && (
             <View style={styles.badge}>
               <Text style={styles.badgeText}>{t('categories.system')}</Text>
@@ -364,7 +376,7 @@ export function CategoriesSettings() {
             >
               <Text style={styles.parentLabel}>{t('categories.parent')}</Text>
               <Text style={styles.parentValue} numberOfLines={1}>
-                {selectedParent ? selectedParent.name : t('categories.parentNone')}
+                {selectedParent ? categoryLabel(selectedParent) : t('categories.parentNone')}
               </Text>
               <Ionicons
                 name={parentListOpen ? 'chevron-up' : 'chevron-down'}
@@ -386,7 +398,7 @@ export function CategoriesSettings() {
                       }}
                     >
                       <Text style={[styles.parentOptionText, isSel && { color: theme.colors.primary }]}>
-                        {opt ? opt.name : t('categories.parentNone')}
+                        {opt ? categoryLabel(opt) : t('categories.parentNone')}
                       </Text>
                       {isSel && <Ionicons name="checkmark" size={16} color={theme.colors.primary} />}
                     </TouchableOpacity>

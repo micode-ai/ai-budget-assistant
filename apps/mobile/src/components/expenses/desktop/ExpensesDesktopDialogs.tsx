@@ -9,6 +9,7 @@ import { ExpenseDialog } from './ExpenseDialog';
 import { CreateDialog } from './CreateDialog';
 import { CategorizeDialog } from './CategorizeDialog';
 import { MoveAccountDialog } from './MoveAccountDialog';
+import { categoryLabel } from '@/utils/entityLabel';
 
 interface Props {
   /** The ledger-row view/edit dialog (design decisions 4/5) — `null` renders
@@ -177,7 +178,7 @@ export function ExpensesDesktopDialogs({
                         size={18}
                         color={theme.colors.primary}
                       />
-                      <Text style={styles.pickerRowText}>{cat.name}</Text>
+                      <Text style={styles.pickerRowText}>{categoryLabel(cat)}</Text>
                     </Pressable>
                   ))}
                 {categories.filter((c) => !c.isDeleted).length === 0 && (

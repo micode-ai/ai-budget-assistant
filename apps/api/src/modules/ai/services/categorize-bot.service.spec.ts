@@ -91,6 +91,24 @@ describe('CategorizeBotService', () => {
       expect(result).toEqual({ categoryName: 'hardware', count: 1 });
     });
 
+    it('reuses a keyed row for a translated name', async () => {
+      const { service, categoriesService, expenseBulk } = setup({}, [
+        { id: 'cat-k', name: 'Zakupy spożywcze', type: 'expense', systemKey: 'groceries' } as any,
+      ]);
+      expenseBulk.bulkUpdate.mockResolvedValue({ updated: 1 });
+      const result = await service.applyStep('acc-1', 'user-1', { categoryId: null, name: 'Groceries', isNew: true, expenseIds: ['e1'] });
+      expect(categoriesService.create).not.toHaveBeenCalled();
+      expect(result.categoryName).toBe('Zakupy spożywcze');
+    });
+
+    it('creates through CategoriesService (which assigns the key) for a new catalog name', async () => {
+      const { service, categoriesService, expenseBulk } = setup({}, []);
+      categoriesService.create.mockResolvedValue({ id: 'n', name: 'Groceries' });
+      expenseBulk.bulkUpdate.mockResolvedValue({ updated: 1 });
+      await service.applyStep('acc-1', 'user-1', { categoryId: null, name: 'Groceries', isNew: true, expenseIds: ['e1'] });
+      expect(categoriesService.create).toHaveBeenCalledWith('acc-1', 'user-1', { name: 'Groceries', type: 'expense' });
+    });
+
     it('uses an equivalent existing category instead of creating a translated duplicate', async () => {
       const { service, categoriesService, expenseBulk } = setup({}, [
         { id: 'cat-groceries', name: 'Groceries', type: 'expense' } as any,

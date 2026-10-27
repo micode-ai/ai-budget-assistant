@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsIn } from 'class-validator';
+import { IsString, IsOptional, IsIn, Allow } from 'class-validator';
 
 export class CreateCategoryDto {
   @IsString()
@@ -23,6 +23,16 @@ export class CreateCategoryDto {
   @IsOptional()
   @IsString()
   parentId?: string;
+
+  // Server-owned: accepted so the global whitelist pipe does not 400 a client
+  // that echoes a category back, then ignored by CategoriesService.
+  @IsOptional()
+  @Allow()
+  systemKey?: string | null;
+
+  @IsOptional()
+  @Allow()
+  nameCustomized?: boolean;
 }
 
 export class UpdateCategoryDto {
@@ -46,6 +56,16 @@ export class UpdateCategoryDto {
   @IsOptional()
   @IsString()
   parentId?: string | null;
+
+  // Server-owned: accepted so the global whitelist pipe does not 400 a client
+  // that echoes a category back, then ignored by CategoriesService.
+  @IsOptional()
+  @Allow()
+  systemKey?: string | null;
+
+  @IsOptional()
+  @Allow()
+  nameCustomized?: boolean;
 
   @IsOptional()
   @IsString()

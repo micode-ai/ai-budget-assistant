@@ -41,11 +41,14 @@ const mockUpsert = jest.fn();
 const mockGetByNameExcluding = jest.fn();
 const mockMerge = jest.fn();
 const mockRemap = jest.fn();
+const mockByKeyExcluding = jest.fn();
+const mockGetById = jest.fn();
 
 jest.mock('@/db/categoryRepository', () => ({
   getAllCategories: jest.fn().mockResolvedValue([]),
   upsertCategory: (...a: any[]) => mockUpsert(...a),
-  getCategoryById: jest.fn().mockResolvedValue(null),
+  getCategoryById: (...a: any[]) => mockGetById(...a),
+  getKeyConvergenceCandidates: (...a: any[]) => mockByKeyExcluding(...a),
   getCategoryByClientId: jest.fn().mockResolvedValue(null),
   remapCategoryId: (...a: any[]) => mockRemap(...a),
   getCategoryByNameExcludingId: (...a: any[]) => mockGetByNameExcluding(...a),
@@ -100,6 +103,8 @@ beforeEach(() => {
   mockMerge.mockResolvedValue(undefined);
   mockRemap.mockResolvedValue(undefined);
   mockGetByNameExcluding.mockResolvedValue(null);
+  mockByKeyExcluding.mockResolvedValue([]);
+  mockGetById.mockResolvedValue(null);
   useCategoryStore.setState({ categories: [], isInitialized: true, isLoading: false });
 });
 
@@ -145,5 +150,115 @@ describe('categoryStore.syncFromServer — legacy category convergence', () => {
     await useCategoryStore.getState().syncFromServer([serverRow({ type: 'income', name: 'Premia' })]);
 
     expect(mockGetByNameExcluding).toHaveBeenCalledWith('acc-1', 'Premia', 'income', 'server-1');
+  });
+});
+
+describe('categoryStore.syncFromServer — system keys', () => {
+  const seed = (over: Record<string, unknown> = {}) => ({
+    id: 'default-exp-groceries',
+    accountId: 'acc-1',
+    name: 'Groceries',
+    type: 'expense',
+    systemKey: 'groceries',
+    nameCustomized: false,
+    isSystem: true,
+    ...over,
+  });
+
+  it('stores the key and the renamed flag the server sends', async () => {
+    await useCategoryStore
+      .getState()
+      .syncFromServer([serverRow({ name: 'Zakupy spożywcze', systemKey: 'groceries', nameCustomized: true })]);
+
+    expect(mockUpsert).toHaveBeenCalledWith(
+      expect.objectContaining({ id: 'server-1', systemKey: 'groceries', nameCustomized: true }),
+    );
+  });
+
+  it('keeps the key the row already has when the server row does not carry the field', async () => {
+    mockGetById.mockResolvedValue({ id: 'server-1', systemKey: 'groceries', nameCustomized: false });
+
+    await useCategoryStore.getState().syncFromServer([serverRow({ name: 'Zakupy spożywcze' })]);
+
+    expect(mockUpsert).toHaveBeenCalledWith(expect.objectContaining({ id: 'server-1', systemKey: 'groceries' }));
+  });
+
+  it('lets an explicit null from the server clear the key', async () => {
+    mockGetById.mockResolvedValue({ id: 'server-1', systemKey: 'groceries' });
+
+    await useCategoryStore.getState().syncFromServer([serverRow({ systemKey: null, nameCustomized: false })]);
+
+    expect(mockUpsert).toHaveBeenCalledWith(expect.objectContaining({ id: 'server-1', systemKey: null }));
+  });
+
+  // The names differ ("Groceries" here, "Zakupy spożywcze" on the server), so
+  // the old name match could never pair them: the seed lived on beside the
+  // server row and expenses stayed split between the two.
+  it('converges a seed with the server row of the same key', async () => {
+    mockByKeyExcluding.mockResolvedValue([seed()]);
+
+    await useCategoryStore
+      .getState()
+      .syncFromServer([serverRow({ name: 'Zakupy spożywcze', systemKey: 'groceries', nameCustomized: false })]);
+
+    expect(mockByKeyExcluding).toHaveBeenCalledWith('acc-1', 'groceries', 'expense', 'server-1');
+    expect(mockMerge).toHaveBeenCalledTimes(1);
+    expect(mockMerge).toHaveBeenCalledWith('default-exp-groceries', 'server-1');
+  });
+
+  // The real query returns every keyless default-* seed (any concept) beside
+  // the rows already carrying the key; only the one whose name maps to the key
+  // is folded.
+  it('converges a seed not yet labelled whose stored name is that key', async () => {
+    mockByKeyExcluding.mockResolvedValue([
+      seed({ id: 'default-exp-health---fitness', name: 'Health & Fitness', systemKey: null }),
+      seed({ id: 'default-exp-transport', name: 'Transport', systemKey: null }),
+    ]);
+
+    await useCategoryStore
+      .getState()
+      .syncFromServer([serverRow({ name: 'Zdrowie', systemKey: 'health' })]);
+
+    expect(mockMerge).toHaveBeenCalledTimes(1);
+    expect(mockMerge).toHaveBeenCalledWith('default-exp-health---fitness', 'server-1');
+  });
+
+  it('converges by key even when the server row carries a clientId', async () => {
+    mockByKeyExcluding.mockResolvedValue([seed()]);
+
+    await useCategoryStore
+      .getState()
+      .syncFromServer([serverRow({ clientId: 'some-other-device', name: 'Zakupy spożywcze', systemKey: 'groceries' })]);
+
+    expect(mockMerge).toHaveBeenCalledWith('default-exp-groceries', 'server-1');
+  });
+
+  it('never folds a seed the user renamed', async () => {
+    mockByKeyExcluding.mockResolvedValue([
+      seed({ name: 'Biedronka', nameCustomized: true }),
+      seed({ id: 'default-exp-shopping', name: 'Sklep', systemKey: null }),
+    ]);
+
+    await useCategoryStore.getState().syncFromServer([serverRow({ name: 'Zakupy spożywcze', systemKey: 'groceries' })]);
+
+    expect(mockMerge).not.toHaveBeenCalled();
+  });
+
+  it('never folds a row that is not a local seed', async () => {
+    mockByKeyExcluding.mockResolvedValue([seed({ id: '2b1f5f0e-0000-4000-8000-000000000001', isSystem: false })]);
+
+    await useCategoryStore.getState().syncFromServer([serverRow({ name: 'Zakupy spożywcze', systemKey: 'groceries' })]);
+
+    expect(mockMerge).not.toHaveBeenCalled();
+  });
+
+  it('does not look up a key for a deleted server row', async () => {
+    mockByKeyExcluding.mockResolvedValue([seed()]);
+
+    await useCategoryStore
+      .getState()
+      .syncFromServer([serverRow({ systemKey: 'groceries', isDeleted: true })]);
+
+    expect(mockMerge).not.toHaveBeenCalled();
   });
 });

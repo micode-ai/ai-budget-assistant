@@ -151,7 +151,7 @@ describe('IncomesService.create', () => {
     });
 
     expect(tx.category.create).toHaveBeenCalledWith({
-      data: { accountId: 'acc-1', name: 'Freelance Work', type: 'income' },
+      data: { accountId: 'acc-1', name: 'Freelance Work', type: 'income', systemKey: null },
     });
     const createArgs = tx.income.upsert.mock.calls[0][0].create;
     expect(createArgs.categoryId).toBe('new-cat');

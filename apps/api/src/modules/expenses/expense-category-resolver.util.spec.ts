@@ -33,6 +33,86 @@ function makePrisma(overrides: {
   return { category } as any;
 }
 
+describe('resolveExpenseCategoryId - system keys', () => {
+  it('reuses the keyed row for a translated name', async () => {
+    const prisma = makePrisma({ live: [{ id: 'k', name: 'Zakupy spożywcze', type: 'expense', systemKey: 'groceries' }] });
+    await expect(resolveExpenseCategoryId(prisma, 'Groceries', 'acc-1')).resolves.toBe('k');
+    expect(prisma.category.create).not.toHaveBeenCalled();
+  });
+
+  it('creates a keyed row for a new catalog name', async () => {
+    const prisma = makePrisma();
+    await resolveExpenseCategoryId(prisma, 'Groceries', 'acc-1');
+    expect(prisma.category.create.mock.calls[0][0].data.systemKey).toBe('groceries');
+  });
+});
+
+describe('resolveExpenseCategoryId - default ids through the catalog', () => {
+  it('default-exp-groceries resolves to the keyed row named in Polish', async () => {
+    const prisma = makePrisma({
+      live: [
+        { id: 'other', name: 'Zakupy budowlane', type: 'expense', systemKey: null },
+        { id: 'k', name: 'Zakupy spożywcze', type: 'expense', systemKey: 'groceries' },
+      ],
+    });
+    await expect(resolveExpenseCategoryId(prisma, 'default-exp-groceries', 'acc-1')).resolves.toBe('k');
+    expect(prisma.category.findFirst).not.toHaveBeenCalledWith(expect.objectContaining({ where: expect.objectContaining({ AND: expect.anything() }) }));
+  });
+
+  it('maps the seeded "Health & Fitness" slug to key health', async () => {
+    const prisma = makePrisma({ live: [{ id: 'h', name: 'Zdrowie', type: 'expense', systemKey: 'health' }] });
+    await expect(resolveExpenseCategoryId(prisma, 'default-exp-health---fitness', 'acc-1')).resolves.toBe('h');
+  });
+
+  it('resolves an income default id by income key', async () => {
+    const prisma = makePrisma({ live: [{ id: 's', name: 'Wynagrodzenie', type: 'income', systemKey: 'salary' }] });
+    await expect(resolveExpenseCategoryId(prisma, 'default-inc-salary', 'acc-1', 'income')).resolves.toBe('s');
+  });
+});
+
+describe('resolveExpenseCategoryId - exact name beats the key when resolving', () => {
+  // The backfill keys only one row per concept; a second row of the same
+  // meaning stays keyless. A reference that always landed on the keyless row
+  // by name must keep landing there, or key work would move spend.
+  const UNKNOWN = '0f0e0d0c-0b0a-4908-8706-050403020100';
+  const duplicates = () => [
+    { id: 'keyed', name: 'Zakupy spożywcze', type: 'expense', systemKey: 'groceries' },
+    { id: 'keyless', name: 'Groceries', type: 'expense', systemKey: null },
+  ];
+
+  it('a fallbackName equal to the keyless duplicate resolves to that row, not the keyed one', async () => {
+    const prisma = makePrisma({ live: duplicates() });
+    await expect(resolveExpenseCategoryId(prisma, UNKNOWN, 'acc-1', 'expense', 'Groceries')).resolves.toBe('keyless');
+    expect(prisma.category.create).not.toHaveBeenCalled();
+  });
+
+  it('a plain name reference matches the exact name after normalization', async () => {
+    const prisma = makePrisma({ live: duplicates() });
+    await expect(resolveExpenseCategoryId(prisma, '  groceries ', 'acc-1')).resolves.toBe('keyless');
+  });
+
+  it('default-exp-groceries resolves to the row named as the old English seed', async () => {
+    const prisma = makePrisma({ live: duplicates() });
+    await expect(resolveExpenseCategoryId(prisma, 'default-exp-groceries', 'acc-1')).resolves.toBe('keyless');
+  });
+
+  it('a default id built from an old seed name matches that name exactly', async () => {
+    const prisma = makePrisma({
+      live: [
+        { id: 'keyed', name: 'Zdrowie', type: 'expense', systemKey: 'health' },
+        { id: 'keyless', name: 'Health & Fitness', type: 'expense', systemKey: null },
+      ],
+    });
+    await expect(resolveExpenseCategoryId(prisma, 'default-exp-health---fitness', 'acc-1')).resolves.toBe('keyless');
+  });
+
+  it('with only the keyed row, both the name and the default id still reach it', async () => {
+    const live = [{ id: 'keyed', name: 'Zakupy spożywcze', type: 'expense', systemKey: 'groceries' }];
+    await expect(resolveExpenseCategoryId(makePrisma({ live }), UNKNOWN, 'acc-1', 'expense', 'Groceries')).resolves.toBe('keyed');
+    await expect(resolveExpenseCategoryId(makePrisma({ live }), 'default-exp-groceries', 'acc-1')).resolves.toBe('keyed');
+  });
+});
+
 describe('resolveExpenseCategoryId', () => {
   it('returns the id when the UUID is a category of this account', async () => {
     const prisma = makePrisma({ findUniqueResult: { id: UUID_A, accountId: 'acc-1' } });
@@ -71,13 +151,13 @@ describe('resolveExpenseCategoryId', () => {
     const prismaExp = makePrisma({ created: { id: 'new-exp' } });
     await expect(resolveExpenseCategoryId(prismaExp, 'Restauracja', 'acc-1')).resolves.toBe('new-exp');
     expect(prismaExp.category.create).toHaveBeenCalledWith({
-      data: { accountId: 'acc-1', name: 'Restauracja', type: 'expense' },
+      data: { accountId: 'acc-1', name: 'Restauracja', type: 'expense', systemKey: null },
     });
 
     const prismaInc = makePrisma({ created: { id: 'new-inc' } });
     await expect(resolveExpenseCategoryId(prismaInc, 'Premia', 'acc-1', 'income')).resolves.toBe('new-inc');
     expect(prismaInc.category.create).toHaveBeenCalledWith({
-      data: { accountId: 'acc-1', name: 'Premia', type: 'income' },
+      data: { accountId: 'acc-1', name: 'Premia', type: 'income', systemKey: null },
     });
   });
 
@@ -137,6 +217,9 @@ describe('resolveExpenseCategoryId — same name on two rows', () => {
           if (orderBy?.isDeleted === 'asc') found = [...found].sort((a, b) => Number(a.isDeleted) - Number(b.isDeleted));
           return Promise.resolve(found[0] ?? null);
         }),
+        findMany: jest.fn().mockImplementation(({ where }: any) =>
+          Promise.resolve(rows.filter((r) => matches(r, where))),
+        ),
         create: jest.fn().mockResolvedValue({ id: 'created' }),
       },
     } as any;
@@ -219,7 +302,7 @@ describe('resolveExpenseCategoryId — id with a name fallback', () => {
     const prisma = dbLike([]);
 
     await expect(resolveExpenseCategoryId(prisma, UNKNOWN, 'acc-1', 'income', 'Salary')).resolves.toBe('created');
-    expect(prisma.category.create).toHaveBeenCalledWith({ data: { accountId: 'acc-1', name: 'Salary', type: 'income' } });
+    expect(prisma.category.create).toHaveBeenCalledWith({ data: { accountId: 'acc-1', name: 'Salary', type: 'income', systemKey: 'salary' } });
   });
 
   it('still returns null for an unknown id sent without a name', async () => {

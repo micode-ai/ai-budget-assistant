@@ -1,29 +1,7 @@
 import type { Currency } from '@budget/shared-types';
 
-// Default categories
-export const DEFAULT_EXPENSE_CATEGORIES = [
-  { name: 'Food & Dining', icon: 'utensils', color: '#FF6B6B' },
-  { name: 'Transportation', icon: 'car', color: '#4ECDC4' },
-  { name: 'Shopping', icon: 'shopping-bag', color: '#45B7D1' },
-  { name: 'Entertainment', icon: 'film', color: '#96CEB4' },
-  { name: 'Bills & Utilities', icon: 'file-invoice', color: '#FFEAA7' },
-  { name: 'Healthcare', icon: 'heartbeat', color: '#DDA0DD' },
-  { name: 'Education', icon: 'book', color: '#98D8C8' },
-  { name: 'Personal Care', icon: 'spa', color: '#F7DC6F' },
-  { name: 'Home', icon: 'home', color: '#BB8FCE' },
-  { name: 'Travel', icon: 'plane', color: '#85C1E9' },
-  { name: 'Gifts & Donations', icon: 'gift', color: '#F1948A' },
-  { name: 'Subscriptions', icon: 'redo', color: '#82E0AA' },
-  { name: 'Other', icon: 'ellipsis-h', color: '#AEB6BF' },
-] as const;
-
-export const DEFAULT_INCOME_CATEGORIES = [
-  { name: 'Salary', icon: 'briefcase', color: '#27AE60' },
-  { name: 'Freelance', icon: 'laptop', color: '#3498DB' },
-  { name: 'Investments', icon: 'chart-line', color: '#9B59B6' },
-  { name: 'Gifts', icon: 'gift', color: '#E74C3C' },
-  { name: 'Other Income', icon: 'plus-circle', color: '#1ABC9C' },
-] as const;
+// Default categories: see CATEGORY_CATALOG in formatting/category-catalog.ts
+// (the keyed catalog both the API and the app seed from).
 
 // Supported currencies
 export const SUPPORTED_CURRENCIES: { code: Currency; name: string; symbol: string }[] = [

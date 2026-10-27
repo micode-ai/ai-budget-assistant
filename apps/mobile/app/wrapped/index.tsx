@@ -41,6 +41,7 @@ import {
   type WrappedShareLine,
 } from '@/components/wrapped/WrappedShareCard';
 import type { WrappedCard } from '@budget/shared-types';
+import { storedCategoryLabel } from '@/features/categories/storedCategoryLabel';
 
 const AnimatedGradient = Animated.createAnimatedComponent(LinearGradient);
 
@@ -151,7 +152,7 @@ export default function WrappedScreen() {
           lines.push(`📅 ${t('wrapped.shareMonth', { month: monthLabel(c.monthIndex, data.year) })}`);
           break;
         case 'top_category':
-          lines.push(`🏆 ${t('wrapped.shareCategory', { name: c.name, percent: c.percentage })}`);
+          lines.push(`🏆 ${t('wrapped.shareCategory', { name: storedCategoryLabel(c.categoryId, c.name), percent: c.percentage })}`);
           break;
         case 'receipts_scanned':
           lines.push(`🧾 ${t('wrapped.shareReceipts', { count: c.count })}`);
@@ -205,7 +206,7 @@ export default function WrappedScreen() {
           push('📅', t('wrapped.shareMonth', { month: monthLabel(c.monthIndex, data.year) }));
           break;
         case 'top_category':
-          push('🏆', t('wrapped.shareCategory', { name: c.name, percent: c.percentage }));
+          push('🏆', t('wrapped.shareCategory', { name: storedCategoryLabel(c.categoryId, c.name), percent: c.percentage }));
           break;
         case 'receipts_scanned':
           push('🧾', t('wrapped.shareReceipts', { count: c.count }));
@@ -420,7 +421,7 @@ export default function WrappedScreen() {
           <>
             <Text style={styles.emoji}>🏆</Text>
             <Text style={styles.label}>{t('wrapped.topCategory')}</Text>
-            <Text style={styles.hero}>{card.name}</Text>
+            <Text style={styles.hero}>{storedCategoryLabel(card.categoryId, card.name)}</Text>
             <Text style={styles.sub}>{money(card.amount)}</Text>
             <Text style={styles.subSmall}>{t('wrapped.ofSpending', { percent: card.percentage })}</Text>
           </>
@@ -434,7 +435,7 @@ export default function WrappedScreen() {
               {card.categories.map((c, i) => (
                 <View key={`${c.categoryId ?? 'x'}-${i}`} style={styles.mixRow}>
                   <View style={[styles.mixDot, { backgroundColor: c.color ?? '#ffffff88' }]} />
-                  <Text style={styles.mixName} numberOfLines={1}>{c.name}</Text>
+                  <Text style={styles.mixName} numberOfLines={1}>{storedCategoryLabel(c.categoryId, c.name)}</Text>
                   <Text style={styles.mixPct}>{c.percentage}%</Text>
                 </View>
               ))}

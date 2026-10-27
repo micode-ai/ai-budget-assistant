@@ -5382,6 +5382,7 @@ Bekijk en beheer al je uitgaven- en inkomstencategorieën op één plek.
 - **Verwijderen is geblokkeerd** als de categorie gerelateerde uitgaven, inkomsten of budgetten heeft — je moet die records eerst opnieuw toewijzen of verwijderen
 - **Systeemcategorieën** kunnen ook worden verwijderd als ze geen gerelateerde records hebben
 - **Subcategorieën** — kies bij het maken of bewerken van een uitgavencategorie een **Hoofdcategorie** om deze onder een andere te plaatsen. Er zijn maar twee niveaus: een categorie die al subcategorieën heeft, kan zelf geen subcategorie worden, en de hoofdcategorie moet een uitgavencategorie van hetzelfde account zijn. Categoriekiezers tonen subcategorieën gegroepeerd onder hun hoofdcategorie. Een categorie met subcategorieën kan pas worden verwijderd als die zijn verplaatst of verwijderd.
+- **Standaardcategorieën volgen de taal van de app** — een categorie die de app voor je heeft gemaakt (zoals Boodschappen of Statiegeld) wordt getoond in de taal die je nu gebruikt, dus een taalwissel verandert de naam op het scherm zonder een duplicaat te maken. Geef je zelf een standaardcategorie een andere naam, dan blijft jouw naam in elke taal behouden. Categorieën die je zelf hebt gemaakt tonen altijd precies wat je hebt getypt.
 
 > **Opmerking:** Het verwijderen van een categorie is permanent en kan niet ongedaan worden gemaakt.
 

@@ -565,6 +565,21 @@ export async function initializeDatabase(): Promise<void> {
       // Column already exists, ignore
     }
 
+    // Category system keys: the stable identity of a standard category
+    // ("groceries"), set by the server and by this device's own seeds, and
+    // whether the user renamed it. Display follows the UI language only for a
+    // keyed, non-renamed row (see utils/categoryDisplayName.ts).
+    try {
+      expoDb.execSync(`ALTER TABLE categories ADD COLUMN system_key TEXT`);
+    } catch {
+      // Column already exists, ignore
+    }
+    try {
+      expoDb.execSync(`ALTER TABLE categories ADD COLUMN name_customized INTEGER DEFAULT 0`);
+    } catch {
+      // Column already exists, ignore
+    }
+
     // Add discount_amount column to expenses
     try {
       expoDb.execSync(`ALTER TABLE expenses ADD COLUMN discount_amount REAL`);

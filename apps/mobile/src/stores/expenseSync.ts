@@ -303,6 +303,9 @@ async function _doPullAndMerge(
             type: c.type || 'expense',
             isSystem: c.isSystem ?? false,
             parentId: c.parentId ?? undefined,
+            // Absent = keep the local row's key (upsertCategory); null clears it.
+            systemKey: c.systemKey,
+            nameCustomized: c.nameCustomized,
             createdAt: c.createdAt ? new Date(c.createdAt) : cn,
             updatedAt: c.updatedAt ? new Date(c.updatedAt) : cn,
             isDeleted: c.isDeleted ?? false,
@@ -324,6 +327,9 @@ async function _doPullAndMerge(
                 type: c.type || 'expense',
                 isSystem: c.isSystem ?? false,
                 parentId: c.parentId ?? undefined,
+                // Absent = keep the local row's key (upsertCategory); null clears it.
+                systemKey: c.systemKey,
+                nameCustomized: c.nameCustomized,
                 createdAt: c.createdAt ? new Date(c.createdAt) : cn,
                 updatedAt: c.updatedAt ? new Date(c.updatedAt) : cn,
                 isDeleted: c.isDeleted ?? false,

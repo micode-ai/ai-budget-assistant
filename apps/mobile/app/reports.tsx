@@ -29,6 +29,7 @@ import {
 import { formatCurrency, formatDate } from '@budget/shared-utils';
 import type { GenerateReportDto, ReportListItem } from '@budget/shared-types';
 import type { Currency } from '@budget/shared-types';
+import { categoryLabel } from '@/utils/entityLabel';
 
 type ReportFormat = 'csv' | 'pdf' | 'excel';
 
@@ -390,7 +391,7 @@ export default function ReportsScreen() {
                   <Text style={styles.digestCategoriesTitle}>{t('reports.topCategories')}</Text>
                   {digest.digest.topCategories.slice(0, 3).map((cat, i) => {
                     const localCat = cat.categoryId ? getCategoryById(cat.categoryId) : null;
-                    const displayName = localCat?.name || cat.name || t('common.uncategorized');
+                    const displayName = localCat ? categoryLabel(localCat) : cat.name || t('common.uncategorized');
                     return (
                     <View key={i} style={styles.digestCategoryRow}>
                       <Text style={styles.digestCategoryName}>{displayName}</Text>

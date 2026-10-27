@@ -14,6 +14,7 @@ import { DivisionPickerSheet } from '@/components/real-salary/DivisionPickerShee
 import { api } from '@/services/api';
 import { showAlert } from '@/utils/alert';
 import { useAccountStore } from '@/stores/accountStore';
+import { storedCategoryLabel } from '@/features/categories/storedCategoryLabel';
 
 export default function RealSalarySettingsScreen() {
   const { t } = useTranslation();
@@ -130,7 +131,7 @@ export default function RealSalarySettingsScreen() {
       <>
         <View style={styles.rowText}>
           <Text style={styles.rowLabel} numberOfLines={1}>
-            {`${cat.icon ?? ''} ${cat.name}`.trim()}
+            {`${cat.icon ?? ''} ${storedCategoryLabel(cat.id, cat.name)}`.trim()}
           </Text>
           {cat.spend !== undefined && cat.spendCurrency && (
             <Text style={styles.rowAmount} numberOfLines={1}>

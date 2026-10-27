@@ -2078,6 +2078,7 @@ View and manage all your expense and income categories in one place.
 - **Deletion is blocked** if the category has any related expenses, incomes, or budgets — you must reassign or delete those records first
 - **System categories** can also be deleted if they have no related records
 - **Subcategories** — when you create or edit an expense category, choose a **Parent category** to file it under another one. There are two levels only: a category that already has subcategories cannot become a subcategory itself, and a parent must be an expense category of the same account. Category pickers show subcategories grouped under their parent. A category with subcategories cannot be deleted until they are moved or removed.
+- **Standard categories follow your app language** — a category the app created for you (such as Groceries or Deposit) is shown in the language you currently use, so switching the app language renames it on screen without creating a duplicate. If you rename a standard category yourself, your name is kept in every language. Categories you created yourself always show exactly what you typed.
 
 > **Note:** Deleting a category is permanent and cannot be undone.
 
@@ -7325,6 +7326,7 @@ Email обновляется мгновенно, выдаются новые т�
 - **Удаление заблокировано**, если с категорией связаны расходы, доходы или бюджеты — сначала необходимо переназначить или удалить эти записи
 - **Системные категории** также можно удалить, если с ними не связаны никакие записи
 - **Подкатегории** — при создании или редактировании категории расходов выберите **Родительскую категорию**, чтобы поместить её внутрь другой. Уровней только два: категория, у которой уже есть подкатегории, сама не может стать подкатегорией, а родительская должна быть категорией расходов того же счёта. В выборе категорий подкатегории сгруппированы под родительской. Категорию с подкатегориями нельзя удалить, пока они не перенесены или не удалены.
+- **Стандартные категории следуют языку приложения** — категория, созданная приложением (например, «Продукты» или «Залог»), показывается на текущем языке, поэтому смена языка меняет её название на экране и не создаёт дубликат. Если вы сами переименуете стандартную категорию, ваше название сохранится на всех языках. Категории, созданные вами, всегда показываются так, как вы их назвали.
 
 > **Примечание:** Удаление категории необратимо.
 
@@ -12558,6 +12560,7 @@ iOS, Android, Web
 - **Видалення заблоковано**, якщо з категорією пов'язані витрати, доходи або бюджети — спочатку потрібно переназначити або видалити ці записи
 - **Системні категорії** також можна видалити, якщо з ними не пов'язані жодні записи
 - **Підкатегорії** — під час створення чи редагування категорії витрат виберіть **Батьківську категорію**, щоб розмістити її всередині іншої. Рівнів лише два: категорія, що вже має підкатегорії, сама не може стати підкатегорією, а батьківська має бути категорією витрат того ж рахунку. У виборі категорій підкатегорії згруповані під батьківською. Категорію з підкатегоріями не можна видалити, доки їх не переміщено або не видалено.
+- **Стандартні категорії слідують мові застосунку** — категорія, створена застосунком (наприклад, «Продукти» або «Застава»), показується поточною мовою, тому зміна мови змінює її назву на екрані й не створює дублікат. Якщо ви самі перейменуєте стандартну категорію, ваша назва збережеться всіма мовами. Категорії, створені вами, завжди показуються так, як ви їх назвали.
 
 > **Примітка:** Видалення категорії є незворотним.
 
@@ -17738,6 +17741,7 @@ Przegladaj wszystkie swoje kategorie wydatkow i przychodow oraz zarzadzaj nimi w
 - **Usuwanie jest zablokowane**, jezeli kategoria ma powiazane wydatki, przychody lub budzety — najpierw musisz je przepisac lub usunac
 - **Kategorie systemowe** rowniez mozna usunac, jezeli nie maja powiazanych rekordow
 - **Podkategorie** — podczas tworzenia lub edycji kategorii wydatków wybierz **Kategorię nadrzędną**, aby umieścić ją pod inną. Są tylko dwa poziomy: kategoria, która ma już podkategorie, nie może sama stać się podkategorią, a kategoria nadrzędna musi być kategorią wydatków tego samego konta. Listy wyboru kategorii pokazują podkategorie pod ich kategorią nadrzędną. Kategorii z podkategoriami nie można usunąć, dopóki nie zostaną przeniesione lub usunięte.
+- **Standardowe kategorie podążają za językiem aplikacji** — kategoria utworzona przez aplikację (np. Zakupy spożywcze lub Kaucja) jest pokazywana w aktualnie używanym języku, więc zmiana języka zmienia jej nazwę na ekranie bez tworzenia duplikatu. Jeśli sam zmienisz nazwę standardowej kategorii, Twoja nazwa zostanie we wszystkich językach. Kategorie utworzone przez Ciebie zawsze pokazują dokładnie to, co wpisałeś.
 
 > **Uwaga:** Usuniecie kategorii jest trwale i nie mozna go cofnac.
 
@@ -22917,6 +22921,7 @@ Zeige und verwalte alle deine Ausgaben- und Einnahmenkategorien an einem Ort.
 - **Loschen gesperrt**, wenn die Kategorie zugehorige Ausgaben, Einnahmen oder Budgets hat — diese Datensatze mussen zuerst neu zugewiesen oder geloscht werden
 - **Systemkategorien** konnen ebenfalls geloscht werden, sofern keine zugehorigen Datensatze vorhanden sind
 - **Unterkategorien** — beim Erstellen oder Bearbeiten einer Ausgabenkategorie wählst du eine **Oberkategorie**, um sie unter einer anderen einzuordnen. Es gibt nur zwei Ebenen: Eine Kategorie, die bereits Unterkategorien hat, kann nicht selbst Unterkategorie werden, und die Oberkategorie muss eine Ausgabenkategorie desselben Kontos sein. Kategorieauswahlen zeigen Unterkategorien unter ihrer Oberkategorie gruppiert. Eine Kategorie mit Unterkategorien kann erst gelöscht werden, wenn diese verschoben oder entfernt sind.
+- **Standardkategorien folgen der App-Sprache** — eine von der App angelegte Kategorie (z. B. Lebensmittel oder Pfand) wird in der aktuell verwendeten Sprache angezeigt. Ein Sprachwechsel ändert also ihren Namen auf dem Bildschirm, ohne ein Duplikat zu erzeugen. Benennst du eine Standardkategorie selbst um, bleibt dein Name in jeder Sprache erhalten. Selbst angelegte Kategorien zeigen immer genau das, was du eingegeben hast.
 
 > **Hinweis:** Das Loschen einer Kategorie ist dauerhaft und kann nicht ruckgangig gemacht werden.
 
@@ -28075,6 +28080,7 @@ Visualiza y gestiona todas tus categorias de gastos e ingresos en un solo lugar.
 - **La eliminacion esta bloqueada** si la categoria tiene gastos, ingresos o presupuestos relacionados — primero debes reasignar o eliminar esos registros
 - **Las categorias del sistema** tambien pueden eliminarse si no tienen registros relacionados
 - **Subcategorías** — al crear o editar una categoría de gastos, elige una **Categoría principal** para colocarla dentro de otra. Solo hay dos niveles: una categoría que ya tiene subcategorías no puede convertirse en subcategoría, y la categoría principal debe ser una categoría de gastos de la misma cuenta. Los selectores de categoría muestran las subcategorías agrupadas bajo su categoría principal. Una categoría con subcategorías no se puede eliminar hasta que se muevan o se eliminen.
+- **Las categorías estándar siguen el idioma de la aplicación** — una categoría creada por la aplicación (como Supermercado o Depósito) se muestra en el idioma que usas ahora, así que cambiar el idioma cambia su nombre en pantalla sin crear un duplicado. Si renombras tú mismo una categoría estándar, se conserva tu nombre en todos los idiomas. Las categorías que creaste tú siempre muestran exactamente lo que escribiste.
 
 > **Nota:** Eliminar una categoria es permanente y no se puede deshacer.
 
@@ -33219,6 +33225,7 @@ Visualisez et gerez toutes vos categories de depenses et de revenus en un seul e
 - **La suppression est bloquee** si la categorie a des depenses, des revenus ou des budgets associes — vous devez d'abord reassigner ou supprimer ces enregistrements
 - **Les categories systeme** peuvent egalement etre supprimees si elles n'ont aucun enregistrement associe
 - **Sous-catégories** — lors de la création ou de la modification d'une catégorie de dépenses, choisissez une **Catégorie parente** pour la ranger sous une autre. Il n'y a que deux niveaux : une catégorie qui a déjà des sous-catégories ne peut pas devenir elle-même une sous-catégorie, et la catégorie parente doit être une catégorie de dépenses du même compte. Les sélecteurs de catégorie affichent les sous-catégories regroupées sous leur parente. Une catégorie ayant des sous-catégories ne peut pas être supprimée tant qu'elles n'ont pas été déplacées ou supprimées.
+- **Les catégories standard suivent la langue de l'application** — une catégorie créée par l'application (comme Courses ou Consigne) s'affiche dans la langue que vous utilisez actuellement : changer de langue modifie donc son nom à l'écran sans créer de doublon. Si vous renommez vous-même une catégorie standard, votre nom est conservé dans toutes les langues. Les catégories que vous avez créées affichent toujours exactement ce que vous avez saisi.
 
 > **Note :** La suppression d'une categorie est definitive et ne peut pas etre annulee.
 
@@ -38365,6 +38372,7 @@ iOS, Android, Web
 - **Выдаленне заблакавана**, калі з катэгорыяй звязаны расходы, даходы або бюджэты — спачатку трэба перапрызначыць або выдаліць гэтыя запісы
 - **Сістэмныя катэгорыі** таксама можна выдаліць, калі з імі не звязаны ніякія запісы
 - **Падкатэгорыі** — пры стварэнні ці рэдагаванні катэгорыі расходаў абярыце **Бацькоўскую катэгорыю**, каб змясціць яе ўнутр іншай. Узроўняў толькі два: катэгорыя, якая ўжо мае падкатэгорыі, сама не можа стаць падкатэгорыяй, а бацькоўская мусіць быць катэгорыяй расходаў таго ж рахунку. У выбары катэгорый падкатэгорыі згрупаваны пад бацькоўскай. Катэгорыю з падкатэгорыямі нельга выдаліць, пакуль іх не перамешчаны або не выдалены.
+- **Стандартныя катэгорыі ідуць за мовай праграмы** — катэгорыя, створаная праграмай (напрыклад, «Прадукты» або «Заклад»), паказваецца бягучай мовай, таму змена мовы мяняе яе назву на экране і не стварае дублікат. Калі вы самі перайменуеце стандартную катэгорыю, ваша назва застанецца ўсімі мовамі. Катэгорыі, створаныя вамі, заўсёды паказваюцца так, як вы іх назвалі.
 
 > **Заўвага:** Выдаленне катэгорыі з'яўляецца незваротным.
 
@@ -43484,6 +43492,7 @@ Bekijk en beheer al je uitgaven- en inkomstencategorieën op één plek.
 - **Verwijderen is geblokkeerd** als de categorie gerelateerde uitgaven, inkomsten of budgetten heeft — je moet die records eerst opnieuw toewijzen of verwijderen
 - **Systeemcategorieën** kunnen ook worden verwijderd als ze geen gerelateerde records hebben
 - **Subcategorieën** — kies bij het maken of bewerken van een uitgavencategorie een **Hoofdcategorie** om deze onder een andere te plaatsen. Er zijn maar twee niveaus: een categorie die al subcategorieën heeft, kan zelf geen subcategorie worden, en de hoofdcategorie moet een uitgavencategorie van hetzelfde account zijn. Categoriekiezers tonen subcategorieën gegroepeerd onder hun hoofdcategorie. Een categorie met subcategorieën kan pas worden verwijderd als die zijn verplaatst of verwijderd.
+- **Standaardcategorieën volgen de taal van de app** — een categorie die de app voor je heeft gemaakt (zoals Boodschappen of Statiegeld) wordt getoond in de taal die je nu gebruikt, dus een taalwissel verandert de naam op het scherm zonder een duplicaat te maken. Geef je zelf een standaardcategorie een andere naam, dan blijft jouw naam in elke taal behouden. Categorieën die je zelf hebt gemaakt tonen altijd precies wat je hebt getypt.
 
 > **Opmerking:** Het verwijderen van een categorie is permanent en kan niet ongedaan worden gemaakt.
 

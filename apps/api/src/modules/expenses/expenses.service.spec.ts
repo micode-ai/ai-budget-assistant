@@ -835,6 +835,7 @@ function makeSplitDefenceService(opts: {
     // by a test is unresolvable unless the test overrides these.
     category: {
       findUnique: jest.fn().mockResolvedValue(null),
+      findMany: jest.fn().mockResolvedValue([]),
       findFirst: jest.fn().mockResolvedValue(null),
       create: jest.fn().mockResolvedValue({ id: 'c-created' }),
     },

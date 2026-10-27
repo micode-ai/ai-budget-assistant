@@ -157,6 +157,7 @@ Visualisez et gerez toutes vos categories de depenses et de revenus en un seul e
 - **La suppression est bloquee** si la categorie a des depenses, des revenus ou des budgets associes — vous devez d'abord reassigner ou supprimer ces enregistrements
 - **Les categories systeme** peuvent egalement etre supprimees si elles n'ont aucun enregistrement associe
 - **Sous-catégories** — lors de la création ou de la modification d'une catégorie de dépenses, choisissez une **Catégorie parente** pour la ranger sous une autre. Il n'y a que deux niveaux : une catégorie qui a déjà des sous-catégories ne peut pas devenir elle-même une sous-catégorie, et la catégorie parente doit être une catégorie de dépenses du même compte. Les sélecteurs de catégorie affichent les sous-catégories regroupées sous leur parente. Une catégorie ayant des sous-catégories ne peut pas être supprimée tant qu'elles n'ont pas été déplacées ou supprimées.
+- **Les catégories standard suivent la langue de l'application** — une catégorie créée par l'application (comme Courses ou Consigne) s'affiche dans la langue que vous utilisez actuellement : changer de langue modifie donc son nom à l'écran sans créer de doublon. Si vous renommez vous-même une catégorie standard, votre nom est conservé dans toutes les langues. Les catégories que vous avez créées affichent toujours exactement ce que vous avez saisi.
 
 > **Note :** La suppression d'une categorie est definitive et ne peut pas etre annulee.
 

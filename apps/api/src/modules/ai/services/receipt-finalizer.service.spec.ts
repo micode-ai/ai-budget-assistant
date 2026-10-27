@@ -304,7 +304,7 @@ describe('finalizeReceipt category splits', () => {
     prisma.category.findMany.mockResolvedValue(cats);
     await runFixture();
     expect(prisma.category.findMany).toHaveBeenCalledWith(
-      expect.objectContaining({ select: { id: true, name: true, parentId: true } }),
+      expect.objectContaining({ select: { id: true, name: true, parentId: true, systemKey: true, nameCustomized: true } }),
     );
     expect(categorySplitterMock.classify).toHaveBeenCalledWith(expect.objectContaining({ categories: cats }));
   });
@@ -616,6 +616,21 @@ describe('finalizeReceipt category splits', () => {
       expect(splits.find((s: any) => s.categoryName === 'Kaucja').categoryId).toBe('c-dep');
     });
 
+    it('treats a keyed deposit row with any name as the deposit group', async () => {
+      prisma.accountMember.findFirst.mockResolvedValue({ user: { language: 'pl' } });
+      prisma.category.findMany.mockResolvedValue([
+        { id: 'c-food', name: 'Groceries', systemKey: 'groceries' },
+        { id: 'c-dep', name: 'Zwrotne butelki', systemKey: 'deposit', nameCustomized: true },
+        { id: 'c-dep-old', name: 'Kaucja', systemKey: null },
+      ]);
+
+      const { splits } = await (service as any).runCategorySplit('a1', RECEIPT_WITH_DEPOSIT, 'u1');
+
+      const deposit = splits.find((s: any) => s.categoryId === 'c-dep');
+      expect(deposit).toBeDefined();
+      expect(deposit.categoryName).toBe('Zwrotne butelki');
+    });
+
     it('reuses an existing deposit category named in another language after the owner switched language', async () => {
       // The owner now reads English, but the account's deposit category was
       // created while they read Polish. Switching the UI language must not
@@ -704,7 +719,7 @@ describe('finalizeReceipt category splits', () => {
 });
 
 describe('ReceiptFinalizerService overall category', () => {
-  const makeService = (split: { splits: unknown[]; itemCategories: unknown[] }, rules = new Map<string, string>()) => {
+  const makeService = (split: { splits: unknown[]; itemCategories: unknown[]; depositCategoryIds?: Set<string> }, rules = new Map<string, string>()) => {
     const service = Object.create(ReceiptFinalizerService.prototype) as any;
     service.logger = { warn: jest.fn(), log: jest.fn(), error: jest.fn() };
     service.merchantRules = { getRulesMap: jest.fn().mockResolvedValue(rules) };
@@ -760,5 +775,27 @@ describe('ReceiptFinalizerService overall category', () => {
     );
     const result = await service.finalizeReceipt({}, [], 'acc-1', 'user-1');
     expect(result.categoryId).toBe('c-rule');
+  });
+
+  it('never lets a renamed keyed deposit group win the overall category, even as the largest group', async () => {
+    const service = makeService({
+      splits: [
+        { categoryId: 'c-dep', categoryName: 'Zwrotne butelki', amount: 60, percentage: 80, itemIndexes: [] },
+        { categoryId: 'c-hyg', categoryName: 'Higiena osobista', amount: 15, percentage: 20, itemIndexes: [2] },
+      ],
+      itemCategories: [],
+      depositCategoryIds: new Set(['c-dep']),
+    });
+    // The model's own pick is the deposit row too.
+    service.buildReceiptExpense = jest.fn().mockResolvedValue({
+      merchant: 'Biedronka',
+      categoryId: 'c-dep',
+      categorySuggestion: 'Zwrotne butelki',
+      receiptItems: [{ description: 'Chusteczki', totalPrice: 15 }],
+      categorySplits: [],
+    });
+    const result = await service.finalizeReceipt({}, [], 'acc-1', 'user-1');
+    expect(result.categoryId).not.toBe('c-dep');
+    expect(result.categoryId).toBe('c-hyg');
   });
 });

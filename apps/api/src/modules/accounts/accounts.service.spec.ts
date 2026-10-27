@@ -130,6 +130,15 @@ describe('AccountsService', () => {
       expect(data.filter((c) => c.type === 'income')).toHaveLength(2);
     });
 
+    it('seeds every row with its catalog key', async () => {
+      mockPrisma.user.findUnique.mockResolvedValue({ language: 'pl' });
+      await service.create(userId, { name: 'Family', type: 'shared' } as CreateAccountDto);
+      const data: Array<{ name: string; type: string; systemKey: string | null }> =
+        mockPrisma.category.createMany.mock.calls[0][0].data;
+      expect(data.find((c) => c.name === 'Zakupy spożywcze')?.systemKey).toBe('groceries');
+      expect(data.every((c) => c.systemKey)).toBe(true);
+    });
+
     it('does NOT seed categories for an investment account', async () => {
       await service.create(userId, { name: 'Portfolio', type: 'investment' } as CreateAccountDto);
 

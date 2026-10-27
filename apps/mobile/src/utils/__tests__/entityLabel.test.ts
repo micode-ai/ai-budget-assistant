@@ -67,3 +67,16 @@ describe('tagLabel', () => {
     expect(tagLabel({ name: '   ' })).toBe('common.unknownTag');
   });
 });
+
+describe('categoryLabel — the category display rule', () => {
+  // The mocked i18n has no language, which reads as English.
+  it('shows a keyed, not-renamed category under its catalog name', () => {
+    expect(categoryLabel({ name: 'Zakupy spożywcze', type: 'expense', systemKey: 'groceries' })).toBe('Groceries');
+  });
+
+  it('keeps a renamed keyed category under its own name', () => {
+    expect(
+      categoryLabel({ name: 'Biedronka', type: 'expense', systemKey: 'groceries', nameCustomized: true }),
+    ).toBe('Biedronka');
+  });
+});

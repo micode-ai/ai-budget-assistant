@@ -157,6 +157,7 @@ Przegladaj wszystkie swoje kategorie wydatkow i przychodow oraz zarzadzaj nimi w
 - **Usuwanie jest zablokowane**, jezeli kategoria ma powiazane wydatki, przychody lub budzety — najpierw musisz je przepisac lub usunac
 - **Kategorie systemowe** rowniez mozna usunac, jezeli nie maja powiazanych rekordow
 - **Podkategorie** — podczas tworzenia lub edycji kategorii wydatków wybierz **Kategorię nadrzędną**, aby umieścić ją pod inną. Są tylko dwa poziomy: kategoria, która ma już podkategorie, nie może sama stać się podkategorią, a kategoria nadrzędna musi być kategorią wydatków tego samego konta. Listy wyboru kategorii pokazują podkategorie pod ich kategorią nadrzędną. Kategorii z podkategoriami nie można usunąć, dopóki nie zostaną przeniesione lub usunięte.
+- **Standardowe kategorie podążają za językiem aplikacji** — kategoria utworzona przez aplikację (np. Zakupy spożywcze lub Kaucja) jest pokazywana w aktualnie używanym języku, więc zmiana języka zmienia jej nazwę na ekranie bez tworzenia duplikatu. Jeśli sam zmienisz nazwę standardowej kategorii, Twoja nazwa zostanie we wszystkich językach. Kategorie utworzone przez Ciebie zawsze pokazują dokładnie to, co wpisałeś.
 
 > **Uwaga:** Usuniecie kategorii jest trwale i nie mozna go cofnac.
 

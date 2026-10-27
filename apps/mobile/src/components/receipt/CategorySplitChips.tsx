@@ -6,6 +6,7 @@ import type { ReceiptCategorySplit } from '@budget/shared-utils';
 import type { Currency } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { isProposedKey } from '@/features/receipt/proposedCategory';
+import { storedCategoryLabel } from '@/features/categories/storedCategoryLabel';
 
 interface Props {
   splits: ReceiptCategorySplit[];
@@ -59,7 +60,7 @@ export default function CategorySplitChips({ splits, currencyCode, hasItems, onP
             return (
               <View key={split.categoryId} style={[styles.chip, proposed && styles.chipProposed]}>
                 <Text style={styles.chipText} numberOfLines={1}>
-                  {proposed ? '+ ' : ''}{split.categoryName} {formatCurrency(split.amount, currencyCode as Currency)}
+                  {proposed ? `+ ${split.categoryName}` : storedCategoryLabel(split.categoryId, split.categoryName)} {formatCurrency(split.amount, currencyCode as Currency)}
                 </Text>
               </View>
             );

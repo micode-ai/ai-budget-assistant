@@ -1,4 +1,5 @@
-import { getDefaultCategories, defaultCategorySlot } from './default-categories';
+import { getDefaultCategories } from './default-categories';
+import { catalogKeyForName } from '../../common/utils/category-catalog';
 
 /**
  * The nine default lists are index-aligned: the same concept sits at the same
@@ -11,7 +12,10 @@ describe('default categories slot alignment', () => {
 
   it.each(locales)('every %s name resolves to its own index', (locale) => {
     getDefaultCategories(locale).forEach((c, i) => {
-      expect(defaultCategorySlot(c.name)).toBe(i);
+      const type = c.type ?? 'expense';
+      expect(catalogKeyForName(c.name, type)).toBe(
+        catalogKeyForName(getDefaultCategories('en')[i].name, type),
+      );
     });
   });
 

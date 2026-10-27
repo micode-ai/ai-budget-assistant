@@ -12,6 +12,8 @@ interface CategoryRow {
   type: string;
   is_system: number;
   parent_id: string | null;
+  system_key?: string | null;
+  name_customized?: number | null;
   created_at: number;
   updated_at: number;
   is_deleted: number;
@@ -30,6 +32,8 @@ function rowToCategory(row: CategoryRow): Category {
     type: row.type as 'expense' | 'income',
     isSystem: row.is_system === 1,
     parentId: row.parent_id ?? undefined,
+    systemKey: row.system_key ?? null,
+    nameCustomized: row.name_customized === 1,
     createdAt: new Date(row.created_at),
     updatedAt: new Date(row.updated_at),
     isDeleted: row.is_deleted === 1,
@@ -49,6 +53,8 @@ function categoryToParams(category: Category): (string | number | null)[] {
     category.type,
     category.isSystem ? 1 : 0,
     category.parentId ?? null,
+    category.systemKey ?? null,
+    category.nameCustomized ? 1 : 0,
     category.createdAt.getTime(),
     category.updatedAt.getTime(),
     category.isDeleted ? 1 : 0,
@@ -60,18 +66,29 @@ export async function insertCategory(category: Category): Promise<void> {
   await executeSql(
     `INSERT INTO categories (
       id, client_id, user_id, account_id, name, icon, color, type, is_system, parent_id,
-      created_at, updated_at, is_deleted, sync_version
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      system_key, name_customized, created_at, updated_at, is_deleted, sync_version
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     categoryToParams(category),
   );
 }
 
+/**
+ * Insert or update a category row.
+ *
+ * `systemKey`/`nameCustomized` are only overwritten when the incoming object
+ * CARRIES `systemKey` (a string or an explicit `null`): several pull paths
+ * upsert a category embedded in an expense/income, and a caller that never
+ * heard of the field must not silently strip a key the row already has - an
+ * absent field never clears a key. An explicit `null` (the server cleared it,
+ * e.g. on a type change) does.
+ */
 export async function upsertCategory(category: Category): Promise<void> {
+  const keyed = category.systemKey !== undefined;
   await executeSql(
     `INSERT INTO categories (
       id, client_id, user_id, account_id, name, icon, color, type, is_system, parent_id,
-      created_at, updated_at, is_deleted, sync_version
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      system_key, name_customized, created_at, updated_at, is_deleted, sync_version
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(id) DO UPDATE SET
       client_id = excluded.client_id,
       user_id = excluded.user_id,
@@ -81,7 +98,13 @@ export async function upsertCategory(category: Category): Promise<void> {
       color = excluded.color,
       type = excluded.type,
       is_system = excluded.is_system,
-      parent_id = excluded.parent_id,
+      parent_id = excluded.parent_id,${
+        keyed
+          ? `
+      system_key = excluded.system_key,
+      name_customized = excluded.name_customized,`
+          : ''
+      }
       created_at = excluded.created_at,
       updated_at = excluded.updated_at,
       is_deleted = excluded.is_deleted,
@@ -139,6 +162,27 @@ export async function getCategoryByNameExcludingId(
 }
 
 /**
+ * Live local rows of this type, other than `excludeId`, that a pulled keyed
+ * server row may absorb: rows already carrying `systemKey`, plus this
+ * device's own seeds (`default-*`) that have no key yet. The second half is
+ * what lets the FIRST pull after an upgrade converge: it runs before
+ * `loadCategories` labels old seed rows, so they are still keyless then. The
+ * caller decides which candidates really stand for the key (by stored name).
+ */
+export async function getKeyConvergenceCandidates(
+  accountId: string,
+  systemKey: string,
+  type: 'expense' | 'income',
+  excludeId: string,
+): Promise<Category[]> {
+  const rows = await executeSql<CategoryRow>(
+    "SELECT * FROM categories WHERE account_id = ? AND type = ? AND id != ? AND is_deleted = 0 AND (system_key = ? OR (system_key IS NULL AND id LIKE 'default-%'))",
+    [accountId, type, excludeId, systemKey],
+  );
+  return rows.map(rowToCategory);
+}
+
+/**
  * Fold a stale duplicate category into the row the server owns.
  *
  * A category created before `clientId` support carries a device-generated id
@@ -150,7 +194,11 @@ export async function getCategoryByNameExcludingId(
  *
  * Deletes rather than renames: the surviving row has already been written by
  * the pull, so renaming the stale one onto its id would collide on the primary
- * key. Re-pointed transactions are marked `pending` because their stored
+ * key. A seed row (`default-*`) is SOFT-deleted instead: its id is the
+ * tombstone `loadCategories` checks (`categoryExistsById`) before seeding, and
+ * without it a later deletion of the server's row would bring the seed back.
+ * The tombstone is invisible - every list read filters `is_deleted = 0`, and
+ * categories have no push queue, so it never syncs. Re-pointed transactions are marked `pending` because their stored
  * category is, by definition, not what the server has — without that nothing
  * would ever push the correction and the rows would stay uncategorised on the
  * server forever.
@@ -174,7 +222,11 @@ export async function mergeCategoryInto(staleId: string, survivingId: string): P
     survivingId,
     staleId,
   ]);
-  await executeSql('DELETE FROM categories WHERE id = ?', [staleId]);
+  if (staleId.startsWith('default-')) {
+    await executeSql('UPDATE categories SET is_deleted = 1, updated_at = ? WHERE id = ?', [Date.now(), staleId]);
+  } else {
+    await executeSql('DELETE FROM categories WHERE id = ?', [staleId]);
+  }
 }
 
 export interface CategoryReferenceCounts {

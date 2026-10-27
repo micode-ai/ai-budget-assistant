@@ -8,6 +8,7 @@ import type { Target } from '@/features/categorize/categorizeReview';
 import { categoryStyle, tintOf } from '@/features/categorize/categoryStyle';
 import { CategoryIcon } from '@/components/CategoryIcon';
 import { useIsDesktopWeb } from '@/components/webLayout.constants';
+import { categoryLabel } from '@/utils/entityLabel';
 
 /** Above this many options the sheet gets a search field. */
 const SEARCH_THRESHOLD = 8;
@@ -73,7 +74,7 @@ export function CategoryTargetPicker({ visible, categories, drafts, onSelect, on
   const matches = (name: string) => !needle || name.toLocaleLowerCase().includes(needle);
   const visibleDrafts = draftEntries.filter(([, name]) => matches(name));
   const visibleCategories = useMemo(
-    () => categories.filter((c) => !needle || c.name.toLocaleLowerCase().includes(needle)),
+    () => categories.filter((c) => !needle || categoryLabel(c).toLocaleLowerCase().includes(needle)),
     [categories, needle],
   );
 
@@ -155,7 +156,7 @@ export function CategoryTargetPicker({ visible, categories, drafts, onSelect, on
                 accessibilityRole="button"
               >
                 {renderIcon(c.icon, c.color)}
-                <Text style={styles.rowText} numberOfLines={1}>{c.name}</Text>
+                <Text style={styles.rowText} numberOfLines={1}>{categoryLabel(c)}</Text>
               </Pressable>
             ))}
             <Pressable

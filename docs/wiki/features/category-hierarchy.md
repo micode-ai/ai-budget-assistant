@@ -1,7 +1,8 @@
 # Category hierarchy
 
 *Hub: [api](../api.md) · [mobile-app](../mobile-app.md) · related:
-[budgets](budgets.md), [receipt-category-split](receipt-category-split.md)*
+[budgets](budgets.md), [receipt-category-split](receipt-category-split.md),
+[category-system-keys](category-system-keys.md)*
 
 ## What this is
 
@@ -61,6 +62,10 @@ every category's own name, so a line may land on a child or a parent. A proposal
 existing category is rerouted to it. The classifier never creates a subcategory — only the user does.
 
 **The deposit category stays outside the tree** — never a parent, never a child.
+
+**Equivalence now goes by key first.** A standard category is identified by its language-independent
+system key, with the name-slot comparison kept for keyless rows — see
+[category-system-keys](category-system-keys.md).
 
 ## Invariants
 

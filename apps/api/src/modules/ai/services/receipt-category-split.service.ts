@@ -7,11 +7,11 @@ import { resolveCheapModel } from './model-resolver';
 import { logCacheUsage } from '../utils/log-cache-usage';
 import { sanitizeForPrompt } from '../utils/sanitize';
 import { depositCategoryName, isDepositCategoryName } from '../../../common/utils/deposit-category';
-import { getDefaultCategories } from '../../accounts/default-categories';
+import { CATEGORY_CATALOG, catalogKeyForName, catalogName } from '../../../common/utils/category-catalog';
 import { sortCategoriesAsTree } from '../../../common/utils/category-tree';
 import { findEquivalentCategory } from '../../../common/utils/category-equivalence';
 
-type TreeCategory = { id: string; name: string; parentId?: string | null };
+type TreeCategory = { id: string; name: string; parentId?: string | null; systemKey?: string | null };
 
 export interface ClassifyLine {
   index: number;
@@ -170,7 +170,7 @@ export class ReceiptCategorySplitService {
     // then wrote those as rules, so the mistake would have repeated forever
     // without another model call. Excluded from BOTH halves below.
     const depositCategoryIds = new Set(
-      categories.filter((c) => isDepositCategoryName(c.name)).map((c) => c.id),
+      categories.filter((c) => c.systemKey === 'deposit' || isDepositCategoryName(c.name)).map((c) => c.id),
     );
     const assignable = categories.filter((c) => !depositCategoryIds.has(c.id));
     const validCategoryIds = new Set(assignable.map((c) => c.id));
@@ -235,12 +235,17 @@ export class ReceiptCategorySplitService {
     // owner's language: the names a new category should take instead of the
     // model inventing one. Income defaults and the deposit name are not
     // spending categories for a receipt line.
-    const existing = new Set(categories.map((c) => c.name.trim().toLowerCase()));
+    // Held by KEY, not name: a keyed row counts under whatever name it carries,
+    // a keyless row counts when its name maps to the key in any language.
+    const heldKeys = new Set<string>();
+    for (const c of categories) {
+      const key = c.systemKey ?? catalogKeyForName(c.name, 'expense');
+      if (key) heldKeys.add(key);
+    }
     const standardNames =
-      getDefaultCategories(language ?? 'en')
-        .filter((c) => c.type !== 'income' && !isDepositCategoryName(c.name))
-        .map((c) => c.name)
-        .filter((name) => !existing.has(name.trim().toLowerCase()))
+      CATEGORY_CATALOG.filter((e) => e.seeded && e.type === 'expense' && e.key !== 'deposit' && !heldKeys.has(e.key))
+        .map((e) => catalogName(e.key, 'expense', language ?? 'en') as string)
+        .filter((name) => !isDepositCategoryName(name))
         .join(', ') || '(none)';
 
     const prompt = `Assign each receipt line to exactly one category.

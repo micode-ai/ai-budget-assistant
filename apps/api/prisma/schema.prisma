@@ -518,6 +518,9 @@ model Category {
   /// Who set coicopDivision: 'seed' (icon map) | 'model' (classifier) | 'user' (PATCH). ABA-617
   coicopSource         String?  @map("coicop_source")
   type                 String   @default("expense")
+  /// Catalog key (see category-catalog.ts); server-owned. A partial unique index (raw SQL, not expressible here) keeps one live row per account+key+type.
+  systemKey            String?  @map("system_key")
+  nameCustomized       Boolean  @default(false) @map("name_customized")
   isSystem             Boolean  @default(false) @map("is_system")
   parentId             String?  @map("parent_id")
   embedding            Json?    @map("embedding")

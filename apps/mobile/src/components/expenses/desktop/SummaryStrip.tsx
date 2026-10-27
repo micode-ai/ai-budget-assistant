@@ -5,6 +5,7 @@ import { formatCurrency } from '@budget/shared-utils';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { summarise, type LedgerRow } from '@/features/expenses/desktopTable';
+import { categoryLabel } from '@/utils/entityLabel';
 
 interface Props {
   rows: LedgerRow[];
@@ -69,7 +70,7 @@ export function SummaryStrip({ rows, baseCurrency }: Props) {
     const category = categories.find((c) => c.id === categoryId);
     // Carries its own currency (rather than the caller re-reading `spendPick`)
     // so nothing downstream needs a non-null assertion to use it.
-    return { name: category?.name ?? t('common.uncategorized'), color: category?.color, amount, currency: spendPick.currency };
+    return { name: category ? categoryLabel(category) : t('common.uncategorized'), color: category?.color, amount, currency: spendPick.currency };
   }, [rows, spendPick, categories, t]);
 
   return (

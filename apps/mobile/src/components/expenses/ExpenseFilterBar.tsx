@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '@budget/shared-utils';
 import { useTheme } from '@/theme';
 import { UNCATEGORIZED_CATEGORY_FILTER } from '@/stores/expenseStore';
+import { categoryLabel } from '@/utils/entityLabel';
 
 type DateRange = 'week' | 'month' | 'year' | 'all' | 'custom';
 
@@ -177,7 +178,7 @@ export function ExpenseFilterBar({
             {isUncategorized
               ? t('expenses.categoryNone')
               : selectedCategory
-                ? selectedCategory.name
+                ? categoryLabel(selectedCategory)
                 : t('expenses.categoryAll')}
           </Text>
           <Ionicons
@@ -308,7 +309,7 @@ export function ExpenseFilterBar({
                         { color: isSelected ? accent : theme.colors.textPrimary, flex: 1 },
                       ]}
                     >
-                      {cat.name}
+                      {categoryLabel(cat)}
                     </Text>
                     {isSelected && <Ionicons name="checkmark" size={18} color={accent} />}
                   </TouchableOpacity>

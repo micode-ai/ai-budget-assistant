@@ -15,6 +15,7 @@ import { BulkActionBar } from '@/components/BulkActionBar';
 import { SettingsScreenScroll } from '../SettingsScreenScroll';
 import { useSettingsPane } from '../SettingsPaneContext';
 import type { MerchantCategoryRule, MerchantRuleReapplyPreview } from '@budget/shared-types';
+import { storedCategoryLabel } from '@/features/categories/storedCategoryLabel';
 
 /**
  * Stable accessible-name ids for the three sheets' titles, wired to the
@@ -435,7 +436,7 @@ export function MerchantsSettings() {
                   </View>
                   <View style={styles.nameContainer}>
                     <Text style={styles.name} numberOfLines={1}>{rule.merchantNormalized}</Text>
-                    <Text style={styles.sub}>{rule.categoryName}</Text>
+                    <Text style={styles.sub}>{storedCategoryLabel(rule.categoryId, rule.categoryName)}</Text>
                   </View>
                   {canEdit && (
                     <TouchableOpacity
@@ -582,7 +583,7 @@ export function MerchantsSettings() {
                   />
                   <View style={styles.nameContainer}>
                     <Text style={styles.name} numberOfLines={1}>
-                      {t('merchants.reapplyGroupLabel', { count: g.count, category: g.categoryName })}
+                      {t('merchants.reapplyGroupLabel', { count: g.count, category: storedCategoryLabel(g.categoryId, g.categoryName) })}
                     </Text>
                   </View>
                 </TouchableOpacity>

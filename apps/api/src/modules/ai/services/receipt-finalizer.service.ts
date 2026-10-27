@@ -261,8 +261,12 @@ export class ReceiptFinalizerService {
     accountId: string,
     receipt: ReceiptExpense,
     userId: string,
-  ): Promise<{ splits: ReceiptCategorySplitPayload[]; itemCategories: ReceiptItemCategory[] }> {
-    const nothing = { splits: [], itemCategories: [] };
+  ): Promise<{
+    splits: ReceiptCategorySplitPayload[];
+    itemCategories: ReceiptItemCategory[];
+    depositCategoryIds: Set<string>;
+  }> {
+    const nothing = { splits: [], itemCategories: [], depositCategoryIds: new Set<string>() };
     try {
       // Tier 2 (full E2EE): line items are encrypted at rest, so the server
       // cannot read them to classify. Same lookup as receipt-split/wrapped.
@@ -303,7 +307,7 @@ export class ReceiptFinalizerService {
 
       const categories = await this.prisma.category.findMany({
         where: { OR: [{ isSystem: true }, { accountId }], type: 'expense', isDeleted: false },
-        select: { id: true, name: true, parentId: true },
+        select: { id: true, name: true, parentId: true, systemKey: true, nameCustomized: true },
       });
       if (categories.length === 0) {
         this.logger.log(`[CategorySplit] ${accountId}: skipped no_categories`);
@@ -395,12 +399,20 @@ export class ReceiptFinalizerService {
       // exact-name lookup minted a new deposit category on every switch (one
       // production account held three, one per language). The owner-language
       // name only breaks a tie, and only names a category that does not exist.
+      // Every row that IS the deposit (by key or any-language name), so the
+      // overall-category reconcile can veto it however it was renamed.
+      const depositCategoryIds = new Set(
+        categories.filter((c) => c.systemKey === 'deposit' || isDepositCategoryName(c.name)).map((c) => c.id),
+      );
       let depositGroup: { categoryId: string; categoryName: string } | null = null;
       if (hasDeposit) {
         const depositName = depositCategoryName(await this.resolveOwnerLanguage(accountId));
+        // The key comes first (a renamed deposit row is still the deposit);
+        // the any-language name match (ABA-697) stays for keyless rows.
+        const keyed = categories.find((c) => c.systemKey === 'deposit');
         const deposits = categories.filter((c) => isDepositCategoryName(c.name));
         const existingDeposit =
-          deposits.find((c) => c.name.trim().toLowerCase() === depositName.toLowerCase()) ?? deposits[0];
+          keyed ?? deposits.find((c) => c.name.trim().toLowerCase() === depositName.toLowerCase()) ?? deposits[0];
         depositGroup = existingDeposit
           ? { categoryId: existingDeposit.id, categoryName: existingDeposit.name }
           : { categoryId: proposedKey(depositName), categoryName: depositName };
@@ -439,12 +451,13 @@ export class ReceiptFinalizerService {
         // No split, but the lines keep their categories: the user sees what each
         // line is, the rules still learn from it on save, and assigning a line
         // by hand from there can produce a split the arithmetic would not.
-        return { splits: [], itemCategories };
+        return { splits: [], itemCategories, depositCategoryIds };
       }
 
       this.logger.log(`[CategorySplit] ${accountId}: ok groups=${splits.length} proposed=${materialProposals.length}: ${decided}`);
       return {
         itemCategories,
+        depositCategoryIds,
         splits: splits.map((split) => ({
           ...split,
           categoryId: isProposedKey(split.categoryId) ? null : split.categoryId,
@@ -477,7 +490,11 @@ export class ReceiptFinalizerService {
     const receipt = await this.buildReceiptExpense(parsed, categories, merchantRulesMap);
     receipt.priceFindings = await this.runPriceCheck(accountId, userId, receipt, options);
 
-    const { splits, itemCategories } = await this.runCategorySplit(accountId, receipt, userId);
+    const { splits, itemCategories, depositCategoryIds = new Set<string>() } = await this.runCategorySplit(
+      accountId,
+      receipt,
+      userId,
+    );
     receipt.categorySplits = splits;
     for (const line of itemCategories) {
       const item = receipt.receiptItems[line.index];
@@ -504,11 +521,14 @@ export class ReceiptFinalizerService {
             }, new Map<string, { categoryId: string | null; categoryName: string; amount: number }>())
             .values(),
         )
-    ).filter((g) => !isDepositCategoryName(g.categoryName));
+    ).filter((g) => !isDepositCategoryName(g.categoryName) && !(g.categoryId && depositCategoryIds.has(g.categoryId)));
     const merchantKey = receipt.merchant?.trim().toLowerCase();
     const overall = reconcileReceiptCategory({
       ruleCategoryId: merchantKey ? merchantRulesMap.get(merchantKey) : undefined,
-      model: { categoryId: receipt.categoryId, name: receipt.categorySuggestion },
+      model: {
+        categoryId: receipt.categoryId && depositCategoryIds.has(receipt.categoryId) ? undefined : receipt.categoryId,
+        name: receipt.categorySuggestion,
+      },
       groups,
     });
     receipt.categoryId = overall.categoryId;

@@ -7,6 +7,7 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { countsForFacet, type ActiveFacets, type LedgerRow } from '@/features/expenses/desktopTable';
 import type { ActiveTab } from '@/features/expenses/useExpensesScreenData';
+import { categoryLabel } from '@/utils/entityLabel';
 
 /**
  * The facet rail (design spec decision 3): the mobile pill row's desktop
@@ -116,7 +117,7 @@ export function FacetRail({
   kind,
   onKindChange,
 }: FacetRailProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const categories = useCategoryStore((s) => s.categories);
@@ -129,9 +130,10 @@ export function FacetRail({
   // *some* label, handled by the `?? uncategorized` fallback below.
   const categoryById = useMemo(() => {
     const map = new Map<string, { name: string; color?: string }>();
-    for (const c of categories) map.set(c.id, { name: c.name, color: c.color });
+    for (const c of categories) map.set(c.id, { name: categoryLabel(c), color: c.color });
     return map;
-  }, [categories]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- the label follows the UI language
+  }, [categories, i18n.language]);
 
   const categoryCounts = useMemo(() => countsForFacet(rows, active, 'categoryId'), [rows, active]);
   const merchantCounts = useMemo(() => countsForFacet(rows, active, 'merchant'), [rows, active]);

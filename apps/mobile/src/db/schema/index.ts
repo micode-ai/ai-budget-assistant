@@ -109,6 +109,8 @@ export const categories = sqliteTable('categories', {
   type: text('type').notNull().default('expense'),
   isSystem: integer('is_system', { mode: 'boolean' }).default(false),
   parentId: text('parent_id'),
+  systemKey: text('system_key'),
+  nameCustomized: integer('name_customized', { mode: 'boolean' }).default(false),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
   isDeleted: integer('is_deleted', { mode: 'boolean' }).default(false),

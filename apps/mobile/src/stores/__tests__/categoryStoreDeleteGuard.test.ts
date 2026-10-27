@@ -209,3 +209,31 @@ describe('categoryStore.deleteCategory — a 404 is not proof the server lacks t
     expect(mockDeleteFromDb).not.toHaveBeenCalled();
   });
 });
+
+describe('categoryStore.deleteCategory — system keys', () => {
+  const seed = { id: 'default-exp-groceries', name: 'Groceries', type: 'expense' as const, systemKey: 'groceries' };
+  const serverKeyed = { id: 'server-g', name: 'Zakupy spożywcze', type: 'expense', systemKey: 'groceries', isDeleted: false };
+
+  // A seed that did not converge yet shows the same translated name as the
+  // account's real standard category. Deleting the seed must not delete that.
+  it("never takes the server's keyed category down with a device seed", async () => {
+    useCategoryStore.setState({ categories: [seed as any] });
+    (api.deleteCategory as jest.Mock).mockRejectedValueOnce(notFound());
+    (api.getCategories as jest.Mock).mockResolvedValue([serverKeyed]);
+
+    await useCategoryStore.getState().deleteCategory('default-exp-groceries');
+
+    expect(api.deleteCategory).toHaveBeenCalledTimes(1);
+    expect(mockDeleteFromDb).toHaveBeenCalledWith('default-exp-groceries');
+  });
+
+  it('still finds the server twin by key for a non-seed row', async () => {
+    useCategoryStore.setState({ categories: [{ ...seed, id: 'local-uuid', name: 'Groceries' } as any] });
+    (api.deleteCategory as jest.Mock).mockRejectedValueOnce(notFound()).mockResolvedValueOnce(undefined);
+    (api.getCategories as jest.Mock).mockResolvedValue([serverKeyed]);
+
+    await useCategoryStore.getState().deleteCategory('local-uuid');
+
+    expect(api.deleteCategory).toHaveBeenNthCalledWith(2, 'server-g');
+  });
+});

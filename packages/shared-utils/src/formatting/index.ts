@@ -278,6 +278,16 @@ export {
   type AllocationRollUp,
 } from './category-tree';
 
+// Keyed category catalog (mirror of the API util)
+export {
+  CATEGORY_CATALOG,
+  catalogKeyForName,
+  catalogName,
+  catalogEntry,
+  type CatalogEntry,
+  type CatalogLocale,
+} from './category-catalog';
+
 // ---------------------------------------------------------------------------
 // Safe-to-spend cashflow formula (single source of truth for API + mobile
 // offline fallback — must stay pure / no I/O).

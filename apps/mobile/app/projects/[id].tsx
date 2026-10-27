@@ -21,6 +21,7 @@ import { useCategoryStore } from '@/stores/categoryStore';
 import { useAccountStore } from '@/stores/accountStore';
 import type { Project } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
+import { categoryLabel } from '@/utils/entityLabel';
 
 const PROJECT_COLORS = [
   '#6366F1', '#EF4444', '#F59E0B', '#10B981', '#3B82F6',
@@ -181,7 +182,7 @@ export default function ProjectDetailScreen() {
                         <View style={[styles.catDot, { backgroundColor: cat?.color || theme.colors.textTertiary }]} />
                         <View style={styles.expenseInfo}>
                           <Text style={styles.expenseName} numberOfLines={1}>
-                            {expense.merchant || expense.description || cat?.name || '—'}
+                            {expense.merchant || expense.description || (cat ? categoryLabel(cat) : '—')}
                           </Text>
                           <Text style={styles.expenseDate}>
                             {new Date(expense.date).toLocaleDateString()}

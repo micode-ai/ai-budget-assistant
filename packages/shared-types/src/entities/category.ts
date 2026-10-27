@@ -11,6 +11,9 @@ export interface Category {
   color?: string;
   type: CategoryType;
   isSystem: boolean;
+  /** Catalog key; server-owned, absent on custom categories. */
+  systemKey?: string | null;
+  nameCustomized?: boolean;
   parentId?: string;
   createdAt: Date;
   updatedAt: Date;

@@ -1,12 +1,51 @@
 import { Logger } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
-import { findEquivalentCategory } from '../../common/utils/category-equivalence';
+import {
+  createOrReuseKeyed,
+  matchExistingCategory,
+  matchKeyedCategory,
+  normalizeCategoryName,
+} from '../../common/utils/category-key.util';
+import { catalogName, catalogNameIndex } from '../../common/utils/category-catalog';
 
 const logger = new Logger('CategoryResolver');
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export type CategoryKind = 'expense' | 'income';
+
+// The app builds `default-exp-<slug>` / `default-inc-<slug>` ids from its
+// English seed names as name.toLowerCase().replace(/[^a-z0-9]/g, '-'). Index
+// every catalog name (and alias) by that slug; a slug two keys share is dropped.
+let keyBySlug: Map<string, string | null> | null = null;
+// Every normalized catalog name (and alias) that produces a slug - the names a
+// `default-*` id may have been built from.
+let namesBySlug: Map<string, Set<string>> | null = null;
+function buildSlugIndex(): void {
+  keyBySlug = new Map();
+  namesBySlug = new Map();
+  for (const [typed, key] of catalogNameIndex()) {
+    const sep = typed.indexOf(':');
+    const type = typed.slice(0, sep);
+    const name = typed.slice(sep + 1);
+    const s = name.toLowerCase().replace(/[^a-z0-9]/g, '-');
+    if (!/[a-z0-9]/.test(s)) continue;
+    const id = `${type}:${s}`;
+    const prev = keyBySlug.get(id);
+    keyBySlug.set(id, prev === undefined || prev === key ? key : null);
+    const names = namesBySlug.get(id) ?? new Set<string>();
+    names.add(name);
+    namesBySlug.set(id, names);
+  }
+}
+function catalogKeyForSlug(slug: string, kind: CategoryKind): string | null {
+  if (!keyBySlug) buildSlugIndex();
+  return keyBySlug!.get(`${kind}:${slug.toLowerCase()}`) ?? null;
+}
+function catalogNamesForSlug(slug: string, kind: CategoryKind): ReadonlySet<string> {
+  if (!namesBySlug) buildSlugIndex();
+  return namesBySlug!.get(`${kind}:${slug.toLowerCase()}`) ?? new Set();
+}
 
 /**
  * Resolve a client-supplied category reference to one of THIS account's
@@ -77,6 +116,18 @@ export async function resolveExpenseCategoryId(
   // A deleted row is still matched as a last resort rather than excluded:
   // `@@unique([accountId, name, type])` would make the auto-create below
   // collide with it.
+  // LIVE rows first: an exact (normalized) live name, then the key rule, so a
+  // translated name reuses the keyed row before any soft-deleted exact-name
+  // row can win. The exact name beats the key: where the backfill left a
+  // keyless duplicate ("Groceries" beside keyed "Zakupy spożywcze"), a
+  // reference that always resolved to "Groceries" must keep doing so - key
+  // work never moves an expense between categories.
+  if (!categoryId.startsWith('default-')) {
+    const liveRows = await prisma.category.findMany({ where: { accountId, type: kind, isDeleted: false } });
+    const liveMatch = matchExistingCategory(categoryId, kind as 'expense' | 'income', liveRows ?? []);
+    if (liveMatch) return liveMatch.id;
+  }
+
   const category = await prisma.category.findFirst({
     where: { accountId, type: kind, name: { equals: categoryId, mode: 'insensitive' } },
     orderBy: { isDeleted: 'asc' },
@@ -86,6 +137,23 @@ export async function resolveExpenseCategoryId(
   // Handle mobile default IDs (e.g. "default-exp-bills---utilities" → search "bills", "utilities")
   const defaultMatch = categoryId.match(/^default-(?:exp|inc)-(.+)$/);
   if (defaultMatch) {
+    // Through the catalog: slug -> key. First a live row named exactly as the
+    // seed this id was built from (or one of its aliases) - the row the id
+    // resolved to before keys, which must not change when a keyed duplicate
+    // exists. Only then this account's row with that key (or a keyless row
+    // whose name maps to it), whatever language it is in.
+    const key = catalogKeyForSlug(defaultMatch[1], kind);
+    if (key) {
+      const liveRows = await prisma.category.findMany({ where: { accountId, type: kind, isDeleted: false } });
+      const rows = liveRows ?? [];
+      const seedNames = catalogNamesForSlug(defaultMatch[1], kind);
+      const byName = rows.find((c) => seedNames.has(normalizeCategoryName(c.name)));
+      if (byName) return byName.id;
+      const byKey =
+        rows.find((c) => c.systemKey === key) ??
+        matchKeyedCategory(catalogName(key, kind, 'en') as string, kind, rows.filter((c) => !c.systemKey));
+      if (byKey) return byKey.id;
+    }
     const words = defaultMatch[1].split(/-+/).filter((w) => w.length > 0);
     if (words.length > 0) {
       const matched = await prisma.category.findFirst({
@@ -103,17 +171,9 @@ export async function resolveExpenseCategoryId(
   // Auto-create category if it looks like a real name (not a default ID).
   if (!categoryId.startsWith('default-')) {
     // Same meaning under another name or language (Zakupy spożywcze vs
-    // Groceries) must reuse the account's category, not add a second one.
-    const live = await prisma.category.findMany({
-      where: { accountId, type: kind, isDeleted: false },
-      select: { id: true, name: true },
-    });
-    const equivalent = findEquivalentCategory(categoryId, live);
-    if (equivalent) return equivalent.id;
-
-    const created = await prisma.category.create({
-      data: { accountId, name: categoryId, type: kind },
-    });
+    // Groceries) reuses the account's category; a new catalog name is created
+    // carrying its key (createOrReuseKeyed owns both and the P2002 race).
+    const created = await createOrReuseKeyed(prisma, { accountId, name: categoryId, type: kind });
     return created.id;
   }
 

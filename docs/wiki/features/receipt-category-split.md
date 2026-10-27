@@ -1,6 +1,7 @@
 # Receipt category auto-split
 
-*Hub: [ai-features](../ai-features.md) · [api](../api.md) · related: [category-hierarchy](category-hierarchy.md)*
+*Hub: [ai-features](../ai-features.md) · [api](../api.md) · related: [category-hierarchy](category-hierarchy.md),
+[category-system-keys](category-system-keys.md)*
 
 ## What this is
 
@@ -73,7 +74,8 @@ regardless of who scanned.
 owner's current-language name alone — the owner-language name only breaks a tie between several and
 names a category that does not exist yet. The UI language can be switched at any time; the old
 exact-name lookup minted a new deposit category on every switch, and one production account ended
-up with three, one per language. Switching language must never create or orphan data.
+up with three, one per language. Switching language must never create or orphan data. The deposit category is now found by its system
+key first (any-language name only for keyless rows) — see [category-system-keys](category-system-keys.md).
 
 **Category proposals.** When no existing category fits, the model may return
 `newCategories: [{name, lines}]`. `validateProposals` holds them to the same never-trust-only-drop

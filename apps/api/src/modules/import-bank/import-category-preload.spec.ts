@@ -13,7 +13,9 @@ import { preloadCategories } from './import-bank-category.util';
  * transaction on the first unique-constraint violation, so creating categories
  * inside it would let one colliding name take down a whole import (ABA-313).
  */
-function makePrisma(opts: { existing?: Array<{ id: string; name: string; type: string }> } = {}) {
+function makePrisma(
+  opts: { existing?: Array<{ id: string; name: string; type: string; systemKey?: string | null }> } = {},
+) {
   const existing = opts.existing ?? [];
 
   const findFirst = jest.fn(async ({ where }: any) => {
@@ -31,7 +33,9 @@ function makePrisma(opts: { existing?: Array<{ id: string; name: string; type: s
   });
 
   const findMany = jest.fn(async ({ where }: any) =>
-    existing.filter((c) => c.type === where.type).map((c) => ({ id: c.id, name: c.name })),
+    existing
+      .filter((c) => c.type === where.type)
+      .map((c) => ({ id: c.id, name: c.name, systemKey: c.systemKey ?? null })),
   );
 
   const prisma: any = { category: { findFirst, findMany, create } };
@@ -51,7 +55,7 @@ describe('preloadCategories', () => {
     ]);
 
     expect(create).toHaveBeenCalledWith(
-      expect.objectContaining({ data: { accountId: 'acc-1', name: 'Jedzenie', type: 'expense' } }),
+      expect.objectContaining({ data: { accountId: 'acc-1', name: 'Jedzenie', type: 'expense', systemKey: null } }),
     );
     expect(cache.get('expense:jedzenie')).toBe('cat-1');
   });
@@ -65,6 +69,31 @@ describe('preloadCategories', () => {
 
     expect(create).not.toHaveBeenCalled();
     expect(cache.get('expense:jedzenie')).toBe('cat-food');
+  });
+
+  it('a row named like a keyless duplicate goes to that row, not to the keyed one', async () => {
+    const { prisma, create } = makePrisma({
+      existing: [
+        { id: 'keyed', name: 'Zakupy spożywcze', type: 'expense', systemKey: 'groceries' },
+        { id: 'keyless', name: 'Groceries', type: 'expense', systemKey: null },
+      ],
+    });
+
+    const cache = await preload(prisma, [{ kind: 'expense', suggestedCategoryName: 'Groceries' }]);
+
+    expect(create).not.toHaveBeenCalled();
+    expect(cache.get('expense:groceries')).toBe('keyless');
+  });
+
+  it('a translated name still reaches the keyed row when no row carries that name', async () => {
+    const { prisma, create } = makePrisma({
+      existing: [{ id: 'keyed', name: 'Zakupy spożywcze', type: 'expense', systemKey: 'groceries' }],
+    });
+
+    const cache = await preload(prisma, [{ kind: 'expense', suggestedCategoryName: 'Groceries' }]);
+
+    expect(create).not.toHaveBeenCalled();
+    expect(cache.get('expense:groceries')).toBe('keyed');
   });
 
   it('matches case-insensitively, so one export cannot mint Food and food', async () => {
@@ -90,6 +119,17 @@ describe('preloadCategories', () => {
 
     expect(create).not.toHaveBeenCalled();
     expect(cache.get('expense:zakupy spożywcze')).toBe('cat-groceries');
+  });
+
+  it('creates a keyed row for a new catalog name and reuses a keyed row for a translation', async () => {
+    const { prisma, create } = makePrisma();
+    await preload(prisma, [{ kind: 'expense', suggestedCategoryName: 'Zakupy spożywcze' }]);
+    expect(create.mock.calls[0][0].data.systemKey).toBe('groceries');
+
+    const second = makePrisma({ existing: [{ id: 'k', name: 'Groceries', type: 'expense' }] });
+    const cache = await preload(second.prisma, [{ kind: 'expense', suggestedCategoryName: 'Продукты' }]);
+    expect(second.create).not.toHaveBeenCalled();
+    expect(cache.get('expense:продукты')).toBe('k');
   });
 
   it('resolves a repeated name once, however many rows use it', async () => {

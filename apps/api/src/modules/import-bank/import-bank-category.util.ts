@@ -1,5 +1,5 @@
 import { PrismaService } from '../../database/prisma.service';
-import { findEquivalentCategory } from '../../common/utils/category-equivalence';
+import { createOrReuseKeyed, matchExistingCategory } from '../../common/utils/category-key.util';
 
 /**
  * Cache key for a resolved category. Includes the type: the same name can
@@ -64,6 +64,15 @@ export async function preloadCategories(
   if (wanted.size === 0) return;
 
   for (const [key, { name, type }] of wanted) {
+    // Live rows first (exact name, then key), so a deleted exact-name row
+    // cannot win, and a keyless "Groceries" the account still has beside a
+    // keyed "Zakupy spożywcze" keeps receiving rows named "Groceries".
+    const liveRows = await prisma.category.findMany({ where: { accountId, type, isDeleted: false } });
+    const liveMatch = matchExistingCategory(name, type, liveRows ?? []);
+    if (liveMatch) {
+      cache.set(key, liveMatch.id);
+      continue;
+    }
     const existing = await prisma.category.findFirst({
       where: { accountId, type, name: { equals: name, mode: 'insensitive' } },
       select: { id: true },
@@ -72,21 +81,9 @@ export async function preloadCategories(
       cache.set(key, existing.id);
       continue;
     }
-    const live = await prisma.category.findMany({
-      where: { accountId, type, isDeleted: false },
-      select: { id: true, name: true },
-    });
-    const equivalent = findEquivalentCategory(name, live);
-    if (equivalent) {
-      cache.set(key, equivalent.id);
-      continue;
-    }
     try {
-      const created = await prisma.category.create({
-        data: { accountId, name, type },
-        select: { id: true },
-      });
-      cache.set(key, created.id);
+      const category = await createOrReuseKeyed(prisma, { accountId, name, type });
+      cache.set(key, category.id);
     } catch {
       // Lost a race, or the name collides under a casing this query missed —
       // re-read rather than fail the import over a category.

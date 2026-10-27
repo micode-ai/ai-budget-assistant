@@ -19,7 +19,7 @@
  * Polish, instead of quietly becoming an ordinary assignable category again —
  * which is exactly the failure this guards (see `isDepositCategoryName`).
  */
-const DEPOSIT_CATEGORY_NAMES: Record<string, string> = {
+export const DEPOSIT_CATEGORY_NAMES: Record<string, string> = {
   en: 'Deposit',
   pl: 'Kaucja',
   de: 'Pfand',

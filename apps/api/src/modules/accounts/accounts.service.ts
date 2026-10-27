@@ -7,6 +7,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
+import { catalogKeyForName } from '../../common/utils/category-catalog';
 import { getDefaultCategories } from './default-categories';
 import { MailService } from '../mail/mail.service';
 import { NotificationsService } from '../notifications/notifications.service';
@@ -96,6 +97,9 @@ export class AccountsService {
         icon: cat.icon,
         color: cat.color,
         type: cat.type ?? 'expense',
+        // Seeded names come from the catalog, so the key is recoverable from
+        // the name; this keeps getDefaultCategories' output shape unchanged.
+        systemKey: catalogKeyForName(cat.name, cat.type ?? 'expense'),
       })),
     });
   }

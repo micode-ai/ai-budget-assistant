@@ -217,6 +217,8 @@ the section you came for — it states what must not break and why. A missing se
   projection, threshold pushes
 - [category-hierarchy](features/category-hierarchy.md) — the two-level category tree, budget roll-up,
   the equivalence check that stops automatic duplicates
+- [category-system-keys](features/category-system-keys.md) — language-independent keys for standard
+  categories, the display rule, server-owned keys and the backfill
 
 ### Pricing and revenue
 - [subscription-pricing](features/subscription-pricing.md) — where prices live, displayed vs

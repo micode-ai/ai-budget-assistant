@@ -79,7 +79,7 @@ describe('CategoriesService.create', () => {
     const result = await service.create('acc-1', 'user-1', dto);
 
     expect(prisma.category.create).toHaveBeenCalledWith({
-      data: { accountId: 'acc-1', userId: 'user-1', name: 'Entertainment', icon: 'movie', color: '#123', type: 'expense', parentId: null },
+      data: { accountId: 'acc-1', userId: 'user-1', name: 'Entertainment', icon: 'movie', color: '#123', type: 'expense', parentId: null, systemKey: 'entertainment' },
     });
     expect(embeddingService.embedAndStore).toHaveBeenCalledWith('category', 'new-cat-id', 'Entertainment');
     expect(result).toEqual(expect.objectContaining({ id: 'new-cat-id', name: 'Entertainment' }));
@@ -531,5 +531,110 @@ describe('CategoriesService parent validation (two-level hierarchy)', () => {
       service.create('acc-1', 'user-1', { name: 'Deposit', type: 'expense', parentId: 'p-1' }),
     ).rejects.toThrow('Invalid parent category');
     expect(prisma.category.update).not.toHaveBeenCalled();
+  });
+});
+
+describe('CategoriesService — system keys', () => {
+  it('create of a catalog name returns the account\'s keyed row in another language', async () => {
+    const keyed = { id: 'k1', name: 'Zakupy spożywcze', type: 'expense', systemKey: 'groceries', isDeleted: false };
+    const { service, prisma } = makeService();
+    prisma.category.findMany.mockResolvedValue([keyed]);
+
+    const result = await service.create('acc-1', 'user-1', { name: 'Groceries', type: 'expense' });
+
+    expect(result).toBe(keyed);
+    expect(prisma.category.create).not.toHaveBeenCalled();
+  });
+
+  it('create of a catalog name on an empty account stores the key', async () => {
+    const { service, prisma } = makeService();
+    await service.create('acc-1', 'user-1', { name: 'Zakupy spożywcze', type: 'expense' });
+    expect(prisma.category.create.mock.calls[0][0].data.systemKey).toBe('groceries');
+  });
+
+  it('create of a non-catalog name stores no key', async () => {
+    const { service, prisma } = makeService();
+    await service.create('acc-1', 'user-1', { name: 'Piwo', type: 'expense' });
+    expect(prisma.category.create.mock.calls[0][0].data.systemKey).toBeNull();
+  });
+
+  it('create ignores a client-sent systemKey', async () => {
+    const { service, prisma } = makeService();
+    await service.create('acc-1', 'user-1', { name: 'Piwo', type: 'expense', systemKey: 'alcohol', nameCustomized: true });
+    const data = prisma.category.create.mock.calls[0][0].data;
+    expect(data.systemKey).toBeNull();
+    expect(data.nameCustomized).toBeUndefined();
+  });
+
+  it('P2002 on the key index re-reads the winner', async () => {
+    const winner = { id: 'w', name: 'Groceries', type: 'expense', systemKey: 'groceries', isDeleted: false };
+    const { service, prisma } = makeService();
+    prisma.category.create.mockRejectedValue({ code: 'P2002' });
+    prisma.category.findMany.mockResolvedValueOnce([]).mockResolvedValueOnce([winner]);
+
+    await expect(service.create('acc-1', 'user-1', { name: 'Zakupy spożywcze', type: 'expense' })).resolves.toBe(winner);
+  });
+
+  it('rename of a keyed row sets nameCustomized without any new field', async () => {
+    const { service, prisma } = makeService({
+      findFirstResult: { id: 'k1', accountId: 'acc-1', name: 'Groceries', type: 'expense', systemKey: 'groceries' },
+    });
+    await service.update('acc-1', 'k1', { name: 'Food shop' });
+    expect(prisma.category.update.mock.calls[0][0].data).toEqual({ name: 'Food shop', nameCustomized: true });
+  });
+
+  it('a colour-only edit or a rename of a keyless row leaves nameCustomized alone', async () => {
+    const keyed = { id: 'k1', accountId: 'acc-1', name: 'Groceries', type: 'expense', systemKey: 'groceries' };
+    const a = makeService({ findFirstResult: keyed });
+    await a.service.update('acc-1', 'k1', { name: 'Groceries', color: '#fff' });
+    expect(a.prisma.category.update.mock.calls[0][0].data.nameCustomized).toBeUndefined();
+    const b = makeService({ findFirstResult: { ...keyed, systemKey: null } });
+    await b.service.update('acc-1', 'k1', { name: 'Other' });
+    expect(b.prisma.category.update.mock.calls[0][0].data.nameCustomized).toBeUndefined();
+  });
+
+  it('update with systemKey in the body leaves the key unchanged', async () => {
+    const { service, prisma } = makeService({
+      findFirstResult: { id: 'k1', accountId: 'acc-1', name: 'Groceries', type: 'expense', systemKey: 'groceries' },
+    });
+    await service.update('acc-1', 'k1', { color: '#000', systemKey: 'alcohol', nameCustomized: false });
+    const data = prisma.category.update.mock.calls[0][0].data;
+    expect(data).not.toHaveProperty('systemKey');
+    expect(data).not.toHaveProperty('nameCustomized');
+  });
+
+  it('create returns the live keyed row even when a soft-deleted keyed row has the exact name', async () => {
+    const deleted = { id: 'd', name: 'Groceries', type: 'expense', systemKey: 'groceries', isDeleted: true };
+    const live = { id: 'l', name: 'Zakupy spożywcze', type: 'expense', systemKey: 'groceries', isDeleted: false };
+    const { service, prisma } = makeService({ findFirstResult: deleted });
+    prisma.category.findMany.mockResolvedValue([live]);
+
+    await expect(service.create('acc-1', 'user-1', { name: 'Groceries', type: 'expense' })).resolves.toBe(live);
+    expect(prisma.category.update).not.toHaveBeenCalled();
+    expect(prisma.category.create).not.toHaveBeenCalled();
+  });
+
+  it('create prefers the live keyed row over a live keyless duplicate with the exact name', async () => {
+    const keyless = { id: 'a', name: 'Groceries', type: 'expense', systemKey: null, isDeleted: false };
+    const keyed = { id: 'b', name: 'Zakupy spożywcze', type: 'expense', systemKey: 'groceries', isDeleted: false };
+    const { service, prisma } = makeService({ findFirstResult: keyless });
+    prisma.category.findMany.mockResolvedValue([keyless, keyed]);
+    await expect(service.create('acc-1', 'user-1', { name: 'Groceries', type: 'expense' })).resolves.toBe(keyed);
+  });
+
+  it('reviving a deleted row that collides on the key returns the live winner instead of a 500', async () => {
+    const deleted = { id: 'd', name: 'Groceries', type: 'expense', systemKey: 'groceries', isDeleted: true };
+    const winner = { id: 'w', name: 'Zakupy spożywcze', type: 'expense', systemKey: 'groceries', isDeleted: false };
+    const { service, prisma } = makeService({ findFirstResult: deleted, updateError: { code: 'P2002' } });
+    prisma.category.findMany.mockResolvedValueOnce([]).mockResolvedValueOnce([winner]);
+    await expect(service.create('acc-1', 'user-1', { name: 'Groceries', type: 'expense' })).resolves.toBe(winner);
+  });
+
+  it('a type change on a keyed row clears the key and nameCustomized', async () => {
+    const { service, prisma } = makeService({
+      findFirstResult: { id: 'k1', accountId: 'acc-1', name: 'Gifts', type: 'expense', systemKey: 'gifts', nameCustomized: true },
+    });
+    await service.update('acc-1', 'k1', { type: 'income' });
+    expect(prisma.category.update.mock.calls[0][0].data).toMatchObject({ type: 'income', systemKey: null, nameCustomized: false });
   });
 });

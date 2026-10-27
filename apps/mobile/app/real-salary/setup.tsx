@@ -12,6 +12,7 @@ import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { api } from '@/services/api';
 import { showAlert } from '@/utils/alert';
 import { useAccountStore } from '@/stores/accountStore';
+import { storedCategoryLabel } from '@/features/categories/storedCategoryLabel';
 
 /** Same bound the API enforces (`manualPreviousMonthly` > 0 and <= 10,000,000). */
 const MAX_MANUAL_PREVIOUS = 10_000_000;
@@ -180,7 +181,7 @@ export default function RealSalarySetupScreen() {
                         />
                         <View style={styles.rowText}>
                           <Text style={styles.rowTitle} numberOfLines={1}>
-                            {c.categoryName ?? c.descriptionKey}
+                            {c.categoryName ? storedCategoryLabel(c.categoryId, c.categoryName) : c.descriptionKey}
                           </Text>
                           <Text style={styles.rowSubtitle}>
                             {formatCurrency(c.typicalAmount, c.currencyCode)} ·{' '}

@@ -1,17 +1,6 @@
 import type { TFunction } from 'i18next';
 import { categoryStyle, tintOf, NEUTRAL_CATEGORY_COLOR } from '../categoryStyle';
-import { DEFAULT_EXPENSE_CATEGORIES } from '@/stores/categoryStore';
-
-// jest.mock calls are hoisted above these imports.
-// categoryStore pulls in SQLite, the API client and the other stores; the
-// helper only needs its DEFAULT_EXPENSE_CATEGORIES constant.
-jest.mock('react-native', () => ({ Platform: { OS: 'web' } }));
-jest.mock('@/db/categoryRepository', () => ({}));
-jest.mock('@/db/syncMetadataRepository', () => ({}));
-jest.mock('@/services/api', () => ({ api: {} }));
-jest.mock('@/services/encryptionHelper', () => ({}));
-jest.mock('@/stores/accountStore', () => ({ useAccountStore: { getState: () => ({}) } }));
-jest.mock('@/stores/authStore', () => ({ useAuthStore: { getState: () => ({}) } }));
+import { CATEGORY_SEEDS } from '@/features/categories/categorySeeds';
 
 const polish: Record<string, string> = {
   'categories.expense.transport': 'Transport',
@@ -20,7 +9,7 @@ const polish: Record<string, string> = {
 };
 const t = ((key: string) => polish[key] ?? key) as unknown as TFunction;
 
-const def = (name: string) => DEFAULT_EXPENSE_CATEGORIES.find((c) => c.name === name)!;
+const def = (name: string) => CATEGORY_SEEDS.find((c) => c.type === 'expense' && c.name === name)!;
 
 describe('categoryStyle', () => {
   it('matches a default category by its English name', () => {
@@ -33,6 +22,16 @@ describe('categoryStyle', () => {
       icon: def('Groceries').icon,
       color: def('Groceries').color,
     });
+  });
+
+  it('matches a name in a language other than the UI one, and a legacy alias', () => {
+    expect(categoryStyle('Lebensmittel', t).icon).toBe(def('Groceries').icon);
+    expect(categoryStyle('Health & Fitness', t).icon).toBe(def('Health').icon);
+  });
+
+  it('never borrows an income look for an expense proposal', () => {
+    expect(categoryStyle('Salary', t, 'expense')).toEqual({ icon: 'folder-outline', color: NEUTRAL_CATEGORY_COLOR });
+    expect(categoryStyle('Salary', t, 'income').icon).toBe('cash');
   });
 
   it('ignores case and surrounding / repeated whitespace', () => {

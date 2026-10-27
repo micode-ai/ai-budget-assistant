@@ -1,4 +1,5 @@
 import i18n from '@/i18n';
+import { displayCategoryName, type DisplayableCategory } from './categoryDisplayName';
 
 /**
  * Turn a category/project/tag *entity* into its display label — never a raw id.
@@ -31,10 +32,15 @@ function resolveLabel(name: string | null | undefined, fallbackKey: string): str
   return trimmed ? trimmed : i18n.t(fallbackKey);
 }
 
+/**
+ * A category's label under the one display rule (`displayCategoryName`): a
+ * standard (keyed, not renamed) category reads in the UI language, anything
+ * else shows its own name; "Uncategorized" when there is nothing to show.
+ */
 export function categoryLabel(
-  category: { name?: string | null } | null | undefined,
+  category: DisplayableCategory | null | undefined,
 ): string {
-  return resolveLabel(category?.name, 'common.uncategorized');
+  return resolveLabel(displayCategoryName(category, i18n.language), 'common.uncategorized');
 }
 
 export function projectLabel(

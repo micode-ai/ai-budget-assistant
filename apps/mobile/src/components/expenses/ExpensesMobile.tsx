@@ -26,6 +26,7 @@ import { ExpenseMapView } from '@/components/map/ExpenseMapView';
 import { UncategorizedBanner } from '@/components/categorize/UncategorizedBanner';
 import { InboundReceiptsBanner } from '@/components/inboundMail/InboundReceiptsBanner';
 import { useExpensesScreenData } from '@/features/expenses/useExpensesScreenData';
+import { categoryLabel } from '@/utils/entityLabel';
 
 export function ExpensesMobile() {
   const { t } = useTranslation();
@@ -504,7 +505,7 @@ export function ExpensesMobile() {
                     color={theme.colors.primary}
                     style={{ marginRight: 8 }}
                   />
-                  <Text style={[styles.modalRowText, { color: theme.colors.textPrimary }]}>{cat.name}</Text>
+                  <Text style={[styles.modalRowText, { color: theme.colors.textPrimary }]}>{categoryLabel(cat)}</Text>
                 </TouchableOpacity>
               ))}
               {categories.filter((c) => !c.isDeleted).length === 0 && (

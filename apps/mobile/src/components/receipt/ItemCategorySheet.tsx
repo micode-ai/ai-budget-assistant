@@ -7,6 +7,7 @@ import type { Category } from '@budget/shared-types';
 import { sortCategoriesAsTree } from '@budget/shared-utils';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { proposedKey, isProposedKey, proposedName } from '@/features/receipt/proposedCategory';
+import { categoryLabel } from '@/utils/entityLabel';
 
 export interface ItemCategorySheetItem {
   /** Position of the line in the receipt's own `receiptItems` array. */
@@ -84,7 +85,7 @@ export default function ItemCategorySheet({ visible, items, categories, proposed
                         {isProposedKey(item.categoryId)
                           ? `${proposedName(item.categoryId as string)} (${t('receiptCategorySplit.newCategory')})`
                           : category
-                            ? category.name
+                            ? categoryLabel(category)
                             : t('receiptCategorySplit.unassigned')}
                       </Text>
                     </View>
@@ -168,7 +169,7 @@ export default function ItemCategorySheet({ visible, items, categories, proposed
                               style={[styles.pickerRowText, selected && styles.pickerRowTextSelected]}
                               numberOfLines={1}
                             >
-                              {cat.name}
+                              {categoryLabel(cat)}
                             </Text>
                             {selected && (
                               <Ionicons name="checkmark" size={16} color={theme.colors.primary} />

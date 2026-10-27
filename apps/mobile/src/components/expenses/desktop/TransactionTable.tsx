@@ -11,6 +11,7 @@ import { groupByDay, rangeBetween, rowId, type LedgerRow, type DayGroup } from '
 import { computeHeaderCheckState } from '@/features/expenses/desktopSelection';
 import { resolveNextFocusedRow } from '@/features/expenses/rowKeyboardNav';
 import { useDesktopShortcut } from '@/hooks/useDesktopShortcuts';
+import { categoryLabel } from '@/utils/entityLabel';
 
 const TABLE_MIN_WIDTH = 940;
 
@@ -152,7 +153,7 @@ export function TransactionTable({
   onOpenRowMenu,
   keyboardNavEnabled,
 }: Props) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const categories = useCategoryStore((s) => s.categories);
@@ -181,9 +182,10 @@ export function TransactionTable({
 
   const categoryById = useMemo(() => {
     const map = new Map<string, { name: string; color?: string }>();
-    for (const c of categories) map.set(c.id, { name: c.name, color: c.color });
+    for (const c of categories) map.set(c.id, { name: categoryLabel(c), color: c.color });
     return map;
-  }, [categories]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- the label follows the UI language
+  }, [categories, i18n.language]);
 
   const dayGroups = useMemo(() => {
     const groups = groupByDay(rows);
