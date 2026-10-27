@@ -82,10 +82,13 @@ every site on the box, so it needs a window. **Not yet done** — tracked in ABA
 
 ## Known space that is deliberately left alone
 
-- **`/root/.gradle` (4.3 GB) and `/opt/android-sdk` (2.9 GB)** — Android toolchain
-  on a server that only runs API, admin and nginx. Mobile builds happen on EAS and
-  GitHub runners, so this is almost certainly a leftover from a one-off local
-  build, but it may belong to another project on the box. 7.2 GB, the largest
-  remaining win, needs a human decision.
+- ~~`/root/.gradle` (4.3 GB) and `/opt/android-sdk` (2.9 GB)~~ — **removed
+  2026-10-27** with the owner's approval: no file in either had changed since the
+  one-off build of 2026-04-04, and nothing on the box referenced them. Disk went
+  from 82% to 62%.
+- **`buildkit/metadata_v2.db` (2.7 GB on 2026-10-27)** survives `docker builder
+  prune -af` once the build cache is already empty; only `systemctl restart docker`
+  compacts it, which restarts every project's containers — do it in a window,
+  together with recreating `shared-nginx` with log limits (its json.log was 500 MB).
 - **`/swapfile` (4.0 GB)** — legitimate, leave it.
 - **~1.8 GB of unused-but-tagged Docker images** — see the safety table.
