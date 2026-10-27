@@ -1,6 +1,6 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { buildBackfillValues } from '../../../scripts/generate-category-key-backfill';
+import { buildBackfillValues } from './category-key-backfill';
 
 const sql = readFileSync(
   join(__dirname, '../../../prisma/migrations/20261027000000_category_system_keys/migration.sql'),

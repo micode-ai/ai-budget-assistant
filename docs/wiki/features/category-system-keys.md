@@ -102,6 +102,10 @@ seed converges with the server row of the same key and type (matched by key befo
 - **The two catalog files are a duplicated pair** — change both, and the API may not import
   `@budget/shared-utils` at runtime. Keys are permanent once shipped; a name must not map to two keys
   of one type (parity test).
+- **Nothing under `apps/api/src` may import from `apps/api/scripts/`, specs included.** `nest build`
+  compiles specs too, so one such import widens the root and moves `dist/main.js` to
+  `dist/src/main.js`; the container then cannot start (the first ABA-698 deploy went down this way).
+  The backfill builder therefore lives in `src/common/utils/category-key-backfill.ts`.
 - **The backfill labels, it never merges.** No expense, budget or rule is re-pointed by it.
 - **Key work never moves money.** When resolving an existing reference, an exact live name beats the
   key; only creation is key first.
