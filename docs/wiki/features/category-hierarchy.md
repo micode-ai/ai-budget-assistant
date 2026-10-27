@@ -119,6 +119,13 @@ system key, with the name-slot comparison kept for keyless rows — see
   "(no subcategory)" slice. This holds for a malformed tree too: `buildParentOf` returns a parent only
   when it is live, top-level and not the row itself, and `rollUpCategoryTotals` itself ignores a
   self-parent or a parent that is not top-level — otherwise that spend would silently vanish.
+- **Drag hit-testing re-measures rows after every tree change, never trusts `onLayout` alone.**
+  react-native-web implements `onLayout` with a ResizeObserver, so it fires on a size change only; a
+  re-parented row that merely moved kept its old top, and the next drag of it hit-tested from where
+  it used to be (fixed 2026-10-27, `rowLayoutsFromWindow`).
+- **A mouse drag must not open the edit form.** On web a row's `onPress` is the browser's native
+  `click`, which still fires after a drag released over the lifted row (it follows the pointer).
+  `createClickGuard` swallows that one click and resets on the next tick.
 
 ## Known gaps
 

@@ -1,10 +1,12 @@
 import type { Category } from '@budget/shared-types';
 import {
   GAP_HALF,
+  createClickGuard,
   dropPayload,
   dropTargetAt,
   refusalAt,
   refuseParentDrop,
+  rowLayoutsFromWindow,
   type RowLayout,
 } from '../categoryDrop';
 
@@ -129,5 +131,42 @@ describe('dropPayload', () => {
   it('has no name, colour or icon keys at all', () => {
     const payload = dropPayload({ kind: 'parent', categoryId: 'Food' });
     expect(Object.keys(payload)).toEqual(['parentId']);
+  });
+});
+
+describe('rowLayoutsFromWindow', () => {
+  // On web onLayout fires only on a size change, so a row that moved (after a
+  // re-parent) keeps a stale top until it is re-measured at lift time.
+  it('converts window rects to the list layout space and orders them by top', () => {
+    const rows = rowLayoutsFromWindow(200, [
+      { categoryId: 'Pizza', depth: 1, y: 260, height: 50 },
+      { categoryId: 'Food', depth: 0, y: 200, height: 50 },
+    ]);
+    expect(rows).toEqual([
+      { categoryId: 'Food', depth: 0, top: 0, height: 50 },
+      { categoryId: 'Pizza', depth: 1, top: 60, height: 50 },
+    ]);
+  });
+});
+
+describe('createClickGuard', () => {
+  // On web a row's onPress comes from the native click, which still fires
+  // after a mouse drag released over the lifted row.
+  it('swallows exactly one press after a drag', () => {
+    const guard = createClickGuard();
+    guard.arm();
+    expect(guard.consume()).toBe(true);
+    expect(guard.consume()).toBe(false);
+  });
+
+  it('lets a press through when no drag happened', () => {
+    expect(createClickGuard().consume()).toBe(false);
+  });
+
+  it('a reset guard lets the next press through', () => {
+    const guard = createClickGuard();
+    guard.arm();
+    guard.reset();
+    expect(guard.consume()).toBe(false);
   });
 });

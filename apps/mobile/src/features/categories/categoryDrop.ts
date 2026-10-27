@@ -38,6 +38,44 @@ export interface RowLayout {
 export type DropTarget = { kind: 'parent'; categoryId: string } | { kind: 'topLevel' };
 
 /**
+ * Row layouts measured at lift time, in the list's own layout space. On web
+ * `onLayout` fires only when a row's SIZE changes (react-native-web uses a
+ * ResizeObserver), so a row that only moved — every re-parent moves one — keeps
+ * a stale top until it is measured again.
+ */
+export function rowLayoutsFromWindow(
+  containerTop: number,
+  rects: { categoryId: string; depth: 0 | 1; y: number; height: number }[]
+): RowLayout[] {
+  return rects
+    .map(({ categoryId, depth, y, height }) => ({ categoryId, depth, top: y - containerTop, height }))
+    .sort((a, b) => a.top - b.top);
+}
+
+/**
+ * Swallows the one press that follows a drag. On web a row's `onPress` comes
+ * from the browser's native `click`, which still fires when a mouse drag is
+ * released over the lifted row (it follows the pointer), so without this the
+ * drop would also open the category's edit form.
+ */
+export function createClickGuard() {
+  let armed = false;
+  return {
+    arm: () => {
+      armed = true;
+    },
+    reset: () => {
+      armed = false;
+    },
+    consume: (): boolean => {
+      const was = armed;
+      armed = false;
+      return was;
+    },
+  };
+}
+
+/**
  * Where the "back to top level" lines sit: the top of every top-level row and
  * the bottom of the last row.
  */

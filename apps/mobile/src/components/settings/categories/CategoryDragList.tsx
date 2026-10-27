@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Animated,
   PanResponder,
@@ -17,10 +17,12 @@ import { showAlert } from '@/utils/alert';
 import { useStyles, type Theme } from '@/theme';
 import {
   GAP_HALF,
+  createClickGuard,
   dropPayload,
   dropTargetAt,
   gapBoundaries,
   refusalAt,
+  rowLayoutsFromWindow,
   type DropTarget,
   type RowLayout,
 } from '@/features/categories/categoryDrop';
@@ -128,8 +130,11 @@ export function CategoryDragList({ type, tree, canEdit, onRowPress, renderRow }:
 
   const containerRef = useRef<View | null>(null);
   const layouts = useRef(new Map<string, RowLayout>());
+  const rowNodes = useRef(new Map<string, View | null>());
   const treeRef = useRef(tree);
   treeRef.current = tree;
+  // Swallows the browser click that follows a mouse drag (see createClickGuard).
+  const clickGuard = useRef(createClickGuard()).current;
 
   const [liftedId, setLiftedId] = useState<string | null>(null);
   const [target, setTarget] = useState<DropTarget | null>(null);
@@ -203,6 +208,41 @@ export function CategoryDragList({ type, tree, canEdit, onRowPress, renderRow }:
     scope.setDragging(false);
   }, [scope, translateY]);
 
+  // Re-measure every row whenever the tree changes. On web onLayout fires only
+  // on a size change, so a re-parented row that merely moved would otherwise
+  // keep its old top and the next drag would hit-test from the wrong place.
+  // Runs only while nothing is lifted, so no transform skews the measurement.
+  useEffect(() => {
+    if (liftedId !== null) return;
+    let cancelled = false;
+    const items = tree;
+    void Promise.all([
+      measureY(containerRef.current),
+      ...items.map((item) => measureY(rowNodes.current.get(item.category.id) ?? null)),
+    ]).then(([container, ...rects]) => {
+      if (cancelled || !container) return;
+      const measured = rowLayoutsFromWindow(
+        container.y,
+        items.flatMap((item, i) => {
+          const rect = rects[i];
+          return rect ? [{ categoryId: item.category.id, depth: item.depth, ...rect }] : [];
+        })
+      );
+      measured.forEach((row) => layouts.current.set(row.categoryId, row));
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [tree, liftedId]);
+
+  /** A drag just ended: swallow the click the browser sends after the mouseup. */
+  const guardNextClick = () => {
+    clickGuard.arm();
+    // The click is dispatched right after the mouseup, before any timer runs;
+    // if it never comes (released off the row), the next real tap must work.
+    setTimeout(clickGuard.reset, 0);
+  };
+
   const onMove = (gs: PanResponderGestureState) => {
     const dragged = findCategory(armedId.current);
     if (!dragged) return;
@@ -242,6 +282,7 @@ export function CategoryDragList({ type, tree, canEdit, onRowPress, renderRow }:
     // `drop()` clears it, never recompute from the release point (the last
     // move frame and the release coordinates can disagree).
     const finalTarget = targetRef.current;
+    guardNextClick();
     drop();
     if (!dragged) return;
     if (finalTarget) {
@@ -311,7 +352,10 @@ export function CategoryDragList({ type, tree, canEdit, onRowPress, renderRow }:
         void handlers.current.onRelease(gs);
       },
       onPanResponderTerminationRequest: () => false,
-      onPanResponderTerminate: () => drop(),
+      onPanResponderTerminate: () => {
+        guardNextClick();
+        drop();
+      },
     }).panHandlers;
     responders.current.set(id, created);
     return created;
@@ -331,7 +375,10 @@ export function CategoryDragList({ type, tree, canEdit, onRowPress, renderRow }:
     if (!canEdit) return { delayLongPress: LONG_PRESS_MS };
     const id = item.category.id;
     return {
-      onPress: () => onRowPress(item.category),
+      onPress: () => {
+        if (clickGuard.consume()) return;
+        onRowPress(item.category);
+      },
       delayLongPress: LONG_PRESS_MS,
       onLongPress: () => {
         if (useConnectivityStore.getState().status === 'offline') {
@@ -366,6 +413,9 @@ export function CategoryDragList({ type, tree, canEdit, onRowPress, renderRow }:
         return (
           <React.Fragment key={id}>
             <Animated.View
+              ref={(node: View | null) => {
+                rowNodes.current.set(id, node);
+              }}
               onLayout={onLayoutRow(item)}
               style={[
                 styles.row,
