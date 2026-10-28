@@ -1,44 +1,48 @@
 # Kaufanfragen
 
-> Schlage einen Kauf auf einem gemeinsamen Konto vor und lass die Gruppe abstimmen, ob er genehmigt oder abgelehnt wird, bevor du kaufst — aus der App oder über die Telegram-/WhatsApp-Bots.
+> Schlage einen Kauf auf einem gemeinsamen Konto vor und lass die Gruppe in der App abstimmen, ob er genehmigt oder abgelehnt wird, bevor du kaufst.
 
-Mit Kaufanfragen kann jedes Kontomitglied einen Kauf zur Gruppenfreigabe vorschlagen, bevor er in das Budget einfließt. Andere Mitglieder stimmen direkt in der App oder über die Telegram- und WhatsApp-Bots ab; genehmigte Anfragen werden zu geplanten Ausgaben, die du mit einem Tipp in echte Ausgaben umwandeln kannst.
+Mit Kaufanfragen können Kontomitglieder einen Kauf zur Gruppenfreigabe vorschlagen, bevor er in das Budget einfließt. Die anderen Mitglieder stimmen in der App ab; genehmigte Anfragen werden zu geplanten Ausgaben, die du mit einem Tipp als gekauft markierst, sobald du tatsächlich kaufst.
 
 ## Anfrage erstellen
 
 1. Gehe zu **Einstellungen → Kaufanfragen**.
 2. Tippe auf die Schaltfläche **+**.
-3. Fülle Titel und Betrag aus (erforderlich). Optional kannst du Kategorie, Händler, Beschreibung, Foto und Frist hinzufügen.
-4. Tippe auf **Senden** — alle anderen Kontomitglieder erhalten eine Benachrichtigung und können abstimmen.
+3. Gib Titel und Betrag ein (Pflichtfelder). Optional kannst du die Währung ändern sowie einen Händler und einen Kommentar hinzufügen.
+4. Tippe auf **Speichern** — alle anderen Kontomitglieder erhalten eine Benachrichtigung und können abstimmen.
+
+Anfragen erstellen können Inhaber und Bearbeiter. Mitglieder mit reinem Lesezugriff können keine Anfragen erstellen, aber abstimmen.
 
 ## Abstimmen
 
-Öffne die Anfrage unter **Einstellungen → Kaufanfragen** oder über die Push-Benachrichtigung. Tippe auf **Genehmigen**, **Ablehnen** oder **Enthalten**. Du kannst deine Stimme jederzeit ändern, solange die Anfrage noch aussteht.
+Öffne die Anfrage unter **Einstellungen → Kaufanfragen** oder über die Push-Benachrichtigung. Tippe auf **Genehmigen**, **Ablehnen** oder **Enthalten** — du kannst deiner Stimme einen Kommentar hinzufügen. Du kannst deine Stimme jederzeit ändern, solange die Anfrage noch aussteht. Auch wer die Anfrage erstellt hat, kann abstimmen.
 
-Telegram- und WhatsApp-Mitglieder können direkt über die Inline-Schaltflächen in der Bot-Nachricht abstimmen.
+Abgestimmt wird in der App.
 
 ## Genehmigungsregeln
 
-Der Kontoinhaber kann die Genehmigungsregel unter **Einstellungen → Kaufanfragen → Genehmigungsregel** festlegen:
+Der Kontoinhaber kann die Regel unter **Einstellungen → Kaufanfragen → Genehmigungsregel** festlegen:
 
-- **Mehrheit** (Standard) — mehr als die Hälfte aller Mitglieder muss zustimmen.
-- **Einstimmig** — jedes Mitglied muss zustimmen; eine Ablehnung schließt die Anfrage.
-- **Nur Inhaber** — nur die Stimme des Kontoinhabers zählt.
+- **Mehrheitsbeschluss** (Standard) — mehr als die Hälfte der Mitglieder muss zustimmen (oder ablehnen).
+- **Alle müssen zustimmen** — jedes Mitglied muss zustimmen; eine Ablehnung schließt die Anfrage.
+- **Inhaber entscheidet** — nur die Stimme des Kontoinhabers zählt.
 
-Enthaltene Mitglieder werden nicht in den Nenner eingerechnet, sodass inaktive Mitglieder keine Entscheidung blockieren.
+Mitglieder, die sich enthalten, werden nicht mitgezählt und halten eine Entscheidung daher nicht auf. Mitglieder, die noch nicht abgestimmt haben, zählen weiterhin mit — eine Anfrage bleibt offen, bis genügend Mitglieder abgestimmt haben.
+
+Die Regel wird beim Erstellen einer Anfrage festgelegt: Eine spätere Änderung der Kontoregel betrifft keine Anfragen, die bereits auf Stimmen warten.
 
 ## Nach der Genehmigung
 
-Wenn eine Anfrage genehmigt wird, kann jeder Redakteur oder Inhaber auf **Zum Kaufplan hinzufügen** tippen. Dadurch wird eine geplante Ausgabe erstellt — sie erscheint im Ausgabendetail mit dem Banner **„Geplant · Als gekauft markieren"**, beeinflusst aber noch nicht deine Budgetsummen.
+Wenn eine Anfrage genehmigt wurde, kann jeder Bearbeiter oder Inhaber auf **Zum Kaufplan hinzufügen** tippen. Dadurch entsteht eine geplante Ausgabe — sie erscheint auf dem Ausgabendetail-Bildschirm mit dem Banner **„Geplanter Kauf · Als gekauft markieren“**, zählt aber noch nicht zu deinen Ausgaben oder deinem Budget.
 
-Wenn du den Kauf tatsächlich tätigst, öffne die Ausgabe und tippe auf das Banner, um sie als gekauft zu markieren. Das Planungs-Flag wird entfernt und die Ausgabe fließt normal in dein Budget ein.
+Wenn du den Kauf tatsächlich tätigst, öffne die Ausgabe und tippe auf das Banner, um sie als gekauft zu markieren. Danach zählt die Ausgabe ganz normal zu deinem Budget.
 
 ## Benachrichtigungen
 
 Du erhältst Push-Benachrichtigungen, wenn:
 
 - Eine neue Kaufanfrage erstellt wird (alle Mitglieder außer dem Ersteller).
-- Jemand auf deine Anfrage abstimmt.
+- Jemand über deine Anfrage abstimmt.
 - Eine Anfrage, an der du beteiligt bist, genehmigt oder abgelehnt wird.
 
 Du kannst Kaufanfragen-Benachrichtigungen unter **Einstellungen → Benachrichtigungen → Kaufanfragen** deaktivieren.

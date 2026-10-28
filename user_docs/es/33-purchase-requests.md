@@ -1,37 +1,41 @@
 # Solicitudes de compra
 
-> Propón una compra en una cuenta compartida y deja que el grupo vote para aprobarla o rechazarla antes de comprar — desde la app o los bots de Telegram/WhatsApp.
+> Propón una compra en una cuenta compartida y deja que el grupo vote en la app para aprobarla o rechazarla antes de comprar.
 
-Las solicitudes de compra permiten que cualquier miembro de la cuenta proponga una compra para aprobación grupal antes de que entre al presupuesto. Los demás miembros votan directamente en la aplicación o a través de los bots de Telegram y WhatsApp; las solicitudes aprobadas se convierten en gastos planificados que puedes convertir en gastos reales con un solo toque.
+Las solicitudes de compra permiten a los miembros de la cuenta proponer una compra para aprobación grupal antes de que entre al presupuesto. Los demás miembros votan en la aplicación; las solicitudes aprobadas se convierten en gastos planificados que marcas como comprados con un solo toque cuando realmente compras.
 
 ## Crear una solicitud
 
 1. Ve a **Configuración → Solicitudes de compra**.
 2. Toca el botón **+**.
-3. Completa el título y el monto (obligatorios). Opcionalmente, agrega categoría, comerciante, descripción, foto y fecha límite.
-4. Toca **Enviar** — todos los demás miembros de la cuenta recibirán una notificación y podrán votar.
+3. Rellena el título y el importe (obligatorios). Opcionalmente cambia la moneda y añade un comercio y un comentario.
+4. Toca **Guardar** — todos los demás miembros de la cuenta recibirán una notificación y podrán votar.
 
-## Votar
+Pueden crear solicitudes el propietario y los editores. Quienes solo tienen acceso de lectura no pueden crearlas, pero sí votar.
 
-Abre la solicitud desde **Configuración → Solicitudes de compra** o desde la notificación push. Toca **Aprobar**, **Rechazar** o **Abstenerse**. Puedes cambiar tu voto en cualquier momento mientras la solicitud aún esté pendiente.
+## Votación
 
-Los miembros de Telegram y WhatsApp pueden votar directamente desde el mensaje del bot usando los botones en línea.
+Abre la solicitud desde **Configuración → Solicitudes de compra** o desde la notificación push. Toca **Aprobar**, **Rechazar** o **Abstenerse** — puedes añadir un comentario a tu voto. Puedes cambiar tu voto en cualquier momento mientras la solicitud siga pendiente. Quien creó la solicitud también puede votar.
+
+La votación se hace en la aplicación.
 
 ## Reglas de aprobación
 
-El propietario de la cuenta puede establecer la regla de aprobación en **Configuración → Solicitudes de compra → Regla de aprobación**:
+El propietario de la cuenta puede establecer la regla en **Configuración → Solicitudes de compra → Regla de aprobación**:
 
-- **Mayoría** (predeterminado) — más de la mitad de todos los miembros debe aprobar.
-- **Unánime** — cada miembro debe aprobar; un rechazo cierra la solicitud.
-- **Solo el propietario** — solo cuenta el voto del propietario de la cuenta.
+- **Votación mayoritaria** (predeterminada) — más de la mitad de los miembros debe aprobar (o rechazar).
+- **Todos deben aprobar** — cada miembro debe aprobar; un solo rechazo cierra la solicitud.
+- **El propietario decide** — solo cuenta el voto del propietario de la cuenta.
 
-Los miembros que se abstienen no se cuentan en el denominador, por lo que los miembros inactivos no bloquean una decisión.
+Los miembros que se abstienen no se cuentan, así que no retrasan la decisión. Los miembros que aún no han votado sí se cuentan: la solicitud queda pendiente hasta que voten suficientes miembros.
+
+La regla se fija al crear la solicitud: cambiar después la regla de la cuenta no afecta a las solicitudes que ya esperan votos.
 
 ## Después de la aprobación
 
-Cuando se aprueba una solicitud, cualquier editor o propietario puede tocar **Agregar al plan de compras**. Esto crea un gasto planificado — aparece en la pantalla de detalles del gasto con el banner **"Planificado · Marcar como comprado"**, pero aún no afecta los totales de tu presupuesto.
+Cuando una solicitud se aprueba, cualquier editor o propietario puede tocar **Añadir al plan de compras**. Esto crea un gasto planificado — aparece en la pantalla de detalles del gasto con el banner **«Compra planificada · Marcar como comprada»**, pero todavía no cuenta en tus gastos ni en tu presupuesto.
 
-Cuando realmente realices la compra, abre el gasto y toca el banner para marcarlo como comprado. El indicador de planificación se elimina y el gasto entra al presupuesto normalmente.
+Cuando realmente hagas la compra, abre el gasto y toca el banner para marcarlo como comprado. A partir de ahí el gasto cuenta normalmente en tu presupuesto.
 
 ## Notificaciones
 

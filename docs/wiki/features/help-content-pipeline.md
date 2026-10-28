@@ -91,10 +91,19 @@ expect a large, boring diff and check it is only that.
   them against each other.
 - Regenerating the public site picks up any markdown committed since the last build, so a help
   commit can carry unrelated content that was never rebuilt. Worth saying so in the commit message.
+- The committed `content.ts` has mixed line endings (generated on Windows from CRLF and LF sources),
+  so `npm run generate:help` on Linux or in a cloud session rewrites the whole file — a
+  whitespace-only diff of tens of thousands of lines. Splice only the changed sections into the
+  committed file and check it equals the generator's output once `\r\n` is normalised (ABA-702).
+- Do not rebuild the public help site or the landing from a shallow clone (a cloud session clones
+  ~50 commits): the builders take `dateModified`/`lastmod` from git history, so every page's date
+  moves, and the OG and screenshot PNGs re-render with that machine's fonts. Rebuild on the usual
+  machine with full history (ABA-702).
 
 ## History
 
 ABA-284 (the public help center) · ABA-288 (mobile rendering: portrait screenshots overflow without
 the shared `article img` constraint) · ABA-342 (help↔blog internal linking, real `lastmod` dates) ·
 ABA-366 (PageSpeed and contrast pass) · ABA-606 (in-app search bar over the article list —
-in-app only, public help center search deferred as a separate idea).
+in-app only, public help center search deferred as a separate idea) · ABA-702 (line-ending churn
+and shallow-clone rebuild hazards found while correcting the purchase-requests page).

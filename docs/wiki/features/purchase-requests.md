@@ -74,3 +74,7 @@ the `:id` routes, or Express would capture them as ids.
 
 ABA-298 (the feature) · ABA-302 (edit and delete a pending request) · ABA-299 (feed events) ·
 ABA-303 (feed cleanup on rejection) · ABA-332 (entry merged into the `shopping_hub` quick action).
+· ABA-702 (help page `user_docs/*/33-purchase-requests.md` corrected against this page: it had advertised
+bot voting, a **Send** button that is actually `common.save`, form fields the create screen does not
+have (category, photo, deadline), and "inactive members do not block a decision" — only abstainers leave
+the denominator, silent members still count).

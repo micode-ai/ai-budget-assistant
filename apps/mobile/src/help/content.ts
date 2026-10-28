@@ -4297,41 +4297,45 @@ Auto-capture is an Android feature. On iOS and web, this section does not appear
     {
       id: '33-purchase-requests',
       title: `Purchase Requests`,
-      description: `Propose a purchase on a shared account and let the group vote to approve or reject it before you buy — from the app or the Telegram/WhatsApp bots.`,
+      description: `Propose a purchase on a shared account and let the group vote in the app to approve or reject it before you buy.`,
       body: `# Purchase Requests
 
-> Propose a purchase on a shared account and let the group vote to approve or reject it before you buy — from the app or the Telegram/WhatsApp bots.
+> Propose a purchase on a shared account and let the group vote in the app to approve or reject it before you buy.
 
-Purchase Requests let any account member propose a purchase for group approval before it enters the budget. Other members vote directly in the app or through Telegram and WhatsApp; approved requests become planned expenses you can convert to real expenses with one tap.
+Purchase Requests let account members propose a purchase for group approval before it enters the budget. The other members vote in the app; approved requests become planned expenses that you mark as purchased with one tap once you actually buy.
 
 ## Creating a request
 
 1. Go to **Settings → Purchase Requests**.
 2. Tap the **+** button.
-3. Fill in the title and amount (required). Optionally add a category, merchant, description, photo, and deadline.
-4. Tap **Send** — all other account members receive a notification and can vote.
+3. Fill in the title and amount (required). Optionally change the currency and add a merchant and a comment.
+4. Tap **Save** — all other account members receive a notification and can vote.
+
+Owners and editors can create requests. Viewers cannot create them, but they can vote.
 
 ## Voting
 
-Open the request from **Settings → Purchase Requests** or from the push notification. Tap **Approve**, **Reject**, or **Abstain**. You can change your vote at any time while the request is still pending.
+Open the request from **Settings → Purchase Requests** or from the push notification. Tap **Approve**, **Reject**, or **Abstain** — you can add a comment to your vote. You can change your vote at any time while the request is still pending. The person who created the request can vote too.
 
-Telegram and WhatsApp members can vote directly from the bot message using the inline buttons.
+Voting happens in the app.
 
 ## Approval rules
 
 The account owner can set the approval rule under **Settings → Purchase Requests → Approval rule**:
 
-- **Majority** (default) — more than half of all members must approve.
-- **Unanimous** — every member must approve; one rejection closes the request.
-- **Owner only** — only the account owner's vote counts.
+- **Majority vote** (default) — more than half of the members must approve (or reject).
+- **Everyone must agree** — every member must approve; one rejection closes the request.
+- **Owner decides** — only the account owner's vote counts.
 
-Abstaining members are not counted in the denominator, so non-participating members do not block a decision.
+Members who abstain are not counted, so they do not hold up a decision. Members who have not voted yet are still counted — a request stays pending until enough members vote.
+
+The rule is fixed when a request is created: changing the account's rule later does not affect requests that are already waiting for votes.
 
 ## After approval
 
-When a request is approved, any editor or owner can tap **Add to purchase plan**. This creates a planned expense — it appears on the expense detail screen with a **"Planned · Mark as purchased"** banner but does not affect your budget totals yet.
+When a request is approved, any editor or owner can tap **Add to purchase plan**. This creates a planned expense — it appears on the expense detail screen with a **"Planned purchase · Mark as purchased"** banner but does not count toward your spending or budget yet.
 
-When you actually make the purchase, open the expense and tap the banner to mark it as purchased. The planned flag is removed and the expense enters your budget normally.
+When you actually make the purchase, open the expense and tap the banner to mark it as purchased. The expense then counts toward your budget normally.
 
 ## Notifications
 
@@ -4341,7 +4345,7 @@ You will receive push notifications when:
 - Someone votes on your request.
 - A request you are part of is approved or rejected.
 
-You can disable purchase request notifications under **Settings → Notifications → Purchase requests**.
+You can disable purchase request notifications under **Settings → Notifications → Purchase Requests**.
 `,
     },
     {
@@ -9533,48 +9537,52 @@ OCR иногда неверно читает цену, выдумывает ст
     {
       id: '33-purchase-requests',
       title: `Запросы на покупку`,
-      description: `Предложите покупку на общем счёте и дайте группе проголосовать за одобрение или отклонение перед покупкой — в приложении или через ботов Telegram и WhatsApp.`,
+      description: `Предложите покупку на общем счёте и дайте группе проголосовать в приложении за одобрение или отклонение перед покупкой.`,
       body: `# Запросы на покупку
 
-> Предложите покупку на общем счёте и дайте группе проголосовать за одобрение или отклонение перед покупкой — в приложении или через ботов Telegram и WhatsApp.
+> Предложите покупку на общем счёте и дайте группе проголосовать в приложении за одобрение или отклонение перед покупкой.
 
-Запросы на покупку позволяют любому участнику счёта предложить покупку для группового согласования до того, как она войдёт в бюджет. Другие участники голосуют прямо в приложении или через ботов Telegram и WhatsApp; одобренные запросы становятся запланированными расходами, которые можно превратить в реальные одним нажатием.
+Запросы на покупку позволяют участникам счёта предложить покупку для группового согласования до того, как она войдёт в бюджет. Остальные участники голосуют в приложении; одобренные запросы становятся запланированными расходами, которые вы одним нажатием отмечаете как купленные, когда действительно совершите покупку.
 
 ## Создание запроса
 
 1. Перейдите в **Настройки → Запросы на покупку**.
 2. Нажмите кнопку **+**.
-3. Заполните название и сумму (обязательно). При желании добавьте категорию, продавца, описание, фото и срок.
-4. Нажмите **Отправить** — все остальные участники счёта получат уведомление и смогут проголосовать.
+3. Заполните название и сумму (обязательно). При желании измените валюту и добавьте магазин и комментарий.
+4. Нажмите **Сохранить** — все остальные участники счёта получат уведомление и смогут проголосовать.
+
+Создавать запросы могут владелец и редакторы. Участники с доступом только на просмотр не могут их создавать, но могут голосовать.
 
 ## Голосование
 
-Откройте запрос из **Настройки → Запросы на покупку** или из push-уведомления. Нажмите **Одобрить**, **Отклонить** или **Воздержаться**. Вы можете изменить свой голос в любое время, пока запрос ещё ожидает решения.
+Откройте запрос из **Настройки → Запросы на покупку** или из push-уведомления. Нажмите **Одобрить**, **Отклонить** или **Воздержаться** — к голосу можно добавить комментарий. Вы можете изменить свой голос в любое время, пока запрос ещё ожидает решения. Автор запроса тоже может голосовать.
 
-Участники Telegram и WhatsApp могут голосовать прямо из сообщения бота, используя встроенные кнопки.
+Голосование проходит в приложении.
 
 ## Правила одобрения
 
-Владелец счёта может задать правило одобрения в **Настройки → Запросы на покупку → Правило одобрения**:
+Владелец счёта может задать правило в **Настройки → Запросы на покупку → Правило одобрения**:
 
-- **Большинство** (по умолчанию) — более половины всех участников должны одобрить.
-- **Единогласно** — каждый участник должен одобрить; одно отклонение закрывает запрос.
-- **Только владелец** — учитывается только голос владельца счёта.
+- **Большинство голосов** (по умолчанию) — одобрить (или отклонить) должны больше половины участников.
+- **Все должны согласиться** — одобрить должен каждый участник; одно отклонение закрывает запрос.
+- **Владелец решает** — учитывается только голос владельца счёта.
 
-Воздержавшиеся участники не включаются в знаменатель, поэтому неактивные участники не блокируют решение.
+Воздержавшиеся участники не учитываются, поэтому не задерживают решение. Участники, которые ещё не проголосовали, учитываются — запрос ждёт, пока проголосует достаточно участников.
+
+Правило фиксируется при создании запроса: если позже изменить правило счёта, это не повлияет на запросы, которые уже ждут голосов.
 
 ## После одобрения
 
-Когда запрос одобрен, любой редактор или владелец может нажать **Добавить в план покупок**. Это создаёт запланированный расход — он появляется на экране деталей расхода с баннером **«Запланировано · Отметить как купленное»**, но пока не влияет на итоги бюджета.
+Когда запрос одобрен, любой редактор или владелец может нажать **Добавить в план покупок**. Это создаёт запланированный расход — он появляется на экране деталей расхода с баннером **«Запланированная покупка · Отметить как купленную»**, но пока не учитывается в расходах и бюджете.
 
-Когда вы фактически совершите покупку, откройте расход и нажмите баннер, чтобы отметить его как купленное. Флаг планирования снимается, и расход нормально входит в бюджет.
+Когда вы действительно совершите покупку, откройте расход и нажмите на баннер, чтобы отметить его как купленный. После этого расход учитывается в бюджете как обычно.
 
 ## Уведомления
 
-Вы получите push-уведомления, когда:
+Вы будете получать push-уведомления, когда:
 
-- Создаётся новый запрос на покупку (все участники, кроме создателя).
-- Кто-то голосует по вашему запросу.
+- Создан новый запрос на покупку (все участники, кроме создателя).
+- Кто-то проголосовал по вашему запросу.
 - Запрос, в котором вы участвуете, одобрен или отклонён.
 
 Вы можете отключить уведомления о запросах на покупку в **Настройки → Уведомления → Запросы на покупку**.
@@ -14736,52 +14744,56 @@ OCR іноді неправильно читає ціну, вигадує ряд
     },
     {
       id: '33-purchase-requests',
-      title: `Запити на покупку`,
-      description: `Запропонуйте покупку на спільному рахунку і дайте групі проголосувати за схвалення чи відхилення перед покупкою — у застосунку або через боти Telegram і WhatsApp.`,
-      body: `# Запити на покупку
+      title: `Запити на купівлю`,
+      description: `Запропонуйте покупку на спільному рахунку і дайте групі проголосувати в застосунку за схвалення чи відхилення перед покупкою.`,
+      body: `# Запити на купівлю
 
-> Запропонуйте покупку на спільному рахунку і дайте групі проголосувати за схвалення чи відхилення перед покупкою — у застосунку або через боти Telegram і WhatsApp.
+> Запропонуйте покупку на спільному рахунку і дайте групі проголосувати в застосунку за схвалення чи відхилення перед покупкою.
 
-Запити на покупку дозволяють будь-якому учаснику рахунку запропонувати покупку для групового погодження до того, як вона увійде до бюджету. Інші учасники голосують безпосередньо в додатку або через ботів Telegram і WhatsApp; схвалені запити стають запланованими витратами, які можна перетворити на реальні одним дотиком.
+Запити на купівлю дозволяють учасникам рахунку запропонувати покупку для групового погодження до того, як вона увійде до бюджету. Інші учасники голосують у застосунку; схвалені запити стають запланованими витратами, які ви одним дотиком позначаєте як куплені, коли справді здійсните покупку.
 
 ## Створення запиту
 
-1. Перейдіть до **Налаштування → Запити на покупку**.
+1. Перейдіть до **Налаштування → Запити на купівлю**.
 2. Натисніть кнопку **+**.
-3. Заповніть назву та суму (обов'язково). За бажанням додайте категорію, продавця, опис, фото та термін.
-4. Натисніть **Надіслати** — всі інші учасники рахунку отримають сповіщення та зможуть проголосувати.
+3. Заповніть назву та суму (обов'язково). За бажанням змініть валюту й додайте магазин і коментар.
+4. Натисніть **Зберегти** — всі інші учасники рахунку отримають сповіщення та зможуть проголосувати.
+
+Створювати запити можуть власник і редактори. Учасники з доступом лише на перегляд не можуть їх створювати, але можуть голосувати.
 
 ## Голосування
 
-Відкрийте запит з **Налаштування → Запити на покупку** або зі сповіщення. Натисніть **Схвалити**, **Відхилити** або **Утриматися**. Ви можете змінити свій голос у будь-який час, поки запит ще очікує рішення.
+Відкрийте запит з **Налаштування → Запити на купівлю** або зі сповіщення. Натисніть **Схвалити**, **Відхилити** або **Утриматись** — до голосу можна додати коментар. Ви можете змінити свій голос у будь-який час, поки запит ще очікує рішення. Автор запиту теж може голосувати.
 
-Учасники Telegram і WhatsApp можуть голосувати безпосередньо з повідомлення бота, використовуючи вбудовані кнопки.
+Голосування відбувається в застосунку.
 
 ## Правила схвалення
 
-Власник рахунку може встановити правило схвалення в **Налаштування → Запити на покупку → Правило схвалення**:
+Власник рахунку може встановити правило в **Налаштування → Запити на купівлю → Правило схвалення**:
 
-- **Більшість** (за замовчуванням) — понад половина всіх учасників повинна схвалити.
-- **Одностайно** — кожен учасник повинен схвалити; одне відхилення закриває запит.
-- **Тільки власник** — враховується лише голос власника рахунку.
+- **Більшість голосів** (за замовчуванням) — схвалити (або відхилити) мають більше половини учасників.
+- **Всі повинні погодитись** — схвалити має кожен учасник; одне відхилення закриває запит.
+- **Власник вирішує** — враховується лише голос власника рахунку.
 
-Учасники, які утримуються, не включаються до знаменника, тому неактивні учасники не блокують рішення.
+Учасники, які утрималися, не враховуються, тому не затримують рішення. Учасники, які ще не проголосували, враховуються — запит чекає, доки проголосує достатньо учасників.
+
+Правило фіксується під час створення запиту: якщо пізніше змінити правило рахунку, це не вплине на запити, які вже чекають на голоси.
 
 ## Після схвалення
 
-Коли запит схвалено, будь-який редактор або власник може натиснути **Додати до плану покупок**. Це створює заплановану витрату — вона з'являється на екрані деталей витрати з банером **«Заплановано · Позначити як куплене»**, але поки не впливає на підсумки бюджету.
+Коли запит схвалено, будь-який редактор або власник може натиснути **Додати до плану покупок**. Це створює заплановану витрату — вона з'являється на екрані деталей витрати з банером **«Запланована покупка · Позначити як куплену»**, але поки не враховується у витратах і бюджеті.
 
-Коли ви фактично зробите покупку, відкрийте витрату та натисніть банер, щоб позначити її як куплену. Прапорець планування знімається, і витрата нормально входить до бюджету.
+Коли ви справді здійсните покупку, відкрийте витрату й натисніть на банер, щоб позначити її як куплену. Після цього витрата враховується в бюджеті як звичайно.
 
 ## Сповіщення
 
-Ви отримаєте push-сповіщення, коли:
+Ви отримуватимете push-сповіщення, коли:
 
-- Створюється новий запит на покупку (всі учасники, крім автора).
-- Хтось голосує за вашим запитом.
+- Створено новий запит на купівлю (всі учасники, крім автора).
+- Хтось проголосував за ваш запит.
 - Запит, у якому ви берете участь, схвалено або відхилено.
 
-Ви можете вимкнути сповіщення про запити на покупку в **Налаштування → Сповіщення → Запити на покупку**.
+Ви можете вимкнути сповіщення про запити на купівлю в **Налаштування → Сповіщення → Запити на купівлю**.
 `,
     },
     {
@@ -19925,52 +19937,56 @@ Automatyczne przechwytywanie to funkcja Androida. Na iOS i w przeglądarce ta se
     },
     {
       id: '33-purchase-requests',
-      title: `Wnioski zakupowe`,
-      description: `Zaproponuj zakup na koncie wspólnym i pozwól grupie zagłosować za zatwierdzeniem lub odrzuceniem, zanim kupisz — z aplikacji albo przez boty Telegram/WhatsApp.`,
-      body: `# Wnioski zakupowe
+      title: `Wnioski o zakup`,
+      description: `Zaproponuj zakup na koncie wspólnym i pozwól grupie zagłosować w aplikacji za zatwierdzeniem lub odrzuceniem, zanim kupisz.`,
+      body: `# Wnioski o zakup
 
-> Zaproponuj zakup na koncie wspólnym i pozwól grupie zagłosować za zatwierdzeniem lub odrzuceniem, zanim kupisz — z aplikacji albo przez boty Telegram/WhatsApp.
+> Zaproponuj zakup na koncie wspólnym i pozwól grupie zagłosować w aplikacji za zatwierdzeniem lub odrzuceniem, zanim kupisz.
 
-Wnioski zakupowe pozwalają każdemu członkowi konta zaproponować zakup do grupowego zatwierdzenia przed wejściem do budżetu. Inni członkowie głosują w aplikacji lub przez boty Telegram i WhatsApp; zatwierdzone wnioski stają się planowanymi wydatkami, które możesz jednym dotknięciem przekształcić w realne wydatki.
+Wnioski o zakup pozwalają członkom konta zaproponować zakup do grupowego zatwierdzenia przed wejściem do budżetu. Pozostali członkowie głosują w aplikacji; zatwierdzone wnioski stają się zaplanowanymi wydatkami, które jednym dotknięciem oznaczasz jako kupione, gdy faktycznie dokonasz zakupu.
 
 ## Tworzenie wniosku
 
-1. Przejdź do **Ustawienia → Wnioski zakupowe**.
+1. Przejdź do **Ustawienia → Wnioski o zakup**.
 2. Dotknij przycisku **+**.
-3. Wypełnij tytuł i kwotę (wymagane). Opcjonalnie dodaj kategorię, sprzedawcę, opis, zdjęcie i termin.
-4. Dotknij **Wyślij** — wszyscy inni członkowie konta otrzymają powiadomienie i będą mogli głosować.
+3. Wypełnij tytuł i kwotę (wymagane). Opcjonalnie zmień walutę i dodaj sprzedawcę oraz komentarz.
+4. Dotknij **Zapisz** — wszyscy inni członkowie konta otrzymają powiadomienie i będą mogli głosować.
+
+Wnioski mogą tworzyć właściciel i edytorzy. Osoby z dostępem tylko do podglądu nie mogą ich tworzyć, ale mogą głosować.
 
 ## Głosowanie
 
-Otwórz wniosek z **Ustawienia → Wnioski zakupowe** lub z powiadomienia push. Dotknij **Zatwierdź**, **Odrzuć** lub **Wstrzymaj się**. Możesz zmienić swój głos w dowolnym momencie, gdy wniosek jest jeszcze oczekujący.
+Otwórz wniosek z **Ustawienia → Wnioski o zakup** lub z powiadomienia push. Dotknij **Zatwierdź**, **Odrzuć** lub **Wstrzymaj się** — do głosu możesz dodać komentarz. Możesz zmienić swój głos w dowolnym momencie, gdy wniosek jest jeszcze oczekujący. Autor wniosku też może głosować.
 
-Członkowie Telegrama i WhatsApp mogą głosować bezpośrednio z wiadomości bota, używając przycisków.
+Głosowanie odbywa się w aplikacji.
 
-## Reguły zatwierdzania
+## Zasady zatwierdzania
 
-Właściciel konta może ustawić regułę zatwierdzania w **Ustawienia → Wnioski zakupowe → Reguła zatwierdzania**:
+Właściciel konta może ustawić zasadę w **Ustawienia → Wnioski o zakup → Zasada zatwierdzania**:
 
-- **Większość** (domyślnie) — ponad połowa wszystkich członków musi zatwierdzić.
-- **Jednomyślność** — każdy członek musi zatwierdzić; jedno odrzucenie zamyka wniosek.
-- **Tylko właściciel** — liczy się tylko głos właściciela konta.
+- **Większość głosów** (domyślnie) — ponad połowa członków musi zatwierdzić (lub odrzucić).
+- **Wszyscy muszą się zgodzić** — każdy członek musi zatwierdzić; jedno odrzucenie zamyka wniosek.
+- **Właściciel decyduje** — liczy się tylko głos właściciela konta.
 
-Wstrzymujący się członkowie nie są wliczani do mianownika, więc nieaktywni członkowie nie blokują decyzji.
+Osoby, które się wstrzymały, nie są liczone, więc nie wstrzymują decyzji. Osoby, które jeszcze nie zagłosowały, nadal się liczą — wniosek czeka, aż zagłosuje wystarczająco wiele osób.
+
+Zasada jest ustalana w chwili tworzenia wniosku: późniejsza zmiana zasady na koncie nie wpływa na wnioski, które już czekają na głosy.
 
 ## Po zatwierdzeniu
 
-Gdy wniosek zostanie zatwierdzony, każdy edytor lub właściciel może dotknąć **Dodaj do planu zakupów**. Tworzy to planowany wydatek — pojawia się na ekranie szczegółów wydatku z banerem **„Planowany · Oznacz jako zakupiony"**, ale jeszcze nie wpływa na sumy budżetu.
+Gdy wniosek zostanie zatwierdzony, każdy edytor lub właściciel może dotknąć **Dodaj do planu zakupów**. Tworzy to zaplanowany wydatek — pojawia się na ekranie szczegółów wydatku z banerem **„Zaplanowany zakup · Oznacz jako kupiony”**, ale jeszcze nie liczy się do wydatków ani budżetu.
 
-Gdy faktycznie dokonasz zakupu, otwórz wydatek i dotknij banera, aby oznaczyć go jako zakupiony. Flaga planowania zostaje usunięta i wydatek normalnie wchodzi do budżetu.
+Gdy faktycznie dokonasz zakupu, otwórz wydatek i dotknij banera, aby oznaczyć go jako kupiony. Od tej chwili wydatek normalnie liczy się do budżetu.
 
 ## Powiadomienia
 
 Otrzymasz powiadomienia push, gdy:
 
-- Zostanie utworzony nowy wniosek zakupowy (wszyscy członkowie poza twórcą).
+- Zostanie utworzony nowy wniosek o zakup (wszyscy członkowie poza twórcą).
 - Ktoś zagłosuje na Twój wniosek.
 - Wniosek, którego jesteś częścią, zostanie zatwierdzony lub odrzucony.
 
-Możesz wyłączyć powiadomienia o wnioskach zakupowych w **Ustawienia → Powiadomienia → Wnioski zakupowe**.
+Możesz wyłączyć powiadomienia o wnioskach w **Ustawienia → Powiadomienia → Wnioski o zakup**.
 `,
     },
     {
@@ -25090,48 +25106,52 @@ Die Auto-Erfassung ist eine Android-Funktion. Auf iOS und im Web erscheint diese
     {
       id: '33-purchase-requests',
       title: `Kaufanfragen`,
-      description: `Schlage einen Kauf auf einem gemeinsamen Konto vor und lass die Gruppe abstimmen, ob er genehmigt oder abgelehnt wird, bevor du kaufst — aus der App oder über die Telegram-/WhatsApp-Bots.`,
+      description: `Schlage einen Kauf auf einem gemeinsamen Konto vor und lass die Gruppe in der App abstimmen, ob er genehmigt oder abgelehnt wird, bevor du kaufst.`,
       body: `# Kaufanfragen
 
-> Schlage einen Kauf auf einem gemeinsamen Konto vor und lass die Gruppe abstimmen, ob er genehmigt oder abgelehnt wird, bevor du kaufst — aus der App oder über die Telegram-/WhatsApp-Bots.
+> Schlage einen Kauf auf einem gemeinsamen Konto vor und lass die Gruppe in der App abstimmen, ob er genehmigt oder abgelehnt wird, bevor du kaufst.
 
-Mit Kaufanfragen kann jedes Kontomitglied einen Kauf zur Gruppenfreigabe vorschlagen, bevor er in das Budget einfließt. Andere Mitglieder stimmen direkt in der App oder über die Telegram- und WhatsApp-Bots ab; genehmigte Anfragen werden zu geplanten Ausgaben, die du mit einem Tipp in echte Ausgaben umwandeln kannst.
+Mit Kaufanfragen können Kontomitglieder einen Kauf zur Gruppenfreigabe vorschlagen, bevor er in das Budget einfließt. Die anderen Mitglieder stimmen in der App ab; genehmigte Anfragen werden zu geplanten Ausgaben, die du mit einem Tipp als gekauft markierst, sobald du tatsächlich kaufst.
 
 ## Anfrage erstellen
 
 1. Gehe zu **Einstellungen → Kaufanfragen**.
 2. Tippe auf die Schaltfläche **+**.
-3. Fülle Titel und Betrag aus (erforderlich). Optional kannst du Kategorie, Händler, Beschreibung, Foto und Frist hinzufügen.
-4. Tippe auf **Senden** — alle anderen Kontomitglieder erhalten eine Benachrichtigung und können abstimmen.
+3. Gib Titel und Betrag ein (Pflichtfelder). Optional kannst du die Währung ändern sowie einen Händler und einen Kommentar hinzufügen.
+4. Tippe auf **Speichern** — alle anderen Kontomitglieder erhalten eine Benachrichtigung und können abstimmen.
+
+Anfragen erstellen können Inhaber und Bearbeiter. Mitglieder mit reinem Lesezugriff können keine Anfragen erstellen, aber abstimmen.
 
 ## Abstimmen
 
-Öffne die Anfrage unter **Einstellungen → Kaufanfragen** oder über die Push-Benachrichtigung. Tippe auf **Genehmigen**, **Ablehnen** oder **Enthalten**. Du kannst deine Stimme jederzeit ändern, solange die Anfrage noch aussteht.
+Öffne die Anfrage unter **Einstellungen → Kaufanfragen** oder über die Push-Benachrichtigung. Tippe auf **Genehmigen**, **Ablehnen** oder **Enthalten** — du kannst deiner Stimme einen Kommentar hinzufügen. Du kannst deine Stimme jederzeit ändern, solange die Anfrage noch aussteht. Auch wer die Anfrage erstellt hat, kann abstimmen.
 
-Telegram- und WhatsApp-Mitglieder können direkt über die Inline-Schaltflächen in der Bot-Nachricht abstimmen.
+Abgestimmt wird in der App.
 
 ## Genehmigungsregeln
 
-Der Kontoinhaber kann die Genehmigungsregel unter **Einstellungen → Kaufanfragen → Genehmigungsregel** festlegen:
+Der Kontoinhaber kann die Regel unter **Einstellungen → Kaufanfragen → Genehmigungsregel** festlegen:
 
-- **Mehrheit** (Standard) — mehr als die Hälfte aller Mitglieder muss zustimmen.
-- **Einstimmig** — jedes Mitglied muss zustimmen; eine Ablehnung schließt die Anfrage.
-- **Nur Inhaber** — nur die Stimme des Kontoinhabers zählt.
+- **Mehrheitsbeschluss** (Standard) — mehr als die Hälfte der Mitglieder muss zustimmen (oder ablehnen).
+- **Alle müssen zustimmen** — jedes Mitglied muss zustimmen; eine Ablehnung schließt die Anfrage.
+- **Inhaber entscheidet** — nur die Stimme des Kontoinhabers zählt.
 
-Enthaltene Mitglieder werden nicht in den Nenner eingerechnet, sodass inaktive Mitglieder keine Entscheidung blockieren.
+Mitglieder, die sich enthalten, werden nicht mitgezählt und halten eine Entscheidung daher nicht auf. Mitglieder, die noch nicht abgestimmt haben, zählen weiterhin mit — eine Anfrage bleibt offen, bis genügend Mitglieder abgestimmt haben.
+
+Die Regel wird beim Erstellen einer Anfrage festgelegt: Eine spätere Änderung der Kontoregel betrifft keine Anfragen, die bereits auf Stimmen warten.
 
 ## Nach der Genehmigung
 
-Wenn eine Anfrage genehmigt wird, kann jeder Redakteur oder Inhaber auf **Zum Kaufplan hinzufügen** tippen. Dadurch wird eine geplante Ausgabe erstellt — sie erscheint im Ausgabendetail mit dem Banner **„Geplant · Als gekauft markieren"**, beeinflusst aber noch nicht deine Budgetsummen.
+Wenn eine Anfrage genehmigt wurde, kann jeder Bearbeiter oder Inhaber auf **Zum Kaufplan hinzufügen** tippen. Dadurch entsteht eine geplante Ausgabe — sie erscheint auf dem Ausgabendetail-Bildschirm mit dem Banner **„Geplanter Kauf · Als gekauft markieren“**, zählt aber noch nicht zu deinen Ausgaben oder deinem Budget.
 
-Wenn du den Kauf tatsächlich tätigst, öffne die Ausgabe und tippe auf das Banner, um sie als gekauft zu markieren. Das Planungs-Flag wird entfernt und die Ausgabe fließt normal in dein Budget ein.
+Wenn du den Kauf tatsächlich tätigst, öffne die Ausgabe und tippe auf das Banner, um sie als gekauft zu markieren. Danach zählt die Ausgabe ganz normal zu deinem Budget.
 
 ## Benachrichtigungen
 
 Du erhältst Push-Benachrichtigungen, wenn:
 
 - Eine neue Kaufanfrage erstellt wird (alle Mitglieder außer dem Ersteller).
-- Jemand auf deine Anfrage abstimmt.
+- Jemand über deine Anfrage abstimmt.
 - Eine Anfrage, an der du beteiligt bist, genehmigt oder abgelehnt wird.
 
 Du kannst Kaufanfragen-Benachrichtigungen unter **Einstellungen → Benachrichtigungen → Kaufanfragen** deaktivieren.
@@ -30243,41 +30263,45 @@ La captura automática es una función de Android. En iOS y web, esta sección n
     {
       id: '33-purchase-requests',
       title: `Solicitudes de compra`,
-      description: `Propón una compra en una cuenta compartida y deja que el grupo vote para aprobarla o rechazarla antes de comprar — desde la app o los bots de Telegram/WhatsApp.`,
+      description: `Propón una compra en una cuenta compartida y deja que el grupo vote en la app para aprobarla o rechazarla antes de comprar.`,
       body: `# Solicitudes de compra
 
-> Propón una compra en una cuenta compartida y deja que el grupo vote para aprobarla o rechazarla antes de comprar — desde la app o los bots de Telegram/WhatsApp.
+> Propón una compra en una cuenta compartida y deja que el grupo vote en la app para aprobarla o rechazarla antes de comprar.
 
-Las solicitudes de compra permiten que cualquier miembro de la cuenta proponga una compra para aprobación grupal antes de que entre al presupuesto. Los demás miembros votan directamente en la aplicación o a través de los bots de Telegram y WhatsApp; las solicitudes aprobadas se convierten en gastos planificados que puedes convertir en gastos reales con un solo toque.
+Las solicitudes de compra permiten a los miembros de la cuenta proponer una compra para aprobación grupal antes de que entre al presupuesto. Los demás miembros votan en la aplicación; las solicitudes aprobadas se convierten en gastos planificados que marcas como comprados con un solo toque cuando realmente compras.
 
 ## Crear una solicitud
 
 1. Ve a **Configuración → Solicitudes de compra**.
 2. Toca el botón **+**.
-3. Completa el título y el monto (obligatorios). Opcionalmente, agrega categoría, comerciante, descripción, foto y fecha límite.
-4. Toca **Enviar** — todos los demás miembros de la cuenta recibirán una notificación y podrán votar.
+3. Rellena el título y el importe (obligatorios). Opcionalmente cambia la moneda y añade un comercio y un comentario.
+4. Toca **Guardar** — todos los demás miembros de la cuenta recibirán una notificación y podrán votar.
 
-## Votar
+Pueden crear solicitudes el propietario y los editores. Quienes solo tienen acceso de lectura no pueden crearlas, pero sí votar.
 
-Abre la solicitud desde **Configuración → Solicitudes de compra** o desde la notificación push. Toca **Aprobar**, **Rechazar** o **Abstenerse**. Puedes cambiar tu voto en cualquier momento mientras la solicitud aún esté pendiente.
+## Votación
 
-Los miembros de Telegram y WhatsApp pueden votar directamente desde el mensaje del bot usando los botones en línea.
+Abre la solicitud desde **Configuración → Solicitudes de compra** o desde la notificación push. Toca **Aprobar**, **Rechazar** o **Abstenerse** — puedes añadir un comentario a tu voto. Puedes cambiar tu voto en cualquier momento mientras la solicitud siga pendiente. Quien creó la solicitud también puede votar.
+
+La votación se hace en la aplicación.
 
 ## Reglas de aprobación
 
-El propietario de la cuenta puede establecer la regla de aprobación en **Configuración → Solicitudes de compra → Regla de aprobación**:
+El propietario de la cuenta puede establecer la regla en **Configuración → Solicitudes de compra → Regla de aprobación**:
 
-- **Mayoría** (predeterminado) — más de la mitad de todos los miembros debe aprobar.
-- **Unánime** — cada miembro debe aprobar; un rechazo cierra la solicitud.
-- **Solo el propietario** — solo cuenta el voto del propietario de la cuenta.
+- **Votación mayoritaria** (predeterminada) — más de la mitad de los miembros debe aprobar (o rechazar).
+- **Todos deben aprobar** — cada miembro debe aprobar; un solo rechazo cierra la solicitud.
+- **El propietario decide** — solo cuenta el voto del propietario de la cuenta.
 
-Los miembros que se abstienen no se cuentan en el denominador, por lo que los miembros inactivos no bloquean una decisión.
+Los miembros que se abstienen no se cuentan, así que no retrasan la decisión. Los miembros que aún no han votado sí se cuentan: la solicitud queda pendiente hasta que voten suficientes miembros.
+
+La regla se fija al crear la solicitud: cambiar después la regla de la cuenta no afecta a las solicitudes que ya esperan votos.
 
 ## Después de la aprobación
 
-Cuando se aprueba una solicitud, cualquier editor o propietario puede tocar **Agregar al plan de compras**. Esto crea un gasto planificado — aparece en la pantalla de detalles del gasto con el banner **"Planificado · Marcar como comprado"**, pero aún no afecta los totales de tu presupuesto.
+Cuando una solicitud se aprueba, cualquier editor o propietario puede tocar **Añadir al plan de compras**. Esto crea un gasto planificado — aparece en la pantalla de detalles del gasto con el banner **«Compra planificada · Marcar como comprada»**, pero todavía no cuenta en tus gastos ni en tu presupuesto.
 
-Cuando realmente realices la compra, abre el gasto y toca el banner para marcarlo como comprado. El indicador de planificación se elimina y el gasto entra al presupuesto normalmente.
+Cuando realmente hagas la compra, abre el gasto y toca el banner para marcarlo como comprado. A partir de ahí el gasto cuenta normalmente en tu presupuesto.
 
 ## Notificaciones
 
@@ -35394,41 +35418,45 @@ La capture automatique est une fonctionnalité Android. Sur iOS et le web, cette
     {
       id: '33-purchase-requests',
       title: `Demandes d'achat`,
-      description: `Proposez un achat sur un compte partagé et laissez le groupe voter pour l'approuver ou le refuser avant l'achat — depuis l'application ou via les bots Telegram/WhatsApp.`,
+      description: `Proposez un achat sur un compte partagé et laissez le groupe voter dans l'application pour l'approuver ou le rejeter avant l'achat.`,
       body: `# Demandes d'achat
 
-> Proposez un achat sur un compte partagé et laissez le groupe voter pour l'approuver ou le refuser avant l'achat — depuis l'application ou via les bots Telegram/WhatsApp.
+> Proposez un achat sur un compte partagé et laissez le groupe voter dans l'application pour l'approuver ou le rejeter avant l'achat.
 
-Les demandes d'achat permettent à n'importe quel membre du compte de proposer un achat pour approbation collective avant qu'il entre dans le budget. Les autres membres votent directement dans l'application ou via les bots Telegram et WhatsApp ; les demandes approuvées deviennent des dépenses planifiées que vous pouvez convertir en dépenses réelles en un seul geste.
+Les demandes d'achat permettent aux membres du compte de proposer un achat pour approbation collective avant qu'il entre dans le budget. Les autres membres votent dans l'application ; les demandes approuvées deviennent des dépenses planifiées que vous marquez comme achetées en un seul geste une fois l'achat réellement effectué.
 
 ## Créer une demande
 
 1. Allez dans **Paramètres → Demandes d'achat**.
 2. Appuyez sur le bouton **+**.
-3. Remplissez le titre et le montant (obligatoires). Vous pouvez optionnellement ajouter une catégorie, un commerçant, une description, une photo et une date limite.
-4. Appuyez sur **Envoyer** — tous les autres membres du compte recevront une notification et pourront voter.
+3. Renseignez le titre et le montant (obligatoires). Vous pouvez aussi changer la devise et ajouter un marchand et un commentaire.
+4. Appuyez sur **Enregistrer** — tous les autres membres du compte reçoivent une notification et peuvent voter.
+
+Le propriétaire et les éditeurs peuvent créer des demandes. Les membres en lecture seule ne peuvent pas en créer, mais ils peuvent voter.
 
 ## Voter
 
-Ouvrez la demande depuis **Paramètres → Demandes d'achat** ou depuis la notification push. Appuyez sur **Approuver**, **Refuser** ou **S'abstenir**. Vous pouvez modifier votre vote à tout moment tant que la demande est en attente.
+Ouvrez la demande depuis **Paramètres → Demandes d'achat** ou depuis la notification push. Appuyez sur **Approuver**, **Rejeter** ou **S'abstenir** — vous pouvez ajouter un commentaire à votre vote. Vous pouvez modifier votre vote à tout moment tant que la demande est en attente. L'auteur de la demande peut aussi voter.
 
-Les membres Telegram et WhatsApp peuvent voter directement depuis le message du bot en utilisant les boutons en ligne.
+Le vote se fait dans l'application.
 
 ## Règles d'approbation
 
-Le propriétaire du compte peut définir la règle d'approbation sous **Paramètres → Demandes d'achat → Règle d'approbation** :
+Le propriétaire du compte peut définir la règle sous **Paramètres → Demandes d'achat → Règle d'approbation** :
 
-- **Majorité** (par défaut) — plus de la moitié de tous les membres doit approuver.
-- **Unanime** — chaque membre doit approuver ; un refus ferme la demande.
-- **Propriétaire uniquement** — seul le vote du propriétaire du compte compte.
+- **Vote majoritaire** (par défaut) — plus de la moitié des membres doit approuver (ou rejeter).
+- **Tout le monde doit approuver** — chaque membre doit approuver ; un seul rejet clôt la demande.
+- **Le propriétaire décide** — seul le vote du propriétaire du compte compte.
 
-Les membres qui s'abstiennent ne sont pas comptés dans le dénominateur, de sorte que les membres inactifs ne bloquent pas une décision.
+Les membres qui s'abstiennent ne sont pas comptés, ils ne retardent donc pas la décision. Les membres qui n'ont pas encore voté restent comptés : la demande reste en attente tant que suffisamment de membres n'ont pas voté.
+
+La règle est fixée à la création de la demande : modifier ensuite la règle du compte n'affecte pas les demandes qui attendent déjà des votes.
 
 ## Après l'approbation
 
-Lorsqu'une demande est approuvée, tout éditeur ou propriétaire peut appuyer sur **Ajouter au plan d'achat**. Cela crée une dépense planifiée — elle apparaît sur l'écran de détail de la dépense avec la bannière **« Planifié · Marquer comme acheté »**, mais n'affecte pas encore vos totaux budgétaires.
+Lorsqu'une demande est approuvée, tout éditeur ou propriétaire peut appuyer sur **Ajouter au plan d'achat**. Cela crée une dépense planifiée — elle apparaît sur l'écran de détail de la dépense avec la bannière **« Achat planifié · Marquer comme acheté »**, mais ne compte pas encore dans vos dépenses ni dans votre budget.
 
-Lorsque vous effectuez réellement l'achat, ouvrez la dépense et appuyez sur la bannière pour la marquer comme achetée. L'indicateur de planification est supprimé et la dépense entre normalement dans votre budget.
+Lorsque vous effectuez réellement l'achat, ouvrez la dépense et appuyez sur la bannière pour la marquer comme achetée. La dépense compte alors normalement dans votre budget.
 
 ## Notifications
 
@@ -40508,52 +40536,56 @@ OCR часам няправільна чытае цану, выдумляе ра
     },
     {
       id: '33-purchase-requests',
-      title: `Запыты на пакупку`,
-      description: `Прапануйце пакупку на агульным рахунку і дайце групе прагаласаваць за зацвярджэнне ці адхіленне перад пакупкай — у дадатку або праз боты Telegram і WhatsApp.`,
-      body: `# Запыты на пакупку
+      title: `Запыты на куплю`,
+      description: `Прапануйце пакупку на агульным рахунку і дайце групе прагаласаваць у дадатку за адабрэнне ці адхіленне перад пакупкай.`,
+      body: `# Запыты на куплю
 
-> Прапануйце пакупку на агульным рахунку і дайце групе прагаласаваць за зацвярджэнне ці адхіленне перад пакупкай — у дадатку або праз боты Telegram і WhatsApp.
+> Прапануйце пакупку на агульным рахунку і дайце групе прагаласаваць у дадатку за адабрэнне ці адхіленне перад пакупкай.
 
-Запыты на пакупку дазваляюць любому ўдзельніку рахунку прапанаваць пакупку для групавога ўзгаднення да таго, як яна ўвойдзе ў бюджэт. Іншыя ўдзельнікі галасуюць непасрэдна ў дадатку або праз боты Telegram і WhatsApp; зацверджаныя запыты становяцца запланаванымі выдаткамі, якія можна ператварыць у рэальныя адным дотыкам.
+Запыты на куплю дазваляюць удзельнікам рахунку прапанаваць пакупку для групавога ўзгаднення да таго, як яна ўвойдзе ў бюджэт. Іншыя ўдзельнікі галасуюць у дадатку; адобраныя запыты становяцца запланаванымі выдаткамі, якія вы адным дотыкам адзначаеце як купленыя, калі сапраўды зробіце пакупку.
 
 ## Стварэнне запыту
 
-1. Перайдзіце ў **Налады → Запыты на пакупку**.
+1. Перайдзіце ў **Налады → Запыты на куплю**.
 2. Націсніце кнопку **+**.
-3. Запоўніце назву і суму (абавязкова). Па жаданні дадайце катэгорыю, прадаўца, апісанне, фота і тэрмін.
-4. Націсніце **Адправіць** — усе іншыя ўдзельнікі рахунку атрымаюць апавяшчэнне і змогуць прагаласаваць.
+3. Запоўніце назву і суму (абавязкова). Пры жаданні змяніце валюту і дадайце краму і каментарый.
+4. Націсніце **Захаваць** — усе іншыя ўдзельнікі рахунку атрымаюць апавяшчэнне і змогуць прагаласаваць.
+
+Ствараць запыты могуць уладальнік і рэдактары. Удзельнікі з доступам толькі на прагляд не могуць іх ствараць, але могуць галасаваць.
 
 ## Галасаванне
 
-Адкрыйце запыт з **Налады → Запыты на пакупку** або з push-апавяшчэння. Націсніце **Зацвердзіць**, **Адхіліць** або **Устрымацца**. Вы можаце змяніць свой голас у любы момант, пакуль запыт яшчэ чакае рашэння.
+Адкрыйце запыт з **Налады → Запыты на куплю** або з push-апавяшчэння. Націсніце **Адобрыць**, **Адхіліць** або **Устрымацца** — да голасу можна дадаць каментарый. Вы можаце змяніць свой голас у любы момант, пакуль запыт яшчэ чакае рашэння. Аўтар запыту таксама можа галасаваць.
 
-Удзельнікі Telegram і WhatsApp могуць галасаваць непасрэдна з паведамлення бота, выкарыстоўваючы ўбудаваныя кнопкі.
+Галасаванне адбываецца ў дадатку.
 
-## Правілы зацвярджэння
+## Правілы адабрэння
 
-Уладальнік рахунку можа задаць правіла зацвярджэння ў **Налады → Запыты на пакупку → Правіла зацвярджэння**:
+Уладальнік рахунку можа задаць правіла ў **Налады → Запыты на куплю → Правіла адабрэння**:
 
-- **Большасць** (па змаўчанні) — больш за палову ўсіх удзельнікаў павінны зацвердзіць.
-- **Аднагалосна** — кожны ўдзельнік павінен зацвердзіць; адно адхіленне закрывае запыт.
-- **Толькі ўладальнік** — улічваецца толькі голас уладальніка рахунку.
+- **Большасць галасоў** (па змаўчанні) — адобрыць (або адхіліць) павінны больш за палову ўдзельнікаў.
+- **Усе павінны пагадзіцца** — адобрыць павінен кожны ўдзельнік; адно адхіленне закрывае запыт.
+- **Уладальнік вырашае** — улічваецца толькі голас уладальніка рахунку.
 
-Удзельнікі, якія ўстрымаліся, не ўключаюцца ў назоўнік, таму неактыўныя ўдзельнікі не блакіруюць рашэнне.
+Удзельнікі, якія ўстрымаліся, не ўлічваюцца, таму не затрымліваюць рашэнне. Удзельнікі, якія яшчэ не прагаласавалі, улічваюцца — запыт чакае, пакуль прагаласуе дастаткова ўдзельнікаў.
 
-## Пасля зацвярджэння
+Правіла фіксуецца пры стварэнні запыту: калі пазней змяніць правіла рахунку, гэта не паўплывае на запыты, якія ўжо чакаюць галасоў.
 
-Калі запыт зацверджаны, любы рэдактар або ўладальнік можа націснуць **Дадаць у план пакупак**. Гэта стварае запланаваны выдатак — ён з'яўляецца на экране дэталяў выдатку з банэрам **«Запланавана · Адзначыць як куплена»**, але пакуль не ўплывае на вынікі бюджэту.
+## Пасля адабрэння
 
-Калі вы фактычна зробіце пакупку, адкрыйце выдатак і націсніце банэр, каб адзначыць яго як куплена. Сцяг планавання здымаецца, і выдатак нармальна ўваходзіць у бюджэт.
+Калі запыт адобраны, любы рэдактар або ўладальнік можа націснуць **Дадаць у план пакупак**. Гэта стварае запланаваны выдатак — ён з'яўляецца на экране дэталяў выдатку з банерам **«Запланаваная пакупка · Адзначыць як купленую»**, але пакуль не ўлічваецца ў выдатках і бюджэце.
+
+Калі вы сапраўды зробіце пакупку, адкрыйце выдатак і націсніце на банер, каб адзначыць яго як куплены. Пасля гэтага выдатак улічваецца ў бюджэце як звычайна.
 
 ## Апавяшчэнні
 
-Вы атрымаеце push-апавяшчэнні, калі:
+Вы будзеце атрымліваць push-апавяшчэнні, калі:
 
-- Стварыцца новы запыт на пакупку (усе ўдзельнікі, акрамя аўтара).
-- Нехта прагаласуе па вашым запыце.
-- Запыт, у якім вы ўдзельнічаеце, будзе зацверджаны або адхілены.
+- Створаны новы запыт на куплю (усе ўдзельнікі, акрамя стваральніка).
+- Хтосьці прагаласаваў па вашым запыце.
+- Запыт, у якім вы ўдзельнічаеце, адобраны або адхілены.
 
-Вы можаце адключыць апавяшчэнні пра запыты на пакупку ў **Налады → Апавяшчэнні → Запыты на пакупку**.
+Вы можаце адключыць апавяшчэнні пра запыты на куплю ў **Налады → Апавяшчэнні → Запыты на куплю**.
 `,
     },
     {
@@ -45750,49 +45782,53 @@ Automatisch vastleggen is een Android-functie. Op iOS en web verschijnt dit gede
     {
       id: '33-purchase-requests',
       title: `Aankoopverzoeken`,
-      description: `Stel een aankoop voor op een gedeelde rekening en laat de groep stemmen om deze goed te keuren of af te wijzen voordat je koopt — via de app of de Telegram-/WhatsApp-bots.`,
+      description: `Stel een aankoop voor op een gedeelde rekening en laat de groep in de app stemmen om deze goed te keuren of af te wijzen voordat je koopt.`,
       body: `# Aankoopverzoeken
 
-> Stel een aankoop voor op een gedeelde rekening en laat de groep stemmen om deze goed te keuren of af te wijzen voordat je koopt — via de app of de Telegram-/WhatsApp-bots.
+> Stel een aankoop voor op een gedeelde rekening en laat de groep in de app stemmen om deze goed te keuren of af te wijzen voordat je koopt.
 
-Met aankoopverzoeken kan elk accountlid een aankoop voorstellen voor groepsgoedkeuring voordat deze het budget ingaat. Andere leden stemmen direct in de app of via de Telegram- en WhatsApp-bots; goedgekeurde verzoeken worden geplande uitgaven die je met één tik kunt omzetten in echte uitgaven.
+Met aankoopverzoeken kunnen accountleden een aankoop voorstellen voor groepsgoedkeuring voordat deze het budget ingaat. De andere leden stemmen in de app; goedgekeurde verzoeken worden geplande uitgaven die je met één tik als gekocht markeert zodra je echt koopt.
 
 ## Een verzoek aanmaken
 
 1. Ga naar **Instellingen → Aankoopverzoeken**.
-2. Tik op de **+** knop.
-3. Vul de titel en het bedrag in (verplicht). Voeg optioneel een categorie, handelaar, beschrijving, foto en deadline toe.
-4. Tik op **Verzenden** — alle andere accountleden ontvangen een melding en kunnen stemmen.
+2. Tik op de knop **+**.
+3. Vul de titel en het bedrag in (verplicht). Optioneel kun je de valuta wijzigen en een winkel en een opmerking toevoegen.
+4. Tik op **Opslaan** — alle andere accountleden ontvangen een melding en kunnen stemmen.
+
+De eigenaar en bewerkers kunnen verzoeken aanmaken. Leden met alleen-lezen-toegang kunnen geen verzoeken aanmaken, maar wel stemmen.
 
 ## Stemmen
 
-Open het verzoek via **Instellingen → Aankoopverzoeken** of via de pushmelding. Tik op **Goedkeuren**, **Afwijzen** of **Onthouden**. Je kunt je stem op elk moment wijzigen zolang het verzoek nog in behandeling is.
+Open het verzoek via **Instellingen → Aankoopverzoeken** of via de pushmelding. Tik op **Goedkeuren**, **Afwijzen** of **Onthouden** — je kunt een opmerking aan je stem toevoegen. Je kunt je stem op elk moment wijzigen zolang het verzoek nog in behandeling is. Wie het verzoek heeft aangemaakt, kan ook stemmen.
 
-Telegram- en WhatsApp-leden kunnen direct vanuit het botbericht stemmen via de inlineknopppen.
+Stemmen gebeurt in de app.
 
 ## Goedkeuringsregels
 
-De accounteigenaar kan de goedkeuringsregel instellen via **Instellingen → Aankoopverzoeken → Goedkeuringsregel**:
+De accounteigenaar kan de regel instellen via **Instellingen → Aankoopverzoeken → Goedkeuringsregel**:
 
-- **Meerderheid** (standaard) — meer dan de helft van alle leden moet goedkeuren.
-- **Unaniem** — elk lid moet goedkeuren; één afwijzing sluit het verzoek.
-- **Alleen eigenaar** — alleen de stem van de accounteigenaar telt.
+- **Meerderheid van stemmen** (standaard) — meer dan de helft van de leden moet goedkeuren (of afwijzen).
+- **Iedereen moet instemmen** — elk lid moet goedkeuren; één afwijzing sluit het verzoek.
+- **Eigenaar beslist** — alleen de stem van de accounteigenaar telt.
 
-Onthoudende leden worden niet meegeteld in de noemer, zodat inactieve leden een beslissing niet blokkeren.
+Leden die zich onthouden, worden niet meegeteld en houden een beslissing dus niet op. Leden die nog niet hebben gestemd, tellen wel mee — een verzoek blijft openstaan tot genoeg leden hebben gestemd.
+
+De regel ligt vast bij het aanmaken van een verzoek: als je later de regel van het account wijzigt, heeft dat geen invloed op verzoeken die al op stemmen wachten.
 
 ## Na goedkeuring
 
-Wanneer een verzoek is goedgekeurd, kan elke redacteur of eigenaar tikken op **Toevoegen aan aankoopplan**. Hiermee wordt een geplande uitgave aangemaakt — deze verschijnt op het detailscherm van de uitgave met de banner **"Gepland · Markeren als gekocht"**, maar beïnvloedt je budgettotalen nog niet.
+Wanneer een verzoek is goedgekeurd, kan elke bewerker of eigenaar op **Toevoegen aan aankoopplan** tikken. Dit maakt een geplande uitgave aan — die verschijnt op het detailscherm van de uitgave met de banner **„Geplande aankoop · Markeren als gekocht”**, maar telt nog niet mee in je uitgaven of budget.
 
-Wanneer je de aankoop daadwerkelijk doet, open dan de uitgave en tik op de banner om deze als gekocht te markeren. De planningsvlag wordt verwijderd en de uitgave gaat normaal in je budget.
+Wanneer je de aankoop echt doet, open je de uitgave en tik je op de banner om deze als gekocht te markeren. Daarna telt de uitgave gewoon mee in je budget.
 
 ## Meldingen
 
 Je ontvangt pushmeldingen wanneer:
 
 - Er een nieuw aankoopverzoek wordt aangemaakt (alle leden behalve de maker).
-- Iemand op jouw verzoek stemt.
-- Een verzoek waaraan je deelneemt wordt goedgekeurd of afgewezen.
+- Iemand op je verzoek stemt.
+- Een verzoek waar je bij betrokken bent, wordt goedgekeurd of afgewezen.
 
 Je kunt meldingen voor aankoopverzoeken uitschakelen via **Instellingen → Meldingen → Aankoopverzoeken**.
 `,
