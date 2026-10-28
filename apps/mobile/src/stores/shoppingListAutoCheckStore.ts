@@ -7,10 +7,8 @@ const KEY = 'enabled';
 interface ShoppingListAutoCheckState {
   /**
    * Auto-check off shopping-list items that show up on a scanned receipt
-   * (ABA shopping-list-receipt-reconciliation). Default ON, unlike
-   * `locationSettingsStore`'s capture toggle — this is a convenience
-   * automation, not a privacy-sensitive capture, so it defaults to doing the
-   * helpful thing. Device-local only, not server-synced (a personal
+   * (ABA shopping-list-receipt-reconciliation). Default ON, like
+   * `locationSettingsStore`'s capture toggle. Device-local only, not server-synced (a personal
    * automation preference, not account data) and not reset on logout, same
    * treatment as `locationSettingsStore`.
    */

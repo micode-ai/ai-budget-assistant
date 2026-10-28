@@ -14,15 +14,13 @@ Eine Ausgabe erhält ihren Standort aus einer von drei Quellen (die höherwertig
 
 Importierte Transaktionen (Bank-CSV-/PDF-Dateien) erhalten keinen Standort.
 
-## GPS-Erfassung aktivieren
+## GPS-Erfassung
 
-Die GPS-Erfassung ist **standardmäßig ausgeschaltet**. So aktivierst du sie:
+Die GPS-Erfassung ist **standardmäßig eingeschaltet**. Wenn du zum ersten Mal eine Ausgabe hinzufügst (von Hand, per Sprache oder durch Scannen eines Belegs), fragt die App nach der Standortberechtigung — erlaube sie, dann erhalten neue Ausgaben, die du unterwegs erfasst, automatisch deine aktuelle Position.
 
-1. Öffne **Einstellungen → Daten & Berichte**.
-2. Schalte im Bereich **Standort** die Option **Standort an neue Ausgaben anhängen** ein.
-3. Erlaube die Standortberechtigung, wenn das System danach fragt.
+Zum Ausschalten (oder Wiedereinschalten) öffne **Einstellungen → Daten & Berichte → Standort** und schalte **Standort an neue Ausgaben anhängen** um. Falls du die Berechtigung abgelehnt hast, erlaube den Standortzugriff für die App in den Systemeinstellungen.
 
-Ist die Option aktiviert, erhalten neue Ausgaben, die du unterwegs erfasst, automatisch deine aktuelle Position. Du kannst den Standort einer Ausgabe jederzeit einsehen und entfernen und den Schalter jederzeit wieder ausschalten.
+Du kannst den Standort einer Ausgabe jederzeit einsehen und entfernen und den Schalter jederzeit ausschalten.
 
 ## Kartenansicht im Tab „Ausgaben"
 
@@ -47,7 +45,7 @@ Reisekonten erhalten einen eigenen Einstiegspunkt: Öffne das Reisekonto und tip
 
 ## Datenschutz
 
-- Die GPS-Erfassung ist strikt Opt-in und standardmäßig ausgeschaltet; die Berechtigung wird erst angefragt, wenn du den Schalter aktivierst.
+- Die GPS-Erfassung ist standardmäßig eingeschaltet, braucht aber deine Berechtigung — die App fragt einmal, und du kannst sie jederzeit unter **Einstellungen → Daten & Berichte → Standort** ausschalten.
 - Die Adresserkennung aus dem Kassenbon nutzt ausschließlich die auf dem Beleg aufgedruckte Adresse — dein Standort wird dabei nicht verwendet.
 - Ein Standort ist Teil des Ausgabendatensatzes: Mitglieder eines gemeinsamen Kontos, die die Ausgabe sehen können, sehen auch ihren Standort.
 - Du kannst den Standort jeder Ausgabe jederzeit entfernen.

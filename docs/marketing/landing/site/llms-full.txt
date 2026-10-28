@@ -3590,7 +3590,7 @@ Tap the card to open your shopping list.
 
 The card only appears once the app recognizes the store from your past shopping there, so it won't show up on your very first visit to a new place — and once you leave, it clears the next time you open the app or come back to the Dashboard.
 
-> **Note:** This card needs location access. Turn on **Attach location to new expenses** in **Settings → Data & Reports → Location** — it's off by default. Without it, the app never checks where you are, and this card never appears.
+> **Note:** This card needs location access. Turn on **Attach location to new expenses** in **Settings → Data & Reports → Location** — it's on by default unless you turned it off. Without it, the app never checks where you are, and this card never appears.
 
 ## Financial Health Score
 
@@ -7760,15 +7760,13 @@ An expense gets its location from one of three sources (higher wins):
 
 Imported transactions (bank CSV/PDF files) do not get a location.
 
-## Turning On GPS Capture
+## GPS Capture
 
-GPS capture is **off by default**. To enable it:
+GPS capture is **on by default**. The first time you add an expense (by hand, by voice or by scanning a receipt), the app asks for the location permission — allow it, and new expenses you add on the go get your current position automatically.
 
-1. Open **Settings → Data & Reports**.
-2. In the **Location** section, turn on **Attach location to new expenses**.
-3. Allow the location permission when the system asks.
+To turn it off (or back on), open **Settings → Data & Reports → Location** and switch **Attach location to new expenses**. If you refused the permission, allow location for the app in your system settings.
 
-When enabled, new expenses you add on the go get your current position automatically. You can always see and remove an expense's location, and you can turn the toggle off at any time.
+You can always see and remove an expense's location, and you can turn the toggle off at any time.
 
 ## Map View on the Expenses Tab
 
@@ -7793,7 +7791,7 @@ Trip accounts get a dedicated entry point: open the trip account and tap **Trip 
 
 ## Privacy
 
-- GPS capture is strictly opt-in and off by default; the permission is only requested when you enable the toggle.
+- GPS capture is on by default but needs your permission — the app asks once, and you can turn it off at any time in **Settings → Data & Reports → Location**.
 - The receipt-address lookup uses only the address printed on the receipt — no phone location is involved.
 - A location is part of the expense record: members of a shared account who can see the expense also see its location.
 - You can remove any expense's location at any time.

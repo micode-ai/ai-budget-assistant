@@ -3585,7 +3585,7 @@ Appuyez sur la carte pour ouvrir votre liste de courses.
 
 La carte n'apparaît que lorsque l'application reconnaît le magasin à partir de vos achats précédents à cet endroit — elle n'apparaîtra donc pas lors de votre toute première visite dans un nouvel endroit, et lorsque vous partez, elle disparaît à la prochaine ouverture de l'application ou lorsque vous revenez au Tableau de bord.
 
-> **Note :** Cette carte nécessite l'accès à la localisation. Activez **Joindre la localisation aux nouvelles dépenses** dans **Paramètres → Données et rapports → Localisation** — elle est désactivée par défaut. Sans cela, l'application ne vérifie jamais où vous êtes, et cette carte n'apparaît jamais.
+> **Note :** Cette carte nécessite l'accès à la localisation. Activez **Joindre la localisation aux nouvelles dépenses** dans **Paramètres → Données et rapports → Localisation** — elle est activée par défaut, sauf si vous l'avez désactivée. Sans cela, l'application ne vérifie jamais où vous êtes, et cette carte n'apparaît jamais.
 
 ## Santé Financière
 
@@ -7639,15 +7639,13 @@ Une dépense obtient sa localisation à partir de l'une de ces trois sources (la
 
 Les transactions importées (fichiers CSV/PDF bancaires) n'obtiennent pas de localisation.
 
-## Activer la capture GPS
+## Capture GPS
 
-La capture GPS est **désactivée par défaut**. Pour l'activer :
+La capture GPS est **activée par défaut**. La première fois que vous ajoutez une dépense (à la main, par la voix ou en scannant un reçu), l'application demande l'autorisation de localisation — acceptez-la, et les nouvelles dépenses que vous ajoutez en déplacement récupèrent automatiquement votre position actuelle.
 
-1. Ouvrez **Paramètres → Données et rapports**.
-2. Dans la section **Localisation**, activez **Joindre la localisation aux nouvelles dépenses**.
-3. Autorisez la permission de localisation lorsque le système la demande.
+Pour la désactiver (ou la réactiver), ouvrez **Paramètres → Données et rapports → Localisation** et basculez **Joindre la localisation aux nouvelles dépenses**. Si vous avez refusé l'autorisation, autorisez la localisation pour l'application dans les paramètres du système.
 
-Une fois activée, les nouvelles dépenses que vous ajoutez en déplacement récupèrent automatiquement votre position actuelle. Vous pouvez toujours consulter et supprimer la localisation d'une dépense, et désactiver l'interrupteur à tout moment.
+Vous pouvez toujours consulter et supprimer la localisation d'une dépense, et désactiver l'interrupteur à tout moment.
 
 ## Vue carte dans l'onglet Dépenses
 
@@ -7672,7 +7670,7 @@ Les comptes voyage disposent d'un point d'accès dédié : ouvrez le compte voya
 
 ## Confidentialité
 
-- La capture GPS est strictement optionnelle et désactivée par défaut ; la permission n'est demandée que lorsque vous activez l'interrupteur.
+- La capture GPS est activée par défaut, mais elle nécessite votre autorisation — l'application la demande une seule fois, et vous pouvez la désactiver à tout moment dans **Paramètres → Données et rapports → Localisation**.
 - La recherche d'adresse à partir du ticket utilise uniquement l'adresse imprimée sur le reçu — aucune localisation du téléphone n'est impliquée.
 - Une localisation fait partie de l'enregistrement de la dépense : les membres d'un compte partagé qui peuvent voir la dépense voient aussi sa localisation.
 - Vous pouvez supprimer la localisation de n'importe quelle dépense à tout moment.

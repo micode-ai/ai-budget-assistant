@@ -39,6 +39,15 @@ name.
 **Source priority: manual pin > OCR address > silent GPS.** GPS is wired through mount refs so it
 never delays a save; imports never get a location.
 
+**GPS capture is ON by default (ABA-701).** `locationSettingsStore` reads `captureEnabled` as
+"anything but a stored `'false'`", so only an explicit OFF from settings keeps it off. Because the
+toggle no longer goes through settings' own permission request, the foreground add-expense screens
+(manual form, voice, receipt save) call `captureCurrentLocation({ askPermission: true })`, which
+asks an *undetermined* OS permission once per install (`permissionAsked` in the `location-settings`
+MMKV). Before this the toggle was opt-in and device-local, so a reinstall or a new phone silently
+turned it off — one account's hand-entered expenses stopped getting any location for months while
+its receipts still got one from the printed address.
+
 ## Invariants
 
 **`GeocodingService` must be a single DI instance.** Its Nominatim throttle (≥1.1 s) is
@@ -77,6 +86,11 @@ the right place with no icon at all.
 reset pan and zoom via `clearLayers` + `fitBounds`. A `readyTick` counter plus a payload diff means
 a recreated WebView process always re-syncs while a no-op render does nothing.
 
+**Never ask for location from a background path.** Notification capture calls
+`captureCurrentLocation()` without `askPermission`; a system dialog there would appear over whatever
+the user is doing. And the ask is once per install whatever the answer, because Android keeps
+re-prompting after a single denial.
+
 **`view=map` needs a nonce param.** An unchanged param value does not re-fire the effect.
 
 ## Known gaps
@@ -87,9 +101,13 @@ a recreated WebView process always re-syncs while a no-op render does nothing.
 - An offline location *clear* is lost on the retry path.
 - The geocode cache upsert can race.
 - The pin picker has no in-screen `canEdit` guard.
+- The capture toggle is device-local, not synced; a past hand-entered expense cannot get a location
+  back (it has neither an address nor coordinates). Older receipts can — their stored image is
+  re-readable — which was done once by hand on production for one account (ABA-701).
 
 ## History
 
 ABA-310 (the feature) · ABA-311 (structured geocoding) · ABA-312 (address search) · ABA-329 (bot
 receipts carry their geocoded location through, instead of dropping it) · ABA-333 (proximity
-search, near-me centering, recent places, web geolocation).
+search, near-me centering, recent places, web geolocation) ·
+[ABA-701](https://github.com/micode-ai/ai-budget-assistant/issues/734) (GPS capture on by default).

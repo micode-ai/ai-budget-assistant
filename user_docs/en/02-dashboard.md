@@ -44,7 +44,7 @@ Tap the card to open your shopping list.
 
 The card only appears once the app recognizes the store from your past shopping there, so it won't show up on your very first visit to a new place — and once you leave, it clears the next time you open the app or come back to the Dashboard.
 
-> **Note:** This card needs location access. Turn on **Attach location to new expenses** in **Settings → Data & Reports → Location** — it's off by default. Without it, the app never checks where you are, and this card never appears.
+> **Note:** This card needs location access. Turn on **Attach location to new expenses** in **Settings → Data & Reports → Location** — it's on by default unless you turned it off. Without it, the app never checks where you are, and this card never appears.
 
 ## Financial Health Score
 

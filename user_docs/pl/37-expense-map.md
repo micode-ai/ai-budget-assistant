@@ -14,15 +14,13 @@ Wydatek otrzymuje swoją lokalizację z jednego z trzech źródeł (wyższe wygr
 
 Zaimportowane transakcje (pliki bankowe CSV/PDF) nie otrzymują lokalizacji.
 
-## Włączanie przechwytywania GPS
+## Przechwytywanie GPS
 
-Przechwytywanie GPS jest **domyślnie wyłączone**. Aby je włączyć:
+Przechwytywanie GPS jest **domyślnie włączone**. Gdy po raz pierwszy dodasz wydatek (ręcznie, głosowo lub skanując paragon), aplikacja poprosi o uprawnienie do lokalizacji — zezwól na nie, a nowe wydatki dodawane w terenie będą automatycznie otrzymywać Twoją aktualną pozycję.
 
-1. Otwórz **Ustawienia → Dane i raporty**.
-2. W sekcji **Lokalizacja** włącz opcję **Dołączaj lokalizację do nowych wydatków**.
-3. Zezwól na uprawnienie lokalizacji, gdy zapyta o to system.
+Aby je wyłączyć (lub ponownie włączyć), otwórz **Ustawienia → Dane i raporty → Lokalizacja** i przełącz **Dołączaj lokalizację do nowych wydatków**. Jeśli odmówisz uprawnienia, zezwól aplikacji na dostęp do lokalizacji w ustawieniach systemu.
 
-Po włączeniu nowe wydatki dodawane w terenie automatycznie otrzymują Twoją aktualną pozycję. Zawsze możesz zobaczyć i usunąć lokalizację wydatku, a przełącznik możesz wyłączyć w dowolnym momencie.
+Zawsze możesz zobaczyć i usunąć lokalizację wydatku, a przełącznik możesz wyłączyć w dowolnym momencie.
 
 ## Widok mapy na karcie Wydatki
 
@@ -47,7 +45,7 @@ Konta podróży mają dedykowany punkt wejścia: otwórz konto podróży i stukn
 
 ## Prywatność
 
-- Przechwytywanie GPS jest ściśle opcjonalne i domyślnie wyłączone; uprawnienie jest wymagane dopiero po włączeniu przełącznika.
+- Przechwytywanie GPS jest domyślnie włączone, ale wymaga Twojej zgody — aplikacja pyta raz, a w dowolnym momencie możesz je wyłączyć w **Ustawienia → Dane i raporty → Lokalizacja**.
 - Wyszukiwanie adresu z paragonu wykorzystuje wyłącznie adres wydrukowany na paragonie — lokalizacja telefonu nie jest w to zaangażowana.
 - Lokalizacja jest częścią rekordu wydatku: członkowie wspólnego konta, którzy widzą dany wydatek, widzą też jego lokalizację.
 - W każdej chwili możesz usunąć lokalizację dowolnego wydatku.

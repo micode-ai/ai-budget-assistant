@@ -9,6 +9,14 @@ jest.mock('expo-location', () => ({
   Accuracy: { Balanced: 3 },
 }));
 
+const mockMmkv = new Map<string, unknown>();
+jest.mock('react-native-mmkv', () => ({
+  MMKV: jest.fn().mockImplementation(() => ({
+    getBoolean: (k: string) => mockMmkv.get(k) as boolean | undefined,
+    set: (k: string, v: unknown) => mockMmkv.set(k, v),
+  })),
+}));
+
 jest.mock('@/stores/locationSettingsStore', () => ({
   useLocationSettingsStore: { getState: jest.fn() },
 }));
@@ -17,8 +25,11 @@ const mockGetState = useLocationSettingsStore.getState as jest.Mock;
 const mockPerms = Location.getForegroundPermissionsAsync as jest.Mock;
 const mockPos = Location.getCurrentPositionAsync as jest.Mock;
 
+const mockRequest = Location.requestForegroundPermissionsAsync as jest.Mock;
+
 beforeEach(() => {
   jest.clearAllMocks();
+  mockMmkv.clear();
   mockGetState.mockReturnValue({ captureEnabled: true });
   mockPerms.mockResolvedValue({ status: 'granted' });
 });
@@ -64,6 +75,37 @@ describe('captureCurrentLocation', () => {
     await jest.advanceTimersByTimeAsync(4100);
     expect(await promise).toBeNull();
     jest.useRealTimers();
+  });
+});
+
+describe('captureCurrentLocation — permission not asked yet', () => {
+  beforeEach(() => {
+    mockPerms.mockResolvedValue({ status: 'undetermined' });
+    mockPos.mockResolvedValue({ coords: { latitude: 54.35, longitude: 18.65 } });
+  });
+
+  it('asks once from a foreground screen and captures when granted', async () => {
+    mockRequest.mockResolvedValue({ status: 'granted' });
+    expect(await captureCurrentLocation({ askPermission: true })).toEqual({ lat: 54.35, lng: 18.65 });
+    expect(mockRequest).toHaveBeenCalledTimes(1);
+  });
+
+  it('never asks again on this install, whatever the answer was', async () => {
+    mockRequest.mockResolvedValue({ status: 'denied' });
+    expect(await captureCurrentLocation({ askPermission: true })).toBeNull();
+    expect(await captureCurrentLocation({ askPermission: true })).toBeNull();
+    expect(mockRequest).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not ask without askPermission (background capture)', async () => {
+    expect(await captureCurrentLocation()).toBeNull();
+    expect(mockRequest).not.toHaveBeenCalled();
+  });
+
+  it('does not ask when the toggle is off', async () => {
+    mockGetState.mockReturnValue({ captureEnabled: false });
+    expect(await captureCurrentLocation({ askPermission: true })).toBeNull();
+    expect(mockRequest).not.toHaveBeenCalled();
   });
 });
 

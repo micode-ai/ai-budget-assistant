@@ -229,7 +229,7 @@ Tap the card to open your shopping list.
 
 The card only appears once the app recognizes the store from your past shopping there, so it won't show up on your very first visit to a new place — and once you leave, it clears the next time you open the app or come back to the Dashboard.
 
-> **Note:** This card needs location access. Turn on **Attach location to new expenses** in **Settings → Data & Reports → Location** — it's off by default. Without it, the app never checks where you are, and this card never appears.
+> **Note:** This card needs location access. Turn on **Attach location to new expenses** in **Settings → Data & Reports → Location** — it's on by default unless you turned it off. Without it, the app never checks where you are, and this card never appears.
 
 ## Financial Health Score
 
@@ -4553,15 +4553,13 @@ An expense gets its location from one of three sources (higher wins):
 
 Imported transactions (bank CSV/PDF files) do not get a location.
 
-## Turning On GPS Capture
+## GPS Capture
 
-GPS capture is **off by default**. To enable it:
+GPS capture is **on by default**. The first time you add an expense (by hand, by voice or by scanning a receipt), the app asks for the location permission — allow it, and new expenses you add on the go get your current position automatically.
 
-1. Open **Settings → Data & Reports**.
-2. In the **Location** section, turn on **Attach location to new expenses**.
-3. Allow the location permission when the system asks.
+To turn it off (or back on), open **Settings → Data & Reports → Location** and switch **Attach location to new expenses**. If you refused the permission, allow location for the app in your system settings.
 
-When enabled, new expenses you add on the go get your current position automatically. You can always see and remove an expense's location, and you can turn the toggle off at any time.
+You can always see and remove an expense's location, and you can turn the toggle off at any time.
 
 ## Map View on the Expenses Tab
 
@@ -4586,7 +4584,7 @@ Trip accounts get a dedicated entry point: open the trip account and tap **Trip 
 
 ## Privacy
 
-- GPS capture is strictly opt-in and off by default; the permission is only requested when you enable the toggle.
+- GPS capture is on by default but needs your permission — the app asks once, and you can turn it off at any time in **Settings → Data & Reports → Location**.
 - The receipt-address lookup uses only the address printed on the receipt — no phone location is involved.
 - A location is part of the expense record: members of a shared account who can see the expense also see its location.
 - You can remove any expense's location at any time.
@@ -5499,7 +5497,7 @@ iOS, Android, Web
 
 Карточка появляется только тогда, когда приложение узнаёт магазин по вашим прошлым покупкам там — поэтому при первом посещении нового места она не появится, а когда вы уйдёте из магазина, она исчезнет при следующем открытии приложения или возвращении на Главную.
 
-> **Примечание:** Для этой карточки нужен доступ к геолокации. Включите **Прикреплять локацию к новым расходам** в **Настройки → Данные и отчёты → Локация** — по умолчанию это выключено. Без этого приложение никогда не проверяет, где вы находитесь, и карточка никогда не появится.
+> **Примечание:** Для этой карточки нужен доступ к геолокации. Включите **Прикреплять локацию к новым расходам** в **Настройки → Данные и отчёты → Локация** — по умолчанию это включено, если вы не отключили. Без этого приложение никогда не проверяет, где вы находитесь, и карточка никогда не появится.
 
 ## Финансовое здоровье
 
@@ -9789,15 +9787,13 @@ OCR иногда неверно читает цену, выдумывает ст
 
 Импортированные транзакции (банковские CSV/PDF-файлы) не получают локацию.
 
-## Включение захвата GPS
+## Захват GPS
 
-Захват GPS **по умолчанию отключён**. Чтобы включить его:
+Захват GPS **по умолчанию включён**. Когда вы впервые добавляете расход (вручную, голосом или сканируя чек), приложение запрашивает доступ к геолокации — разрешите его, и новые расходы, которые вы добавляете на ходу, будут автоматически получать вашу текущую позицию.
 
-1. Откройте **Настройки → Данные и отчёты**.
-2. В разделе **Локация** включите **Прикреплять локацию к новым расходам**.
-3. Разрешите доступ к геолокации, когда система запросит это.
+Чтобы отключить его (или включить снова), откройте **Настройки → Данные и отчёты → Локация** и переключите **Прикреплять локацию к новым расходам**. Если вы отказали в доступе, разрешите приложению геолокацию в системных настройках.
 
-После включения новые расходы, которые вы добавляете на ходу, автоматически получают вашу текущую позицию. Вы всегда можете посмотреть и удалить локацию расхода, а переключатель можно отключить в любой момент.
+Вы всегда можете посмотреть и удалить локацию расхода, а переключатель можно отключить в любой момент.
 
 ## Режим карты на вкладке «Расходы»
 
@@ -9822,7 +9818,7 @@ OCR иногда неверно читает цену, выдумывает ст
 
 ## Конфиденциальность
 
-- Захват GPS строго добровольный и по умолчанию отключён; разрешение запрашивается только при включении переключателя.
+- Захват GPS по умолчанию включён, но требует вашего разрешения — приложение спрашивает один раз, а отключить его можно в любой момент в **Настройки → Данные и отчёты → Локация**.
 - Определение адреса по чеку использует только адрес, напечатанный на чеке, — местоположение телефона при этом не задействуется.
 - Локация — часть записи о расходе: участники общего аккаунта, которые видят расход, видят и его локацию.
 - Вы можете удалить локацию любого расхода в любой момент.
@@ -10746,7 +10742,7 @@ iOS, Android, Web
 
 Картка з'являється лише тоді, коли застосунок розпізнає магазин за вашими попередніми покупками там — тож під час першого відвідування нового місця вона не з'явиться, а коли ви підете з магазину, вона зникне під час наступного відкриття застосунку або повернення на Головну.
 
-> **Примітка:** Для цієї картки потрібен доступ до геолокації. Увімкніть **Прикріплювати локацію до нових витрат** у **Налаштування → Дані та звіти → Локація** — за замовчуванням це вимкнено. Без цього застосунок ніколи не перевіряє, де ви перебуваєте, і картка ніколи не з'явиться.
+> **Примітка:** Для цієї картки потрібен доступ до геолокації. Увімкніть **Прикріплювати локацію до нових витрат** у **Налаштування → Дані та звіти → Локація** — за замовчуванням це увімкнено, якщо ви не вимкнули. Без цього застосунок ніколи не перевіряє, де ви перебуваєте, і картка ніколи не з'явиться.
 
 ## Фінансове здоров'я
 
@@ -14995,15 +14991,13 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 Імпортовані транзакції (банківські CSV/PDF-файли) не отримують локацію.
 
-## Увімкнення захоплення GPS
+## Захоплення GPS
 
-Захоплення GPS **вимкнене за замовчуванням**. Щоб увімкнути його:
+Захоплення GPS **увімкнене за замовчуванням**. Коли ви вперше додаєте витрату (вручну, голосом або скануючи чек), застосунок запитує доступ до геолокації — дозвольте його, і нові витрати, які ви додаєте на ходу, автоматично отримуватимуть вашу поточну позицію.
 
-1. Відкрийте **Налаштування → Дані та звіти**.
-2. У розділі **Локація** увімкніть **Прикріплювати локацію до нових витрат**.
-3. Дозвольте доступ до геолокації, коли система запитає про це.
+Щоб вимкнути його (або ввімкнути знову), відкрийте **Налаштування → Дані та звіти → Локація** і перемкніть **Прикріплювати локацію до нових витрат**. Якщо ви відмовили в доступі, дозвольте застосунку геолокацію в системних налаштуваннях.
 
-Після увімкнення нові витрати, які ви додаєте на ходу, автоматично отримують вашу поточну позицію. Ви завжди можете переглянути й видалити локацію витрати, а перемикач можна вимкнути в будь-який момент.
+Ви завжди можете переглянути й видалити локацію витрати, а перемикач можна вимкнути в будь-який момент.
 
 ## Режим карти на вкладці «Витрати»
 
@@ -15028,7 +15022,7 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 ## Конфіденційність
 
-- Захоплення GPS суворо добровільне і вимкнене за замовчуванням; дозвіл запитується лише після увімкнення перемикача.
+- Захоплення GPS за замовчуванням увімкнене, але потребує вашого дозволу — застосунок запитує один раз, а вимкнути його можна в будь-який момент у **Налаштування → Дані та звіти → Локація**.
 - Визначення адреси за чеком використовує лише адресу, надруковану на чеку, — місцезнаходження телефону при цьому не задіюється.
 - Локація — частина запису про витрату: учасники спільного облікового запису, які бачать витрату, бачать і її локацію.
 - Ви можете видалити локацію будь-якої витрати в будь-який момент.
@@ -15941,7 +15935,7 @@ Dotknij karty, aby otworzyć listę zakupów.
 
 Karta pojawia się dopiero, gdy aplikacja rozpozna sklep na podstawie Twoich wcześniejszych zakupów w nim — nie zobaczysz jej więc podczas pierwszej wizyty w nowym miejscu, a gdy wyjdziesz ze sklepu, karta zniknie przy następnym otwarciu aplikacji lub powrocie na Pulpit.
 
-> **Uwaga:** Ta karta wymaga dostępu do lokalizacji. Włącz **Dołączaj lokalizację do nowych wydatków** w **Ustawienia → Dane i raporty → Lokalizacja** — domyślnie jest to wyłączone. Bez tego aplikacja nigdy nie sprawdza, gdzie jesteś, i karta nigdy się nie pojawi.
+> **Uwaga:** Ta karta wymaga dostępu do lokalizacji. Włącz **Dołączaj lokalizację do nowych wydatków** w **Ustawienia → Dane i raporty → Lokalizacja** — domyślnie jest to włączone, chyba że je wyłączysz. Bez tego aplikacja nigdy nie sprawdza, gdzie jesteś, i karta nigdy się nie pojawi.
 
 ## Kondycja Finansowa
 
@@ -20186,15 +20180,13 @@ Wydatek otrzymuje swoją lokalizację z jednego z trzech źródeł (wyższe wygr
 
 Zaimportowane transakcje (pliki bankowe CSV/PDF) nie otrzymują lokalizacji.
 
-## Włączanie przechwytywania GPS
+## Przechwytywanie GPS
 
-Przechwytywanie GPS jest **domyślnie wyłączone**. Aby je włączyć:
+Przechwytywanie GPS jest **domyślnie włączone**. Gdy po raz pierwszy dodasz wydatek (ręcznie, głosowo lub skanując paragon), aplikacja poprosi o uprawnienie do lokalizacji — zezwól na nie, a nowe wydatki dodawane w terenie będą automatycznie otrzymywać Twoją aktualną pozycję.
 
-1. Otwórz **Ustawienia → Dane i raporty**.
-2. W sekcji **Lokalizacja** włącz opcję **Dołączaj lokalizację do nowych wydatków**.
-3. Zezwól na uprawnienie lokalizacji, gdy zapyta o to system.
+Aby je wyłączyć (lub ponownie włączyć), otwórz **Ustawienia → Dane i raporty → Lokalizacja** i przełącz **Dołączaj lokalizację do nowych wydatków**. Jeśli odmówisz uprawnienia, zezwól aplikacji na dostęp do lokalizacji w ustawieniach systemu.
 
-Po włączeniu nowe wydatki dodawane w terenie automatycznie otrzymują Twoją aktualną pozycję. Zawsze możesz zobaczyć i usunąć lokalizację wydatku, a przełącznik możesz wyłączyć w dowolnym momencie.
+Zawsze możesz zobaczyć i usunąć lokalizację wydatku, a przełącznik możesz wyłączyć w dowolnym momencie.
 
 ## Widok mapy na karcie Wydatki
 
@@ -20219,7 +20211,7 @@ Konta podróży mają dedykowany punkt wejścia: otwórz konto podróży i stukn
 
 ## Prywatność
 
-- Przechwytywanie GPS jest ściśle opcjonalne i domyślnie wyłączone; uprawnienie jest wymagane dopiero po włączeniu przełącznika.
+- Przechwytywanie GPS jest domyślnie włączone, ale wymaga Twojej zgody — aplikacja pyta raz, a w dowolnym momencie możesz je wyłączyć w **Ustawienia → Dane i raporty → Lokalizacja**.
 - Wyszukiwanie adresu z paragonu wykorzystuje wyłącznie adres wydrukowany na paragonie — lokalizacja telefonu nie jest w to zaangażowana.
 - Lokalizacja jest częścią rekordu wydatku: członkowie wspólnego konta, którzy widzą dany wydatek, widzą też jego lokalizację.
 - W każdej chwili możesz usunąć lokalizację dowolnego wydatku.
@@ -21132,7 +21124,7 @@ Tippe auf die Karte, um deine Einkaufsliste zu öffnen.
 
 Die Karte erscheint erst, wenn die App das Geschäft anhand deiner bisherigen Einkäufe dort erkennt — beim allerersten Besuch eines neuen Ortes wird sie also noch nicht angezeigt. Wenn du das Geschäft verlässt, verschwindet sie, sobald du die App das nächste Mal öffnest oder zur Übersicht zurückkehrst.
 
-> **Hinweis:** Diese Karte benötigt Standortzugriff. Aktiviere **Standort an neue Ausgaben anhängen** unter **Einstellungen → Daten & Berichte → Standort** — standardmäßig ist das ausgeschaltet. Ohne diese Einstellung prüft die App nie, wo du dich befindest, und die Karte erscheint nie.
+> **Hinweis:** Diese Karte benötigt Standortzugriff. Aktiviere **Standort an neue Ausgaben anhängen** unter **Einstellungen → Daten & Berichte → Standort** — standardmäßig ist das eingeschaltet, sofern du es nicht ausgeschaltet hast. Ohne diese Einstellung prüft die App nie, wo du dich befindest, und die Karte erscheint nie.
 
 ## Finanzielle Gesundheit
 
@@ -25352,15 +25344,13 @@ Eine Ausgabe erhält ihren Standort aus einer von drei Quellen (die höherwertig
 
 Importierte Transaktionen (Bank-CSV-/PDF-Dateien) erhalten keinen Standort.
 
-## GPS-Erfassung aktivieren
+## GPS-Erfassung
 
-Die GPS-Erfassung ist **standardmäßig ausgeschaltet**. So aktivierst du sie:
+Die GPS-Erfassung ist **standardmäßig eingeschaltet**. Wenn du zum ersten Mal eine Ausgabe hinzufügst (von Hand, per Sprache oder durch Scannen eines Belegs), fragt die App nach der Standortberechtigung — erlaube sie, dann erhalten neue Ausgaben, die du unterwegs erfasst, automatisch deine aktuelle Position.
 
-1. Öffne **Einstellungen → Daten & Berichte**.
-2. Schalte im Bereich **Standort** die Option **Standort an neue Ausgaben anhängen** ein.
-3. Erlaube die Standortberechtigung, wenn das System danach fragt.
+Zum Ausschalten (oder Wiedereinschalten) öffne **Einstellungen → Daten & Berichte → Standort** und schalte **Standort an neue Ausgaben anhängen** um. Falls du die Berechtigung abgelehnt hast, erlaube den Standortzugriff für die App in den Systemeinstellungen.
 
-Ist die Option aktiviert, erhalten neue Ausgaben, die du unterwegs erfasst, automatisch deine aktuelle Position. Du kannst den Standort einer Ausgabe jederzeit einsehen und entfernen und den Schalter jederzeit wieder ausschalten.
+Du kannst den Standort einer Ausgabe jederzeit einsehen und entfernen und den Schalter jederzeit ausschalten.
 
 ## Kartenansicht im Tab „Ausgaben"
 
@@ -25385,7 +25375,7 @@ Reisekonten erhalten einen eigenen Einstiegspunkt: Öffne das Reisekonto und tip
 
 ## Datenschutz
 
-- Die GPS-Erfassung ist strikt Opt-in und standardmäßig ausgeschaltet; die Berechtigung wird erst angefragt, wenn du den Schalter aktivierst.
+- Die GPS-Erfassung ist standardmäßig eingeschaltet, braucht aber deine Berechtigung — die App fragt einmal, und du kannst sie jederzeit unter **Einstellungen → Daten & Berichte → Standort** ausschalten.
 - Die Adresserkennung aus dem Kassenbon nutzt ausschließlich die auf dem Beleg aufgedruckte Adresse — dein Standort wird dabei nicht verwendet.
 - Ein Standort ist Teil des Ausgabendatensatzes: Mitglieder eines gemeinsamen Kontos, die die Ausgabe sehen können, sehen auch ihren Standort.
 - Du kannst den Standort jeder Ausgabe jederzeit entfernen.
@@ -26298,7 +26288,7 @@ Toca la tarjeta para abrir tu lista de la compra.
 
 La tarjeta solo aparece cuando la app reconoce la tienda a partir de tus compras anteriores allí — no aparecerá en tu primera visita a un lugar nuevo, y cuando te vas, desaparece la próxima vez que abres la app o vuelves al Panel.
 
-> **Nota:** Esta tarjeta necesita acceso a la ubicación. Activa **Adjuntar ubicación a nuevos gastos** en **Ajustes → Datos e informes → Ubicación** — está desactivado de forma predeterminada. Sin esto, la app nunca comprueba dónde estás, y la tarjeta nunca aparece.
+> **Nota:** Esta tarjeta necesita acceso a la ubicación. Activa **Adjuntar ubicación a nuevos gastos** en **Ajustes → Datos e informes → Ubicación** — está activado de forma predeterminada salvo que lo hayas desactivado. Sin esto, la app nunca comprueba dónde estás, y la tarjeta nunca aparece.
 
 ## Salud Financiera
 
@@ -30507,15 +30497,13 @@ Un gasto obtiene su ubicación de una de tres fuentes (la de mayor prioridad gan
 
 Las transacciones importadas (archivos CSV/PDF del banco) no reciben ubicación.
 
-## Activar la captura por GPS
+## Captura por GPS
 
-La captura por GPS está **desactivada de forma predeterminada**. Para activarla:
+La captura por GPS está **activada de forma predeterminada**. La primera vez que añadas un gasto (a mano, por voz o escaneando un recibo), la app te pedirá el permiso de ubicación; concédelo y los nuevos gastos que añadas sobre la marcha obtendrán tu posición actual automáticamente.
 
-1. Abre **Ajustes → Datos e informes**.
-2. En la sección **Ubicación**, activa **Adjuntar ubicación a nuevos gastos**.
-3. Concede el permiso de ubicación cuando el sistema lo solicite.
+Para desactivarla (o volver a activarla), abre **Ajustes → Datos e informes → Ubicación** y cambia **Adjuntar ubicación a nuevos gastos**. Si rechazaste el permiso, permite la ubicación para la app en los ajustes del sistema.
 
-Una vez activada, los nuevos gastos que añadas sobre la marcha obtienen tu posición actual automáticamente. Siempre puedes ver y eliminar la ubicación de un gasto, y puedes desactivar el interruptor en cualquier momento.
+Siempre puedes ver y eliminar la ubicación de un gasto, y puedes desactivar el interruptor en cualquier momento.
 
 ## Vista de mapa en la pestaña Gastos
 
@@ -30540,7 +30528,7 @@ Las cuentas de viaje tienen un punto de acceso propio: abre la cuenta de viaje y
 
 ## Privacidad
 
-- La captura por GPS es estrictamente opcional y está desactivada de forma predeterminada; el permiso solo se solicita cuando activas el interruptor.
+- La captura por GPS está activada de forma predeterminada, pero necesita tu permiso: la app lo pide una sola vez y puedes desactivarla en cualquier momento en **Ajustes → Datos e informes → Ubicación**.
 - La búsqueda de dirección del tique usa únicamente la dirección impresa en el recibo — no interviene la ubicación del teléfono.
 - La ubicación forma parte del registro del gasto: los miembros de una cuenta compartida que pueden ver el gasto también ven su ubicación.
 - Puedes eliminar la ubicación de cualquier gasto en cualquier momento.
@@ -31453,7 +31441,7 @@ Appuyez sur la carte pour ouvrir votre liste de courses.
 
 La carte n'apparaît que lorsque l'application reconnaît le magasin à partir de vos achats précédents à cet endroit — elle n'apparaîtra donc pas lors de votre toute première visite dans un nouvel endroit, et lorsque vous partez, elle disparaît à la prochaine ouverture de l'application ou lorsque vous revenez au Tableau de bord.
 
-> **Note :** Cette carte nécessite l'accès à la localisation. Activez **Joindre la localisation aux nouvelles dépenses** dans **Paramètres → Données et rapports → Localisation** — elle est désactivée par défaut. Sans cela, l'application ne vérifie jamais où vous êtes, et cette carte n'apparaît jamais.
+> **Note :** Cette carte nécessite l'accès à la localisation. Activez **Joindre la localisation aux nouvelles dépenses** dans **Paramètres → Données et rapports → Localisation** — elle est activée par défaut, sauf si vous l'avez désactivée. Sans cela, l'application ne vérifie jamais où vous êtes, et cette carte n'apparaît jamais.
 
 ## Santé Financière
 
@@ -35660,15 +35648,13 @@ Une dépense obtient sa localisation à partir de l'une de ces trois sources (la
 
 Les transactions importées (fichiers CSV/PDF bancaires) n'obtiennent pas de localisation.
 
-## Activer la capture GPS
+## Capture GPS
 
-La capture GPS est **désactivée par défaut**. Pour l'activer :
+La capture GPS est **activée par défaut**. La première fois que vous ajoutez une dépense (à la main, par la voix ou en scannant un reçu), l'application demande l'autorisation de localisation — acceptez-la, et les nouvelles dépenses que vous ajoutez en déplacement récupèrent automatiquement votre position actuelle.
 
-1. Ouvrez **Paramètres → Données et rapports**.
-2. Dans la section **Localisation**, activez **Joindre la localisation aux nouvelles dépenses**.
-3. Autorisez la permission de localisation lorsque le système la demande.
+Pour la désactiver (ou la réactiver), ouvrez **Paramètres → Données et rapports → Localisation** et basculez **Joindre la localisation aux nouvelles dépenses**. Si vous avez refusé l'autorisation, autorisez la localisation pour l'application dans les paramètres du système.
 
-Une fois activée, les nouvelles dépenses que vous ajoutez en déplacement récupèrent automatiquement votre position actuelle. Vous pouvez toujours consulter et supprimer la localisation d'une dépense, et désactiver l'interrupteur à tout moment.
+Vous pouvez toujours consulter et supprimer la localisation d'une dépense, et désactiver l'interrupteur à tout moment.
 
 ## Vue carte dans l'onglet Dépenses
 
@@ -35693,7 +35679,7 @@ Les comptes voyage disposent d'un point d'accès dédié : ouvrez le compte voya
 
 ## Confidentialité
 
-- La capture GPS est strictement optionnelle et désactivée par défaut ; la permission n'est demandée que lorsque vous activez l'interrupteur.
+- La capture GPS est activée par défaut, mais elle nécessite votre autorisation — l'application la demande une seule fois, et vous pouvez la désactiver à tout moment dans **Paramètres → Données et rapports → Localisation**.
 - La recherche d'adresse à partir du ticket utilise uniquement l'adresse imprimée sur le reçu — aucune localisation du téléphone n'est impliquée.
 - Une localisation fait partie de l'enregistrement de la dépense : les membres d'un compte partagé qui peuvent voir la dépense voient aussi sa localisation.
 - Vous pouvez supprimer la localisation de n'importe quelle dépense à tout moment.
@@ -36606,7 +36592,7 @@ iOS, Android, Web
 
 Картка з'яўляецца толькі тады, калі праграма распазнае краму па вашых папярэдніх пакупках там — таму падчас першага наведвання новага месца яна не з'явіцца, а калі вы пойдзеце з крамы, яна знікне пры наступным адкрыцці праграмы ці вяртанні на Галоўную.
 
-> **Заўвага:** Для гэтай карткі патрэбны доступ да геалакацыі. Уключыце **Прымацоўваць лакацыю да новых выдаткаў** у **Налады → Даныя і справаздачы → Лакацыя** — па змаўчанні гэта выключана. Без гэтага праграма ніколі не правярае, дзе вы знаходзіцеся, і картка ніколі не з'явіцца.
+> **Заўвага:** Для гэтай карткі патрэбны доступ да геалакацыі. Уключыце **Прымацоўваць лакацыю да новых выдаткаў** у **Налады → Даныя і справаздачы → Лакацыя** — па змаўчанні гэта ўключана, калі вы не выключылі. Без гэтага праграма ніколі не правярае, дзе вы знаходзіцеся, і картка ніколі не з'явіцца.
 
 ## Фінансавае здароўе
 
@@ -40777,15 +40763,13 @@ OCR часам няправільна чытае цану, выдумляе ра
 
 Імпартаваныя транзакцыі (банкаўскія CSV/PDF-файлы) не атрымліваюць лакацыю.
 
-## Уключэнне захопу GPS
+## Захоп GPS
 
-Захоп GPS **выключаны па змаўчанні**. Каб уключыць яго:
+Захоп GPS **уключаны па змаўчанні**. Калі вы ўпершыню дадаяце выдатак (уручную, галасам або скануючы чэк), праграма запытвае доступ да геалакацыі — дазвольце яго, і новыя выдаткі, якія вы дадаяце на хаду, будуць аўтаматычна атрымліваць вашу бягучую пазіцыю.
 
-1. Адкрыйце **Налады → Даныя і справаздачы**.
-2. У раздзеле **Лакацыя** ўключыце **Прымацоўваць лакацыю да новых выдаткаў**.
-3. Дазвольце доступ да геалакацыі, калі сістэма запытае гэта.
+Каб выключыць яго (або ўключыць зноў), адкрыйце **Налады → Даныя і справаздачы → Лакацыя** і пераключыце **Прымацоўваць лакацыю да новых выдаткаў**. Калі вы адмовілі ў доступе, дазвольце праграме геалакацыю ў сістэмных наладах.
 
-Пасля ўключэння новыя выдаткі, якія вы дадаяце на хаду, аўтаматычна атрымліваюць вашу бягучую пазіцыю. Вы заўсёды можаце паглядзець і выдаліць лакацыю выдатку, а пераключальнік можна выключыць у любы момант.
+Вы заўсёды можаце паглядзець і выдаліць лакацыю выдатку, а пераключальнік можна выключыць у любы момант.
 
 ## Рэжым карты на ўкладцы «Выдаткі»
 
@@ -40810,7 +40794,7 @@ OCR часам няправільна чытае цану, выдумляе ра
 
 ## Прыватнасць
 
-- Захоп GPS строга добраахвотны і выключаны па змаўчанні; дазвол запытваецца толькі пасля ўключэння пераключальніка.
+- Захоп GPS па змаўчанні ўключаны, але патрабуе вашага дазволу — праграма пытаецца адзін раз, а выключыць яго можна ў любы момант у **Налады → Даныя і справаздачы → Лакацыя**.
 - Вызначэнне адраса па чэку выкарыстоўвае толькі адрас, надрукаваны на чэку, — месцазнаходжанне тэлефона пры гэтым не задзейнічана.
 - Лакацыя — частка запісу пра выдатак: удзельнікі агульнага ўліковага запісу, якія бачаць выдатак, бачаць і яго лакацыю.
 - Вы можаце выдаліць лакацыю любога выдатку ў любы момант.
@@ -41723,7 +41707,7 @@ Tik op de kaart om je boodschappenlijst te openen.
 
 De kaart verschijnt pas zodra de app de winkel herkent aan je eerdere aankopen daar — bij je allereerste bezoek aan een nieuwe plek zie je hem dus nog niet, en zodra je vertrekt, verdwijnt hij de volgende keer dat je de app opent of terugkeert naar het Dashboard.
 
-> **Let op:** Deze kaart heeft locatietoegang nodig. Zet **Locatie toevoegen aan nieuwe uitgaven** aan onder **Instellingen → Gegevens & rapporten → Locatie** — dit staat standaard uit. Zonder deze instelling controleert de app nooit waar je bent, en verschijnt deze kaart nooit.
+> **Let op:** Deze kaart heeft locatietoegang nodig. Zet **Locatie toevoegen aan nieuwe uitgaven** aan onder **Instellingen → Gegevens & rapporten → Locatie** — dit staat standaard aan, tenzij je het hebt uitgezet. Zonder deze instelling controleert de app nooit waar je bent, en verschijnt deze kaart nooit.
 
 ## Financiële gezondheidsscore
 
@@ -46020,15 +46004,13 @@ Een uitgave krijgt zijn locatie uit een van drie bronnen (de hoogste wint):
 
 Geïmporteerde transacties (bank-CSV/PDF-bestanden) krijgen geen locatie.
 
-## Gps-registratie inschakelen
+## Gps-registratie
 
-Gps-registratie staat **standaard uit**. Om het in te schakelen:
+Gps-registratie staat **standaard aan**. De eerste keer dat je een uitgave toevoegt (met de hand, met spraak of door een bon te scannen), vraagt de app om locatietoestemming — sta die toe, dan krijgen nieuwe uitgaven die je onderweg toevoegt automatisch je huidige positie.
 
-1. Open **Instellingen → Gegevens & rapporten**.
-2. Zet in de sectie **Locatie** de optie **Locatie toevoegen aan nieuwe uitgaven** aan.
-3. Sta de locatietoestemming toe wanneer het systeem hierom vraagt.
+Om het uit (of weer aan) te zetten, open je **Instellingen → Gegevens & rapporten → Locatie** en schakel je **Locatie toevoegen aan nieuwe uitgaven** om. Heb je de toestemming geweigerd, sta locatietoegang voor de app dan toe in de systeeminstellingen.
 
-Wanneer dit is ingeschakeld, krijgen nieuwe uitgaven die je onderweg toevoegt automatisch je huidige positie. Je kunt de locatie van een uitgave altijd bekijken en verwijderen, en je kunt de schakelaar op elk moment uitzetten.
+Je kunt de locatie van een uitgave altijd bekijken en verwijderen, en je kunt de schakelaar op elk moment uitzetten.
 
 ## Kaartweergave op het tabblad Uitgaven
 
@@ -46053,7 +46035,7 @@ Reisaccounts hebben een eigen toegangspunt: open het reisaccount en tik op **Rei
 
 ## Privacy
 
-- Gps-registratie is strikt opt-in en standaard uitgeschakeld; de toestemming wordt pas gevraagd wanneer je de schakelaar inschakelt.
+- Gps-registratie staat standaard aan, maar heeft je toestemming nodig — de app vraagt het één keer, en je kunt het op elk moment uitzetten via **Instellingen → Gegevens & rapporten → Locatie**.
 - De bonadresherkenning gebruikt alleen het op de bon afgedrukte adres — er komt geen telefoonlocatie aan te pas.
 - Een locatie maakt deel uit van de uitgavengegevens: leden van een gedeelde account die de uitgave kunnen zien, zien ook de locatie ervan.
 - Je kunt de locatie van elke uitgave op elk moment verwijderen.

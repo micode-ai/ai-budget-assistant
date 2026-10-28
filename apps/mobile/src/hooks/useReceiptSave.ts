@@ -112,7 +112,7 @@ export function useReceiptSave({
 
   const gpsLocationRef = useRef<CapturedLocation | null>(null);
   useEffect(() => {
-    captureCurrentLocation().then((loc) => { gpsLocationRef.current = loc; });
+    captureCurrentLocation({ askPermission: true }).then((loc) => { gpsLocationRef.current = loc; });
   }, []);
 
   const handleConfirmExpense = async () => {

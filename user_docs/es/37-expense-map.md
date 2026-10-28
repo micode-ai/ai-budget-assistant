@@ -14,15 +14,13 @@ Un gasto obtiene su ubicación de una de tres fuentes (la de mayor prioridad gan
 
 Las transacciones importadas (archivos CSV/PDF del banco) no reciben ubicación.
 
-## Activar la captura por GPS
+## Captura por GPS
 
-La captura por GPS está **desactivada de forma predeterminada**. Para activarla:
+La captura por GPS está **activada de forma predeterminada**. La primera vez que añadas un gasto (a mano, por voz o escaneando un recibo), la app te pedirá el permiso de ubicación; concédelo y los nuevos gastos que añadas sobre la marcha obtendrán tu posición actual automáticamente.
 
-1. Abre **Ajustes → Datos e informes**.
-2. En la sección **Ubicación**, activa **Adjuntar ubicación a nuevos gastos**.
-3. Concede el permiso de ubicación cuando el sistema lo solicite.
+Para desactivarla (o volver a activarla), abre **Ajustes → Datos e informes → Ubicación** y cambia **Adjuntar ubicación a nuevos gastos**. Si rechazaste el permiso, permite la ubicación para la app en los ajustes del sistema.
 
-Una vez activada, los nuevos gastos que añadas sobre la marcha obtienen tu posición actual automáticamente. Siempre puedes ver y eliminar la ubicación de un gasto, y puedes desactivar el interruptor en cualquier momento.
+Siempre puedes ver y eliminar la ubicación de un gasto, y puedes desactivar el interruptor en cualquier momento.
 
 ## Vista de mapa en la pestaña Gastos
 
@@ -47,7 +45,7 @@ Las cuentas de viaje tienen un punto de acceso propio: abre la cuenta de viaje y
 
 ## Privacidad
 
-- La captura por GPS es estrictamente opcional y está desactivada de forma predeterminada; el permiso solo se solicita cuando activas el interruptor.
+- La captura por GPS está activada de forma predeterminada, pero necesita tu permiso: la app lo pide una sola vez y puedes desactivarla en cualquier momento en **Ajustes → Datos e informes → Ubicación**.
 - La búsqueda de dirección del tique usa únicamente la dirección impresa en el recibo — no interviene la ubicación del teléfono.
 - La ubicación forma parte del registro del gasto: los miembros de una cuenta compartida que pueden ver el gasto también ven su ubicación.
 - Puedes eliminar la ubicación de cualquier gasto en cualquier momento.

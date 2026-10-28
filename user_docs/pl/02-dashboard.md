@@ -44,7 +44,7 @@ Dotknij karty, aby otworzyć listę zakupów.
 
 Karta pojawia się dopiero, gdy aplikacja rozpozna sklep na podstawie Twoich wcześniejszych zakupów w nim — nie zobaczysz jej więc podczas pierwszej wizyty w nowym miejscu, a gdy wyjdziesz ze sklepu, karta zniknie przy następnym otwarciu aplikacji lub powrocie na Pulpit.
 
-> **Uwaga:** Ta karta wymaga dostępu do lokalizacji. Włącz **Dołączaj lokalizację do nowych wydatków** w **Ustawienia → Dane i raporty → Lokalizacja** — domyślnie jest to wyłączone. Bez tego aplikacja nigdy nie sprawdza, gdzie jesteś, i karta nigdy się nie pojawi.
+> **Uwaga:** Ta karta wymaga dostępu do lokalizacji. Włącz **Dołączaj lokalizację do nowych wydatków** w **Ustawienia → Dane i raporty → Lokalizacja** — domyślnie jest to włączone, chyba że je wyłączysz. Bez tego aplikacja nigdy nie sprawdza, gdzie jesteś, i karta nigdy się nie pojawi.
 
 ## Kondycja Finansowa
 

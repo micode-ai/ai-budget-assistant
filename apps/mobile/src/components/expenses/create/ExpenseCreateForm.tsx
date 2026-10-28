@@ -101,7 +101,7 @@ export function ExpenseCreateForm({ initial, onDone }: ExpenseCreateFormProps) {
 
   const gpsLocationRef = useRef<CapturedLocation | null>(null);
   useEffect(() => {
-    captureCurrentLocation().then((loc) => { gpsLocationRef.current = loc; });
+    captureCurrentLocation({ askPermission: true }).then((loc) => { gpsLocationRef.current = loc; });
   }, []);
 
   // Trip Expense Splitting (Group Trip Wallet): only relevant for `trip`

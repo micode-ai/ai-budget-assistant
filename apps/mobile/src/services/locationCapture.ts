@@ -1,5 +1,6 @@
 import { Platform } from 'react-native';
 import * as Location from 'expo-location';
+import { MMKV } from 'react-native-mmkv';
 import { useLocationSettingsStore } from '@/stores/locationSettingsStore';
 
 export interface CapturedLocation {
@@ -8,6 +9,12 @@ export interface CapturedLocation {
 }
 
 const CAPTURE_TIMEOUT_MS = 4000;
+
+// The capture toggle is ON by default, so the OS permission may never have been
+// asked. A foreground add-expense screen asks it once per install; after that
+// the user's answer stands (Android would otherwise re-prompt after one denial).
+const promptStore = new MMKV({ id: 'location-settings' });
+const ASKED_KEY = 'permissionAsked';
 
 function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T | null> {
   return Promise.race([
@@ -36,11 +43,15 @@ export async function requestLocationPermission(): Promise<boolean> {
 }
 
 /**
- * Best-effort current position. Gated on the opt-in toggle (unless `force`,
+ * Best-effort current position. Gated on the capture toggle (unless `force`,
  * used by the manual pin screen). NEVER throws and never takes longer than
- * ~4s — an expense save must not block on GPS.
+ * ~4s once permission is settled — an expense save must not block on GPS.
+ * `askPermission` (foreground add-expense screens only, never a background
+ * capture) asks for an undetermined permission, once per install.
  */
-export async function captureCurrentLocation(opts?: { force?: boolean }): Promise<CapturedLocation | null> {
+export async function captureCurrentLocation(
+  opts?: { force?: boolean; askPermission?: boolean },
+): Promise<CapturedLocation | null> {
   if (!opts?.force && !useLocationSettingsStore.getState().captureEnabled) return null;
 
   // Web has no expo-location native module; use the browser Geolocation API.
@@ -48,7 +59,11 @@ export async function captureCurrentLocation(opts?: { force?: boolean }): Promis
   if (Platform.OS === 'web') return captureWebLocation();
 
   try {
-    const { status } = await Location.getForegroundPermissionsAsync();
+    let { status } = await Location.getForegroundPermissionsAsync();
+    if (status === 'undetermined' && opts?.askPermission && !promptStore.getBoolean(ASKED_KEY)) {
+      promptStore.set(ASKED_KEY, true);
+      ({ status } = await Location.requestForegroundPermissionsAsync());
+    }
     if (status !== 'granted') return null;
 
     const pos = await withTimeout(

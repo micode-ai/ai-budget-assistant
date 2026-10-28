@@ -261,6 +261,7 @@ Newest last within each section.
 - 2026-10-27 · [ABA-699](https://github.com/micode-ai/ai-budget-assistant/issues/732) — category hierarchy follow-ups: analytics donuts roll up and drill into subcategories (phone and desktop), income categories get the hierarchy, drag and drop in Settings → Categories to nest and un-nest; remaining gaps recorded. Page: `features/category-hierarchy.md`.
 - 2026-10-27 · [ABA-699](https://github.com/micode-ai/ai-budget-assistant/issues/732) — fix: a second category drag on web hit-tested from the row's old place (react-native-web onLayout fires on resize only) and the post-drag click opened the edit form; invariants on `features/category-hierarchy.md`.
 - 2026-10-27 · [ABA-700](https://github.com/micode-ai/ai-budget-assistant/issues/733) — receipt zoom viewer: pinch, double-tap and pan on the phone, wheel, drag, double-click and +/−/fit buttons on web, shared by the expense detail and the scan confirm card; math in the tested pure `receiptZoom.ts`. Page: [expense-detail-editing](features/expense-detail-editing.md).
+- 2026-10-28 · [ABA-701](https://github.com/micode-ai/ai-budget-assistant/issues/734) — GPS capture on by default; the opt-in device-local toggle had silently reset to OFF after reinstalls; permission asked once from foreground add-expense screens, never from background capture · `features/expense-location-and-map.md`
 
 ## Queries
 

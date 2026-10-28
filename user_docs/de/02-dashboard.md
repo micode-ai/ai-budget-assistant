@@ -44,7 +44,7 @@ Tippe auf die Karte, um deine Einkaufsliste zu öffnen.
 
 Die Karte erscheint erst, wenn die App das Geschäft anhand deiner bisherigen Einkäufe dort erkennt — beim allerersten Besuch eines neuen Ortes wird sie also noch nicht angezeigt. Wenn du das Geschäft verlässt, verschwindet sie, sobald du die App das nächste Mal öffnest oder zur Übersicht zurückkehrst.
 
-> **Hinweis:** Diese Karte benötigt Standortzugriff. Aktiviere **Standort an neue Ausgaben anhängen** unter **Einstellungen → Daten & Berichte → Standort** — standardmäßig ist das ausgeschaltet. Ohne diese Einstellung prüft die App nie, wo du dich befindest, und die Karte erscheint nie.
+> **Hinweis:** Diese Karte benötigt Standortzugriff. Aktiviere **Standort an neue Ausgaben anhängen** unter **Einstellungen → Daten & Berichte → Standort** — standardmäßig ist das eingeschaltet, sofern du es nicht ausgeschaltet hast. Ohne diese Einstellung prüft die App nie, wo du dich befindest, und die Karte erscheint nie.
 
 ## Finanzielle Gesundheit
 

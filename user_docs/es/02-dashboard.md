@@ -44,7 +44,7 @@ Toca la tarjeta para abrir tu lista de la compra.
 
 La tarjeta solo aparece cuando la app reconoce la tienda a partir de tus compras anteriores allí — no aparecerá en tu primera visita a un lugar nuevo, y cuando te vas, desaparece la próxima vez que abres la app o vuelves al Panel.
 
-> **Nota:** Esta tarjeta necesita acceso a la ubicación. Activa **Adjuntar ubicación a nuevos gastos** en **Ajustes → Datos e informes → Ubicación** — está desactivado de forma predeterminada. Sin esto, la app nunca comprueba dónde estás, y la tarjeta nunca aparece.
+> **Nota:** Esta tarjeta necesita acceso a la ubicación. Activa **Adjuntar ubicación a nuevos gastos** en **Ajustes → Datos e informes → Ubicación** — está activado de forma predeterminada salvo que lo hayas desactivado. Sin esto, la app nunca comprueba dónde estás, y la tarjeta nunca aparece.
 
 ## Salud Financiera
 

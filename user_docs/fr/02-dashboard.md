@@ -44,7 +44,7 @@ Appuyez sur la carte pour ouvrir votre liste de courses.
 
 La carte n'apparaît que lorsque l'application reconnaît le magasin à partir de vos achats précédents à cet endroit — elle n'apparaîtra donc pas lors de votre toute première visite dans un nouvel endroit, et lorsque vous partez, elle disparaît à la prochaine ouverture de l'application ou lorsque vous revenez au Tableau de bord.
 
-> **Note :** Cette carte nécessite l'accès à la localisation. Activez **Joindre la localisation aux nouvelles dépenses** dans **Paramètres → Données et rapports → Localisation** — elle est désactivée par défaut. Sans cela, l'application ne vérifie jamais où vous êtes, et cette carte n'apparaît jamais.
+> **Note :** Cette carte nécessite l'accès à la localisation. Activez **Joindre la localisation aux nouvelles dépenses** dans **Paramètres → Données et rapports → Localisation** — elle est activée par défaut, sauf si vous l'avez désactivée. Sans cela, l'application ne vérifie jamais où vous êtes, et cette carte n'apparaît jamais.
 
 ## Santé Financière
 

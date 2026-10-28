@@ -44,7 +44,7 @@ Tik op de kaart om je boodschappenlijst te openen.
 
 De kaart verschijnt pas zodra de app de winkel herkent aan je eerdere aankopen daar — bij je allereerste bezoek aan een nieuwe plek zie je hem dus nog niet, en zodra je vertrekt, verdwijnt hij de volgende keer dat je de app opent of terugkeert naar het Dashboard.
 
-> **Let op:** Deze kaart heeft locatietoegang nodig. Zet **Locatie toevoegen aan nieuwe uitgaven** aan onder **Instellingen → Gegevens & rapporten → Locatie** — dit staat standaard uit. Zonder deze instelling controleert de app nooit waar je bent, en verschijnt deze kaart nooit.
+> **Let op:** Deze kaart heeft locatietoegang nodig. Zet **Locatie toevoegen aan nieuwe uitgaven** aan onder **Instellingen → Gegevens & rapporten → Locatie** — dit staat standaard aan, tenzij je het hebt uitgezet. Zonder deze instelling controleert de app nooit waar je bent, en verschijnt deze kaart nooit.
 
 ## Financiële gezondheidsscore
 

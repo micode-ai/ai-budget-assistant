@@ -14,15 +14,13 @@ Een uitgave krijgt zijn locatie uit een van drie bronnen (de hoogste wint):
 
 Geïmporteerde transacties (bank-CSV/PDF-bestanden) krijgen geen locatie.
 
-## Gps-registratie inschakelen
+## Gps-registratie
 
-Gps-registratie staat **standaard uit**. Om het in te schakelen:
+Gps-registratie staat **standaard aan**. De eerste keer dat je een uitgave toevoegt (met de hand, met spraak of door een bon te scannen), vraagt de app om locatietoestemming — sta die toe, dan krijgen nieuwe uitgaven die je onderweg toevoegt automatisch je huidige positie.
 
-1. Open **Instellingen → Gegevens & rapporten**.
-2. Zet in de sectie **Locatie** de optie **Locatie toevoegen aan nieuwe uitgaven** aan.
-3. Sta de locatietoestemming toe wanneer het systeem hierom vraagt.
+Om het uit (of weer aan) te zetten, open je **Instellingen → Gegevens & rapporten → Locatie** en schakel je **Locatie toevoegen aan nieuwe uitgaven** om. Heb je de toestemming geweigerd, sta locatietoegang voor de app dan toe in de systeeminstellingen.
 
-Wanneer dit is ingeschakeld, krijgen nieuwe uitgaven die je onderweg toevoegt automatisch je huidige positie. Je kunt de locatie van een uitgave altijd bekijken en verwijderen, en je kunt de schakelaar op elk moment uitzetten.
+Je kunt de locatie van een uitgave altijd bekijken en verwijderen, en je kunt de schakelaar op elk moment uitzetten.
 
 ## Kaartweergave op het tabblad Uitgaven
 
@@ -47,7 +45,7 @@ Reisaccounts hebben een eigen toegangspunt: open het reisaccount en tik op **Rei
 
 ## Privacy
 
-- Gps-registratie is strikt opt-in en standaard uitgeschakeld; de toestemming wordt pas gevraagd wanneer je de schakelaar inschakelt.
+- Gps-registratie staat standaard aan, maar heeft je toestemming nodig — de app vraagt het één keer, en je kunt het op elk moment uitzetten via **Instellingen → Gegevens & rapporten → Locatie**.
 - De bonadresherkenning gebruikt alleen het op de bon afgedrukte adres — er komt geen telefoonlocatie aan te pas.
 - Een locatie maakt deel uit van de uitgavengegevens: leden van een gedeelde account die de uitgave kunnen zien, zien ook de locatie ervan.
 - Je kunt de locatie van elke uitgave op elk moment verwijderen.
