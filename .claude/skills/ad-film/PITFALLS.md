@@ -256,3 +256,14 @@ Collected from `receipt-journey`, `real-salary`, `shared-family`, `oddam-pietnas
 | The poster pill failed sync by 209 ms although nothing moved before 27.0 | The baseline subtraction took the hard cut at 26.5 (one value) as the boil baseline and made the whole window negative, so `argmax` returned the window's first frame. A baseline now needs ≥ 3 changed drawings. When a check disagrees with the frames, probe the region frame by frame before moving the animation. |
 | A robot with `facing: -1` showed its nameplate mirrored | The flip mirrors the baked sprite including its text. Keep text-bearing characters at facing +1 (or bake text unflipped). |
 | `R.rowLens` cut off the amount line | Below r ≈ 340 the last line leaves the glass. Budget the lens and the plate under/over it together before placing either. |
+
+## Real 3D / Three.js (from `gdansk-w-kuli`)
+
+| Symptom | Cause and fix |
+|---|---|
+| A brass/wood "material" look drawn in 2D canvas (baked volume sprites) was rejected as cheap and the idea as boring | Fake material in flat canvas reads as clip-art next to real 3D. For a material look use Three.js (`D:\Work\tools\films\gdansk-w-kuli\` is the reference: `src/world.js` scene, `src/film.js` compositor, `src/overlay.js` 2D layer). Check the mechanic against past films first: balls-into-bowls had already been the clay film. |
+| Whole frames went black at a few exact camera angles, reproducibly, and only with bloom on | A grazing GGX highlight on the glass produced a NaN pixel; `UnrealBloomPass` blurs it over the whole frame. A `ShaderPass` right after `RenderPass` replaces NaN/Inf with black and clamps to 64. After render, scan the master: `signalstats` YAVG over all frames, none dark. |
+| `node tools/snap.cjs` timed out waiting for the film while a plain 8 s sleep found it loaded | `page.waitForFunction` returning a GSAP timeline object (not a boolean) never resolved in puppeteer-core 25. Poll `page.evaluate(() => !!window.FILM_READY)` instead. |
+| The first snapped frame showed the cover instead of the requested time | The page's own initial `render(0)` ran after an `await img.decode()` and overwrote the snap. Set `FILM_READY` only after that first render and wait for it. |
+| WebGL in headless Chrome | Works with real GPU (ANGLE D3D11, Iris Xe), ~10–15 ms/frame at 1080×1920; HyperFrames render 30 s in ~3.5 min. `preserveDrawingBuffer: true` so the GL canvas can be `drawImage`d into the 2D compositor canvas. Module scripts + an importmap to `./node_modules/three/...` load under file:// with `--allow-file-access-from-files`. |
+| A popup "pop" failed sync by 40 ms | It scaled from 0 at the cue, so the first visible change was a frame late and too small for a full-frame region. Make it visible on the cue frame (start the ramp one frame early) and give the sync region the popup's own box. |
