@@ -162,7 +162,7 @@ describe('settingsRegistry', () => {
     expect(adminOnly.map((e) => e.key)).toEqual(['admin']);
     expect(visibleSettingsEntries(false).some((e) => e.key === 'admin')).toBe(false);
     expect(visibleSettingsEntries(true).some((e) => e.key === 'admin')).toBe(true);
-    expect(visibleSettingsEntries(true, { inboundMail: true }).length).toBe(SETTINGS_ENTRIES.length);
+    expect(visibleSettingsEntries(true, { inboundMail: true, publicApi: true }).length).toBe(SETTINGS_ENTRIES.length);
   });
 
   // Catches: the e-mail receipts row showing while the server flag is off (every
@@ -170,10 +170,32 @@ describe('settingsRegistry', () => {
   // hidden once the app has learned the feature is on.
   it('shows a feature-gated row only while its server feature is on', () => {
     const gated = SETTINGS_ENTRIES.filter((e) => e.requiresFeature);
-    expect(gated.map((e) => e.key)).toEqual(['emailReceipts']);
+    expect(gated.map((e) => e.key)).toEqual(['emailReceipts', 'connectedApps', 'developers']);
     expect(visibleSettingsEntries(false).some((e) => e.key === 'emailReceipts')).toBe(false);
     expect(visibleSettingsEntries(false, { inboundMail: false }).some((e) => e.key === 'emailReceipts')).toBe(false);
     expect(visibleSettingsEntries(false, { inboundMail: true }).some((e) => e.key === 'emailReceipts')).toBe(true);
+  });
+
+  // Catches: the Developers / Connected apps rows showing while PUBLIC_API_ENABLED
+  // is off (both route families answer 404, so each row would open a dead pane),
+  // or one of them gated on a different flag than the other.
+  it('shows Developers and Connected apps only while the public API is on', () => {
+    const keys = ['developers', 'connectedApps'];
+    for (const key of keys) {
+      expect(SETTINGS_ENTRIES.find((e) => e.key === key)?.requiresFeature).toBe('publicApi');
+      expect(visibleSettingsEntries(false).some((e) => e.key === key)).toBe(false);
+      expect(visibleSettingsEntries(true, { publicApi: false, inboundMail: true }).some((e) => e.key === key)).toBe(false);
+      expect(visibleSettingsEntries(false, { publicApi: true }).some((e) => e.key === key)).toBe(true);
+    }
+    // The flags are independent: turning the public API on does not reveal e-mail receipts.
+    expect(visibleSettingsEntries(false, { publicApi: true }).some((e) => e.key === 'emailReceipts')).toBe(false);
+  });
+
+  // Catches: a route the shell hosts that is not the one `app/settings/*.tsx`
+  // file renders it from — the row would open the no-selection pane.
+  it('routes Developers and Connected apps to their own settings files', () => {
+    expect(resolveSettingsPane('developers')?.route).toBe('/settings/developers');
+    expect(resolveSettingsPane('connectedApps')?.route).toBe('/settings/connected-apps');
   });
 
   // Catches: a minted i18n key, and a key that exists in `en` but not in one
@@ -196,7 +218,7 @@ describe('settingsRegistry', () => {
   // draws - so this also pins that a newly promoted row rises into the pane
   // block in its intended place rather than being appended.
   it('records which entries are panes today', () => {
-    expect(SETTINGS_ENTRIES.filter(isPaneEntry).map((e) => e.key)).toEqual(['profile', 'accounts', 'appearance', 'ai', 'widgets', 'notifications', 'bots', 'emailReceipts', 'security', 'data', 'categories', 'merchants', 'products', 'tags', 'projects', 'about']);
+    expect(SETTINGS_ENTRIES.filter(isPaneEntry).map((e) => e.key)).toEqual(['profile', 'accounts', 'appearance', 'ai', 'widgets', 'notifications', 'bots', 'emailReceipts', 'security', 'connectedApps', 'data', 'categories', 'merchants', 'products', 'tags', 'projects', 'developers', 'about']);
   });
 });
 

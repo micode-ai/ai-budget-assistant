@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/stores/authStore';
 import { usePurchaseRequestStore } from '@/stores/purchaseRequestStore';
 import { useInboundReceiptStore } from '@/stores/inboundReceiptStore';
+import { useDeveloperAppsStore } from '@/stores/developerAppsStore';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { SettingsProfileCard, SettingsLogoutButton } from './SettingsIdentity';
 
@@ -47,6 +48,13 @@ export function SettingsHubMobile() {
   const inboundMailOn = useInboundReceiptStore((s) => s.availability === 'available');
   useEffect(() => {
     void useInboundReceiptStore.getState().probe();
+  }, []);
+
+  // Developers / Connected apps (Public API): both rows exist only while PUBLIC_API_ENABLED is on,
+  // learned the same way - a 404 from `/developer/apps` hides them.
+  const publicApiOn = useDeveloperAppsStore((s) => s.availability === 'available');
+  useEffect(() => {
+    void useDeveloperAppsStore.getState().probe();
   }, []);
 
   const categories: SettingsCategory[] = [
@@ -124,6 +132,16 @@ export function SettingsHubMobile() {
       description: t('settingsNav.securityDesc'),
       route: '/settings/security',
     },
+    ...(publicApiOn
+      ? [
+          {
+            icon: 'apps-outline' as IconName,
+            label: t('connectedApps.title'),
+            description: t('connectedApps.subtitle'),
+            route: '/settings/connected-apps',
+          },
+        ]
+      : []),
     {
       icon: 'library-outline',
       label: t('settingsNav.referenceData'),
@@ -167,6 +185,16 @@ export function SettingsHubMobile() {
       description: t('settingsNav.whatsNewDesc'),
       route: '/whats-new',
     },
+    ...(publicApiOn
+      ? [
+          {
+            icon: 'code-slash-outline' as IconName,
+            label: t('developerApps.title'),
+            description: t('developerApps.subtitle'),
+            route: '/settings/developers',
+          },
+        ]
+      : []),
     {
       icon: 'information-circle-outline',
       label: t('settingsNav.about'),

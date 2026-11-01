@@ -137,6 +137,8 @@ the section you came for — it states what must not break and why. A missing se
 - [restore-credentials](features/restore-credentials.md) — WebAuthn so a session survives an Android
   device transfer
 - [last-active-tracking](features/last-active-tracking.md) — `lastSyncAt` as the activity stamp, set on every authenticated request, throttled through Redis
+- [public-api](features/public-api.md) — the OAuth server and `/public/v1` for third-party apps:
+  opaque hashed tokens, per-request grant checks, encryption tiers, the expenses changes feed
 
 ### Telling users about things, and asking them for something
 - [faster-capture-suggestion](features/faster-capture-suggestion.md) — the one-time nudge toward receipt,

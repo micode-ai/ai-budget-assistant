@@ -88,11 +88,13 @@ export function ExpenseListItem({ item, isMultiSelect, isSelected, onToggleSelec
             {groupMark === 'share' ? t('groupBudget.badgeShare') : t('groupBudget.badgeLinked')}
           </Text>
         )}
-        {(item.source === 'import' || item.source === 'notification') && (
+        {(item.source === 'import' || item.source === 'notification' || item.source === 'api') && (
           <Text style={[styles.sourceBadge, { color: theme.colors.textTertiary }]}>
             {item.source === 'import'
               ? t('expenseDetail.sourceImport')
-              : t('expenseDetail.sourceNotification')}
+              : item.source === 'api'
+                ? t('expenseDetail.sourceApi')
+                : t('expenseDetail.sourceNotification')}
           </Text>
         )}
       </View>

@@ -1,4 +1,5 @@
 import { HttpException } from '@nestjs/common';
+import * as Sentry from '@sentry/node';
 import { SentryExceptionFilter } from './sentry-exception.filter';
 
 jest.mock('@sentry/node', () => ({
@@ -18,6 +19,7 @@ function host(url = '/api/v1/expenses?token=secret') {
 describe('SentryExceptionFilter admin feed', () => {
   let superCatch: jest.SpyInstance;
   beforeEach(() => {
+    jest.clearAllMocks();
     superCatch = jest
       .spyOn(Object.getPrototypeOf(SentryExceptionFilter.prototype), 'catch')
       .mockImplementation(() => undefined);
@@ -31,6 +33,20 @@ describe('SentryExceptionFilter admin feed', () => {
     expect(arg.message).toContain('500 GET /api/v1/expenses: db down');
     expect(arg.message).not.toContain('secret');
     expect(arg.stack).toBeUndefined();
+  });
+
+  it('does not report the expected OAuth 503 temporarily_unavailable', () => {
+    const gw = { emitError: jest.fn() };
+    const e = new HttpException({ error: 'temporarily_unavailable', error_description: 'please try again' }, 503);
+    new SentryExceptionFilter(gw as any).catch(e, host('/oauth/token'));
+    expect(gw.emitError).not.toHaveBeenCalled();
+    expect(Sentry.captureException).not.toHaveBeenCalled();
+  });
+
+  it('still reports any other 503', () => {
+    const gw = { emitError: jest.fn() };
+    new SentryExceptionFilter(gw as any).catch(new HttpException('down', 503), host());
+    expect(gw.emitError).toHaveBeenCalledTimes(1);
   });
 
   it('does not emit for 4xx', () => {

@@ -5,6 +5,7 @@ import {
 import { PrismaService } from '../../database/prisma.service';
 import { CreateProjectDto, UpdateProjectDto } from './dto';
 import { EmbeddingService } from '../ai/services/embedding.service';
+import { touchExpenses } from '../expenses/expense-touch.util';
 
 @Injectable()
 export class ProjectsService {
@@ -203,7 +204,7 @@ export class ProjectsService {
       throw new NotFoundException('Expense not found');
     }
 
-    return this.prisma.projectExpense.upsert({
+    const link = await this.prisma.projectExpense.upsert({
       where: {
         projectId_expenseId: {
           projectId: resolvedProjectId,
@@ -218,6 +219,9 @@ export class ProjectsService {
         isDeleted: false,
       },
     });
+    // Only the link row changed; bump the parent so change feeds re-deliver it (expense-touch.util.ts).
+    await touchExpenses(this.prisma, accountId, { id: resolvedExpenseId });
+    return link;
   }
 
   async removeExpense(
@@ -249,7 +253,7 @@ export class ProjectsService {
       throw new NotFoundException('Project expense association not found');
     }
 
-    return this.prisma.projectExpense.update({
+    const link = await this.prisma.projectExpense.update({
       where: {
         projectId_expenseId: {
           projectId: resolvedProjectId,
@@ -258,6 +262,8 @@ export class ProjectsService {
       },
       data: { isDeleted: true },
     });
+    await touchExpenses(this.prisma, accountId, { id: resolvedExpenseId });
+    return link;
   }
 
   async addIncome(accountId: string, projectId: string, incomeId: string) {

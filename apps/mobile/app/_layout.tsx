@@ -28,6 +28,7 @@ import { useTripInviteDeepLink } from '@/hooks/useTripInviteDeepLink';
 import { useGroupLinkDeepLink } from '@/hooks/useGroupLinkDeepLink';
 import { useShareIntake } from '@/hooks/useShareIntake';
 import { useGenericDeepLink } from '@/hooks/useGenericDeepLink';
+import { useOAuthConsentResume } from '@/hooks/useOAuthConsentResume';
 import { useFirstRunOnboarding } from '@/hooks/useFirstRunOnboarding';
 import { useTelemetryScreenViews } from '@/hooks/useTelemetryScreenViews';
 
@@ -60,6 +61,7 @@ function RootNavigator() {
   useNotificationDeepLink(coldStartGateReady);
   useTripInviteDeepLink(coldStartGateReady, t);
   useGroupLinkDeepLink(coldStartGateReady);
+  useOAuthConsentResume(coldStartGateReady);
   useShareIntake(coldStartGateReady);
   useFirstRunOnboarding(coldStartGateReady);
   useGenericDeepLink(isInitializing, isAuthenticated);
@@ -348,6 +350,13 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="authorize"
+          options={{
+            headerShown: true,
+            title: t('oauthConsent.title'),
+          }}
+        />
+        <Stack.Screen
           name="subscription"
           options={{
             headerShown: true,
@@ -458,6 +467,20 @@ function RootNavigator() {
           options={{
             headerShown: settingsHeaderShown('settings/email-receipts'),
             title: t('emailReceipts.title'),
+          }}
+        />
+        <Stack.Screen
+          name="settings/developers"
+          options={{
+            headerShown: settingsHeaderShown('settings/developers'),
+            title: t('developerApps.title'),
+          }}
+        />
+        <Stack.Screen
+          name="settings/connected-apps"
+          options={{
+            headerShown: settingsHeaderShown('settings/connected-apps'),
+            title: t('connectedApps.title'),
           }}
         />
         <Stack.Screen

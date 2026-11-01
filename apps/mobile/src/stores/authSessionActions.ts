@@ -5,6 +5,7 @@
  * circular import, mirroring walletBalanceActions.ts.
  */
 import { Platform } from 'react-native';
+import { PENDING_CONSENT_KEY } from '@/features/oauth-consent/consentParams';
 import { secureStorage } from '../services/secureStorage';
 import { api } from '../services/api';
 import type { User, Currency, AuthResponse } from '@budget/shared-types';
@@ -27,6 +28,8 @@ import { useShoppingListTemplateStore } from './shoppingListTemplateStore';
 import { useGroupStore } from './groupStore';
 import { useGroupBudgetStore } from './groupBudgetStore';
 import { useInboundReceiptStore } from './inboundReceiptStore';
+import { useDeveloperAppsStore } from './developerAppsStore';
+import { useConnectedAppsStore } from './connectedAppsStore';
 import { useChatStore } from './chatStore';
 import { useScenarioStore } from './scenarioStore';
 import * as investmentRepo from '../db/investmentRepository';
@@ -634,6 +637,11 @@ export async function logoutAction(set: AuthStoreSet): Promise<void> {
       });
     }
 
+    // A consent request stashed while signed out belongs to whoever started it; it must not be
+    // resumed into the next session on this device (public API final review). Unconditional, like
+    // the store resets below: biometric re-login keeps the tokens, not this.
+    await secureStorage.removeItem(PENDING_CONSENT_KEY);
+
     // Reset stores
     useAccountStore.getState().reset();
     useScenarioStore.getState().reset();
@@ -671,6 +679,10 @@ export async function logoutAction(set: AuthStoreSet): Promise<void> {
     // E-mail receipts (ABA-644): the address, the pending items and the feature gate are
     // per user - the next person to sign in must not see another's inbox.
     useInboundReceiptStore.getState().reset();
+    // Public API: a one-time client secret may still be on screen, and the developer's apps and
+    // the connected-apps list are per user - neither may survive into the next session.
+    useDeveloperAppsStore.getState().reset();
+    useConnectedAppsStore.getState().reset();
     // `accountStore` also clears this on an account switch (ABA-513) — this
     // call is deliberately redundant with that, not a duplicate to prune. A
     // conversation can carry another person's name, amounts, anything the

@@ -79,6 +79,8 @@ export const SETTINGS_PANE_KEYS = [
   'accounts',
   'tags',
   'projects',
+  'developers',
+  'connectedApps',
 ] as const;
 
 export type SettingsPaneKey = (typeof SETTINGS_PANE_KEYS)[number];
@@ -120,13 +122,14 @@ interface SettingsEntryBase {
   adminOnly?: boolean;
   /**
    * Rendered only while the named server feature is on (ABA-644: the inbound e-mail flag
-   * answers 404 on every route when off, and the app learns that at runtime).
+   * answers 404 on every route when off, and the app learns that at runtime). `publicApi` works
+   * the same way: with `PUBLIC_API_ENABLED` off `/developer/apps` and `/connected-apps` answer 404.
    */
   requiresFeature?: SettingsFeatureKey;
 }
 
 /** Server-flagged features a settings row can depend on. */
-export type SettingsFeatureKey = 'inboundMail';
+export type SettingsFeatureKey = 'inboundMail' | 'publicApi';
 export type SettingsFeatures = Partial<Record<SettingsFeatureKey, boolean>>;
 
 export interface SettingsPaneEntry extends SettingsEntryBase {
@@ -183,6 +186,9 @@ export const SETTINGS_ENTRIES: readonly SettingsEntry[] = [
   { kind: 'pane', key: 'bots', labelKey: 'settings.bots.title', route: '/settings/bots', width: 'form' },
   { kind: 'pane', key: 'emailReceipts', labelKey: 'emailReceipts.title', route: '/settings/email-receipts', width: 'form', requiresFeature: 'inboundMail' },
   { kind: 'pane', key: 'security', labelKey: 'settingsNav.security', route: '/settings/security', width: 'form' },
+  // Public API: third-party apps connected to your accounts. Beside security, because
+  // disconnecting one is revoking access.
+  { kind: 'pane', key: 'connectedApps', labelKey: 'connectedApps.title', route: '/settings/connected-apps', width: 'form', requiresFeature: 'publicApi' },
   { kind: 'pane', key: 'data', labelKey: 'settingsNav.data', route: '/settings/data', width: 'form' },
   // The reference-data group, in the same order `app/settings/reference.tsx`
   // — the sub-hub these rows are promoted out of, and which dissolves on
@@ -203,6 +209,9 @@ export const SETTINGS_ENTRIES: readonly SettingsEntry[] = [
   { kind: 'pane', key: 'products', labelKey: 'settingsNav.products', route: '/settings/products', width: 'full' },
   { kind: 'pane', key: 'tags', labelKey: 'settingsNav.tags', route: '/tags/manage', width: 'form' },
   { kind: 'pane', key: 'projects', labelKey: 'settingsNav.projects', route: '/projects', width: 'form' },
+  // Public API: the OAuth apps you registered as a developer. Last before `about`, since
+  // almost nobody needs it.
+  { kind: 'pane', key: 'developers', labelKey: 'developerApps.title', route: '/settings/developers', width: 'form', requiresFeature: 'publicApi' },
   { kind: 'pane', key: 'about', labelKey: 'settingsNav.about', route: '/settings/about', width: 'form' },
 
   // --- Places you work. Links, permanently: they are in settings only

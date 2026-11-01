@@ -74,3 +74,30 @@ export interface AdminGroupMetricsResponse {
   };
   daily: AdminGroupMetricsDailyPoint[];
 }
+
+export interface AdminOAuthClient {
+  id: string;
+  name: string;
+  homepageUrl: string;
+  ownerId: string;
+  ownerName: string;
+  ownerEmail: string;
+  createdAt: string;
+  activeGrants: number;
+  requestsLastMinute: number;
+  status: 'active' | 'blocked';
+  blockedReason: string | null;
+  isVerified: boolean;
+  /** null = default limit */
+  rateLimitPerGrant: number | null;
+  rateLimitPerClient: number | null;
+  isDeleted: boolean;
+}
+
+export interface UpdateAdminOAuthClientDto {
+  status?: 'active' | 'blocked';
+  blockedReason?: string;
+  isVerified?: boolean;
+  rateLimitPerGrant?: number | null;
+  rateLimitPerClient?: number | null;
+}

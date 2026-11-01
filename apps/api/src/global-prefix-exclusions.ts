@@ -43,4 +43,12 @@ export const GLOBAL_PREFIX_EXCLUDED_ROUTES: string[] = [
   // under it. Same wildcard reasoning: one controller, one entry. (/s/g/:groupToken is the
   // QR route of 's/(.*)' above, not this one.)
   'g/(.*)',
+  // Public API (/public/v1/*, /public/docs/*) and OAuth (/oauth/token, /oauth/revoke): URLs
+  // registered with third-party developers, so they carry their own versioning, not api/v1.
+  // The two OAuth endpoints are named one by one, NOT 'oauth/(.*)': the consent page's own
+  // backend (OAuthAuthorizeController, /api/v1/oauth/authorize/preview|approve) is an ordinary
+  // JWT-authenticated app route and must keep the prefix. Pinned by global-prefix-exclusions.spec.ts.
+  'public/(.*)',
+  'oauth/token',
+  'oauth/revoke',
 ];

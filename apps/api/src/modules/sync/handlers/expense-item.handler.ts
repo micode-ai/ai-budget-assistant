@@ -1,5 +1,6 @@
 import type { SyncChange } from '@budget/shared-types';
 import { resolveExpenseCategoryId } from '../../expenses/expense-category-resolver.util';
+import { touchExpenses } from '../../expenses/expense-touch.util';
 import { SyncHandlerContext, SyncResult } from '../sync-types';
 
 export async function processExpenseItemChange(
@@ -60,6 +61,9 @@ export async function processExpenseItemChange(
       },
     });
 
+    // Only a child row changed; bump the parent so change feeds re-deliver it (expense-touch.util.ts).
+    await touchExpenses(ctx.prisma, accountId, { id: created.expenseId });
+
     // ABA-642: no community-price contribution here. Only a signed scan token handed
     // back on expense create can contribute (ExpenseCreatedHooksService), so an item
     // created or edited through sync can never vote or rewrite a vote.
@@ -91,6 +95,7 @@ export async function processExpenseItemChange(
         syncVersion: { increment: 1 },
       },
     });
+    await touchExpenses(ctx.prisma, accountId, { id: existing.expenseId });
     return { entityId, status: 'success', serverVersion: updated.syncVersion };
   }
 
@@ -99,6 +104,7 @@ export async function processExpenseItemChange(
       where: { id: entityId },
       data: { isDeleted: true, syncVersion: { increment: 1 } },
     });
+    await touchExpenses(ctx.prisma, accountId, { id: existing.expenseId });
     return { entityId, status: 'success' };
   }
 

@@ -3,6 +3,8 @@ import * as pathToRegexp from 'path-to-regexp';
 import { GLOBAL_PREFIX_EXCLUDED_ROUTES } from './global-prefix-exclusions';
 import { GuestController } from './modules/receipt-split/guest.controller';
 import { GroupGuestController } from './modules/groups/group-guest.controller';
+import { OAuthAuthorizeController } from './modules/oauth/oauth-authorize.controller';
+import { OAuthTokenController } from './modules/oauth/oauth-token.controller';
 
 /**
  * `main.ts` serves every route under `api/v1` EXCEPT the ones named here. The
@@ -62,6 +64,24 @@ describe('GLOBAL_PREFIX_EXCLUDED_ROUTES', () => {
   it('excludes the QR-code group routes specifically', () => {
     expect(isExcluded('/s/g/:groupToken')).toBeTruthy();
     expect(isExcluded('/s/g/:groupToken/:seq')).toBeTruthy();
+  });
+
+  it('excludes the public API and OAuth routes', () => {
+    expect(isExcluded('/public/v1/expenses/:id')).toBeTruthy();
+    expect(isExcluded('/oauth/token')).toBeTruthy();
+    expect(isExcluded('/oauth/revoke')).toBeTruthy();
+  });
+
+  it('excludes EVERY OAuthTokenController route (the third-party token/revoke endpoints)', () => {
+    const routes = routesOf(OAuthTokenController);
+    expect(routes.sort()).toEqual(['/oauth/revoke', '/oauth/token']);
+    for (const route of routes) expect(isExcluded(route)).toBeTruthy();
+  });
+
+  it('keeps the consent page backend (OAuthAuthorizeController) under api/v1', () => {
+    const routes = routesOf(OAuthAuthorizeController);
+    expect(routes.sort()).toEqual(['/oauth/authorize/approve', '/oauth/authorize/preview']);
+    for (const route of routes) expect(isExcluded(route)).toBeFalsy();
   });
 
   it('does not exclude ordinary API routes', () => {

@@ -631,6 +631,25 @@ describe('create with categorized receipt items', () => {
     expect('receiptFingerprint' in bare.create).toBe(false);
     expect('receiptFingerprint' in bare.update).toBe(false);
   });
+
+  // Public API (phase 1): the OAuth app that wrote the row. Create branch ONLY — a repeat of the
+  // same localId must never re-attribute a row — and never read from the dto, which the sync
+  // handler fills by spreading a client payload (a client could otherwise forge the attribution).
+  it('stores createdByOAuthClientId on the create branch only, from the options argument', async () => {
+    const { service, prisma } = makeCategorizedItemsCreateService();
+    await service.create('a1', 'u1', { ...baseDto } as any, { createdByOAuthClientId: 'client-db-1' });
+    const args = prisma.expense.upsert.mock.calls[0][0];
+    expect(args.create.createdByOAuthClientId).toBe('client-db-1');
+    expect('createdByOAuthClientId' in args.update).toBe(false);
+  });
+
+  it('ignores a createdByOAuthClientId smuggled in the dto', async () => {
+    const { service, prisma } = makeCategorizedItemsCreateService();
+    await service.create('a1', 'u1', { ...baseDto, createdByOAuthClientId: 'forged' } as any);
+    const args = prisma.expense.upsert.mock.calls[0][0];
+    expect('createdByOAuthClientId' in args.create).toBe(false);
+    expect('createdByOAuthClientId' in args.update).toBe(false);
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -655,6 +674,7 @@ function makeItemsService(expense: { id: string; clientId: string }) {
         amount: 10,
         user: { name: 'Tester' },
       }),
+      updateMany: jest.fn().mockResolvedValue({ count: 1 }),
     },
     expenseItem: {
       findMany: jest.fn().mockResolvedValue([]),
@@ -751,6 +771,61 @@ describe('expense items CRUD resolves clientId to the server PK', () => {
 });
 
 // ---------------------------------------------------------------------------
+// Child-row edits bump the parent expense's updatedAt
+//
+// GET /public/v1/expenses/changes (and /sync/pull) find changed expenses by
+// expenses.updated_at. A line-item / split edit writes only the child table, so
+// without a bump the integrator's feed never re-delivers the expense.
+// ---------------------------------------------------------------------------
+
+describe('child-row edits touch the parent expense updatedAt', () => {
+  const expense = { id: 'server-pk-1', clientId: 'local-uuid-1' };
+  const touched = (prisma: any) =>
+    prisma.expense.updateMany.mock.calls.filter((c: any[]) => c[0]?.data?.updatedAt instanceof Date);
+
+  function withTouch() {
+    const made = makeItemsService(expense);
+    // removeSplits runs its two writes in one transaction; run it against the same mock.
+    made.prisma.$transaction = jest.fn(async (cb: any) => cb(made.prisma));
+    return made;
+  }
+
+  it.each([
+    ['createItem', (s: ExpensesService) => s.createItem('acc-1', 'local-uuid-1', { description: 'x', totalPrice: 1 } as any)],
+    ['updateItem', (s: ExpensesService) => s.updateItem('acc-1', 'local-uuid-1', 'item-1', { totalPrice: 2 } as any)],
+    ['removeItem', (s: ExpensesService) => s.removeItem('acc-1', 'local-uuid-1', 'item-1')],
+  ])('%s bumps the resolved server PK, scoped to the account', async (_name, run) => {
+    const { service, prisma } = withTouch();
+    await run(service);
+    const calls = touched(prisma);
+    expect(calls).toHaveLength(1);
+    expect(calls[0][0].where).toEqual({ id: 'server-pk-1', accountId: 'acc-1' });
+  });
+
+  it('setSplits bumps the expense inside its transaction', async () => {
+    const { service, prisma } = withTouch();
+    const tx: any = {
+      expense: { updateMany: jest.fn().mockResolvedValue({ count: 1 }), findUnique: jest.fn().mockResolvedValue(null) },
+      expenseCategorySplit: { updateMany: jest.fn().mockResolvedValue({}), createMany: jest.fn().mockResolvedValue({}) },
+    };
+    prisma.$transaction = jest.fn(async (cb: any) => cb(tx));
+    await service.setSplits('acc-1', 'server-pk-1', [{ categoryId: 'c1', amount: 10, percentage: 100 }]);
+    expect(tx.expense.updateMany).toHaveBeenCalledWith({
+      where: { id: 'server-pk-1', accountId: 'acc-1' },
+      data: { updatedAt: expect.any(Date) },
+    });
+  });
+
+  it('removeSplits bumps the expense', async () => {
+    const { service, prisma } = withTouch();
+    await service.removeSplits('acc-1', 'server-pk-1');
+    const calls = touched(prisma);
+    expect(calls).toHaveLength(1);
+    expect(calls[0][0].where).toEqual({ id: 'server-pk-1', accountId: 'acc-1' });
+  });
+});
+
+// ---------------------------------------------------------------------------
 // Split invariant defence — Σ splits === amount after an amount or item edit
 //
 // The receipt category auto-split rests on one invariant: the split amounts sum
@@ -842,6 +917,7 @@ function makeSplitDefenceService(opts: {
     expense: {
       findFirst: jest.fn().mockResolvedValue(expenseRow),
       update: jest.fn().mockResolvedValue({}),
+      updateMany: jest.fn().mockResolvedValue({ count: 1 }),
       // rebuildCategorySplits reads the receipt-level discount: the stored line
       // items are priced before it and the amount after it.
       findUnique: expenseFindUnique,
@@ -1256,5 +1332,78 @@ describe('update() — a budget-mirror share row', () => {
     await service.update('acc-1', 'e-split-1', { amount: 60, currencyCode: 'EUR', date: '2026-01-01' } as any);
     const data = tx.expense.update.mock.calls[0][0].data;
     expect(data).toEqual(expect.objectContaining({ amount: 60, currencyCode: 'EUR', date: new Date('2026-01-01') }));
+  });
+});
+
+// ---------------------------------------------------------------------------
+// createdByApp — "Added via <app>" for expenses created through the public API
+// ---------------------------------------------------------------------------
+
+describe('ExpensesService — createdByApp attribution', () => {
+  function makeService(row: any) {
+    const prisma: any = {
+      expense: {
+        findMany: jest.fn().mockResolvedValue([row]),
+        count: jest.fn().mockResolvedValue(1),
+        findFirst: jest.fn().mockResolvedValue(row),
+      },
+    };
+    const service = new ExpensesService(
+      prisma,
+      {} as any,
+      { delByPrefix: jest.fn(), del: jest.fn() } as any,
+      {} as any,
+      {} as any,
+      makeReceiptSplitServiceStub(),
+      makeCreatedHooksStub(),
+    );
+    return { service, prisma };
+  }
+
+  const appRow = {
+    id: 'e-1',
+    amount: 10,
+    user: { name: 'Alice' },
+    createdByOAuthClient: { id: 'db-uuid-1', clientId: 'aba_ci_public', name: 'AI Accounting' },
+  };
+
+  it('findAll selects the creating app and maps it to {id: public clientId, name}', async () => {
+    const { service, prisma } = makeService(appRow);
+    const result = await service.findAll('acc-1', {} as any);
+
+    const select = prisma.expense.findMany.mock.calls[0][0].select;
+    expect(select.createdByOAuthClient).toEqual({ select: { clientId: true, name: true } });
+    expect(result.data[0]).toEqual(
+      expect.objectContaining({
+        createdByUserName: 'Alice',
+        createdByApp: { id: 'aba_ci_public', name: 'AI Accounting' },
+      }),
+    );
+    expect(result.data[0]).not.toHaveProperty('createdByOAuthClient');
+  });
+
+  it('findOne includes the creating app and maps it', async () => {
+    const { service, prisma } = makeService(appRow);
+    const result: any = await service.findOne('acc-1', 'e-1');
+
+    const include = prisma.expense.findFirst.mock.calls[0][0].include;
+    expect(include.createdByOAuthClient).toEqual({ select: { clientId: true, name: true } });
+    expect(result.createdByApp).toEqual({ id: 'aba_ci_public', name: 'AI Accounting' });
+  });
+
+  it('maps createdByApp to null for an expense created in the app', async () => {
+    const { service } = makeService({ id: 'e-2', user: { name: 'Bob' }, createdByOAuthClient: null });
+    const result: any = await service.findOne('acc-1', 'e-2');
+    expect(result.createdByApp).toBeNull();
+    expect(result).not.toHaveProperty('createdByOAuthClient');
+  });
+
+  it('never returns the scalar createdByOAuthClientId (the OAuthClient db id) (I2)', async () => {
+    const { service } = makeService({ ...appRow, createdByOAuthClientId: 'db-uuid-1' });
+    const one: any = await service.findOne('acc-1', 'e-1');
+    expect(one).not.toHaveProperty('createdByOAuthClientId');
+    expect(JSON.stringify(one)).not.toContain('db-uuid-1');
+    const all = await service.findAll('acc-1', {} as any);
+    expect(all.data[0]).not.toHaveProperty('createdByOAuthClientId');
   });
 });

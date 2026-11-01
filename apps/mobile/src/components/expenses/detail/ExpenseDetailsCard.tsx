@@ -600,6 +600,13 @@ export const ExpenseDetailsCard = forwardRef<ExpenseDetailsCardHandle, ExpenseDe
             </Text>
           </View>
         )}
+        {expense.createdByApp?.name && (
+          <View style={styles.detailRow}>
+            <Text style={styles.detailLabel}>
+              {t('common.addedVia', { app: expense.createdByApp.name })}
+            </Text>
+          </View>
+        )}
 
         {/* Debt info */}
         {expense.isDebt && (

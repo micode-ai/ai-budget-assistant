@@ -150,6 +150,10 @@ export class HttpClient {
       apiError.status = response.status;
       apiError.details = error.details;
       apiError.code = typeof error.code === 'string' ? error.code : undefined;
+      // The parsed error body as sent. Callers whose endpoint answers in a different shape than
+      // `{ message, code }` (the OAuth consent routes answer RFC 6749 `{ error, error_description }`)
+      // read it from here; nothing else changes for existing callers.
+      apiError.body = error;
       throw apiError;
     }
 

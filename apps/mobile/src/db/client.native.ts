@@ -644,6 +644,10 @@ export async function initializeDatabase(): Promise<void> {
     // shared-account screens can show "Added by …" without an extra user lookup.
     try { expoDb.execSync(`ALTER TABLE expenses ADD COLUMN created_by_user_name TEXT`); } catch {}
     try { expoDb.execSync(`ALTER TABLE incomes ADD COLUMN created_by_user_name TEXT`); } catch {}
+    // Public API: the third-party app that created an expense ("Added via <app>").
+    // Server-set and pull-only — never pushed back.
+    try { expoDb.execSync(`ALTER TABLE expenses ADD COLUMN created_by_app_id TEXT`); } catch {}
+    try { expoDb.execSync(`ALTER TABLE expenses ADD COLUMN created_by_app_name TEXT`); } catch {}
 
     // External reference for CSV/bank imports (e.g. "wise:<TransferWise ID>")
     try { expoDb.execSync(`ALTER TABLE expenses ADD COLUMN external_ref TEXT`); } catch {}

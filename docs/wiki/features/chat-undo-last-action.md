@@ -125,6 +125,10 @@ bot-side write invisible to undo again, with no error anywhere to point at why.
 
 ## Known gaps (deliberately out of scope for v1)
 
+- Since the public API (see [public-api](public-api.md)), an edit to an expense's line items, tags
+  or project bumps the expense's `updatedAt` (`touchExpenses`), so the "unmodified since creation"
+  check now refuses to undo an expense whose tags or items were changed after it was created.
+
 - No UI affordance to trigger undo other than typing it — no swipe/long-press "undo" on the
   confirmation card itself.
 - `ActionResultCard` still has no dedicated rendering for `record_debt_repayment`/`create_debt`/

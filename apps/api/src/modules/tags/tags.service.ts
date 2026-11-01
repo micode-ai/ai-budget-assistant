@@ -5,6 +5,7 @@ import {
 import { PrismaService } from '../../database/prisma.service';
 import { CreateTagDto, UpdateTagDto } from './dto';
 import { EmbeddingService } from '../ai/services/embedding.service';
+import { touchExpenses } from '../expenses/expense-touch.util';
 
 @Injectable()
 export class TagsService {
@@ -141,6 +142,8 @@ export class TagsService {
         tagId: tag.id,
       },
     });
+    // Only the link row changed; bump the parent so change feeds re-deliver it (expense-touch.util.ts).
+    await touchExpenses(this.prisma, accountId, { id: expensePk });
 
     // Increment usage count
     await this.prisma.tag.update({
@@ -174,6 +177,7 @@ export class TagsService {
           isDeleted: true,
         },
       });
+      await touchExpenses(this.prisma, accountId, { id: expensePk });
 
       // Decrement usage count
       await this.prisma.tag.update({

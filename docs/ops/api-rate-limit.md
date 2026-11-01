@@ -160,6 +160,13 @@ error path is untested in practice. It is a safety net for the next time
 someone does exceed it: if a throttled request ever shows up as a bare
 `Failed to fetch` again, that is the first thing to check.
 
+## Public API zone (`budget_public`)
+
+`/public/` and `/oauth/` on `api.ai-budget.pl` use their own zone, `budget_public` (50 r/s per IP, `burst=200 nodelay`), so
+third-party traffic and the web app never share a bucket. Snippet and apply steps: `docker/nginx/api-public.conf` and
+`docs/ops/public-api.md`. It is a flood backstop; per-grant and per-client limits are enforced by the API. The first verified
+app, AI Accounting, is on the same VPS, so all its calls arrive from one IP and share one bucket.
+
 ## Rollback
 
 Backups are timestamped beside the originals:

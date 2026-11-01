@@ -12,6 +12,7 @@ function makePrisma(overrides: any = {}) {
     },
     expense: {
       findFirst: jest.fn().mockResolvedValue(null),
+      updateMany: jest.fn().mockResolvedValue({ count: 1 }),
       ...overrides.expense,
     },
     income: {
@@ -110,6 +111,11 @@ describe('ProjectsService — clientId resolution (ABA-374 bug class)', () => {
         create: { projectId: 'server-project-4', expenseId: 'server-expense-1' },
       }),
     );
+    // The parent expense's updatedAt is bumped so the public changes feed re-delivers it.
+    expect(prisma.expense.updateMany).toHaveBeenCalledWith({
+      where: { id: 'server-expense-1', accountId: 'acc-1' },
+      data: { updatedAt: expect.any(Date) },
+    });
   });
 
   it('addExpense throws NotFoundException when the expense clientId does not resolve', async () => {
@@ -135,6 +141,10 @@ describe('ProjectsService — clientId resolution (ABA-374 bug class)', () => {
     expect(prisma.projectExpense.update).toHaveBeenCalledWith({
       where: { projectId_expenseId: { projectId: 'server-project-6', expenseId: 'server-expense-2' } },
       data: { isDeleted: true },
+    });
+    expect(prisma.expense.updateMany).toHaveBeenCalledWith({
+      where: { id: 'server-expense-2', accountId: 'acc-1' },
+      data: { updatedAt: expect.any(Date) },
     });
   });
 

@@ -138,6 +138,8 @@ import { usePriceHistoryStore } from '../priceHistoryStore';
 import { useMerchantRulesStore } from '../merchantRulesStore';
 import { useChatStore } from '../chatStore';
 import { useScenarioStore } from '../scenarioStore';
+import { useDeveloperAppsStore } from '../developerAppsStore';
+import { useConnectedAppsStore } from '../connectedAppsStore';
 import { secureStorage } from '../../services/secureStorage';
 import { api } from '../../services/api';
 import { unregisterPushNotifications } from '../../services/notifications';
@@ -315,5 +317,38 @@ describe('authStore.logout — restore credential cleanup (ABA-465)', () => {
     await useAuthStore.getState().logout();
 
     expect(useScenarioStore.getState().reset).toHaveBeenCalledTimes(1);
+  });
+
+  // Public API: a one-time client secret may still be held in memory (the user had not pressed
+  // "I've saved it"), and the developer apps / connected apps lists are per user. The next person
+  // to sign in on this device must see none of it.
+  it('clears the developer-app secret and the connected-apps list on sign-out', async () => {
+    mockGetItem.mockResolvedValue(null);
+    useDeveloperAppsStore.setState({
+      availability: 'available',
+      loaded: true,
+      revealedSecret: { appId: 'a', appName: 'A', clientId: 'aba_ci_a', clientSecret: 'aba_cs_SECRET' },
+    });
+    useConnectedAppsStore.setState({ loaded: true, items: [{ grantId: 'g' }] as never });
+
+    await useAuthStore.getState().logout();
+
+    expect(useDeveloperAppsStore.getState().revealedSecret).toBeNull();
+    expect(useDeveloperAppsStore.getState().availability).toBe('unknown');
+    expect(useConnectedAppsStore.getState().items).toEqual([]);
+  });
+
+  // A consent request stashed while signed out must not be resumed into the NEXT person's session
+  // on this device: sign-out clears it, with or without biometric re-login kept.
+  it.each([
+    ['plain sign-out', null],
+    ['biometric re-login kept', 'true'],
+  ])('clears the stashed OAuth consent request on sign-out (%s)', async (_label, biometric) => {
+    mockGetItem.mockImplementation(async (key: string) => (key === 'biometricEnabled' ? biometric : null));
+    (secureStorage.removeItem as jest.Mock).mockClear();
+
+    await useAuthStore.getState().logout();
+
+    expect(secureStorage.removeItem).toHaveBeenCalledWith('pendingOAuthConsent');
   });
 });

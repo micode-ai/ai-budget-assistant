@@ -58,6 +58,10 @@ import { RestoreCredentialsModule } from './modules/restore-credentials/restore-
 import { TelemetryModule } from './modules/telemetry/telemetry.module';
 import { VoiceDigestModule } from './modules/voice-digest/voice-digest.module';
 import { InboundMailModule } from './modules/inbound-mail/inbound-mail.module';
+import { OAuthModule } from './modules/oauth/oauth.module';
+import { OAuthPublicModule } from './modules/oauth/oauth-public.module';
+import { PublicApiModule } from './modules/public-api/public-api.module';
+import { PublicDocsModule } from './modules/public-api/docs/public-docs.module';
 
 @Module({
   imports: [
@@ -148,6 +152,10 @@ import { InboundMailModule } from './modules/inbound-mail/inbound-mail.module';
     RestoreCredentialsModule,
     TelemetryModule,
     GroupsModule,
+    OAuthModule,
+    OAuthPublicModule,
+    PublicApiModule,
+    PublicDocsModule,
   ],
   providers: [
     {

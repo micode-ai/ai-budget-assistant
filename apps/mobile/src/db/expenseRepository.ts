@@ -34,6 +34,8 @@ interface ExpenseRow {
   debt_due_date: number | null;
   related_debt_income_id: string | null;
   created_by_user_name: string | null;
+  created_by_app_id: string | null;
+  created_by_app_name: string | null;
   paid_by_user_id: string | null;
   created_at: number;
   updated_at: number;
@@ -81,6 +83,10 @@ function rowToExpense(row: ExpenseRow): Expense {
     debtDueDate: row.debt_due_date ? new Date(row.debt_due_date) : undefined,
     relatedDebtIncomeId: row.related_debt_income_id ?? undefined,
     createdByUserName: row.created_by_user_name ?? null,
+    createdByApp:
+      row.created_by_app_id && row.created_by_app_name
+        ? { id: row.created_by_app_id, name: row.created_by_app_name }
+        : null,
     paidByUserId: row.paid_by_user_id ?? null,
     createdAt: new Date(row.created_at),
     updatedAt: new Date(row.updated_at),
@@ -130,6 +136,8 @@ function expenseToParams(expense: Expense): (string | number | null)[] {
     expense.isPlanned ? 1 : 0,
     expense.paidByUserId ?? null,
     expense.isSplitReceivable ? 1 : 0,
+    expense.createdByApp?.id ?? null,
+    expense.createdByApp?.name ?? null,
   ];
 }
 
@@ -157,8 +165,9 @@ export async function insertExpense(expense: Expense): Promise<void> {
       is_debt, is_debt_repayment, debt_contact_name, debt_due_date, related_debt_income_id,
       created_by_user_name,
       created_at, updated_at,
-      is_deleted, sync_status, sync_version, is_planned, paid_by_user_id, is_split_receivable
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      is_deleted, sync_status, sync_version, is_planned, paid_by_user_id, is_split_receivable,
+      created_by_app_id, created_by_app_name
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     expenseToParams(expense),
   );
 }
@@ -389,8 +398,9 @@ export async function upsertExpense(expense: Expense): Promise<void> {
       is_debt, is_debt_repayment, debt_contact_name, debt_due_date, related_debt_income_id,
       created_by_user_name,
       created_at, updated_at,
-      is_deleted, sync_status, sync_version, is_planned, paid_by_user_id, is_split_receivable
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      is_deleted, sync_status, sync_version, is_planned, paid_by_user_id, is_split_receivable,
+      created_by_app_id, created_by_app_name
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(id) DO UPDATE SET
       local_id = excluded.local_id,
       server_id = excluded.server_id,
@@ -422,6 +432,8 @@ export async function upsertExpense(expense: Expense): Promise<void> {
       debt_due_date = excluded.debt_due_date,
       related_debt_income_id = excluded.related_debt_income_id,
       created_by_user_name = COALESCE(excluded.created_by_user_name, created_by_user_name),
+      created_by_app_id = COALESCE(excluded.created_by_app_id, created_by_app_id),
+      created_by_app_name = COALESCE(excluded.created_by_app_name, created_by_app_name),
       paid_by_user_id = excluded.paid_by_user_id,
       created_at = excluded.created_at,
       updated_at = excluded.updated_at,

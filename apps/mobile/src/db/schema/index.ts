@@ -60,6 +60,9 @@ export const expenses = sqliteTable('expenses', {
   debtDueDate: integer('debt_due_date', { mode: 'timestamp' }),
   relatedDebtIncomeId: text('related_debt_income_id'),
   createdByUserName: text('created_by_user_name'),
+  // Public API: the third-party app that created the row (server-set, pull only).
+  createdByAppId: text('created_by_app_id'),
+  createdByAppName: text('created_by_app_name'),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
   isDeleted: integer('is_deleted', { mode: 'boolean' }).default(false),

@@ -1,10 +1,14 @@
 import './instrument';
 import { NestFactory } from '@nestjs/core';
 import { Logger, ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { json, urlencoded } from 'express';
 import * as Sentry from '@sentry/node';
 import { AppModule } from './app.module';
 import { GLOBAL_PREFIX_EXCLUDED_ROUTES } from './global-prefix-exclusions';
+import { buildCorsDelegate } from './cors-options';
+import { isPublicApiEnabled } from './modules/oauth/oauth.config';
+import { setupPublicDocs } from './modules/public-api/docs/openapi';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bodyParser: false });
@@ -42,15 +46,19 @@ async function bootstrap() {
   // controllers it is supposed to cover — see global-prefix-exclusions.spec.ts.
   app.setGlobalPrefix('api/v1', { exclude: GLOBAL_PREFIX_EXCLUDED_ROUTES });
 
-  // CORS — allow only explicitly configured origins; fall back to localhost for local dev
+  // CORS — allow only explicitly configured origins; fall back to localhost for local dev.
+  // The third-party-facing routes (/oauth/token, /oauth/revoke, /public/*) instead answer `*`
+  // without credentials, preflight included — chosen per request in cors-options.ts.
   const corsOrigins = process.env.CORS_ORIGIN
     ? process.env.CORS_ORIGIN.split(',').map((o) => o.trim())
     : ['http://localhost:8081', 'http://localhost:3001'];
-  app.enableCors({
-    origin: corsOrigins,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    credentials: true,
-  });
+  app.enableCors(
+    buildCorsDelegate({
+      origin: corsOrigins,
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+      credentials: true,
+    }),
+  );
 
   // Global validation pipe
   app.useGlobalPipes(
@@ -63,6 +71,19 @@ async function bootstrap() {
       },
     }),
   );
+
+  // Public API reference (Swagger UI + OpenAPI JSON at /public/docs/{en,pl,ru}). Swagger's routes
+  // are plain Express handlers outside Nest's guards, so they are registered only while the flag is
+  // on — off, they do not exist (404) like every other public-API route. A docs failure must never
+  // stop the API from booting.
+  if (isPublicApiEnabled(app.get(ConfigService))) {
+    const docsLogger = new Logger('PublicDocs');
+    try {
+      setupPublicDocs(app, (message) => docsLogger.warn(message));
+    } catch (e) {
+      docsLogger.error(`public docs setup failed: ${(e as Error).message}`);
+    }
+  }
 
   if (process.env.SENTRY_DSN) {
     Sentry.setupExpressErrorHandler(app.getHttpAdapter().getInstance());

@@ -11,6 +11,7 @@ const mockQuit = jest.fn();
 const mockOn = jest.fn();
 const mockPipelineIncr = jest.fn();
 const mockPipelinePexpire = jest.fn();
+const mockPipelinePttl = jest.fn();
 const mockPipelineExec = jest.fn();
 const mockPipeline = jest.fn();
 
@@ -45,13 +46,16 @@ describe('CacheService', () => {
       mockPipeline,
       mockPipelineIncr,
       mockPipelinePexpire,
+      mockPipelinePttl,
       mockPipelineExec,
     ].forEach((m) => m.mockReset());
     mockPipelineIncr.mockReturnThis();
     mockPipelinePexpire.mockReturnThis();
+    mockPipelinePttl.mockReturnThis();
     mockPipeline.mockImplementation(() => ({
       incr: mockPipelineIncr,
       pexpire: mockPipelinePexpire,
+      pttl: mockPipelinePttl,
       exec: mockPipelineExec,
     }));
     cache = new CacheService({ get: () => 'redis://localhost:6379' } as unknown as ConfigService);
@@ -185,6 +189,75 @@ describe('CacheService', () => {
       mockPipelineExec.mockRejectedValueOnce(new Error('connection lost'));
 
       await expect(cache.incrementWindow('k', 900000)).rejects.toThrow('connection lost');
+    });
+  });
+
+  describe('incrementWindowWithTtl', () => {
+    it('returns hits and the remaining window from PTTL', async () => {
+      mockPipelineExec.mockResolvedValueOnce([
+        [null, 7],
+        [null, 0],
+        [null, 41_500],
+      ]);
+      expect(await cache.incrementWindowWithTtl('k', 60_000)).toEqual({ hits: 7, ttlMs: 41_500 });
+      expect(mockPipelinePexpire).toHaveBeenCalledWith('k', 60_000, 'NX');
+      expect(mockPipelinePttl).toHaveBeenCalledWith('k');
+    });
+
+    it('falls back to the full window when redis reports no expiry', async () => {
+      mockPipelineExec.mockResolvedValueOnce([
+        [null, 1],
+        [null, 1],
+        [null, -1],
+      ]);
+      expect(await cache.incrementWindowWithTtl('k', 60_000)).toEqual({ hits: 1, ttlMs: 60_000 });
+    });
+
+    it('throws (does not swallow) on a redis error', async () => {
+      mockPipelineExec.mockRejectedValueOnce(new Error('connection lost'));
+      await expect(cache.incrementWindowWithTtl('k', 60_000)).rejects.toThrow('connection lost');
+      mockPipelineExec.mockResolvedValueOnce([[new Error('boom'), null], [null, 1], [null, 5]]);
+      await expect(cache.incrementWindowWithTtl('k', 60_000)).rejects.toThrow('boom');
+    });
+  });
+
+  describe('takeOnce', () => {
+    it('returns the parsed value, then null once consumed', async () => {
+      mockGetdel.mockResolvedValueOnce(JSON.stringify({ a: 1 })).mockResolvedValueOnce(null);
+      expect(await cache.takeOnce<{ a: number }>('k')).toEqual({ a: 1 });
+      expect(await cache.takeOnce('k')).toBeNull();
+    });
+
+    it('rejects (does not swallow) when redis errors', async () => {
+      mockGetdel.mockRejectedValueOnce(new Error('connection lost'));
+      await expect(cache.takeOnce('k')).rejects.toThrow('connection lost');
+    });
+  });
+
+  describe('setIfAbsentStrict', () => {
+    it('true when the key was set (NX), false when it already existed', async () => {
+      mockSet.mockResolvedValueOnce('OK').mockResolvedValueOnce(null);
+      expect(await cache.setIfAbsentStrict('k', 60)).toBe(true);
+      expect(await cache.setIfAbsentStrict('k', 60)).toBe(false);
+      expect(mockSet).toHaveBeenCalledWith('k', '1', 'EX', 60, 'NX');
+    });
+
+    it('rejects (does not swallow) when redis errors, so the caller can tell an outage from "already set"', async () => {
+      mockSet.mockRejectedValueOnce(new Error('connection lost'));
+      await expect(cache.setIfAbsentStrict('k', 60)).rejects.toThrow('connection lost');
+    });
+  });
+
+  describe('setStrict', () => {
+    it('writes JSON with an EX ttl', async () => {
+      mockSet.mockResolvedValueOnce('OK');
+      await cache.setStrict('k', { a: 1 }, 600);
+      expect(mockSet).toHaveBeenCalledWith('k', JSON.stringify({ a: 1 }), 'EX', 600);
+    });
+
+    it('rejects (does not swallow) when redis errors', async () => {
+      mockSet.mockRejectedValueOnce(new Error('connection lost'));
+      await expect(cache.setStrict('k', 1, 600)).rejects.toThrow('connection lost');
     });
   });
 

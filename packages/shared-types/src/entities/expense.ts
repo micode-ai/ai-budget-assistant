@@ -128,6 +128,12 @@ export interface Expense {
   debtDueDate?: Date;
   relatedDebtIncomeId?: string;
   createdByUserName?: string | null;
+  /**
+   * The third-party app that created this expense through the public API
+   * (`id` is its public client id, `aba_ci_…`), or null. Server-set only —
+   * never part of any create/update/sync payload.
+   */
+  createdByApp?: { id: string; name: string } | null;
   isPlanned?: boolean;
   /**
    * True for a debt receivable row created by a receipt split — excluded from

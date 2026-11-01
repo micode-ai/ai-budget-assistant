@@ -427,6 +427,7 @@ async function _doPullAndMerge(
             : undefined,
           relatedDebtIncomeId: decrypted.relatedDebtIncomeId ?? undefined,
           createdByUserName: se.createdByUserName ?? null,
+          createdByApp: se.createdByApp ?? null,
           createdAt: new Date(decrypted.createdAt),
           updatedAt: new Date(decrypted.updatedAt),
           isDeleted: decrypted.isDeleted || false,

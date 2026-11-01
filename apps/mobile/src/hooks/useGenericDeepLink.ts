@@ -6,7 +6,7 @@ import { router } from 'expo-router';
  * Handles deep links from widgets and external sources (`budget://` custom
  * scheme + `https://ai-budget.pl/...` universal links), excluding
  * `subscription/success|cancel` (handled by `WebBrowser.openAuthSessionAsync`)
- * `trip-invite/` (handled by `useTripInviteDeepLink`) and `groups/` (routed by the router itself).
+ * `trip-invite/` (handled by `useTripInviteDeepLink`), `groups/` and `authorize` (routed by the router itself).
  *
  * Gated only on `!isInitializing && isAuthenticated` — deliberately WITHOUT
  * `fontsLoaded`, unlike the notification/trip-invite flush gates. Do not
@@ -35,6 +35,11 @@ export function useGenericDeepLink(isInitializing: boolean, isAuthenticated: boo
       // router; pushing them here as well would open the screen twice and spend the single-use
       // link code on the first mount, so the second would fail.
       if (url.includes('groups/')) return;
+
+      // The OAuth consent page (`/authorize?…`) is routed by the router itself; a signed-out visit
+      // is reopened after sign-in by `useOAuthConsentResume`. Pushing it here as well would stack a
+      // second consent screen (and a second preview) under the first.
+      if (/^[^?#]*\/authorize(?:[/?#]|$)/.test(url.replace(/^[a-z][a-z0-9+.-]*:\/\//i, '/'))) return;
 
       // Prevent duplicate navigation for the same URL
       if (lastHandledUrl.current === url) return;

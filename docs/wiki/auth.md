@@ -1,7 +1,8 @@
 # Authentication
 
 *Related: [restore-credentials](features/restore-credentials.md),
-[last-active-tracking](features/last-active-tracking.md)*
+[last-active-tracking](features/last-active-tracking.md),
+[public-api](features/public-api.md) (OAuth for third-party apps)*
 
 ## What this is
 The end-to-end authentication system spanning the NestJS API (`modules/auth/`) and the mobile app (`app/(auth)/`). Handles registration, email verification, login, Google sign-in, JWT lifecycle, password reset, email change, and account context injection.

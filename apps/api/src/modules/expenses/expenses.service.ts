@@ -17,6 +17,7 @@ import {
 import { ReceiptSplitService } from '../receipt-split/receipt-split.service';
 import { ExpenseCreatedHooksService, LearnableExpenseItem } from './expense-created-hooks.service';
 import { logFireAndForget } from '../../common/utils/fire-and-forget';
+import { touchExpenses } from './expense-touch.util';
 
 /**
  * CRUD orchestrator for expenses. `bulkUpdate` lives in ExpenseBulkService,
@@ -44,8 +45,17 @@ export class ExpensesService {
   ) {}
 
   private toExpenseResponse(expense: any) {
-    const { user, ...rest } = expense;
-    return { ...rest, createdByUserName: user?.name ?? null };
+    // The scalar FK is the OAuthClient db id: it must not leave the API either (I2).
+    const { user, createdByOAuthClient, createdByOAuthClientId: _dbClientId, ...rest } = expense;
+    // createdByApp.id is the app's PUBLIC client id (aba_ci_…), matching the
+    // public API's `created_by_app.id`; the OAuthClient db id never leaves here.
+    return {
+      ...rest,
+      createdByUserName: user?.name ?? null,
+      createdByApp: createdByOAuthClient
+        ? { id: createdByOAuthClient.clientId, name: createdByOAuthClient.name }
+        : null,
+    };
   }
 
   /**
@@ -183,7 +193,18 @@ export class ExpensesService {
     }
   }
 
-  async create(accountId: string, userId: string, dto: CreateExpenseDto): Promise<{ expense: any; isNew: boolean }> {
+  /**
+   * @param options.createdByOAuthClientId the public API's OAuth app (`OAuthClient.id`) writing this
+   *   row — written on the upsert's create branch only, so a repeat of the same `localId` never
+   *   re-attributes a row. Deliberately an argument and NOT a dto field: the sync handler builds its
+   *   dto by spreading a client payload, so a dto field would let any client forge the attribution.
+   */
+  async create(
+    accountId: string,
+    userId: string,
+    dto: CreateExpenseDto,
+    options: { createdByOAuthClientId?: string } = {},
+  ): Promise<{ expense: any; isNew: boolean }> {
     // Populated inside the transaction below (one resolved id per dto.items
     // entry, same index) and read again afterwards by the post-create
     // fire-and-forget rule-learning block — see the comment there.
@@ -238,6 +259,7 @@ export class ExpensesService {
         ...(dto.encryptedPayload !== undefined && { encryptedPayload: dto.encryptedPayload }),
         ...(dto.encryptionKeyVersion !== undefined && { encryptionKeyVersion: dto.encryptionKeyVersion }),
         ...(dto.externalRef !== undefined && { externalRef: dto.externalRef }),
+        ...(options.createdByOAuthClientId && { createdByOAuthClientId: options.createdByOAuthClientId }),
       };
 
       const updateData = {
@@ -396,6 +418,7 @@ export class ExpensesService {
           categorySplits: { where: { isDeleted: false }, include: { category: true } },
           projectExpenses: { where: { isDeleted: false }, include: { project: true } },
           user: { select: { name: true } },
+          createdByOAuthClient: { select: { clientId: true, name: true } },
         },
       });
 
@@ -543,6 +566,7 @@ export class ExpensesService {
             include: { project: true },
           },
           user: { select: { name: true } },
+          createdByOAuthClient: { select: { clientId: true, name: true } },
         },
         orderBy: { date: 'desc' },
         skip,
@@ -578,6 +602,7 @@ export class ExpensesService {
         categorySplits: { where: { isDeleted: false }, include: { category: true } },
         projectExpenses: { where: { isDeleted: false }, include: { project: true } },
         user: { select: { name: true } },
+        createdByOAuthClient: { select: { clientId: true, name: true } },
       },
     });
 
@@ -732,6 +757,7 @@ export class ExpensesService {
           categorySplits: { where: { isDeleted: false }, include: { category: true } },
           projectExpenses: { where: { isDeleted: false }, include: { project: true } },
           user: { select: { name: true } },
+          createdByOAuthClient: { select: { clientId: true, name: true } },
         },
       });
     }).then((updated) => {
@@ -848,6 +874,8 @@ export class ExpensesService {
     // A new line moves Σitems, so it moves both the tolerance gate and the group
     // sums the split was derived from.
     await this.rebuildCategorySplits(this.prisma, expensePk, Number(amount));
+    // Only a child row changed; bump the parent so change feeds re-deliver it (expense-touch.util.ts).
+    await touchExpenses(this.prisma, accountId, { id: expensePk });
     return created;
   }
 
@@ -873,6 +901,7 @@ export class ExpensesService {
     // Editing a line price moves money out from under the split just as an
     // amount edit does — same rule, same re-derivation.
     await this.rebuildCategorySplits(this.prisma, expensePk, Number(amount));
+    await touchExpenses(this.prisma, accountId, { id: expensePk });
     return updated;
   }
 
@@ -888,6 +917,7 @@ export class ExpensesService {
       data: { isDeleted: true, syncVersion: { increment: 1 } },
     });
     await this.rebuildCategorySplits(this.prisma, expensePk, Number(amount));
+    await touchExpenses(this.prisma, accountId, { id: expensePk });
     return { success: true };
   }
 
@@ -973,6 +1003,9 @@ export class ExpensesService {
         })),
       });
 
+      // Only child rows changed; bump the parent so change feeds re-deliver it (expense-touch.util.ts).
+      await touchExpenses(tx, accountId, { id: expense.id });
+
       const result = await tx.expense.findUnique({
         where: { id: expenseId },
         include: {
@@ -982,6 +1015,7 @@ export class ExpensesService {
           categorySplits: { where: { isDeleted: false }, include: { category: true } },
           projectExpenses: { where: { isDeleted: false }, include: { project: true } },
           user: { select: { name: true } },
+          createdByOAuthClient: { select: { clientId: true, name: true } },
         },
       });
       return result ? this.toExpenseResponse(result) : result;
@@ -994,9 +1028,12 @@ export class ExpensesService {
     });
     if (!expense) throw new NotFoundException('Expense not found');
 
-    await this.prisma.expenseCategorySplit.updateMany({
-      where: { expenseId, isDeleted: false },
-      data: { isDeleted: true },
+    await this.prisma.$transaction(async (tx: PrismaClient) => {
+      await tx.expenseCategorySplit.updateMany({
+        where: { expenseId, isDeleted: false },
+        data: { isDeleted: true },
+      });
+      await touchExpenses(tx, accountId, { id: expense.id });
     });
 
     return { success: true };

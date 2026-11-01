@@ -15,6 +15,7 @@ function makeService(overrides: { tag?: Record<string, any> } = {}) {
     },
     expense: {
       findFirst: jest.fn(),
+      updateMany: jest.fn().mockResolvedValue({ count: 1 }),
     },
     income: {
       findFirst: jest.fn(),
@@ -183,6 +184,11 @@ describe('TagsService', () => {
         where: { id: 'tag-1' },
         data: { usageCount: { increment: 1 } },
       });
+      // The parent expense's updatedAt is bumped so the public changes feed re-delivers it.
+      expect(prisma.expense.updateMany).toHaveBeenCalledWith({
+        where: { id: 'expense-server-pk', accountId: 'acc-1' },
+        data: { updatedAt: expect.any(Date) },
+      });
     });
 
     it('throws NotFoundException when the expense id/clientId does not resolve to any row', async () => {
@@ -217,6 +223,10 @@ describe('TagsService', () => {
       expect(prisma.expenseTag.update).toHaveBeenCalledWith({
         where: { expenseId_tagId: { expenseId: 'expense-server-pk', tagId: 'tag-1' } },
         data: { isDeleted: true },
+      });
+      expect(prisma.expense.updateMany).toHaveBeenCalledWith({
+        where: { id: 'expense-server-pk', accountId: 'acc-1' },
+        data: { updatedAt: expect.any(Date) },
       });
       expect(prisma.tag.update).toHaveBeenCalledWith({
         where: { id: 'tag-1' },

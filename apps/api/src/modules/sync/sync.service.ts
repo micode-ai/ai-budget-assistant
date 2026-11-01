@@ -6,6 +6,7 @@ import { CommunityPriceService } from '../community-prices/community-price.servi
 import type { SyncChange } from '@budget/shared-types';
 import { SyncHandlerContext, SyncResult, ExpenseRecord, BudgetRecord, CategoryRecord } from './sync-types';
 import { SYNC_ENTITY_HANDLERS } from './handlers';
+import { touchExpenses } from '../expenses/expense-touch.util';
 
 export type { SyncResult, ExpenseRecord, BudgetRecord, CategoryRecord } from './sync-types';
 
@@ -97,6 +98,7 @@ export class SyncService {
         const { payload } = change;
         if (change.operation === 'delete') {
           await this.prisma.expenseTag.updateMany({ where: { id: change.entityId, expense: { accountId } }, data: { isDeleted: true } });
+          await touchExpenses(this.prisma, accountId, { expenseTags: { some: { id: change.entityId } } });
         } else {
           if (!(await this.ownsAll(accountId, { expenseId: payload.expenseId, tagId: payload.tagId }))) return notFound(change.entityId);
           await this.prisma.expenseTag.upsert({
@@ -104,6 +106,7 @@ export class SyncService {
             create: { expenseId: payload.expenseId, tagId: payload.tagId },
             update: { isDeleted: false },
           });
+          await touchExpenses(this.prisma, accountId, { id: payload.expenseId });
         }
       } else if (change.entityType === 'income_tag') {
         const { payload } = change;
@@ -121,6 +124,7 @@ export class SyncService {
         const { payload } = change;
         if (change.operation === 'delete') {
           await this.prisma.projectExpense.updateMany({ where: { id: change.entityId, expense: { accountId } }, data: { isDeleted: true } });
+          await touchExpenses(this.prisma, accountId, { projectExpenses: { some: { id: change.entityId } } });
         } else {
           if (!(await this.ownsAll(accountId, { expenseId: payload.expenseId, projectId: payload.projectId }))) return notFound(change.entityId);
           await this.prisma.projectExpense.upsert({
@@ -128,6 +132,7 @@ export class SyncService {
             create: { projectId: payload.projectId, expenseId: payload.expenseId },
             update: { isDeleted: false },
           });
+          await touchExpenses(this.prisma, accountId, { id: payload.expenseId });
         }
       } else if (change.entityType === 'project_income') {
         const { payload } = change;
@@ -145,6 +150,7 @@ export class SyncService {
         const { payload } = change;
         if (change.operation === 'delete') {
           await this.prisma.expenseCategorySplit.updateMany({ where: { id: change.entityId, expense: { accountId } }, data: { isDeleted: true } });
+          await touchExpenses(this.prisma, accountId, { categorySplits: { some: { id: change.entityId } } });
         } else {
           if (!(await this.ownsAll(accountId, { expenseId: payload.expenseId, categoryId: payload.categoryId }))) return notFound(change.entityId);
           await this.prisma.expenseCategorySplit.create({
@@ -158,8 +164,12 @@ export class SyncService {
               encryptionKeyVersion: change.encryptionKeyVersion,
             },
           });
+          await touchExpenses(this.prisma, accountId, { id: payload.expenseId });
         }
       }
+      // Every expense-side branch above bumps the parent expense's updatedAt (touchExpenses): the
+      // junction write alone would leave it unchanged, and the public changes feed would never
+      // re-deliver the expense with its new tags / project / splits.
       return { entityId: change.entityId, status: 'success' };
     } catch (error) {
       return { entityId: change.entityId, status: 'error', error: String(error) };

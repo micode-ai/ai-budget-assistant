@@ -19,6 +19,7 @@ import {
   Megaphone,
   Activity,
   UsersRound,
+  KeyRound,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -40,6 +41,7 @@ export const navItems = [
   { href: "/app-versions", label: "App Versions", icon: Smartphone },
   { href: "/referrals", label: "Referrals", icon: UserPlus },
   { href: "/groups", label: "Groups", icon: UsersRound },
+  { href: "/api-apps", label: "API apps", icon: KeyRound },
   { href: "/audit-log", label: "Audit Log", icon: ScrollText },
   { href: "/settings", label: "Settings", icon: Settings },
 ];

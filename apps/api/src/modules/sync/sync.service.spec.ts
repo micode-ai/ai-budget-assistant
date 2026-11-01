@@ -12,6 +12,7 @@ const mockPrisma: any = {
   },
   expense: {
     findFirst: jest.fn(),
+    updateMany: jest.fn().mockResolvedValue({ count: 1 }),
   },
   accountMember: {
     findFirst: jest.fn(),
@@ -547,6 +548,11 @@ describe('SyncService', () => {
         create: { expenseId: 'srv-exp-1', tagId: 'srv-tag-1' },
         update: { isDeleted: false },
       });
+      // The parent expense's updatedAt is bumped (account-scoped) so the public changes feed re-delivers it.
+      expect(prisma.expense.updateMany).toHaveBeenCalledWith({
+        where: { id: 'srv-exp-1', accountId: 'acc-1' },
+        data: { updatedAt: expect.any(Date) },
+      });
     });
 
     it('soft-deletes the expense_tag row by its own id, not by expenseId/tagId', async () => {
@@ -565,6 +571,11 @@ describe('SyncService', () => {
       expect(prisma.expenseTag.updateMany).toHaveBeenCalledWith({
         where: { id: 'srv-et-1', expense: { accountId: 'acc-1' } },
         data: { isDeleted: true },
+      });
+      // A delete knows only the link id, so the parent is found through the relation.
+      expect(prisma.expense.updateMany).toHaveBeenCalledWith({
+        where: { expenseTags: { some: { id: 'srv-et-1' } }, accountId: 'acc-1' },
+        data: { updatedAt: expect.any(Date) },
       });
     });
 

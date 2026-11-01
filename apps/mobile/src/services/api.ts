@@ -27,6 +27,7 @@ import { receiptSplitApi } from './receiptSplit.api';
 import { realSalaryApi } from './realSalary.api';
 import { groupsApi } from './groups.api';
 import { inboundMailApi } from './inboundMail.api';
+import { developerAppsApi } from './developerApps.api';
 
 export const api = {
   setAccountIdGetter: (getter: () => string | null) => httpClient.setAccountIdGetter(getter),
@@ -59,7 +60,14 @@ export const api = {
   ...receiptSplitApi,
   ...groupsApi,
   ...inboundMailApi,
+  ...developerAppsApi,
 };
+
+/**
+ * The OAuth consent calls stay namespaced (`oauthApi.preview`/`approve`) rather than spread into
+ * `api`: their method names are too generic to share one flat object with every other domain.
+ */
+export { oauthApi } from './oauth.api';
 
 export function getApiBaseUrl(): string {
   return httpClient.baseUrl;

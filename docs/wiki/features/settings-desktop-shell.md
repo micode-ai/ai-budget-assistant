@@ -76,6 +76,14 @@ clipped but untappable. `SheetDialog` owns that inset for the sheets it wraps.
 a door. Groups are not account-scoped, so the entry carries no gating. Only `SettingsNav` consumes the
 registry, so the phone hub is untouched.
 
+**Developers and Connected apps are gated on `publicApi` (Public API phase 1).** Both panes carry
+`requiresFeature: 'publicApi'`, learned like `inboundMail`: `developerAppsStore.probe()` calls
+`GET /developer/apps`, and a 404 (every route answers 404 while `PUBLIC_API_ENABLED` is off) sets
+`availability: 'unavailable'`. There is no config field on `/users/me` for it — the runtime answer
+is the flag. The phone hub draws both rows behind the same store value, so neither surface can show
+one row without the other. The one-time client secret lives only in `developerAppsStore`'s memory
+and is cleared on "I've saved it" and on sign-out.
+
 ## Known gaps
 
 - A pane's child routes are **uncapped**: they stretch to the full viewport while the pane they came

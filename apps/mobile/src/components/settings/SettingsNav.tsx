@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { useInboundReceiptStore } from '@/stores/inboundReceiptStore';
+import { useDeveloperAppsStore } from '@/stores/developerAppsStore';
 import { SETTINGS_NAV_WIDTH } from '@/components/webLayout.constants';
 import {
   isCurrentSelection,
@@ -46,7 +47,12 @@ export function SettingsNav({ selectedKey, isAdmin, pendingPurchaseRequests }: P
   useEffect(() => {
     void useInboundReceiptStore.getState().probe();
   }, []);
-  const entries = visibleSettingsEntries(isAdmin, { inboundMail });
+  // Developers / Connected apps: hidden while PUBLIC_API_ENABLED is off (a 404 hides them).
+  const publicApi = useDeveloperAppsStore((s) => s.availability === 'available');
+  useEffect(() => {
+    void useDeveloperAppsStore.getState().probe();
+  }, []);
+  const entries = visibleSettingsEntries(isAdmin, { inboundMail, publicApi });
   const panes = entries.filter(isPaneEntry);
   const links = entries.filter(isLinkEntry);
 

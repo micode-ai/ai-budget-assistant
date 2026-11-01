@@ -59,6 +59,16 @@ export class CacheService implements OnModuleDestroy {
     }
   }
 
+  /**
+   * `SET key 1 EX ttl NX`: true when this call set it, false when it already existed. Unlike
+   * `setIfAbsent` it does NOT swallow Redis errors, so a caller can tell an outage apart from
+   * "already set" and choose its own fallback (e.g. send the e-mail rather than drop it).
+   */
+  async setIfAbsentStrict(key: string, ttlSec: number): Promise<boolean> {
+    const res = await this.redis.set(key, '1', 'EX', ttlSec, 'NX');
+    return res === 'OK';
+  }
+
   async del(...keys: string[]): Promise<void> {
     if (keys.length === 0) return;
     try {
@@ -92,6 +102,26 @@ export class CacheService implements OnModuleDestroy {
       this.logger.warn(`cache getAndDelete failed for ${key}: ${(err as Error).message}`);
       return null;
     }
+  }
+
+  /**
+   * `SET key value EX ttl` that does NOT swallow Redis errors. For a value the caller is about to
+   * hand to someone else (an OAuth authorization code): `set` would report success on an outage
+   * and the recipient would hold a credential that was never stored. Callers must fail closed.
+   */
+  async setStrict<T>(key: string, value: T, ttlSec: number): Promise<void> {
+    await this.redis.set(key, JSON.stringify(value), 'EX', ttlSec);
+  }
+
+  /**
+   * Atomically read-and-delete a JSON value (Redis GETDEL) so it can be consumed exactly once.
+   * Unlike `getAndDelete` it does NOT swallow Redis errors -- like `incrementWindow`, a
+   * single-use credential (OAuth authorization code) must fail closed on an outage, and the
+   * caller must be able to tell "already used / never existed" (null) from "could not read" (throw).
+   */
+  async takeOnce<T>(key: string): Promise<T | null> {
+    const raw = await this.redis.getdel(key);
+    return raw ? (JSON.parse(raw) as T) : null;
   }
 
   async delByPrefix(prefix: string): Promise<void> {
@@ -134,6 +164,28 @@ export class CacheService implements OnModuleDestroy {
     const [incrErr, totalHits] = results[0];
     if (incrErr) throw incrErr;
     return totalHits as number;
+  }
+
+  /**
+   * `incrementWindow` plus the window's remaining lifetime (`PTTL`) in the same pipeline, for
+   * callers that must tell the client when the window resets (`Retry-After`). Same fail-closed
+   * contract: Redis errors are thrown, never swallowed. `ttlMs` falls back to `windowMs` when
+   * Redis reports no expiry (-1/-2), so a caller never computes a zero or negative wait.
+   */
+  async incrementWindowWithTtl(key: string, windowMs: number): Promise<{ hits: number; ttlMs: number }> {
+    const results = (await this.redis
+      .pipeline()
+      .incr(key)
+      .pexpire(key, windowMs, 'NX')
+      .pttl(key)
+      .exec()) as [Error | null, unknown][];
+
+    const [incrErr, totalHits] = results[0];
+    if (incrErr) throw incrErr;
+    const [ttlErr, ttl] = results[2] ?? [null, -1];
+    if (ttlErr) throw ttlErr;
+    const ttlMs = typeof ttl === 'number' && ttl > 0 ? ttl : windowMs;
+    return { hits: totalHits as number, ttlMs };
   }
 
   /**

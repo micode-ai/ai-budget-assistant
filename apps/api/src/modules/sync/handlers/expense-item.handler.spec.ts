@@ -4,7 +4,7 @@ import { SyncHandlerContext } from '../sync-types';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mockPrisma: any = {
-  expense: { findFirst: jest.fn() },
+  expense: { findFirst: jest.fn(), updateMany: jest.fn().mockResolvedValue({ count: 1 }) },
   expenseItem: { findFirst: jest.fn(), create: jest.fn(), update: jest.fn() },
   category: { findFirst: jest.fn() },
 };
@@ -68,6 +68,11 @@ describe('processExpenseItemChange', () => {
 
     expect(result).toEqual({ entityId: 'item-1', status: 'success', serverId: 'item-1', serverVersion: 0 });
     expect(mockCommunityPrices.recordContribution).not.toHaveBeenCalled();
+    // The parent expense's updatedAt is bumped (account-scoped) so the public changes feed re-delivers it.
+    expect(mockPrisma.expense.updateMany).toHaveBeenCalledWith({
+      where: { id: 'exp-1', accountId: 'acc-1' },
+      data: { updatedAt: expect.any(Date) },
+    });
   });
 
   it('an item update with a canonicalName never re-votes either (an edit must not rewrite a price)', async () => {
@@ -132,8 +137,8 @@ describe('processExpenseItemChange', () => {
     expect(mockPrisma.expenseItem.update).not.toHaveBeenCalled();
   });
 
-  it('soft-deletes an item', async () => {
-    mockPrisma.expenseItem.findFirst.mockResolvedValue({ id: 'item-1', syncVersion: 1 });
+  it('soft-deletes an item and bumps the parent expense from the stored row, not the payload', async () => {
+    mockPrisma.expenseItem.findFirst.mockResolvedValue({ id: 'item-1', expenseId: 'exp-stored', syncVersion: 1 });
     mockPrisma.expenseItem.update.mockResolvedValue({});
 
     const result = await processExpenseItemChange(makeCtx(), 'acc-1', 'user-1', {
@@ -150,6 +155,10 @@ describe('processExpenseItemChange', () => {
     expect(mockPrisma.expenseItem.update).toHaveBeenCalledWith({
       where: { id: 'item-1' },
       data: { isDeleted: true, syncVersion: { increment: 1 } },
+    });
+    expect(mockPrisma.expense.updateMany).toHaveBeenCalledWith({
+      where: { id: 'exp-stored', accountId: 'acc-1' },
+      data: { updatedAt: expect.any(Date) },
     });
   });
 

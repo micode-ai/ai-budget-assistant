@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
 import type { Transporter } from 'nodemailer';
+import { appConnectedCopy } from './app-connected-email-i18n';
 
 @Injectable()
 export class MailService {
@@ -374,4 +375,72 @@ export class MailService {
 
     return this.sendMail(to, `Monthly Digest: ${periodLabel} — AI Budget`, html);
   }
+
+  /**
+   * "An app was connected to your account" (Public API, spec §9). Localized by the recipient's
+   * `user.language` (nine app languages, English fallback). `appName` comes from a third-party
+   * developer, so every interpolated value is HTML-escaped.
+   */
+  async sendAppConnectedEmail(params: {
+    to: string;
+    lang: string | null | undefined;
+    appName: string;
+    accountName: string;
+    connectedByName: string;
+    manageUrl: string;
+  }): Promise<boolean> {
+    const copy = appConnectedCopy(params.lang);
+    const esc = {
+      appName: escapeHtml(params.appName),
+      accountName: escapeHtml(params.accountName),
+      connectedByName: escapeHtml(params.connectedByName),
+    };
+    const manageUrl = escapeHtml(params.manageUrl);
+
+    const html = `
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"></head>
+<body style="margin:0;padding:0;background:#F8FAFB;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#F8FAFB;padding:40px 20px;">
+    <tr>
+      <td align="center">
+        <table width="480" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;">
+          <tr>
+            <td style="background:#E37F2B;padding:32px 40px;text-align:center;">
+              <h1 style="margin:0;color:#ffffff;font-size:22px;font-weight:600;">${escapeHtml(copy.heading)}</h1>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:32px 40px;">
+              <p style="margin:0 0 16px;color:#1A1D26;font-size:16px;line-height:1.5;">${copy.body(esc)}</p>
+              <p style="margin:0 0 24px;color:#5E6272;font-size:14px;line-height:1.5;">${escapeHtml(copy.warning)}</p>
+              <div style="text-align:center;">
+                <a href="${manageUrl}" style="display:inline-block;background:#E37F2B;color:#ffffff;text-decoration:none;font-weight:600;font-size:15px;padding:12px 24px;border-radius:8px;">${escapeHtml(copy.manage)}</a>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:20px 40px;border-top:1px solid #eee;text-align:center;">
+              <p style="margin:0;color:#ccc;font-size:12px;">AI Budget Assistant</p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+
+    return this.sendMail(params.to, copy.subject(params), html);
+  }
+}
+
+function escapeHtml(v: string): string {
+  return String(v)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }

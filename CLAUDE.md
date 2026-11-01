@@ -282,6 +282,7 @@ See `.env.example`:
 - `SLACK_CLIENT_SECRET` — OAuth app Client Secret (same page); used server-side in the `oauth.v2.access` code exchange; never exposed to clients.
 - `SLACK_OAUTH_REDIRECT_URL` — must match exactly what is registered under OAuth & Permissions → Redirect URLs in the Slack App dashboard (prod value: `https://api.ai-budget.pl/slack/oauth/callback`).
 - `SLACK_TOKEN_ENC_KEY` — 32-byte (256-bit) random hex key for AES-256-GCM encryption of `SlackInstallation.accessToken` at rest; generate with `openssl rand -hex 32`; rotation requires re-encrypting existing rows.
+- `PUBLIC_API_ENABLED` — default off; gates `/public/*`, `/oauth/token|revoke`, authorize, developer and connected-apps routes and docs; see `docs/wiki/features/public-api.md`.
 - `INBOUND_MAIL_ENABLED` — feature flag for e-receipts by e-mail forwarding (ABA-644). Default OFF: every `/inbound-mail*` and `/inbound-receipts*` route 404s and the processing path no-ops unless the value is exactly `true`.
 - `INBOUND_MAIL_DOMAIN` — the receiving subdomain the address is built on (`<token>@<domain>`); default `in.ai-budget.pl`. Also read by the SMTP container.
 - `INBOUND_MAIL_HOSTNAME` — the SMTP banner / MX target host of the inbound-mail container (default `mail-in.ai-budget.pl`); the API does not read it.

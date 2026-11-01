@@ -528,11 +528,13 @@ export function TransactionTable({
                             ) : null;
                           })()}
                           {!isIncome &&
-                          (row.expense.source === 'import' || row.expense.source === 'notification') ? (
+                          (row.expense.source === 'import' || row.expense.source === 'notification' || row.expense.source === 'api') ? (
                             <Text style={styles.sourceBadge} numberOfLines={1}>
                               {row.expense.source === 'import'
                                 ? t('expenseDetail.sourceImport')
-                                : t('expenseDetail.sourceNotification')}
+                                : row.expense.source === 'api'
+                                  ? t('expenseDetail.sourceApi')
+                                  : t('expenseDetail.sourceNotification')}
                             </Text>
                           ) : null}
                         </View>

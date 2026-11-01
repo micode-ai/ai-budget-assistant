@@ -31,6 +31,8 @@ dashboard.
 - [shared-groups](features/shared-groups.md) — the one module that is NOT account-scoped
   (`GroupMemberGuard` replaces `AccountContextGuard`)
 - [inbound-e-receipts](features/inbound-e-receipts.md) — the internal routes the SMTP container calls
+- [public-api](features/public-api.md) — `/public/v1` and `/oauth/token|revoke` for third-party apps,
+  authorized by `PublicApiAuthGuard` instead of the JWT + account stack
 
 ## Key concepts
 
@@ -72,7 +74,8 @@ write rule.
 **Everything that escapes the `/api/v1` prefix is in one file.** Not just the bot webhooks:
 `webhooks/stripe`, `telegram/webhook`, `whatsapp/webhook`, `slack/events`, `slack/interactivity`,
 `slack/install`, `slack/oauth/callback`, and the three guest subtrees as wildcards — `s/(.*)`
-(receipt split), `sl/(.*)` (shopping list) and `g/(.*)` (expense groups).
+(receipt split), `sl/(.*)` (shopping list) and `g/(.*)` (expense groups), plus the public API's
+`public/(.*)`, `oauth/token` and `oauth/revoke` (named one by one, so `/api/v1/oauth/authorize/*` keeps its prefix).
 Adding a route to an excluded controller without checking that file is how every scanned QR 404'd in
 production — see [receipt-split](features/receipt-split.md).
 
@@ -95,6 +98,7 @@ Secured by signature verification or by an unguessable token, never by a session
 | `/s/**` (receipt-split guest links) | A 128-bit token in the path, plus throttling |
 | `/sl/**` (shopping-list share link) | A token in the path — see [shopping-list](features/shopping-list.md) |
 | `/g/**` (expense-group guest page) | A token in the path; the guest's identity only from the hashed `abg_m` cookie secret, never a form field — see [shared-groups](features/shared-groups.md) |
+| `/public/v1/**`, `POST /oauth/token`, `/oauth/revoke` | An opaque OAuth bearer token (or client credentials + PKCE at the token endpoint), checked against the database on every request — see [public-api](features/public-api.md) |
 | `/api/v1/internal/inbound-mail/*` | `InternalSecretGuard`: the `X-Inbound-Secret` header AND a TCP peer inside `INBOUND_MAIL_INTERNAL_CIDR`, read from the socket — see [inbound-e-receipts](features/inbound-e-receipts.md) |
 
 `main.ts` registers `express.urlencoded({ verify })` alongside the JSON parser so `rawBody` exists
