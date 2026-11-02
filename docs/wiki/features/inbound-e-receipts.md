@@ -340,6 +340,11 @@ The settings pane (`emailReceipts`) already came through `settingsRegistry` and 
 - **Pricing:** free on every tier within the AI quota. The spec left "Pro-only?" open, and the code
   ships it free.
 
+- **`joi` override in `apps/inbound-mail/package.json` (ABA-711).** mailauth 8.0.4 pins joi 18.3.0 exactly, which
+  the weekly audit flags (high); `overrides` lifts it to 18.3.1. Drop the override once mailauth pins a fixed joi.
+  Regenerate the package lockfile in a standalone copy: `npm install` inside the workspace attaches to the root
+  and leaves `apps/inbound-mail/package-lock.json` (what the container and the audit use) stale.
+
 ## History
 - [ABA-644](https://github.com/micode-ai/ai-budget-assistant/issues/674) — the whole feature:
   - the API module behind the flag;
@@ -360,3 +365,4 @@ The settings pane (`emailReceipts`) already came through `settingsRegistry` and 
   - The container got a terminable parse worker, a global byte budget, `cap_drop: ALL`, a read-only
     rootfs, a dedicated certificate instead of the `/etc/letsencrypt` mount, a 384 MB limit (the
     spec planned 192 MB) and a weekly `npm audit` workflow.
+ABA-711 (dependency updates to clear the scheduled npm audit; joi override).
