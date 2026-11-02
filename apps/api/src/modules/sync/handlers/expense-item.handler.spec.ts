@@ -5,7 +5,7 @@ import { SyncHandlerContext } from '../sync-types';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mockPrisma: any = {
   expense: { findFirst: jest.fn() },
-  expenseItem: { findUnique: jest.fn(), create: jest.fn(), update: jest.fn() },
+  expenseItem: { findFirst: jest.fn(), create: jest.fn(), update: jest.fn() },
   category: { findFirst: jest.fn() },
 };
 
@@ -48,7 +48,7 @@ describe('processExpenseItemChange', () => {
   });
 
   it('creates a new item and NEVER contributes to the community prices (ABA-642: only a signed scan token can)', async () => {
-    mockPrisma.expenseItem.findUnique.mockResolvedValue(null);
+    mockPrisma.expenseItem.findFirst.mockResolvedValue(null);
     mockPrisma.expenseItem.create.mockResolvedValue({
       id: 'item-1',
       expenseId: 'exp-1',
@@ -71,7 +71,7 @@ describe('processExpenseItemChange', () => {
   });
 
   it('an item update with a canonicalName never re-votes either (an edit must not rewrite a price)', async () => {
-    mockPrisma.expenseItem.findUnique.mockResolvedValue({ id: 'item-1', syncVersion: 1 });
+    mockPrisma.expenseItem.findFirst.mockResolvedValue({ id: 'item-1', syncVersion: 1 });
     mockPrisma.expenseItem.update.mockResolvedValue({
       id: 'item-1',
       expenseId: 'exp-1',
@@ -94,7 +94,7 @@ describe('processExpenseItemChange', () => {
   });
 
   it('does not contribute when canonicalName is absent', async () => {
-    mockPrisma.expenseItem.findUnique.mockResolvedValue(null);
+    mockPrisma.expenseItem.findFirst.mockResolvedValue(null);
     mockPrisma.expenseItem.create.mockResolvedValue({
       id: 'item-1',
       expenseId: 'exp-1',
@@ -116,7 +116,7 @@ describe('processExpenseItemChange', () => {
   });
 
   it('returns conflict when the client version is behind on update', async () => {
-    mockPrisma.expenseItem.findUnique.mockResolvedValue({ id: 'item-1', syncVersion: 3 });
+    mockPrisma.expenseItem.findFirst.mockResolvedValue({ id: 'item-1', syncVersion: 3 });
 
     const result = await processExpenseItemChange(makeCtx(), 'acc-1', 'user-1', {
       entityType: 'expense_item',
@@ -133,7 +133,7 @@ describe('processExpenseItemChange', () => {
   });
 
   it('soft-deletes an item', async () => {
-    mockPrisma.expenseItem.findUnique.mockResolvedValue({ id: 'item-1', syncVersion: 1 });
+    mockPrisma.expenseItem.findFirst.mockResolvedValue({ id: 'item-1', syncVersion: 1 });
     mockPrisma.expenseItem.update.mockResolvedValue({});
 
     const result = await processExpenseItemChange(makeCtx(), 'acc-1', 'user-1', {
@@ -152,4 +152,29 @@ describe('processExpenseItemChange', () => {
       data: { isDeleted: true, syncVersion: { increment: 1 } },
     });
   });
+
+  it.each(['update', 'delete'] as const)(
+    'treats an item id outside the account as missing on %s — no write, no serverData',
+    async (operation) => {
+      // The scoped lookup finds nothing for another account's item.
+      mockPrisma.expenseItem.findFirst.mockResolvedValue(null);
+
+      const result = await processExpenseItemChange(makeCtx(), 'acc-1', 'user-1', {
+        entityType: 'expense_item',
+        entityId: 'foreign-item',
+        operation,
+        clientVersion: 0,
+        accountId: 'acc-1',
+        payload: { expenseId: 'exp-1', description: 'Milk', totalPrice: 5 },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any);
+
+      expect(result).toEqual({ entityId: 'foreign-item', status: 'error', error: 'Entity not found' });
+      expect(result).not.toHaveProperty('serverData');
+      expect(mockPrisma.expenseItem.update).not.toHaveBeenCalled();
+      expect(mockPrisma.expenseItem.findFirst).toHaveBeenCalledWith({
+        where: { id: 'foreign-item', expense: { accountId: 'acc-1' } },
+      });
+    },
+  );
 });

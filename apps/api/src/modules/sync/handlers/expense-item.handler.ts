@@ -30,8 +30,10 @@ export async function processExpenseItemChange(
     ? await resolveExpenseCategoryId(ctx.prisma, payload.categoryId, accountId)
     : undefined;
 
-  const existing = await ctx.prisma.expenseItem.findUnique({
-    where: { id: entityId },
+  // Scoped through the parent expense: an item id from another account must read as missing, never
+  // be updated, deleted, or returned as conflict serverData.
+  const existing = await ctx.prisma.expenseItem.findFirst({
+    where: { id: entityId, expense: { accountId } },
   });
 
   if (operation === 'create') {

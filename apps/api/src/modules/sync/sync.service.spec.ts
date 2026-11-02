@@ -40,6 +40,13 @@ const mockPrisma: any = {
     upsert: jest.fn(),
     updateMany: jest.fn(),
   },
+  incomeTag: { upsert: jest.fn(), updateMany: jest.fn() },
+  projectExpense: { upsert: jest.fn(), updateMany: jest.fn() },
+  projectIncome: { upsert: jest.fn(), updateMany: jest.fn() },
+  expenseCategorySplit: { create: jest.fn(), updateMany: jest.fn() },
+  income: { findFirst: jest.fn() },
+  project: { findFirst: jest.fn() },
+  category: { findFirst: jest.fn() },
   user: {
     update: jest.fn(),
   },
@@ -521,6 +528,8 @@ describe('SyncService', () => {
     // upsert must use the (already-resolved) expenseId/tagId in the payload
     // verbatim — not the SyncChange's own entityId.
     it('upserts the expense_tag junction using the ids from the payload', async () => {
+      prisma.expense.findFirst.mockResolvedValue({ id: 'srv-exp-1' });
+      prisma.tag.findFirst.mockResolvedValue({ id: 'srv-tag-1' });
       prisma.expenseTag.upsert.mockResolvedValue({ id: 'et-1' });
 
       const result = await (service as any).processChange('acc-1', 'user-1', {
@@ -554,12 +563,14 @@ describe('SyncService', () => {
 
       expect(result).toEqual({ entityId: 'srv-et-1', status: 'success' });
       expect(prisma.expenseTag.updateMany).toHaveBeenCalledWith({
-        where: { id: 'srv-et-1' },
+        where: { id: 'srv-et-1', expense: { accountId: 'acc-1' } },
         data: { isDeleted: true },
       });
     });
 
     it('returns a status:error result instead of throwing when the upsert fails', async () => {
+      prisma.expense.findFirst.mockResolvedValue({ id: 'srv-exp-1' });
+      prisma.tag.findFirst.mockResolvedValue({ id: 'srv-tag-1' });
       prisma.expenseTag.upsert.mockRejectedValue(new Error('constraint violation'));
 
       const result = await (service as any).processChange('acc-1', 'user-1', {
@@ -573,6 +584,68 @@ describe('SyncService', () => {
 
       expect(result.status).toBe('error');
       expect(result.error).toContain('constraint violation');
+    });
+  });
+
+  describe('processChange — relation changes stay inside the caller account', () => {
+    const relations = [
+      { entityType: 'expense_tag', payload: { expenseId: 'e', tagId: 't' }, model: 'expenseTag', parent: 'expense', write: 'upsert' },
+      { entityType: 'income_tag', payload: { incomeId: 'i', tagId: 't' }, model: 'incomeTag', parent: 'income', write: 'upsert' },
+      { entityType: 'project_expense', payload: { projectId: 'p', expenseId: 'e' }, model: 'projectExpense', parent: 'expense', write: 'upsert' },
+      { entityType: 'project_income', payload: { projectId: 'p', incomeId: 'i' }, model: 'projectIncome', parent: 'income', write: 'upsert' },
+      {
+        entityType: 'expense_category_split',
+        payload: { expenseId: 'e', categoryId: 'c', amount: 1, percentage: 100 },
+        model: 'expenseCategorySplit',
+        parent: 'expense',
+        write: 'create',
+      },
+    ] as const;
+
+    const refsOf = (payload: object): string[] => Object.keys(payload).filter((k) => k.endsWith('Id'));
+
+    function ownEverything(): void {
+      for (const m of ['expense', 'income', 'tag', 'project', 'category']) prisma[m].findFirst.mockResolvedValue({ id: 'own' });
+    }
+
+    function change(r: (typeof relations)[number], operation: 'create' | 'delete') {
+      return { entityType: r.entityType, entityId: 'link-1', operation, clientVersion: 0, accountId: 'acc-1', payload: r.payload };
+    }
+
+    it.each(relations)('$entityType delete is scoped through the parent row account', async (r) => {
+      prisma[r.model].updateMany.mockResolvedValue({ count: 0 });
+      const result = await (service as any).processChange('acc-1', 'user-1', change(r, 'delete'));
+      expect(result.status).toBe('success');
+      expect(prisma[r.model].updateMany).toHaveBeenCalledWith({
+        where: { id: 'link-1', [r.parent]: { accountId: 'acc-1' } },
+        data: { isDeleted: true },
+      });
+    });
+
+    it.each(relations)('$entityType create writes nothing when a referenced row is in another account', async (r) => {
+      for (const ref of refsOf(r.payload)) {
+        jest.clearAllMocks();
+        ownEverything();
+        prisma[ref.replace(/Id$/, '')].findFirst.mockResolvedValue(null);
+        const result = await (service as any).processChange('acc-1', 'user-1', change(r, 'create'));
+        expect(result).toEqual({ entityId: 'link-1', status: 'error', error: 'Entity not found' });
+        expect(prisma[r.model][r.write]).not.toHaveBeenCalled();
+      }
+    });
+
+    it.each(relations)('$entityType create checks every referenced id against the account', async (r) => {
+      ownEverything();
+      prisma[r.model][r.write].mockResolvedValue({ id: 'link-1' });
+      const result = await (service as any).processChange('acc-1', 'user-1', change(r, 'create'));
+      expect(result.status).toBe('success');
+      for (const ref of refsOf(r.payload)) {
+        const model = ref.replace(/Id$/, '');
+        const scope = model === 'category' ? { OR: [{ accountId: 'acc-1' }, { isSystem: true }] } : { accountId: 'acc-1' };
+        expect(prisma[model].findFirst).toHaveBeenCalledWith({
+          where: { id: (r.payload as Record<string, unknown>)[ref], ...scope },
+          select: { id: true },
+        });
+      }
     });
   });
 

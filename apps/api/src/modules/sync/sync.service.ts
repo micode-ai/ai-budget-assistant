@@ -96,8 +96,9 @@ export class SyncService {
       if (change.entityType === 'expense_tag') {
         const { payload } = change;
         if (change.operation === 'delete') {
-          await this.prisma.expenseTag.updateMany({ where: { id: change.entityId }, data: { isDeleted: true } });
+          await this.prisma.expenseTag.updateMany({ where: { id: change.entityId, expense: { accountId } }, data: { isDeleted: true } });
         } else {
+          if (!(await this.ownsAll(accountId, { expenseId: payload.expenseId, tagId: payload.tagId }))) return notFound(change.entityId);
           await this.prisma.expenseTag.upsert({
             where: { expenseId_tagId: { expenseId: payload.expenseId, tagId: payload.tagId } },
             create: { expenseId: payload.expenseId, tagId: payload.tagId },
@@ -107,8 +108,9 @@ export class SyncService {
       } else if (change.entityType === 'income_tag') {
         const { payload } = change;
         if (change.operation === 'delete') {
-          await this.prisma.incomeTag.updateMany({ where: { id: change.entityId }, data: { isDeleted: true } });
+          await this.prisma.incomeTag.updateMany({ where: { id: change.entityId, income: { accountId } }, data: { isDeleted: true } });
         } else {
+          if (!(await this.ownsAll(accountId, { incomeId: payload.incomeId, tagId: payload.tagId }))) return notFound(change.entityId);
           await this.prisma.incomeTag.upsert({
             where: { incomeId_tagId: { incomeId: payload.incomeId, tagId: payload.tagId } },
             create: { incomeId: payload.incomeId, tagId: payload.tagId },
@@ -118,8 +120,9 @@ export class SyncService {
       } else if (change.entityType === 'project_expense') {
         const { payload } = change;
         if (change.operation === 'delete') {
-          await this.prisma.projectExpense.updateMany({ where: { id: change.entityId }, data: { isDeleted: true } });
+          await this.prisma.projectExpense.updateMany({ where: { id: change.entityId, expense: { accountId } }, data: { isDeleted: true } });
         } else {
+          if (!(await this.ownsAll(accountId, { expenseId: payload.expenseId, projectId: payload.projectId }))) return notFound(change.entityId);
           await this.prisma.projectExpense.upsert({
             where: { projectId_expenseId: { projectId: payload.projectId, expenseId: payload.expenseId } },
             create: { projectId: payload.projectId, expenseId: payload.expenseId },
@@ -129,8 +132,9 @@ export class SyncService {
       } else if (change.entityType === 'project_income') {
         const { payload } = change;
         if (change.operation === 'delete') {
-          await this.prisma.projectIncome.updateMany({ where: { id: change.entityId }, data: { isDeleted: true } });
+          await this.prisma.projectIncome.updateMany({ where: { id: change.entityId, income: { accountId } }, data: { isDeleted: true } });
         } else {
+          if (!(await this.ownsAll(accountId, { incomeId: payload.incomeId, projectId: payload.projectId }))) return notFound(change.entityId);
           await this.prisma.projectIncome.upsert({
             where: { projectId_incomeId: { projectId: payload.projectId, incomeId: payload.incomeId } },
             create: { projectId: payload.projectId, incomeId: payload.incomeId },
@@ -140,8 +144,9 @@ export class SyncService {
       } else if (change.entityType === 'expense_category_split') {
         const { payload } = change;
         if (change.operation === 'delete') {
-          await this.prisma.expenseCategorySplit.updateMany({ where: { id: change.entityId }, data: { isDeleted: true } });
+          await this.prisma.expenseCategorySplit.updateMany({ where: { id: change.entityId, expense: { accountId } }, data: { isDeleted: true } });
         } else {
+          if (!(await this.ownsAll(accountId, { expenseId: payload.expenseId, categoryId: payload.categoryId }))) return notFound(change.entityId);
           await this.prisma.expenseCategorySplit.create({
             data: {
               expenseId: payload.expenseId,
@@ -159,6 +164,25 @@ export class SyncService {
     } catch (error) {
       return { entityId: change.entityId, status: 'error', error: String(error) };
     }
+  }
+
+  /**
+   * Every id a relation change references must belong to the caller's account (a category may also
+   * be a system one). Relation rows carry no accountId of their own, so without this a member of any
+   * account could link, revive or unlink rows of another account by id.
+   */
+  private async ownsAll(
+    accountId: string,
+    ids: { expenseId?: string; incomeId?: string; tagId?: string; projectId?: string; categoryId?: string },
+  ): Promise<boolean> {
+    const checks: Promise<unknown>[] = [];
+    if (ids.expenseId !== undefined) checks.push(this.prisma.expense.findFirst({ where: { id: ids.expenseId, accountId }, select: { id: true } }));
+    if (ids.incomeId !== undefined) checks.push(this.prisma.income.findFirst({ where: { id: ids.incomeId, accountId }, select: { id: true } }));
+    if (ids.tagId !== undefined) checks.push(this.prisma.tag.findFirst({ where: { id: ids.tagId, accountId }, select: { id: true } }));
+    if (ids.projectId !== undefined) checks.push(this.prisma.project.findFirst({ where: { id: ids.projectId, accountId }, select: { id: true } }));
+    if (ids.categoryId !== undefined) checks.push(this.prisma.category.findFirst({ where: { id: ids.categoryId, OR: [{ accountId }, { isSystem: true }] }, select: { id: true } }));
+    const rows = await Promise.all(checks);
+    return rows.length > 0 && rows.every((r) => r !== null);
   }
 
   async pullChanges(accountId: string, userId: string, since: Date) {
@@ -325,4 +349,8 @@ export class SyncService {
       serverTimestamp: new Date().toISOString(),
     };
   }
+}
+
+function notFound(entityId: string): SyncResult {
+  return { entityId, status: 'error', error: 'Entity not found' };
 }

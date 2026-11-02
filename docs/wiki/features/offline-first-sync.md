@@ -80,6 +80,13 @@ hydrate runs, it queues one forced follow-up cycle behind it, shared by every fo
 arrives meanwhile. Handing back the in-flight promise dropped the force, so pull-to-refresh or
 "Sync now" during a background hydrate pulled nothing new (ABA-626).
 
+- **Every push write is scoped through the caller's account.** Relation rows carry no `accountId`,
+  so a link delete matches `{ id, <parent>: { accountId } }` and a link create first checks that
+  every referenced expense, income, tag, project or category (or a system category) is in the
+  account; an expense item is looked up through `expense: { accountId }`. A row outside the account
+  answers `Entity not found` like a missing one and is never returned as conflict `serverData`
+  (ABA-708).
+
 ## Known gaps
 
 - `pullChanges`' merge writes `categoryId: serverCategoryId || localExpense?.categoryId`, so
@@ -91,4 +98,4 @@ arrives meanwhile. Handing back the in-flight promise dropped the force, so pull
 
 ABA-152 (parallel batches of 10) · ABA-157 (warn, not error) · ABA-356 (the first real test
 coverage for the handlers) · ABA-423 (budget/category changes reject instead of silently
-succeeding) · ABA-468 (the 990-line service split into per-entity handler files).
+succeeding) · ABA-468 (the 990-line service split into per-entity handler files) · ABA-708 (account scoping on relation and line-item writes).
