@@ -4,6 +4,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { oauthApi } from '@/services/api';
 import type { OAuthConsentAccount, OAuthConsentApp, OAuthScope } from '@/services/oauth.api';
 import { httpStatusOf, oauthErrorCode } from './consentErrors';
+import { initialAccountSelection } from './consentDisplay';
 import { consentParamsKey, pickConsentParams, type RawSearchParams } from './consentParams';
 import { stashPendingConsent } from './pendingConsent';
 import { openRedirect } from './openRedirect';
@@ -50,8 +51,10 @@ export interface ConsentState {
   app: OAuthConsentApp | null;
   scopes: OAuthScope[];
   accounts: OAuthConsentAccount[];
-  selectedAccountId: string | null;
-  select(id: string): void;
+  selectedAccountIds: string[];
+  toggle(id: string): void;
+  /** Some account is already connected: this is a re-consent that replaces the set. */
+  isReconsent: boolean;
   allow(): Promise<void>;
   deny(): Promise<void>;
 }
@@ -98,7 +101,7 @@ export function useConsent(searchParams: RawSearchParams): ConsentState {
   const [submitError, setSubmitError] = useState<ConsentErrorKey | undefined>();
   const [pendingDecision, setPendingDecision] = useState<'allow' | 'deny' | null>(null);
   const [loaded, setLoaded] = useState<Loaded | null>(null);
-  const [selectedAccountId, setSelectedAccountId] = useState<string | null>(null);
+  const [selectedAccountIds, setSelectedAccountIds] = useState<string[]>([]);
   const inFlight = useRef(false);
 
   useEffect(() => {
@@ -119,7 +122,7 @@ export function useConsent(searchParams: RawSearchParams): ConsentState {
       .then((preview) => {
         if (cancelled) return;
         setLoaded({ app: preview.app, scopes: preview.scopes, accounts: preview.accounts });
-        setSelectedAccountId(preview.accounts.find((a) => a.selectable)?.id ?? null);
+        setSelectedAccountIds(initialAccountSelection(preview.accounts));
         setStatus('ready');
       })
       .catch((e) => {
@@ -134,10 +137,11 @@ export function useConsent(searchParams: RawSearchParams): ConsentState {
   }, [isAuthenticated, paramsKey]);
 
   const accounts = loaded?.accounts;
-  const select = useCallback(
+  const toggle = useCallback(
     (id: string) => {
       const account = accounts?.find((a) => a.id === id);
-      if (account?.selectable) setSelectedAccountId(id);
+      if (!account?.selectable) return;
+      setSelectedAccountIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
     },
     [accounts],
   );
@@ -145,7 +149,7 @@ export function useConsent(searchParams: RawSearchParams): ConsentState {
   const decide = useCallback(
     async (decision: 'allow' | 'deny') => {
       if (status !== 'ready' || inFlight.current) return;
-      if (decision === 'allow' && !selectedAccountId) return;
+      if (decision === 'allow' && selectedAccountIds.length === 0) return;
       inFlight.current = true;
       setStatus('submitting');
       setPendingDecision(decision);
@@ -159,7 +163,9 @@ export function useConsent(searchParams: RawSearchParams): ConsentState {
           state: p.state,
           code_challenge: p.code_challenge,
           code_challenge_method: p.code_challenge_method,
-          ...(decision === 'allow' ? { account_id: selectedAccountId ?? undefined } : {}),
+          ...(decision === 'allow'
+            ? { account_ids: (accounts ?? []).filter((a) => selectedAccountIds.includes(a.id)).map((a) => a.id) }
+            : {}),
           decision,
         });
         await openRedirect(redirectTo);
@@ -179,7 +185,7 @@ export function useConsent(searchParams: RawSearchParams): ConsentState {
         setPendingDecision(null);
       }
     },
-    [status, selectedAccountId],
+    [status, selectedAccountIds, accounts],
   );
 
   const allow = useCallback(() => decide('allow'), [decide]);
@@ -193,8 +199,9 @@ export function useConsent(searchParams: RawSearchParams): ConsentState {
     app: loaded?.app ?? null,
     scopes: loaded?.scopes ?? [],
     accounts: loaded?.accounts ?? [],
-    selectedAccountId,
-    select,
+    selectedAccountIds,
+    toggle,
+    isReconsent: (loaded?.accounts ?? []).some((a) => a.connected),
     allow,
     deny,
   };

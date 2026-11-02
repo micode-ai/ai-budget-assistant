@@ -68,14 +68,14 @@ Gotowy adres wygląda tak:
 https://app.ai-budget.pl/authorize?response_type=code&client_id=aba_ci_q7Lx2Vb9TmR4kWc8Zp1sYg&redirect_uri=https%3A%2F%2Fexample.com%2Foauth%2Fcallback&scope=expenses%3Aread+expenses%3Awrite+receipts%3Aread+categories%3Aread&state=af0ifjsldkj&code_challenge=E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM&code_challenge_method=S256
 ```
 
-Użytkownik loguje się, wybiera **jedno** konto i zatwierdza zakresy. Następnie przeglądarka wraca na Twój redirect URI:
+Użytkownik loguje się, wybiera **jedno lub kilka** kont i zatwierdza zakresy. Następnie przeglądarka wraca na Twój redirect URI:
 
 - zgoda: `https://example.com/oauth/callback?code=...&state=...`
 - odmowa: `https://example.com/oauth/callback?error=access_denied&state=...`
 
 Zanim użyjesz kodu, sprawdź, czy `state` jest tym, który wysłałeś.
 
-**Jedno połączenie = jedno konto.** To użytkownik decyduje, które konto otrzyma Twoja aplikacja. Połączyć konto może tylko jego **właściciel** albo **edytor**. Aby pracować z kilkoma kontami, użytkownik łączy Twoją aplikację osobno z każdym z nich. Jeśli użytkownik, który połączył aplikację, straci później uprawnienia do edycji konta (zostanie obserwatorem albo opuści konto), każde wywołanie zwraca `403 grant_inactive`, dopóki ktoś z uprawnieniami do edycji nie połączy aplikacji ponownie.
+**Jedno połączenie, jedno lub kilka kont.** Użytkownik zaznacza, które konta dostaje Twoja aplikacja; połączenie obejmuje dokładnie te konta. Połączyć konto może tylko jego **właściciel** albo **edytor**. Jeśli użytkownik, który połączył aplikację, straci później uprawnienia do edycji jednego z kont (zostanie obserwatorem albo opuści konto), wywołania kierowane do tego konta zwracają `403 grant_inactive`, a pozostałe konta nadal działają; konto znów zadziała, gdy ktoś z uprawnieniami do edycji połączy aplikację ponownie.
 
 ## 3. Wymień kod na tokeny
 
@@ -117,9 +117,12 @@ Odpowiedź:
   "expires_in": 3600,
   "refresh_token": "aba_rt_Pz4Xc8Vb2Nm6Lk0Jh3Gf7Ds1Aq5We9Rt2Yu6Io0Pa",
   "scope": "expenses:read expenses:write receipts:read categories:read",
+  "account_ids": ["7c9e1a3b-5d7f-4b2c-8e4a-6f8b0d2c4e6a"],
   "account_id": "7c9e1a3b-5d7f-4b2c-8e4a-6f8b0d2c4e6a"
 }
 ```
+
+`account_ids` zawiera wszystkie konta połączenia, w kolejności połączenia. `account_id` pojawia się **tylko** wtedy, gdy połączenie ma dokładnie jedno konto (dla starszych integracji); korzystaj z `account_ids`.
 
 **Token dostępu** żyje **1 godzinę**. **Token odświeżania** jest ważny **90 dni**, a każde odświeżenie daje nowy, znów ważny 90 dni. Przechowuj oba bezpiecznie, w miarę możliwości po stronie serwera.
 
@@ -139,9 +142,29 @@ const res = await fetch('https://api.ai-budget.pl/public/v1/expenses?limit=50', 
 const page = await res.json();
 ```
 
-`GET /public/v1/account` mówi, do którego konta należy token. Listy są stronicowane nieprzezroczystym kursorem: przekazuj `next_cursor` z powrotem jako `cursor`, z tymi samymi filtrami, dopóki `has_more` ma wartość `true`.
+`GET /public/v1/account` mówi, którego konta dotyczy wywołanie. Przy kilku kontach wskaż je nagłówkiem `X-Account-Id` (zob. sekcja 5). Listy są stronicowane nieprzezroczystym kursorem: przekazuj `next_cursor` z powrotem jako `cursor`, z tymi samymi filtrami, dopóki `has_more` ma wartość `true`.
 
-## 5. Odśwież token dostępu
+## 5. Kilka kont w jednym połączeniu
+
+Odpowiedź z tokenami zawsze zawiera `account_ids`. Szczegóły pobierzesz przez `GET /public/v1/accounts`; wystarczy ważny token, bez `X-Account-Id` i bez zakresu, a odpowiedź zawsze przychodzi:
+
+```json
+{ "data": [{ "id": "...", "name": "Family", "type": "shared", "base_currency": "PLN", "access": "read_write", "active": true, "reason": null }] }
+```
+
+- `type` odróżnia konto firmowe (`business`) od prywatnego (`personal`, `shared`, `trip`, `investment`).
+- `access` to `read_write`, gdy połączenie może zapisywać na koncie, w przeciwnym razie `read` (brak zakresu `expenses:write` albo konto z szyfrowaniem tekstu end-to-end).
+- `active: false` oznacza, że żądania do tego konta są odrzucane; `reason` podaje powód: `role` (użytkownik nie jest już właścicielem ani edytorem), `encrypted` (konto jest teraz w pełni szyfrowane end-to-end) albo `archived` (zarchiwizowana podróż: nadal aktywna, tylko do odczytu). Gdy `role` wynika z tego, że użytkownik nie jest już w ogóle członkiem konta, pola `name`, `type` i `base_currency` mają wartość `null`.
+
+**Wybór konta.** Identyfikator wysyłaj w nagłówku `X-Account-Id` przy wszystkich pozostałych wywołaniach. Gdy udostępnione jest dokładnie **jedno** konto, nagłówek jest opcjonalny. Gdy **więcej niż jedno**, jest wymagany, a wywołanie bez niego zwraca `400 account_required` — także `GET /public/v1/account`. Reguła liczy konta udostępnione przez użytkownika, nie te, które działają: połączenie z dwoma kontami, z których jedno jest nieaktywne, nadal wymaga nagłówka. Identyfikator spoza połączenia zwraca `403 account_not_granted`; konto, którego właściciel lub edytor utracił uprawnienia, zwraca `403 grant_inactive`; konto nowo zaszyfrowane `403 account_encrypted`. Pozostałe konta połączenia nie są dotknięte.
+
+**Zawsze wysyłaj `X-Account-Id`, także przy jednym koncie, i traktuj `account_ids` w każdej odpowiedzi z tokenami jako wiążące.** Ponowna zgoda może **zastąpić** zestaw kont: połączenie z jednym kontem może przejść na inne, a żądanie bez nagłówka trafiłoby wtedy po cichu do nowego konta. Po każdej wymianie kodu i odświeżeniu odczytaj `account_ids` ponownie i dostosuj do niego własne powiązanie kont z danymi.
+
+**Jedno wywołanie, jedno konto.** Nie ma wspólnego endpointu dla wielu kont: aby odczytać kilka kont, wywołaj API osobno dla każdego. Zakresy i limity żądań dotyczą całego połączenia (jeden licznik dla wszystkich jego kont), natomiast wartości `Idempotency-Key` i kursory `/expenses/changes` są osobne dla każdego konta: ten sam klucz lub kursor znaczy na każdym koncie coś innego, więc przechowuj je osobno.
+
+**Zmiana zestawu kont.** Gdy użytkownik łączy Twoją aplikację ponownie, ekran zgody ma już zaznaczone połączone konta, a to, co zatwierdzi, **zastępuje** dotychczasowy zestaw. Konto, które odznaczy, traci dostęp od następnego żądania, a tokeny nadal działają dla pozostałych. Odświeżenie zwraca `invalid_grant` tylko wtedy, gdy **żadne** konto połączenia nie nadaje się już do użycia.
+
+## 6. Odśwież token dostępu
 
 ```bash
 curl -X POST https://api.ai-budget.pl/oauth/token \
@@ -194,7 +217,7 @@ async function api(path, init = {}) {
 
 Aby odłączyć aplikację, wyślij dowolny z tokenów na `POST https://api.ai-budget.pl/oauth/revoke`; unieważnione zostanie całe połączenie. Użytkownik może też w każdej chwili odłączyć Twoją aplikację w **Ustawienia → Połączone aplikacje**.
 
-## 6. Synchronizacja przyrostowa
+## 7. Synchronizacja przyrostowa
 
 Aby utrzymywać własną kopię wydatków, czytaj strumień zmian `GET https://api.ai-budget.pl/public/v1/expenses/changes`, zamiast ponownie pobierać listę:
 
@@ -230,7 +253,7 @@ Znane ograniczenia:
 - Wydatek przeniesiony na inne konto nie jest zgłaszany jako usunięty na koncie, z którego go przeniesiono.
 - Zmiana nazwy tagu lub projektu nie powoduje ponownego wysłania wydatków, które go mają. Jeśli nazwy są dla Ciebie ważne, co jakiś czas wykonaj pełną resynchronizację (ponowna synchronizacja bez kursora).
 
-## 7. Dodawanie, edycja i usuwanie wydatków
+## 8. Dodawanie, edycja i usuwanie wydatków
 
 Dodanie wydatku wymaga nagłówka `Idempotency-Key`: UUID wygenerowanego przez Ciebie dla tego wydatku.
 
@@ -250,7 +273,7 @@ curl -X POST https://api.ai-budget.pl/public/v1/expenses \
 
 `PATCH /public/v1/expenses/{id}` zmienia tylko wysłane pola; `null` czyści pole tam, gdzie to dozwolone. `DELETE /public/v1/expenses/{id}` usuwa wydatek, który potem przychodzi w strumieniu zmian jako `delete`. Poprawne wartości `category_id` znajdziesz w `GET /public/v1/categories`.
 
-## 8. Błędy
+## 9. Błędy
 
 Każdy błąd `/public/v1` ma taką samą treść:
 
@@ -277,6 +300,8 @@ Logikę opieraj na `code`; `message` jest dla ludzi i może się zmieniać. Mog�
 | `forbidden` | 403 | Każda inna odmowa. |
 | `validation_failed` | 400 / 422 | 400: żądanie jest niepoprawne. 422: wskazuje rekordy spoza konta albo pola zarządzane przez wspólną grupę. Zob. `details.fields`. |
 | `invalid_cursor` | 400 | Odsyłaj `next_cursor` dokładnie w takiej postaci, w jakiej go otrzymałeś. |
+| `account_required` | 400 | Połączenie obejmuje kilka kont: wyślij nagłówek `X-Account-Id` z jednym z identyfikatorów z `GET /public/v1/accounts`. |
+| `account_not_granted` | 403 | Konto z `X-Account-Id` nie należy do tego połączenia. |
 | `bad_request` | 400 | Każde inne niepoprawne żądanie. |
 | `not_found` | 404 | W połączonym koncie nie ma takiego rekordu albo został usunięty. |
 | `method_not_allowed` | 405 | Ta metoda HTTP nie jest obsługiwana pod tym adresem. |
@@ -287,11 +312,11 @@ Logikę opieraj na `code`; `message` jest dla ludzi i może się zmieniać. Mog�
 | `internal_error` | 500 | Błąd po naszej stronie. Ponów później. |
 | `unavailable` | 503 | Chwilowa awaria. Ponów z rosnącym odstępem. |
 
-`/oauth/token` i `/oauth/revoke` odpowiadają w formacie OAuth `{"error": "...", "error_description": "..."}` z kodami: `invalid_request`, `invalid_client`, `invalid_grant`, `unsupported_grant_type`, `invalid_scope`, `slow_down`, `temporarily_unavailable`. `invalid_grant` przy odświeżaniu oznacza, że połączenia już nie ma (użytkownik je unieważnił, użyto zużytego tokenu odświeżania albo użytkownik stracił uprawnienia do edycji) — poproś użytkownika o ponowne połączenie.
+`/oauth/token` i `/oauth/revoke` odpowiadają w formacie OAuth `{"error": "...", "error_description": "..."}` z kodami: `invalid_request`, `invalid_client`, `invalid_grant`, `unsupported_grant_type`, `invalid_scope`, `slow_down`, `temporarily_unavailable`. `invalid_grant` przy odświeżaniu oznacza, że połączenia już nie ma (użytkownik je unieważnił, użyto zużytego tokenu odświeżania albo żadne konto połączenia nie nadaje się już do użycia, bo użytkownik stracił uprawnienia do edycji wszystkich) — poproś użytkownika o ponowne połączenie.
 
-## 9. Limity żądań
+## 10. Limity żądań
 
-- **120 żądań na minutę na połączenie** (konto jednego użytkownika w Twojej aplikacji).
+- **120 żądań na minutę na połączenie** (jeden użytkownik w Twojej aplikacji, wszystkie konta połączenia razem).
 - **1200 żądań na minutę na aplikację**, łącznie dla wszystkich jej połączeń.
 - `/oauth/token`: 30 żądań na minutę na aplikację. Klient publiczny jest liczony tylko przy żądaniach z ważnym kodem autoryzacji lub tokenem odświeżania tego klienta.
 
@@ -299,7 +324,7 @@ Każda odpowiedź `/public/v1` na uwierzytelnione i autoryzowane żądanie zawie
 
 Przed API działa też serwer pośredniczący, który ogranicza zalewy żądań. Jego `429` nie ma powyższego formatu JSON, a aplikacji przeglądarkowej z obcej domeny przychodzi bez nagłówków CORS, więc przeglądarka zgłasza go jako błąd sieci. Taki nieczytelny błąd traktuj jak `429`: odczekaj i ponów.
 
-## 10. Konta szyfrowane end-to-end
+## 11. Konta szyfrowane end-to-end
 
 Użytkownicy mogą w aplikacji zaszyfrować swoje dane end-to-end — wtedy nawet nasze serwery nie mogą ich odczytać:
 
@@ -309,6 +334,6 @@ Użytkownicy mogą w aplikacji zaszyfrować swoje dane end-to-end — wtedy nawe
 - Nazwy kategorii w `/categories` również mają wartość `null`, a każda kategoria ma `"encrypted_fields": ["name"]`.
 - Filtry `merchant` i `search` zwracają `403 account_encrypted`, a pliki paragonów są niedostępne.
 
-## 11. Wypróbuj na tej stronie
+## 12. Wypróbuj na tej stronie
 
 Przycisk **Authorize** powyżej uruchamia prawdziwy przepływ OAuth z PKCE na prawdziwych danych użytkownika. Aby z niego skorzystać, dodaj `https://api.ai-budget.pl/public/docs/oauth2-redirect.html` do redirect URI swojej aplikacji, a następnie wpisz swój `client_id` (i sekret — w przypadku klienta poufnego).

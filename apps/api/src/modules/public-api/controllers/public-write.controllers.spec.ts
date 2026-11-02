@@ -29,7 +29,6 @@ function tokenRow(scopes: string[], encryptionTier = 0) {
     grant: {
       id: 'grant-1',
       userId: 'user-1',
-      accountId: 'acc-1',
       scopes,
       revokedAt: null,
       client: { id: 'client-db-1', name: 'AI Accounting', status: 'active', deletedAt: null, rateLimitPerGrant: null, rateLimitPerClient: null },
@@ -42,7 +41,7 @@ function tokenRow(scopes: string[], encryptionTier = 0) {
         defaultAccountId: 'acc-1',
         isActive: true,
       },
-      account: { encryptionTier, monthAnchorDay: null },
+      accounts: [{ accountId: 'acc-1', account: { encryptionTier, monthAnchorDay: null } }],
     },
   };
 }

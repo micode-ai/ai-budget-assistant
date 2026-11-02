@@ -53,10 +53,10 @@ const PREVIEW: OAuthAuthorizePreview = {
   },
   scopes: ['expenses:read', 'categories:read'],
   accounts: [
-    { id: 'a-viewer', name: 'Family', type: 'shared', role: 'viewer', selectable: false, reason: 'viewer', readOnly: false },
-    { id: 'a-e2ee', name: 'Secret', type: 'personal', role: 'owner', selectable: false, reason: 'encrypted', readOnly: false },
-    { id: 'a-main', name: 'Main', type: 'personal', role: 'owner', selectable: true, reason: null, readOnly: false },
-    { id: 'a-biz', name: 'Business', type: 'business', role: 'editor', selectable: true, reason: null, readOnly: true },
+    { id: 'a-viewer', name: 'Family', type: 'shared', role: 'viewer', selectable: false, reason: 'viewer', readOnly: false, connected: false },
+    { id: 'a-e2ee', name: 'Secret', type: 'personal', role: 'owner', selectable: false, reason: 'encrypted', readOnly: false, connected: false },
+    { id: 'a-main', name: 'Main', type: 'personal', role: 'owner', selectable: true, reason: null, readOnly: false, connected: false },
+    { id: 'a-biz', name: 'Business', type: 'business', role: 'editor', selectable: true, reason: null, readOnly: true, connected: false },
   ],
 };
 
@@ -129,44 +129,47 @@ describe('useConsent', () => {
     expect(hook.current.error).toBe('unavailable');
   });
 
-  it('preselects the first selectable account', async () => {
+  it('nothing is pre-ticked when two accounts are selectable and none connected', async () => {
     mockPreview.mockResolvedValue(PREVIEW);
     const hook = await renderConsent();
     expect(hook.current.status).toBe('ready');
-    expect(hook.current.selectedAccountId).toBe('a-main');
+    expect(hook.current.selectedAccountIds).toEqual([]);
+    expect(hook.current.isReconsent).toBe(false);
     expect(hook.current.app?.name).toBe('AI Accounting');
     expect(hook.current.scopes).toEqual(['expenses:read', 'categories:read']);
   });
 
-  it('a non-selectable account cannot be selected, a selectable one can', async () => {
+  it('toggle adds and removes a selectable account; non-selectable and unknown ids are ignored', async () => {
     mockPreview.mockResolvedValue(PREVIEW);
     const hook = await renderConsent();
 
-    act(() => hook.current.select('a-viewer'));
-    expect(hook.current.selectedAccountId).toBe('a-main');
-    act(() => hook.current.select('a-e2ee'));
-    expect(hook.current.selectedAccountId).toBe('a-main');
-    act(() => hook.current.select('unknown'));
-    expect(hook.current.selectedAccountId).toBe('a-main');
-    act(() => hook.current.select('a-biz'));
-    expect(hook.current.selectedAccountId).toBe('a-biz');
+    act(() => hook.current.toggle('a-viewer'));
+    act(() => hook.current.toggle('a-e2ee'));
+    act(() => hook.current.toggle('unknown'));
+    expect(hook.current.selectedAccountIds).toEqual([]);
+    act(() => hook.current.toggle('a-biz'));
+    expect(hook.current.selectedAccountIds).toEqual(['a-biz']);
+    act(() => hook.current.toggle('a-main'));
+    expect(hook.current.selectedAccountIds).toEqual(['a-biz', 'a-main']);
+    act(() => hook.current.toggle('a-biz'));
+    expect(hook.current.selectedAccountIds).toEqual(['a-main']);
   });
 
-  it('no selectable account → nothing preselected and allow is a no-op', async () => {
-    mockPreview.mockResolvedValue({ ...PREVIEW, accounts: PREVIEW.accounts.slice(0, 2) });
+  it('allow with an empty selection is a no-op', async () => {
+    mockPreview.mockResolvedValue(PREVIEW);
     const hook = await renderConsent();
-    expect(hook.current.selectedAccountId).toBeNull();
     await act(async () => {
       await hook.current.allow();
     });
     expect(mockApprove).not.toHaveBeenCalled();
   });
 
-  it('allow posts decision allow with the selected account and navigates to the returned URL', async () => {
+  it('allow posts account_ids in the order of accounts (not tick order) and no account_id', async () => {
     mockPreview.mockResolvedValue(PREVIEW);
     mockApprove.mockResolvedValue({ redirectTo: 'https://app.example.com/cb?code=aba_ac_1&state=xyz' });
     const hook = await renderConsent();
-    act(() => hook.current.select('a-biz'));
+    act(() => hook.current.toggle('a-biz'));
+    act(() => hook.current.toggle('a-main'));
 
     await act(async () => {
       await hook.current.allow();
@@ -179,11 +182,40 @@ describe('useConsent', () => {
       state: PARAMS.state,
       code_challenge: PARAMS.code_challenge,
       code_challenge_method: PARAMS.code_challenge_method,
-      account_id: 'a-biz',
+      account_ids: ['a-main', 'a-biz'],
       decision: 'allow',
     });
+    expect(mockApprove.mock.calls[0][0]).not.toHaveProperty('account_id');
     expect(mockOpenRedirect).toHaveBeenCalledWith('https://app.example.com/cb?code=aba_ac_1&state=xyz');
     expect(hook.current.status).toBe('done');
+  });
+
+  it('re-consent pre-ticks the connected accounts, flags isReconsent, and drops a connected viewer row', async () => {
+    mockPreview.mockResolvedValue({
+      ...PREVIEW,
+      accounts: PREVIEW.accounts.map((a) =>
+        a.id === 'a-main' || a.id === 'a-viewer' ? { ...a, connected: true } : a,
+      ),
+    });
+    const hook = await renderConsent();
+    expect(hook.current.isReconsent).toBe(true);
+    expect(hook.current.selectedAccountIds).toEqual(['a-main']);
+  });
+
+  it('exactly one selectable account is pre-ticked on a first connection', async () => {
+    mockPreview.mockResolvedValue({ ...PREVIEW, accounts: PREVIEW.accounts.slice(0, 3) });
+    const hook = await renderConsent();
+    expect(hook.current.selectedAccountIds).toEqual(['a-main']);
+  });
+
+  it('no selectable account: nothing ticked and allow is a no-op', async () => {
+    mockPreview.mockResolvedValue({ ...PREVIEW, accounts: PREVIEW.accounts.slice(0, 2) });
+    const hook = await renderConsent();
+    expect(hook.current.selectedAccountIds).toEqual([]);
+    await act(async () => {
+      await hook.current.allow();
+    });
+    expect(mockApprove).not.toHaveBeenCalled();
   });
 
   it('deny posts decision deny and navigates to the returned URL', async () => {
@@ -197,6 +229,7 @@ describe('useConsent', () => {
 
     expect(mockApprove).toHaveBeenCalledTimes(1);
     expect(mockApprove.mock.calls[0][0]).toMatchObject({ decision: 'deny', client_id: PARAMS.client_id });
+    expect(mockApprove.mock.calls[0][0]).not.toHaveProperty('account_ids');
     expect(mockOpenRedirect).toHaveBeenCalledWith('https://app.example.com/cb?error=access_denied&state=xyz');
   });
 
@@ -204,6 +237,7 @@ describe('useConsent', () => {
     mockPreview.mockResolvedValue(PREVIEW);
     mockApprove.mockRejectedValue(oauthFailure(503, 'temporarily_unavailable'));
     const hook = await renderConsent();
+    act(() => hook.current.toggle('a-main'));
 
     await act(async () => {
       await hook.current.allow();
@@ -218,6 +252,7 @@ describe('useConsent', () => {
     mockPreview.mockResolvedValue(PREVIEW);
     mockApprove.mockRejectedValue(oauthFailure(403, 'account_encrypted'));
     const hook = await renderConsent();
+    act(() => hook.current.toggle('a-main'));
     await act(async () => {
       await hook.current.allow();
     });
@@ -229,6 +264,7 @@ describe('useConsent', () => {
     mockPreview.mockResolvedValue(PREVIEW);
     mockApprove.mockRejectedValue(oauthFailure(400, 'invalid_client'));
     const hook = await renderConsent();
+    act(() => hook.current.toggle('a-main'));
     await act(async () => {
       await hook.current.allow();
     });

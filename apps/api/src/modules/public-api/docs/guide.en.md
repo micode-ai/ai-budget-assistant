@@ -68,14 +68,14 @@ The resulting URL looks like this:
 https://app.ai-budget.pl/authorize?response_type=code&client_id=aba_ci_q7Lx2Vb9TmR4kWc8Zp1sYg&redirect_uri=https%3A%2F%2Fexample.com%2Foauth%2Fcallback&scope=expenses%3Aread+expenses%3Awrite+receipts%3Aread+categories%3Aread&state=af0ifjsldkj&code_challenge=E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM&code_challenge_method=S256
 ```
 
-The user signs in, chooses **one** account and approves the scopes. Then the browser returns to your redirect URI:
+The user signs in, chooses **one or more** accounts and approves the scopes. Then the browser returns to your redirect URI:
 
 - approved: `https://example.com/oauth/callback?code=...&state=...`
 - declined: `https://example.com/oauth/callback?error=access_denied&state=...`
 
 Check that `state` is the one you sent before you use the code.
 
-**One connection = one account.** The user picks which account your app gets. Only an **owner** or an **editor** of an account can connect it. To work with several accounts, the user connects your app once per account. If the user who connected the app later loses edit rights to the account (becomes a viewer or leaves it), every call answers `403 grant_inactive` until someone with edit rights connects the app again.
+**One connection, one or more accounts.** The user ticks which accounts your app gets; the connection covers exactly those. Only an **owner** or an **editor** of an account can connect it. If the user who connected the app later loses edit rights to one account (becomes a viewer or leaves it), calls addressed to that account answer `403 grant_inactive` while the other accounts keep working; the account becomes usable again when someone with edit rights connects the app again.
 
 ## 3. Exchange the code for tokens
 
@@ -117,9 +117,12 @@ Response:
   "expires_in": 3600,
   "refresh_token": "aba_rt_Pz4Xc8Vb2Nm6Lk0Jh3Gf7Ds1Aq5We9Rt2Yu6Io0Pa",
   "scope": "expenses:read expenses:write receipts:read categories:read",
+  "account_ids": ["7c9e1a3b-5d7f-4b2c-8e4a-6f8b0d2c4e6a"],
   "account_id": "7c9e1a3b-5d7f-4b2c-8e4a-6f8b0d2c4e6a"
 }
 ```
+
+`account_ids` lists every account of the connection, in connection order. `account_id` appears **only** when the connection has exactly one account (kept for older integrations); read `account_ids`.
 
 The **access token** lives **1 hour**. The **refresh token** is valid for **90 days**, and every refresh gives you a new one with a fresh 90 days. Store both securely, server-side where you can.
 
@@ -139,9 +142,29 @@ const res = await fetch('https://api.ai-budget.pl/public/v1/expenses?limit=50', 
 const page = await res.json();
 ```
 
-`GET /public/v1/account` tells you which account the token belongs to. Lists are paginated with an opaque cursor: pass `next_cursor` back as `cursor`, with the same filters, while `has_more` is `true`.
+`GET /public/v1/account` tells you which account a call is about. With several accounts, say which one with the `X-Account-Id` header (see section 5). Lists are paginated with an opaque cursor: pass `next_cursor` back as `cursor`, with the same filters, while `has_more` is `true`.
 
-## 5. Refresh the access token
+## 5. Several accounts in one connection
+
+The token response always carries `account_ids`. Ask for the details with `GET /public/v1/accounts`; it needs only a valid token, no `X-Account-Id` and no scope, and it always answers:
+
+```json
+{ "data": [{ "id": "...", "name": "Family", "type": "shared", "base_currency": "PLN", "access": "read_write", "active": true, "reason": null }] }
+```
+
+- `type` tells a company account (`business`) from a private one (`personal`, `shared`, `trip`, `investment`).
+- `access` is `read_write` when the connection may write to the account, otherwise `read` (no `expenses:write` scope, or an end-to-end encrypted account with text encryption).
+- `active: false` means requests addressed to this account are refused; `reason` says why: `role` (the user is no longer an owner or editor), `encrypted` (the account is now fully end-to-end encrypted) or `archived` (an archived trip: still active, read-only). With `role` because the user is no longer a member at all, `name`, `type` and `base_currency` are `null`.
+
+**Choosing the account.** Send the id in the `X-Account-Id` header on every other call. With exactly **one** granted account the header is optional. With **more than one** it is required, and a call without it answers `400 account_required`, `GET /public/v1/account` included. The rule counts the accounts the user granted, not the usable ones: a connection of two accounts of which one is inactive still needs the header. An id that is not part of the connection answers `403 account_not_granted`; an account whose owner or editor right is gone answers `403 grant_inactive`; a newly encrypted one `403 account_encrypted`. The other accounts of the connection are not affected.
+
+**Always send `X-Account-Id`, even with one account, and treat `account_ids` in every token response as authoritative.** Re-consent can **replace** the set: a connection that had one account can move to a different one, and a header-less request would then silently land in the new account. After every code exchange and refresh, re-read `account_ids` and keep your own account-to-data mapping in step with it.
+
+**One call, one account.** There is no merged endpoint across accounts: to read several accounts, call once per account. Scopes and rate limits belong to the whole connection (one bucket for all its accounts), but `Idempotency-Key` values and the `/expenses/changes` cursors are scoped per account: the same key or cursor means something different on each one, so keep them per account.
+
+**Changing the set.** When the user connects your app again, the consent screen pre-ticks the accounts already connected, and what they approve **replaces** the set. An account they untick is cut off on the next request, and the tokens keep working for the rest. A refresh answers `invalid_grant` only when **no** account of the connection is usable any more.
+
+## 6. Refresh the access token
 
 ```bash
 curl -X POST https://api.ai-budget.pl/oauth/token \
@@ -194,7 +217,7 @@ async function api(path, init = {}) {
 
 To disconnect, send either token to `POST https://api.ai-budget.pl/oauth/revoke`; the whole connection is revoked. The user can also disconnect your app at any time in **Settings → Connected apps**.
 
-## 6. Incremental sync
+## 7. Incremental sync
 
 To keep your own copy of the expenses, read the changes feed `GET https://api.ai-budget.pl/public/v1/expenses/changes` instead of re-listing:
 
@@ -230,7 +253,7 @@ Known limitations:
 - An expense moved to another account is not reported as deleted in the account it left.
 - Renaming a tag or a project does not re-emit the expenses that carry it. If names matter to you, do a full resync now and then (sync again without a cursor).
 
-## 7. Create, edit and delete expenses
+## 8. Create, edit and delete expenses
 
 Creating an expense requires an `Idempotency-Key` header: a UUID you generate for this expense.
 
@@ -250,7 +273,7 @@ curl -X POST https://api.ai-budget.pl/public/v1/expenses \
 
 `PATCH /public/v1/expenses/{id}` changes only the fields you send; `null` clears a field where allowed. `DELETE /public/v1/expenses/{id}` deletes the expense; it then arrives as `delete` in the changes feed. Take valid `category_id` values from `GET /public/v1/categories`.
 
-## 8. Errors
+## 9. Errors
 
 Every `/public/v1` error has the same body:
 
@@ -277,6 +300,8 @@ Branch on `code`; `message` is for people and may change. New codes may be added
 | `forbidden` | 403 | Any other refusal. |
 | `validation_failed` | 400 / 422 | 400: the request is malformed. 422: it refers to records that are not in the account, or to fields owned by a shared group. See `details.fields`. |
 | `invalid_cursor` | 400 | Send `next_cursor` back exactly as you received it. |
+| `account_required` | 400 | The connection covers several accounts: send the `X-Account-Id` header with one of the ids from `GET /public/v1/accounts`. |
+| `account_not_granted` | 403 | The `X-Account-Id` account is not part of this connection. |
 | `bad_request` | 400 | Any other invalid request. |
 | `not_found` | 404 | No such record in the connected account, or it was deleted. |
 | `method_not_allowed` | 405 | The HTTP method is not supported on this path. |
@@ -287,11 +312,11 @@ Branch on `code`; `message` is for people and may change. New codes may be added
 | `internal_error` | 500 | Our fault. Retry later. |
 | `unavailable` | 503 | A temporary failure. Retry with backoff. |
 
-`/oauth/token` and `/oauth/revoke` answer in the OAuth format `{"error": "...", "error_description": "..."}` with these codes: `invalid_request`, `invalid_client`, `invalid_grant`, `unsupported_grant_type`, `invalid_scope`, `slow_down`, `temporarily_unavailable`. `invalid_grant` on a refresh means the connection is gone (revoked by the user, a reused refresh token, or the user lost edit rights) — ask the user to connect again.
+`/oauth/token` and `/oauth/revoke` answer in the OAuth format `{"error": "...", "error_description": "..."}` with these codes: `invalid_request`, `invalid_client`, `invalid_grant`, `unsupported_grant_type`, `invalid_scope`, `slow_down`, `temporarily_unavailable`. `invalid_grant` on a refresh means the connection is gone (revoked by the user, a reused refresh token, or no account of the connection is usable any more because the user lost edit rights to all of them) — ask the user to connect again.
 
-## 9. Rate limits
+## 10. Rate limits
 
-- **120 requests per minute per connection** (one user's account in your app).
+- **120 requests per minute per connection** (one user in your app, all the accounts of the connection together).
 - **1,200 requests per minute per app**, across all its connections.
 - `/oauth/token`: 30 requests per minute per app. A public client is counted only on requests that carry a valid authorization code or refresh token of that client.
 
@@ -299,7 +324,7 @@ Every authenticated and authorised `/public/v1` response carries `X-RateLimit-Li
 
 In front of the API an edge proxy also caps floods. Its `429` is not the JSON above and, for a browser app on a third-party origin, carries no CORS headers, so the browser reports it as a network error. Treat such an unreadable failure like a `429`: back off and retry.
 
-## 10. End-to-end encrypted accounts
+## 11. End-to-end encrypted accounts
 
 Users can encrypt their data end to end in the app, and then even our servers cannot read it:
 
@@ -309,6 +334,6 @@ Users can encrypt their data end to end in the app, and then even our servers ca
 - Category names on `/categories` are `null` as well, with `"encrypted_fields": ["name"]` on each category.
 - The `merchant` and `search` filters answer `403 account_encrypted`, and receipt files are not available.
 
-## 11. Try it in this page
+## 12. Try it in this page
 
 The **Authorize** button above runs the real OAuth flow with PKCE against the user's real data. To use it, add `https://api.ai-budget.pl/public/docs/oauth2-redirect.html` to your app's redirect URIs, then enter your `client_id` (and the secret, for a confidential client).

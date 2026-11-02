@@ -4,16 +4,20 @@
 
 ## What connecting an app means
 
-Some products can work with your AI Budget data from inside their own screens: an accounting app can pick up your expenses and receipts, or add expenses for you. To allow it, you connect the app to **one** of your AI Budget accounts.
+Some products can work with your AI Budget data from inside their own screens: an accounting app can pick up your expenses and receipts, or add expenses for you. To allow it, you connect the app to **one or more** of your AI Budget accounts.
 
 The app never sees your password. When you click its "Connect AI Budget" button, it sends you to an AI Budget page where you sign in as usual and see:
 
 - the app's name, its website and who made it;
 - **Verified by AI Budget** (an app we have checked, such as our own) or **Not verified by AI Budget**;
 - the list of permissions the app asks for;
-- **Account to connect** — pick which account the app may use.
+- **Accounts to connect** — a checkbox for every account. Tick each account the app may use; **Allow** stays disabled until at least one is ticked. If only one account can be connected, it is already ticked. Accounts you can only view, or that use full encryption, are greyed out with the reason, and an account with text encryption is marked read-only.
 
 Tap **Allow** to connect, or **Deny** to send you back to the app without connecting. Only allow apps you trust.
+
+**Connecting an app again.** If the app is already connected, the screen opens with the accounts it already has ticked, together with any other account that can still be connected. What you tick is the full list: tick a new account to add it, untick one to cut the app off from it. The app's access to the accounts you leave ticked keeps working without interruption.
+
+When an app has several accounts, it tells us which one each request is about — you do not have to do anything.
 
 ## What each permission allows
 
@@ -22,15 +26,17 @@ Tap **Allow** to connect, or **Deny** to send you back to the app without connec
 - **Download your receipt photos** — the app can download the receipt image or PDF attached to an expense.
 - **See your expense categories** — the app can read your category list, so it can file new expenses correctly.
 
-Every connected app can also see the account's name, type and currency, and your name. It never gets your e-mail address, and it can never see your other accounts.
+Every connected app can also see the name, type and currency of the accounts you ticked, and your name. It never gets your e-mail address, and it can never see an account you did not tick.
 
 ## Seeing and disconnecting apps
 
-Open **Settings → Connected apps**. Each app is listed with the account it is connected to, who connected it and when, when it was last used, and its permissions.
+Open **Settings → Connected apps**. Each app is one row, listing the accounts it is connected to, who connected it and when, when it was last used, and its permissions.
 
-Tap **Disconnect** and confirm. The app loses access to that account immediately — its next request is refused. Expenses it already added stay in your account. To use the app again, connect it again from the app.
+To cut off **one account**, tap **Remove account** next to it and confirm. The app loses that account immediately — its next request for it is refused — while its other accounts keep working. Removing the last account disconnects the app completely.
 
-Every time an app is connected, we send an e-mail to the person who connected it. If you get one and don't recognise the app, disconnect it right away.
+To cut off the whole app, tap **Disconnect** and confirm. It loses access to all its accounts at once. Expenses it already added stay in your accounts. To use the app again, connect it again from the app.
+
+Every time an app is connected or gets new accounts, we send an e-mail to the person who did it, listing the added accounts. If you get one and don't recognise the app, disconnect it right away.
 
 If you don't see **Connected apps** in Settings, connecting apps is not available yet.
 
@@ -38,9 +44,11 @@ If you don't see **Connected apps** in Settings, connecting apps is not availabl
 
 Only an **owner** or an **editor** of an account can connect an app to it; someone who can only view an account sees it greyed out.
 
-An app connected to a shared account sees **everyone's** expenses in it, not only those of the person who connected it. That is why every owner and editor of the account sees all apps connected to it under **Connected apps**, with who connected each one, and can disconnect any of them. When an editor connects an app, the account's owners get the e-mail too.
+An app connected to a shared account sees **everyone's** expenses in it, not only those of the person who connected it. That is why every owner and editor of such an account sees the app under **Connected apps**, with who connected it, and can remove it from that account.
 
-If the person who connected an app later becomes a viewer or leaves the account, the app stops working for that account.
+You only ever see the accounts of a connection that you yourself own or edit — never the other accounts the person who connected the app chose. When you tap **Disconnect**, the app loses only those accounts of yours; it stays connected for the person who set it up, and only that person can disconnect it completely. When an editor connects an app, the owners of the connected accounts get an e-mail too, listing only their own accounts.
+
+If the person who connected an app later becomes a viewer or leaves an account, the app stops working for that account; its other accounts are not affected. An account that is deleted is dropped from the app automatically.
 
 ## Encrypted accounts
 

@@ -1,5 +1,5 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiExtraModels, ApiProperty, ApiPropertyOptional, ApiResponse, getSchemaPath } from '@nestjs/swagger';
+import { ApiExtraModels, ApiHeader, ApiProperty, ApiPropertyOptional, ApiResponse, getSchemaPath } from '@nestjs/swagger';
 import { PUBLIC_API_ERROR_CODES } from '../public-api-error';
 
 /**
@@ -44,4 +44,13 @@ export function ApiPublicErrors(...extra: number[]): MethodDecorator & ClassDeco
       ApiResponse({ status, description: '', schema: { $ref: getSchemaPath(PublicApiErrorResponse) } }),
     ),
   );
+}
+
+/**
+ * The optional `X-Account-Id` header of every account-scoped operation. Optional in the schema
+ * because a connection with exactly one account needs no header; with several it is required
+ * (`400 account_required`), which the description (`param.X-Account-Id`) states.
+ */
+export function ApiAccountHeader(): MethodDecorator & ClassDecorator {
+  return ApiHeader({ name: 'X-Account-Id', required: false, schema: { type: 'string', format: 'uuid' } });
 }

@@ -649,3 +649,25 @@ export class PublicAccount {
   @ApiProperty({ type: () => PublicAccountUser })
   user!: PublicAccountUser;
 }
+
+export class PublicConnectedAccount {
+  @ApiProperty({ type: String, format: 'uuid', example: EX.accountId })
+  id!: string;
+  @ApiProperty({ type: String, nullable: true, example: 'Family budget' })
+  name!: string | null;
+  @ApiProperty({ type: String, nullable: true, enum: ['personal', 'business', 'shared', 'trip', 'investment'], example: 'shared' })
+  type!: string | null;
+  @ApiProperty({ type: String, nullable: true, example: 'PLN' })
+  base_currency!: string | null;
+  @ApiProperty({ type: String, enum: ['read', 'read_write'], example: 'read_write' })
+  access!: 'read' | 'read_write';
+  @ApiProperty({ type: Boolean, example: true })
+  active!: boolean;
+  @ApiProperty({ type: String, enum: ['role', 'encrypted', 'archived'], nullable: true, example: null })
+  reason!: 'role' | 'encrypted' | 'archived' | null;
+}
+
+export class PublicConnectedAccountList {
+  @ApiProperty({ type: () => [PublicConnectedAccount] })
+  data!: PublicConnectedAccount[];
+}

@@ -94,15 +94,17 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <p>Laat een andere app die je gebruikt – je boekhoudsoftware bijvoorbeeld – met je uitgaven in AI Budget werken, zie precies wat die app mag, en sluit hem met één tik weer af. Ontwikkelaars kunnen zulke apps bouwen op de AI Budget API.</p>
 </blockquote>
 <h2>Wat het betekent om een app te koppelen</h2>
-<p>Sommige producten kunnen vanuit hun eigen schermen met je AI Budget-gegevens werken: een boekhoudapp kan je uitgaven en bonnetjes ophalen, of uitgaven voor je toevoegen. Om dat toe te staan koppel je de app aan <strong>één</strong> van je AI Budget-rekeningen.</p>
+<p>Sommige producten kunnen vanuit hun eigen schermen met je AI Budget-gegevens werken: een boekhoudapp kan je uitgaven en bonnetjes ophalen, of uitgaven voor je toevoegen. Om dat toe te staan koppel je de app aan <strong>één of meer</strong> van je AI Budget-rekeningen.</p>
 <p>De app ziet nooit je wachtwoord. Als je in de app op &lsquo;AI Budget koppelen&rsquo; klikt, kom je op een pagina van AI Budget. Daar log je in zoals altijd en zie je:</p>
 <ul>
 <li>de naam van de app, de website en wie hem gemaakt heeft;</li>
 <li><strong>Geverifieerd door AI Budget</strong> (een app die wij gecontroleerd hebben, zoals onze eigen) of <strong>Niet geverifieerd door AI Budget</strong>;</li>
 <li>de lijst met machtigingen die de app vraagt;</li>
-<li><strong>Te koppelen rekening</strong> – hier kies je welke rekening de app mag gebruiken.</li>
+<li><strong>Te koppelen rekeningen</strong> – bij elke rekening een vakje. Vink elke rekening aan die de app mag gebruiken; <strong>Toestaan</strong> blijft uitgeschakeld tot er minstens één is aangevinkt. Kan er maar één rekening gekoppeld worden, dan is die al aangevinkt. Rekeningen die je alleen mag bekijken of die volledig versleuteld zijn, staan grijs met de reden, en een rekening met tekstversleuteling is als alleen-lezen gemarkeerd.</li>
 </ul>
 <p>Tik op <strong>Toestaan</strong> om te koppelen, of op <strong>Weigeren</strong> om zonder koppeling terug te gaan naar de app. Sta alleen apps toe die je vertrouwt.</p>
+<p><strong>De app opnieuw koppelen.</strong> Is de app al gekoppeld, dan opent het scherm met de rekeningen die hij al heeft aangevinkt, plus elke andere rekening die nog gekoppeld kan worden. Wat je aanvinkt is de volledige lijst: vink een nieuwe rekening aan om hem toe te voegen, of haal een vinkje weg om de app van die rekening af te sluiten. De toegang tot de rekeningen die aangevinkt blijven, werkt zonder onderbreking door.</p>
+<p>Heeft een app meerdere rekeningen, dan geeft hij bij elk verzoek zelf aan om welke het gaat – jij hoeft niets te doen.</p>
 <h2>Wat elke machtiging toestaat</h2>
 <ul>
 <li><strong>Je uitgaven zien: bedragen, datums, categorieën, artikelen en tags</strong> – de app kan de uitgaven van de gekoppelde rekening lezen, inclusief de artikelen op een bonnetje en latere wijzigingen en verwijderingen.</li>
@@ -110,16 +112,18 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li><strong>Foto&rsquo;s van je bonnetjes downloaden</strong> – de app kan de foto of pdf van het bonnetje bij een uitgave downloaden.</li>
 <li><strong>Je uitgavencategorieën zien</strong> – de app kan je categorielijst lezen, zodat hij nieuwe uitgaven goed indeelt.</li>
 </ul>
-<p>Elke gekoppelde app ziet ook de naam, het type en de valuta van de rekening, en jouw naam. Je e-mailadres krijgt hij nooit, en je andere rekeningen ziet hij niet.</p>
+<p>Elke gekoppelde app ziet ook de naam, het type en de valuta van de rekeningen die je hebt aangevinkt, en jouw naam. Je e-mailadres krijgt hij nooit, en een rekening die je niet hebt aangevinkt ziet hij niet.</p>
 <h2>Apps bekijken en ontkoppelen</h2>
-<p>Open <strong>Instellingen → Gekoppelde apps</strong>. Bij elke app zie je aan welke rekening hij gekoppeld is, wie hem wanneer gekoppeld heeft, wanneer hij voor het laatst gebruikt is en welke machtigingen hij heeft.</p>
-<p>Tik op <strong>Ontkoppelen</strong> en bevestig. De app verliest meteen de toegang tot die rekening – zijn volgende verzoek wordt al geweigerd. Uitgaven die hij al heeft toegevoegd blijven in je rekening staan. Wil je de app weer gebruiken, koppel hem dan opnieuw vanuit de app.</p>
-<p>Bij elke nieuwe koppeling sturen we een e-mail naar degene die de app gekoppeld heeft. Krijg je zo&rsquo;n mail en herken je de app niet, ontkoppel hem dan meteen.</p>
+<p>Open <strong>Instellingen → Gekoppelde apps</strong>. Elke app is één rij, met de rekeningen waaraan hij gekoppeld is, wie hem wanneer gekoppeld heeft, wanneer hij voor het laatst gebruikt is en welke machtigingen hij heeft.</p>
+<p>Om <strong>één rekening</strong> af te sluiten, tik je ernaast op <strong>Rekening verwijderen</strong> en bevestig je. De app verliest die rekening meteen – zijn volgende verzoek ervoor wordt geweigerd – terwijl zijn andere rekeningen blijven werken. Verwijder je de laatste rekening, dan is de app helemaal ontkoppeld.</p>
+<p>Om de hele app af te sluiten, tik je op <strong>Ontkoppelen</strong> en bevestig je. Hij verliest in één keer de toegang tot al zijn rekeningen. Uitgaven die hij al heeft toegevoegd blijven in je rekeningen staan. Wil je de app weer gebruiken, koppel hem dan opnieuw vanuit de app.</p>
+<p>Telkens als een app gekoppeld wordt of er rekeningen bij krijgt, sturen we een e-mail naar degene die dat deed, met de toegevoegde rekeningen. Krijg je zo&rsquo;n mail en herken je de app niet, ontkoppel hem dan meteen.</p>
 <p>Zie je <strong>Gekoppelde apps</strong> niet in de Instellingen, dan is het koppelen van apps nog niet beschikbaar.</p>
 <h2>Gedeelde rekeningen</h2>
 <p>Alleen een <strong>eigenaar</strong> of <strong>bewerker</strong> van een rekening kan er een app aan koppelen; wie een rekening alleen mag bekijken, ziet hem grijs.</p>
-<p>Een app die aan een gedeelde rekening gekoppeld is, ziet de uitgaven van <strong>alle</strong> leden, niet alleen die van degene die hem gekoppeld heeft. Daarom zien alle eigenaren en bewerkers onder <strong>Gekoppelde apps</strong> elke app die aan de rekening gekoppeld is, met wie hem gekoppeld heeft – en ieder van hen kan hem ontkoppelen. Koppelt een bewerker een app, dan krijgen ook de eigenaren van de rekening de e-mail.</p>
-<p>Wordt degene die de app gekoppeld heeft later alleen-lezer, of verlaat die de rekening, dan werkt de app niet meer voor die rekening.</p>
+<p>Een app die aan een gedeelde rekening gekoppeld is, ziet de uitgaven van <strong>alle</strong> leden, niet alleen die van degene die hem gekoppeld heeft. Daarom zien alle eigenaren en bewerkers van zo&rsquo;n rekening de app onder <strong>Gekoppelde apps</strong>, met wie hem gekoppeld heeft, en kunnen ze hem van die rekening verwijderen.</p>
+<p>Van een koppeling zie je alleen de rekeningen waarvan je zelf eigenaar of bewerker bent – nooit de andere rekeningen die degene die de app koppelde heeft gekozen. Tik je op <strong>Ontkoppelen</strong>, dan verliest de app alleen die rekeningen van jou; voor degene die hem heeft ingesteld blijft hij gekoppeld, en alleen die persoon kan hem helemaal ontkoppelen. Koppelt een bewerker een app, dan krijgen ook de eigenaren van de gekoppelde rekeningen een e-mail, met alleen hun eigen rekeningen erin.</p>
+<p>Wordt degene die de app gekoppeld heeft later alleen-lezer, of verlaat die een rekening, dan werkt de app niet meer voor die rekening; zijn andere rekeningen blijven ongemoeid. Een verwijderde rekening wordt automatisch van de app losgekoppeld.</p>
 <h2>Versleutelde rekeningen</h2>
 <ul>
 <li>Een rekening met <strong>volledige versleuteling</strong> (ook de bedragen) kan helemaal niet gekoppeld worden – de app zou er niets in kunnen lezen.</li>

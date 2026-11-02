@@ -94,15 +94,17 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <p>Deja que otra app que usas —por ejemplo, tu programa de contabilidad— trabaje con tus gastos de AI Budget, mira exactamente qué puede hacer y córtale el acceso con un toque. Los desarrolladores pueden crear estas apps sobre la API de AI Budget.</p>
 </blockquote>
 <h2>Qué significa conectar una app</h2>
-<p>Algunos productos pueden trabajar con tus datos de AI Budget desde sus propias pantallas: una app de contabilidad puede recoger tus gastos y tickets, o añadir gastos por ti. Para permitirlo, conectas la app a <strong>una</strong> de tus cuentas de AI Budget.</p>
+<p>Algunos productos pueden trabajar con tus datos de AI Budget desde sus propias pantallas: una app de contabilidad puede recoger tus gastos y tickets, o añadir gastos por ti. Para permitirlo, conectas la app a <strong>una o varias</strong> de tus cuentas de AI Budget.</p>
 <p>La app nunca ve tu contraseña. Cuando pulsas su botón «Conectar AI Budget», te lleva a una página de AI Budget donde inicias sesión como siempre y ves:</p>
 <ul>
 <li>el nombre de la app, su web y quién la ha creado;</li>
 <li><strong>Verificada por AI Budget</strong> (una app que hemos revisado, como la nuestra) o <strong>No verificada por AI Budget</strong>;</li>
 <li>la lista de permisos que pide la app;</li>
-<li><strong>Cuenta que se conectará</strong>: eliges qué cuenta puede usar la app.</li>
+<li><strong>Cuentas que se conectarán</strong>: una casilla por cada cuenta. Marca cada cuenta que la app puede usar; <strong>Permitir</strong> sigue desactivado hasta que marques al menos una. Si solo se puede conectar una cuenta, ya viene marcada. Las cuentas que solo puedes ver o que usan cifrado completo aparecen en gris con el motivo, y una cuenta con cifrado de texto se marca como solo lectura.</li>
 </ul>
 <p>Pulsa <strong>Permitir</strong> para conectarla o <strong>Denegar</strong> para volver a la app sin conectar nada. Permite solo apps de confianza.</p>
+<p><strong>Conectar la app otra vez.</strong> Si la app ya está conectada, la pantalla se abre con las cuentas que ya tiene marcadas, junto con cualquier otra cuenta que aún se pueda conectar. Lo que marques es la lista completa: marca una cuenta nueva para añadirla o desmarca una para cortar el acceso de la app a ella. El acceso a las cuentas que dejas marcadas sigue funcionando sin interrupción.</p>
+<p>Cuando una app tiene varias cuentas, nos indica en cada petición a cuál se refiere; tú no tienes que hacer nada.</p>
 <h2>Qué permite cada permiso</h2>
 <ul>
 <li><strong>Ver tus gastos: importes, fechas, categorías, artículos y etiquetas</strong>: la app puede leer los gastos de la cuenta conectada, incluidos los artículos de un ticket y los cambios y eliminaciones posteriores.</li>
@@ -110,16 +112,18 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li><strong>Descargar las fotos de tus tickets</strong>: la app puede descargar la imagen o el PDF del ticket adjunto a un gasto.</li>
 <li><strong>Ver tus categorías de gastos</strong>: la app puede leer tu lista de categorías para clasificar bien los gastos nuevos.</li>
 </ul>
-<p>Toda app conectada ve además el nombre, el tipo y la moneda de la cuenta, y tu nombre. Nunca recibe tu dirección de correo y no puede ver tus otras cuentas.</p>
+<p>Toda app conectada ve además el nombre, el tipo y la moneda de las cuentas que marcaste, y tu nombre. Nunca recibe tu dirección de correo y no puede ver ninguna cuenta que no hayas marcado.</p>
 <h2>Ver y desconectar apps</h2>
-<p>Abre <strong>Ajustes → Aplicaciones conectadas</strong>. Cada app aparece con la cuenta a la que está conectada, quién la conectó y cuándo, cuándo se usó por última vez y sus permisos.</p>
-<p>Pulsa <strong>Desconectar</strong> y confirma. La app pierde el acceso a esa cuenta al instante: su siguiente petición ya se rechaza. Los gastos que ya añadió se quedan en tu cuenta. Para volver a usarla, conéctala de nuevo desde la app.</p>
-<p>Cada vez que se conecta una app, enviamos un correo a la persona que la conectó. Si recibes uno y no reconoces la app, desconéctala enseguida.</p>
+<p>Abre <strong>Ajustes → Aplicaciones conectadas</strong>. Cada app es una fila con las cuentas a las que está conectada, quién la conectó y cuándo, cuándo se usó por última vez y sus permisos.</p>
+<p>Para cortar <strong>una sola cuenta</strong>, pulsa <strong>Quitar cuenta</strong> junto a ella y confirma. La app pierde esa cuenta al instante (su siguiente petición para ella se rechaza) y sus otras cuentas siguen funcionando. Si quitas la última cuenta, la app queda desconectada por completo.</p>
+<p>Para cortar toda la app, pulsa <strong>Desconectar</strong> y confirma. Pierde el acceso a todas sus cuentas a la vez. Los gastos que ya añadió se quedan en tus cuentas. Para volver a usarla, conéctala de nuevo desde la app.</p>
+<p>Cada vez que se conecta una app o recibe cuentas nuevas, enviamos un correo a la persona que lo hizo, con la lista de las cuentas añadidas. Si recibes uno y no reconoces la app, desconéctala enseguida.</p>
 <p>Si no ves <strong>Aplicaciones conectadas</strong> en Ajustes, la conexión de apps todavía no está disponible.</p>
 <h2>Cuentas compartidas</h2>
 <p>Solo un <strong>propietario</strong> o un <strong>editor</strong> de una cuenta puede conectarle una app; quien solo puede ver la cuenta la verá desactivada.</p>
-<p>Una app conectada a una cuenta compartida ve los gastos de <strong>todos</strong> sus miembros, no solo los de quien la conectó. Por eso todos los propietarios y editores de la cuenta ven en <strong>Aplicaciones conectadas</strong> cada app conectada a ella, con quién la conectó, y cualquiera de ellos puede desconectarla. Cuando un editor conecta una app, los propietarios de la cuenta también reciben el correo.</p>
-<p>Si la persona que conectó la app pasa después a solo lectura o sale de la cuenta, la app deja de funcionar para esa cuenta.</p>
+<p>Una app conectada a una cuenta compartida ve los gastos de <strong>todos</strong> sus miembros, no solo los de quien la conectó. Por eso todos los propietarios y editores de esa cuenta ven la app en <strong>Aplicaciones conectadas</strong>, con quién la conectó, y pueden quitarla de esa cuenta.</p>
+<p>De una conexión solo ves las cuentas que tú mismo posees o editas, nunca las demás cuentas que eligió quien la conectó. Si pulsas <strong>Desconectar</strong>, la app pierde solo esas cuentas tuyas; sigue conectada para quien la configuró, y solo esa persona puede desconectarla por completo. Cuando un editor conecta una app, los propietarios de las cuentas conectadas también reciben un correo, con únicamente sus propias cuentas.</p>
+<p>Si la persona que conectó la app pasa después a solo lectura o sale de una cuenta, la app deja de funcionar para esa cuenta; sus otras cuentas no se ven afectadas. Una cuenta eliminada se quita de la app automáticamente.</p>
 <h2>Cuentas cifradas</h2>
 <ul>
 <li>Una cuenta con <strong>cifrado completo</strong> (también los importes) no se puede conectar: la app no podría leer nada.</li>

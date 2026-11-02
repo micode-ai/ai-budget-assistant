@@ -18,7 +18,10 @@ export class OAuthTokenCleanupCron {
     const cutoff = new Date(Date.now() - DAY_MS);
     const expired = await this.purge({ expiresAt: { lt: cutoff } });
     const revoked = await this.purge({ grant: { revokedAt: { not: null } } });
-    this.logger.log(`OAuth token cleanup: ${expired} expired, ${revoked} of revoked grants deleted`);
+    const orphaned = await this.revokeAccountlessGrants();
+    this.logger.log(
+      `OAuth token cleanup: ${expired} expired, ${revoked} of revoked grants deleted, ${orphaned} account-less grants revoked`,
+    );
   }
 
   /**
@@ -39,6 +42,34 @@ export class OAuthTokenCleanupCron {
     );
     for await (const page of pages) {
       const r = await this.prisma.oAuthToken.deleteMany({ where: { id: { in: page.map((t) => t.id) } } });
+      total += r.count;
+    }
+    return total;
+  }
+
+  /**
+   * A grant with no join row pointing at an ACTIVE account (hard-deleted by FK cascade, or
+   * soft-deleted without going through dropAccountFromGrants) authorizes nothing, so revoke it.
+   */
+  private async revokeAccountlessGrants(): Promise<number> {
+    let total = 0;
+    const pages = paginateById(
+      () =>
+        this.prisma.oAuthGrant.findMany({
+          where: { revokedAt: null, accounts: { none: { account: { isActive: true } } } },
+          select: { id: true },
+          orderBy: { id: 'asc' },
+          take: BATCH_SIZE,
+        }),
+      BATCH_SIZE,
+    );
+    for await (const page of pages) {
+      const grantId = { in: page.map((g) => g.id) };
+      await this.prisma.oAuthToken.deleteMany({ where: { grantId } });
+      const r = await this.prisma.oAuthGrant.updateMany({
+        where: { id: grantId, revokedAt: null },
+        data: { revokedAt: new Date(), revokedBy: 'user' },
+      });
       total += r.count;
     }
     return total;

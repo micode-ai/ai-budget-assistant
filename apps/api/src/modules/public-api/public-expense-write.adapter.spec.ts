@@ -348,3 +348,34 @@ describe('PublicExpenseWriteAdapter.update / remove', () => {
     expect(expenses.remove).toHaveBeenCalledWith('acc-1', 'exp-1');
   });
 });
+
+describe('PublicExpenseWriteAdapter.create per account', () => {
+  it('the same Idempotency-Key in two accounts of one connection creates two expenses; a replay stays in its account', async () => {
+    const stored: { id: string; accountId: string; clientId: string }[] = [];
+    const prisma = makePrisma();
+    (prisma.expense.findMany as jest.Mock).mockImplementation(async (args: any) =>
+      stored
+        .filter((r) => r.accountId === args.where.accountId && (r.clientId === KEY || r.id === KEY))
+        .map((r) => ({ ...r, createdByOAuthClientId: 'client-db-1', isDeleted: false, isPlanned: false })),
+    );
+    const { adapter, expenses } = makeAdapter(prisma);
+    let n = 0;
+    expenses.create.mockImplementation((async (accountId: string, _u: string, dto: any) => {
+      const id = `exp-${++n}`;
+      stored.push({ id, accountId, clientId: dto.localId });
+      return { expense: { id, currencyCode: 'PLN' }, isNew: true };
+    }) as any);
+
+    const inA = await adapter.create({ ...CTX, accountId: 'acc-A' }, KEY, { amount: '1.00', date: '2026-10-31' });
+    const inB = await adapter.create({ ...CTX, accountId: 'acc-B' }, KEY, { amount: '2.00', date: '2026-10-31' });
+    expect(inA).toEqual({ id: 'exp-1', isNew: true });
+    expect(inB).toEqual({ id: 'exp-2', isNew: true });
+
+    const replay = await adapter.create({ ...CTX, accountId: 'acc-A' }, KEY, { amount: '9.00', date: '2026-10-31' });
+    expect(replay).toEqual({ id: 'exp-1', isNew: false });
+    expect(expenses.create).toHaveBeenCalledTimes(2);
+    expect(prisma.expense.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: expect.objectContaining({ accountId: 'acc-B' }) }),
+    );
+  });
+});

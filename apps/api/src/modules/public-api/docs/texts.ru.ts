@@ -17,7 +17,7 @@ export const TEXTS_RU: DocTexts = {
   // ── tags ─────────────────────────────────────────────────────────────────
   'tag.OAuth':
     'Обмен кода, обновление и отзыв токенов (RFC 6749 / RFC 7009). Ошибки этих эндпоинтов приходят в виде `{"error", "error_description"}`, а не в формате ошибок `/public/v1`.',
-  'tag.Account': 'Счёт, к которому привязан access-токен.',
+  'tag.Account': 'Счёт, к которому обращён запрос (`X-Account-Id`), один из счетов подключения.',
   'tag.Categories': 'Категории расходов счёта — значения для `category_id`.',
   'tag.Expenses': 'Расходы: чтение, инкрементальная синхронизация, чеки и запись.',
 
@@ -59,8 +59,23 @@ export const TEXTS_RU: DocTexts = {
   // ── Account ──────────────────────────────────────────────────────────────
   'op.getAccount.summary': 'Подключённый счёт',
   'op.getAccount.description':
-    'Счёт, к которому привязано подключение, и пользователь, который его создал. Работает с любым действующим токеном, независимо от разрешений. `read_only: true` означает счёт со сквозным шифрованием: чтение работает, но часть полей скрыта, а запись возвращает `403 account_encrypted`.',
+    'Счёт, указанный в `X-Account-Id` (или единственный счёт подключения), и пользователь, который его подключил. Работает с любым действующим токеном, независимо от разрешений; при нескольких счетах заголовок обязателен. `read_only: true` означает счёт со сквозным шифрованием: чтение работает, но часть полей скрыта, а запись возвращает `403 account_encrypted`.',
   'op.getAccount.response.200': 'Подключённый счёт.',
+  'op.listAccounts.summary': 'Счета подключения',
+  'op.listAccounts.description': 'Все счета, которые охватывает это подключение, пригодные и нет. Работает с любым действующим токеном и не требует `X-Account-Id`. `access` равен `read_write` только если у приложения есть разрешение `expenses:write` и счёт допускает запись; `active: false` с `reason` (`role`, `encrypted`) означает, что запросы к этому счёту отклоняются; `reason: archived` — архивная поездка (активна, только чтение). Выбранный `id` передавайте в заголовке `X-Account-Id` во всех остальных вызовах.',
+  'param.X-Account-Id':
+    'К какому счёту подключения относится вызов. Необязателен, если в подключении ровно один счёт; обязателен, если их несколько (`400 account_required`) — считаются предоставленные счета, а не только рабочие. Счёт вне подключения возвращает `403 account_not_granted`. Идентификаторы берите из `GET /public/v1/accounts`.',
+  'op.listAccounts.response.200': 'Счета подключения.',
+  'schema.PublicConnectedAccount': 'Один счёт подключения.',
+  'schema.PublicConnectedAccount.id': 'Идентификатор счёта; передавайте его в `X-Account-Id`.',
+  'schema.PublicConnectedAccount.name': 'Название счёта; `null`, если пользователь больше не участник счёта (`reason: role`).',
+  'schema.PublicConnectedAccount.type': 'Тип счёта; `null`, если пользователь больше не участник счёта.',
+  'schema.PublicConnectedAccount.base_currency': 'Базовая валюта счёта (ISO 4217); `null`, если пользователь больше не участник счёта.',
+  'schema.PublicConnectedAccount.access': '`read_write`, если подключение может писать в счёт, иначе `read`.',
+  'schema.PublicConnectedAccount.active': '`false`, если запросы к этому счёту отклоняются.',
+  'schema.PublicConnectedAccount.reason': 'Почему счёт ограничен: `role` (пользователь потерял права владельца/редактора), `encrypted` (сквозное шифрование), `archived` (архивная поездка, только чтение); иначе `null`.',
+  'schema.PublicConnectedAccountList': 'Счета подключения.',
+  'schema.PublicConnectedAccountList.data': 'Счета в порядке подключения.',
 
   // ── Categories ───────────────────────────────────────────────────────────
   'op.listCategories.summary': 'Список категорий расходов',
@@ -175,7 +190,8 @@ export const TEXTS_RU: DocTexts = {
   'schema.OAuthTokenResponse.refresh_token':
     'Действует 90 дней и одноразовый: каждое обновление возвращает новый. Повторное использование старого отзывает подключение.',
   'schema.OAuthTokenResponse.scope': 'Разрешения подключения через пробел.',
-  'schema.OAuthTokenResponse.account_id': 'Счёт, который подключил пользователь.',
+  'schema.OAuthTokenResponse.account_ids': 'Счета, которые подключил пользователь, в порядке подключения.',
+  'schema.OAuthTokenResponse.account_id': 'Есть только если в подключении ровно один счёт (совместимость с первой версией API). Используйте `account_ids`.',
 
   // ── schemas: account and categories ──────────────────────────────────────
   'schema.PublicAccount': 'Подключённый счёт.',

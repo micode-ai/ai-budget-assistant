@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
 import type { Transporter } from 'nodemailer';
-import { appConnectedCopy } from './app-connected-email-i18n';
+import { APP_CONNECTED_LANGS, appConnectedCopy } from './app-connected-email-i18n';
 
 @Injectable()
 export class MailService {
@@ -385,14 +385,21 @@ export class MailService {
     to: string;
     lang: string | null | undefined;
     appName: string;
-    accountName: string;
+    accountNames: string[];
     connectedByName: string;
     manageUrl: string;
   }): Promise<boolean> {
     const copy = appConnectedCopy(params.lang);
+    const [open, close] = copy.quote;
+    const quoted = params.accountNames.map((n) => `${open}${escapeHtml(n)}${close}`);
+    // The Intl locale follows the copy actually selected: an unknown code (or `xx`) must not fall
+    // through to the host default, and the app's `ua` is `uk` in BCP-47.
+    const known = params.lang && APP_CONNECTED_LANGS.includes(params.lang) ? params.lang : 'en';
+    const accounts = new Intl.ListFormat(known === 'ua' ? 'uk' : known, { type: 'conjunction' }).format(quoted);
     const esc = {
       appName: escapeHtml(params.appName),
-      accountName: escapeHtml(params.accountName),
+      accounts,
+      count: params.accountNames.length,
       connectedByName: escapeHtml(params.connectedByName),
     };
     const manageUrl = escapeHtml(params.manageUrl);
@@ -432,7 +439,7 @@ export class MailService {
 </body>
 </html>`;
 
-    return this.sendMail(params.to, copy.subject(params), html);
+    return this.sendMail(params.to, copy.subject({ appName: params.appName, accounts: '', count: params.accountNames.length, connectedByName: params.connectedByName }), html);
   }
 }
 

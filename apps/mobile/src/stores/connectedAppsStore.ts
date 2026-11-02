@@ -23,6 +23,7 @@ interface ConnectedAppsState {
 
   load: () => Promise<void>;
   disconnect: (grantId: string) => Promise<void>;
+  removeAccount: (grantId: string, accountId: string) => Promise<void>;
   reset: () => void;
 }
 
@@ -72,6 +73,25 @@ export const useConnectedAppsStore = create<ConnectedAppsState>()((set) => ({
       }
     }
     set((s) => ({ items: s.items.filter((g) => g.grantId !== grantId) }));
+  },
+
+  removeAccount: async (grantId, accountId) => {
+    try {
+      await api.removeConnectedAppAccount(grantId, accountId);
+    } catch (e) {
+      // 404: already gone (or not ours to remove) — same rule as `disconnect`.
+      if ((e as { status?: number } | null)?.status !== 404) {
+        console.warn(`[connectedAppsStore] removeAccount failed: ${failureLabel(e)}`);
+        throw e;
+      }
+    }
+    set((s) => ({
+      items: s.items.flatMap((g) => {
+        if (g.grantId !== grantId) return [g];
+        const accounts = g.accounts.filter((a) => a.id !== accountId);
+        return accounts.length > 0 ? [{ ...g, accounts }] : [];
+      }),
+    }));
   },
 
   reset: () => set({ ...initial }),

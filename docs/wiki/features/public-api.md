@@ -74,17 +74,23 @@ one in `global-prefix-exclusions.ts`, never `oauth/(.*)`, so the consent page's 
    PKCE S256 is required for every client, confidential or public.
 2. `authorize.tsx` calls `GET /api/v1/oauth/authorize/preview`: app name, logo, homepage, verified
    badge, plain-language scopes, the user's accounts with a disabled reason per account (viewer,
-   tier ≥2 encrypted; tier 1 marked read-only). An unknown client or an unregistered
+   tier ≥2 encrypted; tier 1 marked read-only) and a `connected` flag per account when the user
+   already has an active grant for this client. The accounts are **checkboxes**; the grant button is
+   disabled until one is ticked, nothing is pre-ticked on a first connection unless exactly one
+   account is selectable, and a re-consent pre-ticks the accounts that are connected AND still
+   selectable. An unknown client or an unregistered
    `redirect_uri` is an error page that **never redirects**.
 3. Signed out → the existing login screens; the request is parked (`pendingConsent.ts`) and
    `useOAuthConsentResume` returns to `/authorize` once the route has left `(auth)` and settled
    (a navigation-state listener plus `replace`, so it cannot race the login screen's own
    `replace('/(tabs)')`).
-4. Allow → `POST /api/v1/oauth/authorize/approve` upserts the grant (one active grant per client ×
-   user × account; re-consent updates its scopes), stores a one-time code in Redis for 10 min and
+4. Allow → `POST /api/v1/oauth/authorize/approve` with `account_ids` (the phase 1 `account_id` is
+   still accepted) upserts the grant (one active grant per client × user; re-consent updates its
+   scopes and **replaces** the account set), stores a one-time code in Redis for 10 min and
    returns the redirect URL; Deny → `redirect_uri?error=access_denied&state=…`.
 5. `POST /oauth/token` `grant_type=authorization_code` with `code_verifier` and client
-   authentication → `{access_token (1 h), refresh_token (90 d), scope, account_id}`.
+   authentication → `{access_token (1 h), refresh_token (90 d), scope, account_ids}`; `account_id` is also returned,
+   but only when the connection has exactly one account.
 6. `grant_type=refresh_token` rotates: a new access AND refresh token; the old refresh token is
    marked `rotatedAt`.
 7. `POST /oauth/revoke` (RFC 7009) revokes the whole grant; the user does the same from
@@ -95,16 +101,32 @@ one in `global-prefix-exclusions.ts`, never `oauth/(.*)`, so the consent page's 
 
 **Data model.** `OAuthClient` (public `clientId` `aba_ci_…`, `secretHash` null for public clients,
 `redirectUris`, `status` active/blocked, `isVerified`, per-client rate-limit overrides, soft
-`deletedAt`), `OAuthGrant` (client × user × account, `scopes`, `lastUsedAt`, `revokedAt`,
+`deletedAt`), `OAuthGrant` (client × user, `scopes`, `lastUsedAt`, `revokedAt`,
 `revokedBy` user/client/admin/reuse_detected), `OAuthToken` (`kind` access/refresh, unique
-`tokenHash`, `expiresAt`, `rotatedAt`). Codes live only in Redis (`oauth:code:<sha256>`).
+`tokenHash`, `expiresAt`, `rotatedAt`). `OAuthGrantAccount` (table `oauth_grant_accounts`, grant ↔ account, the set of accounts a
+connection may address; migration `20261102000000_public_api_multi_account` copied the old
+`oauth_grants.account_id` rows into it and merged duplicate active grants). Codes live only in Redis (`oauth:code:<sha256>`).
 `Expense.createdByOAuthClientId` plus the index `expenses (account_id, updated_at, id)`;
 `ExpenseSource` gains `api`. The app shows "Added via <app>" on such an expense.
 
-**Shared accounts.** Connected apps are listed per account: every current owner/editor of an
-account sees every app connected to it, who connected it, and can disconnect it. When an editor
-connects an app, the grantor and every owner get the "app connected" e-mail (9 languages, by
-recipient's `user.language`), at most once per (app, account) per day
+**Addressing an account (`X-Account-Id`).** A connection can hold several accounts, so each
+`/public/v1` request names the one it is about in `X-Account-Id` (trimmed, lower-cased; a repeated
+header is `400 validation_failed`). With exactly one granted account the header is optional; with
+more, a missing header is `400 account_required` (also for `GET /public/v1/account`). An id outside
+the grant is `403 account_not_granted`. `GET /public/v1/accounts` is the one connection-level
+route (`@ConnectionLevel()`, token only): `{data:[{id, name, type, base_currency, access, active,
+reason}]}` for every granted account, with `access` `read`/`read_write` and `reason`
+`role`/`encrypted`/`archived`/null. The token response carries `account_ids`, and refresh/code
+exchange fail `invalid_grant` only when no account of the connection is active.
+
+**Shared accounts.** Connected apps are listed per grant (one row per connection, with the accounts
+it holds). A co-owner sees a connection only with the granted accounts they are themselves
+owner/editor of, never the grantor's other accounts; their Disconnect removes only those accounts
+(`DELETE /connected-apps/:grantId/accounts/:accountId` removes one), and only the grantor revokes
+the whole connection. An emptied grant is revoked. When an editor connects an app, the grantor and
+every owner get the "app connected" e-mail (9 languages, by recipient's `user.language`; the list
+of accounts is formatted with `Intl`, `ua` mapped to `uk`): the grantor one mail listing the added
+accounts, each owner only their own accounts, at most once per added (app, account) per day
 (`CacheService.setIfAbsentStrict` on `oauth:mail:connected:<client>:<account>`, 24 h), so a
 connect → disconnect → connect loop is not an e-mail stream. A Redis outage on that key sends
 anyway: a lost security notice is worse than a duplicate.
@@ -143,9 +165,29 @@ membership. A concurrent revoke can leave a freshly minted token on a revoked gr
 row, not the token, is the authority.
 
 **A grant works only while its grantor is still owner or editor of the account.** Re-checked on
-every API request (`403 grant_inactive`) and at the token endpoint (`invalid_grant`, the grant is
-not revoked — re-promoting the user revives it). A demoted or removed member must not keep a
+every API request, **per addressed account** (`403 grant_inactive`), and at the token endpoint
+(`invalid_grant` when no account of the connection is active; the grant is not revoked —
+re-promoting the user revives it). A demoted or removed member must not keep a
 backdoor through an app they connected.
+
+**The header rule counts granted accounts, not usable ones.** A connection with two granted
+accounts where one has gone inactive still needs `X-Account-Id` (`400 account_required`), so adding
+or losing an account never silently changes which account an unaddressed request hits.
+
+**Connection-level and account-level checks are separate.** Scopes, the revoked/blocked/user checks
+and the rate limit (one bucket `pa:g:<grantId>` per connection) are connection-level; role,
+encryption tier and archived-trip checks run for the account the request addresses (`403
+account_encrypted` for a tier ≥2 account affects only that account). `@ConnectionLevel()` sits on
+`GET /public/v1/accounts` only, pinned by a placement test; an unmarked route is account-level.
+
+**A removed account is cut off on the next request with no token change**: the guard reads the
+account set from the database every time, and the remaining accounts keep working on the same
+tokens. A grant that loses its last account is revoked — including when an account is soft-deleted
+(`AccountsService.remove` calls `dropAccountFromGrants` in the same transaction), and the daily
+token cleanup cron revokes any zero-account grant it finds.
+
+**A co-owner is never shown the grantor's other accounts**: neither in Connected apps nor in the
+e-mail. Filtering is by the viewer's own owner/editor membership on each granted account.
 
 **The grant's current scopes are authoritative**, not the scopes in the code payload or the
 token: re-consent in another tab changes what every existing token can do. Refresh accepts a
@@ -214,7 +256,9 @@ filter value (Prisma would drop it and bump the whole account), and does not tou
 since creation" check (`ai-undo-tools.service.ts`, `updatedAt` vs `createdAt`) now also trips on a
 tag/project/item edit — arguably more correct, but a behaviour change.
 
-**`Idempotency-Key` is scoped to the app that created the row.** The key becomes the row's
+**`Idempotency-Key` is scoped to the app that created the row, and to the account.** The same key
+on two accounts of one connection is two independent requests, and the changes-feed cursor is
+per account too. The key becomes the row's
 `clientId`; a repeat from the same client returns the existing expense with `200` without calling
 `ExpensesService.create` (whose upsert update branch would overwrite it). A key that matches a row
 of another origin, or another expense's server id, is `409 idempotency_key_conflict` — otherwise a
@@ -245,8 +289,9 @@ why the token controller has its own module: the internal consent, developer and
 routes stay out of the published reference by construction. Schema names are the class names and
 are frozen — renaming one breaks every generated client.
 
-**The partial unique index `oauth_grants_active_key`** (one active grant per client × user ×
-account, `WHERE revoked_at IS NULL`) exists only in the migration SQL — Prisma cannot model it.
+**The partial unique index `oauth_grants_active_client_user_key`** (one active grant per client ×
+user, `WHERE revoked_at IS NULL`; it replaced the phase 1 `oauth_grants_active_key`, which was per
+account) exists only in the migration SQL — Prisma cannot model it.
 `schema-guard.spec.ts` fails if a later migration drops it.
 
 **On mobile, only the list routes decide whether the feature exists.** A 404 from
@@ -276,6 +321,10 @@ web.
 - `/oauth/revoke` has no per-client rate limit; invalid-token requests are limited only by nginx.
 
 ## History
+
+Public API multi-account connections ([ABA-709](https://github.com/micode-ai/ai-budget-assistant/issues/742), spec `docs/superpowers/specs/2026-11-02-public-api-multi-account-design.md`):
+one grant holds several accounts (`oauth_grant_accounts`), `X-Account-Id`, `GET /public/v1/accounts`,
+multi-select consent with replace-the-set re-consent, per-account removal in Connected apps.
 
 Public API phase 1 ([ABA-707](https://github.com/micode-ai/ai-budget-assistant/issues/740)): the OAuth server, `/public/v1` expenses and categories, Swagger in
 English/Polish/Russian, the consent page, Developers and Connected apps settings, admin "API apps",

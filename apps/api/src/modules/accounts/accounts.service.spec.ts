@@ -33,6 +33,9 @@ const mockPrisma: any = {
   settleUpTransaction: {
     count: jest.fn(),
   },
+  oAuthGrantAccount: { findMany: jest.fn(), deleteMany: jest.fn() },
+  oAuthGrant: { findMany: jest.fn(), updateMany: jest.fn() },
+  oAuthToken: { deleteMany: jest.fn() },
   $transaction: jest.fn((fn: (tx: any) => any) => fn(mockPrisma)),
 };
 
@@ -153,6 +156,28 @@ describe('AccountsService', () => {
 
       const call = mockPrisma.category.createMany.mock.calls[0][0];
       expect(call.data.some((c: { name: string }) => c.name === 'Groceries')).toBe(true);
+    });
+  });
+
+  describe('remove — connected apps', () => {
+    it('soft-deletes the account and drops it from OAuth grants in the same transaction', async () => {
+      mockPrisma.accountMember.findUnique.mockResolvedValue({ role: 'owner' });
+      mockPrisma.user.findUnique.mockResolvedValue({ defaultAccountId: 'other' });
+      mockPrisma.account.update.mockResolvedValue({});
+      mockPrisma.oAuthGrantAccount.findMany.mockResolvedValue([{ grantId: 'g1' }]);
+      mockPrisma.oAuthGrantAccount.deleteMany.mockResolvedValue({ count: 1 });
+      mockPrisma.oAuthGrant.findMany.mockResolvedValue([{ id: 'g1' }]);
+      mockPrisma.oAuthToken.deleteMany.mockResolvedValue({ count: 1 });
+      mockPrisma.oAuthGrant.updateMany.mockResolvedValue({ count: 1 });
+
+      await service.remove('account-1', userId);
+
+      expect(mockPrisma.$transaction).toHaveBeenCalledTimes(1);
+      expect(mockPrisma.account.update).toHaveBeenCalledWith({ where: { id: 'account-1' }, data: { isActive: false } });
+      expect(mockPrisma.oAuthGrantAccount.deleteMany).toHaveBeenCalledWith({ where: { accountId: 'account-1' } });
+      expect(mockPrisma.oAuthGrant.updateMany).toHaveBeenCalledWith(
+        expect.objectContaining({ data: { revokedAt: expect.any(Date), revokedBy: 'user' } }),
+      );
     });
   });
 

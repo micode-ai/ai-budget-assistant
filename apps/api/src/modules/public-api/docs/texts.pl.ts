@@ -17,7 +17,7 @@ export const TEXTS_PL: DocTexts = {
   // ── tags ─────────────────────────────────────────────────────────────────
   'tag.OAuth':
     'Wymiana kodu, odświeżanie i unieważnianie tokenów (RFC 6749 / RFC 7009). Błędy tych endpointów mają postać `{"error", "error_description"}`, a nie format błędów `/public/v1`.',
-  'tag.Account': 'Konto, do którego przypisany jest token dostępu.',
+  'tag.Account': 'Konto, którego dotyczy żądanie (`X-Account-Id`), jedno z kont połączenia.',
   'tag.Categories': 'Kategorie wydatków konta — wartości dla `category_id`.',
   'tag.Expenses': 'Wydatki: odczyt, synchronizacja przyrostowa, paragony i zapis.',
 
@@ -59,8 +59,23 @@ export const TEXTS_PL: DocTexts = {
   // ── Account ──────────────────────────────────────────────────────────────
   'op.getAccount.summary': 'Połączone konto',
   'op.getAccount.description':
-    'Konto, do którego przypisane jest to połączenie, oraz użytkownik, który je utworzył. Działa z każdym ważnym tokenem, bez względu na zakresy. `read_only: true` oznacza konto szyfrowane end-to-end: odczyt działa, ale część pól jest ukryta, a zapis zwraca `403 account_encrypted`.',
+    'Konto wskazane w `X-Account-Id` (albo jedyne konto połączenia) oraz użytkownik, który je połączył. Działa z każdym ważnym tokenem, bez względu na zakresy; przy kilku kontach nagłówek jest wymagany. `read_only: true` oznacza konto szyfrowane end-to-end: odczyt działa, ale część pól jest ukryta, a zapis zwraca `403 account_encrypted`.',
   'op.getAccount.response.200': 'Połączone konto.',
+  'op.listAccounts.summary': 'Konta połączenia',
+  'op.listAccounts.description': 'Wszystkie konta objęte tym połączeniem, użyteczne lub nie. Działa z każdym ważnym tokenem i nie wymaga `X-Account-Id`. `access` to `read_write` tylko gdy aplikacja ma zakres `expenses:write`, a konto pozwala na zapis; `active: false` z `reason` (`role`, `encrypted`) oznacza, że żądania do tego konta są odrzucane; `reason: archived` to zarchiwizowana podróż (aktywna, tylko do odczytu). Wybrane `id` wysyłaj w nagłówku `X-Account-Id` przy pozostałych wywołaniach.',
+  'param.X-Account-Id':
+    'Którego konta z połączenia dotyczy wywołanie. Opcjonalny, gdy połączenie ma dokładnie jedno konto; wymagany, gdy ma ich kilka (`400 account_required`) — liczą się konta udostępnione, nie tylko te, które działają. Konto spoza połączenia zwraca `403 account_not_granted`. Identyfikatory pobierzesz z `GET /public/v1/accounts`.',
+  'op.listAccounts.response.200': 'Konta połączenia.',
+  'schema.PublicConnectedAccount': 'Jedno konto połączenia.',
+  'schema.PublicConnectedAccount.id': 'Identyfikator konta; wysyłaj go jako `X-Account-Id`.',
+  'schema.PublicConnectedAccount.name': 'Nazwa konta; `null`, gdy użytkownik nie jest już jego członkiem (`reason: role`).',
+  'schema.PublicConnectedAccount.type': 'Typ konta; `null`, gdy użytkownik nie jest już jego członkiem.',
+  'schema.PublicConnectedAccount.base_currency': 'Waluta bazowa konta (ISO 4217); `null`, gdy użytkownik nie jest już jego członkiem.',
+  'schema.PublicConnectedAccount.access': '`read_write`, gdy to połączenie może zapisywać w koncie, w przeciwnym razie `read`.',
+  'schema.PublicConnectedAccount.active': '`false`, gdy żądania do tego konta są odrzucane.',
+  'schema.PublicConnectedAccount.reason': 'Dlaczego konto jest ograniczone: `role` (użytkownik stracił uprawnienia właściciela/edytora), `encrypted` (szyfrowanie end-to-end), `archived` (zarchiwizowana podróż, tylko odczyt); w pozostałych przypadkach `null`.',
+  'schema.PublicConnectedAccountList': 'Konta połączenia.',
+  'schema.PublicConnectedAccountList.data': 'Konta, w kolejności ich połączenia.',
 
   // ── Categories ───────────────────────────────────────────────────────────
   'op.listCategories.summary': 'Lista kategorii wydatków',
@@ -175,7 +190,8 @@ export const TEXTS_PL: DocTexts = {
   'schema.OAuthTokenResponse.refresh_token':
     'Ważny 90 dni i jednorazowy: każde odświeżenie zwraca nowy. Ponowne użycie starego unieważnia połączenie.',
   'schema.OAuthTokenResponse.scope': 'Zakresy połączenia, rozdzielone spacjami.',
-  'schema.OAuthTokenResponse.account_id': 'Konto połączone przez użytkownika.',
+  'schema.OAuthTokenResponse.account_ids': 'Konta połączone przez użytkownika, w kolejności połączenia.',
+  'schema.OAuthTokenResponse.account_id': 'Występuje tylko wtedy, gdy połączenie ma dokładnie jedno konto (zgodność z pierwszą wersją API). Korzystaj z `account_ids`.',
 
   // ── schemas: account and categories ──────────────────────────────────────
   'schema.PublicAccount': 'Połączone konto.',

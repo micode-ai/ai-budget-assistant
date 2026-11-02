@@ -74,6 +74,9 @@ export function buildPublicOpenApiStructure(app: INestApplication): OpenAPIObjec
   });
 }
 
+/** Parameters whose text is identical on every operation: one `param.<name>` key per language. */
+export const SHARED_PARAM_KEYS = ['X-Account-Id'];
+
 export interface TextSlot {
   key: string;
   set: (value: string) => void;
@@ -82,7 +85,7 @@ export interface TextSlot {
 /**
  * Every human-readable slot of the document, with its stable text key:
  *   info.title · server.production · security.oauth2 · scope.<scope> · tag.<name>
- *   op.<operationId>.summary|description|body · op.<operationId>.param.<name>
+ *   op.<operationId>.summary|description|body · op.<operationId>.param.<name> · param.<name> (shared, see SHARED_PARAM_KEYS)
  *   op.<operationId>.response.<status> — or error.public|oauth.<status> for the shared error responses
  *   schema.<Name> · schema.<Name>.<property>
  */
@@ -113,7 +116,8 @@ export function textSlots(doc: OpenAPIObject): TextSlot[] {
       add(`op.${id}.description`, (v) => (op.description = v));
       for (const param of op.parameters ?? []) {
         if ('$ref' in param) continue;
-        add(`op.${id}.param.${param.name}`, (v) => (param.description = v));
+        const key = SHARED_PARAM_KEYS.includes(param.name) ? `param.${param.name}` : `op.${id}.param.${param.name}`;
+        add(key, (v) => (param.description = v));
       }
       const body = op.requestBody;
       if (body && !('$ref' in body)) add(`op.${id}.body`, (v) => (body.description = v));

@@ -1,6 +1,6 @@
 import type { ComponentProps } from 'react';
 import type { Ionicons } from '@expo/vector-icons';
-import type { OAuthScope } from '@/services/oauth.api';
+import type { OAuthConsentAccount, OAuthScope } from '@/services/oauth.api';
 
 type IconName = ComponentProps<typeof Ionicons>['name'];
 
@@ -52,4 +52,18 @@ export function hostnameOf(url: string | null | undefined): string | null {
 export function safeExternalUrl(url: string | null | undefined): string | null {
   if (!url) return null;
   return /^https?:\/\//i.test(url.trim()) ? url.trim() : null;
+}
+
+/**
+ * The accounts ticked when the page opens. A re-consent pre-ticks the connected accounts that are
+ * STILL selectable: a connected account where the user is now a viewer (or that went end-to-end
+ * encrypted) must stay unticked, or the server would refuse every approve with 403. A first
+ * connection ticks nothing, unless exactly one account is selectable.
+ */
+export function initialAccountSelection(accounts: OAuthConsentAccount[]): string[] {
+  if (accounts.some((a) => a.connected)) {
+    return accounts.filter((a) => a.connected && a.selectable).map((a) => a.id);
+  }
+  const selectable = accounts.filter((a) => a.selectable);
+  return selectable.length === 1 ? [selectable[0].id] : [];
 }

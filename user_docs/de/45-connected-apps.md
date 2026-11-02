@@ -4,16 +4,20 @@
 
 ## Was es heißt, eine App zu verbinden
 
-Manche Produkte können direkt in ihren eigenen Bildschirmen mit deinen AI-Budget-Daten arbeiten: Eine Buchhaltungs-App kann deine Ausgaben und Belege übernehmen oder Ausgaben für dich anlegen. Dafür verbindest du die App mit **einem** deiner AI-Budget-Konten.
+Manche Produkte können direkt in ihren eigenen Bildschirmen mit deinen AI-Budget-Daten arbeiten: Eine Buchhaltungs-App kann deine Ausgaben und Belege übernehmen oder Ausgaben für dich anlegen. Dafür verbindest du die App mit **einem oder mehreren** deiner AI-Budget-Konten.
 
 Dein Passwort sieht die App nie. Wenn du dort auf „Mit AI Budget verbinden“ klickst, landest du auf einer Seite von AI Budget, meldest dich wie gewohnt an und siehst:
 
 - den Namen der App, ihre Website und wer sie entwickelt hat;
 - **Von AI Budget verifiziert** (eine App, die wir geprüft haben, etwa unsere eigene) oder **Nicht von AI Budget verifiziert**;
 - die Berechtigungen, die die App anfragt;
-- **Zu verbindendes Konto** – hier wählst du, welches Konto die App nutzen darf.
+- **Zu verbindende Konten** – zu jedem Konto ein Kästchen. Hake jedes Konto an, das die App nutzen darf; **Erlauben** bleibt gesperrt, bis mindestens eines angehakt ist. Lässt sich nur ein Konto verbinden, ist es schon angehakt. Konten, die du nur ansehen darfst oder die vollständig verschlüsselt sind, sind mit Begründung ausgegraut; ein Konto mit Textverschlüsselung ist als nur lesbar markiert.
 
 Mit **Erlauben** verbindest du die App, mit **Ablehnen** kehrst du ohne Verbindung zur App zurück. Erlaube nur Apps, denen du vertraust.
+
+**App erneut verbinden.** Ist die App schon verbunden, öffnet sich der Bildschirm mit den Konten, die sie bereits hat, schon angehakt – dazu alle weiteren Konten, die sich noch verbinden lassen. Was du ankreuzt, ist die vollständige Liste: Hake ein neues Konto an, um es hinzuzufügen, oder nimm einen Haken weg, um die App von diesem Konto zu trennen. Der Zugriff auf die Konten, die angehakt bleiben, läuft ohne Unterbrechung weiter.
+
+Hat eine App mehrere Konten, teilt sie uns bei jeder Anfrage mit, um welches es geht – du musst nichts tun.
 
 ## Was jede Berechtigung erlaubt
 
@@ -22,15 +26,17 @@ Mit **Erlauben** verbindest du die App, mit **Ablehnen** kehrst du ohne Verbindu
 - **Deine Belegfotos herunterladen** – die App kann das Belegbild oder PDF herunterladen, das an einer Ausgabe hängt.
 - **Deine Ausgabenkategorien sehen** – die App kann deine Kategorienliste lesen, damit sie neue Ausgaben richtig einordnet.
 
-Jede verbundene App sieht außerdem Namen, Typ und Währung des Kontos sowie deinen Namen. Deine E-Mail-Adresse bekommt sie nie, und deine anderen Konten sieht sie nicht.
+Jede verbundene App sieht außerdem Namen, Typ und Währung der Konten, die du angehakt hast, sowie deinen Namen. Deine E-Mail-Adresse bekommt sie nie, und ein Konto, das du nicht angehakt hast, sieht sie nicht.
 
 ## Apps ansehen und trennen
 
-Öffne **Einstellungen → Verbundene Apps**. Zu jeder App siehst du das verbundene Konto, wer sie wann verbunden hat, wann sie zuletzt genutzt wurde und ihre Berechtigungen.
+Öffne **Einstellungen → Verbundene Apps**. Jede App ist eine Zeile mit den Konten, mit denen sie verbunden ist, wer sie wann verbunden hat, wann sie zuletzt genutzt wurde und ihren Berechtigungen.
 
-Tippe auf **Trennen** und bestätige. Die App verliert sofort den Zugriff auf dieses Konto – schon ihre nächste Anfrage wird abgewiesen. Ausgaben, die sie bereits angelegt hat, bleiben in deinem Konto. Um die App wieder zu nutzen, verbinde sie erneut aus der App heraus.
+Um **ein Konto** zu trennen, tippe daneben auf **Konto entfernen** und bestätige. Die App verliert dieses Konto sofort – ihre nächste Anfrage dafür wird abgewiesen –, ihre anderen Konten funktionieren weiter. Wird das letzte Konto entfernt, ist die App vollständig getrennt.
 
-Bei jeder neuen Verbindung schicken wir der Person, die sie hergestellt hat, eine E-Mail. Erkennst du die App darin nicht, trenne sie sofort.
+Um die ganze App zu trennen, tippe auf **Trennen** und bestätige. Sie verliert den Zugriff auf alle ihre Konten auf einmal. Ausgaben, die sie bereits angelegt hat, bleiben in deinen Konten. Um die App wieder zu nutzen, verbinde sie erneut aus der App heraus.
+
+Jedes Mal, wenn eine App verbunden wird oder neue Konten bekommt, schicken wir der Person, die das getan hat, eine E-Mail mit den hinzugefügten Konten. Erkennst du die App darin nicht, trenne sie sofort.
 
 Siehst du **Verbundene Apps** nicht in den Einstellungen, ist das Verbinden von Apps noch nicht verfügbar.
 
@@ -38,9 +44,11 @@ Siehst du **Verbundene Apps** nicht in den Einstellungen, ist das Verbinden von 
 
 Nur **Inhaber** und **Bearbeiter** eines Kontos können eine App damit verbinden; wer ein Konto nur ansehen darf, sieht es ausgegraut.
 
-Eine App, die mit einem geteilten Konto verbunden ist, sieht die Ausgaben **aller** Mitglieder, nicht nur die der Person, die sie verbunden hat. Deshalb sehen alle Inhaber und Bearbeiter unter **Verbundene Apps** jede App, die mit dem Konto verbunden ist, samt der Person, die sie verbunden hat – und jede und jeder von ihnen kann sie trennen. Verbindet ein Bearbeiter eine App, bekommen auch die Inhaber des Kontos die E-Mail.
+Eine App, die mit einem geteilten Konto verbunden ist, sieht die Ausgaben **aller** Mitglieder, nicht nur die der Person, die sie verbunden hat. Deshalb sehen alle Inhaber und Bearbeiter eines solchen Kontos die App unter **Verbundene Apps**, samt der Person, die sie verbunden hat, und können sie von diesem Konto entfernen.
 
-Wird die Person, die die App verbunden hat, später zur reinen Betrachterin oder verlässt sie das Konto, funktioniert die App für dieses Konto nicht mehr.
+Du siehst von einer Verbindung immer nur die Konten, die du selbst besitzt oder bearbeitest – nie die übrigen Konten, die die verbindende Person gewählt hat. Tippst du auf **Trennen**, verliert die App nur diese deine Konten; für die Person, die sie eingerichtet hat, bleibt sie verbunden, und nur diese Person kann sie vollständig trennen. Verbindet ein Bearbeiter eine App, bekommen auch die Inhaber der verbundenen Konten eine E-Mail, in der nur ihre eigenen Konten stehen.
+
+Wird die Person, die die App verbunden hat, später zur reinen Betrachterin oder verlässt sie ein Konto, funktioniert die App für dieses Konto nicht mehr; ihre anderen Konten bleiben unberührt. Ein gelöschtes Konto wird automatisch aus der App entfernt.
 
 ## Verschlüsselte Konten
 

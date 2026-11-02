@@ -68,6 +68,7 @@ export function ConsentBody({ consent, desktop }: ConsentBodyProps) {
 
   const submitting = consent.status === 'submitting';
   const hasSelectable = consent.accounts.some((a) => a.selectable);
+  const nothingTicked = consent.selectedAccountIds.length === 0;
   const homepageUrl = safeExternalUrl(app.homepageUrl);
   const homepage = homepageUrl ? hostnameOf(homepageUrl) : null;
   const privacyUrl = safeExternalUrl(app.privacyPolicyUrl);
@@ -75,11 +76,11 @@ export function ConsentBody({ consent, desktop }: ConsentBodyProps) {
   const allowButton = (
     <TouchableOpacity
       key="allow"
-      style={[styles.button, styles.buttonPrimary, desktop && styles.buttonDesktop, (!consent.selectedAccountId || submitting) && styles.inactive]}
+      style={[styles.button, styles.buttonPrimary, desktop && styles.buttonDesktop, (nothingTicked || submitting) && styles.inactive]}
       onPress={() => void consent.allow()}
-      disabled={!consent.selectedAccountId || submitting}
+      disabled={nothingTicked || submitting}
       accessibilityRole="button"
-      accessibilityState={{ disabled: !consent.selectedAccountId || submitting }}
+      accessibilityState={{ disabled: nothingTicked || submitting }}
     >
       {consent.pendingDecision === 'allow' ? (
         <ActivityIndicator color={theme.colors.textInverse} />
@@ -161,16 +162,21 @@ export function ConsentBody({ consent, desktop }: ConsentBodyProps) {
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>{t('oauthConsent.accountTitle')}</Text>
+        {consent.isReconsent ? <Text style={styles.warning}>{t('oauthConsent.reconsentNote')}</Text> : null}
         {consent.accounts.map((account) => (
           <AccountRow
             key={account.id}
             account={account}
-            selected={consent.selectedAccountId === account.id}
+            selected={consent.selectedAccountIds.includes(account.id)}
             disabled={submitting}
-            onSelect={consent.select}
+            onSelect={consent.toggle}
           />
         ))}
-        {!hasSelectable ? <Text style={styles.warning}>{t('oauthConsent.noSelectable')}</Text> : null}
+        {!hasSelectable ? (
+          <Text style={styles.warning}>{t('oauthConsent.noSelectable')}</Text>
+        ) : nothingTicked ? (
+          <Text style={styles.warning}>{t('oauthConsent.accountsHint')}</Text>
+        ) : null}
       </View>
 
       {consent.submitError ? (
@@ -214,11 +220,11 @@ function AccountRow({ account, selected, disabled, onSelect }: AccountRowProps) 
       onPress={blocked || disabled ? undefined : () => onSelect(account.id)}
       activeOpacity={blocked ? 1 : 0.7}
       disabled={blocked || disabled}
-      accessibilityRole="radio"
+      accessibilityRole="checkbox"
       accessibilityState={{ checked: selected, disabled: blocked || disabled }}
     >
       <Ionicons
-        name={blocked ? 'lock-closed-outline' : selected ? 'radio-button-on' : 'radio-button-off'}
+        name={blocked ? 'lock-closed-outline' : selected ? 'checkbox' : 'square-outline'}
         size={20}
         color={blocked ? theme.colors.textDisabled : selected ? theme.colors.primary : theme.colors.textSecondary}
       />

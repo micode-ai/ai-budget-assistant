@@ -13,6 +13,7 @@ import { PublicApiAuthGuard } from '../guards/public-api-auth.guard';
 import { PublicApiRateLimitService } from '../public-api-rate-limit.service';
 import { PublicExpenseWriteAdapter } from '../public-expense-write.adapter';
 import { PublicAccountController } from './public-account.controller';
+import { PublicAccountsController } from './public-accounts.controller';
 import { PublicCategoriesController } from './public-categories.controller';
 import { PublicExpensesController } from './public-expenses.controller';
 
@@ -26,7 +27,6 @@ function tokenRow(scopes: string[], encryptionTier = 0) {
     grant: {
       id: 'grant-1',
       userId: 'user-1',
-      accountId: 'acc-1',
       scopes,
       revokedAt: null,
       client: { id: 'client-db-1', name: 'AI Accounting', status: 'active', deletedAt: null, rateLimitPerGrant: null, rateLimitPerClient: null },
@@ -39,7 +39,7 @@ function tokenRow(scopes: string[], encryptionTier = 0) {
         defaultAccountId: 'acc-1',
         isActive: true,
       },
-      account: { encryptionTier, monthAnchorDay: null },
+      accounts: [{ accountId: 'acc-1', account: { encryptionTier, monthAnchorDay: null } }],
     },
   };
 }
@@ -83,12 +83,24 @@ describe('public read controllers (HTTP)', () => {
   let token: ReturnType<typeof tokenRow>;
   let expenses: ReturnType<typeof expenseRow>[];
   let detail: ReturnType<typeof expenseRow> | null;
+  let grantAccountRows: any[] = [];
+  let memberRows: any[] = [];
 
   const prisma = {
     oAuthToken: { findUnique: jest.fn(async () => token) },
-    accountMember: { findUnique: jest.fn(async () => ({ role: 'owner' })) },
     oAuthGrant: { updateMany: jest.fn(async () => ({ count: 1 })) },
-    account: { findUnique: jest.fn(async () => ({ id: 'acc-1', name: 'Home', type: 'personal', currencyCode: 'PLN' })) },
+    account: {
+      findUnique: jest.fn(async (args: any) =>
+        args.where.id === 'acc-b'
+          ? { id: 'acc-b', name: 'Firm', type: 'business', currencyCode: 'EUR' }
+          : { id: 'acc-1', name: 'Home', type: 'personal', currencyCode: 'PLN' },
+      ),
+    },
+    oAuthGrantAccount: { findMany: jest.fn(async () => grantAccountRows) },
+    accountMember: {
+      findUnique: jest.fn(async () => ({ role: 'owner' })),
+      findMany: jest.fn(async () => memberRows),
+    },
     expense: {
       findMany: jest.fn(async (args: any) => (args.select?.id && Object.keys(args.select).length === 1 ? [] : expenses)),
       findFirst: jest.fn(async () => detail),
@@ -106,7 +118,7 @@ describe('public read controllers (HTTP)', () => {
 
   beforeAll(async () => {
     const mod = await Test.createTestingModule({
-      controllers: [PublicAccountController, PublicCategoriesController, PublicExpensesController],
+      controllers: [PublicAccountController, PublicAccountsController, PublicCategoriesController, PublicExpensesController],
       providers: [
         PublicApiAuthGuard,
         PublicApiEnabledGuard,
@@ -134,6 +146,8 @@ describe('public read controllers (HTTP)', () => {
     expenses = [expenseRow()];
     detail = expenseRow();
     jest.clearAllMocks();
+    grantAccountRows = [];
+    memberRows = [];
   });
 
   const get = (path: string) => request(app.getHttpServer()).get(path).set('Authorization', `Bearer ${TOKEN}`);
@@ -160,6 +174,70 @@ describe('public read controllers (HTTP)', () => {
       token = tokenRow([], 1);
       const res = await get('/public/v1/account');
       expect(res.body).toMatchObject({ encryption: 'text', read_only: true });
+    });
+  });
+
+  describe('GET /public/v1/accounts and X-Account-Id', () => {
+    const acct = (id: string, name: string, type: string, tier = 0, tripStatus: string | null = null) => ({
+      account: { id, name, type, currencyCode: 'PLN', encryptionTier: tier, tripStatus },
+    });
+
+    it('lists every granted account with access and status, and nothing about the user', async () => {
+      token = tokenRow(['expenses:read', 'expenses:write']);
+      token.grant.accounts = ['acc-a', 'acc-b', 'acc-s'].map((accountId) => ({ accountId, account: { encryptionTier: 0, monthAnchorDay: null } }));
+      grantAccountRows = [acct('acc-a', 'Personal', 'personal'), acct('acc-b', 'Firm', 'business', 1), acct('acc-s', 'Family', 'shared')];
+      memberRows = [
+        { accountId: 'acc-a', role: 'owner' },
+        { accountId: 'acc-b', role: 'editor' },
+        { accountId: 'acc-s', role: 'viewer' },
+      ];
+      const res = await get('/public/v1/accounts');
+      expect(res.status).toBe(200);
+      expect(res.body).toEqual({
+        data: [
+          { id: 'acc-a', name: 'Personal', type: 'personal', base_currency: 'PLN', access: 'read_write', active: true, reason: null },
+          { id: 'acc-b', name: 'Firm', type: 'business', base_currency: 'PLN', access: 'read', active: true, reason: null },
+          { id: 'acc-s', name: 'Family', type: 'shared', base_currency: 'PLN', access: 'read', active: false, reason: 'role' },
+        ],
+      });
+      const text = JSON.stringify(res.body);
+      expect(text).not.toContain('@');
+      for (const row of res.body.data) expect(Object.keys(row).sort()).toEqual(['access', 'active', 'base_currency', 'id', 'name', 'reason', 'type']);
+    });
+
+    it('hides name, type and currency of an account the grantor is no longer a member of; a viewer keeps them', async () => {
+      token = tokenRow([]);
+      token.grant.accounts = ['acc-v', 'acc-x'].map((accountId) => ({ accountId, account: { encryptionTier: 0, monthAnchorDay: null } }));
+      grantAccountRows = [acct('acc-v', 'Viewed', 'shared'), acct('acc-x', 'Renamed Secret', 'business')];
+      memberRows = [{ accountId: 'acc-v', role: 'viewer' }];
+      const res = await get('/public/v1/accounts');
+      expect(res.body.data).toEqual([
+        { id: 'acc-v', name: 'Viewed', type: 'shared', base_currency: 'PLN', access: 'read', active: false, reason: 'role' },
+        { id: 'acc-x', name: null, type: null, base_currency: null, access: 'read', active: false, reason: 'role' },
+      ]);
+      expect(JSON.stringify(res.body)).not.toContain('Renamed Secret');
+    });
+
+    it('an archived trip is active, read-only and says why', async () => {
+      token = tokenRow([], 0);
+      token.grant.accounts = [{ accountId: 'acc-t', account: { encryptionTier: 0, monthAnchorDay: null } }];
+      grantAccountRows = [acct('acc-t', 'Trip', 'trip', 0, 'archived')];
+      memberRows = [{ accountId: 'acc-t', role: 'owner' }];
+      const res = await get('/public/v1/accounts');
+      expect(res.body.data).toEqual([
+        { id: 'acc-t', name: 'Trip', type: 'trip', base_currency: 'PLN', access: 'read', active: true, reason: 'archived' },
+      ]);
+    });
+
+    it('/account describes the addressed account', async () => {
+      token = tokenRow([]);
+      token.grant.accounts = ['acc-1', 'acc-b'].map((accountId) => ({ accountId, account: { encryptionTier: 0, monthAnchorDay: null } }));
+      const res = await get('/public/v1/account').set('X-Account-Id', 'acc-b');
+      expect(res.status).toBe(200);
+      expect(res.body).toMatchObject({ id: 'acc-b', name: 'Firm', base_currency: 'EUR' });
+      const missing = await get('/public/v1/account');
+      expect(missing.status).toBe(400);
+      expect(missing.body.error.code).toBe('account_required');
     });
   });
 

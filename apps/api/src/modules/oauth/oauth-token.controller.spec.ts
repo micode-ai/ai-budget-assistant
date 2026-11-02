@@ -66,6 +66,28 @@ describe('OAuthTokenController (HTTP)', () => {
     expect(res.headers['pragma']).toBe('no-cache');
   });
 
+  it('serialises account_ids, and account_id only when the service sets it', async () => {
+    const base = { access_token: 'aba_at_x', token_type: 'Bearer', expires_in: 3600, refresh_token: 'aba_rt_x', scope: 'expenses:read' };
+    svc.token.mockResolvedValueOnce({ ...base, account_ids: ['acc-a', 'acc-b'] });
+    const multi = await request(app.getHttpServer()).post('/oauth/token').type('form').send({ grant_type: 'refresh_token' });
+    expect(multi.status).toBe(200);
+    expect(Object.keys(multi.body).sort()).toEqual(['access_token', 'account_ids', 'expires_in', 'refresh_token', 'scope', 'token_type']);
+    expect(multi.body.account_ids).toEqual(['acc-a', 'acc-b']);
+
+    svc.token.mockResolvedValueOnce({ ...base, account_ids: ['acc-a'], account_id: 'acc-a' });
+    const single = await request(app.getHttpServer()).post('/oauth/token').type('form').send({ grant_type: 'refresh_token' });
+    expect(Object.keys(single.body).sort()).toEqual([
+      'access_token',
+      'account_id',
+      'account_ids',
+      'expires_in',
+      'refresh_token',
+      'scope',
+      'token_type',
+    ]);
+    expect(single.body).toMatchObject({ account_ids: ['acc-a'], account_id: 'acc-a' });
+  });
+
   it('accepts a JSON body too', async () => {
     svc.token.mockResolvedValue({ ok: true });
     const res = await request(app.getHttpServer()).post('/oauth/token').send({ grant_type: 'refresh_token' });

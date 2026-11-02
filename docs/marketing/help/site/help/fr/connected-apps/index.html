@@ -94,15 +94,17 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <p>Laissez une autre application que vous utilisez — votre logiciel de comptabilité, par exemple — travailler avec vos dépenses AI Budget, voyez exactement ce qu&rsquo;elle a le droit de faire, et coupez-lui l&rsquo;accès d&rsquo;un geste. Les développeurs peuvent créer de telles applications sur l&rsquo;API AI Budget.</p>
 </blockquote>
 <h2>Ce que veut dire connecter une application</h2>
-<p>Certains produits peuvent travailler avec vos données AI Budget depuis leurs propres écrans : une application de comptabilité peut récupérer vos dépenses et vos tickets de caisse, ou ajouter des dépenses pour vous. Pour l&rsquo;autoriser, vous connectez l&rsquo;application à <strong>un</strong> de vos comptes AI Budget.</p>
+<p>Certains produits peuvent travailler avec vos données AI Budget depuis leurs propres écrans : une application de comptabilité peut récupérer vos dépenses et vos tickets de caisse, ou ajouter des dépenses pour vous. Pour l&rsquo;autoriser, vous connectez l&rsquo;application à <strong>un ou plusieurs</strong> de vos comptes AI Budget.</p>
 <p>L&rsquo;application ne voit jamais votre mot de passe. Quand vous cliquez sur son bouton « Connecter AI Budget », elle vous envoie vers une page AI Budget où vous vous connectez comme d&rsquo;habitude, et où vous voyez :</p>
 <ul>
 <li>le nom de l&rsquo;application, son site et qui l&rsquo;a créée ;</li>
 <li><strong>Vérifiée par AI Budget</strong> (une application que nous avons contrôlée, comme la nôtre) ou <strong>Non vérifiée par AI Budget</strong> ;</li>
 <li>la liste des autorisations demandées ;</li>
-<li><strong>Compte à connecter</strong> : vous choisissez le compte que l&rsquo;application pourra utiliser.</li>
+<li><strong>Comptes à connecter</strong> : une case par compte. Cochez chaque compte que l&rsquo;application peut utiliser ; <strong>Autoriser</strong> reste inactif tant qu&rsquo;aucun n&rsquo;est coché. Si un seul compte peut être connecté, il est déjà coché. Les comptes que vous pouvez seulement consulter, ou qui utilisent le chiffrement complet, sont grisés avec la raison, et un compte au chiffrement du texte est marqué en lecture seule.</li>
 </ul>
 <p>Touchez <strong>Autoriser</strong> pour connecter l&rsquo;application, ou <strong>Refuser</strong> pour revenir à l&rsquo;application sans rien connecter. N&rsquo;autorisez que des applications de confiance.</p>
+<p><strong>Reconnecter une application.</strong> Si l&rsquo;application est déjà connectée, l&rsquo;écran s&rsquo;ouvre avec les comptes qu&rsquo;elle a déjà cochés, ainsi que tout autre compte encore connectable. Ce que vous cochez est la liste complète : cochez un nouveau compte pour l&rsquo;ajouter, décochez-en un pour couper l&rsquo;accès de l&rsquo;application. L&rsquo;accès aux comptes qui restent cochés continue sans interruption.</p>
+<p>Quand une application a plusieurs comptes, elle nous indique à chaque requête de quel compte il s&rsquo;agit ; vous n&rsquo;avez rien à faire.</p>
 <h2>Ce que permet chaque autorisation</h2>
 <ul>
 <li><strong>Voir vos dépenses : montants, dates, catégories, articles et étiquettes</strong> — l&rsquo;application peut lire les dépenses du compte connecté, y compris les articles d&rsquo;un ticket et les modifications et suppressions ultérieures.</li>
@@ -110,16 +112,18 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li><strong>Télécharger les photos de vos tickets de caisse</strong> — l&rsquo;application peut télécharger l&rsquo;image ou le PDF du ticket joint à une dépense.</li>
 <li><strong>Voir vos catégories de dépenses</strong> — l&rsquo;application peut lire votre liste de catégories pour classer correctement les nouvelles dépenses.</li>
 </ul>
-<p>Toute application connectée voit aussi le nom, le type et la devise du compte, ainsi que votre nom. Elle ne reçoit jamais votre adresse e-mail et ne voit pas vos autres comptes.</p>
+<p>Toute application connectée voit aussi le nom, le type et la devise des comptes que vous avez cochés, ainsi que votre nom. Elle ne reçoit jamais votre adresse e-mail et ne voit aucun compte que vous n&rsquo;avez pas coché.</p>
 <h2>Voir et déconnecter les applications</h2>
-<p>Ouvrez <strong>Paramètres → Applications connectées</strong>. Chaque application y figure avec le compte auquel elle est connectée, qui l&rsquo;a connectée et quand, sa dernière utilisation et ses autorisations.</p>
-<p>Touchez <strong>Déconnecter</strong> et confirmez. L&rsquo;application perd immédiatement l&rsquo;accès à ce compte : sa requête suivante est refusée. Les dépenses qu&rsquo;elle a déjà ajoutées restent dans votre compte. Pour la réutiliser, reconnectez-la depuis l&rsquo;application.</p>
-<p>À chaque nouvelle connexion, nous envoyons un e-mail à la personne qui l&rsquo;a faite. Si vous en recevez un et ne reconnaissez pas l&rsquo;application, déconnectez-la tout de suite.</p>
+<p>Ouvrez <strong>Paramètres → Applications connectées</strong>. Chaque application est une ligne avec les comptes auxquels elle est connectée, qui l&rsquo;a connectée et quand, sa dernière utilisation et ses autorisations.</p>
+<p>Pour couper <strong>un seul compte</strong>, touchez <strong>Retirer le compte</strong> à côté de lui et confirmez. L&rsquo;application perd ce compte immédiatement (sa requête suivante pour ce compte est refusée) tandis que ses autres comptes continuent de fonctionner. Retirer le dernier compte déconnecte complètement l&rsquo;application.</p>
+<p>Pour couper toute l&rsquo;application, touchez <strong>Déconnecter</strong> et confirmez. Elle perd l&rsquo;accès à tous ses comptes d&rsquo;un coup. Les dépenses qu&rsquo;elle a déjà ajoutées restent dans vos comptes. Pour la réutiliser, reconnectez-la depuis l&rsquo;application.</p>
+<p>Chaque fois qu&rsquo;une application est connectée ou reçoit de nouveaux comptes, nous envoyons un e-mail à la personne qui l&rsquo;a fait, avec la liste des comptes ajoutés. Si vous en recevez un et ne reconnaissez pas l&rsquo;application, déconnectez-la tout de suite.</p>
 <p>Si <strong>Applications connectées</strong> n&rsquo;apparaît pas dans les Paramètres, la connexion d&rsquo;applications n&rsquo;est pas encore disponible.</p>
 <h2>Comptes partagés</h2>
 <p>Seul un <strong>propriétaire</strong> ou un <strong>éditeur</strong> d&rsquo;un compte peut y connecter une application ; une personne qui ne peut que consulter le compte le voit grisé.</p>
-<p>Une application connectée à un compte partagé voit les dépenses de <strong>tous</strong> les membres, pas seulement celles de la personne qui l&rsquo;a connectée. C&rsquo;est pourquoi tous les propriétaires et éditeurs du compte voient dans <strong>Applications connectées</strong> chaque application qui y est connectée, avec la personne qui l&rsquo;a connectée, et chacun d&rsquo;eux peut la déconnecter. Quand un éditeur connecte une application, les propriétaires du compte reçoivent eux aussi l&rsquo;e-mail.</p>
-<p>Si la personne qui a connecté l&rsquo;application passe ensuite en lecture seule ou quitte le compte, l&rsquo;application cesse de fonctionner pour ce compte.</p>
+<p>Une application connectée à un compte partagé voit les dépenses de <strong>tous</strong> les membres, pas seulement celles de la personne qui l&rsquo;a connectée. C&rsquo;est pourquoi tous les propriétaires et éditeurs d&rsquo;un tel compte voient l&rsquo;application dans <strong>Applications connectées</strong>, avec la personne qui l&rsquo;a connectée, et peuvent la retirer de ce compte.</p>
+<p>Vous ne voyez d&rsquo;une connexion que les comptes dont vous êtes vous-même propriétaire ou éditeur, jamais les autres comptes choisis par la personne qui l&rsquo;a connectée. Si vous touchez <strong>Déconnecter</strong>, l&rsquo;application ne perd que ces comptes-là ; elle reste connectée pour la personne qui l&rsquo;a mise en place, et seule cette personne peut la déconnecter complètement. Quand un éditeur connecte une application, les propriétaires des comptes connectés reçoivent aussi un e-mail, qui ne liste que leurs propres comptes.</p>
+<p>Si la personne qui a connecté l&rsquo;application passe ensuite en lecture seule ou quitte un compte, l&rsquo;application cesse de fonctionner pour ce compte ; ses autres comptes ne sont pas touchés. Un compte supprimé est retiré automatiquement de l&rsquo;application.</p>
 <h2>Comptes chiffrés</h2>
 <ul>
 <li>Un compte en <strong>chiffrement complet</strong> (montants compris) ne peut pas être connecté du tout : l&rsquo;application ne pourrait rien y lire.</li>

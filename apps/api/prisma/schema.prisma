@@ -391,7 +391,7 @@ model Account {
   owner                          User                            @relation("OwnedAccounts", fields: [ownerId], references: [id], onDelete: Cascade)
   members                        AccountMember[]
   invitations                    AccountInvitation[]
-  oauthGrants                    OAuthGrant[]
+  oauthGrantAccounts             OAuthGrantAccount[]
   expenses                       Expense[]
   incomes                        Income[]
   budgets                        Budget[]
@@ -2847,13 +2847,13 @@ model OAuthClient {
   @@map("oauth_clients")
 }
 
-/// A user's consent for one app to act on one account. One ACTIVE grant per (client, user, account) is
-/// enforced by the raw partial unique index oauth_grants_active_key (see the public_api_oauth migration).
+/// A user's consent for one app, covering one or more accounts (see OAuthGrantAccount). One ACTIVE grant per
+/// (client, user) is enforced by the raw partial unique index `oauth_grants_active_client_user_key` (see the
+/// public_api_multi_account migration).
 model OAuthGrant {
   id         String          @id @default(uuid())
   clientId   String          @map("client_id")
   userId     String          @map("user_id")
-  accountId  String          @map("account_id")
   scopes     String[]
   createdAt  DateTime        @default(now()) @map("created_at")
   updatedAt  DateTime        @updatedAt @map("updated_at")
@@ -2861,14 +2861,27 @@ model OAuthGrant {
   revokedAt  DateTime?       @map("revoked_at")
   revokedBy  OAuthRevokedBy? @map("revoked_by")
 
-  client  OAuthClient  @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  user    User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  account Account      @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  tokens  OAuthToken[]
+  client   OAuthClient         @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  user     User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accounts OAuthGrantAccount[]
+  tokens   OAuthToken[]
 
-  @@index([accountId])
   @@index([userId])
   @@map("oauth_grants")
+}
+
+/// The accounts one OAuth grant covers.
+model OAuthGrantAccount {
+  grantId   String   @map("grant_id")
+  accountId String   @map("account_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  grant   OAuthGrant @relation(fields: [grantId], references: [id], onDelete: Cascade)
+  account Account    @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@id([grantId, accountId])
+  @@index([accountId])
+  @@map("oauth_grant_accounts")
 }
 
 model OAuthToken {

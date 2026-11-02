@@ -41,10 +41,22 @@ function basic(id: string, secret: string): string {
 function build() {
   const clients: Client[] = [{ ...confidential }, { ...publicClient }];
   const grants: any[] = [
-    { id: 'g1', clientId: 'cdb1', userId: 'u1', accountId: 'acc1', scopes: ['expenses:read', 'categories:read'], revokedAt: null, revokedBy: null },
-    { id: 'g2', clientId: 'cdb2', userId: 'u1', accountId: 'acc1', scopes: ['expenses:read'], revokedAt: null, revokedBy: null },
+    { id: 'g1', clientId: 'cdb1', userId: 'u1', scopes: ['expenses:read', 'categories:read'], revokedAt: null, revokedBy: null },
+    { id: 'g2', clientId: 'cdb2', userId: 'u1', scopes: ['expenses:read'], revokedAt: null, revokedBy: null },
   ];
-  const members = [{ userId: 'u1', accountId: 'acc1', role: 'owner' }];
+  const accounts: any[] = [
+    { id: 'acc1', name: 'Personal', type: 'personal', currencyCode: 'PLN', encryptionTier: 0, tripStatus: null, isActive: true },
+    { id: 'acc2', name: 'Company', type: 'business', currencyCode: 'PLN', encryptionTier: 0, tripStatus: null, isActive: true },
+  ];
+  /** Join rows, in connection order (the util orders by createdAt, then accountId). */
+  const grantAccounts: Array<{ grantId: string; accountId: string; createdAt: Date }> = [
+    { grantId: 'g1', accountId: 'acc1', createdAt: new Date(1) },
+    { grantId: 'g2', accountId: 'acc1', createdAt: new Date(1) },
+  ];
+  const members = [
+    { userId: 'u1', accountId: 'acc1', role: 'owner' },
+    { userId: 'u1', accountId: 'acc2', role: 'editor' },
+  ];
   let tokens: any[] = [];
   let seq = 0;
   const redis = new Map<string, string>();
@@ -86,13 +98,21 @@ function build() {
         return { count: hit.length };
       }),
     },
+    oAuthGrantAccount: {
+      findMany: jest.fn(async ({ where }: any) =>
+        grantAccounts
+          .filter((j) => j.grantId === where.grantId)
+          .map((j) => accounts.find((a) => a.id === j.accountId))
+          .filter((a) => a && (where.account?.isActive === undefined || a.isActive === where.account.isActive))
+          .map(({ isActive: _i, ...account }: any) => ({ account: { ...account } })),
+      ),
+    },
     accountMember: {
-      findFirst: jest.fn(async ({ where }: any) => {
-        const m = members.find(
-          (x) => x.userId === where.userId && x.accountId === where.accountId && where.role.in.includes(x.role),
-        );
-        return m ? { ...m } : null;
-      }),
+      findMany: jest.fn(async ({ where }: any) =>
+        members
+          .filter((x) => x.userId === where.userId && where.accountId.in.includes(x.accountId))
+          .map((m) => ({ accountId: m.accountId, role: m.role })),
+      ),
     },
     $transaction: jest.fn(async (arg: any) => (typeof arg === 'function' ? arg(prisma) : Promise.all(arg))),
   };
@@ -138,7 +158,13 @@ function build() {
     return code;
   };
 
-  return { svc, prisma, cache, clients, grants, members, getTokens: () => tokens, putCode };
+  /** Gives the grant the accounts [ids], in this connection order. */
+  const connect = (ids: string[], grantId = 'g1') => {
+    for (let i = grantAccounts.length - 1; i >= 0; i--) if (grantAccounts[i].grantId === grantId) grantAccounts.splice(i, 1);
+    ids.forEach((accountId, i) => grantAccounts.push({ grantId, accountId, createdAt: new Date(10 + i) }));
+  };
+
+  return { svc, prisma, cache, clients, grants, accounts, members, connect, getTokens: () => tokens, putCode };
 }
 
 const exchangeBody = (code: string, over: Record<string, unknown> = {}) => ({
@@ -174,6 +200,7 @@ describe('OAuthTokenService', () => {
         expires_in: 3600,
         refresh_token: expect.stringMatching(/^aba_rt_/),
         scope: 'expenses:read categories:read',
+        account_ids: ['acc1'],
         account_id: 'acc1',
       });
       const stored = t.getTokens();
@@ -239,6 +266,38 @@ describe('OAuthTokenService', () => {
       t.members[0].role = 'viewer';
       const e = await oauthErr(t.svc.token(exchangeBody(t.putCode()), undefined));
       expect(e.body.error).toBe('invalid_grant');
+    });
+
+    it('a grant of two accounts reports account_ids in connection order and NO account_id key', async () => {
+      const t = build();
+      t.connect(['acc2', 'acc1']);
+      const res = await t.svc.token(exchangeBody(t.putCode()), undefined);
+      expect(res.account_ids).toEqual(['acc2', 'acc1']);
+      expect(Object.keys(res)).not.toContain('account_id');
+    });
+
+    it('a grant of one account keeps the phase 1 account_id next to account_ids (Review Focus 4)', async () => {
+      const t = build();
+      const res = await t.svc.token(exchangeBody(t.putCode()), undefined);
+      expect(res.account_ids).toEqual(['acc1']);
+      expect(res.account_id).toBe('acc1');
+    });
+
+    it('a grant whose only account became tier 2 is invalid_grant', async () => {
+      const t = build();
+      t.accounts[0].encryptionTier = 2;
+      const e = await oauthErr(t.svc.token(exchangeBody(t.putCode()), undefined));
+      expect(e).toEqual({
+        status: 400,
+        body: { error: 'invalid_grant', error_description: 'no account of this connection is usable any more' },
+      });
+      expect(t.getTokens()).toHaveLength(0);
+    });
+
+    it('a grant with no live account left is invalid_grant', async () => {
+      const t = build();
+      t.accounts[0].isActive = false;
+      expect((await oauthErr(t.svc.token(exchangeBody(t.putCode()), undefined))).body.error).toBe('invalid_grant');
     });
 
     it('a Redis outage while taking the code is 503 temporarily_unavailable', async () => {
@@ -357,6 +416,7 @@ describe('OAuthTokenService', () => {
       expect(second.refresh_token).not.toBe(first.refresh_token);
       expect(second.scope).toBe('expenses:read categories:read');
       expect(second.account_id).toBe('acc1');
+      expect(second.account_ids).toEqual(['acc1']);
       const old = t.getTokens().find((x) => x.tokenHash === sha256Hex(first.refresh_token));
       expect(old.rotatedAt).toBeInstanceOf(Date);
       const fresh = t.getTokens().find((x) => x.tokenHash === sha256Hex(second.refresh_token));
@@ -389,6 +449,34 @@ describe('OAuthTokenService', () => {
       expect(results.filter((r) => r.status === 'fulfilled')).toHaveLength(1);
       const rejected = results.find((r) => r.status === 'rejected') as PromiseRejectedResult;
       expect((rejected.reason as HttpException).getResponse()).toMatchObject({ error: 'invalid_grant' });
+    });
+
+    const refreshBody = (rt: string) => ({
+      grant_type: 'refresh_token',
+      refresh_token: rt,
+      client_id: confidential.clientId,
+      client_secret: SECRET,
+    });
+
+    it('a grant [A,B] still refreshes while the grantor is viewer in A only, and keeps listing both', async () => {
+      const t = build();
+      t.connect(['acc1', 'acc2']);
+      const first = await t.svc.token(exchangeBody(t.putCode()), undefined);
+      t.members[0].role = 'viewer';
+      const second = await t.svc.token(refreshBody(first.refresh_token), undefined);
+      expect(second.account_ids).toEqual(['acc1', 'acc2']);
+      expect(Object.keys(second)).not.toContain('account_id');
+    });
+
+    it('a grant [A,B] whose grantor is viewer in both is invalid_grant on refresh, and nothing is revoked', async () => {
+      const t = build();
+      t.connect(['acc1', 'acc2']);
+      const first = await t.svc.token(exchangeBody(t.putCode()), undefined);
+      t.members[0].role = 'viewer';
+      t.members[1].role = 'viewer';
+      const e = await oauthErr(t.svc.token(refreshBody(first.refresh_token), undefined));
+      expect(e.body).toEqual({ error: 'invalid_grant', error_description: 'no account of this connection is usable any more' });
+      expect(t.grants[0].revokedAt).toBeNull();
     });
 
     it('an unknown refresh token is invalid_grant', async () => {

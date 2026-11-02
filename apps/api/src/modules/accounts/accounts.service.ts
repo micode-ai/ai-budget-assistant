@@ -7,6 +7,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
+import { dropAccountFromGrants } from '../oauth/oauth-grant-accounts.util';
 import { catalogKeyForName } from '../../common/utils/category-catalog';
 import { getDefaultCategories } from './default-categories';
 import { MailService } from '../mail/mail.service';
@@ -180,9 +181,9 @@ export class AccountsService {
       throw new BadRequestException('Cannot delete your default account. Set a different default first.');
     }
 
-    await this.prisma.account.update({
-      where: { id: accountId },
-      data: { isActive: false },
+    await this.prisma.$transaction(async (tx) => {
+      await tx.account.update({ where: { id: accountId }, data: { isActive: false } });
+      await dropAccountFromGrants(tx, accountId);
     });
 
     return { success: true };

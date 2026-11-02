@@ -40,7 +40,7 @@ import {
   PublicExpenseChanges,
   PublicExpenseList,
 } from '../dto/public-expense.dto';
-import { ApiPublicErrors } from '../docs/public-api-docs.decorators';
+import { ApiAccountHeader, ApiPublicErrors } from '../docs/public-api-docs.decorators';
 import { PublicApiExceptionFilter } from '../filters/public-api-exception.filter';
 import { PublicApiAuthGuard } from '../guards/public-api-auth.guard';
 import { toPublicExpense } from '../mappers/public-expense.mapper';
@@ -66,6 +66,7 @@ function ApiExpenseId(): MethodDecorator {
  * Route order matters for later tasks: a literal sub-path (`/expenses/changes`) must be declared
  * BEFORE `@Get(':id')` in this class, or `:id` captures it.
  */
+@ApiAccountHeader()
 @ApiTags('Expenses')
 @Controller('public/v1/expenses')
 @UseGuards(PublicApiEnabledGuard, PublicApiAuthGuard)

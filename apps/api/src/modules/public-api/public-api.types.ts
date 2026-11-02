@@ -9,8 +9,13 @@ export interface PublicApiOAuthContext {
   grantId: string;
   /** The grant's current scopes (Ruling 10). */
   scopes: PublicScope[];
-  /** 0 or 1 here; tier >= 2 accounts are refused by the guard. Tier 1 = read-only, text fields null. */
+  /**
+   * The ADDRESSED account's tier: 0 or 1 here, tier >= 2 accounts are refused by the guard. Tier 1 =
+   * read-only, text fields null. 0 on a `@ConnectionLevel()` route, which addresses no account.
+   */
   encryptionTier: number;
+  /** Every live account of the connection, in connection order — usable or not. */
+  grantAccountIds: string[];
 }
 
 export interface PublicApiRequest extends AuthenticatedRequest {

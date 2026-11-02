@@ -3,6 +3,7 @@ jest.mock('@/services/api', () => ({
   api: {
     listConnectedApps: jest.fn(),
     disconnectConnectedApp: jest.fn(),
+    removeConnectedAppAccount: jest.fn(),
     listDeveloperApps: jest.fn(),
   },
 }));
@@ -14,7 +15,9 @@ import { useDeveloperAppsStore } from '../developerAppsStore';
 const mockApi = api as unknown as Record<string, jest.Mock>;
 const err = (status?: number) => Object.assign(new Error('x'), status === undefined ? {} : { status });
 
-function grant(grantId: string, accountId = 'acc-1') {
+const acct = (id: string) => ({ id, name: `Acc ${id}`, type: 'personal', active: true, reason: null });
+
+function grant(grantId: string, accountId = 'acc-1', accountIds: string[] = [accountId]) {
   return {
     grantId,
     app: {
@@ -24,7 +27,8 @@ function grant(grantId: string, accountId = 'acc-1') {
       isVerified: false,
       status: 'active',
     },
-    account: { id: accountId, name: 'Personal' },
+    isGrantor: true,
+    accounts: accountIds.map(acct),
     scopes: ['expenses:read'],
     connectedBy: { id: 'u1', name: 'Me' },
     connectedAt: '2026-11-01T00:00:00.000Z',
@@ -107,4 +111,37 @@ it('reset() clears everything', () => {
   expect(s.items).toEqual([]);
   expect(s.loaded).toBe(false);
   expect(s.error).toBeNull();
+});
+
+describe('removeAccount', () => {
+  const ids = () => useConnectedAppsStore.getState().items.map((g) => g.accounts.map((a) => a.id));
+
+  it('keeps the grant with its remaining accounts', async () => {
+    useConnectedAppsStore.setState({ items: [grant('g', 'A', ['A', 'B'])] as never });
+    mockApi.removeConnectedAppAccount.mockResolvedValue(undefined);
+    await useConnectedAppsStore.getState().removeAccount('g', 'A');
+    expect(mockApi.removeConnectedAppAccount).toHaveBeenCalledWith('g', 'A');
+    expect(ids()).toEqual([['B']]);
+  });
+
+  it('drops the grant when its last account goes', async () => {
+    useConnectedAppsStore.setState({ items: [grant('g', 'A'), grant('h', 'C')] as never });
+    mockApi.removeConnectedAppAccount.mockResolvedValue(undefined);
+    await useConnectedAppsStore.getState().removeAccount('g', 'A');
+    expect(useConnectedAppsStore.getState().items.map((g) => g.grantId)).toEqual(['h']);
+  });
+
+  it('treats a 404 as already gone without throwing', async () => {
+    useConnectedAppsStore.setState({ items: [grant('g', 'A', ['A', 'B'])] as never });
+    mockApi.removeConnectedAppAccount.mockRejectedValue(err(404));
+    await useConnectedAppsStore.getState().removeAccount('g', 'A');
+    expect(ids()).toEqual([['B']]);
+  });
+
+  it('rethrows and leaves the item unchanged on a 500', async () => {
+    useConnectedAppsStore.setState({ items: [grant('g', 'A', ['A', 'B'])] as never });
+    mockApi.removeConnectedAppAccount.mockRejectedValue(err(500));
+    await expect(useConnectedAppsStore.getState().removeAccount('g', 'A')).rejects.toThrow();
+    expect(ids()).toEqual([['A', 'B']]);
+  });
 });

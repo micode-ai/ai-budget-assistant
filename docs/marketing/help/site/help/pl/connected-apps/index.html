@@ -94,15 +94,17 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <p>Pozwól innej aplikacji, z której korzystasz — na przykład programowi księgowemu — pracować z Twoimi wydatkami w AI Budget, sprawdź dokładnie, co może robić, i odetnij jej dostęp jednym dotknięciem. Deweloperzy mogą budować takie aplikacje na API AI Budget.</p>
 </blockquote>
 <h2>Co oznacza połączenie aplikacji</h2>
-<p>Niektóre produkty potrafią pracować z Twoimi danymi z AI Budget na własnych ekranach: aplikacja księgowa może pobierać Twoje wydatki i paragony albo dodawać wydatki za Ciebie. Żeby na to pozwolić, łączysz aplikację z <strong>jednym</strong> ze swoich kont w AI Budget.</p>
+<p>Niektóre produkty potrafią pracować z Twoimi danymi z AI Budget na własnych ekranach: aplikacja księgowa może pobierać Twoje wydatki i paragony albo dodawać wydatki za Ciebie. Żeby na to pozwolić, łączysz aplikację z <strong>jednym lub kilkoma</strong> swoimi kontami w AI Budget.</p>
 <p>Aplikacja nigdy nie widzi Twojego hasła. Gdy klikniesz w niej przycisk „Połącz z AI Budget”, przeniesie Cię na stronę AI Budget, gdzie logujesz się jak zwykle i widzisz:</p>
 <ul>
 <li>nazwę aplikacji, jej stronę i to, kto ją stworzył;</li>
 <li><strong>Zweryfikowana przez AI Budget</strong> (aplikacja, którą sprawdziliśmy, na przykład nasza własna) albo <strong>Niezweryfikowana przez AI Budget</strong>;</li>
 <li>listę uprawnień, o które prosi aplikacja;</li>
-<li><strong>Konto do połączenia</strong> — wybierasz, z którego konta aplikacja może korzystać.</li>
+<li><strong>Konta do połączenia</strong> — przy każdym koncie pole wyboru. Zaznacz każde konto, z którego aplikacja może korzystać; <strong>Zezwól</strong> pozostaje nieaktywne, dopóki nie zaznaczysz co najmniej jednego. Jeśli można połączyć tylko jedno konto, jest już zaznaczone. Konta, które możesz tylko przeglądać, albo z pełnym szyfrowaniem są wyszarzone z podaniem powodu, a konto z szyfrowaniem tekstu jest oznaczone jako tylko do odczytu.</li>
 </ul>
 <p>Dotknij <strong>Zezwól</strong>, żeby połączyć, albo <strong>Odmów</strong>, żeby wrócić do aplikacji bez łączenia. Zezwalaj tylko aplikacjom, którym ufasz.</p>
+<p><strong>Ponowne łączenie aplikacji.</strong> Jeśli aplikacja jest już połączona, ekran otwiera się z zaznaczonymi kontami, które już ma, oraz każdym innym kontem, które nadal można połączyć. To, co zaznaczysz, jest pełną listą: zaznacz nowe konto, żeby je dodać, odznacz konto, żeby odciąć od niego aplikację. Dostęp do kont, które zostają zaznaczone, działa bez przerwy.</p>
+<p>Gdy aplikacja ma kilka kont, przy każdym zapytaniu sama wskazuje, którego konta dotyczy — nie musisz nic robić.</p>
 <h2>Na co pozwala każde uprawnienie</h2>
 <ul>
 <li><strong>Widzieć Twoje wydatki: kwoty, daty, kategorie, pozycje i tagi</strong> — aplikacja może czytać wydatki połączonego konta, łącznie z pozycjami paragonu oraz późniejszymi zmianami i usunięciami.</li>
@@ -110,16 +112,18 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li><strong>Pobierać zdjęcia Twoich paragonów</strong> — aplikacja może pobrać zdjęcie lub PDF paragonu dołączonego do wydatku.</li>
 <li><strong>Widzieć Twoje kategorie wydatków</strong> — aplikacja może czytać listę kategorii, żeby poprawnie przypisywać nowe wydatki.</li>
 </ul>
-<p>Każda połączona aplikacja widzi też nazwę, typ i walutę konta oraz Twoje imię. Nigdy nie dostaje Twojego adresu e-mail i nie widzi Twoich pozostałych kont.</p>
+<p>Każda połączona aplikacja widzi też nazwę, typ i walutę kont, które zaznaczasz, oraz Twoje imię. Nigdy nie dostaje Twojego adresu e-mail i nie widzi żadnego konta, którego nie zaznaczyłeś.</p>
 <h2>Podgląd i odłączanie aplikacji</h2>
-<p>Otwórz <strong>Ustawienia → Połączone aplikacje</strong>. Przy każdej aplikacji widać konto, z którym jest połączona, kto i kiedy ją połączył, kiedy była ostatnio używana oraz jej uprawnienia.</p>
-<p>Dotknij <strong>Odłącz</strong> i potwierdź. Aplikacja od razu traci dostęp do tego konta — jej następne zapytanie zostanie odrzucone. Wydatki, które już dodała, zostają na Twoim koncie. Żeby znów z niej korzystać, połącz ją ponownie z poziomu tej aplikacji.</p>
-<p>Przy każdym nowym połączeniu wysyłamy e-mail do osoby, która je utworzyła. Jeśli taki dostaniesz i nie rozpoznajesz aplikacji, odłącz ją od razu.</p>
+<p>Otwórz <strong>Ustawienia → Połączone aplikacje</strong>. Każda aplikacja to jeden wiersz z kontami, z którymi jest połączona, informacją, kto i kiedy ją połączył, kiedy była ostatnio używana, oraz jej uprawnieniami.</p>
+<p>Żeby odciąć <strong>jedno konto</strong>, dotknij obok niego <strong>Usuń konto</strong> i potwierdź. Aplikacja od razu traci to konto — jej następne zapytanie o nie zostanie odrzucone — a pozostałe konta działają dalej. Usunięcie ostatniego konta całkowicie odłącza aplikację.</p>
+<p>Żeby odciąć całą aplikację, dotknij <strong>Odłącz</strong> i potwierdź. Traci wtedy dostęp do wszystkich swoich kont naraz. Wydatki, które już dodała, zostają na Twoich kontach. Żeby znów z niej korzystać, połącz ją ponownie z poziomu tej aplikacji.</p>
+<p>Za każdym razem, gdy aplikacja zostaje połączona albo dostaje nowe konta, wysyłamy e-mail do osoby, która to zrobiła, z listą dodanych kont. Jeśli taki dostaniesz i nie rozpoznajesz aplikacji, odłącz ją od razu.</p>
 <p>Jeśli nie widzisz pozycji <strong>Połączone aplikacje</strong> w Ustawieniach, łączenie aplikacji nie jest jeszcze dostępne.</p>
 <h2>Konta współdzielone</h2>
 <p>Aplikację z kontem może połączyć tylko jego <strong>właściciel</strong> albo <strong>edytor</strong>; osoba, która może konto tylko przeglądać, zobaczy je wyszarzone.</p>
-<p>Aplikacja połączona z kontem współdzielonym widzi wydatki <strong>wszystkich</strong> jego członków, a nie tylko osoby, która ją połączyła. Dlatego wszyscy właściciele i edytorzy konta widzą w <strong>Połączonych aplikacjach</strong> każdą aplikację połączoną z tym kontem, razem z informacją, kto ją połączył — i każdy z nich może ją odłączyć. Gdy aplikację połączy edytor, e-mail dostają też właściciele konta.</p>
-<p>Jeśli osoba, która połączyła aplikację, straci później prawo edycji albo opuści konto, aplikacja przestanie działać dla tego konta.</p>
+<p>Aplikacja połączona z kontem współdzielonym widzi wydatki <strong>wszystkich</strong> jego członków, a nie tylko osoby, która ją połączyła. Dlatego wszyscy właściciele i edytorzy takiego konta widzą aplikację w <strong>Połączonych aplikacjach</strong>, razem z informacją, kto ją połączył, i mogą ją z tego konta usunąć.</p>
+<p>Z połączenia widzisz zawsze tylko te konta, których sam jesteś właścicielem lub edytorem — nigdy pozostałych kont, które wybrała osoba łącząca aplikację. Gdy dotkniesz <strong>Odłącz</strong>, aplikacja traci tylko te Twoje konta; dla osoby, która ją skonfigurowała, pozostaje połączona i tylko ona może ją odłączyć całkowicie. Gdy aplikację połączy edytor, e-mail dostają też właściciele połączonych kont — z listą wyłącznie ich własnych kont.</p>
+<p>Jeśli osoba, która połączyła aplikację, straci później prawo edycji albo opuści konto, aplikacja przestanie działać dla tego konta; jej pozostałe konta nie są naruszone. Usunięte konto jest automatycznie odpinane od aplikacji.</p>
 <h2>Konta szyfrowane</h2>
 <ul>
 <li>Konta z <strong>pełnym szyfrowaniem</strong> (zaszyfrowane są też kwoty) nie da się połączyć — aplikacja nie mogłaby w nim niczego odczytać.</li>

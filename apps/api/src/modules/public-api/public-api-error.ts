@@ -24,6 +24,8 @@ export const PUBLIC_API_ERROR_CODES = [
   'internal_error',
   'invalid_cursor',
   'idempotency_key_conflict',
+  'account_required',
+  'account_not_granted',
 ] as const;
 export type PublicApiErrorCode = (typeof PUBLIC_API_ERROR_CODES)[number];
 

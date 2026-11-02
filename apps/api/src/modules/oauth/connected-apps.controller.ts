@@ -5,7 +5,7 @@ import { PublicApiEnabledGuard } from './guards/public-api-enabled.guard';
 import { OAuthGrantsService } from './oauth-grants.service';
 
 /**
- * "Connected apps": spans every account where the caller is owner/editor, so deliberately no
+ * "Connected apps": spans every account the caller made available or owns/edits, so deliberately no
  * AccountContextGuard. Membership is enforced per query in OAuthGrantsService.
  */
 @Controller('connected-apps')
@@ -20,7 +20,17 @@ export class ConnectedAppsController {
 
   @Delete(':grantId')
   @HttpCode(204)
-  async revoke(@Req() req: AuthenticatedRequest, @Param('grantId') grantId: string): Promise<void> {
-    await this.grants.revokeAsMember(req.user.id, grantId);
+  async disconnect(@Req() req: AuthenticatedRequest, @Param('grantId') grantId: string): Promise<void> {
+    await this.grants.disconnectAsUser(req.user.id, grantId);
+  }
+
+  @Delete(':grantId/accounts/:accountId')
+  @HttpCode(204)
+  async removeAccount(
+    @Req() req: AuthenticatedRequest,
+    @Param('grantId') grantId: string,
+    @Param('accountId') accountId: string,
+  ): Promise<void> {
+    await this.grants.removeAccountAsUser(req.user.id, grantId, accountId);
   }
 }

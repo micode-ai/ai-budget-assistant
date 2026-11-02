@@ -46,10 +46,11 @@ interface Member {
   user: { name: string; email: string; language: string };
 }
 
-function build(members: Member[] = []) {
+function build(members: Member[] = [], connectedAccountIds: string[] = []) {
   const redis = new Map<string, { value: any; ttl: number }>();
   const grants: any[] = [];
   const prisma: any = {
+    oAuthGrantAccount: { findMany: jest.fn(async () => connectedAccountIds.map((accountId) => ({ accountId }))) },
     user: { findUnique: jest.fn(async () => ({ name: 'Dev Person' })) },
     accountMember: {
       findMany: jest.fn(),
@@ -70,15 +71,17 @@ function build(members: Member[] = []) {
   );
   const clients: any = { findActiveByClientId: jest.fn(async (id: string) => (id === client.clientId ? { ...client } : null)) };
   const grantsSvc: any = {
-    upsertActive: jest.fn(async (clientDbId: string, userId: string, accountId: string, scopes: string[]) => {
-      const existing = grants.find((g) => g.clientId === clientDbId && g.userId === userId && g.accountId === accountId);
+    replaceActive: jest.fn(async (clientDbId: string, userId: string, accountIds: string[], scopes: string[]) => {
+      const existing = grants.find((g) => g.clientId === clientDbId && g.userId === userId);
       if (existing) {
+        const addedAccountIds = accountIds.filter((id) => !existing.accountIds.includes(id));
+        existing.accountIds = accountIds;
         existing.scopes = scopes;
-        return { grant: existing, isNew: false };
+        return { grant: existing, isNew: false, addedAccountIds };
       }
-      const grant = { id: `g${grants.length + 1}`, clientId: clientDbId, userId, accountId, scopes };
+      const grant = { id: `g${grants.length + 1}`, clientId: clientDbId, userId, accountIds, scopes };
       grants.push(grant);
-      return { grant, isNew: true };
+      return { grant, isNew: true, addedAccountIds: [...accountIds] };
     }),
   };
   const cache: any = {
@@ -129,7 +132,7 @@ describe('OAuthAuthorizeService.preview', () => {
     });
     expect(r.scopes).toEqual(['expenses:read', 'categories:read']);
     expect(r.accounts).toEqual([
-      { id: 'acc1', name: 'Account acc1', type: 'business', role: 'owner', selectable: true, reason: null, readOnly: false },
+      { id: 'acc1', name: 'Account acc1', type: 'business', role: 'owner', selectable: true, reason: null, readOnly: false, connected: false },
     ]);
   });
 
@@ -217,6 +220,27 @@ describe('OAuthAuthorizeService.preview', () => {
   });
 });
 
+describe('OAuthAuthorizeService.preview connected accounts', () => {
+  it('marks the accounts of the caller active grant for this client as connected', async () => {
+    const { svc, prisma } = build([member('u1', 'owner', 0, 'A'), member('u1', 'owner', 0, 'B')], ['A']);
+    const r = await svc.preview('u1', query);
+    expect(r.accounts.map((a) => [a.id, a.connected])).toEqual([
+      ['A', true],
+      ['B', false],
+    ]);
+    expect(prisma.oAuthGrantAccount.findMany).toHaveBeenCalledWith({
+      where: { grant: { clientId: 'cdb1', userId: 'u1', revokedAt: null } },
+      select: { accountId: true },
+    });
+  });
+
+  it('another client grant marks nothing (the lookup is scoped to this client)', async () => {
+    const { svc } = build([member('u1', 'owner', 0, 'A')], []);
+    const r = await svc.preview('u1', query);
+    expect(r.accounts[0].connected).toBe(false);
+  });
+});
+
 describe('OAuthAuthorizeService.approve', () => {
   it('allow stores a hashed, 600 s, single-use code with the ruling-2 payload and echoes state', async () => {
     const { svc, redis } = build([member('u1', 'owner')]);
@@ -264,7 +288,7 @@ describe('OAuthAuthorizeService.approve', () => {
     expect(url.searchParams.get('state')).toBe('a b&c=d');
     expect(url.searchParams.has('code')).toBe(false);
     expect(redis.size).toBe(0);
-    expect(grantsSvc.upsertActive).not.toHaveBeenCalled();
+    expect(grantsSvc.replaceActive).not.toHaveBeenCalled();
   });
 
   it('deny still refuses an unregistered redirect URI (never redirect to an unverified URI)', async () => {
@@ -287,21 +311,57 @@ describe('OAuthAuthorizeService.approve', () => {
     await expectOAuthError(svc.approve('u1', approveBody), 'bad', 'invalid_client');
   });
 
-  it('allow without account_id → invalid_request', async () => {
+  it('allow without account_id or account_ids → invalid_request', async () => {
     const { svc } = build([member('u1', 'owner')]);
     await expectOAuthError(svc.approve('u1', { ...approveBody, account_id: undefined }), 'bad', 'invalid_request');
+  });
+
+  it('account_ids: [] → invalid_request and no grant', async () => {
+    const { svc, grantsSvc } = build([member('u1', 'owner')]);
+    await expectOAuthError(svc.approve('u1', { ...approveBody, account_id: undefined, account_ids: [] }), 'bad', 'invalid_request');
+    expect(grantsSvc.replaceActive).not.toHaveBeenCalled();
+  });
+
+  it('account_ids [A, B] → replaceActive(client, user, [A, B], scopes)', async () => {
+    const { svc, grantsSvc } = build([member('u1', 'owner', 0, 'A'), member('u1', 'editor', 0, 'B')]);
+    await svc.approve('u1', { ...approveBody, account_id: undefined, account_ids: ['A', 'B'] });
+    expect(grantsSvc.replaceActive).toHaveBeenCalledWith('cdb1', 'u1', ['A', 'B'], ['expenses:read', 'categories:read']);
+  });
+
+  it('account_ids are de-duplicated', async () => {
+    const { svc, grantsSvc } = build([member('u1', 'owner', 0, 'A')]);
+    await svc.approve('u1', { ...approveBody, account_id: undefined, account_ids: ['A', 'A'] });
+    expect(grantsSvc.replaceActive.mock.calls[0][2]).toEqual(['A']);
+  });
+
+  it('the phase 1 account_id alone still works', async () => {
+    const { svc, grantsSvc } = build([member('u1', 'owner', 0, 'A')]);
+    await svc.approve('u1', { ...approveBody, account_id: 'A' });
+    expect(grantsSvc.replaceActive.mock.calls[0][2]).toEqual(['A']);
+  });
+
+  it('one viewer account in the list refuses the whole approve (no partial grant)', async () => {
+    const { svc, grantsSvc } = build([member('u1', 'owner', 0, 'A'), member('u1', 'viewer', 0, 'V')]);
+    await expect(svc.approve('u1', { ...approveBody, account_id: undefined, account_ids: ['A', 'V'] })).rejects.toBeInstanceOf(ForbiddenException);
+    expect(grantsSvc.replaceActive).not.toHaveBeenCalled();
+  });
+
+  it('one tier 2 account in the list → 403 account_encrypted, no grant', async () => {
+    const { svc, grantsSvc } = build([member('u1', 'owner', 0, 'A'), member('u1', 'owner', 2, 'T')]);
+    await expectOAuthError(svc.approve('u1', { ...approveBody, account_id: undefined, account_ids: ['A', 'T'] }), 'forbidden', 'account_encrypted');
+    expect(grantsSvc.replaceActive).not.toHaveBeenCalled();
   });
 
   it('approve as viewer → 403', async () => {
     const { svc, grantsSvc } = build([member('u1', 'viewer')]);
     await expect(svc.approve('u1', approveBody)).rejects.toBeInstanceOf(ForbiddenException);
-    expect(grantsSvc.upsertActive).not.toHaveBeenCalled();
+    expect(grantsSvc.replaceActive).not.toHaveBeenCalled();
   });
 
   it('approve on an account the user is not a member of → 403', async () => {
     const { svc, grantsSvc } = build([member('u2', 'owner')]);
     await expect(svc.approve('u1', approveBody)).rejects.toBeInstanceOf(ForbiddenException);
-    expect(grantsSvc.upsertActive).not.toHaveBeenCalled();
+    expect(grantsSvc.replaceActive).not.toHaveBeenCalled();
   });
 
   it('membership lookup requires an active account', async () => {
@@ -353,7 +413,7 @@ describe('OAuthAuthorizeService connection e-mails', () => {
     for (const c of calls) {
       expect(c).toMatchObject({
         appName: 'AI Accounting',
-        accountName: 'Account acc1',
+        accountNames: ['Account acc1'],
         connectedByName: 'Name ed',
         manageUrl: CONNECTED_APPS_URL,
       });
@@ -405,5 +465,59 @@ describe('OAuthAuthorizeService connection e-mails', () => {
     mail.sendAppConnectedEmail.mockRejectedValue(new Error('smtp down'));
     await expect(svc.approve('o1', approveBody)).resolves.toHaveProperty('redirectTo');
     await flush();
+  });
+});
+
+describe('OAuthAuthorizeService multi-account e-mails', () => {
+  const names = (mail: any) =>
+    mail.sendAppConnectedEmail.mock.calls.map((c: any[]) => [c[0].to, c[0].accountNames]).sort();
+  const multi = () => [
+    member('g', 'owner', 0, 'P'),
+    member('g', 'editor', 0, 'S'),
+    member('o', 'owner', 0, 'S'),
+    member('o', 'owner', 0, 'P'),
+  ];
+  const ids = { ...approveBody, account_id: undefined };
+
+  it('new grant [P owner, S editor]: grantor lists both, the owner of S only S', async () => {
+    const { svc, mail } = build(multi());
+    await svc.approve('g', { ...ids, account_ids: ['P', 'S'] });
+    await flush();
+    // 'o' owns P too, but P is the grantor's own account, so only S reaches o
+    expect(names(mail)).toEqual([
+      ['g@x.pl', ['Account P', 'Account S']],
+      ['o@x.pl', ['Account S']],
+    ]);
+  });
+
+  it('re-consent adding T mails only T when P and S are still deduped', async () => {
+    const { svc, mail } = build([...multi(), member('g', 'owner', 0, 'T')]);
+    await svc.approve('g', { ...ids, account_ids: ['P', 'S'] });
+    await flush();
+    mail.sendAppConnectedEmail.mockClear();
+    await svc.approve('g', { ...ids, account_ids: ['P', 'S', 'T'] });
+    await flush();
+    expect(names(mail)).toEqual([['g@x.pl', ['Account T']]]);
+  });
+
+  it('re-consent with nothing added sends no e-mail', async () => {
+    const { svc, mail } = build(multi());
+    await svc.approve('g', { ...ids, account_ids: ['P', 'S'] });
+    await flush();
+    mail.sendAppConnectedEmail.mockClear();
+    await svc.approve('g', { ...ids, account_ids: ['P'] });
+    await flush();
+    expect(mail.sendAppConnectedEmail).not.toHaveBeenCalled();
+  });
+
+  it('a dedupe key already taken for P leaves only S in the grantor e-mail', async () => {
+    const { svc, mail, redis } = build(multi());
+    redis.set('oauth:mail:connected:cdb1:P', { value: '1', ttl: 1 });
+    await svc.approve('g', { ...ids, account_ids: ['P', 'S'] });
+    await flush();
+    expect(names(mail)).toEqual([
+      ['g@x.pl', ['Account S']],
+      ['o@x.pl', ['Account S']],
+    ]);
   });
 });

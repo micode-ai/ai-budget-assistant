@@ -34,6 +34,8 @@ export interface OAuthConsentAccount {
   reason: 'viewer' | 'encrypted' | null;
   /** `encryptionTier === 1`: the app may read, encrypted text comes back hidden, writes are refused. */
   readOnly: boolean;
+  /** The app is already connected to this account (re-consent pre-ticks it). */
+  connected: boolean;
 }
 
 export interface OAuthAuthorizePreview {
@@ -60,7 +62,8 @@ export interface OAuthApproveBody {
   state?: string;
   code_challenge?: string;
   code_challenge_method?: string;
-  account_id?: string;
+  /** Accounts the app may use; the server replaces the connection's set with exactly these. */
+  account_ids?: string[];
   decision: 'allow' | 'deny';
 }
 

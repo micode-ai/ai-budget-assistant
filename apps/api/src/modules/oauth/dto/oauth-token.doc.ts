@@ -69,8 +69,17 @@ export class OAuthTokenResponse {
   @ApiProperty({ type: String, example: 'expenses:read expenses:write categories:read' })
   scope!: string;
 
-  @ApiProperty({ type: String, format: 'uuid', example: '7c9e1a3b-5d7f-4b2c-8e4a-6f8b0d2c4e6a' })
-  account_id!: string;
+  @ApiProperty({
+    type: String,
+    format: 'uuid',
+    isArray: true,
+    example: ['7c9e1a3b-5d7f-4b2c-8e4a-6f8b0d2c4e6a', '2f4a6c8e-0b1d-4f3a-9c5e-7a9b1d3f5e7c'],
+  })
+  account_ids!: string[];
+
+  /** Phase 1 compatibility: present only when the connection holds exactly one account. */
+  @ApiPropertyOptional({ type: String, format: 'uuid', example: '7c9e1a3b-5d7f-4b2c-8e4a-6f8b0d2c4e6a' })
+  account_id?: string;
 }
 
 /** RFC 6749 §5.2 error body. */

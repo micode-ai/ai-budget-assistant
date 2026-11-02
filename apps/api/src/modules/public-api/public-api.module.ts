@@ -3,6 +3,7 @@ import { AdminModule } from '../admin/admin.module';
 import { BudgetsModule } from '../budgets/budgets.module';
 import { ExpensesModule } from '../expenses/expenses.module';
 import { PublicAccountController } from './controllers/public-account.controller';
+import { PublicAccountsController } from './controllers/public-accounts.controller';
 import { PublicCategoriesController } from './controllers/public-categories.controller';
 import { PublicExpensesController } from './controllers/public-expenses.controller';
 import { PublicApiExceptionFilter } from './filters/public-api-exception.filter';
@@ -24,7 +25,7 @@ import { PublicExpenseWriteAdapter } from './public-expense-write.adapter';
  */
 @Module({
   imports: [AdminModule, ExpensesModule, BudgetsModule],
-  controllers: [PublicAccountController, PublicCategoriesController, PublicExpensesController],
+  controllers: [PublicAccountController, PublicAccountsController, PublicCategoriesController, PublicExpensesController],
   providers: [PublicApiAuthGuard, PublicApiRateLimitService, PublicApiExceptionFilter, PublicWriteGuard, PublicExpenseWriteAdapter],
   exports: [PublicApiAuthGuard, PublicApiRateLimitService, PublicApiExceptionFilter, PublicWriteGuard],
 })

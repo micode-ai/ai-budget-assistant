@@ -46,7 +46,9 @@ interface TokenPair {
   access_token: string;
   refresh_token: string;
   scope: string;
-  account_id: string;
+  /** Phase 1: present only when the connection has exactly one account. */
+  account_id?: string;
+  account_ids: string[];
 }
 
 function pkce(): { verifier: string; challenge: string } {
@@ -237,12 +239,32 @@ describe('Public API (e2e)', () => {
     return exchange(client, code, verifier);
   }
 
+  /** The multi-account approve body (`account_ids`). */
+  function approveMany(user: TestUser, client: RegisteredApp, accountIds: string[], challenge: string) {
+    return http()
+      .post('/api/v1/oauth/authorize/approve')
+      .set('Authorization', `Bearer ${user.jwt}`)
+      .send({ ...authorizeQuery(client, challenge), state: 'st-1', account_ids: accountIds, decision: 'allow' });
+  }
+
+  async function connectMany(user: TestUser, client: RegisteredApp, accountIds: string[]): Promise<TokenPair> {
+    const { verifier, challenge } = pkce();
+    const res = await approveMany(user, client, accountIds, challenge);
+    expect(res.status).toBe(200);
+    const code = new URL(res.body.redirectTo).searchParams.get('code');
+    expect(code).toMatch(/^aba_ac_/);
+    return exchange(client, code!, verifier);
+  }
+
   async function refresh(client: RegisteredApp, refreshToken: string) {
     return tokenRequest(client, { grant_type: 'refresh_token', refresh_token: refreshToken });
   }
 
-  const api = (method: 'get' | 'post' | 'patch' | 'delete', path: string, accessToken: string) =>
-    http()[method](`/public/v1${path}`).set('Authorization', `Bearer ${accessToken}`);
+  /** `accountId` sets `X-Account-Id`; phase 1 cases send none. */
+  const api = (method: 'get' | 'post' | 'patch' | 'delete', path: string, accessToken: string, accountId?: string) => {
+    const req = http()[method](`/public/v1${path}`).set('Authorization', `Bearer ${accessToken}`);
+    return accountId ? req.set('X-Account-Id', accountId) : req;
+  };
 
   /**
    * The changes feed withholds rows younger than PUBLIC_CHANGES_SAFETY_LAG_MS (10 s, on the DB
@@ -253,8 +275,8 @@ describe('Public API (e2e)', () => {
     await prisma.$executeRaw`UPDATE expenses SET updated_at = updated_at - interval '20 seconds' WHERE id = ${expenseId}`;
   }
 
-  async function allChanges(accessToken: string, cursor?: string) {
-    const res = await api('get', `/expenses/changes${cursor ? `?cursor=${encodeURIComponent(cursor)}` : ''}`, accessToken);
+  async function allChanges(accessToken: string, cursor?: string, accountId?: string) {
+    const res = await api('get', `/expenses/changes${cursor ? `?cursor=${encodeURIComponent(cursor)}` : ''}`, accessToken, accountId);
     expect(res.status).toBe(200);
     return res.body as {
       changes: Array<{ type: 'upsert'; expense: { id: string; amount: string } } | { type: 'delete'; id: string; deleted_at: string }>;
@@ -286,7 +308,7 @@ describe('Public API (e2e)', () => {
     for (let i = 0; i < 50 && sendAppConnectedEmail.mock.calls.length === 0; i++) {
       await new Promise((r) => setTimeout(r, 20));
     }
-    expect(sendAppConnectedEmail).toHaveBeenCalledWith(expect.objectContaining({ to: owner.email, accountName: expect.any(String) }));
+    expect(sendAppConnectedEmail).toHaveBeenCalledWith(expect.objectContaining({ to: owner.email, accountNames: [expect.any(String)] }));
 
     const pair = await exchange(client, code, verifier);
     expect(pair.account_id).toBe(accountA);
@@ -607,6 +629,154 @@ describe('Public API (e2e)', () => {
     const right = await tokenRequest(client, { grant_type: 'authorization_code', code, redirect_uri: REDIRECT_URI, code_verifier: verifier });
     expect(right.status).toBe(400);
     expect(right.body.error).toBe('invalid_grant');
+  });
+
+  // ── (j) one connection, two accounts ─────────────────────────────────────
+
+  it('(j) one connection, two accounts: addressing, isolation, role loss, co-owner disconnect, re-consent, removal', async () => {
+    const tag = randomUUID().slice(0, 8);
+    const nameA = `J personal A ${tag}`;
+    const jA = await createExtraAccount(owner.id, nameA);
+    const jB = await createExtraAccount(owner.id, `J account B ${tag}`);
+    const sharer = await createUser(`sharer-${tag}`);
+    const jS = (
+      await prisma.account.create({
+        data: {
+          name: `J shared S ${tag}`,
+          type: 'shared',
+          currencyCode: 'PLN',
+          ownerId: sharer.id,
+          members: { create: [{ userId: sharer.id, role: 'owner' }, { userId: owner.id, role: 'editor' }] },
+        },
+      })
+    ).id;
+    const client = await registerApp(owner);
+    const errCode = (res: request.Response) => res.body?.error?.code;
+
+    // 1. One connection on [A, S]: account_ids, no phase 1 account_id.
+    let pair = await connectMany(owner, client, [jA, jS]);
+    expect([...pair.account_ids].sort()).toEqual([jA, jS].sort());
+    expect(pair.account_id).toBeUndefined();
+    const grantId = (await prisma.oAuthGrant.findFirstOrThrow({ where: { clientId: client.dbId, revokedAt: null } })).id;
+
+    // 2. GET /accounts — token-only, both rows usable.
+    const listAccounts = async (token: string) => {
+      const res = await api('get', '/accounts', token);
+      expect(res.status).toBe(200);
+      return res.body.data as Array<{ id: string; type: string; active: boolean; access: string; reason: string | null }>;
+    };
+    const two = await listAccounts(pair.access_token);
+    expect(two).toHaveLength(2);
+    expect(two.find((a) => a.id === jA)).toMatchObject({ type: 'personal', active: true, access: 'read_write', reason: null });
+    expect(two.find((a) => a.id === jS)).toMatchObject({ type: 'shared', active: true, access: 'read_write', reason: null });
+
+    // 3. Addressing: each header sees only its own account.
+    const inA = await seedExpense(jA, owner.id, { localId: randomUUID(), amount: 10, currencyCode: 'PLN', date: '2026-10-30', description: 'in A', source: 'manual' });
+    const inS = await seedExpense(jS, sharer.id, { localId: randomUUID(), amount: 20, currencyCode: 'PLN', date: '2026-10-30', description: 'in S', source: 'manual' });
+    const listA = await api('get', '/expenses', pair.access_token, jA);
+    expect(listA.status).toBe(200);
+    expect(listA.body.data.map((e: { id: string }) => e.id)).toEqual([inA.id]);
+    const listS = await api('get', '/expenses', pair.access_token, jS);
+    expect(listS.status).toBe(200);
+    expect(listS.body.data.map((e: { id: string }) => e.id)).toEqual([inS.id]);
+
+    const noHeader = await api('get', '/expenses', pair.access_token);
+    expect(noHeader.status).toBe(400);
+    expect(errCode(noHeader)).toBe('account_required');
+    const accountNoHeader = await api('get', '/account', pair.access_token);
+    expect(accountNoHeader.status).toBe(400);
+    expect(errCode(accountNoHeader)).toBe('account_required');
+    const notGranted = await api('get', '/expenses', pair.access_token, jB);
+    expect(notGranted.status).toBe(403);
+    expect(errCode(notGranted)).toBe('account_not_granted');
+
+    // 4. Idempotency keys are per account; a cursor from A never leaks A's rows into S.
+    const key = randomUUID();
+    const body = { amount: '7.00', date: '2026-10-31', description: 'same key' };
+    const createdA = await api('post', '/expenses', pair.access_token, jA).set('Idempotency-Key', key).send(body);
+    const createdS = await api('post', '/expenses', pair.access_token, jS).set('Idempotency-Key', key).send(body);
+    expect(createdA.status).toBe(201);
+    expect(createdS.status).toBe(201);
+    expect(createdA.body.id).not.toBe(createdS.body.id);
+    for (const id of [inA.id, inS.id, createdA.body.id, createdS.body.id]) await settle(id);
+
+    let cursorA: string | undefined;
+    const feedA: string[] = [];
+    for (let page = 0; page < 20; page++) {
+      const feed = await allChanges(pair.access_token, cursorA, jA);
+      feedA.push(...feed.changes.map(changeId));
+      cursorA = feed.next_cursor;
+      if (!feed.has_more) break;
+    }
+    expect(feedA).toEqual(expect.arrayContaining([inA.id, createdA.body.id]));
+    const aIds = (await prisma.expense.findMany({ where: { accountId: jA }, select: { id: true } })).map((e) => e.id);
+    let cursorS: string | undefined = cursorA;
+    const feedS: string[] = [];
+    for (let page = 0; page < 20; page++) {
+      const feed = await allChanges(pair.access_token, cursorS, jS);
+      feedS.push(...feed.changes.map(changeId));
+      cursorS = feed.next_cursor;
+      if (!feed.has_more) break;
+    }
+    expect(feedS.filter((id) => aIds.includes(id))).toEqual([]);
+
+    // 5. Role loss in S cuts off S only; the connection still refreshes.
+    const setRoleInS = (role: 'viewer' | 'editor') =>
+      prisma.accountMember.update({ where: { accountId_userId: { accountId: jS, userId: owner.id } }, data: { role } });
+    await setRoleInS('viewer');
+    const demoted = await api('get', '/expenses', pair.access_token, jS);
+    expect(demoted.status).toBe(403);
+    expect(errCode(demoted)).toBe('grant_inactive');
+    expect((await api('get', '/expenses', pair.access_token, jA)).status).toBe(200);
+    expect((await listAccounts(pair.access_token)).find((a) => a.id === jS)).toMatchObject({ active: false, reason: 'role' });
+    const refreshed = await refresh(client, pair.refresh_token);
+    expect(refreshed.status).toBe(200);
+    pair = refreshed.body as TokenPair;
+
+    // 6. The co-owner sees only S and disconnects only S.
+    await setRoleInS('editor');
+    const sharerApps = await http().get('/api/v1/connected-apps').set('Authorization', `Bearer ${sharer.jwt}`);
+    expect(sharerApps.status).toBe(200);
+    expect(sharerApps.body).toHaveLength(1);
+    expect(sharerApps.body[0].accounts.map((a: { id: string }) => a.id)).toEqual([jS]);
+    expect(JSON.stringify(sharerApps.body)).not.toContain(nameA);
+    const sharerDisconnect = await http().delete(`/api/v1/connected-apps/${grantId}`).set('Authorization', `Bearer ${sharer.jwt}`);
+    expect(sharerDisconnect.status).toBe(204);
+    const cutS = await api('get', '/expenses', pair.access_token, jS);
+    expect(cutS.status).toBe(403);
+    expect(errCode(cutS)).toBe('account_not_granted');
+    // One granted account left: the header becomes optional again, on the same token.
+    const single = await api('get', '/expenses', pair.access_token);
+    expect(single.status).toBe(200);
+    expect(single.body.data.map((e: { id: string }) => e.id)).toEqual(expect.arrayContaining([inA.id]));
+
+    // 7. Re-consent pre-ticks A and replaces the set with [A, B]; the existing token reaches B.
+    const { challenge } = pkce();
+    const preview = await http()
+      .get('/api/v1/oauth/authorize/preview')
+      .query({ ...authorizeQuery(client, challenge), response_type: 'code', state: 'st-1' })
+      .set('Authorization', `Bearer ${owner.jwt}`);
+    expect(preview.status).toBe(200);
+    const previewRow = (id: string) => preview.body.accounts.find((a: { id: string }) => a.id === id);
+    expect(previewRow(jA)).toMatchObject({ connected: true });
+    expect(previewRow(jB)).toMatchObject({ connected: false });
+    expect(previewRow(jS)).toMatchObject({ connected: false });
+    expect((await approveMany(owner, client, [jA, jB], challenge)).status).toBe(200);
+    expect((await api('get', '/expenses', pair.access_token, jB)).status).toBe(200);
+    expect((await listAccounts(pair.access_token)).map((a) => a.id).sort()).toEqual([jA, jB].sort());
+
+    // 8. Removing the last account revokes the connection.
+    const removeA = await http().delete(`/api/v1/connected-apps/${grantId}/accounts/${jA}`).set('Authorization', `Bearer ${owner.jwt}`);
+    expect(removeA.status).toBe(204);
+    expect((await api('get', '/expenses', pair.access_token)).status).toBe(200); // B alone, header optional
+    const removeB = await http().delete(`/api/v1/connected-apps/${grantId}/accounts/${jB}`).set('Authorization', `Bearer ${owner.jwt}`);
+    expect(removeB.status).toBe(204);
+    const gone = await api('get', '/accounts', pair.access_token);
+    expect(gone.status).toBe(401);
+    expect(errCode(gone)).toBe('invalid_token');
+    const deadRefresh = await refresh(client, pair.refresh_token);
+    expect(deadRefresh.status).toBe(400);
+    expect(deadRefresh.body.error).toBe('invalid_grant');
   });
 
   // ── (e) feature flag off — last, and restored in a finally ───────────────

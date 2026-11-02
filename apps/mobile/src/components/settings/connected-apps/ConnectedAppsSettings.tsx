@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { View, Text, TouchableOpacity, ActivityIndicator, Linking } from 'react-native';
 import { useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -19,7 +19,7 @@ function formatDate(iso: string): string {
 
 /**
  * Settings → Connected apps (Public API phase 1): third-party apps connected to the user's accounts,
- * grouped by account, with their permissions and a Disconnect action.
+ * one card per app listing its accounts, with their permissions and a Disconnect action.
  *
  * The server lists only accounts where the caller is owner or editor, so a viewer never sees a row
  * they could not revoke — no client-side role gating is needed or wanted here. Permission lines
@@ -45,20 +45,12 @@ export function ConnectedAppsSettings() {
     }, []),
   );
 
-  const groups = useMemo(() => {
-    const byAccount = new Map<string, { name: string; items: ConnectedApp[] }>();
-    for (const item of items) {
-      const group = byAccount.get(item.account.id) ?? { name: item.account.name, items: [] };
-      group.items.push(item);
-      byAccount.set(item.account.id, group);
-    }
-    return [...byAccount.entries()].map(([id, g]) => ({ id, ...g }));
-  }, [items]);
-
   const confirmDisconnect = (item: ConnectedApp) =>
     showAlert(
       t('connectedApps.disconnectConfirmTitle', { app: item.app.name }),
-      t('connectedApps.disconnectConfirmBody', { app: item.app.name, account: item.account.name }),
+      item.isGrantor
+        ? t('connectedApps.disconnectConfirmBody', { app: item.app.name })
+        : t('connectedApps.disconnectSharedConfirmMessage', { app: item.app.name }),
       [
         { text: t('common.cancel'), style: 'cancel' },
         {
@@ -68,6 +60,33 @@ export function ConnectedAppsSettings() {
         },
       ],
     );
+
+  const accountLabel = (name: string | null) => name ?? t('connectedApps.accountGone');
+
+  const confirmRemoveAccount = (item: ConnectedApp, account: ConnectedApp['accounts'][number]) =>
+    showAlert(
+      t('connectedApps.removeAccountConfirmTitle', { account: accountLabel(account.name) }),
+      t('connectedApps.removeAccountConfirmMessage', { app: item.app.name, account: accountLabel(account.name) }),
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('connectedApps.removeAccount'),
+          style: 'destructive',
+          onPress: () => void removeAccount(item.grantId, account.id),
+        },
+      ],
+    );
+
+  const removeAccount = async (grantId: string, accountId: string) => {
+    setBusyId(grantId);
+    try {
+      await useConnectedAppsStore.getState().removeAccount(grantId, accountId);
+    } catch {
+      showAlert(t('common.error'), t('connectedApps.disconnectError'));
+    } finally {
+      setBusyId(null);
+    }
+  };
 
   const disconnect = async (grantId: string) => {
     setBusyId(grantId);
@@ -110,6 +129,33 @@ export function ConnectedAppsSettings() {
             <View key={scope} style={styles.scopeRow}>
               <Ionicons name={scopeIcon(scope)} size={16} color={theme.colors.textSecondary} />
               <Text style={styles.scopeText}>{t(scopeLabelKey(scope))}</Text>
+            </View>
+          ))}
+        </View>
+
+        <View style={styles.scopes}>
+          <Text style={styles.label}>{t('connectedApps.accountsLabel')}</Text>
+          {item.accounts.map((account) => (
+            <View key={account.id} style={styles.accountRow}>
+              <View style={styles.accountInfo}>
+                <Text style={styles.scopeText} numberOfLines={2}>
+                  {accountLabel(account.name)} · {t(`accounts.types.${account.type}`)}
+                </Text>
+                {!account.active && (account.reason === 'role' || account.reason === 'encrypted') && (
+                  <Text style={styles.meta}>{t(`connectedApps.accountUnavailable.${account.reason}`)}</Text>
+                )}
+              </View>
+              {item.accounts.length > 1 && (
+                <TouchableOpacity
+                  disabled={busy}
+                  onPress={() => confirmRemoveAccount(item, account)}
+                  accessibilityRole="button"
+                  accessibilityLabel={`${t('connectedApps.removeAccount')}: ${accountLabel(account.name)}`}
+                  style={styles.removeBtn}
+                >
+                  <Ionicons name="close-circle-outline" size={20} color={theme.colors.danger} />
+                </TouchableOpacity>
+              )}
             </View>
           ))}
         </View>
@@ -182,12 +228,7 @@ export function ConnectedAppsSettings() {
         </View>
       );
     }
-    return groups.map((group) => (
-      <View key={group.id} style={styles.group}>
-        <Text style={styles.groupTitle}>{t('connectedApps.account', { name: group.name })}</Text>
-        {group.items.map(renderItem)}
-      </View>
-    ));
+    return items.map(renderItem);
   };
 
   return (
@@ -207,8 +248,9 @@ const createStyles = (theme: Theme) => ({
   centered: { alignItems: 'center' as const, justifyContent: 'center' as const, minHeight: 80 },
   intro: { ...theme.textStyles.body, color: theme.colors.textSecondary },
   muted: { ...theme.textStyles.body, color: theme.colors.textTertiary, textAlign: 'center' as const },
-  group: { gap: theme.spacing[2] },
-  groupTitle: { ...theme.textStyles.label, color: theme.colors.textTertiary },
+  accountRow: { flexDirection: 'row' as const, alignItems: 'center' as const, gap: theme.spacing[2] },
+  accountInfo: { flex: 1 },
+  removeBtn: { minWidth: 36, minHeight: 36, alignItems: 'center' as const, justifyContent: 'center' as const },
   label: { ...theme.textStyles.label, color: theme.colors.textTertiary },
   card: {
     backgroundColor: theme.colors.surface,

@@ -21,7 +21,7 @@ export const TEXTS_EN: DocTexts = {
   // ── tags ─────────────────────────────────────────────────────────────────
   'tag.OAuth':
     'Token exchange, refresh and revocation (RFC 6749 / RFC 7009). These endpoints answer errors as `{"error", "error_description"}`, not in the `/public/v1` error shape.',
-  'tag.Account': 'The account the access token is bound to.',
+  'tag.Account': 'The account a request addresses (`X-Account-Id`), one of the accounts of the connection.',
   'tag.Categories': "The account's expense categories, for `category_id`.",
   'tag.Expenses': 'Expenses: read, incremental sync, receipts and writes.',
 
@@ -63,8 +63,23 @@ export const TEXTS_EN: DocTexts = {
   // ── Account ──────────────────────────────────────────────────────────────
   'op.getAccount.summary': 'Get the connected account',
   'op.getAccount.description':
-    'The account this connection is bound to and the user who connected it. Works with any valid token, whatever its scopes. `read_only: true` means the account is end-to-end encrypted: reads work with some fields withheld, writes answer `403 account_encrypted`.',
+    'The account addressed by `X-Account-Id` (or the only account of the connection) and the user who connected it. Works with any valid token, whatever its scopes; with several accounts the header is required. `read_only: true` means the account is end-to-end encrypted: reads work with some fields withheld, writes answer `403 account_encrypted`.',
   'op.getAccount.response.200': 'The connected account.',
+  'op.listAccounts.summary': "List the connection's accounts",
+  'op.listAccounts.description': 'Every account this connection covers, usable or not. Works with any valid token and needs no `X-Account-Id`. `access` is `read_write` only when the app holds `expenses:write` and the account allows writes; `active: false` with a `reason` (`role`, `encrypted`) means requests addressed to it are refused; `reason: archived` is an archived trip (active, read-only). Send the chosen `id` as `X-Account-Id` on every other call.',
+  'param.X-Account-Id':
+    'Which account of the connection the call is about. Optional when the connection has exactly one account; required when it has several (`400 account_required`), counted on the granted accounts, not the usable ones. An account that is not part of the connection answers `403 account_not_granted`. Take the ids from `GET /public/v1/accounts`.',
+  'op.listAccounts.response.200': 'The accounts of the connection.',
+  'schema.PublicConnectedAccount': 'One account of the connection.',
+  'schema.PublicConnectedAccount.id': 'Account id; send it as `X-Account-Id`.',
+  'schema.PublicConnectedAccount.name': 'Account name; `null` when the user is no longer a member of it (`reason: role`).',
+  'schema.PublicConnectedAccount.type': 'Account type; `null` when the user is no longer a member of it.',
+  'schema.PublicConnectedAccount.base_currency': "The account's base currency (ISO 4217); `null` when the user is no longer a member of it.",
+  'schema.PublicConnectedAccount.access': '`read_write` when this connection may write to the account, otherwise `read`.',
+  'schema.PublicConnectedAccount.active': '`false` when requests addressed to this account are refused.',
+  'schema.PublicConnectedAccount.reason': 'Why the account is limited: `role` (the user lost owner/editor rights), `encrypted` (end-to-end encrypted), `archived` (archived trip, read-only); `null` otherwise.',
+  'schema.PublicConnectedAccountList': 'The accounts of the connection.',
+  'schema.PublicConnectedAccountList.data': 'Accounts, in the order they were connected.',
 
   // ── Categories ───────────────────────────────────────────────────────────
   'op.listCategories.summary': 'List expense categories',
@@ -179,7 +194,8 @@ export const TEXTS_EN: DocTexts = {
   'schema.OAuthTokenResponse.refresh_token':
     'Valid for 90 days and single-use: each refresh returns a new one. Reusing an old one revokes the connection.',
   'schema.OAuthTokenResponse.scope': 'The scopes of the connection, space-separated.',
-  'schema.OAuthTokenResponse.account_id': 'The account the user connected.',
+  'schema.OAuthTokenResponse.account_ids': 'The accounts the user connected, in connection order.',
+  'schema.OAuthTokenResponse.account_id': 'Present only when the connection has exactly one account (phase 1 compatibility). Read `account_ids` instead.',
 
   // ── schemas: account and categories ──────────────────────────────────────
   'schema.PublicAccount': 'The connected account.',

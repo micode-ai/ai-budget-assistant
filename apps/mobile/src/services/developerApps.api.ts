@@ -1,3 +1,4 @@
+import type { AccountType } from '@budget/shared-types';
 import { httpClient } from './http-client';
 
 /**
@@ -72,7 +73,16 @@ export interface ConnectedApp {
     isVerified: boolean;
     status: DeveloperAppStatus;
   };
-  account: { id: string; name: string };
+  /** True for the user who connected the app; a co-owner sees only their own accounts of it. */
+  isGrantor: boolean;
+  accounts: {
+    id: string;
+    /** null when the grantor is no longer a member of the account. */
+    name: string | null;
+    type: AccountType;
+    active: boolean;
+    reason: 'role' | 'encrypted' | 'archived' | null;
+  }[];
   scopes: string[];
   connectedBy: { id: string; name: string };
   connectedAt: string;
@@ -117,5 +127,12 @@ export const developerAppsApi = {
 
   disconnectConnectedApp(grantId: string) {
     return httpClient.request<void>(`/connected-apps/${encodeURIComponent(grantId)}`, { method: 'DELETE' });
+  },
+
+  removeConnectedAppAccount(grantId: string, accountId: string) {
+    return httpClient.request<void>(
+      `/connected-apps/${encodeURIComponent(grantId)}/accounts/${encodeURIComponent(accountId)}`,
+      { method: 'DELETE' },
+    );
   },
 };

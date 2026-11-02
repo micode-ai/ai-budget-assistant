@@ -7,6 +7,7 @@ import { OAuthGrantsService } from './oauth-grants.service';
 import { generateToken, sha256Hex, verifyPkceS256 } from './oauth-crypto.util';
 import { oauthCodeKey, type OAuthCodePayload } from './oauth-code';
 import { InvalidScopeError, parseScopeParam } from './oauth-scopes';
+import { grantAccountStatus, loadGrantAccountStates } from './oauth-grant-accounts.util';
 
 export const ACCESS_TOKEN_TTL_SEC = 3600;
 export const REFRESH_TOKEN_TTL_MS = 90 * 24 * 60 * 60 * 1000;
@@ -49,7 +50,10 @@ export interface TokenResponse {
   expires_in: number;
   refresh_token: string;
   scope: string;
-  account_id: string;
+  /** Every account of the connection (granted, live), in connection order. */
+  account_ids: string[];
+  /** Phase 1 compatibility: present only when `account_ids` has exactly one entry. */
+  account_id?: string;
 }
 
 /** Form or JSON body, as parsed by express. Values may be strings, arrays (repeated keys) or objects. */
@@ -177,10 +181,10 @@ export class OAuthTokenService {
     if (!verifyPkceS256(verifier, payload.codeChallenge)) throw err.grant('code_verifier does not match');
 
     const grant = await this.prisma.oAuthGrant.findUnique({ where: { id: payload.grantId } });
-    await this.assertGrantUsable(grant, client);
+    const accountIds = await this.assertGrantUsable(grant, client);
 
     const pair = await this.issuePair(grant!.id);
-    return this.response(grant!, pair);
+    return this.response(grant!, accountIds, pair);
   }
 
   private async refresh(client: OAuthClient, body: OAuthBody): Promise<TokenResponse> {
@@ -202,7 +206,7 @@ export class OAuthTokenService {
     }
     if (row.expiresAt.getTime() <= Date.now()) throw err.grant('refresh token has expired');
 
-    await this.assertGrantUsable(row.grant, client);
+    const accountIds = await this.assertGrantUsable(row.grant, client);
 
     if (scopeParam !== undefined) {
       let requested: string[];
@@ -231,7 +235,7 @@ export class OAuthTokenService {
       await this.reuseDetected(row.grantId);
       throw err.grant('refresh token is invalid');
     }
-    return this.response(row.grant, pair);
+    return this.response(row.grant, accountIds, pair);
   }
 
   private async reuseDetected(grantId: string): Promise<void> {
@@ -239,24 +243,33 @@ export class OAuthTokenService {
     await this.grants.revoke(grantId, 'reuse_detected');
   }
 
-  /** Grant exists, belongs to this client, is not revoked, and its grantor is still owner/editor. */
-  private async assertGrantUsable(grant: OAuthGrant | null, client: OAuthClient): Promise<void> {
+  /**
+   * Grant exists, belongs to this client, is not revoked, and at least ONE of its accounts is still
+   * usable (grantor owner/editor there, tier < 2). Returns every granted account id, usable or not,
+   * in connection order: an inactive account stays in the connection (and in `/accounts`) until the
+   * last one goes, so a refresh keeps working for the others.
+   */
+  private async assertGrantUsable(grant: OAuthGrant | null, client: OAuthClient): Promise<string[]> {
     if (!grant || grant.clientId !== client.id || grant.revokedAt) throw err.grant('grant is not active');
-    const member = await this.prisma.accountMember.findFirst({
-      where: { userId: grant.userId, accountId: grant.accountId, role: { in: ['owner', 'editor'] } },
-      select: { userId: true },
-    });
-    if (!member) throw err.grant('grant is no longer valid for this account');
+    const states = await loadGrantAccountStates(this.prisma, grant.id, grant.userId);
+    if (!states.some((s) => grantAccountStatus(s).active)) throw err.grant('no account of this connection is usable any more');
+    return states.map((s) => s.id);
   }
 
-  private response(grant: OAuthGrant, pair: { accessToken: string; refreshToken: string }): TokenResponse {
+  private response(
+    grant: OAuthGrant,
+    accountIds: string[],
+    pair: { accessToken: string; refreshToken: string },
+  ): TokenResponse {
     return {
       access_token: pair.accessToken,
       token_type: 'Bearer',
       expires_in: ACCESS_TOKEN_TTL_SEC,
       refresh_token: pair.refreshToken,
       scope: grant.scopes.join(' '),
-      account_id: grant.accountId,
+      account_ids: accountIds,
+      // Phase 1 compatibility (Review Focus 4): only a single-account connection carries it.
+      ...(accountIds.length === 1 ? { account_id: accountIds[0] } : {}),
     };
   }
 

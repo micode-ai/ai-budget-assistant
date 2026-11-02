@@ -3,7 +3,7 @@ import { ApiOAuth2, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger
 import { PrismaService } from '../../../database/prisma.service';
 import { PublicApiEnabledGuard } from '../../oauth/guards/public-api-enabled.guard';
 import { TokenOnly } from '../decorators/token-only.decorator';
-import { ApiPublicErrors } from '../docs/public-api-docs.decorators';
+import { ApiAccountHeader, ApiPublicErrors } from '../docs/public-api-docs.decorators';
 import { PublicAccount } from '../dto/public-expense.dto';
 import { PublicApiExceptionFilter } from '../filters/public-api-exception.filter';
 import { PublicApiAuthGuard } from '../guards/public-api-auth.guard';
@@ -17,10 +17,11 @@ export function encryptionLabel(tier: number): PublicAccount['encryption'] {
 }
 
 /**
- * `GET /public/v1/account` — the account the token is bound to. The ONLY `@TokenOnly()` route
+ * `GET /public/v1/account` — the account the request addresses (`X-Account-Id`), one of the connection's accounts. The ONLY `@TokenOnly()` route
  * (Ruling 13): any valid token may read it, so it says nothing beyond what the consent screen
  * already showed — no e-mail, no other accounts.
  */
+@ApiAccountHeader()
 @ApiTags('Account')
 @Controller('public/v1/account')
 @UseGuards(PublicApiEnabledGuard, PublicApiAuthGuard)

@@ -40,6 +40,8 @@ export interface AuthorizePreviewAccount {
   selectable: boolean;
   reason: 'viewer' | 'encrypted' | null;
   readOnly: boolean;
+  /** The account is in the caller's active grant for this client (re-consent pre-ticks it). */
+  connected: boolean;
 }
 
 export interface AuthorizePreview {
@@ -90,14 +92,19 @@ export class OAuthAuthorizeService {
   async preview(userId: string, q: AuthorizePreviewQueryDto): Promise<AuthorizePreview> {
     const { client, scopes } = await this.validate(q, { check: true, value: q.response_type });
 
-    const [developer, memberships] = await Promise.all([
+    const [developer, memberships, connectedRows] = await Promise.all([
       this.prisma.user.findUnique({ where: { id: client.ownerUserId }, select: { name: true } }),
       this.prisma.accountMember.findMany({
         where: { userId, account: { isActive: true } },
         include: { account: { select: { id: true, name: true, type: true, encryptionTier: true } } },
         orderBy: { joinedAt: 'asc' },
       }),
+      this.prisma.oAuthGrantAccount.findMany({
+        where: { grant: { clientId: client.id, userId, revokedAt: null } },
+        select: { accountId: true },
+      }),
     ]);
+    const connected = new Set(connectedRows.map((r) => r.accountId));
 
     return {
       app: {
@@ -120,6 +127,7 @@ export class OAuthAuthorizeService {
           selectable: !encrypted && !viewer,
           reason: encrypted ? 'encrypted' : viewer ? 'viewer' : null,
           readOnly: m.account.encryptionTier === 1,
+          connected: connected.has(m.account.id),
         };
       }),
     };
@@ -133,38 +141,50 @@ export class OAuthAuthorizeService {
     }
 
     const req = await this.validate(dto, { check: false });
-    if (!dto.account_id) throw oauthError('invalid_request', 'account_id is required');
+    // `account_ids` is the multi-account form; `account_id` is the phase 1 single-account form.
+    const accountIds = [...new Set(dto.account_ids ?? (dto.account_id ? [dto.account_id] : []))];
+    if (accountIds.length === 0) throw oauthError('invalid_request', 'account_ids is required');
 
-    const membership = await this.prisma.accountMember.findFirst({
-      where: { userId, accountId: dto.account_id, account: { isActive: true } },
-      include: {
-        account: { select: { id: true, name: true, encryptionTier: true } },
-        user: { select: { name: true, email: true, language: true } },
-      },
-    });
-    if (!membership) {
-      throw new ForbiddenException({ error: 'access_denied', error_description: 'not a member of this account' });
-    }
-    if (membership.role !== 'owner' && membership.role !== 'editor') {
-      throw new ForbiddenException({ error: 'access_denied', error_description: 'only an owner or editor can connect an app' });
-    }
-    if (membership.account.encryptionTier >= 2) {
-      throw new ForbiddenException({ error: 'account_encrypted', error_description: 'this account is end-to-end encrypted' });
+    // Every requested account is checked; any failure refuses the whole approve (no partial grant).
+    const memberships: {
+      role: AccountRole;
+      account: { id: string; name: string };
+      user: { name: string; email: string; language: string };
+    }[] = [];
+    for (const accountId of accountIds) {
+      const membership = await this.prisma.accountMember.findFirst({
+        where: { userId, accountId, account: { isActive: true } },
+        include: {
+          account: { select: { id: true, name: true, encryptionTier: true } },
+          user: { select: { name: true, email: true, language: true } },
+        },
+      });
+      if (!membership) {
+        throw new ForbiddenException({ error: 'access_denied', error_description: 'not a member of this account' });
+      }
+      if (membership.role !== 'owner' && membership.role !== 'editor') {
+        throw new ForbiddenException({ error: 'access_denied', error_description: 'only an owner or editor can connect an app' });
+      }
+      if (membership.account.encryptionTier >= 2) {
+        throw new ForbiddenException({ error: 'account_encrypted', error_description: 'this account is end-to-end encrypted' });
+      }
+      memberships.push(membership);
     }
 
-    const { grant, isNew } = await this.grants.upsertActive(req.client.id, userId, membership.account.id, req.scopes);
+    const { grant, addedAccountIds } = await this.grants.replaceActive(req.client.id, userId, accountIds, req.scopes);
 
-    // A new grant is a real connection (it shows in Connected apps) whether or not the code below
-    // is stored, so the e-mail goes out here; a retry after a failed store re-uses the grant silently.
-    if (isNew) {
+    // Newly connected accounts are real connections (they show in Connected apps) whether or not the
+    // code below is stored, so the e-mail goes out here; a retry after a failed store adds nothing new.
+    if (addedAccountIds.length > 0) {
+      const added = memberships
+        .filter((m) => addedAccountIds.includes(m.account.id))
+        .map((m) => ({ id: m.account.id, name: m.account.name, grantorRole: m.role }));
       void this.notifyConnected({
         clientDbId: req.client.id,
         appName: req.client.name,
-        accountId: membership.account.id,
-        accountName: membership.account.name,
         grantorId: userId,
-        grantorRole: membership.role,
-        grantor: membership.user,
+        grantor: memberships[0].user,
+        added,
       }).catch(logFireAndForget(this.logger, 'OAuthAuthorizeService.notifyConnected'));
     }
 
@@ -236,48 +256,58 @@ export class OAuthAuthorizeService {
   }
 
   /**
-   * E-mails the grantor; when the grantor is an editor, every owner of the account too (spec §9).
-   * At most once per (app, account) per day: connect → disconnect → connect must not turn into a
-   * stream of e-mails. A Redis outage on the dedupe key sends anyway — a lost security notice is
-   * worse than a duplicate.
+   * E-mails the grantor one message listing every newly connected account; for the accounts where
+   * the grantor is an editor, each owner of them gets one message listing only the accounts they
+   * own (spec section 9). At most once per (app, account) per day: connect, disconnect, connect must
+   * not turn into a stream of e-mails. A Redis outage on the dedupe key sends anyway: a lost
+   * security notice is worse than a duplicate.
    */
   private async notifyConnected(p: {
     clientDbId: string;
     appName: string;
-    accountId: string;
-    accountName: string;
     grantorId: string;
-    grantorRole: AccountRole;
     grantor: { name: string; email: string; language: string };
+    added: { id: string; name: string; grantorRole: AccountRole }[];
   }): Promise<void> {
-    let first = true;
-    try {
-      first = await this.cache.setIfAbsentStrict(`oauth:mail:connected:${p.clientDbId}:${p.accountId}`, CONNECTED_MAIL_DEDUPE_SEC);
-    } catch (e) {
-      this.logger.warn(`connected-mail dedupe unavailable, sending anyway: ${(e as Error).message}`);
+    const surviving: typeof p.added = [];
+    for (const a of p.added) {
+      let first = true;
+      try {
+        first = await this.cache.setIfAbsentStrict(`oauth:mail:connected:${p.clientDbId}:${a.id}`, CONNECTED_MAIL_DEDUPE_SEC);
+      } catch (e) {
+        this.logger.warn(`connected-mail dedupe unavailable, sending anyway: ${(e as Error).message}`);
+      }
+      if (first) surviving.push(a);
     }
-    if (!first) return;
+    if (surviving.length === 0) return;
 
-    const recipients: { email: string; language: string }[] = [p.grantor];
-    if (p.grantorRole === 'editor') {
-      const owners = await this.prisma.accountMember.findMany({
-        where: { accountId: p.accountId, role: 'owner', userId: { not: p.grantorId } },
-        include: { user: { select: { email: true, language: true } } },
-      });
-      for (const o of owners) recipients.push(o.user);
-    }
-    for (const r of recipients) {
+    const send = (r: { email: string; language: string }, names: string[]) =>
       void this.mail
         .sendAppConnectedEmail({
           to: r.email,
           lang: r.language,
           appName: p.appName,
-          accountName: p.accountName,
+          accountNames: names,
           connectedByName: p.grantor.name,
           manageUrl: CONNECTED_APPS_URL,
         })
         .catch(logFireAndForget(this.logger, 'OAuthAuthorizeService.sendAppConnectedEmail'));
+
+    send(p.grantor, surviving.map((a) => a.name));
+
+    const byOwner = new Map<string, { user: { email: string; language: string }; names: string[] }>();
+    for (const a of surviving.filter((x) => x.grantorRole === 'editor')) {
+      const owners = await this.prisma.accountMember.findMany({
+        where: { accountId: a.id, role: 'owner', userId: { not: p.grantorId } },
+        include: { user: { select: { email: true, language: true } } },
+      });
+      for (const o of owners) {
+        const entry = byOwner.get(o.userId) ?? { user: o.user, names: [] };
+        entry.names.push(a.name);
+        byOwner.set(o.userId, entry);
+      }
     }
+    for (const { user, names } of byOwner.values()) send(user, names);
   }
 }
 

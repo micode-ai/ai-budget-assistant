@@ -8,6 +8,7 @@ import { PUBLIC_SCOPES } from '../../oauth/oauth-scopes';
 import { OAUTH_TOKEN_ERROR_CODES } from '../../oauth/oauth-token.service';
 import { OAuthTokenController } from '../../oauth/oauth-token.controller';
 import { PublicAccountController } from '../controllers/public-account.controller';
+import { PublicAccountsController } from '../controllers/public-accounts.controller';
 import { PublicCategoriesController } from '../controllers/public-categories.controller';
 import { PublicExpensesController } from '../controllers/public-expenses.controller';
 import { REQUIRE_SCOPES_KEY } from '../decorators/require-scopes.decorator';
@@ -68,6 +69,7 @@ describe('public OpenAPI document', () => {
         'getExpense',
         'getExpenseReceipt',
         'issueToken',
+        'listAccounts',
         'listCategories',
         'listExpenseChanges',
         'listExpenses',
@@ -121,7 +123,7 @@ describe('public OpenAPI document', () => {
   });
 
   it('each operation publishes exactly the scopes its route enforces', () => {
-    const controllers = [PublicAccountController, PublicCategoriesController, PublicExpensesController];
+    const controllers = [PublicAccountController, PublicAccountsController, PublicCategoriesController, PublicExpensesController];
     const enforced = new Map<string, string[]>();
     for (const ctrl of controllers) {
       const proto = ctrl.prototype as unknown as Record<string, object>;
@@ -162,6 +164,36 @@ describe('public OpenAPI document', () => {
     const header = (create.parameters ?? []).find((p) => 'name' in p && p.name === 'Idempotency-Key') as { in: string; required: boolean };
     expect(header).toMatchObject({ in: 'header', required: true });
     expect(Object.keys(create.responses)).toEqual(expect.arrayContaining(['200', '201', '409', '422']));
+  });
+
+  it('listAccounts needs no scope and no X-Account-Id; every other /public/v1 operation has an optional one', () => {
+    const publicOps = operations(doc).filter((o) => o.path.startsWith('/public/v1/'));
+    const list = publicOps.find((o) => o.op.operationId === 'listAccounts')!.op;
+    expect(list.security).toEqual([{ oauth2: [] }]);
+    expect((list.parameters ?? []).some((p) => 'name' in p && p.name === 'X-Account-Id')).toBe(false);
+    for (const { op } of publicOps.filter((o) => o.op.operationId !== 'listAccounts')) {
+      const header = (op.parameters ?? []).find((p) => 'name' in p && p.name === 'X-Account-Id') as
+        | { in: string; required?: boolean }
+        | undefined;
+      expect({ op: op.operationId, in: header?.in, required: header?.required ?? false }).toEqual({
+        op: op.operationId,
+        in: 'header',
+        required: false,
+      });
+    }
+  });
+
+  it('the X-Account-Id description comes from the one shared text key in every language', () => {
+    for (const lang of DOC_LANGS) {
+      const { document, missing } = buildPublicOpenApi(app, lang, doc);
+      expect(missing).toEqual([]);
+      const descriptions = operations(document)
+        .flatMap((o) => (o.op.parameters ?? []).filter((p) => 'name' in p && p.name === 'X-Account-Id'))
+        .map((p) => (p as { description?: string }).description);
+      expect(descriptions.length).toBeGreaterThan(0);
+      expect(new Set(descriptions).size).toBe(1);
+      expect(descriptions[0]).toContain('account_required');
+    }
   });
 
   it.each(DOC_LANGS)('builds the %s document: texts applied, guide under a language switcher', (lang) => {

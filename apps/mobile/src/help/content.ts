@@ -5288,16 +5288,20 @@ Groups need a connection to the server. While the app can't reach it, a banner s
 
 ## What connecting an app means
 
-Some products can work with your AI Budget data from inside their own screens: an accounting app can pick up your expenses and receipts, or add expenses for you. To allow it, you connect the app to **one** of your AI Budget accounts.
+Some products can work with your AI Budget data from inside their own screens: an accounting app can pick up your expenses and receipts, or add expenses for you. To allow it, you connect the app to **one or more** of your AI Budget accounts.
 
 The app never sees your password. When you click its "Connect AI Budget" button, it sends you to an AI Budget page where you sign in as usual and see:
 
 - the app's name, its website and who made it;
 - **Verified by AI Budget** (an app we have checked, such as our own) or **Not verified by AI Budget**;
 - the list of permissions the app asks for;
-- **Account to connect** — pick which account the app may use.
+- **Accounts to connect** — a checkbox for every account. Tick each account the app may use; **Allow** stays disabled until at least one is ticked. If only one account can be connected, it is already ticked. Accounts you can only view, or that use full encryption, are greyed out with the reason, and an account with text encryption is marked read-only.
 
 Tap **Allow** to connect, or **Deny** to send you back to the app without connecting. Only allow apps you trust.
+
+**Connecting an app again.** If the app is already connected, the screen opens with the accounts it already has ticked, together with any other account that can still be connected. What you tick is the full list: tick a new account to add it, untick one to cut the app off from it. The app's access to the accounts you leave ticked keeps working without interruption.
+
+When an app has several accounts, it tells us which one each request is about — you do not have to do anything.
 
 ## What each permission allows
 
@@ -5306,15 +5310,17 @@ Tap **Allow** to connect, or **Deny** to send you back to the app without connec
 - **Download your receipt photos** — the app can download the receipt image or PDF attached to an expense.
 - **See your expense categories** — the app can read your category list, so it can file new expenses correctly.
 
-Every connected app can also see the account's name, type and currency, and your name. It never gets your e-mail address, and it can never see your other accounts.
+Every connected app can also see the name, type and currency of the accounts you ticked, and your name. It never gets your e-mail address, and it can never see an account you did not tick.
 
 ## Seeing and disconnecting apps
 
-Open **Settings → Connected apps**. Each app is listed with the account it is connected to, who connected it and when, when it was last used, and its permissions.
+Open **Settings → Connected apps**. Each app is one row, listing the accounts it is connected to, who connected it and when, when it was last used, and its permissions.
 
-Tap **Disconnect** and confirm. The app loses access to that account immediately — its next request is refused. Expenses it already added stay in your account. To use the app again, connect it again from the app.
+To cut off **one account**, tap **Remove account** next to it and confirm. The app loses that account immediately — its next request for it is refused — while its other accounts keep working. Removing the last account disconnects the app completely.
 
-Every time an app is connected, we send an e-mail to the person who connected it. If you get one and don't recognise the app, disconnect it right away.
+To cut off the whole app, tap **Disconnect** and confirm. It loses access to all its accounts at once. Expenses it already added stay in your accounts. To use the app again, connect it again from the app.
+
+Every time an app is connected or gets new accounts, we send an e-mail to the person who did it, listing the added accounts. If you get one and don't recognise the app, disconnect it right away.
 
 If you don't see **Connected apps** in Settings, connecting apps is not available yet.
 
@@ -5322,9 +5328,11 @@ If you don't see **Connected apps** in Settings, connecting apps is not availabl
 
 Only an **owner** or an **editor** of an account can connect an app to it; someone who can only view an account sees it greyed out.
 
-An app connected to a shared account sees **everyone's** expenses in it, not only those of the person who connected it. That is why every owner and editor of the account sees all apps connected to it under **Connected apps**, with who connected each one, and can disconnect any of them. When an editor connects an app, the account's owners get the e-mail too.
+An app connected to a shared account sees **everyone's** expenses in it, not only those of the person who connected it. That is why every owner and editor of such an account sees the app under **Connected apps**, with who connected it, and can remove it from that account.
 
-If the person who connected an app later becomes a viewer or leaves the account, the app stops working for that account.
+You only ever see the accounts of a connection that you yourself own or edit — never the other accounts the person who connected the app chose. When you tap **Disconnect**, the app loses only those accounts of yours; it stays connected for the person who set it up, and only that person can disconnect it completely. When an editor connects an app, the owners of the connected accounts get an e-mail too, listing only their own accounts.
+
+If the person who connected an app later becomes a viewer or leaves an account, the app stops working for that account; its other accounts are not affected. An account that is deleted is dropped from the app automatically.
 
 ## Encrypted accounts
 
@@ -10584,16 +10592,20 @@ OCR иногда неверно читает цену, выдумывает ст
 
 ## Что значит «подключить приложение»
 
-Некоторые сервисы умеют работать с вашими данными AI Budget прямо на своих экранах: бухгалтерское приложение может забирать ваши расходы и чеки или добавлять расходы за вас. Чтобы это разрешить, вы подключаете приложение к **одному** из своих счетов в AI Budget.
+Некоторые сервисы умеют работать с вашими данными AI Budget прямо на своих экранах: бухгалтерское приложение может забирать ваши расходы и чеки или добавлять расходы за вас. Чтобы это разрешить, вы подключаете приложение к **одному или нескольким** своим счетам в AI Budget.
 
 Ваш пароль приложение не видит никогда. Когда вы нажимаете в нём кнопку «Подключить AI Budget», оно открывает страницу AI Budget: вы входите как обычно и видите:
 
 - название приложения, его сайт и кто его сделал;
 - **Проверено AI Budget** (приложение, которое мы проверили, например наше собственное) или **Не проверено AI Budget**;
 - список разрешений, которые просит приложение;
-- **Какой счёт подключить** — вы выбираете, каким счётом приложение сможет пользоваться.
+- **Какие счета подключить** — у каждого счёта есть флажок. Отметьте каждый счёт, которым приложение может пользоваться; кнопка **Разрешить** неактивна, пока не отмечен хотя бы один. Если подключить можно только один счёт, он уже отмечен. Счета, которые вы можете только просматривать, и счета с полным шифрованием неактивны, с указанием причины, а счёт с шифрованием текста помечен как «только чтение».
 
 Нажмите **Разрешить**, чтобы подключить, или **Отклонить**, чтобы вернуться в приложение без подключения. Разрешайте доступ только приложениям, которым доверяете.
+
+**Повторное подключение.** Если приложение уже подключено, экран откроется с уже отмеченными счетами, которые у него есть, и со всеми остальными счетами, которые ещё можно подключить. Отмеченное вами — это полный список: отметьте новый счёт, чтобы добавить его, или снимите отметку, чтобы отрезать приложение от счёта. Доступ к счетам, которые остались отмеченными, работает без перерыва.
+
+Когда у приложения несколько счетов, оно само указывает в каждом запросе, о каком счёте речь, — вам ничего делать не нужно.
 
 ## Что даёт каждое разрешение
 
@@ -10602,15 +10614,17 @@ OCR иногда неверно читает цену, выдумывает ст
 - **Скачивать фото ваших чеков** — приложение может скачать изображение или PDF чека, прикреплённого к расходу.
 - **Видеть ваши категории расходов** — приложение может читать список категорий, чтобы правильно раскладывать новые расходы.
 
-Любое подключённое приложение видит также название, тип и валюту счёта и ваше имя. Ваш адрес электронной почты оно не получает никогда, а другие ваши счета не видит.
+Любое подключённое приложение видит также название, тип и валюту счетов, которые вы отметили, и ваше имя. Ваш адрес электронной почты оно не получает никогда, а счета, которые вы не отметили, не видит.
 
 ## Просмотр и отключение приложений
 
-Откройте **Настройки → Подключённые приложения**. Для каждого приложения видно, к какому счёту оно подключено, кто и когда его подключил, когда им пользовались в последний раз и какие у него разрешения.
+Откройте **Настройки → Подключённые приложения**. Каждое приложение — одна строка: счета, к которым оно подключено, кто и когда его подключил, когда им пользовались в последний раз и какие у него разрешения.
 
-Нажмите **Отключить** и подтвердите. Приложение сразу теряет доступ к этому счёту — уже следующий его запрос будет отклонён. Расходы, которые оно успело добавить, остаются на счёте. Чтобы снова пользоваться приложением, подключите его заново из самого приложения.
+Чтобы отрезать **один счёт**, нажмите рядом с ним **Убрать счёт** и подтвердите. Приложение сразу теряет этот счёт — его следующий запрос по нему будет отклонён, — а остальные счета продолжают работать. Если убрать последний счёт, приложение отключается полностью.
 
-При каждом новом подключении мы отправляем письмо тому, кто его сделал. Если вам пришло такое письмо, а приложение вам незнакомо, сразу отключите его.
+Чтобы отключить приложение целиком, нажмите **Отключить** и подтвердите. Оно сразу теряет доступ ко всем своим счетам. Расходы, которые оно успело добавить, остаются на счетах. Чтобы снова пользоваться приложением, подключите его заново из самого приложения.
+
+Каждый раз, когда приложение подключают или к нему добавляют счета, мы отправляем письмо тому, кто это сделал, со списком добавленных счетов. Если вам пришло такое письмо, а приложение вам незнакомо, сразу отключите его.
 
 Если пункта **Подключённые приложения** в настройках нет, подключение приложений пока недоступно.
 
@@ -10618,9 +10632,11 @@ OCR иногда неверно читает цену, выдумывает ст
 
 Подключить приложение к счёту может только его **владелец** или **редактор**; тот, кто может счёт только просматривать, увидит его неактивным.
 
-Приложение, подключённое к общему счёту, видит расходы **всех** участников, а не только того, кто его подключил. Поэтому все владельцы и редакторы счёта видят в **Подключённых приложениях** каждое приложение, подключённое к нему, и кто его подключил, — и любой из них может его отключить. Когда приложение подключает редактор, письмо получают и владельцы счёта.
+Приложение, подключённое к общему счёту, видит расходы **всех** участников, а не только того, кто его подключил. Поэтому все владельцы и редакторы такого счёта видят приложение в **Подключённых приложениях**, вместе с тем, кто его подключил, и могут убрать его с этого счёта.
 
-Если тот, кто подключил приложение, потом станет только наблюдателем или покинет счёт, приложение перестанет работать с этим счётом.
+Из подключения вы видите только те счета, где вы сами владелец или редактор, — никогда остальные счета, которые выбрал подключивший. Если вы нажмёте **Отключить**, приложение потеряет только эти ваши счета; для того, кто его настроил, оно остаётся подключённым, и полностью отключить его может только он. Когда приложение подключает редактор, письмо получают и владельцы подключённых счетов — в нём перечислены только их собственные счета.
+
+Если тот, кто подключил приложение, потом станет только наблюдателем или покинет счёт, приложение перестанет работать с этим счётом; остальные его счета не затрагиваются. Удалённый счёт автоматически отключается от приложения.
 
 ## Зашифрованные счета
 
@@ -15850,16 +15866,20 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 ## Що означає «підключити застосунок»
 
-Деякі сервіси вміють працювати з вашими даними AI Budget просто на своїх екранах: бухгалтерський застосунок може забирати ваші витрати й чеки або додавати витрати за вас. Щоб це дозволити, ви підключаєте застосунок до **одного** зі своїх рахунків в AI Budget.
+Деякі сервіси вміють працювати з вашими даними AI Budget просто на своїх екранах: бухгалтерський застосунок може забирати ваші витрати й чеки або додавати витрати за вас. Щоб це дозволити, ви підключаєте застосунок до **одного або кількох** своїх рахунків в AI Budget.
 
 Ваш пароль застосунок не бачить ніколи. Коли ви натискаєте в ньому кнопку «Підключити AI Budget», він відкриває сторінку AI Budget: ви входите як зазвичай і бачите:
 
 - назву застосунку, його сайт і хто його зробив;
 - **Перевірено AI Budget** (застосунок, який ми перевірили, наприклад наш власний) або **Не перевірено AI Budget**;
 - список дозволів, яких просить застосунок;
-- **Який рахунок підключити** — ви обираєте, яким рахунком застосунок зможе користуватися.
+- **Які рахунки підключити** — біля кожного рахунку є прапорець. Позначте кожен рахунок, яким застосунок може користуватися; кнопка **Дозволити** неактивна, доки не позначено хоча б один. Якщо підключити можна лише один рахунок, він уже позначений. Рахунки, які ви можете лише переглядати, і рахунки з повним шифруванням неактивні, із зазначенням причини, а рахунок із шифруванням тексту позначено як «лише читання».
 
 Натисніть **Дозволити**, щоб підключити, або **Відхилити**, щоб повернутися до застосунку без підключення. Дозволяйте доступ лише застосункам, яким довіряєте.
+
+**Повторне підключення.** Якщо застосунок уже підключено, екран відкриється з уже позначеними рахунками, які в нього є, і з усіма іншими рахунками, які ще можна підключити. Те, що ви позначите, — це повний список: позначте новий рахунок, щоб додати його, або зніміть позначку, щоб відрізати застосунок від рахунку. Доступ до рахунків, які залишилися позначеними, працює без перерви.
+
+Коли в застосунка кілька рахунків, він сам вказує в кожному запиті, про який рахунок ідеться, — вам нічого робити не потрібно.
 
 ## Що дає кожен дозвіл
 
@@ -15868,15 +15888,17 @@ OCR іноді неправильно читає ціну, вигадує ряд
 - **Завантажувати фото ваших чеків** — застосунок може завантажити зображення або PDF чека, прикріпленого до витрати.
 - **Бачити ваші категорії витрат** — застосунок може читати список категорій, щоб правильно розносити нові витрати.
 
-Будь-який підключений застосунок бачить також назву, тип і валюту рахунку та ваше ім'я. Вашої адреси електронної пошти він не отримує ніколи, а інших ваших рахунків не бачить.
+Будь-який підключений застосунок бачить також назву, тип і валюту рахунків, які ви позначили, та ваше ім'я. Вашої адреси електронної пошти він не отримує ніколи, а рахунків, які ви не позначили, не бачить.
 
 ## Перегляд і відключення застосунків
 
-Відкрийте **Налаштування → Підключені застосунки**. Для кожного застосунку видно, до якого рахунку його підключено, хто й коли його підключив, коли ним користувалися востаннє і які в нього дозволи.
+Відкрийте **Налаштування → Підключені застосунки**. Кожен застосунок — один рядок: рахунки, до яких його підключено, хто й коли його підключив, коли ним користувалися востаннє і які в нього дозволи.
 
-Натисніть **Відключити** й підтвердьте. Застосунок одразу втрачає доступ до цього рахунку — вже наступний його запит буде відхилено. Витрати, які він устиг додати, лишаються на рахунку. Щоб знову ним користуватися, підключіть його заново із самого застосунку.
+Щоб відрізати **один рахунок**, натисніть поруч із ним **Прибрати рахунок** і підтвердьте. Застосунок одразу втрачає цей рахунок — його наступний запит щодо нього буде відхилено, — а решта рахунків працює далі. Якщо прибрати останній рахунок, застосунок відключається повністю.
 
-Під час кожного нового підключення ми надсилаємо лист тому, хто його зробив. Якщо вам прийшов такий лист, а застосунок вам незнайомий, одразу відключіть його.
+Щоб відключити застосунок цілком, натисніть **Відключити** й підтвердьте. Він одразу втрачає доступ до всіх своїх рахунків. Витрати, які він устиг додати, лишаються на рахунках. Щоб знову ним користуватися, підключіть його заново із самого застосунку.
+
+Щоразу, коли застосунок підключають або до нього додають рахунки, ми надсилаємо лист тому, хто це зробив, зі списком доданих рахунків. Якщо вам прийшов такий лист, а застосунок вам незнайомий, одразу відключіть його.
 
 Якщо пункту **Підключені застосунки** в налаштуваннях немає, підключення застосунків поки недоступне.
 
@@ -15884,9 +15906,11 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 Підключити застосунок до рахунку може лише його **власник** або **редактор**; той, хто може рахунок лише переглядати, побачить його неактивним.
 
-Застосунок, підключений до спільного рахунку, бачить витрати **всіх** учасників, а не лише того, хто його підключив. Тому всі власники й редактори рахунку бачать у **Підключених застосунках** кожен застосунок, підключений до нього, і хто його підключив, — і будь-хто з них може його відключити. Коли застосунок підключає редактор, лист отримують і власники рахунку.
+Застосунок, підключений до спільного рахунку, бачить витрати **всіх** учасників, а не лише того, хто його підключив. Тому всі власники й редактори такого рахунку бачать застосунок у **Підключених застосунках**, разом із тим, хто його підключив, і можуть прибрати його з цього рахунку.
 
-Якщо той, хто підключив застосунок, згодом стане лише глядачем або покине рахунок, застосунок перестане працювати з цим рахунком.
+З підключення ви бачите лише ті рахунки, де самі є власником або редактором, — ніколи решту рахунків, які обрав той, хто підключав. Якщо ви натиснете **Відключити**, застосунок втратить лише ці ваші рахунки; для того, хто його налаштував, він лишається підключеним, і повністю відключити його може лише він. Коли застосунок підключає редактор, лист отримують і власники підключених рахунків — у ньому перелічено лише їхні власні рахунки.
+
+Якщо той, хто підключив застосунок, згодом стане лише глядачем або покине рахунок, застосунок перестане працювати з цим рахунком; решта його рахунків не зачіпається. Видалений рахунок автоматично відключається від застосунку.
 
 ## Зашифровані рахунки
 
@@ -21101,16 +21125,20 @@ Grupy wymagają połączenia z serwerem. Dopóki aplikacja nie może się z nim 
 
 ## Co oznacza połączenie aplikacji
 
-Niektóre produkty potrafią pracować z Twoimi danymi z AI Budget na własnych ekranach: aplikacja księgowa może pobierać Twoje wydatki i paragony albo dodawać wydatki za Ciebie. Żeby na to pozwolić, łączysz aplikację z **jednym** ze swoich kont w AI Budget.
+Niektóre produkty potrafią pracować z Twoimi danymi z AI Budget na własnych ekranach: aplikacja księgowa może pobierać Twoje wydatki i paragony albo dodawać wydatki za Ciebie. Żeby na to pozwolić, łączysz aplikację z **jednym lub kilkoma** swoimi kontami w AI Budget.
 
 Aplikacja nigdy nie widzi Twojego hasła. Gdy klikniesz w niej przycisk „Połącz z AI Budget”, przeniesie Cię na stronę AI Budget, gdzie logujesz się jak zwykle i widzisz:
 
 - nazwę aplikacji, jej stronę i to, kto ją stworzył;
 - **Zweryfikowana przez AI Budget** (aplikacja, którą sprawdziliśmy, na przykład nasza własna) albo **Niezweryfikowana przez AI Budget**;
 - listę uprawnień, o które prosi aplikacja;
-- **Konto do połączenia** — wybierasz, z którego konta aplikacja może korzystać.
+- **Konta do połączenia** — przy każdym koncie pole wyboru. Zaznacz każde konto, z którego aplikacja może korzystać; **Zezwól** pozostaje nieaktywne, dopóki nie zaznaczysz co najmniej jednego. Jeśli można połączyć tylko jedno konto, jest już zaznaczone. Konta, które możesz tylko przeglądać, albo z pełnym szyfrowaniem są wyszarzone z podaniem powodu, a konto z szyfrowaniem tekstu jest oznaczone jako tylko do odczytu.
 
 Dotknij **Zezwól**, żeby połączyć, albo **Odmów**, żeby wrócić do aplikacji bez łączenia. Zezwalaj tylko aplikacjom, którym ufasz.
+
+**Ponowne łączenie aplikacji.** Jeśli aplikacja jest już połączona, ekran otwiera się z zaznaczonymi kontami, które już ma, oraz każdym innym kontem, które nadal można połączyć. To, co zaznaczysz, jest pełną listą: zaznacz nowe konto, żeby je dodać, odznacz konto, żeby odciąć od niego aplikację. Dostęp do kont, które zostają zaznaczone, działa bez przerwy.
+
+Gdy aplikacja ma kilka kont, przy każdym zapytaniu sama wskazuje, którego konta dotyczy — nie musisz nic robić.
 
 ## Na co pozwala każde uprawnienie
 
@@ -21119,15 +21147,17 @@ Dotknij **Zezwól**, żeby połączyć, albo **Odmów**, żeby wrócić do aplik
 - **Pobierać zdjęcia Twoich paragonów** — aplikacja może pobrać zdjęcie lub PDF paragonu dołączonego do wydatku.
 - **Widzieć Twoje kategorie wydatków** — aplikacja może czytać listę kategorii, żeby poprawnie przypisywać nowe wydatki.
 
-Każda połączona aplikacja widzi też nazwę, typ i walutę konta oraz Twoje imię. Nigdy nie dostaje Twojego adresu e-mail i nie widzi Twoich pozostałych kont.
+Każda połączona aplikacja widzi też nazwę, typ i walutę kont, które zaznaczasz, oraz Twoje imię. Nigdy nie dostaje Twojego adresu e-mail i nie widzi żadnego konta, którego nie zaznaczyłeś.
 
 ## Podgląd i odłączanie aplikacji
 
-Otwórz **Ustawienia → Połączone aplikacje**. Przy każdej aplikacji widać konto, z którym jest połączona, kto i kiedy ją połączył, kiedy była ostatnio używana oraz jej uprawnienia.
+Otwórz **Ustawienia → Połączone aplikacje**. Każda aplikacja to jeden wiersz z kontami, z którymi jest połączona, informacją, kto i kiedy ją połączył, kiedy była ostatnio używana, oraz jej uprawnieniami.
 
-Dotknij **Odłącz** i potwierdź. Aplikacja od razu traci dostęp do tego konta — jej następne zapytanie zostanie odrzucone. Wydatki, które już dodała, zostają na Twoim koncie. Żeby znów z niej korzystać, połącz ją ponownie z poziomu tej aplikacji.
+Żeby odciąć **jedno konto**, dotknij obok niego **Usuń konto** i potwierdź. Aplikacja od razu traci to konto — jej następne zapytanie o nie zostanie odrzucone — a pozostałe konta działają dalej. Usunięcie ostatniego konta całkowicie odłącza aplikację.
 
-Przy każdym nowym połączeniu wysyłamy e-mail do osoby, która je utworzyła. Jeśli taki dostaniesz i nie rozpoznajesz aplikacji, odłącz ją od razu.
+Żeby odciąć całą aplikację, dotknij **Odłącz** i potwierdź. Traci wtedy dostęp do wszystkich swoich kont naraz. Wydatki, które już dodała, zostają na Twoich kontach. Żeby znów z niej korzystać, połącz ją ponownie z poziomu tej aplikacji.
+
+Za każdym razem, gdy aplikacja zostaje połączona albo dostaje nowe konta, wysyłamy e-mail do osoby, która to zrobiła, z listą dodanych kont. Jeśli taki dostaniesz i nie rozpoznajesz aplikacji, odłącz ją od razu.
 
 Jeśli nie widzisz pozycji **Połączone aplikacje** w Ustawieniach, łączenie aplikacji nie jest jeszcze dostępne.
 
@@ -21135,9 +21165,11 @@ Jeśli nie widzisz pozycji **Połączone aplikacje** w Ustawieniach, łączenie 
 
 Aplikację z kontem może połączyć tylko jego **właściciel** albo **edytor**; osoba, która może konto tylko przeglądać, zobaczy je wyszarzone.
 
-Aplikacja połączona z kontem współdzielonym widzi wydatki **wszystkich** jego członków, a nie tylko osoby, która ją połączyła. Dlatego wszyscy właściciele i edytorzy konta widzą w **Połączonych aplikacjach** każdą aplikację połączoną z tym kontem, razem z informacją, kto ją połączył — i każdy z nich może ją odłączyć. Gdy aplikację połączy edytor, e-mail dostają też właściciele konta.
+Aplikacja połączona z kontem współdzielonym widzi wydatki **wszystkich** jego członków, a nie tylko osoby, która ją połączyła. Dlatego wszyscy właściciele i edytorzy takiego konta widzą aplikację w **Połączonych aplikacjach**, razem z informacją, kto ją połączył, i mogą ją z tego konta usunąć.
 
-Jeśli osoba, która połączyła aplikację, straci później prawo edycji albo opuści konto, aplikacja przestanie działać dla tego konta.
+Z połączenia widzisz zawsze tylko te konta, których sam jesteś właścicielem lub edytorem — nigdy pozostałych kont, które wybrała osoba łącząca aplikację. Gdy dotkniesz **Odłącz**, aplikacja traci tylko te Twoje konta; dla osoby, która ją skonfigurowała, pozostaje połączona i tylko ona może ją odłączyć całkowicie. Gdy aplikację połączy edytor, e-mail dostają też właściciele połączonych kont — z listą wyłącznie ich własnych kont.
+
+Jeśli osoba, która połączyła aplikację, straci później prawo edycji albo opuści konto, aplikacja przestanie działać dla tego konta; jej pozostałe konta nie są naruszone. Usunięte konto jest automatycznie odpinane od aplikacji.
 
 ## Konta szyfrowane
 
@@ -26327,16 +26359,20 @@ Gruppen brauchen eine Verbindung zum Server. Solange die App ihn nicht erreicht,
 
 ## Was es heißt, eine App zu verbinden
 
-Manche Produkte können direkt in ihren eigenen Bildschirmen mit deinen AI-Budget-Daten arbeiten: Eine Buchhaltungs-App kann deine Ausgaben und Belege übernehmen oder Ausgaben für dich anlegen. Dafür verbindest du die App mit **einem** deiner AI-Budget-Konten.
+Manche Produkte können direkt in ihren eigenen Bildschirmen mit deinen AI-Budget-Daten arbeiten: Eine Buchhaltungs-App kann deine Ausgaben und Belege übernehmen oder Ausgaben für dich anlegen. Dafür verbindest du die App mit **einem oder mehreren** deiner AI-Budget-Konten.
 
 Dein Passwort sieht die App nie. Wenn du dort auf „Mit AI Budget verbinden“ klickst, landest du auf einer Seite von AI Budget, meldest dich wie gewohnt an und siehst:
 
 - den Namen der App, ihre Website und wer sie entwickelt hat;
 - **Von AI Budget verifiziert** (eine App, die wir geprüft haben, etwa unsere eigene) oder **Nicht von AI Budget verifiziert**;
 - die Berechtigungen, die die App anfragt;
-- **Zu verbindendes Konto** – hier wählst du, welches Konto die App nutzen darf.
+- **Zu verbindende Konten** – zu jedem Konto ein Kästchen. Hake jedes Konto an, das die App nutzen darf; **Erlauben** bleibt gesperrt, bis mindestens eines angehakt ist. Lässt sich nur ein Konto verbinden, ist es schon angehakt. Konten, die du nur ansehen darfst oder die vollständig verschlüsselt sind, sind mit Begründung ausgegraut; ein Konto mit Textverschlüsselung ist als nur lesbar markiert.
 
 Mit **Erlauben** verbindest du die App, mit **Ablehnen** kehrst du ohne Verbindung zur App zurück. Erlaube nur Apps, denen du vertraust.
+
+**App erneut verbinden.** Ist die App schon verbunden, öffnet sich der Bildschirm mit den Konten, die sie bereits hat, schon angehakt – dazu alle weiteren Konten, die sich noch verbinden lassen. Was du ankreuzt, ist die vollständige Liste: Hake ein neues Konto an, um es hinzuzufügen, oder nimm einen Haken weg, um die App von diesem Konto zu trennen. Der Zugriff auf die Konten, die angehakt bleiben, läuft ohne Unterbrechung weiter.
+
+Hat eine App mehrere Konten, teilt sie uns bei jeder Anfrage mit, um welches es geht – du musst nichts tun.
 
 ## Was jede Berechtigung erlaubt
 
@@ -26345,15 +26381,17 @@ Mit **Erlauben** verbindest du die App, mit **Ablehnen** kehrst du ohne Verbindu
 - **Deine Belegfotos herunterladen** – die App kann das Belegbild oder PDF herunterladen, das an einer Ausgabe hängt.
 - **Deine Ausgabenkategorien sehen** – die App kann deine Kategorienliste lesen, damit sie neue Ausgaben richtig einordnet.
 
-Jede verbundene App sieht außerdem Namen, Typ und Währung des Kontos sowie deinen Namen. Deine E-Mail-Adresse bekommt sie nie, und deine anderen Konten sieht sie nicht.
+Jede verbundene App sieht außerdem Namen, Typ und Währung der Konten, die du angehakt hast, sowie deinen Namen. Deine E-Mail-Adresse bekommt sie nie, und ein Konto, das du nicht angehakt hast, sieht sie nicht.
 
 ## Apps ansehen und trennen
 
-Öffne **Einstellungen → Verbundene Apps**. Zu jeder App siehst du das verbundene Konto, wer sie wann verbunden hat, wann sie zuletzt genutzt wurde und ihre Berechtigungen.
+Öffne **Einstellungen → Verbundene Apps**. Jede App ist eine Zeile mit den Konten, mit denen sie verbunden ist, wer sie wann verbunden hat, wann sie zuletzt genutzt wurde und ihren Berechtigungen.
 
-Tippe auf **Trennen** und bestätige. Die App verliert sofort den Zugriff auf dieses Konto – schon ihre nächste Anfrage wird abgewiesen. Ausgaben, die sie bereits angelegt hat, bleiben in deinem Konto. Um die App wieder zu nutzen, verbinde sie erneut aus der App heraus.
+Um **ein Konto** zu trennen, tippe daneben auf **Konto entfernen** und bestätige. Die App verliert dieses Konto sofort – ihre nächste Anfrage dafür wird abgewiesen –, ihre anderen Konten funktionieren weiter. Wird das letzte Konto entfernt, ist die App vollständig getrennt.
 
-Bei jeder neuen Verbindung schicken wir der Person, die sie hergestellt hat, eine E-Mail. Erkennst du die App darin nicht, trenne sie sofort.
+Um die ganze App zu trennen, tippe auf **Trennen** und bestätige. Sie verliert den Zugriff auf alle ihre Konten auf einmal. Ausgaben, die sie bereits angelegt hat, bleiben in deinen Konten. Um die App wieder zu nutzen, verbinde sie erneut aus der App heraus.
+
+Jedes Mal, wenn eine App verbunden wird oder neue Konten bekommt, schicken wir der Person, die das getan hat, eine E-Mail mit den hinzugefügten Konten. Erkennst du die App darin nicht, trenne sie sofort.
 
 Siehst du **Verbundene Apps** nicht in den Einstellungen, ist das Verbinden von Apps noch nicht verfügbar.
 
@@ -26361,9 +26399,11 @@ Siehst du **Verbundene Apps** nicht in den Einstellungen, ist das Verbinden von 
 
 Nur **Inhaber** und **Bearbeiter** eines Kontos können eine App damit verbinden; wer ein Konto nur ansehen darf, sieht es ausgegraut.
 
-Eine App, die mit einem geteilten Konto verbunden ist, sieht die Ausgaben **aller** Mitglieder, nicht nur die der Person, die sie verbunden hat. Deshalb sehen alle Inhaber und Bearbeiter unter **Verbundene Apps** jede App, die mit dem Konto verbunden ist, samt der Person, die sie verbunden hat – und jede und jeder von ihnen kann sie trennen. Verbindet ein Bearbeiter eine App, bekommen auch die Inhaber des Kontos die E-Mail.
+Eine App, die mit einem geteilten Konto verbunden ist, sieht die Ausgaben **aller** Mitglieder, nicht nur die der Person, die sie verbunden hat. Deshalb sehen alle Inhaber und Bearbeiter eines solchen Kontos die App unter **Verbundene Apps**, samt der Person, die sie verbunden hat, und können sie von diesem Konto entfernen.
 
-Wird die Person, die die App verbunden hat, später zur reinen Betrachterin oder verlässt sie das Konto, funktioniert die App für dieses Konto nicht mehr.
+Du siehst von einer Verbindung immer nur die Konten, die du selbst besitzt oder bearbeitest – nie die übrigen Konten, die die verbindende Person gewählt hat. Tippst du auf **Trennen**, verliert die App nur diese deine Konten; für die Person, die sie eingerichtet hat, bleibt sie verbunden, und nur diese Person kann sie vollständig trennen. Verbindet ein Bearbeiter eine App, bekommen auch die Inhaber der verbundenen Konten eine E-Mail, in der nur ihre eigenen Konten stehen.
+
+Wird die Person, die die App verbunden hat, später zur reinen Betrachterin oder verlässt sie ein Konto, funktioniert die App für dieses Konto nicht mehr; ihre anderen Konten bleiben unberührt. Ein gelöschtes Konto wird automatisch aus der App entfernt.
 
 ## Verschlüsselte Konten
 
@@ -31542,16 +31582,20 @@ Los grupos necesitan conexión con el servidor. Mientras la app no pueda alcanza
 
 ## Qué significa conectar una app
 
-Algunos productos pueden trabajar con tus datos de AI Budget desde sus propias pantallas: una app de contabilidad puede recoger tus gastos y tickets, o añadir gastos por ti. Para permitirlo, conectas la app a **una** de tus cuentas de AI Budget.
+Algunos productos pueden trabajar con tus datos de AI Budget desde sus propias pantallas: una app de contabilidad puede recoger tus gastos y tickets, o añadir gastos por ti. Para permitirlo, conectas la app a **una o varias** de tus cuentas de AI Budget.
 
 La app nunca ve tu contraseña. Cuando pulsas su botón «Conectar AI Budget», te lleva a una página de AI Budget donde inicias sesión como siempre y ves:
 
 - el nombre de la app, su web y quién la ha creado;
 - **Verificada por AI Budget** (una app que hemos revisado, como la nuestra) o **No verificada por AI Budget**;
 - la lista de permisos que pide la app;
-- **Cuenta que se conectará**: eliges qué cuenta puede usar la app.
+- **Cuentas que se conectarán**: una casilla por cada cuenta. Marca cada cuenta que la app puede usar; **Permitir** sigue desactivado hasta que marques al menos una. Si solo se puede conectar una cuenta, ya viene marcada. Las cuentas que solo puedes ver o que usan cifrado completo aparecen en gris con el motivo, y una cuenta con cifrado de texto se marca como solo lectura.
 
 Pulsa **Permitir** para conectarla o **Denegar** para volver a la app sin conectar nada. Permite solo apps de confianza.
+
+**Conectar la app otra vez.** Si la app ya está conectada, la pantalla se abre con las cuentas que ya tiene marcadas, junto con cualquier otra cuenta que aún se pueda conectar. Lo que marques es la lista completa: marca una cuenta nueva para añadirla o desmarca una para cortar el acceso de la app a ella. El acceso a las cuentas que dejas marcadas sigue funcionando sin interrupción.
+
+Cuando una app tiene varias cuentas, nos indica en cada petición a cuál se refiere; tú no tienes que hacer nada.
 
 ## Qué permite cada permiso
 
@@ -31560,15 +31604,17 @@ Pulsa **Permitir** para conectarla o **Denegar** para volver a la app sin conect
 - **Descargar las fotos de tus tickets**: la app puede descargar la imagen o el PDF del ticket adjunto a un gasto.
 - **Ver tus categorías de gastos**: la app puede leer tu lista de categorías para clasificar bien los gastos nuevos.
 
-Toda app conectada ve además el nombre, el tipo y la moneda de la cuenta, y tu nombre. Nunca recibe tu dirección de correo y no puede ver tus otras cuentas.
+Toda app conectada ve además el nombre, el tipo y la moneda de las cuentas que marcaste, y tu nombre. Nunca recibe tu dirección de correo y no puede ver ninguna cuenta que no hayas marcado.
 
 ## Ver y desconectar apps
 
-Abre **Ajustes → Aplicaciones conectadas**. Cada app aparece con la cuenta a la que está conectada, quién la conectó y cuándo, cuándo se usó por última vez y sus permisos.
+Abre **Ajustes → Aplicaciones conectadas**. Cada app es una fila con las cuentas a las que está conectada, quién la conectó y cuándo, cuándo se usó por última vez y sus permisos.
 
-Pulsa **Desconectar** y confirma. La app pierde el acceso a esa cuenta al instante: su siguiente petición ya se rechaza. Los gastos que ya añadió se quedan en tu cuenta. Para volver a usarla, conéctala de nuevo desde la app.
+Para cortar **una sola cuenta**, pulsa **Quitar cuenta** junto a ella y confirma. La app pierde esa cuenta al instante (su siguiente petición para ella se rechaza) y sus otras cuentas siguen funcionando. Si quitas la última cuenta, la app queda desconectada por completo.
 
-Cada vez que se conecta una app, enviamos un correo a la persona que la conectó. Si recibes uno y no reconoces la app, desconéctala enseguida.
+Para cortar toda la app, pulsa **Desconectar** y confirma. Pierde el acceso a todas sus cuentas a la vez. Los gastos que ya añadió se quedan en tus cuentas. Para volver a usarla, conéctala de nuevo desde la app.
+
+Cada vez que se conecta una app o recibe cuentas nuevas, enviamos un correo a la persona que lo hizo, con la lista de las cuentas añadidas. Si recibes uno y no reconoces la app, desconéctala enseguida.
 
 Si no ves **Aplicaciones conectadas** en Ajustes, la conexión de apps todavía no está disponible.
 
@@ -31576,9 +31622,11 @@ Si no ves **Aplicaciones conectadas** en Ajustes, la conexión de apps todavía 
 
 Solo un **propietario** o un **editor** de una cuenta puede conectarle una app; quien solo puede ver la cuenta la verá desactivada.
 
-Una app conectada a una cuenta compartida ve los gastos de **todos** sus miembros, no solo los de quien la conectó. Por eso todos los propietarios y editores de la cuenta ven en **Aplicaciones conectadas** cada app conectada a ella, con quién la conectó, y cualquiera de ellos puede desconectarla. Cuando un editor conecta una app, los propietarios de la cuenta también reciben el correo.
+Una app conectada a una cuenta compartida ve los gastos de **todos** sus miembros, no solo los de quien la conectó. Por eso todos los propietarios y editores de esa cuenta ven la app en **Aplicaciones conectadas**, con quién la conectó, y pueden quitarla de esa cuenta.
 
-Si la persona que conectó la app pasa después a solo lectura o sale de la cuenta, la app deja de funcionar para esa cuenta.
+De una conexión solo ves las cuentas que tú mismo posees o editas, nunca las demás cuentas que eligió quien la conectó. Si pulsas **Desconectar**, la app pierde solo esas cuentas tuyas; sigue conectada para quien la configuró, y solo esa persona puede desconectarla por completo. Cuando un editor conecta una app, los propietarios de las cuentas conectadas también reciben un correo, con únicamente sus propias cuentas.
+
+Si la persona que conectó la app pasa después a solo lectura o sale de una cuenta, la app deja de funcionar para esa cuenta; sus otras cuentas no se ven afectadas. Una cuenta eliminada se quita de la app automáticamente.
 
 ## Cuentas cifradas
 
@@ -36755,16 +36803,20 @@ Les groupes nécessitent une connexion au serveur. Tant que l’app ne peut pas 
 
 ## Ce que veut dire connecter une application
 
-Certains produits peuvent travailler avec vos données AI Budget depuis leurs propres écrans : une application de comptabilité peut récupérer vos dépenses et vos tickets de caisse, ou ajouter des dépenses pour vous. Pour l'autoriser, vous connectez l'application à **un** de vos comptes AI Budget.
+Certains produits peuvent travailler avec vos données AI Budget depuis leurs propres écrans : une application de comptabilité peut récupérer vos dépenses et vos tickets de caisse, ou ajouter des dépenses pour vous. Pour l'autoriser, vous connectez l'application à **un ou plusieurs** de vos comptes AI Budget.
 
 L'application ne voit jamais votre mot de passe. Quand vous cliquez sur son bouton « Connecter AI Budget », elle vous envoie vers une page AI Budget où vous vous connectez comme d'habitude, et où vous voyez :
 
 - le nom de l'application, son site et qui l'a créée ;
 - **Vérifiée par AI Budget** (une application que nous avons contrôlée, comme la nôtre) ou **Non vérifiée par AI Budget** ;
 - la liste des autorisations demandées ;
-- **Compte à connecter** : vous choisissez le compte que l'application pourra utiliser.
+- **Comptes à connecter** : une case par compte. Cochez chaque compte que l'application peut utiliser ; **Autoriser** reste inactif tant qu'aucun n'est coché. Si un seul compte peut être connecté, il est déjà coché. Les comptes que vous pouvez seulement consulter, ou qui utilisent le chiffrement complet, sont grisés avec la raison, et un compte au chiffrement du texte est marqué en lecture seule.
 
 Touchez **Autoriser** pour connecter l'application, ou **Refuser** pour revenir à l'application sans rien connecter. N'autorisez que des applications de confiance.
+
+**Reconnecter une application.** Si l'application est déjà connectée, l'écran s'ouvre avec les comptes qu'elle a déjà cochés, ainsi que tout autre compte encore connectable. Ce que vous cochez est la liste complète : cochez un nouveau compte pour l'ajouter, décochez-en un pour couper l'accès de l'application. L'accès aux comptes qui restent cochés continue sans interruption.
+
+Quand une application a plusieurs comptes, elle nous indique à chaque requête de quel compte il s'agit ; vous n'avez rien à faire.
 
 ## Ce que permet chaque autorisation
 
@@ -36773,15 +36825,17 @@ Touchez **Autoriser** pour connecter l'application, ou **Refuser** pour revenir 
 - **Télécharger les photos de vos tickets de caisse** — l'application peut télécharger l'image ou le PDF du ticket joint à une dépense.
 - **Voir vos catégories de dépenses** — l'application peut lire votre liste de catégories pour classer correctement les nouvelles dépenses.
 
-Toute application connectée voit aussi le nom, le type et la devise du compte, ainsi que votre nom. Elle ne reçoit jamais votre adresse e-mail et ne voit pas vos autres comptes.
+Toute application connectée voit aussi le nom, le type et la devise des comptes que vous avez cochés, ainsi que votre nom. Elle ne reçoit jamais votre adresse e-mail et ne voit aucun compte que vous n'avez pas coché.
 
 ## Voir et déconnecter les applications
 
-Ouvrez **Paramètres → Applications connectées**. Chaque application y figure avec le compte auquel elle est connectée, qui l'a connectée et quand, sa dernière utilisation et ses autorisations.
+Ouvrez **Paramètres → Applications connectées**. Chaque application est une ligne avec les comptes auxquels elle est connectée, qui l'a connectée et quand, sa dernière utilisation et ses autorisations.
 
-Touchez **Déconnecter** et confirmez. L'application perd immédiatement l'accès à ce compte : sa requête suivante est refusée. Les dépenses qu'elle a déjà ajoutées restent dans votre compte. Pour la réutiliser, reconnectez-la depuis l'application.
+Pour couper **un seul compte**, touchez **Retirer le compte** à côté de lui et confirmez. L'application perd ce compte immédiatement (sa requête suivante pour ce compte est refusée) tandis que ses autres comptes continuent de fonctionner. Retirer le dernier compte déconnecte complètement l'application.
 
-À chaque nouvelle connexion, nous envoyons un e-mail à la personne qui l'a faite. Si vous en recevez un et ne reconnaissez pas l'application, déconnectez-la tout de suite.
+Pour couper toute l'application, touchez **Déconnecter** et confirmez. Elle perd l'accès à tous ses comptes d'un coup. Les dépenses qu'elle a déjà ajoutées restent dans vos comptes. Pour la réutiliser, reconnectez-la depuis l'application.
+
+Chaque fois qu'une application est connectée ou reçoit de nouveaux comptes, nous envoyons un e-mail à la personne qui l'a fait, avec la liste des comptes ajoutés. Si vous en recevez un et ne reconnaissez pas l'application, déconnectez-la tout de suite.
 
 Si **Applications connectées** n'apparaît pas dans les Paramètres, la connexion d'applications n'est pas encore disponible.
 
@@ -36789,9 +36843,11 @@ Si **Applications connectées** n'apparaît pas dans les Paramètres, la connexi
 
 Seul un **propriétaire** ou un **éditeur** d'un compte peut y connecter une application ; une personne qui ne peut que consulter le compte le voit grisé.
 
-Une application connectée à un compte partagé voit les dépenses de **tous** les membres, pas seulement celles de la personne qui l'a connectée. C'est pourquoi tous les propriétaires et éditeurs du compte voient dans **Applications connectées** chaque application qui y est connectée, avec la personne qui l'a connectée, et chacun d'eux peut la déconnecter. Quand un éditeur connecte une application, les propriétaires du compte reçoivent eux aussi l'e-mail.
+Une application connectée à un compte partagé voit les dépenses de **tous** les membres, pas seulement celles de la personne qui l'a connectée. C'est pourquoi tous les propriétaires et éditeurs d'un tel compte voient l'application dans **Applications connectées**, avec la personne qui l'a connectée, et peuvent la retirer de ce compte.
 
-Si la personne qui a connecté l'application passe ensuite en lecture seule ou quitte le compte, l'application cesse de fonctionner pour ce compte.
+Vous ne voyez d'une connexion que les comptes dont vous êtes vous-même propriétaire ou éditeur, jamais les autres comptes choisis par la personne qui l'a connectée. Si vous touchez **Déconnecter**, l'application ne perd que ces comptes-là ; elle reste connectée pour la personne qui l'a mise en place, et seule cette personne peut la déconnecter complètement. Quand un éditeur connecte une application, les propriétaires des comptes connectés reçoivent aussi un e-mail, qui ne liste que leurs propres comptes.
+
+Si la personne qui a connecté l'application passe ensuite en lecture seule ou quitte un compte, l'application cesse de fonctionner pour ce compte ; ses autres comptes ne sont pas touchés. Un compte supprimé est retiré automatiquement de l'application.
 
 ## Comptes chiffrés
 
@@ -41932,16 +41988,20 @@ OCR часам няправільна чытае цану, выдумляе ра
 
 ## Што значыць «падключыць праграму»
 
-Некаторыя сэрвісы ўмеюць працаваць з вашымі дадзенымі AI Budget проста на сваіх экранах: бухгалтарская праграма можа забіраць вашы выдаткі і чэкі або дадаваць выдаткі за вас. Каб гэта дазволіць, вы падключаеце праграму да **аднаго** са сваіх рахункаў у AI Budget.
+Некаторыя сэрвісы ўмеюць працаваць з вашымі дадзенымі AI Budget проста на сваіх экранах: бухгалтарская праграма можа забіраць вашы выдаткі і чэкі або дадаваць выдаткі за вас. Каб гэта дазволіць, вы падключаеце праграму да **аднаго або некалькіх** са сваіх рахункаў у AI Budget.
 
 Ваш пароль праграма не бачыць ніколі. Калі вы націскаеце ў ёй кнопку «Падключыць AI Budget», яна адкрывае старонку AI Budget: вы ўваходзіце як звычайна і бачыце:
 
 - назву праграмы, яе сайт і хто яе зрабіў;
 - **Праверана AI Budget** (праграма, якую мы праверылі, напрыклад наша ўласная) або **Не праверана AI Budget**;
 - спіс дазволаў, якія просіць праграма;
-- **Які рахунак падключыць** — вы выбіраеце, якім рахункам праграма зможа карыстацца.
+- **Якія рахункі падключыць** — каля кожнага рахунку ёсць сцяжок. Адзначце кожны рахунак, якім праграма можа карыстацца; кнопка **Дазволіць** неактыўная, пакуль не адзначаны хаця б адзін. Калі падключыць можна толькі адзін рахунак, ён ужо адзначаны. Рахункі, якія вы можаце толькі праглядаць, і рахункі з поўным шыфраваннем неактыўныя, з указаннем прычыны, а рахунак з шыфраваннем тэксту пазначаны як «толькі чытанне».
 
 Націсніце **Дазволіць**, каб падключыць, або **Адхіліць**, каб вярнуцца ў праграму без падключэння. Дазваляйце доступ толькі праграмам, якім давяраеце.
+
+**Паўторнае падключэнне.** Калі праграма ўжо падключана, экран адкрыецца з ужо адзначанымі рахункамі, якія ў яе ёсць, і з усімі іншымі рахункамі, якія яшчэ можна падключыць. Тое, што вы адзначыце, — гэта поўны спіс: адзначце новы рахунак, каб дадаць яго, або здыміце адзнаку, каб адрэзаць праграму ад рахунку. Доступ да рахункаў, якія засталіся адзначанымі, працуе без перапынку.
+
+Калі ў праграмы некалькі рахункаў, яна сама ўказвае ў кожным запыце, пра які рахунак ідзе гаворка, — вам нічога рабіць не трэба.
 
 ## Што дае кожны дазвол
 
@@ -41950,15 +42010,17 @@ OCR часам няправільна чытае цану, выдумляе ра
 - **Спампоўваць фота вашых чэкаў** — праграма можа спампаваць выяву або PDF чэка, прымацаванага да выдатку.
 - **Бачыць вашы катэгорыі выдаткаў** — праграма можа чытаць спіс катэгорый, каб правільна раскладваць новыя выдаткі.
 
-Любая падключаная праграма бачыць таксама назву, тып і валюту рахунку і ваша імя. Вашага адраса электроннай пошты яна не атрымлівае ніколі, а іншых вашых рахункаў не бачыць.
+Любая падключаная праграма бачыць таксама назву, тып і валюту рахункаў, якія вы адзначылі, і ваша імя. Вашага адраса электроннай пошты яна не атрымлівае ніколі, а рахункаў, якія вы не адзначылі, не бачыць.
 
 ## Прагляд і адключэнне праграм
 
-Адкрыйце **Налады → Падключаныя праграмы**. Для кожнай праграмы відаць, да якога рахунку яна падключана, хто і калі яе падключыў, калі ёю карысталіся апошні раз і якія ў яе дазволы.
+Адкрыйце **Налады → Падключаныя праграмы**. Кожная праграма — адзін радок: рахункі, да якіх яе падключана, хто і калі яе падключыў, калі ёю карысталіся апошні раз і якія ў яе дазволы.
 
-Націсніце **Адключыць** і пацвердзіце. Праграма адразу губляе доступ да гэтага рахунку — ужо наступны яе запыт будзе адхілены. Выдаткі, якія яна паспела дадаць, застаюцца на рахунку. Каб зноў ёю карыстацца, падключыце яе нанава з самой праграмы.
+Каб адрэзаць **адзін рахунак**, націсніце побач з ім **Прыбраць рахунак** і пацвердзіце. Праграма адразу губляе гэты рахунак — яе наступны запыт па ім будзе адхілены, — а астатнія рахункі працуюць далей. Калі прыбраць апошні рахунак, праграма адключаецца цалкам.
 
-Пры кожным новым падключэнні мы адпраўляем ліст таму, хто яго зрабіў. Калі вам прыйшоў такі ліст, а праграма вам незнаёмая, адразу адключыце яе.
+Каб адключыць праграму цалкам, націсніце **Адключыць** і пацвердзіце. Яна адразу губляе доступ да ўсіх сваіх рахункаў. Выдаткі, якія яна паспела дадаць, застаюцца на рахунках. Каб зноў ёю карыстацца, падключыце яе нанава з самой праграмы.
+
+Кожны раз, калі праграму падключаюць або да яе дадаюць рахункі, мы адпраўляем ліст таму, хто гэта зрабіў, са спісам дададзеных рахункаў. Калі вам прыйшоў такі ліст, а праграма вам незнаёмая, адразу адключыце яе.
 
 Калі пункта **Падключаныя праграмы** ў наладах няма, падключэнне праграм пакуль недаступнае.
 
@@ -41966,9 +42028,11 @@ OCR часам няправільна чытае цану, выдумляе ра
 
 Падключыць праграму да рахунку можа толькі яго **ўладальнік** або **рэдактар**; той, хто можа рахунак толькі праглядаць, убачыць яго неактыўным.
 
-Праграма, падключаная да агульнага рахунку, бачыць выдаткі **ўсіх** удзельнікаў, а не толькі таго, хто яе падключыў. Таму ўсе ўладальнікі і рэдактары рахунку бачаць у **Падключаных праграмах** кожную праграму, падключаную да яго, і хто яе падключыў, — і любы з іх можа яе адключыць. Калі праграму падключае рэдактар, ліст атрымліваюць і ўладальнікі рахунку.
+Праграма, падключаная да агульнага рахунку, бачыць выдаткі **ўсіх** удзельнікаў, а не толькі таго, хто яе падключыў. Таму ўсе ўладальнікі і рэдактары такога рахунку бачаць праграму ў **Падключаных праграмах**, разам з тым, хто яе падключыў, і могуць прыбраць яе з гэтага рахунку.
 
-Калі той, хто падключыў праграму, потым стане толькі назіральнікам або пакіне рахунак, праграма перастане працаваць з гэтым рахункам.
+З падключэння вы бачыце толькі тыя рахункі, дзе самі з'яўляецеся ўладальнікам або рэдактарам, — ніколі астатнія рахункі, якія выбраў той, хто падключаў. Калі вы націснеце **Адключыць**, праграма страціць толькі гэтыя вашы рахункі; для таго, хто яе наладзіў, яна застаецца падключанай, і цалкам адключыць яе можа толькі ён. Калі праграму падключае рэдактар, ліст атрымліваюць і ўладальнікі падключаных рахункаў — у ім пералічаны толькі іх уласныя рахункі.
+
+Калі той, хто падключыў праграму, потым стане толькі назіральнікам або пакіне рахунак, праграма перастане працаваць з гэтым рахункам; астатнія яе рахункі не закранаюцца. Выдалены рахунак аўтаматычна адключаецца ад праграмы.
 
 ## Зашыфраваныя рахункі
 
@@ -47235,16 +47299,20 @@ Groepen hebben een verbinding met de server nodig. Zolang de app die niet kan be
 
 ## Wat het betekent om een app te koppelen
 
-Sommige producten kunnen vanuit hun eigen schermen met je AI Budget-gegevens werken: een boekhoudapp kan je uitgaven en bonnetjes ophalen, of uitgaven voor je toevoegen. Om dat toe te staan koppel je de app aan **één** van je AI Budget-rekeningen.
+Sommige producten kunnen vanuit hun eigen schermen met je AI Budget-gegevens werken: een boekhoudapp kan je uitgaven en bonnetjes ophalen, of uitgaven voor je toevoegen. Om dat toe te staan koppel je de app aan **één of meer** van je AI Budget-rekeningen.
 
 De app ziet nooit je wachtwoord. Als je in de app op 'AI Budget koppelen' klikt, kom je op een pagina van AI Budget. Daar log je in zoals altijd en zie je:
 
 - de naam van de app, de website en wie hem gemaakt heeft;
 - **Geverifieerd door AI Budget** (een app die wij gecontroleerd hebben, zoals onze eigen) of **Niet geverifieerd door AI Budget**;
 - de lijst met machtigingen die de app vraagt;
-- **Te koppelen rekening** – hier kies je welke rekening de app mag gebruiken.
+- **Te koppelen rekeningen** – bij elke rekening een vakje. Vink elke rekening aan die de app mag gebruiken; **Toestaan** blijft uitgeschakeld tot er minstens één is aangevinkt. Kan er maar één rekening gekoppeld worden, dan is die al aangevinkt. Rekeningen die je alleen mag bekijken of die volledig versleuteld zijn, staan grijs met de reden, en een rekening met tekstversleuteling is als alleen-lezen gemarkeerd.
 
 Tik op **Toestaan** om te koppelen, of op **Weigeren** om zonder koppeling terug te gaan naar de app. Sta alleen apps toe die je vertrouwt.
+
+**De app opnieuw koppelen.** Is de app al gekoppeld, dan opent het scherm met de rekeningen die hij al heeft aangevinkt, plus elke andere rekening die nog gekoppeld kan worden. Wat je aanvinkt is de volledige lijst: vink een nieuwe rekening aan om hem toe te voegen, of haal een vinkje weg om de app van die rekening af te sluiten. De toegang tot de rekeningen die aangevinkt blijven, werkt zonder onderbreking door.
+
+Heeft een app meerdere rekeningen, dan geeft hij bij elk verzoek zelf aan om welke het gaat – jij hoeft niets te doen.
 
 ## Wat elke machtiging toestaat
 
@@ -47253,15 +47321,17 @@ Tik op **Toestaan** om te koppelen, of op **Weigeren** om zonder koppeling terug
 - **Foto's van je bonnetjes downloaden** – de app kan de foto of pdf van het bonnetje bij een uitgave downloaden.
 - **Je uitgavencategorieën zien** – de app kan je categorielijst lezen, zodat hij nieuwe uitgaven goed indeelt.
 
-Elke gekoppelde app ziet ook de naam, het type en de valuta van de rekening, en jouw naam. Je e-mailadres krijgt hij nooit, en je andere rekeningen ziet hij niet.
+Elke gekoppelde app ziet ook de naam, het type en de valuta van de rekeningen die je hebt aangevinkt, en jouw naam. Je e-mailadres krijgt hij nooit, en een rekening die je niet hebt aangevinkt ziet hij niet.
 
 ## Apps bekijken en ontkoppelen
 
-Open **Instellingen → Gekoppelde apps**. Bij elke app zie je aan welke rekening hij gekoppeld is, wie hem wanneer gekoppeld heeft, wanneer hij voor het laatst gebruikt is en welke machtigingen hij heeft.
+Open **Instellingen → Gekoppelde apps**. Elke app is één rij, met de rekeningen waaraan hij gekoppeld is, wie hem wanneer gekoppeld heeft, wanneer hij voor het laatst gebruikt is en welke machtigingen hij heeft.
 
-Tik op **Ontkoppelen** en bevestig. De app verliest meteen de toegang tot die rekening – zijn volgende verzoek wordt al geweigerd. Uitgaven die hij al heeft toegevoegd blijven in je rekening staan. Wil je de app weer gebruiken, koppel hem dan opnieuw vanuit de app.
+Om **één rekening** af te sluiten, tik je ernaast op **Rekening verwijderen** en bevestig je. De app verliest die rekening meteen – zijn volgende verzoek ervoor wordt geweigerd – terwijl zijn andere rekeningen blijven werken. Verwijder je de laatste rekening, dan is de app helemaal ontkoppeld.
 
-Bij elke nieuwe koppeling sturen we een e-mail naar degene die de app gekoppeld heeft. Krijg je zo'n mail en herken je de app niet, ontkoppel hem dan meteen.
+Om de hele app af te sluiten, tik je op **Ontkoppelen** en bevestig je. Hij verliest in één keer de toegang tot al zijn rekeningen. Uitgaven die hij al heeft toegevoegd blijven in je rekeningen staan. Wil je de app weer gebruiken, koppel hem dan opnieuw vanuit de app.
+
+Telkens als een app gekoppeld wordt of er rekeningen bij krijgt, sturen we een e-mail naar degene die dat deed, met de toegevoegde rekeningen. Krijg je zo'n mail en herken je de app niet, ontkoppel hem dan meteen.
 
 Zie je **Gekoppelde apps** niet in de Instellingen, dan is het koppelen van apps nog niet beschikbaar.
 
@@ -47269,9 +47339,11 @@ Zie je **Gekoppelde apps** niet in de Instellingen, dan is het koppelen van apps
 
 Alleen een **eigenaar** of **bewerker** van een rekening kan er een app aan koppelen; wie een rekening alleen mag bekijken, ziet hem grijs.
 
-Een app die aan een gedeelde rekening gekoppeld is, ziet de uitgaven van **alle** leden, niet alleen die van degene die hem gekoppeld heeft. Daarom zien alle eigenaren en bewerkers onder **Gekoppelde apps** elke app die aan de rekening gekoppeld is, met wie hem gekoppeld heeft – en ieder van hen kan hem ontkoppelen. Koppelt een bewerker een app, dan krijgen ook de eigenaren van de rekening de e-mail.
+Een app die aan een gedeelde rekening gekoppeld is, ziet de uitgaven van **alle** leden, niet alleen die van degene die hem gekoppeld heeft. Daarom zien alle eigenaren en bewerkers van zo'n rekening de app onder **Gekoppelde apps**, met wie hem gekoppeld heeft, en kunnen ze hem van die rekening verwijderen.
 
-Wordt degene die de app gekoppeld heeft later alleen-lezer, of verlaat die de rekening, dan werkt de app niet meer voor die rekening.
+Van een koppeling zie je alleen de rekeningen waarvan je zelf eigenaar of bewerker bent – nooit de andere rekeningen die degene die de app koppelde heeft gekozen. Tik je op **Ontkoppelen**, dan verliest de app alleen die rekeningen van jou; voor degene die hem heeft ingesteld blijft hij gekoppeld, en alleen die persoon kan hem helemaal ontkoppelen. Koppelt een bewerker een app, dan krijgen ook de eigenaren van de gekoppelde rekeningen een e-mail, met alleen hun eigen rekeningen erin.
+
+Wordt degene die de app gekoppeld heeft later alleen-lezer, of verlaat die een rekening, dan werkt de app niet meer voor die rekening; zijn andere rekeningen blijven ongemoeid. Een verwijderde rekening wordt automatisch van de app losgekoppeld.
 
 ## Versleutelde rekeningen
 
