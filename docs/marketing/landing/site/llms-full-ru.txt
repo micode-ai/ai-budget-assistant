@@ -3,6 +3,7 @@
 > Зеркало в markdown блога и центра помощи ai-budget.pl на русском языке, для AI-поисковых систем. Краткое описание продукта (на английском) в llms.txt.
 
 Source: https://ai-budget.pl/llms.txt
+Public API (OAuth 2.0): https://ai-budget.pl/ru/developers/ - reference https://api.ai-budget.pl/public/docs/ru, OpenAPI https://api.ai-budget.pl/public/docs/en/openapi.json
 
 
 # Blog

@@ -42,6 +42,7 @@
 - [Blog](https://ai-budget.pl/blog/ru/): статьи о бюджете, учёте расходов и накоплениях на 9 языках
 - [Помощь](https://ai-budget.pl/help/ru/): как пользоваться каждой функцией приложения
 - [Тарифы](https://ai-budget.pl/ru/pricing/): бесплатный, Pro и Business
+- [API для разработчиков](https://ai-budget.pl/ru/developers/): бесплатное REST API с OAuth 2.0 (PKCE) для расходов, чеков и категорий; [API](https://api.ai-budget.pl/public/docs/ru), [OpenAPI](https://api.ai-budget.pl/public/docs/en/openapi.json)
 - [llms-full-ru.txt](https://ai-budget.pl/llms-full-ru.txt): зеркало блога и центра помощи на русском языке
 - [llms.txt](https://ai-budget.pl/llms.txt): английская версия
 

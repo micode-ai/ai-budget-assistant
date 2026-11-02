@@ -3,6 +3,7 @@
 > Miroir markdown en français du blog et du centre d'aide ai-budget.pl, pour les moteurs de réponse IA. Voir llms.txt pour le résumé du produit (en anglais).
 
 Source: https://ai-budget.pl/llms.txt
+Public API (OAuth 2.0): https://ai-budget.pl/fr/developers/ - reference https://api.ai-budget.pl/public/docs/en, OpenAPI https://api.ai-budget.pl/public/docs/en/openapi.json
 
 
 # Blog

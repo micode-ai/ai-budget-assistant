@@ -270,6 +270,7 @@ Newest last within each section.
 - 2026-11-02 · [ABA-708](https://github.com/micode-ai/ai-budget-assistant/issues/741) — sync push relation and line-item writes now resolve rows through the caller's account; a foreign row reads as not found ([offline-first-sync](features/offline-first-sync.md)).
 - 2026-11-02 · [ABA-707](https://github.com/micode-ai/ai-budget-assistant/issues/740) — Public API launch: `PUBLIC_API_ENABLED` on in production, nginx `/public/` and `/oauth/` locations with the `budget_public` zone, the app host's anti-framing headers, and the Connected apps help section published ([public-api](features/public-api.md)).
 - 2026-11-02 · [ABA-709](https://github.com/micode-ai/ai-budget-assistant/issues/742) — Public API multi-account connections: one grant covers several accounts (join table `oauth_grant_accounts`), `X-Account-Id` addressing counted on granted accounts, `GET /public/v1/accounts`, `account_ids` in the token response, consent multi-select, co-owners see and remove only their own accounts ([public-api](features/public-api.md)).
+- 2026-11-02 · [ABA-710](https://github.com/micode-ai/ai-budget-assistant/issues/744) — developers page on ai-budget.pl in nine languages, an "API for developers" footer link on every generated page and the API in `llms*.txt` ([marketing-site](features/marketing-site.md), [public-api](features/public-api.md)).
 
 ## Queries
 

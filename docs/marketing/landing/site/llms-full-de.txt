@@ -3,6 +3,7 @@
 > Deutschsprachiger Markdown-Spiegel des ai-budget.pl-Blogs und -Hilfecenters, für KI-Antwortmaschinen. Siehe llms.txt für die Produktzusammenfassung (Englisch).
 
 Source: https://ai-budget.pl/llms.txt
+Public API (OAuth 2.0): https://ai-budget.pl/de/developers/ - reference https://api.ai-budget.pl/public/docs/en, OpenAPI https://api.ai-budget.pl/public/docs/en/openapi.json
 
 
 # Blog

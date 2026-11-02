@@ -3,6 +3,7 @@
 > Люстэрка ў фармаце markdown блога і цэнтра дапамогі ai-budget.pl на беларускай мове, для AI-пошукавых сістэм. Кароткае апісанне прадукту (на англійскай) у llms.txt.
 
 Source: https://ai-budget.pl/llms.txt
+Public API (OAuth 2.0): https://ai-budget.pl/be/developers/ - reference https://api.ai-budget.pl/public/docs/en, OpenAPI https://api.ai-budget.pl/public/docs/en/openapi.json
 
 
 # Blog

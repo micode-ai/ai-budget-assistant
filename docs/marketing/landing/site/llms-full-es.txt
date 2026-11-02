@@ -3,6 +3,7 @@
 > Espejo en markdown del blog y el centro de ayuda de ai-budget.pl en español, para motores de respuesta de IA. Consulta llms.txt para el resumen del producto (en inglés).
 
 Source: https://ai-budget.pl/llms.txt
+Public API (OAuth 2.0): https://ai-budget.pl/es/developers/ - reference https://api.ai-budget.pl/public/docs/en, OpenAPI https://api.ai-budget.pl/public/docs/en/openapi.json
 
 
 # Blog

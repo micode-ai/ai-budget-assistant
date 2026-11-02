@@ -42,6 +42,7 @@
 - [Blog](https://ai-budget.pl/blog/pl/): poradniki o budżetowaniu, kontroli wydatków i oszczędzaniu w 9 językach
 - [Pomoc](https://ai-budget.pl/help/pl/): jak korzystać z każdej funkcji aplikacji
 - [Cennik](https://ai-budget.pl/pricing/): Darmowy, Pro i Business
+- [API dla deweloperów](https://ai-budget.pl/developers/): bezpłatne REST API z OAuth 2.0 (PKCE) do wydatków, paragonów i kategorii; [API](https://api.ai-budget.pl/public/docs/pl), [OpenAPI](https://api.ai-budget.pl/public/docs/en/openapi.json)
 - [llms-full-pl.txt](https://ai-budget.pl/llms-full-pl.txt): polskojęzyczne lustro bloga i centrum pomocy
 - [llms.txt](https://ai-budget.pl/llms.txt): wersja angielska
 

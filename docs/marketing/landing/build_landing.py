@@ -1062,6 +1062,10 @@ footer .wrap{padding:30px 22px;display:flex;flex-direction:column;align-items:ce
 .legal h3{font-size:17px;margin:20px 0 6px}.legal ul{padding-left:22px;margin:0 0 12px}
 .legal li{font-size:16px;color:#3a3a42;margin:4px 0}.legal .updated{color:#888;font-size:14px;margin:-8px 0 24px}
 .legal strong{color:#1a1a1d}
+.legal ol{padding-left:22px;margin:0 0 12px}.legal ol li{margin:8px 0}
+.legal pre{background:#1a1a1d;color:#f3f3f5;border-radius:12px;padding:16px 18px;overflow-x:auto;font-size:13px;line-height:1.6;margin:8px 0 18px}
+.legal pre code{background:none;padding:0;font-size:13px;color:inherit}
+.devbtns{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0 22px}
 .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:8px}
 @media(max-width:760px){.pricing-grid{grid-template-columns:1fr}}
 .pcard{position:relative;padding:28px 24px;border:1px solid #ececf0;border-radius:16px;background:#fff}
@@ -1152,6 +1156,7 @@ _TRACK_TPL = ('<script>(function(){'
               'function pt(){var p=location.pathname;'
               'if(p.indexOf("/pricing/")>-1)return "pricing";'
               'if(p.indexOf("/about/")>-1)return "about";'
+              'if(p.indexOf("/developers/")>-1)return "developers";'
               'if(p.indexOf("/cookies/")>-1)return "cookies";'
               'if(p.indexOf("/privacy/")>-1||p.indexOf("/terms/")>-1)return "legal";'
               'return "home";}'
@@ -1247,6 +1252,7 @@ def footer_html(lang):
             f'<a href="{pricing_url(lang)}">{PRICING_LABELS[lang]}</a>'
             f'<a href="/help/{lang}/">{HELP_LABELS[lang]}</a>'
             f'<a href="{about_url(lang)}">{ABOUT_LABELS[lang]}</a>'
+            f'<a href="{dev_url(lang)}">{DEV_LABELS[lang]}</a>'
             f'<a href="{priv_url(lang)}">{pl}</a><a href="{terms_url(lang)}">{tl}</a>'
             f'<a href="{cookies_url(lang)}">{cl}</a>'
             f'<a href="{app_url("footer", lang)}">{t["nav_login"]}</a><a href="{play_url("footer", lang)}">Google Play</a>'
@@ -1301,6 +1307,377 @@ def about_page(lang):
             f'<nav class="nav"><a href="{about_url(lang)}">{ABOUT_LABELS[lang]}</a>'
             f'<a class="btn p" href="{app_url("nav", lang)}">{C[lang]["nav_login"]}</a></nav></div></header>'
             f'<main class="wrap legal"><h1>{html.escape(h1)}</h1>{body}{author_html}</main>'
+            + footer_html(lang) + consent_html(lang) + '</body></html>')
+
+# "API for developers" page (ABA-710): the public REST API with OAuth 2.0 ("Connect AI Budget").
+# Facts only, checked against docs/wiki/features/public-api.md -- the scopes, the X-Account-Id
+# addressing, the encryption-tier rules and the per-connection/per-app rate limits. Do not add a
+# number, a customer or a resource the API does not serve (incomes/budgets/goals are not in it).
+dev_url = bb.dev_url
+DEV_LABELS = bb.DEV_LABELS
+API_DOCS = "https://api.ai-budget.pl/public/docs"
+API_OPENAPI = f"{API_DOCS}/en/openapi.json"
+API_REGISTER = f"{APP}/settings/developers"  # apps/mobile/app/settings/developers.tsx
+API_DOCS_LANGS = (("en", "English"), ("pl", "Polski"), ("ru", "Русский"))  # the docs exist in these three
+API_BLOG = {"pl": "https://mi-code.pl/blog/ai-budget-public-api-oauth-ai-accounting/",
+            "en": "https://mi-code.pl/en/blog/ai-budget-public-api-oauth-ai-accounting/",
+            "ru": "https://mi-code.pl/ru/blog/ai-budget-public-api-oauth-ai-accounting/"}
+
+def api_docs_url(lang):
+    return f"{API_DOCS}/{lang if lang in ('pl', 'ru') else 'en'}"
+
+def api_blog_url(lang):
+    return API_BLOG.get(lang, API_BLOG["en"])
+
+# The request sequence, language-neutral (it is code). Mirrors the guide's own examples
+# (apps/api/src/modules/public-api/docs/guide.en.md).
+API_SNIPPET = html.escape(
+    "# 1. Send the user to the consent page (PKCE S256)\n"
+    "https://app.ai-budget.pl/authorize?response_type=code&client_id=aba_ci_...\n"
+    "  &redirect_uri=https%3A%2F%2Fexample.com%2Fcallback\n"
+    "  &scope=expenses%3Aread+categories%3Aread&state=...\n"
+    "  &code_challenge=...&code_challenge_method=S256\n\n"
+    "# 2. Exchange the code for tokens\n"
+    "curl -X POST https://api.ai-budget.pl/oauth/token \\\n"
+    "  -u \"$CLIENT_ID:$CLIENT_SECRET\" \\\n"
+    "  -d grant_type=authorization_code -d code=\"$CODE\" \\\n"
+    "  -d redirect_uri=https://example.com/callback -d code_verifier=\"$CODE_VERIFIER\"\n\n"
+    "# 3. Call the API for one of the connected accounts\n"
+    "curl https://api.ai-budget.pl/public/v1/accounts -H \"Authorization: Bearer $ACCESS_TOKEN\"\n"
+    "curl https://api.ai-budget.pl/public/v1/expenses -H \"Authorization: Bearer $ACCESS_TOKEN\" \\\n"
+    "  -H \"X-Account-Id: $ACCOUNT_ID\"", quote=False)
+
+# Per language. The settings paths use the app's own screen titles (apps/mobile/src/i18n/locales:
+# the `settings` label, then `developers.title` / `connectedApps.title`), so the page names the
+# screens exactly as the app shows them.
+DEVELOPERS = {
+ "pl": {
+  "title": "API dla deweloperów - AI Budget Assistant",
+  "meta": "Publiczne REST API AI Budget z OAuth 2.0 i PKCE: wydatki, paragony, kategorie i kilka kont w jednym połączeniu. Bezpłatne, bez weryfikacji aplikacji.",
+  "h1": "API AI Budget dla deweloperów",
+  "lead": "AI Budget ma publiczne REST API z autoryzacją OAuth 2.0 – „Połącz z AI Budget”. Za zgodą użytkownika Twoja aplikacja może czytać i zapisywać jego wydatki, pobierać paragony i kategorie. Użytkownik sam wybiera, co udostępnia, i w każdej chwili może cofnąć dostęp.",
+  "btn_docs": "Dokumentacja API", "btn_register": "Zarejestruj aplikację", "btn_blog": "Jak to zbudowaliśmy",
+  "h_can": "Co API potrafi już dziś",
+  "can": [
+   "Czytać, dodawać, zmieniać i usuwać wydatki (<code>/public/v1/expenses</code>).",
+   "Synchronizować zmiany przez kanał zmian <code>/public/v1/expenses/changes</code>: odpytujesz go co jakiś czas i dostajesz nowe, zmienione i usunięte wydatki – usunięcia przychodzą jako wpisy <code>delete</code> (tombstone).",
+   "Pobierać zdjęcia paragonów dołączonych do wydatków.",
+   "Czytać kategorie wydatków konta.",
+   "Obsłużyć kilka kont w jednym połączeniu: użytkownik zaznacza konta, które udostępnia (osobiste, firmowe, rodzinne…), a każde zapytanie wskazuje konto w nagłówku <code>X-Account-Id</code>. <code>GET /public/v1/accounts</code> zwraca udostępnione konta wraz z ich typem.",
+   "Uprawnienia (scopes): <code>expenses:read</code>, <code>expenses:write</code>, <code>receipts:read</code>, <code>categories:read</code>.",
+  ],
+  "later": "Na razie API obejmuje wydatki, paragony i kategorie. Przychody, budżety i cele mogą dojść później.",
+  "h_free": "Bezpłatnie i bez weryfikacji",
+  "free": "Dostęp do API jest bezpłatny. Każdy deweloper sam rejestruje aplikację w AI Budget (<strong>Ustawienia → Dla deweloperów</strong>) – bez ręcznej weryfikacji i bez czekania. Limity zapytań są liczone osobno dla każdego połączenia i dla każdej aplikacji.",
+  "h_priv": "Prywatność użytkownika",
+  "priv": "To użytkownik decyduje, które konta udostępnia, i w każdej chwili może odłączyć aplikację w <strong>Ustawienia → Połączone aplikacje</strong> (<a href=\"__HELP__\">jak to działa</a>). Konta z szyfrowaniem end-to-end pozostają chronione: konto z szyfrowaniem tekstu można połączyć tylko do odczytu, a konta z pełnym szyfrowaniem nie da się połączyć.",
+  "h_start": "Start w 3 krokach",
+  "steps": [
+   "<strong>Zarejestruj aplikację</strong> w <strong>Ustawienia → Dla deweloperów</strong>: podaj nazwę i adres przekierowania (redirect URI), a otrzymasz <code>client_id</code> i <code>client_secret</code>.",
+   "<strong>Przekieruj użytkownika</strong> na adres autoryzacji <code>https://app.ai-budget.pl/authorize</code> z PKCE. Użytkownik loguje się, zaznacza konta i zatwierdza uprawnienia.",
+   "<strong>Wymień kod</strong> na token w <code>POST /oauth/token</code> i wywołuj <code>https://api.ai-budget.pl/public/v1</code> z nagłówkiem <code>Authorization: Bearer …</code>.",
+  ],
+  "h_example": "Pierwsza integracja: eKsięgowy AI",
+  "example": "<a href=\"https://eksiegowyai.pl/\">eKsięgowy AI</a> łączy przez API konto firmowe i konto prywatne użytkownika i trzyma je ściśle osobno.",
+  "h_docs": "Dokumentacja",
+  "docs": "Opis wszystkich endpointów (Swagger) z przewodnikiem krok po kroku:",
+  "openapi": "Schemat OpenAPI (JSON)",
+ },
+ "en": {
+  "title": "API for developers - AI Budget Assistant",
+  "meta": "The AI Budget public REST API with OAuth 2.0 and PKCE: expenses, receipts, categories and several accounts in one connection. Free, no app review.",
+  "h1": "AI Budget API for developers",
+  "lead": "AI Budget has a public REST API with OAuth 2.0 authorization – “Connect AI Budget”. With the user’s consent your app can read and write their expenses and download receipts and categories. The user chooses what to share and can revoke access at any time.",
+  "btn_docs": "API reference", "btn_register": "Register an app", "btn_blog": "How we built it",
+  "h_can": "What the API can do today",
+  "can": [
+   "Read, create, update and delete expenses (<code>/public/v1/expenses</code>).",
+   "Sync through the changes feed <code>/public/v1/expenses/changes</code>: poll it and get new, changed and deleted expenses – deletions arrive as <code>delete</code> entries (tombstones).",
+   "Download the receipt images attached to expenses.",
+   "Read the account’s expense categories.",
+   "Cover several accounts with one connection: the user ticks the accounts to share (personal, business, family…) and each request names its account in the <code>X-Account-Id</code> header. <code>GET /public/v1/accounts</code> lists the shared accounts with their type.",
+   "Scopes: <code>expenses:read</code>, <code>expenses:write</code>, <code>receipts:read</code>, <code>categories:read</code>.",
+  ],
+  "later": "Today the API covers expenses, receipts and categories. Incomes, budgets and goals may come later.",
+  "h_free": "Free, no review",
+  "free": "API access is free. Any developer registers an app in AI Budget themselves (<strong>Settings → Developers</strong>) – no manual review, no waiting. Rate limits apply per connection and per app.",
+  "h_priv": "The user’s privacy",
+  "priv": "The user decides which accounts to share and can disconnect your app at any time in <strong>Settings → Connected apps</strong> (<a href=\"__HELP__\">how it works</a>). End-to-end encrypted accounts stay protected: an account with text encryption can be connected read-only, and a fully encrypted account cannot be connected.",
+  "h_start": "Get started in 3 steps",
+  "steps": [
+   "<strong>Register an app</strong> in <strong>Settings → Developers</strong>: give it a name and a redirect URI, and you get a <code>client_id</code> and <code>client_secret</code>.",
+   "<strong>Send the user</strong> to the authorize URL <code>https://app.ai-budget.pl/authorize</code> with PKCE. The user signs in, ticks the accounts and approves the scopes.",
+   "<strong>Exchange the code</strong> for a token at <code>POST /oauth/token</code> and call <code>https://api.ai-budget.pl/public/v1</code> with an <code>Authorization: Bearer …</code> header.",
+  ],
+  "h_example": "First integration: eKsięgowy AI",
+  "example": "<a href=\"https://eksiegowyai.pl/\">eKsięgowy AI</a> connects a user’s company and private accounts through the API and keeps them strictly apart.",
+  "h_docs": "Documentation",
+  "docs": "Every endpoint (Swagger) with a step-by-step guide:",
+  "openapi": "OpenAPI schema (JSON)",
+ },
+ "de": {
+  "title": "API für Entwickler - AI Budget Assistant",
+  "meta": "Öffentliche REST-API von AI Budget mit OAuth 2.0 und PKCE: Ausgaben, Kassenbons, Kategorien und mehrere Konten pro Verbindung. Kostenlos, ohne App-Prüfung.",
+  "h1": "AI Budget API für Entwickler",
+  "lead": "AI Budget hat eine öffentliche REST-API mit OAuth-2.0-Autorisierung – „Mit AI Budget verbinden“. Mit Zustimmung der Nutzer kann Ihre App deren Ausgaben lesen und schreiben sowie Kassenbons und Kategorien abrufen. Die Nutzer entscheiden selbst, was sie teilen, und können den Zugriff jederzeit widerrufen.",
+  "btn_docs": "API-Referenz", "btn_register": "App registrieren", "btn_blog": "Wie wir es gebaut haben",
+  "h_can": "Was die API heute kann",
+  "can": [
+   "Ausgaben lesen, anlegen, ändern und löschen (<code>/public/v1/expenses</code>).",
+   "Über den Änderungs-Feed <code>/public/v1/expenses/changes</code> synchronisieren: regelmäßig abfragen und neue, geänderte und gelöschte Ausgaben erhalten – Löschungen kommen als <code>delete</code>-Einträge (Tombstones).",
+   "Die Kassenbon-Bilder herunterladen, die an Ausgaben hängen.",
+   "Die Ausgabenkategorien des Kontos lesen.",
+   "Mehrere Konten in einer Verbindung: Die Nutzer wählen die geteilten Konten (privat, geschäftlich, Familie …), und jede Anfrage nennt ihr Konto im Header <code>X-Account-Id</code>. <code>GET /public/v1/accounts</code> listet die geteilten Konten mit ihrem Typ.",
+   "Berechtigungen (Scopes): <code>expenses:read</code>, <code>expenses:write</code>, <code>receipts:read</code>, <code>categories:read</code>.",
+  ],
+  "later": "Derzeit umfasst die API Ausgaben, Kassenbons und Kategorien. Einnahmen, Budgets und Ziele können später dazukommen.",
+  "h_free": "Kostenlos und ohne Prüfung",
+  "free": "Der API-Zugang ist kostenlos. Entwickler registrieren ihre App selbst in AI Budget (<strong>Einstellungen → Entwickler</strong>) – ohne manuelle Prüfung, ohne Wartezeit. Ratenlimits gelten pro Verbindung und pro App.",
+  "h_priv": "Privatsphäre der Nutzer",
+  "priv": "Die Nutzer entscheiden, welche Konten sie teilen, und können Ihre App jederzeit unter <strong>Einstellungen → Verbundene Apps</strong> trennen (<a href=\"__HELP__\">so funktioniert es</a>). Ende-zu-Ende-verschlüsselte Konten bleiben geschützt: Ein Konto mit Textverschlüsselung lässt sich nur lesend verbinden, ein vollständig verschlüsseltes Konto gar nicht.",
+  "h_start": "In 3 Schritten starten",
+  "steps": [
+   "<strong>App registrieren</strong> unter <strong>Einstellungen → Entwickler</strong>: Namen und Redirect-URI angeben, und Sie erhalten <code>client_id</code> und <code>client_secret</code>.",
+   "<strong>Nutzer weiterleiten</strong> zur Autorisierungs-URL <code>https://app.ai-budget.pl/authorize</code> mit PKCE. Dort melden sie sich an, wählen die Konten und bestätigen die Berechtigungen.",
+   "<strong>Code eintauschen</strong> gegen ein Token unter <code>POST /oauth/token</code> und <code>https://api.ai-budget.pl/public/v1</code> mit dem Header <code>Authorization: Bearer …</code> aufrufen.",
+  ],
+  "h_example": "Erste Integration: eKsięgowy AI",
+  "example": "<a href=\"https://eksiegowyai.pl/\">eKsięgowy AI</a> verbindet über die API das Geschäfts- und das Privatkonto eines Nutzers und hält beide strikt getrennt.",
+  "h_docs": "Dokumentation",
+  "docs": "Alle Endpunkte (Swagger) mit einer Schritt-für-Schritt-Anleitung:",
+  "openapi": "OpenAPI-Schema (JSON)",
+ },
+ "es": {
+  "title": "API para desarrolladores - AI Budget Assistant",
+  "meta": "La API REST pública de AI Budget con OAuth 2.0 y PKCE: gastos, tickets, categorías y varias cuentas en una sola conexión. Gratis y sin revisión de apps.",
+  "h1": "API de AI Budget para desarrolladores",
+  "lead": "AI Budget tiene una API REST pública con autorización OAuth 2.0: «Conectar con AI Budget». Con el consentimiento del usuario, tu app puede leer y escribir sus gastos y descargar tickets y categorías. El usuario elige qué comparte y puede retirar el acceso cuando quiera.",
+  "btn_docs": "Referencia de la API", "btn_register": "Registrar una app", "btn_blog": "Cómo lo construimos",
+  "h_can": "Qué puede hacer la API hoy",
+  "can": [
+   "Leer, crear, modificar y eliminar gastos (<code>/public/v1/expenses</code>).",
+   "Sincronizar con el feed de cambios <code>/public/v1/expenses/changes</code>: lo consultas periódicamente y recibes los gastos nuevos, modificados y eliminados; las eliminaciones llegan como entradas <code>delete</code> (tombstones).",
+   "Descargar las imágenes de los tickets adjuntos a los gastos.",
+   "Leer las categorías de gastos de la cuenta.",
+   "Cubrir varias cuentas con una conexión: el usuario marca las cuentas que comparte (personal, empresa, familia…) y cada petición indica su cuenta en la cabecera <code>X-Account-Id</code>. <code>GET /public/v1/accounts</code> lista las cuentas compartidas con su tipo.",
+   "Permisos (scopes): <code>expenses:read</code>, <code>expenses:write</code>, <code>receipts:read</code>, <code>categories:read</code>.",
+  ],
+  "later": "Por ahora la API cubre gastos, tickets y categorías. Ingresos, presupuestos y metas podrían llegar más adelante.",
+  "h_free": "Gratis y sin revisión",
+  "free": "El acceso a la API es gratuito. Cualquier desarrollador registra su app en AI Budget por su cuenta (<strong>Ajustes → Desarrolladores</strong>), sin revisión manual ni esperas. Los límites de peticiones se aplican por conexión y por app.",
+  "h_priv": "La privacidad del usuario",
+  "priv": "El usuario decide qué cuentas comparte y puede desconectar tu app en cualquier momento en <strong>Ajustes → Aplicaciones conectadas</strong> (<a href=\"__HELP__\">cómo funciona</a>). Las cuentas con cifrado de extremo a extremo siguen protegidas: una cuenta con cifrado de texto solo se puede conectar en modo lectura y una cuenta con cifrado completo no se puede conectar.",
+  "h_start": "Empieza en 3 pasos",
+  "steps": [
+   "<strong>Registra una app</strong> en <strong>Ajustes → Desarrolladores</strong>: indica un nombre y una URI de redirección y obtendrás <code>client_id</code> y <code>client_secret</code>.",
+   "<strong>Envía al usuario</strong> a la URL de autorización <code>https://app.ai-budget.pl/authorize</code> con PKCE. El usuario inicia sesión, marca las cuentas y aprueba los permisos.",
+   "<strong>Canjea el código</strong> por un token en <code>POST /oauth/token</code> y llama a <code>https://api.ai-budget.pl/public/v1</code> con la cabecera <code>Authorization: Bearer …</code>.",
+  ],
+  "h_example": "Primera integración: eKsięgowy AI",
+  "example": "<a href=\"https://eksiegowyai.pl/\">eKsięgowy AI</a> conecta mediante la API la cuenta de empresa y la cuenta personal del usuario y las mantiene estrictamente separadas.",
+  "h_docs": "Documentación",
+  "docs": "Todos los endpoints (Swagger) con una guía paso a paso:",
+  "openapi": "Esquema OpenAPI (JSON)",
+ },
+ "fr": {
+  "title": "API pour développeurs - AI Budget Assistant",
+  "meta": "API REST publique d’AI Budget avec OAuth 2.0 et PKCE : dépenses, tickets, catégories et plusieurs comptes par connexion. Gratuite, sans validation.",
+  "h1": "L’API AI Budget pour les développeurs",
+  "lead": "AI Budget propose une API REST publique avec autorisation OAuth 2.0 : « Se connecter avec AI Budget ». Avec l’accord de l’utilisateur, votre application peut lire et écrire ses dépenses et récupérer ses tickets et catégories. L’utilisateur choisit ce qu’il partage et peut retirer l’accès à tout moment.",
+  "btn_docs": "Référence de l’API", "btn_register": "Inscrire une application", "btn_blog": "Comment nous l’avons construite",
+  "h_can": "Ce que l’API sait faire aujourd’hui",
+  "can": [
+   "Lire, créer, modifier et supprimer des dépenses (<code>/public/v1/expenses</code>).",
+   "Synchroniser via le flux de modifications <code>/public/v1/expenses/changes</code> : interrogé régulièrement, il renvoie les dépenses nouvelles, modifiées et supprimées ; les suppressions arrivent sous forme d’entrées <code>delete</code> (tombstones).",
+   "Télécharger les images des tickets joints aux dépenses.",
+   "Lire les catégories de dépenses du compte.",
+   "Couvrir plusieurs comptes avec une seule connexion : l’utilisateur coche les comptes partagés (personnel, professionnel, famille…) et chaque requête indique son compte dans l’en-tête <code>X-Account-Id</code>. <code>GET /public/v1/accounts</code> liste les comptes partagés avec leur type.",
+   "Autorisations (scopes) : <code>expenses:read</code>, <code>expenses:write</code>, <code>receipts:read</code>, <code>categories:read</code>.",
+  ],
+  "later": "Pour l’instant, l’API couvre les dépenses, les tickets et les catégories. Les revenus, budgets et objectifs pourraient suivre.",
+  "h_free": "Gratuite et sans validation",
+  "free": "L’accès à l’API est gratuit. Chaque développeur inscrit lui-même son application dans AI Budget (<strong>Paramètres → Développeurs</strong>), sans validation manuelle ni attente. Les limites de requêtes s’appliquent par connexion et par application.",
+  "h_priv": "La vie privée de l’utilisateur",
+  "priv": "L’utilisateur décide quels comptes il partage et peut déconnecter votre application à tout moment dans <strong>Paramètres → Applications connectées</strong> (<a href=\"__HELP__\">comment ça marche</a>). Les comptes chiffrés de bout en bout restent protégés : un compte avec chiffrement du texte ne se connecte qu’en lecture seule, et un compte entièrement chiffré ne peut pas être connecté.",
+  "h_start": "Démarrer en 3 étapes",
+  "steps": [
+   "<strong>Inscrivez une application</strong> dans <strong>Paramètres → Développeurs</strong> : donnez-lui un nom et une URI de redirection, vous obtenez un <code>client_id</code> et un <code>client_secret</code>.",
+   "<strong>Envoyez l’utilisateur</strong> vers l’URL d’autorisation <code>https://app.ai-budget.pl/authorize</code> avec PKCE. Il se connecte, coche les comptes et approuve les autorisations.",
+   "<strong>Échangez le code</strong> contre un jeton sur <code>POST /oauth/token</code> et appelez <code>https://api.ai-budget.pl/public/v1</code> avec l’en-tête <code>Authorization: Bearer …</code>.",
+  ],
+  "h_example": "Première intégration : eKsięgowy AI",
+  "example": "<a href=\"https://eksiegowyai.pl/\">eKsięgowy AI</a> connecte via l’API le compte professionnel et le compte personnel d’un utilisateur et les garde strictement séparés.",
+  "h_docs": "Documentation",
+  "docs": "Tous les endpoints (Swagger) avec un guide pas à pas :",
+  "openapi": "Schéma OpenAPI (JSON)",
+ },
+ "ru": {
+  "title": "API для разработчиков - AI Budget Assistant",
+  "meta": "Публичное REST API AI Budget с OAuth 2.0 и PKCE: расходы, чеки, категории и несколько счетов в одном подключении. Бесплатно, без проверки приложений.",
+  "h1": "API AI Budget для разработчиков",
+  "lead": "У AI Budget есть публичное REST API с авторизацией OAuth 2.0 – «Подключить AI Budget». С согласия пользователя ваше приложение может читать и записывать его расходы, скачивать чеки и категории. Пользователь сам выбирает, чем делиться, и может отозвать доступ в любой момент.",
+  "btn_docs": "Документация API", "btn_register": "Зарегистрировать приложение", "btn_blog": "Как мы это сделали",
+  "h_can": "Что API умеет уже сейчас",
+  "can": [
+   "Читать, создавать, изменять и удалять расходы (<code>/public/v1/expenses</code>).",
+   "Синхронизироваться через ленту изменений <code>/public/v1/expenses/changes</code>: вы периодически опрашиваете её и получаете новые, изменённые и удалённые расходы – удаления приходят записями <code>delete</code> (tombstone).",
+   "Скачивать фото чеков, прикреплённых к расходам.",
+   "Читать категории расходов счёта.",
+   "Работать с несколькими счетами в одном подключении: пользователь отмечает счета, которыми делится (личный, бизнес, семейный…), а каждый запрос указывает счёт в заголовке <code>X-Account-Id</code>. <code>GET /public/v1/accounts</code> возвращает подключённые счета с их типом.",
+   "Права доступа (scopes): <code>expenses:read</code>, <code>expenses:write</code>, <code>receipts:read</code>, <code>categories:read</code>.",
+  ],
+  "later": "Пока API охватывает расходы, чеки и категории. Доходы, бюджеты и цели могут появиться позже.",
+  "h_free": "Бесплатно и без проверки",
+  "free": "Доступ к API бесплатный. Любой разработчик сам регистрирует приложение в AI Budget (<strong>Настройки → Разработчикам</strong>) – без ручной проверки и ожидания. Лимиты запросов считаются отдельно для каждого подключения и для каждого приложения.",
+  "h_priv": "Приватность пользователя",
+  "priv": "Пользователь сам решает, какими счетами делиться, и в любой момент может отключить приложение в <strong>Настройки → Подключённые приложения</strong> (<a href=\"__HELP__\">как это работает</a>). Счета со сквозным шифрованием остаются защищены: счёт с шифрованием текста подключается только для чтения, а полностью зашифрованный счёт подключить нельзя.",
+  "h_start": "Старт за 3 шага",
+  "steps": [
+   "<strong>Зарегистрируйте приложение</strong> в <strong>Настройки → Разработчикам</strong>: укажите название и адрес перенаправления (redirect URI) – вы получите <code>client_id</code> и <code>client_secret</code>.",
+   "<strong>Отправьте пользователя</strong> на адрес авторизации <code>https://app.ai-budget.pl/authorize</code> с PKCE. Пользователь входит, отмечает счета и подтверждает права.",
+   "<strong>Обменяйте код</strong> на токен в <code>POST /oauth/token</code> и вызывайте <code>https://api.ai-budget.pl/public/v1</code> с заголовком <code>Authorization: Bearer …</code>.",
+  ],
+  "h_example": "Первая интеграция: eKsięgowy AI",
+  "example": "<a href=\"https://eksiegowyai.pl/\">eKsięgowy AI</a> подключает через API бизнес-счёт и личный счёт пользователя и строго держит их раздельно.",
+  "h_docs": "Документация",
+  "docs": "Описание всех эндпоинтов (Swagger) и пошаговое руководство:",
+  "openapi": "Схема OpenAPI (JSON)",
+ },
+ "ua": {
+  "title": "API для розробників - AI Budget Assistant",
+  "meta": "Публічне REST API AI Budget з OAuth 2.0 і PKCE: витрати, чеки, категорії та кілька рахунків в одному підключенні. Безкоштовно, без перевірки застосунків.",
+  "h1": "API AI Budget для розробників",
+  "lead": "AI Budget має публічне REST API з авторизацією OAuth 2.0 – «Підключити AI Budget». За згодою користувача ваш застосунок може читати й записувати його витрати, завантажувати чеки та категорії. Користувач сам обирає, чим ділитися, і може будь-коли відкликати доступ.",
+  "btn_docs": "Документація API", "btn_register": "Зареєструвати застосунок", "btn_blog": "Як ми це зробили",
+  "h_can": "Що API вміє вже зараз",
+  "can": [
+   "Читати, створювати, змінювати й видаляти витрати (<code>/public/v1/expenses</code>).",
+   "Синхронізуватися через стрічку змін <code>/public/v1/expenses/changes</code>: ви періодично опитуєте її й отримуєте нові, змінені та видалені витрати – видалення надходять записами <code>delete</code> (tombstone).",
+   "Завантажувати фото чеків, прикріплених до витрат.",
+   "Читати категорії витрат рахунку.",
+   "Працювати з кількома рахунками в одному підключенні: користувач позначає рахунки, якими ділиться (особистий, бізнес, сімейний…), а кожен запит вказує рахунок у заголовку <code>X-Account-Id</code>. <code>GET /public/v1/accounts</code> повертає підключені рахунки з їхнім типом.",
+   "Права доступу (scopes): <code>expenses:read</code>, <code>expenses:write</code>, <code>receipts:read</code>, <code>categories:read</code>.",
+  ],
+  "later": "Поки що API охоплює витрати, чеки та категорії. Доходи, бюджети й цілі можуть з’явитися пізніше.",
+  "h_free": "Безкоштовно й без перевірки",
+  "free": "Доступ до API безкоштовний. Будь-який розробник сам реєструє застосунок в AI Budget (<strong>Налаштування → Розробникам</strong>) – без ручної перевірки й очікування. Ліміти запитів рахуються окремо для кожного підключення та для кожного застосунку.",
+  "h_priv": "Приватність користувача",
+  "priv": "Користувач сам вирішує, якими рахунками ділитися, і будь-коли може відключити застосунок у <strong>Налаштування → Підключені застосунки</strong> (<a href=\"__HELP__\">як це працює</a>). Рахунки з наскрізним шифруванням залишаються захищеними: рахунок із шифруванням тексту підключається лише для читання, а повністю зашифрований рахунок підключити не можна.",
+  "h_start": "Старт за 3 кроки",
+  "steps": [
+   "<strong>Зареєструйте застосунок</strong> у <strong>Налаштування → Розробникам</strong>: вкажіть назву й адресу перенаправлення (redirect URI) – ви отримаєте <code>client_id</code> і <code>client_secret</code>.",
+   "<strong>Надішліть користувача</strong> на адресу авторизації <code>https://app.ai-budget.pl/authorize</code> з PKCE. Користувач входить, позначає рахунки й підтверджує права.",
+   "<strong>Обміняйте код</strong> на токен у <code>POST /oauth/token</code> і викликайте <code>https://api.ai-budget.pl/public/v1</code> із заголовком <code>Authorization: Bearer …</code>.",
+  ],
+  "h_example": "Перша інтеграція: eKsięgowy AI",
+  "example": "<a href=\"https://eksiegowyai.pl/\">eKsięgowy AI</a> підключає через API бізнес-рахунок і особистий рахунок користувача та суворо тримає їх окремо.",
+  "h_docs": "Документація",
+  "docs": "Опис усіх ендпоінтів (Swagger) і покрокова інструкція:",
+  "openapi": "Схема OpenAPI (JSON)",
+ },
+ "be": {
+  "title": "API для распрацоўшчыкаў - AI Budget Assistant",
+  "meta": "Публічнае REST API AI Budget з OAuth 2.0 і PKCE: выдаткі, чэкі, катэгорыі і некалькі рахункаў у адным падключэнні. Бясплатна, без праверкі праграм.",
+  "h1": "API AI Budget для распрацоўшчыкаў",
+  "lead": "У AI Budget ёсць публічнае REST API з аўтарызацыяй OAuth 2.0 – «Падключыць AI Budget». Са згоды карыстальніка ваша праграма можа чытаць і запісваць яго выдаткі, спампоўваць чэкі і катэгорыі. Карыстальнік сам выбірае, чым дзяліцца, і можа ў любы момант адклікаць доступ.",
+  "btn_docs": "Дакументацыя API", "btn_register": "Зарэгістраваць праграму", "btn_blog": "Як мы гэта зрабілі",
+  "h_can": "Што API ўмее ўжо цяпер",
+  "can": [
+   "Чытаць, ствараць, змяняць і выдаляць выдаткі (<code>/public/v1/expenses</code>).",
+   "Сінхранізавацца праз стужку змяненняў <code>/public/v1/expenses/changes</code>: вы перыядычна апытваеце яе і атрымліваеце новыя, змененыя і выдаленыя выдаткі – выдаленні прыходзяць запісамі <code>delete</code> (tombstone).",
+   "Спампоўваць фота чэкаў, прымацаваных да выдаткаў.",
+   "Чытаць катэгорыі выдаткаў рахунку.",
+   "Працаваць з некалькімі рахункамі ў адным падключэнні: карыстальнік адзначае рахункі, якімі дзеліцца (асабісты, бізнес, сямейны…), а кожны запыт паказвае рахунак у загалоўку <code>X-Account-Id</code>. <code>GET /public/v1/accounts</code> вяртае падключаныя рахункі з іх тыпам.",
+   "Правы доступу (scopes): <code>expenses:read</code>, <code>expenses:write</code>, <code>receipts:read</code>, <code>categories:read</code>.",
+  ],
+  "later": "Пакуль API ахоплівае выдаткі, чэкі і катэгорыі. Даходы, бюджэты і мэты могуць з’явіцца пазней.",
+  "h_free": "Бясплатна і без праверкі",
+  "free": "Доступ да API бясплатны. Любы распрацоўшчык сам рэгіструе праграму ў AI Budget (<strong>Налады → Распрацоўшчыкам</strong>) – без ручной праверкі і чакання. Ліміты запытаў лічацца асобна для кожнага падключэння і для кожнай праграмы.",
+  "h_priv": "Прыватнасць карыстальніка",
+  "priv": "Карыстальнік сам вырашае, якімі рахункамі дзяліцца, і ў любы момант можа адключыць праграму ў <strong>Налады → Падключаныя праграмы</strong> (<a href=\"__HELP__\">як гэта працуе</a>). Рахункі са скразным шыфраваннем застаюцца абароненымі: рахунак з шыфраваннем тэксту падключаецца толькі для чытання, а цалкам зашыфраваны рахунак падключыць нельга.",
+  "h_start": "Старт за 3 крокі",
+  "steps": [
+   "<strong>Зарэгіструйце праграму</strong> ў <strong>Налады → Распрацоўшчыкам</strong>: пакажыце назву і адрас перанакіравання (redirect URI) – вы атрымаеце <code>client_id</code> і <code>client_secret</code>.",
+   "<strong>Адпраўце карыстальніка</strong> на адрас аўтарызацыі <code>https://app.ai-budget.pl/authorize</code> з PKCE. Карыстальнік уваходзіць, адзначае рахункі і пацвярджае правы.",
+   "<strong>Абмяняйце код</strong> на токен у <code>POST /oauth/token</code> і выклікайце <code>https://api.ai-budget.pl/public/v1</code> з загалоўкам <code>Authorization: Bearer …</code>.",
+  ],
+  "h_example": "Першая інтэграцыя: eKsięgowy AI",
+  "example": "<a href=\"https://eksiegowyai.pl/\">eKsięgowy AI</a> падключае праз API бізнес-рахунак і асабісты рахунак карыстальніка і строга трымае іх асобна.",
+  "h_docs": "Дакументацыя",
+  "docs": "Апісанне ўсіх эндпойнтаў (Swagger) і пакрокавае кіраўніцтва:",
+  "openapi": "Схема OpenAPI (JSON)",
+ },
+ "nl": {
+  "title": "API voor ontwikkelaars - AI Budget Assistant",
+  "meta": "Publieke REST API van AI Budget met OAuth 2.0 en PKCE: uitgaven, bonnetjes, categorieën en meerdere rekeningen per koppeling. Gratis, zonder beoordeling.",
+  "h1": "AI Budget API voor ontwikkelaars",
+  "lead": "AI Budget heeft een publieke REST API met OAuth 2.0-autorisatie: ‘Koppelen met AI Budget’. Met toestemming van de gebruiker kan je app diens uitgaven lezen en schrijven en bonnetjes en categorieën ophalen. De gebruiker kiest zelf wat er gedeeld wordt en kan de toegang altijd intrekken.",
+  "btn_docs": "API-referentie", "btn_register": "App registreren", "btn_blog": "Hoe we het bouwden",
+  "h_can": "Wat de API nu al kan",
+  "can": [
+   "Uitgaven lezen, aanmaken, wijzigen en verwijderen (<code>/public/v1/expenses</code>).",
+   "Synchroniseren via de wijzigingenfeed <code>/public/v1/expenses/changes</code>: vraag hem regelmatig op en ontvang nieuwe, gewijzigde en verwijderde uitgaven – verwijderingen komen binnen als <code>delete</code>-items (tombstones).",
+   "De bonnetjesfoto’s downloaden die aan uitgaven hangen.",
+   "De uitgavencategorieën van de rekening lezen.",
+   "Meerdere rekeningen in één koppeling: de gebruiker vinkt de rekeningen aan die gedeeld worden (persoonlijk, zakelijk, gezin…) en elk verzoek noemt zijn rekening in de header <code>X-Account-Id</code>. <code>GET /public/v1/accounts</code> toont de gedeelde rekeningen met hun type.",
+   "Rechten (scopes): <code>expenses:read</code>, <code>expenses:write</code>, <code>receipts:read</code>, <code>categories:read</code>.",
+  ],
+  "later": "Voorlopig dekt de API uitgaven, bonnetjes en categorieën. Inkomsten, budgetten en doelen kunnen later volgen.",
+  "h_free": "Gratis en zonder beoordeling",
+  "free": "Toegang tot de API is gratis. Elke ontwikkelaar registreert zelf een app in AI Budget (<strong>Instellingen → Ontwikkelaars</strong>) – zonder handmatige beoordeling en zonder wachten. Limieten gelden per koppeling en per app.",
+  "h_priv": "Privacy van de gebruiker",
+  "priv": "De gebruiker bepaalt welke rekeningen gedeeld worden en kan je app altijd ontkoppelen via <strong>Instellingen → Gekoppelde apps</strong> (<a href=\"__HELP__\">zo werkt het</a>). End-to-end versleutelde rekeningen blijven beschermd: een rekening met tekstversleuteling is alleen-lezen te koppelen en een volledig versleutelde rekening kan niet worden gekoppeld.",
+  "h_start": "Starten in 3 stappen",
+  "steps": [
+   "<strong>Registreer een app</strong> via <strong>Instellingen → Ontwikkelaars</strong>: geef een naam en een redirect-URI op, en je krijgt een <code>client_id</code> en <code>client_secret</code>.",
+   "<strong>Stuur de gebruiker</strong> naar de autorisatie-URL <code>https://app.ai-budget.pl/authorize</code> met PKCE. De gebruiker logt in, vinkt de rekeningen aan en keurt de rechten goed.",
+   "<strong>Wissel de code</strong> in voor een token via <code>POST /oauth/token</code> en roep <code>https://api.ai-budget.pl/public/v1</code> aan met de header <code>Authorization: Bearer …</code>.",
+  ],
+  "h_example": "Eerste integratie: eKsięgowy AI",
+  "example": "<a href=\"https://eksiegowyai.pl/\">eKsięgowy AI</a> koppelt via de API de zakelijke en de privérekening van een gebruiker en houdt ze strikt gescheiden.",
+  "h_docs": "Documentatie",
+  "docs": "Alle endpoints (Swagger) met een stapsgewijze handleiding:",
+  "openapi": "OpenAPI-schema (JSON)",
+ },
+}
+
+def developers_page(lang):
+    t = DEVELOPERS[lang]
+    url = SITE + dev_url(lang)
+    alts = [(l, SITE + dev_url(l)) for l in LANG_NAMES if l in DEVELOPERS] + [("x-default", SITE + dev_url("en"))]
+    alt_tags = "".join(f'<link rel="alternate" hreflang="{bcp47(hl)}" href="{href}">' for hl, href in alts)
+    ld = {"@context": "https://schema.org", "@graph": [
+        bb.org_node(),
+        {"@type": "WebAPI", "@id": f"{SITE}/#api", "name": "AI Budget Assistant Public API",
+         "description": DEVELOPERS["en"]["meta"], "documentation": f"{API_DOCS}/en",
+         "isAccessibleForFree": True, "provider": {"@id": f"{SITE}/#organization"}},
+        {"@type": "WebPage", "@id": url, "url": url, "name": t["title"], "description": t["meta"],
+         "inLanguage": bcp47(lang), "about": {"@id": f"{SITE}/#api"},
+         "publisher": {"@id": f"{SITE}/#organization"}}]}
+    btns = (f'<p class="devbtns"><a class="btn p" href="{api_docs_url(lang)}">{t["btn_docs"]}</a>'
+            f'<a class="btn s" href="{API_REGISTER}">{t["btn_register"]}</a>'
+            f'<a class="btn s" href="{api_blog_url(lang)}">{t["btn_blog"]}</a></p>')
+    priv = t["priv"].replace("__HELP__", f"/help/{lang}/connected-apps/")
+    other = " · ".join(f'<a href="{API_DOCS}/{c}" hreflang="{c}">{n}</a>' for c, n in API_DOCS_LANGS)
+    body = (f'<p>{t["lead"]}</p>{btns}'
+            f'<h2>{t["h_can"]}</h2><ul>' + "".join(f"<li>{x}</li>" for x in t["can"]) + f'</ul><p>{t["later"]}</p>'
+            f'<h2>{t["h_free"]}</h2><p>{t["free"]}</p>'
+            f'<h2>{t["h_priv"]}</h2><p>{priv}</p>'
+            f'<h2>{t["h_start"]}</h2><ol>' + "".join(f"<li>{x}</li>" for x in t["steps"]) + '</ol>'
+            f'<pre><code>{API_SNIPPET}</code></pre>'
+            f'<h2>{t["h_example"]}</h2><p>{t["example"]}</p>'
+            f'<h2>{t["h_docs"]}</h2><p>{t["docs"]}</p>{btns}'
+            f'<p>{other} · <a href="{API_OPENAPI}">{t["openapi"]}</a></p>')
+    return (f'<!DOCTYPE html><html lang="{bcp47(lang)}"><head><meta charset="utf-8">'
+            f'<meta name="viewport" content="width=device-width, initial-scale=1">'
+            f'<title>{html.escape(t["title"])}</title><meta name="description" content="{html.escape(t["meta"])}">'
+            f'<link rel="canonical" href="{url}"><meta name="robots" content="{ROBOTS}">{alt_tags}'
+            f'<script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>'
+            f'<style>{CSS}</style></head><body>'
+            f'<header><div class="wrap"><a class="brand" href="{lp(lang)}">AI <span>Budget</span> Assistant</a>'
+            f'<nav class="nav"><a href="{dev_url(lang)}">{DEV_LABELS[lang]}</a>'
+            f'<a class="btn p" href="{app_url("nav", lang)}">{C[lang]["nav_login"]}</a></nav></div></header>'
+            f'<main class="wrap legal"><h1>{html.escape(t["h1"])}</h1>{body}</main>'
             + footer_html(lang) + consent_html(lang) + '</body></html>')
 
 def pricing_page(lang):
@@ -1955,6 +2332,18 @@ LLMS_TXT_I18N = {
     },
 }
 
+# The API line of each llms-<lang>.txt (ABA-710).
+LLMS_API_DESC = {
+    "de": "kostenlose REST-API mit OAuth 2.0 (PKCE) für Ausgaben, Kassenbons und Kategorien",
+    "nl": "gratis REST API met OAuth 2.0 (PKCE) voor uitgaven, bonnetjes en categorieën",
+    "pl": "bezpłatne REST API z OAuth 2.0 (PKCE) do wydatków, paragonów i kategorii",
+    "ru": "бесплатное REST API с OAuth 2.0 (PKCE) для расходов, чеков и категорий",
+    "es": "API REST gratuita con OAuth 2.0 (PKCE) para gastos, tickets y categorías",
+    "fr": "API REST gratuite avec OAuth 2.0 (PKCE) pour les dépenses, les tickets et les catégories",
+    "ua": "безкоштовне REST API з OAuth 2.0 (PKCE) для витрат, чеків і категорій",
+    "be": "бясплатнае REST API з OAuth 2.0 (PKCE) для выдаткаў, чэкаў і катэгорый",
+}
+
 def check_feature_lists():
     """Fail the build when a translated feature list is not item-for-item with FEATURES_EN."""
     bad = {l: len(v["features"]) for l, v in LLMS_TXT_I18N.items() if len(v["features"]) != len(FEATURES_EN)}
@@ -1986,6 +2375,8 @@ def write_llms_txt_localized(lang):
         f"- [Blog]({SITE}/blog/{lang}/): {t['blog_desc']}\n"
         f"- [{HELP_LABELS.get(lang, 'Help')}]({SITE}/help/{lang}/): {t['help_desc']}\n"
         f"- [{PRICING_LABELS.get(lang, 'Pricing')}]({SITE}{pricing_url(lang)}): {t['pricing_desc']}\n"
+        f"- [{DEV_LABELS[lang]}]({SITE}{dev_url(lang)}): {LLMS_API_DESC[lang]}; "
+        f"[API]({api_docs_url(lang)}), [OpenAPI]({API_OPENAPI})\n"
         f"- [llms-full-{lang}.txt]({SITE}/llms-full-{lang}.txt): {t['full_desc']}\n"
         f"- [llms.txt]({SITE}/llms.txt): {t['full_en_note']}\n\n"
         f"## Links\n\n"
@@ -2011,7 +2402,8 @@ def write_llms_full(lang="en"):
     filename = "llms-full.txt" if lang == "en" else f"llms-full-{lang}.txt"
     out = [f"# AI Budget Assistant - Full content ({label})", "",
            f"> {intro}", "",
-           f"Source: {SITE}/llms.txt", ""]
+           f"Source: {SITE}/llms.txt",
+           f"Public API (OAuth 2.0): {SITE}{dev_url(lang)} - reference {api_docs_url(lang)}, OpenAPI {API_OPENAPI}", ""]
     try:
         blog_lang = sorted((a for a in bb.read_articles() if a["lang"] == lang),
                             key=lambda a: a["m"]["slug"])
@@ -2054,6 +2446,12 @@ def build():
         d = os.path.join(OUT, sub)
         os.makedirs(d, exist_ok=True)
         open(os.path.join(d, "index.html"), "w", encoding="utf-8", newline="\n").write(about_page(lang))
+    # Developers / public API page (all 9 languages, ABA-710)
+    for lang in [l for l in LANG_NAMES if l in DEVELOPERS]:
+        sub = "developers" if lang == "pl" else os.path.join(lang, "developers")
+        d = os.path.join(OUT, sub)
+        os.makedirs(d, exist_ok=True)
+        open(os.path.join(d, "index.html"), "w", encoding="utf-8", newline="\n").write(developers_page(lang))
     # Pricing page (all 9 languages)
     for lang in [l for l in LANG_NAMES if l in PRICING]:
         sub = "pricing" if lang == "pl" else os.path.join(lang, "pricing")
@@ -2117,6 +2515,7 @@ def build():
             landing_urls[u] = l
         entries += [(SITE + about_url(l), lp_date, "monthly", "0.5") for l in LANG_NAMES if l in ABOUT]
         entries += [(SITE + pricing_url(l), lp_date, "monthly", "0.7") for l in LANG_NAMES if l in PRICING]
+        entries += [(SITE + dev_url(l), lp_date, "monthly", "0.5") for l in LANG_NAMES if l in DEVELOPERS]
         for k in ("cookies", "privacy", "terms"):                        # legal (pl + en)
             src = os.path.join(LEGAL_DIR, "en", k + ".html") if k in ("privacy", "terms") else landing_py
             kdate = git_date(src, lp_date)
@@ -2197,6 +2596,8 @@ def build():
             f"- [Blog]({SITE}/blog/en/): budgeting, expense-tracking and saving guides in 9 languages\n"
             f"- [Help center]({SITE}/help/en/): how to use every feature of the app\n"
             f"- [Pricing]({SITE}/pricing/): Free, Pro and Business plans\n"
+            f"- [Public API for developers]({SITE}{dev_url('en')}): free REST API with OAuth 2.0 (PKCE) for expenses, "
+            f"receipts and categories; [API reference]({API_DOCS}/en), [OpenAPI schema]({API_OPENAPI})\n"
             f"- [Full content for LLMs]({SITE}/llms-full.txt): English markdown mirror of the blog and help center\n"
             f"- Full content mirrors in other languages: "
             + ", ".join(f"[{LLMS_FULL_INTRO[l][0]}]({SITE}/llms-full-{l}.txt)"

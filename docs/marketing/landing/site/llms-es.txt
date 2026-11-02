@@ -42,6 +42,7 @@
 - [Blog](https://ai-budget.pl/blog/es/): guías sobre presupuesto, control de gastos y ahorro en 9 idiomas
 - [Ayuda](https://ai-budget.pl/help/es/): cómo usar cada función de la app
 - [Precios](https://ai-budget.pl/es/pricing/): Gratis, Pro y Business
+- [API para desarrolladores](https://ai-budget.pl/es/developers/): API REST gratuita con OAuth 2.0 (PKCE) para gastos, tickets y categorías; [API](https://api.ai-budget.pl/public/docs/en), [OpenAPI](https://api.ai-budget.pl/public/docs/en/openapi.json)
 - [llms-full-es.txt](https://ai-budget.pl/llms-full-es.txt): espejo en markdown del blog y el centro de ayuda en español
 - [llms.txt](https://ai-budget.pl/llms.txt): versión en inglés
 

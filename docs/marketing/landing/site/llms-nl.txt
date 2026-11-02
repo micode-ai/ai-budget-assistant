@@ -42,6 +42,7 @@
 - [Blog](https://ai-budget.pl/blog/nl/): gidsen over budgetteren, uitgaven bijhouden en sparen in 9 talen
 - [Help](https://ai-budget.pl/help/nl/): hoe je elke functie van de app gebruikt
 - [Prijzen](https://ai-budget.pl/nl/pricing/): Gratis, Pro en Business
+- [API voor ontwikkelaars](https://ai-budget.pl/nl/developers/): gratis REST API met OAuth 2.0 (PKCE) voor uitgaven, bonnetjes en categorieën; [API](https://api.ai-budget.pl/public/docs/en), [OpenAPI](https://api.ai-budget.pl/public/docs/en/openapi.json)
 - [llms-full-nl.txt](https://ai-budget.pl/llms-full-nl.txt): Nederlandstalige markdown-spiegel van blog en helpcentrum
 - [llms.txt](https://ai-budget.pl/llms.txt): Engelse versie
 

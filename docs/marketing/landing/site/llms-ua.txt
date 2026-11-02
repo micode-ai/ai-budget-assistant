@@ -42,6 +42,7 @@
 - [Blog](https://ai-budget.pl/blog/ua/): статті про бюджет, облік витрат і накопичення на 9 мовах
 - [Довідка](https://ai-budget.pl/help/ua/): як користуватися кожною функцією застосунку
 - [Тарифи](https://ai-budget.pl/ua/pricing/): безкоштовний, Pro та Business
+- [API для розробників](https://ai-budget.pl/ua/developers/): безкоштовне REST API з OAuth 2.0 (PKCE) для витрат, чеків і категорій; [API](https://api.ai-budget.pl/public/docs/en), [OpenAPI](https://api.ai-budget.pl/public/docs/en/openapi.json)
 - [llms-full-ua.txt](https://ai-budget.pl/llms-full-ua.txt): дзеркало блогу і центру допомоги українською мовою
 - [llms.txt](https://ai-budget.pl/llms.txt): англійська версія
 

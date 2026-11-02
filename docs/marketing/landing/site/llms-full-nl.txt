@@ -3,6 +3,7 @@
 > Nederlandstalige markdown-spiegel van de ai-budget.pl blog en het helpcentrum, voor AI-antwoordmachines. Zie llms.txt voor de productsamenvatting (Engels).
 
 Source: https://ai-budget.pl/llms.txt
+Public API (OAuth 2.0): https://ai-budget.pl/nl/developers/ - reference https://api.ai-budget.pl/public/docs/en, OpenAPI https://api.ai-budget.pl/public/docs/en/openapi.json
 
 
 # Blog

@@ -42,6 +42,7 @@
 - [Blog](https://ai-budget.pl/blog/en/): budgeting, expense-tracking and saving guides in 9 languages
 - [Help center](https://ai-budget.pl/help/en/): how to use every feature of the app
 - [Pricing](https://ai-budget.pl/pricing/): Free, Pro and Business plans
+- [Public API for developers](https://ai-budget.pl/en/developers/): free REST API with OAuth 2.0 (PKCE) for expenses, receipts and categories; [API reference](https://api.ai-budget.pl/public/docs/en), [OpenAPI schema](https://api.ai-budget.pl/public/docs/en/openapi.json)
 - [Full content for LLMs](https://ai-budget.pl/llms-full.txt): English markdown mirror of the blog and help center
 - Full content mirrors in other languages: [Deutsch](https://ai-budget.pl/llms-full-de.txt), [Nederlands](https://ai-budget.pl/llms-full-nl.txt), [Polski](https://ai-budget.pl/llms-full-pl.txt), [Русский](https://ai-budget.pl/llms-full-ru.txt), [Español](https://ai-budget.pl/llms-full-es.txt), [Français](https://ai-budget.pl/llms-full-fr.txt), [Українська](https://ai-budget.pl/llms-full-ua.txt), [Беларуская](https://ai-budget.pl/llms-full-be.txt)
 

@@ -3,6 +3,7 @@
 > Дзеркало у форматі markdown блогу та центру допомоги ai-budget.pl українською мовою, для AI-пошукових систем. Короткий опис продукту (англійською) в llms.txt.
 
 Source: https://ai-budget.pl/llms.txt
+Public API (OAuth 2.0): https://ai-budget.pl/ua/developers/ - reference https://api.ai-budget.pl/public/docs/en, OpenAPI https://api.ai-budget.pl/public/docs/en/openapi.json
 
 
 # Blog

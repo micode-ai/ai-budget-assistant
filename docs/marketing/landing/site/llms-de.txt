@@ -42,6 +42,7 @@
 - [Blog](https://ai-budget.pl/blog/de/): Anleitungen zu Haushaltsbuch, Ausgaben-Tracking und Sparen in 9 Sprachen
 - [Hilfe](https://ai-budget.pl/help/de/): so nutzt du jede Funktion der App
 - [Preise](https://ai-budget.pl/de/pricing/): Kostenlos-, Pro- und Business-Tarif
+- [API für Entwickler](https://ai-budget.pl/de/developers/): kostenlose REST-API mit OAuth 2.0 (PKCE) für Ausgaben, Kassenbons und Kategorien; [API](https://api.ai-budget.pl/public/docs/en), [OpenAPI](https://api.ai-budget.pl/public/docs/en/openapi.json)
 - [llms-full-de.txt](https://ai-budget.pl/llms-full-de.txt): deutschsprachiges Markdown-Spiegel von Blog und Hilfecenter
 - [llms.txt](https://ai-budget.pl/llms.txt): Englische Version
 

@@ -3,6 +3,7 @@
 > Polskojęzyczne lustro markdown bloga i centrum pomocy ai-budget.pl, dla silników odpowiedzi AI. Podsumowanie produktu (po angielsku) w llms.txt.
 
 Source: https://ai-budget.pl/llms.txt
+Public API (OAuth 2.0): https://ai-budget.pl/developers/ - reference https://api.ai-budget.pl/public/docs/pl, OpenAPI https://api.ai-budget.pl/public/docs/en/openapi.json
 
 
 # Blog
