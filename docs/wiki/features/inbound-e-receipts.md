@@ -342,8 +342,11 @@ The settings pane (`emailReceipts`) already came through `settingsRegistry` and 
 
 - **`joi` override in `apps/inbound-mail/package.json` (ABA-711).** mailauth 8.0.4 pins joi 18.3.0 exactly, which
   the weekly audit flags (high); `overrides` lifts it to 18.3.1. Drop the override once mailauth pins a fixed joi.
-  Regenerate the package lockfile in a standalone copy: `npm install` inside the workspace attaches to the root
-  and leaves `apps/inbound-mail/package-lock.json` (what the container and the audit use) stale.
+  `apps/inbound-mail` has TWO lockfiles and both must move together: its own `package-lock.json` (what the
+  container and the audit install from — regenerate it in a standalone copy, since `npm install` inside the
+  workspace attaches to the root and leaves it stale) AND the root `package-lock.json`, which records the
+  workspace's packages too — then `npm install --package-lock-only` at the repo root. Updating only the first
+  broke every `npm ci` in CI (ABA-711: web deploy failed until the root lockfile was synced).
 
 ## History
 - [ABA-644](https://github.com/micode-ai/ai-budget-assistant/issues/674) — the whole feature:
