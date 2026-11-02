@@ -127,9 +127,8 @@ punctuation- and diacritic-insensitively (`app-name.util.ts`) — is `app_name_r
 consent screen shows an unverified app with a warning-coloured "Not verified by AI Budget" badge.
 The app's form folds the text to one line before sending and explains `app_name_reserved`.
 
-**Help is dark until launch** (Ruling 32): `user_docs/*/45-connected-apps.md` exist in all nine
-locales but are registered in none of the three help registries; registering and regenerating them
-is a step of the enable sequence in `docs/ops/public-api.md`.
+**Help** is the `45-connected-apps` section in all nine locales, registered in the three help
+registries at launch (2026-11-02); it was kept dark until the flag went on (Ruling 32).
 
 ## Invariants
 

@@ -5278,6 +5278,68 @@ When someone else adds an expense or a payment, you get a notification — at mo
 Groups need a connection to the server. While the app can't reach it, a banner says so and the buttons that change something (new group, join, add expense, settle, members and the like) are disabled. You can still read what's already on screen. Everything unlocks by itself as soon as the connection is back.
 `,
     },
+    {
+      id: '45-connected-apps',
+      title: `Connected apps & developers`,
+      description: `Let another app you use — accounting software, for example — work with your AI Budget expenses, see exactly what it is allowed to do, and cut it off in one tap. Developers can build such apps on the AI Budget API.`,
+      body: `# Connected apps & developers
+
+> Let another app you use — accounting software, for example — work with your AI Budget expenses, see exactly what it is allowed to do, and cut it off in one tap. Developers can build such apps on the AI Budget API.
+
+## What connecting an app means
+
+Some products can work with your AI Budget data from inside their own screens: an accounting app can pick up your expenses and receipts, or add expenses for you. To allow it, you connect the app to **one** of your AI Budget accounts.
+
+The app never sees your password. When you click its "Connect AI Budget" button, it sends you to an AI Budget page where you sign in as usual and see:
+
+- the app's name, its website and who made it;
+- **Verified by AI Budget** (an app we have checked, such as our own) or **Not verified by AI Budget**;
+- the list of permissions the app asks for;
+- **Account to connect** — pick which account the app may use.
+
+Tap **Allow** to connect, or **Deny** to send you back to the app without connecting. Only allow apps you trust.
+
+## What each permission allows
+
+- **See your expenses: amounts, dates, categories, items and tags** — the app can read the expenses of the connected account, including the line items of a receipt and later changes and deletions.
+- **Add, change and delete expenses** — the app can write to that account. Expenses it adds show **Added via** and the app's name on the expense screen.
+- **Download your receipt photos** — the app can download the receipt image or PDF attached to an expense.
+- **See your expense categories** — the app can read your category list, so it can file new expenses correctly.
+
+Every connected app can also see the account's name, type and currency, and your name. It never gets your e-mail address, and it can never see your other accounts.
+
+## Seeing and disconnecting apps
+
+Open **Settings → Connected apps**. Each app is listed with the account it is connected to, who connected it and when, when it was last used, and its permissions.
+
+Tap **Disconnect** and confirm. The app loses access to that account immediately — its next request is refused. Expenses it already added stay in your account. To use the app again, connect it again from the app.
+
+Every time an app is connected, we send an e-mail to the person who connected it. If you get one and don't recognise the app, disconnect it right away.
+
+If you don't see **Connected apps** in Settings, connecting apps is not available yet.
+
+## Shared accounts
+
+Only an **owner** or an **editor** of an account can connect an app to it; someone who can only view an account sees it greyed out.
+
+An app connected to a shared account sees **everyone's** expenses in it, not only those of the person who connected it. That is why every owner and editor of the account sees all apps connected to it under **Connected apps**, with who connected each one, and can disconnect any of them. When an editor connects an app, the account's owners get the e-mail too.
+
+If the person who connected an app later becomes a viewer or leaves the account, the app stops working for that account.
+
+## Encrypted accounts
+
+- An account with **full encryption** (amounts encrypted too) cannot be connected at all — the app could not read anything in it.
+- An account with **text encryption** can be connected **read-only**: the app sees amounts, dates and categories, but descriptions, notes, merchants, item names, tags and other encrypted text stay hidden, and it cannot add or change expenses.
+
+See End-to-End Encryption for what each level covers.
+
+## For developers
+
+You can build your own app on the AI Budget API — it's free. Open **Settings → Developers** and tap **Create app**: give it a name, a homepage and the redirect addresses it will use, and choose **Server app** or **Mobile or browser app**. You get a **Client ID** right away; a server app also gets a client secret, shown **only once** — copy it immediately.
+
+The full API reference and a step-by-step guide (in English, Polish and Russian) are at [api.ai-budget.pl/public/docs](https://api.ai-budget.pl/public/docs), also linked from **API documentation** on the Developers screen. You can register up to 10 apps.
+`,
+    },
   ],
   ru: [
     {
@@ -10512,6 +10574,68 @@ OCR иногда неверно читает цену, выдумывает ст
 Группам нужно соединение с сервером. Пока приложение не может до него достучаться, вверху виден баннер, а кнопки, которые что-то меняют (новая группа, вступление, добавление траты, расчёт, участники и т. п.), отключены. Уже открытое на экране можно читать. Всё включится само, как только появится связь.
 `,
     },
+    {
+      id: '45-connected-apps',
+      title: `Подключённые приложения и разработчикам`,
+      description: `Разрешите другому приложению, которым вы пользуетесь, — например, бухгалтерской программе — работать с вашими расходами в AI Budget, посмотрите, что именно ему можно, и отключите его одним нажатием. Разработчики могут создавать такие приложения на API AI Budget.`,
+      body: `# Подключённые приложения и разработчикам
+
+> Разрешите другому приложению, которым вы пользуетесь, — например, бухгалтерской программе — работать с вашими расходами в AI Budget, посмотрите, что именно ему можно, и отключите его одним нажатием. Разработчики могут создавать такие приложения на API AI Budget.
+
+## Что значит «подключить приложение»
+
+Некоторые сервисы умеют работать с вашими данными AI Budget прямо на своих экранах: бухгалтерское приложение может забирать ваши расходы и чеки или добавлять расходы за вас. Чтобы это разрешить, вы подключаете приложение к **одному** из своих счетов в AI Budget.
+
+Ваш пароль приложение не видит никогда. Когда вы нажимаете в нём кнопку «Подключить AI Budget», оно открывает страницу AI Budget: вы входите как обычно и видите:
+
+- название приложения, его сайт и кто его сделал;
+- **Проверено AI Budget** (приложение, которое мы проверили, например наше собственное) или **Не проверено AI Budget**;
+- список разрешений, которые просит приложение;
+- **Какой счёт подключить** — вы выбираете, каким счётом приложение сможет пользоваться.
+
+Нажмите **Разрешить**, чтобы подключить, или **Отклонить**, чтобы вернуться в приложение без подключения. Разрешайте доступ только приложениям, которым доверяете.
+
+## Что даёт каждое разрешение
+
+- **Видеть ваши расходы: суммы, даты, категории, позиции и теги** — приложение может читать расходы подключённого счёта, включая позиции чека, а также последующие изменения и удаления.
+- **Добавлять, изменять и удалять расходы** — приложение может записывать в этот счёт. У добавленных им расходов на экране расхода видна надпись **Добавлено через** и название приложения.
+- **Скачивать фото ваших чеков** — приложение может скачать изображение или PDF чека, прикреплённого к расходу.
+- **Видеть ваши категории расходов** — приложение может читать список категорий, чтобы правильно раскладывать новые расходы.
+
+Любое подключённое приложение видит также название, тип и валюту счёта и ваше имя. Ваш адрес электронной почты оно не получает никогда, а другие ваши счета не видит.
+
+## Просмотр и отключение приложений
+
+Откройте **Настройки → Подключённые приложения**. Для каждого приложения видно, к какому счёту оно подключено, кто и когда его подключил, когда им пользовались в последний раз и какие у него разрешения.
+
+Нажмите **Отключить** и подтвердите. Приложение сразу теряет доступ к этому счёту — уже следующий его запрос будет отклонён. Расходы, которые оно успело добавить, остаются на счёте. Чтобы снова пользоваться приложением, подключите его заново из самого приложения.
+
+При каждом новом подключении мы отправляем письмо тому, кто его сделал. Если вам пришло такое письмо, а приложение вам незнакомо, сразу отключите его.
+
+Если пункта **Подключённые приложения** в настройках нет, подключение приложений пока недоступно.
+
+## Общие счета
+
+Подключить приложение к счёту может только его **владелец** или **редактор**; тот, кто может счёт только просматривать, увидит его неактивным.
+
+Приложение, подключённое к общему счёту, видит расходы **всех** участников, а не только того, кто его подключил. Поэтому все владельцы и редакторы счёта видят в **Подключённых приложениях** каждое приложение, подключённое к нему, и кто его подключил, — и любой из них может его отключить. Когда приложение подключает редактор, письмо получают и владельцы счёта.
+
+Если тот, кто подключил приложение, потом станет только наблюдателем или покинет счёт, приложение перестанет работать с этим счётом.
+
+## Зашифрованные счета
+
+- Счёт с **полным шифрованием** (зашифрованы и суммы) подключить нельзя — приложение не смогло бы в нём ничего прочитать.
+- Счёт с **шифрованием текста** можно подключить **только для чтения**: приложение видит суммы, даты и категории, но описания, заметки, продавцы, названия позиций, теги и другой зашифрованный текст остаются скрытыми, а добавлять и менять расходы оно не может.
+
+Что входит в каждый уровень, описано в разделе Сквозное шифрование.
+
+## Разработчикам
+
+Вы можете сделать собственное приложение на API AI Budget — бесплатно. Откройте **Настройки → Разработчикам** и нажмите **Создать приложение**: укажите название, сайт и адреса перенаправления (redirect URI) и выберите **Серверное приложение** или **Мобильное или браузерное приложение**. **Client ID** вы получите сразу; серверному приложению выдаётся ещё и client secret, который показывается **только один раз** — скопируйте его сразу.
+
+Полный справочник API и пошаговое руководство (на английском, польском и русском) — на [api.ai-budget.pl/public/docs](https://api.ai-budget.pl/public/docs); туда же ведёт ссылка **Документация API** на экране «Разработчикам». Можно зарегистрировать до 10 приложений.
+`,
+    },
   ],
   ua: [
     {
@@ -15716,6 +15840,68 @@ OCR іноді неправильно читає ціну, вигадує ряд
 Групам потрібне з’єднання із сервером. Поки застосунок не може до нього достукатися, угорі видно банер, а кнопки, що щось змінюють (нова група, вступ, додавання витрати, розрахунок, учасники тощо), вимкнено. Те, що вже на екрані, можна читати. Усе ввімкнеться саме, щойно з’явиться зв’язок.
 `,
     },
+    {
+      id: '45-connected-apps',
+      title: `Підключені застосунки та розробникам`,
+      description: `Дозвольте іншому застосунку, яким ви користуєтеся, — наприклад, бухгалтерській програмі — працювати з вашими витратами в AI Budget, подивіться, що саме йому дозволено, і відключіть його одним дотиком. Розробники можуть створювати такі застосунки на API AI Budget.`,
+      body: `# Підключені застосунки та розробникам
+
+> Дозвольте іншому застосунку, яким ви користуєтеся, — наприклад, бухгалтерській програмі — працювати з вашими витратами в AI Budget, подивіться, що саме йому дозволено, і відключіть його одним дотиком. Розробники можуть створювати такі застосунки на API AI Budget.
+
+## Що означає «підключити застосунок»
+
+Деякі сервіси вміють працювати з вашими даними AI Budget просто на своїх екранах: бухгалтерський застосунок може забирати ваші витрати й чеки або додавати витрати за вас. Щоб це дозволити, ви підключаєте застосунок до **одного** зі своїх рахунків в AI Budget.
+
+Ваш пароль застосунок не бачить ніколи. Коли ви натискаєте в ньому кнопку «Підключити AI Budget», він відкриває сторінку AI Budget: ви входите як зазвичай і бачите:
+
+- назву застосунку, його сайт і хто його зробив;
+- **Перевірено AI Budget** (застосунок, який ми перевірили, наприклад наш власний) або **Не перевірено AI Budget**;
+- список дозволів, яких просить застосунок;
+- **Який рахунок підключити** — ви обираєте, яким рахунком застосунок зможе користуватися.
+
+Натисніть **Дозволити**, щоб підключити, або **Відхилити**, щоб повернутися до застосунку без підключення. Дозволяйте доступ лише застосункам, яким довіряєте.
+
+## Що дає кожен дозвіл
+
+- **Бачити ваші витрати: суми, дати, категорії, позиції та теги** — застосунок може читати витрати підключеного рахунку, зокрема позиції чека, а також подальші зміни й видалення.
+- **Додавати, змінювати й видаляти витрати** — застосунок може записувати в цей рахунок. На екрані витрати, яку він додав, видно напис **Додано через** і назву застосунку.
+- **Завантажувати фото ваших чеків** — застосунок може завантажити зображення або PDF чека, прикріпленого до витрати.
+- **Бачити ваші категорії витрат** — застосунок може читати список категорій, щоб правильно розносити нові витрати.
+
+Будь-який підключений застосунок бачить також назву, тип і валюту рахунку та ваше ім'я. Вашої адреси електронної пошти він не отримує ніколи, а інших ваших рахунків не бачить.
+
+## Перегляд і відключення застосунків
+
+Відкрийте **Налаштування → Підключені застосунки**. Для кожного застосунку видно, до якого рахунку його підключено, хто й коли його підключив, коли ним користувалися востаннє і які в нього дозволи.
+
+Натисніть **Відключити** й підтвердьте. Застосунок одразу втрачає доступ до цього рахунку — вже наступний його запит буде відхилено. Витрати, які він устиг додати, лишаються на рахунку. Щоб знову ним користуватися, підключіть його заново із самого застосунку.
+
+Під час кожного нового підключення ми надсилаємо лист тому, хто його зробив. Якщо вам прийшов такий лист, а застосунок вам незнайомий, одразу відключіть його.
+
+Якщо пункту **Підключені застосунки** в налаштуваннях немає, підключення застосунків поки недоступне.
+
+## Спільні рахунки
+
+Підключити застосунок до рахунку може лише його **власник** або **редактор**; той, хто може рахунок лише переглядати, побачить його неактивним.
+
+Застосунок, підключений до спільного рахунку, бачить витрати **всіх** учасників, а не лише того, хто його підключив. Тому всі власники й редактори рахунку бачать у **Підключених застосунках** кожен застосунок, підключений до нього, і хто його підключив, — і будь-хто з них може його відключити. Коли застосунок підключає редактор, лист отримують і власники рахунку.
+
+Якщо той, хто підключив застосунок, згодом стане лише глядачем або покине рахунок, застосунок перестане працювати з цим рахунком.
+
+## Зашифровані рахунки
+
+- Рахунок із **повним шифруванням** (зашифровано й суми) підключити не можна — застосунок не зміг би в ньому нічого прочитати.
+- Рахунок із **шифруванням тексту** можна підключити **лише для читання**: застосунок бачить суми, дати й категорії, але описи, нотатки, продавці, назви позицій, теги та інший зашифрований текст лишаються прихованими, а додавати й змінювати витрати він не може.
+
+Що входить до кожного рівня, описано в розділі Наскрізне шифрування.
+
+## Розробникам
+
+Ви можете зробити власний застосунок на API AI Budget — безкоштовно. Відкрийте **Налаштування → Розробникам** і натисніть **Створити застосунок**: вкажіть назву, сайт і адреси перенаправлення (redirect URI) та оберіть **Серверний застосунок** або **Мобільний або браузерний застосунок**. **Client ID** ви отримаєте одразу; серверному застосунку видається ще й client secret, який показується **лише один раз** — скопіюйте його одразу.
+
+Повний довідник API та покрокова інструкція (англійською, польською й російською) — на [api.ai-budget.pl/public/docs](https://api.ai-budget.pl/public/docs); туди ж веде посилання **Документація API** на екрані «Розробникам». Можна зареєструвати до 10 застосунків.
+`,
+    },
   ],
   pl: [
     {
@@ -20905,6 +21091,68 @@ Gdy ktoś inny doda wydatek lub płatność, dostajesz powiadomienie — najwyż
 Grupy wymagają połączenia z serwerem. Dopóki aplikacja nie może się z nim połączyć, widać o tym informację, a przyciski zmieniające dane (nowa grupa, dołączenie, dodanie wydatku, rozliczenie, członkowie itp.) są wyłączone. To, co już jest na ekranie, nadal możesz czytać. Wszystko odblokuje się samo, gdy tylko wróci połączenie.
 `,
     },
+    {
+      id: '45-connected-apps',
+      title: `Połączone aplikacje i deweloperzy`,
+      description: `Pozwól innej aplikacji, z której korzystasz — na przykład programowi księgowemu — pracować z Twoimi wydatkami w AI Budget, sprawdź dokładnie, co może robić, i odetnij jej dostęp jednym dotknięciem. Deweloperzy mogą budować takie aplikacje na API AI Budget.`,
+      body: `# Połączone aplikacje i deweloperzy
+
+> Pozwól innej aplikacji, z której korzystasz — na przykład programowi księgowemu — pracować z Twoimi wydatkami w AI Budget, sprawdź dokładnie, co może robić, i odetnij jej dostęp jednym dotknięciem. Deweloperzy mogą budować takie aplikacje na API AI Budget.
+
+## Co oznacza połączenie aplikacji
+
+Niektóre produkty potrafią pracować z Twoimi danymi z AI Budget na własnych ekranach: aplikacja księgowa może pobierać Twoje wydatki i paragony albo dodawać wydatki za Ciebie. Żeby na to pozwolić, łączysz aplikację z **jednym** ze swoich kont w AI Budget.
+
+Aplikacja nigdy nie widzi Twojego hasła. Gdy klikniesz w niej przycisk „Połącz z AI Budget”, przeniesie Cię na stronę AI Budget, gdzie logujesz się jak zwykle i widzisz:
+
+- nazwę aplikacji, jej stronę i to, kto ją stworzył;
+- **Zweryfikowana przez AI Budget** (aplikacja, którą sprawdziliśmy, na przykład nasza własna) albo **Niezweryfikowana przez AI Budget**;
+- listę uprawnień, o które prosi aplikacja;
+- **Konto do połączenia** — wybierasz, z którego konta aplikacja może korzystać.
+
+Dotknij **Zezwól**, żeby połączyć, albo **Odmów**, żeby wrócić do aplikacji bez łączenia. Zezwalaj tylko aplikacjom, którym ufasz.
+
+## Na co pozwala każde uprawnienie
+
+- **Widzieć Twoje wydatki: kwoty, daty, kategorie, pozycje i tagi** — aplikacja może czytać wydatki połączonego konta, łącznie z pozycjami paragonu oraz późniejszymi zmianami i usunięciami.
+- **Dodawać, zmieniać i usuwać wydatki** — aplikacja może zapisywać w tym koncie. Wydatki dodane przez nią mają na ekranie wydatku dopisek **Dodano przez** i nazwę aplikacji.
+- **Pobierać zdjęcia Twoich paragonów** — aplikacja może pobrać zdjęcie lub PDF paragonu dołączonego do wydatku.
+- **Widzieć Twoje kategorie wydatków** — aplikacja może czytać listę kategorii, żeby poprawnie przypisywać nowe wydatki.
+
+Każda połączona aplikacja widzi też nazwę, typ i walutę konta oraz Twoje imię. Nigdy nie dostaje Twojego adresu e-mail i nie widzi Twoich pozostałych kont.
+
+## Podgląd i odłączanie aplikacji
+
+Otwórz **Ustawienia → Połączone aplikacje**. Przy każdej aplikacji widać konto, z którym jest połączona, kto i kiedy ją połączył, kiedy była ostatnio używana oraz jej uprawnienia.
+
+Dotknij **Odłącz** i potwierdź. Aplikacja od razu traci dostęp do tego konta — jej następne zapytanie zostanie odrzucone. Wydatki, które już dodała, zostają na Twoim koncie. Żeby znów z niej korzystać, połącz ją ponownie z poziomu tej aplikacji.
+
+Przy każdym nowym połączeniu wysyłamy e-mail do osoby, która je utworzyła. Jeśli taki dostaniesz i nie rozpoznajesz aplikacji, odłącz ją od razu.
+
+Jeśli nie widzisz pozycji **Połączone aplikacje** w Ustawieniach, łączenie aplikacji nie jest jeszcze dostępne.
+
+## Konta współdzielone
+
+Aplikację z kontem może połączyć tylko jego **właściciel** albo **edytor**; osoba, która może konto tylko przeglądać, zobaczy je wyszarzone.
+
+Aplikacja połączona z kontem współdzielonym widzi wydatki **wszystkich** jego członków, a nie tylko osoby, która ją połączyła. Dlatego wszyscy właściciele i edytorzy konta widzą w **Połączonych aplikacjach** każdą aplikację połączoną z tym kontem, razem z informacją, kto ją połączył — i każdy z nich może ją odłączyć. Gdy aplikację połączy edytor, e-mail dostają też właściciele konta.
+
+Jeśli osoba, która połączyła aplikację, straci później prawo edycji albo opuści konto, aplikacja przestanie działać dla tego konta.
+
+## Konta szyfrowane
+
+- Konta z **pełnym szyfrowaniem** (zaszyfrowane są też kwoty) nie da się połączyć — aplikacja nie mogłaby w nim niczego odczytać.
+- Konto z **szyfrowaniem tekstu** można połączyć **tylko do odczytu**: aplikacja widzi kwoty, daty i kategorie, ale opisy, notatki, sprzedawcy, nazwy pozycji, tagi i inne zaszyfrowane teksty pozostają ukryte, a dodawanie i zmienianie wydatków jest zablokowane.
+
+Co obejmuje każdy poziom, opisaliśmy w Szyfrowaniu end-to-end.
+
+## Dla deweloperów
+
+Możesz zbudować własną aplikację na API AI Budget — za darmo. Otwórz **Ustawienia → Dla deweloperów** i dotknij **Utwórz aplikację**: podaj nazwę, stronę domową i adresy przekierowania (redirect URI), a potem wybierz **Aplikacja serwerowa** albo **Aplikacja mobilna lub przeglądarkowa**. **Client ID** dostajesz od razu; aplikacja serwerowa dostaje też client secret, który wyświetlamy **tylko raz** — skopiuj go natychmiast.
+
+Pełna dokumentacja API i przewodnik krok po kroku (po angielsku, polsku i rosyjsku) są pod adresem [api.ai-budget.pl/public/docs](https://api.ai-budget.pl/public/docs), a także pod linkiem **Dokumentacja API** na ekranie dla deweloperów. Możesz zarejestrować do 10 aplikacji.
+`,
+    },
   ],
   de: [
     {
@@ -26069,6 +26317,68 @@ Wenn jemand anderes eine Ausgabe oder Zahlung hinzufügt, bekommst du eine Benac
 Gruppen brauchen eine Verbindung zum Server. Solange die App ihn nicht erreicht, weist ein Hinweis darauf hin und alle Schaltflächen, die etwas ändern (neue Gruppe, Beitreten, Ausgabe hinzufügen, Ausgleichen, Mitglieder usw.), sind deaktiviert. Lesen kannst du weiterhin, was schon angezeigt wird. Sobald die Verbindung zurück ist, wird alles von selbst wieder freigeschaltet.
 `,
     },
+    {
+      id: '45-connected-apps',
+      title: `Verbundene Apps & Entwickler`,
+      description: `Lass eine andere App, die du nutzt – zum Beispiel deine Buchhaltungssoftware –, mit deinen Ausgaben in AI Budget arbeiten, sieh genau, was sie darf, und sperre sie mit einem Tipp wieder aus. Entwickler können solche Apps auf der AI Budget API bauen.`,
+      body: `# Verbundene Apps & Entwickler
+
+> Lass eine andere App, die du nutzt – zum Beispiel deine Buchhaltungssoftware –, mit deinen Ausgaben in AI Budget arbeiten, sieh genau, was sie darf, und sperre sie mit einem Tipp wieder aus. Entwickler können solche Apps auf der AI Budget API bauen.
+
+## Was es heißt, eine App zu verbinden
+
+Manche Produkte können direkt in ihren eigenen Bildschirmen mit deinen AI-Budget-Daten arbeiten: Eine Buchhaltungs-App kann deine Ausgaben und Belege übernehmen oder Ausgaben für dich anlegen. Dafür verbindest du die App mit **einem** deiner AI-Budget-Konten.
+
+Dein Passwort sieht die App nie. Wenn du dort auf „Mit AI Budget verbinden“ klickst, landest du auf einer Seite von AI Budget, meldest dich wie gewohnt an und siehst:
+
+- den Namen der App, ihre Website und wer sie entwickelt hat;
+- **Von AI Budget verifiziert** (eine App, die wir geprüft haben, etwa unsere eigene) oder **Nicht von AI Budget verifiziert**;
+- die Berechtigungen, die die App anfragt;
+- **Zu verbindendes Konto** – hier wählst du, welches Konto die App nutzen darf.
+
+Mit **Erlauben** verbindest du die App, mit **Ablehnen** kehrst du ohne Verbindung zur App zurück. Erlaube nur Apps, denen du vertraust.
+
+## Was jede Berechtigung erlaubt
+
+- **Deine Ausgaben sehen: Beträge, Daten, Kategorien, Positionen und Tags** – die App kann die Ausgaben des verbundenen Kontos lesen, samt den Positionen eines Belegs und späteren Änderungen und Löschungen.
+- **Ausgaben hinzufügen, ändern und löschen** – die App darf in dieses Konto schreiben. Ausgaben, die sie anlegt, zeigen auf der Ausgabenseite **Hinzugefügt über** und den Namen der App.
+- **Deine Belegfotos herunterladen** – die App kann das Belegbild oder PDF herunterladen, das an einer Ausgabe hängt.
+- **Deine Ausgabenkategorien sehen** – die App kann deine Kategorienliste lesen, damit sie neue Ausgaben richtig einordnet.
+
+Jede verbundene App sieht außerdem Namen, Typ und Währung des Kontos sowie deinen Namen. Deine E-Mail-Adresse bekommt sie nie, und deine anderen Konten sieht sie nicht.
+
+## Apps ansehen und trennen
+
+Öffne **Einstellungen → Verbundene Apps**. Zu jeder App siehst du das verbundene Konto, wer sie wann verbunden hat, wann sie zuletzt genutzt wurde und ihre Berechtigungen.
+
+Tippe auf **Trennen** und bestätige. Die App verliert sofort den Zugriff auf dieses Konto – schon ihre nächste Anfrage wird abgewiesen. Ausgaben, die sie bereits angelegt hat, bleiben in deinem Konto. Um die App wieder zu nutzen, verbinde sie erneut aus der App heraus.
+
+Bei jeder neuen Verbindung schicken wir der Person, die sie hergestellt hat, eine E-Mail. Erkennst du die App darin nicht, trenne sie sofort.
+
+Siehst du **Verbundene Apps** nicht in den Einstellungen, ist das Verbinden von Apps noch nicht verfügbar.
+
+## Geteilte Konten
+
+Nur **Inhaber** und **Bearbeiter** eines Kontos können eine App damit verbinden; wer ein Konto nur ansehen darf, sieht es ausgegraut.
+
+Eine App, die mit einem geteilten Konto verbunden ist, sieht die Ausgaben **aller** Mitglieder, nicht nur die der Person, die sie verbunden hat. Deshalb sehen alle Inhaber und Bearbeiter unter **Verbundene Apps** jede App, die mit dem Konto verbunden ist, samt der Person, die sie verbunden hat – und jede und jeder von ihnen kann sie trennen. Verbindet ein Bearbeiter eine App, bekommen auch die Inhaber des Kontos die E-Mail.
+
+Wird die Person, die die App verbunden hat, später zur reinen Betrachterin oder verlässt sie das Konto, funktioniert die App für dieses Konto nicht mehr.
+
+## Verschlüsselte Konten
+
+- Ein Konto mit **vollständiger Verschlüsselung** (auch die Beträge sind verschlüsselt) lässt sich gar nicht verbinden – die App könnte darin nichts lesen.
+- Ein Konto mit **Textverschlüsselung** lässt sich **nur zum Lesen** verbinden: Die App sieht Beträge, Daten und Kategorien, aber Beschreibungen, Notizen, Händler, Positionsnamen, Tags und anderer verschlüsselter Text bleiben verborgen, und sie kann keine Ausgaben anlegen oder ändern.
+
+Was jede Stufe umfasst, steht unter Ende-zu-Ende-Verschlüsselung.
+
+## Für Entwickler
+
+Du kannst eigene Apps auf der AI Budget API bauen – kostenlos. Öffne **Einstellungen → Entwickler** und tippe auf **App erstellen**: Gib einen Namen, eine Website und die Weiterleitungsadressen (Redirect-URIs) an und wähle **Server-App** oder **Mobile oder Browser-App**. Die **Client-ID** bekommst du sofort; eine Server-App erhält zusätzlich ein Client-Secret, das **nur ein einziges Mal** angezeigt wird – kopiere es gleich.
+
+Die vollständige API-Referenz und eine Schritt-für-Schritt-Anleitung (auf Englisch, Polnisch und Russisch) findest du unter [api.ai-budget.pl/public/docs](https://api.ai-budget.pl/public/docs), auch verlinkt über **API-Dokumentation** im Entwickler-Bildschirm. Du kannst bis zu 10 Apps registrieren.
+`,
+    },
   ],
   es: [
     {
@@ -31222,6 +31532,68 @@ Cuando otra persona añade un gasto o un pago, recibes una notificación: como m
 Los grupos necesitan conexión con el servidor. Mientras la app no pueda alcanzarlo, un aviso lo indica y los botones que cambian algo (nuevo grupo, unirse, añadir gasto, saldar, miembros, etc.) quedan desactivados. Puedes seguir leyendo lo que ya está en pantalla. Todo se reactiva solo en cuanto vuelve la conexión.
 `,
     },
+    {
+      id: '45-connected-apps',
+      title: `Aplicaciones conectadas y desarrolladores`,
+      description: `Deja que otra app que usas —por ejemplo, tu programa de contabilidad— trabaje con tus gastos de AI Budget, mira exactamente qué puede hacer y córtale el acceso con un toque. Los desarrolladores pueden crear estas apps sobre la API de AI Budget.`,
+      body: `# Aplicaciones conectadas y desarrolladores
+
+> Deja que otra app que usas —por ejemplo, tu programa de contabilidad— trabaje con tus gastos de AI Budget, mira exactamente qué puede hacer y córtale el acceso con un toque. Los desarrolladores pueden crear estas apps sobre la API de AI Budget.
+
+## Qué significa conectar una app
+
+Algunos productos pueden trabajar con tus datos de AI Budget desde sus propias pantallas: una app de contabilidad puede recoger tus gastos y tickets, o añadir gastos por ti. Para permitirlo, conectas la app a **una** de tus cuentas de AI Budget.
+
+La app nunca ve tu contraseña. Cuando pulsas su botón «Conectar AI Budget», te lleva a una página de AI Budget donde inicias sesión como siempre y ves:
+
+- el nombre de la app, su web y quién la ha creado;
+- **Verificada por AI Budget** (una app que hemos revisado, como la nuestra) o **No verificada por AI Budget**;
+- la lista de permisos que pide la app;
+- **Cuenta que se conectará**: eliges qué cuenta puede usar la app.
+
+Pulsa **Permitir** para conectarla o **Denegar** para volver a la app sin conectar nada. Permite solo apps de confianza.
+
+## Qué permite cada permiso
+
+- **Ver tus gastos: importes, fechas, categorías, artículos y etiquetas**: la app puede leer los gastos de la cuenta conectada, incluidos los artículos de un ticket y los cambios y eliminaciones posteriores.
+- **Añadir, modificar y eliminar gastos**: la app puede escribir en esa cuenta. Los gastos que añade muestran **Añadido a través de** y el nombre de la app en la pantalla del gasto.
+- **Descargar las fotos de tus tickets**: la app puede descargar la imagen o el PDF del ticket adjunto a un gasto.
+- **Ver tus categorías de gastos**: la app puede leer tu lista de categorías para clasificar bien los gastos nuevos.
+
+Toda app conectada ve además el nombre, el tipo y la moneda de la cuenta, y tu nombre. Nunca recibe tu dirección de correo y no puede ver tus otras cuentas.
+
+## Ver y desconectar apps
+
+Abre **Ajustes → Aplicaciones conectadas**. Cada app aparece con la cuenta a la que está conectada, quién la conectó y cuándo, cuándo se usó por última vez y sus permisos.
+
+Pulsa **Desconectar** y confirma. La app pierde el acceso a esa cuenta al instante: su siguiente petición ya se rechaza. Los gastos que ya añadió se quedan en tu cuenta. Para volver a usarla, conéctala de nuevo desde la app.
+
+Cada vez que se conecta una app, enviamos un correo a la persona que la conectó. Si recibes uno y no reconoces la app, desconéctala enseguida.
+
+Si no ves **Aplicaciones conectadas** en Ajustes, la conexión de apps todavía no está disponible.
+
+## Cuentas compartidas
+
+Solo un **propietario** o un **editor** de una cuenta puede conectarle una app; quien solo puede ver la cuenta la verá desactivada.
+
+Una app conectada a una cuenta compartida ve los gastos de **todos** sus miembros, no solo los de quien la conectó. Por eso todos los propietarios y editores de la cuenta ven en **Aplicaciones conectadas** cada app conectada a ella, con quién la conectó, y cualquiera de ellos puede desconectarla. Cuando un editor conecta una app, los propietarios de la cuenta también reciben el correo.
+
+Si la persona que conectó la app pasa después a solo lectura o sale de la cuenta, la app deja de funcionar para esa cuenta.
+
+## Cuentas cifradas
+
+- Una cuenta con **cifrado completo** (también los importes) no se puede conectar: la app no podría leer nada.
+- Una cuenta con **cifrado de texto** se puede conectar **solo en lectura**: la app ve importes, fechas y categorías, pero las descripciones, notas, comercios, nombres de artículos, etiquetas y demás texto cifrado quedan ocultos, y no puede añadir ni modificar gastos.
+
+Qué cubre cada nivel se explica en Cifrado de extremo a extremo.
+
+## Para desarrolladores
+
+Puedes crear tu propia app sobre la API de AI Budget, gratis. Abre **Ajustes → Desarrolladores** y pulsa **Crear app**: ponle un nombre, una web y las direcciones de redirección que usará, y elige **App de servidor** o **App móvil o de navegador**. El **Client ID** lo recibes al momento; una app de servidor recibe además un client secret que se muestra **una sola vez**: cópialo enseguida.
+
+La referencia completa de la API y una guía paso a paso (en inglés, polaco y ruso) están en [api.ai-budget.pl/public/docs](https://api.ai-budget.pl/public/docs), también enlazadas desde **Documentación de la API** en la pantalla de desarrolladores. Puedes registrar hasta 10 apps.
+`,
+    },
   ],
   fr: [
     {
@@ -36373,6 +36745,68 @@ Quand quelqu'un d'autre ajoute une dépense ou un paiement, vous recevez une not
 Les groupes nécessitent une connexion au serveur. Tant que l’app ne peut pas l’atteindre, un bandeau l’indique et les boutons qui modifient quelque chose (nouveau groupe, rejoindre, ajouter une dépense, régler, membres, etc.) sont désactivés. Vous pouvez toujours lire ce qui est déjà affiché. Tout se réactive tout seul dès le retour de la connexion.
 `,
     },
+    {
+      id: '45-connected-apps',
+      title: `Applications connectées et développeurs`,
+      description: `Laissez une autre application que vous utilisez — votre logiciel de comptabilité, par exemple — travailler avec vos dépenses AI Budget, voyez exactement ce qu'elle a le droit de faire, et coupez-lui l'accès d'un geste. Les développeurs peuvent créer de telles applications sur l'API AI Budget.`,
+      body: `# Applications connectées et développeurs
+
+> Laissez une autre application que vous utilisez — votre logiciel de comptabilité, par exemple — travailler avec vos dépenses AI Budget, voyez exactement ce qu'elle a le droit de faire, et coupez-lui l'accès d'un geste. Les développeurs peuvent créer de telles applications sur l'API AI Budget.
+
+## Ce que veut dire connecter une application
+
+Certains produits peuvent travailler avec vos données AI Budget depuis leurs propres écrans : une application de comptabilité peut récupérer vos dépenses et vos tickets de caisse, ou ajouter des dépenses pour vous. Pour l'autoriser, vous connectez l'application à **un** de vos comptes AI Budget.
+
+L'application ne voit jamais votre mot de passe. Quand vous cliquez sur son bouton « Connecter AI Budget », elle vous envoie vers une page AI Budget où vous vous connectez comme d'habitude, et où vous voyez :
+
+- le nom de l'application, son site et qui l'a créée ;
+- **Vérifiée par AI Budget** (une application que nous avons contrôlée, comme la nôtre) ou **Non vérifiée par AI Budget** ;
+- la liste des autorisations demandées ;
+- **Compte à connecter** : vous choisissez le compte que l'application pourra utiliser.
+
+Touchez **Autoriser** pour connecter l'application, ou **Refuser** pour revenir à l'application sans rien connecter. N'autorisez que des applications de confiance.
+
+## Ce que permet chaque autorisation
+
+- **Voir vos dépenses : montants, dates, catégories, articles et étiquettes** — l'application peut lire les dépenses du compte connecté, y compris les articles d'un ticket et les modifications et suppressions ultérieures.
+- **Ajouter, modifier et supprimer des dépenses** — l'application peut écrire dans ce compte. Les dépenses qu'elle ajoute affichent **Ajouté via** suivi du nom de l'application sur l'écran de la dépense.
+- **Télécharger les photos de vos tickets de caisse** — l'application peut télécharger l'image ou le PDF du ticket joint à une dépense.
+- **Voir vos catégories de dépenses** — l'application peut lire votre liste de catégories pour classer correctement les nouvelles dépenses.
+
+Toute application connectée voit aussi le nom, le type et la devise du compte, ainsi que votre nom. Elle ne reçoit jamais votre adresse e-mail et ne voit pas vos autres comptes.
+
+## Voir et déconnecter les applications
+
+Ouvrez **Paramètres → Applications connectées**. Chaque application y figure avec le compte auquel elle est connectée, qui l'a connectée et quand, sa dernière utilisation et ses autorisations.
+
+Touchez **Déconnecter** et confirmez. L'application perd immédiatement l'accès à ce compte : sa requête suivante est refusée. Les dépenses qu'elle a déjà ajoutées restent dans votre compte. Pour la réutiliser, reconnectez-la depuis l'application.
+
+À chaque nouvelle connexion, nous envoyons un e-mail à la personne qui l'a faite. Si vous en recevez un et ne reconnaissez pas l'application, déconnectez-la tout de suite.
+
+Si **Applications connectées** n'apparaît pas dans les Paramètres, la connexion d'applications n'est pas encore disponible.
+
+## Comptes partagés
+
+Seul un **propriétaire** ou un **éditeur** d'un compte peut y connecter une application ; une personne qui ne peut que consulter le compte le voit grisé.
+
+Une application connectée à un compte partagé voit les dépenses de **tous** les membres, pas seulement celles de la personne qui l'a connectée. C'est pourquoi tous les propriétaires et éditeurs du compte voient dans **Applications connectées** chaque application qui y est connectée, avec la personne qui l'a connectée, et chacun d'eux peut la déconnecter. Quand un éditeur connecte une application, les propriétaires du compte reçoivent eux aussi l'e-mail.
+
+Si la personne qui a connecté l'application passe ensuite en lecture seule ou quitte le compte, l'application cesse de fonctionner pour ce compte.
+
+## Comptes chiffrés
+
+- Un compte en **chiffrement complet** (montants compris) ne peut pas être connecté du tout : l'application ne pourrait rien y lire.
+- Un compte en **chiffrement du texte** peut être connecté **en lecture seule** : l'application voit les montants, les dates et les catégories, mais les descriptions, notes, commerçants, noms d'articles, étiquettes et autres textes chiffrés restent masqués, et elle ne peut ni ajouter ni modifier de dépenses.
+
+Le détail de chaque niveau est dans Chiffrement de bout en bout.
+
+## Pour les développeurs
+
+Vous pouvez créer votre propre application sur l'API AI Budget, gratuitement. Ouvrez **Paramètres → Développeurs** et touchez **Créer une app** : donnez-lui un nom, un site et les adresses de redirection qu'elle utilisera, puis choisissez **App serveur** ou **App mobile ou navigateur**. Vous recevez aussitôt un **Client ID** ; une app serveur reçoit en plus un client secret affiché **une seule fois** — copiez-le immédiatement.
+
+La référence complète de l'API et un guide pas à pas (en anglais, polonais et russe) sont sur [api.ai-budget.pl/public/docs](https://api.ai-budget.pl/public/docs), accessibles aussi via **Documentation de l’API** sur l'écran Développeurs. Vous pouvez enregistrer jusqu'à 10 applications.
+`,
+    },
   ],
   be: [
     {
@@ -41486,6 +41920,68 @@ OCR часам няправільна чытае цану, выдумляе ра
 ## Без сеткі
 
 Групам патрэбна злучэнне з серверам. Пакуль праграма не можа да яго дастукацца, уверсе бачны банер, а кнопкі, якія нешта змяняюць (новая група, далучэнне, даданне выдаткаў, разлік, удзельнікі і г. д.), адключаны. Тое, што ўжо на экране, можна чытаць. Усё ўключыцца само, як толькі з’явіцца сувязь.
+`,
+    },
+    {
+      id: '45-connected-apps',
+      title: `Падключаныя праграмы і распрацоўшчыкам`,
+      description: `Дазвольце іншай праграме, якой вы карыстаецеся, — напрыклад, бухгалтарскай — працаваць з вашымі выдаткамі ў AI Budget, паглядзіце, што менавіта ёй дазволена, і адключыце яе адным дотыкам. Распрацоўшчыкі могуць ствараць такія праграмы на API AI Budget.`,
+      body: `# Падключаныя праграмы і распрацоўшчыкам
+
+> Дазвольце іншай праграме, якой вы карыстаецеся, — напрыклад, бухгалтарскай — працаваць з вашымі выдаткамі ў AI Budget, паглядзіце, што менавіта ёй дазволена, і адключыце яе адным дотыкам. Распрацоўшчыкі могуць ствараць такія праграмы на API AI Budget.
+
+## Што значыць «падключыць праграму»
+
+Некаторыя сэрвісы ўмеюць працаваць з вашымі дадзенымі AI Budget проста на сваіх экранах: бухгалтарская праграма можа забіраць вашы выдаткі і чэкі або дадаваць выдаткі за вас. Каб гэта дазволіць, вы падключаеце праграму да **аднаго** са сваіх рахункаў у AI Budget.
+
+Ваш пароль праграма не бачыць ніколі. Калі вы націскаеце ў ёй кнопку «Падключыць AI Budget», яна адкрывае старонку AI Budget: вы ўваходзіце як звычайна і бачыце:
+
+- назву праграмы, яе сайт і хто яе зрабіў;
+- **Праверана AI Budget** (праграма, якую мы праверылі, напрыклад наша ўласная) або **Не праверана AI Budget**;
+- спіс дазволаў, якія просіць праграма;
+- **Які рахунак падключыць** — вы выбіраеце, якім рахункам праграма зможа карыстацца.
+
+Націсніце **Дазволіць**, каб падключыць, або **Адхіліць**, каб вярнуцца ў праграму без падключэння. Дазваляйце доступ толькі праграмам, якім давяраеце.
+
+## Што дае кожны дазвол
+
+- **Бачыць вашы выдаткі: сумы, даты, катэгорыі, пазіцыі і тэгі** — праграма можа чытаць выдаткі падключанага рахунку, у тым ліку пазіцыі чэка, а таксама пазнейшыя змены і выдаленні.
+- **Дадаваць, змяняць і выдаляць выдаткі** — праграма можа запісваць у гэты рахунак. На экране выдатку, які яна дадала, відаць надпіс **Дададзена праз** і назва праграмы.
+- **Спампоўваць фота вашых чэкаў** — праграма можа спампаваць выяву або PDF чэка, прымацаванага да выдатку.
+- **Бачыць вашы катэгорыі выдаткаў** — праграма можа чытаць спіс катэгорый, каб правільна раскладваць новыя выдаткі.
+
+Любая падключаная праграма бачыць таксама назву, тып і валюту рахунку і ваша імя. Вашага адраса электроннай пошты яна не атрымлівае ніколі, а іншых вашых рахункаў не бачыць.
+
+## Прагляд і адключэнне праграм
+
+Адкрыйце **Налады → Падключаныя праграмы**. Для кожнай праграмы відаць, да якога рахунку яна падключана, хто і калі яе падключыў, калі ёю карысталіся апошні раз і якія ў яе дазволы.
+
+Націсніце **Адключыць** і пацвердзіце. Праграма адразу губляе доступ да гэтага рахунку — ужо наступны яе запыт будзе адхілены. Выдаткі, якія яна паспела дадаць, застаюцца на рахунку. Каб зноў ёю карыстацца, падключыце яе нанава з самой праграмы.
+
+Пры кожным новым падключэнні мы адпраўляем ліст таму, хто яго зрабіў. Калі вам прыйшоў такі ліст, а праграма вам незнаёмая, адразу адключыце яе.
+
+Калі пункта **Падключаныя праграмы** ў наладах няма, падключэнне праграм пакуль недаступнае.
+
+## Агульныя рахункі
+
+Падключыць праграму да рахунку можа толькі яго **ўладальнік** або **рэдактар**; той, хто можа рахунак толькі праглядаць, убачыць яго неактыўным.
+
+Праграма, падключаная да агульнага рахунку, бачыць выдаткі **ўсіх** удзельнікаў, а не толькі таго, хто яе падключыў. Таму ўсе ўладальнікі і рэдактары рахунку бачаць у **Падключаных праграмах** кожную праграму, падключаную да яго, і хто яе падключыў, — і любы з іх можа яе адключыць. Калі праграму падключае рэдактар, ліст атрымліваюць і ўладальнікі рахунку.
+
+Калі той, хто падключыў праграму, потым стане толькі назіральнікам або пакіне рахунак, праграма перастане працаваць з гэтым рахункам.
+
+## Зашыфраваныя рахункі
+
+- Рахунак з **поўным шыфраваннем** (зашыфраваны і сумы) падключыць нельга — праграма не змагла б у ім нічога прачытаць.
+- Рахунак з **шыфраваннем тэксту** можна падключыць **толькі для чытання**: праграма бачыць сумы, даты і катэгорыі, але апісанні, нататкі, прадаўцы, назвы пазіцый, тэгі і іншы зашыфраваны тэкст застаюцца схаванымі, а дадаваць і змяняць выдаткі яна не можа.
+
+Што ўваходзіць у кожны ўзровень, апісана ў раздзеле Скразное шыфраванне.
+
+## Распрацоўшчыкам
+
+Вы можаце зрабіць уласную праграму на API AI Budget — бясплатна. Адкрыйце **Налады → Распрацоўшчыкам** і націсніце **Стварыць праграму**: пазначце назву, сайт і адрасы перанакіравання (redirect URI) і выберыце **Серверная праграма** або **Мабільная або браўзерная праграма**. **Client ID** вы атрымаеце адразу; сервернай праграме выдаецца яшчэ і client secret, які паказваецца **толькі адзін раз** — скапіруйце яго адразу.
+
+Поўны даведнік API і пакрокавае кіраўніцтва (на англійскай, польскай і рускай мовах) — на [api.ai-budget.pl/public/docs](https://api.ai-budget.pl/public/docs); туды ж вядзе спасылка **Дакументацыя API** на экране «Распрацоўшчыкам». Можна зарэгістраваць да 10 праграм.
 `,
     },
   ],
@@ -46727,6 +47223,68 @@ Als iemand anders een uitgave of betaling toevoegt, krijg je een melding — hoo
 ## Offline
 
 Groepen hebben een verbinding met de server nodig. Zolang de app die niet kan bereiken, meldt een balk dat en zijn de knoppen die iets wijzigen (nieuwe groep, deelnemen, uitgave toevoegen, afrekenen, leden enzovoort) uitgeschakeld. Wat al op het scherm staat, kun je gewoon lezen. Zodra de verbinding terug is, wordt alles vanzelf weer actief.
+`,
+    },
+    {
+      id: '45-connected-apps',
+      title: `Gekoppelde apps & ontwikkelaars`,
+      description: `Laat een andere app die je gebruikt – je boekhoudsoftware bijvoorbeeld – met je uitgaven in AI Budget werken, zie precies wat die app mag, en sluit hem met één tik weer af. Ontwikkelaars kunnen zulke apps bouwen op de AI Budget API.`,
+      body: `# Gekoppelde apps & ontwikkelaars
+
+> Laat een andere app die je gebruikt – je boekhoudsoftware bijvoorbeeld – met je uitgaven in AI Budget werken, zie precies wat die app mag, en sluit hem met één tik weer af. Ontwikkelaars kunnen zulke apps bouwen op de AI Budget API.
+
+## Wat het betekent om een app te koppelen
+
+Sommige producten kunnen vanuit hun eigen schermen met je AI Budget-gegevens werken: een boekhoudapp kan je uitgaven en bonnetjes ophalen, of uitgaven voor je toevoegen. Om dat toe te staan koppel je de app aan **één** van je AI Budget-rekeningen.
+
+De app ziet nooit je wachtwoord. Als je in de app op 'AI Budget koppelen' klikt, kom je op een pagina van AI Budget. Daar log je in zoals altijd en zie je:
+
+- de naam van de app, de website en wie hem gemaakt heeft;
+- **Geverifieerd door AI Budget** (een app die wij gecontroleerd hebben, zoals onze eigen) of **Niet geverifieerd door AI Budget**;
+- de lijst met machtigingen die de app vraagt;
+- **Te koppelen rekening** – hier kies je welke rekening de app mag gebruiken.
+
+Tik op **Toestaan** om te koppelen, of op **Weigeren** om zonder koppeling terug te gaan naar de app. Sta alleen apps toe die je vertrouwt.
+
+## Wat elke machtiging toestaat
+
+- **Je uitgaven zien: bedragen, datums, categorieën, artikelen en tags** – de app kan de uitgaven van de gekoppelde rekening lezen, inclusief de artikelen op een bonnetje en latere wijzigingen en verwijderingen.
+- **Uitgaven toevoegen, wijzigen en verwijderen** – de app mag in die rekening schrijven. Uitgaven die hij toevoegt tonen op het uitgavenscherm **Toegevoegd via** met de naam van de app.
+- **Foto's van je bonnetjes downloaden** – de app kan de foto of pdf van het bonnetje bij een uitgave downloaden.
+- **Je uitgavencategorieën zien** – de app kan je categorielijst lezen, zodat hij nieuwe uitgaven goed indeelt.
+
+Elke gekoppelde app ziet ook de naam, het type en de valuta van de rekening, en jouw naam. Je e-mailadres krijgt hij nooit, en je andere rekeningen ziet hij niet.
+
+## Apps bekijken en ontkoppelen
+
+Open **Instellingen → Gekoppelde apps**. Bij elke app zie je aan welke rekening hij gekoppeld is, wie hem wanneer gekoppeld heeft, wanneer hij voor het laatst gebruikt is en welke machtigingen hij heeft.
+
+Tik op **Ontkoppelen** en bevestig. De app verliest meteen de toegang tot die rekening – zijn volgende verzoek wordt al geweigerd. Uitgaven die hij al heeft toegevoegd blijven in je rekening staan. Wil je de app weer gebruiken, koppel hem dan opnieuw vanuit de app.
+
+Bij elke nieuwe koppeling sturen we een e-mail naar degene die de app gekoppeld heeft. Krijg je zo'n mail en herken je de app niet, ontkoppel hem dan meteen.
+
+Zie je **Gekoppelde apps** niet in de Instellingen, dan is het koppelen van apps nog niet beschikbaar.
+
+## Gedeelde rekeningen
+
+Alleen een **eigenaar** of **bewerker** van een rekening kan er een app aan koppelen; wie een rekening alleen mag bekijken, ziet hem grijs.
+
+Een app die aan een gedeelde rekening gekoppeld is, ziet de uitgaven van **alle** leden, niet alleen die van degene die hem gekoppeld heeft. Daarom zien alle eigenaren en bewerkers onder **Gekoppelde apps** elke app die aan de rekening gekoppeld is, met wie hem gekoppeld heeft – en ieder van hen kan hem ontkoppelen. Koppelt een bewerker een app, dan krijgen ook de eigenaren van de rekening de e-mail.
+
+Wordt degene die de app gekoppeld heeft later alleen-lezer, of verlaat die de rekening, dan werkt de app niet meer voor die rekening.
+
+## Versleutelde rekeningen
+
+- Een rekening met **volledige versleuteling** (ook de bedragen) kan helemaal niet gekoppeld worden – de app zou er niets in kunnen lezen.
+- Een rekening met **tekstversleuteling** kan **alleen-lezen** gekoppeld worden: de app ziet bedragen, datums en categorieën, maar omschrijvingen, notities, winkels, artikelnamen, tags en andere versleutelde tekst blijven verborgen, en hij kan geen uitgaven toevoegen of wijzigen.
+
+Wat elk niveau omvat, lees je in End-to-end-versleuteling.
+
+## Voor ontwikkelaars
+
+Je kunt je eigen app bouwen op de AI Budget API – gratis. Open **Instellingen → Ontwikkelaars** en tik op **App maken**: geef een naam, een website en de redirect-adressen die hij gebruikt, en kies **Server-app** of **Mobiele of browser-app**. De **Client-ID** krijg je meteen; een server-app krijgt daarnaast een client secret die **maar één keer** getoond wordt – kopieer hem direct.
+
+De volledige API-referentie en een stapsgewijze handleiding (in het Engels, Pools en Russisch) staan op [api.ai-budget.pl/public/docs](https://api.ai-budget.pl/public/docs), ook te bereiken via **API-documentatie** op het scherm Ontwikkelaars. Je kunt tot 10 apps registreren.
 `,
     },
   ],

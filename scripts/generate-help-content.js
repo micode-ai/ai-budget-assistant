@@ -47,6 +47,7 @@ const SECTIONS = [
   '42-receipt-split',
   '43-real-salary',
   '44-shared-groups',
+  '45-connected-apps',
 ];
 
 const docsRoot = path.resolve(__dirname, '..', 'user_docs');
