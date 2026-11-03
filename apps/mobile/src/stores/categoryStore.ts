@@ -72,7 +72,12 @@ interface CategoryState {
   getExpenseCategories: () => Category[];
   getIncomeCategories: () => Category[];
   createCategory: (name: string, type: 'expense' | 'income', icon?: string, color?: string, parentId?: string) => Promise<Category>;
-  syncFromServer: (serverCategories: any[]) => Promise<void>;
+  /**
+   * `partial: true` = `serverCategories` is NOT the account's whole list (one
+   * echoed row). Matters only on web, where the local read-back is empty: a
+   * full pull replaces the in-memory list, a partial one is merged into it.
+   */
+  syncFromServer: (serverCategories: any[], options?: { partial?: boolean }) => Promise<void>;
   deleteCategory: (id: string) => Promise<void>;
   updateCategory: (id: string, data: { name?: string; color?: string; icon?: string; parentId?: string | null }) => Promise<void>;
 }
@@ -385,7 +390,7 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
 
       if (created?.id && created.id !== id) {
         await remapCategoryId(id, created.id, id);
-        await get().syncFromServer([created]);
+        await get().syncFromServer([created], { partial: true });
         return { ...category, id: created.id, clientId: id };
       }
     } catch (error: any) {
@@ -410,10 +415,13 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
     return category;
   },
 
-  syncFromServer: async (serverCategories: any[]) => {
+  syncFromServer: async (serverCategories: any[], options?: { partial?: boolean }) => {
     // Collect the built rows so web (no real SQLite) can fall back to them when
     // the post-upsert read-back is empty.
     const built: Category[] = [];
+    // Ids of rows the server reports deleted, and local ids the server rows
+    // replace (clientId) - a partial web merge drops both from memory.
+    const superseded = new Set<string>();
     for (const cat of serverCategories) {
       // Decrypt encrypted fields if present
       const decrypted = await maybeDecrypt('category', cat, cat.accountId);
@@ -509,14 +517,27 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
         if (stale) await mergeCategoryInto(stale.id, entity.id);
       }
 
+      superseded.add(entity.id);
+      if (entity.clientId) superseded.add(entity.clientId);
       if (!entity.isDeleted) built.push(entity);
     }
     // Reload without recursive fetch
     const accountId = useAccountStore.getState().currentAccountId;
     if (accountId) {
       const categories = await getAllCategories(accountId);
-      // Web (no real SQLite): read-back is empty — fall back to built rows.
-      set({ categories: categories.length > 0 ? categories : built, isInitialized: true });
+      if (categories.length > 0) {
+        set({ categories, isInitialized: true });
+      } else if (options?.partial) {
+        // Web, partial: `built` is a few rows, not the account's list. Using
+        // it as the list is what made every other category vanish after a
+        // create on web until a page reload. Merge instead.
+        const kept = get().categories.filter((c) => !superseded.has(c.id));
+        set({ categories: [...kept, ...built], isInitialized: true });
+      } else {
+        // Web (no real SQLite), full pull: read-back is empty — the built
+        // rows ARE the list.
+        set({ categories: built, isInitialized: true });
+      }
     }
   },
 

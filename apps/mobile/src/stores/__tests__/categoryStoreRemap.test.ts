@@ -119,6 +119,32 @@ describe('categoryStore.createCategory — adopts the server id', () => {
     expect(created.name).toBe('Kawa');
   });
 
+  it('keeps every other category in memory when the local read-back is empty (web)', async () => {
+    // Web has no SQLite: `getAllCategories` always answers []. Adopting the
+    // server id used to run `syncFromServer([created])`, whose web fallback is
+    // "the rows I was given" - so the whole list collapsed to the one new
+    // category until a page reload.
+    const others = [
+      { id: 'c1', name: 'Food', type: 'expense', accountId: 'acc-1' },
+      { id: 'c2', name: 'Salary', type: 'income', accountId: 'acc-1' },
+    ] as any[];
+    useCategoryStore.setState({ categories: others, isInitialized: true, isLoading: false });
+    (api.createCategory as jest.Mock).mockImplementation(async (data: any) => ({
+      id: 'server-9',
+      clientId: data.clientId,
+      accountId: 'acc-1',
+      name: 'Kawa',
+      type: 'expense',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }));
+
+    await useCategoryStore.getState().createCategory('Kawa', 'expense');
+
+    const ids = useCategoryStore.getState().categories.map((c) => c.id);
+    expect(ids).toEqual(['c1', 'c2', 'server-9']);
+  });
+
   it('does not remap when the server echoes the same id', async () => {
     (api.createCategory as jest.Mock).mockImplementation(async (data: any) => ({ id: data.clientId, clientId: data.clientId, name: 'Kawa', type: 'expense' }));
 

@@ -59,6 +59,14 @@ behind three separate fixes (ABA-506, ABA-518, ABA-519):
   or the store initialized, and the fast path never trades a populated in-memory list for an empty
   local read.
 
+**On web, "the rows I was given" is the list only for a FULL pull (ABA-712).** Every
+`syncFromServer`-style method falls back to the rows it built when the SQLite read-back is empty.
+That is right for a full `GET`, and wrong for a one-row echo: `categoryStore.createCategory` always
+adopts the server's PK (the server never reuses the `clientId` as its id) and synced just the
+created row, so on web the list collapsed to that one category until a reload. A partial call passes
+`{ partial: true }` and is merged into the in-memory list, replacing rows it supersedes by `id` or
+`clientId`; a full pull still replaces, so a row deleted elsewhere leaves the list.
+
 **Read persisted state on the path that actually runs on web.** `loadAccounts` read the persisted
 `currentAccountId` after a local-rows branch that web never passes, so the chosen account reset on
 every refresh (ABA-498). `loadAccountsFromServer` resolves `currentAccountId ?? stored value` —
@@ -138,5 +146,6 @@ reappears, check this first.**
 
 ABA-498 (selection lost on refresh) · ABA-506 (failed account list) · ABA-518 (wallet
 reconstruction, budget retry) · ABA-519 (remembered account, categories after a failed fetch) ·
-ABA-520 (module-scope caches) · ABA-522 (proxy rate limit). The dashboard's own readiness rules
+ABA-520 (module-scope caches) · ABA-522 (proxy rate limit) · ABA-712 (category create collapsed the
+list). The dashboard's own readiness rules
 (ABA-521) are on [desktop-dashboard](desktop-dashboard.md).
