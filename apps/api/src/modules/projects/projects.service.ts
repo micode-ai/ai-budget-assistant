@@ -6,6 +6,7 @@ import { PrismaService } from '../../database/prisma.service';
 import { CreateProjectDto, UpdateProjectDto } from './dto';
 import { EmbeddingService } from '../ai/services/embedding.service';
 import { touchExpenses } from '../expenses/expense-touch.util';
+import { touchIncomes } from '../incomes/income-touch.util';
 
 @Injectable()
 export class ProjectsService {
@@ -278,7 +279,7 @@ export class ProjectsService {
       throw new NotFoundException('Income not found');
     }
 
-    return this.prisma.projectIncome.upsert({
+    const link = await this.prisma.projectIncome.upsert({
       where: {
         projectId_incomeId: {
           projectId: resolvedProjectId,
@@ -293,6 +294,8 @@ export class ProjectsService {
         isDeleted: false,
       },
     });
+    await touchIncomes(this.prisma, accountId, { id: resolvedIncomeId });
+    return link;
   }
 
   async removeIncome(accountId: string, projectId: string, incomeId: string) {
@@ -320,7 +323,7 @@ export class ProjectsService {
       throw new NotFoundException('Project income association not found');
     }
 
-    return this.prisma.projectIncome.update({
+    const removed = await this.prisma.projectIncome.update({
       where: {
         projectId_incomeId: {
           projectId: resolvedProjectId,
@@ -329,6 +332,8 @@ export class ProjectsService {
       },
       data: { isDeleted: true },
     });
+    await touchIncomes(this.prisma, accountId, { id: resolvedIncomeId });
+    return removed;
   }
 
   async getAnalytics(accountId: string, projectId: string) {

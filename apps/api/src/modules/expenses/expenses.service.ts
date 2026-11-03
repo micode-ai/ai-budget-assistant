@@ -694,6 +694,12 @@ export class ExpensesService {
               })),
               skipDuplicates: true,
             });
+            // skipDuplicates skips a link soft-deleted above (unique on the pair), so revive
+            // the re-sent ones explicitly.
+            await tx.expenseTag.updateMany({
+              where: { expenseId: expense.id, tagId: { in: validTagIds } },
+              data: { isDeleted: false },
+            });
             await tx.tag.updateMany({
               where: { id: { in: validTagIds } },
               data: { usageCount: { increment: 1 } },

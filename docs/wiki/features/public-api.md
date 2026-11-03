@@ -8,7 +8,9 @@
 A versioned public REST API (`/public/v1`) that other products use on a user's behalf, with
 our own OAuth 2.0 authorization server in front of it. Phase 1 opens **expenses** (list, read,
 create, update, delete, receipt download, an incremental changes feed) and the account's expense
-categories. The first consumer is our own AI Accounting product. Any user can register an app,
+categories. Phase 2 (ABA-713) adds **incomes** (list, detail, changes feed, create/update/delete),
+**budgets** (list/detail with current-period progress, create/update/delete) and read-only
+**analytics** totals, plus income categories. The first consumer is our own AI Accounting product. Any user can register an app,
 self-serve; API access is free; the user's own subscription tier still applies.
 
 Everything ships dark behind **`PUBLIC_API_ENABLED`** (default off, anything but `true` is off).
@@ -34,9 +36,14 @@ API, `apps/api/src/modules/oauth/` — the authorization server:
 
 API, `apps/api/src/modules/public-api/` — the resource server:
 - `public-api.module.ts`; controllers `public-account.controller.ts`, `public-categories.controller.ts`,
-  `public-expenses.controller.ts`
+  `public-expenses.controller.ts`, `public-incomes.controller.ts`, `public-budgets.controller.ts`,
+  `public-analytics.controller.ts`
 - `guards/public-api-auth.guard.ts` — the whole per-request authorization; `guards/public-write.guard.ts`
 - `decorators/require-scopes.decorator.ts`, `decorators/token-only.decorator.ts`, `decorators/public-write.decorator.ts`
+- Phase 2: `public-incomes.query.ts`, `public-income-write.adapter.ts` (through `IncomesService`),
+  `public-budgets.query.ts`, `public-budget-write.adapter.ts` (through `BudgetsService`),
+  `public-analytics.service.ts`; shared helpers `list-feed.util.ts` (list/feed paging),
+  `public-idempotency.util.ts`, `public-write.shared.ts` (write context)
 - `public-expenses.query.ts` (list, detail, changes feed), `public-expense-write.adapter.ts`
   (create/update/delete through `ExpensesService`), `public-categories.query.ts`,
   `mappers/public-expense.mapper.ts`, `dto/public-expense.dto.ts`, `cursor.util.ts`,
@@ -46,6 +53,7 @@ API, `apps/api/src/modules/public-api/` — the resource server:
   texts `texts.{en,pl,ru}.ts` and guides `guide.{en,pl,ru}.md`
 
 Elsewhere in the API: `apps/api/src/modules/expenses/expense-touch.util.ts` (`touchExpenses`),
+`apps/api/src/modules/incomes/income-touch.util.ts` (`touchIncomes`),
 `apps/api/src/modules/admin/admin-oauth-clients.controller.ts` (admin "API apps"),
 `apps/api/src/modules/mail/app-connected-email-i18n.ts`, `apps/api/src/cors-options.ts`,
 `apps/api/src/global-prefix-exclusions.ts`.
@@ -58,7 +66,8 @@ Mobile/web: `apps/mobile/app/authorize.tsx` (consent route) over
 stores `apps/mobile/src/stores/developerAppsStore.ts`, `apps/mobile/src/stores/connectedAppsStore.ts`.
 
 Admin: `apps/admin/src/app/api-apps/page.tsx`. Ops: `docker/nginx/api-public.conf`,
-`docs/ops/public-api.md`. Migration: `20261101000000_public_api_oauth`. Tests: the unit specs
+`docs/ops/public-api.md`. Migration: `20261101000000_public_api_oauth`, `20261103000000_public_api_phase2` (`Income.createdByOAuthClientId`,
+`Budget.createdByOAuthClientId`, index `incomes (account_id, updated_at, id)`, `IncomeSource` gains `api`). Tests: the unit specs
 beside each file, and `apps/api/test/public-api.e2e-spec.ts` (code → token → API → refresh →
 revoke, cross-account isolation).
 
@@ -96,7 +105,8 @@ one in `global-prefix-exclusions.ts`, never `oauth/(.*)`, so the consent page's 
 7. `POST /oauth/revoke` (RFC 7009) revokes the whole grant; the user does the same from
    Settings → Connected apps, an admin by blocking the app.
 
-**Scopes.** `expenses:read`, `expenses:write`, `receipts:read`, `categories:read`
+**Scopes.** `expenses:read`, `expenses:write`, `receipts:read`, `categories:read`,
+`incomes:read`, `incomes:write`, `budgets:read`, `budgets:write`, `analytics:read`
 (`oauth-scopes.ts`). `GET /public/v1/account` needs only a valid token. User e-mail is never shared.
 
 **Data model.** `OAuthClient` (public `clientId` `aba_ci_…`, `secretHash` null for public clients,
@@ -284,6 +294,30 @@ and delete is allowed, as in the app. A write API must never drop a field silent
 gamification, merchant rules and cache busts fire as for an app write; the adapter adds what
 `ExpensesController` adds on top (budget alert re-check, shared-activity push).
 
+**Analytics counting rules.** Every row is converted with `common/utils/fx.ts` into the requested
+currency, which defaults to the grantor's display currency (`user.currencyCode`), never a row's
+own currency. A row whose rate is unknown is excluded and the response says `fx_approximate`,
+never summed unconverted. Splits resolve through `attributeToCategories`; planned expenses and
+split receivables are excluded; debts and transfers are counted as the app's Analytics tab counts
+them. `transaction_count` is expense plus income rows. Results are cached 60 s under a key that
+carries the currency. Consent says income and spending totals are shared.
+
+**Income and budget `Idempotency-Key` follow the expense rule** (shared `public-idempotency.util.ts`):
+scoped to the app and the account, stored as the row's `clientId`, a replay is `200`, a foreign or
+deleted match is `409 idempotency_key_conflict`. `createdByOAuthClientId` is server-set only.
+
+**A transfer-linked income is read-only** (`is_transfer` is exposed so an integrator can tell):
+update and delete answer `422`; debt flags are read-only too. A budget allocation set replaces the
+old one, and two allocations with the same category are refused (`422`) rather than merged.
+
+**Income child edits (tags, projects) bump the income's `updatedAt` through `touchIncomes`**, same
+reasoning and same account-filtered `updateMany` as `touchExpenses`, so the income feed re-delivers it.
+`IncomesService.create/update` write the row itself, so they need no extra bump.
+
+**400 vs 422.** A malformed request, body or query, fails the class-validator pipe with `400
+validation_failed` (as phase 1 does); `422` is reserved for a request that parses but cannot be
+honoured (wrong category, transfer-linked income, mirror row, duplicate allocation category).
+
 **The public OpenAPI document includes only `PublicApiModule` and `OAuthPublicModule`.** That is
 why the token controller has its own module: the internal consent, developer and connected-apps
 routes stay out of the published reference by construction. Schema names are the class names and
@@ -320,7 +354,18 @@ web.
   stored; a retried item create could duplicate.
 - `/oauth/revoke` has no per-client rate limit; invalid-token requests are limited only by nginx.
 
+- **The phase 2 e2e scenario (k) is written but has not been run** — no disposable Postgres/Redis was
+  available when it landed; run it before the first pilot of the new scopes.
+- **The app's Analytics tab differs from the API**: the tab adds an amount with no known rate
+  unconverted and its currency picker filters rather than converts. Aligning the app is a separate task.
+- Budget `is_active` is read-only; categories, tags and projects are not writable; goals and debts as
+  resources, and webhooks, are later phases.
+
 ## History
+
+Public API phase 2 ([ABA-713](https://github.com/micode-ai/ai-budget-assistant/issues/747), spec `docs/superpowers/specs/2026-11-03-public-api-phase-2-design.md`):
+incomes, budgets and analytics totals with five new scopes, income categories, shared list/feed,
+idempotency and write helpers.
 
 Public API multi-account connections ([ABA-709](https://github.com/micode-ai/ai-budget-assistant/issues/742), spec `docs/superpowers/specs/2026-11-02-public-api-multi-account-design.md`):
 one grant holds several accounts (`oauth_grant_accounts`), `X-Account-Id`, `GET /public/v1/accounts`,

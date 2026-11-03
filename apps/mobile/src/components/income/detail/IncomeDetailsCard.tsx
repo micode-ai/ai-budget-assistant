@@ -273,6 +273,11 @@ export const IncomeDetailsCard = forwardRef<IncomeDetailsCardHandle, IncomeDetai
               <Text style={styles.detailLabel}>{t('common.addedBy', { name: income.createdByUserName })}</Text>
             </View>
           )}
+          {income.createdByApp?.name && (
+            <View style={styles.detailRow}>
+              <Text style={styles.detailLabel}>{t('common.addedVia', { app: income.createdByApp.name })}</Text>
+            </View>
+          )}
 
           {/* Debt Info Section */}
           {income.isDebt && (

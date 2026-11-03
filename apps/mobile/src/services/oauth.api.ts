@@ -14,7 +14,16 @@ import { httpClient } from './http-client';
  */
 
 /** The phase-1 scopes. The server rejects any other value, so the UI never sees one. */
-export type OAuthScope = 'expenses:read' | 'expenses:write' | 'receipts:read' | 'categories:read';
+export type OAuthScope =
+  | 'expenses:read'
+  | 'expenses:write'
+  | 'receipts:read'
+  | 'categories:read'
+  | 'incomes:read'
+  | 'incomes:write'
+  | 'budgets:read'
+  | 'budgets:write'
+  | 'analytics:read';
 
 export interface OAuthConsentApp {
   name: string;

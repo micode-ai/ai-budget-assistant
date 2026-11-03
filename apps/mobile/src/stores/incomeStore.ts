@@ -229,6 +229,7 @@ export const useIncomeStore = create<IncomeState>()(
               debtDueDate: decrypted.debtDueDate ? new Date(decrypted.debtDueDate) : undefined,
               relatedDebtExpenseId: decrypted.relatedDebtExpenseId ?? undefined,
               createdByUserName: si.createdByUserName ?? null,
+              createdByApp: si.createdByApp ?? null,
               createdAt: new Date(decrypted.createdAt),
               updatedAt: new Date(decrypted.updatedAt),
               isDeleted: decrypted.isDeleted || false,

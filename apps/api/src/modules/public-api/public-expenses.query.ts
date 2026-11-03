@@ -1,15 +1,32 @@
 import type { Prisma } from '@prisma/client';
 import type { PrismaService } from '../../database/prisma.service';
 import { sniffReceiptContentType } from '../receipt-split/helpers/receipt-content-type';
-import { decodeCursor, encodeCursor, invalidCursor } from './cursor.util';
 import {
-  isDateOnly,
   PUBLIC_CHANGES_DEFAULT_LIMIT,
   PUBLIC_EXPENSES_DEFAULT_LIMIT,
   type ListPublicExpensesQueryDto,
 } from './dto/public-expense.dto';
 import type { PublicExpenseRow } from './mappers/public-expense.mapper';
 import { PublicApiError } from './public-api-error';
+import {
+  dateRangeFilter,
+  descriptionSearchWhere,
+  feedAfterWhere,
+  feedHorizon,
+  feedPage,
+  listCursorWhere,
+  listPage,
+} from './list-feed.util';
+
+// The list/feed helpers moved to `list-feed.util.ts` (shared with incomes); re-exported for existing importers.
+export {
+  CURSOR_ID,
+  FEED_CURSOR_ID,
+  ISO_MS,
+  PUBLIC_CHANGES_SAFETY_LAG_MS,
+  START_CURSOR_PARTS,
+  utcDay,
+} from './list-feed.util';
 
 /**
  * The public API's expense READS go straight to Prisma (writes still go through `ExpensesService`):
@@ -110,8 +127,6 @@ type ListQuery = Pick<
   'date_from' | 'date_to' | 'category_id' | 'merchant' | 'project_id' | 'search' | 'limit' | 'cursor'
 >;
 
-const utcDay = (d: string): Date => new Date(`${d}T00:00:00.000Z`);
-const CURSOR_ID = /^[0-9A-Za-z-]{1,64}$/;
 
 /**
  * One page of the account's expenses, `date desc, id desc`, keyset-paginated over `(date, id)`:
@@ -124,29 +139,13 @@ export async function listPublicExpenses(prisma: PrismaService, accountId: strin
   const where: Prisma.ExpenseWhereInput = { accountId, isDeleted: false, isPlanned: false };
   const and: Prisma.ExpenseWhereInput[] = [];
 
-  if (q.date_from || q.date_to) {
-    const date: Prisma.DateTimeFilter = {};
-    if (q.date_from) date.gte = utcDay(q.date_from);
-    if (q.date_to) date.lte = utcDay(q.date_to);
-    where.date = date;
-  }
+  const date = dateRangeFilter(q.date_from, q.date_to);
+  if (date) where.date = date;
   if (q.category_id) where.categoryId = q.category_id;
   if (q.merchant) where.merchant = { contains: q.merchant, mode: 'insensitive' };
   if (q.project_id) where.projectExpenses = { some: { projectId: q.project_id, isDeleted: false } };
-  if (q.search) {
-    and.push({
-      OR: [
-        { description: { contains: q.search, mode: 'insensitive' } },
-        { notes: { contains: q.search, mode: 'insensitive' } },
-      ],
-    });
-  }
-  if (q.cursor !== undefined) {
-    const [cDate, cId] = decodeCursor(q.cursor, 2);
-    if (!isDateOnly(cDate) || !CURSOR_ID.test(cId)) throw invalidCursor();
-    const d = utcDay(cDate);
-    and.push({ OR: [{ date: { lt: d } }, { date: d, id: { lt: cId } }] });
-  }
+  if (q.search) and.push(descriptionSearchWhere(q.search));
+  if (q.cursor !== undefined) and.push(listCursorWhere(q.cursor));
   if (and.length > 0) where.AND = and;
 
   const fetched = await prisma.expense.findMany({
@@ -156,10 +155,7 @@ export async function listPublicExpenses(prisma: PrismaService, accountId: strin
     take: limit + 1,
   });
 
-  const hasMore = fetched.length > limit;
-  const page = hasMore ? fetched.slice(0, limit) : fetched;
-  const last = page[page.length - 1];
-  const nextCursor = hasMore && last ? encodeCursor([last.date.toISOString().slice(0, 10), last.id]) : null;
+  const { page, hasMore, nextCursor } = listPage(fetched, limit);
 
   return { rows: await attachReceiptFlags(prisma, accountId, page), nextCursor, hasMore };
 }
@@ -181,25 +177,6 @@ export async function getPublicExpense(prisma: PrismaService, accountId: string,
 
 // ── changes feed ────────────────────────────────────────────────────────────
 
-/** Exactly what `Date#toISOString()` produces: UTC, millisecond precision, `Z`. */
-const ISO_MS = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
-/** Ids in the feed cursor; empty is allowed — it is the "from the beginning" start cursor. */
-const FEED_CURSOR_ID = /^[0-9A-Za-z-]{0,64}$/;
-/**
- * The cursor handed out on an empty first page (no input cursor, no rows yet). Every real row
- * sorts after it — any `updatedAt` is later than the epoch, and at the epoch any id is greater
- * than `''` — so it behaves exactly like "no cursor" and the client can store it.
- */
-const START_CURSOR_PARTS = [new Date(0).toISOString(), ''];
-
-/**
- * Safety lag of the changes feed (Ruling 21). `@updatedAt` is stamped when Prisma builds the
- * statement, not when the transaction commits, so a slow transaction can commit a row whose
- * `updatedAt` is already behind a cursor a client has paged past — and keyset paging would then
- * skip it forever. Only rows at least this old (by the DATABASE clock) are served, which gives any
- * in-flight transaction this long to commit before its rows can be paged past.
- */
-export const PUBLIC_CHANGES_SAFETY_LAG_MS = 10_000;
 
 const PUBLIC_EXPENSE_CHANGES_SELECT = {
   ...PUBLIC_EXPENSE_DETAIL_SELECT,
@@ -250,22 +227,10 @@ export async function listPublicExpenseChanges(
   q: { cursor?: string; limit?: number },
 ): Promise<PublicExpenseChangesPage> {
   const limit = q.limit ?? PUBLIC_CHANGES_DEFAULT_LIMIT;
-  let after: Prisma.ExpenseWhereInput | undefined;
-  if (q.cursor !== undefined) {
-    const [cAt, cId] = decodeCursor(q.cursor, 2);
-    if (!ISO_MS.test(cAt) || !FEED_CURSOR_ID.test(cId)) throw invalidCursor();
-    const at = new Date(cAt);
-    // Round-trip check rejects impossible dates (`2026-02-30T…` normalises to March).
-    if (Number.isNaN(at.getTime()) || at.toISOString() !== cAt) throw invalidCursor();
-    after = { OR: [{ updatedAt: { gt: at } }, { updatedAt: at, id: { gt: cId } }] };
-  }
+  const after = q.cursor !== undefined ? feedAfterWhere(q.cursor) : undefined;
 
-  // The lag is measured on the DB clock (one `SELECT now()` per request), never the app server's,
-  // so clock skew between API and Postgres cannot shrink it. Rows still inside the window are not
-  // fetched at all, so `next_cursor` — the last RETURNED row, or the input cursor on an empty page —
-  // can never move past them, and `has_more` does not count them.
-  const [{ now: dbNow }] = await prisma.$queryRaw<Array<{ now: Date }>>`SELECT now() AS now`;
-  const settledBefore = new Date(dbNow.getTime() - PUBLIC_CHANGES_SAFETY_LAG_MS);
+  // Only rows older than the safety lag on the DB clock are served (see `feedHorizon`).
+  const settledBefore = await feedHorizon(prisma);
   const where: Prisma.ExpenseWhereInput = { accountId, updatedAt: { lte: settledBefore } };
   if (after) where.AND = [after];
 
@@ -276,12 +241,7 @@ export async function listPublicExpenseChanges(
     take: limit + 1,
   });
 
-  const hasMore = fetched.length > limit;
-  const page = hasMore ? fetched.slice(0, limit) : fetched;
-  const last = page[page.length - 1];
-  const nextCursor = last
-    ? encodeCursor([last.updatedAt.toISOString(), last.id])
-    : (q.cursor ?? encodeCursor(START_CURSOR_PARTS));
+  const { page, hasMore, nextCursor } = feedPage(fetched, limit, q.cursor);
 
   const live = page.filter((r) => !r.isDeleted && !r.isPlanned);
   const flagged = new Map((await attachReceiptFlags(prisma, accountId, live)).map((r) => [r.id, r]));

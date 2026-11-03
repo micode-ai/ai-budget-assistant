@@ -6,6 +6,7 @@ import { PrismaService } from '../../database/prisma.service';
 import { CreateTagDto, UpdateTagDto } from './dto';
 import { EmbeddingService } from '../ai/services/embedding.service';
 import { touchExpenses } from '../expenses/expense-touch.util';
+import { touchIncomes } from '../incomes/income-touch.util';
 
 @Injectable()
 export class TagsService {
@@ -215,6 +216,8 @@ export class TagsService {
       },
     });
 
+    await touchIncomes(this.prisma, accountId, { id: incomePk });
+
     // Increment usage count
     await this.prisma.tag.update({
       where: { id: tag.id },
@@ -248,6 +251,7 @@ export class TagsService {
           isDeleted: true,
         },
       });
+      await touchIncomes(this.prisma, accountId, { id: incomePk });
 
       // Decrement usage count
       await this.prisma.tag.update({

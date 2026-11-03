@@ -8,9 +8,12 @@ import { PUBLIC_SCOPES } from '../../oauth/oauth-scopes';
 import { OAUTH_TOKEN_ERROR_CODES } from '../../oauth/oauth-token.service';
 import { OAuthTokenController } from '../../oauth/oauth-token.controller';
 import { PublicAccountController } from '../controllers/public-account.controller';
+import { PublicAnalyticsController } from '../controllers/public-analytics.controller';
 import { PublicAccountsController } from '../controllers/public-accounts.controller';
 import { PublicCategoriesController } from '../controllers/public-categories.controller';
 import { PublicExpensesController } from '../controllers/public-expenses.controller';
+import { PublicBudgetsController } from '../controllers/public-budgets.controller';
+import { PublicIncomesController } from '../controllers/public-incomes.controller';
 import { REQUIRE_SCOPES_KEY } from '../decorators/require-scopes.decorator';
 import { TOKEN_ONLY_KEY } from '../decorators/token-only.decorator';
 import { PUBLIC_API_ERROR_CODES } from '../public-api-error';
@@ -63,20 +66,52 @@ describe('public OpenAPI document', () => {
     const ids = operations(doc).map((o) => o.op.operationId).sort();
     expect(ids).toEqual(
       [
+        'createBudget',
         'createExpense',
+        'createIncome',
+        'deleteBudget',
         'deleteExpense',
+        'deleteIncome',
         'getAccount',
+        'getAnalyticsByCategory',
+        'getAnalyticsMonthly',
+        'getAnalyticsSummary',
+        'getBudget',
         'getExpense',
         'getExpenseReceipt',
+        'getIncome',
         'issueToken',
         'listAccounts',
+        'listBudgets',
         'listCategories',
         'listExpenseChanges',
         'listExpenses',
+        'listIncomeChanges',
+        'listIncomes',
         'revokeToken',
+        'updateBudget',
         'updateExpense',
+        'updateIncome',
       ].sort(),
     );
+  });
+
+  it('publishes the frozen phase 2 schema names', () => {
+    const names = Object.keys(doc.components!.schemas ?? {});
+    for (const name of [
+      'PublicIncome',
+      'PublicIncomeList',
+      'PublicIncomeChanges',
+      'PublicBudget',
+      'PublicBudgetList',
+      'PublicBudgetProgress',
+      'PublicBudgetAllocation',
+      'PublicAnalyticsSummary',
+      'PublicAnalyticsByCategory',
+      'PublicAnalyticsMonthly',
+    ]) {
+      expect(names).toContain(name);
+    }
   });
 
   it('every /public/v1 operation lists 400/401/403/404/429 with the shared error schema', () => {
@@ -123,7 +158,7 @@ describe('public OpenAPI document', () => {
   });
 
   it('each operation publishes exactly the scopes its route enforces', () => {
-    const controllers = [PublicAccountController, PublicAccountsController, PublicCategoriesController, PublicExpensesController];
+    const controllers = [PublicAccountController, PublicAccountsController, PublicAnalyticsController, PublicBudgetsController, PublicCategoriesController, PublicExpensesController, PublicIncomesController];
     const enforced = new Map<string, string[]>();
     for (const ctrl of controllers) {
       const proto = ctrl.prototype as unknown as Record<string, object>;

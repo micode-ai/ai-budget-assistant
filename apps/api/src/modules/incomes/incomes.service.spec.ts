@@ -55,6 +55,29 @@ function makeService(overrides: {
 }
 
 describe('IncomesService.create', () => {
+  it('stamps createdByOAuthClientId on the upsert create branch only, never on update', async () => {
+    const { service, tx } = makeService();
+    const dto: any = { localId: 'local-1', amount: 100, currencyCode: 'USD', date: '2026-07-01' };
+    await service.create('acc-1', 'user-1', dto, { createdByOAuthClientId: 'c1' });
+    const args = tx.income.upsert.mock.calls[0][0];
+    expect(args.create.createdByOAuthClientId).toBe('c1');
+    expect(args.update).not.toHaveProperty('createdByOAuthClientId');
+  });
+
+  it('sets no attribution without options and returns createdByApp, never the scalar', async () => {
+    const { service, tx } = makeService();
+    tx.income.findUnique.mockResolvedValue({
+      id: 'inc-1', amount: 1, currencyCode: 'USD', user: { name: 'A' },
+      createdByOAuthClientId: 'db-1', createdByOAuthClient: { clientId: 'aba_ci_x', name: 'App' },
+    });
+    const dto: any = { localId: 'local-1', amount: 100, currencyCode: 'USD', date: '2026-07-01' };
+    const res: any = await service.create('acc-1', 'user-1', dto);
+    expect(tx.income.upsert.mock.calls[0][0].create).not.toHaveProperty('createdByOAuthClientId');
+    expect(res.createdByApp).toEqual({ id: 'aba_ci_x', name: 'App' });
+    expect(res).not.toHaveProperty('createdByOAuthClientId');
+    expect(res).not.toHaveProperty('createdByOAuthClient');
+  });
+
   it('upserts on accountId+clientId and returns createdByUserName flattened from user', async () => {
     const { service, tx } = makeService();
 
@@ -332,6 +355,18 @@ describe('IncomesService.update', () => {
     const updateData = tx.income.update.mock.calls[0][0].data;
     expect(updateData.categoryId).toBe('cat-x');
     expect(updateData.syncVersion).toEqual({ increment: 1 });
+  });
+
+  it('revives a re-sent tag link that the soft-delete pass and skipDuplicates would otherwise leave deleted', async () => {
+    const { service, tx } = makeService();
+    tx.tag.findMany.mockResolvedValue([{ id: 'tag-A' }, { id: 'tag-B' }]);
+
+    await service.update('acc-1', 'inc-1', { tagIds: ['tag-A', 'tag-B'] } as any);
+
+    expect(tx.incomeTag.updateMany).toHaveBeenCalledWith({
+      where: { incomeId: 'inc-1', tagId: { in: ['tag-A', 'tag-B'] } },
+      data: { isDeleted: false },
+    });
   });
 
   it('leaves categoryId untouched (undefined) when dto omits it', async () => {

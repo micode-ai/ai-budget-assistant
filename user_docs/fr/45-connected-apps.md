@@ -25,6 +25,9 @@ Quand une application a plusieurs comptes, elle nous indique à chaque requête 
 - **Ajouter, modifier et supprimer des dépenses** — l'application peut écrire dans ce compte. Les dépenses qu'elle ajoute affichent **Ajouté via** suivi du nom de l'application sur l'écran de la dépense.
 - **Télécharger les photos de vos tickets de caisse** — l'application peut télécharger l'image ou le PDF du ticket joint à une dépense.
 - **Voir vos catégories de dépenses** — l'application peut lire votre liste de catégories pour classer correctement les nouvelles dépenses.
+- **Voir et ajouter vos revenus** — l'application peut lire les revenus du compte connecté et, avec l'autorisation d'écriture, ajouter, modifier et supprimer des revenus. Les revenus qu'elle ajoute affichent **Ajouté via** et le nom de l'application. Un revenu créé par un virement entre vos comptes est en lecture seule.
+- **Voir et gérer vos budgets** — l'application peut lire vos budgets avec l'avancement de la période en cours et, avec l'autorisation d'écriture, les créer, les modifier et les supprimer.
+- **Voir les totaux de vos revenus et dépenses** — l'application peut lire des synthèses : totaux par catégorie et par mois. Elle reçoit ces totaux, pas les opérations une à une, et les montants sont convertis dans votre devise d'affichage.
 
 Toute application connectée voit aussi le nom, le type et la devise des comptes que vous avez cochés, ainsi que votre nom. Elle ne reçoit jamais votre adresse e-mail et ne voit aucun compte que vous n'avez pas coché.
 

@@ -779,6 +779,90 @@ describe('Public API (e2e)', () => {
     expect(deadRefresh.body.error).toBe('invalid_grant');
   });
 
+  // ── (k) phase 2: incomes, budgets, analytics ─────────────────────────────
+
+  it('(k) incomes, budgets and analytics: create → idempotent repeat → feed → allocation → summary; another account sees none of it', async () => {
+    const tag = randomUUID().slice(0, 8);
+    const kA = await createExtraAccount(owner.id, `K account A ${tag}`);
+    const kB = await createExtraAccount(owner.id, `K account B ${tag}`);
+    const client = await registerApp(owner);
+    const scope = 'incomes:read incomes:write budgets:read budgets:write analytics:read categories:read';
+    const { verifier, challenge } = pkce();
+    const approved = await http()
+      .post('/api/v1/oauth/authorize/approve')
+      .set('Authorization', `Bearer ${owner.jwt}`)
+      .send({
+        client_id: client.clientId,
+        redirect_uri: REDIRECT_URI,
+        scope,
+        code_challenge: challenge,
+        code_challenge_method: 'S256',
+        state: 'st-1',
+        account_ids: [kA, kB],
+        decision: 'allow',
+      });
+    expect(approved.status).toBe(200);
+    const code = new URL(approved.body.redirectTo).searchParams.get('code')!;
+    const pair = await exchange(client, code, verifier);
+    expect(pair.scope.split(' ')).toEqual(expect.arrayContaining(['incomes:write', 'budgets:write', 'analytics:read']));
+
+    // Income: 201, then 200 with the same record on a repeat.
+    const key = randomUUID();
+    const body = { amount: '1000.00', currency: 'PLN', date: '2026-10-15', description: 'Salary' };
+    const created = await api('post', '/incomes', pair.access_token, kA).set('Idempotency-Key', key).send(body);
+    expect(created.status).toBe(201);
+    expect(created.body).toMatchObject({ amount: '1000.00', currency: 'PLN', date: '2026-10-15' });
+    const incomeId: string = created.body.id;
+    const repeated = await api('post', '/incomes', pair.access_token, kA).set('Idempotency-Key', key).send(body);
+    expect(repeated.status).toBe(200);
+    expect(repeated.body.id).toBe(incomeId);
+    expect(await prisma.income.count({ where: { accountId: kA, isDeleted: false } })).toBe(1);
+
+    // Changes feed, past the safety lag.
+    await prisma.$executeRaw`UPDATE incomes SET updated_at = updated_at - interval '20 seconds' WHERE id = ${incomeId}`;
+    const feed = await api('get', '/incomes/changes', pair.access_token, kA);
+    expect(feed.status).toBe(200);
+    expect(feed.body.changes).toEqual([expect.objectContaining({ type: 'upsert', income: expect.objectContaining({ id: incomeId }) })]);
+
+    // Budget with one allocation of an expense category.
+    const seeded = await prisma.category.create({ data: { accountId: kA, userId: owner.id, name: `K food ${tag}`, type: 'expense' } });
+    const cats = await api('get', '/categories?type=expense', pair.access_token, kA);
+    expect(cats.status).toBe(200);
+    const categoryId: string = seeded.id;
+    expect(cats.body.data.map((c: { id: string }) => c.id)).toContain(categoryId);
+    const budgetKey = randomUUID();
+    const budgetBody = {
+      name: 'K budget',
+      amount: '500.00',
+      currency: 'PLN',
+      period: 'monthly',
+      start_date: '2026-10-01',
+      allocations: [{ category_id: categoryId, amount: '200.00' }],
+    };
+    const budget = await api('post', '/budgets', pair.access_token, kA).set('Idempotency-Key', budgetKey).send(budgetBody);
+    expect(budget.status).toBe(201);
+    expect(budget.body.allocations).toEqual([expect.objectContaining({ category_id: categoryId, amount: '200.00' })]);
+    const budgetRepeat = await api('post', '/budgets', pair.access_token, kA).set('Idempotency-Key', budgetKey).send(budgetBody);
+    expect(budgetRepeat.status).toBe(200);
+    expect(budgetRepeat.body.id).toBe(budget.body.id);
+
+    // Analytics for the income's day.
+    const summary = await api('get', '/analytics/summary?from=2026-10-15&to=2026-10-15&currency=PLN', pair.access_token, kA);
+    expect(summary.status).toBe(200);
+    expect(summary.body).toMatchObject({ currency: 'PLN', total_income: '1000.00', total_expenses: '0.00', net: '1000.00', transaction_count: 1 });
+
+    // The second account of the same connection sees none of it.
+    const incomesB = await api('get', '/incomes', pair.access_token, kB);
+    expect(incomesB.status).toBe(200);
+    expect(incomesB.body.data).toEqual([]);
+    expect((await api('get', `/incomes/${incomeId}`, pair.access_token, kB)).status).toBe(404);
+    const budgetsB = await api('get', '/budgets', pair.access_token, kB);
+    expect(budgetsB.body.data).toEqual([]);
+    expect((await api('get', `/budgets/${budget.body.id}`, pair.access_token, kB)).status).toBe(404);
+    const summaryB = await api('get', '/analytics/summary?from=2026-10-15&to=2026-10-15&currency=PLN', pair.access_token, kB);
+    expect(summaryB.body).toMatchObject({ total_income: '0.00', transaction_count: 0 });
+  });
+
   // ── (e) feature flag off — last, and restored in a finally ───────────────
 
   it('(e) with PUBLIC_API_ENABLED off the surface does not exist (404), read per request', async () => {

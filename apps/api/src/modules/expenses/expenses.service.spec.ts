@@ -1130,6 +1130,21 @@ describe('split invariant is defended after creation', () => {
     });
   });
 
+  describe('tag re-send', () => {
+    it('revives a re-sent tag link that the soft-delete pass and skipDuplicates would otherwise leave deleted', async () => {
+      const { service, tx } = makeSplitDefenceService({ amount: 240 });
+      tx.tag.findMany.mockResolvedValue([{ id: 'tag-A' }, { id: 'tag-B' }]);
+      (tx.tag as any).updateMany = jest.fn().mockResolvedValue({});
+
+      await service.update('acc-1', 'e-split-1', { tagIds: ['tag-A', 'tag-B'] } as any);
+
+      expect(tx.expenseTag.updateMany).toHaveBeenCalledWith({
+        where: { expenseId: 'e-split-1', tagId: { in: ['tag-A', 'tag-B'] } },
+        data: { isDeleted: false },
+      });
+    });
+  });
+
   describe('item edits', () => {
     it('removeItem re-derives and drops a split the surviving lines no longer support', async () => {
       // The alcohol line is gone, so the items now sum to 215 against a 240 total —

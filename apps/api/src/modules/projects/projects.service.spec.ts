@@ -17,6 +17,7 @@ function makePrisma(overrides: any = {}) {
     },
     income: {
       findFirst: jest.fn().mockResolvedValue(null),
+      updateMany: jest.fn().mockResolvedValue({ count: 1 }),
       ...overrides.income,
     },
     projectExpense: {
@@ -162,6 +163,10 @@ describe('ProjectsService — clientId resolution (ABA-374 bug class)', () => {
         create: { projectId: 'server-project-7', incomeId: 'server-income-1' },
       }),
     );
+    expect(prisma.income.updateMany).toHaveBeenCalledWith({
+      where: { id: 'server-income-1', accountId: 'acc-1' },
+      data: { updatedAt: expect.any(Date) },
+    });
   });
 
   it('removeIncome resolves BOTH ids by clientId before looking up and soft-deleting the join row', async () => {

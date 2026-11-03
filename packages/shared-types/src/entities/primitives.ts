@@ -5,7 +5,8 @@ export type SyncStatus = 'pending' | 'synced' | 'conflict' | 'error';
 /** `api`: created through the public OAuth API (Public API phase 1). `group`: a share row the shared-groups budget mirror writes (ABA-660); amount, date and currency follow the group. */
 export type ExpenseSource = 'manual' | 'voice' | 'ocr' | 'import' | 'telegram' | 'whatsapp' | 'slack' | 'notification' | 'group' | 'api';
 
-export type IncomeSource = 'manual' | 'voice' | 'ocr' | 'import' | 'telegram' | 'whatsapp' | 'slack';
+/** `api`: created through the public OAuth API (Public API phase 2). */
+export type IncomeSource = 'manual' | 'voice' | 'ocr' | 'import' | 'telegram' | 'whatsapp' | 'slack' | 'api';
 
 export type BudgetPeriod = 'daily' | 'weekly' | 'monthly' | 'yearly' | 'custom';
 

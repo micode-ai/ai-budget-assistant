@@ -12,13 +12,38 @@ import { PublicApiExceptionFilter } from '../filters/public-api-exception.filter
 import { PublicApiAuthGuard } from '../guards/public-api-auth.guard';
 import { PublicApiRateLimitService } from '../public-api-rate-limit.service';
 import { PublicExpenseWriteAdapter } from '../public-expense-write.adapter';
+import { PublicIncomeWriteAdapter } from '../public-income-write.adapter';
 import { PublicAccountController } from './public-account.controller';
 import { PublicAccountsController } from './public-accounts.controller';
 import { PublicCategoriesController } from './public-categories.controller';
 import { PublicExpensesController } from './public-expenses.controller';
+import { PublicIncomesController } from './public-incomes.controller';
 
 const TOKEN = 'aba_at_good-token';
 const EXP_ID = '00000000-0000-4000-8000-000000000001';
+const INC_ID = '00000000-0000-4000-8000-0000000000a1';
+
+function incomeRow() {
+  return {
+    id: INC_ID,
+    amount: new Prisma.Decimal('4200'),
+    currencyCode: 'PLN',
+    date: new Date('2026-10-31T00:00:00.000Z'),
+    description: 'October salary',
+    notes: null,
+    source: 'manual',
+    isDebt: false,
+    isDebtRepayment: false,
+    isSplitReceivable: false,
+    createdAt: new Date('2026-10-31T12:00:00.000Z'),
+    updatedAt: new Date('2026-10-31T12:00:00.000Z'),
+    category: { id: 'cat-9', name: 'Salary' },
+    linkedTransfer: null,
+    createdByOAuthClient: null,
+    incomeTags: [],
+    projectIncomes: [],
+  };
+}
 
 function tokenRow(scopes: string[], encryptionTier = 0) {
   return {
@@ -83,6 +108,8 @@ describe('public read controllers (HTTP)', () => {
   let token: ReturnType<typeof tokenRow>;
   let expenses: ReturnType<typeof expenseRow>[];
   let detail: ReturnType<typeof expenseRow> | null;
+  let incomes: ReturnType<typeof incomeRow>[];
+  let incomeDetail: ReturnType<typeof incomeRow> | null;
   let grantAccountRows: any[] = [];
   let memberRows: any[] = [];
 
@@ -105,6 +132,10 @@ describe('public read controllers (HTTP)', () => {
       findMany: jest.fn(async (args: any) => (args.select?.id && Object.keys(args.select).length === 1 ? [] : expenses)),
       findFirst: jest.fn(async () => detail),
     },
+    income: {
+      findMany: jest.fn(async () => incomes),
+      findFirst: jest.fn(async () => incomeDetail),
+    },
     // DB clock for the changes feed's safety lag; well ahead of every fixture.
     $queryRaw: jest.fn(async () => [{ now: new Date('2030-01-01T00:00:00.000Z') }]),
     // The query filters (publicCategoryWhere); the mock returns what such a query yields.
@@ -118,13 +149,14 @@ describe('public read controllers (HTTP)', () => {
 
   beforeAll(async () => {
     const mod = await Test.createTestingModule({
-      controllers: [PublicAccountController, PublicAccountsController, PublicCategoriesController, PublicExpensesController],
+      controllers: [PublicAccountController, PublicAccountsController, PublicCategoriesController, PublicExpensesController, PublicIncomesController],
       providers: [
         PublicApiAuthGuard,
         PublicApiEnabledGuard,
         PublicApiExceptionFilter,
         { provide: PrismaService, useValue: prisma },
         { provide: PublicExpenseWriteAdapter, useValue: {} },
+        { provide: PublicIncomeWriteAdapter, useValue: {} },
         { provide: CacheService, useValue: { setIfAbsent: jest.fn(async () => false) } },
         { provide: PublicApiRateLimitService, useValue: { check: jest.fn(async () => ({ limit: 120, remaining: 119 })) } },
         { provide: ConfigService, useValue: { get: () => 'true' } },
@@ -145,6 +177,8 @@ describe('public read controllers (HTTP)', () => {
     token = tokenRow(['expenses:read', 'categories:read']);
     expenses = [expenseRow()];
     detail = expenseRow();
+    incomes = [incomeRow()];
+    incomeDetail = incomeRow();
     jest.clearAllMocks();
     grantAccountRows = [];
     memberRows = [];
@@ -258,6 +292,20 @@ describe('public read controllers (HTTP)', () => {
           select: { id: true, name: true, parentId: true, icon: true, color: true, type: true },
         }),
       );
+    });
+
+    it('?type=income lists income categories; no param stays expense', async () => {
+      const res = await get('/public/v1/categories?type=income');
+      expect(res.status).toBe(200);
+      expect(prisma.category.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { accountId: 'acc-1', type: 'income', isDeleted: false } }),
+      );
+    });
+
+    it('rejects an unknown type with validation_failed', async () => {
+      const res = await get('/public/v1/categories?type=foo');
+      expect(res.body.error.code).toBe('validation_failed');
+      expect(Object.keys(res.body.error.details.fields)).toContain('type');
     });
 
     it('a tier 1 account withholds category names and lists them', async () => {
@@ -506,6 +554,132 @@ describe('public read controllers (HTTP)', () => {
       const res = await get(`/public/v1/expenses/${EXP_ID}`);
       expect(res.status).toBe(404);
       expect(res.body.error.code).toBe('not_found');
+    });
+  });
+
+  describe('GET /public/v1/incomes', () => {
+    beforeEach(() => {
+      token = tokenRow(['incomes:read']);
+    });
+
+    it('returns a page', async () => {
+      const res = await get('/public/v1/incomes');
+      expect(res.status).toBe(200);
+      expect(res.body.has_more).toBe(false);
+      expect(res.body.next_cursor).toBeNull();
+      expect(res.body.data[0]).toMatchObject({
+        id: INC_ID,
+        amount: '4200.00',
+        date: '2026-10-31',
+        category: { id: 'cat-9', name: 'Salary' },
+        is_transfer: false,
+      });
+    });
+
+    it('requires incomes:read', async () => {
+      token = tokenRow(['expenses:read']);
+      const res = await get('/public/v1/incomes');
+      expect(res.status).toBe(403);
+      expect(res.body.error.code).toBe('insufficient_scope');
+    });
+
+    it.each([
+      ['limit above 200', 'limit=201', 'limit'],
+      ['a datetime date_from', 'date_from=2026-10-01T00:00:00Z', 'date_from'],
+      ['date_from after date_to', 'date_from=2026-10-31&date_to=2026-10-01', 'date_to'],
+      ['a non-uuid project_id', 'project_id=1', 'project_id'],
+      ['min_amount (not a list filter)', 'min_amount=10', 'min_amount'],
+      ['merchant (not an income filter)', 'merchant=x', 'merchant'],
+    ])('rejects %s with validation_failed', async (_label, qs, field) => {
+      const res = await get(`/public/v1/incomes?${qs}`);
+      expect(res.status).toBe(400);
+      expect(res.body.error.code).toBe('validation_failed');
+      expect(Object.keys(res.body.error.details.fields)).toContain(field);
+    });
+
+    it('a tier 1 account withholds text fields', async () => {
+      token = tokenRow(['incomes:read'], 1);
+      const res = await get('/public/v1/incomes');
+      expect(res.body.data[0]).toMatchObject({ description: null, category: { id: 'cat-9', name: null }, amount: '4200.00' });
+      expect(res.body.data[0].encrypted_fields).toEqual(['description', 'notes', 'category.name', 'tags.name', 'project.name']);
+      expect(JSON.stringify(res.body)).not.toMatch(/October salary|"Salary"/);
+    });
+
+    it('a tier 1 account refuses the search filter with details.fields', async () => {
+      token = tokenRow(['incomes:read'], 1);
+      const res = await get('/public/v1/incomes?search=sal');
+      expect(res.status).toBe(403);
+      expect(res.body.error.code).toBe('account_encrypted');
+      expect(res.body.error.details.fields).toEqual(['search']);
+      expect(prisma.income.findMany).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('GET /public/v1/incomes/changes', () => {
+    beforeEach(() => {
+      token = tokenRow(['incomes:read']);
+    });
+
+    it('is routed to the feed, not captured by :id', async () => {
+      incomes = [{ ...incomeRow(), isDeleted: false } as any];
+      const res = await get('/public/v1/incomes/changes');
+      expect(res.status).toBe(200);
+      expect(prisma.income.findFirst).not.toHaveBeenCalled();
+      expect(res.body.changes[0].type).toBe('upsert');
+      expect(res.body.changes[0].income).toMatchObject({ id: INC_ID, amount: '4200.00' });
+      expect(res.body.changes[0].income).not.toHaveProperty('isDeleted');
+    });
+
+    it('emits deleted rows as delete with deleted_at = updated_at', async () => {
+      incomes = [{ ...incomeRow(), id: 'i-del', isDeleted: true, updatedAt: new Date('2026-10-31T12:00:00.001Z') }] as any;
+      const res = await get('/public/v1/incomes/changes');
+      expect(res.body.changes).toEqual([{ type: 'delete', id: 'i-del', deleted_at: '2026-10-31T12:00:00.001Z' }]);
+    });
+
+    it('a tier 1 account gets upserts with text fields withheld', async () => {
+      token = tokenRow(['incomes:read'], 1);
+      incomes = [{ ...incomeRow(), isDeleted: false } as any];
+      const res = await get('/public/v1/incomes/changes');
+      expect(res.body.changes[0].income).toMatchObject({ description: null });
+      expect(JSON.stringify(res.body)).not.toMatch(/October salary/);
+    });
+
+    it('requires incomes:read', async () => {
+      token = tokenRow(['expenses:read']);
+      const res = await get('/public/v1/incomes/changes');
+      expect(res.status).toBe(403);
+      expect(res.body.error.code).toBe('insufficient_scope');
+    });
+
+    it('a malformed cursor is invalid_cursor', async () => {
+      const res = await get('/public/v1/incomes/changes?cursor=nope!');
+      expect(res.status).toBe(400);
+      expect(res.body.error.code).toBe('invalid_cursor');
+    });
+  });
+
+  describe('GET /public/v1/incomes/:id', () => {
+    beforeEach(() => {
+      token = tokenRow(['incomes:read']);
+    });
+
+    it('returns the income', async () => {
+      const res = await get(`/public/v1/incomes/${INC_ID}`);
+      expect(res.status).toBe(200);
+      expect(res.body).toMatchObject({ id: INC_ID, description: 'October salary', encrypted_fields: [] });
+    });
+
+    it('404s not_found when missing', async () => {
+      incomeDetail = null;
+      const res = await get(`/public/v1/incomes/${INC_ID}`);
+      expect(res.status).toBe(404);
+      expect(res.body.error.code).toBe('not_found');
+    });
+
+    it('requires incomes:read', async () => {
+      token = tokenRow(['expenses:read']);
+      const res = await get(`/public/v1/incomes/${INC_ID}`);
+      expect(res.status).toBe(403);
     });
   });
 });

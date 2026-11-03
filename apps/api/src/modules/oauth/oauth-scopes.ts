@@ -1,4 +1,14 @@
-export const PUBLIC_SCOPES = ['expenses:read', 'expenses:write', 'receipts:read', 'categories:read'] as const;
+export const PUBLIC_SCOPES = [
+  'expenses:read',
+  'expenses:write',
+  'receipts:read',
+  'categories:read',
+  'incomes:read',
+  'incomes:write',
+  'budgets:read',
+  'budgets:write',
+  'analytics:read',
+] as const;
 export type PublicScope = (typeof PUBLIC_SCOPES)[number];
 
 export class InvalidScopeError extends Error {

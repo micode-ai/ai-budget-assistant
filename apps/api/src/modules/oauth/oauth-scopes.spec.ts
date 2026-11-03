@@ -11,7 +11,25 @@ describe('parseScopeParam', () => {
     expect(() => parseScopeParam('')).toThrow(InvalidScopeError);
     expect(() => parseScopeParam('   ')).toThrow(InvalidScopeError);
   });
-  it('lists the four scopes', () => {
-    expect(PUBLIC_SCOPES).toEqual(['expenses:read', 'expenses:write', 'receipts:read', 'categories:read']);
+  it('lists all the scopes', () => {
+    expect(PUBLIC_SCOPES).toEqual([
+      'expenses:read',
+      'expenses:write',
+      'receipts:read',
+      'categories:read',
+      'incomes:read',
+      'incomes:write',
+      'budgets:read',
+      'budgets:write',
+      'analytics:read',
+    ]);
+  });
+  it('accepts the phase 2 scopes in order', () => {
+    expect(
+      parseScopeParam('incomes:read incomes:write budgets:read budgets:write analytics:read'),
+    ).toEqual(['incomes:read', 'incomes:write', 'budgets:read', 'budgets:write', 'analytics:read']);
+  });
+  it('rejects analytics:write', () => {
+    expect(() => parseScopeParam('analytics:write')).toThrow(InvalidScopeError);
   });
 });

@@ -1,4 +1,11 @@
-import { CATEGORY_TIER1_ENCRYPTED_FIELDS, EXPENSE_TIER1_ENCRYPTED_FIELDS, PUBLIC_TIER1_FIELDS } from './public-encryption-fields';
+import {
+  ANALYTICS_BY_CATEGORY_TIER1_ENCRYPTED_FIELDS,
+  CATEGORY_TIER1_ENCRYPTED_FIELDS,
+  EXPENSE_TIER1_ENCRYPTED_FIELDS,
+  BUDGET_TIER1_ENCRYPTED_FIELDS,
+  INCOME_TIER1_ENCRYPTED_FIELDS,
+  PUBLIC_TIER1_FIELDS,
+} from './public-encryption-fields';
 
 /**
  * Drift guard against the app's source of truth. Loading the shared constant inside a SPEC is fine:
@@ -10,7 +17,7 @@ const { ENCRYPTION_FIELDS } = require('../../../../../packages/shared-utils/src/
   ENCRYPTION_FIELDS: Record<string, { tier1: string[]; tier2: string[] }>;
 };
 
-const ENTITIES = ['expense', 'expense_item', 'tag', 'project', 'category'] as const;
+const ENTITIES = ['expense', 'expense_item', 'income', 'budget', 'tag', 'project', 'category'] as const;
 
 describe('PUBLIC_TIER1_FIELDS vs shared-utils ENCRYPTION_FIELDS', () => {
   it.each(ENTITIES)('%s: every shared tier-1 field is either nulled by the API or not exposed at all', (entity) => {
@@ -41,5 +48,8 @@ describe('PUBLIC_TIER1_FIELDS vs shared-utils ENCRYPTION_FIELDS', () => {
       'project.name',
     ]);
     expect(CATEGORY_TIER1_ENCRYPTED_FIELDS).toEqual(['name']);
+    expect(INCOME_TIER1_ENCRYPTED_FIELDS).toEqual(['description', 'notes', 'category.name', 'tags.name', 'project.name']);
+    expect(BUDGET_TIER1_ENCRYPTED_FIELDS).toEqual(['name', 'allocations.category_name']);
+    expect(ANALYTICS_BY_CATEGORY_TIER1_ENCRYPTED_FIELDS).toEqual(['category_name']);
   });
 });

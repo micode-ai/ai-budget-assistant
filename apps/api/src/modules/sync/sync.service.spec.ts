@@ -45,7 +45,7 @@ const mockPrisma: any = {
   projectExpense: { upsert: jest.fn(), updateMany: jest.fn() },
   projectIncome: { upsert: jest.fn(), updateMany: jest.fn() },
   expenseCategorySplit: { create: jest.fn(), updateMany: jest.fn() },
-  income: { findFirst: jest.fn() },
+  income: { findFirst: jest.fn(), updateMany: jest.fn().mockResolvedValue({ count: 1 }) },
   project: { findFirst: jest.fn() },
   category: { findFirst: jest.fn() },
   user: {
