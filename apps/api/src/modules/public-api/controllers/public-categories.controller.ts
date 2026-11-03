@@ -1,10 +1,10 @@
-import { Controller, Get, Req, UseFilters, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query, Req, UseFilters, UseGuards } from '@nestjs/common';
 import { ApiOAuth2, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PrismaService } from '../../../database/prisma.service';
 import { PublicApiEnabledGuard } from '../../oauth/guards/public-api-enabled.guard';
 import { RequireScopes } from '../decorators/require-scopes.decorator';
 import { ApiAccountHeader, ApiPublicErrors } from '../docs/public-api-docs.decorators';
-import { PublicCategoryList } from '../dto/public-expense.dto';
+import { ListPublicCategoriesQueryDto, PublicCategoryList } from '../dto/public-expense.dto';
 import { PublicApiExceptionFilter } from '../filters/public-api-exception.filter';
 import { PublicApiAuthGuard } from '../guards/public-api-auth.guard';
 import { listPublicCategories } from '../public-categories.query';
@@ -12,10 +12,9 @@ import { CATEGORY_TIER1_ENCRYPTED_FIELDS } from '../public-encryption-fields';
 import type { PublicApiRequest } from '../public-api.types';
 
 /**
- * `GET /public/v1/categories` — exactly the categories an expense write accepts as `category_id`:
- * the account's own live EXPENSE categories (`publicCategoryWhere`, shared with the write check so
- * the two cannot drift). Global system rows are not listed: the write path cannot store them.
- * Income categories are not part of the phase 1 surface.
+ * `GET /public/v1/categories` — the account's own live categories of `type` (expense by default, or income).
+ * `publicCategoryWhere` is shared with the write checks, so with the default type this is exactly what an
+ * expense write accepts as `category_id`, and with `type=income` what an income write accepts. Global system rows are not listed: the write path cannot store them.
  */
 @ApiAccountHeader()
 @ApiTags('Categories')
@@ -31,8 +30,8 @@ export class PublicCategoriesController {
   @ApiOAuth2(['categories:read'], 'oauth2')
   @ApiOkResponse({ type: PublicCategoryList, description: '' })
   @ApiPublicErrors()
-  async list(@Req() req: PublicApiRequest): Promise<PublicCategoryList> {
-    const rows = await listPublicCategories(this.prisma, req.accountId);
+  async list(@Req() req: PublicApiRequest, @Query() q: ListPublicCategoriesQueryDto): Promise<PublicCategoryList> {
+    const rows = await listPublicCategories(this.prisma, req.accountId, q.type);
     // Tier 1: category names are end-to-end encrypted in the app (Ruling 15).
     const encrypted = req.oauth.encryptionTier >= 1;
     return {

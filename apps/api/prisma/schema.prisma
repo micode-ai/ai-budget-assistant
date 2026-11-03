@@ -1042,6 +1042,8 @@ model Income {
   syncVersion          Int       @default(0) @map("sync_version")
   encryptedPayload     String?   @map("encrypted_payload")
   encryptionKeyVersion Int?      @map("encryption_key_version")
+  /// The public-API OAuth app that created this income (OAuthClient.id, the db id). Server-set only.
+  createdByOAuthClientId String? @map("created_by_oauth_client_id")
   createdAt            DateTime  @default(now()) @map("created_at")
   updatedAt            DateTime  @updatedAt @map("updated_at")
 
@@ -1050,6 +1052,7 @@ model Income {
   account              Account               @relation(fields: [accountId], references: [id], onDelete: Cascade)
   category             Category?             @relation(fields: [categoryId], references: [id])
   importBatch          ImportBatch?          @relation(fields: [importBatchId], references: [id])
+  createdByOAuthClient OAuthClient?          @relation(fields: [createdByOAuthClientId], references: [id], onDelete: SetNull)
   incomeTags           IncomeTag[]
   projectIncomes       ProjectIncome[]
   linkedTransfer       AccountTransfer?      @relation("TransferLinkedIncome")
@@ -1061,6 +1064,8 @@ model Income {
   @@index([accountId, date(sort: Desc)])
   @@index([categoryId])
   @@index([accountId, isDebt])
+  @@index([accountId, updatedAt, id])
+  @@index([createdByOAuthClientId])
   @@map("incomes")
 }
 
@@ -1081,17 +1086,21 @@ model Budget {
   syncVersion          Int       @default(0) @map("sync_version")
   encryptedPayload     String?   @map("encrypted_payload")
   encryptionKeyVersion Int?      @map("encryption_key_version")
+  /// The public-API OAuth app that created this budget (OAuthClient.id, the db id). Server-set only.
+  createdByOAuthClientId String? @map("created_by_oauth_client_id")
   createdAt            DateTime  @default(now()) @map("created_at")
   updatedAt            DateTime  @updatedAt @map("updated_at")
 
   // Relations
   user                User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   account             Account          @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  createdByOAuthClient OAuthClient?    @relation(fields: [createdByOAuthClientId], references: [id], onDelete: SetNull)
   alerts              BudgetAlert[]
   categoryAllocations BudgetCategory[]
 
   @@unique([accountId, clientId])
   @@index([accountId, isActive])
+  @@index([createdByOAuthClientId])
   @@map("budgets")
 }
 
@@ -2842,6 +2851,8 @@ model OAuthClient {
   owner    User         @relation(fields: [ownerUserId], references: [id], onDelete: Cascade)
   grants   OAuthGrant[]
   expenses Expense[]
+  incomes  Income[]
+  budgets  Budget[]
 
   @@index([ownerUserId])
   @@map("oauth_clients")

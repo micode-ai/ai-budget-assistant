@@ -19,6 +19,14 @@ export const PUBLIC_TIER1_FIELDS = {
     // receiptImageBase64: the bytes are not in PublicExpense (Task 9's receipt endpoint owns them).
     notExposed: ['receiptUrl', 'receiptImageBase64', 'debtContactName'],
   },
+  income: {
+    nulled: { description: 'description', notes: 'notes' },
+    notExposed: ['debtContactName'],
+  },
+  budget: {
+    nulled: { name: 'name' },
+    notExposed: [],
+  },
   expense_item: {
     nulled: { description: 'items.description' },
     notExposed: [],
@@ -51,3 +59,31 @@ export const EXPENSE_TIER1_ENCRYPTED_FIELDS: readonly string[] = [
 
 /** `encrypted_fields` of every `PublicCategory` at tier 1. */
 export const CATEGORY_TIER1_ENCRYPTED_FIELDS: readonly string[] = Object.values(PUBLIC_TIER1_FIELDS.category.nulled);
+
+/**
+ * `encrypted_fields` of every `PublicIncome` at tier 1. The embedded category name is withheld too
+ * (`category.name`), unlike the expense, which exposes only a bare `category_id`.
+ */
+export const INCOME_TIER1_ENCRYPTED_FIELDS: readonly string[] = [
+  ...Object.values(PUBLIC_TIER1_FIELDS.income.nulled),
+  'category.name',
+  ...Object.values(PUBLIC_TIER1_FIELDS.tag.nulled),
+  ...Object.values(PUBLIC_TIER1_FIELDS.project.nulled),
+];
+
+/**
+ * `encrypted_fields` of every `PublicBudget` at tier 1. The allocations' embedded category names
+ * are withheld too (`allocations.category_name`), because the category name is itself tier-1.
+ */
+export const BUDGET_TIER1_ENCRYPTED_FIELDS: readonly string[] = [
+  ...Object.values(PUBLIC_TIER1_FIELDS.budget.nulled),
+  'allocations.category_name',
+];
+
+/**
+ * `encrypted_fields` of `PublicAnalyticsByCategory` at tier 1: the category's encrypted `name`,
+ * under its public name there (`category_name`). Amounts are plaintext on the server and served.
+ */
+export const ANALYTICS_BY_CATEGORY_TIER1_ENCRYPTED_FIELDS: readonly string[] = Object.values(
+  PUBLIC_TIER1_FIELDS.category.nulled,
+).map((field) => `category_${field}`);

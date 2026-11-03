@@ -25,6 +25,9 @@ Hat eine App mehrere Konten, teilt sie uns bei jeder Anfrage mit, um welches es 
 - **Ausgaben hinzufügen, ändern und löschen** – die App darf in dieses Konto schreiben. Ausgaben, die sie anlegt, zeigen auf der Ausgabenseite **Hinzugefügt über** und den Namen der App.
 - **Deine Belegfotos herunterladen** – die App kann das Belegbild oder PDF herunterladen, das an einer Ausgabe hängt.
 - **Deine Ausgabenkategorien sehen** – die App kann deine Kategorienliste lesen, damit sie neue Ausgaben richtig einordnet.
+- **Deine Einnahmen sehen und hinzufügen** – die App kann die Einnahmen des verbundenen Kontos lesen und mit der Schreibberechtigung Einnahmen hinzufügen, ändern und löschen. Von ihr angelegte Einnahmen zeigen **Hinzugefügt über** und den App-Namen. Einnahmen aus einer Überweisung zwischen deinen Konten sind schreibgeschützt.
+- **Deine Budgets sehen und verwalten** – die App kann deine Budgets samt Fortschritt des aktuellen Zeitraums lesen und mit der Schreibberechtigung anlegen, ändern und löschen.
+- **Deine Einnahmen- und Ausgabensummen sehen** – die App kann Auswertungen lesen: Summen nach Kategorie und nach Monat. Sie erhält diese Summen, nicht einzelne Einträge, und die Beträge werden in deine Anzeigewährung umgerechnet.
 
 Jede verbundene App sieht außerdem Namen, Typ und Währung der Konten, die du angehakt hast, sowie deinen Namen. Deine E-Mail-Adresse bekommt sie nie, und ein Konto, das du nicht angehakt hast, sieht sie nicht.
 

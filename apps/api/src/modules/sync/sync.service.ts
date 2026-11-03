@@ -7,6 +7,7 @@ import type { SyncChange } from '@budget/shared-types';
 import { SyncHandlerContext, SyncResult, ExpenseRecord, BudgetRecord, CategoryRecord } from './sync-types';
 import { SYNC_ENTITY_HANDLERS } from './handlers';
 import { touchExpenses } from '../expenses/expense-touch.util';
+import { touchIncomes } from '../incomes/income-touch.util';
 
 export type { SyncResult, ExpenseRecord, BudgetRecord, CategoryRecord } from './sync-types';
 
@@ -112,6 +113,7 @@ export class SyncService {
         const { payload } = change;
         if (change.operation === 'delete') {
           await this.prisma.incomeTag.updateMany({ where: { id: change.entityId, income: { accountId } }, data: { isDeleted: true } });
+          await touchIncomes(this.prisma, accountId, { incomeTags: { some: { id: change.entityId } } });
         } else {
           if (!(await this.ownsAll(accountId, { incomeId: payload.incomeId, tagId: payload.tagId }))) return notFound(change.entityId);
           await this.prisma.incomeTag.upsert({
@@ -119,6 +121,7 @@ export class SyncService {
             create: { incomeId: payload.incomeId, tagId: payload.tagId },
             update: { isDeleted: false },
           });
+          await touchIncomes(this.prisma, accountId, { id: payload.incomeId });
         }
       } else if (change.entityType === 'project_expense') {
         const { payload } = change;
@@ -138,6 +141,7 @@ export class SyncService {
         const { payload } = change;
         if (change.operation === 'delete') {
           await this.prisma.projectIncome.updateMany({ where: { id: change.entityId, income: { accountId } }, data: { isDeleted: true } });
+          await touchIncomes(this.prisma, accountId, { projectIncomes: { some: { id: change.entityId } } });
         } else {
           if (!(await this.ownsAll(accountId, { incomeId: payload.incomeId, projectId: payload.projectId }))) return notFound(change.entityId);
           await this.prisma.projectIncome.upsert({
@@ -145,6 +149,7 @@ export class SyncService {
             create: { projectId: payload.projectId, incomeId: payload.incomeId },
             update: { isDeleted: false },
           });
+          await touchIncomes(this.prisma, accountId, { id: payload.incomeId });
         }
       } else if (change.entityType === 'expense_category_split') {
         const { payload } = change;

@@ -5,6 +5,7 @@ import {
   ArrayMinSize,
   ArrayUnique,
   IsArray,
+  IsIn,
   IsInt,
   IsNumber,
   IsOptional,
@@ -73,6 +74,15 @@ export class IsDateOnlyConstraint implements ValidatorConstraintInterface {
 
 export const PUBLIC_EXPENSES_DEFAULT_LIMIT = 50;
 export const PUBLIC_EXPENSES_MAX_LIMIT = 200;
+
+/** `GET /public/v1/categories` query. */
+export class ListPublicCategoriesQueryDto {
+  /** Which categories to list; default `expense`. */
+  @ApiPropertyOptional({ enum: ['expense', 'income'], default: 'expense', example: 'income' })
+  @IsOptional()
+  @IsIn(['expense', 'income'])
+  type?: 'expense' | 'income';
+}
 
 /** `GET /public/v1/expenses` query. Unknown params are refused by the global pipe (`validation_failed`). */
 export class ListPublicExpensesQueryDto {
@@ -172,10 +182,10 @@ export class ListPublicExpenseChangesQueryDto {
  * Money: a decimal string, at most two decimal places and ten integer digits — the
  * `Decimal(12, 2)` columns the values land in. `> 0` is checked separately where it applies.
  */
-const MONEY = /^(0|[1-9]\d{0,9})(\.\d{1,2})?$/;
+export const MONEY = /^(0|[1-9]\d{0,9})(\.\d{1,2})?$/;
 /** Quantity: `Decimal(10, 3)` — at most three decimal places and seven integer digits. */
 const QUANTITY = /^(0|[1-9]\d{0,6})(\.\d{1,3})?$/;
-const CURRENCY = /^[A-Z]{3}$/;
+export const CURRENCY = /^[A-Z]{3}$/;
 const TIME_HH_MM = /^([01]\d|2[0-3]):[0-5]\d$/;
 
 export const PUBLIC_DESCRIPTION_MAX = 500;
@@ -191,7 +201,7 @@ export const PUBLIC_ITEMS_MAX = 500;
  * quietly turn a JSON number into a string and accept it; this keeps the raw JSON value so a
  * number fails `IsString` instead of being accepted after a float round-trip.
  */
-const RawValue = () => Transform(({ obj, key }) => (obj as Record<string, unknown>)[key]);
+export const RawValue = () => Transform(({ obj, key }) => (obj as Record<string, unknown>)[key]);
 
 @ValidatorConstraint({ name: 'isPositiveDecimal', async: false })
 export class IsPositiveDecimalConstraint implements ValidatorConstraintInterface {
@@ -204,7 +214,7 @@ export class IsPositiveDecimalConstraint implements ValidatorConstraintInterface
 }
 
 /** `undefined` skips validation; `null` is validated (and refused) — for fields that cannot be cleared. */
-const NotNullIfPresent = () => ValidateIf((_o, v) => v !== undefined);
+export const NotNullIfPresent = () => ValidateIf((_o, v) => v !== undefined);
 
 export class PublicLocationInput {
   @ApiProperty({ type: Number, minimum: -90, maximum: 90, example: 52.2297 })

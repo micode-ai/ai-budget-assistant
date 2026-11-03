@@ -5309,6 +5309,9 @@ When an app has several accounts, it tells us which one each request is about �
 - **Add, change and delete expenses** — the app can write to that account. Expenses it adds show **Added via** and the app's name on the expense screen.
 - **Download your receipt photos** — the app can download the receipt image or PDF attached to an expense.
 - **See your expense categories** — the app can read your category list, so it can file new expenses correctly.
+- **See and add your income** — the app can read the income of the connected account and, with the write permission, add, change and delete income entries. Income it adds shows **Added via** and the app's name. Income created by a transfer between your accounts is read-only.
+- **See and manage your budgets** — the app can read your budgets with the progress of the current period and, with the write permission, create, change and delete them.
+- **See your income and spending totals** — the app can read summaries: totals by category and by month. It shares those totals, not individual entries, and the figures are converted into your display currency.
 
 Every connected app can also see the name, type and currency of the accounts you ticked, and your name. It never gets your e-mail address, and it can never see an account you did not tick.
 
@@ -10613,6 +10616,9 @@ OCR иногда неверно читает цену, выдумывает ст
 - **Добавлять, изменять и удалять расходы** — приложение может записывать в этот счёт. У добавленных им расходов на экране расхода видна надпись **Добавлено через** и название приложения.
 - **Скачивать фото ваших чеков** — приложение может скачать изображение или PDF чека, прикреплённого к расходу.
 - **Видеть ваши категории расходов** — приложение может читать список категорий, чтобы правильно раскладывать новые расходы.
+- **Видеть и добавлять ваши доходы** — приложение может читать доходы подключённого счёта, а с правом записи — добавлять, изменять и удалять доходы. Добавленные им доходы показывают **Добавлено через** и название приложения. Доходы, созданные переводом между вашими счетами, доступны только для чтения.
+- **Видеть и вести ваши бюджеты** — приложение может читать бюджеты вместе с прогрессом текущего периода, а с правом записи — создавать, изменять и удалять их.
+- **Видеть итоги ваших доходов и расходов** — приложение может читать сводки: итоги по категориям и по месяцам. Оно получает эти итоги, а не отдельные записи, и суммы пересчитываются в вашу валюту отображения.
 
 Любое подключённое приложение видит также название, тип и валюту счетов, которые вы отметили, и ваше имя. Ваш адрес электронной почты оно не получает никогда, а счета, которые вы не отметили, не видит.
 
@@ -15887,6 +15893,9 @@ OCR іноді неправильно читає ціну, вигадує ряд
 - **Додавати, змінювати й видаляти витрати** — застосунок може записувати в цей рахунок. На екрані витрати, яку він додав, видно напис **Додано через** і назву застосунку.
 - **Завантажувати фото ваших чеків** — застосунок може завантажити зображення або PDF чека, прикріпленого до витрати.
 - **Бачити ваші категорії витрат** — застосунок може читати список категорій, щоб правильно розносити нові витрати.
+- **Бачити й додавати ваші доходи** — застосунок може читати доходи підключеного рахунку, а з правом запису — додавати, змінювати й видаляти доходи. Додані ним доходи показують **Додано через** і назву застосунку. Доходи, створені переказом між вашими рахунками, доступні лише для читання.
+- **Бачити й вести ваші бюджети** — застосунок може читати бюджети разом із прогресом поточного періоду, а з правом запису — створювати, змінювати й видаляти їх.
+- **Бачити підсумки ваших доходів і витрат** — застосунок може читати зведення: підсумки за категоріями й за місяцями. Він отримує ці підсумки, а не окремі записи, а суми перераховуються у вашу валюту відображення.
 
 Будь-який підключений застосунок бачить також назву, тип і валюту рахунків, які ви позначили, та ваше ім'я. Вашої адреси електронної пошти він не отримує ніколи, а рахунків, які ви не позначили, не бачить.
 
@@ -21146,6 +21155,9 @@ Gdy aplikacja ma kilka kont, przy każdym zapytaniu sama wskazuje, którego kont
 - **Dodawać, zmieniać i usuwać wydatki** — aplikacja może zapisywać w tym koncie. Wydatki dodane przez nią mają na ekranie wydatku dopisek **Dodano przez** i nazwę aplikacji.
 - **Pobierać zdjęcia Twoich paragonów** — aplikacja może pobrać zdjęcie lub PDF paragonu dołączonego do wydatku.
 - **Widzieć Twoje kategorie wydatków** — aplikacja może czytać listę kategorii, żeby poprawnie przypisywać nowe wydatki.
+- **Widzieć i dodawać Twoje przychody** — aplikacja może czytać przychody połączonego konta, a z uprawnieniem do zapisu dodawać, zmieniać i usuwać przychody. Przychody dodane przez nią mają na ekranie przychodu napis **Dodano przez** i nazwę aplikacji. Przychody powstałe z przelewu między Twoimi kontami są tylko do odczytu.
+- **Widzieć i zarządzać Twoimi budżetami** — aplikacja może czytać budżety wraz z postępem bieżącego okresu, a z uprawnieniem do zapisu tworzyć je, zmieniać i usuwać.
+- **Widzieć sumy Twoich przychodów i wydatków** — aplikacja może czytać zestawienia: sumy według kategorii i według miesięcy. Dostaje te sumy, a nie pojedyncze wpisy, a kwoty są przeliczone na Twoją walutę wyświetlania.
 
 Każda połączona aplikacja widzi też nazwę, typ i walutę kont, które zaznaczasz, oraz Twoje imię. Nigdy nie dostaje Twojego adresu e-mail i nie widzi żadnego konta, którego nie zaznaczyłeś.
 
@@ -26380,6 +26392,9 @@ Hat eine App mehrere Konten, teilt sie uns bei jeder Anfrage mit, um welches es 
 - **Ausgaben hinzufügen, ändern und löschen** – die App darf in dieses Konto schreiben. Ausgaben, die sie anlegt, zeigen auf der Ausgabenseite **Hinzugefügt über** und den Namen der App.
 - **Deine Belegfotos herunterladen** – die App kann das Belegbild oder PDF herunterladen, das an einer Ausgabe hängt.
 - **Deine Ausgabenkategorien sehen** – die App kann deine Kategorienliste lesen, damit sie neue Ausgaben richtig einordnet.
+- **Deine Einnahmen sehen und hinzufügen** – die App kann die Einnahmen des verbundenen Kontos lesen und mit der Schreibberechtigung Einnahmen hinzufügen, ändern und löschen. Von ihr angelegte Einnahmen zeigen **Hinzugefügt über** und den App-Namen. Einnahmen aus einer Überweisung zwischen deinen Konten sind schreibgeschützt.
+- **Deine Budgets sehen und verwalten** – die App kann deine Budgets samt Fortschritt des aktuellen Zeitraums lesen und mit der Schreibberechtigung anlegen, ändern und löschen.
+- **Deine Einnahmen- und Ausgabensummen sehen** – die App kann Auswertungen lesen: Summen nach Kategorie und nach Monat. Sie erhält diese Summen, nicht einzelne Einträge, und die Beträge werden in deine Anzeigewährung umgerechnet.
 
 Jede verbundene App sieht außerdem Namen, Typ und Währung der Konten, die du angehakt hast, sowie deinen Namen. Deine E-Mail-Adresse bekommt sie nie, und ein Konto, das du nicht angehakt hast, sieht sie nicht.
 
@@ -31603,6 +31618,9 @@ Cuando una app tiene varias cuentas, nos indica en cada petición a cuál se ref
 - **Añadir, modificar y eliminar gastos**: la app puede escribir en esa cuenta. Los gastos que añade muestran **Añadido a través de** y el nombre de la app en la pantalla del gasto.
 - **Descargar las fotos de tus tickets**: la app puede descargar la imagen o el PDF del ticket adjunto a un gasto.
 - **Ver tus categorías de gastos**: la app puede leer tu lista de categorías para clasificar bien los gastos nuevos.
+- **Ver y añadir tus ingresos** — la app puede leer los ingresos de la cuenta conectada y, con el permiso de escritura, añadir, modificar y eliminar ingresos. Los ingresos que añade muestran **Añadido a través de** y el nombre de la app. Los ingresos creados por una transferencia entre tus cuentas son de solo lectura.
+- **Ver y gestionar tus presupuestos** — la app puede leer tus presupuestos con el avance del periodo actual y, con el permiso de escritura, crearlos, modificarlos y eliminarlos.
+- **Ver los totales de tus ingresos y gastos** — la app puede leer resúmenes: totales por categoría y por mes. Recibe esos totales, no los movimientos individuales, y las cifras se convierten a tu moneda de visualización.
 
 Toda app conectada ve además el nombre, el tipo y la moneda de las cuentas que marcaste, y tu nombre. Nunca recibe tu dirección de correo y no puede ver ninguna cuenta que no hayas marcado.
 
@@ -36824,6 +36842,9 @@ Quand une application a plusieurs comptes, elle nous indique à chaque requête 
 - **Ajouter, modifier et supprimer des dépenses** — l'application peut écrire dans ce compte. Les dépenses qu'elle ajoute affichent **Ajouté via** suivi du nom de l'application sur l'écran de la dépense.
 - **Télécharger les photos de vos tickets de caisse** — l'application peut télécharger l'image ou le PDF du ticket joint à une dépense.
 - **Voir vos catégories de dépenses** — l'application peut lire votre liste de catégories pour classer correctement les nouvelles dépenses.
+- **Voir et ajouter vos revenus** — l'application peut lire les revenus du compte connecté et, avec l'autorisation d'écriture, ajouter, modifier et supprimer des revenus. Les revenus qu'elle ajoute affichent **Ajouté via** et le nom de l'application. Un revenu créé par un virement entre vos comptes est en lecture seule.
+- **Voir et gérer vos budgets** — l'application peut lire vos budgets avec l'avancement de la période en cours et, avec l'autorisation d'écriture, les créer, les modifier et les supprimer.
+- **Voir les totaux de vos revenus et dépenses** — l'application peut lire des synthèses : totaux par catégorie et par mois. Elle reçoit ces totaux, pas les opérations une à une, et les montants sont convertis dans votre devise d'affichage.
 
 Toute application connectée voit aussi le nom, le type et la devise des comptes que vous avez cochés, ainsi que votre nom. Elle ne reçoit jamais votre adresse e-mail et ne voit aucun compte que vous n'avez pas coché.
 
@@ -42009,6 +42030,9 @@ OCR часам няправільна чытае цану, выдумляе ра
 - **Дадаваць, змяняць і выдаляць выдаткі** — праграма можа запісваць у гэты рахунак. На экране выдатку, які яна дадала, відаць надпіс **Дададзена праз** і назва праграмы.
 - **Спампоўваць фота вашых чэкаў** — праграма можа спампаваць выяву або PDF чэка, прымацаванага да выдатку.
 - **Бачыць вашы катэгорыі выдаткаў** — праграма можа чытаць спіс катэгорый, каб правільна раскладваць новыя выдаткі.
+- **Бачыць і дадаваць вашы даходы** — праграма можа чытаць даходы падключанага рахунку, а з правам запісу — дадаваць, змяняць і выдаляць даходы. Дададзеныя ёю даходы паказваюць **Дададзена праз** і назву праграмы. Даходы, створаныя пераводам паміж вашымі рахункамі, даступныя толькі для чытання.
+- **Бачыць і весці вашы бюджэты** — праграма можа чытаць бюджэты разам з прагрэсам бягучага перыяду, а з правам запісу — ствараць, змяняць і выдаляць іх.
+- **Бачыць вынікі вашых даходаў і выдаткаў** — праграма можа чытаць зводкі: вынікі па катэгорыях і па месяцах. Яна атрымлівае гэтыя вынікі, а не асобныя запісы, і сумы пераразлічваюцца ў вашу валюту адлюстравання.
 
 Любая падключаная праграма бачыць таксама назву, тып і валюту рахункаў, якія вы адзначылі, і ваша імя. Вашага адраса электроннай пошты яна не атрымлівае ніколі, а рахункаў, якія вы не адзначылі, не бачыць.
 
@@ -47320,6 +47344,9 @@ Heeft een app meerdere rekeningen, dan geeft hij bij elk verzoek zelf aan om wel
 - **Uitgaven toevoegen, wijzigen en verwijderen** – de app mag in die rekening schrijven. Uitgaven die hij toevoegt tonen op het uitgavenscherm **Toegevoegd via** met de naam van de app.
 - **Foto's van je bonnetjes downloaden** – de app kan de foto of pdf van het bonnetje bij een uitgave downloaden.
 - **Je uitgavencategorieën zien** – de app kan je categorielijst lezen, zodat hij nieuwe uitgaven goed indeelt.
+- **Je inkomsten zien en toevoegen** — de app kan de inkomsten van de gekoppelde rekening lezen en met de schrijfmachtiging inkomsten toevoegen, wijzigen en verwijderen. Inkomsten die hij toevoegt tonen **Toegevoegd via** en de naam van de app. Inkomsten die uit een overboeking tussen je rekeningen zijn ontstaan, zijn alleen-lezen.
+- **Je budgetten zien en beheren** — de app kan je budgetten lezen met de voortgang van de huidige periode en ze met de schrijfmachtiging aanmaken, wijzigen en verwijderen.
+- **De totalen van je inkomsten en uitgaven zien** — de app kan overzichten lezen: totalen per categorie en per maand. Hij krijgt die totalen, geen losse boekingen, en de bedragen worden omgerekend naar je weergavevaluta.
 
 Elke gekoppelde app ziet ook de naam, het type en de valuta van de rekeningen die je hebt aangevinkt, en jouw naam. Je e-mailadres krijgt hij nooit, en een rekening die je niet hebt aangevinkt ziet hij niet.
 

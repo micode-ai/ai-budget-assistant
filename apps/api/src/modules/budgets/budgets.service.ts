@@ -92,18 +92,27 @@ export class BudgetsService {
     });
   }
 
-  async create(accountId: string, userId: string, dto: any) {
+  async create(accountId: string, userId: string, dto: any, opts: { createdByOAuthClientId?: string } = {}) {
+    return (await this.createWithStatus(accountId, userId, dto, opts)).budget;
+  }
+
+  /**
+   * `create`, also reporting whether the row was newly made (a repeat of the same `localId`
+   * returns the existing budget: `isNew: false`). The public API needs it so a racing repeat of an
+   * `Idempotency-Key` answers 200 instead of 201.
+   */
+  async createWithStatus(accountId: string, userId: string, dto: any, opts: { createdByOAuthClientId?: string } = {}) {
     // Offline-first idempotency (ABA-316): the mobile client may resend the same
     // create (sync retry, double-tap, lost response) with the same localId. A
     // plain create then violates @@unique([accountId, clientId]) with P2002 and
     // crashed POST /budgets — return the already-created budget instead.
     if (dto.localId) {
       const existing = await this.findByClientId(accountId, dto.localId);
-      if (existing) return existing;
+      if (existing) return { budget: existing, isNew: false };
     }
 
     try {
-      return await this.prisma.$transaction(async (tx) => {
+      const budget = await this.prisma.$transaction(async (tx) => {
         // Resolve category allocations before creating
         const resolvedAllocations = dto.categories && dto.categories.length > 0
           ? await this.resolveCategoryAllocations(dto.categories, accountId)
@@ -121,6 +130,7 @@ export class BudgetsService {
             startDate: new Date(dto.startDate),
             endDate: dto.endDate ? new Date(dto.endDate) : null,
             alertThreshold: dto.alertThreshold || 80,
+            ...(opts.createdByOAuthClientId && { createdByOAuthClientId: opts.createdByOAuthClientId }),
           },
         });
 
@@ -149,13 +159,14 @@ export class BudgetsService {
 
         return result;
       });
+      return { budget, isNew: true };
     } catch (e: any) {
       // A concurrent duplicate submit committed the row between the pre-check and
       // the insert. Postgres poisons the transaction on the constraint violation
       // (ABA-313), so it has rolled back — re-fetch OUTSIDE it and return the row.
       if (e?.code === 'P2002' && dto.localId) {
         const existing = await this.findByClientId(accountId, dto.localId);
-        if (existing) return existing;
+        if (existing) return { budget: existing, isNew: false };
       }
       throw e;
     }
@@ -568,6 +579,10 @@ export class BudgetsService {
 
     return {
       budget,
+      // The period `spent` was measured over (financial-month anchor applied). Additive: the
+      // public API reports it as `progress.period_start/period_end`.
+      periodStart,
+      periodEnd,
       spent: spentAmount,
       remaining,
       overBy,

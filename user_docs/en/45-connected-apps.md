@@ -25,6 +25,9 @@ When an app has several accounts, it tells us which one each request is about �
 - **Add, change and delete expenses** — the app can write to that account. Expenses it adds show **Added via** and the app's name on the expense screen.
 - **Download your receipt photos** — the app can download the receipt image or PDF attached to an expense.
 - **See your expense categories** — the app can read your category list, so it can file new expenses correctly.
+- **See and add your income** — the app can read the income of the connected account and, with the write permission, add, change and delete income entries. Income it adds shows **Added via** and the app's name. Income created by a transfer between your accounts is read-only.
+- **See and manage your budgets** — the app can read your budgets with the progress of the current period and, with the write permission, create, change and delete them.
+- **See your income and spending totals** — the app can read summaries: totals by category and by month. It shares those totals, not individual entries, and the figures are converted into your display currency.
 
 Every connected app can also see the name, type and currency of the accounts you ticked, and your name. It never gets your e-mail address, and it can never see an account you did not tick.
 

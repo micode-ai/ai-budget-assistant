@@ -19,6 +19,7 @@ function makeService(overrides: { tag?: Record<string, any> } = {}) {
     },
     income: {
       findFirst: jest.fn(),
+      updateMany: jest.fn().mockResolvedValue({ count: 1 }),
     },
     expenseTag: {
       upsert: jest.fn(),

@@ -93,6 +93,8 @@ export const incomes = sqliteTable('incomes', {
   debtDueDate: integer('debt_due_date', { mode: 'timestamp' }),
   relatedDebtExpenseId: text('related_debt_expense_id'),
   createdByUserName: text('created_by_user_name'),
+  createdByAppId: text('created_by_app_id'),
+  createdByAppName: text('created_by_app_name'),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
   isDeleted: integer('is_deleted', { mode: 'boolean' }).default(false),

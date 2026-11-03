@@ -19,10 +19,14 @@ const incomeInclude = {
   incomeTags: { where: { isDeleted: false }, include: { tag: true } },
   projectIncomes: { where: { isDeleted: false }, include: { project: true } },
   user: { select: { name: true } },
+  createdByOAuthClient: { select: { clientId: true, name: true } },
 } satisfies Prisma.IncomeInclude;
 
 type IncomeWithRelations = Prisma.IncomeGetPayload<{ include: typeof incomeInclude }>;
-type IncomeResponse = Omit<IncomeWithRelations, 'user'> & { createdByUserName: string | null };
+type IncomeResponse = Omit<IncomeWithRelations, 'user' | 'createdByOAuthClient' | 'createdByOAuthClientId'> & {
+  createdByUserName: string | null;
+  createdByApp: { id: string; name: string } | null;
+};
 
 @Injectable()
 export class IncomesService {
@@ -38,8 +42,16 @@ export class IncomesService {
   ) {}
 
   private toIncomeResponse(income: IncomeWithRelations): IncomeResponse {
-    const { user, ...rest } = income;
-    return { ...rest, createdByUserName: user?.name ?? null };
+    // The scalar FK is the OAuthClient db id: it must not leave the API.
+    const { user, createdByOAuthClient, createdByOAuthClientId: _dbClientId, ...rest } = income;
+    return {
+      ...rest,
+      createdByUserName: user?.name ?? null,
+      // id is the app's PUBLIC client id (aba_ci_…), like expenses; the db id never leaves here.
+      createdByApp: createdByOAuthClient
+        ? { id: createdByOAuthClient.clientId, name: createdByOAuthClient.name }
+        : null,
+    };
   }
 
   /**
@@ -56,8 +68,38 @@ export class IncomesService {
     return resolveExpenseCategoryId(this.prisma, categoryId, accountId, 'income', fallbackName);
   }
 
-  async create(accountId: string, userId: string, dto: CreateIncomeDto) {
+  /**
+   * @param opts.createdByOAuthClientId the public API's OAuth app (`OAuthClient.id`) writing this
+   *   income. Set on the upsert's `create` branch only: a resent create must never re-attribute a
+   *   row an earlier request already made.
+   */
+  async create(
+    accountId: string,
+    userId: string,
+    dto: CreateIncomeDto,
+    opts: { createdByOAuthClientId?: string } = {},
+  ) {
+    return (await this.createWithStatus(accountId, userId, dto, opts)).income;
+  }
+
+  /**
+   * `create`, also reporting whether the row was newly made (a repeat of the same `localId` takes
+   * the upsert's update branch: `isNew: false`). Mirrors `ExpensesService.create`; the public API
+   * needs it so a racing repeat of an `Idempotency-Key` answers 200 instead of 201.
+   */
+  async createWithStatus(
+    accountId: string,
+    userId: string,
+    dto: CreateIncomeDto,
+    opts: { createdByOAuthClientId?: string } = {},
+  ) {
+    let isNew = true;
     const result = await this.prisma.$transaction(async (tx: PrismaClient) => {
+      const existing = await tx.income.findUnique({
+        where: { accountId_clientId: { accountId, clientId: dto.localId } },
+        select: { id: true },
+      });
+      isNew = !existing;
       const resolvedCategoryId = await this.resolveCategoryId(dto.categoryId, accountId, dto.categoryName);
 
       const incomeData = {
@@ -76,6 +118,7 @@ export class IncomesService {
         debtContactName: dto.debtContactName,
         debtDueDate: dto.debtDueDate ? new Date(dto.debtDueDate) : undefined,
         relatedDebtExpenseId: dto.relatedDebtExpenseId,
+        ...(opts.createdByOAuthClientId && { createdByOAuthClientId: opts.createdByOAuthClientId }),
         // E2EE: pass through encrypted payload if provided
         ...(dto.encryptedPayload !== undefined && { encryptedPayload: dto.encryptedPayload }),
         ...(dto.encryptionKeyVersion !== undefined && { encryptionKeyVersion: dto.encryptionKeyVersion }),
@@ -182,7 +225,7 @@ export class IncomesService {
       this.groupMirror?.afterPersonalWrite(accountId, userId);
     }
 
-    return result;
+    return { income: result, isNew };
   }
 
   async findAll(accountId: string, filters: IncomeFiltersDto) {
@@ -312,6 +355,12 @@ export class IncomesService {
                 tagId,
               })),
               skipDuplicates: true,
+            });
+            // skipDuplicates skips a link soft-deleted above (unique on the pair), so revive
+            // the re-sent ones explicitly.
+            await tx.incomeTag.updateMany({
+              where: { incomeId: income.id, tagId: { in: validTagIds } },
+              data: { isDeleted: false },
             });
             await tx.tag.updateMany({
               where: { id: { in: validTagIds } },

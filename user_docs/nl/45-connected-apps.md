@@ -25,6 +25,9 @@ Heeft een app meerdere rekeningen, dan geeft hij bij elk verzoek zelf aan om wel
 - **Uitgaven toevoegen, wijzigen en verwijderen** – de app mag in die rekening schrijven. Uitgaven die hij toevoegt tonen op het uitgavenscherm **Toegevoegd via** met de naam van de app.
 - **Foto's van je bonnetjes downloaden** – de app kan de foto of pdf van het bonnetje bij een uitgave downloaden.
 - **Je uitgavencategorieën zien** – de app kan je categorielijst lezen, zodat hij nieuwe uitgaven goed indeelt.
+- **Je inkomsten zien en toevoegen** — de app kan de inkomsten van de gekoppelde rekening lezen en met de schrijfmachtiging inkomsten toevoegen, wijzigen en verwijderen. Inkomsten die hij toevoegt tonen **Toegevoegd via** en de naam van de app. Inkomsten die uit een overboeking tussen je rekeningen zijn ontstaan, zijn alleen-lezen.
+- **Je budgetten zien en beheren** — de app kan je budgetten lezen met de voortgang van de huidige periode en ze met de schrijfmachtiging aanmaken, wijzigen en verwijderen.
+- **De totalen van je inkomsten en uitgaven zien** — de app kan overzichten lezen: totalen per categorie en per maand. Hij krijgt die totalen, geen losse boekingen, en de bedragen worden omgerekend naar je weergavevaluta.
 
 Elke gekoppelde app ziet ook de naam, het type en de valuta van de rekeningen die je hebt aangevinkt, en jouw naam. Je e-mailadres krijgt hij nooit, en een rekening die je niet hebt aangevinkt ziet hij niet.
 

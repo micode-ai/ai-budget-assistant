@@ -32,6 +32,11 @@ export interface Income {
   relatedDebtExpenseId?: string;
   createdByUserName?: string | null;
   /**
+   * The public-API OAuth app that created this income (public client id as `id` + display name, like `Expense.createdByApp`), or null.
+   * Server-owned: arrives on pull, never part of any create/update/sync payload.
+   */
+  createdByApp?: { id: string; name: string } | null;
+  /**
    * True when the money is accounted for by another row, so the income is
    * excluded from every income total — the mirror of `Expense.isSplitReceivable`
    * (shared-groups phase 2, task H1). Server-owned: it arrives on the pull and

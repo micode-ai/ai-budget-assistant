@@ -9005,6 +9005,9 @@ Gdy aplikacja ma kilka kont, przy każdym zapytaniu sama wskazuje, którego kont
 - **Dodawać, zmieniać i usuwać wydatki** — aplikacja może zapisywać w tym koncie. Wydatki dodane przez nią mają na ekranie wydatku dopisek **Dodano przez** i nazwę aplikacji.
 - **Pobierać zdjęcia Twoich paragonów** — aplikacja może pobrać zdjęcie lub PDF paragonu dołączonego do wydatku.
 - **Widzieć Twoje kategorie wydatków** — aplikacja może czytać listę kategorii, żeby poprawnie przypisywać nowe wydatki.
+- **Widzieć i dodawać Twoje przychody** — aplikacja może czytać przychody połączonego konta, a z uprawnieniem do zapisu dodawać, zmieniać i usuwać przychody. Przychody dodane przez nią mają na ekranie przychodu napis **Dodano przez** i nazwę aplikacji. Przychody powstałe z przelewu między Twoimi kontami są tylko do odczytu.
+- **Widzieć i zarządzać Twoimi budżetami** — aplikacja może czytać budżety wraz z postępem bieżącego okresu, a z uprawnieniem do zapisu tworzyć je, zmieniać i usuwać.
+- **Widzieć sumy Twoich przychodów i wydatków** — aplikacja może czytać zestawienia: sumy według kategorii i według miesięcy. Dostaje te sumy, a nie pojedyncze wpisy, a kwoty są przeliczone na Twoją walutę wyświetlania.
 
 Każda połączona aplikacja widzi też nazwę, typ i walutę kont, które zaznaczasz, oraz Twoje imię. Nigdy nie dostaje Twojego adresu e-mail i nie widzi żadnego konta, którego nie zaznaczyłeś.
 

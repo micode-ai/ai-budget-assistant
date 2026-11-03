@@ -45,8 +45,9 @@ import { PublicApiExceptionFilter } from '../filters/public-api-exception.filter
 import { PublicApiAuthGuard } from '../guards/public-api-auth.guard';
 import { toPublicExpense } from '../mappers/public-expense.mapper';
 import { PublicApiError } from '../public-api-error';
-import { PublicExpenseWriteAdapter, type PublicWriteContext } from '../public-expense-write.adapter';
+import { PublicExpenseWriteAdapter } from '../public-expense-write.adapter';
 import type { PublicApiRequest } from '../public-api.types';
+import { writeContext } from '../public-write.shared';
 import { getPublicExpense, getPublicReceipt, listPublicExpenseChanges, listPublicExpenses } from '../public-expenses.query';
 
 /** Content types a receipt can be served as (sniffed from the bytes; see `getPublicReceipt`). */
@@ -245,6 +246,3 @@ export class PublicExpensesController {
   }
 }
 
-function writeContext(req: PublicApiRequest): PublicWriteContext {
-  return { accountId: req.accountId, userId: req.user.id, clientDbId: req.oauth.clientDbId };
-}

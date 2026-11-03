@@ -18,6 +18,18 @@ describe('public category scope', () => {
     expect(publicCategoryWhere('acc-1')).toEqual({ accountId: 'acc-1', type: 'expense', isDeleted: false });
   });
 
+  it('income type swaps only the type filter', () => {
+    expect(publicCategoryWhere('a', 'income')).toEqual({ accountId: 'a', type: 'income', isDeleted: false });
+    expect(publicCategoryWhere('a')).toEqual({ accountId: 'a', type: 'expense', isDeleted: false });
+  });
+
+  it('list and check take the type', async () => {
+    await listPublicCategories(prisma as any, 'a', 'income');
+    await isPublicCategory(prisma as any, 'a', 'c-1', 'income');
+    expect((prisma.category.findMany.mock.calls[0] as any[])[0].where.type).toBe('income');
+    expect((prisma.category.findFirst.mock.calls[0] as any[])[0].where.type).toBe('income');
+  });
+
   it('the list and the write check filter by the identical predicate', async () => {
     await listPublicCategories(prisma as any, 'acc-1');
     await isPublicCategory(prisma as any, 'acc-1', 'c-1');

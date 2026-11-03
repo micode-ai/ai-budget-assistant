@@ -25,6 +25,9 @@ Cuando una app tiene varias cuentas, nos indica en cada petición a cuál se ref
 - **Añadir, modificar y eliminar gastos**: la app puede escribir en esa cuenta. Los gastos que añade muestran **Añadido a través de** y el nombre de la app en la pantalla del gasto.
 - **Descargar las fotos de tus tickets**: la app puede descargar la imagen o el PDF del ticket adjunto a un gasto.
 - **Ver tus categorías de gastos**: la app puede leer tu lista de categorías para clasificar bien los gastos nuevos.
+- **Ver y añadir tus ingresos** — la app puede leer los ingresos de la cuenta conectada y, con el permiso de escritura, añadir, modificar y eliminar ingresos. Los ingresos que añade muestran **Añadido a través de** y el nombre de la app. Los ingresos creados por una transferencia entre tus cuentas son de solo lectura.
+- **Ver y gestionar tus presupuestos** — la app puede leer tus presupuestos con el avance del periodo actual y, con el permiso de escritura, crearlos, modificarlos y eliminarlos.
+- **Ver los totales de tus ingresos y gastos** — la app puede leer resúmenes: totales por categoría y por mes. Recibe esos totales, no los movimientos individuales, y las cifras se convierten a tu moneda de visualización.
 
 Toda app conectada ve además el nombre, el tipo y la moneda de las cuentas que marcaste, y tu nombre. Nunca recibe tu dirección de correo y no puede ver ninguna cuenta que no hayas marcado.
 

@@ -27,7 +27,7 @@ Każde żądanie autoryzacji używa PKCE z metodą `S256` (inne metody nie są a
 | `response_type` | `code` |
 | `client_id` | identyfikator Twojego klienta |
 | `redirect_uri` | jeden z zarejestrowanych redirect URI, dokładnie |
-| `scope` | rozdzielone spacjami: `expenses:read`, `expenses:write`, `receipts:read`, `categories:read` |
+| `scope` | rozdzielone spacjami: `expenses:read`, `expenses:write`, `receipts:read`, `categories:read`, `incomes:read`, `incomes:write`, `budgets:read`, `budgets:write`, `analytics:read` |
 | `state` | losowa wartość, którą sprawdzasz po powrocie |
 | `code_challenge` | SHA-256 z `code_verifier` w base64url (43 znaki) |
 | `code_challenge_method` | `S256` |
@@ -273,7 +273,56 @@ curl -X POST https://api.ai-budget.pl/public/v1/expenses \
 
 `PATCH /public/v1/expenses/{id}` zmienia tylko wysłane pola; `null` czyści pole tam, gdzie to dozwolone. `DELETE /public/v1/expenses/{id}` usuwa wydatek, który potem przychodzi w strumieniu zmian jako `delete`. Poprawne wartości `category_id` znajdziesz w `GET /public/v1/categories`.
 
-## 9. Błędy
+## 9. Przychody
+
+Przychody działają jak wydatki (sekcja 8), pod adresem `/public/v1/incomes`: `GET` (lista), `GET /{id}`, `POST`, `PATCH /{id}`, `DELETE /{id}` oraz kanał zmian `GET /incomes/changes` (te same zasady co w sekcji 7). Zakresy: `incomes:read`, `incomes:write`.
+
+- **Kody walidacji.** Żądanie niepoprawne — zły parametr zapytania albo pole treści, które nie przechodzi walidacji (nieznane pole, zły typ, zła wartość enum, `date_from` po `date_to`, nieznana waluta) — to `400 validation_failed`. `422 validation_failed` dotyczy błędów odniesień i stanu: kategorii złego typu lub z innego konta, `tag_ids` albo `project_id` spoza konta oraz próby edycji przychodu powiązanego z przelewem.
+- **Filtry listy** mają nazwy takie jak lista wydatków: `date_from`, `date_to`, `category_id`, `project_id`, `search`, `limit`, `cursor`. Nie ma filtra sprzedawcy ani kwoty. `GET /public/v1/categories?type=income` zwraca kategorie, które przyjmuje zapis przychodu. Nieznane parametry zapytania są odrzucane z `400 validation_failed`, jak na każdej trasie listy, także na `/categories`.
+- **Idempotentność.** `POST /incomes` wymaga `Idempotency-Key`, na tych samych zasadach co wydatki: klucz jest ograniczony do aplikacji i konta; powtórzenie zwraca `200` z istniejącym rekordem; `409 idempotency_key_conflict` oznacza, że klucz należy do rekordu innego pochodzenia, do identyfikatora innego rekordu albo do usuniętego rekordu.
+- **Pola tylko do odczytu.** `is_debt`, `is_debt_repayment`, `is_split_receivable` i `is_transfer` są zwracane, ale nie można ich zapisać.
+- **Spłaty długów.** Kwotę i datę spłaty długu można edytować, a spłatę usunąć — każda z tych operacji zmienia saldo pozostałe do spłaty, więc rób to świadomie.
+- **Przelewy.** Przychodu będącego jedną ze stron przelewu między kontami (`is_transfer: true`) nie można edytować ani usunąć; obie operacje zwracają `422 validation_failed`.
+
+```bash
+curl -X POST https://api.ai-budget.pl/public/v1/incomes \
+  -H "Authorization: Bearer $ACCESS_TOKEN" \
+  -H "Idempotency-Key: 0c9d4e1a-7b2f-4a63-8e15-3f6a9b2c4d70" \
+  -H "Content-Type: application/json" \
+  -d '{"amount":"4200.00","currency":"PLN","date":"2026-10-31","description":"Salary"}'
+```
+
+## 10. Budżety
+
+Budżety są pod adresem `/public/v1/budgets`: `GET` (lista), `GET /{id}`, `POST`, `PATCH /{id}`, `DELETE /{id}`. Zakresy: `budgets:read`, `budgets:write`.
+
+- `POST /budgets` wymaga `Idempotency-Key`, na tych samych zasadach co przychody i wydatki.
+- Budżet nie ma własnej kategorii: zakres kategorii istnieje tylko przez `allocations`, listę `{category_id, amount}`.
+- W `PATCH` pole `allocations` **zastępuje cały zestaw**: `[]` czyści go, pominięcie pola zostawia bez zmian. Powtórzone `category_id` to `422 validation_failed`.
+- `is_active` jest tylko do odczytu.
+- `progress` opisuje **bieżący okres**, w walucie samego budżetu, i używa początku miesiąca finansowego konta.
+- Budżety nie mają kanału zmian: odpytuj listę.
+
+## 11. Analityka
+
+Trzy raporty tylko do odczytu pod `/public/v1/analytics`, zakres `analytics:read`: `GET /summary` (przychody, wydatki, saldo, `transaction_count`), `GET /by-category` (`type=expense|income`) i `GET /monthly`. Wszystkie przyjmują `from` i `to` (`YYYY-MM-DD`, oba włącznie) oraz opcjonalną `currency`.
+
+Jak to jest liczone:
+
+- **Waluta.** Domyślnie jest to waluta wyświetlania użytkownika, który połączył aplikację. Każda odpowiedź podaje `currency`.
+- **Przeliczanie.** Każdy wiersz jest przeliczany po kursach naszego serwera. Wiersz o nieznanym kursie jest wyłączany ze wszystkich wartości, a odpowiedź ma `fx_approximate: true` — nigdy nie jest dodawany nieprzeliczony.
+- **Co jest liczone.** Planowane wydatki i wiersze z kwotami, które znajomi mają oddać użytkownikowi po podziale rachunku, są pomijane. Długi i przelewy są liczone, tak jak w zakładce Analityka w aplikacji. `transaction_count` liczy razem wydatki i przychody.
+- **Kategorie.** Paragon rozdzielony na kategorie jest przypisywany według podziału, więc suma kategorii może różnić się od przeliczenia całego wiersza o grosz.
+- **Zakresy.** `from` i `to` są włącznie. Najwyżej 366 dni dla `summary` i `by-category`, najwyżej 24 miesiące dla `monthly`; miesiące są kalendarzowe. Dłuższy zakres, `from` po `to` albo nieznana waluta to `400 validation_failed`.
+- **Pamięć podręczna.** Wyniki są buforowane przez 60 sekund.
+- **Dlaczego sumy mogą się nieco różnić od aplikacji.** Aplikacja przelicza po własnych, zapamiętanych kursach i dodaje kwotę bez znanego kursu nieprzeliczoną; API ją pomija i oznacza.
+
+```bash
+curl "https://api.ai-budget.pl/public/v1/analytics/summary?from=2026-10-01&to=2026-10-31&currency=PLN" \
+  -H "Authorization: Bearer $ACCESS_TOKEN"
+```
+
+## 12. Błędy
 
 Każdy błąd `/public/v1` ma taką samą treść:
 
@@ -314,7 +363,7 @@ Logikę opieraj na `code`; `message` jest dla ludzi i może się zmieniać. Mog�
 
 `/oauth/token` i `/oauth/revoke` odpowiadają w formacie OAuth `{"error": "...", "error_description": "..."}` z kodami: `invalid_request`, `invalid_client`, `invalid_grant`, `unsupported_grant_type`, `invalid_scope`, `slow_down`, `temporarily_unavailable`. `invalid_grant` przy odświeżaniu oznacza, że połączenia już nie ma (użytkownik je unieważnił, użyto zużytego tokenu odświeżania albo żadne konto połączenia nie nadaje się już do użycia, bo użytkownik stracił uprawnienia do edycji wszystkich) — poproś użytkownika o ponowne połączenie.
 
-## 10. Limity żądań
+## 13. Limity żądań
 
 - **120 żądań na minutę na połączenie** (jeden użytkownik w Twojej aplikacji, wszystkie konta połączenia razem).
 - **1200 żądań na minutę na aplikację**, łącznie dla wszystkich jej połączeń.
@@ -324,7 +373,7 @@ Każda odpowiedź `/public/v1` na uwierzytelnione i autoryzowane żądanie zawie
 
 Przed API działa też serwer pośredniczący, który ogranicza zalewy żądań. Jego `429` nie ma powyższego formatu JSON, a aplikacji przeglądarkowej z obcej domeny przychodzi bez nagłówków CORS, więc przeglądarka zgłasza go jako błąd sieci. Taki nieczytelny błąd traktuj jak `429`: odczekaj i ponów.
 
-## 11. Konta szyfrowane end-to-end
+## 14. Konta szyfrowane end-to-end
 
 Użytkownicy mogą w aplikacji zaszyfrować swoje dane end-to-end — wtedy nawet nasze serwery nie mogą ich odczytać:
 
@@ -334,6 +383,6 @@ Użytkownicy mogą w aplikacji zaszyfrować swoje dane end-to-end — wtedy nawe
 - Nazwy kategorii w `/categories` również mają wartość `null`, a każda kategoria ma `"encrypted_fields": ["name"]`.
 - Filtry `merchant` i `search` zwracają `403 account_encrypted`, a pliki paragonów są niedostępne.
 
-## 12. Wypróbuj na tej stronie
+## 15. Wypróbuj na tej stronie
 
 Przycisk **Authorize** powyżej uruchamia prawdziwy przepływ OAuth z PKCE na prawdziwych danych użytkownika. Aby z niego skorzystać, dodaj `https://api.ai-budget.pl/public/docs/oauth2-redirect.html` do redirect URI swojej aplikacji, a następnie wpisz swój `client_id` (i sekret — w przypadku klienta poufnego).

@@ -7,8 +7,16 @@ import { ExpensesService } from '../expenses/expenses.service';
 import { SharedActivityService } from '../notifications/shared-activity.service';
 import type { PublicExpenseCreateDto, PublicExpenseUpdateDto } from './dto/public-expense.dto';
 import { PublicApiError } from './public-api-error';
-import { isPublicCategory } from './public-categories.query';
 import { getPublicExpense } from './public-expenses.query';
+import { findOwnByIdempotencyKey } from './public-idempotency.util';
+import {
+  assertReferencesBelongToAccount,
+  fetchAccountCurrency,
+  parseIdempotencyKey,
+  type PublicWriteContext,
+} from './public-write.shared';
+
+export { assertReferencesBelongToAccount, parseIdempotencyKey, type PublicWriteContext };
 
 /**
  * The public API's expense WRITE path: public snake_case body → the app's internal
@@ -21,26 +29,6 @@ import { getPublicExpense } from './public-expenses.query';
  * a category by name or client id and silently drops an unknown tag or project, and its tag and
  * project lookups on create are not account-scoped. A public client gets a `422` instead.
  */
-
-const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
-export interface PublicWriteContext {
-  accountId: string;
-  userId: string;
-  /** `OAuthClient.id` of the calling app. */
-  clientDbId: string;
-}
-
-/** `Idempotency-Key` must be a UUID; it becomes the row's `clientId`, so it is normalised to lower case. */
-export function parseIdempotencyKey(raw: string | string[] | undefined): string {
-  const value = Array.isArray(raw) ? raw[0] : raw;
-  if (typeof value !== 'string' || !UUID.test(value.trim())) {
-    throw new PublicApiError(400, 'validation_failed', 'The Idempotency-Key header must be a UUID.', {
-      fields: { 'Idempotency-Key': ['Idempotency-Key must be a UUID'] },
-    });
-  }
-  return value.trim().toLowerCase();
-}
 
 export function toInternalCreateDto(
   body: PublicExpenseCreateDto,
@@ -101,47 +89,6 @@ export function toInternalUpdateDto(body: PublicExpenseUpdateDto): UpdateExpense
 }
 
 /**
- * Every referenced category / tag / project must be a live row of THIS account (category: an
- * expense category). All failures are reported at once, `422 validation_failed` with
- * `details.fields.<field>`. `null` (a clear on PATCH) references nothing and is not checked.
- */
-export async function assertReferencesBelongToAccount(
-  prisma: PrismaService,
-  accountId: string,
-  refs: { category_id?: string | null; tag_ids?: string[]; project_id?: string | null },
-): Promise<void> {
-  const tagIds = refs.tag_ids ?? [];
-  const [categoryOk, tags, project] = await Promise.all([
-    // The same predicate GET /categories lists by (Ruling 19).
-    refs.category_id ? isPublicCategory(prisma, accountId, refs.category_id) : true,
-    tagIds.length > 0
-      ? prisma.tag.findMany({ where: { id: { in: tagIds }, accountId, isDeleted: false }, select: { id: true } })
-      : [],
-    refs.project_id
-      ? prisma.project.findFirst({ where: { id: refs.project_id, accountId, isDeleted: false }, select: { id: true } })
-      : null,
-  ]);
-
-  const fields: Record<string, string[]> = {};
-  if (!categoryOk) {
-    fields.category_id = ['category_id must be one of this account\'s expense categories'];
-  }
-  const found = new Set(tags.map((t) => t.id));
-  const missingTags = tagIds.filter((id) => !found.has(id));
-  if (missingTags.length > 0) {
-    fields.tag_ids = missingTags.map((id) => `tag_ids contains ${id}, which is not a tag of this account`);
-  }
-  if (refs.project_id && !project) {
-    fields.project_id = ['project_id must be one of this account\'s projects'];
-  }
-  if (Object.keys(fields).length > 0) {
-    throw new PublicApiError(422, 'validation_failed', 'The request references records that are not in this account.', {
-      fields,
-    });
-  }
-}
-
-/**
  * Amount, currency and date of a shared-group share row (`source: 'group'`) belong to the group's
  * budget mirror: `ExpensesService.update` ignores them there (ABA-660). A write API must not answer
  * 200 for an edit it dropped, so they are refused up front; every other field stays writable.
@@ -160,8 +107,6 @@ export function assertNotMirrorOwned(source: string, body: PublicExpenseUpdateDt
     });
   }
 }
-
-const keyConflict = (message: string) => new PublicApiError(409, 'idempotency_key_conflict', message);
 
 @Injectable()
 export class PublicExpenseWriteAdapter {
@@ -184,11 +129,11 @@ export class PublicExpenseWriteAdapter {
   async create(ctx: PublicWriteContext, rawKey: string | string[] | undefined, body: PublicExpenseCreateDto) {
     const key = parseIdempotencyKey(rawKey);
 
-    const existingId = await this.findOwnByIdempotencyKey(ctx, key);
+    const existingId = await findOwnByIdempotencyKey(this.prisma.expense, ctx, key, { noun: 'expense', hasPlanned: true });
     if (existingId) return { id: existingId, isNew: false };
 
     await assertReferencesBelongToAccount(this.prisma, ctx.accountId, body);
-    const baseCurrency = body.currency ?? (await this.accountCurrency(ctx.accountId));
+    const baseCurrency = body.currency ?? (await fetchAccountCurrency(this.prisma, ctx.accountId));
     const dto = toInternalCreateDto(body, { idempotencyKey: key, baseCurrency });
 
     const { expense, isNew } = await this.expenses.create(ctx.accountId, ctx.userId, dto, {
@@ -232,39 +177,5 @@ export class PublicExpenseWriteAdapter {
   async remove(ctx: PublicWriteContext, id: string): Promise<void> {
     const row = await getPublicExpense(this.prisma, ctx.accountId, id);
     await this.expenses.remove(ctx.accountId, row.id);
-  }
-
-  /**
-   * The key is the row's `clientId`, unique per account. A row under that key that this app did
-   * not create (an app write, another integration) is never returned or touched — `409`, so a third
-   * party cannot read or overwrite it by guessing its client id. A key equal to another expense's
-   * server id is refused too: the service resolves ids as `id OR clientId`, so such a row would
-   * make later edits of the other expense ambiguous.
-   */
-  private async findOwnByIdempotencyKey(ctx: PublicWriteContext, key: string): Promise<string | null> {
-    const rows = await this.prisma.expense.findMany({
-      where: { accountId: ctx.accountId, OR: [{ clientId: key }, { id: key }] },
-      select: { id: true, clientId: true, createdByOAuthClientId: true, isDeleted: true, isPlanned: true },
-      take: 2,
-    });
-    if (rows.some((r) => r.id === key && r.clientId !== key)) {
-      throw keyConflict('This Idempotency-Key is already used by another record. Use a new UUID.');
-    }
-    const own = rows.find((r) => r.clientId === key);
-    if (!own) return null;
-    if (own.createdByOAuthClientId !== ctx.clientDbId) {
-      throw keyConflict('This Idempotency-Key is already used by another record. Use a new UUID.');
-    }
-    if (own.isDeleted || own.isPlanned) {
-      // Replaying would otherwise resurrect a deleted expense through the upsert.
-      throw keyConflict('This Idempotency-Key belongs to an expense that has since been deleted. Use a new UUID.');
-    }
-    return own.id;
-  }
-
-  private async accountCurrency(accountId: string): Promise<string> {
-    const account = await this.prisma.account.findUnique({ where: { id: accountId }, select: { currencyCode: true } });
-    if (!account) throw new PublicApiError(404, 'not_found', 'Account not found.');
-    return account.currencyCode;
   }
 }

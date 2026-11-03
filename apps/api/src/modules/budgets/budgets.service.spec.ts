@@ -143,6 +143,26 @@ describe('BudgetsService.create — offline-first idempotency (ABA-316)', () => 
     expect(tx.budget.create).toHaveBeenCalledTimes(1);
   });
 
+  it('stamps createdByOAuthClientId on the created budget only when given', async () => {
+    const mk = () => {
+      const tx = {
+        budget: { create: jest.fn().mockResolvedValue({ id: 'b-new' }), findUnique: jest.fn().mockResolvedValue({ id: 'b-new' }) },
+        budgetCategory: { createMany: jest.fn() },
+      };
+      const prisma: any = {
+        budget: { findUnique: jest.fn().mockResolvedValue(null) },
+        $transaction: jest.fn(async (cb: any) => cb(tx)),
+      };
+      return { tx, prisma };
+    };
+    const a = mk();
+    await makeService(a.prisma).create('acc-1', 'u1', dto, { createdByOAuthClientId: 'c1' });
+    expect(a.tx.budget.create.mock.calls[0][0].data.createdByOAuthClientId).toBe('c1');
+    const b = mk();
+    await makeService(b.prisma).create('acc-1', 'u1', dto);
+    expect(b.tx.budget.create.mock.calls[0][0].data).not.toHaveProperty('createdByOAuthClientId');
+  });
+
   it('rethrows non-P2002 errors', async () => {
     const boom = Object.assign(new Error('db down'), { code: 'P1001' });
     const prisma: any = {
@@ -830,5 +850,74 @@ describe('BudgetsService — parent allocation rolls up subcategories', () => {
     expect(prisma.expense.findMany.mock.calls[0][0].where.OR[0]).toEqual({
       categoryId: { in: [P, C] },
     });
+  });
+});
+
+describe('BudgetsService.createWithStatus / getProgress period bounds (public API)', () => {
+  function makeService(prisma: any) {
+    const gamification: any = { checkAchievements: jest.fn().mockResolvedValue(undefined) };
+    const cache: any = { delByPrefix: jest.fn().mockResolvedValue(undefined) };
+    return new BudgetsService(prisma, gamification, cache);
+  }
+
+  it('a repeated localId returns the existing budget with isNew false and writes nothing', async () => {
+    const existing = { id: 'b1', clientId: 'local-1', categoryAllocations: [] };
+    const prisma = {
+      budget: { findUnique: jest.fn().mockResolvedValue(existing) },
+      $transaction: jest.fn(),
+    } as any;
+    const out = await makeService(prisma).createWithStatus('acc-1', 'u-1', { localId: 'local-1' });
+    expect(out).toEqual({ budget: existing, isNew: false });
+    expect(prisma.$transaction).not.toHaveBeenCalled();
+  });
+
+  it('a racing duplicate (P2002) re-fetches the row and reports isNew false', async () => {
+    const existing = { id: 'b1', clientId: 'local-1', categoryAllocations: [] };
+    const prisma = {
+      budget: {
+        findUnique: jest.fn().mockResolvedValueOnce(null).mockResolvedValueOnce(existing),
+      },
+      $transaction: jest.fn().mockRejectedValue({ code: 'P2002' }),
+    } as any;
+    const out = await makeService(prisma).createWithStatus('acc-1', 'u-1', { localId: 'local-1' });
+    expect(out).toEqual({ budget: existing, isNew: false });
+  });
+
+  it('a fresh create reports isNew true, and create() still returns just the budget', async () => {
+    const created = { id: 'b2', categoryAllocations: [] };
+    const tx = {
+      budget: {
+        create: jest.fn().mockResolvedValue({ id: 'b2' }),
+        findUnique: jest.fn().mockResolvedValue(created),
+      },
+      budgetCategory: { createMany: jest.fn() },
+    };
+    const prisma = {
+      budget: { findUnique: jest.fn().mockResolvedValue(null) },
+      $transaction: jest.fn(async (fn: any) => fn(tx)),
+    } as any;
+    const dto = { localId: 'l', name: 'n', amount: 1, currencyCode: 'PLN', period: 'monthly', startDate: '2026-11-01' };
+    const svc = makeService(prisma);
+    expect(await svc.createWithStatus('acc-1', 'u-1', dto)).toEqual({ budget: created, isNew: true });
+    expect(await svc.create('acc-1', 'u-1', dto)).toBe(created);
+  });
+
+  it('getProgress also returns the period it measured', async () => {
+    const prisma = {
+      budget: {
+        findFirst: jest.fn().mockResolvedValue({
+          id: 'b1', amount: 100, currencyCode: 'PLN', period: 'monthly',
+          startDate: new Date('2026-09-01T00:00:00Z'), endDate: null, categoryAllocations: [],
+        }),
+      },
+      expense: {
+        aggregate: jest.fn().mockResolvedValue({ _sum: { amount: 0 } }),
+        groupBy: jest.fn().mockResolvedValue([]),
+      },
+    } as any;
+    const p = await makeService(prisma).getProgress('acc-1', 'b1', null, new Date('2026-09-10T12:00:00Z'));
+    expect(p.periodStart).toBeInstanceOf(Date);
+    expect(p.periodEnd).toBeInstanceOf(Date);
+    expect(p.periodEnd.getTime()).toBeGreaterThan(p.periodStart.getTime());
   });
 });

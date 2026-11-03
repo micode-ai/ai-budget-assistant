@@ -13,6 +13,11 @@ const SCOPE_LABEL_KEYS: Record<OAuthScope, string> = {
   'expenses:write': 'oauthConsent.scopes.expensesWrite',
   'receipts:read': 'oauthConsent.scopes.receiptsRead',
   'categories:read': 'oauthConsent.scopes.categoriesRead',
+  'incomes:read': 'oauthConsent.scopes.incomesRead',
+  'incomes:write': 'oauthConsent.scopes.incomesWrite',
+  'budgets:read': 'oauthConsent.scopes.budgetsRead',
+  'budgets:write': 'oauthConsent.scopes.budgetsWrite',
+  'analytics:read': 'oauthConsent.scopes.analyticsRead',
 };
 
 const SCOPE_ICONS: Record<OAuthScope, IconName> = {
@@ -20,6 +25,11 @@ const SCOPE_ICONS: Record<OAuthScope, IconName> = {
   'expenses:write': 'create-outline',
   'receipts:read': 'receipt-outline',
   'categories:read': 'pricetags-outline',
+  'incomes:read': 'trending-up-outline',
+  'incomes:write': 'cash-outline',
+  'budgets:read': 'pie-chart-outline',
+  'budgets:write': 'wallet-outline',
+  'analytics:read': 'stats-chart-outline',
 };
 
 export function scopeLabelKey(scope: string): string {

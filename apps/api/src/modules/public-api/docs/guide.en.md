@@ -27,7 +27,7 @@ Every authorization request uses PKCE with `S256` (no other method is accepted).
 | `response_type` | `code` |
 | `client_id` | your client id |
 | `redirect_uri` | one of your registered redirect URIs, exactly |
-| `scope` | space-separated: `expenses:read`, `expenses:write`, `receipts:read`, `categories:read` |
+| `scope` | space-separated: `expenses:read`, `expenses:write`, `receipts:read`, `categories:read`, `incomes:read`, `incomes:write`, `budgets:read`, `budgets:write`, `analytics:read` |
 | `state` | a random value you check on return |
 | `code_challenge` | base64url SHA-256 of the `code_verifier` (43 characters) |
 | `code_challenge_method` | `S256` |
@@ -273,7 +273,56 @@ curl -X POST https://api.ai-budget.pl/public/v1/expenses \
 
 `PATCH /public/v1/expenses/{id}` changes only the fields you send; `null` clears a field where allowed. `DELETE /public/v1/expenses/{id}` deletes the expense; it then arrives as `delete` in the changes feed. Take valid `category_id` values from `GET /public/v1/categories`.
 
-## 9. Errors
+## 9. Incomes
+
+Incomes work like expenses (section 8), under `/public/v1/incomes`: `GET` (list), `GET /{id}`, `POST`, `PATCH /{id}`, `DELETE /{id}`, and the changes feed `GET /incomes/changes` (the same rules as section 7). Scopes: `incomes:read`, `incomes:write`.
+
+- **Validation codes.** A malformed request — a bad query parameter, or a body field that fails validation (unknown field, wrong type, bad enum, `date_from` after `date_to`, an unknown currency) — is `400 validation_failed`. `422 validation_failed` is for reference and state errors: a category of the wrong type or of another account, a `tag_ids` or `project_id` that is not in the account, or an attempt to edit a transfer-linked income.
+- **List filters** have the expense list's names: `date_from`, `date_to`, `category_id`, `project_id`, `search`, `limit`, `cursor`. There is no merchant filter and no amount filter. `GET /public/v1/categories?type=income` lists the categories an income write accepts. Unknown query parameters are refused with `400 validation_failed`, as on every list route, `/categories` included.
+- **Idempotency.** `POST /incomes` requires `Idempotency-Key`, with the same rules as for expenses: the key is scoped to your app and the account; a repeat answers `200` with the existing record; `409 idempotency_key_conflict` means the key belongs to a record of another origin, to another record's id, or to a deleted record.
+- **Read-only fields.** `is_debt`, `is_debt_repayment`, `is_split_receivable` and `is_transfer` are returned but cannot be written.
+- **Debt repayments.** The amount and date of a debt repayment can be edited and the repayment can be deleted — either changes the debt's outstanding balance, so do it deliberately.
+- **Transfers.** An income that is one side of a transfer between accounts (`is_transfer: true`) cannot be edited or deleted; both answer `422 validation_failed`.
+
+```bash
+curl -X POST https://api.ai-budget.pl/public/v1/incomes \
+  -H "Authorization: Bearer $ACCESS_TOKEN" \
+  -H "Idempotency-Key: 0c9d4e1a-7b2f-4a63-8e15-3f6a9b2c4d70" \
+  -H "Content-Type: application/json" \
+  -d '{"amount":"4200.00","currency":"PLN","date":"2026-10-31","description":"Salary"}'
+```
+
+## 10. Budgets
+
+Budgets live under `/public/v1/budgets`: `GET` (list), `GET /{id}`, `POST`, `PATCH /{id}`, `DELETE /{id}`. Scopes: `budgets:read`, `budgets:write`.
+
+- `POST /budgets` requires `Idempotency-Key`, with the same rules as for incomes and expenses.
+- A budget has no category of its own: category scope exists only through `allocations`, a list of `{category_id, amount}`.
+- On `PATCH`, `allocations` **replaces the whole set**: `[]` clears it, omitting the field leaves it unchanged. A repeated `category_id` is `422 validation_failed`.
+- `is_active` is read-only.
+- `progress` describes the **current period**, in the budget's own currency, and uses the account's financial-month anchor.
+- There is no changes feed for budgets: poll the list.
+
+## 11. Analytics
+
+Three read-only reports under `/public/v1/analytics`, scope `analytics:read`: `GET /summary` (income, expenses, net, `transaction_count`), `GET /by-category` (`type=expense|income`) and `GET /monthly`. All take `from` and `to` (`YYYY-MM-DD`, both inclusive) and an optional `currency`.
+
+How it is counted:
+
+- **Currency.** The default is the connecting user's display currency. Every response states its `currency`.
+- **Conversion.** Every row is converted with our server's exchange rates. A row whose rate is unknown is excluded from every figure and the response carries `fx_approximate: true` — it is never added unconverted.
+- **What is counted.** Planned expenses and the rows that record what friends owe the user back from a split bill are excluded. Debts and transfers are counted, as in the app's Analytics tab. `transaction_count` counts expense and income rows together.
+- **Categories.** A receipt split across categories is attributed by its split, so a category total can differ from a whole-row conversion by a cent.
+- **Ranges.** `from` and `to` are inclusive. At most 366 days for `summary` and `by-category`, at most 24 months for `monthly`; months are calendar months. A longer range, `from` after `to`, or an unknown currency is `400 validation_failed`.
+- **Caching.** Results are cached for 60 seconds.
+- **Why totals may differ slightly from the app.** The app converts with its own cached exchange rates and adds an amount without a known rate unconverted; the API excludes it and flags it.
+
+```bash
+curl "https://api.ai-budget.pl/public/v1/analytics/summary?from=2026-10-01&to=2026-10-31&currency=PLN" \
+  -H "Authorization: Bearer $ACCESS_TOKEN"
+```
+
+## 12. Errors
 
 Every `/public/v1` error has the same body:
 
@@ -314,7 +363,7 @@ Branch on `code`; `message` is for people and may change. New codes may be added
 
 `/oauth/token` and `/oauth/revoke` answer in the OAuth format `{"error": "...", "error_description": "..."}` with these codes: `invalid_request`, `invalid_client`, `invalid_grant`, `unsupported_grant_type`, `invalid_scope`, `slow_down`, `temporarily_unavailable`. `invalid_grant` on a refresh means the connection is gone (revoked by the user, a reused refresh token, or no account of the connection is usable any more because the user lost edit rights to all of them) — ask the user to connect again.
 
-## 10. Rate limits
+## 13. Rate limits
 
 - **120 requests per minute per connection** (one user in your app, all the accounts of the connection together).
 - **1,200 requests per minute per app**, across all its connections.
@@ -324,7 +373,7 @@ Every authenticated and authorised `/public/v1` response carries `X-RateLimit-Li
 
 In front of the API an edge proxy also caps floods. Its `429` is not the JSON above and, for a browser app on a third-party origin, carries no CORS headers, so the browser reports it as a network error. Treat such an unreadable failure like a `429`: back off and retry.
 
-## 11. End-to-end encrypted accounts
+## 14. End-to-end encrypted accounts
 
 Users can encrypt their data end to end in the app, and then even our servers cannot read it:
 
@@ -334,6 +383,6 @@ Users can encrypt their data end to end in the app, and then even our servers ca
 - Category names on `/categories` are `null` as well, with `"encrypted_fields": ["name"]` on each category.
 - The `merchant` and `search` filters answer `403 account_encrypted`, and receipt files are not available.
 
-## 12. Try it in this page
+## 15. Try it in this page
 
 The **Authorize** button above runs the real OAuth flow with PKCE against the user's real data. To use it, add `https://api.ai-budget.pl/public/docs/oauth2-redirect.html` to your app's redirect URIs, then enter your `client_id` (and the secret, for a confidential client).
