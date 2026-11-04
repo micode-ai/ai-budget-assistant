@@ -24,6 +24,12 @@ const SEARCH_UNIT_LIMIT = 1500;
 // it reads every row without needing a real earliest-row lookup.
 const ALL_TIME_START = '2000-01-01';
 
+// get_expenses reads the expense list in pages of this size. Without a category
+// filter one page is the answer; with one, the filter runs in memory after the
+// fetch, so up to CATEGORY_SCAN_PAGES pages are read before matching.
+const PAGE_SIZE = 500;
+const CATEGORY_SCAN_PAGES = 10;
+
 /**
  * The expense/income-reading and -writing chat tools: create_expense, create_income,
  * get_expenses, get_category_breakdown, get_deposit_total, get_discount_total.
@@ -120,24 +126,6 @@ export class AiExpenseToolsService {
     accountId: string,
     baseCurrency?: string,
   ): Promise<ChatActionResult> {
-    // Product/item/merchant questions ("how much did I spend on beer") are almost always
-    // lifetime questions. If the model didn't scope an explicit period, search the full
-    // history so we never miss older purchases (the #1 cause of "found nothing"). An
-    // explicit date from the model is always respected.
-    const hasKeyword = !!data.descriptionKeyword;
-    const todayIso = new Date().toISOString().slice(0, 10);
-    const endDate = data.endDate ? String(data.endDate) : todayIso;
-    const startDate = data.startDate
-      ? String(data.startDate)
-      : hasKeyword
-        ? ALL_TIME_START
-        : `${todayIso.slice(0, 7)}-01`;
-    const filters: ExpenseFiltersDto = {
-      startDate,
-      endDate,
-      limit: 500,
-    };
-
     // Resolved, but deliberately NOT pushed into the SQL filter. A category can
     // exist purely as a receipt SPLIT — deposits, alcohol, household — and
     // `expenses.category_id` would never match one, so a pushed-down filter
@@ -152,17 +140,47 @@ export class AiExpenseToolsService {
       if (match) categoryFilterId = match.id;
     }
 
-    const result = await this.expensesService.findAll(accountId, filters);
-    const expenses = Array.isArray(result.data) ? result.data : [];
-    const pagination = result.pagination;
+    // Product/item/merchant questions ("how much did I spend on beer") and
+    // questions about a named category ("how much on renovation") are almost
+    // always lifetime questions. If the model didn't scope an explicit period,
+    // search the full history so we never miss older purchases — a dateless
+    // category question once answered with November alone. Only a call that
+    // names neither defaults to the current month. An explicit date from the
+    // model is always respected.
+    const hasKeyword = !!data.descriptionKeyword;
+    const todayIso = new Date().toISOString().slice(0, 10);
+    const endDate = data.endDate ? String(data.endDate) : todayIso;
+    const startDate = data.startDate
+      ? String(data.startDate)
+      : hasKeyword || categoryFilterId
+        ? ALL_TIME_START
+        : `${todayIso.slice(0, 7)}-01`;
+    const filters: ExpenseFiltersDto = {
+      startDate,
+      endDate,
+      limit: PAGE_SIZE,
+    };
 
-    // Filtering after the fetch means the page cap now bites before the filter
-    // rather than after it. Say so rather than truncating silently — same
-    // reason the keyword search logs its own cap below.
-    if (categoryFilterId && expenses.length >= (filters.limit ?? Infinity)) {
-      this.logger.warn(
-        `[chat] get_expenses category filter: page cap ${filters.limit} reached before filtering, older matches may be missing`,
-      );
+    // The category filter runs in memory, so one page could end before an older
+    // match: a lifetime category total read only the 500 newest expenses of the
+    // whole account. Read page after page, up to a cap, and say so in the log
+    // when the cap is what stopped us.
+    const result = await this.expensesService.findAll(accountId, filters);
+    const expenses = Array.isArray(result.data) ? [...result.data] : [];
+    const pagination = result.pagination;
+    if (categoryFilterId) {
+      const totalPages = pagination?.totalPages ?? 1;
+      const lastPage = Math.min(totalPages, CATEGORY_SCAN_PAGES);
+      for (let page = 2; page <= lastPage; page++) {
+        const next = await this.expensesService.findAll(accountId, { ...filters, page });
+        if (!Array.isArray(next.data) || next.data.length === 0) break;
+        expenses.push(...next.data);
+      }
+      if (totalPages > CATEGORY_SCAN_PAGES) {
+        this.logger.warn(
+          `[chat] get_expenses category filter: scan cap ${CATEGORY_SCAN_PAGES * PAGE_SIZE} reached before filtering, older matches may be missing`,
+        );
+      }
     }
 
     const round2 = (value: number): number => Math.round(value * 100) / 100;

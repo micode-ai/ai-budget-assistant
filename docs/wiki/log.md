@@ -274,6 +274,7 @@ Newest last within each section.
 - 2026-11-02 · [ABA-711](https://github.com/micode-ai/ai-budget-assistant/issues/745) — inbound-mail runtime dependencies updated (mailauth 8, mailparser, smtp-server, html-to-text 10) plus a joi override to clear the scheduled npm audit; regenerate the package lockfile standalone ([inbound-e-receipts](features/inbound-e-receipts.md)).
 - 2026-11-03 · [ABA-712](https://github.com/micode-ai/ai-budget-assistant/issues/746) — creating a category on web wiped every other one until reload: the one-row `syncFromServer` echo hit the web "built rows are the list" fallback; partial syncs now merge ([web-data-loading](features/web-data-loading.md)).
 - 2026-11-03 · [ABA-713](https://github.com/micode-ai/ai-budget-assistant/issues/747) — Public API phase 2: incomes, budgets and analytics on `/public/v1` with five new scopes; analytics counting rules, per-resource idempotency, transfer-linked income read-only, `touchIncomes` and the 400 vs 422 convention recorded on `features/public-api.md`; e2e scenario not yet run.
+- 2026-11-04 · [ABA-714](https://github.com/micode-ai/ai-budget-assistant/issues/749) — A dateless chat question about a named category defaulted to the current month and was narrated as "all time"; a resolved `categoryName` now searches the full history, the category filter reads up to 10 pages instead of one, and the schema makes the model state the returned period — `features/chat-spending-questions.md`.
 
 ## Queries
 

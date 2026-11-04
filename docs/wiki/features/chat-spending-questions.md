@@ -38,8 +38,10 @@ same-script substring pass. A beer line inside a 150 zł receipt contributes onl
 **`categoryName` is resolved but NOT pushed into the SQL filter.** `expenses.category_id` can never
 match a split-only category, so matching happens in memory over the attribution, and a filtered row
 reports **only its matching share** (4.50, not the receipt's 233.98 — the whole total is worse than
-no answer). Two consequences, both handled: the `limit: 500` page cap now bites before the filter (a
-full page logs a warning), and `count` comes from the filtered rows, never `pagination.total`.
+no answer). Two consequences, both handled: with a category filter `get_expenses` reads page after
+page of 500 (`CATEGORY_SCAN_PAGES` = 10, so up to 5 000 rows, a warning when the cap is what stopped
+it) — one page cut a lifetime total down to the account's 500 newest expenses (ABA-714); and `count`
+comes from the filtered rows, never `pagination.total`.
 `categoryTotals` is attributed per split while `totalsByCurrency` stays what was actually paid.
 
 **The model returns integer line indices, never UUIDs.** Small models mangle 36-character ids, which
@@ -60,16 +62,30 @@ breaks tap-through for whichever query path wasn't touched.
 the model to omit them unless the user names a period — "use today's date" produced a narrow window
 and "found nothing".
 
+**A named category without a period is a lifetime question too (ABA-714).** "How much have I spent
+on renovation in total" reached `get_expenses` as `categoryName` with no dates, and a dateless,
+keywordless call defaulted to the current month — the chat answered with November's 5.70 and called it
+"all time", then repeated the same call when told it was wrong. Now a resolved `categoryName` or a
+`descriptionKeyword` without `startDate` searches from `ALL_TIME_START`; only a call naming neither
+(and a category name that matches nothing) keeps the current-month default. The schema tells the
+model to describe the period from the returned `startDate`/`endDate`, never from the question, and to
+re-call with new dates when the user says the period was wrong.
+
 **Pass the user's raw wording.** The filter prompt interprets typos, slang, inflections and any
 language (`пиво`/`пивка`/`beeer`/`cerveza` → Polish `Piwo …`); translating or correcting upstream
 loses that.
 
 ## Known gaps
 
-- Recall is bounded by the 1 500-unit cap (logged when exceeded).
+- Recall is bounded by the 1 500-unit cap (logged when exceeded), and a category total by the 5 000-row
+  scan cap.
+- A dateless "how much on groceries" now answers for the whole history rather than this month — a
+  deliberate choice (ABA-714): the answer states its period, and a lifetime figure called a month is
+  the worse failure.
 - Discount lines that predate OCR's discount folding were not backfilled.
 
 ## History
 
 ABA-343 (item search) · ABA-446 (split-aware categories) · ABA-529 (budgets follow) · ABA-605
-(rows tappable through to their expense detail screen).
+(rows tappable through to their expense detail screen) · ABA-714 (dateless category questions
+search the full history; category filter reads every page up to a cap).
