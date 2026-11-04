@@ -3,6 +3,8 @@ import { PrismaService } from '../../database/prisma.service';
 import { ExpensesService } from '../expenses/expenses.service';
 import { IncomesService } from '../incomes/incomes.service';
 import { CommunityPriceService } from '../community-prices/community-price.service';
+import { AnomalyService } from '../anomaly/anomaly.service';
+import { logFireAndForget } from '../../common/utils/fire-and-forget';
 import type { SyncChange } from '@budget/shared-types';
 import { SyncHandlerContext, SyncResult, ExpenseRecord, BudgetRecord, CategoryRecord } from './sync-types';
 import { SYNC_ENTITY_HANDLERS } from './handlers';
@@ -32,6 +34,7 @@ export class SyncService {
     private readonly expensesService: ExpensesService,
     private readonly incomesService: IncomesService,
     @Optional() private readonly communityPrices?: CommunityPriceService,
+    @Optional() private readonly anomalyService?: AnomalyService,
   ) {}
 
   private get handlerContext(): SyncHandlerContext {
@@ -60,6 +63,22 @@ export class SyncService {
         ),
       );
       results.push(...batchResults);
+    }
+
+    // The app syncs a scanned receipt's splits as separate changes after the
+    // expense, so the anomaly check fired by the expense create saw no splits
+    // and a spike in a split-only category went unnoticed (ABA-400 §3). Re-run
+    // just the spike check for the expenses that gained splits in this push.
+    const splitExpenseIds = new Set<string>();
+    changes.forEach((change, i) => {
+      if (change.entityType === 'expense_category_split' && change.operation !== 'delete' && results[i]?.status === 'success') {
+        splitExpenseIds.add(change.payload.expenseId);
+      }
+    });
+    if (this.anomalyService && splitExpenseIds.size > 0) {
+      void this.anomalyService
+        .checkCategorySpikes(accountId, userId, Array.from(splitExpenseIds))
+        .catch(logFireAndForget(this.logger, 'SyncService.checkCategorySpikes'));
     }
 
     // Update user's last sync timestamp

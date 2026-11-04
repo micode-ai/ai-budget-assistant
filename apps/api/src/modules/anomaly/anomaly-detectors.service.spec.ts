@@ -267,18 +267,23 @@ describe('detectRecurringSuggestion', () => {
 });
 
 describe('detectCategorySpike', () => {
-  function spikeService(currentSum: number, prevRows: Array<{ amount: number; date: Date }>) {
+  /** A date in the month `n` months before the current one (0 = this month). */
+  const monthsAgo = (n: number) => {
+    const now = new Date();
+    return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - n, 1, 12));
+  };
+  type Row = { amount: number; date: Date; categoryId?: string | null; categorySplits?: Array<{ categoryId: string; amount: number }> };
+  const own = (amount: number, n: number): Row => ({ amount, date: monthsAgo(n), categoryId: 'cat-1', categorySplits: [] });
+
+  function spikeService(currentSum: number, prevRows: Row[]) {
     const { service, prisma, alertWriter } = makeService();
-    prisma.expense.aggregate = jest.fn().mockResolvedValue({ _sum: { amount: currentSum } });
-    prisma.expense.findMany = jest.fn().mockResolvedValue(prevRows);
+    const rows = currentSum > 0 ? [own(currentSum, 0), ...prevRows] : prevRows;
+    prisma.expense.findMany = jest.fn().mockResolvedValue(rows);
     return { service, prisma, alertWriter };
   }
 
   // two previous months, 100 each → avg 100
-  const twoMonths = [
-    { amount: 100, date: new Date('2026-04-15') },
-    { amount: 100, date: new Date('2026-05-15') },
-  ];
+  const twoMonths = [own(100, 2), own(100, 1)];
 
   it('alerts when current month is ≥30% above the previous average (no budget required)', async () => {
     const { service, alertWriter } = spikeService(150, twoMonths);
@@ -297,7 +302,7 @@ describe('detectCategorySpike', () => {
   });
 
   it('requires at least 2 months of history', async () => {
-    const { service, alertWriter } = spikeService(150, [{ amount: 100, date: new Date('2026-05-15') }]);
+    const { service, alertWriter } = spikeService(150, [own(100, 1)]);
     await service.detectCategorySpike('acc-1', 'user-1', 'cat-1', 'PLN');
     expect(alertWriter.createAlert).not.toHaveBeenCalled();
   });
@@ -306,6 +311,55 @@ describe('detectCategorySpike', () => {
     const { service, alertWriter } = spikeService(150, twoMonths);
     await service.detectCategorySpike('acc-1', 'user-1', null, 'PLN');
     expect(alertWriter.createAlert).not.toHaveBeenCalled();
+  });
+
+  // ABA-400 §3: a category that exists only as a receipt split (alcohol inside
+  // grocery receipts) was invisible — the detector summed `expense.categoryId`.
+  const receipt = (n: number, beer: number, total = 200): Row => ({
+    amount: total,
+    date: monthsAgo(n),
+    categoryId: 'cat-food',
+    categorySplits: [
+      { categoryId: 'cat-food', amount: total - beer },
+      { categoryId: 'cat-1', amount: beer },
+    ],
+  });
+
+  it('alerts on a spike confined to a split-only category', async () => {
+    const { service, alertWriter } = spikeService(0, [receipt(2, 40), receipt(1, 40), receipt(0, 80)]);
+    await service.detectCategorySpike('acc-1', 'user-1', 'cat-1', 'PLN');
+    expect(alertWriter.createAlert).toHaveBeenCalledTimes(1);
+    expect(alertWriter.createAlert.mock.calls[0][0].params).toMatchObject({ percent: 100 });
+  });
+
+  it('counts only the split share, never the whole receipt', async () => {
+    // Whole receipts would be 200/200/200 → no spike; the split share 40/40/50 → 25%, no spike either,
+    // but 40/40/60 is a 50% spike that the whole-receipt total (200 each) would hide.
+    const { service, alertWriter } = spikeService(0, [receipt(2, 40), receipt(1, 40), receipt(0, 60)]);
+    await service.detectCategorySpike('acc-1', 'user-1', 'cat-1', 'PLN');
+    expect(alertWriter.createAlert.mock.calls[0][0].params).toMatchObject({ percent: 50 });
+  });
+
+  it('ignores an expense whose own category matches when its splits say otherwise', async () => {
+    const split: Row = {
+      amount: 500,
+      date: monthsAgo(0),
+      categoryId: 'cat-1',
+      categorySplits: [{ categoryId: 'cat-food', amount: 500 }],
+    };
+    const { service, alertWriter } = spikeService(100, [...twoMonths, split]);
+    await service.detectCategorySpike('acc-1', 'user-1', 'cat-1', 'PLN');
+    expect(alertWriter.createAlert).not.toHaveBeenCalled();
+  });
+
+  it('asks the database for both own-category and split matches', async () => {
+    const { service, prisma } = spikeService(150, twoMonths);
+    await service.detectCategorySpike('acc-1', 'user-1', 'cat-1', 'PLN');
+    const where = (prisma.expense.findMany as jest.Mock).mock.calls[0][0].where;
+    expect(where.OR).toEqual([
+      { categoryId: 'cat-1' },
+      { categorySplits: { some: { categoryId: 'cat-1', isDeleted: false } } },
+    ]);
   });
 });
 

@@ -9,6 +9,7 @@ import {
   resolveReceiptCheckConfig,
   type ReceiptCheckLine,
 } from '../price-history/receipt-check.util';
+import { attributeToCategories } from '../../common/utils/category-attribution';
 import { AnomalyAlertWriterService } from './anomaly-alert-writer.service';
 import {
   DAY_MS,
@@ -181,24 +182,48 @@ export class AnomalyDetectorsService {
     if (!categoryId) return;
     const now = new Date();
     const currentMonthStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
-
-    const current = await this.prisma.expense.aggregate({
-      _sum: { amount: true },
-      where: { accountId, categoryId, currencyCode, isDeleted: false, date: { gte: currentMonthStart } },
-    });
-    const currentAmount = Number(current._sum.amount ?? 0);
-    if (currentAmount <= 0) return;
-
     const threeMonthsAgo = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - 3, 1));
-    const previous = await this.prisma.expense.findMany({
-      where: { accountId, categoryId, currencyCode, isDeleted: false, date: { gte: threeMonthsAgo, lt: currentMonthStart } },
-      select: { amount: true, date: true },
+
+    // Split-aware (ABA-400 §3): a category that exists only as a receipt split
+    // (alcohol inside grocery receipts) never matched `expense.categoryId`, so a
+    // spike there never fired. Fetch every expense that could count toward the
+    // category — its own or through a split — and let `attributeToCategories`
+    // decide, the same single rule the Analytics tab, chat and budgets use:
+    // live splits decide, otherwise the expense's own category takes it all.
+    const rows = await this.prisma.expense.findMany({
+      where: {
+        accountId,
+        currencyCode,
+        isDeleted: false,
+        date: { gte: threeMonthsAgo },
+        OR: [
+          { categoryId },
+          { categorySplits: { some: { categoryId, isDeleted: false } } },
+        ],
+      },
+      select: {
+        amount: true,
+        date: true,
+        categoryId: true,
+        categorySplits: { where: { isDeleted: false }, select: { categoryId: true, amount: true } },
+      },
     });
+
+    let currentAmount = 0;
     const byMonth = new Map<string, number>();
-    for (const e of previous) {
+    for (const e of rows) {
+      const share = attributeToCategories(e)
+        .filter((a) => a.categoryId === categoryId)
+        .reduce((sum, a) => sum + a.amount, 0);
+      if (share <= 0) continue;
+      if (e.date >= currentMonthStart) {
+        currentAmount += share;
+        continue;
+      }
       const k = `${e.date.getUTCFullYear()}-${e.date.getUTCMonth()}`;
-      byMonth.set(k, (byMonth.get(k) ?? 0) + Number(e.amount));
+      byMonth.set(k, (byMonth.get(k) ?? 0) + share);
     }
+    if (currentAmount <= 0) return;
     if (byMonth.size < 2) return;
     const avg = Array.from(byMonth.values()).reduce((a, b) => a + b, 0) / byMonth.size;
     if (avg <= 0) return;

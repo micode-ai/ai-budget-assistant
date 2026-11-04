@@ -60,6 +60,22 @@ describe('checkExpense', () => {
     expect(detectors.detectPriceOvercharge).toHaveBeenCalledTimes(1);
   });
 
+  it('checks every category a split receipt counts toward, not only its own', async () => {
+    const row = expenseRow({
+      categoryId: 'cat-food',
+      categorySplits: [
+        { categoryId: 'cat-food', amount: 150 },
+        { categoryId: 'cat-beer', amount: 50 },
+      ],
+    });
+    const { service, prisma, detectors } = makeService({ expenseFindFirst: jest.fn().mockResolvedValue(row) });
+    await service.checkExpense('acc-1', 'user-1', 'e-new');
+    expect(prisma.expense.findFirst.mock.calls[0][0].include).toEqual({
+      categorySplits: { where: { isDeleted: false }, select: { categoryId: true, amount: true } },
+    });
+    expect(detectors.detectCategorySpike.mock.calls.map((c: unknown[]) => c[2])).toEqual(['cat-food', 'cat-beer']);
+  });
+
   it('calls detectPossibleMerge AFTER detectDuplicateCharge', async () => {
     const { service, detectors } = makeService({ expenseFindFirst: jest.fn().mockResolvedValue(expenseRow()) });
     const callOrder: string[] = [];
@@ -90,6 +106,21 @@ describe('checkExpenseBatch', () => {
     expect(detectors.detectPriceIncrease).toHaveBeenCalledTimes(2);
     expect(detectors.detectRecurringSuggestion).toHaveBeenCalledTimes(2);
     expect(detectors.detectCategorySpike).toHaveBeenCalledTimes(1); // same category checked once
+  });
+
+  it('includes split-only categories and still checks each once', async () => {
+    const { service, prisma, detectors } = makeService();
+    prisma.expense.findMany = jest.fn().mockResolvedValue([
+      expenseRow({ id: 'e-1', categoryId: 'cat-food', categorySplits: [
+        { categoryId: 'cat-food', amount: 10 },
+        { categoryId: 'cat-beer', amount: 5 },
+      ] }),
+      expenseRow({ id: 'e-2', categoryId: 'cat-beer' }),
+    ]);
+
+    await service.checkExpenseBatch('acc-1', 'user-1', ['e-1', 'e-2']);
+
+    expect(detectors.detectCategorySpike.mock.calls.map((c: unknown[]) => c[2]).sort()).toEqual(['cat-beer', 'cat-food']);
   });
 
   it('no-ops on an empty id list', async () => {
@@ -212,5 +243,32 @@ describe('dismissForExpense', () => {
     const { service, prisma } = makeService();
     prisma.anomalyAlert.updateMany = jest.fn().mockRejectedValue(new Error('db down'));
     await expect(service.dismissForExpense('acc-1', 'e-1')).resolves.toBeUndefined();
+  });
+});
+
+describe('checkCategorySpikes', () => {
+  it('checks each category the expenses count toward, once per currency, and nothing else', async () => {
+    const { service, prisma, detectors } = makeService();
+    prisma.expense.findMany = jest.fn().mockResolvedValue([
+      expenseRow({ id: 'e-1', categoryId: 'cat-food', categorySplits: [
+        { categoryId: 'cat-food', amount: 10 },
+        { categoryId: 'cat-beer', amount: 5 },
+      ] }),
+      expenseRow({ id: 'e-2', categoryId: 'cat-food', categorySplits: [{ categoryId: 'cat-beer', amount: 3 }] }),
+    ]);
+
+    await service.checkCategorySpikes('acc-1', 'user-1', ['e-1', 'e-2']);
+
+    expect(detectors.detectCategorySpike.mock.calls.map((c: unknown[]) => c[2]).sort()).toEqual(['cat-beer', 'cat-food']);
+    expect(detectors.detectPriceIncrease).not.toHaveBeenCalled();
+  });
+
+  it('no-ops on an empty id list and never throws', async () => {
+    const { service, prisma, detectors } = makeService();
+    await service.checkCategorySpikes('acc-1', 'user-1', []);
+    expect(prisma.expense.findMany).not.toHaveBeenCalled();
+    prisma.expense.findMany = jest.fn().mockRejectedValue(new Error('db down'));
+    await expect(service.checkCategorySpikes('acc-1', 'user-1', ['e-1'])).resolves.toBeUndefined();
+    expect(detectors.detectCategorySpike).not.toHaveBeenCalled();
   });
 });
