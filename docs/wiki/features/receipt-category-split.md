@@ -222,8 +222,6 @@ confidently wrong two times out of three.
   nothing encrypting it.
 - A user can still hand-assign a line to the deposit category in `ItemCategorySheet`, producing a
   second group with the same `categoryId`.
-- `AnomalyService.detectCategorySpike` still groups by `categoryId`, so a spike confined to a
-  split-only category will not fire.
 - No backfill of already-scanned receipts; no splits for bank/Wise imports or manual entry (neither
   has line items).
 - Invented item NAMES on a reading whose arithmetic happens to reconcile are undetectable — one

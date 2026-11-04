@@ -3,6 +3,18 @@ import { PrismaService } from '../../database/prisma.service';
 import type { PriceCheckSummary } from '@budget/shared-types';
 import { AnomalyDetectorsService } from './anomaly-detectors.service';
 import type { DetectorExpense } from './anomaly.types';
+import { attributeToCategories, type AttributableExpense } from '../../common/utils/category-attribution';
+
+/** Live splits ride along so the spike check sees split-only categories (ABA-400 §3). */
+const SPLITS_INCLUDE = {
+  categorySplits: { where: { isDeleted: false }, select: { categoryId: true, amount: true } },
+} as const;
+
+/** Every category an expense counts toward — its splits when it has any, else its own. */
+function spikeCategories(expense: AttributableExpense): string[] {
+  const ids = attributeToCategories(expense).map((a) => a.categoryId).filter((id): id is string => !!id);
+  return Array.from(new Set(ids));
+}
 
 /**
  * Thin orchestrator: fans a new expense (or a batch of imported expenses) out
@@ -25,13 +37,16 @@ export class AnomalyService {
     try {
       const expense = await this.prisma.expense.findFirst({
         where: { id: expenseId, accountId, isDeleted: false },
+        include: SPLITS_INCLUDE,
       });
       if (!expense) return;
       // duplicate first — highest priority for the daily push cap
       await this.detectors.detectDuplicateCharge(accountId, userId, expense as DetectorExpense);
       await this.detectors.detectPriceIncrease(accountId, userId, expense as DetectorExpense);
       await this.detectors.detectRecurringSuggestion(accountId, userId, expense as DetectorExpense);
-      await this.detectors.detectCategorySpike(accountId, userId, expense.categoryId, expense.currencyCode);
+      for (const categoryId of spikeCategories(expense)) {
+        await this.detectors.detectCategorySpike(accountId, userId, categoryId, expense.currencyCode);
+      }
       // possible_merge is last — lower priority than genuine duplicate/price alerts
       await this.detectors.detectPossibleMerge(accountId, userId, expense as DetectorExpense);
       // price_overcharge writes feed-only via skipPush: true, so it never touches the push budget.
@@ -47,23 +62,50 @@ export class AnomalyService {
       if (expenseIds.length === 0) return;
       const expenses = await this.prisma.expense.findMany({
         where: { id: { in: expenseIds }, accountId, isDeleted: false },
+        include: SPLITS_INCLUDE,
       });
-      const categoryCurrencies = new Map<string, { categoryId: string; currencyCode: string }>();
       for (const expense of expenses) {
         await this.detectors.detectPriceIncrease(accountId, userId, expense as DetectorExpense);
         await this.detectors.detectRecurringSuggestion(accountId, userId, expense as DetectorExpense);
-        if (expense.categoryId) {
-          categoryCurrencies.set(`${expense.categoryId}:${expense.currencyCode}`, {
-            categoryId: expense.categoryId,
-            currencyCode: expense.currencyCode,
-          });
-        }
       }
-      for (const { categoryId, currencyCode } of categoryCurrencies.values()) {
-        await this.detectors.detectCategorySpike(accountId, userId, categoryId, currencyCode);
-      }
+      await this.runCategorySpikes(accountId, userId, expenses);
     } catch (error) {
       this.logger.error(`checkExpenseBatch failed: ${error}`);
+    }
+  }
+
+  /**
+   * Only the category-spike check, for expenses whose splits arrived after the
+   * expense itself — the app syncs a scanned receipt's splits as separate
+   * changes, so `checkExpense` ran before they existed (ABA-400 §3). Never throws.
+   */
+  async checkCategorySpikes(accountId: string, userId: string, expenseIds: string[]): Promise<void> {
+    try {
+      if (expenseIds.length === 0) return;
+      const expenses = await this.prisma.expense.findMany({
+        where: { id: { in: expenseIds }, accountId, isDeleted: false },
+        include: SPLITS_INCLUDE,
+      });
+      await this.runCategorySpikes(accountId, userId, expenses);
+    } catch (error) {
+      this.logger.error(`checkCategorySpikes failed: ${error}`);
+    }
+  }
+
+  /** One spike check per (category, currency) the expenses count toward. */
+  private async runCategorySpikes(
+    accountId: string,
+    userId: string,
+    expenses: Array<AttributableExpense & { currencyCode: string }>,
+  ): Promise<void> {
+    const categoryCurrencies = new Map<string, { categoryId: string; currencyCode: string }>();
+    for (const expense of expenses) {
+      for (const categoryId of spikeCategories(expense)) {
+        categoryCurrencies.set(`${categoryId}:${expense.currencyCode}`, { categoryId, currencyCode: expense.currencyCode });
+      }
+    }
+    for (const { categoryId, currencyCode } of categoryCurrencies.values()) {
+      await this.detectors.detectCategorySpike(accountId, userId, categoryId, currencyCode);
     }
   }
 

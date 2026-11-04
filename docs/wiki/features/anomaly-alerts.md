@@ -28,6 +28,16 @@ the import preview already content-dedups.
 possible merge and price overcharge. `detectPriceOvercharge` runs from `checkExpense` only, never
 from the batch, because imports have no line items.
 
+**The category spike is split-aware (ABA-400 §3).** `detectCategorySpike` sums a category through
+`attributeToCategories` — live splits decide, otherwise the expense's own category takes the whole
+amount — over every expense matching it by `categoryId` OR a live split, so a spike in a split-only
+category (alcohol inside grocery receipts) fires. The entry points check every category an expense
+counts toward, not only its own. And because the app syncs a scanned receipt's splits as separate
+`expense_category_split` changes **after** the expense, `checkExpense` ran before they existed:
+`SyncService.pushChanges` therefore calls `AnomalyService.checkCategorySpikes` (spike only, never the
+other detectors) for the expenses that gained splits in that push. The `spike:{categoryId}:{month}`
+dedup key keeps the second pass from alerting twice.
+
 **`@@unique([accountId, dedupKey])` IS the dedup.** Insert and catch P2002 means "already alerted".
 No alert text is stored — only `params` Json; mobile renders from i18n and pushes are localized
 server-side.
@@ -98,12 +108,11 @@ be opened from it.
 ## Known gaps
 
 - The daily push cap is a read-then-act race — known and benign.
-- `detectCategorySpike` groups by `categoryId`, so a spike confined to a split-only category will not
-  fire.
 - `possible_merge` is a plain string in the `type` column, with no migration behind it.
 
 ## History
 
 ABA-242 (the feature) · ABA-245 (payee fallback) · ABA-246 (badge refresh) · ABA-247 (four-way id
 resolution) · ABA-296 (notification-capture dedup, tiers 1 and 2) · ABA-339 (the deep link, and
-resolve-on-delete) · ABA-532 (the mark-as-recurring nudge).
+resolve-on-delete) · ABA-532 (the mark-as-recurring nudge) · ABA-400 (split-aware category spike,
+re-checked after a sync push writes splits).

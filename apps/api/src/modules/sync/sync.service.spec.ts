@@ -3,6 +3,7 @@ import { SyncService } from './sync.service';
 import { PrismaService } from '../../database/prisma.service';
 import { ExpensesService } from '../expenses/expenses.service';
 import { IncomesService } from '../incomes/incomes.service';
+import { AnomalyService } from '../anomaly/anomaly.service';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mockPrisma: any = {
@@ -689,5 +690,65 @@ describe('SyncService', () => {
 
       expect(results).toEqual([{ entityId: 'client-exp-1', status: 'error', error: 'db down' }]);
     });
+  });
+});
+
+/**
+ * ABA-400 §3: the app pushes a scanned receipt's splits as separate
+ * `expense_category_split` changes AFTER the expense, so the anomaly check
+ * fired by the expense create ran before the splits existed and a spike in a
+ * split-only category was never seen. Once the push has written them, the
+ * spike check runs again for the expenses that gained splits.
+ */
+describe('SyncService.pushChanges — spike check after split writes', () => {
+  const anomaly = { checkCategorySpikes: jest.fn().mockResolvedValue(undefined) };
+
+  async function build(withAnomaly = true): Promise<SyncService> {
+    const module = await Test.createTestingModule({
+      providers: [
+        SyncService,
+        { provide: PrismaService, useValue: mockPrisma },
+        { provide: ExpensesService, useValue: mockExpensesService },
+        { provide: IncomesService, useValue: mockIncomesService },
+        ...(withAnomaly ? [{ provide: AnomalyService, useValue: anomaly }] : []),
+      ],
+    }).compile();
+    return module.get(SyncService);
+  }
+
+  const split = (entityId: string, expenseId: string) => ({
+    entityType: 'expense_category_split' as const,
+    entityId,
+    operation: 'create' as const,
+    clientVersion: 0,
+    accountId: 'acc-1',
+    payload: { expenseId, categoryId: 'c', amount: 1, percentage: 100 },
+  });
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    for (const m of ['expense', 'category']) (mockPrisma as any)[m].findFirst = jest.fn().mockResolvedValue({ id: 'own' });
+    (mockPrisma as any).expenseCategorySplit.create = jest.fn().mockResolvedValue({ id: 'x' });
+    (mockPrisma as any).expense.updateMany = jest.fn().mockResolvedValue({ count: 1 });
+    (mockPrisma as any).user.update = jest.fn().mockResolvedValue({});
+  });
+
+  it('re-runs the spike check once per expense that gained splits', async () => {
+    const service = await build();
+    await service.pushChanges('acc-1', 'user-1', [split('s1', 'e1'), split('s2', 'e1'), split('s3', 'e2')] as any);
+    expect(anomaly.checkCategorySpikes).toHaveBeenCalledTimes(1);
+    expect(anomaly.checkCategorySpikes).toHaveBeenCalledWith('acc-1', 'user-1', ['e1', 'e2']);
+  });
+
+  it('skips the check when no split was written', async () => {
+    (mockPrisma as any).expense.findFirst = jest.fn().mockResolvedValue(null); // not in this account
+    const service = await build();
+    await service.pushChanges('acc-1', 'user-1', [split('s1', 'e1')] as any);
+    expect(anomaly.checkCategorySpikes).not.toHaveBeenCalled();
+  });
+
+  it('works without the anomaly module', async () => {
+    const service = await build(false);
+    await expect(service.pushChanges('acc-1', 'user-1', [split('s1', 'e1')] as any)).resolves.toHaveLength(1);
   });
 });
