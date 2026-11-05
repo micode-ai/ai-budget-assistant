@@ -86,6 +86,8 @@ the section you came for — it states what must not break and why. A missing se
 - [acquisition-tracking](features/acquisition-tracking.md) — link tagging, first-touch capture,
   GA4 events, Play install referrer
 - [directory-badges](features/directory-badges.md) — the footer badge row and its width arithmetic
+- [community-posting](features/community-posting.md) — the `community-post` skill: rules check and
+  Go/No-Go before any community post, the target tracker and the post log
 
 ### Documentation and content
 - [help-content-pipeline](features/help-content-pipeline.md) — one markdown source feeding the
