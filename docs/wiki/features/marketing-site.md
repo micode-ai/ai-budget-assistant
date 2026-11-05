@@ -215,6 +215,16 @@ reported only once its Sunday is three days old, because the last days are still
 The key is the `GSC_SERVICE_ACCOUNT_JSON` repo secret; to rotate it, add a key to the service
 account, replace the secret and delete the old key.
 
+**Reading an alert: check the base for a one-day burst first.** The drop alert compares last week
+with the plain mean of the four before it, so one inflated week in the base raises a false alarm a
+week or more later. The 2026-11-04 `help: 28 vs 76 (-63%)` alert was this: 107 of the week's 136
+help impressions landed on one day, 2026-10-20, spread across 78 pages (`blog/be` and `blog/ua`
+burst the same two days), then everything returned to its usual level. Without that week the help baseline was 42–50, and the 28
+were spread over 20 pages at single digits each — no page lost anything worth acting on. To check,
+download the run's `gsc-snapshot` artifact and group `by_date_page` by page and by day. Also expect
+the "What changed" list to carry app-feature commits: any commit that regenerates
+`docs/marketing/landing/site/llms-full*.txt` counts as a landing change.
+
 **Search Console can also be read from a session through the Chrome extension** (the user's own signed-in
 browser): the performance URL takes `resource_id=sc-domain%3Aai-budget.pl`, `breakdown=query|page|country`
 and an exact-page filter `page=!<encoded url>`. Set rows per page to 500 by clicking the control —
