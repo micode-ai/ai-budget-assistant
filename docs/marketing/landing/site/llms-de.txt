@@ -36,6 +36,12 @@
 - Offline-first-Architektur; optionale Ende-zu-Ende-Verschlüsselung
 - Safe-to-Spend-Rechner: täglich verfügbarer Betrag aus Kontostand minus anstehenden Verpflichtungen
 - Anomalie-Erkennung: doppelte Abbuchungen, Preiserhöhungen, Ausgabenspitzen
+- Kassenbon-Aufteilung nach Kategorien: die Positionen eines Supermarkt-Bons werden auf Ausgabenkategorien verteilt
+- Zweistufige Kategorien: Unterkategorien fließen in das Budget der Oberkategorie ein
+- Ausgabenkarte: Ausgaben auf der Karte, aus der Bon-Adresse, einer manuellen Markierung oder GPS
+- Realgehalt: ob dein Gehalt mit deiner persönlichen Inflation Schritt hält
+- Wöchentliche Sprachzusammenfassung deiner Ausgaben über den Telegram-, WhatsApp- oder Slack-Bot (optional)
+- Summen gezahlter Flaschenpfänder und erhaltener Rabatte aus gescannten Kassenbons
 
 ## Documentation
 

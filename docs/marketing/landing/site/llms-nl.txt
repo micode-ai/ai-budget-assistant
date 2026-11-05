@@ -36,6 +36,12 @@
 - Offline-first-architectuur; optionele end-to-end-encryptie
 - Safe-to-spend-motor: dagelijks besteedbaar bedrag op basis van saldo minus aankomende verplichtingen
 - Anomaliedetectie: dubbele afschrijvingen, prijsstijgingen, uitgavenpieken
+- Bon opsplitsen per categorie: de regels van een supermarktbon worden over uitgavencategorieën verdeeld
+- Categorieën op twee niveaus: subcategorieën tellen mee in het budget van de hoofdcategorie
+- Uitgavenkaart: uitgaven op de kaart, vanuit het adres op de bon, een handmatige pin of gps
+- Echt salaris: of je loon je persoonlijke inflatie bijhoudt
+- Wekelijkse gesproken samenvatting van je uitgaven via de Telegram-, WhatsApp- of Slack-bot (optioneel)
+- Totalen van betaald statiegeld en ontvangen kortingen uit gescande bonnen
 
 ## Documentation
 

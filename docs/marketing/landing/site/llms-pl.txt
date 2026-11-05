@@ -36,6 +36,12 @@
 - Architektura offline-first; opcjonalne szyfrowanie end-to-end
 - Silnik Safe-to-Spend: dzienna kwota do wydania na podstawie salda pomniejszonego o nadchodzące zobowiązania
 - Wykrywanie anomalii: podwójne obciążenia, podwyżki cen, skoki wydatków
+- Podział paragonu na kategorie: pozycje paragonu ze sklepu trafiają do różnych kategorii wydatków
+- Kategorie dwupoziomowe: podkategorie wliczają się do budżetu kategorii nadrzędnej
+- Mapa wydatków: wydatki na mapie, z adresu na paragonie, ręcznej pinezki lub GPS
+- Realna pensja: czy twoja pensja nadąża za twoją osobistą inflacją
+- Cotygodniowe podsumowanie głosowe wydatków od bota w Telegramie, WhatsAppie lub Slacku (opcjonalne)
+- Sumy zapłaconych kaucji za butelki i otrzymanych rabatów z zeskanowanych paragonów
 
 ## Documentation
 

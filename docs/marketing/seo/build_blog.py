@@ -208,6 +208,7 @@ APP_SAMEAS = [
     "https://www.wikidata.org/wiki/Q141551014",
 ]
 ORG_SAMEAS = ["https://mi-code.pl/", "https://github.com/micode-ai",
+              "https://www.instagram.com/micode.development/",
               "https://www.wikidata.org/wiki/Q141551004"]
 ORG_ALT_NAMES = ["MICODE sp. z o.o.", "MiCode"]
 ORG_TAX_ID = "5833510147"  # NIP, as published on mi-code.pl
@@ -327,6 +328,7 @@ def org_node():
     (better Knowledge-Graph / AI-engine entity consolidation than ~500 inline duplicates)."""
     return {"@type": "Organization", "@id": f"{SITE}/#organization", "name": COMPANY,
             "alternateName": ORG_ALT_NAMES, "taxID": ORG_TAX_ID,
+            "founder": {"@id": f"{SITE}/#author"},
             "url": COMPANY_URL, "sameAs": ORG_SAMEAS,
             "logo": {"@type": "ImageObject", "url": f"{SITE}/assets/mi_code_logo.svg",
                      "width": 512, "height": 512}}

@@ -36,6 +36,12 @@
 - Arquitectura offline-first; cifrado de extremo a extremo opcional
 - Motor Safe-to-Spend: cuánto puedes gastar hoy según el saldo menos las obligaciones próximas
 - Detección de anomalías: cargos duplicados, subidas de precio, picos de gasto
+- División del ticket por categorías: las líneas de un ticket del súper se reparten entre categorías de gasto
+- Categorías de dos niveles: las subcategorías cuentan en el presupuesto de su categoría principal
+- Mapa de gastos: gastos en el mapa, desde la dirección del ticket, un pin manual o el GPS
+- Salario real: si tu sueldo sigue el ritmo de tu inflación personal
+- Resumen semanal de tus gastos por voz desde el bot de Telegram, WhatsApp o Slack (opcional)
+- Totales de depósitos de envases pagados y descuentos obtenidos, a partir de tickets escaneados
 
 ## Documentation
 

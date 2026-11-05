@@ -234,7 +234,9 @@ a scripted `.click()` on the option does nothing — then read the visible table
 
 - The three generators keep parallel notions of the language list and of which topics exist;
   nothing cross-checks them.
-- `sameAs` still lacks LinkedIn and Crunchbase. The Organization and the app carry separate
+- `sameAs` still lacks a LinkedIn company page and Crunchbase — neither exists yet (ABA-716 searched;
+  mi-code.pl links only the founder's personal LinkedIn, which is on the author node). The
+  Organization names the author as `founder` and lists the Instagram profile mi-code.pl links. The Organization and the app carry separate
   profile lists (`ORG_SAMEAS` / `APP_SAMEAS`, duplicated in the landing and blog generators),
   each ending in its Wikidata item: MiCode Sp. z o.o. is Q141551004, the app Q141551014 (created
   2026-09-24; P577 April 2026 and P495 Poland added 2026-10-15; not to be confused with Q110126846 "Micode", a French YouTuber). Wikidata may still
@@ -266,4 +268,5 @@ ABA-685 (the ABA-584 re-measure: no snippet rewrite moved CTR; EN blog drop not 
 ABA-686 (diagnosis of the decline: site-wide ranking loss from 2026-09-15, followed footer badges, growing not-indexed queue) ·
 ABA-688 (weekly Search Console API snapshot per section with a drop alert) ·
 ABA-689 (per-section sitemaps submitted separately) · ABA-690 (site changes listed next to the weekly series). ·
-ABA-710 (developers page, footer link and llms entry for the public API).
+ABA-710 (developers page, footer link and llms entry for the public API) ·
+ABA-716 (six shipped features added to `FEATURES_EN`; Organization `founder` and Instagram `sameAs`).

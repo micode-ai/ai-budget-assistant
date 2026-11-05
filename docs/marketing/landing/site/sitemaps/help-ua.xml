@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
-<url><loc>https://ai-budget.pl/help/ua/</loc><lastmod>2026-11-02</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+<url><loc>https://ai-budget.pl/help/ua/</loc><lastmod>2026-11-03</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
 <url><loc>https://ai-budget.pl/help/ua/getting-started/</loc><lastmod>2026-10-08</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/ua/dashboard/</loc><lastmod>2026-10-28</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/ua/expenses-and-income/</loc><lastmod>2026-10-19</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
@@ -43,5 +43,5 @@
 <url><loc>https://ai-budget.pl/help/ua/receipt-split/</loc><lastmod>2026-09-14</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/ua/real-salary/</loc><lastmod>2026-09-27</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/ua/shared-groups/</loc><lastmod>2026-10-09</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-<url><loc>https://ai-budget.pl/help/ua/connected-apps/</loc><lastmod>2026-11-02</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+<url><loc>https://ai-budget.pl/help/ua/connected-apps/</loc><lastmod>2026-11-03</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 </urlset>

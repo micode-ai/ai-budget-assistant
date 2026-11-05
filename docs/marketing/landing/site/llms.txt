@@ -36,6 +36,12 @@
 - Offline-first architecture; optional end-to-end encryption
 - Safe-to-spend engine: daily spendable amount from balance minus upcoming obligations
 - Anomaly detection: duplicate charges, price increases, spending spikes
+- Receipt category split: a supermarket receipt's line items are split across expense categories
+- Two-level categories: subcategories roll up into their parent category's budget
+- Expense map: expenses placed on a map from the receipt address, a manual pin or GPS
+- Real Salary: whether your pay keeps up with your own personal inflation
+- Weekly voice digest of your spending from the Telegram, WhatsApp or Slack bot (opt-in)
+- Totals of bottle deposits paid and discounts received, from scanned receipts
 
 ## Documentation
 

@@ -36,6 +36,12 @@
 - Architecture offline-first ; chiffrement de bout en bout en option
 - Moteur Safe-to-Spend : montant dépensable aujourd'hui à partir du solde moins les engagements à venir
 - Détection d'anomalies : doublons de charges, hausses de prix, pics de dépenses
+- Ventilation du ticket par catégorie : les lignes d'un ticket de supermarché sont réparties entre catégories de dépenses
+- Catégories à deux niveaux : les sous-catégories comptent dans le budget de leur catégorie parente
+- Carte des dépenses : dépenses placées sur une carte, depuis l'adresse du ticket, une épingle manuelle ou le GPS
+- Salaire réel : votre salaire suit-il votre inflation personnelle
+- Résumé vocal hebdomadaire de vos dépenses par le bot Telegram, WhatsApp ou Slack (sur demande)
+- Totaux des consignes payées et des remises obtenues, à partir des tickets scannés
 
 ## Documentation
 
