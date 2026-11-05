@@ -195,6 +195,13 @@ week while new waves keep landing in nine languages. **Read a decline from the w
 section** (GSC `breakdown=date` with a page filter lists every day, no row control needed), not
 from 28-day totals, which hide the step.
 
+**Answer-first is already the norm where Polish pages rank (2026-11-05 query).** Over 10-06 → 11-01 the
+PL pages at positions 4–12 with the most impressions are the per-bank import pages (38–45), the
+comparisons (34–37) and 46–47; every one of them opens with a direct answer, so restructuring them
+is not a lever. Story-first openings remain on the older articles 01–31 (except 14, 29, 32, 33),
+which draw single-digit impressions at positions 14+. The top page, Erste import, had 288
+impressions and 2 clicks in four weeks: volume, not structure, is the limit.
+
 **Sitemaps are submitted per section (ABA-689).** The apex build writes `/sitemap.xml` (every URL,
 the one robots.txt names) and the same entries split into `/sitemaps/landing.xml`,
 `/sitemaps/blog-<lang>.xml` and `/sitemaps/help-<lang>.xml`, each submitted in Search Console on its

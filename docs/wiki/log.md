@@ -287,6 +287,7 @@ Newest last within each section.
 - 2026-11-05 (no issue, query ritual) — the GSC weekly `help -63%` alert (issue #720, 2026-11-04) was a false alarm: a one-day burst on 2026-10-20 inflated the four-week base; no help page lost real traffic. Pages: `features/marketing-site.md`.
 - 2026-10-18 (no issue, query ritual) — what web telemetry tells us: first 6 weeks of prod data are 11 users, one internal account = 82% of sessions; `started` is per-flow (chat = screen mount, import = preview screen). Pages: `features/web-telemetry.md` (Known gaps).
 - 2026-10-18 (no issue, query ritual) — one churned web user's journey from telemetry: a session is a page load (bursts = tab reloads, form factor unrecorded), event times are 15 s flush times, and `completed` counts matched saved rows exactly. Pages: `features/web-telemetry.md` (Known gaps).
+- 2026-11-05 · Should PL ranking pages be reworked answer-first? No — those at positions 4–12 already are; only low-traffic articles 01–31 open with a story — `features/marketing-site.md`.
 
 ## Lint passes
 
