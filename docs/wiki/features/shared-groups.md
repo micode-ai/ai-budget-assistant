@@ -778,7 +778,13 @@ Phase-2 spec section H2, user decision of 2026-10-09: the **consumption mirror**
 The app half is ABA-661 (task H3, *The app* below). Server files:
 `apps/api/src/modules/groups/group-budget-mirror.ts` (pure: share-row plan, the two-tier matcher, the
 accounting check), `apps/api/src/modules/groups/group-budget-mirror.service.ts`
-(`GroupBudgetMirrorService`), `apps/api/src/modules/groups/group-budget-mirror.cron.ts` (the sweep),
+(`GroupBudgetMirrorService`, the facade: triggers, enable/disable, `reconcileMember`, share rows; public
+signatures unchanged, link and teardown routes delegate) over three plain collaborators it builds itself
+(ABA-718): `group-budget-mirror.support.ts` (eligibility, member row, legs, cache bust, status view),
+`group-budget-mirror.teardown.ts` (takes the caller's transaction client) and
+`group-budget-mirror.links.ts` (cash-link matcher, suggestions, link routes), with shared constants and
+types in `group-budget-mirror.shared.ts`. A cash-link change goes in `.links.ts`, a teardown change in
+`.teardown.ts`, not back into the facade. `apps/api/src/modules/groups/group-budget-mirror.cron.ts` (the sweep),
 `apps/api/src/modules/groups/group-budget-mirror.controller.ts`, and
 `apps/api/src/modules/groups/group-budget-mirror.module.ts`, a module of its own (Prisma, cache and the
 singleton `ExchangeRateService` only) so `ExpensesModule`, `IncomesModule` and both imports can trigger it
