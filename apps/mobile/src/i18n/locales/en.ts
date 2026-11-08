@@ -1182,6 +1182,8 @@ export default {
     monthlyChange: 'in {{month}}',
     displayCurrency: 'Display currency',
     noHistoryYet: 'Add transactions to see your balance trend',
+    untrackedCorrection: 'Balance correction',
+    trackedChange: 'Tracked',
   },
   exchange: {
     title: 'Exchange',

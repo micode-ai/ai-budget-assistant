@@ -1178,6 +1178,8 @@ export default {
     monthlyChange: 'in {{month}}',
     displayCurrency: 'Weergavevaluta',
     noHistoryYet: 'Voeg transacties toe om de saldotrend te zien',
+    untrackedCorrection: 'Saldocorrectie',
+    trackedChange: 'Geregistreerd',
   },
   exchange: {
     title: 'Omwisselen',

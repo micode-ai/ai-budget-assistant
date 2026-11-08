@@ -1186,6 +1186,8 @@ export default {
     monthlyChange: 'за {{month}}',
     displayCurrency: 'Валюта відображення',
     noHistoryYet: 'Додайте транзакції, щоб побачити динаміку балансу',
+    untrackedCorrection: 'Коригування балансу',
+    trackedChange: 'Враховано',
   },
   exchange: {
     title: 'Обмін валют',

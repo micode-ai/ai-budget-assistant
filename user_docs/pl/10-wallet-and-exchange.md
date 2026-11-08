@@ -61,6 +61,7 @@ W górnej części ekranu Portfela karta **Historia salda** pokazuje, jak zmieni
 - Dotknij dowolnego słupka, aby zobaczyć dokładną zmianę w danym miesiącu.
 - Użyj przełącznika **6M / 12M**, aby przełączyć między ostatnimi 6 lub 12 miesiącami.
 - Kwoty są wyświetlane w walucie wybranej w elementach waluty, przeliczonej po aktualnych kursach wymiany.
+- Jeśli skorygowano saldo, korekta jest rysowana jako osobna szara część słupka (z legendą), dzięki czemu widać, ile pieniędzy nie zostało zarejestrowanych. Dotknij słupka, aby zobaczyć osobno zmianę zarejestrowaną i korektę.
 
 ## Wymiana walut
 

@@ -32,13 +32,22 @@ adjustments via totals cached in MMKV (`adjustments:<accountId>`).
 **Writes are guarded** by `ViewerBlockGuard` and `TripArchivedGuard`. A zero difference writes
 nothing. The currency must already be a wallet currency of the account.
 
+## The history chart
+
+`buildMonthlyBars` (`apps/mobile/src/features/wallet/monthlyBars.ts`) splits each month into
+`value` (net, corrections included — the headline equals the real balance movement) and
+`adjustment`. `WalletMonthlyChart` stacks the tracked part (green/red) with the correction in the
+neutral `textTertiary` colour, adds a legend only when a correction exists, and the tap tooltip lists
+tracked / correction. Phone and desktop web share it: `app/wallet/index.tsx` renders the same
+`WalletBalanceCard` at every width. Keys `wallet.untrackedCorrection`, `wallet.trackedChange`.
+Unverified on a device: gifted-charts stacks with mixed signs.
+
 ## Known gaps
 
 - No offline write queue for the correction itself.
-- The monthly history API returns `adjustments` per month, but the chart does not yet draw them in
-  their own colour.
 - The "untracked this month" message appears in the sheet after saving; it is not persisted.
 
 ## History
 
 - [ABA-692](https://github.com/micode-ai/ai-budget-assistant/issues/724) — built from the product idea `wallet-balance-true-up`.
+- [ABA-717](https://github.com/micode-ai/ai-budget-assistant/issues/754) — history chart draws corrections.

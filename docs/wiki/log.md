@@ -278,6 +278,7 @@ Newest last within each section.
 - 2026-11-04 · [ABA-400](https://github.com/micode-ai/ai-budget-assistant/issues/402) — Category spike made split-aware through `attributeToCategories`, entry points check every attributed category, and a sync push that writes splits re-runs the spike check (the app syncs splits after the expense); backup restore of splits/items/tags/projects confirmed already fixed by ABA-163/626 — `features/anomaly-alerts.md`, `features/receipt-category-split.md`.
 - 2026-11-05 · [ABA-715](https://github.com/micode-ai/ai-budget-assistant/issues/752) — `community-post` skill: upstream `community-post-generator` (MIT) vendored verbatim under a project wrapper adding Polish, Facebook groups and Wykop, mandatory maker disclosure and manual-only posting; new `features/community-posting.md`.
 - 2026-11-05 · [ABA-716](https://github.com/micode-ai/ai-budget-assistant/issues/753) — `FEATURES_EN` had drifted again: six live features (receipt category split, two-level categories, expense map, Real Salary, voice digest, deposit/discount totals) added in all nine languages; Organization gains `founder` and the Instagram `sameAs`; no LinkedIn company page or Crunchbase exists yet — `features/marketing-site.md`.
+- 2026-11-08 · [ABA-717](https://github.com/micode-ai/ai-budget-assistant/issues/754) — wallet history chart now draws balance corrections as a neutral stacked segment with legend and tooltip lines; phone and desktop share `WalletBalanceCard`; headline net keeps corrections. Pages: `features/wallet-balance-true-up.md`.
 
 ## Queries
 

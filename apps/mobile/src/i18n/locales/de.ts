@@ -1178,6 +1178,8 @@ export default {
     monthlyChange: 'im {{month}}',
     displayCurrency: 'Anzeigewährung',
     noHistoryYet: 'Füge Transaktionen hinzu, um den Guthabentrend zu sehen',
+    untrackedCorrection: 'Saldokorrektur',
+    trackedChange: 'Erfasst',
   },
   exchange: {
     title: 'Umtausch',

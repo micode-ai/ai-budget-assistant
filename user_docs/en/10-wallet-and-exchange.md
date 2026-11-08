@@ -44,6 +44,7 @@ At the top of the Wallet screen, the **Balance History** card shows how your tot
 - Tap any bar to see the exact change for that month.
 - Use the **6M / 12M** toggle to switch between the last 6 or 12 months.
 - Amounts follow the currency you pick in the currency chips, converted at the latest exchange rates.
+- If you have corrected your balance, that correction is drawn as a separate grey part of the bar (with a legend), so you can see how much money went untracked. Tap the bar to see tracked change and correction separately.
 
 ## Setting Initial Balance
 

@@ -6,21 +6,10 @@ import { useWalletStore } from '@/stores/walletStore';
 import { useExchangeRateStore, convertAmount } from '@/stores/exchangeRateStore';
 import { formatCurrency } from '@budget/shared-utils';
 import { getIntlLocale } from '@/i18n';
-import { WalletMonthlyChart, type MonthlyDeltaBar } from './WalletMonthlyChart';
+import { WalletMonthlyChart } from './WalletMonthlyChart';
+import { buildMonthlyBars } from '@/features/wallet/monthlyBars';
 
 const MONTH_WINDOWS: Array<6 | 12> = [6, 12];
-
-function convertBalances(
-  balances: Record<string, number>,
-  toCurrency: string,
-  rates: Record<string, number>,
-): number {
-  let total = 0;
-  for (const [currency, amount] of Object.entries(balances)) {
-    total += convertAmount(amount, currency, toCurrency, rates);
-  }
-  return total;
-}
 
 /** 'YYYY-MM' -> localized short month label, e.g. 'Jun'. */
 function monthLabel(key: string): string {
@@ -57,11 +46,11 @@ export function WalletBalanceCard({ displayCurrency }: Props) {
 
   if (walletSummary.length === 0) return null;
 
-  const bars: MonthlyDeltaBar[] = monthlyHistory.map((p) => ({
-    month: p.month,
-    label: monthLabel(p.month),
-    value: convertBalances(p.deltas, displayCurrency, rates),
-  }));
+  const bars = buildMonthlyBars(
+    monthlyHistory,
+    (amount, currency) => convertAmount(amount, currency, displayCurrency, rates),
+    (m) => monthLabel(m),
+  );
 
   const latest = bars[bars.length - 1];
   const latestValue = latest?.value ?? 0;
@@ -106,7 +95,12 @@ export function WalletBalanceCard({ displayCurrency }: Props) {
               <Text style={styles.deltaMonth}>{t('wallet.monthlyChange', { month: latest.label })}</Text>
             </View>
           )}
-          <WalletMonthlyChart data={bars} formatValue={(v) => formatCurrency(v, displayCurrency)} />
+          <WalletMonthlyChart
+            data={bars}
+            formatValue={(v) => formatCurrency(v, displayCurrency)}
+            adjustmentLabel={t('wallet.untrackedCorrection')}
+            trackedLabel={t('wallet.trackedChange')}
+          />
         </>
       )}
     </View>

@@ -1177,6 +1177,8 @@ export default {
     monthlyChange: 'за {{month}}',
     displayCurrency: 'Валюта адлюстравання',
     noHistoryYet: 'Дадайце транзакцыі, каб убачыць дынаміку балансу',
+    untrackedCorrection: 'Карэкціроўка балансу',
+    trackedChange: 'Улічана',
   },
   exchange: {
     title: 'Абмен валют',

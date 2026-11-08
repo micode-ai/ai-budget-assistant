@@ -1178,6 +1178,8 @@ export default {
     monthlyChange: 'en {{month}}',
     displayCurrency: 'Moneda de visualización',
     noHistoryYet: 'Agrega transacciones para ver la tendencia de tu saldo',
+    untrackedCorrection: 'Corrección de saldo',
+    trackedChange: 'Registrado',
   },
   exchange: {
     title: 'Cambio',

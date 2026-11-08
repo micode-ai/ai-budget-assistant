@@ -1186,6 +1186,8 @@ export default {
     monthlyChange: 'w {{month}}',
     displayCurrency: 'Waluta wyświetlania',
     noHistoryYet: 'Dodaj transakcje, aby zobaczyć trend salda',
+    untrackedCorrection: 'Korekta salda',
+    trackedChange: 'Zarejestrowane',
   },
   exchange: {
     title: 'Kantor',

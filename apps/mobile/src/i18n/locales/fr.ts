@@ -1178,6 +1178,8 @@ export default {
     monthlyChange: 'en {{month}}',
     displayCurrency: "Devise d'affichage",
     noHistoryYet: 'Ajoutez des transactions pour voir l\'évolution de votre solde',
+    untrackedCorrection: 'Correction de solde',
+    trackedChange: 'Suivi',
   },
   exchange: {
     title: 'Change',

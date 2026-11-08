@@ -5026,6 +5026,7 @@ Bovenaan het Portemonnee-scherm toont de kaart **Saldogeschiedenis** hoe je tota
 - Tik op een staaf om de exacte verandering voor die maand te zien.
 - Gebruik de schakelaar **6M / 12M** om te wisselen tussen de laatste 6 of 12 maanden.
 - Bedragen volgen de valuta die je kiest in de valutachips, omgerekend tegen de meest recente wisselkoersen.
+- Als u uw saldo hebt gecorrigeerd, wordt die correctie als apart grijs deel van de balk getekend (met legenda), zodat u ziet hoeveel geld niet is bijgehouden. Tik op de balk om bijgehouden wijziging en correctie apart te zien.
 
 ## Beginsaldo instellen
 

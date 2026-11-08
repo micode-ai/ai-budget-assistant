@@ -5017,6 +5017,7 @@ Oben auf dem Geldborse-Bildschirm zeigt die Karte **Saldoverlauf**, wie sich dei
 - Tippe auf einen Balken, um die genaue Veranderung fur diesen Monat zu sehen.
 - Nutze den **6M / 12M**-Schalter, um zwischen den letzten 6 oder 12 Monaten zu wechseln.
 - Die Betrage richten sich nach der Wahrung, die du bei den Wahrungschips auswahlst, umgerechnet zu den aktuellen Wechselkursen.
+- Wenn Sie Ihren Saldo korrigiert haben, wird die Korrektur als separater grauer Teil des Balkens (mit Legende) dargestellt, so sehen Sie, wie viel Geld nicht erfasst wurde. Tippen Sie auf den Balken, um erfasste Änderung und Korrektur getrennt zu sehen.
 
 ## Anfangssaldo festlegen
 

@@ -1714,6 +1714,7 @@ At the top of the Wallet screen, the **Balance History** card shows how your tot
 - Tap any bar to see the exact change for that month.
 - Use the **6M / 12M** toggle to switch between the last 6 or 12 months.
 - Amounts follow the currency you pick in the currency chips, converted at the latest exchange rates.
+- If you have corrected your balance, that correction is drawn as a separate grey part of the bar (with a legend), so you can see how much money went untracked. Tap the bar to see tracked change and correction separately.
 
 ## Setting Initial Balance
 
@@ -7039,6 +7040,7 @@ iOS, Android, Web
 - Нажмите на любой столбец, чтобы увидеть точное изменение за этот месяц.
 - Используйте переключатель **6 мес. / 12 мес.**, чтобы переключаться между последними 6 или 12 месяцами.
 - Суммы отображаются в валюте, которую вы выбираете в чипах валюты, с конвертацией по актуальным курсам обмена.
+- Если вы корректировали баланс, корректировка рисуется отдельной серой частью столбца (с легендой), так видно, сколько денег осталось неучтённым. Нажмите на столбец, чтобы увидеть учтённое изменение и корректировку отдельно.
 
 ## Установка начального баланса
 
@@ -12380,6 +12382,7 @@ iOS, Android, Web
 - Натисніть на будь-який стовпець, щоб побачити точну зміну за цей місяць.
 - Використовуйте перемикач **6М / 12М**, щоб переключатися між останніми 6 або 12 місяцями.
 - Суми відображаються у валюті, яку ви обираєте у валютних чіпах, конвертованій за актуальними курсами обміну.
+- Якщо ви коригували баланс, коригування малюється окремою сірою частиною стовпця (з легендою), тож видно, скільки грошей залишилось неврахованими. Натисніть на стовпець, щоб побачити враховану зміну й коригування окремо.
 
 ## Обмін валют
 
@@ -17640,6 +17643,7 @@ W górnej części ekranu Portfela karta **Historia salda** pokazuje, jak zmieni
 - Dotknij dowolnego słupka, aby zobaczyć dokładną zmianę w danym miesiącu.
 - Użyj przełącznika **6M / 12M**, aby przełączyć między ostatnimi 6 lub 12 miesiącami.
 - Kwoty są wyświetlane w walucie wybranej w elementach waluty, przeliczonej po aktualnych kursach wymiany.
+- Jeśli skorygowano saldo, korekta jest rysowana jako osobna szara część słupka (z legendą), dzięki czemu widać, ile pieniędzy nie zostało zarejestrowanych. Dotknij słupka, aby zobaczyć osobno zmianę zarejestrowaną i korektę.
 
 ## Wymiana walut
 
@@ -22887,6 +22891,7 @@ Oben auf dem Geldborse-Bildschirm zeigt die Karte **Saldoverlauf**, wie sich dei
 - Tippe auf einen Balken, um die genaue Veranderung fur diesen Monat zu sehen.
 - Nutze den **6M / 12M**-Schalter, um zwischen den letzten 6 oder 12 Monaten zu wechseln.
 - Die Betrage richten sich nach der Wahrung, die du bei den Wahrungschips auswahlst, umgerechnet zu den aktuellen Wechselkursen.
+- Wenn Sie Ihren Saldo korrigiert haben, wird die Korrektur als separater grauer Teil des Balkens (mit Legende) dargestellt, so sehen Sie, wie viel Geld nicht erfasst wurde. Tippen Sie auf den Balken, um erfasste Änderung und Korrektur getrennt zu sehen.
 
 ## Anfangssaldo festlegen
 
@@ -28139,6 +28144,7 @@ En la parte superior de la pantalla de Billetera, la tarjeta **Historial de sald
 - Toca cualquier barra para ver el cambio exacto de ese mes.
 - Usa el selector **6M / 12M** para alternar entre los ultimos 6 o 12 meses.
 - Los importes siguen la moneda que elijas en las fichas de moneda, convertidos a las tasas de cambio mas recientes.
+- Si has corregido tu saldo, la corrección se dibuja como una parte gris separada de la barra (con leyenda), para que veas cuánto dinero no se registró. Toca la barra para ver por separado el cambio registrado y la corrección.
 
 ## Transferencias entre cuentas
 
@@ -33361,6 +33367,7 @@ En haut de l'ecran Portefeuille, la carte **Historique du solde** montre comment
 - Appuyez sur une barre pour voir le changement exact de ce mois.
 - Utilisez le bouton **6M / 12M** pour basculer entre les 6 ou 12 derniers mois.
 - Les montants suivent la devise que vous selectionnez dans les pastilles de devise, convertis aux taux de change les plus recents.
+- Si vous avez corrigé votre solde, la correction est dessinée comme une partie grise distincte de la barre (avec légende), pour voir combien d’argent n’a pas été suivi. Touchez la barre pour voir séparément la variation suivie et la correction.
 
 ## Change de devises
 
@@ -38572,6 +38579,7 @@ iOS, Android, Web
 - Націсніце на любы слупок, каб убачыць дакладную змену за гэты месяц.
 - Выкарыстоўвайце перамыкач **6 мес. / 12 мес.**, каб пераключацца паміж апошнімі 6 або 12 месяцамі.
 - Сумы адлюстроўваюцца ў валюце, якую вы выбіраеце ў чыпах валюты, з канвертацыяй па актуальных курсах абмену.
+- Калі вы карэкціравалі баланс, карэкціроўка малюецца асобнай шэрай часткай слупка (з легендай), таму відаць, колькі грошай засталося неўлічанымі. Націсніце на слупок, каб убачыць уліковую змену і карэкціроўку паасобку.
 
 ## Устаноўка пачатковага балансу
 
@@ -43760,6 +43768,7 @@ Bovenaan het Portemonnee-scherm toont de kaart **Saldogeschiedenis** hoe je tota
 - Tik op een staaf om de exacte verandering voor die maand te zien.
 - Gebruik de schakelaar **6M / 12M** om te wisselen tussen de laatste 6 of 12 maanden.
 - Bedragen volgen de valuta die je kiest in de valutachips, omgerekend tegen de meest recente wisselkoersen.
+- Als u uw saldo hebt gecorrigeerd, wordt die correctie als apart grijs deel van de balk getekend (met legenda), zodat u ziet hoeveel geld niet is bijgehouden. Tik op de balk om bijgehouden wijziging en correctie apart te zien.
 
 ## Beginsaldo instellen
 
