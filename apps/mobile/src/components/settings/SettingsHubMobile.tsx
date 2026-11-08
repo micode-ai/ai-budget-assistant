@@ -10,6 +10,7 @@ import { useInboundReceiptStore } from '@/stores/inboundReceiptStore';
 import { useDeveloperAppsStore } from '@/stores/developerAppsStore';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { SettingsProfileCard, SettingsLogoutButton } from './SettingsIdentity';
+import { PendingSyncChip } from './PendingSyncChip';
 
 type IconName = keyof typeof Ionicons.glyphMap;
 
@@ -221,6 +222,9 @@ export function SettingsHubMobile() {
       >
         {/* Profile header */}
         <SettingsProfileCard />
+
+        {/* Pending-sync status: renders nothing on a synced account */}
+        <PendingSyncChip />
 
         {/* Category rows */}
         <View style={styles.card}>

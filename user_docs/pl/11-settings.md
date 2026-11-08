@@ -169,6 +169,7 @@ Przegladaj wszystkie swoje kategorie wydatkow i przychodow oraz zarzadzaj nimi w
 
 - **Ostatnia synchronizacja** — pokazuje, kiedy dane zostaly ostatnio zsynchronizowane z serwerem (np. "5 min temu" lub "Nigdy")
 - **Synchronizuj teraz** — dotknij, aby recznie wywolac synchronizacje danych
+- **Czeka na synchronizację** — jeśli zmiany wprowadzone offline od dłuższego czasu nie zostały wysłane, znacznik pokazuje, ile ich czeka. Dotknij go, aby zobaczyć szczegóły i zsynchronizować od razu. Znika, gdy wszystko jest zapisane na serwerze.
 
 > **Uwaga:** Aplikacja dziala offline. Dane zapisuja sie na urzadzeniu i synchronizuja automatycznie po przywroceniu polaczenia. Uzyj **Synchronizuj teraz**, aby wymusic natychmiastowa synchronizacje.
 

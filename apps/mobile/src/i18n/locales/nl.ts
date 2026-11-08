@@ -819,6 +819,22 @@ export default {
       'Als je salaris op de 10e binnenkomt, kies dan 10 — budgetten en rapporten lopen dan van de 10e tot de 9e. Eerdere periodes worden ook opnieuw ingedeeld; er verandert geen data.',
     financialMonthClamped: 'In kortere maanden begint de periode op de laatste dag.',
   },
+  pendingSync: {
+    chipWaiting: 'Wacht op synchronisatie: {{count}}',
+    chipFailed: 'Niet gesynchroniseerd, opnieuw proberen: {{count}}',
+    title: 'Synchronisatiestatus',
+    explainWaiting: 'Deze wijzigingen zijn opgeslagen op deze telefoon en worden geüpload zodra de verbinding het toelaat.',
+    explainFailed: 'Sommige wijzigingen konden niet worden geüpload. Ze staan veilig op deze telefoon; probeer opnieuw te synchroniseren.',
+    syncNow: 'Nu synchroniseren',
+    entity: {
+      expenses: 'Uitgaven',
+      incomes: 'Inkomsten',
+      account_transfers: 'Overboekingen',
+      currency_exchanges: 'Valutawissels',
+      budgets: 'Budgetten',
+      investment_transactions: 'Beleggingen',
+    },
+  },
   settings: {
     title: 'Instellingen',
     profile: 'Profiel',

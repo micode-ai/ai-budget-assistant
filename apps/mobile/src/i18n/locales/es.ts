@@ -819,6 +819,22 @@ export default {
       'Si tu salario llega el día 10, elige 10 — los presupuestos e informes irán del 10 al 9. Los períodos pasados también se reagrupan; no se modifica ningún dato.',
     financialMonthClamped: 'En los meses más cortos, el período comienza el último día.',
   },
+  pendingSync: {
+    chipWaiting: 'Pendiente de sincronizar: {{count}}',
+    chipFailed: 'Sin sincronizar, requiere reintento: {{count}}',
+    title: 'Estado de sincronización',
+    explainWaiting: 'Estos cambios están guardados en este teléfono y se subirán cuando la conexión lo permita.',
+    explainFailed: 'Algunos cambios no se pudieron subir. Están seguros en este teléfono; vuelve a sincronizar.',
+    syncNow: 'Sincronizar ahora',
+    entity: {
+      expenses: 'Gastos',
+      incomes: 'Ingresos',
+      account_transfers: 'Transferencias',
+      currency_exchanges: 'Cambios de divisa',
+      budgets: 'Presupuestos',
+      investment_transactions: 'Inversiones',
+    },
+  },
   settings: {
     title: 'Ajustes',
     profile: 'Perfil',

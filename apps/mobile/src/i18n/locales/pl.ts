@@ -825,6 +825,22 @@ export default {
       'Jeśli wypłata wpływa 10. dnia miesiąca, ustaw 10 — budżety i raporty będą liczone od 10. do 9. dnia następnego miesiąca. Poprzednie okresy również zostaną przeliczone; dane pozostają bez zmian.',
     financialMonthClamped: 'W krótszych miesiącach okres zacznie się w ostatnim dniu.',
   },
+  pendingSync: {
+    chipWaiting: 'Czeka na synchronizację: {{count}}',
+    chipFailed: 'Niezsynchronizowane, wymaga ponowienia: {{count}}',
+    title: 'Stan synchronizacji',
+    explainWaiting: 'Te zmiany są zapisane na telefonie i zostaną wysłane, gdy połączenie na to pozwoli.',
+    explainFailed: 'Część zmian nie została wysłana. Są bezpieczne na telefonie; spróbuj zsynchronizować ponownie.',
+    syncNow: 'Synchronizuj teraz',
+    entity: {
+      expenses: 'Wydatki',
+      incomes: 'Przychody',
+      account_transfers: 'Przelewy',
+      currency_exchanges: 'Wymiany walut',
+      budgets: 'Budżety',
+      investment_transactions: 'Inwestycje',
+    },
+  },
   settings: {
     title: 'Ustawienia',
     profile: 'Profil',

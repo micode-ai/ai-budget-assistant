@@ -169,6 +169,7 @@ Visualisez et gerez toutes vos categories de depenses et de revenus en un seul e
 
 - **Derniere synchronisation** — indique quand vos donnees ont ete synchronisees pour la derniere fois avec le serveur (par ex. "il y a 5 min" ou "Jamais")
 - **Synchroniser maintenant** — appuyez pour declencher manuellement une synchronisation des donnees
+- **En attente de synchronisation** — si des modifications faites hors ligne ne sont pas envoyées depuis un moment, une pastille indique combien attendent. Appuyez dessus pour les voir et synchroniser maintenant. Elle disparaît une fois tout sauvegardé.
 
 > **Note :** L'application fonctionne hors ligne. Vos donnees sont enregistrees sur votre appareil et se synchronisent automatiquement lorsque vous etes de nouveau en ligne. Utilisez **Synchroniser maintenant** pour forcer une synchronisation immediate.
 

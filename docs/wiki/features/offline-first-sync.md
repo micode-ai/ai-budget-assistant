@@ -87,6 +87,17 @@ arrives meanwhile. Handing back the in-flight promise dropped the force, so pull
   answers `Entity not found` like a missing one and is never returned as conflict `serverData`
   (ABA-708).
 
+## Pending-sync status chip (ABA-722)
+
+`PendingSyncChip` (settings hub and Settings → Data, phone and desktop pane) shows "Waiting to sync: N"
+from `db/pendingSyncRepository.ts`, which counts rows with `sync_status IN ('pending','error')` per entity
+table (expenses, incomes, account transfers, currency exchanges, budgets, investment transactions).
+The pure rule is `features/syncStatus/pendingSyncSummary.ts`. Tap offers "Sync now" via `runManualSync`.
+
+- **The `sync_queue` table is declared but unused** — never count it; `sync_status` is the real marker.
+- Failed (`error`) rows show at once; `pending` rows only after 5 minutes, so brief offline stays quiet.
+- Web renders nothing: the SQLite mock returns no rows. Contract: `docs/contracts/pending-sync-status-indicator.md`.
+
 ## Known gaps
 
 - `pullChanges`' merge writes `categoryId: serverCategoryId || localExpense?.categoryId`, so
@@ -98,4 +109,4 @@ arrives meanwhile. Handing back the in-flight promise dropped the force, so pull
 
 ABA-152 (parallel batches of 10) · ABA-157 (warn, not error) · ABA-356 (the first real test
 coverage for the handlers) · ABA-423 (budget/category changes reject instead of silently
-succeeding) · ABA-468 (the 990-line service split into per-entity handler files) · ABA-708 (account scoping on relation and line-item writes).
+succeeding) · ABA-468 (the 990-line service split into per-entity handler files) · ABA-708 (account scoping on relation and line-item writes) · ABA-722 (pending-sync chip).

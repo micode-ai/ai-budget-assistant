@@ -169,6 +169,7 @@ Visualiza y gestiona todas tus categorias de gastos e ingresos en un solo lugar.
 
 - **Ultima sincronizacion** — muestra cuando se sincronizaron tus datos por ultima vez con el servidor (por ejemplo, "Hace 5 min" o "Nunca")
 - **Sincronizar ahora** — toca para activar manualmente una sincronizacion de datos
+- **Pendiente de sincronizar** — si los cambios hechos sin conexión no se han subido durante un tiempo, un indicador muestra cuántos esperan. Tócalo para ver cuáles son y sincronizar ahora. Desaparece cuando todo está respaldado.
 
 > **Nota:** La aplicacion funciona sin conexion. Tus datos se guardan en tu dispositivo y se sincronizan automaticamente cuando vuelves a estar en linea. Usa **Sincronizar ahora** para forzar una sincronizacion inmediata.
 

@@ -13,12 +13,8 @@ import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import * as DocumentPicker from 'expo-document-picker';
 import { useTranslation } from 'react-i18next';
-import { useExpenseStore } from '@/stores/expenseStore';
-import { useAccountStore } from '@/stores/accountStore';
-import { useIncomeStore } from '@/stores/incomeStore';
-import { useCategoryStore } from '@/stores/categoryStore';
-import { useWalletStore } from '@/stores/walletStore';
-import { useBudgetStore } from '@/stores/budgetStore';
+import { runManualSync } from '@/features/syncStatus/runManualSync';
+import { PendingSyncChip } from '../PendingSyncChip';
 import { useReportStore } from '@/stores/reportStore';
 import { useSubscriptionStore } from '@/stores/subscriptionStore';
 import { useLocationSettingsStore } from '@/stores/locationSettingsStore';
@@ -145,17 +141,7 @@ export function DataSettings() {
   const handleSyncNow = async () => {
     setIsSyncing(true);
     try {
-      await Promise.allSettled([
-        // Refresh the account list from the server too — otherwise an account
-        // joined server-side (e.g. accepting an invitation) has no manual way to
-        // appear on the current build (the list is otherwise local-first).
-        useAccountStore.getState().loadAccountsFromServer(),
-        useExpenseStore.getState().loadExpenses({ force: true }),
-        useIncomeStore.getState().loadIncomes({ force: true }),
-        useCategoryStore.getState().loadCategories(),
-        useWalletStore.getState().loadWallet(),
-        useBudgetStore.getState().loadBudgets(),
-      ]);
+      await runManualSync();
       const time = await getLastSyncTime();
       setLastSyncTimeState(time);
       showAlert(t('common.success'), t('settings.syncComplete'));
@@ -316,6 +302,7 @@ export function DataSettings() {
       {/* Data & Sync */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>{t('settings.dataSync')}</Text>
+        <PendingSyncChip />
         <View style={styles.card}>
           <View style={styles.fieldRow}>
             <View style={[styles.fieldValueRow, { flex: 1 }]}>

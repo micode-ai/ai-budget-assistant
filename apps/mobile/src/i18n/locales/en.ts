@@ -823,6 +823,22 @@ export default {
       'If your salary arrives on the 10th, set 10 — budgets and reports will run from the 10th to the 9th. Past periods are regrouped too; no data is changed.',
     financialMonthClamped: 'In shorter months the period starts on the last day.',
   },
+  pendingSync: {
+    chipWaiting: 'Waiting to sync: {{count}}',
+    chipFailed: 'Not synced, needs a retry: {{count}}',
+    title: 'Sync status',
+    explainWaiting: 'These changes are saved on this phone and will upload when the connection allows.',
+    explainFailed: 'Some changes could not upload. They are safe on this phone; try syncing again.',
+    syncNow: 'Sync now',
+    entity: {
+      expenses: 'Expenses',
+      incomes: 'Income',
+      account_transfers: 'Transfers',
+      currency_exchanges: 'Currency exchanges',
+      budgets: 'Budgets',
+      investment_transactions: 'Investments',
+    },
+  },
   settings: {
     title: 'Settings',
     profile: 'Profile',

@@ -2101,6 +2101,7 @@ View and manage all your expense and income categories in one place.
 
 - **Last Synced** — shows when your data was last synced with the server (e.g., "5 min ago" or "Never")
 - **Sync Now** — tap to manually trigger a data sync
+- **Waiting to sync** — if changes made offline have not uploaded for a while, a chip shows how many are waiting. Tap it to see what they are and to sync now. It disappears once everything is backed up.
 
 > **Note:** The app works offline. Your data saves to your device and automatically syncs when you're back online. Use **Sync Now** to force an immediate sync.
 
@@ -7437,6 +7438,7 @@ Email обновляется мгновенно, выдаются новые т�
 
 - **Последняя синхронизация** — показывает, когда данные были в последний раз синхронизированы с сервером (например, «5 мин. назад» или «Никогда»)
 - **Синхронизировать** — нажмите для ручного запуска синхронизации данных
+- **Ожидает синхронизации** — если изменения, сделанные офлайн, долго не загружаются, метка показывает, сколько их ждёт. Нажмите на неё, чтобы увидеть подробности и синхронизировать сразу. Она исчезает, когда всё сохранено на сервере.
 
 > **Примечание:** Приложение работает офлайн. Ваши данные сохраняются на устройстве и автоматически синхронизируются при подключении к сети. Используйте **Синхронизировать**, чтобы принудительно запустить немедленную синхронизацию.
 
@@ -12759,6 +12761,7 @@ iOS, Android, Web
 
 - **Остання синхронізація** — показує, коли ваші дані були останній раз синхронізовані з сервером (наприклад, "5 хв. тому" або "Ніколи")
 - **Синхронізувати** — натисніть, щоб вручну запустити синхронізацію даних
+- **Очікує синхронізації** — якщо зміни, зроблені офлайн, довго не завантажуються, мітка показує, скільки їх чекає. Натисніть на неї, щоб побачити подробиці й синхронізувати одразу. Вона зникає, коли все збережено на сервері.
 
 > **Примітка:** Додаток працює офлайн. Ваші дані зберігаються на пристрої та автоматично синхронізуються при підключенні до мережі. Використовуйте **Синхронізувати**, щоб примусово запустити негайну синхронізацію.
 
@@ -18028,6 +18031,7 @@ Przegladaj wszystkie swoje kategorie wydatkow i przychodow oraz zarzadzaj nimi w
 
 - **Ostatnia synchronizacja** — pokazuje, kiedy dane zostaly ostatnio zsynchronizowane z serwerem (np. "5 min temu" lub "Nigdy")
 - **Synchronizuj teraz** — dotknij, aby recznie wywolac synchronizacje danych
+- **Czeka na synchronizację** — jeśli zmiany wprowadzone offline od dłuższego czasu nie zostały wysłane, znacznik pokazuje, ile ich czeka. Dotknij go, aby zobaczyć szczegóły i zsynchronizować od razu. Znika, gdy wszystko jest zapisane na serwerze.
 
 > **Uwaga:** Aplikacja dziala offline. Dane zapisuja sie na urzadzeniu i synchronizuja automatycznie po przywroceniu polaczenia. Uzyj **Synchronizuj teraz**, aby wymusic natychmiastowa synchronizacje.
 
@@ -23296,6 +23300,7 @@ Zeige und verwalte alle deine Ausgaben- und Einnahmenkategorien an einem Ort.
 
 - **Zuletzt synchronisiert** — zeigt, wann deine Daten zuletzt mit dem Server synchronisiert wurden (z.B. "Vor 5 Min." oder "Nie")
 - **Jetzt synchronisieren** — tippe, um eine Datensynchronisierung manuell auszulosen
+- **Wartet auf Synchronisierung** — wenn offline vorgenommene Änderungen längere Zeit nicht hochgeladen wurden, zeigt ein Chip an, wie viele warten. Tippe darauf, um Details zu sehen und sofort zu synchronisieren. Er verschwindet, sobald alles gesichert ist.
 
 > **Hinweis:** Die App funktioniert offline. Deine Daten werden auf deinem Gerat gespeichert und automatisch synchronisiert, wenn du wieder online bist. Verwende **Jetzt synchronisieren**, um eine sofortige Synchronisierung zu erzwingen.
 
@@ -28543,6 +28548,7 @@ Visualiza y gestiona todas tus categorias de gastos e ingresos en un solo lugar.
 
 - **Ultima sincronizacion** — muestra cuando se sincronizaron tus datos por ultima vez con el servidor (por ejemplo, "Hace 5 min" o "Nunca")
 - **Sincronizar ahora** — toca para activar manualmente una sincronizacion de datos
+- **Pendiente de sincronizar** — si los cambios hechos sin conexión no se han subido durante un tiempo, un indicador muestra cuántos esperan. Tócalo para ver cuáles son y sincronizar ahora. Desaparece cuando todo está respaldado.
 
 > **Nota:** La aplicacion funciona sin conexion. Tus datos se guardan en tu dispositivo y se sincronizan automaticamente cuando vuelves a estar en linea. Usa **Sincronizar ahora** para forzar una sincronizacion inmediata.
 
@@ -33776,6 +33782,7 @@ Visualisez et gerez toutes vos categories de depenses et de revenus en un seul e
 
 - **Derniere synchronisation** — indique quand vos donnees ont ete synchronisees pour la derniere fois avec le serveur (par ex. "il y a 5 min" ou "Jamais")
 - **Synchroniser maintenant** — appuyez pour declencher manuellement une synchronisation des donnees
+- **En attente de synchronisation** — si des modifications faites hors ligne ne sont pas envoyées depuis un moment, une pastille indique combien attendent. Appuyez dessus pour les voir et synchroniser maintenant. Elle disparaît une fois tout sauvegardé.
 
 > **Note :** L'application fonctionne hors ligne. Vos donnees sont enregistrees sur votre appareil et se synchronisent automatiquement lorsque vous etes de nouveau en ligne. Utilisez **Synchroniser maintenant** pour forcer une synchronisation immediate.
 
@@ -39011,6 +39018,7 @@ iOS, Android, Web
 
 - **Апошняя сінхранізацыя** — паказвае, калі даныя былі апошні раз сінхранізаваны з серверам (напрыклад, «5 хв. таму» або «Ніколі»)
 - **Сінхранізаваць** — націсніце для ручнога запуску сінхранізацыі даных
+- **Чакае сінхранізацыі** — калі змены, зробленыя афлайн, доўга не загружаюцца, пазнака паказвае, колькі іх чакае. Націсніце на яе, каб убачыць падрабязнасці і сінхранізаваць адразу. Яна знікае, калі ўсё захавана на серверы.
 
 > **Заўвага:** Праграма працуе афлайн. Вашы даныя захоўваюцца на прыладзе і аўтаматычна сінхранізуюцца пры падключэнні да сеткі. Выкарыстоўвайце **Сінхранізаваць**, каб прымусова запусціць неадкладную сінхранізацыю.
 
@@ -44219,6 +44227,7 @@ Bekijk en beheer al je uitgaven- en inkomstencategorieën op één plek.
 
 - **Laatst gesynchroniseerd** — toont wanneer je gegevens voor het laatst met de server zijn gesynchroniseerd (bijv. "5 min geleden" of "Nooit")
 - **Nu synchroniseren** — tik om handmatig een gegevenssynchronisatie te starten
+- **Wacht op synchronisatie** — als offline gemaakte wijzigingen een tijd niet zijn geüpload, toont een label hoeveel er wachten. Tik erop voor details en om direct te synchroniseren. Het verdwijnt zodra alles is veiliggesteld.
 
 > **Opmerking:** De app werkt offline. Je gegevens worden op je apparaat opgeslagen en automatisch gesynchroniseerd zodra je weer online bent. Gebruik **Nu synchroniseren** om een onmiddellijke synchronisatie te forceren.
 

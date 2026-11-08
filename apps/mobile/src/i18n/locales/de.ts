@@ -819,6 +819,22 @@ export default {
       'Wenn dein Gehalt am 10. eingeht, wähle 10 — Budgets und Berichte laufen dann vom 10. bis zum 9. des Folgemonats. Vergangene Zeiträume werden ebenfalls neu gruppiert; es werden keine Daten verändert.',
     financialMonthClamped: 'In kürzeren Monaten beginnt der Zeitraum am letzten Tag.',
   },
+  pendingSync: {
+    chipWaiting: 'Wartet auf Synchronisierung: {{count}}',
+    chipFailed: 'Nicht synchronisiert, erneut versuchen: {{count}}',
+    title: 'Synchronisierungsstatus',
+    explainWaiting: 'Diese Änderungen sind auf diesem Telefon gespeichert und werden hochgeladen, sobald die Verbindung es erlaubt.',
+    explainFailed: 'Einige Änderungen konnten nicht hochgeladen werden. Sie sind auf diesem Telefon sicher; versuche die Synchronisierung erneut.',
+    syncNow: 'Jetzt synchronisieren',
+    entity: {
+      expenses: 'Ausgaben',
+      incomes: 'Einnahmen',
+      account_transfers: 'Überweisungen',
+      currency_exchanges: 'Währungswechsel',
+      budgets: 'Budgets',
+      investment_transactions: 'Investitionen',
+    },
+  },
   settings: {
     title: 'Einstellungen',
     profile: 'Profil',

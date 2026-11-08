@@ -819,6 +819,22 @@ export default {
       "Si votre salaire arrive le 10, choisissez 10 — les budgets et rapports iront du 10 au 9. Les périodes passées sont aussi regroupées à nouveau ; aucune donnée n'est modifiée.",
     financialMonthClamped: 'Dans les mois plus courts, la période commence le dernier jour.',
   },
+  pendingSync: {
+    chipWaiting: 'En attente de synchronisation : {{count}}',
+    chipFailed: 'Non synchronisé, à réessayer : {{count}}',
+    title: 'État de la synchronisation',
+    explainWaiting: 'Ces modifications sont enregistrées sur ce téléphone et seront envoyées dès que la connexion le permettra.',
+    explainFailed: 'Certaines modifications n'ont pas pu être envoyées. Elles sont en sécurité sur ce téléphone ; réessayez de synchroniser.',
+    syncNow: 'Synchroniser maintenant',
+    entity: {
+      expenses: 'Dépenses',
+      incomes: 'Revenus',
+      account_transfers: 'Virements',
+      currency_exchanges: 'Changes de devises',
+      budgets: 'Budgets',
+      investment_transactions: 'Investissements',
+    },
+  },
   settings: {
     title: 'Paramètres',
     profile: 'Profil',

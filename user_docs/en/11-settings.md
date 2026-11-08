@@ -182,6 +182,7 @@ View and manage all your expense and income categories in one place.
 
 - **Last Synced** — shows when your data was last synced with the server (e.g., "5 min ago" or "Never")
 - **Sync Now** — tap to manually trigger a data sync
+- **Waiting to sync** — if changes made offline have not uploaded for a while, a chip shows how many are waiting. Tap it to see what they are and to sync now. It disappears once everything is backed up.
 
 > **Note:** The app works offline. Your data saves to your device and automatically syncs when you're back online. Use **Sync Now** to force an immediate sync.
 

@@ -169,6 +169,7 @@ Zeige und verwalte alle deine Ausgaben- und Einnahmenkategorien an einem Ort.
 
 - **Zuletzt synchronisiert** — zeigt, wann deine Daten zuletzt mit dem Server synchronisiert wurden (z.B. "Vor 5 Min." oder "Nie")
 - **Jetzt synchronisieren** — tippe, um eine Datensynchronisierung manuell auszulosen
+- **Wartet auf Synchronisierung** — wenn offline vorgenommene Änderungen längere Zeit nicht hochgeladen wurden, zeigt ein Chip an, wie viele warten. Tippe darauf, um Details zu sehen und sofort zu synchronisieren. Er verschwindet, sobald alles gesichert ist.
 
 > **Hinweis:** Die App funktioniert offline. Deine Daten werden auf deinem Gerat gespeichert und automatisch synchronisiert, wenn du wieder online bist. Verwende **Jetzt synchronisieren**, um eine sofortige Synchronisierung zu erzwingen.
 

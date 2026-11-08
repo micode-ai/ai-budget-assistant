@@ -182,6 +182,7 @@ Bekijk en beheer al je uitgaven- en inkomstencategorieën op één plek.
 
 - **Laatst gesynchroniseerd** — toont wanneer je gegevens voor het laatst met de server zijn gesynchroniseerd (bijv. "5 min geleden" of "Nooit")
 - **Nu synchroniseren** — tik om handmatig een gegevenssynchronisatie te starten
+- **Wacht op synchronisatie** — als offline gemaakte wijzigingen een tijd niet zijn geüpload, toont een label hoeveel er wachten. Tik erop voor details en om direct te synchroniseren. Het verdwijnt zodra alles is veiliggesteld.
 
 > **Opmerking:** De app werkt offline. Je gegevens worden op je apparaat opgeslagen en automatisch gesynchroniseerd zodra je weer online bent. Gebruik **Nu synchroniseren** om een onmiddellijke synchronisatie te forceren.
 
