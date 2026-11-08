@@ -101,6 +101,8 @@ Aanvullende navigatie:
 - **Tactiele feedback** — bij het tikken op een tabblad voel je een lichte trilling op ondersteunde apparaten, zodat je weet dat je tik is geregistreerd
 - **Laadindicator** — een dunne voortgangsbalk bovenaan het scherm verschijnt terwijl de app gegevens ophaalt of synchroniseert
 
+- **Probeer met voorbeeldgegevens** — op het startscherm (telefoon) verken je de app met gegenereerde voorbeeldtransacties. Een banner herinnert je eraan; tik op **Opnieuw beginnen** om ze te wissen. Er wordt niets op de server opgeslagen.
+
 ---
 
 *Volgende: [Dashboard](./02-dashboard.md)*

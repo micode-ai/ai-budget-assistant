@@ -1406,6 +1406,11 @@ export default {
     wantMore: 'Chcesz więcej? Zaktualizuj w dowolnym momencie',
     continueWithFree: 'Kontynuuj za darmo',
   },
+  demo: {
+    banner: 'Oglądasz dane przykładowe. Nic z tego nie jest Twoje ani zapisane na serwerze.',
+    startFresh: 'Zacznij od nowa',
+    tryWithSample: 'Wypróbuj na przykładowych danych',
+  },
   onboarding: {
     heading: 'Od czego chcesz zacząć?',
     subheading: 'Dodaj jedną rzecz, a aplikacja zacznie działać dla Ciebie.',

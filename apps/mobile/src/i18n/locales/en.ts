@@ -1402,6 +1402,11 @@ export default {
     wantMore: 'Want more? Upgrade anytime',
     continueWithFree: 'Continue with Free',
   },
+  demo: {
+    banner: 'You are viewing sample data. Nothing here is yours or saved to the server.',
+    startFresh: 'Start fresh',
+    tryWithSample: 'Try with sample data',
+  },
   onboarding: {
     heading: 'Where would you like to start?',
     subheading: 'Add one thing and the app starts working for you.',

@@ -10,6 +10,7 @@ import { HomeQuickActionStrip } from '@/components/home/HomeQuickActionStrip';
 import { SafeToSpendSheet } from '@/components/home/SafeToSpendSheet';
 import { InvestmentCard, renderHomeWidget, type HomeWidgetContext } from '@/components/home/HomeWidgetSwitch';
 import type { QuickActionKey } from '@/stores/quickActionStore';
+import { DemoBanner } from '@/components/demo/DemoBanner';
 import { IosInstallCard } from '@/components/home/IosInstallCard';
 
 export function DashboardMobile() {
@@ -86,6 +87,7 @@ export function DashboardMobile() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
+      <DemoBanner />
       {/* Orange Hero Header — the controls row + divider are hidden on desktop
           web, where WebTopBar provides account/currency/alerts/settings. */}
       {!isDesktopWeb && (

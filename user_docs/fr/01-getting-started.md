@@ -101,6 +101,8 @@ Navigation supplementaire :
 - **Retour haptique** — toucher un onglet declenche une legere vibration sur les appareils compatibles pour confirmer que l'appui a ete enregistre
 - **Indicateur de chargement** — une fine barre de progression apparait en haut de l'ecran pendant que l'application recupere ou synchronise les donnees
 
+- **Essayer avec des données d'exemple** — sur l'écran de démarrage (téléphone), explorez l'app avec des transactions d'exemple. Une bannière le rappelle ; touchez **Repartir de zéro** pour les supprimer. Rien n'est enregistré sur le serveur.
+
 ---
 
 *Suivant : [Tableau de bord](./02-dashboard.md)*

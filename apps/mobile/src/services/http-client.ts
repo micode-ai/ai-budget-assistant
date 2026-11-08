@@ -1,4 +1,5 @@
 import { secureStorage } from './secureStorage';
+import { isDemoAccountId, DemoAccountOfflineError } from '@/features/demo/demoAccount';
 import { reportApiFetchFailure, reportApiResponse } from './connectivity';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000/api/v1';
@@ -94,6 +95,8 @@ export class HttpClient {
       // e.g. the group budget mirror's target account, ABA-661) keeps it; everything else gets the
       // current account, as before.
       const explicit = (headers as Record<string, string>)['X-Account-Id'];
+      // Sample-data accounts are local-only: the server does not know them, so never send them.
+      if (isDemoAccountId(explicit ?? accountId)) throw new DemoAccountOfflineError();
       if (accountId && !explicit) {
         (headers as Record<string, string>)['X-Account-Id'] = accountId;
       }

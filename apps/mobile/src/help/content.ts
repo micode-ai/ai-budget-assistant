@@ -174,6 +174,8 @@ Additional navigation:
 - **Tactile feedback** — tapping a tab produces a light vibration on supported devices, so you know your tap was registered
 - **Loading indicator** — a thin progress bar at the very top of the screen appears while the app is fetching or syncing data
 
+- **Try with sample data** — on the get-started screen (phone) you can explore the app with generated sample transactions. A banner reminds you it is sample data; tap **Start fresh** to delete it. Nothing is saved to the server.
+
 ---
 
 *Next: Dashboard*
@@ -5525,6 +5527,8 @@ iOS, Android, Web
 - **Тактильный отклик** — при нажатии на вкладку на поддерживаемых устройствах появляется лёгкая вибрация — так вы видите, что нажатие зарегистрировано
 - **Индикатор загрузки** — тонкая полоса в самом верху экрана появляется, пока приложение загружает или синхронизирует данные
 
+- **Попробовать на примерных данных** — на стартовом экране (телефон) можно изучить приложение на сгенерированных транзакциях. Баннер напоминает, что это примерные данные; нажмите **Начать с нуля**, чтобы удалить их. Ничего не сохраняется на сервере.
+
 ---
 
 *Далее: Главная*
@@ -10853,6 +10857,8 @@ iOS, Android, Web
 - **П:** Що робити, якщо я забув пароль?
   **В:** Натисніть **Забули пароль?** на екрані входу та дотримуйтесь інструкцій для відновлення доступу за допомогою електронної пошти.
 
+- **Спробувати на прикладі даних** — на стартовому екрані (телефон) можна дослідити застосунок на згенерованих транзакціях. Банер нагадує, що це приклад даних; натисніть **Почати з нуля**, щоб видалити їх. Нічого не зберігається на сервері.
+
 ---
 
 *Далі: Головна*
@@ -16129,6 +16135,8 @@ Dodatkowa nawigacja:
 - **Wibracja przy dotyku** — dotkniecie zakladki powoduje krotka wibracje na obslugiwanych urzadzeniach, dzieki czemu wiesz, ze dotkniecie zostalo zarejestrowane
 - **Wskaznik ladowania** — cienki pasek postepu pojawia sie u gory ekranu, gdy aplikacja pobiera lub synchronizuje dane
 
+- **Wypróbuj na przykładowych danych** — na ekranie startowym (telefon) możesz poznać aplikację na wygenerowanych transakcjach. Baner przypomina, że to dane przykładowe; dotknij **Zacznij od nowa**, aby je usunąć. Nic nie jest zapisywane na serwerze.
+
 ---
 
 *Dalej: Pulpit*
@@ -21401,6 +21409,8 @@ Zusatzliche Navigation:
 - **Haptisches Feedback** — beim Antippen eines Tabs gibt es auf unterstutzten Geraten eine kurze Vibration, damit du weisst, dass deine Eingabe registriert wurde
 - **Ladeanzeige** — ein dunner Fortschrittsbalken erscheint oben am Bildschirmrand, wahrend die App Daten ladt oder synchronisiert
 
+- **Mit Beispieldaten ausprobieren** — auf dem Startbildschirm (Handy) kannst du die App mit erzeugten Beispieltransaktionen erkunden. Ein Banner weist darauf hin; tippe auf **Neu starten**, um sie zu löschen. Nichts wird auf dem Server gespeichert.
+
 ---
 
 *Weiter: Ubersicht*
@@ -26648,6 +26658,8 @@ Navegacion adicional:
 - **Vibracion tactil** — al tocar una pestana, los dispositivos compatibles producen una breve vibracion para confirmar que el toque fue registrado
 - **Indicador de carga** — una barra de progreso fina aparece en la parte superior de la pantalla mientras la app obtiene o sincroniza datos
 
+- **Probar con datos de ejemplo** — en la pantalla de inicio (móvil) puedes explorar la app con transacciones de ejemplo. Un aviso indica que son datos de ejemplo; toca **Empezar de cero** para borrarlos. No se guarda nada en el servidor.
+
 ---
 
 *Siguiente: Panel*
@@ -31884,6 +31896,8 @@ Navigation supplementaire :
 - **Retour haptique** — toucher un onglet declenche une legere vibration sur les appareils compatibles pour confirmer que l'appui a ete enregistre
 - **Indicateur de chargement** — une fine barre de progression apparait en haut de l'ecran pendant que l'application recupere ou synchronise les donnees
 
+- **Essayer avec des données d'exemple** — sur l'écran de démarrage (téléphone), explorez l'app avec des transactions d'exemple. Une bannière le rappelle ; touchez **Repartir de zéro** pour les supprimer. Rien n'est enregistré sur le serveur.
+
 ---
 
 *Suivant : Tableau de bord*
@@ -37118,6 +37132,8 @@ iOS, Android, Web
 - **Тактыльны водгук** — пры націсканні на ўкладку на падтрымлівальных прыладах з'яўляецца лёгкая вібрацыя, каб вы бачылі, што націсканне зарэгістравана
 - **Індыкатар загрузкі** — тонкая паласа прагрэсу з'яўляецца ў верхняй частцы экрана, пакуль праграма атрымлівае ці сінхранізуе даныя
 
+- **Паспрабаваць на прыкладзе даных** — на стартавым экране (тэлефон) можна даследаваць праграму на згенерыраваных транзакцыях. Банер нагадвае, што гэта прыклад даных; націсніце **Пачаць з нуля**, каб выдаліць іх. Нічога не захоўваецца на серверы.
+
 ---
 
 *Далей: Галоўная*
@@ -42315,6 +42331,8 @@ Aanvullende navigatie:
 - **Instellingen** — tik op het tandwielpictogram (rechtsboven) om naar de instellingen te gaan
 - **Tactiele feedback** — bij het tikken op een tabblad voel je een lichte trilling op ondersteunde apparaten, zodat je weet dat je tik is geregistreerd
 - **Laadindicator** — een dunne voortgangsbalk bovenaan het scherm verschijnt terwijl de app gegevens ophaalt of synchroniseert
+
+- **Probeer met voorbeeldgegevens** — op het startscherm (telefoon) verken je de app met gegenereerde voorbeeldtransacties. Een banner herinnert je eraan; tik op **Opnieuw beginnen** om ze te wissen. Er wordt niets op de server opgeslagen.
 
 ---
 

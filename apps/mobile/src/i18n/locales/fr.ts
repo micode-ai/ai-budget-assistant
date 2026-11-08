@@ -824,7 +824,7 @@ export default {
     chipFailed: 'Non synchronisé, à réessayer : {{count}}',
     title: 'État de la synchronisation',
     explainWaiting: 'Ces modifications sont enregistrées sur ce téléphone et seront envoyées dès que la connexion le permettra.',
-    explainFailed: 'Certaines modifications n'ont pas pu être envoyées. Elles sont en sécurité sur ce téléphone ; réessayez de synchroniser.',
+    explainFailed: 'Certaines modifications n\'ont pas pu être envoyées. Elles sont en sécurité sur ce téléphone ; réessayez de synchroniser.',
     syncNow: 'Synchroniser maintenant',
     entity: {
       expenses: 'Dépenses',
@@ -1397,6 +1397,11 @@ export default {
     freeTracking: 'Suivi complet des dépenses',
     wantMore: 'Envie de plus ? Passez à un forfait supérieur',
     continueWithFree: 'Continuer gratuitement',
+  },
+  demo: {
+    banner: "Vous voyez des données d'exemple. Rien ici ne vous appartient ni n'est enregistré sur le serveur.",
+    startFresh: 'Repartir de zéro',
+    tryWithSample: "Essayer avec des données d'exemple",
   },
   onboarding: {
     heading: 'Par où voulez-vous commencer ?',

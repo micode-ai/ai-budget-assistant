@@ -101,6 +101,8 @@ Additional navigation:
 - **Tactile feedback** — tapping a tab produces a light vibration on supported devices, so you know your tap was registered
 - **Loading indicator** — a thin progress bar at the very top of the screen appears while the app is fetching or syncing data
 
+- **Try with sample data** — on the get-started screen (phone) you can explore the app with generated sample transactions. A banner reminds you it is sample data; tap **Start fresh** to delete it. Nothing is saved to the server.
+
 ---
 
 *Next: [Dashboard](./02-dashboard.md)*

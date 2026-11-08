@@ -284,6 +284,7 @@ Newest last within each section.
 - 2026-11-08 · [ABA-720](https://github.com/micode-ai/ai-budget-assistant/issues/757) — static launcher shortcuts (add expense, scan receipt, voice) via committed shortcuts.xml plus a prebuild-safe config plugin; routed by the existing `useGenericDeepLink`. Page: `features/android-launcher-shortcuts.md`. Dynamic shortcuts and device check outstanding.
 - 2026-11-08 · [ABA-721](https://github.com/micode-ai/ai-budget-assistant/issues/758) — seven more supported currencies; `kr` stays unmapped; every currency list is a hand-kept copy — pages: features/supported-currencies
 - 2026-11-08 · [ABA-722](https://github.com/micode-ai/ai-budget-assistant/issues/759) — no surface showed pending offline writes; `sync_queue` is unused, `sync_status` is the marker. → `features/offline-first-sync.md`
+- 2026-11-08 · [ABA-723](https://github.com/micode-ai/ai-budget-assistant/issues/760) — local-only sample-data demo account, HTTP guard, banner; page sample-data-explore-mode
 
 ## Queries
 

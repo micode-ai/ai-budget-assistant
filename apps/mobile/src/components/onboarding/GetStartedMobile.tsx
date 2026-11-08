@@ -9,6 +9,7 @@ import { useExpenseStore } from '@/stores/expenseStore';
 import { useIncomeStore } from '@/stores/incomeStore';
 import { useImportStore } from '@/stores/importStore';
 import { ROUTE_IMPORT } from '@/features/dashboard/dashboardDialogs';
+import { startDemo } from '@/features/demo/demoSession';
 import { useTheme, useStyles, type Theme } from '@/theme';
 
 type IconName = keyof typeof Ionicons.glyphMap;
@@ -126,6 +127,20 @@ export const GetStartedMobile = forwardRef<GetStartedHandle, GetStartedMobilePro
       [finish],
     );
 
+    const [demoBusy, setDemoBusy] = React.useState(false);
+    // Sample data lives in SQLite, which does not exist on web.
+    const showDemo = Platform.OS !== 'web';
+    const tryDemo = async () => {
+      setDemoBusy(true);
+      try {
+        await startDemo();
+        router.replace('/(tabs)');
+      } catch (e) {
+        console.warn('Failed to start sample data', e);
+        setDemoBusy(false);
+      }
+    };
+
     const goTo = (route: string) => {
       markSeen();
       // Lets the post-import report finish onboarding instead of returning to settings.
@@ -188,6 +203,12 @@ export const GetStartedMobile = forwardRef<GetStartedHandle, GetStartedMobilePro
               </React.Fragment>
             ))}
           </View>
+
+          {showDemo && (
+            <TouchableOpacity style={styles.laterLink} onPress={tryDemo} disabled={demoBusy}>
+              <Text style={styles.laterText}>{t('demo.tryWithSample')}</Text>
+            </TouchableOpacity>
+          )}
 
           {/* Skip for now */}
           <TouchableOpacity style={styles.laterLink} onPress={finish}>

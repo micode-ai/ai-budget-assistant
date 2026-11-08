@@ -1398,6 +1398,11 @@ export default {
     wantMore: '¿Quieres más? Actualiza en cualquier momento',
     continueWithFree: 'Continuar gratis',
   },
+  demo: {
+    banner: 'Estás viendo datos de ejemplo. Nada de esto es tuyo ni se guarda en el servidor.',
+    startFresh: 'Empezar de cero',
+    tryWithSample: 'Probar con datos de ejemplo',
+  },
   onboarding: {
     heading: '¿Por dónde te gustaría empezar?',
     subheading: 'Añade una cosa y la aplicación empezará a trabajar para ti.',

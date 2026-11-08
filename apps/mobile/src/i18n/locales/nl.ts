@@ -1398,6 +1398,11 @@ export default {
     wantMore: 'Meer nodig? Upgrade wanneer je wilt',
     continueWithFree: 'Doorgaan met gratis',
   },
+  demo: {
+    banner: 'Je bekijkt voorbeeldgegevens. Niets hiervan is van jou of wordt op de server opgeslagen.',
+    startFresh: 'Opnieuw beginnen',
+    tryWithSample: 'Probeer met voorbeeldgegevens',
+  },
   onboarding: {
     heading: 'Waar wil je beginnen?',
     subheading: 'Voeg één ding toe en de app gaat voor je aan de slag.',

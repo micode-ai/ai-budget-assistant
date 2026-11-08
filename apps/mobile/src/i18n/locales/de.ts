@@ -1398,6 +1398,11 @@ export default {
     wantMore: 'Mehr gewünscht? Jederzeit upgraden',
     continueWithFree: 'Kostenlos fortfahren',
   },
+  demo: {
+    banner: 'Du siehst Beispieldaten. Nichts davon gehört dir oder wird auf dem Server gespeichert.',
+    startFresh: 'Neu starten',
+    tryWithSample: 'Mit Beispieldaten ausprobieren',
+  },
   onboarding: {
     heading: 'Wo möchten Sie beginnen?',
     subheading: 'Fügen Sie eine Sache hinzu, und die App beginnt, für Sie zu arbeiten.',

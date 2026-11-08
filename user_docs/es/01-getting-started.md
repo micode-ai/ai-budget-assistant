@@ -101,6 +101,8 @@ Navegacion adicional:
 - **Vibracion tactil** — al tocar una pestana, los dispositivos compatibles producen una breve vibracion para confirmar que el toque fue registrado
 - **Indicador de carga** — una barra de progreso fina aparece en la parte superior de la pantalla mientras la app obtiene o sincroniza datos
 
+- **Probar con datos de ejemplo** — en la pantalla de inicio (móvil) puedes explorar la app con transacciones de ejemplo. Un aviso indica que son datos de ejemplo; toca **Empezar de cero** para borrarlos. No se guarda nada en el servidor.
+
 ---
 
 *Siguiente: [Panel](./02-dashboard.md)*

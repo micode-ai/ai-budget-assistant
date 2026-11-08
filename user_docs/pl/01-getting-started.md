@@ -101,6 +101,8 @@ Dodatkowa nawigacja:
 - **Wibracja przy dotyku** — dotkniecie zakladki powoduje krotka wibracje na obslugiwanych urzadzeniach, dzieki czemu wiesz, ze dotkniecie zostalo zarejestrowane
 - **Wskaznik ladowania** — cienki pasek postepu pojawia sie u gory ekranu, gdy aplikacja pobiera lub synchronizuje dane
 
+- **Wypróbuj na przykładowych danych** — na ekranie startowym (telefon) możesz poznać aplikację na wygenerowanych transakcjach. Baner przypomina, że to dane przykładowe; dotknij **Zacznij od nowa**, aby je usunąć. Nic nie jest zapisywane na serwerze.
+
 ---
 
 *Dalej: [Pulpit](./02-dashboard.md)*

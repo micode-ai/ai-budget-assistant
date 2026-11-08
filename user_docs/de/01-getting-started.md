@@ -101,6 +101,8 @@ Zusatzliche Navigation:
 - **Haptisches Feedback** — beim Antippen eines Tabs gibt es auf unterstutzten Geraten eine kurze Vibration, damit du weisst, dass deine Eingabe registriert wurde
 - **Ladeanzeige** — ein dunner Fortschrittsbalken erscheint oben am Bildschirmrand, wahrend die App Daten ladt oder synchronisiert
 
+- **Mit Beispieldaten ausprobieren** — auf dem Startbildschirm (Handy) kannst du die App mit erzeugten Beispieltransaktionen erkunden. Ein Banner weist darauf hin; tippe auf **Neu starten**, um sie zu löschen. Nichts wird auf dem Server gespeichert.
+
 ---
 
 *Weiter: [Ubersicht](./02-dashboard.md)*

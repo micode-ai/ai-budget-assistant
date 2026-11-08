@@ -128,6 +128,7 @@ the section you came for — it states what must not break and why. A missing se
 - [desktop-chat-screen](features/desktop-chat-screen.md) — the conversation rail and reading column
 - [desktop-keyboard-shortcuts](features/desktop-keyboard-shortcuts.md) — the fixed key bindings, the
   registry behind them, and the cheat sheet
+- [sample-data-explore-mode](features/sample-data-explore-mode.md) — local-only sample data for new users
 - [first-run-onboarding](features/first-run-onboarding.md) — routing a brand-new user, and the web
   dashboard state that replaces it there
 - [settings-desktop-shell](features/settings-desktop-shell.md) — the two-pane settings layout and
