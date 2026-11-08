@@ -6,12 +6,12 @@ import { useState, useEffect, useMemo } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useWalletStore } from '@/stores/walletStore';
-import { formatCurrency } from '@budget/shared-utils';
+import { formatCurrency, SUPPORTED_CURRENCIES } from '@budget/shared-utils';
 import type { Currency } from '@budget/shared-types';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 
-const CURRENCIES: Currency[] = ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN'];
+const CURRENCIES: Currency[] = SUPPORTED_CURRENCIES.map((c) => c.code);
 
 export interface SetBalanceViewProps {
   /**

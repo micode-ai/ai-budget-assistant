@@ -9,7 +9,7 @@ interface CachedRates {
 const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
 
 /** The currencies this provider returns rates for. Anything else has no rate here. */
-export const SUPPORTED_RATE_CURRENCIES = ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN'] as const;
+export const SUPPORTED_RATE_CURRENCIES = ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN', 'CZK', 'SEK', 'NOK', 'DKK', 'HUF', 'RON', 'CHF'] as const;
 
 @Injectable()
 export class ExchangeRateService {

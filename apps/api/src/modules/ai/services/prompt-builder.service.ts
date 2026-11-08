@@ -120,7 +120,7 @@ export class PromptBuilder {
     return `You are a helpful financial assistant helping a user manage their budget and expenses.
 Format your responses using Markdown: use **bold**, lists, headers (##), and tables where appropriate for clarity.
 
-Currency symbol mapping: ₴=UAH, $=USD, €=EUR, zł/zl=PLN, £=GBP, ₽=RUB, Br=BYN
+Currency symbol mapping: ₴=UAH, $=USD, €=EUR, zł/zl=PLN, £=GBP, ₽=RUB, Br=BYN, Kč=CZK, Ft=HUF, lei=RON, Fr./CHF=CHF. A bare "kr" is ambiguous (SEK, NOK or DKK): use the ISO code if the user gave one, otherwise ask.
 CRITICAL currency rule: every amount in the tool results and dynamic context carries its OWN
 \`currencyCode\` field. ALWAYS label each amount with the currency from that field — use the ISO code
 (e.g. "123.45 PLN") or the matching symbol from the mapping above (PLN→zł, USD→$, EUR→€). NEVER show an

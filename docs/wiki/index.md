@@ -186,6 +186,7 @@ the section you came for — it states what must not break and why. A missing se
 - [expense-detail-editing](features/expense-detail-editing.md) — project links, currency relabel, extracting items from a receipt attached later
 - [wallet-balance-history](features/wallet-balance-history.md) — monthly per-currency net change as signed bars, the wallet-local currency toggle
 - [base-currency](features/base-currency.md) — changing `user.currencyCode` on the client, optimistically and through one action
+- [supported-currencies](features/supported-currencies.md) — the currency list and every place that copies it
 
 ### Capturing expenses automatically
 - [bank-notification-capture](features/bank-notification-capture.md) — Android bank pushes parsed on

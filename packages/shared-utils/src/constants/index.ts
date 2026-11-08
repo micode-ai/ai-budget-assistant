@@ -12,6 +12,13 @@ export const SUPPORTED_CURRENCIES: { code: Currency; name: string; symbol: strin
   { code: 'UAH', name: 'Ukrainian Hryvnia', symbol: '₴' },
   { code: 'RUB', name: 'Russian Ruble', symbol: '₽' },
   { code: 'BYN', name: 'Belarusian Ruble', symbol: 'Br' },
+  { code: 'CZK', name: 'Czech Koruna', symbol: 'Kč' },
+  { code: 'SEK', name: 'Swedish Krona', symbol: 'kr' },
+  { code: 'NOK', name: 'Norwegian Krone', symbol: 'kr' },
+  { code: 'DKK', name: 'Danish Krone', symbol: 'kr' },
+  { code: 'HUF', name: 'Hungarian Forint', symbol: 'Ft' },
+  { code: 'RON', name: 'Romanian Leu', symbol: 'lei' },
+  { code: 'CHF', name: 'Swiss Franc', symbol: 'CHF' },
 ];
 
 // Budget periods

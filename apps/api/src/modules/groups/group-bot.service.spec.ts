@@ -186,8 +186,8 @@ describe('GroupBotService (ABA-658)', () => {
   it('refuses an unsupported currency code', async () => {
     const w = makeGroupBotWorld();
     w.addGroup({ name: 'Trip' }, [ME.userId, 'user-b']);
-    const r = await w.service.start(P, ME, '100 CHF fondue', 'req-00000001');
-    expect(r).toEqual({ kind: 'text', text: t('groupCurrencyUnsupported', 'en', { currency: 'CHF' }) });
+    const r = await w.service.start(P, ME, '100 JPY fondue', 'req-00000001');
+    expect(r).toEqual({ kind: 'text', text: t('groupCurrencyUnsupported', 'en', { currency: 'JPY' }) });
   });
 
   it('a rate that disappears between card and confirm is refused and the draft is kept for a retry', async () => {

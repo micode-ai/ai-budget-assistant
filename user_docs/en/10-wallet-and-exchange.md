@@ -234,6 +234,8 @@ The difference is recorded as a balance adjustment. It is not an expense or an i
 
 > **Note:** Correcting a balance needs an internet connection. Viewers and archived trip accounts cannot correct a balance.
 
+Supported currencies also include CZK, SEK, NOK, DKK, HUF, RON and CHF.
+
 ---
 
 *See also: [Dashboard](./02-dashboard.md) | [Settings](./11-settings.md)*

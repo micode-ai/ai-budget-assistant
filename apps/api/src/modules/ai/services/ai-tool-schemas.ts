@@ -1,7 +1,7 @@
 import OpenAI from 'openai';
 
-const CURRENCY_CODES = ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN'];
-const CURRENCY_SYMBOL_HINT = 'Infer from symbols: ₴=UAH, $=USD, €=EUR, zł=PLN, £=GBP, ₽=RUB, Br=BYN.';
+const CURRENCY_CODES = ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN', 'CZK', 'SEK', 'NOK', 'DKK', 'HUF', 'RON', 'CHF'];
+const CURRENCY_SYMBOL_HINT = 'Infer from symbols: ₴=UAH, $=USD, €=EUR, zł=PLN, £=GBP, ₽=RUB, Br=BYN, Kč=CZK, Ft=HUF, lei=RON. Never guess a code for a bare "kr" (SEK, NOK or DKK): use the ISO code if stated.';
 
 /**
  * The OpenAI function-calling tool schemas exposed to the chat model. Data-only —

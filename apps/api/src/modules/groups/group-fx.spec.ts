@@ -65,8 +65,8 @@ describe('group-fx (pure)', () => {
 
   it('allows the group currency and the provider list only, group currency first in the options', () => {
     expect(isAllowedEntryCurrency('EUR', 'PLN')).toBe(true);
-    expect(isAllowedEntryCurrency('CZK', 'CZK')).toBe(true);
-    expect(isAllowedEntryCurrency('CZK', 'PLN')).toBe(false);
+    expect(isAllowedEntryCurrency('XYZ', 'XYZ')).toBe(true);
+    expect(isAllowedEntryCurrency('XYZ', 'PLN')).toBe(false);
     expect(isAllowedEntryCurrency('eur', 'PLN')).toBe(false);
     expect(isAllowedEntryCurrency(undefined, 'PLN')).toBe(false);
     const opts = entryCurrencyOptions('PLN');

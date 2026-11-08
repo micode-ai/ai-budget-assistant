@@ -92,11 +92,11 @@ describe('extractCurrency', () => {
     }
   });
 
-  it('detects CHF → supported=false', () => {
-    const r = extractCurrency('CHF 120.00 at Migros');
+  it('detects JPY → supported=false', () => {
+    const r = extractCurrency('JPY 12000 at Shop');
     expect(r).not.toBeNull();
     if (r) {
-      expect(r.code).toBe('CHF');
+      expect(r.code).toBe('JPY');
       expect(r.supported).toBe(false);
     }
   });
@@ -226,24 +226,26 @@ describe('parseGeneric', () => {
   });
 
   // Unsupported currency CHF — must return null and warn
-  it('returns null for an unsupported currency (CHF) and emits a console.warn', () => {
+  it('returns null for an unsupported currency (JPY) and emits a console.warn', () => {
     const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
     const result = parseGeneric(
       'Kartenzahlung',
-      'Zahlung CHF 120.00 bei Migros Supermarkt',
+      'Zahlung JPY 12000.00 bei Shop Supermarkt',
     );
     expect(result).toBeNull();
-    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('CHF'));
+    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('JPY'));
     warnSpy.mockRestore();
   });
 
-  // Unsupported currency CZK
-  it('returns null for CZK (unsupported) and emits a console.warn', () => {
-    const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
-    const result = parseGeneric('Platba', 'Zaplaceno 350,00 CZK v Billa');
-    expect(result).toBeNull();
-    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('CZK'));
-    warnSpy.mockRestore();
+  // ABA-721: CEE/Nordic currencies are supported; bare `kr` stays ambiguous.
+  it('maps CZK, CHF and RON tokens and leaves a bare kr unmapped', () => {
+    expect(extractCurrency('Zaplaceno 350,00 CZK v Billa')).toEqual({ code: 'CZK', supported: true });
+    expect(extractCurrency('Platba 99,00 Kč')).toEqual({ code: 'CZK', supported: true });
+    expect(extractCurrency('Zahlung CHF 120.00 bei Migros')).toEqual({ code: 'CHF', supported: true });
+    expect(extractCurrency('Plata 45,00 lei')).toEqual({ code: 'RON', supported: true });
+    expect(extractCurrency('Köp 120,00 SEK ICA')).toEqual({ code: 'SEK', supported: true });
+    expect(extractCurrency('Kjøp 120,00 kr Rema')).toBeNull();
+    expect(extractCurrency('Nokia store 5,00 EUR')).toEqual({ code: 'EUR', supported: true });
   });
 });
 

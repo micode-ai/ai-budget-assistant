@@ -234,6 +234,8 @@ La différence est enregistrée comme un ajustement de solde. Ce n'est ni une d�
 
 > **Remarque :** la correction du solde nécessite une connexion internet. Les lecteurs et les comptes de voyage archivés ne peuvent pas corriger le solde.
 
+Les devises CZK, SEK, NOK, DKK, HUF, RON et CHF sont aussi prises en charge.
+
 ---
 
 *Voir aussi : [Tableau de bord](./02-dashboard.md) | [Parametres](./11-settings.md)*

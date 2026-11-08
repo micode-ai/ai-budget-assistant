@@ -12,9 +12,10 @@ import { partitionRateAlerts } from '@/features/wallet/rateAlerts';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { getIntlLocale } from '@/i18n';
 import type { Currency, RateWatchDirection, ExchangeRateWatch } from '@budget/shared-types';
+import { SUPPORTED_CURRENCIES } from '@budget/shared-utils';
 import { trackAction } from '@/services/telemetry';
 
-const CURRENCIES: Currency[] = ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN'];
+const CURRENCIES: Currency[] = SUPPORTED_CURRENCIES.map((c) => c.code);
 
 /**
  * Every rate alert the user has, across all pairs — the list the feature was

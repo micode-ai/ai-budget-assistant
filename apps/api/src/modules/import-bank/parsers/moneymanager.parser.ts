@@ -176,7 +176,7 @@ function directionOf(raw: string): 'income' | 'expense' | null {
 }
 
 function currencyFromSymbol(raw: string): string | undefined {
-  const code = raw.match(/\b(PLN|EUR|USD|GBP|UAH|RUB|BYN)\b/i);
+  const code = raw.match(/\b(PLN|EUR|USD|GBP|UAH|RUB|BYN|CZK|SEK|NOK|DKK|HUF|RON|CHF)\b/i);
   if (code) return code[1].toUpperCase();
   return SYMBOL_TO_CURRENCY.find(([re]) => re.test(raw))?.[1];
 }

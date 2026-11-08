@@ -1,4 +1,4 @@
-export type Currency = 'USD' | 'EUR' | 'PLN' | 'GBP' | 'UAH' | 'RUB' | 'BYN';
+export type Currency = 'USD' | 'EUR' | 'PLN' | 'GBP' | 'UAH' | 'RUB' | 'BYN' | 'CZK' | 'SEK' | 'NOK' | 'DKK' | 'HUF' | 'RON' | 'CHF';
 
 export type SyncStatus = 'pending' | 'synced' | 'conflict' | 'error';
 

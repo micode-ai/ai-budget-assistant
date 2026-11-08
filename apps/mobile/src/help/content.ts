@@ -1906,6 +1906,8 @@ The difference is recorded as a balance adjustment. It is not an expense or an i
 
 > **Note:** Correcting a balance needs an internet connection. Viewers and archived trip accounts cannot correct a balance.
 
+Supported currencies also include CZK, SEK, NOK, DKK, HUF, RON and CHF.
+
 ---
 
 *See also: Dashboard | Settings*
@@ -7240,6 +7242,8 @@ iOS, Android, Web
 
 > **Примечание:** для исправления баланса нужно подключение к интернету. Наблюдатели и архивные счета поездок исправлять баланс не могут.
 
+Теперь также поддерживаются CZK, SEK, NOK, DKK, HUF, RON и CHF.
+
 ---
 
 *См. также: Главная | Настройки*
@@ -12573,6 +12577,8 @@ iOS, Android, Web
 
 > **Примітка:** для виправлення балансу потрібне підключення до інтернету. Спостерігачі та архівні рахунки поїздок виправляти баланс не можуть.
 
+Тепер також підтримуються CZK, SEK, NOK, DKK, HUF, RON і CHF.
+
 ---
 
 *Див. також: Головна | Налаштування*
@@ -17840,6 +17846,8 @@ Różnica zapisuje się jako korekta salda. Nie jest wydatkiem ani przychodem, w
 
 > **Uwaga:** korekta salda wymaga połączenia z internetem. Obserwatorzy i zarchiwizowane konta podróży nie mogą korygować salda.
 
+Obsługiwane są także CZK, SEK, NOK, DKK, HUF, RON i CHF.
+
 ---
 
 *Zobacz takze: Pulpit | Ustawienia*
@@ -23106,6 +23114,8 @@ Die Differenz wird als Saldokorrektur gespeichert. Sie ist weder Ausgabe noch Ei
 
 > **Hinweis:** Zum Korrigieren ist eine Internetverbindung nötig. Betrachter und archivierte Reisekonten können den Saldo nicht korrigieren.
 
+Unterstützt werden jetzt auch CZK, SEK, NOK, DKK, HUF, RON und CHF.
+
 ---
 
 *Siehe auch: Ubersicht | Einstellungen*
@@ -28351,6 +28361,8 @@ La diferencia se guarda como un ajuste de saldo. No es un gasto ni un ingreso, a
 
 > **Nota:** para corregir el saldo hace falta conexión a internet. Los observadores y las cuentas de viaje archivadas no pueden corregir el saldo.
 
+También se admiten CZK, SEK, NOK, DKK, HUF, RON y CHF.
+
 ---
 
 *Ver tambien: Panel | Ajustes*
@@ -33581,6 +33593,8 @@ Si le solde du portefeuille ne correspond plus à l'argent que vous avez réelle
 La différence est enregistrée comme un ajustement de solde. Ce n'est ni une dépense ni un revenu : les budgets et les analyses ne changent pas. S'il manque de l'argent, l'application indique combien n'a pas été saisi ce mois-ci et propose **Configurer les rappels de suivi**.
 
 > **Remarque :** la correction du solde nécessite une connexion internet. Les lecteurs et les comptes de voyage archivés ne peuvent pas corriger le solde.
+
+Les devises CZK, SEK, NOK, DKK, HUF, RON et CHF sont aussi prises en charge.
 
 ---
 
@@ -38815,6 +38829,8 @@ iOS, Android, Web
 
 > **Заўвага:** для выпраўлення балансу патрэбна падключэнне да інтэрнэту. Назіральнікі і архіўныя рахункі паездак выпраўляць баланс не могуць.
 
+Цяпер таксама падтрымліваюцца CZK, SEK, NOK, DKK, HUF, RON і CHF.
+
 ---
 
 *Гл. таксама: Галоўная | Налады*
@@ -44007,6 +44023,8 @@ Als het saldo in je portemonnee niet meer klopt met het geld dat je echt hebt �
 Het verschil wordt opgeslagen als saldocorrectie. Het is geen uitgave en geen inkomen, dus budgetten en analyses veranderen niet. Ontbreekt er geld, dan laat de app zien hoeveel deze maand niet is vastgelegd en biedt **Herinneringen voor bijhouden instellen** aan.
 
 > **Let op:** voor een saldocorrectie is een internetverbinding nodig. Kijkers en gearchiveerde reisrekeningen kunnen het saldo niet corrigeren.
+
+Ook CZK, SEK, NOK, DKK, HUF, RON en CHF worden ondersteund.
 
 ---
 

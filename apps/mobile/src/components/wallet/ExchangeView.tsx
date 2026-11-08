@@ -8,11 +8,12 @@ import { Ionicons } from '@expo/vector-icons';
 import { useWalletStore } from '@/stores/walletStore';
 import { api } from '@/services/api';
 import type { Currency } from '@budget/shared-types';
+import { SUPPORTED_CURRENCIES } from '@budget/shared-utils';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { RateAlertsSection } from '@/components/wallet/RateAlertsSection';
 
-const CURRENCIES: Currency[] = ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN'];
+const CURRENCIES: Currency[] = SUPPORTED_CURRENCIES.map((c) => c.code);
 
 function isCurrency(value: unknown): value is Currency {
   return typeof value === 'string' && (CURRENCIES as string[]).includes(value);

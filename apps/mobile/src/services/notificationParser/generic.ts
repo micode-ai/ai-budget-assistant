@@ -21,6 +21,7 @@
 // ---------------------------------------------------------------------------
 export const SUPPORTED_CURRENCIES = new Set<string>([
   'USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN',
+  'CZK', 'SEK', 'NOK', 'DKK', 'HUF', 'RON', 'CHF',
 ]);
 
 // ---------------------------------------------------------------------------
@@ -46,6 +47,20 @@ export const SYMBOL_TO_ISO: Record<string, string> = {
   'RUB': 'RUB',
   'BYN': 'BYN',
   'Br': 'BYN', // Belarusian ruble abbreviation used in some apps
+  // ISO codes for the Central/Northern European currencies (ABA-721). A bare `kr`
+  // is deliberately NOT mapped: it is SEK, NOK or DKK and only the ISO code or the
+  // bank can tell them apart. Bare `Ft` and `Fr.` are skipped too (too ambiguous).
+  'CZK': 'CZK',
+  'Kč': 'CZK',
+  'KČ': 'CZK',
+  'SEK': 'SEK',
+  'NOK': 'NOK',
+  'DKK': 'DKK',
+  'HUF': 'HUF',
+  'RON': 'RON',
+  'lei': 'RON',
+  'LEI': 'RON',
+  'CHF': 'CHF',
   // No unsupported currency is mapped here — this map is symbol → ISO for
   // currencies the app can actually store. See DETECTABLE_UNSUPPORTED below for
   // the ones we recognise only in order to say why we are skipping them.
@@ -59,13 +74,11 @@ export const SYMBOL_TO_ISO: Record<string, string> = {
  * where no currency was found at all, and a user in e.g. Switzerland just sees
  * auto-capture silently do nothing.
  *
- * Kept to CHF and CZK on purpose. `CURRENCY_RE` is built without word
- * boundaries, so every token here can also match inside an unrelated word —
- * and a false match makes a perfectly good capture get skipped. `NOK` would hit
- * "NOKIA", `SEK` would hit Polish "SEKTOR", and `RON` would hit "ELEKTRONIKA".
- * Do not extend this list without first anchoring the regex on word boundaries.
+ * Kept short on purpose: only currencies the app does not store but that a user could
+ * plausibly meet. ASCII tokens are matched on word boundaries (so `NOK` no longer hits
+ * "NOKIA"); the supported Nordic/CEE codes now live in SYMBOL_TO_ISO.
  */
-const DETECTABLE_UNSUPPORTED = ['CHF', 'CZK'];
+const DETECTABLE_UNSUPPORTED = ['JPY', 'CAD', 'AUD'];
 
 // ---------------------------------------------------------------------------
 // Amount extraction

@@ -14,6 +14,7 @@ import { useAccountStore } from '@/stores/accountStore';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import type { AccountType, Currency } from '@budget/shared-types';
+import { SUPPORTED_CURRENCIES } from '@budget/shared-utils';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { PaneChildWidth } from '@/components/PaneChildWidth';
 
@@ -30,7 +31,7 @@ const ACCOUNT_TYPES: { type: AccountType; icon: IconName }[] = [
   { type: 'trip', icon: 'airplane-outline' },
 ];
 
-const CURRENCIES: Currency[] = ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN'];
+const CURRENCIES: Currency[] = SUPPORTED_CURRENCIES.map((c) => c.code);
 
 export default function CreateAccountScreen() {
   const { t } = useTranslation();

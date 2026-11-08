@@ -235,6 +235,8 @@ Die Differenz wird als Saldokorrektur gespeichert. Sie ist weder Ausgabe noch Ei
 
 > **Hinweis:** Zum Korrigieren ist eine Internetverbindung nötig. Betrachter und archivierte Reisekonten können den Saldo nicht korrigieren.
 
+Unterstützt werden jetzt auch CZK, SEK, NOK, DKK, HUF, RON und CHF.
+
 ---
 
 *Siehe auch: [Ubersicht](./02-dashboard.md) | [Einstellungen](./11-settings.md)*

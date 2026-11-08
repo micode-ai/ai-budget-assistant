@@ -33,7 +33,7 @@ const ISO_CURRENCY = /^[A-Z]{3}$/;
  * currency summary line is stale (it omits `BYN`); the source of truth is
  * the `Currency` type itself, not that doc.
  */
-const SUPPORTED_AI_CURRENCIES = new Set(['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN']);
+const SUPPORTED_AI_CURRENCIES = new Set(['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN', 'CZK', 'SEK', 'NOK', 'DKK', 'HUF', 'RON', 'CHF']);
 
 /** Strip a ```json fence if the model wrapped its answer in one. */
 function parseJson(raw: string): any | null {

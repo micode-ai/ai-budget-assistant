@@ -16,7 +16,7 @@ function toWatchResponse<T extends { targetRate: unknown; triggeredRate: unknown
 // Mirrors ExchangeRateService's own local list (that service filters the live provider
 // response down to exactly these). Kept in sync by hand — this module has no runtime
 // dependency on @budget/shared-types (type-only for the API, see CLAUDE.md).
-const SUPPORTED_CURRENCIES = ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN'];
+const SUPPORTED_CURRENCIES = ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN', 'CZK', 'SEK', 'NOK', 'DKK', 'HUF', 'RON', 'CHF'];
 
 // Cheap abuse guard — no product reason for a user to ever need more than a handful.
 export const MAX_ACTIVE_WATCHES = 20;

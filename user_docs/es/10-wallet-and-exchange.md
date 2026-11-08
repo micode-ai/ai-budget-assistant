@@ -236,6 +236,8 @@ La diferencia se guarda como un ajuste de saldo. No es un gasto ni un ingreso, a
 
 > **Nota:** para corregir el saldo hace falta conexión a internet. Los observadores y las cuentas de viaje archivadas no pueden corregir el saldo.
 
+También se admiten CZK, SEK, NOK, DKK, HUF, RON y CHF.
+
 ---
 
 *Ver tambien: [Panel](./02-dashboard.md) | [Ajustes](./11-settings.md)*

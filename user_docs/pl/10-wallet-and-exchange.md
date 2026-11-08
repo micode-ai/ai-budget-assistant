@@ -238,6 +238,8 @@ Różnica zapisuje się jako korekta salda. Nie jest wydatkiem ani przychodem, w
 
 > **Uwaga:** korekta salda wymaga połączenia z internetem. Obserwatorzy i zarchiwizowane konta podróży nie mogą korygować salda.
 
+Obsługiwane są także CZK, SEK, NOK, DKK, HUF, RON i CHF.
+
 ---
 
 *Zobacz takze: [Pulpit](./02-dashboard.md) | [Ustawienia](./11-settings.md)*

@@ -197,7 +197,7 @@ describe('validateExtractedRows', () => {
   });
 
   it('drops a row with a well-formed but unsupported currency code (no FX rate exists for it)', () => {
-    const raw = JSON.stringify({ rows: [{ date: '2026-01-15', amount: -5, currencyCode: 'CHF', description: 'x' }] });
+    const raw = JSON.stringify({ rows: [{ date: '2026-01-15', amount: -5, currencyCode: 'JPY', description: 'x' }] });
     expect(validateExtractedRows(raw)).toEqual([]);
   });
 

@@ -55,7 +55,7 @@ function buildPrompt(accountCurrency: string): string {
 Fill these fields:
 - "productName": product name as printed, brand included, without the pack size. null if unreadable.
 - "price": the price a shopper pays right now for one item, as a number (use a dot for decimals). When a promo price is shown next to a crossed-out regular price, this is the PROMO price. null if unreadable.
-- "currencyCode": ISO 4217 code of that price (zł/PLN -> "PLN", € -> "EUR", $ -> "USD", £ -> "GBP", ₴ -> "UAH", ₽ -> "RUB", Br -> "BYN"). If the tag shows no currency sign, return "${accountCurrency}".
+- "currencyCode": ISO 4217 code of that price (zł/PLN -> "PLN", € -> "EUR", $ -> "USD", £ -> "GBP", ₴ -> "UAH", ₽ -> "RUB", Br -> "BYN", Kč -> "CZK", Ft -> "HUF", lei -> "RON", CHF/Fr. -> "CHF"; for "kr" use SEK/NOK/DKK only if the country is clear). If the tag shows no currency sign, return "${accountCurrency}".
 - "size": pack size exactly as printed, e.g. "500 g", "1 l", "6 x 0,5 l". null if absent.
 - "unitPriceText": price per kg / l / piece exactly as printed, e.g. "9,98 zł/kg". null if absent.
 - "regularPrice": the crossed-out regular price as a number, only when a promo is shown. null otherwise.

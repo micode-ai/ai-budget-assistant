@@ -234,6 +234,8 @@ Het verschil wordt opgeslagen als saldocorrectie. Het is geen uitgave en geen in
 
 > **Let op:** voor een saldocorrectie is een internetverbinding nodig. Kijkers en gearchiveerde reisrekeningen kunnen het saldo niet corrigeren.
 
+Ook CZK, SEK, NOK, DKK, HUF, RON en CHF worden ondersteund.
+
 ---
 
 *Zie ook: [Dashboard](./02-dashboard.md) | [Instellingen](./11-settings.md)*

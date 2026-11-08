@@ -10,6 +10,13 @@ const currencyConfig: Record<Currency, { symbol: string; locale: string; positio
   UAH: { symbol: '₴', locale: 'uk-UA', position: 'after' },
   RUB: { symbol: '₽', locale: 'ru-RU', position: 'after' },
   BYN: { symbol: 'Br', locale: 'be-BY', position: 'after' },
+  CZK: { symbol: 'Kč', locale: 'cs-CZ', position: 'after' },
+  SEK: { symbol: 'kr', locale: 'sv-SE', position: 'after' },
+  NOK: { symbol: 'kr', locale: 'nb-NO', position: 'after' },
+  DKK: { symbol: 'kr', locale: 'da-DK', position: 'after' },
+  HUF: { symbol: 'Ft', locale: 'hu-HU', position: 'after' },
+  RON: { symbol: 'lei', locale: 'ro-RO', position: 'after' },
+  CHF: { symbol: 'CHF', locale: 'de-CH', position: 'before' },
 };
 
 export function formatCurrency(amount: number, currency: Currency | string): string {

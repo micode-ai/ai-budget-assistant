@@ -59,7 +59,7 @@ export function parseAmount(text: string): ParsedAmount | null {
   }
 
   // Try: amount + currency code (e.g., "100 UAH taxi", "50 EUR dinner")
-  const codeMatch = trimmed.match(/^(\d+(?:[.,]\d+)?)\s+(USD|EUR|PLN|GBP|UAH|RUB|BYN)\b\s*(.*)?$/i);
+  const codeMatch = trimmed.match(/^(\d+(?:[.,]\d+)?)\s+(USD|EUR|PLN|GBP|UAH|RUB|BYN|CZK|SEK|NOK|DKK|HUF|RON|CHF)\b\s*(.*)?$/i);
   if (codeMatch) {
     const amount = parseFloat(codeMatch[1].replace(',', '.'));
     if (isNaN(amount) || amount <= 0) return null;

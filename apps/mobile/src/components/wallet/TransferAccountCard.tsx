@@ -1,12 +1,12 @@
 import { ReactNode } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, TextInput } from 'react-native';
 import { useTheme, useStyles, type Theme } from '@/theme';
-import { formatCurrency } from '@budget/shared-utils';
+import { formatCurrency, SUPPORTED_CURRENCIES } from '@budget/shared-utils';
 import type { Account, AccountRole, Currency } from '@budget/shared-types';
 
 type AccountWithRole = Account & { myRole: AccountRole };
 
-const CURRENCIES: Currency[] = ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN'];
+const CURRENCIES: Currency[] = SUPPORTED_CURRENCIES.map((c) => c.code);
 
 interface Props {
   label: string;
