@@ -1,0 +1,18 @@
+{
+  "shortcuts": [
+    { "id": "add_expense", "path": "expense/new", "key": "shortcut_add_expense" },
+    { "id": "scan_receipt", "path": "expense/receipt", "key": "shortcut_scan_receipt" },
+    { "id": "voice_expense", "path": "expense/voice", "key": "shortcut_voice_expense" }
+  ],
+  "labels": {
+    "en": ["Add expense", "Scan receipt", "Voice"],
+    "de": ["Ausgabe hinzufügen", "Beleg scannen", "Sprache"],
+    "es": ["Añadir gasto", "Escanear recibo", "Voz"],
+    "fr": ["Ajouter une dépense", "Scanner un reçu", "Voix"],
+    "nl": ["Uitgave toevoegen", "Bon scannen", "Spraak"],
+    "pl": ["Dodaj wydatek", "Skanuj paragon", "Głos"],
+    "ru": ["Добавить расход", "Сканировать чек", "Голос"],
+    "uk": ["Додати витрату", "Сканувати чек", "Голос"],
+    "be": ["Дадаць выдатак", "Сканаваць чэк", "Голас"]
+  }
+}

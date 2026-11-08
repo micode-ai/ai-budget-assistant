@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+  <shortcut android:shortcutId="add_expense" android:enabled="true" android:icon="@mipmap/ic_launcher" android:shortcutShortLabel="@string/shortcut_add_expense" android:shortcutLongLabel="@string/shortcut_add_expense">
+    <intent android:action="android.intent.action.VIEW" android:data="budget:///expense/new" android:targetPackage="com.budget.assistant" android:targetClass="com.budget.assistant.MainActivity"/>
+  </shortcut>
+  <shortcut android:shortcutId="scan_receipt" android:enabled="true" android:icon="@mipmap/ic_launcher" android:shortcutShortLabel="@string/shortcut_scan_receipt" android:shortcutLongLabel="@string/shortcut_scan_receipt">
+    <intent android:action="android.intent.action.VIEW" android:data="budget:///expense/receipt" android:targetPackage="com.budget.assistant" android:targetClass="com.budget.assistant.MainActivity"/>
+  </shortcut>
+  <shortcut android:shortcutId="voice_expense" android:enabled="true" android:icon="@mipmap/ic_launcher" android:shortcutShortLabel="@string/shortcut_voice_expense" android:shortcutLongLabel="@string/shortcut_voice_expense">
+    <intent android:action="android.intent.action.VIEW" android:data="budget:///expense/voice" android:targetPackage="com.budget.assistant" android:targetClass="com.budget.assistant.MainActivity"/>
+  </shortcut>
+</shortcuts>

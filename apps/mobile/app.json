@@ -59,6 +59,7 @@
     },
     "plugins": [
       "expo-router",
+      "./plugins/withLauncherShortcuts",
       "expo-secure-store",
       "expo-local-authentication",
       "expo-location",

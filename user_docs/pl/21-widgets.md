@@ -89,6 +89,10 @@ Zacznij rejestrować wydatek jednym stuknięciem — bez otwierania aplikacji.
 | Budżet – Przegląd | Co 30 minut |
 | Budżet – Szybkie dodanie | Statyczny |
 
+## Skróty na ikonie (Android)
+
+Przytrzymaj ikonę aplikacji, aby od razu przejść do **Dodaj wydatek**, **Skanuj paragon** lub **Głos**. Bez żadnej konfiguracji.
+
 ---
 
 ## FAQ

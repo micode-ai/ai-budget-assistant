@@ -89,6 +89,10 @@ Empieza a registrar un gasto con un toque, sin abrir la aplicación.
 | Presupuesto – Vista general | Cada 30 minutos |
 | Presupuesto – Añadir rápido | Estático |
 
+## Accesos directos del launcher (Android)
+
+Mantén pulsado el icono de la app para ir directo a **Añadir gasto**, **Escanear recibo** o **Voz**. No requiere configuración.
+
 ---
 
 ## Preguntas frecuentes

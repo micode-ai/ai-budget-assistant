@@ -119,6 +119,10 @@ A: Nee. Widgets voor het startscherm vereisen Android. Alle dezelfde functies zi
 **V: Kan ik de grootte van de widgets aanpassen?**
 A: Budget – Vandaag en Budget – Snel toevoegen hebben een vaste grootte. Budget – Week kan horizontaal worden vergroot of verkleind. Budget – Overzicht kan zowel horizontaal als verticaal worden aangepast.
 
+## Launcher-snelkoppelingen (Android)
+
+Houd het app-pictogram ingedrukt om direct naar **Uitgave toevoegen**, **Bon scannen** of **Spraak** te gaan. Geen instelling nodig.
+
 ---
 
 *Zie ook: [Spraakinvoer & bonnen scannen](./04-voice-and-receipt.md) | [Uitgaven & inkomsten](./03-expenses-and-income.md)*

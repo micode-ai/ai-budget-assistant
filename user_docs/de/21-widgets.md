@@ -89,6 +89,10 @@ Starten Sie die Ausgabenerfassung mit einem Tipp – ohne die App zu öffnen.
 | Budget – Übersicht | Alle 30 Minuten |
 | Budget – Schnell hinzufügen | Statisch |
 
+## Launcher-Shortcuts (Android)
+
+Halte das App-Symbol gedrückt, um direkt zu **Ausgabe hinzufügen**, **Beleg scannen** oder **Sprache** zu springen. Keine Einrichtung nötig.
+
 ---
 
 ## FAQ

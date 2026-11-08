@@ -1,0 +1,5 @@
+<resources>
+  <string name="shortcut_add_expense">Дадаць выдатак</string>
+  <string name="shortcut_scan_receipt">Сканаваць чэк</string>
+  <string name="shortcut_voice_expense">Голас</string>
+</resources>

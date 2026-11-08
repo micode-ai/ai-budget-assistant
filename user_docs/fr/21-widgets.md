@@ -89,6 +89,10 @@ Commencez à saisir une dépense en un seul appui, sans ouvrir l'application.
 | Budget – Vue d'ensemble | Toutes les 30 minutes |
 | Budget – Ajout rapide | Statique |
 
+## Raccourcis du lanceur (Android)
+
+Appuyez longuement sur l'icône de l'app pour accéder directement à **Ajouter une dépense**, **Scanner un reçu** ou **Voix**. Aucune configuration requise.
+
 ---
 
 ## FAQ

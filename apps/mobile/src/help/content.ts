@@ -3432,6 +3432,10 @@ A: No. Home screen widgets require Android. All the same features are available 
 **Q: Can I resize the widgets?**
 A: Budget – Today and Budget – Quick Add have a fixed size. Budget – Week can be resized horizontally. Budget – Overview can be resized both horizontally and vertically.
 
+## Launcher shortcuts (Android)
+
+Long-press the app icon to jump straight to **Add expense**, **Scan receipt** or **Voice**. No setup needed.
+
 ---
 
 *See also: Voice Input & Receipt Scanning | Expenses & Income*
@@ -8762,6 +8766,10 @@ AI Budget Assistant предлагает три уровня подписки. �
 **В: Можно ли изменить размер виджетов?**
 О: «Сегодня» и «Быстрое добавление» имеют фиксированный размер. «Неделя» можно растянуть по горизонтали. «Обзор» можно изменять как по горизонтали, так и по вертикали.
 
+## Быстрые действия на значке (Android)
+
+Удерживайте значок приложения, чтобы сразу перейти к **Добавить расход**, **Сканировать чек** или **Голос**. Настройка не нужна.
+
 ---
 
 *См. также: Голосовой ввод и сканирование чеков | Расходы и доходы*
@@ -14046,6 +14054,10 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 | Бюджет — Огляд | Кожні 30 хвилин |
 | Бюджет — Швидке додавання | Статично |
 
+## Швидкі дії на значку (Android)
+
+Утримуйте значок застосунку, щоб одразу перейти до **Додати витрату**, **Сканувати чек** або **Голос**. Налаштування не потрібне.
+
 ---
 
 ## Часті запитання
@@ -19310,6 +19322,10 @@ Zacznij rejestrować wydatek jednym stuknięciem — bez otwierania aplikacji.
 | Budżet – Przegląd | Co 30 minut |
 | Budżet – Szybkie dodanie | Statyczny |
 
+## Skróty na ikonie (Android)
+
+Przytrzymaj ikonę aplikacji, aby od razu przejść do **Dodaj wydatek**, **Skanuj paragon** lub **Głos**. Bez żadnej konfiguracji.
+
 ---
 
 ## FAQ
@@ -24573,6 +24589,10 @@ Starten Sie die Ausgabenerfassung mit einem Tipp – ohne die App zu öffnen.
 | Budget – Übersicht | Alle 30 Minuten |
 | Budget – Schnell hinzufügen | Statisch |
 
+## Launcher-Shortcuts (Android)
+
+Halte das App-Symbol gedrückt, um direkt zu **Ausgabe hinzufügen**, **Beleg scannen** oder **Sprache** zu springen. Keine Einrichtung nötig.
+
 ---
 
 ## FAQ
@@ -29813,6 +29833,10 @@ Empieza a registrar un gasto con un toque, sin abrir la aplicación.
 | Presupuesto – Vista general | Cada 30 minutos |
 | Presupuesto – Añadir rápido | Estático |
 
+## Accesos directos del launcher (Android)
+
+Mantén pulsado el icono de la app para ir directo a **Añadir gasto**, **Escanear recibo** o **Voz**. No requiere configuración.
+
 ---
 
 ## Preguntas frecuentes
@@ -35039,6 +35063,10 @@ Commencez à saisir une dépense en un seul appui, sans ouvrir l'application.
 | Budget – Semaine | Toutes les 30 minutes |
 | Budget – Vue d'ensemble | Toutes les 30 minutes |
 | Budget – Ajout rapide | Statique |
+
+## Raccourcis du lanceur (Android)
+
+Appuyez longuement sur l'icône de l'app pour accéder directement à **Ajouter une dépense**, **Scanner un reçu** ou **Voix**. Aucune configuration requise.
 
 ---
 
@@ -40271,6 +40299,10 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 | Бюджэт — Агляд | Кожныя 30 хвілін |
 | Бюджэт — Хуткае дабаўленне | Статычна |
 
+## Хуткія дзеянні на значку (Android)
+
+Утрымлівайце значок праграмы, каб адразу перайсці да **Дадаць выдатак**, **Сканаваць чэк** або **Голас**. Налада не патрэбна.
+
 ---
 
 ## Частыя пытанні
@@ -45497,6 +45529,10 @@ A: Nee. Widgets voor het startscherm vereisen Android. Alle dezelfde functies zi
 
 **V: Kan ik de grootte van de widgets aanpassen?**
 A: Budget – Vandaag en Budget – Snel toevoegen hebben een vaste grootte. Budget – Week kan horizontaal worden vergroot of verkleind. Budget – Overzicht kan zowel horizontaal als verticaal worden aangepast.
+
+## Launcher-snelkoppelingen (Android)
+
+Houd het app-pictogram ingedrukt om direct naar **Uitgave toevoegen**, **Bon scannen** of **Spraak** te gaan. Geen instelling nodig.
 
 ---
 

@@ -1,0 +1,5 @@
+<resources>
+  <string name="shortcut_add_expense">Uitgave toevoegen</string>
+  <string name="shortcut_scan_receipt">Bon scannen</string>
+  <string name="shortcut_voice_expense">Spraak</string>
+</resources>

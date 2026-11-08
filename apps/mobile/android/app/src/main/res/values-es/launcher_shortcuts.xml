@@ -1,0 +1,5 @@
+<resources>
+  <string name="shortcut_add_expense">Añadir gasto</string>
+  <string name="shortcut_scan_receipt">Escanear recibo</string>
+  <string name="shortcut_voice_expense">Voz</string>
+</resources>

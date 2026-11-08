@@ -119,6 +119,10 @@ A: No. Home screen widgets require Android. All the same features are available 
 **Q: Can I resize the widgets?**
 A: Budget – Today and Budget – Quick Add have a fixed size. Budget – Week can be resized horizontally. Budget – Overview can be resized both horizontally and vertically.
 
+## Launcher shortcuts (Android)
+
+Long-press the app icon to jump straight to **Add expense**, **Scan receipt** or **Voice**. No setup needed.
+
 ---
 
 *See also: [Voice Input & Receipt Scanning](./04-voice-and-receipt.md) | [Expenses & Income](./03-expenses-and-income.md)*

@@ -79,6 +79,7 @@ the section you came for — it states what must not break and why. A missing se
 - [batch-receipt-scanning](features/batch-receipt-scanning.md) — the session count and the non-blocking checkpoint every fifteen receipts
 
 ### Web, marketing site and growth
+- [android-launcher-shortcuts](features/android-launcher-shortcuts.md) — long-press app icon shortcuts: add expense, scan receipt, voice.
 - [web-build-and-hosting](features/web-build-and-hosting.md) — the Expo web build, platform splits,
   the two nginx containers, and the deploy traps that have bitten
 - [marketing-site](features/marketing-site.md) — the three static generators, nine languages, and
