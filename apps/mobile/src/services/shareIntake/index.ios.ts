@@ -4,6 +4,8 @@ import type { SharedFile } from '@/features/share-intake/shareIntakeQueue';
 export interface SharePayload {
   files: SharedFile[];
   droppedCount: number;
+  /** Plain-text shares (SMS, e-mail body, chat message). */
+  texts: string[];
 }
 
 export async function getInitialShare(): Promise<SharePayload | null> {

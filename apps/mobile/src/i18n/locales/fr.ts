@@ -560,6 +560,8 @@ export default {
     discardBody: "Fichiers partagés pas encore ajoutés : {{count}}. Les abandonner ?",
     droppedTitle: "Certains fichiers ont été ignorés",
     droppedBody: "Fichiers non ajoutés : {{count}}. Images et PDF uniquement, 10 maximum à la fois (PDF jusqu’à 10 Mo).",
+    textNotSpendTitle: "Cela ne ressemble pas à un paiement",
+    textNotSpendBody: "Le texte partagé ne contient aucun terme de paiement, il n’a donc pas été converti en dépense. Vous pouvez toujours la saisir manuellement.",
     limitStoppedTitle: "Limite d’IA atteinte",
     limitStoppedBody: "Fichiers non traités : {{count}}. Partagez-les à nouveau plus tard.",
     viewerBlockedTitle: "Impossible d’ajouter des dépenses ici",

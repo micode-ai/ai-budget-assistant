@@ -134,6 +134,8 @@ Heb je een bon als screenshot, een bevestiging uit je bank-app of een e-bon als 
 
 Je kunt **afbeeldingen en pdf's** delen, tot **10 bestanden tegelijk** (pdf tot 10 MB). Meerdere bestanden worden na elkaar losse uitgaven — de titel toont de voortgang ('Bon 2 van 5') en **Volgende** gaat naar het volgende bestand. Kan een bestand niet worden gelezen, kies dan **Overslaan** of **Handmatig invoeren**. Bij sluiten vraagt de app eerst voordat wachtende bestanden worden weggegooid. Elk bestand telt als één bonscan binnen je AI-limiet; is die op, dan blijven de overige bestanden voor later.
 
+**Betaalteksten:** selecteer een bank-sms, e-mail of chatbericht, tik op **Delen** en kies AI Budget. De app leest bedrag en winkel en opent het formulier voor een nieuwe uitgave vooraf ingevuld — controleer en sla op. Een tekst die niet op een betaling lijkt (reclame, geweigerde transactie) wordt nooit een uitgave.
+
 Delen werkt alleen op Android. Gebruik op iPhone en in de web-app **Bon scannen**.
 
 ### E-bonnetjes doorsturen per e-mail

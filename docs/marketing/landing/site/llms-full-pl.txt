@@ -4672,6 +4672,8 @@ Masz paragon jako zrzut ekranu, potwierdzenie z aplikacji banku albo e-paragon w
 
 Możesz udostępniać **zdjęcia i pliki PDF**, maksymalnie **10 plików naraz** (PDF do 10 MB). Kilka plików to osobne wydatki, jeden po drugim — tytuł pokazuje postęp („Paragon 2 z 5”), a **Dalej** przechodzi do kolejnego pliku. Jeśli pliku nie da się odczytać, wybierz **Pomiń** albo **Wpisz ręcznie**. Zamknięcie ekranu wymaga potwierdzenia, zanim oczekujące pliki zostaną odrzucone. Każdy plik to jedno skanowanie paragonu w limicie AI; gdy limit się wyczerpie, pozostałe pliki zostają na później.
 
+**Teksty o płatnościach:** zaznacz SMS z banku, e-mail lub wiadomość z komunikatora, wybierz **Udostępnij** i AI Budżet. Aplikacja odczyta kwotę i sprzedawcę i otworzy wstępnie wypełniony formularz nowego wydatku — sprawdź i zapisz. Tekst, który nie wygląda na płatność (reklama, odrzucona transakcja), nigdy nie stanie się wydatkiem. Tylko Android.
+
 Udostępnianie działa tylko na Androidzie. Na iPhonie i w aplikacji webowej użyj **Skanuj paragon**.
 
 ### Przekazywanie e-paragonów e-mailem

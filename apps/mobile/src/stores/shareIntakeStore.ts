@@ -7,11 +7,16 @@ interface ShareIntakeState {
   queue: ShareQueue;
   /** Files dropped by add() (cap/MIME/native limits) — shown once, then cleared by the view. */
   lastDropped: number;
+  /** Shared plain texts waiting for the root hook (SMS / e-mail / chat). */
+  texts: string[];
   /** Set when a queue arrives; the root `useShareIntake` hook consumes it. */
   pendingNavigation: boolean;
   /** True while `expense/receipt?source=share` is mounted — the root hook stays idle then. */
   screenOpen: boolean;
   add: (files: SharedFile[], nativeDropped: number) => void;
+  addTexts: (texts: string[]) => void;
+  /** Returns and clears the waiting texts. */
+  takeTexts: () => string[];
   /** Advances; returns the finished file. */
   next: () => SharedFile | null;
   /** Returns everything not yet processed and empties the queue. */
@@ -29,8 +34,15 @@ interface ShareIntakeState {
 export const useShareIntakeStore = create<ShareIntakeState>((set, get) => ({
   queue: EMPTY_QUEUE,
   lastDropped: 0,
+  texts: [],
   pendingNavigation: false,
   screenOpen: false,
+  addTexts: (texts) => { if (texts.length) set((s) => ({ texts: [...s.texts, ...texts] })); },
+  takeTexts: () => {
+    const t = get().texts;
+    set({ texts: [] });
+    return t;
+  },
   add: (files, nativeDropped) => {
     const before = get().queue;
     const { queue, dropped } = enqueue(before, files);
@@ -54,5 +66,5 @@ export const useShareIntakeStore = create<ShareIntakeState>((set, get) => ({
   consumeNavigation: () => set({ pendingNavigation: false }),
   clearDropped: () => set({ lastDropped: 0 }),
   setScreenOpen: (screenOpen) => set({ screenOpen }),
-  reset: () => set({ queue: EMPTY_QUEUE, lastDropped: 0, pendingNavigation: false, screenOpen: false }),
+  reset: () => set({ queue: EMPTY_QUEUE, lastDropped: 0, texts: [], pendingNavigation: false, screenOpen: false }),
 }));

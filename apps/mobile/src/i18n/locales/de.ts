@@ -560,6 +560,8 @@ export default {
     discardBody: "Noch nicht hinzugefügte Dateien: {{count}}. Verwerfen?",
     droppedTitle: "Einige Dateien wurden übersprungen",
     droppedBody: "Nicht hinzugefügte Dateien: {{count}}. Nur Bilder und PDFs, höchstens 10 auf einmal (PDF bis 10 MB).",
+    textNotSpendTitle: "Das sieht nicht nach einer Zahlung aus",
+    textNotSpendBody: "Der geteilte Text enthält keine Zahlungsangaben und wurde nicht zur Ausgabe. Du kannst sie manuell eingeben.",
     limitStoppedTitle: "KI-Limit erreicht",
     limitStoppedBody: "Nicht verarbeitete Dateien: {{count}}. Teile sie später erneut.",
     viewerBlockedTitle: "Hier kannst du keine Ausgaben hinzufügen",

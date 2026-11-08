@@ -560,6 +560,8 @@ export default {
     discardBody: "Яшчэ не дададзена файлаў: {{count}}. Адмяніць іх?",
     droppedTitle: "Частку файлаў прапушчана",
     droppedBody: "Не дададзена файлаў: {{count}}. Толькі фота і PDF, не больш за 10 за раз (PDF да 10 МБ).",
+    textNotSpendTitle: "Гэта не падобна на плацёж",
+    textNotSpendBody: "У тэксце няма прыкмет плацяжу, таму выдатак не створаны. Можна ўвесці яго ўручную.",
     limitStoppedTitle: "Ліміт AI вычарпаны",
     limitStoppedBody: "Не апрацавана файлаў: {{count}}. Падзяліцеся імі пазней яшчэ раз.",
     viewerBlockedTitle: "Тут нельга дадаваць выдаткі",

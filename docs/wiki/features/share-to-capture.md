@@ -37,6 +37,17 @@ screen is open appends to the running queue.
 image or PDF path, so downscaling, the ABA-603 duplicate pre-check and `POST /ai/scan-receipt`
 all apply unchanged. The server has no share-specific code.
 
+## Shared text (ABA-719)
+A plain text shared from SMS / e-mail / a messenger (`text/plain`, stream-less `EXTRA_TEXT`, capped at
+4000 chars natively) arrives as `texts` in the same payload and is held in `shareIntakeStore.texts`.
+`useShareIntake` drains it through the same `decideShareNavigation` gate (viewer blocked), then
+`openSharedText`: `classifySharedText` (`features/share-intake/sharedTextCapture.ts`) runs the
+notification parser's spend gate — a non-spend text gets an alert, never a form; a parsed text prefills
+`/expense/new`; a long (> 1000 chars, e-mail body) or unparsed spend-like text goes to `api.parseExpense`;
+an AI failure still opens the form with the text as description. The form saves with source
+`notification` and a `notif:` `externalRef`, so the client content-dedup and the server's
+`reconcileNotificationStub` cover it unchanged. Nothing is auto-saved. Only the first queued text opens.
+
 ## Invariants
 - **Navigate only through `decideShareNavigation`** — it waits for the same `coldStartGateReady`
   as the notification and trip-invite flushes (earlier navigation wedges expo-router on a black
@@ -76,9 +87,10 @@ all apply unchanged. The server has no share-specific code.
   `handleEditExpense` needs a scanned receipt, and a failed scan has none.
 - No iOS (not possible without a native share extension) and no web (Web Share Target needs a
   service worker, which the web build deliberately lacks).
-- Text / SMS sharing, background save and multi-photo long receipts are out of scope.
+- Background save and multi-photo long receipts are out of scope. Text sharing (ABA-719) has no device verification yet.
 - The native part has no automated test; it is verified on a device (checklist in the plan,
   `docs/superpowers/plans/2026-09-26-share-to-capture.md`, Task 8).
 
 ## History
+[ABA-719](https://github.com/micode-ai/ai-budget-assistant/issues/756) — shared text → prefilled create form.
 [ABA-607](https://github.com/micode-ai/ai-budget-assistant/issues/631) — share-to-capture (2026-09-26); spec `docs/superpowers/specs/2026-09-26-share-to-capture-design.md`.

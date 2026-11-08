@@ -280,6 +280,7 @@ Newest last within each section.
 - 2026-11-05 · [ABA-716](https://github.com/micode-ai/ai-budget-assistant/issues/753) — `FEATURES_EN` had drifted again: six live features (receipt category split, two-level categories, expense map, Real Salary, voice digest, deposit/discount totals) added in all nine languages; Organization gains `founder` and the Instagram `sameAs`; no LinkedIn company page or Crunchbase exists yet — `features/marketing-site.md`.
 - 2026-11-08 · [ABA-717](https://github.com/micode-ai/ai-budget-assistant/issues/754) — wallet history chart now draws balance corrections as a neutral stacked segment with legend and tooltip lines; phone and desktop share `WalletBalanceCard`; headline net keeps corrections. Pages: `features/wallet-balance-true-up.md`.
 - 2026-11-08 · [ABA-718](https://github.com/micode-ai/ai-budget-assistant/issues/755) — GroupBudgetMirrorService split into support, teardown and cash-link collaborators behind the unchanged facade; pages: features/shared-groups.md
+- 2026-11-08 · [ABA-719](https://github.com/micode-ai/ai-budget-assistant/issues/756) — share-text-to-capture: shared text reuses the notification parser + spend gate and prefills the create form with source `notification` (reconciliation unchanged); pages: features/share-to-capture.
 
 ## Queries
 

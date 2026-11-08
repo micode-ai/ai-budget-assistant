@@ -562,6 +562,8 @@ export default {
     discardBody: "Ще не додано файлів: {{count}}. Скасувати їх?",
     droppedTitle: "Частину файлів пропущено",
     droppedBody: "Не додано файлів: {{count}}. Лише фото та PDF, не більше 10 за раз (PDF до 10 МБ).",
+    textNotSpendTitle: "Це не схоже на платіж",
+    textNotSpendBody: "У надісланому тексті немає ознак платежу, тому витрату не створено. Можна ввести її вручну.",
     limitStoppedTitle: "Ліміт AI вичерпано",
     limitStoppedBody: "Не оброблено файлів: {{count}}. Поділіться ними пізніше ще раз.",
     viewerBlockedTitle: "Тут не можна додавати витрати",

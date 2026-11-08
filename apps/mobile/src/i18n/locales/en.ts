@@ -563,6 +563,8 @@ export default {
     discardBody: "Shared files not added yet: {{count}}. Discard them?",
     droppedTitle: "Some files were skipped",
     droppedBody: "Files not added: {{count}}. Only images and PDFs, up to 10 at a time (PDF up to 10 MB).",
+    textNotSpendTitle: "This doesn't look like a payment",
+    textNotSpendBody: "The shared text has no payment wording, so it wasn't turned into an expense. You can still enter it manually.",
     limitStoppedTitle: "AI limit reached",
     limitStoppedBody: "Files left unprocessed: {{count}}. Share them again later.",
     viewerBlockedTitle: "Can't add expenses here",

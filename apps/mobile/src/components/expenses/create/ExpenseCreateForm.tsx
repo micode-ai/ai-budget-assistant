@@ -74,6 +74,12 @@ export type ExpenseCreatePrefill = {
   isDebtRepayment?: string;
   relatedDebtIncomeId?: string;
   debtContactName?: string;
+  /** ISO date; absent = today. */
+  date?: string;
+  /** Only `notification` is honoured (share-text-to-capture); anything else saves as manual. */
+  source?: string;
+  /** Dedup key for a captured text; absent = none. */
+  externalRef?: string;
 };
 
 interface ExpenseCreateFormProps {
@@ -131,7 +137,10 @@ export function ExpenseCreateForm({ initial, onDone }: ExpenseCreateFormProps) {
   // expense you forgot to log no longer requires saving it and then editing the
   // date on the detail screen. Not clamped to the past — the edit-mode picker in
   // `ExpenseDetailsCard` accepts any date and the two must agree.
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(() => {
+    const d = initial?.date ? new Date(initial.date) : null;
+    return d && !isNaN(d.getTime()) ? d : new Date();
+  });
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showCreateCategory, setShowCreateCategory] = useState(false);
@@ -211,7 +220,8 @@ export function ExpenseCreateForm({ initial, onDone }: ExpenseCreateFormProps) {
         tagIds: selectedTagIds.length > 0 ? selectedTagIds : undefined,
         projectId: selectedProjectId || undefined,
         date,
-        source: 'manual',
+        source: initial?.source === 'notification' ? 'notification' : 'manual',
+        externalRef: initial?.source === 'notification' ? initial.externalRef || undefined : undefined,
         isRecurring: recurring.isRecurring,
         recurringId: recurring.isRecurring ? generateUUID() : undefined,
         recurringPeriod: recurring.isRecurring ? recurring.recurringPeriod : undefined,

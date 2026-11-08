@@ -134,6 +134,8 @@ Got a receipt as a screenshot, a banking-app confirmation or an e-receipt PDF? Y
 
 You can share **images and PDFs**, up to **10 files at a time** (a PDF up to 10 MB). Several files become separate expenses, one after another — the title shows your progress ("Receipt 2 of 5") and **Next** takes you to the following file. If a file can't be read, choose **Skip** or **Enter manually**. Closing the screen asks before discarding the files still waiting. Each file counts as one receipt scan against your AI limit; if the limit runs out, the remaining files are left for later.
 
+**Payment texts:** select a bank SMS, an e-mail or a chat message, tap **Share** and choose AI Budget. The app reads the amount and merchant and opens the new-expense form pre-filled — check it and save. A text that doesn't look like a payment (an ad, a declined transaction) is never turned into an expense. Android only.
+
 Sharing works on Android only. On iPhone and in the web app, use **Scan Receipt** instead.
 
 ### Forwarding E-receipts by E-mail

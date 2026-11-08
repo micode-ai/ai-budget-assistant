@@ -725,6 +725,8 @@ Got a receipt as a screenshot, a banking-app confirmation or an e-receipt PDF? Y
 
 You can share **images and PDFs**, up to **10 files at a time** (a PDF up to 10 MB). Several files become separate expenses, one after another — the title shows your progress ("Receipt 2 of 5") and **Next** takes you to the following file. If a file can't be read, choose **Skip** or **Enter manually**. Closing the screen asks before discarding the files still waiting. Each file counts as one receipt scan against your AI limit; if the limit runs out, the remaining files are left for later.
 
+**Payment texts:** select a bank SMS, an e-mail or a chat message, tap **Share** and choose AI Budget. The app reads the amount and merchant and opens the new-expense form pre-filled — check it and save. A text that doesn't look like a payment (an ad, a declined transaction) is never turned into an expense. Android only.
+
 Sharing works on Android only. On iPhone and in the web app, use **Scan Receipt** instead.
 
 ### Forwarding E-receipts by E-mail
@@ -6067,6 +6069,8 @@ iOS, Android, Web
 
 Можно делиться **фото и PDF**, до **10 файлов за раз** (PDF до 10 МБ). Несколько файлов становятся отдельными расходами, по очереди: в заголовке виден прогресс («Чек 2 из 5»), а **Дальше** переходит к следующему файлу. Если файл не распознался, выберите **Пропустить** или **Ввести вручную**. При закрытии экрана приложение спросит, прежде чем отменить оставшиеся файлы. Каждый файл — одно сканирование чека в лимите AI; если лимит закончился, оставшиеся файлы откладываются на потом.
 
+**Тексты о платежах:** выделите SMS из банка, письмо или сообщение в мессенджере, нажмите **Поделиться** и выберите AI Budget. Приложение распознает сумму и магазин и откроет форму нового расхода с готовыми полями — проверьте и сохраните. Текст, не похожий на платёж (реклама, отклонённая операция), никогда не станет расходом. Только Android.
+
 Функция работает только на Android. На iPhone и в веб-версии используйте **Сканировать чек**.
 
 ### Пересылка электронных чеков по почте
@@ -11386,6 +11390,8 @@ iOS, Android, Web
 
 Можна ділитися **фото та PDF**, до **10 файлів за раз** (PDF до 10 МБ). Кілька файлів стають окремими витратами, по черзі: у заголовку видно прогрес («Чек 2 з 5»), а **Далі** переходить до наступного файлу. Якщо файл не розпізнано, оберіть **Пропустити** або **Ввести вручну**. Під час закриття екрана застосунок запитає, перш ніж скасувати решту файлів. Кожен файл — одне сканування чека в ліміті AI; якщо ліміт вичерпано, решта файлів лишається на потім.
 
+**Тексти про платежі:** виділіть SMS з банку, лист або повідомлення в месенджері, натисніть **Поділитися** й оберіть AI Budget. Застосунок розпізнає суму та крамницю й відкриє форму нової витрати з готовими полями — перевірте та збережіть. Текст, не схожий на платіж (реклама, відхилена операція), ніколи не стане витратою. Лише Android.
+
 Функція працює лише на Android. На iPhone і у вебверсії використовуйте **Сканувати чек**.
 
 ### Пересилання електронних чеків поштою
@@ -16653,6 +16659,8 @@ Masz paragon jako zrzut ekranu, potwierdzenie z aplikacji banku albo e-paragon w
 
 Możesz udostępniać **zdjęcia i pliki PDF**, maksymalnie **10 plików naraz** (PDF do 10 MB). Kilka plików to osobne wydatki, jeden po drugim — tytuł pokazuje postęp („Paragon 2 z 5”), a **Dalej** przechodzi do kolejnego pliku. Jeśli pliku nie da się odczytać, wybierz **Pomiń** albo **Wpisz ręcznie**. Zamknięcie ekranu wymaga potwierdzenia, zanim oczekujące pliki zostaną odrzucone. Każdy plik to jedno skanowanie paragonu w limicie AI; gdy limit się wyczerpie, pozostałe pliki zostają na później.
 
+**Teksty o płatnościach:** zaznacz SMS z banku, e-mail lub wiadomość z komunikatora, wybierz **Udostępnij** i AI Budżet. Aplikacja odczyta kwotę i sprzedawcę i otworzy wstępnie wypełniony formularz nowego wydatku — sprawdź i zapisz. Tekst, który nie wygląda na płatność (reklama, odrzucona transakcja), nigdy nie stanie się wydatkiem. Tylko Android.
+
 Udostępnianie działa tylko na Androidzie. Na iPhonie i w aplikacji webowej użyj **Skanuj paragon**.
 
 ### Przekazywanie e-paragonów e-mailem
@@ -21916,6 +21924,8 @@ Du hast einen Beleg als Screenshot, eine Bestätigung aus der Banking-App oder e
 
 Du kannst **Bilder und PDFs** teilen, bis zu **10 Dateien auf einmal** (PDF bis 10 MB). Mehrere Dateien werden nacheinander zu einzelnen Ausgaben — der Titel zeigt den Fortschritt („Beleg 2 von 5“), **Weiter** führt zur nächsten Datei. Kann eine Datei nicht gelesen werden, wähle **Überspringen** oder **Manuell eingeben**. Beim Schließen fragt die App, bevor wartende Dateien verworfen werden. Jede Datei zählt als ein Belegscan gegen dein KI-Limit; ist es aufgebraucht, bleiben die übrigen Dateien für später.
 
+**Zahlungstexte:** Markiere eine Bank-SMS, eine E-Mail oder eine Chatnachricht, tippe auf **Teilen** und wähle AI Budget. Die App liest Betrag und Händler und öffnet das Formular für neue Ausgaben vorausgefüllt – prüfen und speichern. Ein Text, der nicht nach Zahlung aussieht (Werbung, abgelehnte Transaktion), wird nie zur Ausgabe. Nur Android.
+
 Teilen funktioniert nur unter Android. Auf dem iPhone und in der Web-App nutze **Beleg scannen**.
 
 ### E-Belege per E-Mail weiterleiten
@@ -27154,6 +27164,8 @@ Los bots de Telegram, WhatsApp y Slack avisan igual y ofrecen un botón **Escane
 
 Puedes compartir **imágenes y PDF**, hasta **10 archivos a la vez** (PDF de hasta 10 MB). Varios archivos se convierten en gastos separados, uno tras otro: el título muestra el progreso («Recibo 2 de 5») y **Siguiente** pasa al archivo siguiente. Si un archivo no se puede leer, elige **Omitir** o **Introducir a mano**. Al cerrar la pantalla, la app pregunta antes de descartar los archivos pendientes. Cada archivo cuenta como un escaneo de recibo en tu límite de IA; si se agota, los archivos restantes quedan para más tarde.
 
+**Textos de pago:** selecciona un SMS del banco, un correo o un mensaje de chat, pulsa **Compartir** y elige AI Budget. La app lee el importe y el comercio y abre el formulario de nuevo gasto ya rellenado: revísalo y guarda. Un texto que no parece un pago (publicidad, operación rechazada) nunca se convierte en gasto. Solo Android.
+
 Compartir solo funciona en Android. En iPhone y en la app web usa **Escanear recibo**.
 
 ### Reenviar e-recibos por correo
@@ -32381,6 +32393,8 @@ Vous avez un ticket en capture d'écran, une confirmation de l'app bancaire ou u
 
 Vous pouvez partager des **images et des PDF**, jusqu'à **10 fichiers à la fois** (PDF jusqu'à 10 Mo). Plusieurs fichiers deviennent des dépenses séparées, l'une après l'autre : le titre indique la progression (« Ticket 2 sur 5 ») et **Suivant** passe au fichier suivant. Si un fichier ne peut pas être lu, choisissez **Passer** ou **Saisir à la main**. À la fermeture, l'app demande confirmation avant d'abandonner les fichiers en attente. Chaque fichier compte comme un scan de ticket dans votre limite d'IA ; si elle est atteinte, les fichiers restants attendent.
 
+**Textes de paiement :** sélectionnez un SMS bancaire, un e-mail ou un message de messagerie, touchez **Partager** et choisissez AI Budget. L’app lit le montant et le commerçant et ouvre le formulaire de nouvelle dépense prérempli : vérifiez et enregistrez. Un texte qui ne ressemble pas à un paiement (publicité, opération refusée) n’est jamais transformé en dépense. Android uniquement.
+
 Le partage fonctionne uniquement sur Android. Sur iPhone et dans l'app web, utilisez **Scanner un reçu**.
 
 ### Transférer ses e-reçus par e-mail
@@ -37606,6 +37620,8 @@ iOS, Android, Web
 
 Можна дзяліцца **фота і PDF**, да **10 файлаў за раз** (PDF да 10 МБ). Некалькі файлаў становяцца асобнымі выдаткамі, па чарзе: у загалоўку відаць прагрэс («Чэк 2 з 5»), а **Далей** пераходзіць да наступнага файла. Калі файл не распазнаны, выберыце **Прапусціць** або **Увесці ўручную**. Пры закрыцці экрана праграма спытае, перш чым адмяніць астатнія файлы. Кожны файл — адно сканаванне чэка ў ліміце AI; калі ліміт скончыўся, астатнія файлы застаюцца на потым.
 
+**Тэксты пра плацяжы:** вылучыце SMS з банка, ліст або паведамленне ў мэсенджары, націсніце **Падзяліцца** і абярыце AI Budget. Праграма распазнае суму і краму і адкрые форму новага расходу з гатовымі палямі — праверце і захавайце. Тэкст, не падобны на плацёж (рэклама, адхіленая аперацыя), ніколі не стане расходам. Толькі Android.
+
 Функцыя працуе толькі на Android. На iPhone і ў вэб-версіі выкарыстоўвайце **Сканаваць чэк**.
 
 ### Перасылка электронных чэкаў поштай
@@ -42794,6 +42810,8 @@ Heb je een bon als screenshot, een bevestiging uit je bank-app of een e-bon als 
 3. De app opent meteen het ingevulde bevestigingsscherm — controleer het en tik op **Opslaan**
 
 Je kunt **afbeeldingen en pdf's** delen, tot **10 bestanden tegelijk** (pdf tot 10 MB). Meerdere bestanden worden na elkaar losse uitgaven — de titel toont de voortgang ('Bon 2 van 5') en **Volgende** gaat naar het volgende bestand. Kan een bestand niet worden gelezen, kies dan **Overslaan** of **Handmatig invoeren**. Bij sluiten vraagt de app eerst voordat wachtende bestanden worden weggegooid. Elk bestand telt als één bonscan binnen je AI-limiet; is die op, dan blijven de overige bestanden voor later.
+
+**Betaalteksten:** selecteer een bank-sms, e-mail of chatbericht, tik op **Delen** en kies AI Budget. De app leest bedrag en winkel en opent het formulier voor een nieuwe uitgave vooraf ingevuld — controleer en sla op. Een tekst die niet op een betaling lijkt (reclame, geweigerde transactie) wordt nooit een uitgave.
 
 Delen werkt alleen op Android. Gebruik op iPhone en in de web-app **Bon scannen**.
 

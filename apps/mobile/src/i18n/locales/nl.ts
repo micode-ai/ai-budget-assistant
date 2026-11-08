@@ -560,6 +560,8 @@ export default {
     discardBody: "Nog niet toegevoegde bestanden: {{count}}. Weggooien?",
     droppedTitle: "Sommige bestanden zijn overgeslagen",
     droppedBody: "Niet toegevoegde bestanden: {{count}}. Alleen afbeeldingen en pdf’s, maximaal 10 tegelijk (pdf tot 10 MB).",
+    textNotSpendTitle: "Dit lijkt geen betaling",
+    textNotSpendBody: "De gedeelde tekst bevat geen betaalgegevens en is daarom geen uitgave geworden. Je kunt hem nog steeds handmatig invoeren.",
     limitStoppedTitle: "AI-limiet bereikt",
     limitStoppedBody: "Niet verwerkte bestanden: {{count}}. Deel ze later opnieuw.",
     viewerBlockedTitle: "Je kunt hier geen uitgaven toevoegen",

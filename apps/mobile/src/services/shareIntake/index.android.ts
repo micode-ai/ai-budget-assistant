@@ -10,6 +10,8 @@ import type { SharedFile } from '@/features/share-intake/shareIntakeQueue';
 export interface SharePayload {
   files: SharedFile[];
   droppedCount: number;
+  /** Plain-text shares (SMS, e-mail body, chat message). */
+  texts: string[];
 }
 
 const { ShareIntakeModule } = NativeModules;
@@ -23,7 +25,7 @@ if (!ShareIntakeModule && __DEV__) {
 
 function normalise(raw: unknown): SharePayload | null {
   if (!raw || typeof raw !== 'object') return null;
-  const r = raw as { files?: unknown; droppedCount?: unknown };
+  const r = raw as { files?: unknown; droppedCount?: unknown; texts?: unknown };
   const files = Array.isArray(r.files)
     ? r.files.filter(
         (f): f is SharedFile =>
@@ -31,8 +33,11 @@ function normalise(raw: unknown): SharePayload | null {
       )
     : [];
   const droppedCount = typeof r.droppedCount === 'number' ? r.droppedCount : 0;
-  if (files.length === 0 && droppedCount === 0) return null;
-  return { files, droppedCount };
+  const texts = Array.isArray(r.texts)
+    ? r.texts.filter((t): t is string => typeof t === 'string' && t.trim().length > 0)
+    : [];
+  if (files.length === 0 && droppedCount === 0 && texts.length === 0) return null;
+  return { files, droppedCount, texts };
 }
 
 export async function getInitialShare(): Promise<SharePayload | null> {

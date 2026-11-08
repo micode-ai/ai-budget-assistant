@@ -134,6 +134,8 @@ Los bots de Telegram, WhatsApp y Slack avisan igual y ofrecen un botón **Escane
 
 Puedes compartir **imágenes y PDF**, hasta **10 archivos a la vez** (PDF de hasta 10 MB). Varios archivos se convierten en gastos separados, uno tras otro: el título muestra el progreso («Recibo 2 de 5») y **Siguiente** pasa al archivo siguiente. Si un archivo no se puede leer, elige **Omitir** o **Introducir a mano**. Al cerrar la pantalla, la app pregunta antes de descartar los archivos pendientes. Cada archivo cuenta como un escaneo de recibo en tu límite de IA; si se agota, los archivos restantes quedan para más tarde.
 
+**Textos de pago:** selecciona un SMS del banco, un correo o un mensaje de chat, pulsa **Compartir** y elige AI Budget. La app lee el importe y el comercio y abre el formulario de nuevo gasto ya rellenado: revísalo y guarda. Un texto que no parece un pago (publicidad, operación rechazada) nunca se convierte en gasto. Solo Android.
+
 Compartir solo funciona en Android. En iPhone y en la app web usa **Escanear recibo**.
 
 ### Reenviar e-recibos por correo

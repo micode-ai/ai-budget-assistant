@@ -4069,6 +4069,8 @@ Vous avez un ticket en capture d'écran, une confirmation de l'app bancaire ou u
 
 Vous pouvez partager des **images et des PDF**, jusqu'à **10 fichiers à la fois** (PDF jusqu'à 10 Mo). Plusieurs fichiers deviennent des dépenses séparées, l'une après l'autre : le titre indique la progression (« Ticket 2 sur 5 ») et **Suivant** passe au fichier suivant. Si un fichier ne peut pas être lu, choisissez **Passer** ou **Saisir à la main**. À la fermeture, l'app demande confirmation avant d'abandonner les fichiers en attente. Chaque fichier compte comme un scan de ticket dans votre limite d'IA ; si elle est atteinte, les fichiers restants attendent.
 
+**Textes de paiement :** sélectionnez un SMS bancaire, un e-mail ou un message de messagerie, touchez **Partager** et choisissez AI Budget. L’app lit le montant et le commerçant et ouvre le formulaire de nouvelle dépense prérempli : vérifiez et enregistrez. Un texte qui ne ressemble pas à un paiement (publicité, opération refusée) n’est jamais transformé en dépense. Android uniquement.
+
 Le partage fonctionne uniquement sur Android. Sur iPhone et dans l'app web, utilisez **Scanner un reçu**.
 
 ### Transférer ses e-reçus par e-mail

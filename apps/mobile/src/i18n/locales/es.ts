@@ -560,6 +560,8 @@ export default {
     discardBody: "Archivos compartidos sin añadir: {{count}}. ¿Descartarlos?",
     droppedTitle: "Se omitieron algunos archivos",
     droppedBody: "Archivos no añadidos: {{count}}. Solo imágenes y PDF, hasta 10 a la vez (PDF hasta 10 MB).",
+    textNotSpendTitle: "Esto no parece un pago",
+    textNotSpendBody: "El texto compartido no contiene datos de pago, así que no se convirtió en gasto. Aún puedes introducirlo manualmente.",
     limitStoppedTitle: "Límite de IA alcanzado",
     limitStoppedBody: "Archivos sin procesar: {{count}}. Compártelos de nuevo más tarde.",
     viewerBlockedTitle: "No puedes añadir gastos aquí",

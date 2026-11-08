@@ -134,6 +134,8 @@ Du hast einen Beleg als Screenshot, eine Bestätigung aus der Banking-App oder e
 
 Du kannst **Bilder und PDFs** teilen, bis zu **10 Dateien auf einmal** (PDF bis 10 MB). Mehrere Dateien werden nacheinander zu einzelnen Ausgaben — der Titel zeigt den Fortschritt („Beleg 2 von 5“), **Weiter** führt zur nächsten Datei. Kann eine Datei nicht gelesen werden, wähle **Überspringen** oder **Manuell eingeben**. Beim Schließen fragt die App, bevor wartende Dateien verworfen werden. Jede Datei zählt als ein Belegscan gegen dein KI-Limit; ist es aufgebraucht, bleiben die übrigen Dateien für später.
 
+**Zahlungstexte:** Markiere eine Bank-SMS, eine E-Mail oder eine Chatnachricht, tippe auf **Teilen** und wähle AI Budget. Die App liest Betrag und Händler und öffnet das Formular für neue Ausgaben vorausgefüllt – prüfen und speichern. Ein Text, der nicht nach Zahlung aussieht (Werbung, abgelehnte Transaktion), wird nie zur Ausgabe. Nur Android.
+
 Teilen funktioniert nur unter Android. Auf dem iPhone und in der Web-App nutze **Beleg scannen**.
 
 ### E-Belege per E-Mail weiterleiten

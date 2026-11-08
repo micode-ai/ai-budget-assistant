@@ -100,6 +100,7 @@ class ShareIntakeModule(private val reactContext: ReactApplicationContext) :
     companion object {
         const val EVENT_NAME = "ShareIntakeReceived"
         const val MAX_FILES = 10
+        const val MAX_TEXT_CHARS = 4000
         const val MAX_PDF_BYTES = 10L * 1024 * 1024
         const val MAX_IMAGE_BYTES = 25L * 1024 * 1024
 
@@ -110,7 +111,11 @@ class ShareIntakeModule(private val reactContext: ReactApplicationContext) :
         @Volatile private var instance: ShareIntakeModule? = null
         private val io = Executors.newSingleThreadExecutor()
 
-        private class Held(val files: MutableList<Map<String, Any>>, var dropped: Int)
+        private class Held(
+            val files: MutableList<Map<String, Any>>,
+            var dropped: Int,
+            val texts: MutableList<String> = mutableListOf(),
+        )
 
         private fun toWritable(h: Held): WritableMap = Arguments.createMap().apply {
             val arr = Arguments.createArray()
@@ -124,6 +129,9 @@ class ShareIntakeModule(private val reactContext: ReactApplicationContext) :
             }
             putArray("files", arr)
             putInt("droppedCount", h.dropped)
+            val t = Arguments.createArray()
+            h.texts.forEach { t.pushString(it) }
+            putArray("texts", t)
         }
 
         private fun intakeDir(ctx: Context): File =
@@ -135,8 +143,16 @@ class ShareIntakeModule(private val reactContext: ReactApplicationContext) :
                 if (intent == null) return
                 val action = intent.action
                 if (action != Intent.ACTION_SEND && action != Intent.ACTION_SEND_MULTIPLE) return
-                val uris = extractUris(intent)
                 val intentType = intent.type
+                // A plain-text share (bank SMS, e-mail body, chat message) carries
+                // EXTRA_TEXT and no stream. It never touches the file-copy path.
+                val text = extractText(intent)
+                if (text != null) {
+                    intent.action = null
+                    io.execute { deliver(Held(mutableListOf(), 0, mutableListOf(text))) }
+                    return
+                }
+                val uris = extractUris(intent)
                 // Consume the intent so a config change / recreate does not re-deliver it.
                 intent.action = null
                 if (uris.isEmpty()) return
@@ -154,6 +170,17 @@ class ShareIntakeModule(private val reactContext: ReactApplicationContext) :
          */
         private fun isForeignContent(ctx: Context, uri: Uri): Boolean =
             uri.scheme == "content" && uri.authority?.startsWith(ctx.packageName) != true
+
+        /** Non-blank EXTRA_TEXT of a stream-less text/* ACTION_SEND, trimmed and capped; else null. */
+        private fun extractText(intent: Intent): String? = try {
+            if (intent.action != Intent.ACTION_SEND) null
+            else if (intent.type?.startsWith("text/") != true) null
+            else if (intent.hasExtra(Intent.EXTRA_STREAM)) null
+            else intent.getCharSequenceExtra(Intent.EXTRA_TEXT)?.toString()?.trim()
+                ?.take(MAX_TEXT_CHARS)?.takeIf { it.isNotEmpty() }
+        } catch (_: Throwable) {
+            null
+        }
 
         @Suppress("DEPRECATION")
         private fun extractUris(intent: Intent): List<Uri> = try {
@@ -246,6 +273,7 @@ class ShareIntakeModule(private val reactContext: ReactApplicationContext) :
                     pending = payload
                 } else {
                     held.files.addAll(payload.files)
+                    held.texts.addAll(payload.texts)
                     held.dropped += payload.dropped
                 }
             }

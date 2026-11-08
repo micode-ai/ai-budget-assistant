@@ -562,6 +562,8 @@ export default {
     discardBody: "Nie dodano jeszcze udostępnionych plików: {{count}}. Odrzucić je?",
     droppedTitle: "Część plików pominięto",
     droppedBody: "Nie dodano plików: {{count}}. Tylko zdjęcia i PDF, maks. 10 naraz (PDF do 10 MB).",
+    textNotSpendTitle: "To nie wygląda na płatność",
+    textNotSpendBody: "Udostępniony tekst nie zawiera informacji o płatności, więc nie zamieniono go w wydatek. Możesz nadal wpisać go ręcznie.",
     limitStoppedTitle: "Limit AI wyczerpany",
     limitStoppedBody: "Nieprzetworzone pliki: {{count}}. Udostępnij je ponownie później.",
     viewerBlockedTitle: "Nie można tu dodawać wydatków",
