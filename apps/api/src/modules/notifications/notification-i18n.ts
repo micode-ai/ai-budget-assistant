@@ -208,6 +208,8 @@ const translations: Record<string, {
   subscriptionChargedBody: (p: SubscriptionRenewalParams) => string;
   trackingGapTitle: () => string;
   trackingGapBody: () => string;
+  activationNudgeTitle: () => string;
+  activationNudgeBody: () => string;
   shoppingReminderTitle: () => string;
   shoppingReminderBody: (product: string, extraCount: number) => string;
   shoppingDealTitle: () => string;
@@ -308,6 +310,8 @@ const translations: Record<string, {
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} added to your expenses for ${name}`,
     trackingGapTitle: () => 'Time to log your expenses!',
     trackingGapBody: () => "You haven't recorded anything in 3+ days. Add a transaction to keep your budget on track.",
+    activationNudgeTitle: () => "Your first expense takes a few seconds",
+    activationNudgeBody: () => "Snap any receipt and we'll fill in the shop, amount and items for you. Or type it in by hand.",
     shoppingReminderTitle: () => 'Time to restock?',
     shoppingReminderBody: (product: string, extraCount: number) =>
       extraCount > 0
@@ -414,6 +418,8 @@ const translations: Record<string, {
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} добавлено в расходы за ${name}`,
     trackingGapTitle: () => 'Пора записать расходы!',
     trackingGapBody: () => 'Вы не записывали транзакции уже 3+ дня. Добавьте запись, чтобы бюджет был под контролем.',
+    activationNudgeTitle: () => "Первый расход — за пару секунд",
+    activationNudgeBody: () => "Сфотографируйте любой чек — магазин, сумму и позиции мы заполним сами. Или введите расход вручную.",
     shoppingReminderTitle: () => 'Пора пополнить запасы?',
     shoppingReminderBody: (product: string, extraCount: number) =>
       extraCount > 0
@@ -520,6 +526,8 @@ const translations: Record<string, {
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} додано до витрат за ${name}`,
     trackingGapTitle: () => 'Час записати витрати!',
     trackingGapBody: () => 'Ви не записували транзакції вже 3+ дні. Додайте запис, щоб бюджет був під контролем.',
+    activationNudgeTitle: () => "Перша витрата — за пару секунд",
+    activationNudgeBody: () => "Сфотографуйте будь-який чек — магазин, суму й позиції ми заповнимо самі. Або введіть витрату вручну.",
     shoppingReminderTitle: () => 'Час поповнити запаси?',
     shoppingReminderBody: (product: string, extraCount: number) =>
       extraCount > 0
@@ -626,6 +634,8 @@ const translations: Record<string, {
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} dodano do wydatków za ${name}`,
     trackingGapTitle: () => 'Czas zapisać wydatki!',
     trackingGapBody: () => 'Nie rejestrowałeś transakcji od ponad 3 dni. Dodaj wpis, żeby budżet był pod kontrolą.',
+    activationNudgeTitle: () => "Pierwszy wydatek w kilka sekund",
+    activationNudgeBody: () => "Zrób zdjęcie dowolnego paragonu — sklep, kwotę i pozycje uzupełnimy sami. Albo wpisz wydatek ręcznie.",
     shoppingReminderTitle: () => 'Czas na uzupełnienie zapasów?',
     shoppingReminderBody: (product: string, extraCount: number) =>
       extraCount > 0
@@ -732,6 +742,8 @@ const translations: Record<string, {
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} añadido a tus gastos por ${name}`,
     trackingGapTitle: () => '¡Es hora de registrar tus gastos!',
     trackingGapBody: () => 'No has registrado transacciones en más de 3 días. Añade un registro para mantener tu presupuesto al día.',
+    activationNudgeTitle: () => "Tu primer gasto en unos segundos",
+    activationNudgeBody: () => "Haz una foto de cualquier recibo y rellenamos la tienda, el importe y los artículos por ti. O escríbelo a mano.",
     shoppingReminderTitle: () => '¿Hora de reabastecer?',
     shoppingReminderBody: (product: string, extraCount: number) =>
       extraCount > 0
@@ -838,6 +850,8 @@ const translations: Record<string, {
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} ajouté à vos dépenses pour ${name}`,
     trackingGapTitle: () => "Il est temps d'enregistrer vos dépenses !",
     trackingGapBody: () => "Vous n'avez enregistré aucune transaction depuis plus de 3 jours. Ajoutez une entrée pour rester dans votre budget.",
+    activationNudgeTitle: () => "Votre première dépense en quelques secondes",
+    activationNudgeBody: () => "Prenez en photo n'importe quel ticket : on remplit le magasin, le montant et les articles pour vous. Ou saisissez-la à la main.",
     shoppingReminderTitle: () => 'Temps de faire le plein ?',
     shoppingReminderBody: (product: string, extraCount: number) =>
       extraCount > 0
@@ -944,6 +958,8 @@ const translations: Record<string, {
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} zu deinen Ausgaben für ${name} hinzugefügt`,
     trackingGapTitle: () => 'Zeit, deine Ausgaben einzutragen!',
     trackingGapBody: () => 'Du hast seit über 3 Tagen keine Transaktionen erfasst. Trag eine ein, um dein Budget im Blick zu behalten.',
+    activationNudgeTitle: () => "Deine erste Ausgabe in wenigen Sekunden",
+    activationNudgeBody: () => "Fotografiere einen beliebigen Beleg – Geschäft, Betrag und Positionen tragen wir für dich ein. Oder gib sie von Hand ein.",
     shoppingReminderTitle: () => 'Zeit zum Nachkaufen?',
     shoppingReminderBody: (product: string, extraCount: number) =>
       extraCount > 0
@@ -1050,6 +1066,8 @@ const translations: Record<string, {
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} дададзена ў выдаткі за ${name}`,
     trackingGapTitle: () => 'Час запісаць выдаткі!',
     trackingGapBody: () => 'Вы не запісвалі транзакцыі ўжо 3+ дні. Дадайце запіс, каб бюджэт быў пад кантролем.',
+    activationNudgeTitle: () => "Першы выдатак — за пару секунд",
+    activationNudgeBody: () => "Сфатаграфуйце любы чэк — краму, суму і пазіцыі мы запоўнім самі. Або ўвядзіце выдатак уручную.",
     shoppingReminderTitle: () => 'Час папоўніць запасы?',
     shoppingReminderBody: (product: string, extraCount: number) =>
       extraCount > 0
@@ -1156,6 +1174,8 @@ const translations: Record<string, {
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} toegevoegd aan je uitgaven voor ${name}`,
     trackingGapTitle: () => 'Tijd om je uitgaven bij te houden!',
     trackingGapBody: () => 'Je hebt al meer dan 3 dagen geen transacties geregistreerd. Voeg er een toe om je budget op koers te houden.',
+    activationNudgeTitle: () => "Je eerste uitgave in een paar seconden",
+    activationNudgeBody: () => "Maak een foto van een bon en wij vullen de winkel, het bedrag en de artikelen voor je in. Of voer hem met de hand in.",
     shoppingReminderTitle: () => 'Tijd om bij te vullen?',
     shoppingReminderBody: (product: string, extraCount: number) =>
       extraCount > 0
@@ -1361,6 +1381,15 @@ export function trackingGapTitle(lang: Lang): string {
 
 export function trackingGapBody(lang: Lang): string {
   return t(lang).trackingGapBody();
+}
+
+/** ABA-737: the one push to a user who signed up 24-48 h ago and has logged nothing. */
+export function activationNudgeTitle(lang: Lang): string {
+  return t(lang).activationNudgeTitle();
+}
+
+export function activationNudgeBody(lang: Lang): string {
+  return t(lang).activationNudgeBody();
 }
 
 export function shoppingReminderTitle(lang: Lang): string {

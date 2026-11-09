@@ -136,7 +136,7 @@ Umschaltflachen fur Benachrichtigungspraferenzen:
 | **Wiederkehrende Ausgaben** | Benachrichtigung, wenn die App automatisch eine wiederkehrende Ausgabe erfasst |
 | **Abonnementverlängerungen** | Benachrichtigung 3 Tage vor Verlängerung eines verfolgten Abonnements |
 | **Anomalie-Warnungen** | Benachrichtigung bei ungewöhnlichen Ausgaben: Duplikate, Preiserhöhungen oder Kategorie-Spitzen |
-| **Tracking-Erinnerung** | Hinweis, wenn du seit 3+ Tagen keine Ausgaben erfasst hast |
+| **Tracking-Erinnerung** | Hinweis, wenn du seit 3+ Tagen keine Ausgaben erfasst hast, sowie eine Erinnerung am Tag nach der Registrierung, falls du noch nichts eingetragen hast |
 
 ### Telegram-Bot
 

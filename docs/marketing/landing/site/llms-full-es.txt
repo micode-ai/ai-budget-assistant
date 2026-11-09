@@ -5374,7 +5374,7 @@ Interruptores para las preferencias de notificaciones:
 | **Gastos recurrentes** | Notificación cuando la app registra automáticamente un gasto recurrente |
 | **Renovaciones de suscripciones** | Notificación 3 días antes de que se renueve una suscripción rastreada |
 | **Alertas de anomalías** | Notificación por gastos inusuales: cargos duplicados, aumentos de precio o picos de categoría |
-| **Recordatorio de seguimiento** | Aviso si no has registrado gastos en 3+ días |
+| **Recordatorio de seguimiento** | Aviso si no has registrado gastos en 3+ días, y un recordatorio el día después de registrarte si aún no has añadido nada |
 
 ### Bot de Telegram
 

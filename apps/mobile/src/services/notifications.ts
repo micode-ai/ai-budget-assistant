@@ -138,6 +138,11 @@ export function handleNotificationResponse(
       // no item id and open the inbox; a single-item push opens the item.
       router.push(inboundPushRoute(data) as any);
       break;
+    case 'activation_nudge':
+      // ABA-737: the one nudge to a user who has logged nothing yet — straight to the
+      // receipt scanner, the entry the phone's get-started screen now leads with.
+      router.push('/expense/receipt' as any);
+      break;
     case 'spending_anomaly':
       router.push('/alerts' as any);
       break;

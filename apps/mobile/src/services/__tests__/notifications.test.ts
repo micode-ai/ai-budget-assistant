@@ -119,3 +119,14 @@ describe('handleNotificationResponse — group pushes (ABA-653)', () => {
     expect(push).toHaveBeenCalledWith('/groups/g1/settle');
   });
 });
+
+describe('handleNotificationResponse — activation_nudge (ABA-737)', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('opens the receipt scanner, the entry new users are steered to', () => {
+    handleNotificationResponse(notificationResponse({ type: 'activation_nudge' }));
+    expect(push).toHaveBeenCalledWith('/expense/receipt');
+  });
+});

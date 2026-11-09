@@ -18,6 +18,7 @@ who has stopped logging. Shown on the home `GamificationCard` widget.
 - `gamification.controller.ts` — `GET /gamification/profile`, `POST /gamification/check`,
   `GET /gamification/definitions` (`JwtAuthGuard` + `AccountContextGuard`)
 - `tracking-gap-reminder.cron.ts` — `TrackingGapReminderCron`, `@Cron('0 10 * * *')`
+- `activation-nudge.cron.ts` — `ActivationNudgeCron`, `@Cron('0 17 * * *')`, the one push to a user who has logged nothing ([ABA-737](https://github.com/micode-ai/ai-budget-assistant/issues/775))
 - `apps/mobile/src/stores/gamificationStore.ts`,
   `apps/mobile/src/components/home/widgets/GamificationCard.tsx`
 
@@ -46,6 +47,13 @@ all their accounts, and sends a `tracking_gap_reminder` push when the gap is a p
 3 days (day 3, 6, 9 …; never day 4, 5, 7, 8). The preference is exposed as `trackingGap` on
 `GET/PATCH /users/me/notification-preferences` and also gated inside `sendToUser`.
 
+**The activation nudge is the one exception to "no streak, no nudge" ([ABA-737](https://github.com/micode-ai/ai-budget-assistant/issues/775)).**
+`ActivationNudgeCron` sends exactly one push to a user whose account is 24–48 h old and who has
+no non-deleted expense or income — 65 of 123 users never logged anything and only 8 came back after
+day one, with nothing ever contacting them. It is a separate cron, not a loosening of the
+tracking-gap rule, because that rule is about not nagging repeatedly. Type `activation_nudge`,
+gated by `notifyTrackingGap`; a tap opens the receipt scanner.
+
 ## Invariants
 
 **A user with no `UserStreak` row is never nudged.** A new user who has never logged anything has
@@ -58,6 +66,11 @@ entirely; the `% 3` cadence is deliberate.
 user and "break" for another — `streak.service.spec.ts` pins exactly that case.
 
 ## Known gaps
+
+- **Send-once is the window, not a ledger.** `activationNudgeWindow` is exactly one cron period
+  wide, so every signup falls into exactly one run; changing the schedule without changing the
+  window either skips users or double-sends. A run missed by a deploy skips that day's signups.
+- No follow-up e-mail: there is no marketing-email consent or unsubscribe mechanism yet.
 
 - `budget_3months_no_exceed` is a documented simplification (see the comment in `checkAchievements`):
   it does not really check three months. `gamification.service.spec.ts` asserts the current
@@ -77,4 +90,4 @@ plus the timezone case.
 
 ## History
 
-ABA-292 (tracking-gap reminder) · ABA-426 (the test suite) · ABA-457 (the cron paginated).
+ABA-292 (tracking-gap reminder) · ABA-426 (the test suite) · ABA-457 (the cron paginated) · [ABA-737](https://github.com/micode-ai/ai-budget-assistant/issues/775) (activation nudge).

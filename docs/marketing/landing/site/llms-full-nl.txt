@@ -5380,7 +5380,7 @@ Schakelaars voor meldingsvoorkeuren:
 | **Terugkerende uitgaven** | Melding wanneer de app automatisch een terugkerende uitgave registreert |
 | **Abonnementsverlengingen** | Melding 3 dagen voor verlenging van een gevolgd abonnement |
 | **Anomaliemeldingen** | Melding bij ongewone uitgaven: dubbele kosten, prijsstijgingen of categoriepieken |
-| **Trackingherinnering** | Melding als je 3+ dagen geen uitgaven hebt geregistreerd |
+| **Trackingherinnering** | Melding als je 3+ dagen geen uitgaven hebt geregistreerd, plus één herinnering de dag na je aanmelding als je nog niets hebt toegevoegd |
 
 ### Telegram-bot
 

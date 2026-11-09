@@ -299,6 +299,7 @@ Newest last within each section.
 - 2026-11-09 · [ABA-734](https://github.com/micode-ai/ai-budget-assistant/issues/772) — the receipt-split and group guest pages' Play links now carry a `referrer` (`playStoreUrl`, same scheme as the landing's `play_url`), so their installs stop landing in `not-set`; `features/acquisition-tracking.md`.
 - 2026-11-09 · [ABA-735](https://github.com/micode-ai/ai-budget-assistant/issues/773) — the phone get-started screen leads with a receipt scan, then manual entry; import stays first on desktop web (`resolveGetStartedEntries`); prompted by import being the first transaction for 2 users ever; `features/first-run-onboarding.md`.
 - 2026-11-09 · [ABA-736](https://github.com/micode-ai/ai-budget-assistant/issues/774) — the chat steers a user with no transactions to logging the first expense right in the chat (`UserContext.hasAnyTransactions`, dynamic-suffix instruction); 8 of 65 never-activated users had tried the chat; `features/chat-architecture.md`.
+- 2026-11-09 · [ABA-737](https://github.com/micode-ai/ai-budget-assistant/issues/775) — one push (17:00 UTC) to users 24–48 h after signup with no transaction, gated by `notifyTrackingGap`, tap opens the receipt scanner; send-once by a one-period window, no table; e-mail follow-up deferred (no consent mechanism); `features/gamification.md`.
 
 ## Queries
 

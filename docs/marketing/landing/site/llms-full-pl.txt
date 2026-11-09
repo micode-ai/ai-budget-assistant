@@ -5959,7 +5959,7 @@ Przelaczniki dla preferencji powiadomien:
 | **Wydatki cykliczne** | Powiadomienie, gdy aplikacja automatycznie rejestruje wydatek cykliczny |
 | **Odnowienia subskrypcji** | Powiadomienie 3 dni przed odnowieniem śledzonej subskrypcji |
 | **Alerty anomalii** | Powiadomienie o nietypowych wydatkach: duplikaty, wzrosty cen lub skoki kategorii |
-| **Przypomnienie o śledzeniu** | Powiadomienie, gdy nie rejestrowałeś wydatków przez 3+ dni |
+| **Przypomnienie o śledzeniu** | Powiadomienie, gdy nie rejestrowałeś wydatków przez 3+ dni, oraz jedno przypomnienie dzień po rejestracji, jeśli jeszcze niczego nie dodałeś |
 
 ### Bot Telegram
 

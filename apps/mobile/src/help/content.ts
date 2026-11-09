@@ -2075,7 +2075,7 @@ Toggle switches for notification preferences:
 | **Recurring Expenses** | Get notified when the app automatically records a recurring expense |
 | **Subscription Renewals** | Get notified 3 days before a tracked subscription renews |
 | **Anomaly Alerts** | Get notified about unusual spending: duplicate charges, price increases, or category spikes |
-| **Tracking Reminder** | Get a nudge if you haven't logged any expenses for 3+ days |
+| **Tracking Reminder** | Get a nudge if you haven't logged any expenses for 3+ days, plus one reminder the day after you sign up if you haven't added anything yet |
 
 ### Telegram Bot
 
@@ -7420,7 +7420,7 @@ Email обновляется мгновенно, выдаются новые т�
 | **Повторяющиеся расходы** | Уведомление, когда приложение автоматически записывает повторяющийся расход |
 | **Продление подписок** | Уведомление за 3 дня до продления отслеживаемой подписки |
 | **Аномальные расходы** | Уведомление о нетипичных тратах: дубли, повышение цен, всплески по категории |
-| **Напоминание о трекинге** | Напоминание, если вы не записывали расходы 3+ дней |
+| **Напоминание о трекинге** | Напоминание, если вы не записывали расходы 3+ дней, а также одно напоминание на следующий день после регистрации, если вы ещё ничего не добавили |
 
 ### Telegram-бот
 
@@ -12751,7 +12751,7 @@ iOS, Android, Web
 | **Повторювані витрати** | Сповіщення, коли застосунок автоматично записує повторюваний витрат |
 | **Продовження підписок** | Сповіщення за 3 дні до продовження відстежуваної підписки |
 | **Аномальні витрати** | Сповіщення про нетипові витрати: дублі, підвищення цін або сплески по категорії |
-| **Нагадування про трекінг** | Нагадування, якщо ви не записували витрати 3+ дні |
+| **Нагадування про трекінг** | Нагадування, якщо ви не записували витрати 3+ дні, а також одне нагадування наступного дня після реєстрації, якщо ви ще нічого не додали |
 
 ### Telegram-бот
 
@@ -18029,7 +18029,7 @@ Przelaczniki dla preferencji powiadomien:
 | **Wydatki cykliczne** | Powiadomienie, gdy aplikacja automatycznie rejestruje wydatek cykliczny |
 | **Odnowienia subskrypcji** | Powiadomienie 3 dni przed odnowieniem śledzonej subskrypcji |
 | **Alerty anomalii** | Powiadomienie o nietypowych wydatkach: duplikaty, wzrosty cen lub skoki kategorii |
-| **Przypomnienie o śledzeniu** | Powiadomienie, gdy nie rejestrowałeś wydatków przez 3+ dni |
+| **Przypomnienie o śledzeniu** | Powiadomienie, gdy nie rejestrowałeś wydatków przez 3+ dni, oraz jedno przypomnienie dzień po rejestracji, jeśli jeszcze niczego nie dodałeś |
 
 ### Bot Telegram
 
@@ -23306,7 +23306,7 @@ Umschaltflachen fur Benachrichtigungspraferenzen:
 | **Wiederkehrende Ausgaben** | Benachrichtigung, wenn die App automatisch eine wiederkehrende Ausgabe erfasst |
 | **Abonnementverlängerungen** | Benachrichtigung 3 Tage vor Verlängerung eines verfolgten Abonnements |
 | **Anomalie-Warnungen** | Benachrichtigung bei ungewöhnlichen Ausgaben: Duplikate, Preiserhöhungen oder Kategorie-Spitzen |
-| **Tracking-Erinnerung** | Hinweis, wenn du seit 3+ Tagen keine Ausgaben erfasst hast |
+| **Tracking-Erinnerung** | Hinweis, wenn du seit 3+ Tagen keine Ausgaben erfasst hast, sowie eine Erinnerung am Tag nach der Registrierung, falls du noch nichts eingetragen hast |
 
 ### Telegram-Bot
 
@@ -28562,7 +28562,7 @@ Interruptores para las preferencias de notificaciones:
 | **Gastos recurrentes** | Notificación cuando la app registra automáticamente un gasto recurrente |
 | **Renovaciones de suscripciones** | Notificación 3 días antes de que se renueve una suscripción rastreada |
 | **Alertas de anomalías** | Notificación por gastos inusuales: cargos duplicados, aumentos de precio o picos de categoría |
-| **Recordatorio de seguimiento** | Aviso si no has registrado gastos en 3+ días |
+| **Recordatorio de seguimiento** | Aviso si no has registrado gastos en 3+ días, y un recordatorio el día después de registrarte si aún no has añadido nada |
 
 ### Bot de Telegram
 
@@ -33804,7 +33804,7 @@ Interrupteurs a bascule pour les preferences de notifications :
 | **Dépenses récurrentes** | Notification quand l'app enregistre automatiquement une dépense récurrente |
 | **Renouvellements d'abonnements** | Notification 3 jours avant le renouvellement d'un abonnement suivi |
 | **Alertes d'anomalies** | Notification pour les dépenses inhabituelles : doublons, hausses de prix ou pics de catégorie |
-| **Rappel de suivi** | Notification si vous n'avez pas enregistré de dépenses depuis 3+ jours |
+| **Rappel de suivi** | Notification si vous n'avez pas enregistré de dépenses depuis 3+ jours, plus un rappel le lendemain de votre inscription si vous n'avez encore rien ajouté |
 
 ### Bot Telegram
 
@@ -39048,7 +39048,7 @@ iOS, Android, Web
 | **Паўтаральныя выдаткі** | Апавяшчэнне, калі праграма аўтаматычна запісвае паўтаральны выдатак |
 | **Падаўжэнні падпісак** | Апавяшчэнне за 3 дні да падаўжэння адсочваемай падпіскі |
 | **Аномальныя выдаткі** | Апавяшчэнне пра нетыповыя выдаткі: дублі, падвышэнне цэн або ўсплёскі па катэгорыі |
-| **Нагадванне пра трэкінг** | Нагадванне, калі не запісвалі выдаткі 3+ дні |
+| **Нагадванне пра трэкінг** | Нагадванне, калі не запісвалі выдаткі 3+ дні, а таксама адно нагадванне на наступны дзень пасля рэгістрацыі, калі вы яшчэ нічога не дадалі |
 
 ### Telegram-бот
 
@@ -44265,7 +44265,7 @@ Schakelaars voor meldingsvoorkeuren:
 | **Terugkerende uitgaven** | Melding wanneer de app automatisch een terugkerende uitgave registreert |
 | **Abonnementsverlengingen** | Melding 3 dagen voor verlenging van een gevolgd abonnement |
 | **Anomaliemeldingen** | Melding bij ongewone uitgaven: dubbele kosten, prijsstijgingen of categoriepieken |
-| **Trackingherinnering** | Melding als je 3+ dagen geen uitgaven hebt geregistreerd |
+| **Trackingherinnering** | Melding als je 3+ dagen geen uitgaven hebt geregistreerd, plus één herinnering de dag na je aanmelding als je nog niets hebt toegevoegd |
 
 ### Telegram-bot
 

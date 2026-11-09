@@ -65,6 +65,8 @@ export class NotificationsService {
     if (notificationType === 'chat_mention' && !user.notifySharedActivity) return false;
     if (notificationType === 'subscription_renewal' && !user.notifySubscriptionRenewals) return false;
     if (notificationType === 'tracking_gap_reminder' && !user.notifyTrackingGap) return false;
+    // ABA-737: the first-transaction nudge is a tracking reminder too, under the same switch.
+    if (notificationType === 'activation_nudge' && !user.notifyTrackingGap) return false;
     if (notificationType === 'purchase_request_created' && !user.notifyPurchaseRequests) return false;
     if (notificationType === 'purchase_request_voted' && !user.notifyPurchaseRequests) return false;
     if (notificationType === 'purchase_request_approved' && !user.notifyPurchaseRequests) return false;

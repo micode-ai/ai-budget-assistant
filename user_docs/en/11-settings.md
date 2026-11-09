@@ -149,7 +149,7 @@ Toggle switches for notification preferences:
 | **Recurring Expenses** | Get notified when the app automatically records a recurring expense |
 | **Subscription Renewals** | Get notified 3 days before a tracked subscription renews |
 | **Anomaly Alerts** | Get notified about unusual spending: duplicate charges, price increases, or category spikes |
-| **Tracking Reminder** | Get a nudge if you haven't logged any expenses for 3+ days |
+| **Tracking Reminder** | Get a nudge if you haven't logged any expenses for 3+ days, plus one reminder the day after you sign up if you haven't added anything yet |
 
 ### Telegram Bot
 

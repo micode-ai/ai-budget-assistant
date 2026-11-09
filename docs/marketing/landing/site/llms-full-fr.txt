@@ -5352,7 +5352,7 @@ Interrupteurs a bascule pour les preferences de notifications :
 | **Dépenses récurrentes** | Notification quand l'app enregistre automatiquement une dépense récurrente |
 | **Renouvellements d'abonnements** | Notification 3 jours avant le renouvellement d'un abonnement suivi |
 | **Alertes d'anomalies** | Notification pour les dépenses inhabituelles : doublons, hausses de prix ou pics de catégorie |
-| **Rappel de suivi** | Notification si vous n'avez pas enregistré de dépenses depuis 3+ jours |
+| **Rappel de suivi** | Notification si vous n'avez pas enregistré de dépenses depuis 3+ jours, plus un rappel le lendemain de votre inscription si vous n'avez encore rien ajouté |
 
 ### Bot Telegram
 
