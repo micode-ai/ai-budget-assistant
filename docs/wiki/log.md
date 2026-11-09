@@ -309,6 +309,7 @@ Newest last within each section.
 - 2026-11-09 (no issue, query ritual) — "budget creation errors" in telemetry are validation messages: both users with `failed` saved a budget seconds later (checked in `budgets`); one user opened the form 4× without submitting, with `started` landing on unrelated screens — a pattern shared by other flows and left unexplained. Pages: `features/web-telemetry.md` (Known gaps).
 - 2026-11-09 (no issue, query ritual) — what GA4 and Play Console add: GA4 is consent-gated marketing-site only (11 users / 28 d), Play Console is the only view of installs → first opens (36 → 18) and native stability (no crashes/ANRs); reviews stalled since August. Pages: `features/acquisition-tracking.md` (Known gaps).
 - 2026-11-09 (no issue, query ritual) — why no Play review since August: the rating prompt (1.24.0) asks only on a receipt-scan Done or a Wrapped share, a path ~10 users reached; also `hasAction()` is called without `await`. Pages: `features/store-rating-prompt.md` (Known gaps).
+- 2026-11-09 (no issue, query ritual) — who `not-set` is: Android installs whose Play Install Referrer is `(not set)` — Play's "direct" traffic through a bare Play link (Play Console: 20 direct vs 13 explore in 28 d); best-activating source (22/32), ru/ua-heavy; our two guest pages link to Play untagged. Pages: `features/acquisition-tracking.md` (Known gaps).
 
 ## Lint passes
 

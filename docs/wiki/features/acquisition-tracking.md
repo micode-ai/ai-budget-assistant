@@ -91,9 +91,18 @@ without the gate, first-touch-wins then kept it over a real friend's later link.
 
 - The product itself is otherwise unmeasured: `app.ai-budget.pl` serves no analytics and the mobile
   app has no analytics SDK. Web telemetry exists but is a separate, narrower thing.
-- `not-set` is the largest signup source (20 of 34 between 2026-09-24 and 10-21, against 8
-  `google-play`, 5 `landing`, 1 `google`, 0 NULL): a native install with no referrer and a web
-  visit with no tagged link look the same.
+- **`not-set` is a Play install that reached the listing through an untagged link (checked
+  2026-11-09).** All 32 `not-set` signups since September carry exactly
+  `utm_source=(not%20set)&utm_medium=(not%20set)` from the Play Install Referrer, so they are
+  Android installs, not web visits; none came through a shared account or a referral, one through
+  an expense group. Play Console's own split for the same 28 days — 13 "Google Play explore", 20
+  "Paid and direct", 3 not attributed — matches our `google-play` (organic search/browse) vs
+  `not-set` ratio, so `not-set` is Play's "direct": someone followed a bare
+  `play.google.com/...?id=com.budget.assistant` link. It is the best-activating source (22 of 32
+  logged a transaction, against 6 of 18 for `google-play`) and skews ru/ua, which fits links shared
+  in chats and social posts. Bare Play links we control and could tag: the receipt-split guest page
+  (`receipt-split/helpers/guest-page.ts`), the group guest page (`groups/helpers/group-guest-page.ts`),
+  directory listings, social bios and community posts.
 - No internal-traffic filter (needs the office IP).
 - **What the outside consoles can and cannot answer (checked 2026-11-09, last 28 days).**
   *GA4* covers only the marketing site and only visitors who accepted the consent banner: 11
