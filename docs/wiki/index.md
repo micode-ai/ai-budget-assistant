@@ -261,6 +261,7 @@ the section you came for — it states what must not break and why. A missing se
 - [default-category-seeding](features/default-category-seeding.md) — every new account (not just a
   user's first) gets the localized default category set; `investment` accounts don't
 - [tags](features/tags.md) — device-created tags, `clientId`, and using the resolved PK after a lookup
+- [vehicle-fuel-log](features/vehicle-fuel-log.md) — vehicles, fill-ups, l/100 km and cost per km (API only)
 - [merchants](features/merchants.md) — the merchant field, filters, capture reconciliation, rename/merge and grouping suggestions
 - [reference-data-screens](features/reference-data-screens.md) — the shared layout of the four reference-data screens, and the viewer-role UI gate
 

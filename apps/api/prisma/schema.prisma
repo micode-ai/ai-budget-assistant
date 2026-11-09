@@ -408,6 +408,8 @@ model Account {
   generatedInsights              GeneratedInsight[]
   spendingStories                SpendingStory[]
   tags                           Tag[]
+  vehicles                       Vehicle[]
+  fuelLogs                       FuelLog[]
   projects                       Project[]
   achievements                   UserAchievement[]
   streaks                        UserStreak[]
@@ -628,6 +630,7 @@ model Expense {
   createdByOAuthClient OAuthClient?              @relation(fields: [createdByOAuthClientId], references: [id], onDelete: SetNull)
   items                ExpenseItem[]
   expenseTags          ExpenseTag[]
+  fuelLog              FuelLog?
   categorySplits       ExpenseCategorySplit[]
   projectExpenses      ProjectExpense[]
   purchaseRequest      PurchaseRequest?          @relation("PlannedPurchase")
@@ -2948,4 +2951,39 @@ model TransactionRevision {
   @@index([entityType, entityId, createdAt(sort: Desc)])
   @@index([accountId])
   @@map("transaction_revisions")
+}
+
+model Vehicle {
+  id        String   @id @default(uuid())
+  accountId String   @map("account_id")
+  userId    String   @map("user_id")
+  name      String
+  fuelType  String   @default("petrol") @map("fuel_type")
+  isDeleted Boolean  @default(false) @map("is_deleted")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  account  Account   @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  fuelLogs FuelLog[]
+
+  @@index([accountId])
+  @@map("vehicles")
+}
+
+model FuelLog {
+  id         String   @id @default(uuid())
+  accountId  String   @map("account_id")
+  vehicleId  String   @map("vehicle_id")
+  expenseId  String   @unique @map("expense_id")
+  liters     Decimal  @db.Decimal(8, 3)
+  odometerKm Int      @map("odometer_km")
+  isFullTank Boolean  @default(true) @map("is_full_tank")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  expense Expense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId])
+  @@map("fuel_logs")
 }

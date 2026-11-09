@@ -288,6 +288,7 @@ Newest last within each section.
 - 2026-11-09 · [ABA-724](https://github.com/micode-ai/ai-budget-assistant/issues/761) — new page `features/spending-by-member.md`: device-only by-member donut on shared accounts, grouped by `userId`, hidden with <2 creators; tap-to-filter, member-within-category and owner toggle left as follow-ups.
 - 2026-11-09 · [ABA-725](https://github.com/micode-ai/ai-budget-assistant/issues/762) — shared-account edit history: `TransactionRevision` rows written in the update transaction (editor from controller and `/sync` handlers; E2EE rows skipped; newest 20 kept); API only, mobile UI pending. Pages: `features/transaction-edit-history.md`.
 - 2026-11-09 · [ABA-726](https://github.com/micode-ai/ai-budget-assistant/issues/763) — "Normal for me" mutes one alert type per merchant/category, checked centrally in the alert writer; push action not built. Pages: features/anomaly-alerts.
+- 2026-11-09 · [ABA-727](https://github.com/micode-ai/ai-budget-assistant/issues/764) — vehicles + fuel log as separate tables beside `Expense` (not columns), full-tank l/100 km and cost/km stats, API only; mobile screen, OCR prefill and tax export are open. Pages: `features/vehicle-fuel-log.md`.
 
 ## Queries
 
