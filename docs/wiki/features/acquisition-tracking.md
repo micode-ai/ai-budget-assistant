@@ -95,6 +95,17 @@ without the gate, first-touch-wins then kept it over a real friend's later link.
   `google-play`, 5 `landing`, 1 `google`, 0 NULL): a native install with no referrer and a web
   visit with no tagged link look the same.
 - No internal-traffic filter (needs the office IP).
+- **What the outside consoles can and cannot answer (checked 2026-11-09, last 28 days).**
+  *GA4* covers only the marketing site and only visitors who accepted the consent banner: 11
+  users, 21 sessions, 7 `consent_accept`, 3 `cta_click` from one person, 0 key events — too thin to
+  judge pages or CTAs; Search Console (`gsc-snapshot.yml`) is the better read of organic reach.
+  *Play Console* is the one source for the Android top of funnel and for native stability: 3.1K
+  store impressions → 109 listing visitors → 37 install clicks → 36 acquisitions → 18 first opens →
+  1 device retained at day 7; listing conversion ~20%; no user-perceived crash or ANR; DAU/MAU at or
+  above the Finance peer median; 13 ratings averaging 5.0 with no new review since 2026-08-25
+  (the [store-rating-prompt](store-rating-prompt.md) has produced none). Half of all installs never
+  open the app, so the leak starts before signup. In the same window the database shows 11
+  `google-play` signups of which 2 logged a transaction.
 - The landing and blog generators do not forward `?ref=` through their CTAs, so a referral routed
   via the marketing site loses the code.
 

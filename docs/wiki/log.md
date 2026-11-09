@@ -306,6 +306,7 @@ Newest last within each section.
 - 2026-10-18 (no issue, query ritual) — one churned web user's journey from telemetry: a session is a page load (bursts = tab reloads, form factor unrecorded), event times are 15 s flush times, and `completed` counts matched saved rows exactly. Pages: `features/web-telemetry.md` (Known gaps).
 - 2026-11-05 · Should PL ranking pages be reworked answer-first? No — those at positions 4–12 already are; only low-traffic articles 01–31 open with a story — `features/marketing-site.md`.
 - 2026-11-09 (no issue, query ritual) — "budget creation errors" in telemetry are validation messages: both users with `failed` saved a budget seconds later (checked in `budgets`); one user opened the form 4× without submitting, with `started` landing on unrelated screens — a pattern shared by other flows and left unexplained. Pages: `features/web-telemetry.md` (Known gaps).
+- 2026-11-09 (no issue, query ritual) — what GA4 and Play Console add: GA4 is consent-gated marketing-site only (11 users / 28 d), Play Console is the only view of installs → first opens (36 → 18) and native stability (no crashes/ANRs); reviews stalled since August. Pages: `features/acquisition-tracking.md` (Known gaps).
 
 ## Lint passes
 
