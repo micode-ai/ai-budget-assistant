@@ -133,6 +133,17 @@ registration, a policy omitting the data category being collected.
   makes that testable: such bursts should cluster under `phone`.
 - **Event times are flush times**, quantized to the 15 s flush interval: the server's `createdAt`
   is used and the client `ts` is advisory. Order inside one batch is preserved, sub-15 s timing is not.
+- **`budget_create` `failed` is a validation message, not a broken save (checked 2026-11-09).** Every
+  `failed` in `BudgetCreateForm` but the last is one of the three form checks (no name, no or
+  unparseable amount, by-category with no allocations), and the `catch` cannot fire in practice
+  because `addBudget` persists fire-and-forget. All three prod `failed` events belonged to two users
+  who saved a budget 3–15 s later (confirmed in `budgets`). The event carries no reason, so which
+  check tripped is unknowable — add a `reason` prop to the validator first if that ever matters.
+- **`started` sometimes lands while the last recorded screen is unrelated** (settings, account
+  screens) — for `budget_create`, `expense_manual`, `expense_receipt` and `income_manual` alike,
+  across several users, within ONE session id (so not two tabs). Unexplained as of 2026-11-09. The
+  desktop dashboard opens these flows as dialogs, which emit no `screen_view`, and the dashboard tab
+  stays mounted under pushed screens; do not read a flow's last screen as where it was opened from.
 - **Verified against real rows (2026-10-18):** for one user, `completed` counts for `expense_manual`
   and `income_manual` equalled the expense and income rows actually saved, exactly — the once-per-mount
   guard holds in practice.
