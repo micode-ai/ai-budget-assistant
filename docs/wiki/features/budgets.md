@@ -33,6 +33,13 @@ row with `amount = budget.amount`; a multi-category budget has several. The lega
 dropped (migration `20260523000000_drop_budget_category_id`); existing devices still carry a dead
 `category_id` SQLite column that is never read or written.
 
+**The name is optional on create ([ABA-732](https://github.com/micode-ai/ai-budget-assistant/issues/770)).** Left empty, `resolveBudgetName`
+(`apps/mobile/src/features/budgets/defaultBudgetName.ts`) names the budget after its one category,
+or after its period ("Monthly Budget", `budgetNew.defaultNames.*`); several allocations fall back to
+the period. The resolved value is the name field's placeholder, so the saved name is the one on
+screen. It was required before, and it was the field people skipped — telemetry showed the
+"failures" were all users hitting that check and retrying. The edit form still requires a name.
+
 **Periods come from one function.** `computeBudgetPeriod(budget, now?)` (Monday-based weeks) in
 `budget-period.util.ts` is imported by both the service and the alert cron; `shared-utils` exports
 the same function for the mobile bundle. Do not add another copy.
@@ -127,4 +134,4 @@ over a `budgets` array. The public `useBudgetStore` API is unchanged across its 
 
 ABA-171 (period util) · ABA-314 (category threshold alerts) · ABA-383 (financial month, wave 1) ·
 ABA-523 (projection) · ABA-529 (split-aware progress) · ABA-537 (store split) · category
-hierarchy roll-up [ABA-696](https://github.com/micode-ai/ai-budget-assistant/issues/729).
+hierarchy roll-up [ABA-696](https://github.com/micode-ai/ai-budget-assistant/issues/729) · optional name [ABA-732](https://github.com/micode-ai/ai-budget-assistant/issues/770).

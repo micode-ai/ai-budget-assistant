@@ -3556,6 +3556,8 @@ Navegacion adicional:
 - **Vibracion tactil** — al tocar una pestana, los dispositivos compatibles producen una breve vibracion para confirmar que el toque fue registrado
 - **Indicador de carga** — una barra de progreso fina aparece en la parte superior de la pantalla mientras la app obtiene o sincroniza datos
 
+- **Probar con datos de ejemplo** — en la pantalla de inicio (móvil) puedes explorar la app con transacciones de ejemplo. Un aviso indica que son datos de ejemplo; toca **Empezar de cero** para borrarlos. No se guarda nada en el servidor.
+
 ---
 
 *Siguiente: [Panel](./02-dashboard.md)*
@@ -4250,7 +4252,7 @@ La pestaña **Presupuestos** muestra todos tus presupuestos activos:
 ### Paso a paso
 
 1. Toca **Crear presupuesto** en la pestaña Presupuestos (o el botón **+**)
-2. Introduce un **Nombre del presupuesto** (por ejemplo, "Supermercado mensual")
+2. Introduce un **Nombre del presupuesto** (por ejemplo, "Supermercado mensual") — opcional: si lo dejas vacío, el presupuesto toma el nombre de su categoría o de su periodo («Presupuesto mensual»)
 3. Selecciona la **Moneda**
 4. Elige un **Modo de presupuesto**:
    - **General** — un importe total único, opcionalmente vinculado a una categoría
@@ -4437,6 +4439,11 @@ Cada tarjeta de informacion tiene un nivel de severidad: critico (rojo), adverte
 - Solo aparece cuando al menos un gasto tiene un comerciante asignado
 
 Si la misma tienda aparece con varios nombres, abre **Ajustes → Comerciantes** para ordenarlos: toca **Seleccionar**, marca las variantes y **Combinar** en un solo nombre. La app también sugiere grupos probables (por ejemplo varias entradas de *Biedronka*) que puedes combinar con un solo toque, de modo que cuenten como un único comerciante en estos gráficos.
+
+### Por miembro
+
+- Quién registró cuánto del gasto en el período seleccionado.
+- Solo aparece en cuentas compartidas con al menos dos miembros con gastos.
 
 ### Por etiquetas / Por proyectos
 
@@ -5224,6 +5231,8 @@ La diferencia se guarda como un ajuste de saldo. No es un gasto ni un ingreso, a
 
 > **Nota:** para corregir el saldo hace falta conexión a internet. Los observadores y las cuentas de viaje archivadas no pueden corregir el saldo.
 
+También se admiten CZK, SEK, NOK, DKK, HUF, RON y CHF.
+
 ---
 
 *Ver tambien: [Panel](./02-dashboard.md) | [Ajustes](./11-settings.md)*
@@ -5398,6 +5407,7 @@ Visualiza y gestiona todas tus categorias de gastos e ingresos en un solo lugar.
 
 - **Ultima sincronizacion** — muestra cuando se sincronizaron tus datos por ultima vez con el servidor (por ejemplo, "Hace 5 min" o "Nunca")
 - **Sincronizar ahora** — toca para activar manualmente una sincronizacion de datos
+- **Pendiente de sincronizar** — si los cambios hechos sin conexión no se han subido durante un tiempo, un indicador muestra cuántos esperan. Tócalo para ver cuáles son y sincronizar ahora. Desaparece cuando todo está respaldado.
 
 > **Nota:** La aplicacion funciona sin conexion. Tus datos se guardan en tu dispositivo y se sincronizan automaticamente cuando vuelves a estar en linea. Usa **Sincronizar ahora** para forzar una sincronizacion inmediata.
 
@@ -6657,6 +6667,10 @@ Empieza a registrar un gasto con un toque, sin abrir la aplicación.
 | Presupuesto – Vista general | Cada 30 minutos |
 | Presupuesto – Añadir rápido | Estático |
 
+## Accesos directos del launcher (Android)
+
+Mantén pulsado el icono de la app para ir directo a **Añadir gasto**, **Escanear recibo** o **Voz**. No requiere configuración.
+
 ---
 
 ## Preguntas frecuentes
@@ -7342,6 +7356,7 @@ Puedes activar o desactivar las notificaciones push de anomalías en **Ajustes �
 - Cada anomalía se notifica una sola vez — no recibirás la misma alerta dos veces.
 - En cuanto resuelves un posible duplicado eliminando o combinando el gasto de más, su alerta desaparece sola. Si ya lo habías resuelto, al tocar la alerta solo indica que ya está resuelto, sin la confusa pantalla de «gasto no encontrado».
 - En cuentas compartidas, marcar alertas como leídas afecta a toda la cuenta; los observadores pueden leer el feed pero no modificarlo.
+- **Es normal para mí:** en una tarjeta de alerta, toca **Es normal para mí** para dejar de recibir ese tipo de alerta para ese comercio o categoría. Los demás tipos siguen llegando. Revísalo o deshazlo en **Alertas → Alertas silenciadas**.
 
 ## Planificación — Gasto seguro, asequibilidad y captura automática
 URL: https://ai-budget.pl/help/es/safe-to-spend/

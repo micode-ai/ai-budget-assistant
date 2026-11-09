@@ -670,6 +670,13 @@ export default {
   },
   budgetNew: {
     name: 'Nom du budget',
+    nameOptional: 'Nom du budget (Facultatif)',
+    defaultNames: {
+      daily: 'Budget quotidien',
+      weekly: 'Budget hebdomadaire',
+      monthly: 'Budget mensuel',
+      yearly: 'Budget annuel',
+    },
     namePlaceholder: 'ex. Courses mensuelles',
     amount: 'Montant',
     amountPlaceholder: '0,00',

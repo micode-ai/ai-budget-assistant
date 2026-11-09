@@ -27,7 +27,7 @@ Der **Budgets**-Tab zeigt alle deine aktiven Budgets:
 ### Schritt für Schritt
 
 1. Tippe auf **Budget erstellen** im Budgets-Tab (oder die **+**-Schaltfläche)
-2. Gib einen **Budgetnamen** ein (z.B. "Monatliche Lebensmittel")
+2. Gib einen **Budgetnamen** ein (z.B. "Monatliche Lebensmittel") — optional: Bleibt das Feld leer, heißt das Budget wie seine Kategorie oder nach seinem Zeitraum („Monatsbudget“)
 3. Wähle die **Währung**
 4. Wähle einen **Budget-Modus**:
    - **Gesamt** — ein Gesamtbetrag, optional mit einer Kategorie verknüpft

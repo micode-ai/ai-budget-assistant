@@ -27,7 +27,7 @@ La pestaña **Presupuestos** muestra todos tus presupuestos activos:
 ### Paso a paso
 
 1. Toca **Crear presupuesto** en la pestaña Presupuestos (o el botón **+**)
-2. Introduce un **Nombre del presupuesto** (por ejemplo, "Supermercado mensual")
+2. Introduce un **Nombre del presupuesto** (por ejemplo, "Supermercado mensual") — opcional: si lo dejas vacío, el presupuesto toma el nombre de su categoría o de su periodo («Presupuesto mensual»)
 3. Selecciona la **Moneda**
 4. Elige un **Modo de presupuesto**:
    - **General** — un importe total único, opcionalmente vinculado a una categoría

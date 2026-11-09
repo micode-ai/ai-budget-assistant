@@ -27,7 +27,7 @@ Zakładka **Budżety** wyświetla wszystkie aktywne budżety:
 ### Krok po kroku
 
 1. Dotknij **Utwórz budżet** w zakładce Budżety (lub przycisk **+**)
-2. Wprowadź **Nazwę budżetu** (np. "Miesięczne zakupy spożywcze")
+2. Wprowadź **Nazwę budżetu** (np. "Miesięczne zakupy spożywcze") — opcjonalnie: jeśli zostawisz pole puste, budżet otrzyma nazwę swojej kategorii lub okresu („Budżet miesięczny”)
 3. Wybierz **Walutę**
 4. Wybierz **Tryb budżetu**:
    - **Ogólny** — jedna łączna kwota, opcjonalnie powiązana z jedną kategorią

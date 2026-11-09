@@ -3540,6 +3540,8 @@ Zusatzliche Navigation:
 - **Haptisches Feedback** — beim Antippen eines Tabs gibt es auf unterstutzten Geraten eine kurze Vibration, damit du weisst, dass deine Eingabe registriert wurde
 - **Ladeanzeige** — ein dunner Fortschrittsbalken erscheint oben am Bildschirmrand, wahrend die App Daten ladt oder synchronisiert
 
+- **Mit Beispieldaten ausprobieren** — auf dem Startbildschirm (Handy) kannst du die App mit erzeugten Beispieltransaktionen erkunden. Ein Banner weist darauf hin; tippe auf **Neu starten**, um sie zu löschen. Nichts wird auf dem Server gespeichert.
+
 ---
 
 *Weiter: [Ubersicht](./02-dashboard.md)*
@@ -4234,7 +4236,7 @@ Der **Budgets**-Tab zeigt alle deine aktiven Budgets:
 ### Schritt für Schritt
 
 1. Tippe auf **Budget erstellen** im Budgets-Tab (oder die **+**-Schaltfläche)
-2. Gib einen **Budgetnamen** ein (z.B. "Monatliche Lebensmittel")
+2. Gib einen **Budgetnamen** ein (z.B. "Monatliche Lebensmittel") — optional: Bleibt das Feld leer, heißt das Budget wie seine Kategorie oder nach seinem Zeitraum („Monatsbudget“)
 3. Wähle die **Währung**
 4. Wähle einen **Budget-Modus**:
    - **Gesamt** — ein Gesamtbetrag, optional mit einer Kategorie verknüpft
@@ -4421,6 +4423,11 @@ Jede Einblickkarte hat einen Schweregrad: Kritisch (rot), Warnung (gelb) oder In
 - Erscheint nur, wenn mindestens eine Ausgabe einen Händler hat
 
 Wenn dasselbe Geschäft unter verschiedenen Namen erscheint, öffne **Einstellungen → Händler**, um sie zu bereinigen: Tippe auf **Auswählen**, markiere die Varianten und **Zusammenführen** zu einem Namen. Die App schlägt auch mögliche Gruppen vor (zum Beispiel mehrere *Biedronka*-Einträge), die du mit einem einzigen Tippen zusammenführen kannst — damit gelten sie in diesen Diagrammen als ein einziger Händler.
+
+### Nach Mitgliedern
+
+- Wer im gewählten Zeitraum wie viel der Ausgaben erfasst hat.
+- Erscheint nur bei geteilten Konten mit mindestens zwei Mitgliedern mit Ausgaben.
 
 ### Nach Tags / Nach Projekten
 
@@ -5207,6 +5214,8 @@ Die Differenz wird als Saldokorrektur gespeichert. Sie ist weder Ausgabe noch Ei
 
 > **Hinweis:** Zum Korrigieren ist eine Internetverbindung nötig. Betrachter und archivierte Reisekonten können den Saldo nicht korrigieren.
 
+Unterstützt werden jetzt auch CZK, SEK, NOK, DKK, HUF, RON und CHF.
+
 ---
 
 *Siehe auch: [Ubersicht](./02-dashboard.md) | [Einstellungen](./11-settings.md)*
@@ -5381,6 +5390,7 @@ Zeige und verwalte alle deine Ausgaben- und Einnahmenkategorien an einem Ort.
 
 - **Zuletzt synchronisiert** — zeigt, wann deine Daten zuletzt mit dem Server synchronisiert wurden (z.B. "Vor 5 Min." oder "Nie")
 - **Jetzt synchronisieren** — tippe, um eine Datensynchronisierung manuell auszulosen
+- **Wartet auf Synchronisierung** — wenn offline vorgenommene Änderungen längere Zeit nicht hochgeladen wurden, zeigt ein Chip an, wie viele warten. Tippe darauf, um Details zu sehen und sofort zu synchronisieren. Er verschwindet, sobald alles gesichert ist.
 
 > **Hinweis:** Die App funktioniert offline. Deine Daten werden auf deinem Gerat gespeichert und automatisch synchronisiert, wenn du wieder online bist. Verwende **Jetzt synchronisieren**, um eine sofortige Synchronisierung zu erzwingen.
 
@@ -6641,6 +6651,10 @@ Starten Sie die Ausgabenerfassung mit einem Tipp – ohne die App zu öffnen.
 | Budget – Übersicht | Alle 30 Minuten |
 | Budget – Schnell hinzufügen | Statisch |
 
+## Launcher-Shortcuts (Android)
+
+Halte das App-Symbol gedrückt, um direkt zu **Ausgabe hinzufügen**, **Beleg scannen** oder **Sprache** zu springen. Keine Einrichtung nötig.
+
 ---
 
 ## FAQ
@@ -7337,6 +7351,7 @@ Du kannst Anomalie-Push-Benachrichtigungen in **Einstellungen → Benachrichtigu
 - Jede Anomalie wird nur einmal gemeldet — du bekommst denselben Hinweis nicht zweimal.
 - Sobald du einen möglichen Doppeleintrag durch Löschen oder Zusammenführen der zusätzlichen Ausgabe erledigst, verschwindet der zugehörige Hinweis von selbst. Hast du ihn bereits erledigt, meldet ein Tippen nur „bereits erledigt“ — kein verwirrender „Ausgabe nicht gefunden“-Bildschirm.
 - In geteilten Konten wirkt das Markieren als gelesen auf das gesamte Konto; Betrachter können den Feed lesen, aber nicht ändern.
+- **Normal für mich:** Tippe auf der Hinweiskarte auf **Normal für mich**, um diese Hinweisart für diesen Händler oder diese Kategorie zu stoppen. Andere Hinweisarten kommen weiterhin. Unter **Hinweise → Stummgeschaltete Hinweise** kannst du das rückgängig machen.
 
 ## Vorausplanung — Sicher ausgeben, Leistbarkeit & Auto-Erfassung
 URL: https://ai-budget.pl/help/de/safe-to-spend/

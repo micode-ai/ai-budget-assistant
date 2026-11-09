@@ -57,6 +57,8 @@ const STRING_PROPS: Record<string, ReadonlySet<string>> = {
   // the user agent, so the pair cannot fingerprint anyone.
   formFactor: new Set(FORM_FACTORS),
   display: new Set(['standalone', 'browser']),
+  // ABA-732: which check a `failed` tripped. A closed list, never an error message.
+  reason: new Set(['amount', 'categories', 'save']),
 };
 const NUMBER_PROPS: ReadonlySet<string> = new Set(['ms']);
 

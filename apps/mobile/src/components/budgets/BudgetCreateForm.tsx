@@ -24,7 +24,8 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
 import { CreateCategoryModal } from '@/components/CreateCategoryModal';
 import { BudgetCategoryEditor, type BudgetAllocationRow } from '@/components/BudgetCategoryEditor';
-import { trackAction } from '@/services/telemetry';
+import { trackAction, trackFailure } from '@/services/telemetry';
+import { resolveBudgetName } from '@/features/budgets/defaultBudgetName';
 
 type BudgetMode = 'overall' | 'byCategory';
 
@@ -72,25 +73,36 @@ export function BudgetCreateForm({ onDone }: BudgetCreateFormProps) {
 
   const totalFromAllocations = categoryAllocations.reduce((sum, a) => sum + a.amount, 0);
 
+  // The name is optional (ABA-732): left empty, the budget is named after its one
+  // category or its period. Shown as the placeholder, so what is saved is what the
+  // user saw.
+  const resolvedName = resolveBudgetName({
+    typed: name,
+    mode: budgetMode,
+    period,
+    selectedCategoryId: selectedCategory,
+    allocationCategoryIds: categoryAllocations.map((a) => a.categoryId),
+    categoryName: (id) => {
+      const cat = getExpenseCategories().find((c) => c.id === id);
+      return cat ? getCategoryDisplayName(cat, t) : undefined;
+    },
+    periodName: (p) => t(`budgetNew.defaultNames.${p}`, { defaultValue: t('budgetNew.defaultNames.monthly') }),
+  });
+
   const handleSubmit = async () => {
-    if (!name.trim()) {
-      trackAction('budget_create', 'failed');
-      showAlert(t('common.error'), t('budgetNew.errorName'));
-      return;
-    }
 
     const numericAmount = budgetMode === 'byCategory'
       ? totalFromAllocations
       : parseAmount(amount);
 
     if (!numericAmount || numericAmount <= 0) {
-      trackAction('budget_create', 'failed');
+      trackFailure('budget_create', 'amount');
       showAlert(t('common.error'), t('budgetNew.errorAmount'));
       return;
     }
 
     if (budgetMode === 'byCategory' && categoryAllocations.length === 0) {
-      trackAction('budget_create', 'failed');
+      trackFailure('budget_create', 'categories');
       showAlert(t('common.error'), t('budgetNew.errorNoCategories'));
       return;
     }
@@ -99,7 +111,7 @@ export function BudgetCreateForm({ onDone }: BudgetCreateFormProps) {
     try {
       addBudget({
         userId: user?.id || '',
-        name: name.trim(),
+        name: resolvedName,
         amount: numericAmount,
         currencyCode,
         period,
@@ -140,7 +152,7 @@ export function BudgetCreateForm({ onDone }: BudgetCreateFormProps) {
       trackAction('budget_create', 'completed');
       onDone();
     } catch {
-      trackAction('budget_create', 'failed');
+      trackFailure('budget_create', 'save');
       showAlert(t('common.error'), t('budgetNew.errorFailed'));
     } finally {
       setIsSubmitting(false);
@@ -158,12 +170,12 @@ export function BudgetCreateForm({ onDone }: BudgetCreateFormProps) {
         <ScrollView style={styles.flex} contentContainerStyle={styles.scrollContent}>
           {/* Name */}
           <View style={styles.fieldContainer}>
-            <Text style={styles.fieldLabel}>{t('budgetNew.name')}</Text>
+            <Text style={styles.fieldLabel}>{t('budgetNew.nameOptional')}</Text>
             <TextInput
               style={styles.textInput}
               value={name}
               onChangeText={setName}
-              placeholder={t('budgetNew.namePlaceholder')}
+              placeholder={resolvedName}
               placeholderTextColor={theme.colors.textTertiary}
               autoFocus
             />

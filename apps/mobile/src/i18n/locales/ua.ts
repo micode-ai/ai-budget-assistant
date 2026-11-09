@@ -676,6 +676,13 @@ export default {
   },
   budgetNew: {
     name: 'Назва бюджету',
+    nameOptional: "Назва бюджету (необов'язково)",
+    defaultNames: {
+      daily: 'Денний бюджет',
+      weekly: 'Тижневий бюджет',
+      monthly: 'Місячний бюджет',
+      yearly: 'Річний бюджет',
+    },
     namePlaceholder: 'напр. Щомісячні продукти',
     amount: 'Сума',
     amountPlaceholder: '0.00',

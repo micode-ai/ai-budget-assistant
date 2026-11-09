@@ -3551,6 +3551,8 @@ Aanvullende navigatie:
 - **Tactiele feedback** — bij het tikken op een tabblad voel je een lichte trilling op ondersteunde apparaten, zodat je weet dat je tik is geregistreerd
 - **Laadindicator** — een dunne voortgangsbalk bovenaan het scherm verschijnt terwijl de app gegevens ophaalt of synchroniseert
 
+- **Probeer met voorbeeldgegevens** — op het startscherm (telefoon) verken je de app met gegenereerde voorbeeldtransacties. Een banner herinnert je eraan; tik op **Opnieuw beginnen** om ze te wissen. Er wordt niets op de server opgeslagen.
+
 ---
 
 *Volgende: [Dashboard](./02-dashboard.md)*
@@ -4084,6 +4086,8 @@ Heb je een bon als screenshot, een bevestiging uit je bank-app of een e-bon als 
 
 Je kunt **afbeeldingen en pdf's** delen, tot **10 bestanden tegelijk** (pdf tot 10 MB). Meerdere bestanden worden na elkaar losse uitgaven — de titel toont de voortgang ('Bon 2 van 5') en **Volgende** gaat naar het volgende bestand. Kan een bestand niet worden gelezen, kies dan **Overslaan** of **Handmatig invoeren**. Bij sluiten vraagt de app eerst voordat wachtende bestanden worden weggegooid. Elk bestand telt als één bonscan binnen je AI-limiet; is die op, dan blijven de overige bestanden voor later.
 
+**Betaalteksten:** selecteer een bank-sms, e-mail of chatbericht, tik op **Delen** en kies AI Budget. De app leest bedrag en winkel en opent het formulier voor een nieuwe uitgave vooraf ingevuld — controleer en sla op. Een tekst die niet op een betaling lijkt (reclame, geweigerde transactie) wordt nooit een uitgave.
+
 Delen werkt alleen op Android. Gebruik op iPhone en in de web-app **Bon scannen**.
 
 ### E-bonnetjes doorsturen per e-mail
@@ -4243,7 +4247,7 @@ Het tabblad **Budgetten** toont al je actieve budgetten:
 ### Stap voor stap
 
 1. Tik op **Budget maken** op het tabblad Budgetten (of de **+**-knop)
-2. Voer een **Budgetnaam** in (bijv. "Maandelijkse boodschappen")
+2. Voer een **Budgetnaam** in (bijv. "Maandelijkse boodschappen") — optioneel: laat je het leeg, dan krijgt het budget de naam van zijn categorie of van zijn periode („Maandbudget”)
 3. Selecteer de **Valuta**
 4. Kies een **Budgetmodus**:
    - **Totaal** — stel één totaalbedrag in, optioneel gekoppeld aan één categorie
@@ -4430,6 +4434,11 @@ Elke inzichtkaart heeft een ernst: kritiek (rood), waarschuwing (geel) of info (
 - Verschijnt alleen wanneer minstens één uitgave een verkoperwaarde heeft
 
 Als dezelfde winkel onder meerdere namen voorkomt, open dan **Instellingen → Verkopers** om ze op te ruimen: tik op **Selecteren**, vink de varianten aan en **Samenvoegen** tot één naam. De app stelt ook waarschijnlijke groepen voor (bijvoorbeeld meerdere *Biedronka*-vermeldingen) die je met één tik kunt samenvoegen — zodat ze als één verkoper tellen in deze grafieken.
+
+### Per lid
+
+- Wie hoeveel van de uitgaven in de gekozen periode heeft vastgelegd.
+- Verschijnt alleen bij gedeelde rekeningen met minstens twee leden met uitgaven.
 
 ### Per tag / Per project
 
@@ -5215,6 +5224,8 @@ Het verschil wordt opgeslagen als saldocorrectie. Het is geen uitgave en geen in
 
 > **Let op:** voor een saldocorrectie is een internetverbinding nodig. Kijkers en gearchiveerde reisrekeningen kunnen het saldo niet corrigeren.
 
+Ook CZK, SEK, NOK, DKK, HUF, RON en CHF worden ondersteund.
+
 ---
 
 *Zie ook: [Dashboard](./02-dashboard.md) | [Instellingen](./11-settings.md)*
@@ -5402,6 +5413,7 @@ Bekijk en beheer al je uitgaven- en inkomstencategorieën op één plek.
 
 - **Laatst gesynchroniseerd** — toont wanneer je gegevens voor het laatst met de server zijn gesynchroniseerd (bijv. "5 min geleden" of "Nooit")
 - **Nu synchroniseren** — tik om handmatig een gegevenssynchronisatie te starten
+- **Wacht op synchronisatie** — als offline gemaakte wijzigingen een tijd niet zijn geüpload, toont een label hoeveel er wachten. Tik erop voor details en om direct te synchroniseren. Het verdwijnt zodra alles is veiliggesteld.
 
 > **Opmerking:** De app werkt offline. Je gegevens worden op je apparaat opgeslagen en automatisch gesynchroniseerd zodra je weer online bent. Gebruik **Nu synchroniseren** om een onmiddellijke synchronisatie te forceren.
 
@@ -6687,6 +6699,10 @@ A: Nee. Widgets voor het startscherm vereisen Android. Alle dezelfde functies zi
 **V: Kan ik de grootte van de widgets aanpassen?**
 A: Budget – Vandaag en Budget – Snel toevoegen hebben een vaste grootte. Budget – Week kan horizontaal worden vergroot of verkleind. Budget – Overzicht kan zowel horizontaal als verticaal worden aangepast.
 
+## Launcher-snelkoppelingen (Android)
+
+Houd het app-pictogram ingedrukt om direct naar **Uitgave toevoegen**, **Bon scannen** of **Spraak** te gaan. Geen instelling nodig.
+
 ---
 
 *Zie ook: [Spraakinvoer & bonnen scannen](./04-voice-and-receipt.md) | [Uitgaven & inkomsten](./03-expenses-and-income.md)*
@@ -7422,6 +7438,7 @@ Je kunt anomalie-pushmeldingen in- of uitschakelen via **Instellingen → Meldin
 - Elke anomalie wordt slechts één keer gemeld — je ontvangt dezelfde melding niet twee keer.
 - Zodra je een mogelijke dubbele uitgave oplost door de extra uitgave te verwijderen of samen te voegen, verdwijnt de bijbehorende melding vanzelf. Heb je het al afgehandeld, dan zegt het tikken op de melding gewoon dat het is opgelost — geen verwarrend scherm 'uitgave niet gevonden'.
 - In gedeelde accounts heeft het als gelezen markeren van meldingen invloed op het hele account; kijkers kunnen de feed lezen maar niet wijzigen.
+- **Normaal voor mij:** tik op een meldingskaart op **Normaal voor mij** om dat type melding voor die winkel of categorie te stoppen. Andere typen blijven komen. Maak het ongedaan onder **Meldingen → Gedempte meldingen**.
 
 ## Vooruitplannen — Veilig uitgeven, betaalbaarheid en automatisch vastleggen
 URL: https://ai-budget.pl/help/nl/safe-to-spend/

@@ -1,6 +1,6 @@
-import type { TelemetryFlow, TelemetryStatus } from './telemetry.types';
+import type { TelemetryFailReason, TelemetryFlow, TelemetryStatus } from './telemetry.types';
 
-export type { TelemetryFlow, TelemetryStatus };
+export type { TelemetryFailReason, TelemetryFlow, TelemetryStatus };
 
 /**
  * Native no-op — and, unlike its siblings, THIS extensionless file IS the real
@@ -23,5 +23,7 @@ export type { TelemetryFlow, TelemetryStatus };
 export function startTelemetrySession(): void {}
 export function trackScreen(_screen: string): void {}
 export function trackAction(_flow: TelemetryFlow, _status: TelemetryStatus, _ms?: number): void {}
+
+export function trackFailure(_flow: TelemetryFlow, _reason: TelemetryFailReason): void {}
 export function flushTelemetry(): void {}
 export function resetTelemetry(): void {}

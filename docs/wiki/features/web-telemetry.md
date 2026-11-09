@@ -46,6 +46,11 @@ counts once, where it ended; unstamped sessions read `unknown`. `GET /admin/tele
 `?formFactor=` to filter, and always returns the unfiltered `formFactors` breakdown (sessions, users,
 installed sessions) so the reader sees how much each slice weighs.
 
+**A `failed` can say why ([ABA-732](https://github.com/micode-ai/ai-budget-assistant/issues/770)).** `trackFailure(flow, reason)` sends the
+same `failed` action plus `reason` from a closed list — `amount`, `categories`, `save` — mirrored by
+`TelemetryFailReason` on mobile and `STRING_PROPS.reason` in the validator. Never an error message:
+one could carry an amount or a name. First caller: `BudgetCreateForm`.
+
 **`abandoned` is derived on read**, as `max(stored, started − completed − failed)`. A screen that
 has been left cannot run code to report itself.
 
@@ -137,8 +142,8 @@ registration, a policy omitting the data category being collected.
   `failed` in `BudgetCreateForm` but the last is one of the three form checks (no name, no or
   unparseable amount, by-category with no allocations), and the `catch` cannot fire in practice
   because `addBudget` persists fire-and-forget. All three prod `failed` events belonged to two users
-  who saved a budget 3–15 s later (confirmed in `budgets`). The event carries no reason, so which
-  check tripped is unknowable — add a `reason` prop to the validator first if that ever matters.
+  who saved a budget 3–15 s later (confirmed in `budgets`). Those events carried no reason;
+  since [ABA-732](https://github.com/micode-ai/ai-budget-assistant/issues/770) they do (see `reason` above), and the name check is gone.
 - **`started` sometimes lands while the last recorded screen is unrelated** (settings, account
   screens) — for `budget_create`, `expense_manual`, `expense_receipt` and `income_manual` alike,
   across several users, within ONE session id (so not two tabs). Unexplained as of 2026-11-09. The
@@ -154,7 +159,7 @@ registration, a policy omitting the data category being collected.
 
 ## History
 
-ABA-497 · ABA-645 (`ios_install` flow) · ABA-643 (`import_report` flow) ·
+ABA-497 · [ABA-732](https://github.com/micode-ai/ai-budget-assistant/issues/770) (`reason` on `failed`) · ABA-645 (`ios_install` flow) · ABA-643 (`import_report` flow) ·
 [ABA-680](https://github.com/micode-ai/ai-budget-assistant/issues/710) (internal accounts excluded
 from the funnel) · [ABA-683](https://github.com/micode-ai/ai-budget-assistant/issues/713) (device
 class and display mode on every event).

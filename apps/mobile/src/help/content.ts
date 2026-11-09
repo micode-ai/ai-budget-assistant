@@ -894,7 +894,7 @@ The **Budgets** tab shows all your active budgets:
 ### Step-by-step
 
 1. Tap **Create Budget** on the Budgets tab (or the **+** button)
-2. Enter a **Budget Name** (e.g., "Monthly Groceries")
+2. Enter a **Budget Name** (e.g., "Monthly Groceries") — optional: left empty, the budget is named after its category, or after its period ("Monthly Budget")
 3. Select the **Currency**
 4. Choose a **Budget Mode**:
    - **Overall** — set a single total amount, optionally linked to one category
@@ -6252,7 +6252,7 @@ iOS, Android, Web
 ### Пошагово
 
 1. Нажмите **Создать бюджет** на вкладке Бюджеты (или кнопку **+**)
-2. Введите **Название бюджета** (например, «Продукты на месяц»)
+2. Введите **Название бюджета** (например, «Продукты на месяц») — необязательно: если оставить поле пустым, бюджет получит название своей категории или периода («Месячный бюджет»)
 3. Выберите **Валюту**
 4. Выберите **Режим бюджета**:
    - **Общий** — одна общая сумма, по желанию привязанная к одной категории
@@ -11588,7 +11588,7 @@ iOS, Android, Web
 ### Покроково
 
 1. Натисніть **Створити бюджет** на вкладці Бюджети (або кнопку **+**)
-2. Введіть **Назву бюджету** (наприклад, «Щомісячні продукти»)
+2. Введіть **Назву бюджету** (наприклад, «Щомісячні продукти») — необов’язково: якщо залишити поле порожнім, бюджет отримає назву своєї категорії або періоду («Місячний бюджет»)
 3. Оберіть **Валюту**
 4. Оберіть **Режим бюджету**:
    - **Загальний** — одна загальна сума, за бажанням прив'язана до однієї категорії
@@ -16872,7 +16872,7 @@ Zakładka **Budżety** wyświetla wszystkie aktywne budżety:
 ### Krok po kroku
 
 1. Dotknij **Utwórz budżet** w zakładce Budżety (lub przycisk **+**)
-2. Wprowadź **Nazwę budżetu** (np. "Miesięczne zakupy spożywcze")
+2. Wprowadź **Nazwę budżetu** (np. "Miesięczne zakupy spożywcze") — opcjonalnie: jeśli zostawisz pole puste, budżet otrzyma nazwę swojej kategorii lub okresu („Budżet miesięczny”)
 3. Wybierz **Walutę**
 4. Wybierz **Tryb budżetu**:
    - **Ogólny** — jedna łączna kwota, opcjonalnie powiązana z jedną kategorią
@@ -22152,7 +22152,7 @@ Der **Budgets**-Tab zeigt alle deine aktiven Budgets:
 ### Schritt für Schritt
 
 1. Tippe auf **Budget erstellen** im Budgets-Tab (oder die **+**-Schaltfläche)
-2. Gib einen **Budgetnamen** ein (z.B. "Monatliche Lebensmittel")
+2. Gib einen **Budgetnamen** ein (z.B. "Monatliche Lebensmittel") — optional: Bleibt das Feld leer, heißt das Budget wie seine Kategorie oder nach seinem Zeitraum („Monatsbudget“)
 3. Wähle die **Währung**
 4. Wähle einen **Budget-Modus**:
    - **Gesamt** — ein Gesamtbetrag, optional mit einer Kategorie verknüpft
@@ -27407,7 +27407,7 @@ La pestaña **Presupuestos** muestra todos tus presupuestos activos:
 ### Paso a paso
 
 1. Toca **Crear presupuesto** en la pestaña Presupuestos (o el botón **+**)
-2. Introduce un **Nombre del presupuesto** (por ejemplo, "Supermercado mensual")
+2. Introduce un **Nombre del presupuesto** (por ejemplo, "Supermercado mensual") — opcional: si lo dejas vacío, el presupuesto toma el nombre de su categoría o de su periodo («Presupuesto mensual»)
 3. Selecciona la **Moneda**
 4. Elige un **Modo de presupuesto**:
    - **General** — un importe total único, opcionalmente vinculado a una categoría
@@ -32651,7 +32651,7 @@ L'onglet **Budgets** affiche tous vos budgets actifs :
 ### Étape par étape
 
 1. Appuyez sur **Créer un budget** dans l'onglet Budgets (ou le bouton **+**)
-2. Entrez un **Nom de budget** (par ex. "Courses mensuelles")
+2. Entrez un **Nom de budget** (par ex. "Courses mensuelles") — facultatif : laissé vide, le budget prend le nom de sa catégorie ou de sa période (« Budget mensuel »)
 3. Sélectionnez la **Devise**
 4. Choisissez un **Mode de budget** :
    - **Global** — un montant total unique, optionnellement lié à une catégorie
@@ -37893,7 +37893,7 @@ iOS, Android, Web
 ### Пакрокава
 
 1. Націсніце **Стварыць бюджэт** на ўкладцы Бюджэты (або кнопку **+**)
-2. Увядзіце **Назву бюджэту** (напрыклад, «Прадукты на месяц»)
+2. Увядзіце **Назву бюджэту** (напрыклад, «Прадукты на месяц») — неабавязкова: калі пакінуць поле пустым, бюджэт атрымае назву сваёй катэгорыі або перыяду («Месячны бюджэт»)
 3. Выберыце **Валюту**
 4. Выберыце **Рэжым бюджэту**:
    - **Агульны** — адна агульная сума, па жаданні прывязаная да адной катэгорыі
@@ -43099,7 +43099,7 @@ Het tabblad **Budgetten** toont al je actieve budgetten:
 ### Stap voor stap
 
 1. Tik op **Budget maken** op het tabblad Budgetten (of de **+**-knop)
-2. Voer een **Budgetnaam** in (bijv. "Maandelijkse boodschappen")
+2. Voer een **Budgetnaam** in (bijv. "Maandelijkse boodschappen") — optioneel: laat je het leeg, dan krijgt het budget de naam van zijn categorie of van zijn periode („Maandbudget”)
 3. Selecteer de **Valuta**
 4. Kies een **Budgetmodus**:
    - **Totaal** — stel één totaalbedrag in, optioneel gekoppeld aan één categorie

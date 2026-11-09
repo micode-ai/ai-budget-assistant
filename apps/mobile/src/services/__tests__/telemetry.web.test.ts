@@ -7,6 +7,7 @@ import {
   startTelemetrySession,
   trackScreen,
   trackAction,
+  trackFailure,
   flushTelemetry,
   resetTelemetry,
   formFactorForWidth,
@@ -57,6 +58,17 @@ describe('telemetry (web)', () => {
       'screen_view',
       'action',
     ]);
+  });
+
+  it('sends a failure as a failed action carrying its reason (ABA-732)', async () => {
+    trackFailure('budget_create', 'amount');
+
+    flushTelemetry();
+    await flushMicrotasks();
+
+    const body = JSON.parse(fetchMock.mock.calls[0][1].body);
+    expect(body.events[0].name).toBe('action');
+    expect(body.events[0].props).toMatchObject({ flow: 'budget_create', status: 'failed', reason: 'amount' });
   });
 
   it('flushes on its own after the interval, with no explicit call', async () => {

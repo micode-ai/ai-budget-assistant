@@ -27,7 +27,7 @@ Het tabblad **Budgetten** toont al je actieve budgetten:
 ### Stap voor stap
 
 1. Tik op **Budget maken** op het tabblad Budgetten (of de **+**-knop)
-2. Voer een **Budgetnaam** in (bijv. "Maandelijkse boodschappen")
+2. Voer een **Budgetnaam** in (bijv. "Maandelijkse boodschappen") — optioneel: laat je het leeg, dan krijgt het budget de naam van zijn categorie of van zijn periode („Maandbudget”)
 3. Selecteer de **Valuta**
 4. Kies een **Budgetmodus**:
    - **Totaal** — stel één totaalbedrag in, optioneel gekoppeld aan één categorie

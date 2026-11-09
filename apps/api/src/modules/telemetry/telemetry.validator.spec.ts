@@ -129,6 +129,16 @@ describe('sanitizeEvents', () => {
     expect(out[0].props).toEqual({ status: 'completed' });
   });
 
+  it('keeps a failure reason from the closed list and drops anything else (ABA-732)', () => {
+    const out = sanitizeEvents([
+      { name: 'action', props: { flow: 'budget_create', status: 'failed', reason: 'amount' } },
+      { name: 'action', props: { flow: 'budget_create', status: 'failed', reason: 'Network error: 42.50 PLN' } },
+    ]);
+
+    expect(out[0].props).toEqual({ flow: 'budget_create', status: 'failed', reason: 'amount' });
+    expect(out[1].props).toEqual({ flow: 'budget_create', status: 'failed' });
+  });
+
   it('drops a non-finite duration', () => {
     const out = sanitizeEvents([
       { name: 'action', props: { flow: 'expense_manual', status: 'failed', ms: Number.NaN } },

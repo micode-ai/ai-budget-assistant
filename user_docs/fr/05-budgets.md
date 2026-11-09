@@ -27,7 +27,7 @@ L'onglet **Budgets** affiche tous vos budgets actifs :
 ### Étape par étape
 
 1. Appuyez sur **Créer un budget** dans l'onglet Budgets (ou le bouton **+**)
-2. Entrez un **Nom de budget** (par ex. "Courses mensuelles")
+2. Entrez un **Nom de budget** (par ex. "Courses mensuelles") — facultatif : laissé vide, le budget prend le nom de sa catégorie ou de sa période (« Budget mensuel »)
 3. Sélectionnez la **Devise**
 4. Choisissez un **Mode de budget** :
    - **Global** — un montant total unique, optionnellement lié à une catégorie

@@ -673,6 +673,13 @@ export default {
   },
   budgetNew: {
     name: 'Budget Name',
+    nameOptional: 'Budget Name (Optional)',
+    defaultNames: {
+      daily: 'Daily Budget',
+      weekly: 'Weekly Budget',
+      monthly: 'Monthly Budget',
+      yearly: 'Yearly Budget',
+    },
     namePlaceholder: 'e.g. Monthly Groceries',
     amount: 'Amount',
     amountPlaceholder: '0.00',

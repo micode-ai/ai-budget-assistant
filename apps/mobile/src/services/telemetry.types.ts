@@ -18,6 +18,11 @@ export type TelemetryFlow =
 
 export type TelemetryStatus = 'started' | 'completed' | 'failed' | 'abandoned';
 
+/** Why a `failed` happened — which form check tripped, or the save itself.
+ *  A closed list, never free text (an error message could carry user data).
+ *  Must match `STRING_PROPS.reason` in the API validator. */
+export type TelemetryFailReason = 'amount' | 'categories' | 'save';
+
 /** Coarse device class, from the window width alone (ABA-683). Never the raw
  *  dimensions or the user agent: those fingerprint, a three-way bucket does not.
  *  Must match `STRING_PROPS.formFactor` in the API validator. */

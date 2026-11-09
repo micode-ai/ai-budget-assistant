@@ -676,6 +676,13 @@ export default {
   },
   budgetNew: {
     name: 'Nazwa budżetu',
+    nameOptional: 'Nazwa budżetu (opcjonalnie)',
+    defaultNames: {
+      daily: 'Budżet dzienny',
+      weekly: 'Budżet tygodniowy',
+      monthly: 'Budżet miesięczny',
+      yearly: 'Budżet roczny',
+    },
     namePlaceholder: 'np. Miesięczne zakupy spożywcze',
     amount: 'Kwota',
     amountPlaceholder: '0,00',

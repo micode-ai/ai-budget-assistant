@@ -27,7 +27,7 @@ The **Budgets** tab shows all your active budgets:
 ### Step-by-step
 
 1. Tap **Create Budget** on the Budgets tab (or the **+** button)
-2. Enter a **Budget Name** (e.g., "Monthly Groceries")
+2. Enter a **Budget Name** (e.g., "Monthly Groceries") — optional: left empty, the budget is named after its category, or after its period ("Monthly Budget")
 3. Select the **Currency**
 4. Choose a **Budget Mode**:
    - **Overall** — set a single total amount, optionally linked to one category

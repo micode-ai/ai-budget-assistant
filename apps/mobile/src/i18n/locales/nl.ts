@@ -670,6 +670,13 @@ export default {
   },
   budgetNew: {
     name: 'Budgetnaam',
+    nameOptional: 'Budgetnaam (optioneel)',
+    defaultNames: {
+      daily: 'Dagbudget',
+      weekly: 'Weekbudget',
+      monthly: 'Maandbudget',
+      yearly: 'Jaarbudget',
+    },
     namePlaceholder: 'bijv. Maandelijkse boodschappen',
     amount: 'Bedrag',
     amountPlaceholder: '0,00',

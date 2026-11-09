@@ -3536,6 +3536,8 @@ Navigation supplementaire :
 - **Retour haptique** — toucher un onglet declenche une legere vibration sur les appareils compatibles pour confirmer que l'appui a ete enregistre
 - **Indicateur de chargement** — une fine barre de progression apparait en haut de l'ecran pendant que l'application recupere ou synchronise les donnees
 
+- **Essayer avec des données d'exemple** — sur l'écran de démarrage (téléphone), explorez l'app avec des transactions d'exemple. Une bannière le rappelle ; touchez **Repartir de zéro** pour les supprimer. Rien n'est enregistré sur le serveur.
+
 ---
 
 *Suivant : [Tableau de bord](./02-dashboard.md)*
@@ -4230,7 +4232,7 @@ L'onglet **Budgets** affiche tous vos budgets actifs :
 ### Étape par étape
 
 1. Appuyez sur **Créer un budget** dans l'onglet Budgets (ou le bouton **+**)
-2. Entrez un **Nom de budget** (par ex. "Courses mensuelles")
+2. Entrez un **Nom de budget** (par ex. "Courses mensuelles") — facultatif : laissé vide, le budget prend le nom de sa catégorie ou de sa période (« Budget mensuel »)
 3. Sélectionnez la **Devise**
 4. Choisissez un **Mode de budget** :
    - **Global** — un montant total unique, optionnellement lié à une catégorie
@@ -4417,6 +4419,11 @@ Chaque carte d'apercu a un niveau de gravite : critique (rouge), avertissement (
 - Apparait uniquement quand au moins une depense a un marchand renseigne
 
 Si le même magasin apparaît sous plusieurs noms, ouvrez **Paramètres → Marchands** pour les réorganiser : appuyez sur **Sélectionner**, cochez les variantes et **Fusionner** en un seul nom. L'application suggère également des groupes probables (par exemple plusieurs entrées *Biedronka*) que vous pouvez fusionner en un seul appui — afin qu'ils comptent comme un seul marchand dans ces graphiques.
+
+### Par membre
+
+- Qui a saisi quelle part des dépenses sur la période choisie.
+- N'apparaît que sur les comptes partagés avec au moins deux membres ayant des dépenses.
 
 ### Par etiquettes / Par projets
 
@@ -5202,6 +5209,8 @@ La différence est enregistrée comme un ajustement de solde. Ce n'est ni une d�
 
 > **Remarque :** la correction du solde nécessite une connexion internet. Les lecteurs et les comptes de voyage archivés ne peuvent pas corriger le solde.
 
+Les devises CZK, SEK, NOK, DKK, HUF, RON et CHF sont aussi prises en charge.
+
 ---
 
 *Voir aussi : [Tableau de bord](./02-dashboard.md) | [Parametres](./11-settings.md)*
@@ -5376,6 +5385,7 @@ Visualisez et gerez toutes vos categories de depenses et de revenus en un seul e
 
 - **Derniere synchronisation** — indique quand vos donnees ont ete synchronisees pour la derniere fois avec le serveur (par ex. "il y a 5 min" ou "Jamais")
 - **Synchroniser maintenant** — appuyez pour declencher manuellement une synchronisation des donnees
+- **En attente de synchronisation** — si des modifications faites hors ligne ne sont pas envoyées depuis un moment, une pastille indique combien attendent. Appuyez dessus pour les voir et synchroniser maintenant. Elle disparaît une fois tout sauvegardé.
 
 > **Note :** L'application fonctionne hors ligne. Vos donnees sont enregistrees sur votre appareil et se synchronisent automatiquement lorsque vous etes de nouveau en ligne. Utilisez **Synchroniser maintenant** pour forcer une synchronisation immediate.
 
@@ -6635,6 +6645,10 @@ Commencez à saisir une dépense en un seul appui, sans ouvrir l'application.
 | Budget – Vue d'ensemble | Toutes les 30 minutes |
 | Budget – Ajout rapide | Statique |
 
+## Raccourcis du lanceur (Android)
+
+Appuyez longuement sur l'icône de l'app pour accéder directement à **Ajouter une dépense**, **Scanner un reçu** ou **Voix**. Aucune configuration requise.
+
 ---
 
 ## FAQ
@@ -7320,6 +7334,7 @@ Vous pouvez activer ou désactiver les notifications push d'anomalies dans **Par
 - Chaque anomalie n'est signalée qu'une seule fois — vous ne recevrez pas deux fois la même alerte.
 - Dès que vous traitez un doublon possible en supprimant ou en fusionnant la dépense en trop, son alerte disparaît d'elle-même. Si vous l'avez déjà réglé, toucher l'alerte indique simplement que c'est résolu — pas d'écran déroutant « dépense introuvable ».
 - Dans les comptes partagés, marquer les alertes comme lues affecte l'ensemble du compte ; les observateurs peuvent lire le fil mais ne peuvent pas le modifier.
+- **Normal pour moi :** sur une carte d’alerte, touchez **Normal pour moi** pour ne plus recevoir ce type d’alerte pour ce commerçant ou cette catégorie. Les autres types continuent d’arriver. Annulez-le dans **Alertes → Alertes masquées**.
 
 ## Planification — Dépense sûre, abordabilité et capture automatique
 URL: https://ai-budget.pl/help/fr/safe-to-spend/

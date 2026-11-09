@@ -2,12 +2,13 @@ import { secureStorage } from '@/services/secureStorage';
 import { DESKTOP_MIN_WIDTH } from '@/components/webLayout.constants';
 import type {
   TelemetryDisplay,
+  TelemetryFailReason,
   TelemetryFlow,
   TelemetryFormFactor,
   TelemetryStatus,
 } from './telemetry.types';
 
-export type { TelemetryFlow, TelemetryStatus };
+export type { TelemetryFailReason, TelemetryFlow, TelemetryStatus };
 
 /** Below this a window is a phone; from here to `DESKTOP_MIN_WIDTH` a tablet. */
 const TABLET_MIN_WIDTH = 768;
@@ -93,6 +94,12 @@ export function trackAction(flow: TelemetryFlow, status: TelemetryStatus, ms?: n
   const props: Record<string, string | number> = { flow, status };
   if (typeof ms === 'number' && Number.isFinite(ms)) props.ms = Math.round(ms);
   push({ name: 'action', props, ts: Date.now() });
+}
+
+/** A `failed` that says which check tripped. Same event as
+ *  `trackAction(flow, 'failed')`, plus a `reason` from a closed list. */
+export function trackFailure(flow: TelemetryFlow, reason: TelemetryFailReason): void {
+  push({ name: 'action', props: { flow, status: 'failed', reason }, ts: Date.now() });
 }
 
 /** Drops whatever is buffered without sending it. Called on sign-out: the token

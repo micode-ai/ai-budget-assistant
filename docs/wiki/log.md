@@ -294,6 +294,7 @@ Newest last within each section.
 - 2026-11-09 · [ABA-729](https://github.com/micode-ai/ai-budget-assistant/issues/766) — the pending-sync chip read "Waiting to sync: 52" right after a successful sync: it counted soft-deleted rows, which stay `pending` forever because a delete is sent once and never re-marked, and the push loops skip deleted rows. The count now excludes `is_deleted` rows. The never-retried offline delete underneath is recorded as a known gap. Pages: `features/offline-first-sync.md`.
 - 2026-11-09 · [ABA-730](https://github.com/micode-ai/ai-budget-assistant/issues/767) — admin Users table opens on Last Active desc with never-active users last (Postgres NULLS FIRST on DESC had buried real users), plus a non-sortable Expenses count column; `admin-dashboard.md`.
 - 2026-11-09 · [ABA-731](https://github.com/micode-ai/ai-budget-assistant/issues/769) — admin Activation page: activation speed, never-activated split, first-transaction channel vs W4, pooled retention curve, all platforms from server data with internal accounts excluded; telemetry was web-only and too thin to answer this; `admin-dashboard.md`.
+- 2026-11-09 · [ABA-732](https://github.com/micode-ai/ai-budget-assistant/issues/770) — budget name optional on create (resolved from the one category or the period, shown as placeholder) and `failed` telemetry gains a closed-list `reason`; prompted by "budget errors" that were all validation retries; `features/budgets.md`, `features/web-telemetry.md`.
 
 ## Queries
 

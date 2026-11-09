@@ -3541,6 +3541,8 @@ Additional navigation:
 - **Tactile feedback** — tapping a tab produces a light vibration on supported devices, so you know your tap was registered
 - **Loading indicator** — a thin progress bar at the very top of the screen appears while the app is fetching or syncing data
 
+- **Try with sample data** — on the get-started screen (phone) you can explore the app with generated sample transactions. A banner reminds you it is sample data; tap **Start fresh** to delete it. Nothing is saved to the server.
+
 ---
 
 *Next: [Dashboard](./02-dashboard.md)*
@@ -4236,7 +4238,7 @@ The **Budgets** tab shows all your active budgets:
 ### Step-by-step
 
 1. Tap **Create Budget** on the Budgets tab (or the **+** button)
-2. Enter a **Budget Name** (e.g., "Monthly Groceries")
+2. Enter a **Budget Name** (e.g., "Monthly Groceries") — optional: left empty, the budget is named after its category, or after its period ("Monthly Budget")
 3. Select the **Currency**
 4. Choose a **Budget Mode**:
    - **Overall** — set a single total amount, optionally linked to one category
@@ -4423,6 +4425,11 @@ Each insight card has severity: critical (red), warning (yellow), or info (blue)
 - Only appears when at least one expense has a merchant value
 
 If the same shop appears under several names, open **Settings → Merchants** to tidy them up: tap **Select**, tick the variants, and **Merge** them into one name. The app also suggests likely groups (for example several *Biedronka* entries) that you can merge in a single tap — so they count as one merchant in these charts.
+
+### By Member
+
+- Who created how much of the spending in the selected period.
+- Only appears on shared accounts with at least two members who have spending.
 
 ### By Tags / By Projects
 
@@ -5223,6 +5230,8 @@ The difference is recorded as a balance adjustment. It is not an expense or an i
 
 > **Note:** Correcting a balance needs an internet connection. Viewers and archived trip accounts cannot correct a balance.
 
+Supported currencies also include CZK, SEK, NOK, DKK, HUF, RON and CHF.
+
 ---
 
 *See also: [Dashboard](./02-dashboard.md) | [Settings](./11-settings.md)*
@@ -5410,6 +5419,7 @@ View and manage all your expense and income categories in one place.
 
 - **Last Synced** — shows when your data was last synced with the server (e.g., "5 min ago" or "Never")
 - **Sync Now** — tap to manually trigger a data sync
+- **Waiting to sync** — if changes made offline have not uploaded for a while, a chip shows how many are waiting. Tap it to see what they are and to sync now. It disappears once everything is backed up.
 
 > **Note:** The app works offline. Your data saves to your device and automatically syncs when you're back online. Use **Sync Now** to force an immediate sync.
 
@@ -6699,6 +6709,10 @@ A: No. Home screen widgets require Android. All the same features are available 
 **Q: Can I resize the widgets?**
 A: Budget – Today and Budget – Quick Add have a fixed size. Budget – Week can be resized horizontally. Budget – Overview can be resized both horizontally and vertically.
 
+## Launcher shortcuts (Android)
+
+Long-press the app icon to jump straight to **Add expense**, **Scan receipt** or **Voice**. No setup needed.
+
 ---
 
 *See also: [Voice Input & Receipt Scanning](./04-voice-and-receipt.md) | [Expenses & Income](./03-expenses-and-income.md)*
@@ -7439,6 +7453,7 @@ You can turn anomaly push notifications on or off in **Settings → Notification
 - Each anomaly is reported only once — you won't get the same alert twice.
 - Once you handle a possible duplicate by deleting or merging the extra expense, its alert clears itself. If you already dealt with it, tapping the alert simply says it's resolved — no confusing "expense not found" screen.
 - In shared accounts, marking alerts as read affects the whole account; viewers can read the feed but not change it.
+- **Normal for me:** on an alert card, tap **Normal for me** to stop that kind of alert for that merchant or category. Other kinds of alerts still arrive. Review or undo under **Alerts → Muted alerts**.
 
 ## Planning ahead — Safe to Spend, Affordability & Auto-Capture
 URL: https://ai-budget.pl/help/en/safe-to-spend/
