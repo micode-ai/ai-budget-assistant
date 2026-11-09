@@ -1,3 +1,4 @@
+import { TransactionRevisionsService } from '../transaction-revisions/transaction-revisions.service';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe, CanActivate, ExecutionContext } from '@nestjs/common';
 import * as request from 'supertest';
@@ -35,6 +36,7 @@ describe('IncomesController routing', () => {
       providers: [
         { provide: IncomesService, useValue: incomesService },
         { provide: IncomeBulkService, useValue: incomeBulkService },
+        { provide: TransactionRevisionsService, useValue: { list: jest.fn() } },
       ],
     })
       .overrideGuard(JwtAuthGuard)

@@ -181,6 +181,7 @@ the section you came for — it states what must not break and why. A missing se
   feature with its own offline write queue
 - [shopping-list](features/shopping-list.md) — offline-first lists, basket comparison, restock and
   deal pushes, receipt reconciliation, the three AI chat tools
+- [transaction-edit-history](features/transaction-edit-history.md) — who edited a shared transaction and the before/after diff (API only)
 - [expenses-service](features/expenses-service.md) — which expenses service owns which write path, the create hook chain, `createdByUserName`
 - [expense-bulk-operations](features/expense-bulk-operations.md) — bulk category/tag/delete for expenses and incomes, and the two traps behind every silent no-op
 - [move-expense-between-accounts](features/move-expense-between-accounts.md) — re-homing an expense, what crosses the account boundary and what does not

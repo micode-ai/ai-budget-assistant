@@ -1,3 +1,4 @@
+import { TransactionRevisionsService } from '../transaction-revisions/transaction-revisions.service';
 import {
   Controller,
   Get,
@@ -24,6 +25,7 @@ export class IncomesController {
   constructor(
     private readonly incomesService: IncomesService,
     private readonly incomeBulkService: IncomeBulkService,
+    private readonly revisionsService: TransactionRevisionsService,
   ) {}
 
   @Post()
@@ -47,6 +49,12 @@ export class IncomesController {
     return this.incomeBulkService.bulkUpdate(req.accountId, dto);
   }
 
+  @Get(':id/revisions')
+  async revisions(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+    const income = await this.incomesService.findOne(req.accountId, id);
+    return this.revisionsService.list(req.accountId, 'income', income.id);
+  }
+
   @Get(':id')
   async findOne(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     return this.incomesService.findOne(req.accountId, id);
@@ -55,7 +63,7 @@ export class IncomesController {
   @Patch(':id')
   @UseGuards(new ViewerBlockGuard())
   async update(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() dto: UpdateIncomeDto) {
-    return this.incomesService.update(req.accountId, id, dto);
+    return this.incomesService.update(req.accountId, id, dto, req.user.id);
   }
 
   @Delete(':id')

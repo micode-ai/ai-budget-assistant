@@ -147,6 +147,7 @@ enum FeedEventType {
 // ---- Models ----
 
 model User {
+  transactionRevisions TransactionRevision[]
   id                         String        @id @default(uuid())
   email                      String        @unique
   passwordHash               String?       @map("password_hash")
@@ -368,6 +369,7 @@ model ExchangeRateWatch {
 }
 
 model Account {
+  transactionRevisions TransactionRevision[]
   id                   String       @id @default(uuid())
   name                 String
   type                 AccountType
@@ -2908,4 +2910,25 @@ model OAuthToken {
 
   @@index([expiresAt])
   @@map("oauth_tokens")
+}
+
+/// Edit history of a shared-account expense/income (transaction-edit-history). One row per edit that
+/// changed a tracked plaintext field; written in the same $transaction as the update and only for
+/// accounts with more than one member. `changes` is `{ field: { from, to } }`. No FK on the entity
+/// (polymorphic on entityType), so history is removed with the account, not with the row.
+model TransactionRevision {
+  id         String   @id @default(uuid())
+  accountId  String   @map("account_id")
+  entityType String   @map("entity_type") // 'expense' | 'income'
+  entityId   String   @map("entity_id")
+  userId     String?  @map("user_id")
+  changes    Json
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  user    User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([entityType, entityId, createdAt(sort: Desc)])
+  @@index([accountId])
+  @@map("transaction_revisions")
 }

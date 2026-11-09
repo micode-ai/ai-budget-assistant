@@ -22,8 +22,10 @@ import { GroupBudgetMirrorModule } from '../groups/group-budget-mirror.module';
 // the global PrismaService) — so ExpensesModule -> ReceiptSplitModule ->
 // DebtsModule is a one-way edge with no path back to ExpensesModule. Real DI is
 // safe here; do not revert to importing a standalone function.
+import { TransactionRevisionsModule } from '../transaction-revisions/transaction-revisions.module';
+
 @Module({
-  imports: [WalletCurrencyModule, BudgetsModule, GamificationModule, AnomalyModule, MerchantRulesModule, FamilyFeedModule, CommunityPriceModule, InflationShieldTrackingModule, ReceiptSplitModule, GroupBudgetMirrorModule],
+  imports: [TransactionRevisionsModule, WalletCurrencyModule, BudgetsModule, GamificationModule, AnomalyModule, MerchantRulesModule, FamilyFeedModule, CommunityPriceModule, InflationShieldTrackingModule, ReceiptSplitModule, GroupBudgetMirrorModule],
   controllers: [ExpensesController],
   providers: [ReceiptDuplicateService, ExpensesService, ExpenseBulkService, ExpenseCrossAccountService, ExpenseCreatedHooksService, ExpenseRecurringCron],
   exports: [ExpensesService, ExpenseBulkService, ExpenseCrossAccountService, ReceiptDuplicateService],

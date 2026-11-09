@@ -7,8 +7,10 @@ import { FamilyFeedModule } from '../family-feed/family-feed.module';
 import { WalletCurrencyModule } from '../wallet/wallet-currency.module';
 import { GroupBudgetMirrorModule } from '../groups/group-budget-mirror.module';
 
+import { TransactionRevisionsModule } from '../transaction-revisions/transaction-revisions.module';
+
 @Module({
-  imports: [WalletCurrencyModule, GamificationModule, FamilyFeedModule, GroupBudgetMirrorModule],
+  imports: [TransactionRevisionsModule, WalletCurrencyModule, GamificationModule, FamilyFeedModule, GroupBudgetMirrorModule],
   controllers: [IncomesController],
   providers: [IncomesService, IncomeBulkService],
   exports: [IncomesService, IncomeBulkService],

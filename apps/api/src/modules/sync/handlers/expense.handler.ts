@@ -76,7 +76,7 @@ export async function processExpenseChange(
       encryptedPayload,
       encryptionKeyVersion,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } as any);
+    } as any, userId);
     if (!updated) {
       return { entityId, status: 'error', error: 'Failed to update expense' };
     }

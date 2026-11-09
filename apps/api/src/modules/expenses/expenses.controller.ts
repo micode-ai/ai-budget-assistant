@@ -1,3 +1,4 @@
+import { TransactionRevisionsService } from '../transaction-revisions/transaction-revisions.service';
 import {
   Controller,
   Get,
@@ -35,6 +36,7 @@ export class ExpensesController {
     private readonly expenseCrossAccountService: ExpenseCrossAccountService,
     private readonly budgetAlertService: BudgetAlertService,
     private readonly sharedActivityService: SharedActivityService,
+    private readonly revisionsService: TransactionRevisionsService,
   ) {}
 
   @Post()
@@ -61,6 +63,12 @@ export class ExpensesController {
     return this.expensesService.findAll(req.accountId, filters);
   }
 
+  @Get(':id/revisions')
+  async revisions(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+    const expense = await this.expensesService.findOne(req.accountId, id);
+    return this.revisionsService.list(req.accountId, 'expense', expense.id);
+  }
+
   @Get(':id')
   async findOne(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     return this.expensesService.findOne(req.accountId, id);
@@ -85,7 +93,7 @@ export class ExpensesController {
   @Patch(':id')
   @UseGuards(new ViewerBlockGuard(), TripArchivedGuard)
   async update(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() dto: UpdateExpenseDto) {
-    const expense = await this.expensesService.update(req.accountId, id, dto);
+    const expense = await this.expensesService.update(req.accountId, id, dto, req.user.id);
 
     // Re-check budget alerts if amount or currency changed
     if (expense && (dto.amount !== undefined || dto.currencyCode !== undefined)) {

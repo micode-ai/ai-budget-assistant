@@ -1,3 +1,4 @@
+import { TransactionRevisionsService } from '../transaction-revisions/transaction-revisions.service';
 import { Injectable, Logger, NotFoundException, Optional } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
@@ -39,6 +40,7 @@ export class IncomesService {
     @Optional() private readonly familyFeed?: FamilyFeedService,
     @Optional() private readonly walletCurrency?: WalletCurrencyService,
     @Optional() private readonly groupMirror?: GroupBudgetMirrorService,
+    @Optional() private readonly revisions?: TransactionRevisionsService,
   ) {}
 
   private toIncomeResponse(income: IncomeWithRelations): IncomeResponse {
@@ -300,7 +302,7 @@ export class IncomesService {
     return this.toIncomeResponse(income);
   }
 
-  async update(accountId: string, id: string, dto: UpdateIncomeDto) {
+  async update(accountId: string, id: string, dto: UpdateIncomeDto, editorUserId?: string) {
     const income = await this.findOne(accountId, id);
     // Tri-state, see resolveCategoryIdForUpdate: an unresolvable id must not
     // erase the stored category (ABA-566).
@@ -394,6 +396,14 @@ export class IncomesService {
       const updated = await tx.income.findUnique({
         where: { id: income.id },
         include: incomeInclude,
+      });
+      await this.revisions?.record(tx, {
+        accountId,
+        userId: editorUserId,
+        entityType: 'income',
+        entityId: income.id,
+        before: income as any,
+        after: updated as any,
       });
       return updated ? this.toIncomeResponse(updated) : updated;
     });

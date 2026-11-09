@@ -1,3 +1,4 @@
+import { TransactionRevisionsService } from '../transaction-revisions/transaction-revisions.service';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe, CanActivate, ExecutionContext } from '@nestjs/common';
 import * as request from 'supertest';
@@ -52,6 +53,7 @@ describe('ExpensesController routing', () => {
         { provide: ExpenseCrossAccountService, useValue: expenseCrossAccountService },
         { provide: BudgetAlertService, useValue: budgetAlertService },
         { provide: SharedActivityService, useValue: sharedActivityService },
+        { provide: TransactionRevisionsService, useValue: { list: jest.fn() } },
       ],
     })
       .overrideGuard(JwtAuthGuard)

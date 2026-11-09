@@ -1,4 +1,5 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { TransactionRevisionsService } from '../transaction-revisions/transaction-revisions.service';
+import { Injectable, Logger, NotFoundException, Optional } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
 import { CreateExpenseDto, UpdateExpenseDto, ExpenseFiltersDto, CreateExpenseItemDto, UpdateExpenseItemDto } from './dto';
@@ -42,6 +43,7 @@ export class ExpensesService {
     private readonly merchantRules: MerchantRulesService,
     private readonly receiptSplitService: ReceiptSplitService,
     private readonly createdHooks: ExpenseCreatedHooksService,
+    @Optional() private readonly revisions?: TransactionRevisionsService,
   ) {}
 
   private toExpenseResponse(expense: any) {
@@ -613,7 +615,7 @@ export class ExpensesService {
     return this.toExpenseResponse(expense);
   }
 
-  async update(accountId: string, id: string, dto: UpdateExpenseDto) {
+  async update(accountId: string, id: string, dto: UpdateExpenseDto, editorUserId?: string) {
     const expense = await this.findOne(accountId, id);
     // ABA-660: a budget-mirror share row's amount, currency and date follow the group (the mirror
     // re-syncs them); the user owns everything else on it, the category above all.
@@ -754,7 +756,7 @@ export class ExpensesService {
         });
       }
 
-      return tx.expense.findUnique({
+      const refreshed = await tx.expense.findUnique({
         where: { id: expense.id },
         include: {
           category: true,
@@ -766,6 +768,15 @@ export class ExpensesService {
           createdByOAuthClient: { select: { clientId: true, name: true } },
         },
       });
+      await this.revisions?.record(tx, {
+        accountId,
+        userId: editorUserId,
+        entityType: 'expense',
+        entityId: expense.id,
+        before: expense as any,
+        after: refreshed as any,
+      });
+      return refreshed;
     }).then((updated) => {
       this.invalidateChatCache(accountId).catch(logFireAndForget(this.logger, 'ExpensesService.invalidateChatCache'));
       if (updated?.merchant && dto.categoryId !== undefined && resolvedCategoryId) {

@@ -48,7 +48,7 @@ export async function processIncomeChange(
       encryptedPayload,
       encryptionKeyVersion,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } as any);
+    } as any, userId);
     return { entityId, status: 'success', serverVersion: updated?.syncVersion ?? existing.syncVersion + 1 };
   }
 

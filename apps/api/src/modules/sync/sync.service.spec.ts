@@ -264,7 +264,7 @@ describe('SyncService', () => {
       });
 
       expect(result).toEqual({ entityId: 'client-exp-1', status: 'success', serverVersion: 3 });
-      expect(mockExpensesService.update).toHaveBeenCalledWith('acc-1', 'srv-exp-1', expect.any(Object));
+      expect(mockExpensesService.update).toHaveBeenCalledWith('acc-1', 'srv-exp-1', expect.any(Object), 'user-1');
     });
 
     it('soft-deletes an existing expense', async () => {
@@ -362,7 +362,7 @@ describe('SyncService', () => {
       });
 
       expect(result).toEqual({ entityId: 'client-inc-1', status: 'success', serverVersion: 2 });
-      expect(mockIncomesService.update).toHaveBeenCalledWith('acc-1', 'srv-inc-1', expect.any(Object));
+      expect(mockIncomesService.update).toHaveBeenCalledWith('acc-1', 'srv-inc-1', expect.any(Object), 'user-1');
     });
 
     it('soft-deletes an existing income', async () => {
