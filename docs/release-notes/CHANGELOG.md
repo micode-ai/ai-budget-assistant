@@ -8,6 +8,17 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.38.1 - 2026-11-09
+
+**Fixes**
+
+- Launcher shortcuts and the home-screen widgets open Add expense, Scan receipt and Voice once,
+  with the home screen underneath, so Back returns to it (ABA-728).
+- The "Waiting to sync" chip no longer counts deleted entries, which never need syncing
+  (ABA-729).
+
+---
+
 ## 1.38.0 - 2026-11-09
 
 **Faster capture (Android)**
