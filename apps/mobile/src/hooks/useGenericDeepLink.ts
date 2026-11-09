@@ -12,6 +12,13 @@ import { router } from 'expo-router';
  * `fontsLoaded`, unlike the notification/trip-invite flush gates. Do not
  * "fix" this to add fontsLoaded.
  */
+/**
+ * The launch URL is handled once per process. The effect re-runs whenever init or auth
+ * changes, and `getInitialURL()` keeps returning the same launch URL, so without this every
+ * re-run after the 1 s de-dupe window pushed the screen again.
+ */
+let initialUrlHandled = false;
+
 export function useGenericDeepLink(isInitializing: boolean, isAuthenticated: boolean): void {
   const lastHandledUrl = useRef<string | null>(null);
 
@@ -75,9 +82,12 @@ export function useGenericDeepLink(isInitializing: boolean, isAuthenticated: boo
     }
 
     // Handle URL that launched the app (cold start)
-    Linking.getInitialURL().then((url) => {
-      if (url) navigateToDeepLink(url);
-    });
+    if (!initialUrlHandled) {
+      initialUrlHandled = true;
+      Linking.getInitialURL().then((url) => {
+        if (url) navigateToDeepLink(url);
+      });
+    }
 
     // Handle URLs when app is already running (warm start)
     const sub = Linking.addEventListener('url', (event) => {
