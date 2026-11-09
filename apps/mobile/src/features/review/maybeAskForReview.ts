@@ -21,7 +21,7 @@ const SETTLE_MS = 700;
  * thing happening at any moment it runs, so every failure path — no account,
  * SQLite unavailable, native module missing — resolves silently.
  */
-export async function maybeAskForReview(): Promise<void> {
+export async function maybeAskForReview(options: { minTransactions?: number } = {}): Promise<void> {
   if (Platform.OS === 'web') return;
 
   try {
@@ -43,6 +43,7 @@ export async function maybeAskForReview(): Promise<void> {
         lastAskedVersion,
         currentVersion,
         now: Date.now(),
+        minTransactions: options.minTransactions,
       })
     ) {
       return;

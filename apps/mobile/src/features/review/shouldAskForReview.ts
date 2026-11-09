@@ -12,6 +12,12 @@
 
 /** Never ask someone who has not actually used the app yet. */
 export const MIN_TRANSACTIONS = 5;
+/**
+ * Floor for the ask after a manual expense save (ABA-733). Higher than the
+ * receipt floor because a manual save is the everyday action: by the tenth the
+ * user has made the app a habit, not just tried it.
+ */
+export const MIN_TRANSACTIONS_AFTER_MANUAL_SAVE = 10;
 /** Roughly matches Play's own quota window — asking sooner is wasted. */
 export const MIN_DAYS_BETWEEN_ASKS = 90;
 
@@ -32,6 +38,8 @@ export interface ReviewPromptInputs {
   /** `Application.nativeApplicationVersion`. */
   currentVersion: string;
   now: number;
+  /** Transaction floor for this call site; defaults to `MIN_TRANSACTIONS`. */
+  minTransactions?: number;
 }
 
 /**
@@ -49,8 +57,9 @@ export function shouldAskForReview({
   lastAskedVersion,
   currentVersion,
   now,
+  minTransactions = MIN_TRANSACTIONS,
 }: ReviewPromptInputs): boolean {
-  if (transactionCount < MIN_TRANSACTIONS) return false;
+  if (transactionCount < minTransactions) return false;
   if (lastAskedVersion !== null && lastAskedVersion === currentVersion) return false;
   if (lastAskedAt !== null && now - lastAskedAt < MIN_DAYS_BETWEEN_ASKS * DAY_MS) return false;
   return true;

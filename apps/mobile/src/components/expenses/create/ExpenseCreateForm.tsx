@@ -43,6 +43,8 @@ import { MerchantInput } from '@/components/MerchantInput';
 import { DatePicker } from '@/components/DatePicker';
 import { captureCurrentLocation, type CapturedLocation } from '@/services/locationCapture';
 import { trackAction } from '@/services/telemetry';
+import { maybeAskForReview } from '@/features/review/maybeAskForReview';
+import { MIN_TRANSACTIONS_AFTER_MANUAL_SAVE } from '@/features/review/shouldAskForReview';
 import { useCaptureSuggestionStore } from '@/stores/captureSuggestionStore';
 import { hasUsedFasterCapture } from '@/features/captureSuggestion/captureSuggestion';
 
@@ -262,6 +264,14 @@ export function ExpenseCreateForm({ initial, onDone }: ExpenseCreateFormProps) {
         .getState()
         .recordManualSave(hasUsedFasterCapture(useExpenseStore.getState().expenses));
       onDone();
+      // ABA-733: the everyday success moment, so the rating ask can actually be
+      // reached — it used to ride only on a receipt-scan Done, which few users
+      // ever hit. Skipped when the faster-capture suggestion is about to appear
+      // over the same screen: two sheets on one save is how a prompt earns a
+      // one-star answer. Throttles itself; a no-op on web.
+      if (!useCaptureSuggestionStore.getState().isPending) {
+        void maybeAskForReview({ minTransactions: MIN_TRANSACTIONS_AFTER_MANUAL_SAVE });
+      }
     } catch {
       trackAction('expense_manual', 'failed');
       showAlert(t('common.error'), t('errors.saveFailed'));

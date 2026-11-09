@@ -2,6 +2,7 @@ import {
   shouldAskForReview,
   MIN_TRANSACTIONS,
   MIN_DAYS_BETWEEN_ASKS,
+  MIN_TRANSACTIONS_AFTER_MANUAL_SAVE,
 } from '../shouldAskForReview';
 import { resolveLastAskedAt, resolveLastAskedVersion } from '@/stores/reviewPromptStore';
 
@@ -23,6 +24,12 @@ describe('shouldAskForReview', () => {
 
   it('never asks a user below the transaction floor', () => {
     expect(shouldAskForReview({ ...base, transactionCount: MIN_TRANSACTIONS - 1 })).toBe(false);
+  });
+
+  it("applies a call site's own floor (ABA-733: manual saves ask from the tenth)", () => {
+    const manual = { ...base, minTransactions: MIN_TRANSACTIONS_AFTER_MANUAL_SAVE };
+    expect(shouldAskForReview({ ...manual, transactionCount: MIN_TRANSACTIONS_AFTER_MANUAL_SAVE - 1 })).toBe(false);
+    expect(shouldAskForReview({ ...manual, transactionCount: MIN_TRANSACTIONS_AFTER_MANUAL_SAVE })).toBe(true);
   });
 
   it('treats the floor as inclusive', () => {

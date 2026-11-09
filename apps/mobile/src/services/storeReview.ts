@@ -20,7 +20,9 @@ export async function requestStoreReview(): Promise<void> {
   try {
     if (!(await StoreReview.isAvailableAsync())) return;
     // False on a build with no store URL configured (e.g. a bare dev client).
-    if (!StoreReview.hasAction()) return;
+    // `hasAction` is async in expo-store-review 9 — un-awaited it read a
+    // Promise, which is always truthy, so this check never did anything.
+    if (!(await StoreReview.hasAction())) return;
     await StoreReview.requestReview();
   } catch (error) {
     console.warn('[storeReview] request failed', error);
