@@ -194,6 +194,15 @@ the model, and only `user`/`assistant` reach the client. Mobile caches conversat
 (`chatRepository.ts`) and loads them with `chatStore.loadConversations()` /
 `loadConversation(id)`; the chat tab's history sheet is `ChatHistorySheet`.
 
+**A user with no transactions gets a nudge, not an answer about nothing ([ABA-736](https://github.com/micode-ai/ai-budget-assistant/issues/774)).**
+`UserContext.hasAnyTransactions` is false only when the account has no non-deleted expense or income
+at all — checked with two `findFirst` calls, and only when this month is empty (`recentExpenses`
+covers this month, so it cannot tell a new user from a quiet month). `PromptBuilder.buildNewUserInstruction`
+then adds, in the dynamic suffix, an instruction to say there is no data yet, never invent figures, and
+show how to log the first expense by just writing it. The flag is optional and only an explicit
+`false` triggers it, so a context cached before the field existed behaves as before; the
+`uc:{accountId}` invalidation on every expense/income write flips it after the first save.
+
 ## Invariants
 
 - **A write only ever executes from `confirmAction`**, never on the turn that proposed it. The
@@ -235,6 +244,7 @@ the model, and only `user`/`assistant` reach the client. Mobile caches conversat
 
 ## History
 
+- [ABA-736](https://github.com/micode-ai/ai-budget-assistant/issues/774) — new-user nudge toward the first expense (`hasAnyTransactions`).
 - ABA-119 — `chat.service.ts` split into an orchestrator plus `UserContextBuilder`,
   `AiToolsService`, `PromptBuilder`.
 - ABA-151 — `uc:{accountId}` context cache and its invalidation on writes.

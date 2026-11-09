@@ -94,6 +94,24 @@ describe('PromptBuilder language detection', () => {
       }
     });
 
+    it('steers a user with no transactions to logging the first expense from chat (ABA-736)', () => {
+      const prompt = pb.buildSystemPrompt({ ...ctx, hasAnyTransactions: false }, 0, 'balanced', 'hi', [], null, 'PLN', 'en');
+      expect(prompt).toContain('NEW USER');
+      expect(prompt).toContain('create_expense');
+      expect(prompt).toContain('never invent figures');
+      // It belongs to the per-user suffix: the two prompts share the whole static prefix
+      // and first differ after it, so the cacheable part is untouched.
+      const plain = build('balanced');
+      let i = 0;
+      while (i < plain.length && plain[i] === prompt[i]) i++;
+      expect(plain.slice(0, i)).toContain('do not guess.');
+    });
+
+    it('adds no new-user nudge when the user has data, or when the flag is absent (an older cached context)', () => {
+      expect(pb.buildSystemPrompt({ ...ctx, hasAnyTransactions: true }, 0, 'balanced', 'hi', [], null, 'PLN', 'en')).not.toContain('NEW USER');
+      expect(build('balanced')).not.toContain('NEW USER');
+    });
+
     it('moved the multilingual deposit/discount vocabulary and reporting rules into the tool descriptions', () => {
       const desc = (n: string) => AI_TOOL_DEFINITIONS.find((t) => t.type === 'function' && t.function.name === n)!.function.description!;
       expect(desc('get_deposit_total')).toContain('kaucja');

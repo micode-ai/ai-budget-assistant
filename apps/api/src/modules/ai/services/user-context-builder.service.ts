@@ -18,6 +18,12 @@ export interface UserContext {
   savingsGoals: { id: string; name: string; targetAmount: number; currentAmount: number; currencyCode: string; deadline: string; status: string }[];
   categoryNames: string[];
   activeDebts: { id: string; type: 'lent' | 'borrowed'; contactName: string; remainingAmount: number; currencyCode: string; status: string }[];
+  /**
+   * False only when the account (or user) has no expense or income at all, ever (ABA-736).
+   * Optional so a context cached before this field existed reads as "has data" — the
+   * safe side, which leaves the prompt exactly as it was.
+   */
+  hasAnyTransactions?: boolean;
 }
 
 interface ExpenseWithCategory {
@@ -195,6 +201,18 @@ export class UserContextBuilder {
       ];
     }
 
+    // `expenses` covers this month only, so an empty list does not mean a new user.
+    // One cheap existence check per type, only when this month is empty.
+    let hasAnyTransactions = expenses.length > 0;
+    if (!hasAnyTransactions) {
+      const owner = accountId ? { accountId } : { userId };
+      const [anyExpense, anyIncome] = await Promise.all([
+        this.prisma.expense.findFirst({ where: { ...owner, isDeleted: false }, select: { id: true } }),
+        this.prisma.income.findFirst({ where: { ...owner, isDeleted: false }, select: { id: true } }),
+      ]);
+      hasAnyTransactions = !!(anyExpense || anyIncome);
+    }
+
     const context: UserContext = {
       totalSpentThisMonth: totalSpent,
       monthlyBudget,
@@ -206,6 +224,7 @@ export class UserContextBuilder {
       savingsGoals,
       categoryNames,
       activeDebts,
+      hasAnyTransactions,
     };
 
     if (accountId) {
