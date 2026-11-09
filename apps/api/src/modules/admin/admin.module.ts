@@ -8,6 +8,7 @@ import { AdminGuard } from './admin.guard';
 import { AdminGateway } from './admin.gateway';
 import { ReferralsModule } from '../referrals/referrals.module';
 import { AdminInvestorMetricsService } from './admin-investor-metrics.service';
+import { AdminActivationService } from './admin-activation.service';
 import { AdminGroupMetricsService } from './admin-group-metrics.service';
 import { AdminOAuthClientsController } from './admin-oauth-clients.controller';
 import { AdminOAuthClientsService } from './admin-oauth-clients.service';
@@ -20,7 +21,7 @@ import { GroupsModule } from '../groups/groups.module';
     GroupsModule, // GroupOwnershipService for deactivate / delete (ABA-650)
   ],
   controllers: [AdminController, AdminOAuthClientsController],
-  providers: [AdminService, AdminAnalyticsService, AdminNotificationService, AdminInvestorMetricsService, AdminGroupMetricsService, AdminOAuthClientsService, AdminGuard, AdminGateway],
+  providers: [AdminService, AdminAnalyticsService, AdminNotificationService, AdminInvestorMetricsService, AdminActivationService, AdminGroupMetricsService, AdminOAuthClientsService, AdminGuard, AdminGateway],
   exports: [AdminService, AdminAnalyticsService, AdminNotificationService, AdminGateway],
 })
 export class AdminModule {}

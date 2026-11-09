@@ -20,6 +20,7 @@ import {
   Activity,
   UsersRound,
   KeyRound,
+  TrendingUp,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -32,6 +33,7 @@ import { useState } from "react";
 export const navItems = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
   { href: "/metrics", label: "Investor Metrics", icon: LineChart },
+  { href: "/activation", label: "Activation", icon: TrendingUp },
   { href: "/acquisition", label: "Acquisition", icon: Megaphone },
   { href: "/telemetry", label: "Telemetry", icon: Activity },
   { href: "/users", label: "Users", icon: Users },

@@ -18,6 +18,7 @@ import { AdminAnalyticsService } from './admin-analytics.service';
 import { AdminNotificationService } from './admin-notification.service';
 import { ReferralsService } from '../referrals/referrals.service';
 import { AdminInvestorMetricsService } from './admin-investor-metrics.service';
+import { AdminActivationService } from './admin-activation.service';
 import { AdminGroupMetricsService } from './admin-group-metrics.service';
 
 interface AdminRequest extends Request {
@@ -34,6 +35,7 @@ export class AdminController {
     private readonly referralsService: ReferralsService,
     private readonly investorMetricsService: AdminInvestorMetricsService,
     private readonly groupMetricsService: AdminGroupMetricsService,
+    private readonly activationService: AdminActivationService,
   ) {}
 
   private getIp(req: Request): string | null {
@@ -66,6 +68,19 @@ export class AdminController {
       months: clamp(months, 6, 1, 24),
       weeks: clamp(weeks, 12, 1, 26),
       activationDays: clamp(activationDays, 3, 1, 30),
+    });
+  }
+
+  /** Activation & retention report (ABA-731). Internal (ADMIN_EMAILS) accounts are left out unless asked. */
+  @Get('metrics/activation')
+  async getActivationReport(
+    @Query('weeks') weeks?: string,
+    @Query('includeInternal') includeInternal?: string,
+  ) {
+    const n = parseInt(weeks ?? '', 10);
+    return this.activationService.getReport({
+      weeks: Number.isNaN(n) ? 26 : Math.min(104, Math.max(4, n)),
+      includeInternal: includeInternal === 'true',
     });
   }
 

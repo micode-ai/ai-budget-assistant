@@ -77,3 +77,59 @@ export interface AdminInvestorMetricsResponse {
   segments: SegmentMetrics[]; // [pl, other]
   scale: ScaleContext;
 }
+
+// ─── Activation & retention report (ABA-731) ──────────────────────────────────
+// "Activated" = logged a first non-deleted expense or income; "active in week n"
+// = logged one during the n-th week after the Monday of signup — the same
+// definition the investor metrics use, so the two pages agree.
+
+export interface ActivationSummary {
+  signups: number; // users in the report's cohorts
+  activated: number; // ever logged a transaction
+  activatedD1: number; // within 24 h of signing up
+  d1Eligible: number; // signups at least 24 h old
+  activatedD7: number; // within 7 days of signing up
+  d7Eligible: number; // signups at least 7 days old
+  medianHoursToFirst: number | null; // over activated users
+  neverActivated: number;
+  /** Never activated AND never seen again more than 24 h after signing up. */
+  neverReturned: number;
+}
+
+export interface ActivationCohortRow {
+  cohortWeekStart: string; // Monday (UTC) of the signup week
+  size: number;
+  activatedD1: number;
+  activatedD7: number;
+  d7Eligible: number; // members at least 7 days old
+  activated: number; // ever
+}
+
+export interface ActivationChannelRow {
+  /** `source` of the user's first transaction (manual / ocr / voice / import / …). */
+  source: string;
+  users: number;
+  activatedD1: number;
+  /** Mean number of distinct weeks with a transaction, per user. */
+  avgActiveWeeks: number;
+  /** Users active in their 4th week, over users whose 4th week has fully elapsed. */
+  w4Retained: number;
+  w4Eligible: number;
+}
+
+export interface RetentionCurvePoint {
+  week: number; // weeks since the signup week (0 = signup week)
+  rate: number | null; // pooled over every cohort whose week `week` has fully elapsed
+  users: number; // the pool size behind `rate`
+}
+
+export interface AdminActivationReportResponse {
+  generatedAt: string;
+  weeks: number; // cohorts covered: signups in the last `weeks` weeks
+  internalExcluded: boolean;
+  excludedAccounts: number;
+  summary: ActivationSummary;
+  cohorts: ActivationCohortRow[]; // most-recent cohort last
+  channels: ActivationChannelRow[]; // most users first
+  curve: RetentionCurvePoint[];
+}
