@@ -54,6 +54,13 @@ day one, with nothing ever contacting them. It is a separate cron, not a looseni
 tracking-gap rule, because that rule is about not nagging repeatedly. Type `activation_nudge`,
 gated by `notifyTrackingGap`; a tap opens the receipt scanner.
 
+**And one e-mail two days later ([ABA-738](https://github.com/micode-ai/ai-budget-assistant/issues/776)).** `handleActivationEmails` (17:30 UTC)
+mails users 72–96 h old who still have nothing logged and `onboardingEmailsEnabled` on — the push
+never reaches the half with no push token. Copy in `mail/onboarding-email-i18n.ts`. The e-mail
+carries a signed unsubscribe link (`mail/email-unsubscribe.ts`, HMAC over the user id keyed with
+`JWT_SECRET`) in the body and in `List-Unsubscribe`; the public `/api/v1/mail/unsubscribe`
+(GET link, POST one-click) turns the flag off and answers identically for a forged token.
+
 ## Invariants
 
 **A user with no `UserStreak` row is never nudged.** A new user who has never logged anything has
@@ -70,7 +77,8 @@ user and "break" for another — `streak.service.spec.ts` pins exactly that case
 - **Send-once is the window, not a ledger.** `activationNudgeWindow` is exactly one cron period
   wide, so every signup falls into exactly one run; changing the schedule without changing the
   window either skips users or double-sends. A run missed by a deploy skips that day's signups.
-- No follow-up e-mail: there is no marketing-email consent or unsubscribe mechanism yet.
+- No in-app toggle for `onboardingEmailsEnabled`; the unsubscribe link is the control. Rotating
+  `JWT_SECRET` invalidates every unsubscribe link already sent.
 
 - `budget_3months_no_exceed` is a documented simplification (see the comment in `checkAchievements`):
   it does not really check three months. `gamification.service.spec.ts` asserts the current
@@ -90,4 +98,4 @@ plus the timezone case.
 
 ## History
 
-ABA-292 (tracking-gap reminder) · ABA-426 (the test suite) · ABA-457 (the cron paginated) · [ABA-737](https://github.com/micode-ai/ai-budget-assistant/issues/775) (activation nudge).
+ABA-292 (tracking-gap reminder) · ABA-426 (the test suite) · ABA-457 (the cron paginated) · [ABA-737](https://github.com/micode-ai/ai-budget-assistant/issues/775) (activation nudge) · [ABA-738](https://github.com/micode-ai/ai-budget-assistant/issues/776) (activation e-mail, unsubscribe).

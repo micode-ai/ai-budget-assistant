@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
 import type { Transporter } from 'nodemailer';
 import { APP_CONNECTED_LANGS, appConnectedCopy } from './app-connected-email-i18n';
+import { onboardingEmailCopy } from './onboarding-email-i18n';
 
 @Injectable()
 export class MailService {
@@ -33,14 +34,22 @@ export class MailService {
     return this.config.get<string>('SMTP_FROM', 'AI Budget <noreply@example.com>');
   }
 
-  async sendMail(to: string, subject: string, html: string): Promise<boolean> {
+  /**
+   * @param unsubscribeUrl adds `List-Unsubscribe` + `List-Unsubscribe-Post` (RFC 8058), so mail
+   *   clients show their own one-click unsubscribe. Only for optional mail (ABA-738), never for
+   *   account or security mail.
+   */
+  async sendMail(to: string, subject: string, html: string, unsubscribeUrl?: string): Promise<boolean> {
     if (!this.transporter) {
       this.logger.warn(`Mail skipped (no SMTP): to=${to}, subject=${subject}`);
       return false;
     }
 
     try {
-      await this.transporter.sendMail({ from: this.from, to, subject, html });
+      const headers = unsubscribeUrl
+        ? { 'List-Unsubscribe': `<${unsubscribeUrl}>`, 'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click' }
+        : undefined;
+      await this.transporter.sendMail({ from: this.from, to, subject, html, ...(headers ? { headers } : {}) });
       this.logger.log(`Mail sent: to=${to}, subject=${subject}`);
       return true;
     } catch (error) {
@@ -440,6 +449,64 @@ export class MailService {
 </html>`;
 
     return this.sendMail(params.to, copy.subject({ appName: params.appName, accounts: '', count: params.accountNames.length, connectedByName: params.connectedByName }), html);
+  }
+
+  /**
+   * ABA-738: the one "how to start" e-mail to a user who has logged nothing three days after
+   * signing up. Carries a signed unsubscribe link in the body and in `List-Unsubscribe`.
+   */
+  async sendActivationEmail(params: {
+    to: string;
+    lang: string | null | undefined;
+    name: string;
+    ctaUrl: string;
+    unsubscribeUrl: string;
+  }): Promise<boolean> {
+    const copy = onboardingEmailCopy(params.lang);
+    const ctaUrl = escapeHtml(params.ctaUrl);
+    const unsubscribeUrl = escapeHtml(params.unsubscribeUrl);
+    const tips = copy.tips
+      .map((tip) => `<li style="margin:0 0 10px;">${escapeHtml(tip)}</li>`)
+      .join('');
+
+    const html = `
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"></head>
+<body style="margin:0;padding:0;background:#F8FAFB;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#F8FAFB;padding:40px 20px;">
+    <tr>
+      <td align="center">
+        <table width="480" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;">
+          <tr>
+            <td style="background:#E37F2B;padding:32px 40px;text-align:center;">
+              <h1 style="margin:0;color:#ffffff;font-size:22px;font-weight:600;">${escapeHtml(copy.heading)}</h1>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:32px 40px;">
+              <p style="margin:0 0 12px;color:#1A1D26;font-size:16px;line-height:1.5;">${escapeHtml(copy.greeting(params.name))}</p>
+              <p style="margin:0 0 16px;color:#5E6272;font-size:15px;line-height:1.6;">${escapeHtml(copy.intro)}</p>
+              <ul style="margin:0 0 24px;padding-left:20px;color:#1A1D26;font-size:15px;line-height:1.5;">${tips}</ul>
+              <div style="text-align:center;">
+                <a href="${ctaUrl}" style="display:inline-block;background:#E37F2B;color:#ffffff;text-decoration:none;font-weight:600;font-size:15px;padding:12px 24px;border-radius:8px;">${escapeHtml(copy.cta)}</a>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:20px 40px;border-top:1px solid #eee;text-align:center;">
+              <p style="margin:0 0 8px;color:#9CA3B4;font-size:12px;line-height:1.5;">${escapeHtml(copy.footer)}</p>
+              <p style="margin:0;font-size:12px;"><a href="${unsubscribeUrl}" style="color:#9CA3B4;">${escapeHtml(copy.unsubscribe)}</a></p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+
+    return this.sendMail(params.to, copy.subject, html, params.unsubscribeUrl);
   }
 }
 

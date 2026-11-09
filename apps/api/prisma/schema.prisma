@@ -239,6 +239,9 @@ model User {
   weeklyEmailEnabled   Boolean @default(false) @map("weekly_email_enabled")
   weeklyEmailDay       Int     @default(1) @map("weekly_email_day")
   monthlyDigestEnabled Boolean @default(false) @map("monthly_digest_enabled")
+  // ABA-738: the one "how to start" e-mail to a user who has logged nothing 3 days after signup.
+  // On by default; the signed unsubscribe link in that e-mail turns it off.
+  onboardingEmailsEnabled Boolean @default(true) @map("onboarding_emails_enabled")
 
   // Report & backup relations
   generatedReports GeneratedReport[]
