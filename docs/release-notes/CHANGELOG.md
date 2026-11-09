@@ -8,6 +8,63 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.38.0 - 2026-11-09
+
+**Faster capture (Android)**
+
+- **Share a payment text into the app.** Share an SMS, e-mail or chat message with AI Budget
+  and it opens a prefilled expense to check and save — nothing is saved automatically, and a
+  text that is not a payment is refused (ABA-719).
+- **Long-press the app icon** for Add expense, Scan receipt and Voice (ABA-720).
+- **Location is on by default** for new hand-entered expenses, so they land on the expense
+  map too; switching it off in settings is kept (ABA-701).
+
+**Currencies**
+
+- **Seven new currencies:** CZK, SEK, NOK, DKK, HUF, RON and CHF (ABA-721).
+
+**Shared accounts**
+
+- **Who spent how much.** Analytics on a shared account shows spending per member, on the
+  phone and on the web (ABA-724).
+
+**Alerts**
+
+- **"Normal for me".** Mark an alert as normal and the same alert for that merchant (or that
+  category, for spikes) stops coming back; manage muted alerts in a new list (ABA-726).
+- The category spike alert now counts receipts split across categories correctly (ABA-400).
+
+**Wallet**
+
+- **Balance corrections are shown separately** in the monthly history chart, so a manual
+  correction no longer looks like unexplained income or spending (ABA-717).
+
+**Getting started and sync**
+
+- **Try the app with sample data.** A new user can explore a ~3-month sample account kept
+  only on the phone, then start fresh with one tap (ABA-723).
+- **Waiting-to-sync chip.** Settings shows how many changes are still only on this phone,
+  and lets you sync now (ABA-722).
+
+**AI chat**
+
+- Asked how much a category cost "in total", the assistant now answers for the whole
+  history rather than the current month (ABA-714).
+
+**Fixes**
+
+- Web: creating a category no longer hides all other categories until a reload (ABA-712).
+- The purchase-requests help page now matches the app in all 9 languages (ABA-702).
+
+**Under the hood**
+
+- Edit history for shared transactions is now recorded on the server (ABA-725); vehicles and a
+  fuel log API (ABA-727); a public API with OAuth connect, not yet switched on (ABA-707,
+  ABA-709, ABA-713); tighter account scoping in sync (ABA-708); refactoring (ABA-718);
+  dependency updates (ABA-711).
+
+---
+
 ## 1.37.0 - 2026-10-28
 
 **Receipts**
