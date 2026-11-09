@@ -296,6 +296,7 @@ Newest last within each section.
 - 2026-11-09 · [ABA-731](https://github.com/micode-ai/ai-budget-assistant/issues/769) — admin Activation page: activation speed, never-activated split, first-transaction channel vs W4, pooled retention curve, all platforms from server data with internal accounts excluded; telemetry was web-only and too thin to answer this; `admin-dashboard.md`.
 - 2026-11-09 · [ABA-732](https://github.com/micode-ai/ai-budget-assistant/issues/770) — budget name optional on create (resolved from the one category or the period, shown as placeholder) and `failed` telemetry gains a closed-list `reason`; prompted by "budget errors" that were all validation retries; `features/budgets.md`, `features/web-telemetry.md`.
 - 2026-11-09 · [ABA-733](https://github.com/micode-ai/ai-budget-assistant/issues/771) — the Play rating prompt also asks after a manual expense save (floor 10, skipped when the faster-capture suggestion is pending), since its receipt-only trigger reached ~10 users; `hasAction()` now awaited; `features/store-rating-prompt.md`.
+- 2026-11-09 · [ABA-734](https://github.com/micode-ai/ai-budget-assistant/issues/772) — the receipt-split and group guest pages' Play links now carry a `referrer` (`playStoreUrl`, same scheme as the landing's `play_url`), so their installs stop landing in `not-set`; `features/acquisition-tracking.md`.
 
 ## Queries
 

@@ -1063,6 +1063,12 @@ describe('renderGuestPage — pay affordance suppressed once payment is claimed'
       expect(html).toContain('play.google.com/store/apps/details?id=com.budget.assistant');
     });
 
+    it('tags the Play link so an install from this page is attributed (ABA-734)', () => {
+      const html = renderGuestPage(baseModel, strings);
+      // HTML-escaped `&` before the referrer, URL-encoded tags inside it.
+      expect(html).toContain('id=com.budget.assistant&amp;referrer=src%3Dsplit%26loc%3Dguest');
+    });
+
     it('does not use the pay button class, so it cannot pass for a payment action', () => {
       // `.btn-primary` is what the assertions below rely on to prove the pay
       // affordance disappears once a share is claimed. A CTA that borrowed the

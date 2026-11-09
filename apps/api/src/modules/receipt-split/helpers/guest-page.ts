@@ -1,4 +1,5 @@
 import type { GuestPageStrings } from './guest-page-i18n';
+import { playStoreUrl } from '../../../common/utils/play-store-url';
 
 /**
  * Structured after modules/slack/helpers/oauth-pages.ts — a single self-contained
@@ -180,7 +181,9 @@ export function buildGuestPayLink(
   return { paymentLink: null, instructions: null };
 }
 
-const STORE_URL_ANDROID = 'https://play.google.com/store/apps/details?id=com.budget.assistant';
+// Tagged like APP_URL below, so an install from this page is attributed to it
+// instead of landing in `not-set` (ABA-734).
+const STORE_URL_ANDROID = playStoreUrl({ src: 'split', loc: 'guest' });
 
 /**
  * The primary call to action points at the WEB app, not a store.
@@ -334,7 +337,7 @@ export function renderGuestPage(model: GuestPageModel, strings: GuestPageStrings
          able to satisfy that assertion. -->
     <div class="cta-title">${escapeHtml(strings.poweredBy)}</div>
     <a class="btn btn-cta" rel="noreferrer" href="${APP_URL}">${escapeHtml(strings.ctaButton)}</a>
-    <a class="play" rel="noreferrer" href="${STORE_URL_ANDROID}">${escapeHtml(strings.getAndroid)}</a>
+    <a class="play" rel="noreferrer" href="${escapeHtml(STORE_URL_ANDROID)}">${escapeHtml(strings.getAndroid)}</a>
   </div>`;
 
   return pageShell(strings.title(model.merchant ?? strings.genericMerchant), body);

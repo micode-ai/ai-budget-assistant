@@ -14,6 +14,8 @@ sends it; the admin reports on it.
   tracker template
 - `docs/marketing/seo/build_blog.py` — `app_url(loc, lang, src)`, and `to_html()`'s rewrite of the
   bare Play URL written in article prose
+- `apps/api/src/common/utils/play-store-url.ts` — `playStoreUrl({src, loc, lang?})`, the tagged Play
+  link for server-rendered pages (the receipt-split and group guest pages), [ABA-734](https://github.com/micode-ai/ai-budget-assistant/issues/772)
 - `apps/mobile/src/services/attribution.{ts,types.ts,web.ts,native.ts}` — `parseAcquisition`,
   `captureAcquisition`, `captureReferralCode`
 - `apps/mobile/index.js` — calls the capture **before** expo-router mounts
@@ -66,6 +68,12 @@ guard silently discarded every directory referral (`startupfa.me`).
 indexed, never grouped, and has no admin UI — it exists to be read by hand when a source needs
 explaining.
 
+**Every Play link we serve to a non-user carries a `referrer`.** Without one the install reads
+`(not set)` — Play's "direct" — and its channel is lost for good, since a referrer is written once at
+install. The landing and blog generators have `play_url`; server-rendered pages use `playStoreUrl`,
+the same two schemes (our `src`/`loc`/`lang` plus the `utm_*` pair). Escape it in an HTML attribute:
+it contains `&`.
+
 **Keep identity claims untagged.** `SAMEAS`, JSON-LD `downloadUrl`/`sameAs` and the GA4 tracker's
 Play constant use the bare URL. The tracker detects a store click by prefix, which a tagged URL
 would still satisfy, but those fields assert "this is our listing" rather than funnelling a click.
@@ -100,9 +108,9 @@ without the gate, first-touch-wins then kept it over a real friend's later link.
   `not-set` ratio, so `not-set` is Play's "direct": someone followed a bare
   `play.google.com/...?id=com.budget.assistant` link. It is the best-activating source (22 of 32
   logged a transaction, against 6 of 18 for `google-play`) and skews ru/ua, which fits links shared
-  in chats and social posts. Bare Play links we control and could tag: the receipt-split guest page
-  (`receipt-split/helpers/guest-page.ts`), the group guest page (`groups/helpers/group-guest-page.ts`),
-  directory listings, social bios and community posts.
+  in chats and social posts. The two guest pages linked to Play untagged until
+  [ABA-734](https://github.com/micode-ai/ai-budget-assistant/issues/772) (`src=split` / `src=group` now); directory listings, social bios and community
+  posts still need tagging by hand.
 - No internal-traffic filter (needs the office IP).
 - **What the outside consoles can and cannot answer (checked 2026-11-09, last 28 days).**
   *GA4* covers only the marketing site and only visitors who accepted the consent banner: 11
@@ -125,4 +133,5 @@ was permanently empty) · ABA-436 (link tagging and capture) · ABA-452 (the adm
 ABA-486 (referral links) · ABA-492 (`utm_*` fallback) · ABA-553 (Play Install Referrer) ·
 ABA-584 (the 90-day check: 30 signups since ABA-436, only one NULL after the Install Referrer
 shipped — native rows now read `not-set`/`google-play`, so "native stays NULL" is no longer true) ·
-ABA-685 (`plan` and `billing_period` verified populating on `cta_click`/`plan_select`; no NULL source since 09-24).
+ABA-685 (`plan` and `billing_period` verified populating on `cta_click`/`plan_select`; no NULL source since 09-24) ·
+[ABA-734](https://github.com/micode-ai/ai-budget-assistant/issues/772) (guest-page Play links tagged).

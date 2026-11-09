@@ -1,5 +1,6 @@
 import { escapeHtml } from '../../receipt-split/helpers/guest-page';
 import type { GroupGuestStrings, GroupStrKey } from './group-guest-page-i18n';
+import { playStoreUrl } from '../../../common/utils/play-store-url';
 
 /**
  * Server-rendered, script-free HTML for the public group page (`/g/:token`, ABA-640). Plain
@@ -13,7 +14,6 @@ import type { GroupGuestStrings, GroupStrKey } from './group-guest-page-i18n';
  * pay affordance, and the class is deliberately absent from this stylesheet). No iOS store link.
  */
 
-const STORE_URL_ANDROID = 'https://play.google.com/store/apps/details?id=com.budget.assistant';
 const APP_BASE = 'https://app.ai-budget.pl/';
 
 export type CtaMoment = 'added' | 'form' | 'settled';
@@ -216,7 +216,10 @@ const CTA_KEYS: Record<CtaMoment, GroupStrKey> = {
 
 function ctaCard(s: GroupGuestStrings, moment: CtaMoment): string {
   const href = `${APP_BASE}?src=group&loc=${moment}&lang=${encodeURIComponent(s.lang)}`;
-  return `<div class="cta"><div class="cta-title">${escapeHtml(s.t(CTA_KEYS[moment]))}</div><a class="btn btn-cta" rel="noreferrer" href="${escapeHtml(href)}">${escapeHtml(s.t('ctaButton'))}</a><a class="play" rel="noreferrer" href="${STORE_URL_ANDROID}">${escapeHtml(s.t('getAndroid'))}</a></div>`;
+  // The Play link carries the same tags, so an install from this card is
+  // attributed to it instead of landing in `not-set` (ABA-734).
+  const play = playStoreUrl({ src: 'group', loc: moment, lang: s.lang });
+  return `<div class="cta"><div class="cta-title">${escapeHtml(s.t(CTA_KEYS[moment]))}</div><a class="btn btn-cta" rel="noreferrer" href="${escapeHtml(href)}">${escapeHtml(s.t('ctaButton'))}</a><a class="play" rel="noreferrer" href="${escapeHtml(play)}">${escapeHtml(s.t('getAndroid'))}</a></div>`;
 }
 
 function methodName(s: GroupGuestStrings, method: string): string {
