@@ -149,7 +149,7 @@ class ShareIntakeModule(private val reactContext: ReactApplicationContext) :
                 val text = extractText(intent)
                 if (text != null) {
                     intent.action = null
-                    io.execute { deliver(Held(mutableListOf(), 0, mutableListOf(text))) }
+                    io.execute { deliver(Held(mutableListOf<Map<String, Any>>(), 0, mutableListOf<String>(text))) }
                     return
                 }
                 val uris = extractUris(intent)
@@ -171,7 +171,7 @@ class ShareIntakeModule(private val reactContext: ReactApplicationContext) :
         private fun isForeignContent(ctx: Context, uri: Uri): Boolean =
             uri.scheme == "content" && uri.authority?.startsWith(ctx.packageName) != true
 
-        /** Non-blank EXTRA_TEXT of a stream-less text/* ACTION_SEND, trimmed and capped; else null. */
+        /** Non-blank EXTRA_TEXT of a stream-less text ACTION_SEND (any text MIME type), trimmed and capped; else null. */
         private fun extractText(intent: Intent): String? = try {
             if (intent.action != Intent.ACTION_SEND) null
             else if (intent.type?.startsWith("text/") != true) null

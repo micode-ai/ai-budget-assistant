@@ -289,6 +289,7 @@ Newest last within each section.
 - 2026-11-09 · [ABA-725](https://github.com/micode-ai/ai-budget-assistant/issues/762) — shared-account edit history: `TransactionRevision` rows written in the update transaction (editor from controller and `/sync` handlers; E2EE rows skipped; newest 20 kept); API only, mobile UI pending. Pages: `features/transaction-edit-history.md`.
 - 2026-11-09 · [ABA-726](https://github.com/micode-ai/ai-budget-assistant/issues/763) — "Normal for me" mutes one alert type per merchant/category, checked centrally in the alert writer; push action not built. Pages: features/anomaly-alerts.
 - 2026-11-09 · [ABA-727](https://github.com/micode-ai/ai-budget-assistant/issues/764) — vehicles + fuel log as separate tables beside `Expense` (not columns), full-tank l/100 km and cost/km stats, API only; mobile screen, OCR prefill and tax export are open. Pages: `features/vehicle-fuel-log.md`.
+- 2026-11-09 · [ABA-719](https://github.com/micode-ai/ai-budget-assistant/issues/756) — the 1.38.0 release build failed in `compileReleaseKotlin`: a KDoc in `ShareIntakeModule.kt` said `text/*`, and Kotlin comments nest, so the rest of the file became a comment. No pre-release check compiles Kotlin (typecheck, lint, jest and code review all passed it). Fixed the comment and made the `Held` list types explicit; verified with a local `./gradlew :app:compileReleaseKotlin`. Pages: `features/share-to-capture.md`.
 
 ## Queries
 

@@ -49,6 +49,8 @@ an AI failure still opens the form with the text as description. The form saves 
 `reconcileNotificationStub` cover it unchanged. Nothing is auto-saved. Only the first queued text opens.
 
 ## Invariants
+
+- No `/*` inside a Kotlin comment in `ShareIntakeModule.kt` (or any `.kt`): Kotlin comments NEST, so a KDoc saying `text/*` opened a comment that ran to the end of the file and broke the 1.38.0 release build. Nothing before the release workflow compiles Kotlin — typecheck, lint and jest never see it — so a native change needs `./gradlew :app:compileReleaseKotlin` locally before it ships.
 - **Navigate only through `decideShareNavigation`** — it waits for the same `coldStartGateReady`
   as the notification and trip-invite flushes (earlier navigation wedges expo-router on a black
   screen) and for `firstRunStore.seen` (never cover first-run onboarding); it blocks a viewer.
