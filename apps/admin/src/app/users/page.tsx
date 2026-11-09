@@ -36,7 +36,8 @@ export default function UsersPage() {
   const [tier, setTier] = useState<string>("");
   const [billing, setBilling] = useState<string>("");
   const [isActive, setIsActive] = useState<string>("");
-  const [sortBy, setSortBy] = useState<SortField>("createdAt");
+  // Opens on "most recently active first"; never-active users sort last (server-side).
+  const [sortBy, setSortBy] = useState<SortField>("lastSyncAt");
   const [order, setOrder] = useState<"asc" | "desc">("desc");
 
   const { data, isLoading } = useUsers({
@@ -151,6 +152,7 @@ export default function UsersPage() {
                   <TableHead>Tier</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>AI Requests</TableHead>
+                  <TableHead>Expenses</TableHead>
                   <SortableHead field="createdAt" label="Registered" />
                   {/* lastSyncAt is a last-*activity* stamp (any authenticated
                       request), not a login event — label it for what it is. */}
@@ -176,6 +178,7 @@ export default function UsersPage() {
                       <StatusBadge active={user.isActive} />
                     </TableCell>
                     <TableCell>{user.subscription?.aiRequestsUsed ?? 0}</TableCell>
+                    <TableCell>{user.expenseCount ?? 0}</TableCell>
                     <TableCell className="text-muted-foreground">{formatDate(user.createdAt)}</TableCell>
                     <TableCell className="text-muted-foreground">
                       {user.lastSyncAt ? formatRelative(user.lastSyncAt) : "Never"}
@@ -184,7 +187,7 @@ export default function UsersPage() {
                 ))}
                 {data?.data.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
+                    <TableCell colSpan={8} className="text-center text-muted-foreground py-8">
                       No users found
                     </TableCell>
                   </TableRow>

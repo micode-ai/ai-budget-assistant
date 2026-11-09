@@ -53,6 +53,8 @@ export interface AdminUserListItem {
   language: string;
   createdAt: string;
   lastSyncAt: string | null;
+  /** Expenses this user created across all their accounts, deleted ones excluded. */
+  expenseCount: number;
   subscription: {
     tier: SubscriptionTier;
     status: SubscriptionStatus;

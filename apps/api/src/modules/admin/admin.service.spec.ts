@@ -76,6 +76,51 @@ describe('AdminService.getUsers — comped flagging and billing filter', () => {
   });
 });
 
+describe('AdminService.getUsers — default order and expense count', () => {
+  const orderOf = (prisma: any) => prisma.user.findMany.mock.calls[0][0].orderBy;
+
+  it('defaults to most recently active first, never-active users last', async () => {
+    const prisma = makePrisma();
+    await new AdminService(prisma, cache, ownership).getUsers({ ...base });
+    expect(orderOf(prisma)).toEqual([{ lastSyncAt: { sort: 'desc', nulls: 'last' } }, { id: 'asc' }]);
+  });
+
+  it('keeps never-active users last when sorting Last Active ascending too', async () => {
+    const prisma = makePrisma();
+    await new AdminService(prisma, cache, ownership).getUsers({ ...base, sortBy: 'lastSyncAt', order: 'asc' });
+    expect(orderOf(prisma)[0]).toEqual({ lastSyncAt: { sort: 'asc', nulls: 'last' } });
+  });
+
+  it('falls back on an unknown sort field and an unknown order', async () => {
+    const prisma = makePrisma();
+    await new AdminService(prisma, cache, ownership).getUsers({
+      ...base,
+      sortBy: 'passwordHash',
+      order: 'sideways' as any,
+    });
+    expect(orderOf(prisma)[0]).toEqual({ lastSyncAt: { sort: 'desc', nulls: 'last' } });
+  });
+
+  it('sorts other fields plainly', async () => {
+    const prisma = makePrisma();
+    await new AdminService(prisma, cache, ownership).getUsers({ ...base, sortBy: 'name', order: 'asc' });
+    expect(orderOf(prisma)[0]).toEqual({ name: 'asc' });
+  });
+
+  it('counts only non-deleted expenses and flattens the count onto the row', async () => {
+    const prisma = makePrisma([
+      { id: 'u1', email: 'a@x', name: 'A', subscription: null, _count: { expenses: 42 } },
+      { id: 'u2', email: 'b@x', name: 'B', subscription: null },
+    ]);
+    const res = await new AdminService(prisma, cache, ownership).getUsers({ ...base });
+    expect(prisma.user.findMany.mock.calls[0][0].select._count).toEqual({
+      select: { expenses: { where: { isDeleted: false } } },
+    });
+    expect(res.data.map((u: any) => u.expenseCount)).toEqual([42, 0]);
+    expect(res.data[0]).not.toHaveProperty('_count');
+  });
+});
+
 describe('AdminService account removal runs inside the group-ownership transaction (ABA-650)', () => {
   const order: string[] = [];
   const tx = {

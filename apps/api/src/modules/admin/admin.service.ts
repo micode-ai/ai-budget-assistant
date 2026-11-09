@@ -93,7 +93,10 @@ export class AdminService {
     sortBy?: string;
     order?: 'asc' | 'desc';
   }) {
-    const { page, limit, search, tier, billing, isActive, sortBy = 'createdAt', order = 'desc' } = params;
+    // Default view is "most recently active first" — that is what an admin opens the
+    // table to see. `order` comes from the query string, so anything else is coerced.
+    const { page, limit, search, tier, billing, isActive, sortBy = 'lastSyncAt' } = params;
+    const order: 'asc' | 'desc' = params.order === 'asc' ? 'asc' : 'desc';
     const skip = (page - 1) * limit;
     const where: Record<string, unknown> = {};
     if (search) {
@@ -112,9 +115,17 @@ export class AdminService {
     if (billing === 'comped') Object.assign(subFilter, COMPED_SUB_WHERE, tier ? { tier } : {});
     if (Object.keys(subFilter).length > 0) where.subscription = subFilter;
 
-    const orderBy: Record<string, string> = {};
     const allowedSortFields = ['name', 'email', 'createdAt', 'lastSyncAt'];
-    orderBy[allowedSortFields.includes(sortBy) ? sortBy : 'createdAt'] = order;
+    const sortField = allowedSortFields.includes(sortBy) ? sortBy : 'lastSyncAt';
+    // `lastSyncAt` is nullable (never active). Postgres puts NULLs FIRST on DESC, which
+    // floated every never-used account above the real users — keep them last in both
+    // directions. `id` is a tiebreaker so pagination is stable across equal values.
+    const orderBy: Prisma.UserOrderByWithRelationInput[] = [
+      sortField === 'lastSyncAt'
+        ? { lastSyncAt: { sort: order, nulls: 'last' } }
+        : { [sortField]: order },
+      { id: 'asc' },
+    ];
 
     const [users, total] = await Promise.all([
       this.prisma.user.findMany({
@@ -134,6 +145,8 @@ export class AdminService {
           subscription: {
             select: { tier: true, status: true, aiRequestsUsed: true, stripeSubscriptionId: true },
           },
+          // Expenses this user created (across all their accounts), deleted ones excluded.
+          _count: { select: { expenses: { where: { isDeleted: false } } } },
         },
       }),
       this.prisma.user.count({ where }),
@@ -141,8 +154,9 @@ export class AdminService {
 
     // The raw Stripe subscription id has no business in a user list — collapse it to the
     // one bit the UI needs before it leaves the service.
-    const data = users.map(({ subscription, ...user }) => ({
+    const data = users.map(({ subscription, _count, ...user }) => ({
       ...user,
+      expenseCount: _count?.expenses ?? 0,
       subscription: subscription
         ? {
             tier: subscription.tier,
