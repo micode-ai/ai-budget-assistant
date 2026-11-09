@@ -23,3 +23,14 @@ export interface AnomalyAlertListResponse {
   alerts: AnomalyAlert[];
   unreadCount: number;
 }
+
+/** A "Normal for me" mute: one alert type for one merchant/category on an account. */
+export interface AnomalySuppression {
+  id: string;
+  accountId: string;
+  type: AnomalyAlertType;
+  subjectKey: string;
+  label: string;
+  createdByUserId: string;
+  createdAt: string;
+}

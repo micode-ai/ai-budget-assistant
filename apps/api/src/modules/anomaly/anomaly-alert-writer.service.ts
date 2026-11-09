@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import type { CreateAlertInput } from './anomaly.types';
+import { suppressionSubject } from './anomaly-helpers.util';
 
 const PUSH_DAILY_CAP = 3;
 
@@ -25,6 +26,7 @@ export class AnomalyAlertWriterService {
    * push it unless the account already received PUSH_DAILY_CAP pushes today.
    */
   async createAlert(input: CreateAlertInput): Promise<void> {
+    if (await this.isSuppressed(input)) return;
     let alert: { id: string };
     try {
       alert = await this.prisma.anomalyAlert.create({
@@ -64,6 +66,23 @@ export class AnomalyAlertWriterService {
     );
     if (sentOk) {
       await this.prisma.anomalyAlert.update({ where: { id: alert.id }, data: { pushSent: true } });
+    }
+  }
+
+  /** "Normal for me": the user muted this alert type for this merchant/category. */
+  private async isSuppressed(input: CreateAlertInput): Promise<boolean> {
+    const subjectKey = suppressionSubject(input.type, input.params, input.categoryId);
+    if (!subjectKey) return false;
+    try {
+      const hit = await this.prisma.anomalySuppression.findUnique({
+        where: { accountId_type_subjectKey: { accountId: input.accountId, type: input.type, subjectKey } },
+        select: { id: true },
+      });
+      return !!hit;
+    } catch (err) {
+      // A failed lookup must not silence real alerts.
+      this.logger.warn(`suppression lookup failed: ${err}`);
+      return false;
     }
   }
 }

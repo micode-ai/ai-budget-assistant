@@ -1,8 +1,9 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import type { PriceCheckSummary } from '@budget/shared-types';
 import { AnomalyDetectorsService } from './anomaly-detectors.service';
 import type { DetectorExpense } from './anomaly.types';
+import { suppressionSubject } from './anomaly-helpers.util';
 import { attributeToCategories, type AttributableExpense } from '../../common/utils/category-attribution';
 
 /** Live splits ride along so the spike check sees split-only categories (ABA-400 §3). */
@@ -182,6 +183,37 @@ export class AnomalyService {
       data: { readAt: new Date() },
     });
     return { success: true, updated: result.count };
+  }
+
+  /** "Normal for me": mute this alert's type for its merchant/category, then dismiss it. Idempotent. */
+  async markNormal(accountId: string, userId: string, id: string) {
+    const alert = await this.prisma.anomalyAlert.findFirst({ where: { id, accountId } });
+    if (!alert) throw new NotFoundException('Alert not found');
+    const params = (alert.params ?? {}) as Record<string, unknown>;
+    const subjectKey = suppressionSubject(alert.type, params, alert.categoryId);
+    if (!subjectKey) throw new BadRequestException('This alert cannot be marked as normal');
+    const label = String(params.merchant ?? params.categoryName ?? '').trim() || subjectKey;
+    await this.prisma.anomalySuppression.upsert({
+      where: { accountId_type_subjectKey: { accountId, type: alert.type, subjectKey } },
+      create: { accountId, type: alert.type, subjectKey, label, createdByUserId: userId },
+      update: {},
+    });
+    await this.prisma.anomalyAlert.update({ where: { id }, data: { dismissedAt: new Date() } });
+    return { success: true };
+  }
+
+  async listSuppressions(accountId: string) {
+    const rows = await this.prisma.anomalySuppression.findMany({
+      where: { accountId },
+      orderBy: { createdAt: 'desc' },
+    });
+    return rows.map((r) => ({ ...r, createdAt: r.createdAt.toISOString() }));
+  }
+
+  async removeSuppression(accountId: string, id: string) {
+    const result = await this.prisma.anomalySuppression.deleteMany({ where: { id, accountId } });
+    if (result.count === 0) throw new NotFoundException('Suppression not found');
+    return { success: true };
   }
 
   async dismiss(accountId: string, id: string) {

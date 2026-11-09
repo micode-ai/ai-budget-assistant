@@ -1,5 +1,5 @@
 import { httpClient } from './http-client';
-import type { AnomalyAlertListResponse, PriceCheckSummary } from '@budget/shared-types';
+import type { AnomalyAlertListResponse, AnomalySuppression, PriceCheckSummary } from '@budget/shared-types';
 
 export const alertsApi = {
   listAlerts() {
@@ -16,6 +16,18 @@ export const alertsApi = {
 
   dismissAlert(id: string) {
     return httpClient.request<{ success: boolean; updated: number }>(`/alerts/${id}`, { method: 'DELETE' });
+  },
+
+  markAlertNormal(id: string) {
+    return httpClient.request<{ success: boolean }>(`/alerts/${id}/normal`, { method: 'POST' });
+  },
+
+  listAlertSuppressions() {
+    return httpClient.request<AnomalySuppression[]>('/alerts/suppressions');
+  },
+
+  removeAlertSuppression(id: string) {
+    return httpClient.request<{ success: boolean }>(`/alerts/suppressions/${id}`, { method: 'DELETE' });
   },
 
   getPriceCheckSummary() {

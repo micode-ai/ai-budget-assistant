@@ -25,3 +25,4 @@ Vous pouvez activer ou désactiver les notifications push d'anomalies dans **Par
 - Chaque anomalie n'est signalée qu'une seule fois — vous ne recevrez pas deux fois la même alerte.
 - Dès que vous traitez un doublon possible en supprimant ou en fusionnant la dépense en trop, son alerte disparaît d'elle-même. Si vous l'avez déjà réglé, toucher l'alerte indique simplement que c'est résolu — pas d'écran déroutant « dépense introuvable ».
 - Dans les comptes partagés, marquer les alertes comme lues affecte l'ensemble du compte ; les observateurs peuvent lire le fil mais ne peuvent pas le modifier.
+- **Normal pour moi :** sur une carte d’alerte, touchez **Normal pour moi** pour ne plus recevoir ce type d’alerte pour ce commerçant ou cette catégorie. Les autres types continuent d’arriver. Annulez-le dans **Alertes → Alertes masquées**.

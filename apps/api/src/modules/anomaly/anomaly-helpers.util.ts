@@ -101,6 +101,24 @@ export function normalizeMerchant(merchant: string): string {
   return merchant.trim().toLowerCase();
 }
 
+/**
+ * What a "Normal for me" suppression is keyed on (alongside the alert type):
+ * the category for a spike, the normalized payee for every other type.
+ * Returns null when the alert carries nothing to key on.
+ */
+export function suppressionSubject(
+  type: string,
+  params: Record<string, unknown> | null | undefined,
+  categoryId?: string | null,
+): string | null {
+  if (type === 'category_spike') {
+    const id = categoryId ?? (typeof params?.categoryId === 'string' ? params.categoryId : null);
+    return id ? `cat:${id}` : null;
+  }
+  const merchant = typeof params?.merchant === 'string' ? normalizeMerchant(params.merchant) : '';
+  return merchant ? `m:${merchant}` : null;
+}
+
 export function monthKey(date: Date): string {
   return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, '0')}`;
 }

@@ -23,12 +23,21 @@ import { buildMarkRecurringUpdate, isMergeableDuplicate } from '@/features/dashb
 import { useExpenseStore } from '@/stores/expenseStore';
 import type { AnomalyAlert } from '@budget/shared-types';
 
+// Types a "Normal for me" mute makes sense for (a merge suggestion is a one-off pair).
+const NORMALIZABLE = new Set<AnomalyAlert['type']>([
+  'category_spike',
+  'price_increase',
+  'duplicate_charge',
+  'recurring_suggestion',
+  'price_overcharge',
+]);
+
 export default function AlertsScreen() {
   const { t, i18n } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
 
-  const { alerts, isLoading, unreadCount, loadAlerts, markRead, markAllRead, dismiss } =
+  const { alerts, isLoading, unreadCount, loadAlerts, markRead, markAllRead, dismiss, markNormal } =
     useAlertStore();
   const params = useLocalSearchParams<{ tab?: string }>();
   const [activeTab, setActiveTab] = React.useState<'alerts' | 'invitations'>(
@@ -129,6 +138,11 @@ export default function AlertsScreen() {
     dismiss(alert.id);
   };
 
+  const handleMarkNormal = async (alert: AnomalyAlert) => {
+    const ok = await markNormal(alert.id);
+    if (!ok) showAlert(t('errors.error'), t('alerts.markNormalFailed'));
+  };
+
   const renderAlert = ({ item }: { item: AnomalyAlert }) => {
     const { title, body } = renderAlertBody(item, t);
     const icon = TYPE_ICON[item.type] || 'alert-circle-outline';
@@ -177,6 +191,15 @@ export default function AlertsScreen() {
                 <Text style={styles.markRecurringText}>{t('alerts.markAsRecurring')}</Text>
               </TouchableOpacity>
             )}
+            {canEdit && NORMALIZABLE.has(item.type) && (
+              <TouchableOpacity
+                style={styles.markRecurringBtn}
+                onPress={() => handleMarkNormal(item)}
+                hitSlop={8}
+              >
+                <Text style={styles.markRecurringText}>{t('alerts.markNormal')}</Text>
+              </TouchableOpacity>
+            )}
           </View>
           {resolvingId === item.id ? (
             <ActivityIndicator size="small" color={theme.colors.primary} style={styles.dismissBtn} />
@@ -204,6 +227,10 @@ export default function AlertsScreen() {
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
       <Stack.Screen options={{ headerRight }} />
+      <TouchableOpacity style={styles.mutedLink} onPress={() => router.push('/alerts/muted' as any)}>
+        <Ionicons name="volume-mute-outline" size={16} color={theme.colors.textSecondary} />
+        <Text style={styles.mutedLinkText}>{t('alerts.mutedLink')}</Text>
+      </TouchableOpacity>
       <View style={styles.tabRow}>
         <TouchableOpacity
           style={[styles.tabButton, activeTab === 'alerts' && styles.tabButtonActive]}
@@ -276,6 +303,17 @@ const createStyles = (theme: Theme) => ({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
+  },
+  mutedLink: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[1.5],
+    paddingHorizontal: theme.spacing[4],
+    paddingTop: theme.spacing[3],
+  },
+  mutedLinkText: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textSecondary,
   },
   tabRow: {
     flexDirection: 'row' as const,

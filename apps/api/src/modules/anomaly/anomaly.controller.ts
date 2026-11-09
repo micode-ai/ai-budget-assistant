@@ -1,4 +1,4 @@
-import { Controller, Get, Patch, Delete, Param, Query, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Patch, Post, Delete, Param, Query, Req, UseGuards } from '@nestjs/common';
 import { AnomalyService } from './anomaly.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
@@ -23,6 +23,23 @@ export class AnomalyController {
   async getPriceCheckSummary(@Req() req: AuthenticatedRequest): Promise<PriceCheckSummary> {
     const since = new Date(Date.UTC(new Date().getUTCFullYear(), 0, 1));
     return this.service.getPriceCheckSummary(req.accountId, since);
+  }
+
+  @Get('suppressions')
+  listSuppressions(@Req() req: AuthenticatedRequest) {
+    return this.service.listSuppressions(req.accountId);
+  }
+
+  @Delete('suppressions/:id')
+  @UseGuards(new ViewerBlockGuard())
+  removeSuppression(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+    return this.service.removeSuppression(req.accountId, id);
+  }
+
+  @Post(':id/normal')
+  @UseGuards(new ViewerBlockGuard())
+  markNormal(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+    return this.service.markNormal(req.accountId, req.user.id, id);
   }
 
   @Patch('read-all')

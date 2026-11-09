@@ -25,3 +25,4 @@ You can turn anomaly push notifications on or off in **Settings → Notification
 - Each anomaly is reported only once — you won't get the same alert twice.
 - Once you handle a possible duplicate by deleting or merging the extra expense, its alert clears itself. If you already dealt with it, tapping the alert simply says it's resolved — no confusing "expense not found" screen.
 - In shared accounts, marking alerts as read affects the whole account; viewers can read the feed but not change it.
+- **Normal for me:** on an alert card, tap **Normal for me** to stop that kind of alert for that merchant or category. Other kinds of alerts still arrive. Review or undo under **Alerts → Muted alerts**.

@@ -13,6 +13,7 @@ interface AlertState {
   markRead: (id: string) => Promise<void>;
   markAllRead: () => Promise<void>;
   dismiss: (id: string) => Promise<void>;
+  markNormal: (id: string) => Promise<boolean>;
   clearPriceCheckSummary: () => void;
   reset: () => void;
 }
@@ -74,6 +75,23 @@ export const useAlertStore = create<AlertState>((set, get) => ({
       };
     });
     api.dismissAlert(id).catch((e) => console.warn('Failed to dismiss alert:', e));
+  },
+
+  async markNormal(id) {
+    try {
+      await api.markAlertNormal(id);
+    } catch (e) {
+      console.warn('Failed to mark alert normal:', e);
+      return false;
+    }
+    set((s) => {
+      const target = s.alerts.find((a) => a.id === id);
+      return {
+        alerts: s.alerts.filter((a) => a.id !== id),
+        unreadCount: target && !target.readAt ? Math.max(0, s.unreadCount - 1) : s.unreadCount,
+      };
+    });
+    return true;
   },
 
   clearPriceCheckSummary() {

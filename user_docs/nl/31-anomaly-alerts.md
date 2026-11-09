@@ -25,3 +25,4 @@ Je kunt anomalie-pushmeldingen in- of uitschakelen via **Instellingen → Meldin
 - Elke anomalie wordt slechts één keer gemeld — je ontvangt dezelfde melding niet twee keer.
 - Zodra je een mogelijke dubbele uitgave oplost door de extra uitgave te verwijderen of samen te voegen, verdwijnt de bijbehorende melding vanzelf. Heb je het al afgehandeld, dan zegt het tikken op de melding gewoon dat het is opgelost — geen verwarrend scherm 'uitgave niet gevonden'.
 - In gedeelde accounts heeft het als gelezen markeren van meldingen invloed op het hele account; kijkers kunnen de feed lezen maar niet wijzigen.
+- **Normaal voor mij:** tik op een meldingskaart op **Normaal voor mij** om dat type melding voor die winkel of categorie te stoppen. Andere typen blijven komen. Maak het ongedaan onder **Meldingen → Gedempte meldingen**.

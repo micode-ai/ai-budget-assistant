@@ -121,3 +121,16 @@ describe('push ↔ receipt loose matching (ABA-625)', () => {
     ).toBeNull();
   });
 });
+
+import { suppressionSubject } from './anomaly-helpers.util';
+
+describe('suppressionSubject', () => {
+  it('keys a spike on the category', () => {
+    expect(suppressionSubject('category_spike', {}, 'c1')).toBe('cat:c1');
+    expect(suppressionSubject('category_spike', {}, null)).toBeNull();
+  });
+  it('keys other types on the normalized merchant', () => {
+    expect(suppressionSubject('price_increase', { merchant: '  Rent Co ' })).toBe('m:rent co');
+    expect(suppressionSubject('duplicate_charge', { merchant: '' })).toBeNull();
+  });
+});

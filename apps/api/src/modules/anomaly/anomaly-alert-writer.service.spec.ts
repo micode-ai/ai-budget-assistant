@@ -84,3 +84,33 @@ describe('AnomalyAlertWriterService.createAlert', () => {
     expect(notifications.sendToUser).not.toHaveBeenCalled();
   });
 });
+
+describe('AnomalyAlertWriterService suppression ("Normal for me")', () => {
+  const base = {
+    accountId: 'acc-1',
+    userId: 'user-1',
+    dedupKey: 'price:x:2026-11',
+    params: { merchant: ' Netflix ' },
+    pushTitle: () => 't',
+    pushBody: () => 'b',
+  };
+
+  it('skips insert and push when the type+merchant is suppressed', async () => {
+    const { writer, prisma, notifications } = makeWriter();
+    prisma.anomalySuppression = { findUnique: jest.fn().mockResolvedValue({ id: 's1' }) };
+    await writer.createAlert({ ...base, type: 'price_increase' });
+    expect(prisma.anomalySuppression.findUnique).toHaveBeenCalledWith({
+      where: { accountId_type_subjectKey: { accountId: 'acc-1', type: 'price_increase', subjectKey: 'm:netflix' } },
+      select: { id: true },
+    });
+    expect(prisma.anomalyAlert.create).not.toHaveBeenCalled();
+    expect(notifications.sendToUser).not.toHaveBeenCalled();
+  });
+
+  it('still alerts when no suppression exists, or the lookup fails', async () => {
+    const { writer, prisma } = makeWriter();
+    prisma.anomalySuppression = { findUnique: jest.fn().mockRejectedValue(new Error('db')) };
+    await writer.createAlert({ ...base, type: 'duplicate_charge' });
+    expect(prisma.anomalyAlert.create).toHaveBeenCalledTimes(1);
+  });
+});

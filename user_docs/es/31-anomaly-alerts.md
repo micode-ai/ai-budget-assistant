@@ -25,3 +25,4 @@ Puedes activar o desactivar las notificaciones push de anomalías en **Ajustes �
 - Cada anomalía se notifica una sola vez — no recibirás la misma alerta dos veces.
 - En cuanto resuelves un posible duplicado eliminando o combinando el gasto de más, su alerta desaparece sola. Si ya lo habías resuelto, al tocar la alerta solo indica que ya está resuelto, sin la confusa pantalla de «gasto no encontrado».
 - En cuentas compartidas, marcar alertas como leídas afecta a toda la cuenta; los observadores pueden leer el feed pero no modificarlo.
+- **Es normal para mí:** en una tarjeta de alerta, toca **Es normal para mí** para dejar de recibir ese tipo de alerta para ese comercio o categoría. Los demás tipos siguen llegando. Revísalo o deshazlo en **Alertas → Alertas silenciadas**.

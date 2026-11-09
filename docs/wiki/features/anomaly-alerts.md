@@ -105,6 +105,18 @@ be opened from it.
 
 **Tier 2 never auto-acts.** Only `POST /expenses/merge` mutates.
 
+## "Normal for me" (ABA-726)
+
+`AnomalySuppression` mutes one alert **type** for one subject on an account: the category for
+`category_spike`, the lowercased payee for every other type (`suppressionSubject` in the helpers
+file). It lasts until removed, is shared by all members of the account, and is a full mute rather
+than a raised threshold. `POST /alerts/:id/normal` creates it (idempotent) and dismisses the alert;
+`GET/DELETE /alerts/suppressions` back the Muted alerts screen (`apps/mobile/app/alerts/muted.tsx`).
+
+**Invariant:** the check lives in `AnomalyAlertWriterService.createAlert`, not in each detector, so
+a new detector inherits it. A failed lookup alerts anyway. Muting `price_increase` for a payee must
+not mute `duplicate_charge` for it — the key includes the type. The push-notification action is not built.
+
 ## Known gaps
 
 - The daily push cap is a read-then-act race — known and benign.
@@ -115,4 +127,4 @@ be opened from it.
 ABA-242 (the feature) · ABA-245 (payee fallback) · ABA-246 (badge refresh) · ABA-247 (four-way id
 resolution) · ABA-296 (notification-capture dedup, tiers 1 and 2) · ABA-339 (the deep link, and
 resolve-on-delete) · ABA-532 (the mark-as-recurring nudge) · ABA-400 (split-aware category spike,
-re-checked after a sync push writes splits).
+re-checked after a sync push writes splits) · ABA-726 ("Normal for me" suppressions).

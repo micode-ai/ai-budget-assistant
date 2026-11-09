@@ -427,6 +427,7 @@ model Account {
   importBatches                  ImportBatch[]
   userSubscriptions              UserSubscription[]
   anomalyAlerts                  AnomalyAlert[]
+  anomalySuppressions            AnomalySuppression[]
   merchantCategoryRules          MerchantCategoryRule[]
   productCategoryRules           ProductCategoryRule[]
   goalContributions              GoalContribution[]
@@ -2174,6 +2175,22 @@ model AnomalyAlert {
   @@unique([accountId, dedupKey])
   @@index([accountId, createdAt])
   @@map("anomaly_alerts")
+}
+
+/// "Normal for me": mutes one alert type for one merchant/category on an account.
+model AnomalySuppression {
+  id              String   @id @default(uuid())
+  accountId       String   @map("account_id")
+  type            String
+  subjectKey      String   @map("subject_key")
+  label           String
+  createdByUserId String   @map("created_by_user_id")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@unique([accountId, type, subjectKey])
+  @@map("anomaly_suppressions")
 }
 
 // ---- CSV Import Mappings ----

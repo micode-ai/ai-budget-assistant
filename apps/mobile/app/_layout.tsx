@@ -957,6 +957,13 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="alerts/muted"
+          options={{
+            headerShown: true,
+            title: t('alerts.mutedTitle'),
+          }}
+        />
+        <Stack.Screen
           name="scenario-simulator"
           options={{
             headerShown: true,

@@ -272,3 +272,28 @@ describe('checkCategorySpikes', () => {
     expect(detectors.detectCategorySpike).not.toHaveBeenCalled();
   });
 });
+
+describe('AnomalyService.markNormal', () => {
+  function make(alert: any) {
+    const prisma: any = {
+      anomalyAlert: { findFirst: jest.fn().mockResolvedValue(alert), update: jest.fn().mockResolvedValue({}) },
+      anomalySuppression: { upsert: jest.fn().mockResolvedValue({}), deleteMany: jest.fn().mockResolvedValue({ count: 0 }) },
+    };
+    return { prisma, svc: new AnomalyService(prisma, {} as any) };
+  }
+  it('creates the suppression and dismisses the alert', async () => {
+    const { prisma, svc } = make({ id: 'a1', type: 'price_increase', params: { merchant: 'Rent' }, categoryId: null });
+    await svc.markNormal('acc', 'u1', 'a1');
+    expect(prisma.anomalySuppression.upsert).toHaveBeenCalledWith(
+      expect.objectContaining({ create: expect.objectContaining({ accountId: 'acc', type: 'price_increase', subjectKey: 'm:rent' }) }),
+    );
+    expect(prisma.anomalyAlert.update).toHaveBeenCalled();
+  });
+  it('404s for a foreign alert and 400s when no subject', async () => {
+    await expect(make(null).svc.markNormal('acc', 'u', 'x')).rejects.toThrow('not found');
+    await expect(make({ id: 'a', type: 'price_increase', params: {}, categoryId: null }).svc.markNormal('acc', 'u', 'a')).rejects.toThrow();
+  });
+  it('removeSuppression 404s outside the account', async () => {
+    await expect(make(null).svc.removeSuppression('acc', 'x')).rejects.toThrow('not found');
+  });
+});

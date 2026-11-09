@@ -25,3 +25,4 @@ Możesz włączyć lub wyłączyć powiadomienia push o anomaliach w **Ustawieni
 - Każda anomalia jest zgłaszana tylko raz — nie otrzymasz tego samego alertu dwa razy.
 - Gdy rozwiążesz możliwy duplikat, usuwając lub scalając nadmiarowy wydatek, jego alert znika sam. Jeśli już się tym zająłeś, dotknięcie alertu po prostu informuje, że sprawa jest załatwiona — bez mylącego ekranu „nie znaleziono wydatku”.
 - Na kontach współdzielonych oznaczenie alertów jako przeczytanych dotyczy całego konta; obserwatorzy mogą czytać kanał, ale nie mogą go zmieniać.
+- **To normalne u mnie:** na karcie alertu stuknij **To normalne u mnie**, aby wyciszyć ten rodzaj alertu dla danego sprzedawcy lub kategorii. Inne rodzaje alertów nadal przychodzą. Cofniesz to w **Alerty → Wyciszone alerty**.
