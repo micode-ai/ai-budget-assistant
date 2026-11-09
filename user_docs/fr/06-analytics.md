@@ -80,6 +80,11 @@ Chaque carte d'apercu a un niveau de gravite : critique (rouge), avertissement (
 
 Si le même magasin apparaît sous plusieurs noms, ouvrez **Paramètres → Marchands** pour les réorganiser : appuyez sur **Sélectionner**, cochez les variantes et **Fusionner** en un seul nom. L'application suggère également des groupes probables (par exemple plusieurs entrées *Biedronka*) que vous pouvez fusionner en un seul appui — afin qu'ils comptent comme un seul marchand dans ces graphiques.
 
+### Par membre
+
+- Qui a saisi quelle part des dépenses sur la période choisie.
+- N'apparaît que sur les comptes partagés avec au moins deux membres ayant des dépenses.
+
 ### Par etiquettes / Par projets
 
 - **Repartition par etiquettes** — depenses groupees par vos etiquettes personnalisees

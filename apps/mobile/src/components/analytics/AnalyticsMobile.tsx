@@ -7,7 +7,7 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import { previousMonthParams } from '@/features/insights/previousMonth';
 import {
   AnalyticsHeader, SummaryCards, SpendingTrendChart, CategoryBreakdown,
-  IncomeCategoryBreakdown, MerchantBreakdown, TagBreakdown, ProjectBreakdown,
+  IncomeCategoryBreakdown, MerchantBreakdown, MemberBreakdown, TagBreakdown, ProjectBreakdown,
   DayOfWeekSection, QuickInsights, TopReceiptItems, AiInsightsSection,
   InflationIndexSection, SavingsDetailSheet,
 } from '@/components/analytics';
@@ -40,6 +40,7 @@ export function AnalyticsMobile() {
     dailySpending,
     categorySpending,
     merchantSpending,
+    memberSpending,
     incomeByCategory,
     summary,
     itemBreakdown,
@@ -147,6 +148,7 @@ export function AnalyticsMobile() {
         <SpendingTrendChart dailySpending={dailySpending} selectedRange={selectedRange} onBarPress={openDrillDown} />
         <CategoryBreakdown categorySpending={categorySpending} currency={currency} />
         {merchantSpending.length > 0 && <MerchantBreakdown merchantSpending={merchantSpending} currency={currency} />}
+        {memberSpending.length > 0 && <MemberBreakdown memberSpending={memberSpending} currency={currency} />}
         {tagSpending.length > 0 && <TagBreakdown tagSpending={tagSpending} currency={currency} />}
         {projectSpending.length > 0 && <ProjectBreakdown projectSpending={projectSpending} currency={currency} />}
         {dayOfWeekSpending.some((d) => d.totalAmount > 0) && <DayOfWeekSection dayOfWeekSpending={dayOfWeekSpending} />}

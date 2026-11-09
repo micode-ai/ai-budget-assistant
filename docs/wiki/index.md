@@ -214,6 +214,7 @@ the section you came for — it states what must not break and why. A missing se
 - [real-salary](features/real-salary.md) — personal inflation vs. pay: Eurostat HICP by COICOP
   division plus the personal receipt index, weighted by the account's own spend
 - [analytics-tab-breakdowns](features/analytics-tab-breakdowns.md) — the by-merchant and by-income-category donuts
+- [spending-by-member](features/spending-by-member.md) — the by-member donut on shared accounts
 - [financial-health-score](features/financial-health-score.md) — the four-component 0–100 score, and why it lies while loading
 - [scenario-simulator](features/scenario-simulator.md) — what-if projections and device-local saved scenarios
 - [safe-to-spend](features/safe-to-spend.md) — the deterministic home hero number and the chat affordability check

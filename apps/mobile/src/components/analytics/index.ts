@@ -12,3 +12,4 @@ export { AiInsightsSection } from './AiInsightsSection';
 export { IncomeCategoryBreakdown } from './IncomeCategoryBreakdown';
 export { InflationIndexSection } from './InflationIndexSection';
 export { SavingsDetailSheet } from './SavingsDetailSheet';
+export { MemberBreakdown } from './MemberBreakdown';

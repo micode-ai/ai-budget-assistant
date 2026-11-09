@@ -372,6 +372,8 @@ export default {
     savingsDetailDepositNote: 'Das an der Kasse gezahlte Pfand für Mehrwegverpackungen — keine Rückerstattung; zurückgegebene Flaschen und Dosen werden nicht erfasst.',
     byMerchant: 'Nach Händlern',
     merchantOther: 'Sonstige',
+    byMember: 'Nach Mitgliedern',
+    memberUnknown: 'Unbekannt',
     byTag: 'Nach Tags',
     byProject: 'Nach Projekten',
     byIncomeCategory: 'Einnahmen nach Kategorie',

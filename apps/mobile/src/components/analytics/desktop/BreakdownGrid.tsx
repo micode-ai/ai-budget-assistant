@@ -4,6 +4,7 @@ import { useStyles, type Theme } from '@/theme';
 import type {
   CategorySpending,
   MerchantSpending,
+  MemberSpending,
   TagSpending,
   ProjectSpending,
   IncomeCategorySpending,
@@ -28,6 +29,16 @@ function merchantToRows(merchantSpending: MerchantSpending[]): BreakdownRow[] {
   return merchantSpending.map((m) => ({
     id: m.merchant,
     name: m.merchant,
+    amount: m.amount,
+    percentage: m.percentage,
+    color: m.color,
+  }));
+}
+
+function memberToRows(memberSpending: MemberSpending[]): BreakdownRow[] {
+  return memberSpending.map((m) => ({
+    id: m.userId ?? m.name,
+    name: m.name,
     amount: m.amount,
     percentage: m.percentage,
     color: m.color,
@@ -71,6 +82,7 @@ export interface BreakdownGridProps {
   currency: string;
   categorySpending: CategorySpending[];
   merchantSpending: MerchantSpending[];
+  memberSpending: MemberSpending[];
   tagSpending: TagSpending[];
   projectSpending: ProjectSpending[];
   incomeByCategory: IncomeCategorySpending[];
@@ -97,6 +109,7 @@ export function BreakdownGrid({
   currency,
   categorySpending,
   merchantSpending,
+  memberSpending,
   tagSpending,
   projectSpending,
   incomeByCategory,
@@ -127,6 +140,7 @@ export function BreakdownGrid({
     drillKey?: string | null;
   }[] = [
     ...(!isWideGrid && hasMerchant ? [{ key: 'merchant', title: t('analytics.byMerchant'), rows: merchantToRows(merchantSpending) }] : []),
+    ...(memberSpending.length > 0 ? [{ key: 'member', title: t('analytics.byMember'), rows: memberToRows(memberSpending) }] : []),
     ...(tagSpending.length > 0 ? [{ key: 'tag', title: t('analytics.byTag'), rows: tagToRows(tagSpending) }] : []),
     ...(projectSpending.length > 0 ? [{ key: 'project', title: t('analytics.byProject'), rows: projectToRows(projectSpending) }] : []),
     ...(incomeByCategory.length > 0 ? [{ key: 'income', title: t('analytics.byIncomeCategory'), rows: incomeCardRows,

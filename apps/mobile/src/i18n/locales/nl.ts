@@ -372,6 +372,8 @@ export default {
     savingsDetailDepositNote: 'Wat je aan de kassa hebt betaald voor retourverpakkingen — geen terugbetaling; teruggebrachte flessen en blikjes worden niet bijgehouden.',
     byMerchant: 'Per verkoper',
     merchantOther: 'Overig',
+    byMember: 'Per lid',
+    memberUnknown: 'Onbekend',
     byTag: 'Per tag',
     byProject: 'Per project',
     byIncomeCategory: 'Inkomsten per categorie',

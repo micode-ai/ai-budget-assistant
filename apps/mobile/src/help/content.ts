@@ -1087,6 +1087,11 @@ Each insight card has severity: critical (red), warning (yellow), or info (blue)
 
 If the same shop appears under several names, open **Settings → Merchants** to tidy them up: tap **Select**, tick the variants, and **Merge** them into one name. The app also suggests likely groups (for example several *Biedronka* entries) that you can merge in a single tap — so they count as one merchant in these charts.
 
+### By Member
+
+- Who created how much of the spending in the selected period.
+- Only appears on shared accounts with at least two members who have spending.
+
 ### By Tags / By Projects
 
 - **Tag Breakdown** — spending grouped by your custom tags
@@ -6439,6 +6444,11 @@ iOS, Android, Web
 
 Если один и тот же магазин встречается под несколькими названиями, откройте **Настройки → Магазины**, чтобы навести порядок: нажмите **Выбрать**, отметьте варианты и **Объединить** их в одно название. Приложение также предлагает вероятные группы (например, несколько записей *Biedronka*), которые можно объединить одним нажатием — тогда они будут считаться одним продавцом на этих диаграммах.
 
+### По участникам
+
+- Кто записал какую часть расходов за выбранный период.
+- Появляется только в общих счетах, где расходы есть минимум у двух участников.
+
 ### По тегам / По проектам
 
 - **Разбивка по тегам** — расходы, сгруппированные по вашим пользовательским тегам
@@ -11769,6 +11779,11 @@ iOS, Android, Web
 
 Якщо один і той самий магазин зустрічається під кількома назвами, відкрийте **Налаштування → Магазини**, щоб навести лад: натисніть **Вибрати**, позначте варіанти і **Об'єднати** їх в одну назву. Застосунок також пропонує ймовірні групи (наприклад, кілька записів *Biedronka*), які можна об'єднати одним натисненням — тоді вони рахуватимуться як один продавець на цих діаграмах.
 
+### За учасниками
+
+- Хто записав яку частину витрат за вибраний період.
+- З’являється лише в спільних рахунках, де витрати є щонайменше у двох учасників.
+
 ### За тегами / За проєктами
 
 - **Розподіл за тегами** — витрати, згруповані за вашими тегами
@@ -17047,6 +17062,11 @@ Kazda karta wnioskow ma poziom waznosci: krytyczny (czerwony), ostrzezenie (zolt
 
 Jeśli ten sam sklep pojawia się pod kilkoma nazwami, otwórz **Ustawienia → Sprzedawcy**, aby je uporządkować: kliknij **Wybierz**, zaznacz warianty i **Scal** je w jedną nazwę. Aplikacja sugeruje też prawdopodobne grupy (na przykład kilka wpisów *Biedronka*), które możesz scalić jednym dotknięciem — dzięki temu będą liczone jako jeden sprzedawca na tych wykresach.
 
+### Według członków
+
+- Kto zapisał jaką część wydatków w wybranym okresie.
+- Pojawia się tylko na kontach wspólnych, gdzie co najmniej dwóch członków ma wydatki.
+
 ### Wedlug tagow / Wedlug projektow
 
 - **Podzial tagow** — wydatki pogrupowane wedlug Twoich niestandardowych tagow
@@ -22321,6 +22341,11 @@ Jede Einblickkarte hat einen Schweregrad: Kritisch (rot), Warnung (gelb) oder In
 
 Wenn dasselbe Geschäft unter verschiedenen Namen erscheint, öffne **Einstellungen → Händler**, um sie zu bereinigen: Tippe auf **Auswählen**, markiere die Varianten und **Zusammenführen** zu einem Namen. Die App schlägt auch mögliche Gruppen vor (zum Beispiel mehrere *Biedronka*-Einträge), die du mit einem einzigen Tippen zusammenführen kannst — damit gelten sie in diesen Diagrammen als ein einziger Händler.
 
+### Nach Mitgliedern
+
+- Wer im gewählten Zeitraum wie viel der Ausgaben erfasst hat.
+- Erscheint nur bei geteilten Konten mit mindestens zwei Mitgliedern mit Ausgaben.
+
 ### Nach Tags / Nach Projekten
 
 - **Tag-Ubersicht** — Ausgaben gruppiert nach deinen benutzerdefinierten Tags
@@ -27570,6 +27595,11 @@ Cada tarjeta de informacion tiene un nivel de severidad: critico (rojo), adverte
 
 Si la misma tienda aparece con varios nombres, abre **Ajustes → Comerciantes** para ordenarlos: toca **Seleccionar**, marca las variantes y **Combinar** en un solo nombre. La app también sugiere grupos probables (por ejemplo varias entradas de *Biedronka*) que puedes combinar con un solo toque, de modo que cuenten como un único comerciante en estos gráficos.
 
+### Por miembro
+
+- Quién registró cuánto del gasto en el período seleccionado.
+- Solo aparece en cuentas compartidas con al menos dos miembros con gastos.
+
 ### Por etiquetas / Por proyectos
 
 - **Desglose por etiquetas** — gasto agrupado por tus etiquetas personalizadas
@@ -32808,6 +32838,11 @@ Chaque carte d'apercu a un niveau de gravite : critique (rouge), avertissement (
 
 Si le même magasin apparaît sous plusieurs noms, ouvrez **Paramètres → Marchands** pour les réorganiser : appuyez sur **Sélectionner**, cochez les variantes et **Fusionner** en un seul nom. L'application suggère également des groupes probables (par exemple plusieurs entrées *Biedronka*) que vous pouvez fusionner en un seul appui — afin qu'ils comptent comme un seul marchand dans ces graphiques.
 
+### Par membre
+
+- Qui a saisi quelle part des dépenses sur la période choisie.
+- N'apparaît que sur les comptes partagés avec au moins deux membres ayant des dépenses.
+
 ### Par etiquettes / Par projets
 
 - **Repartition par etiquettes** — depenses groupees par vos etiquettes personnalisees
@@ -38044,6 +38079,11 @@ iOS, Android, Web
 
 Калі адна і тая ж крама сустракаецца пад некалькімі назвамі, адкрыйце **Налады → Крамы**, каб навесці парадак: націсніце **Выбраць**, адзначце варыянты і **Аб'яднаць** іх у адну назву. Прыкладанне таксама прапануе верагодныя групы (напрыклад, некалькі запісаў *Biedronka*), якія можна аб'яднаць адным дотыкам — тады яны будуць лічыцца адным прадаўцом на гэтых дыяграмах.
 
+### Па ўдзельніках
+
+- Хто запісаў якую частку выдаткаў за выбраны перыяд.
+- З’яўляецца толькі ў агульных рахунках, дзе выдаткі ёсць мінімум у двух удзельнікаў.
+
 ### Па тэгах / Па праектах
 
 - **Разбіўка па тэгах** — выдаткі, згрупаваныя па вашых карыстальніцкіх тэгах
@@ -43243,6 +43283,11 @@ Elke inzichtkaart heeft een ernst: kritiek (rood), waarschuwing (geel) of info (
 - Verschijnt alleen wanneer minstens één uitgave een verkoperwaarde heeft
 
 Als dezelfde winkel onder meerdere namen voorkomt, open dan **Instellingen → Verkopers** om ze op te ruimen: tik op **Selecteren**, vink de varianten aan en **Samenvoegen** tot één naam. De app stelt ook waarschijnlijke groepen voor (bijvoorbeeld meerdere *Biedronka*-vermeldingen) die je met één tik kunt samenvoegen — zodat ze als één verkoper tellen in deze grafieken.
+
+### Per lid
+
+- Wie hoeveel van de uitgaven in de gekozen periode heeft vastgelegd.
+- Verschijnt alleen bij gedeelde rekeningen met minstens twee leden met uitgaven.
 
 ### Per tag / Per project
 

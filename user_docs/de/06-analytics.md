@@ -80,6 +80,11 @@ Jede Einblickkarte hat einen Schweregrad: Kritisch (rot), Warnung (gelb) oder In
 
 Wenn dasselbe Geschäft unter verschiedenen Namen erscheint, öffne **Einstellungen → Händler**, um sie zu bereinigen: Tippe auf **Auswählen**, markiere die Varianten und **Zusammenführen** zu einem Namen. Die App schlägt auch mögliche Gruppen vor (zum Beispiel mehrere *Biedronka*-Einträge), die du mit einem einzigen Tippen zusammenführen kannst — damit gelten sie in diesen Diagrammen als ein einziger Händler.
 
+### Nach Mitgliedern
+
+- Wer im gewählten Zeitraum wie viel der Ausgaben erfasst hat.
+- Erscheint nur bei geteilten Konten mit mindestens zwei Mitgliedern mit Ausgaben.
+
 ### Nach Tags / Nach Projekten
 
 - **Tag-Ubersicht** — Ausgaben gruppiert nach deinen benutzerdefinierten Tags

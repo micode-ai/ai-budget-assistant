@@ -80,6 +80,11 @@ Elke inzichtkaart heeft een ernst: kritiek (rood), waarschuwing (geel) of info (
 
 Als dezelfde winkel onder meerdere namen voorkomt, open dan **Instellingen → Verkopers** om ze op te ruimen: tik op **Selecteren**, vink de varianten aan en **Samenvoegen** tot één naam. De app stelt ook waarschijnlijke groepen voor (bijvoorbeeld meerdere *Biedronka*-vermeldingen) die je met één tik kunt samenvoegen — zodat ze als één verkoper tellen in deze grafieken.
 
+### Per lid
+
+- Wie hoeveel van de uitgaven in de gekozen periode heeft vastgelegd.
+- Verschijnt alleen bij gedeelde rekeningen met minstens twee leden met uitgaven.
+
 ### Per tag / Per project
 
 - **Taguitsplitsing** — uitgaven gegroepeerd op je aangepaste tags

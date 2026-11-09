@@ -80,6 +80,11 @@ Kazda karta wnioskow ma poziom waznosci: krytyczny (czerwony), ostrzezenie (zolt
 
 Jeśli ten sam sklep pojawia się pod kilkoma nazwami, otwórz **Ustawienia → Sprzedawcy**, aby je uporządkować: kliknij **Wybierz**, zaznacz warianty i **Scal** je w jedną nazwę. Aplikacja sugeruje też prawdopodobne grupy (na przykład kilka wpisów *Biedronka*), które możesz scalić jednym dotknięciem — dzięki temu będą liczone jako jeden sprzedawca na tych wykresach.
 
+### Według członków
+
+- Kto zapisał jaką część wydatków w wybranym okresie.
+- Pojawia się tylko na kontach wspólnych, gdzie co najmniej dwóch członków ma wydatki.
+
 ### Wedlug tagow / Wedlug projektow
 
 - **Podzial tagow** — wydatki pogrupowane wedlug Twoich niestandardowych tagow

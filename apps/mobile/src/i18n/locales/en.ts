@@ -372,6 +372,8 @@ export default {
     savingsDetailDepositNote: "What you paid at checkout for returnable packaging — not a refund; returned bottles and cans aren't tracked.",
     byMerchant: 'By Merchants',
     merchantOther: 'Other',
+    byMember: 'By Member',
+    memberUnknown: 'Unknown',
     byTag: 'By Tags',
     byProject: 'By Projects',
     byIncomeCategory: 'Income by Category',

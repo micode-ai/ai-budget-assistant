@@ -374,6 +374,8 @@ export default {
     savingsDetailDepositNote: 'To, co zapłaciłeś przy kasie za opakowania zwrotne — to nie zwrot; zwrócone butelki i puszki nie są śledzone.',
     byMerchant: 'Według sprzedawców',
     merchantOther: 'Inne',
+    byMember: 'Według członków',
+    memberUnknown: 'Nieznany',
     byTag: 'Według tagów',
     byProject: 'Według projektów',
     byIncomeCategory: 'Przychody według kategorii',

@@ -39,7 +39,7 @@ export function useAnalyticsScreenData() {
     selectedRange !== 'week' ? selectedMonth : undefined,
     selectedYear,
   );
-  const { dailySpending, categorySpending, merchantSpending, incomeByCategory, summary, itemBreakdown, dayOfWeekSpending, periodComparison, anomalies, predictions, dateRange, tagSpending, projectSpending } = analytics;
+  const { dailySpending, categorySpending, merchantSpending, memberSpending, incomeByCategory, summary, itemBreakdown, dayOfWeekSpending, periodComparison, anomalies, predictions, dateRange, tagSpending, projectSpending } = analytics;
 
   const { aiInsights, aiInsightsProGated, loadAIInsights } = useInsightsStore();
   const { loadRates } = useExchangeRateStore();
@@ -117,6 +117,7 @@ export function useAnalyticsScreenData() {
     dailySpending,
     categorySpending,
     merchantSpending,
+    memberSpending,
     incomeByCategory,
     summary,
     itemBreakdown,

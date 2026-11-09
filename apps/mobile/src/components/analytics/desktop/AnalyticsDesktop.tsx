@@ -95,6 +95,7 @@ export function AnalyticsDesktop() {
     dailySpending,
     categorySpending,
     merchantSpending,
+    memberSpending,
     incomeByCategory,
     summary,
     itemBreakdown,
@@ -193,6 +194,7 @@ export function AnalyticsDesktop() {
                 currency={currency}
                 categorySpending={categorySpending}
                 merchantSpending={merchantSpending}
+                memberSpending={memberSpending}
                 tagSpending={tagSpending}
                 projectSpending={projectSpending}
                 incomeByCategory={incomeByCategory}

@@ -372,6 +372,8 @@ export default {
     savingsDetailDepositNote: 'Ce que vous avez payé en caisse pour des emballages consignés — pas un remboursement ; les bouteilles et canettes rendues ne sont pas suivies.',
     byMerchant: 'Par marchands',
     merchantOther: 'Autres',
+    byMember: 'Par membre',
+    memberUnknown: 'Inconnu',
     byTag: 'Par tags',
     byProject: 'Par projets',
     byIncomeCategory: 'Revenus par catégorie',

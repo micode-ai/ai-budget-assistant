@@ -374,6 +374,8 @@ export default {
     savingsDetailDepositNote: 'То, что вы заплатили на кассе за тару, — это не возврат; сданная тара нигде не отслеживается.',
     byMerchant: 'По магазинам',
     merchantOther: 'Другие',
+    byMember: 'По участникам',
+    memberUnknown: 'Неизвестно',
     byTag: 'По тегам',
     byProject: 'По проектам',
     byIncomeCategory: 'Доходы по категориям',

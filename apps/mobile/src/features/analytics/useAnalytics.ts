@@ -6,6 +6,7 @@ import { useFilteredTransactions } from './useFilteredTransactions';
 import { useDailySpending } from './useDailySpending';
 import { useCategoryAnalytics } from './useCategoryAnalytics';
 import { useMerchantAnalytics } from './useMerchantAnalytics';
+import { useMemberAnalytics } from './useMemberAnalytics';
 import { useIncomeAnalytics } from './useIncomeAnalytics';
 import { useSummaryAnalytics } from './useSummaryAnalytics';
 import { useBudgetComparison } from './useBudgetComparison';
@@ -132,6 +133,14 @@ export interface MerchantSpending {
   color: string;
 }
 
+export interface MemberSpending {
+  userId: string | null;
+  name: string;
+  amount: number;
+  percentage: number;
+  color: string;
+}
+
 export interface IncomeCategorySpending {
   categoryId: string | null;
   name: string;
@@ -164,6 +173,7 @@ export function useAnalytics(
   const { dailySpending } = useDailySpending(timeRange, currencyCode, selectedMonth, selectedYear);
   const { categorySpending } = useCategoryAnalytics(timeRange, currencyCode, selectedMonth, selectedYear);
   const { merchantSpending } = useMerchantAnalytics(timeRange, currencyCode, selectedMonth, selectedYear);
+  const { memberSpending } = useMemberAnalytics(timeRange, currencyCode, selectedMonth, selectedYear);
   const { incomeByCategory } = useIncomeAnalytics(timeRange, currencyCode, selectedMonth, selectedYear);
   const { summary } = useSummaryAnalytics(timeRange, currencyCode, selectedMonth, selectedYear);
   const { budgetComparison } = useBudgetComparison(timeRange, currencyCode, selectedMonth, selectedYear);
@@ -179,6 +189,7 @@ export function useAnalytics(
     dailySpending,
     categorySpending,
     merchantSpending,
+    memberSpending,
     incomeByCategory,
     summary,
     dateRange,

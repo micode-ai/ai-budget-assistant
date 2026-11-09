@@ -372,6 +372,8 @@ export default {
     savingsDetailDepositNote: 'Lo que pagaste en caja por envases retornables — no es un reembolso; los envases devueltos no se registran.',
     byMerchant: 'Por comerciantes',
     merchantOther: 'Otros',
+    byMember: 'Por miembro',
+    memberUnknown: 'Desconocido',
     byTag: 'Por etiquetas',
     byProject: 'Por proyectos',
     byIncomeCategory: 'Ingresos por categoría',
