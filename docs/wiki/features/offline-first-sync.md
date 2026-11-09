@@ -96,6 +96,7 @@ The pure rule is `features/syncStatus/pendingSyncSummary.ts`. Tap offers "Sync n
 
 - **The `sync_queue` table is declared but unused** — never count it; `sync_status` is the real marker.
 - Failed (`error`) rows show at once; `pending` rows only after 5 minutes, so brief offline stays quiet.
+- **Soft-deleted rows are never counted** (`is_deleted = 0` in `loadPendingRows`). A delete is sent once at delete time and its row is never marked synced afterwards, while the push loops skip `isDeleted` rows, so every deleted row stays `pending` forever — counting them showed "Waiting to sync: 52" right after a successful sync ([ABA-729](https://github.com/micode-ai/ai-budget-assistant/issues/766)). The count must equal what a sync would upload. Known gap: a delete that failed offline is never retried, and the chip cannot tell it from one that succeeded.
 - Web renders nothing: the SQLite mock returns no rows. Contract: `docs/contracts/pending-sync-status-indicator.md`.
 
 ## Known gaps
