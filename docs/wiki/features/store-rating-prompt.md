@@ -61,6 +61,15 @@ settled bill split precisely so the two asks never stack on one success.
   distinguish a completed share from a dismissed sheet — so that path can ask after a non-share.
 - Nothing coordinates this prompt with the invite nudge and the What's New spotlight beyond their
   being on different paths.
+- **The trigger is too narrow to move the review count (checked 2026-11-09).** Shipped in 1.24.0
+  (2026-09-03); no new Play review since 2026-08-25. Only a receipt-scan "Done" (or a Wrapped share)
+  can ask, and from 1.24.0 to 2026-11-09 only 10 users saved a scanned receipt (7 of them with 5+
+  transactions, the team's own accounts included) against 40 who logged anything — so at most a
+  handful of asks, each of which Play may drop for quota or for a user who already rated. Most
+  users never reach the path: manual entry is the most common way in (see the admin Activation page).
+- `requestStoreReview` calls `StoreReview.hasAction()` without `await`; it is async in
+  expo-store-review 9, so the check reads a Promise and never blocks. Harmless today (the
+  `isAvailableAsync` check before it does the real gating) but it is not doing what it says.
 
 ## History
 
