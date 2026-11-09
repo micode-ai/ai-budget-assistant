@@ -301,6 +301,7 @@ Newest last within each section.
 - 2026-11-09 · [ABA-736](https://github.com/micode-ai/ai-budget-assistant/issues/774) — the chat steers a user with no transactions to logging the first expense right in the chat (`UserContext.hasAnyTransactions`, dynamic-suffix instruction); 8 of 65 never-activated users had tried the chat; `features/chat-architecture.md`.
 - 2026-11-09 · [ABA-737](https://github.com/micode-ai/ai-budget-assistant/issues/775) — one push (17:00 UTC) to users 24–48 h after signup with no transaction, gated by `notifyTrackingGap`, tap opens the receipt scanner; send-once by a one-period window, no table; e-mail follow-up deferred (no consent mechanism); `features/gamification.md`.
 - 2026-11-09 · [ABA-738](https://github.com/micode-ai/ai-budget-assistant/issues/776) — one onboarding e-mail at 72–96 h for users with nothing logged, opt-out via `User.onboardingEmailsEnabled` and a signed one-click unsubscribe (body link + RFC 8058 headers); `features/gamification.md`.
+- 2026-11-09 · [ABA-739](https://github.com/micode-ai/ai-budget-assistant/issues/777) — blog titles rewritten to searched intent (8 Polish "jak pobrać wyciąg z <bank>" articles, family budget, EN Black Friday) and Play short descriptions led by the receipt scanner; GSC showed position ~8 at 0.6% CTR; `features/marketing-site.md`.
 
 ## Queries
 

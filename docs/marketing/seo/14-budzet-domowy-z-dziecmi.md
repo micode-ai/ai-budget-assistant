@@ -1,14 +1,14 @@
 ---
-title: "Budżet domowy z dziećmi, który się spina"
-meta_description: "Jak prowadzić budżet domowy z dziećmi, gdy koszty są nieregularne. Wspólny widok dla obojga rodziców, fundusze celowe i nauka dzieci o pieniądzach."
-target_keyword: "budżet domowy z dziećmi"
+title: "Budżet domowy z dziećmi: przykład dla rodziny 4-osobowej"
+meta_description: "Jak zaplanować budżet rodziny z dziećmi: przykładowy budżet 4-osobowej rodziny w złotych, fundusze celowe na nieregularne koszty i wspólny widok."
+target_keyword: "budżet rodziny 4-osobowej"
 slug: "budzet-domowy-z-dziecmi"
 pair: "family"
 lang: "pl"
 date: "2026-06-27"
 ---
 
-# Budżet domowy z dziećmi, który naprawdę się spina
+# Budżet domowy z dziećmi: przykład dla rodziny 4-osobowej
 
 **Jak zaplanować budżet rodziny z dziećmi?** Zacznij od dochodu netto, odejmij koszty stałe, a resztę podziel na życie na co dzień, nieregularne wydatki dzieci odkładane co miesiąc w funduszach celowych, oszczędności i niewielki bufor. Poniżej przykładowy budżet 4-osobowej rodziny w złotych, z założeniami, który możesz przeliczyć na własne liczby.
 

@@ -18,7 +18,7 @@ AI Budget & Expense Tracker
 
 **Short (≤80):**
 ```
-Expense tracker and shared family budget with AI - scan receipts.
+Receipt scanner and expense tracker: AI reads receipts and builds your budget.
 ```
 
 **Full (≤4000):**
@@ -77,7 +77,7 @@ AI Budget: учёт расходов
 
 **Short (≤80):**
 ```
-Учёт расходов и общий семейный бюджет с AI: сканируй чеки.
+Сканер чеков и учёт расходов: AI читает чек и сам считает бюджет.
 ```
 
 **Full (≤4000):**
@@ -136,12 +136,18 @@ AI Budżet: kontrola wydatków
 
 **Short (≤80):**
 ```
-Budżet domowy, kontrola wydatków i wspólny budżet z AI: skanuj paragony.
+Skaner paragonów i kontrola wydatków: AI czyta paragon i liczy budżet.
 ```
 
 **Full (≤4000):**
 ```
 Pieniądze pod kontrolą — bez nudnej roboty. AI Budget Assistant łączy wydatki, budżety, cele, długi, subskrypcje i import z banku w jednej aplikacji, a AI robi za Ciebie żmudne rzeczy. Prowadź finanse sam lub razem z rodziną, na żywo.
+
+SKANER PARAGONÓW, KTÓRY NAPRAWDĘ CZYTA
+• Zrób zdjęcie paragonu — AI odczyta kwotę, datę i sprzedawcę
+• Pozycje z paragonu trafiają do kategorii same, bez przepisywania
+• Paragony z Biedronki, Lidla czy Żabki rozbijane na kategorie automatycznie
+• Historia cen produktów: zobacz, gdzie ten sam towar jest tańszy
 
 Po prostu porozmawiaj ze swoimi pieniędzmi:
 „Ile wydałem na zakupy?" — odpowiedź w kilka sekund.
@@ -195,7 +201,7 @@ AI Budget: облік витрат
 
 **Short (≤80):**
 ```
-Облік витрат і спільний сімейний бюджет з AI: скануй чеки.
+Сканер чеків і облік витрат: AI читає чек і сам рахує бюджет.
 ```
 
 **Full (≤4000):**
@@ -431,7 +437,7 @@ AI Budget Assistant
 
 **Short (≤80):**
 ```
-Улік выдаткаў і агульны сямейны бюджэт з AI: сканаваць чэкі.
+Сканер чэкаў і ўлік выдаткаў: AI чытае чэк і сам лічыць бюджэт.
 ```
 
 **Full (≤4000):**

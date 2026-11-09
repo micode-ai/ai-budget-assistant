@@ -1,14 +1,14 @@
 ---
-title: "Import wyciągu PDF z Erste Bank Polska do budżetu"
-meta_description: "Jak zaimportować wyciąg PDF z Erste Bank Polska do aplikacji budżetowej: pobranie wyciągu, import, kolumny wpływy i wydatki, kategorie i brak duplikatów."
-target_keyword: "import wyciągu erste bank pdf"
+title: "Jak pobrać wyciąg z Erste Banku (PDF) i dodać go do budżetu"
+meta_description: "Jak pobrać wyciąg z Erste Bank Polska w PDF krok po kroku i zaimportować go do aplikacji budżetowej: kategorie, wpływy i wydatki, bez duplikatów."
+target_keyword: "jak pobrać wyciąg z erste"
 slug: "import-wyciagu-erste-bank"
 pair: "import-erste"
 lang: "pl"
 date: "2026-10-07"
 ---
 
-# Import wyciągu PDF z Erste Bank Polska do budżetu
+# Jak pobrać wyciąg z Erste Banku (PDF) i dodać go do budżetu
 
 Aby zaimportować wyciąg z Erste Bank Polska, pobierz wyciąg w formacie PDF z bankowości internetowej, a w AI Budget Assistant wybierz Ustawienia → Importuj transakcje → Erste Bank (PDF) i wskaż plik. Aplikacja odczyta tabelę z kolumnami wpływy i wydatki, podpowie kategorie i odznaczy transakcje, które już masz.
 

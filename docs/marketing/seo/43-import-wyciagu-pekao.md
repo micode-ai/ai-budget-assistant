@@ -1,14 +1,14 @@
 ---
-title: "Import wyciągu z Banku Pekao do budżetu"
-meta_description: "Jak zaimportować historię z Banku Pekao (CSV) do aplikacji budżetowej: eksport, import z autorozpoznaniem, odczyt kolumn i ochrona przed duplikatami."
-target_keyword: "import wyciągu pekao"
+title: "Jak pobrać wyciąg z Pekao (CSV) i dodać go do budżetu"
+meta_description: "Jak pobrać historię i wyciąg z Banku Pekao w CSV i zaimportować go do aplikacji budżetowej: autorozpoznanie, odczyt kolumn, bez duplikatów."
+target_keyword: "jak pobrać wyciąg z pekao"
 slug: "import-wyciagu-pekao"
 pair: "import-pekao"
 lang: "pl"
 date: "2026-10-07"
 ---
 
-# Import wyciągu z Banku Pekao do budżetu
+# Jak pobrać wyciąg z Pekao (CSV) i dodać go do budżetu
 
 Aby zaimportować historię z Banku Pekao, pobierz operacje z bankowości internetowej do pliku CSV, a w AI Budget Assistant wybierz Ustawienia → Importuj transakcje → Rozpoznaj automatycznie (dowolny bank). Aplikacja spróbuje rozpoznać układ Pekao, a w razie niepowodzenia odczyta kolumny z pomocą AI albo pozwoli je wskazać ręcznie.
 

@@ -404,7 +404,7 @@ Kiedy zauważasz regularne luki w zapisach, kiedy druga osoba w budżecie przest
 
 *Powiązane artykuły: [Kontrola wydatków: aplikacja, która robi to za ciebie](/blog/pl/kontrola-wydatkow-aplikacja/) | [Najlepsze aplikacje do budżetu w 2026 roku](/blog/pl/najlepsze-aplikacje-do-budzetu/) | [Jak zaimportować wyciąg bankowy do budżetu](/blog/pl/jak-zaimportowac-wyciag-bankowy/)*
 
-## Budżet domowy z dziećmi, który się spina
+## Budżet domowy z dziećmi: przykład dla rodziny 4-osobowej
 URL: https://ai-budget.pl/blog/pl/budzet-domowy-z-dziecmi/
 
 **Jak zaplanować budżet rodziny z dziećmi?** Zacznij od dochodu netto, odejmij koszty stałe, a resztę podziel na życie na co dzień, nieregularne wydatki dzieci odkładane co miesiąc w funduszach celowych, oszczędności i niewielki bufor. Poniżej przykładowy budżet 4-osobowej rodziny w złotych, z założeniami, który możesz przeliczyć na własne liczby.
@@ -847,7 +847,7 @@ Po. Pokazanie cennika, zanim ktoś zobaczył, jak aplikacja radzi sobie z jego w
 
 *Powiązane artykuły: [Kontrola wydatków bez ręcznego wpisywania wszystkiego](/blog/pl/kontrola-wydatkow-aplikacja/) | [Najlepsze aplikacje do budżetu w 2026 roku](/blog/pl/najlepsze-aplikacje-do-budzetu/) | [Jak AI pomaga w zarządzaniu finansami](/blog/pl/ai-w-zarzadzaniu-finansami/)*
 
-## Import wyciągu PDF z Alior Banku do budżetu
+## Jak pobrać wyciąg z Alior Banku (PDF) i dodać go do budżetu
 URL: https://ai-budget.pl/blog/pl/import-wyciagu-alior-bank/
 
 Aby zaimportować wyciąg z Alior Banku, pobierz z bankowości internetowej wyciąg z rachunku w formacie PDF, a w AI Budget Assistant wybierz Ustawienia → Importuj transakcje → Alior Bank (PDF) i wskaż plik. Aplikacja odczyta tekst z PDF, wyciągnie operacje, podpowie kategorie i odznaczy to, co już masz.
@@ -911,7 +911,7 @@ Z linii pod operacją na wyciągu, w której Alior drukuje kontrahenta lub lokal
 
 Tak, w historii importów na dole ekranu importu, przez 30 dni od importu.
 
-## Import wyciągu PDF z Erste Bank Polska do budżetu
+## Jak pobrać wyciąg z Erste Banku (PDF) i dodać go do budżetu
 URL: https://ai-budget.pl/blog/pl/import-wyciagu-erste-bank/
 
 Aby zaimportować wyciąg z Erste Bank Polska, pobierz wyciąg w formacie PDF z bankowości internetowej, a w AI Budget Assistant wybierz Ustawienia → Importuj transakcje → Erste Bank (PDF) i wskaż plik. Aplikacja odczyta tabelę z kolumnami wpływy i wydatki, podpowie kategorie i odznaczy transakcje, które już masz.
@@ -976,7 +976,7 @@ Z opisu operacji, z fragmentu po słowach „PŁATNOŚĆ KARTĄ”, kwocie i wal
 
 Tak, w historii importów na dole ekranu importu, przez 30 dni od importu.
 
-## Import wyciągu z ING Banku Śląskiego do budżetu
+## Jak pobrać wyciąg z ING (CSV) i dodać go do budżetu
 URL: https://ai-budget.pl/blog/pl/import-wyciagu-ing/
 
 Aby zaimportować historię z ING Banku Śląskiego, pobierz operacje z bankowości internetowej w formacie CSV, a w AI Budget Assistant wybierz Ustawienia → Importuj transakcje → Rozpoznaj automatycznie (dowolny bank). Aplikacja spróbuje rozpoznać układ pliku ING, a gdy się nie uda, odczyta kolumny z pomocą AI lub zapyta cię o nie.
@@ -1040,7 +1040,7 @@ Nie przez dedykowany czytnik, bo ten działa na CSV. Wyciąg PDF z nierozpoznane
 
 Tak, w historii importów na dole ekranu importu, przez 30 dni. Po cofnięciu możesz zaimportować plik ponownie.
 
-## Import wyciągu mBank do aplikacji budżetowej
+## Jak pobrać wyciąg z mBanku (CSV) i dodać go do budżetu
 URL: https://ai-budget.pl/blog/pl/import-wyciagu-mbank/
 
 Aby zaimportować wyciąg z mBanku, wyeksportuj historię operacji do pliku CSV w bankowości internetowej, a w AI Budget Assistant wybierz Ustawienia → Importuj transakcje → mBank i wskaż plik. Aplikacja pominie nagłówek banku, odczyta operacje, podpowie kategorie i odznaczy transakcje, które już masz.
@@ -1108,7 +1108,7 @@ Pomijane są wiersze bez rozpoznawalnej daty lub kwoty, na przykład stopka z in
 
 Tak, przez 30 dni od importu, w historii importów na dole ekranu importu. Cofnięcie usuwa transakcje z tego importu i pozwala wgrać plik ponownie.
 
-## Import wyciągu z Banku Millennium do budżetu
+## Jak pobrać wyciąg z Millennium (CSV) i dodać go do budżetu
 URL: https://ai-budget.pl/blog/pl/import-wyciagu-millennium/
 
 Aby zaimportować historię z Banku Millennium, pobierz operacje z bankowości internetowej do pliku CSV, a w AI Budget Assistant wybierz Ustawienia → Importuj transakcje → Rozpoznaj automatycznie (dowolny bank). Aplikacja rozpozna układ z kolumnami Obciążenie i Uznanie albo, gdy to się nie uda, odczyta kolumny z pomocą AI.
@@ -1172,7 +1172,7 @@ Dedykowany czytnik działa na CSV. PDF z nierozpoznanego banku może przeczytać
 
 Tak, w historii importów na dole ekranu importu, przez 30 dni. Potem możesz wgrać plik ponownie.
 
-## Import wyciągu z Banku Pekao do budżetu
+## Jak pobrać wyciąg z Pekao (CSV) i dodać go do budżetu
 URL: https://ai-budget.pl/blog/pl/import-wyciagu-pekao/
 
 Aby zaimportować historię z Banku Pekao, pobierz operacje z bankowości internetowej do pliku CSV, a w AI Budget Assistant wybierz Ustawienia → Importuj transakcje → Rozpoznaj automatycznie (dowolny bank). Aplikacja spróbuje rozpoznać układ Pekao, a w razie niepowodzenia odczyta kolumny z pomocą AI albo pozwoli je wskazać ręcznie.
@@ -1236,7 +1236,7 @@ Dedykowany czytnik działa na CSV. PDF z nierozpoznanego banku może odczytać A
 
 Tak, w historii importów na dole ekranu importu, przez 30 dni od importu.
 
-## Eksport historii z PKO BP do CSV i import do budżetu
+## Jak pobrać wyciąg z iPKO (CSV) i dodać go do budżetu
 URL: https://ai-budget.pl/blog/pl/import-wyciagu-pko-bp/
 
 Aby zaimportować historię z PKO BP, wyeksportuj operacje z bankowości internetowej do pliku CSV, a w AI Budget Assistant wybierz Ustawienia → Importuj transakcje → PKO BP i wskaż plik. Aplikacja odczyta kwoty ze znakiem, wyciągnie nazwy sklepów z płatności kartą, podpowie kategorie i pominie to, co już zaimportowałeś.
@@ -1298,7 +1298,7 @@ Nie powinien. Aplikacja porównuje datę, kwotę i walutę z istniejącymi wydat
 
 Tak, w historii importów na dole ekranu importu, przez 30 dni od importu. Po cofnięciu możesz wgrać ten sam plik jeszcze raz.
 
-## Import wyciągu z Revolut do aplikacji budżetowej
+## Jak pobrać wyciąg z Revolut (CSV) i dodać go do budżetu
 URL: https://ai-budget.pl/blog/pl/import-wyciagu-revolut/
 
 Aby zaimportować wyciąg z Revolut, wygeneruj w aplikacji Revolut wyciąg konta w formacie CSV, a w AI Budget Assistant wybierz Ustawienia → Importuj transakcje → Revolut i wskaż plik. Zobaczysz podgląd z kategoriami, odznaczone duplikaty i przewalutowania połączone w jedną wymianę. Całość trwa kilka minut.

@@ -1,14 +1,14 @@
 ---
-title: "Import wyciągu PDF z Alior Banku do budżetu"
-meta_description: "Jak zaimportować wyciąg PDF z Alior Banku do aplikacji budżetowej: pobranie wyciągu, import, kategorie i brak duplikatów przy ponownym imporcie."
-target_keyword: "import wyciągu alior bank pdf"
+title: "Jak pobrać wyciąg z Alior Banku (PDF) i dodać go do budżetu"
+meta_description: "Jak pobrać wyciąg z Alior Banku w PDF krok po kroku i zaimportować go do aplikacji budżetowej: kategorie i brak duplikatów przy ponownym imporcie."
+target_keyword: "jak pobrać wyciąg z alior"
 slug: "import-wyciagu-alior-bank"
 pair: "import-alior"
 lang: "pl"
 date: "2026-10-07"
 ---
 
-# Import wyciągu PDF z Alior Banku do budżetu
+# Jak pobrać wyciąg z Alior Banku (PDF) i dodać go do budżetu
 
 Aby zaimportować wyciąg z Alior Banku, pobierz z bankowości internetowej wyciąg z rachunku w formacie PDF, a w AI Budget Assistant wybierz Ustawienia → Importuj transakcje → Alior Bank (PDF) i wskaż plik. Aplikacja odczyta tekst z PDF, wyciągnie operacje, podpowie kategorie i odznaczy to, co już masz.
 

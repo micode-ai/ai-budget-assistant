@@ -1,14 +1,14 @@
 ---
-title: "Are Black Friday Deals Real? How to Check Before You Buy"
-meta_description: "Are Black Friday deals real? How to check a discount against the 30-day lowest price, a pre-sale checklist, and how to dodge free-trial traps."
-target_keyword: "black friday deals"
+title: "Black Friday Budget: Are the Deals Real? Check Before Buying"
+meta_description: "Set a Black Friday budget and check if a deal is real: compare against the 30-day lowest price, a pre-sale checklist, and how to dodge free-trial traps."
+target_keyword: "black friday budget"
 slug: "black-friday-deals-real"
 pair: "black-friday"
 lang: "en"
 date: "2026-10-02"
 ---
 
-# Are Black Friday Deals Real? How to Check Before You Buy
+# Black Friday Budget: Are the Deals Real? Check Before Buying
 
 **Short answer:** do not judge a deal by the percentage on the banner. Judge it by what you pay compared with the lowest price of the previous 30 days, and by whether it was on your list at all. Three steps: set a cap and a list of what you actually need before the sales start, check the price before the discount, and wait 24 hours on anything you feel like grabbing on impulse. The rest of this guide expands those three sentences.
 

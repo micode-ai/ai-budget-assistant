@@ -1,14 +1,14 @@
 ---
-title: "Import wyciągu z Banku Millennium do budżetu"
-meta_description: "Jak zaimportować historię z Banku Millennium (CSV) do aplikacji budżetowej: eksport, autorozpoznanie, kolumny Obciążenie i Uznanie, bez duplikatów."
-target_keyword: "import wyciągu millennium"
+title: "Jak pobrać wyciąg z Millennium (CSV) i dodać go do budżetu"
+meta_description: "Jak pobrać historię i wyciąg z Banku Millennium w CSV i zaimportować go do aplikacji budżetowej: kolumny Obciążenie i Uznanie, bez duplikatów."
+target_keyword: "jak pobrać wyciąg z millennium"
 slug: "import-wyciagu-millennium"
 pair: "import-millennium"
 lang: "pl"
 date: "2026-10-07"
 ---
 
-# Import wyciągu z Banku Millennium do budżetu
+# Jak pobrać wyciąg z Millennium (CSV) i dodać go do budżetu
 
 Aby zaimportować historię z Banku Millennium, pobierz operacje z bankowości internetowej do pliku CSV, a w AI Budget Assistant wybierz Ustawienia → Importuj transakcje → Rozpoznaj automatycznie (dowolny bank). Aplikacja rozpozna układ z kolumnami Obciążenie i Uznanie albo, gdy to się nie uda, odczyta kolumny z pomocą AI.
 

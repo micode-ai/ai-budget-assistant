@@ -1,14 +1,14 @@
 ---
-title: "Import wyciągu z ING Banku Śląskiego do budżetu"
-meta_description: "Jak zaimportować historię z ING Banku Śląskiego (CSV) do aplikacji budżetowej: eksport, import z autorozpoznaniem, podgląd i ochrona przed duplikatami."
-target_keyword: "import wyciągu ing"
+title: "Jak pobrać wyciąg z ING (CSV) i dodać go do budżetu"
+meta_description: "Jak pobrać historię i wyciąg z ING Banku Śląskiego w CSV i zaimportować go do aplikacji budżetowej: autorozpoznanie, podgląd, bez duplikatów."
+target_keyword: "jak pobrać wyciąg z ing"
 slug: "import-wyciagu-ing"
 pair: "import-ing"
 lang: "pl"
 date: "2026-10-07"
 ---
 
-# Import wyciągu z ING Banku Śląskiego do budżetu
+# Jak pobrać wyciąg z ING (CSV) i dodać go do budżetu
 
 Aby zaimportować historię z ING Banku Śląskiego, pobierz operacje z bankowości internetowej w formacie CSV, a w AI Budget Assistant wybierz Ustawienia → Importuj transakcje → Rozpoznaj automatycznie (dowolny bank). Aplikacja spróbuje rozpoznać układ pliku ING, a gdy się nie uda, odczyta kolumny z pomocą AI lub zapyta cię o nie.
 

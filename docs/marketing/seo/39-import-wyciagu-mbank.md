@@ -1,14 +1,14 @@
 ---
-title: "Import wyciągu mBank do aplikacji budżetowej"
-meta_description: "Jak zaimportować wyciąg CSV z mBanku do budżetu: eksport historii, import w aplikacji, podgląd z kategoriami i bezpieczny ponowny import bez duplikatów."
-target_keyword: "import wyciągu mbank"
+title: "Jak pobrać wyciąg z mBanku (CSV) i dodać go do budżetu"
+meta_description: "Jak pobrać historię i wyciąg z konta mBanku w CSV krok po kroku i zaimportować go do aplikacji budżetowej: podgląd z kategoriami, bez duplikatów."
+target_keyword: "jak pobrać wyciąg z mbanku"
 slug: "import-wyciagu-mbank"
 pair: "import-mbank"
 lang: "pl"
 date: "2026-10-07"
 ---
 
-# Import wyciągu z mBanku: CSV do budżetu krok po kroku
+# Jak pobrać wyciąg z mBanku (CSV) i dodać go do budżetu
 
 Aby zaimportować wyciąg z mBanku, wyeksportuj historię operacji do pliku CSV w bankowości internetowej, a w AI Budget Assistant wybierz Ustawienia → Importuj transakcje → mBank i wskaż plik. Aplikacja pominie nagłówek banku, odczyta operacje, podpowie kategorie i odznaczy transakcje, które już masz.
 

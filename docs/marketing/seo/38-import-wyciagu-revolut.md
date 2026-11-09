@@ -1,14 +1,14 @@
 ---
-title: "Import wyciągu z Revolut do aplikacji budżetowej"
-meta_description: "Jak zaimportować wyciąg CSV z Revolut do budżetu: eksport z aplikacji, podgląd, przewalutowania jako wymiana i brak duplikatów przy ponownym imporcie."
-target_keyword: "import wyciągu revolut"
+title: "Jak pobrać wyciąg z Revolut (CSV) i dodać go do budżetu"
+meta_description: "Gdzie w aplikacji Revolut pobrać wyciąg z konta w CSV i jak zaimportować go do budżetu: przewalutowania jako wymiana, bez duplikatów przy ponownym imporcie"
+target_keyword: "jak pobrać wyciąg z revolut"
 slug: "import-wyciagu-revolut"
 pair: "import-revolut"
 lang: "pl"
 date: "2026-10-07"
 ---
 
-# Import wyciągu z Revolut: CSV do budżetu w kilka minut
+# Jak pobrać wyciąg z Revolut (CSV) i dodać go do budżetu
 
 Aby zaimportować wyciąg z Revolut, wygeneruj w aplikacji Revolut wyciąg konta w formacie CSV, a w AI Budget Assistant wybierz Ustawienia → Importuj transakcje → Revolut i wskaż plik. Zobaczysz podgląd z kategoriami, odznaczone duplikaty i przewalutowania połączone w jedną wymianę. Całość trwa kilka minut.
 

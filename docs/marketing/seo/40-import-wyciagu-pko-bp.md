@@ -1,14 +1,14 @@
 ---
-title: "Eksport historii z PKO BP do CSV i import do budżetu"
-meta_description: "Eksport historii z PKO BP do CSV i import do aplikacji budżetowej: kroki, odczyt kolumn, sprzedawcy z płatności kartą i ochrona przed duplikatami."
-target_keyword: "eksport historii pko csv"
+title: "Jak pobrać wyciąg z iPKO (CSV) i dodać go do budżetu"
+meta_description: "Jak pobrać historię i wyciąg z konta PKO BP w iPKO jako CSV i wgrać go do aplikacji budżetowej: sprzedawcy z płatności kartą, bez duplikatów."
+target_keyword: "jak pobrać wyciąg z ipko"
 slug: "import-wyciagu-pko-bp"
 pair: "import-pko"
 lang: "pl"
 date: "2026-10-07"
 ---
 
-# Eksport historii z PKO BP do CSV i import do budżetu
+# Jak pobrać wyciąg z iPKO (CSV) i dodać go do budżetu
 
 Aby zaimportować historię z PKO BP, wyeksportuj operacje z bankowości internetowej do pliku CSV, a w AI Budget Assistant wybierz Ustawienia → Importuj transakcje → PKO BP i wskaż plik. Aplikacja odczyta kwoty ze znakiem, wyciągnie nazwy sklepów z płatności kartą, podpowie kategorie i pominie to, co już zaimportowałeś.
 
