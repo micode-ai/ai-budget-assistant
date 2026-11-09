@@ -149,6 +149,11 @@ registration, a policy omitting the data category being collected.
   across several users, within ONE session id (so not two tabs). Unexplained as of 2026-11-09. The
   desktop dashboard opens these flows as dialogs, which emit no `screen_view`, and the dashboard tab
   stays mounted under pushed screens; do not read a flow's last screen as where it was opened from.
+  **Ruled out in prod on 2026-11-09** (desktop, 1920 px, fetch hooked to log every sent event):
+  walking settings → profile → accounts → data emits screen views only; opening the dashboard's
+  expense dialog and leaving it with browser Back closes it (no hidden mount survives), and walking
+  settings afterwards and returning to the dashboard emits no further `started`. Still open: the
+  first-run `get-started` / `welcome` hosts and narrow-window layout switches.
 - **Verified against real rows (2026-10-18):** for one user, `completed` counts for `expense_manual`
   and `income_manual` equalled the expense and income rows actually saved, exactly — the once-per-mount
   guard holds in practice.
