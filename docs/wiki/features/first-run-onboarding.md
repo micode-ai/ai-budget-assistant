@@ -4,11 +4,14 @@
 
 ## What this is
 
-A brand-new user is routed once to a get-started screen — import the last three months of a
-statement, or scan a receipt, voice, manual entry, and on Android bank-notification capture — instead
-of landing on an empty dashboard. The import leads (ABA-643) because it shows value before effort:
-the post-import report ([bank-statement-import](bank-statement-import.md)) says where the money went
-and offers budgets and subscriptions on one tap. On web the same problem is solved as a dashboard
+A brand-new user is routed once to a get-started screen — scan a receipt, type an expense, import
+the last three months of a statement, voice, and on Android bank-notification capture — instead of
+landing on an empty dashboard. **What leads depends on the device ([ABA-735](https://github.com/micode-ai/ai-budget-assistant/issues/773)).** The
+phone and narrow web lead with a receipt scan, then manual entry: on a phone the statement file is
+rarely at hand, import was the first transaction for 2 users ever against 33 typed and 14 scanned,
+and scan-first users stayed longest. Desktop web keeps the import first (ABA-643): there the file is
+on the same machine, and the post-import report ([bank-statement-import](bank-statement-import.md))
+says where the money went and offers budgets and subscriptions on one tap. On web the same problem is solved as a dashboard
 state rather than a screen.
 
 ## Entry points
@@ -18,6 +21,8 @@ state rather than a screen.
 - `apps/mobile/src/hooks/useFirstRunOnboarding.ts`
 - `apps/mobile/app/get-started.tsx`
 - `apps/mobile/src/db/expenseRepository.ts` — `countTransactions`
+- `apps/mobile/src/features/onboarding/getStartedEntries.ts` — which entry leads and the order
+  (`lead`: `'scan'` on the phone, `'import'` from `GetStartedDesktop`)
 - `apps/mobile/src/components/onboarding/GetStartedMobile.tsx` — the entries; sets
   `importStore.origin` for the import
 - `apps/mobile/src/features/import/importExit.ts` — where an import started here ends
@@ -92,5 +97,5 @@ as `finish()`. Without it the user would land in Settings after their first impo
 
 ## History
 
-The feature · ABA-643 (import leads, origin hand-off to the post-import report) · ABA-507 (the web dashboard state, the setup checklist, and the route-to-dialog
+The feature · ABA-643 (import leads, origin hand-off to the post-import report) · [ABA-735](https://github.com/micode-ai/ai-budget-assistant/issues/773) (the phone leads with a receipt scan) · ABA-507 (the web dashboard state, the setup checklist, and the route-to-dialog
 table it shares with the dashboard).

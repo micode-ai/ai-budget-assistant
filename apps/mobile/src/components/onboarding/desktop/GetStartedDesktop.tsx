@@ -69,7 +69,7 @@ export function GetStartedDesktop() {
 
   return (
     <>
-      <GetStartedMobile ref={handleRef} onSelect={onSelect} />
+      <GetStartedMobile ref={handleRef} onSelect={onSelect} lead="import" />
 
       {dialog === 'expense' && (
         <CreateDialog kind="expense" initial={createPrefill ?? undefined} onClose={closeDialog} />

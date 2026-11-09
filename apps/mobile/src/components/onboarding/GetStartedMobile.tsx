@@ -10,34 +10,32 @@ import { useIncomeStore } from '@/stores/incomeStore';
 import { useImportStore } from '@/stores/importStore';
 import { ROUTE_IMPORT } from '@/features/dashboard/dashboardDialogs';
 import { startDemo } from '@/features/demo/demoSession';
+import {
+  resolveGetStartedEntries,
+  type GetStartedEntryId,
+  type GetStartedLead,
+} from '@/features/onboarding/getStartedEntries';
 import { useTheme, useStyles, type Theme } from '@/theme';
 
 type IconName = keyof typeof Ionicons.glyphMap;
 
-interface SecondaryOption {
+interface EntryDisplay {
   icon: IconName;
   labelKey: string;
   hintKey?: string;
-  route: string;
 }
 
-// The headline entry is the statement import (ABA-643): three months of history give an instant
-// report — where the money went, subscriptions, possible duplicates, suggested budgets — before the
-// user has typed anything. Receipt scanning stays one tap away as the first alternative.
-const SECONDARY_OPTIONS: SecondaryOption[] = [
-  { icon: 'receipt-outline', labelKey: 'onboarding.scanReceipt', hintKey: 'onboarding.scanReceiptHint', route: '/expense/receipt' },
-  { icon: 'mic-outline', labelKey: 'onboarding.useVoice', route: '/expense/voice' },
-  { icon: 'create-outline', labelKey: 'onboarding.typeManually', route: '/expense/new' },
+// How each entry looks. WHICH entry leads, and the order of the rest, is
+// `resolveGetStartedEntries` (ABA-735): a receipt scan on the phone, the
+// statement import (ABA-643) on desktop web.
+const ENTRY_DISPLAY: Record<GetStartedEntryId, EntryDisplay> = {
+  import: { icon: 'cloud-upload-outline', labelKey: 'onboarding.importStatement', hintKey: 'onboarding.importStatementHint' },
+  scan: { icon: 'receipt-outline', labelKey: 'onboarding.scanReceipt', hintKey: 'onboarding.scanReceiptHint' },
+  manual: { icon: 'create-outline', labelKey: 'onboarding.typeManually' },
+  voice: { icon: 'mic-outline', labelKey: 'onboarding.useVoice' },
   // Bank-notification capture exists only on Android (a NotificationListenerService).
-  ...(Platform.OS === 'android'
-    ? [{
-        icon: 'notifications-outline' as IconName,
-        labelKey: 'onboarding.autoCapture',
-        hintKey: 'onboarding.autoCaptureHint',
-        route: '/settings/auto-capture',
-      }]
-    : []),
-];
+  autoCapture: { icon: 'notifications-outline', labelKey: 'onboarding.autoCapture', hintKey: 'onboarding.autoCaptureHint' },
+};
 
 /**
  * Imperative escape hatch consumed ONLY by the desktop wrapper
@@ -66,10 +64,16 @@ interface GetStartedMobileProps {
    * screen from ever being shown to an established user again.
    */
   onSelect?: (route: string) => void;
+  /**
+   * Which entry leads (ABA-735). Defaults to `'scan'` - the phone and narrow
+   * web. The desktop wrapper passes `'import'`, where the statement file is on
+   * the same machine.
+   */
+  lead?: GetStartedLead;
 }
 
 export const GetStartedMobile = forwardRef<GetStartedHandle, GetStartedMobileProps>(
-  function GetStartedMobile({ onSelect }, ref) {
+  function GetStartedMobile({ onSelect, lead = 'scan' }, ref) {
     const { t } = useTranslation();
     const theme = useTheme();
     const styles = useStyles(createStyles);
@@ -141,6 +145,9 @@ export const GetStartedMobile = forwardRef<GetStartedHandle, GetStartedMobilePro
       }
     };
 
+    const { primary, secondary } = resolveGetStartedEntries(lead, Platform.OS === 'android');
+    const primaryDisplay = ENTRY_DISPLAY[primary.id];
+
     const goTo = (route: string) => {
       markSeen();
       // Lets the post-import report finish onboarding instead of returning to settings.
@@ -161,47 +168,46 @@ export const GetStartedMobile = forwardRef<GetStartedHandle, GetStartedMobilePro
             <Text style={styles.subheading}>{t('onboarding.subheading')}</Text>
           </View>
 
-          {/* Primary option — import the last three months of a bank statement */}
+          {/* Primary option - a receipt scan on the phone, the statement import on desktop */}
           <TouchableOpacity
             style={styles.primaryCard}
-            onPress={() => goTo(ROUTE_IMPORT)}
+            onPress={() => goTo(primary.route)}
             activeOpacity={0.85}
           >
             <View style={styles.primaryIconContainer}>
-              <Ionicons name="cloud-upload-outline" size={26} color={theme.colors.textInverse} />
+              <Ionicons name={primaryDisplay.icon} size={26} color={theme.colors.textInverse} />
             </View>
             <View style={styles.primaryContent}>
-              <Text style={styles.primaryLabel}>{t('onboarding.importStatement')}</Text>
-              <Text style={styles.primaryHint}>{t('onboarding.importStatementHint')}</Text>
+              <Text style={styles.primaryLabel}>{t(primaryDisplay.labelKey)}</Text>
+              {primaryDisplay.hintKey && <Text style={styles.primaryHint}>{t(primaryDisplay.hintKey)}</Text>}
             </View>
             <Ionicons name="chevron-forward" size={20} color={theme.colors.textInverse} />
           </TouchableOpacity>
 
           {/* Secondary options */}
           <View style={styles.card}>
-            {SECONDARY_OPTIONS.map((option, index) => (
-              <React.Fragment key={option.route}>
-                <TouchableOpacity
-                  style={styles.row}
-                  onPress={() => goTo(option.route)}
-                  activeOpacity={0.7}
-                >
-                  <View style={styles.rowIconContainer}>
-                    <Ionicons name={option.icon} size={20} color={theme.colors.primary} />
-                  </View>
-                  <View style={styles.rowContent}>
-                    <Text style={styles.rowLabel}>{t(option.labelKey)}</Text>
-                    {option.hintKey && (
-                      <Text style={styles.rowDescription} numberOfLines={1}>
-                        {t(option.hintKey)}
-                      </Text>
-                    )}
-                  </View>
-                  <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
-                </TouchableOpacity>
-                {index < SECONDARY_OPTIONS.length - 1 && <View style={styles.divider} />}
-              </React.Fragment>
-            ))}
+            {secondary.map((entry, index) => {
+              const option = ENTRY_DISPLAY[entry.id];
+              return (
+                <React.Fragment key={entry.route}>
+                  <TouchableOpacity style={styles.row} onPress={() => goTo(entry.route)} activeOpacity={0.7}>
+                    <View style={styles.rowIconContainer}>
+                      <Ionicons name={option.icon} size={20} color={theme.colors.primary} />
+                    </View>
+                    <View style={styles.rowContent}>
+                      <Text style={styles.rowLabel}>{t(option.labelKey)}</Text>
+                      {option.hintKey && (
+                        <Text style={styles.rowDescription} numberOfLines={1}>
+                          {t(option.hintKey)}
+                        </Text>
+                      )}
+                    </View>
+                    <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
+                  </TouchableOpacity>
+                  {index < secondary.length - 1 && <View style={styles.divider} />}
+                </React.Fragment>
+              );
+            })}
           </View>
 
           {showDemo && (

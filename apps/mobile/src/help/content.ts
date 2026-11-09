@@ -130,10 +130,10 @@ If you forgot your password:
 
 The first time you open the app with nothing tracked yet, you'll see a short screen asking **"Where would you like to start?"** — pick whichever is fastest for you:
 
-- **Import your last 3 months** (recommended) — upload a bank statement, or an export from Monefy, Wallet or Money Manager, and right after the import you get a report on where your money went, with suggested budgets and the subscriptions it found
 - **Scan a receipt** — snap a photo and the app reads the store, amount, and even individual line items for you
-- **Use your voice** — say what you spent, and the app fills in the details
 - **Type it manually** — enter your first expense yourself, step by step
+- **Import your last 3 months** (recommended on a computer) — upload a bank statement, or an export from Monefy, Wallet or Money Manager, and right after the import you get a report on where your money went, with suggested budgets and the subscriptions it found
+- **Use your voice** — say what you spent, and the app fills in the details
 - **Capture bank notifications** (Android) — expenses are added automatically from your bank app's alerts
 
 Tap **I'll do this later** if you'd rather explore first — you'll go straight to your dashboard. This screen appears only until you've added your first transaction; after that, it won't show up again.
@@ -5489,10 +5489,10 @@ iOS, Android, Web
 
 Когда вы впервые открываете приложение и ещё ничего не добавили, появится короткий экран с вопросом **«С чего хотите начать?»** — выберите то, что удобнее всего:
 
-- **Загрузите выписку за 3 месяца** (рекомендуем) — банковскую выписку или экспорт из Monefy, Wallet или Money Manager; сразу после импорта вы увидите отчёт, куда ушли деньги, с предложенными бюджетами и найденными подписками
 - **Сканировать чек** — сфотографируйте чек, и приложение само распознает магазин, сумму и даже отдельные позиции
-- **Использовать голос** — скажите, на что потратили, и приложение заполнит детали
 - **Ввести вручную** — введите первый расход сами, шаг за шагом
+- **Загрузите выписку за 3 месяца** (рекомендуем на компьютере) — банковскую выписку или экспорт из Monefy, Wallet или Money Manager; сразу после импорта вы увидите отчёт, куда ушли деньги, с предложенными бюджетами и найденными подписками
+- **Использовать голос** — скажите, на что потратили, и приложение заполнит детали
 - **Перехват уведомлений банка** (Android) — расходы добавляются сами из уведомлений банковского приложения
 
 Нажмите **Сделаю это позже**, если хотите сначала осмотреться — вы сразу попадёте на главный экран. Этот экран показывается только до тех пор, пока вы не добавите первую транзакцию — после этого он больше не появится.
@@ -10814,10 +10814,10 @@ iOS, Android, Web
 
 Коли ви вперше відкриваєте застосунок і ще нічого не додали, з'явиться короткий екран із запитанням **«З чого хочете почати?»** — оберіть варіант, який найзручніший саме для вас:
 
-- **Завантажте виписку за 3 місяці** (рекомендуємо) — банківську виписку або експорт з Monefy, Wallet чи Money Manager; одразу після імпорту ви побачите звіт, куди пішли гроші, із запропонованими бюджетами та знайденими підписками
 - **Сканувати чек** — сфотографуйте чек, і застосунок сам розпізнає магазин, суму й навіть окремі позиції
-- **Використати голос** — скажіть, на що витратили, і застосунок заповнить деталі
 - **Ввести вручну** — введіть першу витрату самі, крок за кроком
+- **Завантажте виписку за 3 місяці** (рекомендуємо на комп’ютері) — банківську виписку або експорт з Monefy, Wallet чи Money Manager; одразу після імпорту ви побачите звіт, куди пішли гроші, із запропонованими бюджетами та знайденими підписками
+- **Використати голос** — скажіть, на що витратили, і застосунок заповнить деталі
 - **Перехоплення сповіщень банку** (Android) — витрати додаються самі зі сповіщень банківського застосунку
 
 Натисніть **Зроблю це пізніше**, якщо хочете спершу роздивитися застосунок — ви одразу потрапите на головний екран. Цей екран з'являється лише доки ви не додасте першу транзакцію — після цього він більше не показуватиметься.
@@ -16109,10 +16109,10 @@ Jeśli zapomniałeś hasła:
 
 Gdy pierwszy raz otwierasz aplikację i nie masz jeszcze żadnych zapisanych transakcji, zobaczysz krótki ekran z pytaniem **"Od czego chcesz zacząć?"** — wybierz opcję, która jest dla Ciebie najszybsza:
 
-- **Wgraj wyciąg z ostatnich 3 miesięcy** (polecane) — wgraj wyciąg z banku albo eksport z Monefy, Wallet czy Money Manager, a zaraz po imporcie zobaczysz raport, na co poszły pieniądze, z proponowanymi budżetami i znalezionymi subskrypcjami
 - **Zeskanuj paragon** — zrób zdjęcie, a aplikacja sama odczyta sklep, kwotę, a nawet poszczególne pozycje
-- **Użyj głosu** — powiedz, na co wydałeś pieniądze, a aplikacja uzupełni szczegóły
 - **Wpisz ręcznie** — wprowadź swój pierwszy wydatek samodzielnie, krok po kroku
+- **Wgraj wyciąg z ostatnich 3 miesięcy** (polecane na komputerze) — wgraj wyciąg z banku albo eksport z Monefy, Wallet czy Money Manager, a zaraz po imporcie zobaczysz raport, na co poszły pieniądze, z proponowanymi budżetami i znalezionymi subskrypcjami
+- **Użyj głosu** — powiedz, na co wydałeś pieniądze, a aplikacja uzupełni szczegóły
 - **Przechwytuj powiadomienia z banku** (Android) — wydatki dodają się same z powiadomień aplikacji bankowej
 
 Dotknij **Zrobię to później**, jeśli wolisz najpierw rozejrzeć się po aplikacji — trafisz od razu na pulpit. Ten ekran pojawia się tylko do momentu dodania pierwszej transakcji; potem już się nie wyświetli.
@@ -21389,10 +21389,10 @@ Wenn Sie Ihr Passwort vergessen haben:
 
 Wenn du die App zum ersten Mal öffnest und noch nichts erfasst hast, siehst du einen kurzen Bildschirm mit der Frage **"Wo möchten Sie beginnen?"** — wähle, was für dich am schnellsten geht:
 
-- **Importiere die letzten 3 Monate** (empfohlen) — lade einen Kontoauszug oder einen Export aus Monefy, Wallet oder Money Manager hoch; direkt nach dem Import siehst du einen Bericht, wohin dein Geld ging, mit Budgetvorschlägen und den gefundenen Abos
 - **Beleg scannen** — mach ein Foto, und die App liest Geschäft, Betrag und sogar einzelne Positionen für dich aus
-- **Stimme verwenden** — sag, wofür du Geld ausgegeben hast, und die App ergänzt die Details
 - **Manuell eingeben** — erfasse deine erste Ausgabe selbst, Schritt für Schritt
+- **Importiere die letzten 3 Monate** (am Computer empfohlen) — lade einen Kontoauszug oder einen Export aus Monefy, Wallet oder Money Manager hoch; direkt nach dem Import siehst du einen Bericht, wohin dein Geld ging, mit Budgetvorschlägen und den gefundenen Abos
+- **Stimme verwenden** — sag, wofür du Geld ausgegeben hast, und die App ergänzt die Details
 - **Bank-Benachrichtigungen erfassen** (Android) — Ausgaben werden automatisch aus den Meldungen deiner Banking-App hinzugefügt
 
 Tippe auf **Das mache ich später**, wenn du lieber zuerst alles erkunden möchtest — du gelangst direkt zu deinem Dashboard. Dieser Bildschirm erscheint nur, bis du deine erste Ausgabe hinzugefügt hast; danach wird er nicht mehr angezeigt.
@@ -26644,10 +26644,10 @@ Si olvidaste tu contraseña:
 
 La primera vez que abres la app sin nada registrado todavía, verás una pantalla breve que te pregunta **"¿Por dónde te gustaría empezar?"** — elige lo que te resulte más rápido:
 
-- **Importa tus últimos 3 meses** (recomendado): sube un extracto bancario o una exportación de Monefy, Wallet o Money Manager y, justo después, verás un informe de en qué se fue tu dinero, con presupuestos sugeridos y las suscripciones encontradas
 - **Escanear un recibo**: haz una foto y la app lee la tienda, el importe e incluso cada línea por ti
-- **Usar tu voz**: di en qué has gastado y la app completa los detalles
 - **Escribirlo manualmente**: introduce tu primer gasto tú mismo, paso a paso
+- **Importa tus últimos 3 meses** (recomendado en el ordenador): sube un extracto bancario o una exportación de Monefy, Wallet o Money Manager y, justo después, verás un informe de en qué se fue tu dinero, con presupuestos sugeridos y las suscripciones encontradas
+- **Usar tu voz**: di en qué has gastado y la app completa los detalles
 - **Captura las notificaciones del banco** (Android): los gastos se añaden solos a partir de los avisos de tu app bancaria
 
 Toca **Lo haré más tarde** si prefieres explorar primero — irás directamente a tu panel. Esta pantalla solo aparece hasta que agregues tu primera transacción; después, no volverá a mostrarse.
@@ -31888,10 +31888,10 @@ Si vous avez oublié votre mot de passe :
 
 La première fois que vous ouvrez l'application sans rien avoir encore enregistré, un court écran vous demande **"Par où voulez-vous commencer ?"** — choisissez l'option la plus rapide pour vous :
 
-- **Importez vos 3 derniers mois** (recommandé) — importez un relevé bancaire ou un export de Monefy, Wallet ou Money Manager : juste après, un rapport montre où est passé votre argent, avec des budgets suggérés et les abonnements trouvés
 - **Scanner un reçu** — prenez une photo, l'appli lit le magasin, le montant et même chaque ligne pour vous
-- **Utiliser votre voix** — dites ce que vous avez dépensé, l'appli complète les détails
 - **Le saisir manuellement** — entrez vous-même votre première dépense, étape par étape
+- **Importez vos 3 derniers mois** (recommandé sur ordinateur) — importez un relevé bancaire ou un export de Monefy, Wallet ou Money Manager : juste après, un rapport montre où est passé votre argent, avec des budgets suggérés et les abonnements trouvés
+- **Utiliser votre voix** — dites ce que vous avez dépensé, l'appli complète les détails
 - **Capturer les notifications bancaires** (Android) — les dépenses s'ajoutent automatiquement à partir des alertes de votre appli bancaire
 
 Appuyez sur **Je le ferai plus tard** si vous préférez explorer d'abord l'application — vous accéderez directement à votre tableau de bord. Cet écran n'apparaît que tant que vous n'avez pas ajouté votre première transaction ; ensuite, il ne s'affichera plus.
@@ -37130,10 +37130,10 @@ iOS, Android, Web
 
 Калі вы ўпершыню адкрываеце праграму і яшчэ нічога не дадалі, з'явіцца кароткі экран з пытаннем **«З чаго хочаце пачаць?»** — выберыце варыянт, які найбольш зручны для вас:
 
-- **Загрузіце выпіску за 3 месяцы** (раім) — банкаўскую выпіску або экспарт з Monefy, Wallet ці Money Manager; адразу пасля імпарту вы ўбачыце справаздачу, куды пайшлі грошы, з прапанаванымі бюджэтамі і знойдзенымі падпіскамі
 - **Сканаваць чэк** — сфатаграфуйце чэк, і праграма сама распазнае краму, суму і нават асобныя пазіцыі
-- **Выкарыстаць голас** — скажыце, на што выдаткавалі, і праграма запоўніць дэталі
 - **Увесці ўручную** — увядзіце першы выдатак самі, крок за крокам
+- **Загрузіце выпіску за 3 месяцы** (раім на камп’ютары) — банкаўскую выпіску або экспарт з Monefy, Wallet ці Money Manager; адразу пасля імпарту вы ўбачыце справаздачу, куды пайшлі грошы, з прапанаванымі бюджэтамі і знойдзенымі падпіскамі
+- **Выкарыстаць голас** — скажыце, на што выдаткавалі, і праграма запоўніць дэталі
 - **Перахоп апавяшчэнняў банка** (Android) — выдаткі дадаюцца самі з апавяшчэнняў банкаўскай праграмы
 
 Націсніце **Зраблю гэта пазней**, калі хочаце спачатку агледзецца ў праграме — вы адразу трапіце на галоўны экран. Гэты экран з'яўляецца толькі пакуль вы не дадасце першую транзакцыю — пасля гэтага ён больш не паказваецца.
@@ -42336,10 +42336,10 @@ Als je je wachtwoord bent vergeten:
 
 De eerste keer dat je de app opent zonder dat er nog iets is vastgelegd, zie je een kort scherm met de vraag **"Waar wil je beginnen?"** — kies wat voor jou het snelst gaat:
 
-- **Importeer je laatste 3 maanden** (aanbevolen) — upload een bankafschrift of een export uit Monefy, Wallet of Money Manager; direct na de import zie je een rapport over waar je geld heen ging, met voorgestelde budgetten en de gevonden abonnementen
 - **Bon scannen** — maak een foto en de app leest de winkel, het bedrag en zelfs losse regels voor je uit
-- **Gebruik je stem** — zeg waar je geld aan uitgaf en de app vult de details in
 - **Handmatig invoeren** — voer je eerste uitgave zelf in, stap voor stap
+- **Importeer je laatste 3 maanden** (aanbevolen op een computer) — upload een bankafschrift of een export uit Monefy, Wallet of Money Manager; direct na de import zie je een rapport over waar je geld heen ging, met voorgestelde budgetten en de gevonden abonnementen
+- **Gebruik je stem** — zeg waar je geld aan uitgaf en de app vult de details in
 - **Bankmeldingen vastleggen** (Android) — uitgaven worden automatisch toegevoegd vanuit de meldingen van je bankapp
 
 Tik op **Dat doe ik later** als je liever eerst rondkijkt — je gaat dan direct naar je dashboard. Dit scherm verschijnt alleen totdat je je eerste transactie hebt toegevoegd; daarna zie je het niet meer.
