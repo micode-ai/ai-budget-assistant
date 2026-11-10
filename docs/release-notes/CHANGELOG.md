@@ -8,6 +8,41 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.39.0 - 2026-11-10
+
+**Sharing**
+
+- **Share AI Budget** in Settings opens your phone's share sheet with a short message, a Google
+  Play link and a browser link for iPhone and computer users; on the web the message is copied
+  if the browser cannot share. Shared images (Wrapped, Inflation Shield, Real Salary) now always
+  carry ai-budget.pl (ABA-741).
+
+**Getting started**
+
+- The phone's get-started screen leads with scanning a receipt, the quickest first entry; the
+  desktop still leads with import (ABA-735).
+- A budget no longer needs a name: leave it empty and it is named after its single category,
+  or else its period ("Monthly Budget") (ABA-732).
+- A user who signed up a day ago and logged nothing gets one push that opens the receipt
+  scanner (ABA-737), and after three days one e-mail with an unsubscribe link (ABA-738).
+- For a user with no transactions yet, the AI chat helps add the first expense (ABA-736).
+
+**Ratings**
+
+- The Google Play rating request can also appear after ten hand-entered expenses, not only
+  after a receipt scan (ABA-733).
+
+**Behind the scenes**
+
+- Play links on the bill-split and group guest pages are tagged so their installs are
+  attributed (ABA-734); budget-save failures record why they failed (ABA-732).
+- Admin: users table opens on Last Active with expense counts (ABA-730), an activation and
+  retention report (ABA-731), and broadcasts limited to recently active users (ABA-742).
+- Weekly growth digest, dated reminders and a blog bank-claims check in CI (ABA-740); blog
+  titles and the Play short description matched to search intent (ABA-739).
+
+---
+
 ## 1.38.1 - 2026-11-09
 
 **Fixes**
