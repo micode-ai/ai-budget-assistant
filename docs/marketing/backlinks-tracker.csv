@@ -35,7 +35,7 @@ Tier,Site,Submit URL,Link type,Week,Status,Date submitted,Live URL,Notes
 3,r/androidapps,https://www.reddit.com/r/androidapps/,nofollow,W3,todo,,,Follow weekly self-promo thread rules.
 3,r/povertyfinance,https://www.reddit.com/r/povertyfinance/,nofollow,W3,todo,,,Free-tier angle.
 3,Quora,https://www.quora.com/,nofollow,W3,todo,,,Answer best budgeting app questions. Draft in outreach doc.
-3,Medium,https://medium.com/,nofollow,W3,todo,,,Repost a blog article with rel=canonical to ai-budget.pl.
+3,Medium,https://medium.com/,nofollow,W3,live,2026-11-10,https://medium.com/@perevertkinma/best-budgeting-apps-in-2026-an-honest-buyers-guide-d77c88fb226c,Repost a blog article with rel=canonical to ai-budget.pl. Imported best-budgeting-apps; canonical verified -> ai-budget.pl/blog/en/best-budgeting-apps/.
 3,dev.to,https://dev.to/new,nofollow,W3,todo,,,Repost with canonical_url frontmatter.
 3,AppAdvice,https://appadvice.com/ (app submission),mixed,W3,todo,,,App-review site.
 3,AppGrooves,https://appgrooves.com/,mixed,W3,todo,,,App-review site.
