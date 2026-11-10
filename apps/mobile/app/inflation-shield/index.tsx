@@ -8,6 +8,7 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import { useInflationShield } from '@/features/insights/useInflationShield';
 import { useInflationShieldStore } from '@/stores/inflationShieldStore';
 import { InflationShieldShareCard, type InflationShieldShareCardHandle } from '@/components/insights/InflationShieldShareCard';
+import { playLinkFor } from '@/features/share/shareApp';
 import { buildShieldSharePayload, buildShieldShareMessage } from '@/features/insights/shieldShare';
 
 export default function InflationShieldScreen() {
@@ -44,7 +45,7 @@ export default function InflationShieldScreen() {
     const message = buildShieldShareMessage(data, { hideAmounts, money, t });
     if (!message) return;
     try {
-      await Share.share({ message });
+      await Share.share({ message: `${message}\n${playLinkFor('share-image', 'inflation')}` });
     } catch {
       // user dismissed / unavailable — no-op
     }

@@ -67,6 +67,10 @@ Znajomi, którzy zarejestrują się z twoim kodem polecenia, otrzymują:
 - **Przedłużony 14-dniowy okres próbny** (zamiast standardowego 7-dniowego)
 - Data zakończenia okresu próbnego jest wyświetlana na ekranie **Subskrypcja**
 
+## Udostępnij aplikację bez kodu
+
+Chcesz polecić aplikację bez programu poleceń? Otwórz **Ustawienia → Udostępnij AI Budżet**. Otworzy się okno udostępniania z krótką wiadomością, linkiem do Google Play i linkiem przeglądarkowym dla osób z iPhonem lub komputerem. W wersji webowej, jeśli przeglądarka nie obsługuje udostępniania, wiadomość zostanie skopiowana do wklejenia.
+
 ## FAQ
 
 - **P: Gdzie znajdę mój kod polecenia?**

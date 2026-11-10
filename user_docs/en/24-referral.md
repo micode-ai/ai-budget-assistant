@@ -67,6 +67,10 @@ Friends who register with your referral code receive:
 - **Extended 14-day trial** (instead of the standard 7-day trial)
 - The trial end date is shown on the **Subscription** screen
 
+## Share the app without a code
+
+Want to recommend the app without the referral programme? Open **Settings → Share AI Budget**. It opens your phone's share sheet with a short message, a Google Play link and a browser link for iPhone and computer users. On the web, if your browser cannot share, the message is copied for you to paste.
+
 ## FAQ
 
 - **Q: Where do I find my referral code?**

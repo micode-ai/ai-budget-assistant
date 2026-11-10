@@ -41,6 +41,7 @@ import {
   type WrappedShareLine,
 } from '@/components/wrapped/WrappedShareCard';
 import type { WrappedCard } from '@budget/shared-types';
+import { playLinkFor } from '@/features/share/shareApp';
 import { storedCategoryLabel } from '@/features/categories/storedCategoryLabel';
 
 const AnimatedGradient = Animated.createAnimatedComponent(LinearGradient);
@@ -183,6 +184,7 @@ export default function WrappedScreen() {
     }
     lines.push('');
     lines.push(t('wrapped.shareCta'));
+    lines.push(playLinkFor('share-image', 'wrapped'));
     return lines.join('\n');
   }, [data, t, money, monthLabel, shareTitle, weekdayLabel]);
 

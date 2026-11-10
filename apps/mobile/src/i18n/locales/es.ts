@@ -2788,6 +2788,13 @@ export default {
       goal_plan: 'Planificación de metas',
     },
   },
+  shareApp: {
+    title: 'Compartir AI Budget',
+    description: 'Envía la app a un amigo',
+    message: 'Llevo mis gastos con AI Budget: escaneo recibos, añado gastos por voz o chat y veo en qué se va el dinero. Pruébala:',
+    webLine: 'En iPhone o en el ordenador, ábrela en el navegador:',
+    copied: 'Texto copiado. Pégalo en un mensaje.',
+  },
   referral: {
     title: 'Invitar amigos',
     yourCode: 'Tu código de referido',

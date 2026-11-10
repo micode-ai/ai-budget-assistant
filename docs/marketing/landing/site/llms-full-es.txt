@@ -6951,6 +6951,10 @@ Los amigos que se registran con tu código de referido reciben:
 - **Prueba extendida de 14 días** (en lugar de la prueba estándar de 7 días)
 - La fecha de fin de prueba se muestra en la pantalla **Suscripción**
 
+## Comparte la app sin código
+
+¿Quieres recomendar la app sin el programa de referidos? Abre **Ajustes → Compartir AI Budget**. Se abre el menú para compartir con un mensaje breve, un enlace a Google Play y un enlace web para quien use iPhone u ordenador. En la web, si tu navegador no puede compartir, el mensaje se copia para que lo pegues.
+
 ## Preguntas frecuentes
 
 - **P: ¿Dónde encuentro mi código de referido?**

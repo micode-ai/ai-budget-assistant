@@ -11,6 +11,7 @@ import { useDeveloperAppsStore } from '@/stores/developerAppsStore';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { SettingsProfileCard, SettingsLogoutButton } from './SettingsIdentity';
 import { PendingSyncChip } from './PendingSyncChip';
+import { shareApp } from '@/features/share/shareApp';
 
 type IconName = keyof typeof Ionicons.glyphMap;
 
@@ -19,6 +20,8 @@ interface SettingsCategory {
   label: string;
   description: string;
   route: string;
+  /** Runs instead of navigating to `route`. */
+  onPress?: () => void;
   iconColor?: string;
   badge?: number;
 }
@@ -208,6 +211,13 @@ export function SettingsHubMobile() {
       description: t('referral.settingsSubtitle'),
       route: '/referral',
     },
+    {
+      icon: 'share-social-outline',
+      label: t('shareApp.title'),
+      description: t('shareApp.description'),
+      route: 'share-app',
+      onPress: () => void shareApp(t),
+    },
   ];
 
   return (
@@ -232,7 +242,7 @@ export function SettingsHubMobile() {
             <React.Fragment key={category.route}>
               <TouchableOpacity
                 style={styles.row}
-                onPress={() => router.push(category.route as any)}
+                onPress={category.onPress ?? (() => router.push(category.route as any))}
                 activeOpacity={0.7}
               >
                 <View style={styles.iconContainer}>

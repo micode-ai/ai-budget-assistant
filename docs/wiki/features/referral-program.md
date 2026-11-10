@@ -67,6 +67,13 @@ send a message with an empty code.
 **`ParticipantStatusList` has no opinion about referrals** — it gained an optional `footer` slot
 rendered inside its scroll, and the screen decides what goes there.
 
+**A codeless "Share AI Budget" sits beside the referral flow ([ABA-741](https://github.com/micode-ai/ai-budget-assistant/issues/779)).** A settings
+row (`settingsRegistry` entry `shareApp` with `action: 'shareApp'`, run instead of navigating) sends a
+friend-addressed message with a tagged Play link (`src=share`, `loc=settings`) and a browser link —
+built by `src/features/share/appShareLink.ts`, the app's one builder of tagged links. It does not
+touch referral codes; a share there that is meant to credit someone still goes through the referral
+screen.
+
 ## Known gaps
 
 - The landing and blog generators do not forward `?ref=` through their CTAs.
@@ -78,4 +85,4 @@ rendered inside its scroll, and the screen decides what goes there.
 ## History
 
 ABA-486 (a real link in the share message) · ABA-489 (the invite nudge) · ABA-494 (the
-`src=referral` capture gate).
+`src=referral` capture gate) · [ABA-741](https://github.com/micode-ai/ai-budget-assistant/issues/779) (codeless share row).

@@ -3765,6 +3765,10 @@ Friends who register with your referral code receive:
 - **Extended 14-day trial** (instead of the standard 7-day trial)
 - The trial end date is shown on the **Subscription** screen
 
+## Share the app without a code
+
+Want to recommend the app without the referral programme? Open **Settings → Share AI Budget**. It opens your phone's share sheet with a short message, a Google Play link and a browser link for iPhone and computer users. On the web, if your browser cannot share, the message is copied for you to paste.
+
 ## FAQ
 
 - **Q: Where do I find my referral code?**
@@ -9103,6 +9107,10 @@ OCR иногда неверно читает цену, выдумывает ст
 - **Расширенный 14-дневный пробный период** (вместо стандартного 7-дневного)
 - Дата окончания пробного периода отображается на экране **Подписка**
 
+## Поделиться приложением без кода
+
+Хотите посоветовать приложение без реферальной программы? Откройте **Настройки → Поделиться AI Budget**. Откроется окно «Поделиться» с коротким сообщением, ссылкой на Google Play и ссылкой на браузерную версию для тех, у кого iPhone или компьютер. В веб-версии, если браузер не умеет делиться, сообщение копируется, чтобы вы его вставили.
+
 ## Часто задаваемые вопросы
 
 - **В: Где найти мой реферальный код?**
@@ -14408,6 +14416,10 @@ OCR іноді неправильно читає ціну, вигадує ряд
 - **Розширений 14-денний пробний період** (замість стандартного 7-денного)
 - Дата закінчення пробного періоду відображається на екрані **Підписка**
 
+## Поділитися застосунком без коду
+
+Хочете порадити застосунок без реферальної програми? Відкрийте **Налаштування → Поділитися AI Budget**. Відкриється вікно «Поділитися» з коротким повідомленням, посиланням на Google Play і посиланням на браузерну версію для тих, хто має iPhone або комп’ютер. У веб-версії, якщо браузер не вміє ділитися, повідомлення копіюється, щоб ви його вставили.
+
 ## Часті запитання
 
 - **П: Де знайти мій реферальний код?**
@@ -19682,6 +19694,10 @@ Znajomi, którzy zarejestrują się z twoim kodem polecenia, otrzymują:
 - **Przedłużony 14-dniowy okres próbny** (zamiast standardowego 7-dniowego)
 - Data zakończenia okresu próbnego jest wyświetlana na ekranie **Subskrypcja**
 
+## Udostępnij aplikację bez kodu
+
+Chcesz polecić aplikację bez programu poleceń? Otwórz **Ustawienia → Udostępnij AI Budżet**. Otworzy się okno udostępniania z krótką wiadomością, linkiem do Google Play i linkiem przeglądarkowym dla osób z iPhonem lub komputerem. W wersji webowej, jeśli przeglądarka nie obsługuje udostępniania, wiadomość zostanie skopiowana do wklejenia.
+
 ## FAQ
 
 - **P: Gdzie znajdę mój kod polecenia?**
@@ -24950,6 +24966,10 @@ Freunde, die sich mit deinem Empfehlungscode registrieren, erhalten:
 - **Verlängerte 14-tägige Testphase** (statt der standardmäßigen 7-tägigen)
 - Das Enddatum wird auf dem **Abonnement**-Bildschirm angezeigt
 
+## App ohne Code teilen
+
+Du möchtest die App ohne das Empfehlungsprogramm weiterempfehlen? Öffne **Einstellungen → AI Budget teilen**. Es öffnet sich das Teilen-Menü mit einer kurzen Nachricht, einem Google-Play-Link und einem Browser-Link für iPhone- und Computer-Nutzer. Im Web wird die Nachricht kopiert, wenn dein Browser nicht teilen kann.
+
 ## FAQ
 
 - **F: Wo finde ich meinen Empfehlungscode?**
@@ -30195,6 +30215,10 @@ Los amigos que se registran con tu código de referido reciben:
 - **Prueba extendida de 14 días** (en lugar de la prueba estándar de 7 días)
 - La fecha de fin de prueba se muestra en la pantalla **Suscripción**
 
+## Comparte la app sin código
+
+¿Quieres recomendar la app sin el programa de referidos? Abre **Ajustes → Compartir AI Budget**. Se abre el menú para compartir con un mensaje breve, un enlace a Google Play y un enlace web para quien use iPhone u ordenador. En la web, si tu navegador no puede compartir, el mensaje se copia para que lo pegues.
+
 ## Preguntas frecuentes
 
 - **P: ¿Dónde encuentro mi código de referido?**
@@ -35437,6 +35461,10 @@ Les amis qui s'inscrivent avec votre code de parrainage reçoivent :
 - **Essai prolongé de 14 jours** (au lieu de l'essai standard de 7 jours)
 - La date de fin d'essai est affichée sur l'écran **Abonnement**
 
+## Partager l’appli sans code
+
+Tu veux recommander l’appli sans le programme de parrainage ? Ouvre **Réglages → Partager AI Budget**. Le menu de partage s’ouvre avec un court message, un lien Google Play et un lien web pour les utilisateurs d’iPhone ou d’ordinateur. Sur le web, si ton navigateur ne peut pas partager, le message est copié pour que tu le colles.
+
 ## FAQ
 
 - **Q : Où trouver mon code de parrainage ?**
@@ -40673,6 +40701,10 @@ OCR часам няправільна чытае цану, выдумляе ра
 
 - **Пашыраны 14-дзённы пробны перыяд** (замест стандартнага 7-дзённага)
 - Дата заканчэння пробнага перыяду адлюстроўваецца на экране **Падпіска**
+
+## Падзяліцца праграмай без кода
+
+Хочаце параіць праграму без рэферальнай праграмы? Адкрыйце **Налады → Падзяліцца AI Budget**. Адкрыецца акно «Падзяліцца» з кароткім паведамленнем, спасылкай на Google Play і спасылкай на браўзерную версію для тых, хто мае iPhone або камп’ютар. У вэб-версіі, калі браўзер не ўмее дзяліцца, паведамленне капіюецца, каб вы яго ўставілі.
 
 ## Частыя пытанні
 
@@ -45950,6 +45982,10 @@ Vrienden die zich registreren met jouw verwijzingscode ontvangen:
 
 - **Verlengde proefperiode van 14 dagen** (in plaats van de standaard proefperiode van 7 dagen)
 - De einddatum van de proefperiode wordt weergegeven op het scherm **Abonnement**
+
+## De app delen zonder code
+
+Wil je de app aanraden zonder het verwijzingsprogramma? Open **Instellingen → AI Budget delen**. Het deelmenu opent met een kort bericht, een Google Play-link en een browserlink voor wie een iPhone of computer gebruikt. Op het web wordt het bericht gekopieerd als je browser niet kan delen, zodat je het kunt plakken.
 
 ## Veelgestelde vragen
 

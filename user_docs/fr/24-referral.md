@@ -67,6 +67,10 @@ Les amis qui s'inscrivent avec votre code de parrainage reçoivent :
 - **Essai prolongé de 14 jours** (au lieu de l'essai standard de 7 jours)
 - La date de fin d'essai est affichée sur l'écran **Abonnement**
 
+## Partager l’appli sans code
+
+Tu veux recommander l’appli sans le programme de parrainage ? Ouvre **Réglages → Partager AI Budget**. Le menu de partage s’ouvre avec un court message, un lien Google Play et un lien web pour les utilisateurs d’iPhone ou d’ordinateur. Sur le web, si ton navigateur ne peut pas partager, le message est copié pour que tu le colles.
+
 ## FAQ
 
 - **Q : Où trouver mon code de parrainage ?**

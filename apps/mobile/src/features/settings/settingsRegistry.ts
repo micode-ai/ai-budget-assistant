@@ -99,6 +99,7 @@ export type SettingsLinkKey =
   | 'import'
   | 'subscription'
   | 'referral'
+  | 'shareApp'
   | 'whatsNew'
   | 'admin';
 
@@ -126,6 +127,11 @@ interface SettingsEntryBase {
    * the same way: with `PUBLIC_API_ENABLED` off `/developer/apps` and `/connected-apps` answer 404.
    */
   requiresFeature?: SettingsFeatureKey;
+  /**
+   * A row that runs something instead of navigating (the native share sheet). `route` is then
+   * only a placeholder and is never pushed; the shell and the phone hub both check `action` first.
+   */
+  action?: 'shareApp';
 }
 
 /** Server-flagged features a settings row can depend on. */
@@ -231,6 +237,8 @@ export const SETTINGS_ENTRIES: readonly SettingsEntry[] = [
   // than a control panel.
   { kind: 'link', key: 'subscription', labelKey: 'subscription.managePlan', route: '/subscription' },
   { kind: 'link', key: 'referral', labelKey: 'referral.settingsTitle', route: '/referral' },
+  // Opens the system share sheet with a tagged Play link; no screen behind it.
+  { kind: 'link', key: 'shareApp', labelKey: 'shareApp.title', route: '/settings', action: 'shareApp' },
   { kind: 'link', key: 'whatsNew', labelKey: 'settingsNav.whatsNew', route: '/whats-new' },
   { kind: 'link', key: 'admin', labelKey: 'admin.openPanel', route: '/admin', adminOnly: true },
 ];

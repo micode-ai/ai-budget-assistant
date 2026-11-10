@@ -2788,6 +2788,13 @@ export default {
       goal_plan: 'Doelplanning',
     },
   },
+  shareApp: {
+    title: 'AI Budget delen',
+    description: 'Stuur de app naar een vriend',
+    message: 'Ik hou mijn uitgaven bij met AI Budget: bonnetjes scannen, uitgaven toevoegen met spraak of chat en zien waar het geld naartoe gaat. Probeer het:',
+    webLine: 'Op iPhone of computer open je het in de browser:',
+    copied: 'Tekst gekopieerd. Plak het in een bericht.',
+  },
   referral: {
     title: 'Vrienden uitnodigen',
     yourCode: 'Jouw verwijzingscode',

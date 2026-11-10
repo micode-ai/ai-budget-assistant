@@ -6945,6 +6945,10 @@ Freunde, die sich mit deinem Empfehlungscode registrieren, erhalten:
 - **Verlängerte 14-tägige Testphase** (statt der standardmäßigen 7-tägigen)
 - Das Enddatum wird auf dem **Abonnement**-Bildschirm angezeigt
 
+## App ohne Code teilen
+
+Du möchtest die App ohne das Empfehlungsprogramm weiterempfehlen? Öffne **Einstellungen → AI Budget teilen**. Es öffnet sich das Teilen-Menü mit einer kurzen Nachricht, einem Google-Play-Link und einem Browser-Link für iPhone- und Computer-Nutzer. Im Web wird die Nachricht kopiert, wenn dein Browser nicht teilen kann.
+
 ## FAQ
 
 - **F: Wo finde ich meinen Empfehlungscode?**

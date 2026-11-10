@@ -2795,6 +2795,13 @@ export default {
       goal_plan: 'Goal Planning',
     },
   },
+  shareApp: {
+    title: 'Share AI Budget',
+    description: 'Send the app to a friend',
+    message: 'I track my spending with AI Budget: scan receipts, add expenses by voice or chat, and see where the money goes. Try it:',
+    webLine: 'On iPhone or a computer, open it in the browser:',
+    copied: 'Link copied. Paste it into a message.',
+  },
   referral: {
     title: 'Invite Friends',
     yourCode: 'Your Referral Code',

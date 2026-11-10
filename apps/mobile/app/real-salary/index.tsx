@@ -23,6 +23,7 @@ import i18n from '@/i18n';
 import { useUpgradeStore } from '@/stores/upgradeStore';
 import { useSubscriptionStore } from '@/stores/subscriptionStore';
 import { useAccountStore } from '@/stores/accountStore';
+import { playLinkFor } from '@/features/share/shareApp';
 
 export default function RealSalaryScreen() {
   const { t } = useTranslation();
@@ -59,7 +60,11 @@ export default function RealSalaryScreen() {
     }
     try {
       await Share.share({
-        message: [t('realSalary.share.title'), ...lines.map((l) => `${l.emoji} ${l.label}: ${l.value}`)].join('\n'),
+        message: [
+          t('realSalary.share.title'),
+          ...lines.map((l) => `${l.emoji} ${l.label}: ${l.value}`),
+          playLinkFor('share-image', 'salary'),
+        ].join('\n'),
       });
     } catch {
       // user dismissed / unavailable — no-op

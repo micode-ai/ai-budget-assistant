@@ -44,6 +44,11 @@ other, each with its own bridge, timeout, in-flight guard and error handling.
 **Callers must handle `false`.** It is the normal result on web, on a device without a share
 target, and on a timeout.
 
+**Every shared image names the site, and every text fallback carries a tagged link
+([ABA-741](https://github.com/micode-ai/ai-budget-assistant/issues/779)).** The canvas draws "ai-budget.pl" under the footer when a wrapper's footer
+lacks it. The PNG share (`expo-sharing`) cannot carry text, so the tagged Play link
+(`src=share-image`, `loc=<card>`) lives in each wrapper's text-share fallback via `playLinkFor`.
+
 ## Known gaps
 
 - No component test: nothing in this repo renders a component (no `react-test-renderer` or

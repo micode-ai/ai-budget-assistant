@@ -2788,6 +2788,13 @@ export default {
       goal_plan: 'Planification des objectifs',
     },
   },
+  shareApp: {
+    title: 'Partager AI Budget',
+    description: 'Envoyez l\'appli à un ami',
+    message: 'Je suis mes dépenses avec AI Budget : je scanne mes tickets, j\'ajoute des dépenses par la voix ou le chat et je vois où va l\'argent. Essaie :',
+    webLine: 'Sur iPhone ou sur ordinateur, ouvre-la dans le navigateur :',
+    copied: 'Texte copié. Collez-le dans un message.',
+  },
   referral: {
     title: 'Inviter des amis',
     yourCode: 'Votre code de parrainage',

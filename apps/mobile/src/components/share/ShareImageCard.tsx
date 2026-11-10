@@ -137,6 +137,14 @@ function buildCardHtml({ gradientFrom, gradientTo, renderFnName }: Pick<ShareIma
         ctx.font = '600 30px -apple-system, Roboto, Arial, sans-serif';
         ctx.fillStyle = 'rgba(255,255,255,0.85)';
         ctx.fillText(payload.footer || '', W / 2, H - 130);
+
+        // Every shared image carries the site, even when a wrapper's own footer does not
+        // (the real-salary card's footer is just the app name).
+        if (String(payload.footer || '').indexOf('ai-budget.pl') === -1) {
+          ctx.font = '600 28px -apple-system, Roboto, Arial, sans-serif';
+          ctx.fillStyle = 'rgba(255,255,255,0.7)';
+          ctx.fillText('ai-budget.pl', W / 2, H - 82);
+        }
       }
 
       window.${renderFnName} = function (payloadJson) {

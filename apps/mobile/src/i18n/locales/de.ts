@@ -2788,6 +2788,13 @@ export default {
       goal_plan: 'Zielplanung',
     },
   },
+  shareApp: {
+    title: 'AI Budget teilen',
+    description: 'Schick die App an einen Freund',
+    message: 'Ich behalte meine Ausgaben mit AI Budget im Blick: Belege scannen, Ausgaben per Sprache oder Chat erfassen und sehen, wohin das Geld fließt. Probier es aus:',
+    webLine: 'Auf dem iPhone oder am Computer im Browser öffnen:',
+    copied: 'Text kopiert. Füge ihn in eine Nachricht ein.',
+  },
   referral: {
     title: 'Freunde einladen',
     yourCode: 'Dein Empfehlungscode',

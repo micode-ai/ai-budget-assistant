@@ -2798,6 +2798,13 @@ export default {
       goal_plan: 'Planowanie celów',
     },
   },
+  shareApp: {
+    title: 'Udostępnij AI Budżet',
+    description: 'Wyślij aplikację znajomemu',
+    message: 'Pilnuję swoich wydatków w AI Budżet: skanuję paragony, dodaję wydatki głosem lub na czacie i widzę, gdzie znikają pieniądze. Wypróbuj:',
+    webLine: 'Na iPhonie lub komputerze otwórz w przeglądarce:',
+    copied: 'Tekst skopiowany. Wklej go do wiadomości.',
+  },
   referral: {
     title: 'Zaproś znajomych',
     yourCode: 'Twój kod polecenia',

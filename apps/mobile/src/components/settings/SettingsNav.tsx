@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { useInboundReceiptStore } from '@/stores/inboundReceiptStore';
 import { useDeveloperAppsStore } from '@/stores/developerAppsStore';
+import { shareApp } from '@/features/share/shareApp';
 import { SETTINGS_NAV_WIDTH } from '@/components/webLayout.constants';
 import {
   isCurrentSelection,
@@ -95,7 +96,13 @@ function SettingsNavRow({
       // then hold separate state. This is the same `selected` that paints the
       // row below, so the row that looks current is exactly the row that is
       // inert — one variable, not a convention two places have to keep.
-      onPress={selected ? undefined : () => router.push(entry.route as never)}
+      onPress={
+        entry.action === 'shareApp'
+          ? () => void shareApp(t)
+          : selected
+            ? undefined
+            : () => router.push(entry.route as never)
+      }
       onHoverIn={() => setHovered(true)}
       onHoverOut={() => setHovered(false)}
       accessibilityRole="button"
@@ -113,7 +120,11 @@ function SettingsNavRow({
       {isLinkEntry(entry) && (
         // The outbound arrow is half the pane/link mechanism — it is what says
         // this row leaves settings rather than opening beside the list.
-        <Ionicons name="open-outline" size={14} color={theme.colors.textTertiary} />
+        <Ionicons
+          name={entry.action === 'shareApp' ? 'share-social-outline' : 'open-outline'}
+          size={14}
+          color={theme.colors.textTertiary}
+        />
       )}
     </Pressable>
   );

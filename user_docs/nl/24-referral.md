@@ -67,6 +67,10 @@ Vrienden die zich registreren met jouw verwijzingscode ontvangen:
 - **Verlengde proefperiode van 14 dagen** (in plaats van de standaard proefperiode van 7 dagen)
 - De einddatum van de proefperiode wordt weergegeven op het scherm **Abonnement**
 
+## De app delen zonder code
+
+Wil je de app aanraden zonder het verwijzingsprogramma? Open **Instellingen → AI Budget delen**. Het deelmenu opent met een kort bericht, een Google Play-link en een browserlink voor wie een iPhone of computer gebruikt. Op het web wordt het bericht gekopieerd als je browser niet kan delen, zodat je het kunt plakken.
+
 ## Veelgestelde vragen
 
 - **V: Waar vind ik mijn verwijzingscode?**
