@@ -18,15 +18,30 @@ export function describeDuplicateMatch(match: ReceiptDuplicateMatch, locale: str
 
 /**
  * The bank's own copy of this purchase — a push captured on the device or a
- * row from an imported statement. Only such a row is offered for merging on
- * the scan screen; the server refuses to fold anything else.
+ * row from an imported statement.
  */
 export function bankCopySource(match: ReceiptDuplicateMatch | null | undefined): 'notification' | 'import' | null {
   if (!match || match.kind !== 'likely') return null;
   return match.source === 'notification' || match.source === 'import' ? match.source : null;
 }
 
-/** The merge box starts ticked unless the pair matched on the amount alone. */
+/**
+ * A row the scan screen may fold into this receipt: the bank's copy, or the
+ * same purchase typed in by hand earlier (ABA-730). The server refuses to fold
+ * anything else.
+ */
+export function mergeableSource(
+  match: ReceiptDuplicateMatch | null | undefined,
+): 'notification' | 'import' | 'manual' | null {
+  const bank = bankCopySource(match);
+  if (bank) return bank;
+  return match?.kind === 'likely' && match.source === 'manual' ? 'manual' : null;
+}
+
+/**
+ * The merge box starts ticked only for a bank copy matched on the payee. A
+ * hand-entered row can be a genuine second purchase, so the user ticks it.
+ */
 export function defaultMergeWithBank(match: ReceiptDuplicateMatch | null | undefined): boolean {
   return bankCopySource(match) !== null && !match?.amountOnly;
 }

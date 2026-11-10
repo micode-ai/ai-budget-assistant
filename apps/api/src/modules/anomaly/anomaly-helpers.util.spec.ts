@@ -6,6 +6,7 @@ import {
   monthKey,
   normalizeMerchant,
   payeesLooselyMatch,
+  pickManualReceiptCounterpart,
   pickPushReceiptCounterpart,
 } from './anomaly-helpers.util';
 
@@ -132,5 +133,34 @@ describe('suppressionSubject', () => {
   it('keys other types on the normalized merchant', () => {
     expect(suppressionSubject('price_increase', { merchant: '  Rent Co ' })).toBe('m:rent co');
     expect(suppressionSubject('duplicate_charge', { merchant: '' })).toBeNull();
+  });
+});
+
+describe('manual ↔ receipt loose matching (ABA-730)', () => {
+  const receipt = { merchant: 'Netto nr 541', description: 'Netto nr 541 (2 items)', source: 'ocr' };
+
+  it('pairs a hand-typed shop name with the branch the receipt prints', () => {
+    expect(
+      pickManualReceiptCounterpart(receipt, [{ id: 'm', merchant: null, description: 'Netto', source: 'manual' }]),
+    ).toMatchObject({ id: 'm' });
+    expect(
+      pickManualReceiptCounterpart({ merchant: null, description: 'netto', source: 'manual' }, [
+        { id: 'r', ...receipt },
+      ]),
+    ).toMatchObject({ id: 'r' });
+  });
+
+  it('never pairs on amount alone, nor a label-less manual row', () => {
+    expect(pickManualReceiptCounterpart(receipt, [{ id: 'm', merchant: null, description: 'Lunch', source: 'manual' }])).toBeNull();
+    expect(pickManualReceiptCounterpart({ merchant: null, description: null, source: 'manual' }, [{ id: 'r', ...receipt }])).toBeNull();
+  });
+
+  it('ignores every other channel pair', () => {
+    expect(pickManualReceiptCounterpart(receipt, [{ id: 'n', merchant: 'NETTO', description: null, source: 'notification' }])).toBeNull();
+    expect(
+      pickManualReceiptCounterpart({ merchant: 'Netto', description: null, source: 'manual' }, [
+        { id: 'm2', merchant: 'Netto nr 541', description: null, source: 'manual' },
+      ]),
+    ).toBeNull();
   });
 });

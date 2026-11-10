@@ -135,8 +135,16 @@ significant token of one label inside the other, legal-form/city words ignored) 
 counterpart on amount + currency + ±1 day alone. Before this, the ABA-568 `suggestMerge` branch was
 unreachable for pushes: with an exact payee Tier 1 had already deleted the stub on the same
 predicate, and without one (the usual case — a push says `ZABKA Z5712 WARSZAWA`, OCR says `Żabka`)
-nothing matched and both rows stayed with no alert. The loose rule applies to this pair ONLY; every
-other pair keeps exact-payee `P`, so two manual rows are never flagged on amount alone.
+nothing matched and both rows stayed with no alert. The loose rule applies to this pair and, without
+the amount-only fallback, to manual ↔ receipt (below); every other pair keeps exact-payee `P`, so two
+manual rows are never flagged on amount alone.
+
+**A hand-entered row and its receipt are paired loosely too, but never on amount alone (ABA-743).**
+A user types `Netto`, the receipt prints `Netto nr 541`; with the exact rule the pair stayed as two
+expenses with no alert. `pickManualReceiptCounterpart` pairs `manual` ↔ `ocr` on `payeesLooselyMatch`
+only — no single-counterpart fallback, because two hand-entered purchases of one amount on one day are
+common and a typed row's label is the only thing identifying it. The alert carries `suggestMerge`, so
+it opens the merge screen with the receipt as the default survivor. Two manual rows keep exact `P`.
 
 **`P` and `Q` are mutually exclusive** — same currency versus different currency — so a pair is
 auto-deduplicated or suggested, never both. The `possible_merge` dedup key sorts the two ids, so it
@@ -168,4 +176,4 @@ ABA-296 (two-tier dedup, `POST /expenses/merge`) · ABA-297 (New-Arch emission, 
 PKO template) · ABA-387 (the spend gate, percentage masking, the `EUR` and `brutto` fixes) · ABA-597
 (documentation-only: this page previously understated the category resolution above, found while
 investigating why merchant rules weren't yet applied at receipt-scan time) · ABA-625 (receipt scans
-are paired loosely with pushes and offered as a merge; Tier 1 no longer runs for `ocr`). · ABA-695 (the description drops the English `(auto-captured)` suffix: merchant alone, else the localized source label)
+are paired loosely with pushes and offered as a merge; Tier 1 no longer runs for `ocr`). · [ABA-743](https://github.com/micode-ai/ai-budget-assistant/issues/781) (a hand-entered row ↔ its receipt: loose payee, never amount alone, merge offered). · ABA-695 (the description drops the English `(auto-captured)` suffix: merchant alone, else the localized source label)

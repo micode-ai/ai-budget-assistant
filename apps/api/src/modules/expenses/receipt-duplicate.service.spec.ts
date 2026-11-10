@@ -51,6 +51,12 @@ describe('pickLikelyDuplicate', () => {
     expect(m).toMatchObject({ expenseId: 'srv-1', amountOnly: true });
   });
 
+  it('matches a hand-entered row loosely, never flagged amountOnly (ABA-730)', () => {
+    const m = pickLikelyDuplicate({ merchant: 'Netto nr 541' }, [row({ merchant: null, description: 'Netto', source: 'manual' }) as any]);
+    expect(m).toMatchObject({ expenseId: 'srv-1', source: 'manual' });
+    expect(m?.amountOnly).toBeUndefined();
+  });
+
   it('never pairs on amount alone with a manual row, or with two bank rows', () => {
     expect(pickLikelyDuplicate({ merchant: 'Lidl' }, [row({ source: 'manual' }) as any])).toBeNull();
     expect(

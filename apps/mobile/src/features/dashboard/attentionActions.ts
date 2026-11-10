@@ -38,8 +38,8 @@ export type AlertAction =
 /**
  * Whether a `duplicate_charge` alert is really "same purchase logged twice,
  * once by hand/import and once by receipt scan" — the API marks that pair
- * with `params.suggestMerge` (one side `notification`/`import`, the other
- * `ocr`), in which case the alert wants the merge screen, not the expense it
+ * with `params.suggestMerge` (one side `notification`/`import`/`manual`, the
+ * other `ocr`), in which case the alert wants the merge screen, not the expense it
  * points at.
  */
 export function isMergeableDuplicate(alert: AnomalyAlert): boolean {

@@ -373,7 +373,7 @@ describe('onExpenseCreated — merge a receipt into the bank copy', () => {
     });
     await flush();
     const where = prisma.expense.findFirst.mock.calls[0][0].where;
-    expect(where).toMatchObject({ accountId: 'acc-1', isDeleted: false, source: { in: ['notification', 'import'] } });
+    expect(where).toMatchObject({ accountId: 'acc-1', isDeleted: false, source: { in: ['notification', 'import', 'manual'] } });
     expect(where.OR).toEqual([{ id: 'bank-cli' }, { clientId: 'bank-cli' }]);
     expect(crossAccount.mergeExpenses).toHaveBeenCalledWith('acc-1', 'u-1', { keepId: 'rcpt', mergeId: 'bank-srv' });
     expect(crossAccount.mergeExpenses.mock.invocationCallOrder[0]).toBeLessThan(
@@ -381,10 +381,10 @@ describe('onExpenseCreated — merge a receipt into the bank copy', () => {
     );
   });
 
-  it('never folds a row that is not a bank copy', async () => {
+  it('never folds a row that is not mergeable (another receipt, a bot or API row)', async () => {
     const { service, crossAccount } = make(null);
     await service.onExpenseCreated('acc-1', 'u-1', { id: 'rcpt', amount: 10, currencyCode: 'PLN', source: 'ocr' }, [], {
-      mergeWithExpenseId: 'manual-row',
+      mergeWithExpenseId: 'other-receipt',
     });
     await flush();
     expect(crossAccount.mergeExpenses).not.toHaveBeenCalled();

@@ -1,4 +1,4 @@
-import { bankCopySource, defaultMergeWithBank, describeDuplicateMatch } from '../receiptDuplicate';
+import { bankCopySource, defaultMergeWithBank, describeDuplicateMatch, mergeableSource } from '../receiptDuplicate';
 
 const match = {
   kind: 'exact' as const,
@@ -52,5 +52,26 @@ describe('bankCopySource / defaultMergeWithBank', () => {
     expect(bankCopySource({ ...match, source: 'import' })).toBeNull();
     expect(bankCopySource(likely)).toBeNull();
     expect(bankCopySource(null)).toBeNull();
+  });
+});
+
+describe('mergeableSource (ABA-730)', () => {
+  const likely = { ...match, kind: 'likely' as const };
+
+  it('offers a hand-entered row for merging, unticked by default', () => {
+    expect(mergeableSource({ ...likely, source: 'manual' })).toBe('manual');
+    expect(defaultMergeWithBank({ ...likely, source: 'manual' })).toBe(false);
+  });
+
+  it('still offers the bank copies', () => {
+    expect(mergeableSource({ ...likely, source: 'notification' })).toBe('notification');
+    expect(mergeableSource({ ...likely, source: 'import' })).toBe('import');
+  });
+
+  it('never offers an exact re-upload, a receipt or a bot row', () => {
+    expect(mergeableSource({ ...match, source: 'manual' })).toBeNull();
+    expect(mergeableSource({ ...likely, source: 'ocr' })).toBeNull();
+    expect(mergeableSource({ ...likely, source: 'telegram' })).toBeNull();
+    expect(mergeableSource(null)).toBeNull();
   });
 });

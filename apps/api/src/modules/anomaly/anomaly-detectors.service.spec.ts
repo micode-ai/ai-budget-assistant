@@ -151,13 +151,49 @@ describe('detectDuplicateCharge', () => {
     expect(arg.params.merchant).toBe('ZABKA Z1');
   });
 
-  it('keeps the exact-payee rule for other channels — a differently-spelled manual row is not a duplicate', async () => {
+  it('suggests a merge when a receipt meets the same purchase typed in by hand (ABA-730)', async () => {
+    const { service, prisma, alertWriter } = makeService();
+    prisma.expense.findMany = jest
+      .fn()
+      .mockResolvedValue([{ id: 'e-manual', merchant: null, description: 'Netto', source: 'manual' }]);
+
+    await service.detectDuplicateCharge('acc-1', 'user-1', expenseRow({ merchant: 'Netto nr 541', source: 'ocr' }) as any);
+
+    expect(alertWriter.createAlert).toHaveBeenCalledTimes(1);
+    const arg = alertWriter.createAlert.mock.calls[0][0];
+    expect(arg.params.otherExpenseId).toBe('e-manual');
+    expect(arg.params.suggestMerge).toBe(true);
+  });
+
+  it('suggests the merge from the manual side when the hand-entered row comes second', async () => {
+    const { service, prisma, alertWriter } = makeService();
+    prisma.expense.findMany = jest
+      .fn()
+      .mockResolvedValue([{ id: 'e-ocr', merchant: 'Netto nr 541', description: null, source: 'ocr' }]);
+
+    await service.detectDuplicateCharge('acc-1', 'user-1', expenseRow({ merchant: null, description: 'netto', source: 'manual' }) as any);
+
+    expect(alertWriter.createAlert.mock.calls[0][0].params).toMatchObject({ otherExpenseId: 'e-ocr', suggestMerge: true });
+  });
+
+  it('never pairs a manual row with a receipt on amount alone', async () => {
+    const { service, prisma, alertWriter } = makeService();
+    prisma.expense.findMany = jest
+      .fn()
+      .mockResolvedValue([{ id: 'e-manual', merchant: null, description: 'Lunch', source: 'manual' }]);
+
+    await service.detectDuplicateCharge('acc-1', 'user-1', expenseRow({ merchant: 'Netto nr 541', source: 'ocr' }) as any);
+
+    expect(alertWriter.createAlert).not.toHaveBeenCalled();
+  });
+
+  it('keeps the exact-payee rule between two manual rows', async () => {
     const { service, prisma, alertWriter } = makeService();
     prisma.expense.findMany = jest
       .fn()
       .mockResolvedValue([{ id: 'e-old', merchant: 'ZABKA Z5712', description: null, source: 'manual' }]);
 
-    await service.detectDuplicateCharge('acc-1', 'user-1', expenseRow({ merchant: 'Żabka', source: 'ocr' }) as any);
+    await service.detectDuplicateCharge('acc-1', 'user-1', expenseRow({ merchant: 'Żabka', source: 'manual' }) as any);
 
     expect(alertWriter.createAlert).not.toHaveBeenCalled();
   });

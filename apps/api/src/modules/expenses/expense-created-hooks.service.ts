@@ -21,8 +21,11 @@ export interface ExpenseCreatedHookExpense {
   source: string | null;
 }
 
-/** Sources a receipt scan may be merged into from the scan screen: the bank's own copies. */
-export const BANK_CAPTURED_SOURCES = ['notification', 'import'] as const;
+/**
+ * Sources a receipt scan may be merged into from the scan screen: the bank's
+ * own copies, and the same purchase typed in by hand earlier (ABA-730).
+ */
+export const RECEIPT_MERGEABLE_SOURCES = ['notification', 'import', 'manual'] as const;
 
 export interface ExpenseCreatedHookOptions {
   /** The bank-captured row the user chose to merge this receipt into. */
@@ -81,9 +84,9 @@ export class ExpenseCreatedHooksService {
    * the post-save `possible_merge` suggestion would have done — just without
    * the round trip through an alert.
    *
-   * SAFETY: only an `ocr` row may ask, and only a bank-captured row
-   * (`notification`/`import`) in the same account can be folded — a client
-   * cannot use this to delete an arbitrary expense.
+   * SAFETY: only an `ocr` row may ask, and only a bank-captured or
+   * hand-entered row (`notification`/`import`/`manual`) in the same account
+   * can be folded — never another receipt, a bot or an API row.
    */
   private async mergeBankCopy(accountId: string, userId: string, receiptId: string, bankId: string): Promise<void> {
     if (!this.crossAccount) return;
@@ -92,7 +95,7 @@ export class ExpenseCreatedHooksService {
         accountId,
         isDeleted: false,
         id: { not: receiptId },
-        source: { in: [...BANK_CAPTURED_SOURCES] },
+        source: { in: [...RECEIPT_MERGEABLE_SOURCES] },
         OR: [{ id: bankId }, { clientId: bankId }],
       },
       select: { id: true },

@@ -174,7 +174,7 @@ export const useExpenseStore = create<ExpenseState>()(
       // Await local SQLite writes so data is persisted before navigation
       await insertExpense(newExpense);
 
-      // A receipt replacing the bank's copy of the same purchase: hide that
+      // A receipt replacing the bank's (or a hand-entered) copy of the same purchase: hide that
       // row now; the server folds it into this one when the create lands and
       // the next pull confirms the soft-delete on every device.
       if (mergeWithExpenseId) {

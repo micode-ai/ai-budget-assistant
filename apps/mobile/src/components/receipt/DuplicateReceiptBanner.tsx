@@ -4,12 +4,12 @@ import { useTranslation } from 'react-i18next';
 import type { ReceiptDuplicateMatch } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { getIntlLocale } from '@/i18n';
-import { bankCopySource, describeDuplicateMatch } from '@/features/receipt/receiptDuplicate';
+import { describeDuplicateMatch, mergeableSource } from '@/features/receipt/receiptDuplicate';
 
 interface Props {
   match: ReceiptDuplicateMatch | null | undefined;
   onOpen: (expenseId: string) => void;
-  /** Ticked: saving folds the bank's copy into this receipt. */
+  /** Ticked: saving folds the matched bank/manual row into this receipt. */
   mergeWithBank: boolean;
   onToggleMergeWithBank: () => void;
 }
@@ -20,8 +20,9 @@ interface Props {
  * genuine second purchase or the bank-notification copy of this very receipt.
  *
  * When the match is the bank's own copy (a captured push or an imported
- * statement row) the banner names that origin and offers a "merge into one
- * expense" box: the receipt survives, the bank row is folded in on save.
+ * statement row) or the same purchase typed in by hand (ABA-730), the banner
+ * names that origin and offers a "merge into one expense" box: the receipt
+ * survives, the other row is folded in on save.
  */
 export default function DuplicateReceiptBanner({
   match,
@@ -33,15 +34,17 @@ export default function DuplicateReceiptBanner({
   const theme = useTheme();
   const styles = useStyles(createStyles);
   if (!match) return null;
-  const bankSource = bankCopySource(match);
+  const mergeSource = mergeableSource(match);
   const title =
     match.kind === 'exact'
       ? t('receipt.duplicateExactTitle')
-      : bankSource === 'notification'
+      : mergeSource === 'notification'
         ? t('receipt.duplicateBankPushTitle')
-        : bankSource === 'import'
+        : mergeSource === 'import'
           ? t('receipt.duplicateBankImportTitle')
-          : t('receipt.duplicateLikelyTitle');
+          : mergeSource === 'manual'
+            ? t('receipt.duplicateManualTitle')
+            : t('receipt.duplicateLikelyTitle');
 
   return (
     <View style={styles.container} accessibilityRole="alert">
@@ -60,7 +63,7 @@ export default function DuplicateReceiptBanner({
           <Text style={styles.actionText}>{t('receipt.duplicateOpen')}</Text>
         </TouchableOpacity>
       </View>
-      {bankSource && (
+      {mergeSource && (
         <TouchableOpacity
           style={styles.mergeRow}
           onPress={onToggleMergeWithBank}
@@ -75,7 +78,9 @@ export default function DuplicateReceiptBanner({
           />
           <View style={styles.body}>
             <Text style={styles.mergeLabel}>{t('receipt.duplicateMergeLabel')}</Text>
-            <Text style={styles.detail}>{t('receipt.duplicateMergeHint')}</Text>
+            <Text style={styles.detail}>
+              {t(mergeSource === 'manual' ? 'receipt.duplicateMergeManualHint' : 'receipt.duplicateMergeHint')}
+            </Text>
             {match.amountOnly && (
               <Text style={styles.caution}>{t('receipt.duplicateAmountOnly')}</Text>
             )}

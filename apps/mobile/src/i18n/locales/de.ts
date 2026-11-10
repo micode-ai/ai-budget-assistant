@@ -580,6 +580,8 @@ export default {
     duplicateMergeLabel: 'Zu einer Ausgabe zusammenführen',
     duplicateMergeHint: 'Der Beleg ersetzt den Bankeintrag: Positionen, Foto und Kategorie bleiben erhalten.',
     duplicateAmountOnly: 'Nur Betrag und Datum stimmen überein – vor dem Zusammenführen prüfen.',
+    duplicateManualTitle: 'Diesen Kauf hast du bereits manuell erfasst',
+    duplicateMergeManualHint: 'Der Beleg ersetzt deinen Eintrag, mit Positionen und Foto; deine Notizen, Tags und dein Projekt werden übernommen.',
     scanAnyway: 'Trotzdem scannen',
     title: 'Beleg scannen',
     instructions: 'Foto aufnehmen, aus Galerie wählen oder PDF hochladen',

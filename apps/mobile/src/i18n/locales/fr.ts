@@ -580,6 +580,8 @@ export default {
     duplicateMergeLabel: 'Fusionner en une seule dépense',
     duplicateMergeHint: 'Le ticket remplace l’entrée bancaire : ses articles, sa photo et sa catégorie sont conservés.',
     duplicateAmountOnly: 'Seuls le montant et la date correspondent — vérifiez avant de fusionner.',
+    duplicateManualTitle: 'Vous avez déjà saisi cet achat à la main',
+    duplicateMergeManualHint: 'Le ticket remplace votre saisie, avec ses articles et sa photo ; vos notes, tags et projet sont repris.',
     scanAnyway: 'Scanner quand même',
     title: 'Scanner un reçu',
     instructions: 'Prenez une photo, choisissez depuis la galerie ou importez un PDF',

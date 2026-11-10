@@ -13,6 +13,7 @@ import { attributeToCategories } from '../../common/utils/category-attribution';
 import { AnomalyAlertWriterService } from './anomaly-alert-writer.service';
 import {
   DAY_MS,
+  pickManualReceiptCounterpart,
   pickPushReceiptCounterpart,
   PRICE_INCREASE_FACTOR,
   SPIKE_THRESHOLD_PERCENT,
@@ -288,7 +289,10 @@ export class AnomalyDetectorsService {
     // that pair is matched loosely (ABA-625).
     const other =
       (label ? candidates.find((c: { merchant?: string | null; description?: string | null }) => expensePayee(c) === label) : undefined) ??
-      pickPushReceiptCounterpart(expense, candidates);
+      pickPushReceiptCounterpart(expense, candidates) ??
+      // A hand-entered row and its receipt (`Netto` vs `Netto nr 541`) —
+      // loose payee only, never amount alone (ABA-730).
+      pickManualReceiptCounterpart(expense, candidates);
     if (!other) return;
 
     // Receipt-scan vs auto-captured/imported row → the same purchase recorded
@@ -299,7 +303,12 @@ export class AnomalyDetectorsService {
     const otherIsAuto = autoSources.has((other as { source?: string | null }).source ?? '');
     const expenseIsReceipt = expense.source === 'ocr';
     const otherIsReceipt = (other as { source?: string | null }).source === 'ocr';
-    const suggestMerge = (expenseIsAuto && otherIsReceipt) || (otherIsAuto && expenseIsReceipt);
+    // A hand-entered row recorded again by a receipt scan is the same case:
+    // the receipt is the richer record (ABA-730).
+    const expenseIsManual = expense.source === 'manual';
+    const otherIsManual = (other as { source?: string | null }).source === 'manual';
+    const suggestMerge =
+      ((expenseIsAuto || expenseIsManual) && otherIsReceipt) || ((otherIsAuto || otherIsManual) && expenseIsReceipt);
 
     const params = {
       merchant:

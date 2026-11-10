@@ -33,6 +33,11 @@ currency within ±1 day, as `detectDuplicateCharge`. Against a **bank-captured**
 `notification` or `import`) it then falls back to the push↔receipt pairing: a loose payee match
 (`payeesLooselyMatch`), else a SINGLE bank row on amount alone, flagged `amountOnly` (ABA-630).
 
+**A hand-entered row is matched loosely as well (ABA-743)** — `Netto` typed by hand against the
+receipt's `Netto nr 541` — but never on amount alone. The banner says "You already added this purchase
+by hand" and offers the same merge box, **unticked** by default: a manual row can be a genuine second
+purchase. Folding it keeps the receipt; notes gap-fill, tags union and the project carries over.
+
 **A bank copy can be merged from the scan screen (ABA-630).** The match carries `source`; when it is a
 bank copy the banner names the origin and shows a "Merge into one expense" box — ticked by default,
 unticked when `amountOnly`. Saving with it ticked sends `mergeWithExpenseId` on the create;
@@ -52,9 +57,12 @@ exact re-upload.
   without one never clears a stored fingerprint.
 - A warning, never a block: a match can be a genuine second purchase, or the bank-notification copy
   of this very receipt. The merge happens only on the user's tick.
-- `mergeWithExpenseId` folds only a `notification`/`import` row in the same account, and only from an
-  `ocr` create — the server re-checks both, so a client cannot use it to delete an arbitrary expense.
-- The amount-only fallback applies to bank rows ONLY; two manual rows are never paired on amount.
+- `mergeWithExpenseId` folds only a `notification`/`import`/`manual` row (`RECEIPT_MERGEABLE_SOURCES`)
+  in the same account, and only from an `ocr` create — the server re-checks both, so a client cannot
+  use it to fold another receipt, a bot or an API row.
+- The amount-only fallback applies to bank rows ONLY; a manual row is never paired with a receipt on
+  amount alone, and two manual rows never at all.
+- The merge box starts ticked only for a bank copy matched on the payee; never for a manual row.
 
 ## Known gaps
 - Expenses saved before ABA-603 have no fingerprint; only stage 2 catches them.
@@ -69,4 +77,5 @@ exact re-upload.
 
 ## History
 ABA-603 (the feature; bot scan flows unified into one `runScan` per bot) · [ABA-630](https://github.com/micode-ai/ai-budget-assistant/issues/660) (bank-copy
-matching and the merge checkbox).
+matching and the merge checkbox) · [ABA-743](https://github.com/micode-ai/ai-budget-assistant/issues/781) (hand-entered rows:
+loose match and an unticked merge box).

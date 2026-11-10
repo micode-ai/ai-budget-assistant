@@ -55,6 +55,8 @@ function toMatch(kind: ReceiptDuplicateMatch['kind'], row: CandidateRow, amountO
  * payee is matched loosely, and failing that a SINGLE bank row is accepted on
  * amount alone (`amountOnly`) — the same pairing `pickPushReceiptCounterpart`
  * uses after the save. It is a suggestion the user confirms, never a merge.
+ * A hand-entered (`manual`) row is matched loosely too, but never on amount
+ * alone (ABA-730).
  */
 export function pickLikelyDuplicate(
   receipt: { merchant?: string | null; description?: string | null },
@@ -64,7 +66,10 @@ export function pickLikelyDuplicate(
   const hit = label ? candidates.find((c) => expensePayee(c) === label) : undefined;
   if (hit) return toMatch('likely', hit);
   const bank = candidates.filter((c) => BANK_SOURCES.has(c.source ?? ''));
-  const loose = label ? bank.find((c) => payeesLooselyMatch(label, expensePayee(c))) : undefined;
+  // A hand-entered row names the shop the short way (`Netto` vs the receipt's
+  // `Netto nr 541`): loose payee, like a bank copy — but never amount alone (ABA-730).
+  const loosePool = candidates.filter((c) => BANK_SOURCES.has(c.source ?? '') || c.source === 'manual');
+  const loose = label ? loosePool.find((c) => payeesLooselyMatch(label, expensePayee(c))) : undefined;
   if (loose) return toMatch('likely', loose);
   return bank.length === 1 ? toMatch('likely', bank[0], true) : null;
 }

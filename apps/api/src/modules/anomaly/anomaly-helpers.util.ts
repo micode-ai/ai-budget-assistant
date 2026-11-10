@@ -97,6 +97,32 @@ export function pickPushReceiptCounterpart<T extends { merchant?: string | null;
   return counterparts.length === 1 ? counterparts[0] : null;
 }
 
+/**
+ * The hand-entered ↔ receipt-scan pair: one side `manual`, the other `ocr`.
+ * A user types the shop the short way (`Netto`) and the receipt prints the
+ * branch (`Netto nr 541`), so this pair is matched on a LOOSE payee too — but,
+ * unlike the push pair, never on amount alone: two hand-entered purchases of
+ * the same amount on one day are common, and a typed row with no shop name
+ * identifies nothing (ABA-730).
+ */
+export function isManualReceiptPair(a?: string | null, b?: string | null): boolean {
+  return (a === 'manual' && b === 'ocr') || (a === 'ocr' && b === 'manual');
+}
+
+/** The loose-payee manual↔receipt counterpart of `expense`, or null. */
+export function pickManualReceiptCounterpart<T extends { merchant?: string | null; description?: string | null; source?: string | null }>(
+  expense: { merchant?: string | null; description?: string | null; source?: string | null },
+  candidates: T[],
+): T | null {
+  const label = expensePayee(expense);
+  if (!label) return null;
+  return (
+    candidates.find(
+      (c) => isManualReceiptPair(expense.source, c.source) && payeesLooselyMatch(label, expensePayee(c)),
+    ) ?? null
+  );
+}
+
 export function normalizeMerchant(merchant: string): string {
   return merchant.trim().toLowerCase();
 }

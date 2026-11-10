@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { router } from 'expo-router';
 import { showAlert } from '@/utils/alert';
 import { getIntlLocale } from '@/i18n';
-import { bankCopySource, defaultMergeWithBank, describeDuplicateMatch } from '@/features/receipt/receiptDuplicate';
+import { defaultMergeWithBank, describeDuplicateMatch, mergeableSource } from '@/features/receipt/receiptDuplicate';
 import type { ReceiptDuplicateMatch } from '@budget/shared-types';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { useTranslation } from 'react-i18next';
@@ -375,7 +375,7 @@ export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpens
     itemCategories,
     proposedNamesToCreate,
     mergeWithExpenseId:
-      mergeWithBank && bankCopySource(scannedReceipt?.possibleDuplicate)
+      mergeWithBank && mergeableSource(scannedReceipt?.possibleDuplicate)
         ? scannedReceipt?.possibleDuplicate?.expenseId
         : undefined,
     // In share mode the only caller of onReset is "Edit" (there is no "Scan
