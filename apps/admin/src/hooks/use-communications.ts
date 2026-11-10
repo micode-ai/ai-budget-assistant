@@ -41,7 +41,7 @@ export function useSendBroadcast() {
       subject?: string;
       body: string;
       html?: string;
-      filters?: { tier?: string; isActive?: boolean; language?: string };
+      filters?: { tier?: string; isActive?: boolean; language?: string; activeWithinDays?: number };
     }) => {
       return api.post("admin/notifications/broadcast", { json: data }).json();
     },

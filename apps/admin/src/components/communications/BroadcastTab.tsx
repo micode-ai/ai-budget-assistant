@@ -23,6 +23,8 @@ export function BroadcastTab() {
   const [body, setBody] = useState("");
   const [tier, setTier] = useState<string>("");
   const [language, setLanguage] = useState<string>("");
+  // ABA-742: only users whose last activity is within N days; empty = no activity filter.
+  const [activeWithinDays, setActiveWithinDays] = useState<string>("");
   const sendBroadcast = useSendBroadcast();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -30,6 +32,7 @@ export function BroadcastTab() {
     const filters: Record<string, unknown> = { isActive: true };
     if (tier) filters.tier = tier;
     if (language) filters.language = language;
+    if (activeWithinDays && Number(activeWithinDays) >= 1) filters.activeWithinDays = Number(activeWithinDays);
 
     sendBroadcast.mutate(
       {
@@ -38,7 +41,7 @@ export function BroadcastTab() {
         subject: type === "email" ? subject : undefined,
         body,
         html: type === "email" ? body : undefined,
-        filters: filters as { tier?: string; isActive?: boolean; language?: string },
+        filters: filters as { tier?: string; isActive?: boolean; language?: string; activeWithinDays?: number },
       },
       {
         onSuccess: (data) => {
@@ -91,8 +94,20 @@ export function BroadcastTab() {
                   <SelectItem value="fr">French</SelectItem>
                   <SelectItem value="pl">Polish</SelectItem>
                   <SelectItem value="be">Belarusian</SelectItem>
+                  <SelectItem value="nl">Dutch</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+            <div className="w-[180px] space-y-2">
+              <Label>Active within (days)</Label>
+              <Input
+                type="number"
+                min={1}
+                max={365}
+                placeholder="Any"
+                value={activeWithinDays}
+                onChange={(e) => setActiveWithinDays(e.target.value)}
+              />
             </div>
           </div>
           {type === "push" && (

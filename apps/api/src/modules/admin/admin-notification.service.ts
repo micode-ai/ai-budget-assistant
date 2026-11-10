@@ -72,13 +72,19 @@ export class AdminNotificationService {
       subject?: string;
       body: string;
       html?: string;
-      filters?: { tier?: string; isActive?: boolean; language?: string };
+      filters?: { tier?: string; isActive?: boolean; language?: string; activeWithinDays?: number };
     },
   ) {
     const where: Record<string, unknown> = {};
     if (params.filters?.isActive !== undefined) where.isActive = params.filters.isActive;
     if (params.filters?.language) where.language = params.filters.language;
     if (params.filters?.tier) where.subscription = { tier: params.filters.tier };
+    // ABA-742: reach only people who actually use the app (lastSyncAt is the last-activity stamp).
+    // Clamped to 1..365 days; anything else (0, negative, non-numeric) adds no filter.
+    const days = Number(params.filters?.activeWithinDays);
+    if (Number.isFinite(days) && days >= 1) {
+      where.lastSyncAt = { gte: new Date(Date.now() - Math.min(365, Math.floor(days)) * 86_400_000) };
+    }
 
     const users = await this.prisma.user.findMany({
       where,

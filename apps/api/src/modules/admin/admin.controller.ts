@@ -191,7 +191,7 @@ export class AdminController {
       subject?: string;
       body: string;
       html?: string;
-      filters?: { tier?: string; isActive?: boolean; language?: string };
+      filters?: { tier?: string; isActive?: boolean; language?: string; activeWithinDays?: number };
     },
     @Req() req: AdminRequest,
   ) {
