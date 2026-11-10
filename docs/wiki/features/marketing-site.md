@@ -245,6 +245,14 @@ title, read the page's queries in Search Console (Performance → filter by page
 the body actually answers them. Most impressions are anonymized long-tail, so the visible queries
 are a sample, not the whole.
 
+**A bank-import article may only promise a bank the app parses ([ABA-740](https://github.com/micode-ai/ai-budget-assistant/issues/778)).**
+`scripts/check-blog-bank-claims.py`, run by `marketing-checks.yml` whenever blog sources, the bank
+parsers or the import picker change: an article whose slug names an import topic and a bank fails
+when no parser exists for that bank, and warns when the parser is hidden from the import picker
+(ING, Millennium, Pekao today) unless the article tells the reader to use auto-detect. Parser ids
+come from `import-bank/parsers/registry.ts`, the picker from `features/import/importEntries.ts`; a
+new bank NAME in the blog needs one line in the script's `BANKS`.
+
 ## Known gaps
 
 - The three generators keep parallel notions of the language list and of which topics exist;
@@ -284,4 +292,4 @@ ABA-686 (diagnosis of the decline: site-wide ranking loss from 2026-09-15, follo
 ABA-688 (weekly Search Console API snapshot per section with a drop alert) ·
 ABA-689 (per-section sitemaps submitted separately) · ABA-690 (site changes listed next to the weekly series). ·
 ABA-710 (developers page, footer link and llms entry for the public API) ·
-ABA-716 (six shipped features added to `FEATURES_EN`; Organization `founder` and Instagram `sameAs`). · [ABA-739](https://github.com/micode-ai/ai-budget-assistant/issues/777) (search-intent titles, Play short descriptions)
+ABA-716 (six shipped features added to `FEATURES_EN`; Organization `founder` and Instagram `sameAs`). · [ABA-739](https://github.com/micode-ai/ai-budget-assistant/issues/777) (search-intent titles, Play short descriptions) · [ABA-740](https://github.com/micode-ai/ai-budget-assistant/issues/778) (blog bank-claims check)

@@ -1,0 +1,34 @@
+name: Marketing checks
+
+# Content checks that must not block an app deploy (ABA-740). Runs when the blog,
+# the bank parsers or the import picker change — any of the three can make an
+# article's promise untrue.
+on:
+  push:
+    branches: [development]
+    paths:
+      - 'docs/marketing/seo/**/*.md'
+      - 'apps/api/src/modules/import-bank/parsers/**'
+      - 'apps/mobile/src/features/import/importEntries.ts'
+      - 'scripts/check-blog-bank-claims.py'
+      - '.github/workflows/marketing-checks.yml'
+  pull_request:
+    paths:
+      - 'docs/marketing/seo/**/*.md'
+      - 'apps/api/src/modules/import-bank/parsers/**'
+      - 'apps/mobile/src/features/import/importEntries.ts'
+      - 'scripts/check-blog-bank-claims.py'
+  workflow_dispatch:
+
+jobs:
+  bank-claims:
+    name: Blog bank-import claims
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Every bank a blog article promises has a parser
+        run: python scripts/check-blog-bank-claims.py

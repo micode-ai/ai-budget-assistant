@@ -1,0 +1,40 @@
+name: Reminders
+
+# Sends the dated reminders in docs/ops/reminders.tsv that fall due today (UTC) to the
+# ops Telegram channel (ABA-740). A file, not a person's memory, holds anything with a date.
+on:
+  schedule:
+    - cron: '30 7 * * *' # daily 07:30 UTC
+  workflow_dispatch:
+
+jobs:
+  remind:
+    name: Due reminders
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Send today's reminders
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.OPS_TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.OPS_TELEGRAM_CHAT_ID }}
+        run: |
+          TODAY=$(date -u +%F)
+          DUE=$(grep -v '^#' docs/ops/reminders.tsv | awk -F'\t' -v d="$TODAY" '$1 == d { print "• " $2 }')
+          if [ -z "$DUE" ]; then
+            echo "No reminders due on $TODAY"
+            exit 0
+          fi
+          echo "$DUE"
+          if [ -z "$TELEGRAM_BOT_TOKEN" ] || [ -z "$TELEGRAM_CHAT_ID" ]; then
+            echo "OPS Telegram secrets missing — cannot send" >&2
+            exit 1
+          fi
+          MESSAGE=$(printf '*[AI Budget]* Reminders for %s\n\n%s' "$TODAY" "$DUE")
+          curl -sS -X POST \
+            "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            -d "chat_id=${TELEGRAM_CHAT_ID}" \
+            -d "disable_web_page_preview=true" \
+            --data-urlencode "text=${MESSAGE}" > tg.json
+          grep -q '"ok":true' tg.json && echo "sent" || { echo "::warning::Telegram did not accept the reminder: $(cat tg.json)"; exit 1; }

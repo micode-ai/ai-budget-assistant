@@ -302,6 +302,7 @@ Newest last within each section.
 - 2026-11-09 · [ABA-737](https://github.com/micode-ai/ai-budget-assistant/issues/775) — one push (17:00 UTC) to users 24–48 h after signup with no transaction, gated by `notifyTrackingGap`, tap opens the receipt scanner; send-once by a one-period window, no table; e-mail follow-up deferred (no consent mechanism); `features/gamification.md`.
 - 2026-11-09 · [ABA-738](https://github.com/micode-ai/ai-budget-assistant/issues/776) — one onboarding e-mail at 72–96 h for users with nothing logged, opt-out via `User.onboardingEmailsEnabled` and a signed one-click unsubscribe (body link + RFC 8058 headers); `features/gamification.md`.
 - 2026-11-09 · [ABA-739](https://github.com/micode-ai/ai-budget-assistant/issues/777) — blog titles rewritten to searched intent (8 Polish "jak pobrać wyciąg z <bank>" articles, family budget, EN Black Friday) and Play short descriptions led by the receipt scanner; GSC showed position ~8 at 0.6% CTR; `features/marketing-site.md`.
+- 2026-11-10 · [ABA-740](https://github.com/micode-ai/ai-budget-assistant/issues/778) — weekly growth digest and dated reminders to the ops Telegram channel, and a CI check that blog bank-import articles only promise parsed banks (hidden parsers need an auto-detect pointer); `features/marketing-site.md`, `CLAUDE.md` (Observability).
 
 ## Queries
 

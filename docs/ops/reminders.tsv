@@ -1,0 +1,10 @@
+# Dated reminders sent to the ops Telegram channel by .github/workflows/reminders.yml (ABA-740).
+# One per line: YYYY-MM-DD<TAB>text. Sent once, on that date (UTC, 07:30). Lines starting with # are ignored.
+# Add a line instead of trusting memory for anything with a date on it; delete lines once they are in the past.
+2026-11-13	AlternativeTo: check moderation of the listing edit and the 7 alternatives. Once approved, submit one more edit dropping ING/Millennium/Pekao from the description — see docs/marketing/outreach-2026-11-distribution.md §3.
+2026-11-17	Play Console: check the review of the 11 store-listing text changes (submitted 2026-11-10). Managed publishing is on — publish them in Publishing overview once approved.
+2026-11-20	Black Friday (27.11): publish the Black Friday film/posts this week, with a tagged Play link per platform (docs/marketing/outreach-2026-11-distribution.md §1).
+2026-11-24	Listicle pitches: for each one sent ~10 days ago with no reply, send the single allowed follow-up (docs/marketing/outreach-2026-11-distribution.md §2).
+2026-12-01	Activation: open the admin Activation page — compare 24 h / 7 day activation of signups after 2026-11-10 (activation push + e-mail, chat nudge, get-started order) with the weeks before.
+2026-12-08	Search Console: CTR and clicks of the 10 retitled articles (ABA-739) vs the baseline — Polish bank-statement pages were ~0.6% CTR at position ~8.
+2026-12-08	Acquisition: check the new src tags on the admin Acquisition page (telegram-*, pitch outlets, split/group guest pages) — is "not-set" shrinking?

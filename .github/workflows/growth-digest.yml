@@ -1,0 +1,74 @@
+name: Growth Digest
+
+# Weekly growth numbers to the ops Telegram channel (ABA-740): signups by source,
+# activation of last week's cohort, active users, transactions, e-mail opt-outs.
+# Read-only — scripts/growth-digest.sh runs SELECTs in a READ ONLY transaction.
+on:
+  schedule:
+    - cron: '0 7 * * 1' # Monday 07:00 UTC
+  workflow_dispatch:
+
+concurrency:
+  group: growth-digest
+  cancel-in-progress: false
+
+jobs:
+  digest:
+    name: Weekly growth digest
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout (for script)
+        uses: actions/checkout@v5
+
+      - name: Configure SSH key
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_digest
+          chmod 600 ~/.ssh/id_digest
+
+      - name: Collect the numbers over SSH
+        id: collect
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+        run: |
+          set +e
+          OUT=$(ssh -o StrictHostKeyChecking=accept-new -o BatchMode=yes -i ~/.ssh/id_digest \
+            "$SSH_USER@$SSH_HOST" 'bash -s' < scripts/growth-digest.sh 2>&1)
+          CODE=$?
+          echo "$OUT"
+          {
+            echo "code=$CODE"
+            echo "report<<EOF"
+            echo "$OUT"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Send to the ops Telegram channel
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.OPS_TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.OPS_TELEGRAM_CHAT_ID }}
+          REPORT: ${{ steps.collect.outputs.report }}
+          CODE: ${{ steps.collect.outputs.code }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          if [ -z "$TELEGRAM_BOT_TOKEN" ] || [ -z "$TELEGRAM_CHAT_ID" ]; then
+            echo "OPS Telegram secrets missing — cannot send" >&2
+            exit 1
+          fi
+          if [ "$CODE" = "0" ]; then
+            HEAD='*[AI Budget]* Weekly growth digest'
+          else
+            HEAD='*[AI Budget]* Weekly growth digest FAILED'
+          fi
+          MESSAGE=$(printf '%s\n\n```\n%s\n```\nAdmin: Activation / Acquisition pages for the detail.\n[GitHub run](%s)' "$HEAD" "$REPORT" "$RUN_URL")
+          curl -sS -X POST \
+            "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            -d "chat_id=${TELEGRAM_CHAT_ID}" \
+            -d "parse_mode=Markdown" \
+            -d "disable_web_page_preview=true" \
+            --data-urlencode "text=${MESSAGE}" > tg.json
+          grep -q '"ok":true' tg.json && echo "sent" || { echo "::warning::Telegram did not accept the digest: $(cat tg.json)"; exit 1; }
+          [ "$CODE" = "0" ]
