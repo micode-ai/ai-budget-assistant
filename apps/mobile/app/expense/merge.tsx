@@ -80,10 +80,11 @@ export default function ExpenseMergeScreen() {
     if (expenseB.source === 'import' || expenseB.source === 'notification' ? false : expenseA.source === 'notification') {
       return expenseB.id;
     }
-    // A receipt scan and the same purchase typed in by hand: the receipt is
-    // the richer record (items, photo, the shop's real name) — ABA-730.
-    if (expenseA.source === 'ocr' && expenseB.source === 'manual') return expenseA.id;
-    if (expenseB.source === 'ocr' && expenseA.source === 'manual') return expenseB.id;
+    // A receipt scan and the same purchase the user entered (typed, spoken or
+    // sent to a bot): the receipt is the richer record — ABA-743.
+    const userEntered: string[] = ['manual', 'voice', 'telegram', 'whatsapp', 'slack'];
+    if (expenseA.source === 'ocr' && userEntered.includes(expenseB.source)) return expenseA.id;
+    if (expenseB.source === 'ocr' && userEntered.includes(expenseA.source)) return expenseB.id;
     if (expenseA.source === 'import') return expenseA.id;
     if (expenseB.source === 'import') return expenseB.id;
     // Default to A (keepId param)

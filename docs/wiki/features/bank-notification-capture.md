@@ -139,9 +139,12 @@ nothing matched and both rows stayed with no alert. The loose rule applies to th
 the amount-only fallback, to manual ↔ receipt (below); every other pair keeps exact-payee `P`, so two
 manual rows are never flagged on amount alone.
 
-**A hand-entered row and its receipt are paired loosely too, but never on amount alone (ABA-743).**
+**A user-entered row and its receipt are paired loosely too, but never on amount alone (ABA-743).**
+"User-entered" is `USER_ENTERED_SOURCES`: `manual`, `voice` and bot text (`telegram`/`whatsapp`/`slack`) —
+a bot's receipt photo is `ocr`, its text message is the bot's own source.
+
 A user types `Netto`, the receipt prints `Netto nr 541`; with the exact rule the pair stayed as two
-expenses with no alert. `pickManualReceiptCounterpart` pairs `manual` ↔ `ocr` on `payeesLooselyMatch`
+expenses with no alert. `pickManualReceiptCounterpart` pairs a user-entered row ↔ `ocr` on `payeesLooselyMatch`
 only — no single-counterpart fallback, because two hand-entered purchases of one amount on one day are
 common and a typed row's label is the only thing identifying it. The alert carries `suggestMerge`, so
 it opens the merge screen with the receipt as the default survivor. Two manual rows keep exact `P`.

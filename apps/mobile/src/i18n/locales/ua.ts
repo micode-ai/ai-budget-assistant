@@ -582,7 +582,7 @@ export default {
     duplicateMergeLabel: 'Об’єднати в одну витрату',
     duplicateMergeHint: 'Чек замінить запис із банку: збережуться позиції, фото та категорія.',
     duplicateAmountOnly: 'Збіглися лише сума та дата — перевірте перед об’єднанням.',
-    duplicateManualTitle: 'Цю покупку вже додано вручну',
+    duplicateManualTitle: 'Ви вже додали цю покупку',
     duplicateMergeManualHint: 'Чек замінить ваш запис, з позиціями та фото; ваші нотатки, теги й проєкт перенесуться.',
     scanAnyway: 'Все одно розпізнати',
     title: 'Сканувати чек',

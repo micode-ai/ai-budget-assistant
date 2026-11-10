@@ -23,9 +23,10 @@ export interface ExpenseCreatedHookExpense {
 
 /**
  * Sources a receipt scan may be merged into from the scan screen: the bank's
- * own copies, and the same purchase typed in by hand earlier (ABA-730).
+ * own copies, and the same purchase the user entered earlier — typed in the
+ * app, said by voice or sent as text to a bot (ABA-743).
  */
-export const RECEIPT_MERGEABLE_SOURCES = ['notification', 'import', 'manual'] as const;
+export const RECEIPT_MERGEABLE_SOURCES = ['notification', 'import', 'manual', 'voice', 'telegram', 'whatsapp', 'slack'] as const;
 
 export interface ExpenseCreatedHookOptions {
   /** The bank-captured row the user chose to merge this receipt into. */
@@ -85,8 +86,8 @@ export class ExpenseCreatedHooksService {
    * the round trip through an alert.
    *
    * SAFETY: only an `ocr` row may ask, and only a bank-captured or
-   * hand-entered row (`notification`/`import`/`manual`) in the same account
-   * can be folded — never another receipt, a bot or an API row.
+   * user-entered row (`RECEIPT_MERGEABLE_SOURCES`) in the same account can be
+   * folded — never another receipt, an API, group or recurring row.
    */
   private async mergeBankCopy(accountId: string, userId: string, receiptId: string, bankId: string): Promise<void> {
     if (!this.crossAccount) return;

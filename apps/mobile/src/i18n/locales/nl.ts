@@ -580,7 +580,7 @@ export default {
     duplicateMergeLabel: 'Samenvoegen tot één uitgave',
     duplicateMergeHint: 'Het bonnetje vervangt de bankregel: artikelen, foto en categorie blijven behouden.',
     duplicateAmountOnly: 'Alleen bedrag en datum komen overeen — controleer vóór het samenvoegen.',
-    duplicateManualTitle: 'Je hebt deze aankoop al handmatig toegevoegd',
+    duplicateManualTitle: 'Je hebt deze aankoop al toegevoegd',
     duplicateMergeManualHint: 'De bon vervangt je invoer, met artikelen en foto; je notities, tags en project worden overgenomen.',
     scanAnyway: 'Toch scannen',
     title: 'Bon scannen',

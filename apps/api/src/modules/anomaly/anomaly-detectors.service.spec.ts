@@ -151,7 +151,7 @@ describe('detectDuplicateCharge', () => {
     expect(arg.params.merchant).toBe('ZABKA Z1');
   });
 
-  it('suggests a merge when a receipt meets the same purchase typed in by hand (ABA-730)', async () => {
+  it('suggests a merge when a receipt meets the same purchase typed in by hand (ABA-743)', async () => {
     const { service, prisma, alertWriter } = makeService();
     prisma.expense.findMany = jest
       .fn()
@@ -174,6 +174,15 @@ describe('detectDuplicateCharge', () => {
     await service.detectDuplicateCharge('acc-1', 'user-1', expenseRow({ merchant: null, description: 'netto', source: 'manual' }) as any);
 
     expect(alertWriter.createAlert.mock.calls[0][0].params).toMatchObject({ otherExpenseId: 'e-ocr', suggestMerge: true });
+  });
+
+  it.each(['voice', 'telegram', 'whatsapp', 'slack'])('treats a %s row like a hand-entered one', async (source) => {
+    const { service, prisma, alertWriter } = makeService();
+    prisma.expense.findMany = jest.fn().mockResolvedValue([{ id: 'e-typed', merchant: null, description: 'netto', source }]);
+
+    await service.detectDuplicateCharge('acc-1', 'user-1', expenseRow({ merchant: 'Netto nr 541', source: 'ocr' }) as any);
+
+    expect(alertWriter.createAlert.mock.calls[0][0].params).toMatchObject({ otherExpenseId: 'e-typed', suggestMerge: true });
   });
 
   it('never pairs a manual row with a receipt on amount alone', async () => {

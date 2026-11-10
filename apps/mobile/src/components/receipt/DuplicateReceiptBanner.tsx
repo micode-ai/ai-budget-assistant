@@ -20,7 +20,7 @@ interface Props {
  * genuine second purchase or the bank-notification copy of this very receipt.
  *
  * When the match is the bank's own copy (a captured push or an imported
- * statement row) or the same purchase typed in by hand (ABA-730), the banner
+ * statement row) or the same purchase typed in by hand (ABA-743), the banner
  * names that origin and offers a "merge into one expense" box: the receipt
  * survives, the other row is folded in on save.
  */
@@ -42,7 +42,7 @@ export default function DuplicateReceiptBanner({
         ? t('receipt.duplicateBankPushTitle')
         : mergeSource === 'import'
           ? t('receipt.duplicateBankImportTitle')
-          : mergeSource === 'manual'
+          : mergeSource === 'userEntered'
             ? t('receipt.duplicateManualTitle')
             : t('receipt.duplicateLikelyTitle');
 
@@ -79,7 +79,7 @@ export default function DuplicateReceiptBanner({
           <View style={styles.body}>
             <Text style={styles.mergeLabel}>{t('receipt.duplicateMergeLabel')}</Text>
             <Text style={styles.detail}>
-              {t(mergeSource === 'manual' ? 'receipt.duplicateMergeManualHint' : 'receipt.duplicateMergeHint')}
+              {t(mergeSource === 'userEntered' ? 'receipt.duplicateMergeManualHint' : 'receipt.duplicateMergeHint')}
             </Text>
             {match.amountOnly && (
               <Text style={styles.caution}>{t('receipt.duplicateAmountOnly')}</Text>

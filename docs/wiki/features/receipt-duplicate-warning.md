@@ -33,7 +33,7 @@ currency within ±1 day, as `detectDuplicateCharge`. Against a **bank-captured**
 `notification` or `import`) it then falls back to the push↔receipt pairing: a loose payee match
 (`payeesLooselyMatch`), else a SINGLE bank row on amount alone, flagged `amountOnly` (ABA-630).
 
-**A hand-entered row is matched loosely as well (ABA-743)** — `Netto` typed by hand against the
+**A user-entered row (app form, voice, bot text) is matched loosely as well (ABA-743)** — `Netto` typed by hand against the
 receipt's `Netto nr 541` — but never on amount alone. The banner says "You already added this purchase
 by hand" and offers the same merge box, **unticked** by default: a manual row can be a genuine second
 purchase. Folding it keeps the receipt; notes gap-fill, tags union and the project carries over.
@@ -57,9 +57,9 @@ exact re-upload.
   without one never clears a stored fingerprint.
 - A warning, never a block: a match can be a genuine second purchase, or the bank-notification copy
   of this very receipt. The merge happens only on the user's tick.
-- `mergeWithExpenseId` folds only a `notification`/`import`/`manual` row (`RECEIPT_MERGEABLE_SOURCES`)
+- `mergeWithExpenseId` folds only a bank or user-entered row (`RECEIPT_MERGEABLE_SOURCES`)
   in the same account, and only from an `ocr` create — the server re-checks both, so a client cannot
-  use it to fold another receipt, a bot or an API row.
+  use it to fold another receipt, an API, group or recurring row.
 - The amount-only fallback applies to bank rows ONLY; a manual row is never paired with a receipt on
   amount alone, and two manual rows never at all.
 - The merge box starts ticked only for a bank copy matched on the payee; never for a manual row.

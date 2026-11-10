@@ -13,6 +13,7 @@ import { attributeToCategories } from '../../common/utils/category-attribution';
 import { AnomalyAlertWriterService } from './anomaly-alert-writer.service';
 import {
   DAY_MS,
+  isUserEnteredSource,
   pickManualReceiptCounterpart,
   pickPushReceiptCounterpart,
   PRICE_INCREASE_FACTOR,
@@ -291,7 +292,7 @@ export class AnomalyDetectorsService {
       (label ? candidates.find((c: { merchant?: string | null; description?: string | null }) => expensePayee(c) === label) : undefined) ??
       pickPushReceiptCounterpart(expense, candidates) ??
       // A hand-entered row and its receipt (`Netto` vs `Netto nr 541`) —
-      // loose payee only, never amount alone (ABA-730).
+      // loose payee only, never amount alone (ABA-743).
       pickManualReceiptCounterpart(expense, candidates);
     if (!other) return;
 
@@ -304,9 +305,9 @@ export class AnomalyDetectorsService {
     const expenseIsReceipt = expense.source === 'ocr';
     const otherIsReceipt = (other as { source?: string | null }).source === 'ocr';
     // A hand-entered row recorded again by a receipt scan is the same case:
-    // the receipt is the richer record (ABA-730).
-    const expenseIsManual = expense.source === 'manual';
-    const otherIsManual = (other as { source?: string | null }).source === 'manual';
+    // the receipt is the richer record (ABA-743).
+    const expenseIsManual = isUserEnteredSource(expense.source);
+    const otherIsManual = isUserEnteredSource((other as { source?: string | null }).source);
     const suggestMerge =
       ((expenseIsAuto || expenseIsManual) && otherIsReceipt) || ((otherIsAuto || otherIsManual) && expenseIsReceipt);
 

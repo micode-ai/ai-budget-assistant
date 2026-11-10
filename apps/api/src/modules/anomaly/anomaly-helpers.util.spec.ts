@@ -136,7 +136,7 @@ describe('suppressionSubject', () => {
   });
 });
 
-describe('manual ↔ receipt loose matching (ABA-730)', () => {
+describe('manual ↔ receipt loose matching (ABA-743)', () => {
   const receipt = { merchant: 'Netto nr 541', description: 'Netto nr 541 (2 items)', source: 'ocr' };
 
   it('pairs a hand-typed shop name with the branch the receipt prints', () => {

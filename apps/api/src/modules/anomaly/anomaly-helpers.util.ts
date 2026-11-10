@@ -98,15 +98,25 @@ export function pickPushReceiptCounterpart<T extends { merchant?: string | null;
 }
 
 /**
- * The hand-entered ↔ receipt-scan pair: one side `manual`, the other `ocr`.
- * A user types the shop the short way (`Netto`) and the receipt prints the
- * branch (`Netto nr 541`), so this pair is matched on a LOOSE payee too — but,
- * unlike the push pair, never on amount alone: two hand-entered purchases of
- * the same amount on one day are common, and a typed row with no shop name
- * identifies nothing (ABA-730).
+ * Sources whose payee the user typed or said themselves: the app's form, its
+ * voice capture, and a text message to any of the three bots (ABA-743).
+ */
+export const USER_ENTERED_SOURCES: ReadonlySet<string> = new Set(['manual', 'voice', 'telegram', 'whatsapp', 'slack']);
+
+export function isUserEnteredSource(source?: string | null): boolean {
+  return USER_ENTERED_SOURCES.has(source ?? '');
+}
+
+/**
+ * The user-entered ↔ receipt-scan pair: one side typed/said by the user, the
+ * other `ocr`. A user names the shop the short way (`Netto`) and the receipt
+ * prints the branch (`Netto nr 541`), so this pair is matched on a LOOSE payee
+ * too — but, unlike the push pair, never on amount alone: two hand-entered
+ * purchases of the same amount on one day are common, and a typed row with no
+ * shop name identifies nothing (ABA-743).
  */
 export function isManualReceiptPair(a?: string | null, b?: string | null): boolean {
-  return (a === 'manual' && b === 'ocr') || (a === 'ocr' && b === 'manual');
+  return (isUserEnteredSource(a) && b === 'ocr') || (a === 'ocr' && isUserEnteredSource(b));
 }
 
 /** The loose-payee manual↔receipt counterpart of `expense`, or null. */

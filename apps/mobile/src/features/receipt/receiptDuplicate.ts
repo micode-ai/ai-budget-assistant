@@ -25,22 +25,25 @@ export function bankCopySource(match: ReceiptDuplicateMatch | null | undefined):
   return match.source === 'notification' || match.source === 'import' ? match.source : null;
 }
 
+/** Sources whose payee the user typed or said: the app form, voice, bot text. */
+const USER_ENTERED_SOURCES = new Set(['manual', 'voice', 'telegram', 'whatsapp', 'slack']);
+
 /**
  * A row the scan screen may fold into this receipt: the bank's copy, or the
- * same purchase typed in by hand earlier (ABA-730). The server refuses to fold
- * anything else.
+ * same purchase the user entered earlier — typed, spoken or sent to a bot
+ * (ABA-743). The server refuses to fold anything else.
  */
 export function mergeableSource(
   match: ReceiptDuplicateMatch | null | undefined,
-): 'notification' | 'import' | 'manual' | null {
+): 'notification' | 'import' | 'userEntered' | null {
   const bank = bankCopySource(match);
   if (bank) return bank;
-  return match?.kind === 'likely' && match.source === 'manual' ? 'manual' : null;
+  return match?.kind === 'likely' && USER_ENTERED_SOURCES.has(match.source ?? '') ? 'userEntered' : null;
 }
 
 /**
  * The merge box starts ticked only for a bank copy matched on the payee. A
- * hand-entered row can be a genuine second purchase, so the user ticks it.
+ * user-entered row can be a genuine second purchase, so the user ticks it.
  */
 export function defaultMergeWithBank(match: ReceiptDuplicateMatch | null | undefined): boolean {
   return bankCopySource(match) !== null && !match?.amountOnly;

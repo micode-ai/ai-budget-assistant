@@ -580,7 +580,7 @@ export default {
     duplicateMergeLabel: 'Unir en un solo gasto',
     duplicateMergeHint: 'El recibo sustituye la entrada del banco: se conservan sus artículos, foto y categoría.',
     duplicateAmountOnly: 'Solo coinciden el importe y la fecha: compruébalo antes de unir.',
-    duplicateManualTitle: 'Ya añadiste esta compra a mano',
+    duplicateManualTitle: 'Ya añadiste esta compra',
     duplicateMergeManualHint: 'El recibo sustituye tu entrada, con sus artículos y foto; tus notas, etiquetas y proyecto se conservan.',
     scanAnyway: 'Escanear igualmente',
     title: 'Escanear recibo',

@@ -580,7 +580,7 @@ export default {
     duplicateMergeLabel: 'Аб’яднаць у адзін выдатак',
     duplicateMergeHint: 'Чэк заменіць запіс з банка: захаваюцца пазіцыі, фота і катэгорыя.',
     duplicateAmountOnly: 'Супалі толькі сума і дата — праверце перад аб’яднаннем.',
-    duplicateManualTitle: 'Гэтая пакупка ўжо дададзена ўручную',
+    duplicateManualTitle: 'Вы ўжо дадалі гэтую пакупку',
     duplicateMergeManualHint: 'Чэк заменіць ваш запіс, з пазіцыямі і фота; вашы нататкі, тэгі і праект перанясуцца.',
     scanAnyway: 'Усё роўна распазнаць',
     title: 'Сканаваць чэк',

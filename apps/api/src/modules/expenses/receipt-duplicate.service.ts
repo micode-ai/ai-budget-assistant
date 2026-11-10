@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { createHash } from 'crypto';
 import type { ReceiptDuplicateMatch } from '@budget/shared-types';
 import { PrismaService } from '../../database/prisma.service';
-import { DAY_MS, expensePayee, payeesLooselyMatch } from '../anomaly/anomaly-helpers.util';
+import { DAY_MS, expensePayee, isUserEnteredSource, payeesLooselyMatch } from '../anomaly/anomaly-helpers.util';
 
 /**
  * The receipt file's fingerprint: SHA-256 of its base64 text, whitespace
@@ -55,8 +55,8 @@ function toMatch(kind: ReceiptDuplicateMatch['kind'], row: CandidateRow, amountO
  * payee is matched loosely, and failing that a SINGLE bank row is accepted on
  * amount alone (`amountOnly`) — the same pairing `pickPushReceiptCounterpart`
  * uses after the save. It is a suggestion the user confirms, never a merge.
- * A hand-entered (`manual`) row is matched loosely too, but never on amount
- * alone (ABA-730).
+ * A user-entered row (app form, voice, bot text) is matched loosely too, but never on amount
+ * alone (ABA-743).
  */
 export function pickLikelyDuplicate(
   receipt: { merchant?: string | null; description?: string | null },
@@ -67,8 +67,8 @@ export function pickLikelyDuplicate(
   if (hit) return toMatch('likely', hit);
   const bank = candidates.filter((c) => BANK_SOURCES.has(c.source ?? ''));
   // A hand-entered row names the shop the short way (`Netto` vs the receipt's
-  // `Netto nr 541`): loose payee, like a bank copy — but never amount alone (ABA-730).
-  const loosePool = candidates.filter((c) => BANK_SOURCES.has(c.source ?? '') || c.source === 'manual');
+  // `Netto nr 541`): loose payee, like a bank copy — but never amount alone (ABA-743).
+  const loosePool = candidates.filter((c) => BANK_SOURCES.has(c.source ?? '') || isUserEnteredSource(c.source));
   const loose = label ? loosePool.find((c) => payeesLooselyMatch(label, expensePayee(c))) : undefined;
   if (loose) return toMatch('likely', loose);
   return bank.length === 1 ? toMatch('likely', bank[0], true) : null;

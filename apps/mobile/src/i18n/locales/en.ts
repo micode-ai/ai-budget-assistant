@@ -583,7 +583,7 @@ export default {
     duplicateMergeLabel: 'Merge into one expense',
     duplicateMergeHint: 'The receipt replaces the bank entry: its items, photo and category are kept.',
     duplicateAmountOnly: 'Matched on amount and date only — check before merging.',
-    duplicateManualTitle: 'You already added this purchase by hand',
+    duplicateManualTitle: 'You already added this purchase',
     duplicateMergeManualHint: 'The receipt replaces your entry, with its items and photo; your notes, tags and project carry over.',
     scanAnyway: 'Scan anyway',
     title: 'Scan Receipt',

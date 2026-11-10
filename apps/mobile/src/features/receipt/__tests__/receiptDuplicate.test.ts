@@ -55,11 +55,13 @@ describe('bankCopySource / defaultMergeWithBank', () => {
   });
 });
 
-describe('mergeableSource (ABA-730)', () => {
+describe('mergeableSource (ABA-743)', () => {
   const likely = { ...match, kind: 'likely' as const };
 
   it('offers a hand-entered row for merging, unticked by default', () => {
-    expect(mergeableSource({ ...likely, source: 'manual' })).toBe('manual');
+    expect(mergeableSource({ ...likely, source: 'manual' })).toBe('userEntered');
+    expect(mergeableSource({ ...likely, source: 'voice' })).toBe('userEntered');
+    expect(mergeableSource({ ...likely, source: 'telegram' })).toBe('userEntered');
     expect(defaultMergeWithBank({ ...likely, source: 'manual' })).toBe(false);
   });
 
@@ -68,10 +70,10 @@ describe('mergeableSource (ABA-730)', () => {
     expect(mergeableSource({ ...likely, source: 'import' })).toBe('import');
   });
 
-  it('never offers an exact re-upload, a receipt or a bot row', () => {
+  it('never offers an exact re-upload, a receipt or an API row', () => {
     expect(mergeableSource({ ...match, source: 'manual' })).toBeNull();
     expect(mergeableSource({ ...likely, source: 'ocr' })).toBeNull();
-    expect(mergeableSource({ ...likely, source: 'telegram' })).toBeNull();
+    expect(mergeableSource({ ...likely, source: 'api' as any })).toBeNull();
     expect(mergeableSource(null)).toBeNull();
   });
 });

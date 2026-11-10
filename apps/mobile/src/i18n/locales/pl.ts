@@ -582,7 +582,7 @@ export default {
     duplicateMergeLabel: 'Połącz w jeden wydatek',
     duplicateMergeHint: 'Paragon zastąpi wpis z banku: zachowane zostaną pozycje, zdjęcie i kategoria.',
     duplicateAmountOnly: 'Zgadzają się tylko kwota i data — sprawdź przed połączeniem.',
-    duplicateManualTitle: 'Ten zakup był już dodany ręcznie',
+    duplicateManualTitle: 'Ten zakup był już dodany',
     duplicateMergeManualHint: 'Paragon zastąpi Twój wpis, z pozycjami i zdjęciem; Twoje notatki, tagi i projekt zostaną przeniesione.',
     scanAnyway: 'Skanuj mimo to',
     title: 'Skanuj paragon',
