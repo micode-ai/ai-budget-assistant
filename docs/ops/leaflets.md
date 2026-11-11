@@ -20,7 +20,9 @@ owner's explicit OK first, and use only a graceful reload — never recreate `sh
 
    ```nginx
    # Promo leaflets: base64 PDFs (user) and multi-page uploads (admin).
-   location /api/v1/leaflets/ {
+   # No trailing slash: `location /api/v1/leaflets/` makes nginx 301-redirect
+   # POST /api/v1/leaflets (create) to the slashed URL, which breaks it.
+   location /api/v1/leaflets {
        client_max_body_size 60M;
        set $upstream_budget_api http://budget-api-prod:3000;
        proxy_pass $upstream_budget_api;
