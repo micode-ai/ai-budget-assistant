@@ -218,6 +218,9 @@ export class SlackBotService {
       case 'cat_i': return this.categoryHandler.handleTypeCallback('income', payload, userState);
       case 'cat_d': return this.categoryHandler.handleDeleteCallback(payload, userState);
       case 'receipt_add': return this.photoHandler.handleReceiptAddCallback(payload, userState);
+      // Merge question on a receipt with a matching expense (ABA-744).
+      case 'receipt_merge': return this.photoHandler.handleReceiptAddCallback(payload, userState, 'merge');
+      case 'receipt_keep': return this.photoHandler.handleReceiptAddCallback(payload, userState, 'keep');
       case 'receipt_items': return this.photoHandler.handleItemsCallback(payload, userState);
       case 'receipt_date': return this.photoHandler.handleDateCallback(payload, userState);
       // Duplicate-warning callbacks (ABA-603).

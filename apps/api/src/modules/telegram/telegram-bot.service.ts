@@ -250,6 +250,16 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
         return;
       }
 
+      // Merge question after "Add expense" on a receipt with a matching expense (ABA-744).
+      if (data.startsWith('receipt_merge:')) {
+        await this.photoHandler.handleReceiptAddCallback(ctx, data.slice('receipt_merge:'.length), 'merge');
+        return;
+      }
+      if (data.startsWith('receipt_keep:')) {
+        await this.photoHandler.handleReceiptAddCallback(ctx, data.slice('receipt_keep:'.length), 'keep');
+        return;
+      }
+
       if (data.startsWith('receipt_items:')) {
         const receiptId = data.slice('receipt_items:'.length);
         await this.photoHandler.handleItemsCallback(ctx, receiptId);

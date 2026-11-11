@@ -1,5 +1,5 @@
 import { createHash } from 'crypto';
-import { ReceiptDuplicateService, pickLikelyDuplicate, receiptFingerprint } from './receipt-duplicate.service';
+import { ReceiptDuplicateService, pickLikelyDuplicate, receiptFingerprint, receiptMergeCandidate } from './receipt-duplicate.service';
 
 const row = (over: Partial<Record<string, unknown>> = {}) => ({
   id: 'srv-1',
@@ -137,5 +137,22 @@ describe('ReceiptDuplicateService', () => {
     expect(await service.findLikely('acc-1', { merchant: 'X', amount: 10, currencyCode: 'PLN', date: null })).toBeNull();
     expect(await service.findLikely('acc-1', { merchant: 'X', amount: 0, currencyCode: 'PLN', date: '2026-09-25' })).toBeNull();
     expect(prisma.expense.findMany).not.toHaveBeenCalled();
+  });
+});
+
+describe('receiptMergeCandidate (ABA-744)', () => {
+  const m = { kind: 'likely' as const, expenseId: 'e1', clientId: 'c1', merchant: null, description: 'Netto', amount: 8.58, currencyCode: 'PLN', date: '2026-11-10T12:00:00.000Z' };
+
+  it('offers a bank or user-entered row, named for the bot', () => {
+    for (const source of ['notification', 'import', 'manual', 'voice', 'telegram', 'whatsapp', 'slack'] as const) {
+      expect(receiptMergeCandidate({ ...m, source })).toEqual({ id: 'e1', what: 'Netto, 8.58 PLN, 2026-11-10' });
+    }
+  });
+
+  it('never offers an exact re-upload, another receipt or an API row', () => {
+    expect(receiptMergeCandidate({ ...m, kind: 'exact', source: 'manual' })).toBeUndefined();
+    expect(receiptMergeCandidate({ ...m, source: 'ocr' })).toBeUndefined();
+    expect(receiptMergeCandidate({ ...m, source: 'api' as any })).toBeUndefined();
+    expect(receiptMergeCandidate(null)).toBeUndefined();
   });
 });

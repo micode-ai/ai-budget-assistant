@@ -123,7 +123,7 @@ La app te avisa antes de que un recibo acabe dos veces en tus gastos:
 - **Ya registrado por tu banco** — si el gasto coincidente vino de una notificación del banco o de un extracto importado, el aviso lo indica y ofrece **Unir en un solo gasto**. Con la casilla marcada, al guardar se conserva el recibo (artículos, foto y categoría) y se sustituye la entrada del banco, así la compra cuenta una sola vez. Si solo coinciden el importe y la fecha, la casilla empieza desmarcada: compruébalo antes de unir.
 - **Ya añadido a mano** — si antes registraste tú esta compra —a mano, por voz o con un mensaje al bot— (por ejemplo, «Netto», mientras el recibo dice «Netto nr 541»), el aviso lo indica y ofrece el mismo **Unir en un solo gasto**. Aquí la casilla empieza desmarcada, porque un gasto manual puede ser otra compra: márcala si es la misma. El recibo sustituye tu entrada; tus notas, etiquetas y proyecto se conservan. Si no la marcas, la pareja aparecerá después en las alertas con un botón para unir.
 
-Los bots de Telegram, WhatsApp y Slack avisan igual y ofrecen un botón **Escanear igualmente**.
+Los bots de Telegram, WhatsApp y Slack avisan igual y ofrecen un botón **Escanear igualmente**. Si la coincidencia es una entrada tuya o la copia del banco, al pulsar **Agregar gasto** el bot pregunta si unirlas: **Unir** conserva el recibo e integra la otra entrada, **Mantener ambos** guarda el recibo por separado.
 
 ### Compartir desde otra app (Android)
 

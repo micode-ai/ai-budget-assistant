@@ -742,3 +742,65 @@ describe('Telegram PhotoHandler — same-file duplicate warning (ABA-603)', () =
     expect(summary).not.toContain('Duplicate Shop');
   });
 });
+
+const DUP_MATCH = { kind: 'likely', expenseId: 'manual-srv', clientId: 'manual-cli', merchant: null, description: 'Netto', amount: 42.5, currencyCode: 'PLN', date: '2026-07-07T12:00:00.000Z', source: 'manual' };
+
+describe('Telegram PhotoHandler — merge into a matching expense (ABA-744)', () => {
+  function setup(possibleDuplicate: unknown) {
+    const ocr = {
+      parseReceipt: jest.fn(),
+      parseReceiptPdf: jest.fn().mockResolvedValue({ ...baseReceipt(null), possibleDuplicate }),
+    };
+    const expenses = { create: jest.fn().mockResolvedValue({ expense: { id: 'exp-1' } }) };
+    const handler = new PhotoHandler(
+      ocr as never,
+      expenses as never,
+      { trackAiUsage: jest.fn().mockResolvedValue(undefined) } as never,
+      { create: jest.fn() } as never,
+      makeShoppingList() as never,
+      makeCache() as never,
+      makeChatActionRecorder() as never,
+      makeLinkService() as never,
+    );
+    return { handler, expenses };
+  }
+
+  it('asks before saving, then passes the matching id only when the user merges', async () => {
+    const { handler, expenses } = setup(DUP_MATCH);
+    const ctx = makeCtx();
+    await handler.handleDocument(ctx as never);
+    const receiptId = receiptIdFromReply(ctx);
+
+    await handler.handleReceiptAddCallback(ctx as never, receiptId);
+    expect(expenses.create).not.toHaveBeenCalled();
+    const kb = ctx.reply.mock.calls[1][1].reply_markup.inline_keyboard;
+    expect(kb.map((row: any[]) => row[0].callback_data)).toEqual([
+      `receipt_merge:${receiptId}`,
+      `receipt_keep:${receiptId}`,
+      `receipt_cancel:${receiptId}`,
+    ]);
+
+    await handler.handleReceiptAddCallback(ctx as never, receiptId, 'merge');
+    expect(expenses.create.mock.calls[0][2].mergeWithExpenseId).toBe('manual-srv');
+    expect(ctx.editMessageText.mock.calls[0][0]).toContain('Netto');
+  });
+
+  it('keeps both when asked to', async () => {
+    const { handler, expenses } = setup(DUP_MATCH);
+    const ctx = makeCtx();
+    await handler.handleDocument(ctx as never);
+    await handler.handleReceiptAddCallback(ctx as never, receiptIdFromReply(ctx), 'keep');
+    expect(expenses.create.mock.calls[0][2].mergeWithExpenseId).toBeUndefined();
+  });
+
+  it('never offers a merge for an exact re-upload or another receipt', async () => {
+    for (const dup of [{ ...(DUP_MATCH as any), kind: 'exact' }, { ...(DUP_MATCH as any), source: 'ocr' }]) {
+      const { handler, expenses } = setup(dup);
+      const ctx = makeCtx();
+      await handler.handleDocument(ctx as never);
+      await handler.handleReceiptAddCallback(ctx as never, receiptIdFromReply(ctx));
+      expect(expenses.create).toHaveBeenCalledTimes(1);
+      expect(expenses.create.mock.calls[0][2].mergeWithExpenseId).toBeUndefined();
+    }
+  });
+});

@@ -14,7 +14,7 @@ blocks a save.
 - `apps/mobile/src/features/receipt/useReceiptScanner.ts` — `onDuplicate` option;
   `receiptFingerprint.ts`, `receiptDuplicate.ts`; UI in `components/receipt/ReceiptExpenseView.tsx`
   and `DuplicateReceiptBanner.tsx`.
-- Bots: `scanOrWarn` / `runScan` / `handleRescanCallback` in each `modules/{telegram,whatsapp,slack}/handlers/photo.handler.ts`;
+- Bots: `scanOrWarn` / `runScan` / `handleRescanCallback` / `handleReceiptAddCallback(…, mode)` in each `modules/{telegram,whatsapp,slack}/handlers/photo.handler.ts`;
   strings in `common/bot-i18n/shared-messages.ts` (`receiptDuplicate*`, `scanAnyway`, `scanRequestExpired`).
 
 ## Key concepts
@@ -37,6 +37,14 @@ currency within ±1 day, as `detectDuplicateCharge`. Against a **bank-captured**
 receipt's `Netto nr 541` — but never on amount alone. The banner says "You already added this purchase
 by hand" and offers the same merge box, **unticked** by default: a manual row can be a genuine second
 purchase. Folding it keeps the receipt; notes gap-fill, tags union and the project carries over.
+
+**The bots offer the merge as a question (ABA-745).** When the stage-2 match is mergeable
+(`receiptMergeCandidate`: a `likely` match from `RECEIPT_MERGEABLE_SOURCES`), the pending receipt keeps
+`mergeCandidate`, and **Add expense** asks first — **Merge** / **Keep both** / **Cancel**
+(`receipt_merge`, `receipt_keep`) — then creates with or without `mergeWithExpenseId`. A question
+rather than an extra button on the scan reply because WhatsApp caps a message at three buttons and the
+scan reply already uses all three. An `exact` match or another `ocr` row is never offered: the server
+cannot fold a receipt into a receipt.
 
 **A bank copy can be merged from the scan screen (ABA-630).** The match carries `source`; when it is a
 bank copy the banner names the origin and shows a "Merge into one expense" box — ticked by default,
@@ -73,9 +81,9 @@ exact re-upload.
 - Income receipt scans and the "Extract items" re-scan do not run stage 1.
 - `mergeWithExpenseId` rides only the first create push; an offline retry does not carry it — the
   post-save `possible_merge` alert still catches the pair.
-- The bots warn at scan time but do not offer the merge.
 
 ## History
 ABA-603 (the feature; bot scan flows unified into one `runScan` per bot) · [ABA-630](https://github.com/micode-ai/ai-budget-assistant/issues/660) (bank-copy
 matching and the merge checkbox) · [ABA-743](https://github.com/micode-ai/ai-budget-assistant/issues/781) (hand-entered rows:
-loose match and an unticked merge box).
+loose match and an unticked merge box) · [ABA-745](https://github.com/micode-ai/ai-budget-assistant/issues/783) (the bots ask
+to merge).

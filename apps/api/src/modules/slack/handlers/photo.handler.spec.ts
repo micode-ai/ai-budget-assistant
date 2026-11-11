@@ -640,3 +640,68 @@ describe('Slack PhotoHandler — same-file duplicate warning (ABA-603)', () => {
     expect(summary).not.toContain('Duplicate Shop');
   });
 });
+
+const DUP_MATCH = { kind: 'likely', expenseId: 'manual-srv', clientId: 'manual-cli', merchant: null, description: 'Netto', amount: 42.5, currencyCode: 'PLN', date: '2026-07-07T12:00:00.000Z', source: 'manual' };
+
+describe('Slack PhotoHandler — merge into a matching expense (ABA-744)', () => {
+  function setup(possibleDuplicate: unknown) {
+    const redis = makeFakeRedis();
+    const ocr = {
+      parseReceipt: jest.fn(),
+      parseReceiptPdf: jest.fn().mockResolvedValue({ ...baseReceipt(null), possibleDuplicate }),
+    };
+    const expenses = { create: jest.fn().mockResolvedValue({ expense: { id: 'exp-1' } }) };
+    const client = {
+      postPlaceholder: jest.fn().mockResolvedValue('1700000000.000100'),
+      downloadMedia: jest.fn().mockResolvedValue({ buffer: Buffer.from('pdf'), mimeType: 'application/pdf' }),
+      downloadFile: jest.fn().mockResolvedValue({ buffer: Buffer.from('pdf'), mimeType: 'application/pdf' }),
+      replyText: jest.fn().mockResolvedValue(undefined),
+      replyButtons: jest.fn().mockResolvedValue(undefined),
+      sendText: jest.fn().mockResolvedValue(undefined),
+      sendButtons: jest.fn().mockResolvedValue(undefined),
+    };
+    const handler = new PhotoHandler(
+      ocr as never,
+      expenses as never,
+      { trackAiUsage: jest.fn().mockResolvedValue(undefined) } as never,
+      { create: jest.fn() } as never,
+      makeShoppingList() as never,
+      client as never,
+      makeChatActionRecorder() as never,
+      makeLinkService() as never,
+      redis as never,
+    );
+    const shortId = () => [...redis.store.keys()].find((k) => k.startsWith('slack:receipt:'))!.slice('slack:receipt:'.length);
+    return { handler, expenses, client, shortId };
+  }
+
+  it('asks before saving, then passes the matching id only when the user merges', async () => {
+    const { handler, expenses, client, shortId } = setup(DUP_MATCH);
+    await handler.handleDocument(pdfFile(), userState);
+    const id = shortId();
+
+    await handler.handleReceiptAddCallback(id, userState);
+    expect(expenses.create).not.toHaveBeenCalled();
+    const buttons = client.sendButtons.mock.calls.at(-1)!.at(-1) as Array<{ id: string; title: string }>;
+    expect(buttons.map((b) => b.id)).toEqual([`receipt_merge:${id}`, `receipt_keep:${id}`, `receipt_cancel:${id}`]);
+    for (const b of buttons) expect(b.title.length).toBeLessThanOrEqual(20);
+
+    await handler.handleReceiptAddCallback(id, userState, 'merge');
+    expect(expenses.create.mock.calls[0][2].mergeWithExpenseId).toBe('manual-srv');
+  });
+
+  it('keeps both when asked to', async () => {
+    const { handler, expenses, shortId } = setup(DUP_MATCH);
+    await handler.handleDocument(pdfFile(), userState);
+    await handler.handleReceiptAddCallback(shortId(), userState, 'keep');
+    expect(expenses.create.mock.calls[0][2].mergeWithExpenseId).toBeUndefined();
+  });
+
+  it('saves straight away when there is nothing to merge', async () => {
+    const { handler, expenses, shortId } = setup({ ...(DUP_MATCH as any), source: 'ocr' });
+    await handler.handleDocument(pdfFile(), userState);
+    await handler.handleReceiptAddCallback(shortId(), userState);
+    expect(expenses.create).toHaveBeenCalledTimes(1);
+    expect(expenses.create.mock.calls[0][2].mergeWithExpenseId).toBeUndefined();
+  });
+});

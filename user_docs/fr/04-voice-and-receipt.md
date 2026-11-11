@@ -123,7 +123,7 @@ L'application vous prévient avant qu'un reçu n'apparaisse deux fois dans vos d
 - **Déjà enregistré par votre banque** — si la dépense correspondante provient d'une notification bancaire ou d'un relevé importé, l'avis l'indique et propose **Fusionner en une seule dépense**. Case cochée, l'enregistrement conserve le reçu (articles, photo et catégorie) et remplace l'entrée bancaire : l'achat n'est compté qu'une fois. Si seuls le montant et la date correspondent, la case est décochée au départ — vérifiez avant de fusionner.
 - **Déjà saisi à la main** — si vous aviez ajouté cet achat vous-même — saisi, à la voix ou par message au bot — (par exemple « Netto », alors que le reçu indique « Netto nr 541 »), l'avis l'indique et propose le même **Fusionner en une seule dépense**. Ici la case est décochée au départ, car une saisie manuelle peut être un autre achat : cochez-la si c'est le même. Le reçu remplace votre saisie ; vos notes, tags et projet sont repris. Sinon, la paire apparaîtra plus tard dans les alertes avec un bouton de fusion.
 
-Les bots Telegram, WhatsApp et Slack préviennent de la même façon et proposent un bouton **Scanner quand même**.
+Les bots Telegram, WhatsApp et Slack préviennent de la même façon et proposent un bouton **Scanner quand même**. Si la correspondance est votre propre saisie ou la copie de la banque, après **Ajouter dépense** le bot demande s'il faut fusionner : **Fusionner** garde le reçu et y intègre l'autre entrée, **Garder les deux** enregistre le reçu séparément.
 
 ### Partager depuis une autre app (Android)
 

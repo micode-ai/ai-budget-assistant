@@ -292,6 +292,11 @@ export class WhatsAppBotService {
         return this.categoryHandler.handleDeleteCallback(payload, userState);
       case 'receipt_add':
         return this.photoHandler.handleReceiptAddCallback(payload, userState);
+      // Merge question on a receipt with a matching expense (ABA-744).
+      case 'receipt_merge':
+        return this.photoHandler.handleReceiptAddCallback(payload, userState, 'merge');
+      case 'receipt_keep':
+        return this.photoHandler.handleReceiptAddCallback(payload, userState, 'keep');
       case 'receipt_edit':
         return this.photoHandler.handleEditMenuCallback(payload, userState);
       case 'receipt_items':

@@ -123,7 +123,7 @@ De app waarschuwt je voordat een bon twee keer in je uitgaven belandt:
 - **Al vastgelegd door je bank** — kwam de overeenkomende uitgave uit een bankmelding of een geïmporteerd afschrift, dan zegt de melding dat en biedt **Samenvoegen tot één uitgave** aan. Aangevinkt bewaart opslaan het bonnetje (artikelen, foto en categorie) en vervangt het de bankregel, zodat de aankoop één keer telt. Komen alleen bedrag en datum overeen, dan staat het vakje eerst uit — controleer vóór het samenvoegen.
 - **Al handmatig toegevoegd** — heb je deze aankoop eerder zelf toegevoegd — getypt, met je stem of als bericht aan de bot (bijvoorbeeld „Netto”, terwijl de bon „Netto nr 541” toont), dan zegt de melding dat en biedt hetzelfde **Samenvoegen tot één uitgave** aan. Het vakje staat hier eerst uit, want een handmatige uitgave kan een aparte aankoop zijn — vink het aan als het dezelfde is. De bon vervangt je invoer; notities, tags en project worden overgenomen. Laat je het uit, dan verschijnt het paar later in de meldingen met een knop om samen te voegen.
 
-De bots in Telegram, WhatsApp en Slack waarschuwen op dezelfde manier en bieden een knop **Toch scannen**.
+De bots in Telegram, WhatsApp en Slack waarschuwen op dezelfde manier en bieden een knop **Toch scannen**. Is de overeenkomst je eigen invoer of de kopie van de bank, dan vraagt de bot na **Uitgave toevoegen** of je wilt samenvoegen: **Samenvoegen** houdt de bon en voegt de andere invoer erin, **Beide houden** slaat de bon apart op.
 
 ### Delen vanuit een andere app (Android)
 

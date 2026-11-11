@@ -123,7 +123,7 @@ The app warns you before a receipt ends up in your expenses twice:
 - **Already recorded by your bank** — if the matching expense came from a bank notification or a bank statement import, the notice says so and offers **Merge into one expense**. With it ticked, saving keeps the receipt (its items, photo and category) and replaces the bank entry, so the purchase is counted once. The box starts unticked when only the amount and date matched — check before merging.
 - **Already added by hand** — if you entered this purchase yourself earlier — typed, by voice or as a message to the bot (say, „Netto”, while the receipt prints „Netto nr 541”), the notice says so and offers the same **Merge into one expense**. This box starts unticked, because a hand-entered expense can be a separate purchase — tick it if it is the same one. The receipt replaces your entry; your notes, tags and project carry over. If you leave it, the pair also shows up later in alerts with a merge button.
 
-The Telegram, WhatsApp and Slack bots give the same warnings, with a **Scan anyway** button.
+The Telegram, WhatsApp and Slack bots give the same warnings, with a **Scan anyway** button. When the match is your own entry or the bank's copy, pressing **Add expense** asks whether to merge: **Merge** keeps the receipt and folds the other entry into it, **Keep both** saves the receipt separately.
 
 ### Sharing from Another App (Android)
 

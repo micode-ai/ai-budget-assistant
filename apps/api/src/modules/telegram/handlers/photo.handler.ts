@@ -4,7 +4,7 @@ import { randomUUID } from 'crypto';
 import { OcrService } from '../../ai/services/ocr.service';
 import type { ReceiptExpense } from '../../ai/services/ocr.service';
 import { ExpensesService } from '../../expenses/expenses.service';
-import { ReceiptDuplicateService, receiptFingerprint } from '../../expenses/receipt-duplicate.service';
+import { ReceiptDuplicateService, receiptFingerprint, receiptMergeCandidate } from '../../expenses/receipt-duplicate.service';
 import { buildDuplicateLine, describeDuplicate } from '../../../common/bot-i18n/shared-messages';
 import { SubscriptionsService } from '../../subscriptions/subscriptions.service';
 import { CategoriesService } from '../../categories/categories.service';
@@ -93,6 +93,8 @@ interface PendingReceiptData {
   receiptFingerprint?: string;
   /** Server-signed scan token (ABA-642), handed back on create; never edited. */
   scanAttestation?: string;
+  /** A bank or user-entered row this receipt may be folded into on save (ABA-744). */
+  mergeCandidate?: { id: string; what: string };
   language?: string;
 }
 
@@ -329,6 +331,7 @@ export class PhotoHandler {
         receiptImageBase64: scan.base64,
         receiptFingerprint: receipt.fingerprint,
         scanAttestation: receipt.scanAttestation,
+        mergeCandidate: receiptMergeCandidate(receipt.possibleDuplicate),
         language: lang,
       },
       PENDING_RECEIPT_TTL_SEC,
@@ -347,10 +350,25 @@ export class PhotoHandler {
     });
   }
 
-  async handleReceiptAddCallback(ctx: BotContext, receiptId: string): Promise<void> {
+  async handleReceiptAddCallback(ctx: BotContext, receiptId: string, mode?: 'merge' | 'keep'): Promise<void> {
     const data = await this.cache.get<PendingReceiptData>(pendingReceiptKey(receiptId));
     if (!data) {
       await safeAnswerCb(ctx, 'Receipt data expired. Please resend the photo.');
+      return;
+    }
+
+    // A matching expense the user entered or the bank captured: ask before
+    // saving whether to fold it into this receipt (ABA-744).
+    if (data.mergeCandidate && !mode) {
+      await safeAnswerCb(ctx);
+      await ctx.reply(escapeHtml(t('receiptMergeQuestion', data.language, { what: data.mergeCandidate.what })), {
+        parse_mode: 'HTML',
+        ...Markup.inlineKeyboard([
+          [Markup.button.callback(t('receiptMergeYes', data.language), `receipt_merge:${receiptId}`)],
+          [Markup.button.callback(t('receiptKeepBoth', data.language), `receipt_keep:${receiptId}`)],
+          [Markup.button.callback(t('cancel', data.language), `receipt_cancel:${receiptId}`)],
+        ]),
+      });
       return;
     }
 
@@ -384,6 +402,8 @@ export class PhotoHandler {
           receiptImageBase64: data.receiptImageBase64,
           receiptFingerprint: data.receiptFingerprint,
           scanAttestation: data.scanAttestation,
+          // The user chose to fold the matching expense into this receipt (ABA-744).
+          mergeWithExpenseId: mode === 'merge' ? data.mergeCandidate?.id : undefined,
           items: data.items.map((item, index) => ({
             description: item.description,
             canonicalName: item.canonicalName,
@@ -414,7 +434,10 @@ export class PhotoHandler {
       const shoppingLine = buildShoppingListReconciliationLine(reconciled.checkedLabels, data.language);
       const confirmationText =
         `✅ Expense created: <b>${formatCurrency(data.amount, data.currencyCode)}</b> — ${escapeHtml(data.description)}` +
-        (shoppingLine ? `\n${escapeHtml(shoppingLine)}` : '');
+        (shoppingLine ? `\n${escapeHtml(shoppingLine)}` : '') +
+        (mode === 'merge' && data.mergeCandidate
+          ? `\n${escapeHtml(t('receiptMergedNote', data.language, { what: data.mergeCandidate.what }))}`
+          : '');
 
       try {
         await ctx.editMessageText(confirmationText, { parse_mode: 'HTML' });

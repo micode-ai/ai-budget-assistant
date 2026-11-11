@@ -716,7 +716,7 @@ The app warns you before a receipt ends up in your expenses twice:
 - **Already recorded by your bank** — if the matching expense came from a bank notification or a bank statement import, the notice says so and offers **Merge into one expense**. With it ticked, saving keeps the receipt (its items, photo and category) and replaces the bank entry, so the purchase is counted once. The box starts unticked when only the amount and date matched — check before merging.
 - **Already added by hand** — if you entered this purchase yourself earlier — typed, by voice or as a message to the bot (say, „Netto”, while the receipt prints „Netto nr 541”), the notice says so and offers the same **Merge into one expense**. This box starts unticked, because a hand-entered expense can be a separate purchase — tick it if it is the same one. The receipt replaces your entry; your notes, tags and project carry over. If you leave it, the pair also shows up later in alerts with a merge button.
 
-The Telegram, WhatsApp and Slack bots give the same warnings, with a **Scan anyway** button.
+The Telegram, WhatsApp and Slack bots give the same warnings, with a **Scan anyway** button. When the match is your own entry or the bank's copy, pressing **Add expense** asks whether to merge: **Merge** keeps the receipt and folds the other entry into it, **Keep both** saves the receipt separately.
 
 ### Sharing from Another App (Android)
 
@@ -6080,7 +6080,7 @@ iOS, Android, Web
 - **Уже записано банком** — если совпавший расход пришёл из уведомления банка или из импорта выписки, плашка об этом скажет и предложит **Объединить в один расход**. С галочкой при сохранении останется чек (позиции, фото и категория), а запись из банка будет заменена — покупка посчитается один раз. Если совпали только сумма и дата, галочка изначально снята — проверьте перед объединением.
 - **Уже добавлено вручную** — если вы раньше сами внесли эту покупку — вручную, голосом или сообщением боту (например, «Netto», а в чеке «Netto nr 541»), плашка об этом скажет и предложит то же **Объединить в один расход**. Здесь галочка изначально снята: ручная запись может быть отдельной покупкой — поставьте её, если это та же. Чек заменит вашу запись, а заметки, теги и проект перенесутся. Если не объединять сразу, пара появится позже в оповещениях с кнопкой объединения.
 
-Боты в Telegram, WhatsApp и Slack предупреждают так же и предлагают кнопку **Всё равно распознать**.
+Боты в Telegram, WhatsApp и Slack предупреждают так же и предлагают кнопку **Всё равно распознать**. Если совпала ваша собственная запись или запись из банка, после **Добавить расход** бот спросит про объединение: **Объединить** оставит чек и присоединит к нему другую запись, **Оставить оба** сохранит чек отдельно.
 
 ### Поделиться из другого приложения (Android)
 
@@ -11421,7 +11421,7 @@ iOS, Android, Web
 - **Вже записано банком** — якщо збіжна витрата прийшла зі сповіщення банку або з імпорту виписки, плашка про це скаже й запропонує **Об’єднати в одну витрату**. З галочкою під час збереження залишиться чек (позиції, фото й категорія), а запис із банку буде замінено — покупку буде пораховано один раз. Якщо збіглися лише сума й дата, галочку спочатку знято — перевірте перед об’єднанням.
 - **Уже додано вручну** — якщо ви раніше самі внесли цю покупку — вручну, голосом або повідомленням боту (наприклад, «Netto», а в чеку «Netto nr 541»), плашка про це скаже й запропонує те саме **Об’єднати в одну витрату**. Тут галочка спочатку знята: ручний запис може бути окремою покупкою — поставте її, якщо це та сама. Чек замінить ваш запис, а нотатки, теги й проєкт перенесуться. Якщо не об’єднувати одразу, пара з’явиться пізніше в сповіщеннях із кнопкою об’єднання.
 
-Боти в Telegram, WhatsApp і Slack попереджають так само й пропонують кнопку **Все одно розпізнати**.
+Боти в Telegram, WhatsApp і Slack попереджають так само й пропонують кнопку **Все одно розпізнати**. Якщо збігся ваш власний запис або запис із банку, після **Додати витрату** бот запитає про об’єднання: **Об’єднати** залишить чек і приєднає до нього інший запис, **Залишити обидва** збереже чек окремо.
 
 ### Поділитися з іншого застосунку (Android)
 
@@ -16710,7 +16710,7 @@ Aplikacja ostrzeże Cię, zanim paragon trafi do wydatków dwa razy:
 - **Już zapisane przez bank** — jeśli pasujący wydatek pochodzi z powiadomienia banku albo z importu wyciągu, komunikat to pokazuje i proponuje **Połącz w jeden wydatek**. Gdy pole jest zaznaczone, zapis zachowa paragon (pozycje, zdjęcie i kategorię) i zastąpi wpis z banku, więc zakup zostanie policzony raz. Jeśli zgadzają się tylko kwota i data, pole jest na początku odznaczone — sprawdź przed połączeniem.
 - **Już dodane ręcznie** — jeśli wcześniej dodałeś ten zakup sam — wpisując, głosem albo wiadomością do bota (np. „Netto”, a na paragonie jest „Netto nr 541”), komunikat to pokazuje i proponuje to samo **Połącz w jeden wydatek**. To pole jest na początku odznaczone, bo ręczny wpis może być osobnym zakupem — zaznacz je, jeśli to ten sam. Paragon zastąpi Twój wpis; notatki, tagi i projekt zostaną przeniesione. Jeśli go nie zaznaczysz, para pojawi się też później w alertach z przyciskiem połączenia.
 
-Boty w Telegramie, WhatsAppie i Slacku ostrzegają tak samo i oferują przycisk **Skanuj mimo to**.
+Boty w Telegramie, WhatsAppie i Slacku ostrzegają tak samo i oferują przycisk **Skanuj mimo to**. Gdy pasujący wpis to Twój własny lub kopia z banku, po **Dodaj wydatek** bot zapyta o połączenie: **Połącz** zachowa paragon i dołączy do niego drugi wpis, **Zostaw oba** zapisze paragon osobno.
 
 ### Udostępnianie z innej aplikacji (Android)
 
@@ -21995,7 +21995,7 @@ Die App warnt dich, bevor ein Beleg doppelt in deinen Ausgaben landet:
 - **Bereits von der Bank erfasst** — stammt die passende Ausgabe aus einer Bankbenachrichtigung oder einem Kontoauszug-Import, sagt der Hinweis das und bietet **Zu einer Ausgabe zusammenführen** an. Ist es angehakt, behält das Speichern den Beleg (Positionen, Foto und Kategorie) und ersetzt den Bankeintrag, sodass der Einkauf nur einmal zählt. Stimmen nur Betrag und Datum überein, ist das Kästchen anfangs nicht angehakt — vor dem Zusammenführen prüfen.
 - **Bereits manuell erfasst** — hast du diesen Kauf vorher selbst erfasst — getippt, per Sprache oder als Nachricht an den Bot (z. B. „Netto“, während der Beleg „Netto nr 541“ zeigt), sagt der Hinweis das und bietet dasselbe **Zu einer Ausgabe zusammenführen** an. Das Kästchen ist hier zunächst leer, denn ein manueller Eintrag kann ein eigener Kauf sein — hake es an, wenn es derselbe ist. Der Beleg ersetzt deinen Eintrag; Notizen, Tags und Projekt werden übernommen. Lässt du es leer, erscheint das Paar später in den Hinweisen mit einer Schaltfläche zum Zusammenführen.
 
-Die Bots in Telegram, WhatsApp und Slack warnen genauso und bieten eine Schaltfläche **Trotzdem scannen** an.
+Die Bots in Telegram, WhatsApp und Slack warnen genauso und bieten eine Schaltfläche **Trotzdem scannen** an. Ist der Treffer dein eigener Eintrag oder die Kopie der Bank, fragt der Bot nach **Ausgabe hinzufügen**, ob zusammengeführt werden soll: **Zusammenführen** behält den Beleg und übernimmt den anderen Eintrag, **Beide behalten** speichert den Beleg separat.
 
 ### Aus einer anderen App teilen (Android)
 
@@ -27255,7 +27255,7 @@ La app te avisa antes de que un recibo acabe dos veces en tus gastos:
 - **Ya registrado por tu banco** — si el gasto coincidente vino de una notificación del banco o de un extracto importado, el aviso lo indica y ofrece **Unir en un solo gasto**. Con la casilla marcada, al guardar se conserva el recibo (artículos, foto y categoría) y se sustituye la entrada del banco, así la compra cuenta una sola vez. Si solo coinciden el importe y la fecha, la casilla empieza desmarcada: compruébalo antes de unir.
 - **Ya añadido a mano** — si antes registraste tú esta compra —a mano, por voz o con un mensaje al bot— (por ejemplo, «Netto», mientras el recibo dice «Netto nr 541»), el aviso lo indica y ofrece el mismo **Unir en un solo gasto**. Aquí la casilla empieza desmarcada, porque un gasto manual puede ser otra compra: márcala si es la misma. El recibo sustituye tu entrada; tus notas, etiquetas y proyecto se conservan. Si no la marcas, la pareja aparecerá después en las alertas con un botón para unir.
 
-Los bots de Telegram, WhatsApp y Slack avisan igual y ofrecen un botón **Escanear igualmente**.
+Los bots de Telegram, WhatsApp y Slack avisan igual y ofrecen un botón **Escanear igualmente**. Si la coincidencia es una entrada tuya o la copia del banco, al pulsar **Agregar gasto** el bot pregunta si unirlas: **Unir** conserva el recibo e integra la otra entrada, **Mantener ambos** guarda el recibo por separado.
 
 ### Compartir desde otra app (Android)
 
@@ -32504,7 +32504,7 @@ L'application vous prévient avant qu'un reçu n'apparaisse deux fois dans vos d
 - **Déjà enregistré par votre banque** — si la dépense correspondante provient d'une notification bancaire ou d'un relevé importé, l'avis l'indique et propose **Fusionner en une seule dépense**. Case cochée, l'enregistrement conserve le reçu (articles, photo et catégorie) et remplace l'entrée bancaire : l'achat n'est compté qu'une fois. Si seuls le montant et la date correspondent, la case est décochée au départ — vérifiez avant de fusionner.
 - **Déjà saisi à la main** — si vous aviez ajouté cet achat vous-même — saisi, à la voix ou par message au bot — (par exemple « Netto », alors que le reçu indique « Netto nr 541 »), l'avis l'indique et propose le même **Fusionner en une seule dépense**. Ici la case est décochée au départ, car une saisie manuelle peut être un autre achat : cochez-la si c'est le même. Le reçu remplace votre saisie ; vos notes, tags et projet sont repris. Sinon, la paire apparaîtra plus tard dans les alertes avec un bouton de fusion.
 
-Les bots Telegram, WhatsApp et Slack préviennent de la même façon et proposent un bouton **Scanner quand même**.
+Les bots Telegram, WhatsApp et Slack préviennent de la même façon et proposent un bouton **Scanner quand même**. Si la correspondance est votre propre saisie ou la copie de la banque, après **Ajouter dépense** le bot demande s'il faut fusionner : **Fusionner** garde le reçu et y intègre l'autre entrée, **Garder les deux** enregistre le reçu séparément.
 
 ### Partager depuis une autre app (Android)
 
@@ -37751,7 +37751,7 @@ iOS, Android, Web
 - **Ужо запісана банкам** — калі супалы выдатак прыйшоў з апавяшчэння банка або з імпарту выпіскі, плашка пра гэта скажа і прапануе **Аб’яднаць у адзін выдатак**. З птушкай пры захаванні застанецца чэк (пазіцыі, фота і катэгорыя), а запіс з банка будзе заменены — пакупка палічыцца адзін раз. Калі супалі толькі сума і дата, птушка спачатку знятая — праверце перад аб’яднаннем.
 - **Ужо дададзена ўручную** — калі вы раней самі ўнеслі гэтую пакупку — уручную, голасам або паведамленнем боту (напрыклад, «Netto», а ў чэку «Netto nr 541»), плашка пра гэта скажа і прапануе тое ж **Аб’яднаць у адзін выдатак**. Тут галачка спачатку знятая: ручны запіс можа быць асобнай пакупкай — пастаўце яе, калі гэта тая ж. Чэк заменіць ваш запіс, а нататкі, тэгі і праект перанясуцца. Калі не аб’ядноўваць адразу, пара з’явіцца пазней у апавяшчэннях з кнопкай аб’яднання.
 
-Боты ў Telegram, WhatsApp і Slack папярэджваюць гэтак жа і прапануюць кнопку **Усё роўна распазнаць**.
+Боты ў Telegram, WhatsApp і Slack папярэджваюць гэтак жа і прапануюць кнопку **Усё роўна распазнаць**. Калі супаў ваш уласны запіс або запіс з банка, пасля **Дадаць выдатак** бот спытае пра аб’яднанне: **Аб’яднаць** пакіне чэк і далучыць да яго іншы запіс, **Пакінуць абодва** захавае чэк асобна.
 
 ### Падзяліцца з іншай праграмы (Android)
 
@@ -42962,7 +42962,7 @@ De app waarschuwt je voordat een bon twee keer in je uitgaven belandt:
 - **Al vastgelegd door je bank** — kwam de overeenkomende uitgave uit een bankmelding of een geïmporteerd afschrift, dan zegt de melding dat en biedt **Samenvoegen tot één uitgave** aan. Aangevinkt bewaart opslaan het bonnetje (artikelen, foto en categorie) en vervangt het de bankregel, zodat de aankoop één keer telt. Komen alleen bedrag en datum overeen, dan staat het vakje eerst uit — controleer vóór het samenvoegen.
 - **Al handmatig toegevoegd** — heb je deze aankoop eerder zelf toegevoegd — getypt, met je stem of als bericht aan de bot (bijvoorbeeld „Netto”, terwijl de bon „Netto nr 541” toont), dan zegt de melding dat en biedt hetzelfde **Samenvoegen tot één uitgave** aan. Het vakje staat hier eerst uit, want een handmatige uitgave kan een aparte aankoop zijn — vink het aan als het dezelfde is. De bon vervangt je invoer; notities, tags en project worden overgenomen. Laat je het uit, dan verschijnt het paar later in de meldingen met een knop om samen te voegen.
 
-De bots in Telegram, WhatsApp en Slack waarschuwen op dezelfde manier en bieden een knop **Toch scannen**.
+De bots in Telegram, WhatsApp en Slack waarschuwen op dezelfde manier en bieden een knop **Toch scannen**. Is de overeenkomst je eigen invoer of de kopie van de bank, dan vraagt de bot na **Uitgave toevoegen** of je wilt samenvoegen: **Samenvoegen** houdt de bon en voegt de andere invoer erin, **Beide houden** slaat de bon apart op.
 
 ### Delen vanuit een andere app (Android)
 

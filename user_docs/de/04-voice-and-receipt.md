@@ -123,7 +123,7 @@ Die App warnt dich, bevor ein Beleg doppelt in deinen Ausgaben landet:
 - **Bereits von der Bank erfasst** — stammt die passende Ausgabe aus einer Bankbenachrichtigung oder einem Kontoauszug-Import, sagt der Hinweis das und bietet **Zu einer Ausgabe zusammenführen** an. Ist es angehakt, behält das Speichern den Beleg (Positionen, Foto und Kategorie) und ersetzt den Bankeintrag, sodass der Einkauf nur einmal zählt. Stimmen nur Betrag und Datum überein, ist das Kästchen anfangs nicht angehakt — vor dem Zusammenführen prüfen.
 - **Bereits manuell erfasst** — hast du diesen Kauf vorher selbst erfasst — getippt, per Sprache oder als Nachricht an den Bot (z. B. „Netto“, während der Beleg „Netto nr 541“ zeigt), sagt der Hinweis das und bietet dasselbe **Zu einer Ausgabe zusammenführen** an. Das Kästchen ist hier zunächst leer, denn ein manueller Eintrag kann ein eigener Kauf sein — hake es an, wenn es derselbe ist. Der Beleg ersetzt deinen Eintrag; Notizen, Tags und Projekt werden übernommen. Lässt du es leer, erscheint das Paar später in den Hinweisen mit einer Schaltfläche zum Zusammenführen.
 
-Die Bots in Telegram, WhatsApp und Slack warnen genauso und bieten eine Schaltfläche **Trotzdem scannen** an.
+Die Bots in Telegram, WhatsApp und Slack warnen genauso und bieten eine Schaltfläche **Trotzdem scannen** an. Ist der Treffer dein eigener Eintrag oder die Kopie der Bank, fragt der Bot nach **Ausgabe hinzufügen**, ob zusammengeführt werden soll: **Zusammenführen** behält den Beleg und übernimmt den anderen Eintrag, **Beide behalten** speichert den Beleg separat.
 
 ### Aus einer anderen App teilen (Android)
 

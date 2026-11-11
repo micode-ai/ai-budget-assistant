@@ -4,7 +4,7 @@ import Redis from 'ioredis';
 import { OcrService } from '../../ai/services/ocr.service';
 import type { ReceiptExpense } from '../../ai/services/ocr.service';
 import { ExpensesService } from '../../expenses/expenses.service';
-import { ReceiptDuplicateService, receiptFingerprint } from '../../expenses/receipt-duplicate.service';
+import { ReceiptDuplicateService, receiptFingerprint, receiptMergeCandidate } from '../../expenses/receipt-duplicate.service';
 import { SubscriptionsService } from '../../subscriptions/subscriptions.service';
 import { CategoriesService } from '../../categories/categories.service';
 import { ShoppingListService } from '../../shopping-list/shopping-list.service';
@@ -71,6 +71,8 @@ interface PendingReceiptData {
   receiptFingerprint?: string;
   /** Server-signed scan token (ABA-642), handed back on create; never edited. */
   scanAttestation?: string;
+  /** A bank or user-entered row this receipt may be folded into on save (ABA-744). */
+  mergeCandidate?: { id: string; what: string };
   language: string;
 }
 
@@ -278,6 +280,7 @@ export class PhotoHandler {
         receiptMimeType: mimeType,
         receiptFingerprint: receipt.fingerprint,
         scanAttestation: receipt.scanAttestation,
+        mergeCandidate: receiptMergeCandidate(receipt.possibleDuplicate),
         language,
       };
       await this.redis.set(`slack:receipt:${shortId}`, JSON.stringify(data), 'EX', 1800);
@@ -366,7 +369,7 @@ export class PhotoHandler {
     }
   }
 
-  async handleReceiptAddCallback(shortId: string, userState: SlackUserState): Promise<void> {
+  async handleReceiptAddCallback(shortId: string, userState: SlackUserState, mode?: 'merge' | 'keep'): Promise<void> {
     const { channel, language } = userState;
     const teamId = userState.slackTeamId;
     try {
@@ -377,6 +380,16 @@ export class PhotoHandler {
       }
 
       const data: PendingReceiptData = JSON.parse(raw);
+      // A matching expense the user entered or the bank captured: ask before
+      // saving whether to fold it into this receipt (ABA-744).
+      if (data.mergeCandidate && !mode) {
+        await this.client.sendButtons(teamId, channel, t('receiptMergeQuestion', language, { what: data.mergeCandidate.what }), [
+          { id: `receipt_merge:${shortId}`, title: t('receiptMergeYes', language) },
+          { id: `receipt_keep:${shortId}`, title: t('receiptKeepBoth', language) },
+          { id: `receipt_cancel:${shortId}`, title: t('cancel', language) },
+        ]);
+        return;
+      }
       const resolvedSplits = await resolveProposedSplits(
         data.categorySplits ?? [],
         (name) => this.categoriesService.create(data.accountId, data.userId, { name, type: 'expense', icon: '🏷️' }),
@@ -400,6 +413,8 @@ export class PhotoHandler {
         receiptMimeType: data.receiptMimeType,
         receiptFingerprint: data.receiptFingerprint,
         scanAttestation: data.scanAttestation,
+        // The user chose to fold the matching expense into this receipt (ABA-744).
+        mergeWithExpenseId: mode === 'merge' ? data.mergeCandidate?.id : undefined,
         items: data.items.map((item, index) => ({
           description: item.description,
           canonicalName: item.canonicalName,
@@ -434,7 +449,10 @@ export class PhotoHandler {
         teamId,
         channel,
         `${t('expenseCreated', language)}: *${amountStr}* — ${data.description}` +
-          (shoppingLine ? `\n${shoppingLine}` : ''),
+          (shoppingLine ? `\n${shoppingLine}` : '') +
+          (mode === 'merge' && data.mergeCandidate
+            ? `\n${t('receiptMergedNote', language, { what: data.mergeCandidate.what })}`
+            : ''),
       );
 
       // Makes this write undoable via chat's "undo" (ABA-599) — a receipt-confirm

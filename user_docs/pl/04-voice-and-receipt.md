@@ -123,7 +123,7 @@ Aplikacja ostrzeże Cię, zanim paragon trafi do wydatków dwa razy:
 - **Już zapisane przez bank** — jeśli pasujący wydatek pochodzi z powiadomienia banku albo z importu wyciągu, komunikat to pokazuje i proponuje **Połącz w jeden wydatek**. Gdy pole jest zaznaczone, zapis zachowa paragon (pozycje, zdjęcie i kategorię) i zastąpi wpis z banku, więc zakup zostanie policzony raz. Jeśli zgadzają się tylko kwota i data, pole jest na początku odznaczone — sprawdź przed połączeniem.
 - **Już dodane ręcznie** — jeśli wcześniej dodałeś ten zakup sam — wpisując, głosem albo wiadomością do bota (np. „Netto”, a na paragonie jest „Netto nr 541”), komunikat to pokazuje i proponuje to samo **Połącz w jeden wydatek**. To pole jest na początku odznaczone, bo ręczny wpis może być osobnym zakupem — zaznacz je, jeśli to ten sam. Paragon zastąpi Twój wpis; notatki, tagi i projekt zostaną przeniesione. Jeśli go nie zaznaczysz, para pojawi się też później w alertach z przyciskiem połączenia.
 
-Boty w Telegramie, WhatsAppie i Slacku ostrzegają tak samo i oferują przycisk **Skanuj mimo to**.
+Boty w Telegramie, WhatsAppie i Slacku ostrzegają tak samo i oferują przycisk **Skanuj mimo to**. Gdy pasujący wpis to Twój własny lub kopia z banku, po **Dodaj wydatek** bot zapyta o połączenie: **Połącz** zachowa paragon i dołączy do niego drugi wpis, **Zostaw oba** zapisze paragon osobno.
 
 ### Udostępnianie z innej aplikacji (Android)
 

@@ -3,6 +3,7 @@ import { createHash } from 'crypto';
 import type { ReceiptDuplicateMatch } from '@budget/shared-types';
 import { PrismaService } from '../../database/prisma.service';
 import { DAY_MS, expensePayee, isUserEnteredSource, payeesLooselyMatch } from '../anomaly/anomaly-helpers.util';
+import { describeDuplicate } from '../../common/bot-i18n/shared-messages';
 
 /**
  * The receipt file's fingerprint: SHA-256 of its base64 text, whitespace
@@ -28,6 +29,27 @@ interface CandidateRow {
 }
 
 const BANK_SOURCES = new Set(['notification', 'import']);
+
+/**
+ * Sources a receipt scan may be merged into on save (`mergeWithExpenseId`):
+ * the bank's own copies, and the same purchase the user entered earlier —
+ * typed in the app, said by voice or sent as text to a bot (ABA-743).
+ */
+export const RECEIPT_MERGEABLE_SOURCES = ['notification', 'import', 'manual', 'voice', 'telegram', 'whatsapp', 'slack'] as const;
+const MERGEABLE = new Set<string>(RECEIPT_MERGEABLE_SOURCES);
+
+/**
+ * What a bot offers to merge a scanned receipt into (ABA-744): the stage-2
+ * `likely` match when it is a bank or user-entered row. An `exact` match is the
+ * same file already saved, and another `ocr` row is the same receipt scanned
+ * twice — neither can be folded, so neither is offered.
+ */
+export function receiptMergeCandidate(
+  match: ReceiptDuplicateMatch | null | undefined,
+): { id: string; what: string } | undefined {
+  if (!match || match.kind !== 'likely' || !MERGEABLE.has(match.source ?? '')) return undefined;
+  return { id: match.expenseId, what: describeDuplicate(match) };
+}
 
 function toMatch(kind: ReceiptDuplicateMatch['kind'], row: CandidateRow, amountOnly = false): ReceiptDuplicateMatch {
   return {

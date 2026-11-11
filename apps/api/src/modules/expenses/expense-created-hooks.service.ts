@@ -10,6 +10,7 @@ import { ProductRulesService } from '../merchant-rules/product-rules.service';
 import { WalletCurrencyService } from '../wallet/wallet-currency.service';
 import { invalidateExpenseChatCache } from './expense-cache.util';
 import { ExpenseCrossAccountService } from './expense-cross-account.service';
+import { RECEIPT_MERGEABLE_SOURCES } from './receipt-duplicate.service';
 import { logFireAndForget } from '../../common/utils/fire-and-forget';
 import { GroupBudgetMirrorService } from '../groups/group-budget-mirror.service';
 
@@ -21,12 +22,6 @@ export interface ExpenseCreatedHookExpense {
   source: string | null;
 }
 
-/**
- * Sources a receipt scan may be merged into from the scan screen: the bank's
- * own copies, and the same purchase the user entered earlier — typed in the
- * app, said by voice or sent as text to a bot (ABA-743).
- */
-export const RECEIPT_MERGEABLE_SOURCES = ['notification', 'import', 'manual', 'voice', 'telegram', 'whatsapp', 'slack'] as const;
 
 export interface ExpenseCreatedHookOptions {
   /** The bank-captured row the user chose to merge this receipt into. */
