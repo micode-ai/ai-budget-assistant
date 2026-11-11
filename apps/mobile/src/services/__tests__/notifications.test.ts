@@ -16,7 +16,9 @@ jest.mock('expo-notifications', () => ({
 jest.mock('expo-device', () => ({ isDevice: true }));
 jest.mock('expo-constants', () => ({ expoConfig: {}, easConfig: {} }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
-jest.mock('../api', () => ({ api: { updatePushToken: jest.fn() } }));
+jest.mock('../api', () => ({
+  api: { updatePushToken: jest.fn(), markLeafletPushOpened: jest.fn(() => Promise.resolve()) },
+}));
 jest.mock('@/stores/accountStore', () => ({
   useAccountStore: {
     getState: jest.fn(() => ({ currentAccountId: null, accounts: [], switchAccount: jest.fn() })),
@@ -29,6 +31,7 @@ jest.mock('@/stores/receiptSplitParticipantIndex', () => ({
 import { router } from 'expo-router';
 import { handleNotificationResponse } from '../notifications';
 import { resolveExpenseIdForParticipant } from '@/stores/receiptSplitParticipantIndex';
+import { api } from '../api';
 
 const push = router.push as jest.Mock;
 const resolveExpenseId = resolveExpenseIdForParticipant as jest.Mock;
@@ -128,5 +131,36 @@ describe('handleNotificationResponse — activation_nudge (ABA-737)', () => {
   it('opens the receipt scanner, the entry new users are steered to', () => {
     handleNotificationResponse(notificationResponse({ type: 'activation_nudge' }));
     expect(push).toHaveBeenCalledWith('/expense/receipt');
+  });
+});
+
+// R14: the push opens the leaflet screen in its idle state (the list of active leaflets), never
+// the photo gallery — `from=push` is what tells the screen not to open the picker.
+const LEAFLETS_FROM_PUSH = { pathname: '/leaflets', params: { from: 'push' } };
+
+describe('handleNotificationResponse — leaflet_promo (Gazetka match)', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('opens the leaflet screen and reports the open with its pushKey', () => {
+    handleNotificationResponse(notificationResponse({ type: 'leaflet_promo', pushKey: 'log-1' }));
+    expect(push).toHaveBeenCalledWith(LEAFLETS_FROM_PUSH);
+    expect(api.markLeafletPushOpened).toHaveBeenCalledWith('log-1');
+  });
+
+  it('still opens the screen without a pushKey, and reports nothing', () => {
+    handleNotificationResponse(notificationResponse({ type: 'leaflet_promo' }));
+    expect(push).toHaveBeenCalledWith(LEAFLETS_FROM_PUSH);
+    expect(api.markLeafletPushOpened).not.toHaveBeenCalled();
+  });
+
+  it('a failed open report never throws into the tap handler', async () => {
+    (api.markLeafletPushOpened as jest.Mock).mockReturnValueOnce(Promise.reject(new Error('offline')));
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    expect(() => handleNotificationResponse(notificationResponse({ type: 'leaflet_promo', pushKey: 'log-2' }))).not.toThrow();
+    await new Promise((r) => setTimeout(r, 0));
+    expect(push).toHaveBeenCalledWith(LEAFLETS_FROM_PUSH);
+    warn.mockRestore();
   });
 });

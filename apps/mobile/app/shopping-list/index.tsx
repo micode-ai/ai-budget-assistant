@@ -423,6 +423,20 @@ export default function ShoppingListScreen() {
           )}
         </View>
 
+        {/* Gazetka match: not canEdit-gated — a viewer may read a leaflet too. */}
+        <TouchableOpacity
+          style={styles.leafletBtn}
+          onPress={() => router.push({ pathname: '/leaflets', params: { from: 'pick' } })}
+          activeOpacity={0.7}
+          accessibilityRole="button"
+        >
+          <Ionicons name="newspaper-outline" size={18} color={theme.colors.primary} />
+          <Text style={styles.leafletBtnText} numberOfLines={1}>
+            {t('shoppingList.checkLeaflet')}
+          </Text>
+          <Ionicons name="chevron-forward" size={16} color={theme.colors.textTertiary} />
+        </TouchableOpacity>
+
         {lists.length > 0 && suggestions.length > 0 && (
           <View style={styles.restockSection}>
             <Text style={styles.restockTitle}>{t('shoppingList.restockTitle')}</Text>
@@ -750,6 +764,18 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.textTertiary,
     flexShrink: 1,
   },
+
+  leafletBtn: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.spacing[3],
+    marginBottom: theme.spacing[3],
+  },
+  leafletBtnText: { ...theme.textStyles.bodyMedium, color: theme.colors.primary, flex: 1 },
 
   card: {
     backgroundColor: theme.colors.surface,

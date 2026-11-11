@@ -139,6 +139,12 @@ Carried: only an image scan or a scanned PDF may attest (never plain text, a tex
 - No per-litre/kg normalization: `canonicalName` keeps pack size, so matching is exact-only.
 - Merchant normalization is PL-biased, which fragments non-PL stores.
 
+## Promo leaflets
+
+The same `contributeCommunityPrices` consent also covers promo prices read from leaflets, which feed a
+separate, flag-gated promo layer (`COMMUNITY_PROMOS_ENABLED`) — see [gazetka-match](gazetka-match.md).
+It shares `computeContributorKey` and the trusted rule with this page but not its tables.
+
 ## History
 
 ABA-335 (M1–M4, and the security audit whose findings became the invariants above) · ABA-642 (server-attested scans, one key per person, consensus store pins, ingest-week persistence, free reads; existing rows kept and excluded by `attested`).

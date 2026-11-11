@@ -51,6 +51,7 @@ import { PurchaseRequestsModule } from './modules/purchase-requests/purchase-req
 import { FamilyFeedModule } from './modules/family-feed/family-feed.module';
 import { TripSettleUpModule } from './modules/trip-settle-up/trip-settle-up.module';
 import { PriceHistoryModule } from './modules/price-history/price-history.module';
+import { LeafletsModule } from './modules/leaflets/leaflets.module';
 import { ShoppingListModule } from './modules/shopping-list/shopping-list.module';
 import { CommunityPriceModule } from './modules/community-prices/community-price.module';
 import { GroupsModule } from './modules/groups/groups.module';
@@ -144,6 +145,7 @@ import { PublicDocsModule } from './modules/public-api/docs/public-docs.module';
     FamilyFeedModule,
     TripSettleUpModule,
     PriceHistoryModule,
+    LeafletsModule,
     ShoppingListModule,
     CommunityPriceModule,
     // ReceiptSplitModule's controller adds /expenses/:id/receipt-split* routes.

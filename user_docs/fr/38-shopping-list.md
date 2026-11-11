@@ -139,6 +139,21 @@ L'app compare le prix récemment payé pour un produit suivi à son prix moyen s
 
 Les promotions sont également envoyées sous forme de notification push lorsqu'une vraie baisse est détectée, pour que vous n'ayez pas besoin d'ouvrir l'app pour ne pas la manquer — mais une même baisse de prix ne vous sera pas signalée plus d'une fois par semaine, pour éviter de vous relancer sur la même chose.
 
+## Vérifier un prospectus promo
+
+Vous avez le prospectus promo d'un magasin en photos ou en PDF ? L'appli vous indique lesquels des produits **que vous achetez vraiment** s'y trouvent et compare le prix promo à ce que vous payez d'habitude.
+
+- **Depuis la liste de courses**, touchez **Vérifier un prospectus** et choisissez des captures du prospectus (sur le web, déposez-les ou un PDF sur la page).
+- **Depuis une autre appli (Android)**, partagez les captures ou le PDF vers AI Budget et choisissez **Prospectus promo** dans la question qui s'affiche.
+
+L'appli lit le prospectus et n'affiche que les promos sur des produits de vos achats et de votre liste, chacune avec le prix promo et — si vous avez déjà acheté le produit dans la même devise — ce que vous payez d'habitude, sous la forme *d’habitude X → Y*. Les produits que vous n'achetez pas ne sont jamais affichés, et le prospectus lui-même n'est pas conservé : seuls les prix extraits le sont. Les prix sont indiqués *d'après un prospectus — à vérifier en magasin* — le magasin peut différer. Touchez **Ajouter à la liste** sur un article pour le mettre sur votre liste de courses.
+
+**Vos prospectus.** L'écran du prospectus garde la liste de vos prospectus encore en cours : le magasin, jusqu'à quand, et combien de vos produits chacun contient. Touchez-en un pour revoir ses produits et les ajouter à votre liste (si le sélecteur de photos s'ouvre d'abord, fermez-le simplement).
+
+**Combien de pages vous pouvez lire.** Les pages de prospectus ont leur propre quota mensuel, distinct de vos requêtes IA : 20 pages en Free, 200 en Pro et 500 en Business. Un partage lit jusqu'à 10 pages (un PDF jusqu'à environ 7 Mo — au-delà, partagez plutôt des captures des pages). Le reste est ignoré et l'écran indique combien de pages ont été laissées de côté.
+
+**Promos de la communauté (facultatif).** Si vous partagez des prix anonymes (Réglages → Données → **Partager des prix anonymes**), les prix promo des prospectus que vous lisez sont partagés de la même façon — uniquement le magasin, le produit, le prix et les dates, jamais votre nom, votre compte ni l'image du prospectus. Une fois les promos de la communauté activées dans l'appli, quand plusieurs acheteurs confirment la même promo, les personnes qui achètent dans ce magasin et y prennent d'habitude ce produit reçoivent au plus une notification par jour, qui indique jusqu'à quand dure la promo — et seulement une fois qu'elle a commencé. La toucher ouvre vos prospectus. Désactivez-la dans Réglages → Notifications → **Promos des prospectus sur vos produits**.
+
 ## Gérer les notifications
 
 Les deux notifications sont activées par défaut et peuvent être désactivées indépendamment dans **Paramètres → Notifications** :

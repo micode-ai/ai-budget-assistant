@@ -704,7 +704,7 @@ export class SubscriptionsService {
     return statusMap[stripeStatus] || 'active';
   }
 
-  private async resetUsageIfNeeded(sub: SubscriptionRecord): Promise<void> {
+  async resetUsageIfNeeded(sub: SubscriptionRecord): Promise<void> {
     const now = new Date();
     if (now > sub.aiRequestsResetAt) {
       const nextReset = new Date(
@@ -716,6 +716,7 @@ export class SubscriptionsService {
         where: { id: sub.id },
         data: {
           aiRequestsUsed: 0,
+          leafletPagesUsed: 0,
           aiRequestsResetAt: nextReset,
         },
       });

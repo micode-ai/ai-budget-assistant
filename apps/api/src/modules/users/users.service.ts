@@ -21,6 +21,7 @@ interface CreateUserData {
   paymentMethod?: SettleMethod | null;
   paymentHandle?: string | null;
   inflationCountry?: string | null;
+  leafletConsentNoticeAt?: Date;
   acquisitionSource?: string;
   acquisitionLocation?: string;
   acquisitionLanguage?: string;
@@ -179,6 +180,7 @@ export class UsersService {
         notifyMonthlyWrapped: true,
         notifyGroupActivity: true,
         notifyGroupReminders: true,
+        notifyLeafletPromos: true,
       },
     });
     return {
@@ -197,12 +199,13 @@ export class UsersService {
       monthlyWrapped: user?.notifyMonthlyWrapped ?? true,
       groupActivity: user?.notifyGroupActivity ?? true,
       groupReminders: user?.notifyGroupReminders ?? true,
+      leafletPromos: user?.notifyLeafletPromos ?? true,
     };
   }
 
   async updateNotificationPreferences(
     userId: string,
-    prefs: { budgetAlerts?: boolean; sharedAccountActivity?: boolean; debtReminders?: boolean; recurringExpenses?: boolean; subscriptionRenewals?: boolean; anomalyAlerts?: boolean; trackingGap?: boolean; purchaseRequests?: boolean; tripSettleUp?: boolean; shoppingReminders?: boolean; shoppingDeals?: boolean; inflationShield?: boolean; monthlyWrapped?: boolean; groupActivity?: boolean; groupReminders?: boolean },
+    prefs: { budgetAlerts?: boolean; sharedAccountActivity?: boolean; debtReminders?: boolean; recurringExpenses?: boolean; subscriptionRenewals?: boolean; anomalyAlerts?: boolean; trackingGap?: boolean; purchaseRequests?: boolean; tripSettleUp?: boolean; shoppingReminders?: boolean; shoppingDeals?: boolean; inflationShield?: boolean; monthlyWrapped?: boolean; groupActivity?: boolean; groupReminders?: boolean; leafletPromos?: boolean },
   ) {
     const data: Record<string, boolean> = {};
     if (prefs.budgetAlerts !== undefined) data.notifyBudgetAlerts = prefs.budgetAlerts;
@@ -220,6 +223,7 @@ export class UsersService {
     if (prefs.monthlyWrapped !== undefined) data.notifyMonthlyWrapped = prefs.monthlyWrapped;
     if (prefs.groupActivity !== undefined) data.notifyGroupActivity = prefs.groupActivity;
     if (prefs.groupReminders !== undefined) data.notifyGroupReminders = prefs.groupReminders;
+    if (prefs.leafletPromos !== undefined) data.notifyLeafletPromos = prefs.leafletPromos;
 
     await this.prisma.user.update({ where: { id: userId }, data });
     return this.getNotificationPreferences(userId);

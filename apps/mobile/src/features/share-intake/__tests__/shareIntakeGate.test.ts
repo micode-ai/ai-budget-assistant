@@ -1,8 +1,32 @@
 import { decideShareNavigation, shouldAnnounceDropped } from '../shareIntakeGate';
 
-const base = { pendingNavigation: true, screenOpen: false, coldStartGateReady: true, firstRunSeen: true, canEdit: true };
+const base = {
+  kind: 'text' as const, pendingNavigation: true, screenOpen: false, coldStartGateReady: true, firstRunSeen: true, canEdit: true,
+};
+const files = { ...base, kind: 'files' as const };
 
-describe('decideShareNavigation', () => {
+describe('decideShareNavigation — shared files (Receipts / Promo leaflet chooser)', () => {
+  it('files pending + ready + editor → choose', () => {
+    expect(decideShareNavigation(files)).toBe('choose');
+  });
+  it('files pending + ready + viewer → choose (a viewer may read leaflets)', () => {
+    expect(decideShareNavigation({ ...files, canEdit: false })).toBe('choose');
+  });
+  it('not ready → wait (cold-start gate)', () => {
+    expect(decideShareNavigation({ ...files, coldStartGateReady: false })).toBe('wait');
+  });
+  it('not ready → wait (first-run onboarding)', () => {
+    expect(decideShareNavigation({ ...files, firstRunSeen: false })).toBe('wait');
+  });
+  it('screenOpen → idle (the receipt screen appends new shares itself)', () => {
+    expect(decideShareNavigation({ ...files, screenOpen: true })).toBe('idle');
+  });
+  it('nothing pending → idle', () => {
+    expect(decideShareNavigation({ ...files, pendingNavigation: false })).toBe('idle');
+  });
+});
+
+describe('decideShareNavigation — shared text', () => {
   it('idle when nothing is pending', () => {
     expect(decideShareNavigation({ ...base, pendingNavigation: false })).toBe('idle');
   });

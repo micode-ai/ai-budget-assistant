@@ -139,6 +139,21 @@ Die App vergleicht den zuletzt gezahlten Preis für ein erfasstes Produkt mit de
 
 Angebote werden ebenfalls als Push-Benachrichtigung zugestellt, sobald eine echte Preissenkung erkannt wird, damit du die App nicht öffnen musst, um ein gutes Angebot zu erwischen — dieselbe Preissenkung wird jedoch höchstens einmal pro Woche gemeldet, damit du nicht wiederholt darauf hingewiesen wirst.
 
+## Prospekt prüfen
+
+Du hast den Prospekt eines Geschäfts als Fotos oder PDF? Die App zeigt dir, welche der Produkte, **die du wirklich kaufst**, darin vorkommen, und vergleicht den Angebotspreis mit dem, was du üblicherweise zahlst.
+
+- **In der Einkaufsliste** tippe auf **Prospekt prüfen** und wähle Screenshots des Prospekts (im Web ziehst du sie oder ein PDF auf die Seite).
+- **Aus einer anderen App (Android)** teile die Screenshots oder das PDF an AI Budget und wähle in der Rückfrage **Prospekt**.
+
+Die App liest den Prospekt und zeigt nur Angebote für Produkte aus deinen Einkäufen und deiner Einkaufsliste, jeweils mit dem Angebotspreis und — wenn du das Produkt schon in derselben Währung gekauft hast — deinem üblichen Preis, als *üblich X → Y*. Produkte, die du nicht kaufst, werden nie angezeigt, und der Prospekt selbst wird nicht gespeichert — nur die ausgelesenen Preise. Die Preise gelten *laut Prospekt — im Geschäft prüfen* — das Geschäft kann abweichen. Tippe bei einem Eintrag auf **Zur Liste**, um ihn auf deine Einkaufsliste zu setzen.
+
+**Deine Prospekte.** Der Prospekt-Bildschirm führt eine Liste deiner Prospekte, die noch gelten: Geschäft, gültig bis und wie viele deiner Produkte jeweils darin sind. Tippe auf einen, um seine Produkte wieder zu sehen und zur Liste hinzuzufügen (öffnet sich zuerst die Fotoauswahl, schließ sie einfach).
+
+**Wie viele Seiten du lesen kannst.** Prospektseiten haben ein eigenes Monatskontingent, getrennt von deinen KI-Anfragen: 20 Seiten im Free-Tarif, 200 in Pro und 500 in Business. Eine Freigabe liest bis zu 10 Seiten (ein PDF bis etwa 7 MB — bei einem größeren teile stattdessen Screenshots der Seiten). Der Rest wird übersprungen, und der Bildschirm sagt dir, wie viele Seiten fehlen.
+
+**Community-Angebote (optional).** Wenn du anonyme Preise teilst (Einstellungen → Daten → **Anonyme Preise teilen**), werden die Angebotspreise aus Prospekten, die du liest, genauso geteilt — nur Geschäft, Produkt, Preis und Datum, nie dein Name, dein Konto oder das Prospektbild. Sobald Community-Angebote in der App eingeschaltet sind und mehrere Käufer dasselbe Angebot bestätigen, erhalten andere, die in diesem Geschäft einkaufen und das Produkt üblicherweise kaufen, höchstens eine Benachrichtigung pro Tag, die sagt, bis wann das Angebot gilt — und erst, wenn es begonnen hat. Ein Tipp darauf öffnet deine Prospekte. Ausschalten unter Einstellungen → Benachrichtigungen → **Prospekt-Angebote für deine Produkte**.
+
 ## Benachrichtigungen verwalten
 
 Beide Benachrichtigungen sind standardmäßig aktiviert und können unabhängig voneinander unter **Einstellungen → Benachrichtigungen** deaktiviert werden:

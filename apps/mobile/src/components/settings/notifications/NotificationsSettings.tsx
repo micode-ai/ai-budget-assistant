@@ -59,6 +59,7 @@ export function NotificationsSettings() {
   const [notifShoppingReminders, setNotifShoppingReminders] = useState(true);
   const [notifShoppingDeals, setNotifShoppingDeals] = useState(true);
   const [notifInflationShield, setNotifInflationShield] = useState(true);
+  const [notifLeafletPromos, setNotifLeafletPromos] = useState(true);
   const [notifMonthlyWrapped, setNotifMonthlyWrapped] = useState(true);
   const [notifGroupActivity, setNotifGroupActivity] = useState(true);
   const [notifGroupReminders, setNotifGroupReminders] = useState(true);
@@ -79,6 +80,7 @@ export function NotificationsSettings() {
       setNotifShoppingReminders(prefs.shoppingReminders ?? true);
       setNotifShoppingDeals(prefs.shoppingDeals ?? true);
       setNotifInflationShield(prefs.inflationShield ?? true);
+      setNotifLeafletPromos(prefs.leafletPromos ?? true);
       setNotifMonthlyWrapped(prefs.monthlyWrapped ?? true);
       setNotifGroupActivity(prefs.groupActivity ?? true);
       setNotifGroupReminders(prefs.groupReminders ?? true);
@@ -213,6 +215,16 @@ export function NotificationsSettings() {
     }
   };
 
+  const handleToggleLeafletPromos = async (value: boolean) => {
+    setNotifLeafletPromos(value);
+    try {
+      await api.updateNotificationPreferences({ leafletPromos: value });
+    } catch (e) {
+      setNotifLeafletPromos(!value);
+      showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+    }
+  };
+
   const handleToggleMonthlyWrapped = async (value: boolean) => {
     setNotifMonthlyWrapped(value);
     try {
@@ -256,11 +268,12 @@ export function NotificationsSettings() {
     setNotifShoppingReminders(value);
     setNotifShoppingDeals(value);
     setNotifInflationShield(value);
+    setNotifLeafletPromos(value);
     setNotifMonthlyWrapped(value);
     setNotifGroupActivity(value);
     setNotifGroupReminders(value);
     try {
-      await api.updateNotificationPreferences({ budgetAlerts: value, sharedAccountActivity: value, debtReminders: value, recurringExpenses: value, subscriptionRenewals: value, anomalyAlerts: value, trackingGap: value, purchaseRequests: value, tripSettleUp: value, shoppingReminders: value, shoppingDeals: value, inflationShield: value, monthlyWrapped: value, groupActivity: value, groupReminders: value });
+      await api.updateNotificationPreferences({ budgetAlerts: value, sharedAccountActivity: value, debtReminders: value, recurringExpenses: value, subscriptionRenewals: value, anomalyAlerts: value, trackingGap: value, purchaseRequests: value, tripSettleUp: value, shoppingReminders: value, shoppingDeals: value, inflationShield: value, leafletPromos: value, monthlyWrapped: value, groupActivity: value, groupReminders: value });
     } catch (e) {
       setNotifBudgetAlerts(!value);
       setNotifSharedActivity(!value);
@@ -274,6 +287,7 @@ export function NotificationsSettings() {
       setNotifShoppingReminders(!value);
       setNotifShoppingDeals(!value);
       setNotifInflationShield(!value);
+      setNotifLeafletPromos(!value);
       setNotifMonthlyWrapped(!value);
       setNotifGroupActivity(!value);
       setNotifGroupReminders(!value);
@@ -293,7 +307,7 @@ export function NotificationsSettings() {
               <Text style={styles.fieldDesc}>{t('notifications.pushNotificationsDesc')}</Text>
             </View>
             <Switch
-              value={notifBudgetAlerts || notifSharedActivity || notifDebtReminders || notifRecurringExpenses || notifSubscriptionRenewals || notifAnomalyAlerts || notifTrackingGap || notifPurchaseRequests || notifTripSettleUp || notifShoppingReminders || notifShoppingDeals || notifInflationShield || notifMonthlyWrapped || notifGroupActivity || notifGroupReminders}
+              value={notifBudgetAlerts || notifSharedActivity || notifDebtReminders || notifRecurringExpenses || notifSubscriptionRenewals || notifAnomalyAlerts || notifTrackingGap || notifPurchaseRequests || notifTripSettleUp || notifShoppingReminders || notifShoppingDeals || notifInflationShield || notifLeafletPromos || notifMonthlyWrapped || notifGroupActivity || notifGroupReminders}
               onValueChange={handleToggleAllNotifications}
               trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
               disabled={notifLoading}
@@ -475,6 +489,21 @@ export function NotificationsSettings() {
             <Switch
               value={notifInflationShield}
               onValueChange={handleToggleInflationShield}
+              trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
+              disabled={notifLoading}
+            />
+          </View>
+
+          <View style={styles.divider} />
+
+          <View style={styles.fieldRow}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.fieldLabel}>{t('notifications.leafletPromos')}</Text>
+              <Text style={styles.fieldDesc}>{t('notifications.leafletPromosDesc')}</Text>
+            </View>
+            <Switch
+              value={notifLeafletPromos}
+              onValueChange={handleToggleLeafletPromos}
               trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
               disabled={notifLoading}
             />

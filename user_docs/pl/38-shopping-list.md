@@ -139,6 +139,21 @@ Aplikacja porównuje cenę, jaką ostatnio zapłaciłeś za śledzony produkt, z
 
 Promocje są też dostarczane jako powiadomienie push, gdy wykryta zostanie prawdziwa obniżka, więc nie musisz otwierać aplikacji, żeby jej nie przegapić — ta sama obniżka ceny nie zostanie jednak wysłana częściej niż raz w tygodniu, więc nie będziesz o niej przypominany wielokrotnie.
 
+## Sprawdź gazetkę promocyjną
+
+Masz gazetkę promocyjną sklepu w formie zdjęć lub PDF? Aplikacja pokaże, które z produktów, **które naprawdę kupujesz**, w niej są, i porówna cenę promocyjną z tym, ile zwykle płacisz.
+
+- **Z listy zakupów** dotknij **Sprawdź gazetkę** i wybierz zrzuty ekranu gazetki (w wersji webowej upuść je lub plik PDF na stronę).
+- **Z innej aplikacji (Android)** udostępnij zrzuty ekranu lub PDF do AI Budżet i wybierz **Gazetka promocyjna** w pytaniu, które się pojawi.
+
+Aplikacja czyta gazetkę i pokazuje tylko promocje na produkty z Twoich zakupów i listy zakupów: cenę promocyjną oraz — jeśli kupowałeś już ten produkt w tej samej walucie — ile zwykle płacisz, jako *zwykle X → Y*. Produkty, których nie kupujesz, nigdy się nie pokazują, a sama gazetka nie jest zapisywana — zostają tylko odczytane ceny. Ceny są podane *według gazetki — sprawdź w sklepie* — sklep może się różnić. Dotknij **Dodaj do listy** przy pozycji, aby dodać ją do listy zakupów.
+
+**Twoje gazetki.** Ekran gazetki zachowuje listę Twoich gazetek, które jeszcze obowiązują: sklep, do kiedy i ile Twoich produktów jest w każdej. Dotknij jednej, aby znów zobaczyć jej produkty i dodać je do listy (jeśli najpierw otworzy się wybór zdjęć, po prostu go zamknij).
+
+**Ile stron możesz sprawdzić.** Strony gazetek mają własny miesięczny limit, osobny od zapytań AI: 20 stron w Free, 200 w Pro i 500 w Business. Jedno udostępnienie czyta do 10 stron (PDF do około 7 MB — przy większym udostępnij zamiast tego zrzuty stron). Reszta jest pomijana, a ekran mówi, ile stron pominięto.
+
+**Promocje społeczności (opcjonalnie).** Jeśli udostępniasz anonimowe ceny (Ustawienia → Dane → **Udostępniaj anonimowe ceny**), ceny promocyjne z gazetek, które czytasz, są udostępniane w ten sam sposób — tylko sklep, produkt, cena i daty, nigdy Twoje imię, konto ani obraz gazetki. Gdy promocje społeczności zostaną włączone w aplikacji, a tę samą promocję potwierdzi kilku kupujących, inni, którzy kupują w tym sklepie i zwykle kupują ten produkt, dostają najwyżej jedno powiadomienie dziennie z informacją, do kiedy trwa promocja — i dopiero gdy już się zaczęła. Dotknięcie go otwiera Twoje gazetki. Wyłączysz je w Ustawienia → Powiadomienia → **Promocje z gazetek na Twoje produkty**.
+
 ## Zarządzanie powiadomieniami
 
 Oba powiadomienia są domyślnie włączone i można je wyłączyć niezależnie w **Ustawienia → Powiadomienia**:

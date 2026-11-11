@@ -4,12 +4,16 @@ const mockSpawn = jest.fn();
 jest.mock('node:child_process', () => ({ spawn: (...a: unknown[]) => mockSpawn(...a) }));
 
 const mockGetText = jest.fn();
+const mockGetInfo = jest.fn();
 const mockDestroy = jest.fn().mockResolvedValue(undefined);
 jest.mock('pdf-parse', () => ({
-  PDFParse: jest.fn().mockImplementation(() => ({ getText: mockGetText, destroy: mockDestroy })),
+  PDFParse: jest.fn().mockImplementation(() => ({ getText: mockGetText, getInfo: mockGetInfo, destroy: mockDestroy })),
 }));
 
+import { writeFileSync } from 'node:fs';
 import {
+  PDF_RENDER_CHUNK_PAGES,
+  pageChunks,
   PDFTOPPM_SCALE_TO,
   PDFTOPPM_TIMEOUT_MS,
   PDF_TEXT_MAX_PAGES,
@@ -116,5 +120,129 @@ describe('ReceiptPdfService.renderToPngs', () => {
     proc.stderr.emit('data', Buffer.from('boom'));
     proc.emit('close', 1);
     await expect(pending).rejects.toThrow(/exited 1: boom/);
+  });
+});
+
+describe('ReceiptPdfService.countPages', () => {
+  beforeEach(() => jest.clearAllMocks());
+
+  it('returns the document page count and destroys the parser', async () => {
+    mockGetInfo.mockResolvedValue({ total: 12 });
+    await expect(new ReceiptPdfService().countPages(Buffer.from('%PDF'))).resolves.toBe(12);
+    expect(mockDestroy).toHaveBeenCalled();
+  });
+
+  it('returns null instead of throwing when the PDF cannot be parsed', async () => {
+    mockGetInfo.mockRejectedValue(new Error('bad pdf'));
+    await expect(new ReceiptPdfService().countPages(Buffer.from('x'))).resolves.toBeNull();
+    expect(mockDestroy).toHaveBeenCalled();
+  });
+
+  it('returns null for a nonsensical total', async () => {
+    mockGetInfo.mockResolvedValue({ total: -1 });
+    await expect(new ReceiptPdfService().countPages(Buffer.from('%PDF'))).resolves.toBeNull();
+  });
+});
+
+describe('pageChunks', () => {
+  it('splits 1..last into ranges of at most `size` pages', () => {
+    expect(pageChunks(12, 5)).toEqual([
+      [1, 5],
+      [6, 10],
+      [11, 12],
+    ]);
+    expect(pageChunks(10, 5)).toEqual([
+      [1, 5],
+      [6, 10],
+    ]);
+    expect(pageChunks(3, 5)).toEqual([[1, 3]]);
+    expect(pageChunks(0, 5)).toEqual([]);
+  });
+});
+
+describe('ReceiptPdfService.renderPageChunks', () => {
+  beforeEach(() => jest.clearAllMocks());
+
+  /** A fake pdftoppm that writes one PNG per page of its -f/-l range (up to `docPages`), or fails. */
+  function fakePdftoppm(docPages: number, failOnCall?: number) {
+    let call = 0;
+    mockSpawn.mockImplementation((_cmd: string, args: string[]) => {
+      call++;
+      const proc = fakeProc();
+      const first = Number(args[args.indexOf('-f') + 1]);
+      const last = Number(args[args.indexOf('-l') + 1]);
+      const prefix = args[args.length - 1];
+      const failing = call === failOnCall;
+      setImmediate(() => {
+        if (failing) {
+          proc.stderr.emit('data', Buffer.from('broken page'));
+          proc.emit('close', 1);
+          return;
+        }
+        for (let n = first; n <= Math.min(last, docPages); n++) {
+          writeFileSync(`${prefix}-${String(n).padStart(2, '0')}.png`, `png${n}`);
+        }
+        proc.emit('close', 0);
+      });
+      return proc;
+    });
+  }
+
+  async function collect(gen: AsyncGenerator<Buffer[]>): Promise<string[][]> {
+    const out: string[][] = [];
+    for await (const chunk of gen) out.push(chunk.map((b) => b.toString()));
+    return out;
+  }
+
+  it('renders 12 pages as 5, 5 and 2, one pdftoppm spawn per chunk with its own -f/-l', async () => {
+    fakePdftoppm(12);
+    const chunks = await collect(new ReceiptPdfService().renderPageChunks(Buffer.from('%PDF'), 12));
+    expect(PDF_RENDER_CHUNK_PAGES).toBe(5);
+    expect(chunks.map((c) => c.length)).toEqual([5, 5, 2]);
+    expect(chunks.flat()).toEqual(Array.from({ length: 12 }, (_, i) => `png${i + 1}`));
+    const ranges = mockSpawn.mock.calls.map(([, args]: [string, string[]]) => [
+      args[args.indexOf('-f') + 1],
+      args[args.indexOf('-l') + 1],
+    ]);
+    expect(ranges).toEqual([
+      ['1', '5'],
+      ['6', '10'],
+      ['11', '12'],
+    ]);
+    for (const [, args] of mockSpawn.mock.calls) expect(args).toEqual(expect.arrayContaining(['-scale-to', String(PDFTOPPM_SCALE_TO)]));
+  });
+
+  it('stops once a chunk comes back short — the document ended before `lastPage`', async () => {
+    fakePdftoppm(7);
+    const chunks = await collect(new ReceiptPdfService().renderPageChunks(Buffer.from('%PDF'), 15));
+    expect(chunks.map((c) => c.length)).toEqual([5, 2]);
+    expect(mockSpawn).toHaveBeenCalledTimes(2);
+  });
+
+  it('a failing chunk rejects after the chunks before it were handed over', async () => {
+    fakePdftoppm(12, 2);
+    const seen: number[] = [];
+    const run = async () => {
+      for await (const chunk of new ReceiptPdfService().renderPageChunks(Buffer.from('%PDF'), 12)) seen.push(chunk.length);
+    };
+    await expect(run()).rejects.toThrow(/exited 1: broken page/);
+    expect(seen).toEqual([5]);
+    expect(mockSpawn).toHaveBeenCalledTimes(2);
+  });
+
+  it('gives each chunk its own pdftoppm timeout', async () => {
+    const realSetTimeout = global.setTimeout;
+    const deadlines: number[] = [];
+    const spy = jest.spyOn(global, 'setTimeout').mockImplementation(((fn: () => void, ms?: number, ...rest: unknown[]) => {
+      if (ms === PDFTOPPM_TIMEOUT_MS) deadlines.push(ms);
+      return realSetTimeout(fn, ms, ...rest);
+    }) as unknown as typeof setTimeout);
+    try {
+      fakePdftoppm(12);
+      await collect(new ReceiptPdfService().renderPageChunks(Buffer.from('%PDF'), 12));
+      expect(deadlines).toHaveLength(3);
+    } finally {
+      spy.mockRestore();
+    }
   });
 });

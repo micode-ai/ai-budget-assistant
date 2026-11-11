@@ -139,6 +139,21 @@ The app compares the price you've recently paid for a tracked product against it
 
 Deals are also delivered as a push notification when a genuine drop is detected, so you don't have to open the app to catch a good price — but the same price drop won't be pushed more than once a week, so you're not nudged about it repeatedly.
 
+## Check a Promo Leaflet
+
+Got a store's promo leaflet as photos or a PDF? The app can tell you which of the products **you actually buy** are in it, and compare the promo price with what you usually pay.
+
+- **From the shopping list**, tap **Check a leaflet** and pick screenshots of the leaflet (on the web, drop them or a PDF onto the page).
+- **From another app (Android)**, share the screenshots or the PDF to AI Budget and choose **Promo leaflet** in the question that appears.
+
+The app reads the leaflet and shows only the promos on products from your own purchases and shopping list, each with the promo price and — when you have bought the product before in the same currency — what you usually pay, as *usually X → Y*. Products you do not buy are never shown, and the leaflet itself is not kept: only the extracted prices are stored. Prices are shown *according to a leaflet — check in store* — the shop may differ. Tap **Add to list** on an item to put it on your shopping list.
+
+**Your leaflets.** The leaflet screen keeps a list of your leaflets that are still running: the shop, until when, and how many of your products are in each. Tap one to see its products again and add them to your list (if the photo picker opens first, just close it).
+
+**How many pages you can read.** Leaflet pages have their own monthly allowance, separate from your AI requests: 20 pages on Free, 200 on Pro and 500 on Business. One share reads up to 10 pages (a PDF up to about 7 MB — for a larger one, share screenshots of the pages instead). Anything beyond that is skipped and the screen tells you how many pages were left out.
+
+**Community promos (optional).** If you share anonymous prices (Settings → Data → **Share anonymous prices**), the promo prices from leaflets you read are shared the same way — only the shop, the product, the price and the dates, never your name, your account or the leaflet image. Once community promos are switched on in the app and several shoppers confirm the same promo, other people who buy at that shop and usually buy that product get at most one notification a day, saying until when the promo runs — and only once it has started. Tapping it opens your leaflets. Turn it off in Settings → Notifications → **Leaflet promos on your usual products**.
+
 ## Managing Notifications
 
 Both notifications are on by default and can be turned off independently in **Settings → Notifications**:

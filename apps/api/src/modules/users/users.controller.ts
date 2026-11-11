@@ -67,6 +67,7 @@ export class UsersController {
       paymentHandle: user.paymentHandle,
       paymentMethods,
       inflationCountry: user.inflationCountry,
+      leafletConsentNoticeAt: user.leafletConsentNoticeAt ?? null,
       createdAt: user.createdAt,
       isAdmin: adminEmails.includes(user.email.toLowerCase()),
     };
@@ -97,7 +98,7 @@ export class UsersController {
   @Patch('me')
   async updateProfile(
     @Req() req: AuthenticatedRequest,
-    @Body() body: { name?: string; currencyCode?: string; timezone?: string; language?: string; contributeCommunityPrices?: boolean; themeMode?: string; accentColor?: string | null; paymentMethod?: SettleMethod | null; paymentHandle?: string | null; inflationCountry?: string | null },
+    @Body() body: { name?: string; currencyCode?: string; timezone?: string; language?: string; contributeCommunityPrices?: boolean; themeMode?: string; accentColor?: string | null; paymentMethod?: SettleMethod | null; paymentHandle?: string | null; inflationCountry?: string | null; leafletConsentNoticeAt?: 'now' },
   ) {
     if (body.themeMode !== undefined && !THEME_MODES.includes(body.themeMode)) {
       throw new BadRequestException('Invalid themeMode');
@@ -114,7 +115,17 @@ export class UsersController {
     if (body.inflationCountry !== undefined) {
       body.inflationCountry = validateInflationCountry(body.inflationCountry);
     }
-    const user = await this.usersService.update(req.user.id, body);
+    // Gazetka match consent notice: the client can only say "seen now" — the server picks the time.
+    // Opting in to community prices also counts as seeing it, because that copy mentions leaflets.
+    const { leafletConsentNoticeAt, ...profile } = body;
+    if (leafletConsentNoticeAt !== undefined && leafletConsentNoticeAt !== 'now') {
+      throw new BadRequestException("Invalid leafletConsentNoticeAt (only 'now' is accepted)");
+    }
+    const data: Parameters<UsersService['update']>[1] = { ...profile };
+    if (leafletConsentNoticeAt === 'now' || profile.contributeCommunityPrices === true) {
+      data.leafletConsentNoticeAt = new Date();
+    }
+    const user = await this.usersService.update(req.user.id, data);
     if (body.inflationCountry !== undefined || body.timezone !== undefined) {
       // Every account's real-salary answer depends on the user's country, which
       // is guessed from the timezone when no inflationCountry is set.
@@ -134,6 +145,7 @@ export class UsersController {
       paymentMethod: user.paymentMethod,
       paymentHandle: user.paymentHandle,
       inflationCountry: user.inflationCountry,
+      leafletConsentNoticeAt: user.leafletConsentNoticeAt,
     };
   }
 
@@ -169,7 +181,7 @@ export class UsersController {
   @Patch('me/notification-preferences')
   async updateNotificationPreferences(
     @Req() req: AuthenticatedRequest,
-    @Body() body: { budgetAlerts?: boolean; sharedAccountActivity?: boolean; debtReminders?: boolean; recurringExpenses?: boolean; subscriptionRenewals?: boolean; anomalyAlerts?: boolean; trackingGap?: boolean; purchaseRequests?: boolean; tripSettleUp?: boolean; shoppingReminders?: boolean; shoppingDeals?: boolean; inflationShield?: boolean; monthlyWrapped?: boolean; groupActivity?: boolean; groupReminders?: boolean },
+    @Body() body: { budgetAlerts?: boolean; sharedAccountActivity?: boolean; debtReminders?: boolean; recurringExpenses?: boolean; subscriptionRenewals?: boolean; anomalyAlerts?: boolean; trackingGap?: boolean; purchaseRequests?: boolean; tripSettleUp?: boolean; shoppingReminders?: boolean; shoppingDeals?: boolean; inflationShield?: boolean; monthlyWrapped?: boolean; groupActivity?: boolean; groupReminders?: boolean; leafletPromos?: boolean },
   ) {
     return this.usersService.updateNotificationPreferences(req.user.id, body);
   }

@@ -4,12 +4,15 @@ import { createHash } from 'crypto';
 import { PrismaService } from '../../database/prisma.service';
 import { CacheService } from '../../common/cache/cache.service';
 import { GeocodingService } from '../ai/services/geocoding.service';
-import { isStripePaidSub } from '../admin/admin-comped.util';
 import {
   mondayOfWeek,
   regionBucket,
   computeContributorKey,
   isEligibleContributor,
+  isTrustedContributor,
+  COMMUNITY_MIN_ACCOUNT_AGE_DAYS,
+  COMMUNITY_MIN_CONTRIBUTOR_EXPENSES,
+  COMMUNITY_TRUSTED_TENURE_DAYS,
 } from './community-price.util';
 import {
   aggregateCommunityPrices,
@@ -78,10 +81,10 @@ export type ContributionOutcome =
 // cheap to fake. Both overridable via env
 // (COMMUNITY_MIN_ACCOUNT_AGE_DAYS / COMMUNITY_MIN_CONTRIBUTOR_EXPENSES; the names
 // predate the per-user keying and are unchanged).
-const MIN_ACCOUNT_AGE_DAYS = 7;
-const MIN_CONTRIBUTOR_EXPENSES = 15;
+const MIN_ACCOUNT_AGE_DAYS = COMMUNITY_MIN_ACCOUNT_AGE_DAYS;
+const MIN_CONTRIBUTOR_EXPENSES = COMMUNITY_MIN_CONTRIBUTOR_EXPENSES;
 // Trusted = user tenure >= this many days OR paying through Stripe (never a comp).
-const TRUSTED_TENURE_DAYS = 60;
+const TRUSTED_TENURE_DAYS = COMMUNITY_TRUSTED_TENURE_DAYS;
 // Product/merchant labels beyond this are almost certainly not real names — cap
 // them so no oversized free-text string can reach the cross-account corpus.
 const MAX_LABEL_LEN = 64;
@@ -733,9 +736,11 @@ export class CommunityPriceService implements OnModuleInit {
         where: { userId },
         select: { tier: true, status: true, stripeSubscriptionId: true },
       });
-      const trusted =
-        accountAgeDays >= this.intEnv('COMMUNITY_TRUSTED_TENURE_DAYS', TRUSTED_TENURE_DAYS) ||
-        isStripePaidSub(sub);
+      const trusted = isTrustedContributor(
+        accountAgeDays,
+        sub,
+        this.intEnv('COMMUNITY_TRUSTED_TENURE_DAYS', TRUSTED_TENURE_DAYS),
+      );
 
       const contributorKey = computeContributorKey(salt, userId);
 

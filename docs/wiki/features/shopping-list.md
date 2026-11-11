@@ -255,6 +255,12 @@ own offline-first mirror has no notion of, same precedent as account-transfers' 
 - The guest share link has no rotate-without-revoking: "Revoke" then "Share" again is the
   rotation path. No QR code (receipt-split has one for its own group-split flow; not built here).
 
+## Promo leaflets
+
+The "Check a leaflet" button on the list opens the leaflet screen, which matches a shared promo leaflet
+against the products the user buys. Everything about it — budget, matching, community layer — is on
+[gazetka-match](gazetka-match.md).
+
 ## History
 
 ABA-330 (M1–M6) · ABA-332 (the shopping hub quick action) · ABA-348 (archive-to-empty-state; the

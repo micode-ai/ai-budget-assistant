@@ -139,6 +139,21 @@ De app vergelijkt de prijs die je onlangs betaalde voor een bijgehouden product 
 
 Aanbiedingen worden ook als pushmelding bezorgd zodra een echte prijsdaling wordt gedetecteerd, zodat je de app niet hoeft te openen om een goede prijs niet te missen — dezelfde prijsdaling wordt echter niet vaker dan één keer per week gemeld, zodat je niet herhaaldelijk op hetzelfde wordt gewezen.
 
+## Een folder bekijken
+
+Heb je de folder van een winkel als foto's of pdf? De app laat zien welke van de producten **die je echt koopt** erin staan en vergelijkt de aanbiedingsprijs met wat je normaal betaalt.
+
+- **Vanuit de boodschappenlijst** tik je op **Folder bekijken** en kies je schermafbeeldingen van de folder (op het web sleep je ze of een pdf naar de pagina).
+- **Vanuit een andere app (Android)** deel je de schermafbeeldingen of de pdf met AI Budget en kies je **Folder** in de vraag die verschijnt.
+
+De app leest de folder en toont alleen aanbiedingen voor producten uit je aankopen en boodschappenlijst, elk met de aanbiedingsprijs en — als je het product al eerder in dezelfde valuta kocht — wat je normaal betaalt, als *meestal X → Y*. Producten die je niet koopt worden nooit getoond, en de folder zelf wordt niet bewaard: alleen de uitgelezen prijzen. Prijzen worden getoond *volgens een folder — controleer het in de winkel* — de winkel kan afwijken. Tik bij een item op **Op de lijst** om het op je boodschappenlijst te zetten.
+
+**Je folders.** Het folderscherm houdt een lijst bij van je folders die nog lopen: de winkel, tot wanneer en hoeveel van je producten erin staan. Tik op een folder om de producten opnieuw te zien en aan je lijst toe te voegen (opent eerst de fotokiezer, sluit die dan gewoon).
+
+**Hoeveel pagina's je kunt lezen.** Folderpagina's hebben een eigen maandelijks tegoed, los van je AI-verzoeken: 20 pagina's bij Free, 200 bij Pro en 500 bij Business. Eén keer delen leest maximaal 10 pagina's (een pdf tot ongeveer 7 MB — deel bij een grotere in plaats daarvan screenshots van de pagina's). De rest wordt overgeslagen en het scherm laat weten hoeveel pagina's er zijn weggelaten.
+
+**Aanbiedingen van de community (optioneel).** Als je anonieme prijzen deelt (Instellingen → Gegevens → **Anonieme prijzen delen**), worden de aanbiedingsprijzen uit folders die je leest op dezelfde manier gedeeld — alleen winkel, product, prijs en data, nooit je naam, je account of de folderafbeelding. Zodra community-aanbiedingen in de app zijn ingeschakeld en meerdere kopers dezelfde aanbieding bevestigen, krijgen anderen die bij die winkel kopen en dat product meestal kopen hooguit één melding per dag, met tot wanneer de aanbieding loopt — en pas als ze begonnen is. Erop tikken opent je folders. Uitzetten kan bij Instellingen → Meldingen → **Folderaanbiedingen voor je producten**.
+
 ## Meldingen beheren
 
 Beide meldingen staan standaard aan en kunnen onafhankelijk van elkaar worden uitgeschakeld via **Instellingen → Meldingen**:

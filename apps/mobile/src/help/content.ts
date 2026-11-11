@@ -4758,6 +4758,21 @@ The app compares the price you've recently paid for a tracked product against it
 
 Deals are also delivered as a push notification when a genuine drop is detected, so you don't have to open the app to catch a good price — but the same price drop won't be pushed more than once a week, so you're not nudged about it repeatedly.
 
+## Check a Promo Leaflet
+
+Got a store's promo leaflet as photos or a PDF? The app can tell you which of the products **you actually buy** are in it, and compare the promo price with what you usually pay.
+
+- **From the shopping list**, tap **Check a leaflet** and pick screenshots of the leaflet (on the web, drop them or a PDF onto the page).
+- **From another app (Android)**, share the screenshots or the PDF to AI Budget and choose **Promo leaflet** in the question that appears.
+
+The app reads the leaflet and shows only the promos on products from your own purchases and shopping list, each with the promo price and — when you have bought the product before in the same currency — what you usually pay, as *usually X → Y*. Products you do not buy are never shown, and the leaflet itself is not kept: only the extracted prices are stored. Prices are shown *according to a leaflet — check in store* — the shop may differ. Tap **Add to list** on an item to put it on your shopping list.
+
+**Your leaflets.** The leaflet screen keeps a list of your leaflets that are still running: the shop, until when, and how many of your products are in each. Tap one to see its products again and add them to your list (if the photo picker opens first, just close it).
+
+**How many pages you can read.** Leaflet pages have their own monthly allowance, separate from your AI requests: 20 pages on Free, 200 on Pro and 500 on Business. One share reads up to 10 pages (a PDF up to about 7 MB — for a larger one, share screenshots of the pages instead). Anything beyond that is skipped and the screen tells you how many pages were left out.
+
+**Community promos (optional).** If you share anonymous prices (Settings → Data → **Share anonymous prices**), the promo prices from leaflets you read are shared the same way — only the shop, the product, the price and the dates, never your name, your account or the leaflet image. Once community promos are switched on in the app and several shoppers confirm the same promo, other people who buy at that shop and usually buy that product get at most one notification a day, saying until when the promo runs — and only once it has started. Tapping it opens your leaflets. Turn it off in Settings → Notifications → **Leaflet promos on your usual products**.
+
 ## Managing Notifications
 
 Both notifications are on by default and can be turned off independently in **Settings → Notifications**:
@@ -10088,6 +10103,21 @@ OCR иногда неверно читает цену, выдумывает ст
 
 Скидки также приходят в виде push-уведомления при обнаружении реального снижения цены, так что вам не нужно открывать приложение, чтобы не пропустить выгодную цену — но об одной и той же скидке вам не будут сообщать чаще одного раза в неделю, чтобы не напоминать о ней постоянно.
 
+## Проверка рекламной газетки
+
+Есть рекламная газетка магазина в виде фото или PDF? Приложение покажет, какие из товаров, **которые вы действительно покупаете**, в ней есть, и сравнит акционную цену с тем, сколько вы обычно платите.
+
+- **Из списка покупок** нажмите **Проверить газетку** и выберите скриншоты газетки (в веб-версии перетащите их или PDF на страницу).
+- **Из другого приложения (Android)** поделитесь скриншотами или PDF с AI Budget и выберите **Рекламная газетка** в появившемся вопросе.
+
+Приложение читает газетку и показывает только акции на товары из ваших покупок и списка покупок: акционную цену и — если вы уже покупали этот товар в той же валюте — сколько вы обычно платите, в виде *обычно X → Y*. Товары, которые вы не покупаете, не показываются никогда, а сама газетка не сохраняется — остаются только считанные цены. Цены указаны *по данным газетки — проверяйте в магазине* — в магазине может отличаться. Нажмите **В список** у позиции, чтобы добавить её в список покупок.
+
+**Ваши газетки.** Экран газетки хранит список ваших газеток, которые ещё действуют: магазин, до какого числа и сколько ваших товаров в каждой. Нажмите на газетку, чтобы снова увидеть её товары и добавить их в список (если сначала откроется выбор фото, просто закройте его).
+
+**Сколько страниц можно прочитать.** У страниц газеток свой месячный лимит, отдельный от запросов к ИИ: 20 страниц на Free, 200 на Pro и 500 на Business. За один раз читается до 10 страниц (PDF примерно до 7 МБ — если больше, поделитесь скриншотами страниц). Остальное пропускается, а экран сообщает, сколько страниц осталось непрочитанными.
+
+**Акции сообщества (по желанию).** Если вы делитесь анонимными ценами (Настройки → Данные → **Делиться анонимными ценами**), акционные цены из газеток, которые вы читаете, передаются так же — только магазин, товар, цена и даты, никогда ваше имя, аккаунт или изображение газетки. Когда акции сообщества будут включены в приложении и одну и ту же акцию подтвердят несколько покупателей, остальные, кто покупает в этом магазине и обычно берёт этот товар, получат не больше одного уведомления в день — с датой, до которой действует акция, и только когда она уже началась. Нажатие на уведомление открывает ваши газетки. Отключить можно в Настройки → Уведомления → **Акции из газеток на ваши товары**.
+
 ## Управление уведомлениями
 
 Оба уведомления включены по умолчанию и отключаются независимо друг от друга в **Настройки → Уведомления**:
@@ -15388,6 +15418,21 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 Знижки також надходять у вигляді push-сповіщення, коли виявлено справжнє зниження ціни, тож вам не потрібно відкривати застосунок, щоб не пропустити вигідну ціну — але про ту саму знижку вам не повідомлятимуть частіше одного разу на тиждень, щоб не нагадувати про неї постійно.
 
+## Перевірка рекламної газетки
+
+Маєте рекламну газетку магазину у вигляді фото чи PDF? Застосунок покаже, які з товарів, **що ви справді купуєте**, у ній є, і порівняє акційну ціну з тим, скільки ви зазвичай платите.
+
+- **Зі списку покупок** натисніть **Перевірити газетку** і виберіть скриншоти газетки (у веб-версії перетягніть їх або PDF на сторінку).
+- **З іншого застосунку (Android)** поділіться скриншотами або PDF з AI Budget і виберіть **Рекламна газетка** у запитанні, що з'явиться.
+
+Застосунок читає газетку й показує лише акції на товари з ваших покупок і списку покупок: акційну ціну та — якщо ви вже купували цей товар у тій самій валюті — скільки ви зазвичай платите, у вигляді *зазвичай X → Y*. Товари, яких ви не купуєте, не показуються ніколи, а сама газетка не зберігається — лишаються тільки зчитані ціни. Ціни вказано *за даними газетки — перевіряйте в магазині* — у магазині може відрізнятися. Натисніть **До списку** біля позиції, щоб додати її до списку покупок.
+
+**Ваші газетки.** Екран газетки зберігає список ваших газеток, які ще діють: магазин, до якого числа і скільки ваших товарів у кожній. Натисніть на газетку, щоб знову побачити її товари й додати їх до списку (якщо спершу відкриється вибір фото, просто закрийте його).
+
+**Скільки сторінок можна прочитати.** Сторінки газеток мають власний місячний ліміт, окремий від запитів до ШІ: 20 сторінок на Free, 200 на Pro і 500 на Business. За один раз читається до 10 сторінок (PDF приблизно до 7 МБ — якщо більший, поділіться скриншотами сторінок). Решту пропущено, а екран повідомляє, скільки сторінок лишилося непрочитаними.
+
+**Акції спільноти (за бажанням).** Якщо ви ділитеся анонімними цінами (Налаштування → Дані → **Ділитися анонімними цінами**), акційні ціни з газеток, які ви читаєте, передаються так само — лише магазин, товар, ціна й дати, ніколи ваше ім'я, акаунт чи зображення газетки. Коли акції спільноти буде увімкнено в застосунку і ту саму акцію підтвердять кілька покупців, інші, хто купує в цьому магазині й зазвичай бере цей товар, отримають не більше одного сповіщення на день — з датою, до якої діє акція, і лише коли вона вже почалася. Натискання на сповіщення відкриває ваші газетки. Вимкнути можна в Налаштування → Сповіщення → **Акції з газеток на ваші товари**.
+
 ## Керування сповіщеннями
 
 Обидва сповіщення увімкнені за замовчуванням і вимикаються незалежно одне від одного в **Налаштування → Сповіщення**:
@@ -20673,6 +20718,21 @@ Aplikacja porównuje cenę, jaką ostatnio zapłaciłeś za śledzony produkt, z
 
 Promocje są też dostarczane jako powiadomienie push, gdy wykryta zostanie prawdziwa obniżka, więc nie musisz otwierać aplikacji, żeby jej nie przegapić — ta sama obniżka ceny nie zostanie jednak wysłana częściej niż raz w tygodniu, więc nie będziesz o niej przypominany wielokrotnie.
 
+## Sprawdź gazetkę promocyjną
+
+Masz gazetkę promocyjną sklepu w formie zdjęć lub PDF? Aplikacja pokaże, które z produktów, **które naprawdę kupujesz**, w niej są, i porówna cenę promocyjną z tym, ile zwykle płacisz.
+
+- **Z listy zakupów** dotknij **Sprawdź gazetkę** i wybierz zrzuty ekranu gazetki (w wersji webowej upuść je lub plik PDF na stronę).
+- **Z innej aplikacji (Android)** udostępnij zrzuty ekranu lub PDF do AI Budżet i wybierz **Gazetka promocyjna** w pytaniu, które się pojawi.
+
+Aplikacja czyta gazetkę i pokazuje tylko promocje na produkty z Twoich zakupów i listy zakupów: cenę promocyjną oraz — jeśli kupowałeś już ten produkt w tej samej walucie — ile zwykle płacisz, jako *zwykle X → Y*. Produkty, których nie kupujesz, nigdy się nie pokazują, a sama gazetka nie jest zapisywana — zostają tylko odczytane ceny. Ceny są podane *według gazetki — sprawdź w sklepie* — sklep może się różnić. Dotknij **Dodaj do listy** przy pozycji, aby dodać ją do listy zakupów.
+
+**Twoje gazetki.** Ekran gazetki zachowuje listę Twoich gazetek, które jeszcze obowiązują: sklep, do kiedy i ile Twoich produktów jest w każdej. Dotknij jednej, aby znów zobaczyć jej produkty i dodać je do listy (jeśli najpierw otworzy się wybór zdjęć, po prostu go zamknij).
+
+**Ile stron możesz sprawdzić.** Strony gazetek mają własny miesięczny limit, osobny od zapytań AI: 20 stron w Free, 200 w Pro i 500 w Business. Jedno udostępnienie czyta do 10 stron (PDF do około 7 MB — przy większym udostępnij zamiast tego zrzuty stron). Reszta jest pomijana, a ekran mówi, ile stron pominięto.
+
+**Promocje społeczności (opcjonalnie).** Jeśli udostępniasz anonimowe ceny (Ustawienia → Dane → **Udostępniaj anonimowe ceny**), ceny promocyjne z gazetek, które czytasz, są udostępniane w ten sam sposób — tylko sklep, produkt, cena i daty, nigdy Twoje imię, konto ani obraz gazetki. Gdy promocje społeczności zostaną włączone w aplikacji, a tę samą promocję potwierdzi kilku kupujących, inni, którzy kupują w tym sklepie i zwykle kupują ten produkt, dostają najwyżej jedno powiadomienie dziennie z informacją, do kiedy trwa promocja — i dopiero gdy już się zaczęła. Dotknięcie go otwiera Twoje gazetki. Wyłączysz je w Ustawienia → Powiadomienia → **Promocje z gazetek na Twoje produkty**.
+
 ## Zarządzanie powiadomieniami
 
 Oba powiadomienia są domyślnie włączone i można je wyłączyć niezależnie w **Ustawienia → Powiadomienia**:
@@ -25933,6 +25993,21 @@ Die App vergleicht den zuletzt gezahlten Preis für ein erfasstes Produkt mit de
 
 Angebote werden ebenfalls als Push-Benachrichtigung zugestellt, sobald eine echte Preissenkung erkannt wird, damit du die App nicht öffnen musst, um ein gutes Angebot zu erwischen — dieselbe Preissenkung wird jedoch höchstens einmal pro Woche gemeldet, damit du nicht wiederholt darauf hingewiesen wirst.
 
+## Prospekt prüfen
+
+Du hast den Prospekt eines Geschäfts als Fotos oder PDF? Die App zeigt dir, welche der Produkte, **die du wirklich kaufst**, darin vorkommen, und vergleicht den Angebotspreis mit dem, was du üblicherweise zahlst.
+
+- **In der Einkaufsliste** tippe auf **Prospekt prüfen** und wähle Screenshots des Prospekts (im Web ziehst du sie oder ein PDF auf die Seite).
+- **Aus einer anderen App (Android)** teile die Screenshots oder das PDF an AI Budget und wähle in der Rückfrage **Prospekt**.
+
+Die App liest den Prospekt und zeigt nur Angebote für Produkte aus deinen Einkäufen und deiner Einkaufsliste, jeweils mit dem Angebotspreis und — wenn du das Produkt schon in derselben Währung gekauft hast — deinem üblichen Preis, als *üblich X → Y*. Produkte, die du nicht kaufst, werden nie angezeigt, und der Prospekt selbst wird nicht gespeichert — nur die ausgelesenen Preise. Die Preise gelten *laut Prospekt — im Geschäft prüfen* — das Geschäft kann abweichen. Tippe bei einem Eintrag auf **Zur Liste**, um ihn auf deine Einkaufsliste zu setzen.
+
+**Deine Prospekte.** Der Prospekt-Bildschirm führt eine Liste deiner Prospekte, die noch gelten: Geschäft, gültig bis und wie viele deiner Produkte jeweils darin sind. Tippe auf einen, um seine Produkte wieder zu sehen und zur Liste hinzuzufügen (öffnet sich zuerst die Fotoauswahl, schließ sie einfach).
+
+**Wie viele Seiten du lesen kannst.** Prospektseiten haben ein eigenes Monatskontingent, getrennt von deinen KI-Anfragen: 20 Seiten im Free-Tarif, 200 in Pro und 500 in Business. Eine Freigabe liest bis zu 10 Seiten (ein PDF bis etwa 7 MB — bei einem größeren teile stattdessen Screenshots der Seiten). Der Rest wird übersprungen, und der Bildschirm sagt dir, wie viele Seiten fehlen.
+
+**Community-Angebote (optional).** Wenn du anonyme Preise teilst (Einstellungen → Daten → **Anonyme Preise teilen**), werden die Angebotspreise aus Prospekten, die du liest, genauso geteilt — nur Geschäft, Produkt, Preis und Datum, nie dein Name, dein Konto oder das Prospektbild. Sobald Community-Angebote in der App eingeschaltet sind und mehrere Käufer dasselbe Angebot bestätigen, erhalten andere, die in diesem Geschäft einkaufen und das Produkt üblicherweise kaufen, höchstens eine Benachrichtigung pro Tag, die sagt, bis wann das Angebot gilt — und erst, wenn es begonnen hat. Ein Tipp darauf öffnet deine Prospekte. Ausschalten unter Einstellungen → Benachrichtigungen → **Prospekt-Angebote für deine Produkte**.
+
 ## Benachrichtigungen verwalten
 
 Beide Benachrichtigungen sind standardmäßig aktiviert und können unabhängig voneinander unter **Einstellungen → Benachrichtigungen** deaktiviert werden:
@@ -31182,6 +31257,21 @@ La app compara el precio que has pagado recientemente por un producto rastreado 
 
 Las ofertas también se envían como notificación push cuando se detecta una bajada genuina, para que no tengas que abrir la app para no perdértela — pero la misma bajada de precio no se te enviará más de una vez por semana, para que no te avisen repetidamente de lo mismo.
 
+## Revisar un folleto de ofertas
+
+¿Tienes el folleto de ofertas de una tienda en fotos o PDF? La app te dice cuáles de los productos **que realmente compras** aparecen en él y compara el precio de oferta con lo que sueles pagar.
+
+- **Desde la lista de compras**, toca **Revisar un folleto** y elige capturas del folleto (en la web, arrástralas o un PDF a la página).
+- **Desde otra app (Android)**, comparte las capturas o el PDF con AI Budget y elige **Folleto de ofertas** en la pregunta que aparece.
+
+La app lee el folleto y muestra solo las ofertas de productos de tus compras y de tu lista, cada una con el precio de oferta y — si ya compraste el producto en la misma moneda — lo que sueles pagar, como *sueles pagar X → Y*. Los productos que no compras nunca se muestran, y el folleto no se guarda: solo los precios extraídos. Los precios se muestran *según un folleto — compruébalo en la tienda* — la tienda puede diferir. Toca **Añadir a la lista** en un producto para ponerlo en tu lista de compras.
+
+**Tus folletos.** La pantalla del folleto guarda una lista de tus folletos que siguen vigentes: la tienda, hasta cuándo y cuántos de tus productos hay en cada uno. Toca uno para volver a ver sus productos y añadirlos a tu lista (si primero se abre el selector de fotos, ciérralo).
+
+**Cuántas páginas puedes leer.** Las páginas de folletos tienen su propio cupo mensual, aparte de tus consultas de IA: 20 páginas en Free, 200 en Pro y 500 en Business. Un envío lee hasta 10 páginas (un PDF de hasta unos 7 MB; si es más grande, comparte capturas de las páginas). Lo demás se omite y la pantalla te dice cuántas páginas quedaron fuera.
+
+**Ofertas de la comunidad (opcional).** Si compartes precios anónimos (Ajustes → Datos → **Compartir precios anónimos**), los precios de oferta de los folletos que lees se comparten igual: solo la tienda, el producto, el precio y las fechas, nunca tu nombre, tu cuenta ni la imagen del folleto. Una vez que las ofertas de la comunidad estén activadas en la app y varios compradores confirmen la misma oferta, quienes compran en esa tienda y suelen comprar ese producto reciben como máximo una notificación al día, que dice hasta cuándo dura la oferta — y solo cuando ya ha empezado. Al tocarla se abren tus folletos. Desactívala en Ajustes → Notificaciones → **Ofertas de folletos en tus productos**.
+
 ## Gestionar notificaciones
 
 Ambas notificaciones están activadas por defecto y se pueden desactivar por separado en **Ajustes → Notificaciones**:
@@ -36429,6 +36519,21 @@ L'app compare le prix récemment payé pour un produit suivi à son prix moyen s
 
 Les promotions sont également envoyées sous forme de notification push lorsqu'une vraie baisse est détectée, pour que vous n'ayez pas besoin d'ouvrir l'app pour ne pas la manquer — mais une même baisse de prix ne vous sera pas signalée plus d'une fois par semaine, pour éviter de vous relancer sur la même chose.
 
+## Vérifier un prospectus promo
+
+Vous avez le prospectus promo d'un magasin en photos ou en PDF ? L'appli vous indique lesquels des produits **que vous achetez vraiment** s'y trouvent et compare le prix promo à ce que vous payez d'habitude.
+
+- **Depuis la liste de courses**, touchez **Vérifier un prospectus** et choisissez des captures du prospectus (sur le web, déposez-les ou un PDF sur la page).
+- **Depuis une autre appli (Android)**, partagez les captures ou le PDF vers AI Budget et choisissez **Prospectus promo** dans la question qui s'affiche.
+
+L'appli lit le prospectus et n'affiche que les promos sur des produits de vos achats et de votre liste, chacune avec le prix promo et — si vous avez déjà acheté le produit dans la même devise — ce que vous payez d'habitude, sous la forme *d’habitude X → Y*. Les produits que vous n'achetez pas ne sont jamais affichés, et le prospectus lui-même n'est pas conservé : seuls les prix extraits le sont. Les prix sont indiqués *d'après un prospectus — à vérifier en magasin* — le magasin peut différer. Touchez **Ajouter à la liste** sur un article pour le mettre sur votre liste de courses.
+
+**Vos prospectus.** L'écran du prospectus garde la liste de vos prospectus encore en cours : le magasin, jusqu'à quand, et combien de vos produits chacun contient. Touchez-en un pour revoir ses produits et les ajouter à votre liste (si le sélecteur de photos s'ouvre d'abord, fermez-le simplement).
+
+**Combien de pages vous pouvez lire.** Les pages de prospectus ont leur propre quota mensuel, distinct de vos requêtes IA : 20 pages en Free, 200 en Pro et 500 en Business. Un partage lit jusqu'à 10 pages (un PDF jusqu'à environ 7 Mo — au-delà, partagez plutôt des captures des pages). Le reste est ignoré et l'écran indique combien de pages ont été laissées de côté.
+
+**Promos de la communauté (facultatif).** Si vous partagez des prix anonymes (Réglages → Données → **Partager des prix anonymes**), les prix promo des prospectus que vous lisez sont partagés de la même façon — uniquement le magasin, le produit, le prix et les dates, jamais votre nom, votre compte ni l'image du prospectus. Une fois les promos de la communauté activées dans l'appli, quand plusieurs acheteurs confirment la même promo, les personnes qui achètent dans ce magasin et y prennent d'habitude ce produit reçoivent au plus une notification par jour, qui indique jusqu'à quand dure la promo — et seulement une fois qu'elle a commencé. La toucher ouvre vos prospectus. Désactivez-la dans Réglages → Notifications → **Promos des prospectus sur vos produits**.
+
 ## Gérer les notifications
 
 Les deux notifications sont activées par défaut et peuvent être désactivées indépendamment dans **Paramètres → Notifications** :
@@ -41639,6 +41744,21 @@ OCR часам няправільна чытае цану, выдумляе ра
 Праграма параўноўвае цану, якую вы нядаўна плацілі за адсочваемы тавар, з сярэдняй цаной за апошнія 90 дзён. Калі апошняя цана тавару ў якой-небудзь краме заўважна ніжэйшая за гэтую сярэднюю, яна з'яўляецца ў выглядзе чыпа ў радку **«Зніжкі для вас»**, з назвай крамы і працэнтам зніжкі. Націсніце на чып, каб дадаць тавар у спіс.
 
 Зніжкі таксама прыходзяць у выглядзе push-апавяшчэння пры выяўленні сапраўднага зніжэння цаны, так што вам не трэба адкрываць праграму, каб не прапусціць выгадную цану — але пра тую ж самую зніжку вам не будуць паведамляць часцей за адзін раз у тыдзень, каб не нагадваць пра яе пастаянна.
+
+## Праверка рэкламнай газеткі
+
+Ёсць рэкламная газетка крамы ў выглядзе фота ці PDF? Праграма пакажа, якія з тавараў, **якія вы сапраўды купляеце**, у ёй ёсць, і параўнае акцыйную цану з тым, колькі вы звычайна плаціце.
+
+- **Са спісу пакупак** націсніце **Праверыць газетку** і абярыце скрыншоты газеткі (у вэб-версіі перацягніце іх або PDF на старонку).
+- **З іншай праграмы (Android)** падзяліцеся скрыншотамі або PDF з AI Budget і абярыце **Рэкламная газетка** у пытанні, якое з'явіцца.
+
+Праграма чытае газетку і паказвае толькі акцыі на тавары з вашых пакупак і спісу пакупак: акцыйную цану і — калі вы ўжо куплялі гэты тавар у той самай валюце — колькі вы звычайна плаціце, у выглядзе *звычайна X → Y*. Тавары, якіх вы не купляеце, не паказваюцца ніколі, а сама газетка не захоўваецца — застаюцца толькі счытаныя цэны. Цэны паказаны *паводле газеткі — правярайце ў краме* — у краме можа адрознівацца. Націсніце **У спіс** каля пазіцыі, каб дадаць яе ў спіс пакупак.
+
+**Вашы газеткі.** Экран газеткі захоўвае спіс вашых газетак, якія яшчэ дзейнічаюць: крама, да якога чысла і колькі вашых тавараў у кожнай. Націсніце на газетку, каб зноў убачыць яе тавары і дадаць іх у спіс (калі спачатку адкрыецца выбар фота, проста закрыйце яго).
+
+**Колькі старонак можна прачытаць.** Старонкі газетак маюць свой месячны ліміт, асобны ад запытаў да ШІ: 20 старонак на Free, 200 на Pro і 500 на Business. За адзін раз чытаецца да 10 старонак (PDF прыкладна да 7 МБ — калі большы, падзяліцеся скрыншотамі старонак). Астатняе прапускаецца, а экран паведамляе, колькі старонак засталося непрачытанымі.
+
+**Акцыі супольнасці (па жаданні).** Калі вы дзеліцеся ананімнымі цэнамі (Налады → Даныя → **Дзяліцца ананімнымі цэнамі**), акцыйныя цэны з газетак, якія вы чытаеце, перадаюцца гэтак жа — толькі крама, тавар, цана і даты, ніколі ваша імя, акаўнт або выява газеткі. Калі акцыі супольнасці будуць уключаны ў праграме і тую самую акцыю пацвердзяць некалькі пакупнікоў, астатнія, хто купляе ў гэтай краме і звычайна бярэ гэты тавар, атрымаюць не больш за адно апавяшчэнне на дзень — з датай, да якой дзейнічае акцыя, і толькі калі яна ўжо пачалася. Націск на апавяшчэнне адкрывае вашы газеткі. Адключыць можна ў Налады → Апавяшчэнні → **Акцыі з газетак на вашы тавары**.
 
 ## Кіраванне апавяшчэннямі
 
@@ -46976,6 +47096,21 @@ Je krijgt ook een pushmelding wanneer iets aangevuld moet worden. Een bepaald pr
 De app vergelijkt de prijs die je onlangs betaalde voor een bijgehouden product met het gemiddelde van de afgelopen 90 dagen. Als de recentste prijs van een winkel voor een product duidelijk onder dat gemiddelde ligt, verschijnt hij als chip in de rij **Aanbiedingen voor jou**, met de winkelnaam en het kortingspercentage. Tik op een chip om het artikel aan je lijst toe te voegen.
 
 Aanbiedingen worden ook als pushmelding bezorgd zodra een echte prijsdaling wordt gedetecteerd, zodat je de app niet hoeft te openen om een goede prijs niet te missen — dezelfde prijsdaling wordt echter niet vaker dan één keer per week gemeld, zodat je niet herhaaldelijk op hetzelfde wordt gewezen.
+
+## Een folder bekijken
+
+Heb je de folder van een winkel als foto's of pdf? De app laat zien welke van de producten **die je echt koopt** erin staan en vergelijkt de aanbiedingsprijs met wat je normaal betaalt.
+
+- **Vanuit de boodschappenlijst** tik je op **Folder bekijken** en kies je schermafbeeldingen van de folder (op het web sleep je ze of een pdf naar de pagina).
+- **Vanuit een andere app (Android)** deel je de schermafbeeldingen of de pdf met AI Budget en kies je **Folder** in de vraag die verschijnt.
+
+De app leest de folder en toont alleen aanbiedingen voor producten uit je aankopen en boodschappenlijst, elk met de aanbiedingsprijs en — als je het product al eerder in dezelfde valuta kocht — wat je normaal betaalt, als *meestal X → Y*. Producten die je niet koopt worden nooit getoond, en de folder zelf wordt niet bewaard: alleen de uitgelezen prijzen. Prijzen worden getoond *volgens een folder — controleer het in de winkel* — de winkel kan afwijken. Tik bij een item op **Op de lijst** om het op je boodschappenlijst te zetten.
+
+**Je folders.** Het folderscherm houdt een lijst bij van je folders die nog lopen: de winkel, tot wanneer en hoeveel van je producten erin staan. Tik op een folder om de producten opnieuw te zien en aan je lijst toe te voegen (opent eerst de fotokiezer, sluit die dan gewoon).
+
+**Hoeveel pagina's je kunt lezen.** Folderpagina's hebben een eigen maandelijks tegoed, los van je AI-verzoeken: 20 pagina's bij Free, 200 bij Pro en 500 bij Business. Eén keer delen leest maximaal 10 pagina's (een pdf tot ongeveer 7 MB — deel bij een grotere in plaats daarvan screenshots van de pagina's). De rest wordt overgeslagen en het scherm laat weten hoeveel pagina's er zijn weggelaten.
+
+**Aanbiedingen van de community (optioneel).** Als je anonieme prijzen deelt (Instellingen → Gegevens → **Anonieme prijzen delen**), worden de aanbiedingsprijzen uit folders die je leest op dezelfde manier gedeeld — alleen winkel, product, prijs en data, nooit je naam, je account of de folderafbeelding. Zodra community-aanbiedingen in de app zijn ingeschakeld en meerdere kopers dezelfde aanbieding bevestigen, krijgen anderen die bij die winkel kopen en dat product meestal kopen hooguit één melding per dag, met tot wanneer de aanbieding loopt — en pas als ze begonnen is. Erop tikken opent je folders. Uitzetten kan bij Instellingen → Meldingen → **Folderaanbiedingen voor je producten**.
 
 ## Meldingen beheren
 

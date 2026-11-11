@@ -153,6 +153,65 @@ describe('UsersController.updateProfile payment handle', () => {
   });
 });
 
+describe('UsersController.updateProfile leaflet consent notice', () => {
+  const saved = (over: Record<string, unknown> = {}) => ({
+    id: 'u1', email: 'a@b.c', name: 'A', currencyCode: 'USD', timezone: 'UTC',
+    contributeCommunityPrices: true, themeMode: 'system', accentColor: null,
+    leafletConsentNoticeAt: new Date('2026-11-11T10:00:00Z'), notifyLeafletPromos: true, ...over,
+  });
+
+  it("leafletConsentNoticeAt: 'now' stamps the server time and returns it", async () => {
+    const update = jest.fn().mockResolvedValue(saved());
+    const { controller } = makeController(update);
+    const before = Date.now();
+    const res = await controller.updateProfile(req, { leafletConsentNoticeAt: 'now' });
+    const data = update.mock.calls[0][1];
+    expect(data.leafletConsentNoticeAt).toBeInstanceOf(Date);
+    expect(data.leafletConsentNoticeAt.getTime()).toBeGreaterThanOrEqual(before);
+    expect(res.leafletConsentNoticeAt).toEqual(new Date('2026-11-11T10:00:00Z'));
+  });
+
+  it('rejects any other leafletConsentNoticeAt value (the client never picks the time)', async () => {
+    const { controller, update } = makeController();
+    await expect(
+      controller.updateProfile(req, { leafletConsentNoticeAt: '2020-01-01' } as any),
+    ).rejects.toBeInstanceOf(BadRequestException);
+    await expect(
+      controller.updateProfile(req, { leafletConsentNoticeAt: null } as any),
+    ).rejects.toBeInstanceOf(BadRequestException);
+    expect(update).not.toHaveBeenCalled();
+  });
+
+  it('opting in to community prices also stamps leafletConsentNoticeAt (the new copy mentions leaflets)', async () => {
+    const update = jest.fn().mockResolvedValue(saved());
+    const { controller } = makeController(update);
+    await controller.updateProfile(req, { contributeCommunityPrices: true });
+    const data = update.mock.calls[0][1];
+    expect(data.contributeCommunityPrices).toBe(true);
+    expect(data.leafletConsentNoticeAt).toBeInstanceOf(Date);
+  });
+
+  it('opting out does not touch leafletConsentNoticeAt', async () => {
+    const update = jest.fn().mockResolvedValue(saved({ contributeCommunityPrices: false }));
+    const { controller } = makeController(update);
+    await controller.updateProfile(req, { contributeCommunityPrices: false });
+    expect(update).toHaveBeenCalledWith('u1', { contributeCommunityPrices: false });
+  });
+
+  it('getProfile returns leafletConsentNoticeAt (null when never seen)', async () => {
+    const findById = jest.fn().mockResolvedValue({
+      id: 'u1', email: 'a@b.c', name: 'A', currencyCode: 'USD', timezone: 'UTC',
+      aiResponseMode: 'balanced', aiModel: 'balanced', contributeCommunityPrices: true,
+      themeMode: 'system', accentColor: null, createdAt: new Date('2026-01-01'),
+      paymentMethod: null, paymentHandle: null, leafletConsentNoticeAt: null,
+    });
+    const usersService = { findById, getPaymentMethods: jest.fn().mockResolvedValue([]) } as any;
+    const controller = new UsersController(usersService, {} as any, {} as any, {} as any, {} as any, {} as any, {} as any);
+    const res = await controller.getProfile(req);
+    expect(res.leafletConsentNoticeAt).toBeNull();
+  });
+});
+
 describe('UsersController.getProfile payment handle', () => {
   it('returns the stored paymentMethod/paymentHandle', async () => {
     const findById = jest.fn().mockResolvedValue({

@@ -169,10 +169,19 @@ export function DataSettings() {
   // setting), so it round-trips through the profile API. Optimistic + revert.
   const handleToggleCommunityPrices = useCallback((value: boolean) => {
     updateUser({ contributeCommunityPrices: value });
-    api.updateProfile({ contributeCommunityPrices: value }).catch((e) => {
-      console.warn('Failed to update community-price consent', e);
-      updateUser({ contributeCommunityPrices: !value });
-    });
+    api
+      .updateProfile({ contributeCommunityPrices: value })
+      .then((res: { leafletConsentNoticeAt?: string | null } | undefined) => {
+        // Opting in here also counts as seeing the leaflet consent notice (this copy names
+        // leaflets); the server stamps it, and mirroring it keeps the notice from showing.
+        if (value && res?.leafletConsentNoticeAt) {
+          updateUser({ leafletConsentNoticeAt: String(res.leafletConsentNoticeAt) });
+        }
+      })
+      .catch((e) => {
+        console.warn('Failed to update community-price consent', e);
+        updateUser({ contributeCommunityPrices: !value });
+      });
   }, [updateUser]);
 
   const WEEK_DAYS = [

@@ -161,6 +161,19 @@ export function handleNotificationResponse(
     case 'inflation_shield':
       router.push('/inflation-shield' as any);
       break;
+    case 'leaflet_promo': {
+      // Gazetka match community push: opens the leaflet screen on its idle state (the account's
+      // active leaflets), never the photo gallery: `from=push`, R14. The open is reported with the
+      // push's `pushKey` (its server log row) — fire-and-forget, a failed report changes nothing.
+      router.push({ pathname: '/leaflets', params: { from: 'push' } } as any);
+      const pushKey = typeof data.pushKey === 'string' ? data.pushKey : undefined;
+      if (pushKey) {
+        api.markLeafletPushOpened(pushKey).catch((e: unknown) => {
+          console.warn('[notifications] leaflet push open report failed', e);
+        });
+      }
+      break;
+    }
     case 'monthly_wrapped':
       router.push({
         pathname: '/wrapped',

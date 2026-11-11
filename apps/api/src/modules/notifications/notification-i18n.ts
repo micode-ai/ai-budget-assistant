@@ -147,6 +147,24 @@ interface SplitItemFlaggedTitleParams {
   name: string;
 }
 
+/**
+ * One promo line of the Gazetka match community push. Prices are already formatted; `usualPrice`
+ * is set only when the user's usual price exists in the promo's own currency (never converted).
+ */
+export interface LeafletPromoItemParams {
+  name: string;
+  chain: string;
+  promoPrice: string;
+  currencyCode: string;
+  usualPrice: string | null;
+  condition: string | null;
+  /** Last day of the promo, `YYYY-MM-DD`; every line says until when it runs. */
+  validTo: string;
+}
+
+/** `YYYY-MM-DD` → `DD.MM`, the short date every supported language reads the same way. */
+const promoDay = (ymd: string): string => `${ymd.slice(8, 10)}.${ymd.slice(5, 7)}`;
+
 /** Group balance reminder (ABA-653). `amount` is the absolute balance, already formatted. */
 export interface GroupReminderParams {
   groupName: string;
@@ -238,6 +256,9 @@ const translations: Record<string, {
   rateWatchHitBody: (p: RateWatchHitParams) => string;
   splitItemFlaggedTitle: (p: SplitItemFlaggedTitleParams) => string;
   splitItemFlaggedBody: () => string;
+  leafletPromoTitle: () => string;
+  leafletPromoItem: (p: LeafletPromoItemParams) => string;
+  leafletPromoBody: (items: string) => string;
 }> = {
   en: {
     sharedExpenseTitle: ({ accountName }) => `New expense in "${accountName}"`,
@@ -346,6 +367,10 @@ const translations: Record<string, {
     rateWatchHitBody: ({ fromCurrency, toCurrency, rate }) => `1 ${fromCurrency} is now ${rate} ${toCurrency}. Tap to exchange.`,
     splitItemFlaggedTitle: ({ name }) => `${name} flagged part of the split`,
     splitItemFlaggedBody: () => "They said something's wrong with their share. Open the app to check.",
+    leafletPromoTitle: () => 'From a leaflet: your usual products',
+    leafletPromoItem: (p) =>
+      `${p.name} — ${p.promoPrice} ${p.currencyCode} at ${p.chain} until ${promoDay(p.validTo)}${p.condition ? ` (${p.condition})` : ''}${p.usualPrice ? `, you usually pay ${p.usualPrice} ${p.currencyCode}` : ''}`,
+    leafletPromoBody: (items) => `According to a leaflet: ${items}. Check in store.`,
   },
   ru: {
     sharedExpenseTitle: ({ accountName }) => `Новый расход в "${accountName}"`,
@@ -454,6 +479,10 @@ const translations: Record<string, {
     rateWatchHitBody: ({ fromCurrency, toCurrency, rate }) => `1 ${fromCurrency} теперь ${rate} ${toCurrency}. Нажмите, чтобы обменять.`,
     splitItemFlaggedTitle: ({ name }) => `${name} отметил(а) проблему в счёте`,
     splitItemFlaggedBody: () => 'Говорит, что с его/её частью что-то не так. Откройте приложение, чтобы посмотреть.',
+    leafletPromoTitle: () => 'В газетке: ваши обычные товары',
+    leafletPromoItem: (p) =>
+      `${p.name} — ${p.promoPrice} ${p.currencyCode} в ${p.chain} до ${promoDay(p.validTo)}${p.condition ? ` (${p.condition})` : ''}${p.usualPrice ? `, обычно вы платите ${p.usualPrice} ${p.currencyCode}` : ''}`,
+    leafletPromoBody: (items) => `По данным газетки: ${items}. Проверьте в магазине.`,
   },
   ua: {
     sharedExpenseTitle: ({ accountName }) => `Новий витрат у "${accountName}"`,
@@ -562,6 +591,10 @@ const translations: Record<string, {
     rateWatchHitBody: ({ fromCurrency, toCurrency, rate }) => `1 ${fromCurrency} тепер ${rate} ${toCurrency}. Натисніть, щоб обміняти.`,
     splitItemFlaggedTitle: ({ name }) => `${name} повідомив(ла) про проблему в рахунку`,
     splitItemFlaggedBody: () => 'Каже, що з його/її часткою щось не так. Відкрийте застосунок, щоб перевірити.',
+    leafletPromoTitle: () => 'У газетці: ваші звичні товари',
+    leafletPromoItem: (p) =>
+      `${p.name} — ${p.promoPrice} ${p.currencyCode} в ${p.chain} до ${promoDay(p.validTo)}${p.condition ? ` (${p.condition})` : ''}${p.usualPrice ? `, зазвичай ви платите ${p.usualPrice} ${p.currencyCode}` : ''}`,
+    leafletPromoBody: (items) => `За даними газетки: ${items}. Перевірте в магазині.`,
   },
   pl: {
     sharedExpenseTitle: ({ accountName }) => `Nowy wydatek w "${accountName}"`,
@@ -670,6 +703,10 @@ const translations: Record<string, {
     rateWatchHitBody: ({ fromCurrency, toCurrency, rate }) => `1 ${fromCurrency} to teraz ${rate} ${toCurrency}. Dotknij, aby wymienić.`,
     splitItemFlaggedTitle: ({ name }) => `${name} zgłosił(a) problem z podziałem`,
     splitItemFlaggedBody: () => 'Mówi, że coś jest nie tak z jego/jej częścią. Otwórz aplikację, aby sprawdzić.',
+    leafletPromoTitle: () => 'W gazetce: Twoje zwykłe produkty',
+    leafletPromoItem: (p) =>
+      `${p.name} — ${p.promoPrice} ${p.currencyCode} w ${p.chain} do ${promoDay(p.validTo)}${p.condition ? ` (${p.condition})` : ''}${p.usualPrice ? `, zwykle płacisz ${p.usualPrice} ${p.currencyCode}` : ''}`,
+    leafletPromoBody: (items) => `Według gazetki: ${items}. Sprawdź w sklepie.`,
   },
   es: {
     sharedExpenseTitle: ({ accountName }) => `Nuevo gasto en "${accountName}"`,
@@ -778,6 +815,10 @@ const translations: Record<string, {
     rateWatchHitBody: ({ fromCurrency, toCurrency, rate }) => `1 ${fromCurrency} ahora es ${rate} ${toCurrency}. Toca para cambiar.`,
     splitItemFlaggedTitle: ({ name }) => `${name} reportó un problema con la cuenta`,
     splitItemFlaggedBody: () => 'Dice que algo no está bien con su parte. Abre la app para revisarlo.',
+    leafletPromoTitle: () => 'En un folleto: tus productos habituales',
+    leafletPromoItem: (p) =>
+      `${p.name} — ${p.promoPrice} ${p.currencyCode} en ${p.chain} hasta el ${promoDay(p.validTo)}${p.condition ? ` (${p.condition})` : ''}${p.usualPrice ? `, sueles pagar ${p.usualPrice} ${p.currencyCode}` : ''}`,
+    leafletPromoBody: (items) => `Según un folleto: ${items}. Compruébalo en la tienda.`,
   },
   fr: {
     sharedExpenseTitle: ({ accountName }) => `Nouvelle dépense dans "${accountName}"`,
@@ -886,6 +927,10 @@ const translations: Record<string, {
     rateWatchHitBody: ({ fromCurrency, toCurrency, rate }) => `1 ${fromCurrency} vaut maintenant ${rate} ${toCurrency}. Touchez pour échanger.`,
     splitItemFlaggedTitle: ({ name }) => `${name} a signalé un problème avec l'addition`,
     splitItemFlaggedBody: () => "Il/elle dit que quelque chose ne va pas avec sa part. Ouvre l'application pour vérifier.",
+    leafletPromoTitle: () => 'Dans un prospectus : vos produits habituels',
+    leafletPromoItem: (p) =>
+      `${p.name} — ${p.promoPrice} ${p.currencyCode} chez ${p.chain} jusqu'au ${promoDay(p.validTo)}${p.condition ? ` (${p.condition})` : ''}${p.usualPrice ? `, vous payez d'habitude ${p.usualPrice} ${p.currencyCode}` : ''}`,
+    leafletPromoBody: (items) => `D'après un prospectus : ${items}. Vérifiez en magasin.`,
   },
   de: {
     sharedExpenseTitle: ({ accountName }) => `Neue Ausgabe in "${accountName}"`,
@@ -994,6 +1039,10 @@ const translations: Record<string, {
     rateWatchHitBody: ({ fromCurrency, toCurrency, rate }) => `1 ${fromCurrency} entspricht jetzt ${rate} ${toCurrency}. Zum Umtauschen tippen.`,
     splitItemFlaggedTitle: ({ name }) => `${name} hat ein Problem mit der Aufteilung gemeldet`,
     splitItemFlaggedBody: () => 'Es heißt, etwas stimmt nicht mit dem Anteil. Öffne die App, um es zu prüfen.',
+    leafletPromoTitle: () => 'Im Prospekt: deine üblichen Produkte',
+    leafletPromoItem: (p) =>
+      `${p.name} — ${p.promoPrice} ${p.currencyCode} bei ${p.chain} bis ${promoDay(p.validTo)}${p.condition ? ` (${p.condition})` : ''}${p.usualPrice ? `, sonst zahlst du ${p.usualPrice} ${p.currencyCode}` : ''}`,
+    leafletPromoBody: (items) => `Laut einem Prospekt: ${items}. Bitte im Laden prüfen.`,
   },
   be: {
     sharedExpenseTitle: ({ accountName }) => `Новы расход у "${accountName}"`,
@@ -1102,6 +1151,10 @@ const translations: Record<string, {
     rateWatchHitBody: ({ fromCurrency, toCurrency, rate }) => `1 ${fromCurrency} цяпер ${rate} ${toCurrency}. Націсніце, каб абмяняць.`,
     splitItemFlaggedTitle: ({ name }) => `${name} паведаміў(ла) пра праблему ў рахунку`,
     splitItemFlaggedBody: () => 'Кажа, што нешта не так з яго/яе часткай. Адкрыйце дадатак, каб праверыць.',
+    leafletPromoTitle: () => 'У газетцы: вашы звычайныя тавары',
+    leafletPromoItem: (p) =>
+      `${p.name} — ${p.promoPrice} ${p.currencyCode} у ${p.chain} да ${promoDay(p.validTo)}${p.condition ? ` (${p.condition})` : ''}${p.usualPrice ? `, звычайна вы плаціце ${p.usualPrice} ${p.currencyCode}` : ''}`,
+    leafletPromoBody: (items) => `Паводле газеткі: ${items}. Праверце ў краме.`,
   },
   nl: {
     sharedExpenseTitle: ({ accountName }) => `Nieuwe uitgave in "${accountName}"`,
@@ -1210,6 +1263,10 @@ const translations: Record<string, {
     rateWatchHitBody: ({ fromCurrency, toCurrency, rate }) => `1 ${fromCurrency} is nu ${rate} ${toCurrency}. Tik om te wisselen.`,
     splitItemFlaggedTitle: ({ name }) => `${name} heeft een probleem gemeld met de rekening`,
     splitItemFlaggedBody: () => 'Er is volgens hen iets niet in orde met hun deel. Open de app om het te bekijken.',
+    leafletPromoTitle: () => 'In een folder: je vaste producten',
+    leafletPromoItem: (p) =>
+      `${p.name} — ${p.promoPrice} ${p.currencyCode} bij ${p.chain} t/m ${promoDay(p.validTo)}${p.condition ? ` (${p.condition})` : ''}${p.usualPrice ? `, normaal betaal je ${p.usualPrice} ${p.currencyCode}` : ''}`,
+    leafletPromoBody: (items) => `Volgens een folder: ${items}. Controleer in de winkel.`,
   },
 };
 
@@ -1512,4 +1569,14 @@ export function splitItemFlaggedTitle(lang: Lang, params: SplitItemFlaggedTitleP
 
 export function splitItemFlaggedBody(lang: Lang): string {
   return t(lang).splitItemFlaggedBody();
+}
+
+export function leafletPromoTitle(lang: Lang): string {
+  return t(lang).leafletPromoTitle();
+}
+
+/** The promo lines joined into one body, framed as "according to a leaflet — check in store". */
+export function leafletPromoBody(lang: Lang, items: LeafletPromoItemParams[]): string {
+  const tr = t(lang);
+  return tr.leafletPromoBody(items.map((p) => tr.leafletPromoItem(p)).join('; '));
 }

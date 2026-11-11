@@ -50,6 +50,9 @@ const STRING_PROPS: Record<string, ReadonlySet<string>> = {
     // ABA-682: `started` when the one-time faster-capture suggestion appears,
     // `completed` when one of its options is chosen.
     'capture_suggestion',
+    // Gazetka match: `started` when a leaflet read begins, `completed` when it
+    // finishes, `failed` when the read stops on an error.
+    'gazetka',
   ]),
   status: new Set(FUNNEL_STATUSES),
   // ABA-683: a coarse device class and the display mode, stamped by the web

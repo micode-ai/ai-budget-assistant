@@ -30,3 +30,4 @@ export * from './family-feed';
 export * from './trip';
 export * from './group';
 export * from './inboundMail';
+export * from './leaflet';

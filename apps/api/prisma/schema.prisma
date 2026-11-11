@@ -171,6 +171,8 @@ model User {
   notifyShoppingDeals        Boolean       @default(true) @map("notify_shopping_deals")
   notifyInflationShield      Boolean       @default(true) @map("notify_inflation_shield")
   notifyMonthlyWrapped       Boolean       @default(true) @map("notify_monthly_wrapped")
+  notifyLeafletPromos        Boolean               @default(true) @map("notify_leaflet_promos")
+  leafletConsentNoticeAt     DateTime?             @map("leaflet_consent_notice_at")
   voiceDigestEnabled         Boolean       @default(false) @map("voice_digest_enabled")
   voiceDigestDay             Int           @default(1) @map("voice_digest_day")
   voiceDigestHour            Int           @default(8) @map("voice_digest_hour")
@@ -207,6 +209,7 @@ model User {
   referredBy                 Referral?     @relation("ReferredBy")
 
   // Relations
+  leaflets               Leaflet[]
   oauthClients           OAuthClient[]
   oauthGrants            OAuthGrant[]
   expenses               Expense[]
@@ -372,6 +375,7 @@ model ExchangeRateWatch {
 }
 
 model Account {
+  leaflets             Leaflet[]
   transactionRevisions TransactionRevision[]
   id                   String       @id @default(uuid())
   name                 String
@@ -446,6 +450,7 @@ model Account {
   inflationShieldRecommendations InflationShieldRecommendation[]
   shoppingNotificationLogs       ShoppingNotificationLog[]
   insightNotificationLogs        InsightNotificationLog[]
+  leafletNotificationLogs        LeafletNotificationLog[]
   salaryProfiles                 SalaryProfile[]
   inboundMailAddresses           InboundMailAddress[]
   inboundReceipts                InboundReceipt[]
@@ -850,6 +855,32 @@ model CommunityPriceObservation {
   @@map("community_price_observations")
 }
 
+/// Gazetka match, community layer: one anonymous promo fact read from a leaflet. Holds NO account
+/// id, user id, image or location — only the chain, the product, the price, the validity and a
+/// one-way `contributorKey` (sha256(COMMUNITY_PRICE_SALT:u:userId), never leaves the server).
+/// The unique key is one vote per contributor per promo. `isAdmin` rows (an admin's read or
+/// upload) confirm a promo on their own; `adminLeafletId` points at an admin-uploaded leaflet so
+/// unpublishing it withdraws its rows. Pruned the day after `validTo`.
+model CommunityPromoObservation {
+  id             String   @id @default(uuid())
+  chain          String
+  canonicalName  String   @map("canonical_name")
+  promoPrice     Decimal  @map("promo_price") @db.Decimal(12, 2)
+  currencyCode   String   @map("currency_code")
+  condition      String?
+  validFrom      DateTime @map("valid_from") @db.Date
+  validTo        DateTime @map("valid_to") @db.Date
+  contributorKey String   @map("contributor_key")
+  trusted        Boolean  @default(false)
+  isAdmin        Boolean  @default(false) @map("is_admin")
+  adminLeafletId String?  @map("admin_leaflet_id")
+  ingestedAt     DateTime @default(now()) @map("ingested_at")
+
+  @@unique([chain, canonicalName, promoPrice, currencyCode, validFrom, validTo, contributorKey], map: "community_promo_dedup_key")
+  @@index([validTo])
+  @@map("community_promo_observations")
+}
+
 // Store-location lookup for the community price MAP (ABA-335 M4). Holds ONLY the
 // STORE's public point-of-sale coordinate keyed by (merchantNormalized, region) —
 // NO accountId / userId / contributorKey / per-observation link. A store is a
@@ -1022,6 +1053,24 @@ model InsightNotificationLog {
   @@unique([accountId, dedupKey])
   @@index([accountId, type, sentAt])
   @@map("insight_notification_log")
+}
+
+/// Gazetka match community push ledger: one row per (account, promo) pushed — `dedupKey` is the
+/// promo key — so a promo is pushed at most once per user, and the newest `sentAt` enforces one push
+/// per day. `id` is the push's `pushKey`; `openedAt` is stamped when the user opens the push.
+model LeafletNotificationLog {
+  id        String    @id @default(uuid())
+  accountId String    @map("account_id")
+  type      String
+  dedupKey  String    @map("dedup_key")
+  sentAt    DateTime  @default(now()) @map("sent_at")
+  openedAt  DateTime? @map("opened_at")
+
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@unique([accountId, dedupKey])
+  @@index([accountId, type, sentAt])
+  @@map("leaflet_notification_log")
 }
 
 model Income {
@@ -1379,6 +1428,8 @@ model Subscription {
   aiRequestsResetAt DateTime @default(now()) @map("ai_requests_reset_at")
   customAiLimit     Int?     @map("custom_ai_limit")
   bonusAiRequests   Int      @default(0) @map("bonus_ai_requests")
+  // Gazetka match: leaflet pages read this month; separate from the AI request limit, reset with it.
+  leafletPagesUsed  Int      @default(0) @map("leaflet_pages_used")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -2989,4 +3040,57 @@ model FuelLog {
 
   @@index([vehicleId])
   @@map("fuel_logs")
+}
+
+/// Gazetka match: a promo leaflet shared by a user (kind personal, account-scoped) or uploaded by an admin
+/// (kind admin, accountId null). Images/PDFs are never stored, only extracted facts.
+model Leaflet {
+  id              String    @id @default(uuid())
+  accountId       String?   @map("account_id")
+  userId          String    @map("user_id")
+  kind            String    @default("personal")
+  source          String
+  platform        String?
+  chain           String?
+  validFrom       DateTime? @map("valid_from") @db.Date
+  validTo         DateTime? @map("valid_to") @db.Date
+  currencyCode    String?   @map("currency_code")
+  status          String    @default("reading")
+  pagesRead       Int       @default(0) @map("pages_read")
+  pagesUnreadable Int       @default(0) @map("pages_unreadable")
+  pagesDropped    Int       @default(0) @map("pages_dropped")
+  publishedAt     DateTime? @map("published_at")
+  unpublishedAt   DateTime? @map("unpublished_at")
+  expiresAt       DateTime  @map("expires_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+
+  account Account?      @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  user    User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items   LeafletItem[]
+
+  @@index([accountId, expiresAt])
+  @@index([kind, publishedAt])
+  @@map("leaflets")
+}
+
+model LeafletItem {
+  id            String    @id @default(uuid())
+  leafletId     String    @map("leaflet_id")
+  page          Int
+  name          String
+  canonicalName String    @map("canonical_name")
+  promoPrice    Decimal   @map("promo_price") @db.Decimal(12, 2)
+  regularPrice  Decimal?  @map("regular_price") @db.Decimal(12, 2)
+  currencyCode  String    @map("currency_code")
+  condition     String?
+  validFrom     DateTime? @map("valid_from") @db.Date
+  validTo       DateTime? @map("valid_to") @db.Date
+  basketName    String?   @map("basket_name")
+  usualPrice    Decimal?  @map("usual_price") @db.Decimal(12, 2)
+  addedToListAt DateTime? @map("added_to_list_at")
+
+  leaflet Leaflet @relation(fields: [leafletId], references: [id], onDelete: Cascade)
+
+  @@index([leafletId])
+  @@map("leaflet_items")
 }

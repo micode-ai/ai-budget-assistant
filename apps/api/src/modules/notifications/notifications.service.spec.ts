@@ -128,3 +128,43 @@ describe('NotificationsService — group_reminder preference gate (ABA-653)', ()
     expect(sent.map((m: { to: string }) => m.to)).toEqual(['ExponentPushToken[one]']);
   });
 });
+
+describe('NotificationsService.sendToUser — leaflet_promo preference gate (Gazetka match)', () => {
+  let service: NotificationsService;
+  let prisma: any;
+  let fetchMock: jest.Mock;
+
+  beforeEach(async () => {
+    prisma = { user: { findUnique: jest.fn(), update: jest.fn().mockResolvedValue({}) } };
+    fetchMock = jest.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ data: [{ status: 'ok', id: 'ticket-1' }] }),
+    });
+    (global as any).fetch = fetchMock;
+    const module = await Test.createTestingModule({
+      providers: [NotificationsService, { provide: PrismaService, useValue: prisma }],
+    }).compile();
+    service = module.get(NotificationsService);
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('notifyLeafletPromos false → sendToUser returns false', async () => {
+    prisma.user.findUnique.mockResolvedValue({ pushToken: 'ExponentPushToken[abc]', language: 'en', notifyLeafletPromos: false });
+    const result = await service.sendToUser('user-1', 'T', 'B', { pushKey: 'log-1' }, 'leaflet_promo');
+    expect(result).toBe(false);
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(prisma.user.findUnique.mock.calls[0][0].select.notifyLeafletPromos).toBe(true);
+  });
+
+  it('sends with data.type leaflet_promo and the pushKey when the toggle is on', async () => {
+    prisma.user.findUnique.mockResolvedValue({ pushToken: 'ExponentPushToken[abc]', language: 'en', notifyLeafletPromos: true });
+    const result = await service.sendToUser('user-1', 'T', 'B', { type: 'leaflet_promo', pushKey: 'log-1' }, 'leaflet_promo');
+    expect(result).toBe(true);
+    const sent = JSON.parse(fetchMock.mock.calls[0][1].body);
+    const message = Array.isArray(sent) ? sent[0] : sent;
+    expect(message.data).toEqual({ type: 'leaflet_promo', pushKey: 'log-1' });
+  });
+});

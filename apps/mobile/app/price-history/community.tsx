@@ -57,10 +57,19 @@ export default function CommunityPriceScreen() {
   // Same consent flag as Settings > Data; flipping it here drives supply.
   const handleContribute = useCallback(() => {
     updateUser({ contributeCommunityPrices: true });
-    api.updateProfile({ contributeCommunityPrices: true }).catch((e) => {
-      console.warn('Failed to update community-price consent', e);
-      updateUser({ contributeCommunityPrices: false });
-    });
+    api
+      .updateProfile({ contributeCommunityPrices: true })
+      .then((res: { leafletConsentNoticeAt?: string | null } | undefined) => {
+        // The CTA copy names leaflets, so the server stamps the leaflet consent notice on opt-in;
+        // mirroring it keeps the one-time notice from showing on the leaflet screen.
+        if (res?.leafletConsentNoticeAt) {
+          updateUser({ leafletConsentNoticeAt: String(res.leafletConsentNoticeAt) });
+        }
+      })
+      .catch((e) => {
+        console.warn('Failed to update community-price consent', e);
+        updateUser({ contributeCommunityPrices: false });
+      });
   }, [updateUser]);
 
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);

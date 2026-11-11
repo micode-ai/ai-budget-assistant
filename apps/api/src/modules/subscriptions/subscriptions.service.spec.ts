@@ -472,3 +472,27 @@ describe('pricing-data.json', () => {
     expect(plans.plans[1].yearly.amount).toBe(expected.biz_yearly);
   });
 });
+
+describe('SubscriptionsService - resetUsageIfNeeded zeroes leaflet pages', () => {
+  it('a reset month zeroes leafletPagesUsed together with aiRequestsUsed', async () => {
+    const { service, prisma } = makeService();
+    await service.resetUsageIfNeeded({
+      id: 'sub-1',
+      aiRequestsResetAt: new Date(Date.now() - 1000),
+    } as any);
+    expect(prisma.subscription.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ aiRequestsUsed: 0, leafletPagesUsed: 0 }),
+      }),
+    );
+  });
+
+  it('does not reset inside the month', async () => {
+    const { service, prisma } = makeService();
+    await service.resetUsageIfNeeded({
+      id: 'sub-1',
+      aiRequestsResetAt: new Date(Date.now() + 100000),
+    } as any);
+    expect(prisma.subscription.update).not.toHaveBeenCalled();
+  });
+});

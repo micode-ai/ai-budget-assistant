@@ -208,6 +208,8 @@ the section you came for — it states what must not break and why. A missing se
   pair
 - [community-prices](features/community-prices.md) — the k-anonymized crowdsourced price map,
   currently dark in production
+- [gazetka-match](features/gazetka-match.md) — shared promo leaflets matched to what the user buys,
+  the opt-in community layer and its daily push, admin upload
 - [anomaly-alerts](features/anomaly-alerts.md) — rule-based alerts fired on expense write
 - [inflation-shield](features/inflation-shield.md) — price forecasting and stock-up advice
 - [personal-inflation-index](features/personal-inflation-index.md) — price history from receipt

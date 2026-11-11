@@ -14,7 +14,8 @@ export type TelemetryFlow =
   | 'rate_alert_create'
   | 'ios_install'
   | 'import_report'
-  | 'capture_suggestion';
+  | 'capture_suggestion'
+  | 'gazetka';
 
 export type TelemetryStatus = 'started' | 'completed' | 'failed' | 'abandoned';
 

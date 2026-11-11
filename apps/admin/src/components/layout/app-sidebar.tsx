@@ -21,6 +21,7 @@ import {
   UsersRound,
   KeyRound,
   TrendingUp,
+  Newspaper,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -41,6 +42,7 @@ export const navItems = [
   { href: "/subscriptions", label: "Subscriptions", icon: CreditCard },
   { href: "/communications", label: "Communications", icon: MessageSquare },
   { href: "/app-versions", label: "App Versions", icon: Smartphone },
+  { href: "/leaflets", label: "Leaflets", icon: Newspaper },
   { href: "/referrals", label: "Referrals", icon: UserPlus },
   { href: "/groups", label: "Groups", icon: UsersRound },
   { href: "/api-apps", label: "API apps", icon: KeyRound },

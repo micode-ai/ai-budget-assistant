@@ -1,15 +1,21 @@
-export type ShareGateDecision = 'wait' | 'navigate' | 'block_viewer' | 'idle';
+export type ShareGateDecision = 'wait' | 'navigate' | 'choose' | 'block_viewer' | 'idle';
 
 /**
- * When a shared queue may open the receipt screen. `coldStartGateReady` is the
- * same `useColdStartGate` value the notification/trip-invite flushes use —
+ * When a shared queue may open a screen. `coldStartGateReady` is the same
+ * `useColdStartGate` value the notification/trip-invite flushes use —
  * navigating before it wedges expo-router on a black screen. `firstRunSeen`
  * keeps a brand-new user's onboarding from being covered. `screenOpen` means the
  * receipt screen is already showing a queue and consumes new shares itself, so
- * pushing again would stack a second copy. The viewer check comes last so a
- * viewer is told only once the app is actually ready to show it.
+ * pushing again would stack a second copy.
+ *
+ * `kind` separates the two share shapes. Shared FILES end in `'choose'` — the
+ * Receipts / Promo leaflet chooser — for a viewer too: a viewer may read a
+ * leaflet, and the chooser simply hides Receipts for them. Shared TEXT keeps its
+ * old rule, where the viewer check comes last so a viewer is told only once the
+ * app is actually ready to show it.
  */
 export function decideShareNavigation(i: {
+  kind: 'files' | 'text';
   pendingNavigation: boolean;
   screenOpen: boolean;
   coldStartGateReady: boolean;
@@ -18,6 +24,7 @@ export function decideShareNavigation(i: {
 }): ShareGateDecision {
   if (!i.pendingNavigation || i.screenOpen) return 'idle';
   if (!i.coldStartGateReady || !i.firstRunSeen) return 'wait';
+  if (i.kind === 'files') return 'choose';
   if (!i.canEdit) return 'block_viewer';
   return 'navigate';
 }

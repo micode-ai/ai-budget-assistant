@@ -28,6 +28,9 @@ export interface User {
   aiResponseMode?: AiResponseMode;
   aiModel?: AiModel;
   contributeCommunityPrices?: boolean;
+  /** When the user saw the leaflet consent notice (Gazetka match). A user who opted in to community
+   * prices before leaflets were part of that consent contributes leaflet promos only once this is set. */
+  leafletConsentNoticeAt?: string | null;
   themeMode?: ThemeMode;
   accentColor?: string | null;
   /** LEGACY single-pair fallback — how the user prefers to be paid back, used to

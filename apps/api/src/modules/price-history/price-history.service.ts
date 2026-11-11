@@ -527,6 +527,17 @@ export class PriceHistoryService {
     return { updatedCount };
   }
 
+  /**
+   * Read-only purchase rows for the leaflet basket (Gazetka match): alias-resolved
+   * name, date, per-unit price and currency of every tracked line item, ignored
+   * products excluded. Same rows the price-history screens use.
+   */
+  async getBasketRows(
+    accountId: string,
+  ): Promise<{ resolvedName: string; date: Date; unitPrice: number; currency: string }[]> {
+    return this.fetchRows(accountId);
+  }
+
   // ── private helpers ──────────────────────────────────────────────────────
 
   private async invalidatePriceHistoryCache(accountId: string): Promise<void> {

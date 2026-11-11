@@ -48,8 +48,21 @@ an AI failure still opens the form with the text as description. The form saves 
 `notification` and a `notif:` `externalRef`, so the client content-dedup and the server's
 `reconcileNotificationStub` cover it unchanged. Nothing is auto-saved. Only the first queued text opens.
 
+## Receipts or promo leaflet
+
+A share of images or a PDF no longer goes straight to the receipt screen: `useShareIntake` first asks
+**Receipts / Promo leaflet** (`shareIntake.chooseLeaflet`). A viewer cannot create expenses, so a viewer
+reaches the chooser with only **Promo leaflet** (reading a leaflet is allowed for viewers). Choosing
+Receipts continues exactly as above. Choosing Promo leaflet hands the files to `/leaflets` through
+`shareIntakeStore.takeFiles`, which empties the store; the leaflet flow then owns the cache copies and
+deletes them once read or on cancel/failure (the images are never kept — see
+[gazetka-match](gazetka-match.md)). Cancelling the chooser also deletes the copies. The text-share path
+is unchanged.
+
 ## Invariants
 
+- The leaflet hand-off goes through `takeFiles` only, never by leaving files in the queue — a leftover
+  head would re-scan as a receipt on the next share. Every exit of the leaflet flow deletes its cache copies.
 - No `/*` inside a Kotlin comment in `ShareIntakeModule.kt` (or any `.kt`): Kotlin comments NEST, so a KDoc saying `text/*` opened a comment that ran to the end of the file and broke the 1.38.0 release build. Nothing before the release workflow compiles Kotlin — typecheck, lint and jest never see it — so a native change needs `./gradlew :app:compileReleaseKotlin` locally before it ships.
 - **Navigate only through `decideShareNavigation`** — it waits for the same `coldStartGateReady`
   as the notification and trip-invite flushes (earlier navigation wedges expo-router on a black

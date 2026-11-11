@@ -139,6 +139,21 @@ La app compara el precio que has pagado recientemente por un producto rastreado 
 
 Las ofertas también se envían como notificación push cuando se detecta una bajada genuina, para que no tengas que abrir la app para no perdértela — pero la misma bajada de precio no se te enviará más de una vez por semana, para que no te avisen repetidamente de lo mismo.
 
+## Revisar un folleto de ofertas
+
+¿Tienes el folleto de ofertas de una tienda en fotos o PDF? La app te dice cuáles de los productos **que realmente compras** aparecen en él y compara el precio de oferta con lo que sueles pagar.
+
+- **Desde la lista de compras**, toca **Revisar un folleto** y elige capturas del folleto (en la web, arrástralas o un PDF a la página).
+- **Desde otra app (Android)**, comparte las capturas o el PDF con AI Budget y elige **Folleto de ofertas** en la pregunta que aparece.
+
+La app lee el folleto y muestra solo las ofertas de productos de tus compras y de tu lista, cada una con el precio de oferta y — si ya compraste el producto en la misma moneda — lo que sueles pagar, como *sueles pagar X → Y*. Los productos que no compras nunca se muestran, y el folleto no se guarda: solo los precios extraídos. Los precios se muestran *según un folleto — compruébalo en la tienda* — la tienda puede diferir. Toca **Añadir a la lista** en un producto para ponerlo en tu lista de compras.
+
+**Tus folletos.** La pantalla del folleto guarda una lista de tus folletos que siguen vigentes: la tienda, hasta cuándo y cuántos de tus productos hay en cada uno. Toca uno para volver a ver sus productos y añadirlos a tu lista (si primero se abre el selector de fotos, ciérralo).
+
+**Cuántas páginas puedes leer.** Las páginas de folletos tienen su propio cupo mensual, aparte de tus consultas de IA: 20 páginas en Free, 200 en Pro y 500 en Business. Un envío lee hasta 10 páginas (un PDF de hasta unos 7 MB; si es más grande, comparte capturas de las páginas). Lo demás se omite y la pantalla te dice cuántas páginas quedaron fuera.
+
+**Ofertas de la comunidad (opcional).** Si compartes precios anónimos (Ajustes → Datos → **Compartir precios anónimos**), los precios de oferta de los folletos que lees se comparten igual: solo la tienda, el producto, el precio y las fechas, nunca tu nombre, tu cuenta ni la imagen del folleto. Una vez que las ofertas de la comunidad estén activadas en la app y varios compradores confirmen la misma oferta, quienes compran en esa tienda y suelen comprar ese producto reciben como máximo una notificación al día, que dice hasta cuándo dura la oferta — y solo cuando ya ha empezado. Al tocarla se abren tus folletos. Desactívala en Ajustes → Notificaciones → **Ofertas de folletos en tus productos**.
+
 ## Gestionar notificaciones
 
 Ambas notificaciones están activadas por defecto y se pueden desactivar por separado en **Ajustes → Notificaciones**:

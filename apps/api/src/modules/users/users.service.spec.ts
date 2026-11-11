@@ -69,6 +69,22 @@ describe('UsersService notification preferences', () => {
       expect(prisma.user.update).toHaveBeenCalledWith({ where: { id: 'user-1' }, data: { notifyGroupReminders: false } });
     });
   });
+
+  describe('notification preferences — leaflet promos (Gazetka match)', () => {
+    it('reads notifyLeafletPromos, defaulting to true', async () => {
+      prisma.user.findUnique = jest.fn().mockResolvedValue({ notifyLeafletPromos: false });
+      expect((await service.getNotificationPreferences('user-1')).leafletPromos).toBe(false);
+      prisma.user.findUnique = jest.fn().mockResolvedValue({});
+      expect((await service.getNotificationPreferences('user-1')).leafletPromos).toBe(true);
+    });
+
+    it('writes only notifyLeafletPromos for { leafletPromos }', async () => {
+      prisma.user.update = jest.fn().mockResolvedValue({});
+      prisma.user.findUnique = jest.fn().mockResolvedValue({ notifyLeafletPromos: false });
+      await service.updateNotificationPreferences('user-1', { leafletPromos: false });
+      expect(prisma.user.update).toHaveBeenCalledWith({ where: { id: 'user-1' }, data: { notifyLeafletPromos: false } });
+    });
+  });
 });
 
 describe('UsersService.search', () => {

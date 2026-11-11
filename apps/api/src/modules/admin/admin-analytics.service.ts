@@ -36,6 +36,8 @@ export const ESTIMATED_COST_PER_REQUEST: Record<string, number> = {
   // A corrective re-read (ABA-442, see docs/tech-debt/ocr-reread-cost-not-tracked.md)
   // is a second, identically-shaped vision call — same per-request estimate as `ocr`.
   ocr_reread: 0.012,
+  // Gazetka match: one vision call per leaflet page.
+  leaflet: 0.012,
 };
 export const DEFAULT_COST_PER_REQUEST = 0.01;
 

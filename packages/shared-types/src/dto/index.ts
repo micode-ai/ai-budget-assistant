@@ -39,3 +39,4 @@ export * from './receipt-split';
 export * from './user';
 export * from './telemetry';
 export * from './group';
+export * from './leaflet';

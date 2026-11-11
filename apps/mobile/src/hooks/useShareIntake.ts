@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { AppState } from 'react-native';
+import { useEffect, useRef } from 'react';
+import { AppState, type AlertButton } from 'react-native';
 import { router } from 'expo-router';
 import i18n from '@/i18n';
 import { showAlert } from '@/utils/alert';
@@ -89,10 +89,60 @@ export async function openSharedText(text: string): Promise<void> {
 }
 
 /**
+ * Shared files: Receipts (editors only — the existing receipt queue) or Promo leaflet (anyone, the
+ * Gazetka match screen). Not cancelable by a tap outside, so every exit is one of the three
+ * buttons and each one settles the queued cache copies:
+ * - Receipts: the receipt screen consumes the queue, which deletes each copy as it advances.
+ * - Promo leaflet: the files move to the store's leaflet hand-off; the leaflet screen takes them
+ *   on mount and deletes them once read or when it closes.
+ * - Cancel: deleted here.
+ * Exported for its button-order test.
+ * Every answer consumes `pendingNavigation`, and takes the whole queue — including files a second
+ * share appended while the chooser was up. The last choice is deliberately not remembered.
+ */
+export function showShareChooser(canEdit: boolean, done: () => void): void {
+  const store = () => useShareIntakeStore.getState();
+  // Cancel first: Android puts the first button in the negative slot and the last in the
+  // positive one, so a trailing Cancel would render as the affirmative choice.
+  const buttons: AlertButton[] = [];
+  buttons.push({
+    text: i18n.t('common.cancel'),
+    style: 'cancel',
+    onPress: () => {
+      done();
+      const left = store().discardAll();
+      store().consumeNavigation();
+      store().clearDropped();
+      left.forEach((f) => void deleteSharedFile(f.uri));
+    },
+  });
+  if (canEdit) {
+    buttons.push({
+      text: i18n.t('shareIntake.chooseReceipts'),
+      onPress: () => {
+        done();
+        store().consumeNavigation();
+        router.push({ pathname: '/expense/receipt', params: { source: 'share' } });
+      },
+    });
+  }
+  buttons.push({
+    text: i18n.t('shareIntake.chooseLeaflet'),
+    onPress: () => {
+      done();
+      const handed = store().handOffToLeaflets();
+      store().consumeNavigation();
+      if (handed > 0) router.push({ pathname: '/leaflets', params: { source: 'share' } });
+    },
+  });
+  showAlert(i18n.t('shareIntake.chooseTitle'), undefined, buttons, { cancelable: false });
+}
+
+/**
  * Share-to-capture entry (spec 2026-09-26-share-to-capture-design). One of
  * RootNavigator's cross-cutting hooks (ABA-354). Captures the cold-start share
- * and warm shares, and opens the receipt screen only through
- * `decideShareNavigation` — gated on the same `coldStartGateReady` as the
+ * and warm shares, and opens the Receipts / Promo leaflet chooser only
+ * through `decideShareNavigation` — gated on the same `coldStartGateReady` as the
  * notification and trip-invite flushes, and idle while the receipt screen is
  * already showing a queue (it appends new shares itself, see `screenOpen`).
  */
@@ -117,25 +167,29 @@ export function useShareIntake(coldStartGateReady: boolean): void {
     };
   }, []);
 
+  // True while the Receipts / Promo leaflet chooser is on screen. `pendingNavigation` stays set
+  // until the user answers (so the dropped-files notice cannot pop over the chooser, and a second
+  // share merges into the same queue); this ref keeps a dependency change from showing it twice.
+  const choosing = useRef(false);
+
   useEffect(() => {
-    const decision = decideShareNavigation({ pendingNavigation, screenOpen, coldStartGateReady, firstRunSeen, canEdit });
-    if (decision === 'navigate') {
-      useShareIntakeStore.getState().consumeNavigation();
-      router.push({ pathname: '/expense/receipt', params: { source: 'share' } });
-    } else if (decision === 'block_viewer') {
-      const left = useShareIntakeStore.getState().discardAll();
-      useShareIntakeStore.getState().consumeNavigation();
-      left.forEach((f) => void deleteSharedFile(f.uri));
-      useShareIntakeStore.getState().clearDropped();
-      showAlert(i18n.t('shareIntake.viewerBlockedTitle'), i18n.t('shareIntake.viewerBlockedBody'));
-    }
+    const decision = decideShareNavigation({
+      kind: 'files', pendingNavigation, screenOpen, coldStartGateReady, firstRunSeen, canEdit,
+    });
+    if (decision !== 'choose' || choosing.current) return;
+    choosing.current = true;
+    showShareChooser(canEdit, () => {
+      choosing.current = false;
+    });
   }, [pendingNavigation, screenOpen, coldStartGateReady, firstRunSeen, canEdit]);
 
   // Shared text: same gate as files (cold start, first run, viewer). It never sets
   // `pendingNavigation`, so it passes `true` for it here and drains `texts` itself.
   useEffect(() => {
     if (!hasTexts) return;
-    const decision = decideShareNavigation({ pendingNavigation: true, screenOpen: false, coldStartGateReady, firstRunSeen, canEdit });
+    const decision = decideShareNavigation({
+      kind: 'text', pendingNavigation: true, screenOpen: false, coldStartGateReady, firstRunSeen, canEdit,
+    });
     if (decision === 'navigate') {
       const [first] = useShareIntakeStore.getState().takeTexts();
       if (first) void openSharedText(first);

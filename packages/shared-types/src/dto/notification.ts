@@ -18,6 +18,8 @@ export interface UpdateNotificationPreferencesDto {
   monthlyWrapped?: boolean;
   groupActivity?: boolean;
   groupReminders?: boolean;
+  /** Gazetka match community promo push. */
+  leafletPromos?: boolean;
 }
 
 export interface NotificationPreferencesResponse {
@@ -36,4 +38,5 @@ export interface NotificationPreferencesResponse {
   monthlyWrapped: boolean;
   groupActivity: boolean;
   groupReminders: boolean;
+  leafletPromos: boolean;
 }

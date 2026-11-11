@@ -721,6 +721,13 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="leaflets/index"
+          options={{
+            headerShown: true,
+            title: t('leaflets.title'),
+          }}
+        />
+        <Stack.Screen
           name="shopping-list/compare"
           options={{
             headerShown: true,

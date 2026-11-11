@@ -1,5 +1,13 @@
 import { createHash } from 'crypto';
 import { normalizeMerchantPL } from '../import-bank/merchants/merchants-pl';
+import { isStripePaidSub, type CompedSubRow } from '../admin/admin-comped.util';
+
+// Contributor thresholds shared by every community corpus (prices, leaflet promos). Each is
+// env-overridable at the call site (COMMUNITY_MIN_ACCOUNT_AGE_DAYS /
+// COMMUNITY_MIN_CONTRIBUTOR_EXPENSES / COMMUNITY_TRUSTED_TENURE_DAYS).
+export const COMMUNITY_MIN_ACCOUNT_AGE_DAYS = 7;
+export const COMMUNITY_MIN_CONTRIBUTOR_EXPENSES = 15;
+export const COMMUNITY_TRUSTED_TENURE_DAYS = 60;
 
 /**
  * Monday-of-week bucket for a purchase date (API-local — do NOT import
@@ -74,4 +82,16 @@ export function isEligibleContributor(
   minExpenses: number,
 ): boolean {
   return accountAgeDays >= minAgeDays && expenseCount >= minExpenses;
+}
+
+/**
+ * Trusted contributor (ABA-642): user tenure of at least `trustedTenureDays`, OR really paying
+ * through Stripe. A comp (paid tier with no Stripe subscription) is not a payment.
+ */
+export function isTrustedContributor(
+  accountAgeDays: number,
+  sub: CompedSubRow | null | undefined,
+  trustedTenureDays: number,
+): boolean {
+  return accountAgeDays >= trustedTenureDays || isStripePaidSub(sub);
 }
