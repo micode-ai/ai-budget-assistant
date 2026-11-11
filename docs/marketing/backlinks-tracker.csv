@@ -57,6 +57,6 @@ Tier,Site,Submit URL,Link type,Week,Status,Date submitted,Live URL,Notes
 2,budzet-excel.pl (listicle),https://budzet-excel.pl/najlepsze-aplikacje-do-budzetu-domowego/,editorial,W2,pitched,2026-11-10,,Author Karol; site sells Excel templates. Contact /kontakt/. pitch sent to kontakt@budzet-excel.pl; follow-up no sooner than 2026-11-20.
 3,mFinanse (mBank blog),https://mfinanse.pl/blog/aplikacje-do-planowania-budzetu-domowego/,editorial,W3,todo,,,Low odds; mBank import angle.
 2,r/PolskaFinanse,https://www.reddit.com/r/PolskaFinanse/,nofollow,W2,todo,,,Read sidebar rules first (unverified). Post 2(c) with disclosure.
-3,wykop.pl,https://wykop.pl/,nofollow,W3,todo,,,Disclosed maker entry; lead with a free article. Rules unverified.
-3,Polish Facebook budget groups,(per group),nofollow,W3,todo,,,Ask admin first; most ban ads. Not indexed - low GEO value.
+3,wykop.pl,https://wykop.pl/,nofollow,W3,live,2026-11-11,https://wykop.pl/wpis/88230969/pol-roku-temu-zaczalem-robic-sam-aplikacje-do-budz,"Mikroblog entry, disclosed maker, tagged #reklama; feedback ask, no giveaway. Links tagged src=wykop / utm_source=wykop."
+3,Polish Facebook budget groups,(per group),nofollow,W3,todo,,,Not a member of any group (2026-11-11); join first and wait before any post. Ask admin; most ban ads.
 1,Wikidata Q141551014 (enrich),https://www.wikidata.org/wiki/Q141551014,n/a,W1,done,2026-10-15,https://www.wikidata.org/wiki/Q141551014,P577 2026-04 (ref llms.txt) + P495 Poland added 2026-10-15; later P973 to press coverage.

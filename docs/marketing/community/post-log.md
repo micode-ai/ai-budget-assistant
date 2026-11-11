@@ -14,3 +14,4 @@ than 5 posts in a group is "too few to tell".
 
 | Posted | Platform | Where | Post | Lang | Verdict | Link | Removed | Score | Comments | Views | Updated |
 |---|---|---|---|---|---|---|---|---|---|---|---|
+| 2026-11-11 | Wykop | Mikroblog (#reklama #finanse #oszczedzanie #pieniadze #android) | Maker intro: receipt split, voice, mBank/PKO/Revolut import, feedback ask | pl | Go (Primary sitewide, norm Secondary) | https://wykop.pl/wpis/88230969/pol-roku-temu-zaczalem-robic-sam-aplikacje-do-budz |  |  |  |  | 2026-11-11 |
