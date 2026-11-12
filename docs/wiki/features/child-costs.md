@@ -76,7 +76,9 @@ were adopted, and differ from the web and the statement.
 **Statement PDF.** `POST /children/:id/statement` builds a bounded, paged PDF: summary, per-month
 and per-category tables, an expense list and a receipt appendix. Receipts are fetched 20 at a time
 with caps of 150 receipts, 40 MB in all and 3 MB per image (env-tunable); stored images are already
-≤800 px (ABA-463) so there is no resampling dependency (ruling R10). Every page carries the localised
+≤800 px (ABA-463) so there is no resampling dependency (ruling R10). A receipt photographed in several
+parts ([long-receipt](long-receipt.md)) appears in the appendix as all its parts, in order, under the
+same caps. Every page carries the localised
 footer and the "data as of" stamp.
 
 ## Invariants

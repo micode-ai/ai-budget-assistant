@@ -4,6 +4,9 @@ import { SlackEventCallback } from './types';
 function makeService() {
   const photoHandler = {
     handleImage: jest.fn().mockResolvedValue(undefined),
+    handleImages: jest.fn().mockResolvedValue(undefined),
+    handlePartCallback: jest.fn().mockResolvedValue(undefined),
+    handleNewReceiptCallback: jest.fn().mockResolvedValue(undefined),
     handleDocument: jest.fn().mockResolvedValue(undefined),
     handleDateInput: jest.fn().mockResolvedValue(false),
     handleItemEditInput: jest.fn().mockResolvedValue(false),
@@ -73,13 +76,36 @@ describe('SlackBotService.handleEvent — file uploads', () => {
   it('routes a file_share image message to the photo handler', async () => {
     const { service, photoHandler } = makeService();
     await service.handleEvent(imageUpload('file_share'));
-    expect(photoHandler.handleImage).toHaveBeenCalledTimes(1);
+    expect(photoHandler.handleImages).toHaveBeenCalledTimes(1);
+    expect(photoHandler.handleImages.mock.calls[0][0]).toHaveLength(1);
+  });
+
+  it('hands every image of a multi-image message to the photo handler, in order (long receipt)', async () => {
+    const { service, photoHandler } = makeService();
+    const body = imageUpload('file_share');
+    body.event.files = [
+      { id: 'F1', mimetype: 'image/jpeg', url_private_download: 'https://files.slack.com/1.jpg' },
+      { id: 'F2', mimetype: 'application/pdf', url_private_download: 'https://files.slack.com/2.pdf' },
+      { id: 'F3', mimetype: 'image/png', url_private_download: 'https://files.slack.com/3.png' },
+    ];
+    await service.handleEvent(body);
+    expect(photoHandler.handleImages.mock.calls[0][0].map((f: { id: string }) => f.id)).toEqual(['F1', 'F3']);
+  });
+
+  it('routes the continuation question buttons', async () => {
+    const { service, photoHandler } = makeService();
+    const tap = (action_id: string) =>
+      service.handleInteractivity({ type: 'block_actions', user: { id: 'U1', team_id: 'T1' }, channel: { id: 'D1' }, actions: [{ action_id }] });
+    await tap('receipt_part:abcd1234:ef567890');
+    await tap('receipt_new:ef567890');
+    expect(photoHandler.handlePartCallback).toHaveBeenCalledWith('abcd1234', 'ef567890', expect.objectContaining({ userId: 'u1' }));
+    expect(photoHandler.handleNewReceiptCallback).toHaveBeenCalledWith('ef567890', expect.objectContaining({ userId: 'u1' }));
   });
 
   it('still ignores edit/system subtypes (e.g. message_changed)', async () => {
     const { service, photoHandler, linkService } = makeService();
     await service.handleEvent(imageUpload('message_changed'));
-    expect(photoHandler.handleImage).not.toHaveBeenCalled();
+    expect(photoHandler.handleImages).not.toHaveBeenCalled();
     // dropped before user resolution
     expect(linkService.getLink).not.toHaveBeenCalled();
   });

@@ -114,6 +114,23 @@ Hast du eine Woche Papierbelege gesammelt? Nach dem Speichern bietet die Bestät
 
 Während du scannst, zeigt ein kleiner Zähler, wie viele Belege du in dieser Sitzung bereits gespeichert hast. Alle 15 Belege meldet sich die App mit einer freundlichen Erinnerung, dass du weitermachen oder eine Pause einlegen kannst — dein Fortschritt ist so oder so schon gespeichert. Der Zähler setzt sich zurück, sobald du den Bildschirm verlässt; er dient nur dazu, dir während einer Sitzung ein Gefühl für den Fortschritt zu geben.
 
+### Langer Beleg in mehreren Fotos
+
+Ein Beleg, der für ein lesbares Foto zu lang ist, kann in Teilen fotografiert und als **ein** Beleg gelesen werden.
+
+**In der App**
+
+1. Tippen Sie auf dem Belegbildschirm auf **Langer Beleg? In Teilen fotografieren**
+2. Fotografieren Sie den Beleg von oben nach unten mit einer kleinen Überlappung zwischen den Fotos (die letzte Zeile eines Fotos sollte oben im nächsten wieder sichtbar sein) — bis zu **4 Teile** sind möglich
+3. Tippen Sie auf **Beleg auslesen**. Sie erhalten eine Bestätigungskarte, auf der jede Position einmal steht; Positionen im Überlappungsbereich werden nicht doppelt gezählt
+4. Stimmt die Summe der Positionen nicht mit dem Beleg-Gesamtbetrag überein, warnt die App und bietet **Teile neu aufnehmen** statt Speichern an
+
+Jeder Teil zählt als ein Beleg-Scan auf Ihr monatliches KI-Limit, ein Beleg aus drei Teilen verbraucht also drei Scans. Ein PDF lässt sich nicht mit Fotos kombinieren. Die Ausgabe behält alle Fotos: Öffnen Sie den Beleg an der Ausgabe und tippen Sie auf einen Teil, um ihn anzusehen.
+
+**In den Bots für Telegram, WhatsApp und Slack**
+
+Senden Sie die Fotos nacheinander. Das erste Foto wird sofort gelesen. Solange seine Bestätigungskarte noch offen ist, senden Sie das nächste Foto — der Bot fragt, ob es eine **Fortsetzung** oder ein **Neuer Beleg** ist. Wählen Sie **Fortsetzung**, und die Karte wird aus allen Fotos zusammen neu aufgebaut (auf der alten Karte eingetippte Korrekturen bleiben nicht erhalten, prüfen Sie also die neue). Die Fotos müssen JPEG, PNG oder WebP und nicht zu groß sein; der Bot sagt Ihnen, wenn eines abgelehnt wird.
+
 ### Bereits gescannte Belege
 
 Die App warnt dich, bevor ein Beleg doppelt in deinen Ausgaben landet:

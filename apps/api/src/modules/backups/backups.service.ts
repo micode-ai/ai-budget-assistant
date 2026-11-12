@@ -80,8 +80,12 @@ export class BackupsService {
     // its size), which is what pushed backups past the 50 MB limit — and restore
     // never reads them back. Setting to undefined frees the buffers for GC and
     // omits them from JSON.stringify.
+    // A long receipt's parts 2..N (`expense_receipt_parts`) follow the same
+    // policy: never included in the query above, and stripped here should a
+    // future include ever pull them in. Restore never writes parts either.
     for (const exp of expenses) {
       (exp as { receiptImage?: Buffer | null }).receiptImage = undefined;
+      (exp as { receiptParts?: unknown }).receiptParts = undefined;
     }
 
     const entityCounts = {

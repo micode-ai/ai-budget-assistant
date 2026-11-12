@@ -16,6 +16,25 @@ function makeFakeRedis() {
   };
 }
 
+/** CacheService over the same in-memory Redis (the handler keeps long-receipt state there). */
+function cacheOver(redis: ReturnType<typeof makeFakeRedis>) {
+  const { store } = redis;
+  return {
+    get: jest.fn(async (k: string) => (store.has(k) ? JSON.parse(store.get(k)!) : null)),
+    set: jest.fn(async (k: string, v: unknown) => {
+      store.set(k, JSON.stringify(v));
+    }),
+    del: jest.fn(async (...keys: string[]) => {
+      for (const k of keys) store.delete(k);
+    }),
+    setIfAbsent: jest.fn(async (k: string) => {
+      if (store.has(k)) return false;
+      store.set(k, '1');
+      return true;
+    }),
+  };
+}
+
 /** In-memory stand-in for ShoppingListService — reconciles nothing by default. */
 function makeShoppingList() {
   return { reconcileWithReceipt: jest.fn().mockResolvedValue({ checkedLabels: [] }) };
@@ -100,6 +119,7 @@ describe('Slack PhotoHandler — geocoded location wiring (ABA-310 bot photo geo
       makeChatActionRecorder() as never,
       makeLinkService() as never,
       redis as never,
+      cacheOver(redis) as never,
     );
     return { handler, redis, expenses };
   }
@@ -193,6 +213,7 @@ describe('Slack PhotoHandler — receipt category splits reported to the bot (bo
       makeChatActionRecorder() as never,
       makeLinkService() as never,
       redis as never,
+      cacheOver(redis) as never,
     );
     return { handler, redis, expenses, client };
   }
@@ -289,6 +310,7 @@ describe('Slack PhotoHandler — receipt category splits reported to the bot (bo
       makeChatActionRecorder() as never,
       makeLinkService() as never,
       redis as never,
+      cacheOver(redis) as never,
     );
 
     await handler.handleDocument(pdfFile(), userState);
@@ -347,6 +369,7 @@ describe('Slack PhotoHandler — line-item editing (ABA-482)', () => {
       makeChatActionRecorder() as never,
       makeLinkService() as never,
       redis as never,
+      cacheOver(redis) as never,
     );
     return { handler, redis, expenses, client };
   }
@@ -440,6 +463,7 @@ describe('Slack PhotoHandler — records the write for chat undo (ABA-599)', () 
       chatActionRecorder as never,
       linkService as never,
       redis as never,
+      cacheOver(redis) as never,
     );
     return { handler, redis, client, chatActionRecorder, linkService };
   }
@@ -557,6 +581,7 @@ describe('Slack PhotoHandler — same-file duplicate warning (ABA-603)', () => {
       makeChatActionRecorder() as never,
       makeLinkService() as never,
       redis as never,
+      cacheOver(redis) as never,
       receiptDuplicates as never,
     );
     return { handler, redis, ocr, expenses, subs, client, receiptDuplicates };
@@ -670,6 +695,7 @@ describe('Slack PhotoHandler — merge into a matching expense (ABA-744)', () =>
       makeChatActionRecorder() as never,
       makeLinkService() as never,
       redis as never,
+      cacheOver(redis) as never,
     );
     const shortId = () => [...redis.store.keys()].find((k) => k.startsWith('slack:receipt:'))!.slice('slack:receipt:'.length);
     return { handler, expenses, client, shortId };

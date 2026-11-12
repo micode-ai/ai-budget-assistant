@@ -114,6 +114,23 @@ Caught up on a week of paper receipts? After you save one, the confirmation prom
 
 While you're scanning, a small counter shows how many receipts you've saved this session. Every 15 receipts, the app checks in with a friendly reminder that you can keep going or take a break — your progress is already saved either way. The counter resets once you leave the screen; it's just there to give you a sense of progress during one sitting.
 
+### Long Receipt in Several Photos
+
+A receipt too long for one readable photo can be photographed in pieces and read as **one** receipt.
+
+**In the app**
+
+1. On the receipt screen tap **Long receipt? Photograph it in parts**
+2. Photograph the receipt from top to bottom, with a small overlap between photos (the last line of one photo should be visible again at the top of the next) — you can add up to **4 parts**
+3. Tap **Read receipt**. You get one confirmation card with every line once; the overlapping lines are not counted twice
+4. If the line totals don't match the receipt total, the app warns you and offers **Retake parts** instead of saving
+
+Each part counts as one receipt scan against your monthly AI limit, so a three-part receipt uses three scans. A PDF cannot be combined with photos. The expense keeps all its photos: open the receipt on the expense and tap a part to view it.
+
+**In the Telegram, WhatsApp and Slack bots**
+
+Send the photos one after another. The first photo is read at once. While its confirmation card is still open, send the next photo — the bot asks whether it is a **Continuation** or a **New receipt**. Choose **Continuation** and the card is rebuilt from all the photos together (corrections you typed on the old card are not kept, so check the new one). Photos must be JPEG, PNG or WebP and not too large; the bot tells you if one is refused.
+
 ### Already-Scanned Receipts
 
 The app warns you before a receipt ends up in your expenses twice:

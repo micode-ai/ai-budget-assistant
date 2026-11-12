@@ -283,6 +283,18 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
         return;
       }
 
+      // Long receipt in several photos: "continuation or new receipt?".
+      if (data.startsWith('receipt_part:')) {
+        const [receiptId, tmpId] = data.slice('receipt_part:'.length).split(':');
+        await this.photoHandler.handlePartCallback(ctx, receiptId, tmpId);
+        return;
+      }
+
+      if (data.startsWith('receipt_new:')) {
+        await this.photoHandler.handleNewReceiptCallback(ctx, data.slice('receipt_new:'.length));
+        return;
+      }
+
       if (data.startsWith('receipt_cancel:')) {
         const receiptId = data.slice('receipt_cancel:'.length);
         await this.photoHandler.handleReceiptCancelCallback(ctx, receiptId);

@@ -146,7 +146,10 @@ export class SlackBotService {
         return;
       }
       if (file.mimetype.startsWith('image/')) {
-        await this.photoHandler.handleImage(file, userState);
+        // Several images in one message (a long receipt in parts): handled one by
+        // one — the first scans at once, the rest are offered as its continuation.
+        const images = (event.files ?? []).filter((f) => f.mimetype?.startsWith('image/'));
+        await this.photoHandler.handleImages(images, userState);
         return;
       }
       if (file.mimetype === 'application/pdf') {
@@ -227,6 +230,13 @@ export class SlackBotService {
       case 'receipt_rescan': return this.photoHandler.handleRescanCallback(payload, userState);
       case 'receipt_rescan_x': return this.photoHandler.handleRescanCancelCallback(payload, userState);
       case 'receipt_cancel': return this.photoHandler.handleReceiptCancelCallback(payload, userState);
+      // Long receipt in several photos: `receipt_part:{receiptId}:{tmpId}` / `receipt_new:{tmpId}`.
+      case 'receipt_part': {
+        const [receiptId, tmpId] = payload.split(':');
+        if (!receiptId || !tmpId) return;
+        return this.photoHandler.handlePartCallback(receiptId, tmpId, userState);
+      }
+      case 'receipt_new': return this.photoHandler.handleNewReceiptCallback(payload, userState);
       case 'catz_y': return this.categorizeHandler.handleYes(Number(payload), userState);
       case 'catz_n': return this.categorizeHandler.handleNo(Number(payload), userState);
       case 'catz_s': return this.categorizeHandler.handleStop(Number(payload), userState);

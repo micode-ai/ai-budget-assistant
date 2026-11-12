@@ -17,6 +17,8 @@ import { useExpenseStore } from '@/stores/expenseStore';
 import { resolveExistingMerchant } from '@/utils/merchant';
 import ReceiptCaptureView from '@/components/receipt/ReceiptCaptureView';
 import ReceiptConfirmCard from '@/components/receipt/ReceiptConfirmCard';
+import ReceiptPartsCapture from '@/components/receipt/ReceiptPartsCapture';
+import { partsTotalsMismatch } from '@/features/receipt/receiptParts';
 import ItemCategorySheet from '@/components/receipt/ItemCategorySheet';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { useStyles, type Theme } from '@/theme';
@@ -134,6 +136,8 @@ export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpens
   const [saveImage, setSaveImage] = useState(true);
   const [userPrompt, setUserPrompt] = useState('');
   const [merchant, setMerchant] = useState('');
+  /** Long receipt: the user is collecting several photos of one receipt. */
+  const [partsMode, setPartsMode] = useState(false);
   /** "Merge with the bank's record" on the confirm card — reset per scan. */
   const [mergeWithBank, setMergeWithBank] = useState(false);
   const getDistinctMerchants = useExpenseStore((s) => s.getDistinctMerchants);
@@ -213,6 +217,15 @@ export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpens
     processSharedFile,
     seedFromInbound,
     reset,
+    parts,
+    isPreparingPart,
+    addPart,
+    capturePart,
+    pickParts,
+    removePart,
+    scanParts,
+    retakeParts,
+    clearError,
   } = useReceiptScanner({ onDuplicate: confirmDuplicateScan });
 
   /**
@@ -235,7 +248,8 @@ export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpens
     // save failures relative to the other flows.
     trackAction('expense_receipt', 'failed');
     if (!shareMode) {
-      showAlert(t('common.error'), error, [{ text: 'OK', onPress: reset }]);
+      // A failed read of a long receipt keeps its parts, so it can be read again.
+      showAlert(t('common.error'), error, [{ text: 'OK', onPress: partsMode ? clearError : reset }]);
       return;
     }
     if (errorStatus === 403) {
@@ -325,10 +339,34 @@ export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpens
 
   const handleReset = () => {
     reset();
+    setPartsMode(false);
     setShowConfirm(false);
     setSaveImage(false);
     setMergeWithBank(false);
     resetSplitState();
+  };
+
+  /** "Retake parts": drop the parts and the result, stay in the long-receipt flow. */
+  const handleRetakeParts = () => {
+    retakeParts();
+    setShowConfirm(false);
+    setMergeWithBank(false);
+    resetSplitState();
+  };
+
+  const handleExitParts = () => {
+    retakeParts();
+    setPartsMode(false);
+  };
+
+  /** Adds dropped images in order; returns the object URLs no part holds (safe to revoke). */
+  const handleDropUris = async (uris: string[]): Promise<string[]> => {
+    const revocable: string[] = [];
+    for (const uri of uris) {
+      const held = await addPart({ uri });
+      if (held !== uri) revocable.push(uri);
+    }
+    return revocable;
   };
 
   const { count: sessionCount, recordSaved } = useReceiptScanSession();
@@ -396,6 +434,7 @@ export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpens
     saveImage,
     imageUri,
     isPdf,
+    parts,
     items,
     currentSplits,
     itemCategories,
@@ -453,6 +492,21 @@ export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpens
           onPdfPress={handlePdfPress}
           sessionCount={sessionCount}
           hideCaptureButtons={shareMode || !!inbound}
+          onStartParts={shareMode || inbound ? undefined : () => setPartsMode(true)}
+          partsCapture={
+            partsMode ? (
+              <ReceiptPartsCapture
+                parts={parts}
+                isPreparingPart={isPreparingPart}
+                onCameraPress={() => void capturePart()}
+                onGalleryPress={() => void pickParts()}
+                onDropUris={handleDropUris}
+                onRemovePart={removePart}
+                onReadReceipt={() => void scanParts(userPrompt.trim() || undefined)}
+                onExit={handleExitParts}
+              />
+            ) : undefined
+          }
         />
       ) : (
         <>
@@ -479,6 +533,7 @@ export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpens
             onEdit={handleEditExpense}
             onConfirm={handleConfirmExpense}
             onRetry={inbound ? onDone : shareMode ? retryShareHead : handleReset}
+            onRetakeParts={partsMode && partsTotalsMismatch(parts.length, scannedReceipt) ? handleRetakeParts : undefined}
           />
 
           <ItemCategorySheet

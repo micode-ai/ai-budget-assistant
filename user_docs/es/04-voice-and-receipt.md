@@ -114,6 +114,23 @@ Funciona igual tanto si escaneas desde la aplicación como desde los bots de Tel
 
 Mientras escaneas, un pequeño contador muestra cuántos recibos has guardado en esta sesión. Cada 15 recibos, la app te avisa con un recordatorio amistoso de que puedes seguir o tomar un descanso — tu progreso ya está guardado de cualquier forma. El contador se reinicia al salir de la pantalla; solo está para darte una sensación de progreso durante una sesión.
 
+### Recibo largo en varias fotos
+
+Un recibo demasiado largo para una foto legible se puede fotografiar por partes y leer como **un solo** recibo.
+
+**En la app**
+
+1. En la pantalla del recibo toca **¿Recibo largo? Fotografíalo por partes**
+2. Fotografía el recibo de arriba abajo con un pequeño solapamiento entre fotos (la última línea de una foto debe verse de nuevo arriba en la siguiente); puedes añadir hasta **4 partes**
+3. Toca **Leer recibo**. Obtendrás una tarjeta de confirmación con cada línea una sola vez; las líneas del solapamiento no se cuentan dos veces
+4. Si la suma de las líneas no coincide con el total del recibo, la app te avisa y ofrece **Volver a fotografiar las partes** en lugar de guardar
+
+Cada parte cuenta como un escaneo de recibo en tu límite mensual de IA, así que un recibo de tres partes usa tres escaneos. Un PDF no se puede combinar con fotos. El gasto conserva todas las fotos: abre el recibo en el gasto y toca una parte para verla.
+
+**En los bots de Telegram, WhatsApp y Slack**
+
+Envía las fotos una tras otra. La primera foto se lee de inmediato. Mientras su tarjeta de confirmación siga abierta, envía la siguiente foto: el bot pregunta si es una **Continuación** o un **Recibo nuevo**. Elige **Continuación** y la tarjeta se reconstruye con todas las fotos juntas (las correcciones escritas en la tarjeta anterior no se conservan, así que revisa la nueva). Las fotos deben ser JPEG, PNG o WebP y no demasiado grandes; el bot te avisa si rechaza alguna.
+
 ### Recibos ya escaneados
 
 La app te avisa antes de que un recibo acabe dos veces en tus gastos:

@@ -457,6 +457,7 @@ export async function softDeleteExpenseInDb(
 
 export async function clearAllExpenses(): Promise<void> {
   await executeSql('DELETE FROM expense_items', []);
+  await executeSql('DELETE FROM expense_receipt_parts', []);
   await executeSql('DELETE FROM expenses', []);
 }
 

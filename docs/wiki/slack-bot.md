@@ -43,6 +43,11 @@ A NestJS module (`modules/slack/`) embedded in the API that lets users interact 
   chat reply gets its own.
 - **Receipt line editing is typed, not tapped** — see
   [bot-receipt-editing](features/bot-receipt-editing.md).
+- **A long receipt in several photos** ([long-receipt](features/long-receipt.md)). Keys
+  `slack:receipt-latest:{channel}:{user}`, `slack:scan:{tmpId}`, `slack:receipt-busy:{receiptId}`;
+  callbacks `receipt_part:{receiptId}:{tmpId}` / `receipt_new:{tmpId}`. The pending receipt stores
+  `cardTs`, updated wherever the card is re-posted. A part larger than 1.5 MB falls back to Slack's
+  `thumb_1024`/`thumb_720`; a multi-image message scans the first image and offers the rest one by one.
 
 ## Multi-workspace install (OAuth)
 

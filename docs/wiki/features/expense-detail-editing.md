@@ -49,7 +49,10 @@ same chip and the same rule.
 `POST /ai/scan-receipt` (photo or PDF) over the attached receipt and applies the lines to the
 existing expense. `ExpenseItemsSection` renders for any expense whose receipt has loaded
 (`hasReceipt`, reported through `onReceiptLoaded`), not only `source: 'ocr'` — mirrored in the
-desktop `ExpenseDialog`. One OCR request per regeneration, tracked like any scan.
+desktop `ExpenseDialog`. One OCR request per regeneration, tracked like any scan. For a receipt
+stored in several photos ([long-receipt](long-receipt.md)) it reads ALL parts, sent as `images`; a
+failed read of the parts is an error, never "no parts" — extracting from part 1 alone would replace
+the lines with a partial list.
 
 **When the receipt arrives as a second expense instead.** An auto-captured or imported expense that
 is later scanned as a separate OCR expense is offered as a merge, and `mergeExpenses` re-points the

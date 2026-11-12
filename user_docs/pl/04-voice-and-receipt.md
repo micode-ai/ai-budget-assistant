@@ -114,6 +114,23 @@ Uzbierał się tydzień papierowych paragonów? Po zapisaniu jednego z nich potw
 
 Podczas skanowania mały licznik pokazuje, ile paragonów zapisano w tej sesji. Co 15 paragonów aplikacja przypomina, że można kontynuować lub zrobić przerwę — postęp jest już zapisany niezależnie od wyboru. Licznik resetuje się po opuszczeniu ekranu; służy tylko do pokazania postępu w trakcie jednej sesji.
 
+### Długi paragon w kilku zdjęciach
+
+Paragon zbyt długi na jedno czytelne zdjęcie można sfotografować w częściach i odczytać jako **jeden** paragon.
+
+**W aplikacji**
+
+1. Na ekranie paragonu dotknij **Długi paragon? Zrób zdjęcia w częściach**
+2. Fotografuj paragon od góry do dołu, z niewielką zakładką między zdjęciami (ostatnia linia jednego zdjęcia powinna być znów widoczna na górze następnego) — możesz dodać do **4 części**
+3. Dotknij **Odczytaj paragon**. Dostaniesz jedną kartę potwierdzenia, na której każda pozycja występuje raz; pozycje w zakładce nie są liczone dwa razy
+4. Jeśli suma pozycji nie zgadza się z sumą paragonu, aplikacja ostrzeże Cię i zaproponuje **Zrób części ponownie** zamiast zapisu
+
+Każda część liczy się jako jedno skanowanie paragonu w Twoim miesięcznym limicie AI, więc paragon z trzech części zużywa trzy skanowania. PDF nie można łączyć ze zdjęciami. Wydatek zachowuje wszystkie zdjęcia: otwórz paragon przy wydatku i dotknij części, aby ją obejrzeć.
+
+**W botach Telegram, WhatsApp i Slack**
+
+Wysyłaj zdjęcia jedno po drugim. Pierwsze zdjęcie jest odczytywane od razu. Dopóki jego karta potwierdzenia jest otwarta, wyślij następne zdjęcie — bot zapyta, czy to **Dalsza część** czy **Nowy paragon**. Wybierz **Dalsza część**, a karta zostanie zbudowana od nowa ze wszystkich zdjęć (poprawki wpisane na starej karcie nie zostają, więc sprawdź nową). Zdjęcia muszą być w formacie JPEG, PNG lub WebP i nie za duże; bot powie, jeśli któreś odrzuci.
+
 ### Paragony już zeskanowane
 
 Aplikacja ostrzeże Cię, zanim paragon trafi do wydatków dwa razy:

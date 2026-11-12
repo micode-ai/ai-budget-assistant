@@ -13,6 +13,7 @@ import {
   softDeleteExpenseInDb,
   updateExpenseInDb,
   setExpenseServerId,
+  getReceiptImageFromDb,
 } from '@/db/expenseRepository';
 import {
   loadItemsByExpenseId,
@@ -27,6 +28,8 @@ import {
   upsertProject,
 } from '@/db/projectRepository';
 import { mapServerSplits } from '@/features/receipt/serverSplits';
+import { buildReceiptImageFields } from '@/features/receipt/receiptParts';
+import { readReceiptPartsStrict } from '@/db/receiptPartsRepository';
 import { getSplitsForExpenses, replaceSplitsForExpense } from '@/db/splitRepository';
 import { upsertCategory } from '@/db/categoryRepository';
 import { api } from '@/services/api';
@@ -137,6 +140,31 @@ async function attachChildLinks(list: Expense[], accountId: string): Promise<voi
 
 // ─── syncPendingExpenses ─────────────────────────────────────────────────────
 
+/**
+ * The receipt of a row the server has never acknowledged (no `serverId`): its
+ * first push failed (offline), so the stored receipt image never arrived.
+ * Resend it, and with it parts 2..N of a long receipt in the SAME create — the
+ * API reads an image without parts as a one-image receipt and deletes stored
+ * parts (`buildReceiptImageFields`). An acknowledged row is an edit retry and
+ * carries no images, which leaves the server's receipt and parts untouched.
+ * Only images: a stored PDF was attached through its own endpoint.
+ * Any failed read (the image OR the parts) sends no image at all: part 1
+ * without its parts would delete the parts on the server if the first push did
+ * land. The row itself still syncs.
+ */
+async function unackedReceiptFields(expense: Expense) {
+  if (expense.serverId) return {};
+  try {
+    const image = await getReceiptImageFromDb(expense.id);
+    if (!image || !image.mimeType.startsWith('image/')) return {};
+    const parts = await readReceiptPartsStrict(expense.id);
+    return buildReceiptImageFields(image.base64, parts, image.mimeType);
+  } catch (e) {
+    console.warn('[expenseSync] receipt not attached to the retry:', e instanceof Error ? e.message : String(e));
+    return {};
+  }
+}
+
 export async function syncPendingExpenses(
   _set: StoreSet,
   get: StoreGet,
@@ -150,6 +178,7 @@ export async function syncPendingExpenses(
     try {
       const localTags = await getTagsForExpense(expense.id);
       const localProjectId = await getProjectIdForExpense(expense.id);
+      const receiptFields = await unackedReceiptFields(expense);
 
       const { payload: encPayload, encryptedPayload, encryptionKeyVersion } =
         await maybeEncrypt(
@@ -217,6 +246,7 @@ export async function syncPendingExpenses(
         isRecurring: expense.isRecurring || undefined,
         recurringId: expense.recurringId,
         recurringPeriod: expense.recurringPeriod,
+        ...receiptFields,
         encryptedPayload,
         encryptionKeyVersion,
       } as any);

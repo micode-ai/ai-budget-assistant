@@ -1,7 +1,10 @@
 import { Platform } from 'react-native';
+
+/** Expenses known to be single-photo receipts this session (skips the parts read). Cleared in `reset()`. */
+const noReceiptParts = new Set<string>();
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
-import type { Expense, ExpenseItem, ExpenseCategorySplit, SyncStatus, MergeExpensesFieldChoices, ExpenseShareDto, ShareType } from '@budget/shared-types';
+import type { Expense, ExpenseItem, ExpenseCategorySplit, SyncStatus, MergeExpensesFieldChoices, ExpenseShareDto, ShareType, ReceiptImagePart } from '@budget/shared-types';
 import { generateUUID, getStartOfMonth, getEndOfMonth, getStartOfWeek, getEndOfWeek } from '@budget/shared-utils';
 import {
   insertExpense,
@@ -15,6 +18,9 @@ import {
   bulkMergeMerchants,
   moveExpenseAccountInDb,
 } from '@/db/expenseRepository';
+import { saveReceiptPartsLocally, deleteReceiptPartsLocally, getReceiptPartsFromDb } from '@/db/receiptPartsRepository';
+import { mergeReceiptParts, localExtraParts, extraPartsOf, type IndexedReceiptPart } from '@/features/receipt/receiptPartsView';
+import { buildReceiptImageFields } from '@/features/receipt/receiptParts';
 import {
   loadItemsByExpenseId,
   insertExpenseItems,
@@ -93,7 +99,7 @@ interface ExpenseState {
   // Actions
   loadExpenses: (opts?: { force?: boolean }) => Promise<void>;
   setExpenses: (expenses: Expense[]) => void;
-  addExpense: (expense: Omit<Expense, 'id' | 'localId' | 'accountId' | 'createdAt' | 'updatedAt' | 'syncStatus' | 'syncVersion' | 'isDeleted' | 'items' | 'splits'> & { items?: { description: string; canonicalName?: string; quantity?: number; unitPrice?: number; totalPrice: number; sortOrder?: number; categoryId?: string }[]; receiptImageBase64?: string; receiptFingerprint?: string; scanAttestation?: string; mergeWithExpenseId?: string; splits?: { categoryId: string; amount: number; percentage: number; notes?: string }[]; splitType?: ShareType; shares?: ExpenseShareDto[] }) => Promise<Expense>;
+  addExpense: (expense: Omit<Expense, 'id' | 'localId' | 'accountId' | 'createdAt' | 'updatedAt' | 'syncStatus' | 'syncVersion' | 'isDeleted' | 'items' | 'splits'> & { items?: { description: string; canonicalName?: string; quantity?: number; unitPrice?: number; totalPrice: number; sortOrder?: number; categoryId?: string }[]; receiptImageBase64?: string; receiptImageParts?: ReceiptImagePart[]; receiptFingerprint?: string; scanAttestation?: string; mergeWithExpenseId?: string; splits?: { categoryId: string; amount: number; percentage: number; notes?: string }[]; splitType?: ShareType; shares?: ExpenseShareDto[] }) => Promise<Expense>;
   updateExpense: (id: string, updates: Partial<Expense> & { splitType?: ShareType; shares?: ExpenseShareDto[] }) => void;
   setExpenseProject: (expenseId: string, projectId: string | null) => Promise<void>;
   deleteExpense: (id: string) => void;
@@ -111,6 +117,8 @@ interface ExpenseState {
 
   // Receipt Image actions
   loadReceiptImage: (expenseId: string) => Promise<{ base64: string; mimeType: string } | null>;
+  /** Parts 2..N of a long receipt (local first, then the server). Empty = a single-photo receipt. Throws on web when the server read fails (no local copy to fall back on). */
+  loadReceiptParts: (expenseId: string) => Promise<IndexedReceiptPart[]>;
   saveReceiptImage: (expenseId: string, imageBase64: string, mimeType?: string) => Promise<void>;
   deleteReceiptImage: (expenseId: string) => Promise<void>;
 
@@ -151,7 +159,7 @@ export const useExpenseStore = create<ExpenseState>()(
     setExpenses: (expenses) => set({ expenses }),
 
     addExpense: async (expenseData) => {
-      const { items, receiptImageBase64, receiptFingerprint, scanAttestation, mergeWithExpenseId, tagIds, projectId, splits, shares, splitType, ...coreData } = expenseData;
+      const { items, receiptImageBase64, receiptImageParts, receiptFingerprint, scanAttestation, mergeWithExpenseId, tagIds, projectId, splits, shares, splitType, ...coreData } = expenseData;
       const id = generateUUID();
       const now = new Date();
       const accountId = useAccountStore.getState().currentAccountId || '';
@@ -235,8 +243,17 @@ export const useExpenseStore = create<ExpenseState>()(
         });
       }
 
-      if (receiptImageBase64) {
-        await saveReceiptImageLocally(id, receiptImageBase64);
+      // Long receipt: parts 2..N go everywhere part 1 goes, and only with it
+      // (see buildReceiptImageFields) — locally here, and in the create below.
+      // Parts BEFORE part 1: a concurrent syncPendingExpenses that sees part 1
+      // must also see its parts (part 1 alone would wipe them on the server);
+      // parts without part 1 are never sent.
+      const receiptFields = buildReceiptImageFields(receiptImageBase64, receiptImageParts);
+      if (receiptFields.receiptImageParts) {
+        await saveReceiptPartsLocally(id, receiptFields.receiptImageParts);
+      }
+      if (receiptFields.receiptImageBase64) {
+        await saveReceiptImageLocally(id, receiptFields.receiptImageBase64);
       }
 
       if (items && items.length > 0) {
@@ -342,9 +359,13 @@ export const useExpenseStore = create<ExpenseState>()(
           source: newExpense.source,
           externalRef: newExpense.externalRef,
           items: sanitizedItems,
-          receiptImageBase64,
-          // Only on this first push, like the image: an offline retry through
-          // syncPendingExpenses does not carry it (ABA-603 known gap).
+          // Part 1 and parts 2..N in ONE create: a create carrying the image
+          // without parts deletes the stored parts on the server.
+          ...receiptFields,
+          // Only on this first push: an offline retry through
+          // syncPendingExpenses does not carry it (ABA-603 known gap). The
+          // retry does resend the image and its parts for a row the server
+          // never acknowledged (see unackedReceiptFields).
           receiptFingerprint,
           // Short-lived token: first push only, never stored in SQLite.
           scanAttestation,
@@ -1000,9 +1021,36 @@ export const useExpenseStore = create<ExpenseState>()(
       }
     },
 
+    loadReceiptParts: async (expenseId: string): Promise<IndexedReceiptPart[]> => {
+      const local = localExtraParts(await getReceiptPartsFromDb(expenseId));
+      if (local.length > 0) return local;
+      if (noReceiptParts.has(expenseId)) return [];
+      // Parts-only read (`from=2`): a single-photo receipt costs no bytes. A
+      // failure THROWS on every platform — reading it as "no parts" would let
+      // Extract items replace the line items from part 1 alone.
+      const all = await api.getReceiptParts(expenseId, { from: 2 });
+      const parts = mergeReceiptParts(
+        local,
+        extraPartsOf(all.map((p) => ({ index: p.index, imageBase64: p.imageBase64, mimeType: p.mimeType }))),
+      );
+      if (parts.length === 0) {
+        noReceiptParts.add(expenseId);
+      } else {
+        await saveReceiptPartsLocally(
+          expenseId,
+          parts.map((p) => ({ imageBase64: p.imageBase64, mimeType: p.mimeType })),
+        ).catch((e) => console.warn('[expenseStore] receipt parts not cached locally:', e));
+      }
+      return parts;
+    },
+
     saveReceiptImage: async (expenseId: string, imageBase64: string, mimeType?: string) => {
       try {
         await saveReceiptImageLocally(expenseId, imageBase64, mimeType);
+        // Replacing part 1 deletes the other parts on the server; mirror it.
+        await deleteReceiptPartsLocally(expenseId).catch((e) =>
+          console.warn('[expenseStore] local receipt parts not cleared:', e),
+        );
         api.saveReceiptImage(expenseId, imageBase64, mimeType).catch((e) =>
           console.warn('Receipt image sync deferred (offline?):', e),
         );
@@ -1014,6 +1062,9 @@ export const useExpenseStore = create<ExpenseState>()(
     deleteReceiptImage: async (expenseId: string) => {
       try {
         await deleteReceiptImageLocally(expenseId);
+        await deleteReceiptPartsLocally(expenseId).catch((e) =>
+          console.warn('[expenseStore] local receipt parts not cleared:', e),
+        );
         await api.deleteReceiptImage(expenseId);
       } catch (e) {
         console.error('Failed to delete receipt image:', e);
@@ -1029,6 +1080,7 @@ export const useExpenseStore = create<ExpenseState>()(
       // decides the (now empty) store is fresh and skips the server. See
       // `resetExpenseSyncThrottle`.
       resetExpenseSyncThrottle();
+      noReceiptParts.clear();
       set({ expenses: [], expenseItems: {}, isLoading: false, error: null, lastPullAt: null, totalThisMonth: 0, expenseTotalsByCurrency: {} });
     },
 

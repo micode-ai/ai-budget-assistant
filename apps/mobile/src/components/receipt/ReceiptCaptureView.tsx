@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -19,6 +20,16 @@ interface Props {
    * so neither the capture buttons nor the free-text prompt apply.
    */
   hideCaptureButtons?: boolean;
+  /**
+   * Long receipt: enters the several-photos flow. Omitted (share mode, e-mail
+   * inbox), the entry is not drawn.
+   */
+  onStartParts?: () => void;
+  /**
+   * Long receipt: the parts capture step, drawn in place of the three capture
+   * buttons while the user is collecting parts. Undefined = the ordinary flow.
+   */
+  partsCapture?: ReactNode;
 }
 
 /**
@@ -39,6 +50,8 @@ export default function ReceiptCaptureView({
   onPdfPress,
   sessionCount,
   hideCaptureButtons,
+  onStartParts,
+  partsCapture,
 }: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -91,7 +104,9 @@ export default function ReceiptCaptureView({
             {isPdf ? t('receipt.analyzingPdf') : t('receipt.extracting')}
           </Text>
         </View>
-      ) : hideCaptureButtons ? null : (
+      ) : hideCaptureButtons ? null : partsCapture ? (
+        partsCapture
+      ) : (
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.scanButton}
@@ -119,6 +134,13 @@ export default function ReceiptCaptureView({
             <Ionicons name="document-text" size={28} color={theme.colors.primary} />
             <Text style={styles.galleryButtonText}>{t('receipt.choosePdf')}</Text>
           </TouchableOpacity>
+
+          {onStartParts && (
+            <TouchableOpacity style={styles.partsEntry} onPress={onStartParts} activeOpacity={0.7}>
+              <Ionicons name="albums-outline" size={20} color={theme.colors.primary} />
+              <Text style={styles.partsEntryText}>{t('receipt.longReceipt')}</Text>
+            </TouchableOpacity>
+          )}
         </View>
       )}
     </>
@@ -206,6 +228,18 @@ const createStyles = (theme: Theme) => ({
   },
   galleryButtonText: {
     ...theme.textStyles.button,
+    color: theme.colors.primary,
+  },
+  partsEntry: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    gap: theme.spacing[2],
+    paddingVertical: theme.spacing[3],
+  },
+  partsEntryText: {
+    fontSize: 15,
+    fontWeight: '600' as const,
     color: theme.colors.primary,
   },
   processingContainer: {

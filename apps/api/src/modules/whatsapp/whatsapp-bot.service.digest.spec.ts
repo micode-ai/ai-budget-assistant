@@ -51,6 +51,8 @@ function makePhotoHandler() {
   return {
     handleItemEditInput: jest.fn().mockResolvedValue(false),
     handleDateInput: jest.fn().mockResolvedValue(false),
+    handlePartCallback: jest.fn().mockResolvedValue(undefined),
+    handleNewReceiptCallback: jest.fn().mockResolvedValue(undefined),
   };
 }
 
@@ -95,7 +97,7 @@ function makeService(overrides: {
     groupHandler as never,
   );
 
-  return { service, linkService, client, commandHandler, digestSender, redis, voiceDigestService, groupHandler };
+  return { service, linkService, client, commandHandler, digestSender, redis, voiceDigestService, groupHandler, photoHandler };
 }
 
 function interactiveBody(buttonId: string, from = '48500600700', msgId = 'wamid.btn.1') {
@@ -342,5 +344,15 @@ describe('WhatsAppBotService — the group command (ABA-658)', () => {
     expect(groupHandler.handlePick).toHaveBeenCalledWith('0123456789abcdef:1', expect.anything());
     expect(groupHandler.handleConfirm).toHaveBeenCalledWith('0123456789abcdef', expect.anything());
     expect(groupHandler.handleCancel).toHaveBeenCalledWith('0123456789abcdef', expect.anything());
+  });
+});
+
+describe('WhatsAppBotService — long receipt continuation buttons', () => {
+  it('routes `receipt_part--{receiptId}--{tmpId}` and `receipt_new--{tmpId}`', async () => {
+    const { service, photoHandler } = makeService();
+    await service.handleUpdate(interactiveBody('receipt_part--abcd1234--ef567890', '48500600700', 'wamid.p') as never);
+    await service.handleUpdate(interactiveBody('receipt_new--ef567890', '48500600700', 'wamid.n') as never);
+    expect(photoHandler.handlePartCallback).toHaveBeenCalledWith('abcd1234', 'ef567890', expect.objectContaining({ userId: 'user-1' }));
+    expect(photoHandler.handleNewReceiptCallback).toHaveBeenCalledWith('ef567890', expect.objectContaining({ userId: 'user-1' }));
   });
 });

@@ -1,4 +1,4 @@
-import type { Expense, ExpenseItem, ExpenseCategorySplit } from '@budget/shared-types';
+import type { Expense, ExpenseItem, ExpenseCategorySplit, ReceiptImagePart } from '@budget/shared-types';
 import type { CreateExpenseDto, UpdateExpenseDto, MergeExpensesDto, MergeExpensesResponse, MoveExpenseResponse } from '@budget/shared-types';
 import type { PaginatedResponse } from '@budget/shared-types';
 import { httpClient } from './http-client';
@@ -85,6 +85,21 @@ export const expensesApi = {
     return httpClient.request<{ success: boolean }>(`/expenses/${expenseId}/receipt-image`, {
       method: 'PUT',
       body: JSON.stringify({ imageBase64, mimeType }),
+    });
+  },
+
+  /** Every part of the receipt, part 1 first; `[]` when the expense has no receipt. */
+  getReceiptParts(expenseId: string, opts?: { from?: 2 }) {
+    return httpClient.request<{ index: number; imageBase64: string; mimeType: string }[]>(
+      `/expenses/${expenseId}/receipt-parts${opts?.from ? `?from=${opts.from}` : ''}`,
+    );
+  },
+
+  /** Replaces the whole receipt with `parts` (1-4, top to bottom) in one request. */
+  saveReceiptParts(expenseId: string, parts: ReceiptImagePart[]) {
+    return httpClient.request<{ success: boolean }>(`/expenses/${expenseId}/receipt-parts`, {
+      method: 'PUT',
+      body: JSON.stringify({ parts }),
     });
   },
 

@@ -1,10 +1,10 @@
-import { Injectable, Logger, Optional } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, Optional } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { PrismaService } from '../../../database/prisma.service';
 import { resolveAiModel } from './model-resolver';
 import { logCacheUsage } from '../utils/log-cache-usage';
-import { sanitizeForPrompt } from '../utils/sanitize';
+import { sanitizeForPrompt, RECEIPT_PART_MIME_TYPES } from '../utils/sanitize';
 import { extractReceiptDiscounts } from '../utils/receipt-discount';
 import {
   RECEIPT_RECONCILE_TOLERANCE_PCT,
@@ -14,12 +14,13 @@ import {
   needsReread,
   reconciliationGapPct,
 } from '../utils/receipt-reconcile';
-import type { ReceiptCheckFinding, ReceiptDuplicateMatch } from '@budget/shared-types';
-import { ReceiptDuplicateService, receiptFingerprint } from '../../expenses/receipt-duplicate.service';
+import type { ReceiptCheckFinding, ReceiptDuplicateMatch, ReceiptImagePart } from '@budget/shared-types';
+import { ReceiptDuplicateService, receiptFingerprint, receiptFingerprintParts } from '../../expenses/receipt-duplicate.service';
 import { ReceiptFinalizerService, type ReceiptFinalizeOptions } from './receipt-finalizer.service';
 import { ReceiptPdfService } from './receipt-pdf.service';
 import { SubscriptionsService } from '../../subscriptions/subscriptions.service';
 import { CANONICAL_NAME_RULES } from '../prompts/canonical-name-rules';
+import { RECEIPT_PARTS_INSTRUCTIONS } from '../prompts/receipt-parts.prompt';
 
 export interface ReceiptItem {
   description: string;
@@ -423,6 +424,18 @@ ${note}` } : p));
 // On scanned-PDF receipts (Biedronka/Lidl/etc) gpt-4o hallucinates items and
 // totals; gpt-4.1 reads the same PDF correctly AND is cheaper per token.
 const OCR_RECEIPT_MODEL = 'gpt-4.1';
+/** Output budget for a receipt image scan; a 3–4 part long receipt gets more. */
+const OCR_MAX_TOKENS = 4096;
+const OCR_MAX_TOKENS_LONG = 6144;
+/** A multi-part receipt is 2–4 photos. */
+/** `image/jpg` is not a registered type; the vision API wants `image/jpeg`. */
+function normalizeImageMime(mime?: string): string {
+  const m = (mime || 'image/jpeg').toLowerCase();
+  return m === 'image/jpg' ? 'image/jpeg' : m;
+}
+
+export const RECEIPT_PARTS_MIN = 2;
+export const RECEIPT_PARTS_MAX = 4;
 
 // `readReceipt`'s corrective re-read (see its doc comment) is a real, full
 // second vision call — the same shape and cost as the first — issued only
@@ -558,8 +571,10 @@ User note about this receipt: "${safeNote}"`;
       logCacheUsage(this.logger, `ocr/${label}`, (response as any).usage);
       const choice = (response as any).choices?.[0];
       const content = choice?.message?.content;
-      this.logger.log(`[${label}] GPT finish_reason: ${choice?.finish_reason}`);
-      this.logger.log(`[${label}] GPT response: ${content}`);
+      // Length and finish_reason only: the model's reading IS the receipt (merchant, lines, totals).
+      this.logger.log(
+        `[${label}] GPT response: ${typeof content === 'string' ? content.length : 0} chars, finish_reason: ${choice?.finish_reason}`,
+      );
       if (!content) throw new Error('No response from AI');
       if (choice?.finish_reason === 'length') {
         this.logger.warn(`[${label}] Response was truncated (finish_reason=length), attempting to parse anyway`);
@@ -610,7 +625,7 @@ User note about this receipt: "${safeNote}"`;
       second = await readOnce(withUserCorrection(request, correction));
     } catch (error) {
       // A failed re-read must never cost the user the reading already in hand.
-      this.logger.warn(`[${label}] re-read failed, keeping the first reading: ${error}`);
+      this.logger.warn(`[${label}] re-read failed, keeping the first reading: ${error instanceof SyntaxError ? 'invalid JSON' : error}`);
       return first;
     }
 
@@ -840,20 +855,88 @@ User note about this receipt: "${safeNote}"`;
     imageDataUrl?: string,
     scanOptions: ReceiptFinalizeOptions = {},
   ): Promise<ReceiptExpense> {
+    this.logger.log(`[Vision] Image base64 size: ${(imageBase64.length / 1024).toFixed(1)}KB`);
+    return this.scanReceiptImages(
+      [imageDataUrl || `data:image/jpeg;base64,${imageBase64}`],
+      receiptFingerprint(imageBase64),
+      userId,
+      accountId,
+      userPrompt,
+      scanOptions,
+    );
+  }
+
+  /**
+   * One long receipt photographed as 2–4 overlapping parts, top to bottom.
+   * ONE model call reads all parts (the overlap rule lives in
+   * `RECEIPT_PARTS_INSTRUCTIONS`), then the result goes through exactly the
+   * single-scan pipeline (`scanReceiptImages`): validation and normalization,
+   * corrective re-read, the finalizer (reconciliation, category split, price
+   * check, attestation gates) and the duplicate check — with a fingerprint over
+   * all parts in order. PDFs cannot be combined with parts.
+   */
+  async parseReceiptParts(
+    parts: ReceiptImagePart[],
+    userId: string,
+    accountId: string,
+    userPrompt?: string,
+    scanOptions: ReceiptFinalizeOptions = {},
+  ): Promise<ReceiptExpense> {
+    if (!Array.isArray(parts) || parts.length < RECEIPT_PARTS_MIN || parts.length > RECEIPT_PARTS_MAX) {
+      throw new BadRequestException('parts_count');
+    }
+    for (const p of parts) {
+      if (!p?.imageBase64 || typeof p.imageBase64 !== 'string') {
+        throw new BadRequestException('parts_empty');
+      }
+      if ((p.mimeType ?? '').toLowerCase() === 'application/pdf') {
+        throw new BadRequestException('parts_with_pdf');
+      }
+      const mime = (p.mimeType ?? '').toLowerCase();
+      if (mime && !RECEIPT_PART_MIME_TYPES.includes(mime)) throw new BadRequestException('parts_mime');
+    }
+    // Sizes only — never the bytes.
+    this.logger.log(
+      `[Vision] ${parts.length} receipt parts, base64 sizes: ${parts.map((p) => `${(p.imageBase64.length / 1024).toFixed(1)}KB`).join(', ')}`,
+    );
+    return this.scanReceiptImages(
+      parts.map((p) => `data:${normalizeImageMime(p.mimeType)};base64,${p.imageBase64}`),
+      receiptFingerprintParts(parts.map((p) => p.imageBase64)),
+      userId,
+      accountId,
+      userPrompt,
+      scanOptions,
+      RECEIPT_PARTS_INSTRUCTIONS,
+    );
+  }
+
+  /**
+   * The image-scan pipeline shared by a single photo and a multi-part receipt:
+   * the prompt, one vision call over every image in order (plus the corrective
+   * re-read in `readReceipt`), the finalizer, and the duplicate check.
+   */
+  private async scanReceiptImages(
+    imageUrls: string[],
+    fingerprint: string,
+    userId: string,
+    accountId: string,
+    userPrompt: string | undefined,
+    scanOptions: ReceiptFinalizeOptions,
+    extraInstructions?: string,
+  ): Promise<ReceiptExpense> {
     const { context } = await this.getUserOcrPrefs(userId);
     const aiModel = OCR_RECEIPT_MODEL;
 
     const categories = await this.getExpenseCategories(accountId);
     const categoryNames = categories.map((c: CategoryWithName) => c.name).join(', ');
-    const prompt = this.buildReceiptUserText(categoryNames, 'image', context, userPrompt);
+    let prompt = this.buildReceiptUserText(categoryNames, 'image', context, userPrompt);
+    if (extraInstructions) prompt += '\n\n' + extraInstructions;
 
-    const url = imageDataUrl || `data:image/jpeg;base64,${imageBase64}`;
-
-    // OCR needs more tokens than chat — receipts with many items produce large JSON
-    const ocrMaxTokens = 4096;
+    // OCR needs more tokens than chat — receipts with many items produce large JSON;
+    // a receipt long enough to need 3+ photos gets more room.
+    const ocrMaxTokens = imageUrls.length >= 3 ? OCR_MAX_TOKENS_LONG : OCR_MAX_TOKENS;
 
     this.logger.log(`[Vision] Using model: ${aiModel} (forced for OCR), maxTokens: ${ocrMaxTokens}`);
-    this.logger.log(`[Vision] Image base64 size: ${(imageBase64.length / 1024).toFixed(1)}KB`);
 
     const normalized = await this.readReceipt('Vision', {
       model: aiModel,
@@ -863,20 +946,24 @@ User note about this receipt: "${safeNote}"`;
           role: 'user',
           content: [
             { type: 'text', text: prompt },
-            {
+            ...imageUrls.map((url) => ({
               type: 'image_url',
               image_url: {
                 url,
                 detail: 'high',
               },
-            },
+            })),
           ],
         },
       ],
       max_tokens: ocrMaxTokens,
       response_format: RECEIPT_RESPONSE_FORMAT,
     }, context, userId, accountId);
-    return await this.withDuplicateInfo(await this.receiptFinalizer.finalizeReceipt(normalized, categories, accountId, userId, scanOptions), imageBase64, accountId);
+    return await this.withDuplicateInfo(
+      await this.receiptFinalizer.finalizeReceipt(normalized, categories, accountId, userId, scanOptions),
+      fingerprint,
+      accountId,
+    );
   }
 
   /**
@@ -885,8 +972,7 @@ User note about this receipt: "${safeNote}"`;
    * pre-check (an older app build, the income or re-extract flows) still learns
    * of an exact re-upload. Never throws — a failed check reads as "none".
    */
-  private async withDuplicateInfo(receipt: ReceiptExpense, base64: string, accountId: string): Promise<ReceiptExpense> {
-    const fingerprint = receiptFingerprint(base64);
+  private async withDuplicateInfo(receipt: ReceiptExpense, fingerprint: string, accountId: string): Promise<ReceiptExpense> {
     let possibleDuplicate: ReceiptDuplicateMatch | null = null;
     if (this.receiptDuplicates) {
       possibleDuplicate =
@@ -970,7 +1056,7 @@ User note about this receipt: "${safeNote}"`;
         ...(options.scanOptions ?? {}),
         attest: false,
       }),
-      fingerprintSource,
+      receiptFingerprint(fingerprintSource),
       accountId,
     );
   }
@@ -1023,7 +1109,7 @@ User note about this receipt: "${safeNote}"`;
         max_tokens: resolvedMaxTokens,
         response_format: RECEIPT_RESPONSE_FORMAT,
       }, context, userId, accountId);
-      return await this.withDuplicateInfo(await this.receiptFinalizer.finalizeReceipt(normalized, categories, accountId, userId, scanOptions), pdfBase64, accountId);
+      return await this.withDuplicateInfo(await this.receiptFinalizer.finalizeReceipt(normalized, categories, accountId, userId, scanOptions), receiptFingerprint(pdfBase64), accountId);
     }
 
     const normalized = await this.readReceipt('PDF-File', {
@@ -1038,7 +1124,7 @@ User note about this receipt: "${safeNote}"`;
       max_tokens: resolvedMaxTokens,
       response_format: RECEIPT_RESPONSE_FORMAT,
     }, context, userId, accountId);
-    return await this.withDuplicateInfo(await this.receiptFinalizer.finalizeReceipt(normalized, categories, accountId, userId, scanOptions), pdfBase64, accountId);
+    return await this.withDuplicateInfo(await this.receiptFinalizer.finalizeReceipt(normalized, categories, accountId, userId, scanOptions), receiptFingerprint(pdfBase64), accountId);
   }
 
   async extractTextFromImage(imageBase64: string, userId?: string): Promise<string> {

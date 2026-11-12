@@ -46,7 +46,8 @@ export interface ReceiptRescanReport {
  * own OCR (which issues a fresh attestation exactly as a live scan does) and hands
  * it to `CommunityPriceService.contributeRescannedReceipt`, where every gate —
  * consent, 14-day recency, eligibility, one receipt once, rate limits — still
- * applies. Images only: a PDF is skipped, as is an E2EE account.
+ * applies. Images only: a PDF is skipped, as is an E2EE account. A long receipt
+ * (parts 2..N in `expense_receipt_parts`) is re-read with all its parts at once.
  *
  * Runs in the background (a run takes minutes; one OCR call per receipt, sequential
  * so the Nominatim throttle and OpenAI stay paced); the report is kept in Redis.
@@ -159,13 +160,31 @@ export class ReceiptRescanService {
     userId: string,
     mime: string,
   ): Promise<RescanOutcome> {
-    const row = await this.prisma.expense.findUnique({ where: { id: expenseId }, select: { receiptImage: true } });
+    const row = await this.prisma.expense.findUnique({
+      where: { id: expenseId },
+      select: {
+        receiptImage: true,
+        receiptParts: { select: { image: true, mimeType: true }, orderBy: { index: 'asc' } },
+      },
+    });
     if (!row?.receiptImage) return 'no_expense';
     const base64 = Buffer.from(row.receiptImage).toString('base64');
+    const extra = row.receiptParts ?? [];
 
     let receipt;
     try {
-      receipt = await this.ocr.parseReceipt(base64, userId, accountId, undefined, `data:${mime};base64,${base64}`);
+      // A long receipt is re-read whole — every part in one call, as it was scanned.
+      receipt =
+        extra.length > 0
+          ? await this.ocr.parseReceiptParts(
+              [
+                { imageBase64: base64, mimeType: mime },
+                ...extra.map((p) => ({ imageBase64: Buffer.from(p.image).toString('base64'), mimeType: p.mimeType })),
+              ],
+              userId,
+              accountId,
+            )
+          : await this.ocr.parseReceipt(base64, userId, accountId, undefined, `data:${mime};base64,${base64}`);
     } catch (e) {
       this.logger.warn(`[ReceiptRescan] OCR failed for ${expenseId}: ${e instanceof Error ? e.message : String(e)}`);
       return 'ocr_failed';

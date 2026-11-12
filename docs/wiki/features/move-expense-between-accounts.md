@@ -22,7 +22,7 @@ account). It reassigns the existing `accountId` column — no migration, no copy
 ## Key concepts
 
 **What travels and what does not.** Amount, currency, description, merchant, notes, date, line items
-and the receipt stay with the row. Account-scoped associations do not cross the boundary: the
+and the receipt (every part of a long receipt, [long-receipt](long-receipt.md)) stay with the row. Account-scoped associations do not cross the boundary: the
 category is **remapped by case-insensitive name** into the target account (cleared when there is no
 match), and so is each line item's own `categoryId`; tag links, the project link and category splits are soft-deleted; trip expense shares are
 deleted. Both accounts' chat caches are invalidated, stale source-account anomaly alerts for the row

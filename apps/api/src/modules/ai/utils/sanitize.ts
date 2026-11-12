@@ -27,10 +27,33 @@ export const ScanPriceTagRequestSchema = z.object({
   mimeType: z.string().optional(),
 });
 
-export const ScanReceiptRequestSchema = z.object({
-  imageBase64: z.string().min(1),
-  userPrompt: z.string().max(300).optional(),
-  mimeType: z.string().optional(),
-  /** ABA-642: new app builds ask for the same-store community baseline in priceFindings. */
-  communityBaseline: z.boolean().optional(),
-});
+// Deliberately duplicated: keep identical to packages/shared-utils/src/validation/index.ts (the API cannot import shared-utils at runtime).
+/** Image types a receipt part may carry (what the vision model accepts). Part of the schema contract. */
+export const RECEIPT_PART_MIME_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+
+const ReceiptPartSchema = z
+  .object({
+    imageBase64: z.string().min(1, 'parts_empty'),
+    mimeType: z.string().optional(),
+  })
+  .superRefine((part, ctx) => {
+    const mime = (part.mimeType ?? '').toLowerCase();
+    if (mime === 'application/pdf') ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'parts_with_pdf' });
+    else if (mime && !RECEIPT_PART_MIME_TYPES.includes(mime)) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'parts_mime' });
+    }
+  });
+
+export const ScanReceiptRequestSchema = z
+  .object({
+    imageBase64: z.string().min(1).optional(),
+    /** 2-4 consecutive photos of ONE long receipt, top to bottom. Exclusive with `imageBase64`. */
+    images: z.array(ReceiptPartSchema).min(2, 'parts_count').max(4, 'parts_count').optional(),
+    userPrompt: z.string().max(300).optional(),
+    mimeType: z.string().optional(),
+    /** ABA-642: new app builds ask for the same-store community baseline in priceFindings. */
+    communityBaseline: z.boolean().optional(),
+  })
+  .refine((b) => (b.imageBase64 !== undefined) !== (b.images !== undefined), {
+    message: 'image_or_images',
+  });

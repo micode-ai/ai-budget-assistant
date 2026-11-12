@@ -1,0 +1,214 @@
+{
+  "name": "three-parts-repeat-at-boundary",
+  "synthetic": true,
+  "shop": "Spizarnia Jedna Rodzina",
+  "date": "2026-03-14",
+  "currency": "PLN",
+  "partsCount": 3,
+  "overlapLines": 2,
+  "repeatAcrossBoundary": true,
+  "expected": {
+    "lineCount": 33,
+    "total": 309.93,
+    "lines": [
+      {
+        "name": "Cukier 1kg",
+        "qty": 1,
+        "unitPrice": 4.59,
+        "totalPrice": 4.59
+      },
+      {
+        "name": "Ryz bialy 1kg",
+        "qty": 1,
+        "unitPrice": 5.49,
+        "totalPrice": 5.49
+      },
+      {
+        "name": "Papier toaletowy 8szt",
+        "qty": 2,
+        "unitPrice": 13.99,
+        "totalPrice": 27.98
+      },
+      {
+        "name": "Szynka wiejska 100g",
+        "qty": 1,
+        "unitPrice": 5.59,
+        "totalPrice": 5.59
+      },
+      {
+        "name": "Maslanka 0,5L",
+        "qty": 2,
+        "unitPrice": 2.69,
+        "totalPrice": 5.38
+      },
+      {
+        "name": "Dzem truskawkowy",
+        "qty": 1,
+        "unitPrice": 6.89,
+        "totalPrice": 6.89
+      },
+      {
+        "name": "Jajka M 10szt",
+        "qty": 1,
+        "unitPrice": 11.5,
+        "totalPrice": 11.5
+      },
+      {
+        "name": "Twarog polcustowy",
+        "qty": 2,
+        "unitPrice": 4.89,
+        "totalPrice": 9.78
+      },
+      {
+        "name": "Marchew kg",
+        "qty": 2,
+        "unitPrice": 3.49,
+        "totalPrice": 6.98
+      },
+      {
+        "name": "Maka 1kg",
+        "qty": 2,
+        "unitPrice": 3.29,
+        "totalPrice": 6.58
+      },
+      {
+        "name": "Woda gazowana 1,5L",
+        "qty": 1,
+        "unitPrice": 1.99,
+        "totalPrice": 1.99
+      },
+      {
+        "name": "Woda gazowana 1,5L",
+        "qty": 1,
+        "unitPrice": 1.99,
+        "totalPrice": 1.99
+      },
+      {
+        "name": "Makaron spaghetti",
+        "qty": 1,
+        "unitPrice": 3.99,
+        "totalPrice": 3.99
+      },
+      {
+        "name": "Ziemniaki kg",
+        "qty": 1,
+        "unitPrice": 2.89,
+        "totalPrice": 2.89
+      },
+      {
+        "name": "Chipsy solone",
+        "qty": 2,
+        "unitPrice": 6.19,
+        "totalPrice": 12.38
+      },
+      {
+        "name": "Sok pomaranczowy 1L",
+        "qty": 1,
+        "unitPrice": 5.79,
+        "totalPrice": 5.79
+      },
+      {
+        "name": "Woda gazowana 1,5L",
+        "qty": 1,
+        "unitPrice": 1.99,
+        "totalPrice": 1.99
+      },
+      {
+        "name": "Orzechy wloskie 100g",
+        "qty": 2,
+        "unitPrice": 9.49,
+        "totalPrice": 18.98
+      },
+      {
+        "name": "Mleko 3,2% 1L",
+        "qty": 1,
+        "unitPrice": 3.49,
+        "totalPrice": 3.49
+      },
+      {
+        "name": "Jablka kg",
+        "qty": 1,
+        "unitPrice": 4.49,
+        "totalPrice": 4.49
+      },
+      {
+        "name": "Olej rzepakowy 1L",
+        "qty": 1,
+        "unitPrice": 8.49,
+        "totalPrice": 8.49
+      },
+      {
+        "name": "Maslo extra 200g",
+        "qty": 2,
+        "unitPrice": 8.99,
+        "totalPrice": 17.98
+      },
+      {
+        "name": "Ogorki kg",
+        "qty": 1,
+        "unitPrice": 6.49,
+        "totalPrice": 6.49
+      },
+      {
+        "name": "Piwo jasne 0,5L",
+        "qty": 3,
+        "unitPrice": 3.89,
+        "totalPrice": 11.67
+      },
+      {
+        "name": "Ser zolty plaster",
+        "qty": 1,
+        "unitPrice": 6.79,
+        "totalPrice": 6.79
+      },
+      {
+        "name": "Cebula kg",
+        "qty": 3,
+        "unitPrice": 3.19,
+        "totalPrice": 9.57
+      },
+      {
+        "name": "Plyn do naczyn",
+        "qty": 1,
+        "unitPrice": 6.49,
+        "totalPrice": 6.49
+      },
+      {
+        "name": "Pasta do zebow",
+        "qty": 3,
+        "unitPrice": 7.99,
+        "totalPrice": 23.97
+      },
+      {
+        "name": "Chleb pszenny",
+        "qty": 1,
+        "unitPrice": 4.2,
+        "totalPrice": 4.2
+      },
+      {
+        "name": "Czekolada mleczna",
+        "qty": 1,
+        "unitPrice": 4.99,
+        "totalPrice": 4.99
+      },
+      {
+        "name": "Pomidory kg",
+        "qty": 1,
+        "unitPrice": 9.99,
+        "totalPrice": 9.99
+      },
+      {
+        "name": "Herbata czarna 20szt",
+        "qty": 2,
+        "unitPrice": 7.29,
+        "totalPrice": 14.58
+      },
+      {
+        "name": "Kawa mielona 250g",
+        "qty": 2,
+        "unitPrice": 17.99,
+        "totalPrice": 35.98
+      }
+    ]
+  }
+}

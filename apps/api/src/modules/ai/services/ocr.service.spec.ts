@@ -305,6 +305,17 @@ describe('OcrService', () => {
       expect(second.possibleDuplicate).toBe(likely);
     });
 
+    it('never logs the model response content, only its length and finish_reason', async () => {
+      mockOpenAiResponse({ merchantName: 'SECRET-MERCHANT-XYZ' });
+      await service.parseReceipt('base64imagedata', 'user-1', 'acc-1');
+      const logger = (service as any).logger;
+      const printed = [...logger.log.mock.calls, ...logger.warn.mock.calls, ...logger.error.mock.calls]
+        .map((c: unknown[]) => String(c[0]))
+        .join(' | ');
+      expect(printed).not.toContain('SECRET-MERCHANT-XYZ');
+      expect(printed).toMatch(/GPT response: \d+ chars, finish_reason: stop/);
+    });
+
     it('throws when OpenAI returns no content', async () => {
       mockChatCreate.mockResolvedValue({ choices: [{ message: { content: null }, finish_reason: 'stop' }] });
       await expect(service.parseReceipt('base64imagedata', 'user-1', 'acc-1')).rejects.toThrow('No response from AI');

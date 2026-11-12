@@ -161,6 +161,25 @@ describe('renderChildStatementPdf', () => {
     expect(pageTexts(pdf).filter((p) => p.includes('Receipt —'))).toHaveLength(receipts.length);
   });
 
+  it('statement appendix includes all parts of a long receipt, one page each', async () => {
+    const receipts = [
+      { expenseId: 'long', date: '2026-03-11', merchant: 'CCC' },
+      { expenseId: 'one', date: '2026-03-12', merchant: 'Lidl' },
+    ];
+    const loader = async (ids: string[]) =>
+      new Map<string, Buffer | Buffer[]>(
+        ids.map((id) => [id, id === 'long' ? [PNG, PNG, PNG] : PNG] as [string, Buffer | Buffer[]]),
+      );
+    const pdf = await renderChildStatementPdf(data({ locale: 'en', receipts }), childStatementTranslator('en'), loader);
+    const pages = pageTexts(pdf).filter((p) => p.includes('Receipt —'));
+    expect(pages).toHaveLength(4);
+    expect(pages.filter((p) => p.includes('CCC'))).toHaveLength(3);
+    expect(pages.some((p) => p.includes('(1/3)'))).toBe(true);
+    expect(pages.some((p) => p.includes('(3/3)'))).toBe(true);
+    // A single-image receipt keeps today's heading (no part counter).
+    expect(pages.find((p) => p.includes('Lidl'))).not.toContain('(1/1)');
+  });
+
   it('says how many receipts the caps left out', async () => {
     const t = childStatementTranslator('en');
     const all = pageTexts(await render(data({ locale: 'en', receiptsOmitted: 7 }))).join(' ');

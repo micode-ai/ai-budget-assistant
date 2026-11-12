@@ -47,6 +47,12 @@ interface Props {
   onEdit: () => void;
   onConfirm: () => void;
   onRetry: () => void;
+  /**
+   * Long receipt read from 2+ photos whose lines do not add up to the total:
+   * back to capturing the parts (they are dropped). When given, the card also
+   * shows the mismatch warning. A single photo never sees either.
+   */
+  onRetakeParts?: () => void;
 }
 
 /**
@@ -82,6 +88,7 @@ export default function ReceiptConfirmCard({
   onEdit,
   onConfirm,
   onRetry,
+  onRetakeParts,
 }: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -222,6 +229,13 @@ export default function ReceiptConfirmCard({
         </View>
       </View>
 
+      {onRetakeParts && (
+        <View style={styles.partsWarning}>
+          <Ionicons name="alert-circle" size={18} color={theme.colors.warning} />
+          <Text style={styles.partsWarningText}>{t('receipt.partsMismatch')}</Text>
+        </View>
+      )}
+
       <PriceFindingsCard findings={scannedReceipt?.priceFindings ?? []} />
 
       {!isPdf && (
@@ -248,6 +262,13 @@ export default function ReceiptConfirmCard({
           <Ionicons name="checkmark" size={24} color={theme.colors.textInverse} />
         </TouchableOpacity>
       </View>
+
+      {onRetakeParts && (
+        <TouchableOpacity style={styles.retryButton} onPress={onRetakeParts}>
+          <Ionicons name="albums-outline" size={20} color={theme.colors.textSecondary} />
+          <Text style={styles.retryButtonText}>{t('receipt.retakeParts')}</Text>
+        </TouchableOpacity>
+      )}
 
       <TouchableOpacity style={styles.retryButton} onPress={onRetry}>
         <Ionicons name="refresh" size={20} color={theme.colors.textSecondary} />
@@ -383,6 +404,23 @@ const createStyles = (theme: Theme) => ({
   retryButtonText: {
     fontSize: 14,
     color: theme.colors.textSecondary,
+  },
+  partsWarning: {
+    width: '100%' as const,
+    flexDirection: 'row' as const,
+    alignItems: 'flex-start' as const,
+    gap: theme.spacing[2],
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderRadius: theme.borderRadius.lg,
+    borderLeftWidth: 3,
+    borderLeftColor: theme.colors.warning,
+    padding: theme.spacing[3],
+    marginBottom: theme.spacing[5],
+  },
+  partsWarningText: {
+    flex: 1,
+    fontSize: 14,
+    color: theme.colors.textPrimary,
   },
   merchantField: {
     marginTop: theme.spacing[2],

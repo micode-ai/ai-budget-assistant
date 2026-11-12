@@ -740,6 +740,18 @@ export async function initializeDatabase(): Promise<void> {
     try { expoDb.execSync(`ALTER TABLE expense_items ADD COLUMN line_discount REAL`); } catch {}
     try { expoDb.execSync(`ALTER TABLE expense_items ADD COLUMN category_id TEXT`); } catch {}
 
+    // Long receipt in several photos: parts 2..N of a receipt (part 1 stays in
+    // expenses.receipt_image, as on the server). Idempotent.
+    expoDb.execSync(`
+      CREATE TABLE IF NOT EXISTS expense_receipt_parts (
+        expense_id TEXT NOT NULL,
+        idx INTEGER NOT NULL,
+        image TEXT NOT NULL,
+        mime TEXT NOT NULL,
+        PRIMARY KEY (expense_id, idx)
+      );
+    `);
+
     // Group trip wallet: per-member expense shares
     expoDb.execSync(`
       CREATE TABLE IF NOT EXISTS trip_expense_shares (

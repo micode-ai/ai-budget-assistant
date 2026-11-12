@@ -15,7 +15,8 @@ import { maybeAskForReview } from '@/features/review/maybeAskForReview';
 import { attributeNewReceiptLines } from '@/features/children/attributeNewExpense';
 import type { ReceiptItem, ScannedReceipt } from '@/features/receipt/useReceiptScanner';
 import type { ReceiptCategorySplit } from '@budget/shared-utils';
-import type { Currency } from '@budget/shared-types';
+import type { Currency, ReceiptImagePart } from '@budget/shared-types';
+import type { ScanPart } from '@/features/receipt/receiptParts';
 
 interface UseReceiptSaveParams {
   scannedReceipt: ScannedReceipt | null;
@@ -23,6 +24,12 @@ interface UseReceiptSaveParams {
   saveImage: boolean;
   imageUri: string | null;
   isPdf: boolean;
+  /**
+   * Long receipt: every photo read in the scan, top to bottom (`parts[0]` is
+   * `imageUri`). Two or more are saved together as one receipt; empty or one
+   * part saves exactly as a single photo.
+   */
+  parts?: ScanPart[];
   /** The user's edited line items (ABA receipt-line-item-editing) — from
    * `useReceiptCategorySplit`'s `items`, NOT `scannedReceipt.receiptItems`,
    * which stays the untouched original OCR read. */
@@ -97,6 +104,7 @@ export function useReceiptSave({
   saveImage,
   imageUri,
   isPdf,
+  parts,
   items: editedItems,
   currentSplits,
   itemCategories,
@@ -157,12 +165,24 @@ export function useReceiptSave({
         : undefined;
 
       // Compress and encode receipt image if checkbox is checked (not for PDFs)
+      // A long receipt stores every part, each compressed the same way, or
+      // none of them: a receipt missing a middle part would read as whole.
       let receiptImageBase64: string | undefined;
+      let receiptImageParts: ReceiptImagePart[] | undefined;
       if (saveImage && imageUri && !isPdf) {
         try {
           receiptImageBase64 = await compressAndEncodeImage(imageUri);
+          if (parts && parts.length > 1) {
+            const rest: ReceiptImagePart[] = [];
+            for (const p of parts.slice(1)) {
+              rest.push({ imageBase64: await compressAndEncodeImage(p.uri), mimeType: 'image/jpeg' });
+            }
+            receiptImageParts = rest;
+          }
         } catch (e) {
           console.error('Failed to compress receipt image:', e);
+          receiptImageBase64 = undefined;
+          receiptImageParts = undefined;
         }
       }
 
@@ -189,6 +209,7 @@ export function useReceiptSave({
         isDebtRepayment: false,
         items,
         receiptImageBase64,
+        receiptImageParts,
         receiptFingerprint: scannedReceipt.fingerprint,
         scanAttestation: scannedReceipt.scanAttestation,
         mergeWithExpenseId,

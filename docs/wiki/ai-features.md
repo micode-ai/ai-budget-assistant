@@ -48,6 +48,8 @@ narration calls use `resolveCheapModel()`. `whisper-1` transcribes voice and
   sharing
 - [chat-undo-last-action](features/chat-undo-last-action.md) — reverting the most recent confirmed
   write from inside the same conversation
+- [long-receipt](features/long-receipt.md) — `POST /ai/scan-receipt` with `images`: one call over
+  2–4 overlapping photos of one receipt
 - [receipt-category-split](features/receipt-category-split.md) — the OCR funnel's category splitting
 - [ai-statement-import](features/ai-statement-import.md) — inferring a bank statement's column
   mapping when no parser recognises it

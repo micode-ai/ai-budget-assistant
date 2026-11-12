@@ -114,6 +114,23 @@ Heb je een week aan papieren bonnen verzameld? Na het opslaan van een bon krijg 
 
 Terwijl je scant, laat een kleine teller zien hoeveel bonnen je deze sessie al hebt opgeslagen. Elke 15 bonnen geeft de app een vriendelijke herinnering dat je door kunt gaan of een pauze kunt nemen — je voortgang is sowieso al opgeslagen. De teller wordt gereset zodra je het scherm verlaat; hij is er alleen om je een gevoel van voortgang te geven tijdens één sessie.
 
+### Lange bon in meerdere foto's
+
+Een bon die te lang is voor één leesbare foto kun je in delen fotograferen en als **één** bon laten lezen.
+
+**In de app**
+
+1. Tik op het bonscherm op **Lange bon? Fotografeer hem in delen**
+2. Fotografeer de bon van boven naar beneden met een kleine overlap tussen de foto's (de laatste regel van een foto moet bovenaan de volgende weer zichtbaar zijn); je kunt tot **4 delen** toevoegen
+3. Tik op **Bon uitlezen**. Je krijgt één bevestigingskaart waarop elke regel één keer staat; regels in de overlap worden niet dubbel geteld
+4. Komt het totaal van de regels niet overeen met het totaal van de bon, dan waarschuwt de app je en biedt **Delen opnieuw maken** aan in plaats van opslaan
+
+Elk deel telt als één bonscan voor je maandelijkse AI-limiet, dus een bon van drie delen gebruikt drie scans. Een pdf kan niet met foto's worden gecombineerd. De uitgave bewaart alle foto's: open de bon bij de uitgave en tik op een deel om het te bekijken.
+
+**In de bots voor Telegram, WhatsApp en Slack**
+
+Stuur de foto's na elkaar. De eerste foto wordt direct gelezen. Zolang de bevestigingskaart nog openstaat, stuur je de volgende foto: de bot vraagt of het een **Vervolg** of een **Nieuwe bon** is. Kies **Vervolg** en de kaart wordt opnieuw opgebouwd uit alle foto's samen (correcties die je op de oude kaart typte blijven niet behouden, controleer dus de nieuwe). Foto's moeten JPEG, PNG of WebP zijn en niet te groot; de bot meldt het als er een wordt geweigerd.
+
 ### Al gescande bonnen
 
 De app waarschuwt je voordat een bon twee keer in je uitgaven belandt:

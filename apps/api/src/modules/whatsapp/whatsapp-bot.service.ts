@@ -310,6 +310,14 @@ export class WhatsAppBotService {
         return this.photoHandler.handleRescanCancelCallback(payload, userState);
       case 'receipt_cancel':
         return this.photoHandler.handleReceiptCancelCallback(payload, userState);
+      // Long receipt in several photos: `receipt_part--{receiptId}--{tmpId}` / `receipt_new--{tmpId}`.
+      case 'receipt_part': {
+        const [receiptId, tmpId] = payload.split('--');
+        if (!receiptId || !tmpId) return;
+        return this.photoHandler.handlePartCallback(receiptId, tmpId, userState);
+      }
+      case 'receipt_new':
+        return this.photoHandler.handleNewReceiptCallback(payload, userState);
       case 'pr_approve':
       case 'pr_reject':
         return this.purchaseRequestHandler.handleCallback(prefix, payload, userState);

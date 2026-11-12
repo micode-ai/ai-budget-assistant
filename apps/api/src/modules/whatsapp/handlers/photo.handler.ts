@@ -25,6 +25,27 @@ import {
 import { buildItemCategoryMap, resolveProposedSplits } from '../../ai/utils/receipt-split-items';
 import { ChatActionRecorderService } from '../../ai/services/chat-action-recorder.service';
 import { logFireAndForget } from '../../../common/utils/fire-and-forget';
+import { CacheService } from '../../../common/cache/cache.service';
+import type { ReceiptImagePart } from '@budget/shared-types';
+import {
+  MAX_BOT_PARTS,
+  canBePart,
+  continueReceiptWithPart,
+  partRefusalMessage,
+  pendingPointerKey,
+  withReceiptLock,
+} from '../../../common/bot-receipt-parts';
+
+// Pending receipts live 30 min (`wa:receipt:*`); a long receipt's parts, the
+// "continuation?" pointer and the photo parked by that question share the TTL.
+const PENDING_RECEIPT_TTL_SEC = 1800;
+const pendingReceiptKey = (shortId: string) => `wa:receipt:${shortId}`;
+// A photo held back by the "continuation or new receipt?" question, so either
+// answer needs no re-upload.
+const questionScanKey = (tmpId: string) => `wa:scan:${tmpId}`;
+// Held while one action owns a pending receipt (a continuation's model call, a
+// save, a cancel) so none of them overwrites another's result.
+const receiptBusyKey = (shortId: string) => `wa:receipt-busy:${shortId}`;
 
 /**
  * A scan held back by the same-file duplicate warning (ABA-603), kept so
@@ -65,7 +86,11 @@ interface PendingReceiptData {
     unitPrice?: number;
     totalPrice: number;
   }>;
-  receiptImageBase64: string;
+  /** Image parts, top to bottom; part 1 is the scanned file (also a PDF). The
+   * one copy of the image — part 1 is not stored a second time. */
+  parts: ReceiptImagePart[];
+  /** Legacy (written before `parts` existed); read only as part 1's fallback. */
+  receiptImageBase64?: string;
   receiptMimeType: string;
   receiptFingerprint?: string;
   /** Server-signed scan token (ABA-642), handed back on create; never edited. */
@@ -89,6 +114,9 @@ export class PhotoHandler {
     private readonly chatActionRecorder: ChatActionRecorderService,
     private readonly linkService: WhatsAppLinkService,
     @Inject(WA_REDIS) private readonly redis: Redis,
+    // The long-receipt state (parts, pointer, parked photos, lock) goes through
+    // CacheService; it is the same Redis and JSON encoding as `wa:receipt:*`.
+    private readonly cache: CacheService,
     @Optional() private readonly receiptDuplicates?: ReceiptDuplicateService,
   ) {}
 
@@ -108,15 +136,30 @@ export class PhotoHandler {
 
       const { buffer, mimeType } = await this.client.downloadMedia(media.id);
       const base64 = buffer.toString('base64');
-
-      await this.scanOrWarn({
+      const scan: PendingScanData = {
         userId,
         accountId,
         waPhoneNumber,
         language,
         base64,
         mimeType: mimeType || 'image/jpeg',
-      });
+      };
+
+      // A receipt confirmation with room for another part is pending for this
+      // user: the photo may be its next part, so ask instead of scanning (no
+      // timers).
+      const pendingId = await this.livePendingReceiptId(userState);
+      if (pendingId) {
+        if (canBePart(scan.base64, scan.mimeType)) {
+          await this.askContinuation(pendingId, scan);
+        } else {
+          // Never silently start a second receipt beside the pending one: the user
+          // saves or cancels it first, or sends a smaller photo.
+          await this.client.sendText(waPhoneNumber, t('receiptPartTooLarge', language));
+        }
+        return;
+      }
+      await this.scanOrWarn(scan);
     } catch (error) {
       this.logger.error(`PhotoHandler.handleImage error for ${userState.waPhoneNumber}: ${error}`);
       await this.client.sendText(userState.waPhoneNumber, t('receiptScanFailed', userState.language));
@@ -252,7 +295,7 @@ export class PhotoHandler {
       location: receipt.location,
       categorySplits: receipt.categorySplits ?? [],
       items: receipt.receiptItems || [],
-      receiptImageBase64: base64,
+      parts: [{ imageBase64: base64, mimeType }],
       receiptMimeType: mimeType,
       receiptFingerprint: receipt.fingerprint,
       scanAttestation: receipt.scanAttestation,
@@ -261,6 +304,16 @@ export class PhotoHandler {
     };
     await this.redis.set(`wa:receipt:${shortId}`, JSON.stringify(data), 'EX', 1800);
 
+    await this.sendCard(waPhoneNumber, shortId, this.buildCardSummary(receipt, language), language);
+
+    // The pointer that makes this user's next photo ask "continuation?". Only an
+    // image the parts reader accepts, within the part cap, can be part 1 — never a PDF.
+    if (canBePart(base64, mimeType)) {
+      await this.cache.set(this.pointerKey(waPhoneNumber), shortId, PENDING_RECEIPT_TTL_SEC);
+    }
+  }
+
+  private buildCardSummary(receipt: ReceiptExpense, language: string): string {
     let summary = this.buildSummaryText(receipt.amount, receipt.currencyCode, receipt.date, receipt.merchant, language);
     const priceCheckLine = this.buildPriceCheckLine(receipt, language);
     if (priceCheckLine) {
@@ -275,11 +328,167 @@ export class PhotoHandler {
     if (duplicateLine) {
       summary += `\n${duplicateLine}`;
     }
+    return summary;
+  }
+
+  /** The confirm card. WhatsApp cannot edit a sent message, so a replaced card is sent again. */
+  private async sendCard(waPhoneNumber: string, shortId: string, summary: string, language: string): Promise<void> {
     await this.client.sendButtons(waPhoneNumber, summary, [
       { id: `receipt_add--${shortId}`, title: t('addExpense', language) },
       { id: `receipt_edit--${shortId}`, title: t('editReceipt', language) },
       { id: `receipt_cancel--${shortId}`, title: t('cancel', language) },
     ]);
+  }
+
+  // ── Long receipt in several photos ─────────────────────────────────────────
+
+  /** A WhatsApp chat is one-to-one: the chat and the user are both the phone number. */
+  private pointerKey(waPhoneNumber: string): string {
+    return pendingPointerKey('wa', waPhoneNumber, waPhoneNumber);
+  }
+
+  /** The receipt this user's next photo may continue, if it is still pending and has room. */
+  private async livePendingReceiptId(userState: WhatsAppUserState): Promise<string | null> {
+    const shortId = await this.cache.get<string>(this.pointerKey(userState.waPhoneNumber));
+    if (!shortId) return null;
+    const data = await this.cache.get<PendingReceiptData>(pendingReceiptKey(shortId));
+    if (!data || data.userId !== userState.userId) return null;
+    // Already at the part limit: the photo can only be a new receipt.
+    if ((data.parts?.length ?? 0) >= MAX_BOT_PARTS) return null;
+    return shortId;
+  }
+
+  /**
+   * Parks the photo and asks "continuation or new receipt?". A photo arriving
+   * while an earlier question is unanswered gets its own question and parked
+   * copy; continuations join the receipt in the order they are answered.
+   */
+  private async askContinuation(shortId: string, scan: PendingScanData): Promise<void> {
+    const tmpId = randomUUID().slice(0, 8);
+    await this.cache.set<PendingScanData>(questionScanKey(tmpId), scan, PENDING_RECEIPT_TTL_SEC);
+    const { waPhoneNumber, language } = scan;
+    await this.client.sendButtons(waPhoneNumber, t('receiptContinuationQuestion', language), [
+      { id: `receipt_part--${shortId}--${tmpId}`, title: t('receiptContinuationYes', language) },
+      { id: `receipt_new--${tmpId}`, title: t('receiptContinuationNo', language) },
+    ]);
+  }
+
+  /** The parked photo, only for the user who sent it. Not consumed. */
+  private async peekQuestionScan(tmpId: string, userState: WhatsAppUserState): Promise<PendingScanData | null> {
+    const scan = await this.cache.get<PendingScanData>(questionScanKey(tmpId));
+    if (!scan) {
+      await this.client.sendText(userState.waPhoneNumber, t('scanRequestExpired', userState.language));
+      return null;
+    }
+    if (scan.userId !== userState.userId) return null;
+    return scan;
+  }
+
+  /** Runs `work` under the receipt's busy lock; tells the user to wait when another action holds it. */
+  private async lockReceipt(shortId: string, userState: WhatsAppUserState, work: () => Promise<void>): Promise<void> {
+    const ran = await withReceiptLock(this.cache, receiptBusyKey(shortId), work);
+    if (!ran) await this.client.sendText(userState.waPhoneNumber, t('receiptBusy', userState.language));
+  }
+
+  /** "New receipt": the parked photo is scanned alone, exactly like a fresh photo. */
+  async handleNewReceiptCallback(tmpId: string, userState: WhatsAppUserState): Promise<void> {
+    try {
+      const scan = await this.peekQuestionScan(tmpId, userState);
+      if (!scan) return;
+      await this.cache.del(questionScanKey(tmpId));
+      await this.scanOrWarn(scan);
+    } catch (error) {
+      this.logger.error(`PhotoHandler.handleNewReceiptCallback error for ${userState.waPhoneNumber}: ${error}`);
+      await this.client.sendText(userState.waPhoneNumber, t('receiptScanFailed', userState.language));
+    }
+  }
+
+  /**
+   * "Continuation": the parked photo becomes the receipt's next part and ONE
+   * model call re-reads all parts (see `continueReceiptWithPart` for billing,
+   * refunds and the re-read before every write). Holds the receipt's busy lock,
+   * so a save, a cancel or a second continuation tapped meanwhile is told to wait.
+   */
+  async handlePartCallback(shortId: string, tmpId: string, userState: WhatsAppUserState): Promise<void> {
+    const { waPhoneNumber, language } = userState;
+    try {
+      const scan = await this.peekQuestionScan(tmpId, userState);
+      if (!scan) return;
+      await this.lockReceipt(shortId, userState, async () => {
+        try {
+          await this.continueReceipt(shortId, tmpId, scan);
+        } catch (error) {
+          this.logger.error(`PhotoHandler.continueReceipt error for ${waPhoneNumber}: ${error}`);
+          await this.client.sendText(waPhoneNumber, t('receiptScanFailed', language));
+        }
+      });
+    } catch (error) {
+      this.logger.error(`PhotoHandler.handlePartCallback error for ${waPhoneNumber}: ${error}`);
+      await this.client.sendText(waPhoneNumber, t('somethingWrong', language));
+    }
+  }
+
+  private async continueReceipt(shortId: string, tmpId: string, scan: PendingScanData): Promise<void> {
+    const { waPhoneNumber, language } = scan;
+    const result = await continueReceiptWithPart<PendingReceiptData>(
+      { cache: this.cache, subscriptions: this.subscriptionsService, ocr: this.ocrService },
+      {
+        receiptKey: pendingReceiptKey(shortId),
+        part: { imageBase64: scan.base64, mimeType: scan.mimeType },
+        userId: scan.userId,
+        accountId: scan.accountId,
+        ttlSec: PENDING_RECEIPT_TTL_SEC,
+        // Charged: the photo is now consumed.
+        onCharged: () => this.cache.del(questionScanKey(tmpId)),
+        // The window for the next part runs from this part on.
+        onAppended: () => this.cache.set(this.pointerKey(waPhoneNumber), shortId, PENDING_RECEIPT_TTL_SEC),
+        apply: (current, receipt) => ({ ...current, ...this.receiptFields(receipt) }),
+      },
+    );
+
+    if (result.status === 'limit') {
+      // The parked photo stays: "New receipt" or a later retry can still use it.
+      await this.client.sendText(waPhoneNumber, t('aiLimitReached', language));
+      return;
+    }
+    if (result.status === 'refused') {
+      const { key, params } = partRefusalMessage(result.reason);
+      await this.client.sendText(waPhoneNumber, t(key, language, params));
+      return;
+    }
+    // Saved, cancelled or expired meanwhile: nothing to show.
+    if (result.status === 'superseded') return;
+
+    // The card is replaced, so a correction typed against the old lines or an
+    // armed date prompt must not apply to the new ones.
+    await this.cache.del(`wa:awaiting_item_edit:${waPhoneNumber}`, `wa:awaiting_date:${waPhoneNumber}`);
+    await this.sendCard(waPhoneNumber, shortId, this.buildCardSummary(result.receipt, language), language);
+  }
+
+  /** The scan result as stored on the pending receipt (replaced wholesale by a continuation). */
+  private receiptFields(receipt: ReceiptExpense) {
+    return {
+      amount: receipt.amount,
+      currencyCode: receipt.currencyCode,
+      description: receipt.description,
+      categoryId: receipt.categoryId,
+      date: receipt.date,
+      discountAmount: receipt.discountAmount,
+      depositAmount: receipt.depositAmount,
+      merchant: receipt.merchant,
+      location: receipt.location,
+      categorySplits: receipt.categorySplits ?? [],
+      items: receipt.receiptItems || [],
+      receiptFingerprint: receipt.fingerprint,
+      scanAttestation: receipt.scanAttestation,
+      mergeCandidate: receiptMergeCandidate(receipt.possibleDuplicate),
+    };
+  }
+
+  /** Ends the "continuation?" window when this receipt is saved or cancelled. */
+  private async clearPointer(waPhoneNumber: string, shortId: string): Promise<void> {
+    const key = this.pointerKey(waPhoneNumber);
+    if ((await this.cache.get<string>(key)) === shortId) await this.cache.del(key);
   }
 
   /** Returns true if the text was consumed by the "awaiting date" mode. */
@@ -306,30 +515,34 @@ export class PhotoHandler {
         return true;
       }
 
-      // Read-modify-write the receipt JSON in Redis
-      const raw = await this.redis.get(`wa:receipt:${shortId}`);
-      if (!raw) {
-        // Receipt expired — clear the awaiting-date state and return
+      // Read-modify-write the receipt JSON in Redis, under the receipt's busy lock:
+      // a continuation re-reading the parts meanwhile would otherwise be overwritten
+      // by this stale copy (and lose a paid part).
+      await this.lockReceipt(shortId, userState, async () => {
+        const raw = await this.redis.get(`wa:receipt:${shortId}`);
+        if (!raw) {
+          // Receipt expired — clear the awaiting-date state and return
+          await this.redis.del(`wa:awaiting_date:${waPhoneNumber}`);
+          await this.client.sendText(waPhoneNumber, `${t('cancelled', language)} Expired.`);
+          return;
+        }
+
+        const data: PendingReceiptData = JSON.parse(raw);
+        data.date = dateStr;
+        await this.redis.set(`wa:receipt:${shortId}`, JSON.stringify(data), 'EX', 1800);
         await this.redis.del(`wa:awaiting_date:${waPhoneNumber}`);
-        await this.client.sendText(waPhoneNumber, `${t('cancelled', language)} Expired.`);
-        return true;
-      }
 
-      const data: PendingReceiptData = JSON.parse(raw);
-      data.date = dateStr;
-      await this.redis.set(`wa:receipt:${shortId}`, JSON.stringify(data), 'EX', 1800);
-      await this.redis.del(`wa:awaiting_date:${waPhoneNumber}`);
+        const formattedDate = `${day.padStart(2, '0')}.${month.padStart(2, '0')}.${year}`;
+        await this.client.sendText(waPhoneNumber, t('dateUpdated', language, { date: formattedDate }));
 
-      const formattedDate = `${day.padStart(2, '0')}.${month.padStart(2, '0')}.${year}`;
-      await this.client.sendText(waPhoneNumber, t('dateUpdated', language, { date: formattedDate }));
-
-      // Re-send the 3 buttons with updated receipt info
-      const summary = this.buildSummaryText(data.amount, data.currencyCode, dateStr, data.merchant, language);
-      await this.client.sendButtons(waPhoneNumber, summary, [
-        { id: `receipt_add--${shortId}`, title: t('addExpense', language) },
-        { id: `receipt_edit--${shortId}`, title: t('editReceipt', language) },
-        { id: `receipt_cancel--${shortId}`, title: t('cancel', language) },
-      ]);
+        // Re-send the 3 buttons with updated receipt info
+        const summary = this.buildSummaryText(data.amount, data.currencyCode, dateStr, data.merchant, language);
+        await this.client.sendButtons(waPhoneNumber, summary, [
+          { id: `receipt_add--${shortId}`, title: t('addExpense', language) },
+          { id: `receipt_edit--${shortId}`, title: t('editReceipt', language) },
+          { id: `receipt_cancel--${shortId}`, title: t('cancel', language) },
+        ]);
+      });
 
       return true;
     } catch (error) {
@@ -338,7 +551,17 @@ export class PhotoHandler {
     }
   }
 
+  /** Save, under the receipt's busy lock: never mid-way through a continuation's read. */
   async handleReceiptAddCallback(shortId: string, userState: WhatsAppUserState, mode?: 'merge' | 'keep'): Promise<void> {
+    try {
+      await this.lockReceipt(shortId, userState, () => this.saveReceipt(shortId, userState, mode));
+    } catch (error) {
+      this.logger.error(`PhotoHandler.handleReceiptAddCallback error for ${userState.waPhoneNumber}: ${error}`);
+      await this.client.sendText(userState.waPhoneNumber, t('somethingWrong', userState.language));
+    }
+  }
+
+  private async saveReceipt(shortId: string, userState: WhatsAppUserState, mode?: 'merge' | 'keep'): Promise<void> {
     const { waPhoneNumber, language } = userState;
     try {
       const raw = await this.redis.get(`wa:receipt:${shortId}`);
@@ -363,6 +586,9 @@ export class PhotoHandler {
         (name) => this.categoriesService.create(data.accountId, data.userId, { name, type: 'expense', icon: '🏷️' }),
       );
       const itemCategoryIds = buildItemCategoryMap(resolvedSplits);
+      const parts: ReceiptImagePart[] =
+        data.parts ??
+        (data.receiptImageBase64 ? [{ imageBase64: data.receiptImageBase64, mimeType: data.receiptMimeType }] : []);
 
       const { expense } = await this.expensesService.create(data.accountId, data.userId, {
         localId: randomUUID(),
@@ -377,7 +603,9 @@ export class PhotoHandler {
         source: 'ocr',
         location: data.location ?? undefined,
         splits: resolvedSplits.length ? resolvedSplits : undefined,
-        receiptImageBase64: data.receiptImageBase64,
+        // Part 1 is the receipt image every reader shows; parts 2..N travel beside it.
+        receiptImageBase64: parts[0]?.imageBase64,
+        receiptImageParts: parts.length > 1 ? parts.slice(1) : undefined,
         receiptMimeType: data.receiptMimeType,
         receiptFingerprint: data.receiptFingerprint,
         scanAttestation: data.scanAttestation,
@@ -395,6 +623,7 @@ export class PhotoHandler {
       });
 
       await this.redis.del(`wa:receipt:${shortId}`);
+      await this.clearPointer(waPhoneNumber, shortId);
       await this.redis.del(`wa:awaiting_date:${waPhoneNumber}`);
       // Leave item-edit mode, or the next chat message would be swallowed by the
       // correction parser instead of reaching the AI.
@@ -505,24 +734,28 @@ export class PhotoHandler {
   async handleItemsCallback(shortId: string, userState: WhatsAppUserState): Promise<void> {
     const { waPhoneNumber, language } = userState;
     try {
-      const raw = await this.redis.get(`wa:receipt:${shortId}`);
-      if (!raw) {
-        await this.client.sendText(waPhoneNumber, `${t('cancelled', language)} Expired.`);
-        return;
-      }
+      // Under the receipt's busy lock: this read-modify-write must not overwrite a
+      // continuation's result (and drop a paid part) with a stale copy.
+      await this.lockReceipt(shortId, userState, async () => {
+        const raw = await this.redis.get(`wa:receipt:${shortId}`);
+        if (!raw) {
+          await this.client.sendText(waPhoneNumber, `${t('cancelled', language)} Expired.`);
+          return;
+        }
 
-      const data: PendingReceiptData = JSON.parse(raw);
-      // Land the split's item -> category mapping on the items once, so deleting a
-      // line cannot shift it (the split carries positions, not per-item ids).
-      data.items = seedItemGroups(data.items, data.categorySplits ?? []);
-      await this.redis.set(`wa:receipt:${shortId}`, JSON.stringify(data), 'EX', 1800);
+        const data: PendingReceiptData = JSON.parse(raw);
+        // Land the split's item -> category mapping on the items once, so deleting a
+        // line cannot shift it (the split carries positions, not per-item ids).
+        data.items = seedItemGroups(data.items, data.categorySplits ?? []);
+        await this.redis.set(`wa:receipt:${shortId}`, JSON.stringify(data), 'EX', 1800);
 
-      // The two typed-input modes are mutually exclusive.
-      await this.redis.del(`wa:awaiting_date:${waPhoneNumber}`);
-      await this.redis.set(`wa:awaiting_item_edit:${waPhoneNumber}`, shortId, 'EX', 600);
+        // The two typed-input modes are mutually exclusive.
+        await this.redis.del(`wa:awaiting_date:${waPhoneNumber}`);
+        await this.redis.set(`wa:awaiting_item_edit:${waPhoneNumber}`, shortId, 'EX', 600);
 
-      await this.client.sendText(waPhoneNumber, t('itemEditHint', language));
-      await this.sendItemEditView(shortId, data, userState);
+        await this.client.sendText(waPhoneNumber, t('itemEditHint', language));
+        await this.sendItemEditView(shortId, data, userState);
+      });
     } catch (error) {
       this.logger.error(`PhotoHandler.handleItemsCallback error for ${waPhoneNumber}: ${error}`);
       await this.client.sendText(waPhoneNumber, t('somethingWrong', language));
@@ -551,29 +784,44 @@ export class PhotoHandler {
         return true;
       }
 
-      const data: PendingReceiptData = JSON.parse(raw);
-      const outcome = applyItemEditCommand(data.items, data.amount, command);
-      if (!outcome.ok) {
-        await this.client.sendText(
-          waPhoneNumber,
-          this.itemEditErrorText(outcome.error, command, language),
-        );
-        return true;
-      }
+      // Applied to a fresh read under the receipt's busy lock, so a continuation's
+      // parts and totals are never overwritten by a stale copy.
+      let consumed = true;
+      await this.lockReceipt(shortId, userState, async () => {
+        // The mode may have ended meanwhile (a continuation replaced the card).
+        if ((await this.redis.get(`wa:awaiting_item_edit:${waPhoneNumber}`)) !== shortId) {
+          consumed = false;
+          return;
+        }
+        const fresh = await this.redis.get(`wa:receipt:${shortId}`);
+        if (!fresh) {
+          consumed = false;
+          return;
+        }
+        const data: PendingReceiptData = JSON.parse(fresh);
+        const outcome = applyItemEditCommand(data.items, data.amount, command);
+        if (!outcome.ok) {
+          await this.client.sendText(
+            waPhoneNumber,
+            this.itemEditErrorText(outcome.error, command, language),
+          );
+          return;
+        }
 
-      data.items = outcome.items;
-      data.amount = outcome.total;
-      data.categorySplits = recomputeSplits({
-        items: outcome.items,
-        total: outcome.total,
-        discount: data.discountAmount,
-        deposit: data.depositAmount,
-        existing: data.categorySplits ?? [],
+        data.items = outcome.items;
+        data.amount = outcome.total;
+        data.categorySplits = recomputeSplits({
+          items: outcome.items,
+          total: outcome.total,
+          discount: data.discountAmount,
+          deposit: data.depositAmount,
+          existing: data.categorySplits ?? [],
+        });
+        await this.redis.set(`wa:receipt:${shortId}`, JSON.stringify(data), 'EX', 1800);
+
+        await this.sendItemEditView(shortId, data, userState, t('itemsUpdated', language));
       });
-      await this.redis.set(`wa:receipt:${shortId}`, JSON.stringify(data), 'EX', 1800);
-
-      await this.sendItemEditView(shortId, data, userState, t('itemsUpdated', language));
-      return true;
+      return consumed;
     } catch (error) {
       this.logger.error(`PhotoHandler.handleItemEditInput error for ${waPhoneNumber}: ${error}`);
       return false;
@@ -610,13 +858,17 @@ export class PhotoHandler {
     return t('itemEditEmptyDescription', language);
   }
 
+  /** Cancel, under the receipt's busy lock: a continuation's read cannot bring the card back. */
   async handleReceiptCancelCallback(shortId: string, userState: WhatsAppUserState): Promise<void> {
     const { waPhoneNumber, language } = userState;
     try {
-      await this.redis.del(`wa:receipt:${shortId}`);
-      await this.redis.del(`wa:awaiting_date:${waPhoneNumber}`);
-      await this.redis.del(`wa:awaiting_item_edit:${waPhoneNumber}`);
-      await this.client.sendText(waPhoneNumber, t('receiptCancelled', language));
+      await this.lockReceipt(shortId, userState, async () => {
+        await this.redis.del(`wa:receipt:${shortId}`);
+        await this.clearPointer(waPhoneNumber, shortId);
+        await this.redis.del(`wa:awaiting_date:${waPhoneNumber}`);
+        await this.redis.del(`wa:awaiting_item_edit:${waPhoneNumber}`);
+        await this.client.sendText(waPhoneNumber, t('receiptCancelled', language));
+      });
     } catch (error) {
       this.logger.error(`PhotoHandler.handleReceiptCancelCallback error for ${userState.waPhoneNumber}: ${error}`);
       await this.client.sendText(waPhoneNumber, t('somethingWrong', language));

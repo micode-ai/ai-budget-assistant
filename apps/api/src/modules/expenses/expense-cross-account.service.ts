@@ -88,6 +88,13 @@ export class ExpenseCrossAccountService {
       if ((fieldChoices?.receiptImage === true || !keepRow.receiptImage) && mergeRow.receiptImage) {
         carriedFields.receiptImage = mergeRow.receiptImage;
         carriedFields.receiptMimeType = mergeRow.receiptMimeType;
+        // A long receipt's parts 2..N belong to its part 1: they come along, and
+        // the survivor's own parts (of the receipt being replaced) go.
+        await tx.expenseReceiptPart.deleteMany({ where: { expenseId: keepRow.id } });
+        await tx.expenseReceiptPart.updateMany({
+          where: { expenseId: mergeRow.id },
+          data: { expenseId: keepRow.id },
+        });
       }
 
       // Tags: union — upsert every tag from the merged row onto the survivor.
@@ -159,7 +166,8 @@ export class ExpenseCrossAccountService {
    *  - category is remapped by (case-insensitive) name into the target account, else cleared
    *  - tags, project links and category splits reference source-account rows → soft-deleted
    *  - trip expense shares reference source-account members → deleted
-   * Amount / currency / description / merchant / notes / date / items / receipt travel with it.
+   * Amount / currency / description / merchant / notes / date / items / receipt travel with it
+   * (the receipt's parts 2..N too: they hang off this same row, which is updated in place).
    *
    * E2EE expenses are rejected: their encryptedPayload is sealed with the source
    * account's key and would be undecryptable under the target account.

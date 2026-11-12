@@ -22,6 +22,9 @@ export interface SlackFile {
   filetype?: string;
   name?: string;
   url_private_download?: string;
+  /** Downscaled renditions Slack makes of an image (same host and bot token as the file). */
+  thumb_1024?: string;
+  thumb_720?: string;
 }
 
 /** Inbound `message` event (DM). Subset we use. */

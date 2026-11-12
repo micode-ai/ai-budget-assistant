@@ -57,6 +57,10 @@ so it decodes no larger bitmap than the static viewer did
 **Do not add a blanket `-keep class **` to ProGuard** — it would drop the app under the DEX
 coverage bar. Only two narrow keep rules exist.
 
+**Every part of a long receipt goes through `receiptImage.ts` too** ([long-receipt](long-receipt.md)):
+2–4 parts are each downscaled and encoded one at a time, never decoded together, and the bots cap a
+cached part at 1.5 MB.
+
 ## Known gaps
 
 - The real numbers against the thresholds are unmeasured. Read them from Play Console's Android

@@ -62,6 +62,15 @@ Telegram call site escapes the whole block.
 already used all three buttons, so `changeDate` became `✏️ Edit`, opening a two-row list (Items /
 Date). The one-tap "Add expense" path is unchanged everywhere.
 
+**Long receipts add a lock and a merge rule.** A receipt built from several photos
+([long-receipt](long-receipt.md)) carries its `parts` in the cached pending receipt, so a typed
+correction (and a `receipt_edit` write) in all three bots merges onto a FRESH read of that receipt
+rather than writing back a stale copy — otherwise it drops the parts a concurrent continuation just
+added. The per-receipt lock (`{prefix}:receipt-busy:{receiptId}`) is taken by continuation, save and
+cancel; the new callbacks are `receipt_part`/`receipt_new` (`--`-separated on WhatsApp), and the new
+keys `{prefix}:receipt-latest:*` and `{prefix}:scan:*`. A continuation replaces the card, so
+corrections typed on the old card are lost.
+
 ## Known gaps
 
 - Not editable from a bot: quantity, the receipt's discount/deposit, and a line's category (the

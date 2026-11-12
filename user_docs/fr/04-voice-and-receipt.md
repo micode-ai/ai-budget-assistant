@@ -114,6 +114,23 @@ Vous avez accumulé une semaine de reçus papier ? Après en avoir enregistré u
 
 Pendant que vous scannez, un petit compteur indique combien de reçus vous avez enregistrés dans cette session. Tous les 15 reçus, l'application vous rappelle amicalement que vous pouvez continuer ou faire une pause — votre progression est déjà enregistrée dans tous les cas. Le compteur se réinitialise dès que vous quittez l'écran ; il sert uniquement à donner un sentiment de progression pendant une session.
 
+### Reçu long en plusieurs photos
+
+Un reçu trop long pour une seule photo lisible peut être photographié en plusieurs morceaux et lu comme **un seul** reçu.
+
+**Dans l'application**
+
+1. Sur l'écran du reçu, touchez **Reçu long ? Photographiez-le en plusieurs parties**
+2. Photographiez le reçu de haut en bas avec un petit chevauchement entre les photos (la dernière ligne d'une photo doit réapparaître en haut de la suivante) ; vous pouvez ajouter jusqu'à **4 parties**
+3. Touchez **Lire le reçu**. Vous obtenez une seule carte de confirmation où chaque ligne apparaît une fois ; les lignes du chevauchement ne sont pas comptées deux fois
+4. Si la somme des lignes ne correspond pas au total du reçu, l'application vous prévient et propose **Reprendre les parties** au lieu d'enregistrer
+
+Chaque partie compte comme un scan de reçu dans votre limite mensuelle d'IA : un reçu en trois parties utilise donc trois scans. Un PDF ne peut pas être combiné avec des photos. La dépense conserve toutes les photos : ouvrez le reçu sur la dépense et touchez une partie pour la voir.
+
+**Dans les bots Telegram, WhatsApp et Slack**
+
+Envoyez les photos l'une après l'autre. La première photo est lue tout de suite. Tant que sa carte de confirmation est ouverte, envoyez la photo suivante : le bot demande s'il s'agit d'une **Suite** ou d'un **Nouveau reçu**. Choisissez **Suite** et la carte est reconstruite à partir de toutes les photos ensemble (les corrections saisies sur l'ancienne carte ne sont pas conservées, vérifiez donc la nouvelle). Les photos doivent être en JPEG, PNG ou WebP et pas trop lourdes ; le bot vous le dit s'il en refuse une.
+
 ### Reçus déjà scannés
 
 L'application vous prévient avant qu'un reçu n'apparaisse deux fois dans vos dépenses :

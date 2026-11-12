@@ -18,6 +18,11 @@ function makeCache() {
     del: jest.fn(async (...keys: string[]) => {
       for (const key of keys) store.delete(key);
     }),
+    setIfAbsent: jest.fn(async (key: string) => {
+      if (store.has(key)) return false;
+      store.set(key, 1);
+      return true;
+    }),
   };
 }
 

@@ -3,6 +3,12 @@ import type { Category } from './category';
 import type { ExpenseTag } from './tag';
 import type { ExpenseChildLink } from './child';
 
+/** One extra photo (part 2..N) of a multi-photo receipt. */
+export interface ReceiptImagePart {
+  imageBase64: string;
+  mimeType: string;
+}
+
 export interface ExpenseItem {
   id: string;
   localId: string;
@@ -86,6 +92,8 @@ export interface Expense {
   externalRef?: string;
   items?: ExpenseItem[];
   receiptImageBase64?: string;
+  /** Parts 2..N of a multi-photo receipt, top to bottom (part 1 is receiptImageBase64). */
+  receiptImageParts?: ReceiptImagePart[];
   tags?: ExpenseTag[];
   /** Prisma relation name used in API responses (alias for tags). */
   expenseTags?: ExpenseTag[];

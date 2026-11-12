@@ -5,7 +5,46 @@ import type {
   ReceiptCheckFinding,
   ReceiptDuplicateCheckResponse,
   ReceiptDuplicateMatch,
+  ReceiptImagePart,
 } from '@budget/shared-types';
+
+/** The `POST /ai/scan-receipt` response — one shape for one image, a PDF, or 2-4 parts. */
+export type ScanReceiptResponse = {
+  amount: number;
+  discountAmount: number | null;
+  depositAmount: number | null;
+  currencyCode: string;
+  description: string;
+  categoryId: string | null;
+  categorySuggestion: string | null;
+  merchant: string | null;
+  date: string | null;
+  confidence: number;
+  receiptItems: {
+    description: string;
+    canonicalName?: string;
+    quantity?: number;
+    unitPrice?: number;
+    totalPrice: number;
+    /** A discount read against this line, when there was one. */
+    lineDiscount?: number;
+    categoryId?: string | null;
+    categoryName?: string | null;
+  }[];
+  location: { lat: number; lng: number; name: string } | null;
+  priceFindings?: ReceiptCheckFinding[];
+  categorySplits: {
+    categoryId: string | null;
+    categoryName: string;
+    amount: number;
+    percentage: number;
+    itemIndexes: number[];
+  }[];
+  fingerprint?: string;
+  /** Short-lived (24 h) server-signed token (ABA-642); sent once on first create. */
+  scanAttestation?: string;
+  possibleDuplicate?: ReceiptDuplicateMatch | null;
+};
 
 export const aiApi = {
   transcribeAudio(audioBase64: string, language?: string) {
@@ -174,45 +213,27 @@ export const aiApi = {
   },
 
   scanReceipt(imageBase64: string, userPrompt?: string, mimeType?: string) {
-    return httpClient.request<{
-      amount: number;
-      discountAmount: number | null;
-      depositAmount: number | null;
-      currencyCode: string;
-      description: string;
-      categoryId: string | null;
-      categorySuggestion: string | null;
-      merchant: string | null;
-      date: string | null;
-      confidence: number;
-      receiptItems: {
-        description: string;
-        canonicalName?: string;
-        quantity?: number;
-        unitPrice?: number;
-        totalPrice: number;
-        categoryId?: string | null;
-        categoryName?: string | null;
-      }[];
-      location: { lat: number; lng: number; name: string } | null;
-      priceFindings?: ReceiptCheckFinding[];
-      categorySplits: {
-        categoryId: string | null;
-        categoryName: string;
-        amount: number;
-        percentage: number;
-        itemIndexes: number[];
-      }[];
-      fingerprint?: string;
-      /** Short-lived (24 h) server-signed token (ABA-642); sent once on first create. */
-      scanAttestation?: string;
-      possibleDuplicate?: ReceiptDuplicateMatch | null;
-    }>('/ai/scan-receipt', {
+    return httpClient.request<ScanReceiptResponse>('/ai/scan-receipt', {
       method: 'POST',
       body: JSON.stringify({
         imageBase64,
         ...(userPrompt ? { userPrompt } : {}),
         ...(mimeType ? { mimeType } : {}),
+        communityBaseline: true,
+      }),
+    });
+  },
+
+  /**
+   * Long receipt: 2-4 photos of ONE receipt, top to bottom, read in one scan
+   * (charged per part). One photo goes through `scanReceipt` instead.
+   */
+  scanReceiptParts(images: ReceiptImagePart[], userPrompt?: string) {
+    return httpClient.request<ScanReceiptResponse>('/ai/scan-receipt', {
+      method: 'POST',
+      body: JSON.stringify({
+        images,
+        ...(userPrompt ? { userPrompt } : {}),
         communityBaseline: true,
       }),
     });

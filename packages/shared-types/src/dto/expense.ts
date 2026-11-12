@@ -1,4 +1,4 @@
-import type { Currency, ExpenseSource, ShareType, SettleMethod, SettleUpTransaction } from '../entities';
+import type { Currency, ReceiptImagePart, ExpenseSource, ShareType, SettleMethod, SettleUpTransaction } from '../entities';
 
 export interface ExpenseShareDto {
   userId: string;
@@ -44,6 +44,8 @@ export interface CreateExpenseDto {
   items?: CreateExpenseItemDto[];
   /** SHA-256 of the scanned receipt file, from the scan response (ABA-603). */
   receiptFingerprint?: string;
+  /** Parts 2..N of a multi-photo receipt (part 1 is the expense's own receipt image), top to bottom. */
+  receiptImageParts?: ReceiptImagePart[];
   /**
    * Server-signed scan token from the scan response (ABA-642). Send it on the
    * FIRST push of a scanned receipt only, beside `receiptFingerprint`; without

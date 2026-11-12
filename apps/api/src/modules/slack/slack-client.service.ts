@@ -83,10 +83,12 @@ export class SlackClientService {
     await c.chat.postMessage({ channel, text, mrkdwn: true });
   }
 
-  async sendButtons(teamId: string, channel: string, bodyText: string, buttons: SlackButton[]): Promise<void> {
+  /** Posts a message with buttons; resolves to its ts (undefined when the bot is not configured). */
+  async sendButtons(teamId: string, channel: string, bodyText: string, buttons: SlackButton[]): Promise<string | undefined> {
     const c = await this.clientFor(teamId);
-    if (!c) return;
-    await c.chat.postMessage({ channel, text: bodyText, blocks: this.buildButtonBlocks(bodyText, buttons) });
+    if (!c) return undefined;
+    const res = await c.chat.postMessage({ channel, text: bodyText, blocks: this.buildButtonBlocks(bodyText, buttons) });
+    return res?.ts as string | undefined;
   }
 
   /**
@@ -155,8 +157,18 @@ export class SlackClientService {
     return this.sendText(teamId, channel, text);
   }
 
-  async replyButtons(teamId: string, channel: string, ts: string | undefined, bodyText: string, buttons: SlackButton[]): Promise<void> {
-    if (ts) return this.updateButtons(teamId, channel, ts, bodyText, buttons);
+  /** Fills the placeholder `ts` with the buttons, or posts them; resolves to the message's ts. */
+  async replyButtons(
+    teamId: string,
+    channel: string,
+    ts: string | undefined,
+    bodyText: string,
+    buttons: SlackButton[],
+  ): Promise<string | undefined> {
+    if (ts) {
+      await this.updateButtons(teamId, channel, ts, bodyText, buttons);
+      return ts;
+    }
     return this.sendButtons(teamId, channel, bodyText, buttons);
   }
 

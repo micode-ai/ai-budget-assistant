@@ -49,6 +49,10 @@ function makeMergeService(overrides: {
     expenseTag: { upsert: expenseTagUpsertMock },
     projectExpense: { upsert: projectExpenseUpsertMock },
     expenseItem: { updateMany: expenseItemUpdateManyMock },
+    expenseReceiptPart: {
+      deleteMany: jest.fn().mockResolvedValue({}),
+      updateMany: jest.fn().mockResolvedValue({}),
+    },
   };
 
   const prisma: any = {
@@ -138,6 +142,45 @@ describe('mergeExpenses (Tier 2)', () => {
     });
   });
 
+  // Long receipt: when the merged row's receipt image (part 1) replaces the
+  // survivor's, its parts 2..N come with it and the survivor's old parts go.
+  it('carries the receipt parts with the receipt image, replacing the survivor parts', async () => {
+    const { service, tx } = makeMergeService({
+      mergeRow: {
+        id: 'merge-1', accountId: 'acc-1', merchant: null, notes: null, categoryId: null,
+        receiptImage: Buffer.from('p1'), receiptMimeType: 'image/jpeg',
+        items: [], expenseTags: [], projectExpenses: [],
+      },
+    });
+    await service.mergeExpenses('acc-1', 'user-1', { keepId: 'keep-1', mergeId: 'merge-1' });
+    expect(tx.expenseReceiptPart.deleteMany).toHaveBeenCalledWith({ where: { expenseId: 'keep-1' } });
+    expect(tx.expenseReceiptPart.updateMany).toHaveBeenCalledWith({
+      where: { expenseId: 'merge-1' },
+      data: { expenseId: 'keep-1' },
+    });
+    const del = tx.expenseReceiptPart.deleteMany.mock.invocationCallOrder[0];
+    const move = tx.expenseReceiptPart.updateMany.mock.invocationCallOrder[0];
+    expect(del).toBeLessThan(move);
+  });
+
+  it('leaves receipt parts alone when the survivor keeps its own receipt image', async () => {
+    const { service, tx } = makeMergeService({
+      keepRow: {
+        id: 'keep-1', accountId: 'acc-1', merchant: 'x', notes: null, categoryId: null,
+        receiptImage: Buffer.from('k1'), receiptMimeType: 'image/jpeg',
+        items: [], expenseTags: [], projectExpenses: [],
+      },
+      mergeRow: {
+        id: 'merge-1', accountId: 'acc-1', merchant: null, notes: null, categoryId: null,
+        receiptImage: Buffer.from('m1'), receiptMimeType: 'image/jpeg',
+        items: [], expenseTags: [], projectExpenses: [],
+      },
+    });
+    await service.mergeExpenses('acc-1', 'user-1', { keepId: 'keep-1', mergeId: 'merge-1' });
+    expect(tx.expenseReceiptPart.deleteMany).not.toHaveBeenCalled();
+    expect(tx.expenseReceiptPart.updateMany).not.toHaveBeenCalled();
+  });
+
   it('does NOT move line items when the survivor already has its own', async () => {
     const { service, expenseItemUpdateManyMock } = makeMergeService({
       keepRow: {
@@ -217,6 +260,7 @@ describe('ExpenseCrossAccountService.moveToAccount', () => {
       expenseChild: { updateMany: jest.fn().mockResolvedValue({}) },
       expense: { update: jest.fn().mockResolvedValue({}) },
       expenseItem: { updateMany: jest.fn().mockResolvedValue({}) },
+      expenseReceiptPart: { deleteMany: jest.fn(), updateMany: jest.fn() },
     };
     const expense =
       opts.expense === undefined
@@ -278,6 +322,17 @@ describe('ExpenseCrossAccountService.moveToAccount', () => {
     expect(tx.projectExpense.updateMany).toHaveBeenCalledTimes(1);
     expect(tx.expenseCategorySplit.updateMany).toHaveBeenCalledTimes(1);
     expect(tx.tripExpenseShare.deleteMany).toHaveBeenCalledTimes(1);
+  });
+
+  // Long receipt: parts hang off the expense row (FK expenseId), and the move
+  // updates that same row in place — so they travel with it untouched.
+  it('cross-account move keeps receipt parts: same row id, parts never deleted or re-pointed', async () => {
+    const { service, tx } = makeService({});
+    const res = await service.moveToAccount('acc-src', 'user-1', 'cli-1', { targetAccountId: 'acc-dst' });
+    expect(res.id).toBe('srv-1');
+    expect(tx.expense.update.mock.calls[0][0].where).toEqual({ id: 'srv-1' });
+    expect(tx.expenseReceiptPart.deleteMany).not.toHaveBeenCalled();
+    expect(tx.expenseReceiptPart.updateMany).not.toHaveBeenCalled();
   });
 
   it("drops child attribution — whole-expense links and line childIds point at the source account's children", async () => {

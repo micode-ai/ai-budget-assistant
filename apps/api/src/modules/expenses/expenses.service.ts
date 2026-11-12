@@ -1,5 +1,5 @@
 import { TransactionRevisionsService } from '../transaction-revisions/transaction-revisions.service';
-import { Injectable, Logger, NotFoundException, Optional } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException, Optional } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
 import { CreateExpenseDto, UpdateExpenseDto, ExpenseFiltersDto, CreateExpenseItemDto, UpdateExpenseItemDto } from './dto';
@@ -19,6 +19,13 @@ import { ReceiptSplitService } from '../receipt-split/receipt-split.service';
 import { ExpenseCreatedHooksService, LearnableExpenseItem } from './expense-created-hooks.service';
 import { logFireAndForget } from '../../common/utils/fire-and-forget';
 import { touchExpenses } from './expense-touch.util';
+import type { ReceiptImagePart } from '@budget/shared-types';
+import {
+  decodeReceiptParts,
+  RECEIPT_EXTRA_PARTS_MAX,
+  RECEIPT_PARTS_MAX_TOTAL,
+  type StoredReceiptPart,
+} from './receipt-parts.util';
 
 /**
  * CRUD orchestrator for expenses. `bulkUpdate` lives in ExpenseBulkService,
@@ -222,6 +229,15 @@ export class ExpensesService {
     // fire-and-forget rule-learning block — see the comment there.
     let resolvedItemCategoryIds: Array<string | null> = [];
 
+    // Long receipt: parts 2..N travel next to part 1 (`receiptImageBase64`), never
+    // without it. Validated here as well as in the DTO — the sync handler builds
+    // its dto by spreading a client payload, so class-validator is not the only door.
+    let extraParts: StoredReceiptPart[] | undefined;
+    if (dto.receiptImageParts !== undefined && dto.receiptImageParts !== null) {
+      if (!dto.receiptImageBase64) throw new BadRequestException('parts_without_image');
+      extraParts = decodeReceiptParts(dto.receiptImageParts, 0, RECEIPT_EXTRA_PARTS_MAX);
+    }
+
     const result = await this.prisma.$transaction(async (tx: PrismaClient) => {
       const receiptImage = dto.receiptImageBase64
         ? Buffer.from(dto.receiptImageBase64, 'base64')
@@ -309,6 +325,14 @@ export class ExpensesService {
         update: updateData,
         include: { category: true },
       });
+
+      // A receipt image on this push is a (new) part 1, so whatever parts 2..N the
+      // row held belong to the old receipt: replace them (decision 1 of the long-
+      // receipt spec). A brand-new row has none to clear; a push with no image
+      // leaves the stored receipt and its parts alone.
+      if (receiptImage) {
+        await this.writeReceiptParts(tx, expense.id, extraParts ?? [], !isNew);
+      }
 
       if (dto.items && dto.items.length > 0) {
         // Items address a category by the client's own local id — the same
@@ -973,37 +997,142 @@ export class ExpensesService {
     };
   }
 
+  /**
+   * Replaces part 1 only. A new receipt image starts a new receipt, so the old
+   * parts 2..N are deleted with it (long-receipt spec, decision 1) — a client
+   * saving a multi-part receipt uses `saveReceiptParts`.
+   */
   async saveReceiptImage(
     accountId: string,
     expenseId: string,
     imageBase64: string,
     mimeType?: string,
   ) {
-    const expense = await this.findOne(accountId, expenseId);
+    const { id: expensePk } = await this.resolveExpenseRow(accountId, expenseId);
     const imageBuffer = Buffer.from(imageBase64, 'base64');
 
-    await this.prisma.expense.update({
-      where: { id: expense.id },
-      data: {
-        receiptImage: imageBuffer,
-        receiptMimeType: mimeType ?? 'image/jpeg',
-        syncVersion: { increment: 1 },
-      },
+    await this.prisma.$transaction(async (tx: PrismaClient) => {
+      await tx.expense.update({
+        where: { id: expensePk },
+        data: {
+          receiptImage: imageBuffer,
+          receiptMimeType: mimeType ?? 'image/jpeg',
+          syncVersion: { increment: 1 },
+        },
+      });
+      await tx.expenseReceiptPart.deleteMany({ where: { expenseId: expensePk } });
     });
     return { success: true };
   }
 
+  /** Deletes the receipt — part 1 and every further part — in one transaction. */
   async deleteReceiptImage(accountId: string, expenseId: string) {
-    const expense = await this.findOne(accountId, expenseId);
-    await this.prisma.expense.update({
-      where: { id: expense.id },
-      data: {
-        receiptImage: null,
-        receiptMimeType: null,
-        syncVersion: { increment: 1 },
-      },
+    const { id: expensePk } = await this.resolveExpenseRow(accountId, expenseId);
+    await this.prisma.$transaction(async (tx: PrismaClient) => {
+      await tx.expense.update({
+        where: { id: expensePk },
+        data: {
+          receiptImage: null,
+          receiptMimeType: null,
+          syncVersion: { increment: 1 },
+        },
+      });
+      await tx.expenseReceiptPart.deleteMany({ where: { expenseId: expensePk } });
     });
     return { success: true };
+  }
+
+  // ---- Receipt parts (a long receipt photographed in several parts) ----
+
+  /**
+   * Every part of the receipt, top to bottom: index 1 is `Expense.receiptImage`,
+   * 2..N come from `expense_receipt_parts`. `[]` when the expense has no receipt.
+   * Never used by list queries — the bytes are loaded for this one expense only.
+   */
+  async getReceiptParts(
+    accountId: string,
+    expenseId: string,
+    from?: number,
+  ): Promise<Array<{ index: number; imageBase64: string; mimeType: string }>> {
+    if (from !== undefined && from >= 2) {
+      // Parts-only read: never loads `receiptImage`, so a single-photo receipt
+      // costs one tiny query and no bytes. Same account scoping as below.
+      const row = await this.prisma.expense.findFirst({
+        where: { accountId, isDeleted: false, OR: [{ id: expenseId }, { clientId: expenseId }] },
+        select: {
+          id: true,
+          receiptParts: {
+            where: { index: { gte: from } },
+            select: { index: true, image: true, mimeType: true },
+            orderBy: { index: 'asc' },
+          },
+        },
+      });
+      if (!row) throw new NotFoundException('Expense not found');
+      return row.receiptParts.map((p) => ({
+        index: p.index,
+        imageBase64: Buffer.from(p.image).toString('base64'),
+        mimeType: p.mimeType,
+      }));
+    }
+    const expense = await this.prisma.expense.findFirst({
+      where: { accountId, isDeleted: false, OR: [{ id: expenseId }, { clientId: expenseId }] },
+      select: {
+        id: true,
+        receiptImage: true,
+        receiptMimeType: true,
+        receiptParts: { select: { index: true, image: true, mimeType: true }, orderBy: { index: 'asc' } },
+      },
+    });
+    if (!expense) throw new NotFoundException('Expense not found');
+    if (!expense.receiptImage) return [];
+    return [
+      {
+        index: 1,
+        imageBase64: Buffer.from(expense.receiptImage).toString('base64'),
+        mimeType: expense.receiptMimeType || 'image/jpeg',
+      },
+      ...expense.receiptParts.map((p) => ({
+        index: p.index,
+        imageBase64: Buffer.from(p.image).toString('base64'),
+        mimeType: p.mimeType,
+      })),
+    ];
+  }
+
+  /**
+   * Replaces the whole receipt with `parts` (1–4, top to bottom) in one
+   * transaction: part 1 onto `Expense.receiptImage`, 2..N into
+   * `expense_receipt_parts`. A reader never sees a half-written receipt.
+   */
+  async saveReceiptParts(accountId: string, expenseId: string, parts: ReceiptImagePart[]) {
+    const decoded = decodeReceiptParts(parts, 1, RECEIPT_PARTS_MAX_TOTAL);
+    const { id: expensePk } = await this.resolveExpenseRow(accountId, expenseId);
+    const [first, ...rest] = decoded;
+    await this.prisma.$transaction(async (tx: PrismaClient) => {
+      await tx.expense.update({
+        where: { id: expensePk },
+        data: { receiptImage: first.image, receiptMimeType: first.mimeType, syncVersion: { increment: 1 } },
+      });
+      await this.writeReceiptParts(tx, expensePk, rest, true);
+    });
+    return { success: true };
+  }
+
+  /** Parts 2..N of `expensePk`, replacing what is stored. Runs inside the caller's transaction. */
+  private async writeReceiptParts(
+    tx: PrismaClient,
+    expensePk: string,
+    extra: StoredReceiptPart[],
+    clearExisting: boolean,
+  ): Promise<void> {
+    if (clearExisting || extra.length > 0) {
+      await tx.expenseReceiptPart.deleteMany({ where: { expenseId: expensePk } });
+    }
+    if (extra.length === 0) return;
+    await tx.expenseReceiptPart.createMany({
+      data: extra.map((p, i) => ({ expenseId: expensePk, index: i + 2, image: p.image, mimeType: p.mimeType })),
+    });
   }
 
   // ---- Category Splits ----

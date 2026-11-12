@@ -608,29 +608,33 @@ export async function renderChildStatementPdf(
     const batch = data.receipts.slice(b, b + RECEIPT_BATCH_SIZE);
     const images = await loadImages(batch.map((r) => r.expenseId));
     for (const r of batch) {
-      const image = images.get(r.expenseId);
-      if (!image || (!isJpeg(image) && !isPng(image))) continue; // gone since planning, or e.g. a stored PDF
-      let img: OpenedImage;
-      try {
-        img = (doc as unknown as { openImage(src: Buffer): OpenedImage }).openImage(image);
-      } catch {
-        continue; // a corrupt image must not cost the user the whole statement
+      const loaded = images.get(r.expenseId);
+      if (!loaded) continue; // gone since planning
+      // A long receipt is several photos, top to bottom: one page per part.
+      const parts = Array.isArray(loaded) ? loaded : [loaded];
+      const heading = t('receipt', { date: r.date, merchant: r.merchant || '' }).trim();
+      for (let i = 0; i < parts.length; i++) {
+        const image = parts[i];
+        if (!isJpeg(image) && !isPng(image)) continue; // e.g. a stored PDF
+        let img: OpenedImage;
+        try {
+          img = (doc as unknown as { openImage(src: Buffer): OpenedImage }).openImage(image);
+        } catch {
+          continue; // a corrupt image must not cost the user the whole statement
+        }
+        doc.addPage();
+        doc
+          .font('Inter-Bold')
+          .fontSize(11)
+          .text(parts.length > 1 ? `${heading} (${i + 1}/${parts.length})` : heading, PAGE_LEFT, PAGE_LEFT, {
+            width: PAGE_WIDTH,
+          });
+        const top = doc.y + 8;
+        // Never wider than the stored 800 px copy, and never wider than the page.
+        const maxW = Math.min(PAGE_WIDTH, img.width, RECEIPT_MAX_WIDTH_PX);
+        // pdfkit accepts the opened image object (it skips re-opening when `width`/`height` are set).
+        doc.image(img as unknown as Buffer, PAGE_LEFT, top, { fit: [maxW, CONTENT_BOTTOM - top] });
       }
-      doc.addPage();
-      doc
-        .font('Inter-Bold')
-        .fontSize(11)
-        .text(
-          t('receipt', { date: r.date, merchant: r.merchant || '' }).trim(),
-          PAGE_LEFT,
-          PAGE_LEFT,
-          { width: PAGE_WIDTH }
-        );
-      const top = doc.y + 8;
-      // Never wider than the stored 800 px copy, and never wider than the page.
-      const maxW = Math.min(PAGE_WIDTH, img.width, RECEIPT_MAX_WIDTH_PX);
-      // pdfkit accepts the opened image object (it skips re-opening when `width`/`height` are set).
-      doc.image(img as unknown as Buffer, PAGE_LEFT, top, { fit: [maxW, CONTENT_BOTTOM - top] });
     }
     images.clear();
   }

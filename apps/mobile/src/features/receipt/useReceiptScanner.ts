@@ -9,6 +9,17 @@ import type { InboundReceiptDetail, ReceiptCheckFinding, ReceiptDuplicateMatch }
 import { computeReceiptFingerprint } from './receiptFingerprint';
 import { sharedFileKind } from '@/features/share-intake/sharedFileKind';
 import { inboundScannerState } from '@/features/inboundMail/seedFromInbound';
+import { capturePhoto } from '@/features/camera/capturePhoto';
+import {
+  addPart as appendPart,
+  removePart as dropPart,
+  canScan,
+  partsFingerprintInput,
+  remainingParts,
+  retakeState,
+  scanEncodedParts,
+  type ScanPart,
+} from './receiptParts';
 
 export interface ReceiptItem {
   description: string;
@@ -79,6 +90,31 @@ export interface ReceiptScannerState {
   scannedReceipt: ScannedReceipt | null;
   /** HTTP status of the last failed scan (403 = AI limit / tier), else null. */
   errorStatus: number | null;
+  /**
+   * Long receipt: the photos taken so far, top to bottom (max 4), each already
+   * downscaled. Empty in the ordinary single-photo flow, which never touches it.
+   */
+  parts: ScanPart[];
+  /** A part is being downscaled after capture; the part buttons wait. */
+  isPreparingPart: boolean;
+}
+
+const emptyState = (): ReceiptScannerState => ({
+  isProcessing: false,
+  error: null,
+  imageUri: null,
+  isPdf: false,
+  scannedReceipt: null,
+  errorStatus: null,
+  parts: [],
+  isPreparingPart: false,
+});
+
+/** A 400 code from a multi-part request (`parts_count`...) is not a sentence for the user. */
+function scanErrorMessage(error: unknown): string {
+  const message = error instanceof Error ? error.message : '';
+  if (!message || /^(parts_|image_or_images$)/.test(message)) return i18n.t('errors.processReceiptFailed');
+  return message;
 }
 
 const MAX_PDF_SIZE = 10 * 1024 * 1024; // 10MB
@@ -87,15 +123,10 @@ export function useReceiptScanner(options: ReceiptScannerOptions = {}) {
   const optionsRef = useRef(options);
   optionsRef.current = options;
 
-  const [state, setState] = useState<ReceiptScannerState>({
-    isProcessing: false,
-    error: null,
-    imageUri: null,
-    isPdf: false,
-    scannedReceipt: null,
-    errorStatus: null,
-  });
+  const [state, setState] = useState<ReceiptScannerState>(emptyState);
   const pickingRef = useRef(false);
+  const partsRef = useRef(state.parts);
+  partsRef.current = state.parts;
 
   /** `true` = go ahead with OCR. Resets the scanner when the user declines. */
   const passesDuplicateCheck = async (base64: string): Promise<boolean> => {
@@ -112,7 +143,7 @@ export function useReceiptScanner(options: ReceiptScannerOptions = {}) {
     if (!match) return true;
     const proceed = await onDuplicate(match);
     if (!proceed) {
-      setState({ isProcessing: false, error: null, imageUri: null, isPdf: false, scannedReceipt: null, errorStatus: null });
+      setState(emptyState());
     }
     return proceed;
   };
@@ -330,19 +361,131 @@ export function useReceiptScanner(options: ReceiptScannerOptions = {}) {
    */
   const seedFromInbound = useCallback((detail: InboundReceiptDetail, documentUri: string | null): boolean => {
     const next = inboundScannerState(detail, documentUri);
-    setState(next);
+    setState({ ...emptyState(), ...next });
     return next.scannedReceipt !== null;
   }, []);
 
   const reset = useCallback(() => {
-    setState({
-      isProcessing: false,
+    setState(emptyState());
+  }, []);
+
+  // -- Long receipt in several photos ------------------------------------
+  // Parts are only collected here; nothing is scanned until `scanParts` (the
+  // "Read receipt" button) - one scan per receipt, not per part.
+
+  /**
+   * Downscales a photo (as every receipt is, `receiptImage.ts`) and appends it
+   * as the next part. Returns the URI the part now holds - the original one
+   * when the downscale failed - or null when there was no room.
+   */
+  const addPart = useCallback(async (photo: { uri: string; width?: number }): Promise<string | null> => {
+    if (remainingParts(partsRef.current) === 0) return null;
+    setState((s) => ({ ...s, isPreparingPart: true, error: null, errorStatus: null }));
+    try {
+      const uri = await downscaleForOcr(photo.uri, photo.width);
+      setState((s) => ({ ...s, parts: appendPart(s.parts, { uri }) }));
+      return uri;
+    } finally {
+      setState((s) => ({ ...s, isPreparingPart: false }));
+    }
+  }, []);
+
+  /** Camera for the next part. In-page on web (`capturePhoto`), so a reload cannot lose earlier parts. */
+  const capturePart = useCallback(async (): Promise<void> => {
+    try {
+      const shot = await capturePhoto({ shutter: i18n.t('receipt.takePhoto'), cancel: i18n.t('common.cancel') });
+      if (shot.status === 'denied') {
+        setState((s) => ({ ...s, error: i18n.t('errors.cameraPermissionDenied') }));
+        return;
+      }
+      if (shot.status === 'cancelled') return;
+      await addPart(shot.photo);
+    } catch (error) {
+      console.warn('[ReceiptScanner] part capture failed:', error);
+      setState((s) => ({ ...s, error: i18n.t('errors.captureImageFailed') }));
+    }
+  }, [addPart]);
+
+  /** Gallery (the file chooser on web) for the next parts - several at once, in the order picked. */
+  const pickParts = useCallback(async (): Promise<void> => {
+    const left = remainingParts(partsRef.current);
+    if (left === 0) return;
+    try {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+        setState((s) => ({ ...s, error: i18n.t('errors.galleryPermissionDenied') }));
+        return;
+      }
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ['images'],
+        quality: 0.8,
+        allowsMultipleSelection: left > 1,
+        selectionLimit: left,
+        orderedSelection: true,
+      });
+      if (result.canceled) return;
+      for (const asset of result.assets.slice(0, left)) {
+        await addPart({ uri: asset.uri, width: asset.width });
+      }
+    } catch (error) {
+      console.warn('[ReceiptScanner] part pick failed:', error);
+      setState((s) => ({ ...s, error: i18n.t('errors.pickImageFailed') }));
+    }
+  }, [addPart]);
+
+  const removePart = useCallback((index: number) => {
+    setState((s) => ({ ...s, parts: dropPart(s.parts, index) }));
+  }, []);
+
+  /**
+   * "Read receipt": ONE scan over all parts. One part is today's single-image
+   * request; 2-4 go through `images`. Part 1 becomes `imageUri`, so the confirm
+   * card's preview and the save path treat it exactly like a single photo.
+   * A failure keeps the parts, so the user can read them again.
+   */
+  const scanParts = useCallback(async (userPrompt?: string): Promise<ScannedReceipt | null> => {
+    const parts = partsRef.current;
+    if (!canScan(parts)) return null;
+    setState((s) => ({
+      ...s,
+      isProcessing: true,
       error: null,
-      imageUri: null,
+      errorStatus: null,
+      imageUri: parts[0].uri,
       isPdf: false,
       scannedReceipt: null,
-      errorStatus: null,
-    });
+    }));
+    try {
+      const base64Parts: string[] = [];
+      for (const p of parts) base64Parts.push(await uriToBase64(p.uri));
+      if (!(await passesDuplicateCheck(partsFingerprintInput(base64Parts)))) return null;
+      const scannedReceipt = await scanEncodedParts(base64Parts, userPrompt || undefined, {
+        scanReceipt: (b64, prompt) => api.scanReceipt(b64, prompt),
+        scanReceiptParts: (images, prompt) => api.scanReceiptParts(images, prompt),
+      });
+      setState((s) => ({ ...s, isProcessing: false, scannedReceipt }));
+      return scannedReceipt;
+    } catch (error) {
+      console.warn('[ReceiptScanner] multi-part scan failed:', error instanceof Error ? error.message : String(error));
+      setState((s) => ({
+        ...s,
+        isProcessing: false,
+        error: scanErrorMessage(error),
+        errorStatus: (error as { status?: number }).status ?? null,
+      }));
+      return null;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  /** "Retake parts": drop every part and the result, back to capturing. */
+  const retakeParts = useCallback(() => {
+    setState((s) => ({ ...s, ...retakeState() }));
+  }, []);
+
+  /** Dismiss a failed read without losing the parts. */
+  const clearError = useCallback(() => {
+    setState((s) => ({ ...s, error: null, errorStatus: null }));
   }, []);
 
   return {
@@ -354,5 +497,12 @@ export function useReceiptScanner(options: ReceiptScannerOptions = {}) {
     processSharedFile,
     seedFromInbound,
     reset,
+    addPart,
+    capturePart,
+    pickParts,
+    removePart,
+    scanParts,
+    retakeParts,
+    clearError,
   };
 }

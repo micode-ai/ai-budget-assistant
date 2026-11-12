@@ -17,6 +17,12 @@ import {
 } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
 import type { ShareType, ExpenseShareDto } from '@budget/shared-types';
+import {
+  RECEIPT_EXTRA_PARTS_MAX,
+  RECEIPT_PART_MAX_BASE64_CHARS,
+  RECEIPT_PART_MIME_TYPES,
+  RECEIPT_PARTS_MAX_TOTAL,
+} from '../receipt-parts.util';
 
 class LocationDto {
   @IsNumber()
@@ -110,6 +116,27 @@ export class SaveReceiptImageDto {
   mimeType?: string;
 }
 
+/** One photo of a (long) receipt. Image types only — a PDF cannot be a part. */
+export class ReceiptImagePartDto {
+  @IsString()
+  @MaxLength(RECEIPT_PART_MAX_BASE64_CHARS)
+  imageBase64: string;
+
+  @IsString()
+  @IsIn(RECEIPT_PART_MIME_TYPES)
+  mimeType: string;
+}
+
+/** `PUT /expenses/:id/receipt-parts` — the whole receipt, top to bottom (part 1 first). */
+export class SaveReceiptPartsDto {
+  @IsArray()
+  @ArrayMinSize(1)
+  @ArrayMaxSize(RECEIPT_PARTS_MAX_TOTAL)
+  @ValidateNested({ each: true })
+  @Type(() => ReceiptImagePartDto)
+  parts: ReceiptImagePartDto[];
+}
+
 class CreateExpenseSplitDto {
   @IsString()
   categoryId: string;
@@ -198,6 +225,14 @@ export class CreateExpenseDto {
   @IsOptional()
   @IsString()
   receiptMimeType?: string;
+
+  /** Parts 2..N of a long receipt (part 1 is `receiptImageBase64`), top to bottom. */
+  @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(RECEIPT_EXTRA_PARTS_MAX)
+  @ValidateNested({ each: true })
+  @Type(() => ReceiptImagePartDto)
+  receiptImageParts?: ReceiptImagePartDto[];
 
   /** SHA-256 hex of the scanned receipt file (from the scan response); lets a
    *  later upload of the same file be flagged before OCR (ABA-603). */

@@ -176,6 +176,26 @@ describe('BackupsService — exportBackup', () => {
     expect(parsed.data.expenses[0]).not.toHaveProperty('receiptImage');
   });
 
+  // Long receipt: parts 2..N follow part 1's policy (receiptImage is stripped), so
+  // they are never queried and never serialized — a backup carries no receipt bytes.
+  it('never exports receipt parts: not queried, and stripped if a row carries them', async () => {
+    const findMany = jest.fn().mockResolvedValue([
+      {
+        id: 'exp-1',
+        receiptImage: Buffer.from([1]),
+        receiptParts: [{ id: 'p', index: 2, image: Buffer.from([2]), mimeType: 'image/jpeg' }],
+        items: [],
+        expenseTags: [],
+        categorySplits: [],
+        projectExpenses: [],
+      },
+    ]);
+    const service = new BackupsService(makePrisma({ expense: { findMany } }) as any);
+    const { jsonStr } = await service.exportBackup('acc-1', 'u1');
+    expect(findMany.mock.calls[0][0].include).not.toHaveProperty('receiptParts');
+    expect(JSON.parse(jsonStr).data.expenses[0]).not.toHaveProperty('receiptParts');
+  });
+
   it('throws BadRequestException when serialized JSON exceeds 50 MB', async () => {
     // Generate an expense whose description alone pushes the payload over the limit
     const bigStr = 'x'.repeat(52 * 1024 * 1024);
@@ -367,6 +387,19 @@ describe('BackupsService — restoreBackup (children and fields)', () => {
     expect(tx.income.create.mock.calls[0][0].data.source).toBe('import');
     expect(tx.incomeTag.upsert.mock.calls[0][0].create).toEqual({ incomeId: 'new-inc-inc-c', tagId: 'new-tag-weekly' });
     expect(tx.projectIncome.upsert.mock.calls[0][0].create).toEqual({ projectId: 'new-proj-proj-c', incomeId: 'new-inc-inc-c' });
+  });
+
+  it('ignores receipt parts in a backup file, as it ignores the receipt image', async () => {
+    const tx: any = makeTxClient({ expenseReceiptPart: { createMany: jest.fn(), deleteMany: jest.fn() } });
+    const withParts = {
+      ...backup,
+      expenses: [{ ...backup.expenses[0], receiptParts: [{ id: 'src-part', index: 2, image: { type: 'Buffer', data: [1] }, mimeType: 'image/jpeg' }] }],
+    };
+    const res = await restoreWith(tx, withParts);
+    expect(res.errors).toEqual([]);
+    expect(tx.expenseReceiptPart.createMany).not.toHaveBeenCalled();
+    expect(tx.expenseReceiptPart.deleteMany).not.toHaveBeenCalled();
+    expect(tx.expense.create.mock.calls[0][0].data).not.toHaveProperty('receiptParts');
   });
 
   it("never restores source 'group' or an isSplitReceivable flag (ABA-660 review M2)", async () => {

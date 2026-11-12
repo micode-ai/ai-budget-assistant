@@ -649,6 +649,7 @@ model Expense {
   splitParticipants    ReceiptSplitParticipant[]
   groupCashLink        GroupCashLink?
   groupCashSuggestions GroupCashSuggestion[]
+  receiptParts         ExpenseReceiptPart[]
 
   @@unique([accountId, clientId])
   @@unique([accountId, externalRef])
@@ -664,6 +665,21 @@ model Expense {
   @@index([accountId, updatedAt, id])
   @@index([createdByOAuthClientId])
   @@map("expenses")
+}
+
+/// Parts 2..N of a multi-photo receipt; part 1 stays in Expense.receiptImage.
+model ExpenseReceiptPart {
+  id        String   @id @default(uuid())
+  expenseId String   @map("expense_id")
+  index     Int
+  image     Bytes
+  mimeType  String   @map("mime_type")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  expense Expense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+
+  @@unique([expenseId, index])
+  @@map("expense_receipt_parts")
 }
 
 model ExpenseItem {

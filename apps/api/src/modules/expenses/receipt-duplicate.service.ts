@@ -15,6 +15,15 @@ export function receiptFingerprint(base64: string): string {
   return createHash('sha256').update((base64 ?? '').replace(/\s/g, '')).digest('hex');
 }
 
+/**
+ * Fingerprint of a receipt photographed in several parts: SHA-256 over every
+ * part's base64 concatenated in order. Order-sensitive on purpose, and a
+ * single part fingerprints exactly as `receiptFingerprint` does.
+ */
+export function receiptFingerprintParts(parts: string[]): string {
+  return receiptFingerprint((parts ?? []).join(''));
+}
+
 export const RECEIPT_FINGERPRINT_PATTERN = /^[0-9a-f]{64}$/;
 
 interface CandidateRow {

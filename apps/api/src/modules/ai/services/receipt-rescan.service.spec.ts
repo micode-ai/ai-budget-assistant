@@ -21,7 +21,7 @@ function make(rows: any[], outcome: (id: string) => string = () => 'contributed'
   const prisma = {
     expense: {
       findMany: jest.fn().mockResolvedValue(rows),
-      findUnique: jest.fn().mockResolvedValue({ receiptImage: Buffer.from('img') }),
+      findUnique: jest.fn().mockResolvedValue({ receiptImage: Buffer.from('img'), receiptParts: [] }),
     },
   } as any;
   const cache = makeCache();
@@ -29,6 +29,10 @@ function make(rows: any[], outcome: (id: string) => string = () => 'contributed'
     parseReceipt: jest.fn().mockResolvedValue({
       scanAttestation: 'tok',
       receiptItems: [{ canonicalName: 'Mleko', quantity: 0, totalPrice: 3.5 }],
+    }),
+    parseReceiptParts: jest.fn().mockResolvedValue({
+      scanAttestation: 'tok',
+      receiptItems: [{ canonicalName: 'Mleko', quantity: 1, totalPrice: 3.5 }],
     }),
   } as any;
   const community = {
@@ -40,6 +44,41 @@ function make(rows: any[], outcome: (id: string) => string = () => 'contributed'
 }
 
 describe('ReceiptRescanService', () => {
+  it('rescan of a 3-part receipt calls parseReceiptParts with 3 parts, in order', async () => {
+    const { svc, prisma, ocr, community } = make([row('e1')]);
+    prisma.expense.findUnique.mockResolvedValue({
+      receiptImage: Buffer.from('p1'),
+      receiptParts: [
+        { index: 2, image: Buffer.from('p2'), mimeType: 'image/jpeg' },
+        { index: 3, image: Buffer.from('p3'), mimeType: 'image/png' },
+      ],
+    });
+    await svc.start({});
+    for (let i = 0; i < 5; i++) await flush();
+    const select = prisma.expense.findUnique.mock.calls[0][0].select;
+    expect(select.receiptParts.orderBy).toEqual({ index: 'asc' });
+    expect(ocr.parseReceipt).not.toHaveBeenCalled();
+    expect(ocr.parseReceiptParts).toHaveBeenCalledTimes(1);
+    const [parts, userId, accountId] = ocr.parseReceiptParts.mock.calls[0];
+    expect(parts).toEqual([
+      { imageBase64: Buffer.from('p1').toString('base64'), mimeType: 'image/jpeg' },
+      { imageBase64: Buffer.from('p2').toString('base64'), mimeType: 'image/jpeg' },
+      { imageBase64: Buffer.from('p3').toString('base64'), mimeType: 'image/png' },
+    ]);
+    expect([userId, accountId]).toEqual(['u1', 'a1']);
+    expect(community.contributeRescannedReceipt).toHaveBeenCalledWith('a1', 'u1', 'e1', 'tok', [
+      { canonicalName: 'Mleko', quantity: 1, totalPrice: 3.5 },
+    ]);
+  });
+
+  it('a single-image receipt is read exactly as before', async () => {
+    const { svc, ocr } = make([row('e1')]);
+    await svc.start({});
+    for (let i = 0; i < 5; i++) await flush();
+    expect(ocr.parseReceipt).toHaveBeenCalledTimes(1);
+    expect(ocr.parseReceiptParts).not.toHaveBeenCalled();
+  });
+
   it('only asks for recent, consenting, non-E2EE receipts and passes the OCR lines through', async () => {
     const { svc, prisma, community } = make([row('e1')]);
     await expect(svc.start({ emails: ['U1@x.pl'] })).resolves.toEqual({ started: true, candidates: 1 });

@@ -15,6 +15,8 @@ import * as DocumentPicker from 'expo-document-picker';
 import { uriToBase64 } from '@/utils/fileBase64';
 import * as Sharing from 'expo-sharing';
 import * as MediaLibrary from 'expo-media-library';
+import { scanEncodedParts } from '@/features/receipt/receiptParts';
+import type { IndexedReceiptPart } from '@/features/receipt/receiptPartsView';
 import { compressAndEncodeImage } from '@/features/receipt/receiptImage';
 import { materializeReceipt, releaseReceipt } from '@/features/receipt/receiptImageCache';
 import { ReceiptImageViewer } from '@/components/receipt/ReceiptImageViewer';
@@ -39,7 +41,7 @@ export function ReceiptSection({
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
-  const { loadReceiptImage, saveReceiptImage, deleteReceiptImage, loadExpenseItems, addExpenseItem, deleteExpenseItem } =
+  const { loadReceiptImage, loadReceiptParts, saveReceiptImage, deleteReceiptImage, loadExpenseItems, addExpenseItem, deleteExpenseItem } =
     useExpenseStore();
 
   // The receipt lives on disk, not in state. Holding the base64 here kept a
@@ -53,6 +55,13 @@ export function ReceiptSection({
   // re-render — it is read once per "Extract items" tap. Same lifecycle as the
   // materialized file URI below.
   const receiptBase64Ref = useRef<string | null>(null);
+  // Parts 2..N of a long receipt: file URIs for display, base64 only in a ref
+  // (read once per "Extract items" tap, like part 1).
+  const [extraUris, setExtraUris] = useState<string[]>([]);
+  const extraUrisRef = useRef<string[]>([]);
+  const extraBase64Ref = useRef<string[]>([]);
+  const [partsLoadFailed, setPartsLoadFailed] = useState(false);
+  const [viewerUri, setViewerUri] = useState<string | null>(null);
   const [imageLoading, setImageLoading] = useState(false);
   const [extracting, setExtracting] = useState(false);
   const [imageViewVisible, setImageViewVisible] = useState(false);
@@ -74,24 +83,60 @@ export function ReceiptSection({
     [expenseId, onReceiptLoaded],
   );
 
-  const handleLoadReceiptImage = useCallback(async () => {
+  const showExtraParts = useCallback(
+    async (parts: IndexedReceiptPart[]) => {
+      const previous = extraUrisRef.current;
+      const next = await Promise.all(
+        parts.map(async (p) => (await materializeReceipt(`${expenseId}-p${p.index}`, p.imageBase64, p.mimeType)).uri),
+      );
+      extraUrisRef.current = next;
+      extraBase64Ref.current = parts.map((p) => p.imageBase64);
+      setExtraUris(next);
+      for (const uri of previous) if (!next.includes(uri)) void releaseReceipt(uri);
+    },
+    [expenseId],
+  );
+
+  const handleLoadReceiptImage = useCallback(async (isCancelled: () => boolean = () => false) => {
     setImageLoading(true);
     try {
       const result = await loadReceiptImage(expenseId);
+      if (isCancelled()) return;
       await showReceipt(result?.base64 ?? null, result?.mimeType ?? 'image/jpeg');
+      if (result && result.mimeType !== 'application/pdf') {
+        try {
+          const extra = await loadReceiptParts(expenseId);
+          if (isCancelled()) return;
+          await showExtraParts(extra);
+          setPartsLoadFailed(false);
+        } catch (e) {
+          // A failed read is not "no parts": Extract items must not run on part 1 alone.
+          if (isCancelled()) return;
+          console.warn('[ReceiptSection] Failed to load receipt parts:', e);
+          await showExtraParts([]);
+          setPartsLoadFailed(true);
+        }
+      } else {
+        await showExtraParts([]);
+        setPartsLoadFailed(false);
+      }
     } catch (e) {
       console.warn('[ReceiptSection] Failed to load receipt image:', e);
       await showReceipt(null, 'image/jpeg');
     } finally {
       setImageLoading(false);
     }
-  }, [expenseId, loadReceiptImage, showReceipt]);
+  }, [expenseId, loadReceiptImage, loadReceiptParts, showReceipt, showExtraParts]);
 
   useEffect(() => {
+    let cancelled = false;
     const handle = InteractionManager.runAfterInteractions(() => {
-      handleLoadReceiptImage();
+      void handleLoadReceiptImage(() => cancelled);
     });
-    return () => handle.cancel();
+    return () => {
+      cancelled = true;
+      handle.cancel();
+    };
   }, [expenseId, handleLoadReceiptImage]);
 
   // Drop the cached copy when the screen is gone for good, so viewing many
@@ -99,6 +144,7 @@ export function ReceiptSection({
   useEffect(
     () => () => {
       void releaseReceipt(receiptUriRef.current);
+      for (const uri of extraUrisRef.current) void releaseReceipt(uri);
     },
     [],
   );
@@ -124,6 +170,8 @@ export function ReceiptSection({
     const base64 = await compressAndEncodeImage(uri, sourceWidth);
     await saveReceiptImage(expenseId, base64, 'image/jpeg');
     await showReceipt(base64, 'image/jpeg');
+    await showExtraParts([]);
+    setPartsLoadFailed(false);
   };
 
   const handleAttachFromCamera = async () => {
@@ -152,6 +200,8 @@ export function ReceiptSection({
     const base64 = await uriToBase64(result.assets[0].uri);
     await saveReceiptImage(expenseId, base64, 'application/pdf');
     await showReceipt(base64, 'application/pdf');
+    await showExtraParts([]);
+    setPartsLoadFailed(false);
   };
 
   // Re-run OCR over the attached receipt and apply its line items to this
@@ -160,9 +210,20 @@ export function ReceiptSection({
   const handleExtractItems = async () => {
     const base64 = receiptBase64Ref.current;
     if (!base64 || extracting) return;
+    if (partsLoadFailed) {
+      showAlert(t('common.error'), t('expenseDetail.receiptPartsLoadFailed'));
+      return;
+    }
     setExtracting(true);
     try {
-      const receipt = await api.scanReceipt(base64, undefined, isPdf ? 'application/pdf' : undefined);
+      // A long receipt re-reads ALL its parts in one call (billed per part).
+      const receipt =
+        extraBase64Ref.current.length > 0 && !isPdf
+          ? await scanEncodedParts([base64, ...extraBase64Ref.current], undefined, {
+              scanReceipt: (b64, prompt) => api.scanReceipt(b64, prompt),
+              scanReceiptParts: (parts, prompt) => api.scanReceiptParts(parts, prompt),
+            })
+          : await api.scanReceipt(base64, undefined, isPdf ? 'application/pdf' : undefined);
       const scannedItems = receipt?.receiptItems ?? [];
       if (scannedItems.length === 0) {
         showAlert('', t('expenseDetail.extractItemsNoItems'));
@@ -249,6 +310,8 @@ ${t('children.carryLost', { count: lost })}` : done);
         onPress: async () => {
           await deleteReceiptImage(expenseId);
           await showReceipt(null, receiptMimeType);
+          await showExtraParts([]);
+          setPartsLoadFailed(false);
         },
       },
     ]);
@@ -270,28 +333,38 @@ ${t('children.carryLost', { count: lost })}` : done);
                 <Text style={styles.pdfPreviewHint}>{t('expenseDetail.tapToOpen')}</Text>
               </TouchableOpacity>
             ) : (
-              <TouchableOpacity onPress={() => setImageViewVisible(true)}>
-                <Image
-                  source={{ uri: receiptUri }}
-                  style={styles.receiptThumbnail}
-                  resizeMode="cover"
-                />
-              </TouchableOpacity>
+              [receiptUri, ...extraUris].map((uri, i, all) => (
+                <TouchableOpacity
+                  key={uri}
+                  onPress={() => {
+                    setViewerUri(uri);
+                    setImageViewVisible(true);
+                  }}
+                  accessibilityLabel={
+                    all.length > 1 ? t('expenseDetail.receiptPartOf', { n: i + 1, total: all.length }) : undefined
+                  }
+                >
+                  <Image source={{ uri }} style={styles.receiptThumbnail} resizeMode="cover" />
+                </TouchableOpacity>
+              ))
             )}
             <View style={styles.imageActions}>
               {!isPdf && (
-                <TouchableOpacity style={styles.imageActionBtn} onPress={() => setImageViewVisible(true)}>
+                <TouchableOpacity style={styles.imageActionBtn} onPress={() => {
+                  setViewerUri(receiptUri);
+                  setImageViewVisible(true);
+                }}>
                   <Ionicons name="eye-outline" size={18} color={theme.colors.primary} />
                   <Text style={styles.imageActionText}>{t('expenseDetail.viewImage')}</Text>
                 </TouchableOpacity>
               )}
               <TouchableOpacity style={styles.imageActionBtn} onPress={handleShareImage}>
                 <Ionicons name="share-outline" size={18} color={theme.colors.primary} />
-                <Text style={styles.imageActionText}>{t('expenseDetail.shareImage')}</Text>
+                <Text style={styles.imageActionText}>{(extraUris.length > 0 ? t('expenseDetail.shareFirstPhoto') : t('expenseDetail.shareImage'))}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.imageActionBtn} onPress={handleSaveImage}>
                 <Ionicons name="download-outline" size={18} color={theme.colors.primary} />
-                <Text style={styles.imageActionText}>{t('expenseDetail.saveImage')}</Text>
+                <Text style={styles.imageActionText}>{(extraUris.length > 0 ? t('expenseDetail.saveFirstPhoto') : t('expenseDetail.saveImage'))}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.imageActionBtn}
@@ -333,8 +406,11 @@ ${t('children.carryLost', { count: lost })}` : done);
 
       <ReceiptImageViewer
         visible={imageViewVisible && !isPdf}
-        uri={receiptUri}
-        onClose={() => setImageViewVisible(false)}
+        uri={viewerUri ?? receiptUri}
+        onClose={() => {
+          setImageViewVisible(false);
+          setViewerUri(null);
+        }}
       />
     </>
   );

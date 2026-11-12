@@ -1,0 +1,232 @@
+{
+  "name": "three-parts",
+  "synthetic": true,
+  "shop": "Hurtownia Dobry Targ",
+  "date": "2026-03-14",
+  "currency": "PLN",
+  "partsCount": 3,
+  "overlapLines": 3,
+  "repeatAcrossBoundary": false,
+  "expected": {
+    "lineCount": 36,
+    "total": 330.58,
+    "lines": [
+      {
+        "name": "Piwo jasne 0,5L",
+        "qty": 1,
+        "unitPrice": 3.89,
+        "totalPrice": 3.89
+      },
+      {
+        "name": "Platki owsiane",
+        "qty": 1,
+        "unitPrice": 4.19,
+        "totalPrice": 4.19
+      },
+      {
+        "name": "Jablka kg",
+        "qty": 3,
+        "unitPrice": 4.49,
+        "totalPrice": 13.47
+      },
+      {
+        "name": "Woda gazowana 1,5L",
+        "qty": 1,
+        "unitPrice": 1.99,
+        "totalPrice": 1.99
+      },
+      {
+        "name": "Banany kg",
+        "qty": 2,
+        "unitPrice": 5.99,
+        "totalPrice": 11.98
+      },
+      {
+        "name": "Ser zolty plaster",
+        "qty": 1,
+        "unitPrice": 6.79,
+        "totalPrice": 6.79
+      },
+      {
+        "name": "Orzechy wloskie 100g",
+        "qty": 1,
+        "unitPrice": 9.49,
+        "totalPrice": 9.49
+      },
+      {
+        "name": "Herbata czarna 20szt",
+        "qty": 2,
+        "unitPrice": 7.29,
+        "totalPrice": 14.58
+      },
+      {
+        "name": "Jogurt naturalny",
+        "qty": 1,
+        "unitPrice": 2.19,
+        "totalPrice": 2.19
+      },
+      {
+        "name": "Cebula kg",
+        "qty": 1,
+        "unitPrice": 3.19,
+        "totalPrice": 3.19
+      },
+      {
+        "name": "Ogorki kg",
+        "qty": 2,
+        "unitPrice": 6.49,
+        "totalPrice": 12.98
+      },
+      {
+        "name": "Makaron spaghetti",
+        "qty": 2,
+        "unitPrice": 3.99,
+        "totalPrice": 7.98
+      },
+      {
+        "name": "Chipsy solone",
+        "qty": 1,
+        "unitPrice": 6.19,
+        "totalPrice": 6.19
+      },
+      {
+        "name": "Jajka M 10szt",
+        "qty": 1,
+        "unitPrice": 11.5,
+        "totalPrice": 11.5
+      },
+      {
+        "name": "Maslanka 0,5L",
+        "qty": 1,
+        "unitPrice": 2.69,
+        "totalPrice": 2.69
+      },
+      {
+        "name": "Chleb pszenny",
+        "qty": 2,
+        "unitPrice": 4.2,
+        "totalPrice": 8.4
+      },
+      {
+        "name": "Czekolada mleczna",
+        "qty": 1,
+        "unitPrice": 4.99,
+        "totalPrice": 4.99
+      },
+      {
+        "name": "Szynka wiejska 100g",
+        "qty": 1,
+        "unitPrice": 5.59,
+        "totalPrice": 5.59
+      },
+      {
+        "name": "Ryz bialy 1kg",
+        "qty": 1,
+        "unitPrice": 5.49,
+        "totalPrice": 5.49
+      },
+      {
+        "name": "Plyn do naczyn",
+        "qty": 3,
+        "unitPrice": 6.49,
+        "totalPrice": 19.47
+      },
+      {
+        "name": "Parowki 6szt",
+        "qty": 3,
+        "unitPrice": 9.29,
+        "totalPrice": 27.87
+      },
+      {
+        "name": "Bulki 6szt",
+        "qty": 1,
+        "unitPrice": 4.99,
+        "totalPrice": 4.99
+      },
+      {
+        "name": "Olej rzepakowy 1L",
+        "qty": 1,
+        "unitPrice": 8.49,
+        "totalPrice": 8.49
+      },
+      {
+        "name": "Maka 1kg",
+        "qty": 1,
+        "unitPrice": 3.29,
+        "totalPrice": 3.29
+      },
+      {
+        "name": "Maslo extra 200g",
+        "qty": 2,
+        "unitPrice": 8.99,
+        "totalPrice": 17.98
+      },
+      {
+        "name": "Pomidory kg",
+        "qty": 1,
+        "unitPrice": 9.99,
+        "totalPrice": 9.99
+      },
+      {
+        "name": "Pasta do zebow",
+        "qty": 1,
+        "unitPrice": 7.99,
+        "totalPrice": 7.99
+      },
+      {
+        "name": "Mleko 3,2% 1L",
+        "qty": 2,
+        "unitPrice": 3.49,
+        "totalPrice": 6.98
+      },
+      {
+        "name": "Kawa mielona 250g",
+        "qty": 1,
+        "unitPrice": 17.99,
+        "totalPrice": 17.99
+      },
+      {
+        "name": "Dzem truskawkowy",
+        "qty": 1,
+        "unitPrice": 6.89,
+        "totalPrice": 6.89
+      },
+      {
+        "name": "Sok pomaranczowy 1L",
+        "qty": 3,
+        "unitPrice": 5.79,
+        "totalPrice": 17.37
+      },
+      {
+        "name": "Ziemniaki kg",
+        "qty": 3,
+        "unitPrice": 2.89,
+        "totalPrice": 8.67
+      },
+      {
+        "name": "Marchew kg",
+        "qty": 2,
+        "unitPrice": 3.49,
+        "totalPrice": 6.98
+      },
+      {
+        "name": "Cukier 1kg",
+        "qty": 2,
+        "unitPrice": 4.59,
+        "totalPrice": 9.18
+      },
+      {
+        "name": "Papier toaletowy 8szt",
+        "qty": 1,
+        "unitPrice": 13.99,
+        "totalPrice": 13.99
+      },
+      {
+        "name": "Twarog polcustowy",
+        "qty": 1,
+        "unitPrice": 4.89,
+        "totalPrice": 4.89
+      }
+    ]
+  }
+}

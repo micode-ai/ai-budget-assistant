@@ -213,14 +213,39 @@ describe('ChildStatementService.build', () => {
   it('loads receipt bytes in batches, scoped to the account, without copying', async () => {
     const { service, prisma } = makeService();
     const bytes = Buffer.from([1, 2, 3]);
-    prisma.expense.findMany.mockResolvedValue([{ id: 'e1', receiptImage: bytes }]);
+    prisma.expense.findMany.mockResolvedValue([{ id: 'e1', receiptImage: bytes, receiptParts: [] }]);
     const map = await service.loadReceiptImages('acc-1', ['e1', 'e2']);
     expect(prisma.expense.findMany).toHaveBeenCalledWith({
       where: { accountId: 'acc-1', id: { in: ['e1', 'e2'] } },
-      select: { id: true, receiptImage: true },
+      select: {
+        id: true,
+        receiptImage: true,
+        receiptParts: { select: { image: true }, orderBy: { index: 'asc' } },
+      },
     });
-    expect(map.get('e1')).toBe(bytes);
+    expect(map.get('e1')?.[0]).toBe(bytes);
     expect(map.has('e2')).toBe(false);
+  });
+
+  it('loads every part of a long receipt, part 1 first', async () => {
+    const { service, prisma } = makeService();
+    const [p1, p2, p3] = [Buffer.from([1]), Buffer.from([2]), Buffer.from([3])];
+    prisma.expense.findMany.mockResolvedValue([
+      { id: 'e1', receiptImage: p1, receiptParts: [{ image: p2 }, { image: p3 }] },
+    ]);
+    const map = await service.loadReceiptImages('acc-1', ['e1']);
+    expect(map.get('e1')).toEqual([p1, p2, p3]);
+    expect(map.get('e1')?.[0]).toBe(p1);
+  });
+
+  it('plans a long receipt by the bytes of ALL its parts and its largest part', async () => {
+    const { service, prisma } = makeService({ rows: [expenseRow({ id: 'e1' })] });
+    prisma.$queryRaw.mockResolvedValue([{ id: 'e1', size: 3000, largest: 1500 }]);
+    await build(service);
+    const sql = prisma.$queryRaw.mock.calls[0][0];
+    expect(sql.sql).toContain('expense_receipt_parts');
+    expect(sql.sql).toMatch(/SUM\(octet_length\(p\.image\)\)/);
+    expect(sql.sql).toMatch(/MAX\(octet_length\(p\.image\)\)/);
   });
 });
 
@@ -244,6 +269,19 @@ describe('selectReceipts (appendix caps)', () => {
   it('stops at the total-bytes cap', () => {
     const r = selectReceipts([c('a', 400), c('b', 400), c('c', 400), c('d', 10)], limits);
     expect(r).toEqual({ ids: ['a', 'b', 'd'], omitted: 1 });
+  });
+
+  it('a long receipt counts all its parts against the total, and any part over the per-image cap omits it', () => {
+    const r = selectReceipts(
+      [
+        { id: 'long', size: 900, largest: 300 }, // 3 parts, each under 400, 900 in all
+        { id: 'next', size: 200 }, // 900 + 200 > 1000 -> omitted
+        { id: 'fat-part', size: 500, largest: 401 },
+        { id: 'small', size: 100 },
+      ],
+      limits,
+    );
+    expect(r).toEqual({ ids: ['long', 'small'], omitted: 2 });
   });
 
   it('the default caps: 150 receipts, 40 MB in all, 3 MB each', () => {

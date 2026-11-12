@@ -707,6 +707,23 @@ Caught up on a week of paper receipts? After you save one, the confirmation prom
 
 While you're scanning, a small counter shows how many receipts you've saved this session. Every 15 receipts, the app checks in with a friendly reminder that you can keep going or take a break — your progress is already saved either way. The counter resets once you leave the screen; it's just there to give you a sense of progress during one sitting.
 
+### Long Receipt in Several Photos
+
+A receipt too long for one readable photo can be photographed in pieces and read as **one** receipt.
+
+**In the app**
+
+1. On the receipt screen tap **Long receipt? Photograph it in parts**
+2. Photograph the receipt from top to bottom, with a small overlap between photos (the last line of one photo should be visible again at the top of the next) — you can add up to **4 parts**
+3. Tap **Read receipt**. You get one confirmation card with every line once; the overlapping lines are not counted twice
+4. If the line totals don't match the receipt total, the app warns you and offers **Retake parts** instead of saving
+
+Each part counts as one receipt scan against your monthly AI limit, so a three-part receipt uses three scans. A PDF cannot be combined with photos. The expense keeps all its photos: open the receipt on the expense and tap a part to view it.
+
+**In the Telegram, WhatsApp and Slack bots**
+
+Send the photos one after another. The first photo is read at once. While its confirmation card is still open, send the next photo — the bot asks whether it is a **Continuation** or a **New receipt**. Choose **Continuation** and the card is rebuilt from all the photos together (corrections you typed on the old card are not kept, so check the new one). Photos must be JPEG, PNG or WebP and not too large; the bot tells you if one is refused.
+
 ### Already-Scanned Receipts
 
 The app warns you before a receipt ends up in your expenses twice:
@@ -6100,6 +6117,23 @@ iOS, Android, Web
 
 Пока вы сканируете, небольшой счётчик показывает, сколько чеков сохранено в этой сессии. Каждые 15 чеков приложение дружелюбно напоминает, что можно продолжить или сделать перерыв — прогресс в любом случае уже сохранён. Счётчик сбрасывается при выходе с экрана; он нужен только для ощущения прогресса в рамках одной сессии.
 
+### Длинный чек в нескольких фото
+
+Чек, который не помещается в одно читаемое фото, можно сфотографировать по частям — он будет прочитан как **один** чек.
+
+**В приложении**
+
+1. На экране чека нажмите **Длинный чек? Сфотографируйте по частям**
+2. Фотографируйте чек сверху вниз с небольшим нахлёстом между снимками (последняя строка одного фото должна снова попасть в верх следующего) — можно добавить до **4 частей**
+3. Нажмите **Распознать чек**. Вы получите одну карточку подтверждения, где каждая строка встречается один раз; строки в зоне нахлёста не считаются дважды
+4. Если сумма строк не совпадает с итогом чека, приложение предупредит об этом и предложит **Переснять части** вместо сохранения
+
+Каждая часть считается как одно сканирование чека в вашем месячном лимите ИИ, поэтому чек из трёх частей использует три сканирования. PDF нельзя совмещать с фото. Расход хранит все фото: откройте чек в расходе и нажмите на нужную часть, чтобы её рассмотреть.
+
+**В ботах Telegram, WhatsApp и Slack**
+
+Отправляйте фото одно за другим. Первое фото читается сразу. Пока его карточка подтверждения ещё открыта, отправьте следующее фото — бот спросит, это **Продолжение** или **Новый чек**. Выберите **Продолжение**, и карточка пересоберётся из всех фото сразу (правки, которые вы вводили в старой карточке, не сохраняются, поэтому проверьте новую). Фото должны быть в формате JPEG, PNG или WebP и не слишком большими; если фото не подошло, бот сообщит об этом.
+
 ### Уже отсканированные чеки
 
 Приложение предупредит, прежде чем чек попадёт в расходы дважды:
@@ -11470,6 +11504,23 @@ iOS, Android, Web
 
 Поки ви скануєте, невеликий лічильник показує, скільки чеків збережено в цій сесії. Кожні 15 чеків додаток дружньо нагадує, що можна продовжити або зробити перерву — прогрес у будь-якому разі вже збережено. Лічильник скидається після виходу з екрана; він потрібен лише для відчуття прогресу в межах однієї сесії.
 
+### Довгий чек у кількох фото
+
+Чек, що не вміщується в одне читабельне фото, можна сфотографувати частинами — його буде прочитано як **один** чек.
+
+**У застосунку**
+
+1. На екрані чека натисніть **Довгий чек? Сфотографуйте частинами**
+2. Фотографуйте чек згори донизу з невеликим перекриттям між знімками (останній рядок одного фото має знову потрапити вгору наступного) — можна додати до **4 частин**
+3. Натисніть **Розпізнати чек**. Ви отримаєте одну картку підтвердження, де кожен рядок трапляється один раз; рядки в зоні перекриття не рахуються двічі
+4. Якщо сума рядків не збігається з підсумком чека, застосунок попередить і запропонує **Перезняти частини** замість збереження
+
+Кожна частина рахується як одне сканування чека у вашому місячному ліміті ШІ, тож чек із трьох частин використовує три сканування. PDF не можна поєднувати з фото. Витрата зберігає всі фото: відкрийте чек у витраті й натисніть потрібну частину, щоб її роздивитися.
+
+**У ботах Telegram, WhatsApp і Slack**
+
+Надсилайте фото одне за одним. Перше фото читається одразу. Поки його картка підтвердження ще відкрита, надішліть наступне фото — бот запитає, це **Продовження** чи **Новий чек**. Оберіть **Продовження**, і картку буде перебудовано з усіх фото разом (виправлення, які ви вводили на старій картці, не зберігаються, тож перевірте нову). Фото мають бути у форматі JPEG, PNG або WebP і не надто великими; якщо фото не підійшло, бот повідомить про це.
+
 ### Уже відскановані чеки
 
 Застосунок попередить, перш ніж чек потрапить у витрати двічі:
@@ -16788,6 +16839,23 @@ Uzbierał się tydzień papierowych paragonów? Po zapisaniu jednego z nich potw
 
 Podczas skanowania mały licznik pokazuje, ile paragonów zapisano w tej sesji. Co 15 paragonów aplikacja przypomina, że można kontynuować lub zrobić przerwę — postęp jest już zapisany niezależnie od wyboru. Licznik resetuje się po opuszczeniu ekranu; służy tylko do pokazania postępu w trakcie jednej sesji.
 
+### Długi paragon w kilku zdjęciach
+
+Paragon zbyt długi na jedno czytelne zdjęcie można sfotografować w częściach i odczytać jako **jeden** paragon.
+
+**W aplikacji**
+
+1. Na ekranie paragonu dotknij **Długi paragon? Zrób zdjęcia w częściach**
+2. Fotografuj paragon od góry do dołu, z niewielką zakładką między zdjęciami (ostatnia linia jednego zdjęcia powinna być znów widoczna na górze następnego) — możesz dodać do **4 części**
+3. Dotknij **Odczytaj paragon**. Dostaniesz jedną kartę potwierdzenia, na której każda pozycja występuje raz; pozycje w zakładce nie są liczone dwa razy
+4. Jeśli suma pozycji nie zgadza się z sumą paragonu, aplikacja ostrzeże Cię i zaproponuje **Zrób części ponownie** zamiast zapisu
+
+Każda część liczy się jako jedno skanowanie paragonu w Twoim miesięcznym limicie AI, więc paragon z trzech części zużywa trzy skanowania. PDF nie można łączyć ze zdjęciami. Wydatek zachowuje wszystkie zdjęcia: otwórz paragon przy wydatku i dotknij części, aby ją obejrzeć.
+
+**W botach Telegram, WhatsApp i Slack**
+
+Wysyłaj zdjęcia jedno po drugim. Pierwsze zdjęcie jest odczytywane od razu. Dopóki jego karta potwierdzenia jest otwarta, wyślij następne zdjęcie — bot zapyta, czy to **Dalsza część** czy **Nowy paragon**. Wybierz **Dalsza część**, a karta zostanie zbudowana od nowa ze wszystkich zdjęć (poprawki wpisane na starej karcie nie zostają, więc sprawdź nową). Zdjęcia muszą być w formacie JPEG, PNG lub WebP i nie za duże; bot powie, jeśli któreś odrzuci.
+
 ### Paragony już zeskanowane
 
 Aplikacja ostrzeże Cię, zanim paragon trafi do wydatków dwa razy:
@@ -22102,6 +22170,23 @@ Hast du eine Woche Papierbelege gesammelt? Nach dem Speichern bietet die Bestät
 
 Während du scannst, zeigt ein kleiner Zähler, wie viele Belege du in dieser Sitzung bereits gespeichert hast. Alle 15 Belege meldet sich die App mit einer freundlichen Erinnerung, dass du weitermachen oder eine Pause einlegen kannst — dein Fortschritt ist so oder so schon gespeichert. Der Zähler setzt sich zurück, sobald du den Bildschirm verlässt; er dient nur dazu, dir während einer Sitzung ein Gefühl für den Fortschritt zu geben.
 
+### Langer Beleg in mehreren Fotos
+
+Ein Beleg, der für ein lesbares Foto zu lang ist, kann in Teilen fotografiert und als **ein** Beleg gelesen werden.
+
+**In der App**
+
+1. Tippen Sie auf dem Belegbildschirm auf **Langer Beleg? In Teilen fotografieren**
+2. Fotografieren Sie den Beleg von oben nach unten mit einer kleinen Überlappung zwischen den Fotos (die letzte Zeile eines Fotos sollte oben im nächsten wieder sichtbar sein) — bis zu **4 Teile** sind möglich
+3. Tippen Sie auf **Beleg auslesen**. Sie erhalten eine Bestätigungskarte, auf der jede Position einmal steht; Positionen im Überlappungsbereich werden nicht doppelt gezählt
+4. Stimmt die Summe der Positionen nicht mit dem Beleg-Gesamtbetrag überein, warnt die App und bietet **Teile neu aufnehmen** statt Speichern an
+
+Jeder Teil zählt als ein Beleg-Scan auf Ihr monatliches KI-Limit, ein Beleg aus drei Teilen verbraucht also drei Scans. Ein PDF lässt sich nicht mit Fotos kombinieren. Die Ausgabe behält alle Fotos: Öffnen Sie den Beleg an der Ausgabe und tippen Sie auf einen Teil, um ihn anzusehen.
+
+**In den Bots für Telegram, WhatsApp und Slack**
+
+Senden Sie die Fotos nacheinander. Das erste Foto wird sofort gelesen. Solange seine Bestätigungskarte noch offen ist, senden Sie das nächste Foto — der Bot fragt, ob es eine **Fortsetzung** oder ein **Neuer Beleg** ist. Wählen Sie **Fortsetzung**, und die Karte wird aus allen Fotos zusammen neu aufgebaut (auf der alten Karte eingetippte Korrekturen bleiben nicht erhalten, prüfen Sie also die neue). Die Fotos müssen JPEG, PNG oder WebP und nicht zu groß sein; der Bot sagt Ihnen, wenn eines abgelehnt wird.
+
 ### Bereits gescannte Belege
 
 Die App warnt dich, bevor ein Beleg doppelt in deinen Ausgaben landet:
@@ -27391,6 +27476,23 @@ Funciona igual tanto si escaneas desde la aplicación como desde los bots de Tel
 
 Mientras escaneas, un pequeño contador muestra cuántos recibos has guardado en esta sesión. Cada 15 recibos, la app te avisa con un recordatorio amistoso de que puedes seguir o tomar un descanso — tu progreso ya está guardado de cualquier forma. El contador se reinicia al salir de la pantalla; solo está para darte una sensación de progreso durante una sesión.
 
+### Recibo largo en varias fotos
+
+Un recibo demasiado largo para una foto legible se puede fotografiar por partes y leer como **un solo** recibo.
+
+**En la app**
+
+1. En la pantalla del recibo toca **¿Recibo largo? Fotografíalo por partes**
+2. Fotografía el recibo de arriba abajo con un pequeño solapamiento entre fotos (la última línea de una foto debe verse de nuevo arriba en la siguiente); puedes añadir hasta **4 partes**
+3. Toca **Leer recibo**. Obtendrás una tarjeta de confirmación con cada línea una sola vez; las líneas del solapamiento no se cuentan dos veces
+4. Si la suma de las líneas no coincide con el total del recibo, la app te avisa y ofrece **Volver a fotografiar las partes** en lugar de guardar
+
+Cada parte cuenta como un escaneo de recibo en tu límite mensual de IA, así que un recibo de tres partes usa tres escaneos. Un PDF no se puede combinar con fotos. El gasto conserva todas las fotos: abre el recibo en el gasto y toca una parte para verla.
+
+**En los bots de Telegram, WhatsApp y Slack**
+
+Envía las fotos una tras otra. La primera foto se lee de inmediato. Mientras su tarjeta de confirmación siga abierta, envía la siguiente foto: el bot pregunta si es una **Continuación** o un **Recibo nuevo**. Elige **Continuación** y la tarjeta se reconstruye con todas las fotos juntas (las correcciones escritas en la tarjeta anterior no se conservan, así que revisa la nueva). Las fotos deben ser JPEG, PNG o WebP y no demasiado grandes; el bot te avisa si rechaza alguna.
+
 ### Recibos ya escaneados
 
 La app te avisa antes de que un recibo acabe dos veces en tus gastos:
@@ -32669,6 +32771,23 @@ Vous avez accumulé une semaine de reçus papier ? Après en avoir enregistré u
 
 Pendant que vous scannez, un petit compteur indique combien de reçus vous avez enregistrés dans cette session. Tous les 15 reçus, l'application vous rappelle amicalement que vous pouvez continuer ou faire une pause — votre progression est déjà enregistrée dans tous les cas. Le compteur se réinitialise dès que vous quittez l'écran ; il sert uniquement à donner un sentiment de progression pendant une session.
 
+### Reçu long en plusieurs photos
+
+Un reçu trop long pour une seule photo lisible peut être photographié en plusieurs morceaux et lu comme **un seul** reçu.
+
+**Dans l'application**
+
+1. Sur l'écran du reçu, touchez **Reçu long ? Photographiez-le en plusieurs parties**
+2. Photographiez le reçu de haut en bas avec un petit chevauchement entre les photos (la dernière ligne d'une photo doit réapparaître en haut de la suivante) ; vous pouvez ajouter jusqu'à **4 parties**
+3. Touchez **Lire le reçu**. Vous obtenez une seule carte de confirmation où chaque ligne apparaît une fois ; les lignes du chevauchement ne sont pas comptées deux fois
+4. Si la somme des lignes ne correspond pas au total du reçu, l'application vous prévient et propose **Reprendre les parties** au lieu d'enregistrer
+
+Chaque partie compte comme un scan de reçu dans votre limite mensuelle d'IA : un reçu en trois parties utilise donc trois scans. Un PDF ne peut pas être combiné avec des photos. La dépense conserve toutes les photos : ouvrez le reçu sur la dépense et touchez une partie pour la voir.
+
+**Dans les bots Telegram, WhatsApp et Slack**
+
+Envoyez les photos l'une après l'autre. La première photo est lue tout de suite. Tant que sa carte de confirmation est ouverte, envoyez la photo suivante : le bot demande s'il s'agit d'une **Suite** ou d'un **Nouveau reçu**. Choisissez **Suite** et la carte est reconstruite à partir de toutes les photos ensemble (les corrections saisies sur l'ancienne carte ne sont pas conservées, vérifiez donc la nouvelle). Les photos doivent être en JPEG, PNG ou WebP et pas trop lourdes ; le bot vous le dit s'il en refuse une.
+
 ### Reçus déjà scannés
 
 L'application vous prévient avant qu'un reçu n'apparaisse deux fois dans vos dépenses :
@@ -37945,6 +38064,23 @@ iOS, Android, Web
 
 Пакуль вы скануеце, невялікі лічыльнік паказвае, колькі чэкаў захавана ў гэтай сесіі. Кожныя 15 чэкаў праграма сяброўска нагадвае, што можна працягнуць або зрабіць перапынак — прагрэс у любым выпадку ўжо захаваны. Лічыльнік скідаецца пасля выхаду з экрана; ён патрэбны толькі для адчування прагрэсу ў межах адной сесіі.
 
+### Доўгі чэк у некалькіх фота
+
+Чэк, які не змяшчаецца ў адно чытэльнае фота, можна сфатаграфаваць часткамі — ён будзе прачытаны як **адзін** чэк.
+
+**У праграме**
+
+1. На экране чэка націсніце **Доўгі чэк? Сфатаграфуйце па частках**
+2. Здымайце чэк зверху ўніз з невялікім накладаннем паміж здымкамі (апошні радок аднаго фота павінен зноў трапіць уверх наступнага) — можна дадаць да **4 частак**
+3. Націсніце **Распазнаць чэк**. Вы атрымаеце адну картку пацверджання, дзе кожны радок сустракаецца адзін раз; радкі ў зоне накладання не лічацца двойчы
+4. Калі сума радкоў не супадае з вынікам чэка, праграма папярэдзіць і прапануе **Пераздымаць часткі** замест захавання
+
+Кожная частка лічыцца адным сканаваннем чэка ў вашым месячным ліміце ШІ, таму чэк з трох частак выкарыстоўвае тры сканаванні. PDF нельга спалучаць з фота. Выдатак захоўвае ўсе фота: адкрыйце чэк у выдатку і націсніце патрэбную частку, каб яе разгледзець.
+
+**У ботах Telegram, WhatsApp і Slack**
+
+Дасылайце фота адно за адным. Першае фота чытаецца адразу. Пакуль яго картка пацверджання яшчэ адкрытая, адпраўце наступнае фота — бот спытае, гэта **Працяг** ці **Новы чэк**. Абярыце **Працяг**, і картка перабудуецца з усіх фота разам (праўкі, якія вы ўводзілі на старой картцы, не захоўваюцца, таму праверце новую). Фота павінны быць у фармаце JPEG, PNG або WebP і не занадта вялікімі; калі фота не падышло, бот паведаміць пра гэта.
+
 ### Ужо адсканаваныя чэкі
 
 Праграма папярэдзіць, перш чым чэк трапіць у выдаткі двойчы:
@@ -43184,6 +43320,23 @@ Heb je een week aan papieren bonnen verzameld? Na het opslaan van een bon krijg 
 - **Klaar** — rondt af en brengt je terug naar waar je begon
 
 Terwijl je scant, laat een kleine teller zien hoeveel bonnen je deze sessie al hebt opgeslagen. Elke 15 bonnen geeft de app een vriendelijke herinnering dat je door kunt gaan of een pauze kunt nemen — je voortgang is sowieso al opgeslagen. De teller wordt gereset zodra je het scherm verlaat; hij is er alleen om je een gevoel van voortgang te geven tijdens één sessie.
+
+### Lange bon in meerdere foto's
+
+Een bon die te lang is voor één leesbare foto kun je in delen fotograferen en als **één** bon laten lezen.
+
+**In de app**
+
+1. Tik op het bonscherm op **Lange bon? Fotografeer hem in delen**
+2. Fotografeer de bon van boven naar beneden met een kleine overlap tussen de foto's (de laatste regel van een foto moet bovenaan de volgende weer zichtbaar zijn); je kunt tot **4 delen** toevoegen
+3. Tik op **Bon uitlezen**. Je krijgt één bevestigingskaart waarop elke regel één keer staat; regels in de overlap worden niet dubbel geteld
+4. Komt het totaal van de regels niet overeen met het totaal van de bon, dan waarschuwt de app je en biedt **Delen opnieuw maken** aan in plaats van opslaan
+
+Elk deel telt als één bonscan voor je maandelijkse AI-limiet, dus een bon van drie delen gebruikt drie scans. Een pdf kan niet met foto's worden gecombineerd. De uitgave bewaart alle foto's: open de bon bij de uitgave en tik op een deel om het te bekijken.
+
+**In de bots voor Telegram, WhatsApp en Slack**
+
+Stuur de foto's na elkaar. De eerste foto wordt direct gelezen. Zolang de bevestigingskaart nog openstaat, stuur je de volgende foto: de bot vraagt of het een **Vervolg** of een **Nieuwe bon** is. Kies **Vervolg** en de kaart wordt opnieuw opgebouwd uit alle foto's samen (correcties die je op de oude kaart typte blijven niet behouden, controleer dus de nieuwe). Foto's moeten JPEG, PNG of WebP zijn en niet te groot; de bot meldt het als er een wordt geweigerd.
 
 ### Al gescande bonnen
 

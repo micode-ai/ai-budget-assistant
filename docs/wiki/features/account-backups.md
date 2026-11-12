@@ -41,7 +41,8 @@ OOM-crashed the API. The service builds the JSON string once and the controller 
 
 **`Expense.receiptImage` is stripped from the export.** A `Bytes` field serializes to a per-byte
 integer array (~4-6x its size) and was the main reason backups passed 50 MB; restore never reads it
-back. It is set to `undefined` in JS after the query — query-level Prisma `omit` types as `never` in
+back. The extra photos of a long receipt (`ExpenseReceiptPart`, [long-receipt](long-receipt.md)) are
+skipped the same way: never exported, ignored on restore. It is set to `undefined` in JS after the query — query-level Prisma `omit` types as `never` in
 this client setup.
 
 **Never reuse a source row's `id`.** Ids are global primary keys; reusing them threw

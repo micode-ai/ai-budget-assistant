@@ -35,8 +35,11 @@ export interface StatementReceipt {
   merchant: string | null;
 }
 
-/** Receipt bytes by expense id; an id missing from the map is skipped. */
-export type ReceiptImageLoader = (expenseIds: string[]) => Promise<Map<string, Buffer>>;
+/**
+ * Receipt bytes by expense id; an id missing from the map is skipped. A long
+ * receipt is every part in order (part 1 first); a single image may be a bare Buffer.
+ */
+export type ReceiptImageLoader = (expenseIds: string[]) => Promise<Map<string, Buffer | Buffer[]>>;
 
 export interface StatementData {
   childName: string;
@@ -87,10 +90,12 @@ export function receiptLimits(): ReceiptLimits {
  * Which receipts make the appendix, in order: an image over the per-image
  * limit is skipped, one that would break the total is skipped, and nothing is
  * taken past the count cap. Everything skipped is counted as omitted, so the
- * PDF can say so.
+ * PDF can say so. A long receipt is one candidate: `size` is all its parts
+ * together (counted against the total), `largest` its biggest part (checked
+ * against the per-image cap); without `largest` the receipt is one image.
  */
 export function selectReceipts(
-  candidates: Array<{ id: string; size: number }>,
+  candidates: Array<{ id: string; size: number; largest?: number }>,
   limits: ReceiptLimits = receiptLimits(),
 ): { ids: string[]; omitted: number } {
   const ids: string[] = [];
@@ -98,7 +103,8 @@ export function selectReceipts(
   let omitted = 0;
   for (const c of candidates) {
     if (c.size <= 0) continue;
-    if (c.size > limits.maxImageBytes || ids.length >= limits.maxReceipts || total + c.size > limits.maxTotalBytes) {
+    const largest = c.largest ?? c.size;
+    if (largest > limits.maxImageBytes || ids.length >= limits.maxReceipts || total + c.size > limits.maxTotalBytes) {
       omitted += 1;
       continue;
     }
@@ -388,7 +394,8 @@ export class ChildStatementService {
   /**
    * The appendix plan: which counted expenses have a stored receipt, by SIZE
    * only (`octet_length`, no bytes loaded), capped by `selectReceipts`, in line
-   * order.
+   * order. A long receipt's size is part 1 plus every row in
+   * `expense_receipt_parts`, so its parts count against the byte budget.
    */
   private async planReceipts(
     accountId: string,
@@ -396,13 +403,23 @@ export class ChildStatementService {
     lines: StatementLine[],
   ): Promise<{ receipts: StatementReceipt[]; omitted: number }> {
     if (ids.length === 0) return { receipts: [], omitted: 0 };
-    const sized = await this.prisma.$queryRaw<Array<{ id: string; size: number | bigint }>>(Prisma.sql`
-      SELECT id, octet_length(receipt_image) AS size
-      FROM expenses
-      WHERE account_id = ${accountId} AND id = ANY(${ids}) AND receipt_image IS NOT NULL
+    const sized = await this.prisma.$queryRaw<
+      Array<{ id: string; size: number | bigint; largest?: number | bigint | null }>
+    >(Prisma.sql`
+      SELECT e.id,
+        octet_length(e.receipt_image) + COALESCE(SUM(octet_length(p.image)), 0) AS size,
+        GREATEST(octet_length(e.receipt_image), COALESCE(MAX(octet_length(p.image)), 0)) AS largest
+      FROM expenses e
+      LEFT JOIN expense_receipt_parts p ON p.expense_id = e.id
+      WHERE e.account_id = ${accountId} AND e.id = ANY(${ids}) AND e.receipt_image IS NOT NULL
+      GROUP BY e.id
     `);
-    const sizeById = new Map(sized.map((r) => [r.id, Number(r.size)]));
-    const candidates = ids.filter((id) => sizeById.has(id)).map((id) => ({ id, size: sizeById.get(id) ?? 0 }));
+    const byId = new Map(
+      sized.map((r) => [r.id, { size: Number(r.size), largest: r.largest == null ? undefined : Number(r.largest) }]),
+    );
+    const candidates = ids
+      .filter((id) => byId.has(id))
+      .map((id) => ({ id, size: byId.get(id)?.size ?? 0, largest: byId.get(id)?.largest }));
     const { ids: chosen, omitted } = selectReceipts(candidates);
     const receipts = chosen.map((id) => {
       const first = lines.find((l) => l.expenseId === id)!;
@@ -411,16 +428,25 @@ export class ChildStatementService {
     return { receipts, omitted };
   }
 
-  /** One batch of receipt bytes, scoped to the account. Prisma already returns a Buffer — no copy. */
-  async loadReceiptImages(accountId: string, ids: string[]): Promise<Map<string, Buffer>> {
+  /**
+   * One batch of receipt bytes, scoped to the account: every part of each
+   * receipt, part 1 first. Prisma already returns Buffers — no copy.
+   */
+  async loadReceiptImages(accountId: string, ids: string[]): Promise<Map<string, Buffer[]>> {
     if (ids.length === 0) return new Map();
     const rows = await this.prisma.expense.findMany({
       where: { accountId, id: { in: ids } },
-      select: { id: true, receiptImage: true },
+      select: {
+        id: true,
+        receiptImage: true,
+        receiptParts: { select: { image: true }, orderBy: { index: 'asc' } },
+      },
     });
-    const out = new Map<string, Buffer>();
+    const out = new Map<string, Buffer[]>();
     for (const r of rows) {
-      if (r.receiptImage && r.receiptImage.length > 0) out.set(r.id, r.receiptImage);
+      if (!r.receiptImage || r.receiptImage.length === 0) continue;
+      const parts = (r.receiptParts ?? []).map((p) => p.image).filter((b) => b && b.length > 0);
+      out.set(r.id, [r.receiptImage, ...parts]);
     }
     return out;
   }

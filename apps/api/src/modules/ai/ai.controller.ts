@@ -12,6 +12,8 @@ import {
   Req,
   HttpCode,
   HttpStatus,
+  BadRequestException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
@@ -33,6 +35,9 @@ import { CategorizeSuggestionsService } from './services/categorize-suggestions.
 import { CategorizeIncomeSuggestionsService } from './services/categorize-income-suggestions.service';
 import { ScanPriceTagRequestSchema, ScanReceiptRequestSchema } from './utils/sanitize';
 import { PriceTagService } from './services/price-tag.service';
+import { SubscriptionsService } from '../subscriptions/subscriptions.service';
+import { PrismaService } from '../../database/prisma.service';
+import { getAiCostMultiplier } from './services/model-resolver';
 import { UpdateConversationTitleDto } from './dto';
 
 @Controller('ai')
@@ -51,6 +56,8 @@ export class AiController {
     private readonly categorizeIncomeSuggestionsService: CategorizeIncomeSuggestionsService,
     private readonly receiptDuplicates: ReceiptDuplicateService,
     private readonly priceTagService: PriceTagService,
+    private readonly subscriptionsService: SubscriptionsService,
+    private readonly prisma: PrismaService,
   ) {}
 
   // Forward-geocode a typed query into up to 5 candidate places for the expense
@@ -224,6 +231,17 @@ export class AiController {
     return { duplicate: await this.receiptDuplicates.findByFingerprint(req.accountId, fingerprint ?? '') };
   }
 
+  private async userAiModel(userId: string): Promise<string | undefined> {
+    const user = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiModel: true } });
+    return user?.aiModel ?? undefined;
+  }
+
+  /** Gives back the 2.0 x multiplier AiUsageGuard charged for a scan that did not run. */
+  private async refundScanCharge(req: AuthenticatedRequest, knownModel?: string): Promise<void> {
+    const aiModel = knownModel ?? (await this.userAiModel(req.user.id));
+    await this.subscriptionsService.refundAiUsage(req.user.id, 'ocr', 2.0 * getAiCostMultiplier(aiModel), req.accountId);
+  }
+
   @Post('scan-receipt')
   @UseGuards(AiUsageGuard)
   @TrackAiUsage('ocr', 2.0)
@@ -231,9 +249,40 @@ export class AiController {
     @Req() req: AuthenticatedRequest,
     @Body() body: unknown,
   ) {
-    const { imageBase64, userPrompt, mimeType, communityBaseline } = ScanReceiptRequestSchema.parse(body);
+    const parsed = ScanReceiptRequestSchema.safeParse(body);
+    if (!parsed.success) {
+      // Part / exclusivity errors carry a stable code the clients can map. A client mistake must not
+      // cost a scan: AiUsageGuard already charged part 1, so give it back. Every other Zod failure is a 400 too.
+      const coded = parsed.error.issues.find((i) => /^(parts_|image_or_images$)/.test(i.message));
+      if (coded) {
+        await this.refundScanCharge(req);
+        throw new BadRequestException(coded.message);
+      }
+      throw new BadRequestException(parsed.error.issues.map((i) => `${i.path.join('.') || 'body'}: ${i.message}`));
+    }
+    const { imageBase64, images, userPrompt, mimeType, communityBaseline } = parsed.data;
     // ABA-642: only new app builds send `communityBaseline`; bots and old builds never do.
     const scanOptions = { communityBaseline: communityBaseline === true };
+    if (images) {
+      // AiUsageGuard already charged part 1 (2.0 x multiplier) from the static decorator, before the
+      // body was readable. Parts 2..n are charged here, BEFORE the model call; trackAiUsage enforces the
+      // tier limit against used + extra, so a user without room for every part is refused with OCR untouched.
+      const aiModel = await this.userAiModel(req.user.id);
+      try {
+        await this.subscriptionsService.trackAiUsage(
+          req.user.id,
+          'ocr',
+          2.0 * (images.length - 1) * getAiCostMultiplier(aiModel),
+          req.accountId,
+        );
+      } catch (err) {
+        // Tier limit hit: the scan never runs, so part 1's guard charge goes back.
+        if (err instanceof ForbiddenException) await this.refundScanCharge(req, aiModel);
+        throw err;
+      }
+      return this.ocrService.parseReceiptParts(images.map((p) => ({ imageBase64: p.imageBase64, mimeType: p.mimeType ?? 'image/jpeg' })), req.user.id, req.accountId, userPrompt, scanOptions);
+    }
+    if (!imageBase64) throw new BadRequestException('image_or_images');
     if (mimeType === 'application/pdf') {
       return this.ocrService.parseReceiptPdf(
         imageBase64,

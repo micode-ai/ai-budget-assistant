@@ -22,7 +22,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
 import { ViewerBlockGuard } from '../accounts/guards/account-role.guard';
 import { TripArchivedGuard } from '../accounts/guards/trip-archived.guard';
-import { CreateExpenseDto, UpdateExpenseDto, ExpenseFiltersDto, CreateExpenseItemDto, UpdateExpenseItemDto, SaveReceiptImageDto, BulkUpdateExpensesDto, MergeExpensesDto, MoveExpenseDto } from './dto';
+import { CreateExpenseDto, UpdateExpenseDto, ExpenseFiltersDto, CreateExpenseItemDto, UpdateExpenseItemDto, SaveReceiptImageDto, SaveReceiptPartsDto, BulkUpdateExpensesDto, MergeExpensesDto, MoveExpenseDto } from './dto';
 import { AuthenticatedRequest } from '../../common/types';
 
 @Controller('expenses')
@@ -187,6 +187,28 @@ export class ExpensesController {
   @UseGuards(new ViewerBlockGuard())
   async deleteReceiptImage(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     return this.expensesService.deleteReceiptImage(req.accountId, id);
+  }
+
+  // ---- Receipt parts (a long receipt in several photos) ----
+
+  @Get(':id/receipt-parts')
+  async getReceiptParts(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Query('from') from?: string,
+  ) {
+    // `?from=2` returns only the stored parts 2..N (no part-1 bytes).
+    return this.expensesService.getReceiptParts(req.accountId, id, from === '2' ? 2 : undefined);
+  }
+
+  @Put(':id/receipt-parts')
+  @UseGuards(new ViewerBlockGuard())
+  async saveReceiptParts(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Body() dto: SaveReceiptPartsDto,
+  ) {
+    return this.expensesService.saveReceiptParts(req.accountId, id, dto.parts);
   }
 
   // ---- Category Splits ----

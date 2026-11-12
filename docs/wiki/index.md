@@ -68,6 +68,9 @@ the section you came for — it states what must not break and why. A missing se
   PDFs become expenses on the receipt confirm card, one after another
 - [receipt-category-split](features/receipt-category-split.md) — splitting one receipt's line items
   across categories at scan time, the deposit group, category proposals
+- [long-receipt](features/long-receipt.md) — a receipt too long for one photo, read from 2–4
+  overlapping photos as one expense: parts storage, one model call, billing per part, the bots'
+  continuation flow
 - [receipt-image-memory](features/receipt-image-memory.md) — downscaling receipt photos to stay
   under Google Play's memory thresholds
 - [categorize-uncategorized](features/categorize-uncategorized.md) — one batched review that turns a

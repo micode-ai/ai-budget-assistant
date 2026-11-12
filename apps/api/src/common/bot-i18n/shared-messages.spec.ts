@@ -54,3 +54,29 @@ describe('createBotT replacement values (ABA-658)', () => {
     for (const v of ['$&', "$'", '$`', '$$', '$1']) expect(t('k', 'en', { name: v })).toBe(`Hi ${v}!`);
   });
 });
+
+describe('sharedMessages — long receipt in several photos', () => {
+  const keys = [
+    'receiptContinuationQuestion',
+    'receiptContinuationYes',
+    'receiptContinuationNo',
+    'receiptPartsFull',
+    'receiptPartTooLarge',
+    'receiptBusy',
+  ];
+
+  it.each(keys)('%s is translated into all 9 languages with the same placeholders', (key) => {
+    const entry = sharedMessages[key];
+    const placeholders = (s: string) => (s.match(/\{\{\w+\}\}/g) ?? []).sort().join(',');
+    for (const lang of LANGS) {
+      expect(entry[lang]?.trim()).toBeTruthy();
+      expect(placeholders(entry[lang])).toBe(placeholders(entry.en));
+    }
+  });
+
+  it("keeps both answer buttons within WhatsApp's 20-character limit", () => {
+    for (const key of ['receiptContinuationYes', 'receiptContinuationNo']) {
+      for (const lang of LANGS) expect([...sharedMessages[key][lang]].length).toBeLessThanOrEqual(20);
+    }
+  });
+});
