@@ -1,7 +1,8 @@
 # Public API and OAuth platform
 
 *Hubs: [api](../api.md) · [auth](../auth.md). Related: [expenses-service](expenses-service.md),
-[shared-groups](shared-groups.md), [chat-undo-last-action](chat-undo-last-action.md).*
+[shared-groups](shared-groups.md), [chat-undo-last-action](chat-undo-last-action.md),
+[mcp-connector](mcp-connector.md) (AI assistants over the same authorization core).*
 
 ## What this is
 
@@ -38,7 +39,9 @@ API, `apps/api/src/modules/public-api/` — the resource server:
 - `public-api.module.ts`; controllers `public-account.controller.ts`, `public-categories.controller.ts`,
   `public-expenses.controller.ts`, `public-incomes.controller.ts`, `public-budgets.controller.ts`,
   `public-analytics.controller.ts`
-- `guards/public-api-auth.guard.ts` — the whole per-request authorization; `guards/public-write.guard.ts`
+- `public-api-authorizer.service.ts` — the whole per-request authorization (extracted from the guard in the MCP work, so
+  `/public/v1` and `/mcp` share one core); `guards/public-api-auth.guard.ts` is a thin adapter over it; `guards/public-write.guard.ts`
+- `public-read.views.ts` — the row and page views shared by the REST controllers and the MCP tools
 - `decorators/require-scopes.decorator.ts`, `decorators/token-only.decorator.ts`, `decorators/public-write.decorator.ts`
 - Phase 2: `public-incomes.query.ts`, `public-income-write.adapter.ts` (through `IncomesService`),
   `public-budgets.query.ts`, `public-budget-write.adapter.ts` (through `BudgetsService`),
@@ -158,6 +161,21 @@ starting with "AI Budget", "AI Budżet", "AIBudget" or "MiCode" — compared cas
 punctuation- and diacritic-insensitively (`app-name.util.ts`) — is `app_name_reserved`. The
 consent screen shows an unverified app with a warning-coloured "Not verified by AI Budget" badge.
 The app's form folds the text to one line before sending and explains `app_name_reserved`.
+
+**Resource binding and the shared authorizer (MCP connector).** Authorization lives in
+`PublicApiAuthorizer`, called by `PublicApiAuthGuard` (REST, `resource: null`) and by the `/mcp` endpoint
+([mcp-connector](mcp-connector.md), `resource: MCP_RESOURCE_URL`). A token records the `resource` it was
+issued for and works only on that surface: a token with no resource is `/public/v1`-only, an MCP-bound
+one is `/mcp`-only; the public API's own identifiers (the issuer and `<issuer>/public/v1`) also mean no
+resource (R10); any other `resource` at authorize or token is `invalid_target`, and the resource
+travels on the code in Redis and survives refresh. `AuthorizeOptions.consumeRateLimit` (default `true`)
+lets a caller authorize without spending a rate-limit unit; only the MCP connection-level pre-check
+passes `false`, so a tool call costs one unit. The consent preview gains `app.registeredByAssistant` for
+dynamically registered clients (no owner, so no `byDeveloper`) and `app.redirectHost` (punycode host of the
+validated `redirect_uri`, those clients only); a URI already stored on a developer app is never re-rejected
+by the newer whitespace rule on update (R13); `OAuthClient.ownerUserId` is nullable and
+every query that joins the owner tolerates `null`. Clients also have a `source` (`manual` / `mcp_dcr`);
+developer-app listings are `manual` only.
 
 **Help** is the `45-connected-apps` section in all nine locales, registered in the three help
 registries at launch (2026-11-02); it was kept dark until the flag went on (Ruling 32).

@@ -3580,6 +3580,8 @@ export default {
     loading: 'Anfrage wird geprüft…',
     verified: 'Von AI Budget verifiziert',
     notVerified: 'Nicht von AI Budget verifiziert',
+    registeredByAssistant: 'Nicht verifiziert · automatisch von einem KI-Assistenten registriert',
+    redirectHost: 'Der Zugriff wird an {{host}} gesendet',
     byDeveloper: 'Entwickelt von {{name}}',
     privacyPolicy: 'Datenschutzerklärung',
     wantsTo: '{{app}} möchte:',

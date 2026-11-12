@@ -16,6 +16,7 @@ interface Client {
   isConfidential: boolean;
   secretHash: string | null;
   status: 'active' | 'blocked';
+  source?: 'manual' | 'mcp_dcr';
 }
 
 const confidential: Client = {
@@ -141,7 +142,8 @@ function build() {
   };
 
   const grantsSvc = new OAuthGrantsService(prisma);
-  const svc = new OAuthTokenService(prisma, cache, clientsSvc, grantsSvc);
+  const config: any = { get: (k: string) => ({ PUBLIC_API_ENABLED: 'true', MCP_ENABLED: 'true' } as Record<string, string>)[k] };
+  const svc = new OAuthTokenService(prisma, cache, clientsSvc, grantsSvc, config);
 
   let codeSeq = 0;
   const putCode = (over: Partial<OAuthCodePayload> = {}, client: Client = confidential): string => {
@@ -644,5 +646,135 @@ describe('OAuthTokenService', () => {
         (await oauthErr(t.svc.revoke({ client_id: confidential.clientId, client_secret: SECRET }, undefined))).body.error,
       ).toBe('invalid_request');
     });
+  });
+});
+
+describe('OAuthTokenService resource binding and the registered-assistant policy', () => {
+  const MCP = 'https://api.ai-budget.pl/mcp';
+  const refreshBody = (rt: string, over: Record<string, unknown> = {}) => ({
+    grant_type: 'refresh_token',
+    refresh_token: rt,
+    client_id: confidential.clientId,
+    client_secret: SECRET,
+    ...over,
+  });
+
+  it('code exchange issues tokens carrying the payload resource', async () => {
+    const t = build();
+    await t.svc.token(exchangeBody(t.putCode({ resource: MCP })), undefined);
+    expect(t.getTokens().map((x) => x.resource)).toEqual([MCP, MCP]);
+  });
+
+  it('a code without resource issues public-API tokens (resource null)', async () => {
+    const t = build();
+    await t.svc.token(exchangeBody(t.putCode()), undefined);
+    expect(t.getTokens().map((x) => x.resource)).toEqual([null, null]);
+  });
+
+  it('a token request repeating the code resource (normalized) is accepted', async () => {
+    const t = build();
+    await t.svc.token(exchangeBody(t.putCode({ resource: MCP }), { resource: `${MCP}/` }), undefined);
+    expect(t.getTokens()).toHaveLength(2);
+  });
+
+  it('mismatched resource at token is invalid_target, and nothing is issued', async () => {
+    const t = build();
+    const e1 = await oauthErr(t.svc.token(exchangeBody(t.putCode({ resource: MCP }), { resource: 'https://evil.example.com/mcp' }), undefined));
+    expect(e1).toEqual({ status: 400, body: { error: 'invalid_target', error_description: expect.any(String) } });
+    const e2 = await oauthErr(t.svc.token(exchangeBody(t.putCode(), { resource: MCP }), undefined));
+    expect(e2.body.error).toBe('invalid_target');
+    expect(t.getTokens()).toHaveLength(0);
+  });
+
+  it('refresh keeps resource', async () => {
+    const t = build();
+    const first = await t.svc.token(exchangeBody(t.putCode({ resource: MCP })), undefined);
+    const second = await t.svc.token(refreshBody(first.refresh_token), undefined);
+    const fresh = t.getTokens().filter((x) => x.tokenHash === sha256Hex(second.access_token) || x.tokenHash === sha256Hex(second.refresh_token));
+    expect(fresh.map((x) => x.resource)).toEqual([MCP, MCP]);
+    // and the same resource named on the refresh is fine
+    await t.svc.token(refreshBody(second.refresh_token, { resource: MCP }), undefined);
+  });
+
+  it('R10: a code exchange naming the public API (issuer or /public/v1) binds null, as with no resource', async () => {
+    for (const resource of ['https://api.ai-budget.pl', 'https://api.ai-budget.pl/public/v1/']) {
+      const t = build();
+      await t.svc.token(exchangeBody(t.putCode(), { resource }), undefined);
+      expect(t.getTokens().map((x) => x.resource)).toEqual([null, null]);
+    }
+  });
+
+  it('R10: a refresh naming the public API on a public token rotates; on an MCP token it is invalid_target', async () => {
+    const t = build();
+    const first = await t.svc.token(exchangeBody(t.putCode()), undefined);
+    await t.svc.token(refreshBody(first.refresh_token, { resource: 'https://api.ai-budget.pl/public/v1' }), undefined);
+    expect(t.getTokens().find((x) => x.tokenHash === sha256Hex(first.refresh_token)).rotatedAt).not.toBeNull();
+
+    const t2 = build();
+    const m = await t2.svc.token(exchangeBody(t2.putCode({ resource: MCP })), undefined);
+    const e = await oauthErr(t2.svc.token(refreshBody(m.refresh_token, { resource: 'https://api.ai-budget.pl' }), undefined));
+    expect(e.body.error).toBe('invalid_target');
+    expect(t2.getTokens().find((x) => x.tokenHash === sha256Hex(m.refresh_token)).rotatedAt).toBeNull();
+  });
+
+  it('R10: a public-API identifier on an MCP code exchange is invalid_target, nothing issued', async () => {
+    const t = build();
+    const e = await oauthErr(t.svc.token(exchangeBody(t.putCode({ resource: MCP }), { resource: 'https://api.ai-budget.pl/public/v1' }), undefined));
+    expect(e.body.error).toBe('invalid_target');
+    expect(t.getTokens()).toHaveLength(0);
+  });
+
+  it('a refresh naming a different resource is invalid_target and does not rotate', async () => {
+    const t = build();
+    const first = await t.svc.token(exchangeBody(t.putCode()), undefined);
+    const e = await oauthErr(t.svc.token(refreshBody(first.refresh_token, { resource: MCP }), undefined));
+    expect(e.body.error).toBe('invalid_target');
+    expect(t.getTokens().find((x) => x.tokenHash === sha256Hex(first.refresh_token)).rotatedAt).toBeNull();
+  });
+
+  it('a DCR client code holding a write scope in its grant is invalid_scope at exchange', async () => {
+    const t = build();
+    t.clients[0].source = 'mcp_dcr';
+    t.grants[0].scopes = ['expenses:read', 'expenses:write'];
+    const e = await oauthErr(
+      t.svc.token(exchangeBody(t.putCode({ resource: MCP, scopes: ['expenses:read', 'expenses:write'] })), undefined),
+    );
+    expect(e.body.error).toBe('invalid_scope');
+    expect(t.getTokens()).toHaveLength(0);
+  });
+
+  it('refresh of a DCR grant with a write scope is invalid_scope, grant untouched', async () => {
+    const t = build();
+    t.clients[0].source = 'mcp_dcr';
+    const first = await t.svc.token(exchangeBody(t.putCode({ resource: MCP })), undefined);
+    t.grants[0].scopes = ['expenses:read', 'receipts:read'];
+    const e = await oauthErr(t.svc.token(refreshBody(first.refresh_token), undefined));
+    expect(e.body.error).toBe('invalid_scope');
+    expect(t.grants[0].revokedAt).toBeNull();
+    expect(t.getTokens().find((x) => x.tokenHash === sha256Hex(first.refresh_token)).rotatedAt).toBeNull();
+  });
+
+  it('R4: a DCR client exchanging a code with no resource is invalid_target, nothing issued', async () => {
+    const t = build();
+    t.clients[0].source = 'mcp_dcr';
+    const e = await oauthErr(t.svc.token(exchangeBody(t.putCode()), undefined));
+    expect(e).toEqual({ status: 400, body: { error: 'invalid_target', error_description: expect.any(String) } });
+    expect(t.getTokens()).toHaveLength(0);
+  });
+
+  it('R4: a DCR client exchanging an MCP-bound code gets MCP tokens', async () => {
+    const t = build();
+    t.clients[0].source = 'mcp_dcr';
+    await t.svc.token(exchangeBody(t.putCode({ resource: MCP })), undefined);
+    expect(t.getTokens().map((x) => x.resource)).toEqual([MCP, MCP]);
+  });
+
+  it('R4: refreshing a DCR token that carries no resource is invalid_target and does not rotate', async () => {
+    const t = build();
+    const first = await t.svc.token(exchangeBody(t.putCode()), undefined);
+    t.clients[0].source = 'mcp_dcr';
+    const e = await oauthErr(t.svc.token(refreshBody(first.refresh_token), undefined));
+    expect(e.body.error).toBe('invalid_target');
+    expect(t.getTokens().find((x) => x.tokenHash === sha256Hex(first.refresh_token)).rotatedAt).toBeNull();
   });
 });

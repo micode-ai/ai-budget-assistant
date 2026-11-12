@@ -60,4 +60,11 @@ describe('developer app DTOs', () => {
     expect(errorsOf(UpdateDeveloperAppDto, {})).toEqual([]);
     expect(errorsOf(UpdateDeveloperAppDto, { name: 'Renamed' })).toEqual([]);
   });
+
+  it('R13: create rejects a redirect URI with whitespace; update checks structure only (the service checks added URIs)', () => {
+    expect(errorsOf(CreateDeveloperAppDto, { ...base, redirectUris: ['https://x.pl/c b'] }).join(' ')).toContain('redirect URI');
+    expect(errorsOf(UpdateDeveloperAppDto, { redirectUris: ['https://x.pl/c b'] })).toEqual([]);
+    expect(errorsOf(UpdateDeveloperAppDto, { redirectUris: ['http://x.pl/cb'] }).join(' ')).toContain('redirect URI');
+    expect(errorsOf(UpdateDeveloperAppDto, { redirectUris: ['budget://cb'] }).join(' ')).toContain('redirect URI');
+  });
 });

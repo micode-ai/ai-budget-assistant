@@ -39,6 +39,17 @@ export interface PublicApiErrorBody {
  * the `{error:{…}}` body (the default handler serialises `getResponse()`), never a 500.
  */
 export class PublicApiError extends HttpException {
+  /**
+   * Transport hints set by `PublicApiAuthorizer`, which never touches `res`: the caller (the REST
+   * guard, the MCP transport) turns them into headers. Never part of the body.
+   */
+  /** `WWW-Authenticate` value of an `invalid_token` refusal. */
+  wwwAuthenticate?: string;
+  /** Seconds until the rate-limit window frees up (429 only). */
+  retryAfterSec?: number;
+  /** The connection's rate-limit figures, on any refusal raised after the rate limit was counted. */
+  rateLimit?: { limit: number; remaining: number };
+
   constructor(
     status: number,
     readonly code: PublicApiErrorCode,

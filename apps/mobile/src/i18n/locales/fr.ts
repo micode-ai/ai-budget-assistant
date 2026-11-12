@@ -3581,6 +3581,8 @@ export default {
     loading: 'Vérification de la demande…',
     verified: 'Vérifiée par AI Budget',
     notVerified: 'Non vérifiée par AI Budget',
+    registeredByAssistant: 'Non vérifiée · enregistrée automatiquement par un assistant IA',
+    redirectHost: 'L’accès sera envoyé à {{host}}',
     byDeveloper: 'Créée par {{name}}',
     privacyPolicy: 'Politique de confidentialité',
     wantsTo: '{{app}} souhaite :',

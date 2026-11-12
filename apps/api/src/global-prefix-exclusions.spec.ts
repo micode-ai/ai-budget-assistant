@@ -5,6 +5,8 @@ import { GuestController } from './modules/receipt-split/guest.controller';
 import { GroupGuestController } from './modules/groups/group-guest.controller';
 import { OAuthAuthorizeController } from './modules/oauth/oauth-authorize.controller';
 import { OAuthTokenController } from './modules/oauth/oauth-token.controller';
+import { OAuthMetadataController } from './modules/oauth/oauth-metadata.controller';
+import { OAuthRegisterController } from './modules/oauth/oauth-register.controller';
 
 /**
  * `main.ts` serves every route under `api/v1` EXCEPT the ones named here. The
@@ -82,6 +84,41 @@ describe('GLOBAL_PREFIX_EXCLUDED_ROUTES', () => {
     const routes = routesOf(OAuthAuthorizeController);
     expect(routes.sort()).toEqual(['/oauth/authorize/approve', '/oauth/authorize/preview']);
     for (const route of routes) expect(isExcluded(route)).toBeFalsy();
+  });
+
+  it('excludes the five MCP connector paths, each named one by one', () => {
+    for (const route of [
+      'mcp',
+      'oauth/register',
+      '.well-known/oauth-authorization-server',
+      '.well-known/oauth-protected-resource',
+      '.well-known/oauth-protected-resource/mcp',
+    ]) {
+      expect(GLOBAL_PREFIX_EXCLUDED_ROUTES).toContain(route);
+      expect(isExcluded(`/${route}`)).toBeTruthy();
+    }
+    // Never a wildcard over oauth/: the consent backend must keep the api/v1 prefix.
+    expect(GLOBAL_PREFIX_EXCLUDED_ROUTES).not.toContain('oauth/(.*)');
+    expect(GLOBAL_PREFIX_EXCLUDED_ROUTES).not.toContain('.well-known/(.*)');
+  });
+
+  it('path-to-regexp treats the dot of .well-known literally (no look-alike path is excluded)', () => {
+    expect(isExcluded('/xwell-known/oauth-authorization-server')).toBeFalsy();
+    expect(isExcluded('/.well-known/oauth-protected-resource/other')).toBeFalsy();
+    expect(isExcluded('/mcp/extra')).toBeFalsy();
+    expect(isExcluded('/oauth/registerx')).toBeFalsy();
+  });
+
+  it('excludes EVERY OAuthMetadataController and OAuthRegisterController route', () => {
+    const metadata = routesOf(OAuthMetadataController).sort();
+    expect(metadata).toEqual([
+      '/.well-known/oauth-authorization-server',
+      '/.well-known/oauth-protected-resource',
+      '/.well-known/oauth-protected-resource/mcp',
+    ]);
+    const register = routesOf(OAuthRegisterController);
+    expect(register).toEqual(['/oauth/register']);
+    for (const route of [...metadata, ...register]) expect(isExcluded(route)).toBeTruthy();
   });
 
   it('does not exclude ordinary API routes', () => {

@@ -361,7 +361,7 @@ Logikę opieraj na `code`; `message` jest dla ludzi i może się zmieniać. Mog�
 | `internal_error` | 500 | Błąd po naszej stronie. Ponów później. |
 | `unavailable` | 503 | Chwilowa awaria. Ponów z rosnącym odstępem. |
 
-`/oauth/token` i `/oauth/revoke` odpowiadają w formacie OAuth `{"error": "...", "error_description": "..."}` z kodami: `invalid_request`, `invalid_client`, `invalid_grant`, `unsupported_grant_type`, `invalid_scope`, `slow_down`, `temporarily_unavailable`. `invalid_grant` przy odświeżaniu oznacza, że połączenia już nie ma (użytkownik je unieważnił, użyto zużytego tokenu odświeżania albo żadne konto połączenia nie nadaje się już do użycia, bo użytkownik stracił uprawnienia do edycji wszystkich) — poproś użytkownika o ponowne połączenie.
+`/oauth/token` i `/oauth/revoke` odpowiadają w formacie OAuth `{"error": "...", "error_description": "..."}` z kodami: `invalid_request`, `invalid_client`, `invalid_grant`, `unsupported_grant_type`, `invalid_scope`, `invalid_target`, `slow_down`, `temporarily_unavailable`. `invalid_grant` przy odświeżaniu oznacza, że połączenia już nie ma (użytkownik je unieważnił, użyto zużytego tokenu odświeżania albo żadne konto połączenia nie nadaje się już do użycia, bo użytkownik stracił uprawnienia do edycji wszystkich) — poproś użytkownika o ponowne połączenie. `invalid_target` oznacza, że parametr `resource` wskazuje zasób, którego ten serwer nie obsługuje, albo inny niż ten, dla którego wydano autoryzację; dla tego API pomiń `resource`.
 
 ## 13. Limity żądań
 

@@ -3587,6 +3587,8 @@ export default {
     loading: 'Checking the request…',
     verified: 'Verified by AI Budget',
     notVerified: 'Not verified by AI Budget',
+    registeredByAssistant: 'Unverified · registered automatically by an AI assistant',
+    redirectHost: 'Access will be sent to {{host}}',
     byDeveloper: 'Made by {{name}}',
     privacyPolicy: 'Privacy policy',
     wantsTo: '{{app}} wants to:',

@@ -39,13 +39,22 @@ export function ApiAppsTable({
           <TableRow key={a.id} className={a.isDeleted ? "opacity-60" : undefined}>
             <TableCell>
               <div className="font-medium">{a.name}</div>
-              <div className="text-xs text-muted-foreground">{a.homepageUrl}</div>
+              <div className="text-xs text-muted-foreground">{a.homepageUrl ?? "—"}</div>
+              {a.source === "mcp_dcr" && (
+                <Badge variant="outline" className="mt-1">Registered by an AI assistant</Badge>
+              )}
             </TableCell>
             <TableCell>
-              <Link href={`/users/${a.ownerId}`} className="hover:underline">
-                {a.ownerName}
-              </Link>
-              <div className="text-xs text-muted-foreground">{a.ownerEmail}</div>
+              {a.ownerId ? (
+                <>
+                  <Link href={`/users/${a.ownerId}`} className="hover:underline">
+                    {a.ownerName}
+                  </Link>
+                  <div className="text-xs text-muted-foreground">{a.ownerEmail}</div>
+                </>
+              ) : (
+                <span className="text-muted-foreground">Self-registered (MCP)</span>
+              )}
             </TableCell>
             <TableCell className="text-muted-foreground">{formatDateTime(a.createdAt)}</TableCell>
             <TableCell className="text-right">{a.activeGrants}</TableCell>

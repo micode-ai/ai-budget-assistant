@@ -67,3 +67,22 @@ describe('multi-account migration ordering', () => {
     expect(insert).toBeLessThan(drop);
   });
 });
+
+describe('mcp_oauth data model', () => {
+  const schema = readFileSync(join(__dirname, '../../../prisma/schema.prisma'), 'utf8');
+  const block = (name: string) => schema.split(`model ${name} {`)[1].split('\n}')[0];
+
+  it('OAuthClient.ownerUserId and homepageUrl are optional; source defaults to manual; OAuthToken has resource', () => {
+    const client = block('OAuthClient');
+    expect(client).toMatch(/ownerUserId\s+String\?/);
+    expect(client).toMatch(/homepageUrl\s+String\?/);
+    expect(client).toMatch(/source\s+OAuthClientSource\s+@default\(manual\)/);
+    expect(block('OAuthToken')).toMatch(/resource\s+String\?\s+@map\("resource"\)/);
+  });
+
+  it('the mcp_oauth migration drops nothing and backfills source as manual', () => {
+    const sql = sqlOf('20261114000000_mcp_oauth');
+    expect(sql).not.toMatch(/DROP (TABLE|INDEX|COLUMN)/);
+    expect(sql).toContain("DEFAULT 'manual'");
+  });
+});

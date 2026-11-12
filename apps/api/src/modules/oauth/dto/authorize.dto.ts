@@ -15,6 +15,8 @@ export class AuthorizePreviewQueryDto {
   @IsOptional() @IsString() @MaxLength(32) response_type?: string;
   /** Accepted (the SPA forwards the whole query) but unused by preview. */
   @IsOptional() @IsString() @MaxLength(2048) state?: string;
+  /** RFC 8707 resource indicator; absent = the public API. Validated by the service (`invalid_target`). */
+  @IsOptional() @IsString() @MaxLength(512) resource?: string;
 }
 
 export class AuthorizeApproveDto {
@@ -24,6 +26,8 @@ export class AuthorizeApproveDto {
   @IsOptional() @IsString() @MaxLength(2048) state?: string;
   @IsOptional() @IsString() @MaxLength(256) code_challenge?: string;
   @IsOptional() @IsString() @MaxLength(32) code_challenge_method?: string;
+  /** RFC 8707 resource indicator; absent = the public API. Validated by the service (`invalid_target`). */
+  @IsOptional() @IsString() @MaxLength(512) resource?: string;
   /** Phase 1 single-account form; `account_ids` wins when both are sent. */
   @IsOptional() @IsString() @MaxLength(64) account_id?: string;
   /** Required for `allow` (this or `account_id`); ignored for `deny`. */

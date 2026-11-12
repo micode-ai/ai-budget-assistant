@@ -1,5 +1,6 @@
 import {
   PENDING_CONSENT_TTL_MS,
+  buildApproveBody,
   buildAuthorizePath,
   pickConsentParams,
   resolvePendingConsent,
@@ -40,5 +41,44 @@ describe('consentParams', () => {
     expect(resolvePendingConsent('not json', now)).toEqual({ status: 'discard' });
     expect(resolvePendingConsent(serializePendingConsent({ scope: 'x' }, now), now)).toEqual({ status: 'discard' });
     expect(resolvePendingConsent(null, now)).toEqual({ status: 'none' });
+  });
+
+  describe('resource (RFC 8707)', () => {
+    const MCP = 'https://api.ai-budget.pl/mcp';
+    const WITH = { ...PARAMS, resource: MCP };
+
+    it('consentParams forwards resource to preview and approve unchanged; absent stays absent', () => {
+      expect(pickConsentParams(WITH).resource).toBe(MCP);
+      // Never normalized on the client: the server decides what the value means.
+      expect(pickConsentParams({ ...PARAMS, resource: ['HTTPS://API.AI-BUDGET.PL/mcp/', 'x'] }).resource).toBe(
+        'HTTPS://API.AI-BUDGET.PL/mcp/',
+      );
+      expect('resource' in pickConsentParams(PARAMS)).toBe(false);
+
+      expect(buildApproveBody(pickConsentParams(WITH), 'allow', ['a1'])).toEqual({
+        client_id: PARAMS.client_id,
+        redirect_uri: PARAMS.redirect_uri,
+        scope: PARAMS.scope,
+        state: PARAMS.state,
+        code_challenge: PARAMS.code_challenge,
+        code_challenge_method: PARAMS.code_challenge_method,
+        resource: MCP,
+        account_ids: ['a1'],
+        decision: 'allow',
+      });
+      const deny = buildApproveBody(pickConsentParams(PARAMS), 'deny', ['a1']);
+      expect('resource' in deny).toBe(false);
+      expect('account_ids' in deny).toBe(false);
+      expect(buildApproveBody(pickConsentParams(WITH), 'deny', []).resource).toBe(MCP);
+    });
+
+    it('survives the sign-in resume (stash → path) unchanged', () => {
+      const now = 1_000_000_000;
+      const out = resolvePendingConsent(serializePendingConsent(WITH, now), now + 1000);
+      expect(out.status).toBe('resume');
+      const path = (out as { path: string }).path;
+      expect(new URLSearchParams(path.slice('/authorize?'.length)).get('resource')).toBe(MCP);
+      expect(buildAuthorizePath(PARAMS)).not.toContain('resource');
+    });
   });
 });

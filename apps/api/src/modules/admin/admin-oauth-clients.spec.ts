@@ -8,6 +8,7 @@ function make(client: any) {
     oAuthClient: {
       findUnique: jest.fn().mockResolvedValue(client),
       findMany: jest.fn().mockResolvedValue(client ? [client] : []),
+      count: jest.fn().mockResolvedValue(client ? 1 : 0),
       update: jest.fn().mockResolvedValue({}),
     },
     oAuthGrant: { groupBy: jest.fn().mockResolvedValue([{ clientId: 'c1', _count: { _all: 2 } }]), updateMany: jest.fn() },
@@ -32,9 +33,75 @@ describe('AdminGuard', () => {
 describe('AdminOAuthClientsService', () => {
   it('lists with grants, live request counter and owner', async () => {
     const { svc, cache } = make(base);
-    const [row] = await svc.list();
+    const { items: [row] } = await svc.list();
     expect(cache.peekWindow).toHaveBeenCalledWith('pa:c:c1');
     expect(row).toMatchObject({ activeGrants: 2, requestsLastMinute: 7, ownerId: 'u1', ownerEmail: 'd@x.io', isDeleted: false });
+  });
+
+  it('admin list filters by source and returns ownerEmail null for DCR clients', async () => {
+    const dcr = { ...base, source: 'mcp_dcr', owner: null, homepageUrl: null };
+    const { svc, prisma } = make(dcr);
+    const { items: [row] } = await svc.list('mcp_dcr');
+    expect(prisma.oAuthClient.findMany).toHaveBeenCalledWith(expect.objectContaining({ where: { source: 'mcp_dcr' } }));
+    expect(row).toMatchObject({ source: 'mcp_dcr', ownerId: null, ownerEmail: null, homepageUrl: null });
+    await svc.list();
+    expect(prisma.oAuthClient.findMany).toHaveBeenLastCalledWith(expect.objectContaining({ where: {} }));
+  });
+
+  it('paginates: default 50, newest first with a stable tiebreak, page/limit honoured', async () => {
+    const { svc, prisma } = make(base);
+    prisma.oAuthClient.count.mockResolvedValue(120);
+    const r = await svc.list();
+    expect(prisma.oAuthClient.findMany).toHaveBeenLastCalledWith(
+      expect.objectContaining({ orderBy: [{ createdAt: 'desc' }, { id: 'desc' }], skip: 0, take: 50 }),
+    );
+    expect(r).toMatchObject({ total: 120, page: 1, limit: 50, totalPages: 3 });
+    const r3 = await svc.list('manual', '3', '20');
+    expect(prisma.oAuthClient.findMany).toHaveBeenLastCalledWith(
+      expect.objectContaining({ where: { source: 'manual' }, skip: 40, take: 20 }),
+    );
+    expect(prisma.oAuthClient.count).toHaveBeenLastCalledWith({ where: { source: 'manual' } });
+    expect(r3).toMatchObject({ page: 3, limit: 20, totalPages: 6 });
+  });
+
+  it('peeks the request counter only for the rows of the returned page, and groups grants by those ids', async () => {
+    const { svc, prisma, cache } = make(base);
+    const rows = Array.from({ length: 3 }, (_, i) => ({ ...base, id: `c${i}` }));
+    prisma.oAuthClient.findMany.mockResolvedValue(rows);
+    prisma.oAuthClient.count.mockResolvedValue(10_000);
+    const r = await svc.list(undefined, 1, 3);
+    expect(cache.peekWindow).toHaveBeenCalledTimes(3);
+    expect(prisma.oAuthGrant.groupBy).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { clientId: { in: ['c0', 'c1', 'c2'] }, revokedAt: null } }),
+    );
+    expect(r.items).toHaveLength(3);
+  });
+
+  it('an empty page skips the grant lookup and reports one page', async () => {
+    const { svc, prisma } = make(null);
+    const r = await svc.list();
+    expect(prisma.oAuthGrant.groupBy).not.toHaveBeenCalled();
+    expect(r).toEqual({ items: [], total: 0, page: 1, limit: 50, totalPages: 1 });
+  });
+
+  it('rejects a bad page or limit before Prisma', async () => {
+    const { svc, prisma } = make(base);
+    for (const [page, limit] of [['0', undefined], ['-1', undefined], ['x', undefined], [undefined, '0'], [undefined, '201'], [undefined, '1.5']] as const) {
+      await expect(svc.list(undefined, page, limit)).rejects.toThrow(BadRequestException);
+    }
+    expect(prisma.oAuthClient.findMany).not.toHaveBeenCalled();
+  });
+
+  it('rejects a source outside the allow-list before Prisma', async () => {
+    const { svc, prisma } = make(base);
+    await expect(svc.list('evil' as any)).rejects.toThrow(BadRequestException);
+    expect(prisma.oAuthClient.findMany).not.toHaveBeenCalled();
+  });
+
+  it('blocks an mcp_dcr client like a manual one', async () => {
+    const { svc, prisma } = make({ ...base, source: 'mcp_dcr', owner: null });
+    await svc.update('c1', { status: 'blocked', blockedReason: 'abuse' });
+    expect(prisma.oAuthClient.update).toHaveBeenCalledWith({ where: { id: 'c1' }, data: { status: 'blocked', blockedReason: 'abuse' } });
   });
 
   it('block sets status and reason, never touches grants', async () => {
@@ -79,6 +146,12 @@ describe('AdminOAuthClientsService', () => {
 });
 
 describe('AdminOAuthClientsController', () => {
+  it('passes the source, page and limit queries to the service', () => {
+    const svc = { list: jest.fn() } as any;
+    new AdminOAuthClientsController(svc, {} as any).list('manual', '2', '25');
+    expect(svc.list).toHaveBeenCalledWith('manual', '2', '25');
+  });
+
   it('writes an audit entry on update', async () => {
     const svc = { update: jest.fn().mockResolvedValue({ isVerified: true }) } as any;
     const admin = { logAction: jest.fn() } as any;

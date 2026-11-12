@@ -18,4 +18,10 @@ export interface OAuthCodePayload {
   /** PKCE S256 challenge (base64url, 43 chars). */
   codeChallenge: string;
   scopes: PublicScope[];
+  /**
+   * RFC 8707 resource the tokens will be bound to: exactly `MCP_RESOURCE_URL` for `/mcp`, absent or
+   * null for `/public/v1`. Optional because a public-API code carries no key at all (and codes stored
+   * before this field existed read the same way).
+   */
+  resource?: string | null;
 }

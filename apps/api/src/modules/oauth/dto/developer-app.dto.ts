@@ -15,7 +15,7 @@ import {
   ValidatorConstraintInterface,
 } from 'class-validator';
 import { hasForbiddenChars, isReservedAppName } from '../app-name.util';
-import { isAllowedRedirectUri } from '../redirect-uri.util';
+import { isAllowedRedirectUri, isAllowedRedirectUriShape } from '../redirect-uri.util';
 
 @ValidatorConstraint({ name: 'allowedRedirectUris', async: false })
 class AllowedRedirectUris implements ValidatorConstraintInterface {
@@ -23,7 +23,25 @@ class AllowedRedirectUris implements ValidatorConstraintInterface {
     return Array.isArray(value) && value.every((v) => typeof v === 'string' && isAllowedRedirectUri(v));
   }
   defaultMessage(): string {
-    return 'each redirect URI must be https:// (or http://localhost / http://127.0.0.1) without a fragment';
+    return REDIRECT_URI_MESSAGE;
+  }
+}
+
+/** The redirect-URI message, shared with the service's own check of URIs an update adds. */
+export const REDIRECT_URI_MESSAGE =
+  'each redirect URI must be https:// (or http://localhost / http://127.0.0.1 / http://[::1]) without a fragment or whitespace';
+
+/**
+ * Update-time check (R13): structure only. A URI the app already stores must not be re-rejected by
+ * the newer whitespace/control-character rule; the service applies that rule to URIs the update adds.
+ */
+@ValidatorConstraint({ name: 'allowedRedirectUriShapes', async: false })
+class AllowedRedirectUriShapes implements ValidatorConstraintInterface {
+  validate(value: unknown): boolean {
+    return Array.isArray(value) && value.every((v) => typeof v === 'string' && isAllowedRedirectUriShape(v));
+  }
+  defaultMessage(): string {
+    return REDIRECT_URI_MESSAGE;
   }
 }
 
@@ -131,6 +149,6 @@ export class UpdateDeveloperAppDto {
   @IsArray()
   @ArrayMinSize(1)
   @ArrayMaxSize(10)
-  @Validate(AllowedRedirectUris)
+  @Validate(AllowedRedirectUriShapes)
   redirectUris?: string[];
 }

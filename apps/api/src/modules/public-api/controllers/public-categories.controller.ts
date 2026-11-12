@@ -7,8 +7,7 @@ import { ApiAccountHeader, ApiPublicErrors } from '../docs/public-api-docs.decor
 import { ListPublicCategoriesQueryDto, PublicCategoryList } from '../dto/public-expense.dto';
 import { PublicApiExceptionFilter } from '../filters/public-api-exception.filter';
 import { PublicApiAuthGuard } from '../guards/public-api-auth.guard';
-import { listPublicCategories } from '../public-categories.query';
-import { CATEGORY_TIER1_ENCRYPTED_FIELDS } from '../public-encryption-fields';
+import { readPublicCategoryList } from '../public-read.views';
 import type { PublicApiRequest } from '../public-api.types';
 
 /**
@@ -31,19 +30,7 @@ export class PublicCategoriesController {
   @ApiOkResponse({ type: PublicCategoryList, description: '' })
   @ApiPublicErrors()
   async list(@Req() req: PublicApiRequest, @Query() q: ListPublicCategoriesQueryDto): Promise<PublicCategoryList> {
-    const rows = await listPublicCategories(this.prisma, req.accountId, q.type);
-    // Tier 1: category names are end-to-end encrypted in the app (Ruling 15).
-    const encrypted = req.oauth.encryptionTier >= 1;
-    return {
-      data: rows.map((c) => ({
-        id: c.id,
-        name: encrypted ? null : c.name,
-        parent_id: c.parentId ?? null,
-        icon: c.icon ?? null,
-        color: c.color ?? null,
-        type: c.type,
-        encrypted_fields: encrypted ? [...CATEGORY_TIER1_ENCRYPTED_FIELDS] : [],
-      })),
-    };
+    // Shared with the MCP `list_categories` tool (public-read.views.ts); tier 1 withholds names.
+    return readPublicCategoryList(this.prisma, req.accountId, req.oauth.encryptionTier, q.type);
   }
 }

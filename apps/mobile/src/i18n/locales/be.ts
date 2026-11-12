@@ -3564,6 +3564,8 @@ export default {
     loading: 'Правяраем запыт…',
     verified: 'Праверана AI Budget',
     notVerified: 'Не праверана AI Budget',
+    registeredByAssistant: 'Не праверана · зарэгістравана аўтаматычна ШІ-асістэнтам',
+    redirectHost: 'Доступ будзе перададзены на {{host}}',
     byDeveloper: 'Распрацоўшчык: {{name}}',
     privacyPolicy: 'Палітыка прыватнасці',
     wantsTo: '{{app}} запытвае доступ:',

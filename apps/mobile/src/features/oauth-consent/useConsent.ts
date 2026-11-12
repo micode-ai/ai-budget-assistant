@@ -5,7 +5,7 @@ import { oauthApi } from '@/services/api';
 import type { OAuthConsentAccount, OAuthConsentApp, OAuthScope } from '@/services/oauth.api';
 import { httpStatusOf, oauthErrorCode } from './consentErrors';
 import { initialAccountSelection } from './consentDisplay';
-import { consentParamsKey, pickConsentParams, type RawSearchParams } from './consentParams';
+import { buildApproveBody, consentParamsKey, pickConsentParams, type RawSearchParams } from './consentParams';
 import { stashPendingConsent } from './pendingConsent';
 import { openRedirect } from './openRedirect';
 
@@ -156,18 +156,13 @@ export function useConsent(searchParams: RawSearchParams): ConsentState {
       setSubmitError(undefined);
       const p = paramsRef.current;
       try {
-        const { redirectTo } = await oauthApi.approve({
-          client_id: p.client_id,
-          redirect_uri: p.redirect_uri,
-          scope: p.scope,
-          state: p.state,
-          code_challenge: p.code_challenge,
-          code_challenge_method: p.code_challenge_method,
-          ...(decision === 'allow'
-            ? { account_ids: (accounts ?? []).filter((a) => selectedAccountIds.includes(a.id)).map((a) => a.id) }
-            : {}),
-          decision,
-        });
+        const { redirectTo } = await oauthApi.approve(
+          buildApproveBody(
+            p,
+            decision,
+            (accounts ?? []).filter((a) => selectedAccountIds.includes(a.id)).map((a) => a.id),
+          ),
+        );
         await openRedirect(redirectTo);
         setStatus('done');
       } catch (e) {

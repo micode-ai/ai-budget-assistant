@@ -3580,6 +3580,8 @@ export default {
     loading: 'Verzoek controleren…',
     verified: 'Geverifieerd door AI Budget',
     notVerified: 'Niet geverifieerd door AI Budget',
+    registeredByAssistant: 'Niet geverifieerd · automatisch geregistreerd door een AI-assistent',
+    redirectHost: 'De toegang wordt verzonden naar {{host}}',
     byDeveloper: 'Gemaakt door {{name}}',
     privacyPolicy: 'Privacybeleid',
     wantsTo: '{{app}} wil:',

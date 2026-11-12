@@ -43,16 +43,12 @@ import {
 import { PublicApiExceptionFilter } from '../filters/public-api-exception.filter';
 import { PublicApiAuthGuard } from '../guards/public-api-auth.guard';
 import { toPublicIncome } from '../mappers/public-income.mapper';
-import { PublicApiError } from '../public-api-error';
 
 import { PublicIncomeWriteAdapter } from '../public-income-write.adapter';
 import type { PublicApiRequest } from '../public-api.types';
 import { writeContext } from '../public-write.shared';
-import {
-  getPublicIncome,
-  listPublicIncomeChanges,
-  listPublicIncomes,
-} from '../public-incomes.query';
+import { listPublicIncomeChanges } from '../public-incomes.query';
+import { readPublicIncome, readPublicIncomeList } from '../public-read.views';
 
 /** The `{id}` path parameter: the income's id as returned by this API. */
 function ApiIncomeId(): MethodDecorator {
@@ -88,26 +84,8 @@ export class PublicIncomesController {
     @Req() req: PublicApiRequest,
     @Query() q: ListPublicIncomesQueryDto
   ): Promise<PublicIncomeList> {
-    const tier = req.oauth.encryptionTier;
-    // At tier 1 description/notes are withheld; filtering on them would make the filter an oracle
-    // for the very values withheld (rows a bot or import wrote are plaintext on the server).
-    if (tier >= 1 && q.search !== undefined) {
-      throw new PublicApiError(
-        403,
-        'account_encrypted',
-        'This account is end-to-end encrypted: the search filter is not available.',
-        {
-          fields: ['search'],
-        }
-      );
-    }
-
-    const page = await listPublicIncomes(this.prisma, req.accountId, q);
-    return {
-      data: page.rows.map((r) => toPublicIncome(r, { encryptionTier: tier })),
-      next_cursor: page.nextCursor,
-      has_more: page.hasMore,
-    };
+    // Shared with the MCP `list_incomes` tool, tier-1 filter refusal included (public-read.views.ts).
+    return readPublicIncomeList(this.prisma, req.accountId, req.oauth.encryptionTier, q);
   }
 
   /** Incremental sync: every change since `cursor`, ordered by `(updated_at, id)`; deletions arrive as `{type:'delete'}`. */
@@ -207,8 +185,7 @@ export class PublicIncomesController {
 
   /** Re-read so a write answers exactly what a GET would. */
   private async detail(req: PublicApiRequest, id: string): Promise<PublicIncome> {
-    const row = await getPublicIncome(this.prisma, req.accountId, id);
-    return toPublicIncome(row, { encryptionTier: req.oauth.encryptionTier });
+    return readPublicIncome(this.prisma, req.accountId, req.oauth.encryptionTier, id);
   }
 }
 

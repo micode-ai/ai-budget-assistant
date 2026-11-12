@@ -128,6 +128,16 @@ describe('listPublicExpenses', () => {
     expect(findMany.mock.calls[0][0].where.merchant).toEqual({ contains: 'Biedronka', mode: 'insensitive' });
   });
 
+  it('amount bounds (MCP only) are inclusive gte/lte on the row amount, and absent leaves amount unfiltered', async () => {
+    const { prisma, findMany } = fakePrisma([]);
+    await listPublicExpenses(prisma, 'acc-1', { min_amount: '10', max_amount: '25.50' });
+    expect(findMany.mock.calls[0][0].where.amount).toEqual({ gte: '10', lte: '25.50' });
+    await listPublicExpenses(prisma, 'acc-1', { min_amount: '10' });
+    expect(findMany.mock.calls[1][0].where.amount).toEqual({ gte: '10' });
+    await listPublicExpenses(prisma, 'acc-1', {});
+    expect(findMany.mock.calls[2][0].where).not.toHaveProperty('amount');
+  });
+
   it('date range is inclusive', async () => {
     const { prisma } = fakePrisma([
       expense(1, '2026-09-30'),

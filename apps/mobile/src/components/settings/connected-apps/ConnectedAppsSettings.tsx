@@ -9,7 +9,7 @@ import { getIntlLocale } from '@/i18n';
 import type { ConnectedApp } from '@/services/developerApps.api';
 import { useConnectedAppsStore } from '@/stores/connectedAppsStore';
 import { useDeveloperAppsStore } from '@/stores/developerAppsStore';
-import { safeExternalUrl, scopeIcon, scopeLabelKey } from '@/features/oauth-consent/consentDisplay';
+import { connectedAppWebsiteUrl, scopeIcon, scopeLabelKey } from '@/features/oauth-consent/consentDisplay';
 import { SettingsScreenScroll } from '../SettingsScreenScroll';
 import { useSettingsPane } from '../SettingsPaneContext';
 
@@ -101,7 +101,7 @@ export function ConnectedAppsSettings() {
 
   const renderItem = (item: ConnectedApp) => {
     const busy = busyId === item.grantId;
-    const website = safeExternalUrl(item.app.homepageUrl);
+    const website = connectedAppWebsiteUrl(item.app);
     return (
       <View key={item.grantId} style={styles.card}>
         <View style={styles.appHeader}>

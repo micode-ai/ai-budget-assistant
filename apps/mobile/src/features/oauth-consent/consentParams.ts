@@ -1,4 +1,4 @@
-import type { OAuthAuthorizeParams } from '@/services/oauth.api';
+import type { OAuthApproveBody, OAuthAuthorizeParams } from '@/services/oauth.api';
 
 /**
  * The OAuth request parameters the consent route forwards to the server. Anything else in the
@@ -13,6 +13,10 @@ export const CONSENT_PARAM_KEYS = [
   'state',
   'code_challenge',
   'code_challenge_method',
+  // RFC 8707: an MCP client names the resource it wants a token for. Forwarded byte-for-byte to
+  // preview and approve (and through the sign-in stash); never invented, defaulted or normalized
+  // here — the server is the only one that decides what a value means (`invalid_target`).
+  'resource',
 ] as const satisfies readonly (keyof OAuthAuthorizeParams)[];
 
 export type RawSearchParams = Record<string, string | string[] | undefined>;
@@ -38,6 +42,29 @@ export function buildAuthorizePath(params: OAuthAuthorizeParams): string {
   }
   const s = qs.toString();
   return s ? `/authorize?${s}` : '/authorize';
+}
+
+/**
+ * The approve request for these params. The OAuth fields go back exactly as the third party sent
+ * them (`resource` only when it was there: absent must stay absent, the public API); accounts only
+ * on allow.
+ */
+export function buildApproveBody(
+  p: OAuthAuthorizeParams,
+  decision: 'allow' | 'deny',
+  accountIds: string[],
+): OAuthApproveBody {
+  return {
+    client_id: p.client_id,
+    redirect_uri: p.redirect_uri,
+    scope: p.scope,
+    state: p.state,
+    code_challenge: p.code_challenge,
+    code_challenge_method: p.code_challenge_method,
+    ...(typeof p.resource === 'string' ? { resource: p.resource } : {}),
+    ...(decision === 'allow' ? { account_ids: accountIds } : {}),
+    decision,
+  };
 }
 
 /** Stable identity of a param set, for effect dependencies (expo-router hands out a new object per render). */

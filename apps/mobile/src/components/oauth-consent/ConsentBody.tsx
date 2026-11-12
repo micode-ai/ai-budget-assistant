@@ -5,7 +5,7 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import type { ConsentState } from '@/features/oauth-consent/useConsent';
-import { hostnameOf, safeExternalUrl, scopeIcon, scopeLabelKey } from '@/features/oauth-consent/consentDisplay';
+import { consentAppDisplay, scopeIcon, scopeLabelKey } from '@/features/oauth-consent/consentDisplay';
 import type { OAuthConsentAccount } from '@/services/oauth.api';
 
 interface ConsentBodyProps {
@@ -50,8 +50,10 @@ export function ConsentBody({ consent, desktop }: ConsentBodyProps) {
     );
   }
 
-  const app = consent.app;
-  if (!app) return null;
+  if (!consent.app) return null;
+  // Everything about the app goes through one display decision: an app registered automatically by
+  // an AI assistant is untrusted text (no links, punycode host, https-only logo, its own badge).
+  const app = consentAppDisplay(consent.app);
 
   if (consent.status === 'done') {
     return (
@@ -69,9 +71,8 @@ export function ConsentBody({ consent, desktop }: ConsentBodyProps) {
   const submitting = consent.status === 'submitting';
   const hasSelectable = consent.accounts.some((a) => a.selectable);
   const nothingTicked = consent.selectedAccountIds.length === 0;
-  const homepageUrl = safeExternalUrl(app.homepageUrl);
-  const homepage = homepageUrl ? hostnameOf(homepageUrl) : null;
-  const privacyUrl = safeExternalUrl(app.privacyPolicyUrl);
+  const homepageLinkUrl = app.homepageLinkUrl;
+  const privacyUrl = app.privacyLinkUrl;
 
   const allowButton = (
     <TouchableOpacity
@@ -111,36 +112,51 @@ export function ConsentBody({ consent, desktop }: ConsentBodyProps) {
       <View style={styles.appHeader}>
         {app.logoUrl ? (
           <Image source={{ uri: app.logoUrl }} style={styles.logo} accessibilityIgnoresInvertColors />
+        ) : app.genericLogo ? (
+          <View style={[styles.logo, styles.logoFallback]}>
+            <Ionicons name="apps-outline" size={30} color={theme.colors.primaryDark} />
+          </View>
         ) : (
           <View style={[styles.logo, styles.logoFallback]}>
             <Text style={styles.logoLetter}>{app.name.trim().charAt(0).toUpperCase() || '?'}</Text>
           </View>
         )}
         <Text style={styles.title}>{app.name}</Text>
-        <View style={[styles.badge, app.isVerified ? styles.badgeVerified : styles.badgeUnverified]}>
+        <View style={[styles.badge, app.verified ? styles.badgeVerified : styles.badgeUnverified]}>
           <Ionicons
-            name={app.isVerified ? 'shield-checkmark' : 'warning'}
-            size={app.isVerified ? 14 : 16}
-            color={app.isVerified ? theme.colors.success : theme.colors.warning}
+            name={app.verified ? 'shield-checkmark' : 'warning'}
+            size={app.verified ? 14 : 16}
+            color={app.verified ? theme.colors.success : theme.colors.warning}
           />
           {/* Unverified must stand out (M2): warning colour on the icon and border, primary text so it stays readable. */}
           <Text
             style={[
               styles.badgeText,
-              app.isVerified ? { color: theme.colors.success } : styles.badgeTextUnverified,
+              app.verified ? { color: theme.colors.success } : styles.badgeTextUnverified,
             ]}
           >
-            {app.isVerified ? t('oauthConsent.verified') : t('oauthConsent.notVerified')}
+            {t(app.badgeKey)}
           </Text>
         </View>
-        {app.developerName ? (
-          <Text style={styles.muted}>{t('oauthConsent.byDeveloper', { name: app.developerName })}</Text>
+        {app.redirectHost ? (
+          // R11: the only fact about an assistant-registered app that is not self-declared. Shown
+          // prominently (warning frame, bold host) so a look-alike name cannot hide where access goes.
+          <View style={styles.redirectBox} accessibilityRole="text">
+            <Ionicons name="arrow-forward-circle-outline" size={18} color={theme.colors.warning} />
+            <Text style={styles.redirectText}>{t('oauthConsent.redirectHost', { host: app.redirectHost })}</Text>
+          </View>
+        ) : null}
+        {consent.app.developerName ? (
+          <Text style={styles.muted}>{t('oauthConsent.byDeveloper', { name: consent.app.developerName })}</Text>
         ) : null}
         <View style={styles.links}>
-          {homepage && homepageUrl ? (
-            <TouchableOpacity onPress={() => void Linking.openURL(homepageUrl)} accessibilityRole="link">
-              <Text style={styles.link}>{homepage}</Text>
+          {app.homepageHost && homepageLinkUrl ? (
+            <TouchableOpacity onPress={() => void Linking.openURL(homepageLinkUrl)} accessibilityRole="link">
+              <Text style={styles.link}>{app.homepageHost}</Text>
             </TouchableOpacity>
+          ) : app.homepageHost ? (
+            // Self-declared by an unverified client: plain text, never something to tap.
+            <Text style={styles.muted}>{app.homepageHost}</Text>
           ) : null}
           {privacyUrl ? (
             <TouchableOpacity onPress={() => void Linking.openURL(privacyUrl)} accessibilityRole="link">
@@ -284,6 +300,7 @@ const createStyles = (theme: Theme) => ({
     paddingHorizontal: theme.spacing[2.5],
     paddingVertical: theme.spacing[1],
     borderRadius: theme.borderRadius.full,
+    maxWidth: '100%' as const,
   },
   badgeVerified: {
     backgroundColor: theme.colors.successLight,
@@ -296,10 +313,31 @@ const createStyles = (theme: Theme) => ({
   },
   badgeText: {
     ...theme.textStyles.bodySmMedium,
+    // The assistant label is long; let it wrap inside the pill on a narrow phone.
+    flexShrink: 1,
+    textAlign: 'center' as const,
   },
   badgeTextUnverified: {
     color: theme.colors.textPrimary,
     fontWeight: '700' as const,
+  },
+  redirectBox: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+    paddingHorizontal: theme.spacing[3],
+    paddingVertical: theme.spacing[2],
+    borderRadius: theme.borderRadius.md,
+    borderWidth: 1.5,
+    borderColor: theme.colors.warning,
+    backgroundColor: theme.colors.warningLight,
+    maxWidth: '100%' as const,
+  },
+  redirectText: {
+    ...theme.textStyles.body,
+    color: theme.colors.textPrimary,
+    fontWeight: '700' as const,
+    flexShrink: 1,
   },
   links: {
     flexDirection: 'row' as const,

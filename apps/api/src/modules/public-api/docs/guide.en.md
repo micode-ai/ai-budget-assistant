@@ -361,7 +361,7 @@ Branch on `code`; `message` is for people and may change. New codes may be added
 | `internal_error` | 500 | Our fault. Retry later. |
 | `unavailable` | 503 | A temporary failure. Retry with backoff. |
 
-`/oauth/token` and `/oauth/revoke` answer in the OAuth format `{"error": "...", "error_description": "..."}` with these codes: `invalid_request`, `invalid_client`, `invalid_grant`, `unsupported_grant_type`, `invalid_scope`, `slow_down`, `temporarily_unavailable`. `invalid_grant` on a refresh means the connection is gone (revoked by the user, a reused refresh token, or no account of the connection is usable any more because the user lost edit rights to all of them) — ask the user to connect again.
+`/oauth/token` and `/oauth/revoke` answer in the OAuth format `{"error": "...", "error_description": "..."}` with these codes: `invalid_request`, `invalid_client`, `invalid_grant`, `unsupported_grant_type`, `invalid_scope`, `invalid_target`, `slow_down`, `temporarily_unavailable`. `invalid_grant` on a refresh means the connection is gone (revoked by the user, a reused refresh token, or no account of the connection is usable any more because the user lost edit rights to all of them) — ask the user to connect again. `invalid_target` means the `resource` parameter names a resource this server does not serve, or differs from the one the authorization was issued for; omit `resource` for this API.
 
 ## 13. Rate limits
 

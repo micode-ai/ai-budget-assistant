@@ -2,7 +2,8 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import type { OAuthClient } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
 import { generateClientId, generateToken, safeEqual, sha256Hex } from './oauth-crypto.util';
-import { CreateDeveloperAppDto, UpdateDeveloperAppDto } from './dto/developer-app.dto';
+import { CreateDeveloperAppDto, REDIRECT_URI_MESSAGE, UpdateDeveloperAppDto } from './dto/developer-app.dto';
+import { firstRejectedNewRedirectUri } from './redirect-uri.util';
 
 export const MAX_APPS_PER_DEVELOPER = 10;
 
@@ -12,7 +13,7 @@ export interface DeveloperAppView {
   name: string;
   description: string | null;
   logoUrl: string | null;
-  homepageUrl: string;
+  homepageUrl: string | null;
   privacyPolicyUrl: string | null;
   redirectUris: string[];
   isConfidential: boolean;
@@ -87,7 +88,8 @@ export class OAuthClientsService {
 
   async listForOwner(userId: string): Promise<DeveloperAppView[]> {
     const clients = await this.prisma.oAuthClient.findMany({
-      where: { ownerUserId: userId, deletedAt: null },
+      // Defence in depth: an owner-less mcp_dcr client can never match ownerUserId anyway.
+      where: { ownerUserId: userId, deletedAt: null, source: 'manual' },
       orderBy: { createdAt: 'desc' },
       include: { grants: { where: { revokedAt: null }, select: { lastUsedAt: true } } },
     });
@@ -102,7 +104,12 @@ export class OAuthClientsService {
   }
 
   async update(userId: string, id: string, dto: UpdateDeveloperAppDto) {
-    await this.getOwned(userId, id);
+    const existing = await this.getOwned(userId, id);
+    // R13: the DTO checked structure only; URIs this update adds must also pass the character rule,
+    // URIs the app already stores are kept as they are.
+    if (dto.redirectUris !== undefined && firstRejectedNewRedirectUri(dto.redirectUris, existing.redirectUris) !== null) {
+      throw new BadRequestException([`redirectUris: ${REDIRECT_URI_MESSAGE}`]);
+    }
     const updated = await this.prisma.oAuthClient.update({
       where: { id },
       data: {
@@ -143,7 +150,7 @@ export class OAuthClientsService {
 
   private async getOwned(userId: string, id: string): Promise<OAuthClient> {
     const client = await this.prisma.oAuthClient.findFirst({
-      where: { id, ownerUserId: userId, deletedAt: null },
+      where: { id, ownerUserId: userId, deletedAt: null, source: 'manual' },
     });
     if (!client) throw new NotFoundException('App not found');
     return client;

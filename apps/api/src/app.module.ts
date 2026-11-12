@@ -65,6 +65,7 @@ import { OAuthModule } from './modules/oauth/oauth.module';
 import { OAuthPublicModule } from './modules/oauth/oauth-public.module';
 import { PublicApiModule } from './modules/public-api/public-api.module';
 import { PublicDocsModule } from './modules/public-api/docs/public-docs.module';
+import { McpModule } from './modules/mcp/mcp.module';
 
 @Module({
   imports: [
@@ -162,6 +163,8 @@ import { PublicDocsModule } from './modules/public-api/docs/public-docs.module';
     OAuthPublicModule,
     PublicApiModule,
     PublicDocsModule,
+    // MCP connector (/mcp): 404 unless PUBLIC_API_ENABLED and MCP_ENABLED.
+    McpModule,
   ],
   providers: [
     {

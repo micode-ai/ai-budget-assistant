@@ -28,10 +28,20 @@ export type OAuthScope =
 export interface OAuthConsentApp {
   name: string;
   logoUrl: string | null;
-  homepageUrl: string;
+  homepageUrl: string | null;
   privacyPolicyUrl: string | null;
   isVerified: boolean;
   developerName: string | null;
+  /**
+   * Registered automatically by an AI assistant (dynamic client registration). Its name, URI and
+   * logo are self-declared and shown as untrusted text. Absent (an older API) reads as false.
+   */
+  registeredByAssistant?: boolean;
+  /**
+   * R11: for an assistant-registered app, the ASCII (punycode) host of this request's validated
+   * redirect URI — where the authorization will be sent. Null/absent for manual apps.
+   */
+  redirectHost?: string | null;
 }
 
 export interface OAuthConsentAccount {
@@ -62,6 +72,8 @@ export interface OAuthAuthorizeParams {
   state?: string;
   code_challenge?: string;
   code_challenge_method?: string;
+  /** RFC 8707 resource indicator, forwarded exactly as received; the server validates it. */
+  resource?: string;
 }
 
 export interface OAuthApproveBody {
@@ -71,6 +83,7 @@ export interface OAuthApproveBody {
   state?: string;
   code_challenge?: string;
   code_challenge_method?: string;
+  resource?: string;
   /** Accounts the app may use; the server replaces the connection's set with exactly these. */
   account_ids?: string[];
   decision: 'allow' | 'deny';

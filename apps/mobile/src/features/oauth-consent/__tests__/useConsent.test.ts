@@ -107,6 +107,21 @@ describe('useConsent', () => {
     expect(mockPreview).toHaveBeenCalledWith(expected);
   });
 
+  it('forwards resource to preview and approve unchanged', async () => {
+    mockPreview.mockResolvedValue(PREVIEW);
+    mockApprove.mockResolvedValue({ redirectTo: 'https://app.example.com/cb?code=x' });
+    const resource = 'https://api.ai-budget.pl/mcp';
+    const hook = await renderConsent({ ...PARAMS, resource });
+    expect(mockPreview).toHaveBeenCalledWith(expect.objectContaining({ resource }));
+    await act(async () => {
+      hook.current.toggle('a-main');
+    });
+    await act(async () => {
+      await hook.current.allow();
+    });
+    expect(mockApprove).toHaveBeenCalledWith(expect.objectContaining({ resource, decision: 'allow' }));
+  });
+
   it('a preview error leaves status error with the reason and makes allow and deny no-ops', async () => {
     mockPreview.mockRejectedValue(oauthFailure(400, 'invalid_redirect_uri'));
     const hook = await renderConsent();

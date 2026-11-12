@@ -51,4 +51,14 @@ export const GLOBAL_PREFIX_EXCLUDED_ROUTES: string[] = [
   'public/(.*)',
   'oauth/token',
   'oauth/revoke',
+  // MCP connector (docs/superpowers/specs/2026-11-12-mcp-connector-design.md, decision 6): the MCP
+  // endpoint, dynamic client registration and the OAuth discovery documents. RFC 8414 / RFC 9728
+  // fix the .well-known paths at the host root, and MCP clients derive them from the resource URL,
+  // so none of them can carry api/v1. Named one by one for the same reason as the OAuth pair above.
+  // path-to-regexp escapes the dot of `.well-known` (pinned by the spec).
+  'mcp',
+  'oauth/register',
+  '.well-known/oauth-authorization-server',
+  '.well-known/oauth-protected-resource',
+  '.well-known/oauth-protected-resource/mcp',
 ];

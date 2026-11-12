@@ -13,6 +13,7 @@ import { PublicExpensesController } from './controllers/public-expenses.controll
 import { PublicIncomesController } from './controllers/public-incomes.controller';
 import { PublicApiExceptionFilter } from './filters/public-api-exception.filter';
 import { PublicApiAuthGuard } from './guards/public-api-auth.guard';
+import { PublicApiAuthorizer } from './public-api-authorizer.service';
 import { PublicWriteGuard } from './guards/public-write.guard';
 import { PublicAnalyticsService } from './public-analytics.service';
 import { PublicApiRateLimitService } from './public-api-rate-limit.service';
@@ -36,7 +37,8 @@ import { PublicIncomeWriteAdapter } from './public-income-write.adapter';
 @Module({
   imports: [AdminModule, ExpensesModule, IncomesModule, BudgetsModule, CurrencyExchangeModule],
   controllers: [PublicAccountController, PublicAccountsController, PublicBudgetsController, PublicCategoriesController, PublicExpensesController, PublicIncomesController, PublicAnalyticsController],
-  providers: [PublicApiAuthGuard, PublicApiRateLimitService, PublicApiExceptionFilter, PublicWriteGuard, PublicExpenseWriteAdapter, PublicIncomeWriteAdapter, PublicBudgetWriteAdapter, PublicAnalyticsService],
-  exports: [PublicApiAuthGuard, PublicApiRateLimitService, PublicApiExceptionFilter, PublicWriteGuard],
+  providers: [PublicApiAuthGuard, PublicApiAuthorizer, PublicApiRateLimitService, PublicApiExceptionFilter, PublicWriteGuard, PublicExpenseWriteAdapter, PublicIncomeWriteAdapter, PublicBudgetWriteAdapter, PublicAnalyticsService],
+  // PublicApiAuthorizer and PublicAnalyticsService also serve the MCP tools (McpModule).
+  exports: [PublicApiAuthGuard, PublicApiAuthorizer, PublicApiRateLimitService, PublicApiExceptionFilter, PublicWriteGuard, PublicAnalyticsService],
 })
 export class PublicApiModule {}

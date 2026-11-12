@@ -361,7 +361,7 @@ curl "https://api.ai-budget.pl/public/v1/analytics/summary?from=2026-10-01&to=20
 | `internal_error` | 500 | Ошибка на нашей стороне. Повторите позже. |
 | `unavailable` | 503 | Временный сбой. Повторите, увеличивая паузу. |
 
-`/oauth/token` и `/oauth/revoke` отвечают в формате OAuth `{"error": "...", "error_description": "..."}` с кодами: `invalid_request`, `invalid_client`, `invalid_grant`, `unsupported_grant_type`, `invalid_scope`, `slow_down`, `temporarily_unavailable`. `invalid_grant` при обновлении означает, что подключения больше нет (пользователь его отозвал, был повторно предъявлен refresh-токен или ни один счёт подключения больше не пригоден, потому что пользователь потерял право редактирования на всех), — попросите пользователя подключить приложение заново.
+`/oauth/token` и `/oauth/revoke` отвечают в формате OAuth `{"error": "...", "error_description": "..."}` с кодами: `invalid_request`, `invalid_client`, `invalid_grant`, `unsupported_grant_type`, `invalid_scope`, `invalid_target`, `slow_down`, `temporarily_unavailable`. `invalid_grant` при обновлении означает, что подключения больше нет (пользователь его отозвал, был повторно предъявлен refresh-токен или ни один счёт подключения больше не пригоден, потому что пользователь потерял право редактирования на всех), — попросите пользователя подключить приложение заново. `invalid_target` означает, что параметр `resource` указывает ресурс, который этот сервер не обслуживает, или не тот, для которого была выдана авторизация; для этого API не передавайте `resource`.
 
 ## 13. Лимиты запросов
 

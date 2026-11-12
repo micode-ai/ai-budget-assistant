@@ -8,7 +8,10 @@ import { AppModule } from './app.module';
 import { GLOBAL_PREFIX_EXCLUDED_ROUTES } from './global-prefix-exclusions';
 import { buildCorsDelegate } from './cors-options';
 import { isPublicApiEnabled } from './modules/oauth/oauth.config';
+import { isMcpEnabled } from './modules/oauth/mcp.config';
 import { setupPublicDocs } from './modules/public-api/docs/openapi';
+import { DCR_REGISTER_PATH, registerBodyLimit } from './modules/oauth/register-body-limit';
+import { MCP_PATH, mcpBodyLimit } from './modules/mcp/mcp-body-limit';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bodyParser: false });
@@ -21,6 +24,18 @@ async function bootstrap() {
   // trivial denial of service. `1` trusts exactly one hop (the nginx reverse
   // proxy in front of this container).
   app.getHttpAdapter().getInstance().set('trust proxy', 1);
+
+  // Dynamic client registration (POST /oauth/register) is an anonymous table write: its body is
+  // capped at 16 KB by its own parsers, mounted BEFORE the app-wide 50 MB ones (which then skip
+  // the already-parsed request). See register-body-limit.ts.
+  // Both route-scoped parsers step aside while MCP is off, so the routes stay fully dark (404).
+  const mcpConfig = app.get(ConfigService);
+  const mcpOn = () => isMcpEnabled(mcpConfig);
+  app.use(DCR_REGISTER_PATH, registerBodyLimit(mcpOn));
+
+  // The MCP endpoint (POST /mcp) is reachable before authentication: its JSON body is capped at
+  // 128 KB by its own parser, mounted for the same reason and in the same way (see mcp-body-limit.ts).
+  app.use(MCP_PATH, mcpBodyLimit(mcpOn));
 
   // Increase body size limit for base64 audio/image uploads
   // verify callback preserves rawBody for Stripe webhook signature verification

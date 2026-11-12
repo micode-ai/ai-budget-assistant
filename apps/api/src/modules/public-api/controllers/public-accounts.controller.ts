@@ -2,7 +2,6 @@ import { Controller, Get, Req, UseFilters, UseGuards } from '@nestjs/common';
 import { ApiOAuth2, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PrismaService } from '../../../database/prisma.service';
 import { PublicApiEnabledGuard } from '../../oauth/guards/public-api-enabled.guard';
-import { grantAccountAccess, grantAccountStatus, loadGrantAccountStates } from '../../oauth/oauth-grant-accounts.util';
 import { ConnectionLevel } from '../decorators/connection-level.decorator';
 import { TokenOnly } from '../decorators/token-only.decorator';
 import { ApiPublicErrors } from '../docs/public-api-docs.decorators';
@@ -10,6 +9,7 @@ import { PublicConnectedAccountList } from '../dto/public-expense.dto';
 import { PublicApiExceptionFilter } from '../filters/public-api-exception.filter';
 import { PublicApiAuthGuard } from '../guards/public-api-auth.guard';
 import type { PublicApiRequest } from '../public-api.types';
+import { listConnectedAccounts } from '../public-read.views';
 
 /**
  * `GET /public/v1/accounts` — the accounts of the connection, usable or not. Token-only and
@@ -31,22 +31,7 @@ export class PublicAccountsController {
   @ApiOkResponse({ type: PublicConnectedAccountList, description: '' })
   @ApiPublicErrors()
   async list(@Req() req: PublicApiRequest): Promise<PublicConnectedAccountList> {
-    const states = await loadGrantAccountStates(this.prisma, req.oauth.grantId, req.user.id);
-    return {
-      data: states.map((s) => {
-        const { active, reason } = grantAccountStatus(s);
-        // The grantor is no longer a member: keep the row but reveal nothing current about the account.
-        const hidden = s.role === null;
-        return {
-          id: s.id,
-          name: hidden ? null : s.name,
-          type: hidden ? null : s.type,
-          base_currency: hidden ? null : s.currencyCode,
-          access: grantAccountAccess(s, req.oauth.scopes),
-          active,
-          reason,
-        };
-      }),
-    };
+    // Shared with the MCP `list_accounts` tool (public-read.views.ts).
+    return listConnectedAccounts(this.prisma, req.oauth.grantId, req.user.id, req.oauth.scopes);
   }
 }

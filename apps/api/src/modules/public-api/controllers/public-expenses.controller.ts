@@ -48,7 +48,8 @@ import { PublicApiError } from '../public-api-error';
 import { PublicExpenseWriteAdapter } from '../public-expense-write.adapter';
 import type { PublicApiRequest } from '../public-api.types';
 import { writeContext } from '../public-write.shared';
-import { getPublicExpense, getPublicReceipt, listPublicExpenseChanges, listPublicExpenses } from '../public-expenses.query';
+import { getPublicReceipt, listPublicExpenseChanges } from '../public-expenses.query';
+import { readPublicExpense, readPublicExpenseList } from '../public-read.views';
 
 /** Content types a receipt can be served as (sniffed from the bytes; see `getPublicReceipt`). */
 const RECEIPT_CONTENT_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/heic', 'image/heif', 'application/pdf'];
@@ -85,25 +86,8 @@ export class PublicExpensesController {
   @ApiOkResponse({ type: PublicExpenseList, description: '' })
   @ApiPublicErrors()
   async list(@Req() req: PublicApiRequest, @Query() q: ListPublicExpensesQueryDto): Promise<PublicExpenseList> {
-    const tier = req.oauth.encryptionTier;
-    // At tier 1 merchant/description/notes are withheld from every response; filtering on them would
-    // turn the filter into an oracle for the very values withheld (rows a bot or import wrote are
-    // plaintext on the server). Refuse rather than silently match nothing.
-    if (tier >= 1 && (q.merchant !== undefined || q.search !== undefined)) {
-      throw new PublicApiError(
-        403,
-        'account_encrypted',
-        'This account is end-to-end encrypted: merchant and search filters are not available.',
-        { fields: ['merchant', 'search'].filter((f) => q[f as 'merchant' | 'search'] !== undefined) },
-      );
-    }
-
-    const page = await listPublicExpenses(this.prisma, req.accountId, q);
-    return {
-      data: page.rows.map((r) => toPublicExpense(r, { encryptionTier: tier, includeItems: false })),
-      next_cursor: page.nextCursor,
-      has_more: page.hasMore,
-    };
+    // Shared with the MCP `list_expenses` tool, tier-1 filter refusal included (public-read.views.ts).
+    return readPublicExpenseList(this.prisma, req.accountId, req.oauth.encryptionTier, q);
   }
 
   /**
@@ -241,8 +225,7 @@ export class PublicExpensesController {
 
   /** The detail shape (with items), re-read so a write answers exactly what a GET would. */
   private async detail(req: PublicApiRequest, id: string): Promise<PublicExpense> {
-    const row = await getPublicExpense(this.prisma, req.accountId, id);
-    return toPublicExpense(row, { encryptionTier: req.oauth.encryptionTier, includeItems: true });
+    return readPublicExpense(this.prisma, req.accountId, req.oauth.encryptionTier, id);
   }
 }
 

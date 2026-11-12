@@ -3596,6 +3596,8 @@ export default {
     loading: 'Sprawdzanie żądania…',
     verified: 'Zweryfikowana przez AI Budget',
     notVerified: 'Niezweryfikowana przez AI Budget',
+    registeredByAssistant: 'Niezweryfikowana · zarejestrowana automatycznie przez asystenta AI',
+    redirectHost: 'Dostęp zostanie przekazany do {{host}}',
     byDeveloper: 'Twórca: {{name}}',
     privacyPolicy: 'Polityka prywatności',
     wantsTo: '{{app}} chce:',

@@ -2960,6 +2960,15 @@ enum OAuthClientStatus {
   @@map("oauth_client_status")
 }
 
+/// How an OAuth client came to exist: registered by a developer in the app, or self-registered by an MCP
+/// client through dynamic client registration (owner-less).
+enum OAuthClientSource {
+  manual
+  mcp_dcr
+
+  @@map("oauth_client_source")
+}
+
 enum OAuthTokenKind {
   access
   refresh
@@ -2983,11 +2992,11 @@ model OAuthClient {
   clientId           String            @unique @map("client_id")
   secretHash         String?           @map("secret_hash")
   isConfidential     Boolean           @map("is_confidential")
-  ownerUserId        String            @map("owner_user_id")
+  ownerUserId        String?           @map("owner_user_id")
   name               String
   description        String?
   logoUrl            String?           @map("logo_url")
-  homepageUrl        String            @map("homepage_url")
+  homepageUrl        String?           @map("homepage_url")
   privacyPolicyUrl   String?           @map("privacy_policy_url")
   redirectUris       String[]          @map("redirect_uris")
   status             OAuthClientStatus @default(active)
@@ -2998,14 +3007,16 @@ model OAuthClient {
   createdAt          DateTime          @default(now()) @map("created_at")
   updatedAt          DateTime          @updatedAt @map("updated_at")
   deletedAt          DateTime?         @map("deleted_at")
+  source             OAuthClientSource @default(manual)
 
-  owner    User         @relation(fields: [ownerUserId], references: [id], onDelete: Cascade)
+  owner    User?        @relation(fields: [ownerUserId], references: [id], onDelete: Cascade)
   grants   OAuthGrant[]
   expenses Expense[]
   incomes  Income[]
   budgets  Budget[]
 
   @@index([ownerUserId])
+  @@index([source, createdAt])
   @@map("oauth_clients")
 }
 
@@ -3053,6 +3064,8 @@ model OAuthToken {
   tokenHash String         @unique @map("token_hash")
   expiresAt DateTime       @map("expires_at")
   rotatedAt DateTime?      @map("rotated_at")
+  /// RFC 8707 audience the token was issued for; null = the public REST API.
+  resource  String?        @map("resource")
   createdAt DateTime       @default(now()) @map("created_at")
 
   grant OAuthGrant @relation(fields: [grantId], references: [id], onDelete: Cascade)

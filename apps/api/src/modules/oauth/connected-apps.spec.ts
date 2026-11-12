@@ -11,7 +11,7 @@ const ACCOUNTS: Acc[] = [
 ];
 
 /** In-memory prisma implementing exactly the where-shapes the service issues. */
-function build(members: Member[], grantAccounts: string[]) {
+function build(members: Member[], grantAccounts: string[], source: 'manual' | 'mcp_dcr' = 'manual') {
   let joins = [...grantAccounts];
   let revokedAt: Date | null = null;
   const grantRow = () => ({ id: 'g1', userId: 'uA', revokedAt });
@@ -30,7 +30,7 @@ function build(members: Member[], grantAccounts: string[]) {
             scopes: ['expenses:read'],
             createdAt: new Date('2026-01-01'),
             lastUsedAt: null,
-            client: { name: 'App', logoUrl: null, homepageUrl: 'https://x.io', isVerified: false, status: 'blocked' },
+            client: { name: 'App', logoUrl: null, homepageUrl: 'https://x.io', isVerified: false, status: 'blocked', source },
             user: { id: 'uA', name: 'A' },
             accounts: joins.map((id) => {
               const a = ACCOUNTS.find((x) => x.id === id)!;
@@ -107,6 +107,13 @@ describe('connected apps (multi-account)', () => {
     });
     expect(list[0].accounts.map((a) => a.id)).toEqual(['P', 'S']);
     expect(JSON.stringify(list)).not.toMatch(/clientId|email/);
+  });
+
+  it('R11: a manual app keeps its homepage; an assistant-registered one is flagged and has none', async () => {
+    const manual = await build(members, ['P']).ctrl.list(req('uA'));
+    expect(manual[0].app).toMatchObject({ homepageUrl: 'https://x.io', registeredByAssistant: false });
+    const dcr = await build(members, ['P'], 'mcp_dcr').ctrl.list(req('uA'));
+    expect(dcr[0].app).toMatchObject({ homepageUrl: null, registeredByAssistant: true });
   });
 
   it('a co-owner sees only the accounts they own/edit, never the grantor private account', async () => {

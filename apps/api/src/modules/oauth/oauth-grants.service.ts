@@ -23,7 +23,16 @@ export interface ConnectedAppAccountRow {
 export interface ConnectedAppRow {
   grantId: string;
   isGrantor: boolean;
-  app: { name: string; logoUrl: string | null; homepageUrl: string | null; isVerified: boolean; status: string };
+  app: {
+    name: string;
+    logoUrl: string | null;
+    /** Null for an assistant-registered app (R11): its homepage is self-declared, never a link. */
+    homepageUrl: string | null;
+    isVerified: boolean;
+    status: string;
+    /** Registered by an AI assistant through dynamic client registration (`source = 'mcp_dcr'`). */
+    registeredByAssistant: boolean;
+  };
   accounts: ConnectedAppAccountRow[];
   /** = accounts[0]; kept for phase 1 clients. */
   account: { id: string; name: string };
@@ -130,7 +139,7 @@ export class OAuthGrantsService {
         createdAt: true,
         lastUsedAt: true,
         client: {
-          select: { name: true, logoUrl: true, homepageUrl: true, isVerified: true, status: true },
+          select: { name: true, logoUrl: true, homepageUrl: true, isVerified: true, status: true, source: true },
         },
         user: { select: { id: true, name: true } },
         accounts: {
@@ -185,9 +194,12 @@ export class OAuthGrantsService {
         app: {
           name: g.client.name,
           logoUrl: g.client.logoUrl,
-          homepageUrl: g.client.homepageUrl,
+          // R11: a self-declared homepage of an assistant-registered app is never sent as a link,
+          // so no client (including an app version that predates the flag) can render it as one.
+          homepageUrl: g.client.source === 'mcp_dcr' ? null : g.client.homepageUrl,
           isVerified: g.client.isVerified,
           status: g.client.status,
+          registeredByAssistant: g.client.source === 'mcp_dcr',
         },
         accounts,
         account: { id: accounts[0].id, name: accounts[0].name ?? '' },

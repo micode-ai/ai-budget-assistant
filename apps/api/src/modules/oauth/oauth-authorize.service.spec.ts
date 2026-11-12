@@ -1,5 +1,5 @@
 import { BadRequestException, ForbiddenException, ServiceUnavailableException } from '@nestjs/common';
-import { OAuthAuthorizeService, CONNECTED_APPS_URL } from './oauth-authorize.service';
+import { OAuthAuthorizeService, CONNECTED_APPS_URL, redirectHostOf } from './oauth-authorize.service';
 import { sha256Hex } from './oauth-crypto.util';
 
 const CHALLENGE = 'E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM';
@@ -46,7 +46,23 @@ interface Member {
   user: { name: string; email: string; language: string };
 }
 
-function build(members: Member[] = [], connectedAccountIds: string[] = []) {
+const MCP = 'https://api.ai-budget.pl/mcp';
+const MCP_ON = { PUBLIC_API_ENABLED: 'true', MCP_ENABLED: 'true' };
+
+const dcrClient = {
+  ...client,
+  id: 'cdb9',
+  clientId: 'aba_ci_dcr',
+  name: 'Some Assistant',
+  ownerUserId: null,
+  source: 'mcp_dcr',
+};
+
+function build(
+  members: Member[] = [],
+  connectedAccountIds: string[] = [],
+  opts: { env?: Record<string, string> } = {},
+) {
   const redis = new Map<string, { value: any; ttl: number }>();
   const grants: any[] = [];
   const prisma: any = {
@@ -69,7 +85,13 @@ function build(members: Member[] = [], connectedAccountIds: string[] = []) {
       return true;
     }),
   );
-  const clients: any = { findActiveByClientId: jest.fn(async (id: string) => (id === client.clientId ? { ...client } : null)) };
+  const known: any[] = [client, dcrClient];
+  const clients: any = {
+    findActiveByClientId: jest.fn(async (id: string) => {
+      const c = known.find((x) => x.clientId === id);
+      return c ? { ...c } : null;
+    }),
+  };
   const grantsSvc: any = {
     replaceActive: jest.fn(async (clientDbId: string, userId: string, accountIds: string[], scopes: string[]) => {
       const existing = grants.find((g) => g.clientId === clientDbId && g.userId === userId);
@@ -95,7 +117,9 @@ function build(members: Member[] = [], connectedAccountIds: string[] = []) {
     }),
   };
   const mail: any = { sendAppConnectedEmail: jest.fn().mockResolvedValue(true) };
-  const svc = new OAuthAuthorizeService(prisma, clients, grantsSvc, cache, mail);
+  const env: Record<string, string> = opts.env ?? { PUBLIC_API_ENABLED: 'true' };
+  const config: any = { get: (k: string) => env[k] };
+  const svc = new OAuthAuthorizeService(prisma, clients, grantsSvc, cache, mail, config);
   return { svc, prisma, clients, grantsSvc, cache, mail, redis, grants };
 }
 
@@ -129,6 +153,8 @@ describe('OAuthAuthorizeService.preview', () => {
       privacyPolicyUrl: null,
       isVerified: false,
       developerName: 'Dev Person',
+      registeredByAssistant: false,
+      redirectHost: null,
     });
     expect(r.scopes).toEqual(['expenses:read', 'categories:read']);
     expect(r.accounts).toEqual([
@@ -519,5 +545,150 @@ describe('OAuthAuthorizeService multi-account e-mails', () => {
       ['g@x.pl', ['Account S']],
       ['o@x.pl', ['Account S']],
     ]);
+  });
+});
+
+describe('OAuthAuthorizeService resource and the registered-assistant scope policy', () => {
+  // R4: a registered assistant always names the MCP resource.
+  const dcrQuery = { ...query, client_id: dcrClient.clientId, scope: undefined, resource: MCP };
+  const dcrApprove = { ...approveBody, client_id: dcrClient.clientId, scope: undefined, resource: MCP };
+
+  it('DCR client without scope gets MCP_DEFAULT_SCOPES (preview and approve)', async () => {
+    const { svc, grantsSvc } = build([member('u1', 'owner')], [], { env: MCP_ON });
+    const r = await svc.preview('u1', dcrQuery);
+    expect(r.scopes).toEqual(['expenses:read', 'categories:read', 'incomes:read', 'budgets:read', 'analytics:read']);
+    await svc.approve('u1', dcrApprove);
+    expect(grantsSvc.replaceActive).toHaveBeenCalledWith('cdb9', 'u1', ['acc1'], [
+      'expenses:read',
+      'categories:read',
+      'incomes:read',
+      'budgets:read',
+      'analytics:read',
+    ]);
+  });
+
+  it('preview returns registeredByAssistant for an mcp_dcr client (no developer name)', async () => {
+    const { svc } = build([member('u1', 'owner')], [], { env: MCP_ON });
+    const r = await svc.preview('u1', dcrQuery);
+    expect(r.app.registeredByAssistant).toBe(true);
+    expect(r.app.isVerified).toBe(false);
+    expect(r.app.developerName).toBeNull();
+    // R11: where the code will go, from the validated redirect_uri of this request
+    expect(r.app.redirectHost).toBe(new URL(dcrQuery.redirect_uri).hostname);
+  });
+
+  it('R11: a manual client preview carries no redirectHost', async () => {
+    const { svc } = build([member('u1', 'owner')], [], { env: MCP_ON });
+    const r = await svc.preview('u1', query);
+    expect(r.app.redirectHost).toBeNull();
+  });
+
+  it('R11: redirectHostOf returns the punycode host, never the Unicode one', () => {
+    expect(redirectHostOf('https://claude.ai/api/mcp/auth_callback')).toBe('claude.ai');
+    expect(redirectHostOf('https://аpple.com/cb')).toBe('xn--pple-43d.com');
+    expect(redirectHostOf('HTTPS://München.DE/cb')).toBe('xn--mnchen-3ya.de');
+    expect(redirectHostOf('http://127.0.0.1:3000/cb')).toBe('127.0.0.1');
+    expect(redirectHostOf('http://[::1]:8080/cb')).toBe('[::1]');
+    expect(redirectHostOf('not a url')).toBeNull();
+  });
+
+  it('a DCR client may narrow to a subset of the read scopes', async () => {
+    const { svc } = build([member('u1', 'owner')], [], { env: MCP_ON });
+    const r = await svc.preview('u1', { ...dcrQuery, scope: 'expenses:read' });
+    expect(r.scopes).toEqual(['expenses:read']);
+  });
+
+  it('a DCR client asking for a write scope or receipts:read is invalid_scope (preview and approve)', async () => {
+    const { svc, grantsSvc } = build([member('u1', 'owner')], [], { env: MCP_ON });
+    for (const scope of ['expenses:read expenses:write', 'receipts:read', 'budgets:write']) {
+      await expectOAuthError(svc.preview('u1', { ...dcrQuery, scope }), 'bad', 'invalid_scope');
+      await expectOAuthError(svc.approve('u1', { ...dcrApprove, scope }), 'bad', 'invalid_scope');
+    }
+    expect(grantsSvc.replaceActive).not.toHaveBeenCalled();
+  });
+
+  it('manual client without scope still invalid_scope', async () => {
+    const { svc } = build([member('u1', 'owner')]);
+    await expectOAuthError(svc.preview('u1', { ...query, scope: undefined }), 'bad', 'invalid_scope');
+    await expectOAuthError(svc.approve('u1', { ...approveBody, scope: undefined }), 'bad', 'invalid_scope');
+  });
+
+  it('a manual client may still ask for write and receipt scopes', async () => {
+    const { svc } = build([member('u1', 'owner')]);
+    const r = await svc.preview('u1', { ...query, scope: 'expenses:write receipts:read' });
+    expect(r.scopes).toEqual(['expenses:write', 'receipts:read']);
+  });
+
+  it('resource stored in the code payload, normalized to exactly MCP_RESOURCE_URL', async () => {
+    const { svc, redis } = build([member('u1', 'owner')], [], { env: MCP_ON });
+    const { redirectTo } = await svc.approve('u1', { ...dcrApprove, resource: 'HTTPS://API.AI-BUDGET.PL/mcp/' });
+    const code = new URL(redirectTo).searchParams.get('code')!;
+    expect(redis.get(`oauth:code:${sha256Hex(code)}`)!.value.resource).toBe(MCP);
+  });
+
+  it('no resource stores no binding (the public API, as before)', async () => {
+    const { svc, redis } = build([member('u1', 'owner')], [], { env: MCP_ON });
+    const { redirectTo } = await svc.approve('u1', approveBody);
+    const code = new URL(redirectTo).searchParams.get('code')!;
+    expect(redis.get(`oauth:code:${sha256Hex(code)}`)!.value.resource ?? null).toBeNull();
+  });
+
+  it('an unknown resource is invalid_target (preview and approve), nothing stored', async () => {
+    const { svc, redis, grantsSvc } = build([member('u1', 'owner')], [], { env: MCP_ON });
+    for (const resource of ['https://evil.example.com/mcp', 'https://api.ai-budget.pl/public/v2', 'nope']) {
+      await expectOAuthError(svc.preview('u1', { ...query, resource }), 'bad', 'invalid_target');
+      await expectOAuthError(svc.approve('u1', { ...approveBody, resource }), 'bad', 'invalid_target');
+    }
+    expect(grantsSvc.replaceActive).not.toHaveBeenCalled();
+    expect(redis.size).toBe(0);
+  });
+
+  it('R10: the public API identifiers bind null at preview and approve (MCP on or off)', async () => {
+    for (const env of [MCP_ON, { PUBLIC_API_ENABLED: 'true' }]) {
+      for (const resource of ['https://api.ai-budget.pl', 'https://api.ai-budget.pl/public/v1', 'HTTPS://API.AI-BUDGET.PL/public/v1/']) {
+        const { svc, redis } = build([member('u1', 'owner')], [], { env });
+        await expect(svc.preview('u1', { ...query, resource })).resolves.toBeDefined();
+        const { redirectTo } = await svc.approve('u1', { ...approveBody, resource });
+        const code = new URL(redirectTo).searchParams.get('code')!;
+        expect(redis.get(`oauth:code:${sha256Hex(code)}`)!.value.resource ?? null).toBeNull();
+      }
+    }
+  });
+
+  it('R10 + R4: a DCR client naming the public API is still invalid_target', async () => {
+    const { svc, grantsSvc } = build([member('u1', 'owner')], [], { env: MCP_ON });
+    await expectOAuthError(svc.preview('u1', { ...dcrQuery, resource: 'https://api.ai-budget.pl/public/v1' }), 'bad', 'invalid_target');
+    await expectOAuthError(svc.approve('u1', { ...dcrApprove, resource: 'https://api.ai-budget.pl' }), 'bad', 'invalid_target');
+    expect(grantsSvc.replaceActive).not.toHaveBeenCalled();
+  });
+
+  it('R4: a DCR client without resource is invalid_target (preview and approve), nothing stored', async () => {
+    const { svc, redis, grantsSvc } = build([member('u1', 'owner')], [], { env: MCP_ON });
+    for (const resource of [undefined, '', '  ']) {
+      await expectOAuthError(svc.preview('u1', { ...dcrQuery, resource }), 'bad', 'invalid_target');
+      await expectOAuthError(svc.approve('u1', { ...dcrApprove, resource }), 'bad', 'invalid_target');
+    }
+    expect(grantsSvc.replaceActive).not.toHaveBeenCalled();
+    expect(redis.size).toBe(0);
+  });
+
+  it('R4: a DCR client naming the MCP resource is bound to it', async () => {
+    const { svc, redis } = build([member('u1', 'owner')], [], { env: MCP_ON });
+    const { redirectTo } = await svc.approve('u1', dcrApprove);
+    const code = new URL(redirectTo).searchParams.get('code')!;
+    expect(redis.get(`oauth:code:${sha256Hex(code)}`)!.value.resource).toBe(MCP);
+  });
+
+  it('R4: a DCR deny still redirects with access_denied (no resource needed to refuse)', async () => {
+    const { svc } = build([member('u1', 'owner')], [], { env: MCP_ON });
+    const { redirectTo } = await svc.approve('u1', { ...dcrApprove, resource: undefined, decision: 'deny' });
+    expect(new URL(redirectTo).searchParams.get('error')).toBe('access_denied');
+  });
+
+  it('MCP resource refused when MCP_ENABLED is off', async () => {
+    const { svc, grantsSvc } = build([member('u1', 'owner')], [], { env: { PUBLIC_API_ENABLED: 'true' } });
+    await expectOAuthError(svc.preview('u1', { ...dcrQuery, resource: MCP }), 'bad', 'invalid_target');
+    await expectOAuthError(svc.approve('u1', { ...dcrApprove, resource: MCP }), 'bad', 'invalid_target');
+    expect(grantsSvc.replaceActive).not.toHaveBeenCalled();
   });
 });

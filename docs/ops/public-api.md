@@ -64,6 +64,10 @@ they proxy to 404s, and the header and zone are harmless. Remove them only if th
 
 ## Pilot checklist (manual; automated tests cannot cover these)
 
+Scripted now (not manual): the OAuth flow end to end in production — authorize with PKCE, token, `/public/v1/account`,
+refresh, revoke, dead token — is `node scripts/mcp-smoke.mjs --public` (`docs/ops/mcp.md` step 3).
+
+- [ ] `node scripts/mcp-smoke.mjs --public` passed against production (record the date). Not yet run.
 - [ ] Consent screen renders correctly at phone width and at >= 1024 on web.
 - [ ] Sign-in redirect: opening a consent link while signed out returns to `/authorize` after **password** sign-in AND after **Google** sign-in (Ruling 27).
 - [ ] Native: a brand-new user registering from a consent link. Known edge (Ruling 26); record what actually happens.

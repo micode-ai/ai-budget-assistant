@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Query, Req, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AdminGuard } from './admin.guard';
@@ -19,8 +19,8 @@ export class AdminOAuthClientsController {
   ) {}
 
   @Get()
-  list() {
-    return this.service.list();
+  list(@Query('source') source?: string, @Query('page') page?: string, @Query('limit') limit?: string) {
+    return this.service.list(source, page, limit);
   }
 
   @Patch(':id')

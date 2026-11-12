@@ -3596,6 +3596,8 @@ export default {
     loading: 'Перевіряємо запит…',
     verified: 'Перевірено AI Budget',
     notVerified: 'Не перевірено AI Budget',
+    registeredByAssistant: 'Не перевірено · зареєстровано автоматично ШІ-асистентом',
+    redirectHost: 'Доступ буде передано на {{host}}',
     byDeveloper: 'Розробник: {{name}}',
     privacyPolicy: 'Політика конфіденційності',
     wantsTo: '{{app}} запитує доступ:',

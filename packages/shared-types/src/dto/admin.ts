@@ -78,10 +78,13 @@ export interface AdminGroupMetricsResponse {
 export interface AdminOAuthClient {
   id: string;
   name: string;
-  homepageUrl: string;
-  ownerId: string;
-  ownerName: string;
-  ownerEmail: string;
+  homepageUrl: string | null;
+  /** manual = registered by a developer; mcp_dcr = self-registered by an AI assistant */
+  source: 'manual' | 'mcp_dcr';
+  /** null for an owner-less (MCP dynamic registration) client */
+  ownerId: string | null;
+  ownerName: string | null;
+  ownerEmail: string | null;
   createdAt: string;
   activeGrants: number;
   requestsLastMinute: number;
@@ -92,6 +95,15 @@ export interface AdminOAuthClient {
   rateLimitPerGrant: number | null;
   rateLimitPerClient: number | null;
   isDeleted: boolean;
+}
+
+/** One page of `GET /admin/oauth-clients` (newest first). */
+export interface AdminOAuthClientPage {
+  items: AdminOAuthClient[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
 }
 
 export interface UpdateAdminOAuthClientDto {

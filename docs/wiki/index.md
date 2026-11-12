@@ -143,6 +143,8 @@ the section you came for — it states what must not break and why. A missing se
 - [last-active-tracking](features/last-active-tracking.md) — `lastSyncAt` as the activity stamp, set on every authenticated request, throttled through Redis
 - [public-api](features/public-api.md) — the OAuth server and `/public/v1` for third-party apps:
   opaque hashed tokens, per-request grant checks, encryption tiers, the expenses changes feed
+- [mcp-connector](features/mcp-connector.md) — read-only MCP endpoint for Claude/ChatGPT over the same
+  OAuth server: dynamic client registration, resource-bound tokens, one rate-limit unit per tool call
 
 ### Telling users about things, and asking them for something
 - [faster-capture-suggestion](features/faster-capture-suggestion.md) — the one-time nudge toward receipt,

@@ -1,4 +1,5 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import type { OAuthClient, OAuthGrant, Prisma } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
 import { CacheService } from '../../common/cache/cache.service';
@@ -8,6 +9,8 @@ import { generateToken, sha256Hex, verifyPkceS256 } from './oauth-crypto.util';
 import { oauthCodeKey, type OAuthCodePayload } from './oauth-code';
 import { InvalidScopeError, parseScopeParam } from './oauth-scopes';
 import { grantAccountStatus, loadGrantAccountStates } from './oauth-grant-accounts.util';
+import { InvalidTargetError, assertClientResource, assertResourceMatches } from './oauth-resource.util';
+import { assertScopesAllowedForClient } from './oauth-scope-policy';
 
 export const ACCESS_TOKEN_TTL_SEC = 3600;
 export const REFRESH_TOKEN_TTL_MS = 90 * 24 * 60 * 60 * 1000;
@@ -21,6 +24,7 @@ export const OAUTH_TOKEN_ERROR_CODES = [
   'invalid_grant',
   'unsupported_grant_type',
   'invalid_scope',
+  'invalid_target',
   'slow_down',
   'temporarily_unavailable',
 ] as const;
@@ -93,6 +97,34 @@ function parseBasic(header: string | undefined): { id: string; secret: string } 
 }
 
 /**
+ * The token-side resource check: a named `resource` must repeat the binding, and (ruling R4) a
+ * registered assistant's binding must be the MCP resource — a DCR code or token with none is refused.
+ */
+function checkResource(
+  client: OAuthClient,
+  raw: string | undefined,
+  bound: string | null,
+  config: ConfigService,
+): void {
+  try {
+    assertResourceMatches(raw, bound, config);
+    assertClientResource(client, bound);
+  } catch (e) {
+    if (e instanceof InvalidTargetError) throw new OAuthTokenError('invalid_target', e.message);
+    throw e;
+  }
+}
+
+function checkClientScopes(client: OAuthClient, scopes: string[]): void {
+  try {
+    assertScopesAllowedForClient(client, scopes);
+  } catch (e) {
+    if (e instanceof InvalidScopeError) throw new OAuthTokenError('invalid_scope', e.message);
+    throw e;
+  }
+}
+
+/**
  * The third-party-facing half of the OAuth server: `POST /oauth/token` (code exchange with PKCE,
  * refresh rotation with reuse detection) and `POST /oauth/revoke` (RFC 7009).
  *
@@ -108,6 +140,7 @@ export class OAuthTokenService {
     private readonly cache: CacheService,
     private readonly clients: OAuthClientsService,
     private readonly grants: OAuthGrantsService,
+    private readonly config: ConfigService,
   ) {}
 
   async token(body: OAuthBody, authorization: string | undefined): Promise<TokenResponse> {
@@ -139,22 +172,26 @@ export class OAuthTokenService {
     return {};
   }
 
-  /** Creates one access (1 h) and one refresh (90 d) token for the grant; only hashes are stored. */
-  issuePair(grantId: string): Promise<{ accessToken: string; refreshToken: string }> {
-    return this.issuePairWith(this.prisma, grantId);
+  /**
+   * Creates one access (1 h) and one refresh (90 d) token for the grant; only hashes are stored.
+   * Both are bound to `resource` (null = `/public/v1`, else exactly `MCP_RESOURCE_URL`).
+   */
+  issuePair(grantId: string, resource: string | null = null): Promise<{ accessToken: string; refreshToken: string }> {
+    return this.issuePairWith(this.prisma, grantId, resource);
   }
 
   private async issuePairWith(
     db: Prisma.TransactionClient | PrismaService,
     grantId: string,
+    resource: string | null,
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const accessToken = generateToken('aba_at_');
     const refreshToken = generateToken('aba_rt_');
     const now = Date.now();
     await db.oAuthToken.createMany({
       data: [
-        { grantId, kind: 'access', tokenHash: sha256Hex(accessToken), expiresAt: new Date(now + ACCESS_TOKEN_TTL_SEC * 1000) },
-        { grantId, kind: 'refresh', tokenHash: sha256Hex(refreshToken), expiresAt: new Date(now + REFRESH_TOKEN_TTL_MS) },
+        { grantId, kind: 'access', tokenHash: sha256Hex(accessToken), expiresAt: new Date(now + ACCESS_TOKEN_TTL_SEC * 1000), resource },
+        { grantId, kind: 'refresh', tokenHash: sha256Hex(refreshToken), expiresAt: new Date(now + REFRESH_TOKEN_TTL_MS), resource },
       ],
     });
     return { accessToken, refreshToken };
@@ -164,6 +201,7 @@ export class OAuthTokenService {
     const code = required(body, 'code');
     const redirectUri = required(body, 'redirect_uri');
     const verifier = required(body, 'code_verifier');
+    const resourceParam = param(body, 'resource');
 
     let payload: OAuthCodePayload | null;
     try {
@@ -179,17 +217,23 @@ export class OAuthTokenService {
     if (!client.isConfidential) await this.rateLimit(client);
     if (payload.redirectUri !== redirectUri) throw err.grant('redirect_uri does not match the authorization request');
     if (!verifyPkceS256(verifier, payload.codeChallenge)) throw err.grant('code_verifier does not match');
+    // The binding was chosen at authorize (ruling R1: it rides with the code); a resource named
+    // here may only repeat it.
+    const resource = payload.resource ?? null;
+    checkResource(client, resourceParam, resource, this.config);
 
     const grant = await this.prisma.oAuthGrant.findUnique({ where: { id: payload.grantId } });
     const accountIds = await this.assertGrantUsable(grant, client);
+    checkClientScopes(client, grant!.scopes);
 
-    const pair = await this.issuePair(grant!.id);
+    const pair = await this.issuePair(grant!.id, resource);
     return this.response(grant!, accountIds, pair);
   }
 
   private async refresh(client: OAuthClient, body: OAuthBody): Promise<TokenResponse> {
     const presented = required(body, 'refresh_token');
     const scopeParam = param(body, 'scope');
+    const resourceParam = param(body, 'resource');
 
     const row = await this.prisma.oAuthToken.findUnique({
       where: { tokenHash: sha256Hex(presented) },
@@ -207,6 +251,11 @@ export class OAuthTokenService {
     if (row.expiresAt.getTime() <= Date.now()) throw err.grant('refresh token has expired');
 
     const accountIds = await this.assertGrantUsable(row.grant, client);
+    // The new pair keeps the rotated token's binding; a refresh cannot move a token to another surface.
+    const resource = row.resource ?? null;
+    checkResource(client, resourceParam, resource, this.config);
+    // A registered assistant's grant must still be read-only (refused without touching the grant).
+    checkClientScopes(client, row.grant.scopes);
 
     if (scopeParam !== undefined) {
       let requested: string[];
@@ -228,7 +277,7 @@ export class OAuthTokenService {
         data: { rotatedAt: new Date() },
       });
       if (count !== 1) return null;
-      return this.issuePairWith(tx, row.grantId);
+      return this.issuePairWith(tx, row.grantId, resource);
     });
     if (!pair) {
       // Lost the race to a concurrent refresh with the same token — that is a second use of it.

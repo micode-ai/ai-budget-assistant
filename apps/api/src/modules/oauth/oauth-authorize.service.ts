@@ -5,6 +5,7 @@ import {
   Logger,
   ServiceUnavailableException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import type { AccountRole, AccountType, OAuthClient } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
 import { CacheService } from '../../common/cache/cache.service';
@@ -15,6 +16,8 @@ import { OAuthGrantsService } from './oauth-grants.service';
 import { InvalidScopeError, parseScopeParam, type PublicScope } from './oauth-scopes';
 import { generateToken, sha256Hex } from './oauth-crypto.util';
 import { OAUTH_CODE_TTL_SEC, oauthCodeKey, type OAuthCodePayload } from './oauth-code';
+import { InvalidTargetError, assertClientResource, parseResourceParam } from './oauth-resource.util';
+import { assertScopesAllowedForClient, defaultScopesForClient } from './oauth-scope-policy';
 import type { AuthorizeApproveDto, AuthorizePreviewQueryDto } from './dto/authorize.dto';
 
 export const CONNECTED_APPS_URL = 'https://app.ai-budget.pl/settings/connected-apps';
@@ -30,6 +33,7 @@ export type AuthorizeErrorCode =
   | 'invalid_client'
   | 'invalid_redirect_uri'
   | 'invalid_scope'
+  | 'invalid_target'
   | 'unsupported_response_type';
 
 export interface AuthorizePreviewAccount {
@@ -48,10 +52,22 @@ export interface AuthorizePreview {
   app: {
     name: string;
     logoUrl: string | null;
-    homepageUrl: string;
+    homepageUrl: string | null;
     privacyPolicyUrl: string | null;
     isVerified: boolean;
     developerName: string | null;
+    /**
+     * Registered by an AI assistant through dynamic client registration (`source = 'mcp_dcr'`):
+     * the consent page labels it and renders its self-declared name/URI/logo as untrusted text.
+     */
+    registeredByAssistant: boolean;
+    /**
+     * R11: for an assistant-registered client, the host of the validated `redirect_uri` of THIS
+     * request in ASCII (punycode) form — where the code will actually be sent. The consent page
+     * shows it prominently, because the name, homepage and logo are all self-declared. Null for a
+     * manual (developer-registered) client.
+     */
+    redirectHost: string | null;
   };
   scopes: PublicScope[];
   accounts: AuthorizePreviewAccount[];
@@ -62,6 +78,21 @@ interface ValidatedRequest {
   redirectUri: string;
   scopes: PublicScope[];
   codeChallenge: string;
+  /** null = the public API; otherwise exactly `MCP_RESOURCE_URL`. */
+  resource: string | null;
+}
+
+/**
+ * The host of an already-validated redirect URI, ASCII-only: Node's WHATWG URL applies IDNA, so a
+ * homograph host comes back as `xn--…`. IPv6 keeps its brackets. Null if it somehow fails to parse.
+ */
+export function redirectHostOf(uri: string): string | null {
+  try {
+    const host = new URL(uri).hostname.toLowerCase();
+    return /^[a-z0-9.:[\]-]+$/.test(host) ? host : null;
+  } catch {
+    return null;
+  }
 }
 
 /** RFC 6749 error body. The consent SPA shows these on its own page — it never redirects them. */
@@ -87,13 +118,17 @@ export class OAuthAuthorizeService {
     private readonly grants: OAuthGrantsService,
     private readonly cache: CacheService,
     private readonly mail: MailService,
+    private readonly config: ConfigService,
   ) {}
 
   async preview(userId: string, q: AuthorizePreviewQueryDto): Promise<AuthorizePreview> {
-    const { client, scopes } = await this.validate(q, { check: true, value: q.response_type });
+    const { client, scopes, redirectUri } = await this.validate(q, { check: true, value: q.response_type });
 
     const [developer, memberships, connectedRows] = await Promise.all([
-      this.prisma.user.findUnique({ where: { id: client.ownerUserId }, select: { name: true } }),
+      // Owner-less (dynamic-registration) clients have no publisher to show.
+      client.ownerUserId
+        ? this.prisma.user.findUnique({ where: { id: client.ownerUserId }, select: { name: true } })
+        : Promise.resolve(null),
       this.prisma.accountMember.findMany({
         where: { userId, account: { isActive: true } },
         include: { account: { select: { id: true, name: true, type: true, encryptionTier: true } } },
@@ -114,6 +149,8 @@ export class OAuthAuthorizeService {
         privacyPolicyUrl: client.privacyPolicyUrl,
         isVerified: client.isVerified,
         developerName: developer?.name ?? null,
+        registeredByAssistant: client.source === 'mcp_dcr',
+        redirectHost: client.source === 'mcp_dcr' ? redirectHostOf(redirectUri) : null,
       },
       scopes,
       accounts: memberships.map((m) => {
@@ -195,6 +232,8 @@ export class OAuthAuthorizeService {
       redirectUri: req.redirectUri,
       codeChallenge: req.codeChallenge,
       scopes: req.scopes,
+      // Only an MCP-bound code carries the key: a public-API code stays exactly as before.
+      ...(req.resource !== null ? { resource: req.resource } : {}),
     };
     try {
       await this.cache.setStrict(oauthCodeKey(sha256Hex(code)), payload, OAUTH_CODE_TTL_SEC);
@@ -212,10 +251,22 @@ export class OAuthAuthorizeService {
 
   /**
    * Order: client + redirect first (an error there can never be redirected), then response_type
-   * (preview only — approve's body has none), PKCE, scope.
+   * (preview only — approve's body has none), PKCE, scope, resource.
+   *
+   * Scope: a `mcp_dcr` client that names none gets `MCP_DEFAULT_SCOPES`, and may hold only the read
+   * scopes; a manual client still has to name one and is unrestricted.
+   *
+   * Resource: a `mcp_dcr` client must name the MCP resource (ruling R4) — without it, `invalid_target`.
    */
   private async validate(
-    q: { client_id?: string; redirect_uri?: string; scope?: string; code_challenge?: string; code_challenge_method?: string },
+    q: {
+      client_id?: string;
+      redirect_uri?: string;
+      scope?: string;
+      code_challenge?: string;
+      code_challenge_method?: string;
+      resource?: string;
+    },
     responseType: { check: false } | { check: true; value: string | undefined },
   ): Promise<ValidatedRequest> {
     const { client, redirectUri } = await this.validateClientAndRedirect(q.client_id, q.redirect_uri);
@@ -232,12 +283,23 @@ export class OAuthAuthorizeService {
     }
     let scopes: PublicScope[];
     try {
-      scopes = parseScopeParam(q.scope ?? '');
+      const fallback = (q.scope ?? '').trim() === '' ? defaultScopesForClient(client) : null;
+      scopes = fallback ?? parseScopeParam(q.scope ?? '');
+      assertScopesAllowedForClient(client, scopes);
     } catch (e) {
       if (e instanceof InvalidScopeError) throw oauthError('invalid_scope', e.message);
       throw e;
     }
-    return { client, redirectUri, scopes, codeChallenge: q.code_challenge };
+    let resource: string | null;
+    try {
+      resource = parseResourceParam(q.resource, this.config);
+      // R4: a registered assistant may only ever be authorized for /mcp.
+      assertClientResource(client, resource);
+    } catch (e) {
+      if (e instanceof InvalidTargetError) throw oauthError('invalid_target', e.message);
+      throw e;
+    }
+    return { client, redirectUri, scopes, codeChallenge: q.code_challenge, resource };
   }
 
   private async validateClientAndRedirect(

@@ -69,9 +69,12 @@ export interface ConnectedApp {
   app: {
     name: string;
     logoUrl: string | null;
-    homepageUrl: string;
+    /** Null for an assistant-registered app (R11): never shown as a link. */
+    homepageUrl: string | null;
     isVerified: boolean;
     status: DeveloperAppStatus;
+    /** Registered automatically by an AI assistant (dynamic client registration). Absent = false. */
+    registeredByAssistant?: boolean;
   };
   /** True for the user who connected the app; a co-owner sees only their own accounts of it. */
   isGrantor: boolean;

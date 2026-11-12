@@ -122,10 +122,19 @@ export interface PublicExpensePage {
   hasMore: boolean;
 }
 
+export type PublicExpenseListQuery = ListQuery;
 type ListQuery = Pick<
   ListPublicExpensesQueryDto,
   'date_from' | 'date_to' | 'category_id' | 'merchant' | 'project_id' | 'search' | 'limit' | 'cursor'
->;
+> & {
+  /**
+   * Inclusive bounds on the row's own `amount` (in its own currency, never converted), as decimal
+   * strings. Not a `/public/v1` query parameter (the DTO does not declare them, so the global pipe
+   * refuses them there); only the MCP `list_expenses` tool sends them.
+   */
+  min_amount?: string;
+  max_amount?: string;
+};
 
 
 /**
@@ -142,6 +151,12 @@ export async function listPublicExpenses(prisma: PrismaService, accountId: strin
   const date = dateRangeFilter(q.date_from, q.date_to);
   if (date) where.date = date;
   if (q.category_id) where.categoryId = q.category_id;
+  if (q.min_amount !== undefined || q.max_amount !== undefined) {
+    where.amount = {
+      ...(q.min_amount !== undefined ? { gte: q.min_amount } : {}),
+      ...(q.max_amount !== undefined ? { lte: q.max_amount } : {}),
+    };
+  }
   if (q.merchant) where.merchant = { contains: q.merchant, mode: 'insensitive' };
   if (q.project_id) where.projectExpenses = { some: { projectId: q.project_id, isDeleted: false } };
   if (q.search) and.push(descriptionSearchWhere(q.search));

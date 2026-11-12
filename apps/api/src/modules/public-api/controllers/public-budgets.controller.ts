@@ -39,9 +39,8 @@ import {
 } from '../dto/public-budget.dto';
 import { PublicApiExceptionFilter } from '../filters/public-api-exception.filter';
 import { PublicApiAuthGuard } from '../guards/public-api-auth.guard';
-import { toPublicBudget } from '../mappers/public-budget.mapper';
 import { PublicBudgetWriteAdapter } from '../public-budget-write.adapter';
-import { getPublicBudget, listPublicBudgets } from '../public-budgets.query';
+import { readPublicBudget, readPublicBudgetList } from '../public-read.views';
 import type { PublicApiRequest } from '../public-api.types';
 import { writeContext } from '../public-write.shared';
 
@@ -74,10 +73,8 @@ export class PublicBudgetsController {
   @ApiOkResponse({ type: PublicBudgetList, description: '' })
   @ApiPublicErrors()
   async list(@Req() req: PublicApiRequest): Promise<PublicBudgetList> {
-    const rows = await listPublicBudgets(this.budgets, req.accountId);
-    return {
-      data: rows.map((r) => toPublicBudget(r, { encryptionTier: req.oauth.encryptionTier })),
-    };
+    // Shared with the MCP `list_budgets` tool (public-read.views.ts).
+    return readPublicBudgetList(this.budgets, req.accountId, req.oauth.encryptionTier);
   }
 
   @Get(':id')
@@ -149,7 +146,6 @@ export class PublicBudgetsController {
 
   /** Re-read so a write answers exactly what a GET would. */
   private async detail(req: PublicApiRequest, id: string): Promise<PublicBudget> {
-    const row = await getPublicBudget(this.prisma, this.budgets, req.accountId, id);
-    return toPublicBudget(row, { encryptionTier: req.oauth.encryptionTier });
+    return readPublicBudget(this.prisma, this.budgets, req.accountId, req.oauth.encryptionTier, id);
   }
 }

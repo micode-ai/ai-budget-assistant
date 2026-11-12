@@ -33,6 +33,8 @@ dashboard.
 - [inbound-e-receipts](features/inbound-e-receipts.md) — the internal routes the SMTP container calls
 - [public-api](features/public-api.md) — `/public/v1` and `/oauth/token|revoke` for third-party apps,
   authorized by `PublicApiAuthGuard` instead of the JWT + account stack
+- [mcp-connector](features/mcp-connector.md) — `POST /mcp`, `/oauth/register` and the `.well-known`
+  metadata: a read-only MCP surface authorized by the same `PublicApiAuthorizer`
 
 ## Key concepts
 
