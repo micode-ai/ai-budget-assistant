@@ -52,6 +52,12 @@ export default function ReferenceDataScreen() {
       description: t('settingsNav.projectsDesc'),
       route: '/projects',
     },
+    {
+      icon: 'people-outline',
+      label: t('children.title'),
+      description: t('children.settingsDesc'),
+      route: '/settings/children',
+    },
   ];
 
   return (

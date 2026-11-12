@@ -29,6 +29,7 @@ import { realSalaryApi } from './realSalary.api';
 import { groupsApi } from './groups.api';
 import { inboundMailApi } from './inboundMail.api';
 import { developerAppsApi } from './developerApps.api';
+import { childrenApi } from './children.api';
 
 export const api = {
   setAccountIdGetter: (getter: () => string | null) => httpClient.setAccountIdGetter(getter),
@@ -63,6 +64,7 @@ export const api = {
   ...groupsApi,
   ...inboundMailApi,
   ...developerAppsApi,
+  ...childrenApi,
 };
 
 /**

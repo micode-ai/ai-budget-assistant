@@ -1,3 +1,4 @@
+import type React from 'react';
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useStyles, type Theme } from '@/theme';
@@ -12,6 +13,8 @@ import type {
 import { drillView } from '@/features/analytics/categoryDrillView';
 import { useDrillParent } from '@/features/analytics/useDrillParent';
 import { BreakdownCard, type BreakdownRow } from './BreakdownCard';
+import { ChildrenAnalyticsCard } from '@/components/children/ChildrenAnalyticsCard';
+import type { ChildMonthRow } from '@/features/children/useChildCosts';
 
 function categoryToRows(categorySpending: CategorySpending[]): BreakdownRow[] {
   return categorySpending.map((c, index) => ({
@@ -86,6 +89,10 @@ export interface BreakdownGridProps {
   tagSpending: TagSpending[];
   projectSpending: ProjectSpending[];
   incomeByCategory: IncomeCategorySpending[];
+  /** Non-archived children with this month's total; the "Children" tile shows only when non-empty. */
+  childRows?: ChildMonthRow[];
+  /** The children's totals' currency (the display currency, not the Analytics filter). */
+  childCurrency?: string;
 }
 
 /**
@@ -113,6 +120,8 @@ export function BreakdownGrid({
   tagSpending,
   projectSpending,
   incomeByCategory,
+  childRows = [],
+  childCurrency,
 }: BreakdownGridProps) {
   const { t } = useTranslation();
   const styles = useStyles(createStyles);
@@ -138,6 +147,8 @@ export function BreakdownGrid({
     /** Drill level the card shows; keys the card so donut focus and "Show all"
      *  reset on drill in/out instead of carrying a stale slice. */
     drillKey?: string | null;
+    /** A tile that is not a donut card (the Children list). */
+    render?: () => React.ReactNode;
   }[] = [
     ...(!isWideGrid && hasMerchant ? [{ key: 'merchant', title: t('analytics.byMerchant'), rows: merchantToRows(merchantSpending) }] : []),
     ...(memberSpending.length > 0 ? [{ key: 'member', title: t('analytics.byMember'), rows: memberToRows(memberSpending) }] : []),
@@ -147,6 +158,10 @@ export function BreakdownGrid({
       onRowPress: (row: BreakdownRow) => incomeDrill.setDrillParentId(row.id),
       drill: incomeView.parent ? { parentName: incomeView.parent.name, onBack: () => incomeDrill.setDrillParentId(null) } : undefined,
       drillKey: incomeView.parent?.categoryId ?? null,
+    }] : []),
+    // A list, not a donut: no share-of-total column, which would invite comparing children.
+    ...(childRows.length > 0 ? [{ key: 'children', title: t('childCosts.analyticsTitle'), rows: [],
+      render: () => <ChildrenAnalyticsCard rows={childRows} currency={childCurrency ?? currency} variant="card" />,
     }] : []),
   ];
 
@@ -174,7 +189,9 @@ export function BreakdownGrid({
         <View style={styles.breakdownRow}>
           {secondaries.map((s) => (
             <View key={s.key} style={[styles.breakdownTile, { flexBasis: secondaryBasis, flexGrow: 1, flexShrink: 1, minWidth: 0 }]}>
-              <BreakdownCard key={s.drillKey ?? 'top'} title={s.title} rows={s.rows} currency={currency} size="secondary" onRowPress={s.onRowPress} drill={s.drill} />
+              {s.render ? s.render() : (
+                <BreakdownCard key={s.drillKey ?? 'top'} title={s.title} rows={s.rows} currency={currency} size="secondary" onRowPress={s.onRowPress} drill={s.drill} />
+              )}
             </View>
           ))}
         </View>

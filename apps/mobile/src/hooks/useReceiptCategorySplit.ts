@@ -45,6 +45,10 @@ export function useReceiptCategorySplit(scannedReceipt: ScannedReceipt | null) {
   // items, so once the items themselves changed that split is stale.
   const [hasEditedItems, setHasEditedItems] = useState(false);
   const [showSplitSheet, setShowSplitSheet] = useState(false);
+  // Child costs: receipts line index -> local child id, picked on the confirm
+  // card before the expense exists. Written as line attribution after save
+  // (`attributeNewReceiptLines`); reindexed with the lines like itemCategories.
+  const [itemChildren, setItemChildren] = useState<Record<number, string | null>>({});
 
   useEffect(() => {
     if (scannedReceipt) {
@@ -67,6 +71,7 @@ export function useReceiptCategorySplit(scannedReceipt: ScannedReceipt | null) {
       setServerSplits(splits);
       setHasEditedCategories(false);
       setHasEditedItems(false);
+      setItemChildren({});
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scannedReceipt]);
@@ -154,6 +159,10 @@ export function useReceiptCategorySplit(scannedReceipt: ScannedReceipt | null) {
     setHasEditedCategories(true);
   }
 
+  function handleItemChildChange(itemIndex: number, childId: string | null) {
+    setItemChildren((prev) => ({ ...prev, [itemIndex]: childId }));
+  }
+
   // Edits a line's description/quantity/unitPrice/totalPrice (ABA
   // receipt-line-item-editing) — its index, and therefore its category
   // assignment in itemCategories, is untouched.
@@ -177,6 +186,7 @@ export function useReceiptCategorySplit(scannedReceipt: ScannedReceipt | null) {
   function handleRemoveItem(index: number) {
     setItems((prev) => prev.filter((_, i) => i !== index));
     setItemCategories((prev) => reindexAfterRemoval(prev, index));
+    setItemChildren((prev) => reindexAfterRemoval(prev, index));
     setHasEditedItems(true);
   }
 
@@ -186,6 +196,7 @@ export function useReceiptCategorySplit(scannedReceipt: ScannedReceipt | null) {
   // exact subset the original reset touched.
   function resetSplitState() {
     setItemCategories({});
+    setItemChildren({});
     setSplitDropped(false);
     setShowSplitSheet(false);
   }
@@ -202,6 +213,8 @@ export function useReceiptCategorySplit(scannedReceipt: ScannedReceipt | null) {
     showSplitSheet,
     setShowSplitSheet,
     handleItemCategoryChange,
+    itemChildren,
+    handleItemChildChange,
     handleItemFieldChange,
     handleAddItem,
     handleRemoveItem,

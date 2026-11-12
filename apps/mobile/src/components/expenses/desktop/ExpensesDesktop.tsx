@@ -102,6 +102,7 @@ export function ExpensesDesktop() {
     incomes,
     baseCurrency,
     canEdit,
+    activeChildren,
     expensesLoading,
     incomesLoading,
     multiSelect,
@@ -546,6 +547,20 @@ export function ExpensesDesktop() {
                     <Ionicons name="bookmark-outline" size={16} color={theme.colors.accent} />
                     <Text style={styles.bulkBarButtonText}>{t('expenses.bulkAddTag')}</Text>
                   </Pressable>
+                  {activeChildren.length > 0 && (
+                    <Pressable
+                      style={styles.bulkBarButton}
+                      onPress={() => {
+                        multiSelect.setShowBulkCategoryPicker(false);
+                        multiSelect.setShowBulkTagPicker(false);
+                        multiSelect.setShowBulkChildPicker(true);
+                      }}
+                      accessibilityRole="button"
+                    >
+                      <Ionicons name="people-outline" size={16} color={theme.colors.primary} />
+                      <Text style={styles.bulkBarButtonText}>{t('children.bulkAssign')}</Text>
+                    </Pressable>
+                  )}
                   <Pressable
                     style={styles.bulkBarButton}
                     onPress={multiSelect.handleBulkDelete}
@@ -675,6 +690,10 @@ export function ExpensesDesktop() {
         onCloseBulkTagPicker={() => multiSelect.setShowBulkTagPicker(false)}
         allTags={allTags}
         onBulkAddTags={multiSelect.handleBulkAddTags}
+        showBulkChildPicker={multiSelect.showBulkChildPicker}
+        onCloseBulkChildPicker={() => multiSelect.setShowBulkChildPicker(false)}
+        activeChildren={activeChildren}
+        onBulkAssignChildren={(ids) => void multiSelect.handleBulkAssignChildren(ids)}
       />
     </View>
   );

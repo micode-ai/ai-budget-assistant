@@ -255,6 +255,16 @@ export class ExpenseCrossAccountService {
         data: { isDeleted: true },
       });
       await tx.tripExpenseShare.deleteMany({ where: { expenseId: expense.id } });
+      // Child costs: children are account-scoped, so both attribution modes would
+      // point at the SOURCE account's children — drop whole-expense links and line childIds.
+      await tx.expenseChild.updateMany({
+        where: { expenseId: expense.id, isDeleted: false },
+        data: { isDeleted: true, syncVersion: { increment: 1 } },
+      });
+      await tx.expenseItem.updateMany({
+        where: { expenseId: expense.id, childId: { not: null } },
+        data: { childId: null, syncVersion: { increment: 1 } },
+      });
       for (const [sourceId, targetId] of itemCategoryMap) {
         await tx.expenseItem.updateMany({
           where: { expenseId: expense.id, isDeleted: false, categoryId: sourceId },

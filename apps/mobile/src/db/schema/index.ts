@@ -95,6 +95,8 @@ export const incomes = sqliteTable('incomes', {
   createdByUserName: text('created_by_user_name'),
   createdByAppId: text('created_by_app_id'),
   createdByAppName: text('created_by_app_name'),
+  // Child costs: the child this 800+ benefit payment is for (local child id).
+  childBenefitChildId: text('child_benefit_child_id'),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
   isDeleted: integer('is_deleted', { mode: 'boolean' }).default(false),
@@ -284,6 +286,36 @@ export const tripExpenseShares = sqliteTable('trip_expense_shares', {
   syncVersion: integer('sync_version').default(0),
 });
 
+// Children (child costs). `id` is the device-local id and doubles as the
+// server's `clientId`; `server_id` is the server PK once a push has landed or a
+// pull brought the row in. `expense_items.child_id` (line attribution) is added
+// by ALTER TABLE in client.native.ts — expense_items has no declaration here.
+export const children = sqliteTable('children', {
+  id: text('id').primaryKey(),
+  serverId: text('server_id'),
+  accountId: text('account_id').notNull(),
+  name: text('name').notNull(),
+  color: text('color'),
+  archivedAt: integer('archived_at', { mode: 'timestamp' }),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
+  isDeleted: integer('is_deleted', { mode: 'boolean' }).default(false),
+  syncStatus: text('sync_status').notNull().default('pending'),
+  syncVersion: integer('sync_version').default(0),
+});
+
+// Whole-expense child attribution; unique on (expense_id, child_id), both local ids.
+export const expenseChildren = sqliteTable('expense_children', {
+  id: text('id').primaryKey(),
+  expenseId: text('expense_id').notNull(),
+  childId: text('child_id').notNull(),
+  share: real('share').notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
+  isDeleted: integer('is_deleted', { mode: 'boolean' }).default(false),
+  syncVersion: integer('sync_version').default(0),
+});
+
 // Shopping lists table
 export const shoppingLists = sqliteTable('shopping_lists', {
   id: text('id').primaryKey(),
@@ -453,6 +485,8 @@ export type ExpenseCategorySplitRecord = typeof expenseCategorySplits.$inferSele
 export type NewExpenseCategorySplitRecord = typeof expenseCategorySplits.$inferInsert;
 export type TripExpenseShareRecord = typeof tripExpenseShares.$inferSelect;
 export type NewTripExpenseShareRecord = typeof tripExpenseShares.$inferInsert;
+export type ChildRecord = typeof children.$inferSelect;
+export type ExpenseChildRecord = typeof expenseChildren.$inferSelect;
 export type ShoppingListRecord = typeof shoppingLists.$inferSelect;
 export type NewShoppingListRecord = typeof shoppingLists.$inferInsert;
 export type ShoppingListItemRecord = typeof shoppingListItems.$inferSelect;

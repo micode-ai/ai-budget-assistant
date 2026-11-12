@@ -6,6 +6,8 @@ import { processBudgetChange } from './budget.handler';
 import { processCategoryChange } from './category.handler';
 import { processIncomeChange } from './income.handler';
 import { processTagChange } from './tag.handler';
+import { processChildChange } from './child.handler';
+import { processExpenseChildChange } from './expense-child.handler';
 import { processProjectChange } from './project.handler';
 import { processShoppingListChange } from './shopping-list.handler';
 import { processShoppingListItemChange } from './shopping-list-item.handler';
@@ -20,6 +22,8 @@ export {
   processCategoryChange,
   processIncomeChange,
   processTagChange,
+  processChildChange,
+  processExpenseChildChange,
   processProjectChange,
   processShoppingListChange,
   processShoppingListItemChange,
@@ -61,6 +65,10 @@ export const SYNC_ENTITY_HANDLERS: Partial<Record<SyncChange['entityType'], Sing
   category: processCategoryChange as SingleEntityHandler,
   income: processIncomeChange as SingleEntityHandler,
   tag: processTagChange as SingleEntityHandler,
+  child: processChildChange as SingleEntityHandler,
+  // A link, but keyed by the resolved (expense, child) pair rather than a
+  // thin junction upsert, so it is a handler of its own (child costs).
+  expense_child: processExpenseChildChange as SingleEntityHandler,
   project: processProjectChange as SingleEntityHandler,
   portfolio_holding: processPortfolioHoldingChange as SingleEntityHandler,
   investment_transaction: processInvestmentTransactionChange as SingleEntityHandler,

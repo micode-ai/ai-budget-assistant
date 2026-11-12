@@ -8,6 +8,19 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import { parseAmount } from '@/utils/amount';
 import { formatItemQuantityLine } from '@/features/receipt/itemEditing';
 import type { ReceiptItem } from '@/features/receipt/useReceiptScanner';
+import type { Child } from '@budget/shared-types';
+import { ChildLinePicker } from '@/components/children/ChildLinePicker';
+
+/** Child costs: the confirm card's per-line "For" pickers (state owned by `useReceiptCategorySplit`). */
+export interface ReceiptLineChildren {
+  children: Child[];
+  allChildren: Child[];
+  /** Line index -> local child id. */
+  values: Record<number, string | null>;
+  /** A learned suggestion for the line — shown, never applied. */
+  suggestionFor: (index: number) => string | undefined;
+  onChange: (index: number, childId: string | null) => void;
+}
 
 type EditableItemFields = Pick<ReceiptItem, 'description' | 'quantity' | 'unitPrice' | 'totalPrice'>;
 
@@ -17,6 +30,7 @@ interface Props {
   onEditItem: (index: number, patch: Partial<EditableItemFields>) => void;
   onAddItem: (item: EditableItemFields) => void;
   onRemoveItem: (index: number) => void;
+  lineChildren?: ReceiptLineChildren;
 }
 
 interface DraftFields {
@@ -50,7 +64,14 @@ function toDraft(item: ReceiptItem): DraftFields {
  * three callback props — `useReceiptCategorySplit` owns the real items array,
  * the itemCategories reindex-on-delete, and split recomputation.
  */
-export default function ReceiptItemsEditor({ items, currencyCode, onEditItem, onAddItem, onRemoveItem }: Props) {
+export default function ReceiptItemsEditor({
+  items,
+  currencyCode,
+  onEditItem,
+  onAddItem,
+  onRemoveItem,
+  lineChildren,
+}: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -195,6 +216,17 @@ export default function ReceiptItemsEditor({ items, currencyCode, onEditItem, on
                 <Ionicons name="trash-outline" size={18} color={theme.colors.danger} />
               </TouchableOpacity>
             </View>
+            {lineChildren && (
+              <View style={styles.childRow}>
+                <ChildLinePicker
+                  children={lineChildren.children}
+                  allChildren={lineChildren.allChildren}
+                  value={lineChildren.values[index] ?? null}
+                  suggestion={lineChildren.suggestionFor(index)}
+                  onChange={(childId) => lineChildren.onChange(index, childId)}
+                />
+              </View>
+            )}
             {isExpanded && renderDraftForm()}
           </View>
         );
@@ -213,6 +245,9 @@ export default function ReceiptItemsEditor({ items, currencyCode, onEditItem, on
 }
 
 const createStyles = (theme: Theme) => ({
+  childRow: {
+    paddingBottom: theme.spacing[1.5],
+  },
   itemsSection: {
     marginTop: theme.spacing[4],
     paddingTop: theme.spacing[4],

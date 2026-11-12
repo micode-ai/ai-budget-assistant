@@ -17,6 +17,7 @@ The spending analysis layer: server-side aggregations (`modules/analytics/`, `mo
 ## Feature pages
 - [safe-to-spend](features/safe-to-spend.md) — the deterministic "safe to spend today" number and the chat affordability check
 - [financial-wrapped](features/financial-wrapped.md) — the year-in-review card deck and its share image
+- [child-costs](features/child-costs.md) — per-child spending, 800+ benefit coverage, share card and the Pro statement PDF
 - [gazetka-match](features/gazetka-match.md) — promo leaflets matched to what the user buys, community promos and their daily push
 
 ## Key concepts

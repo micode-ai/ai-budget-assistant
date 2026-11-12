@@ -75,6 +75,8 @@ rewrites, account data.
   payer (`paidByUserId`) and the linked debt income/expense — each points at a row of the source
   account. Every restored row is attributed to the restoring user.
 
+**Children** (`Child`, `ExpenseChild`, line `childId`) are exported and restored with the account — see [child-costs](child-costs.md).
+
 ## History
 
 ABA-163 — streamed export, receipt-image strip, fresh ids, atomic restore.

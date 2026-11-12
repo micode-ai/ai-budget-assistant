@@ -125,6 +125,20 @@ Eine Tabelle mit deinen am haufigsten gekauften Belegartikeln:
 
 Tippe auf **Bericht exportieren**, um zum Export & Berichte-Bildschirm zu gelangen. Dort kannst du PDF-, Excel- oder CSV-Berichte generieren, monatliche Zusammenfassungen ansehen und Daten-Backups verwalten. Siehe [Export & Berichte](./16-export-reports.md) für Details.
 
+## Kinderkosten
+
+Sehen Sie, was jedes Kind kostet, ohne Raten.
+
+- **Kinder hinzufügen:** Einstellungen > Stammdaten > Kinder. Gespeichert werden nur Name und Farbe. Archivieren Sie ein Kind statt es zu löschen; die Ausgaben bleiben zugeordnet.
+- **Ganze Ausgabe zuordnen:** Wählen Sie bei einer neuen oder bestehenden Ausgabe ein oder mehrere Kinder. Bei mehreren wird der Betrag gleichmäßig geteilt, außer Sie ändern die Anteile. Eine Ausgabe nutzt entweder die Zuordnung als Ganzes oder die Zuordnung einzelner Belegpositionen, nicht beides; die App fragt vor dem Wechsel.
+- **Belegpositionen zuordnen:** Ordnen Sie nach dem Scannen einzelne Positionen (Windeln, Schulbedarf) einem Kind zu. Die App merkt sich Ihre Wahl und schlägt sie beim nächsten Mal vor. Ein Vorschlag wird nie ohne Sie angewendet. „Positionen extrahieren“ behält die Zuordnung der Produkte, die noch auf dem Beleg stehen, und nennt die Zahl der nicht übernommenen.
+- **Sammelaktion:** Mehrere Ausgaben markieren und „Kind zuordnen“ wählen. Ausgaben mit Positionszuordnung werden übersprungen, die Anzahl wird angezeigt.
+- **Summen:** Der Kind-Bildschirm (und eine Karte im Analyse-Tab) zeigt diesen Monat, dieses Jahr und die Kategorien in Ihrer Anzeigewährung. Eine Summe mit ≈ enthält eine Näherung, weil ein Wechselkurs fehlte; solche Beträge werden ausgelassen statt geschätzt. Geplante Ausgaben und Forderungen aus geteilten Rechnungen zählen nicht.
+- **800+ und Deckung:** Sieht eine Einnahme wie das Kindergeld 800+ aus (z. B. „800+“ oder „rodzina 800“ in der Beschreibung), bietet die App an, sie einem Kind zuzuordnen. Die Deckung ist das erhaltene Geld geteilt durch die Kosten des Kindes im selben Zeitraum.
+- **Teilen-Karte:** Ein Bild mit den Summen eines Kindes. Der Name ist standardmäßig ausgeblendet und kann eingeblendet werden.
+- **Aufstellung als PDF (Pro, Bearbeiter):** Eine „zestawienie“ der Kosten eines Kindes für bis zu 24 Monate mit Summen, Monats- und Kategorieübersicht, Ausgabenliste und Belegen. Jede Seite trägt eine Fußzeile, dass sie in der App aus vom Nutzer eingegebenen Daten erstellt wurde, und den Zeitpunkt „Datenstand“. Es ist eine Zusammenfassung Ihrer eigenen Aufzeichnungen, kein Rechtsdokument und nicht beglaubigt. Sie enthält nur, was den Server erreicht hat; die App synchronisiert zuerst und bittet um Geduld, wenn noch etwas aussteht. Nicht verfügbar bei Konten mit Ende-zu-Ende-Verschlüsselung.
+- **Getrennte Eltern:** Führen Sie die Kinder in einem persönlichen Konto, damit der andere Elternteil Ihre übrigen Ausgaben nicht sieht. Ein gemeinsames Konto zeigt allen Mitgliedern alles.
+
 ## FAQ
 
 - **F: Warum sehe ich keine Diagramme?**

@@ -16,6 +16,7 @@ import {
 } from '@/db/expenseRepository';
 import {
   loadItemsByExpenseId,
+  setExpenseItemDetails,
   upsertExpenseItem,
 } from '@/db/expenseItemRepository';
 import { insertExpenseTag, getTagsForExpense } from '@/db/tagRepository';
@@ -35,6 +36,16 @@ import { useAccountStore } from './accountStore';
 import { useCategoryStore } from './categoryStore';
 import { useProjectStore } from './projectStore';
 import { createAccountScopedInflight } from './accountScopedInflight';
+import { getExpenseChildLinks } from '@/db/childRepository';
+import { useChildStore } from './childStore';
+import {
+  collectServerChildIds,
+  drainChildQueue,
+  mapServerChildLines,
+  mapServerLinks,
+  mergeServerChildAttribution,
+  type ServerExpenseAttribution,
+} from './childSync';
 
 // Minimal store-state shape the sync functions need from useExpenseStore
 interface SyncableState {
@@ -96,6 +107,31 @@ async function attachSplits(list: Expense[]): Promise<void> {
   for (const exp of list) {
     const splits = splitsByExpenseId.get(exp.id);
     if (splits && splits.length > 0) exp.splits = splits;
+  }
+}
+
+/**
+ * Child costs: attach each expense's whole-expense child links from SQLite as
+ * `expense.expenseChildren` (local child ids), like `attachSplits`. Best
+ * effort — a failure here must never fail the expense load.
+ */
+async function attachChildLinks(list: Expense[], accountId: string): Promise<void> {
+  if (list.length === 0 || Platform.OS === 'web') return;
+  try {
+    const links = await getExpenseChildLinks(accountId);
+    if (links.length === 0) return;
+    const byExpense = new Map<string, Expense['expenseChildren']>();
+    for (const l of links) {
+      const arr = byExpense.get(l.expenseId) ?? [];
+      arr.push(l);
+      byExpense.set(l.expenseId, arr);
+    }
+    for (const exp of list) {
+      const own = byExpense.get(exp.id);
+      if (own) exp.expenseChildren = own;
+    }
+  } catch (e) {
+    console.warn('Child links not attached:', e instanceof Error ? e.message : String(e));
   }
 }
 
@@ -249,6 +285,7 @@ async function _doPullAndMerge(
       if (pid) exp.projectId = pid;
     }
     await attachSplits(localExpenses);
+    await attachChildLinks(localExpenses, accountId);
 
     // On web SQLite is a no-op mock so localExpenses is always empty.
     // Only clobber when we have data, or when the in-memory rows belong to a
@@ -469,6 +506,9 @@ async function _doPullAndMerge(
                   unitPrice: Number(si.unitPrice ?? 0),
                   totalPrice: Number(si.totalPrice ?? 0),
                   sortOrder: si.sortOrder ?? 0,
+                  // Child costs: the line's own discount and category, as the server holds them.
+                  lineDiscount: si.lineDiscount != null ? Number(si.lineDiscount) : null,
+                  categoryId: si.categoryId ?? null,
                   isDeleted: si.isDeleted || false,
                   syncStatus: 'synced' as SyncStatus,
                   syncVersion: si.syncVersion ?? 0,
@@ -477,6 +517,18 @@ async function _doPullAndMerge(
                 };
                 await upsertExpenseItem(item);
               }
+            } else if (se.items.some((si: any) => !!si.childId)) {
+              // Child costs: lines stored before the device kept a line's discount and
+              // category get them from the server — only for line-attributed receipts,
+              // the one place a line's discount changes a figure, so a pull of a large
+              // account does not rewrite every line it holds.
+              await setExpenseItemDetails(
+                se.items.map((si: any) => ({
+                  id: si.id,
+                  lineDiscount: si.lineDiscount != null ? Number(si.lineDiscount) : null,
+                  categoryId: si.categoryId ?? null,
+                })),
+              );
             }
           }
 
@@ -568,6 +620,40 @@ async function _doPullAndMerge(
         }
       });
 
+      // Child costs: the server's whole-expense links and line children, mapped
+      // to local ids (server child PK -> local child id; the expense's local id
+      // is clientId || id, as above). Only list reads carry `expenseChildren` —
+      // create/update responses do not, so nothing else may write links from a
+      // server response. Best effort: a failure must not fail the expense pull.
+      try {
+        const attribution: ServerExpenseAttribution[] = serverExpenses.map((se: any, i) => ({
+          expenseId: builtExpenses[i].id,
+          links: Array.isArray(se.expenseChildren) ? se.expenseChildren : undefined,
+          items: Array.isArray(se.items) ? se.items : undefined,
+        }));
+        const childServerIds = collectServerChildIds(attribution);
+        const childIdMap = childServerIds.length > 0
+          ? await useChildStore.getState().resolveServerChildIds(childServerIds)
+          : new Map<string, string>();
+        if (useAccountStore.getState().currentAccountId !== accountId) return;
+        attribution.forEach((a, i) => {
+          const mapped = mapServerLinks(a.expenseId, a.links, childIdMap);
+          if (mapped) builtExpenses[i].expenseChildren = mapped;
+          // Web only reads this (native final rows come from SQLite): a line child marks the expense.
+          if (a.items) {
+            builtExpenses[i].hasLineChildren = a.items.some((it) => !!it.childId);
+            // Web keeps the lines of a line-attributed expense for the Child costs screen.
+            if (Platform.OS === 'web') {
+              const lines = mapServerChildLines(a.expenseId, a.items, childIdMap);
+              if (lines) builtExpenses[i].items = lines;
+            }
+          }
+        });
+        await mergeServerChildAttribution(accountId, attribution, childIdMap);
+      } catch (e) {
+        console.warn('Child attribution merge skipped:', e instanceof Error ? e.message : String(e));
+      }
+
       // Reload from SQLite after merge
       const merged = await loadAllExpenses(accountId);
       if (useAccountStore.getState().currentAccountId !== accountId) return;
@@ -580,6 +666,7 @@ async function _doPullAndMerge(
         if (pid) exp.projectId = pid;
       }
       await attachSplits(merged);
+      await attachChildLinks(merged, accountId);
 
       // Web (no real SQLite): fall back to freshly-built server rows.
       const finalExpenses =
@@ -589,6 +676,9 @@ async function _doPullAndMerge(
       setLastSyncTime(Date.now());
       _lastExpensesSyncAt = Date.now();
       _lastExpensesSyncedAccountId = accountId;
+      // The server is reachable: replay queued child-cost changes (links and
+      // lines need their expense on the server, which this cycle just pushed).
+      void drainChildQueue(accountId);
 
       // Refresh category and project stores (awaited — fire-and-forget caused
       // background SQLite contention with the next hydrateTransactions cycle).

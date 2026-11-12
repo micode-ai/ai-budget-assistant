@@ -16,6 +16,8 @@ export interface ReceiptItem {
   quantity?: number;
   unitPrice?: number;
   totalPrice: number;
+  /** A discount OCR read against this line, when there was one. */
+  lineDiscount?: number;
   /** The category the server classified this line into; `null` id with a name
    * means a category it proposed that does not exist yet. Present even when the
    * receipt produced no money split. */

@@ -56,10 +56,16 @@ export const subscriptionsApi = {
     });
   },
 
-  pushChanges(changes: SyncChange[]) {
+  /**
+   * `options.accountId` pins the `X-Account-Id` header to the account the changes belong to.
+   * A background queue drain must pass it: without it the header follows the CURRENT account,
+   * and a switch mid-drain would write one account's changes into another.
+   */
+  pushChanges(changes: SyncChange[], options?: { accountId?: string }) {
     return httpClient.request<SyncPushResponse>('/sync/push', {
       method: 'POST',
       body: JSON.stringify({ changes }),
+      ...(options?.accountId ? { headers: { 'X-Account-Id': options.accountId } } : {}),
     });
   },
 

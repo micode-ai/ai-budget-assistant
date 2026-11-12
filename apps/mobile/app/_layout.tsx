@@ -575,6 +575,13 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="settings/children"
+          options={{
+            headerShown: settingsHeaderShown('settings/children'),
+            title: t('children.title'),
+          }}
+        />
+        <Stack.Screen
           name="settings/reference"
           options={{
             headerShown: true,
@@ -833,6 +840,20 @@ function RootNavigator() {
           options={{
             headerShown: true,
             title: t('realSalary.title'),
+          }}
+        />
+        <Stack.Screen
+          name="children/index"
+          options={{
+            headerShown: true,
+            title: t('children.title'),
+          }}
+        />
+        <Stack.Screen
+          name="children/[id]"
+          options={{
+            headerShown: true,
+            title: t('childCosts.screenTitle'),
           }}
         />
         <Stack.Screen

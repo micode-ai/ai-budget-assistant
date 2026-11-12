@@ -3,6 +3,7 @@ export { useAccountStore } from './accountStore';
 export { useExpenseStore } from './expenseStore';
 export { useBudgetStore } from './budgetStore';
 export { useChatStore } from './chatStore';
+export { useChildStore } from './childStore';
 export { useThemeStore } from './themeStore';
 export { useExchangeRateStore } from './exchangeRateStore';
 export { useGamificationStore } from './gamificationStore';

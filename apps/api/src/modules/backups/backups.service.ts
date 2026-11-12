@@ -11,6 +11,7 @@ interface RestoreIdMaps {
   category: Map<string, string>;
   tag: Map<string, string>;
   project: Map<string, string>;
+  child: Map<string, string>;
 }
 
 function remap(map: Map<string, string>, id: string | null | undefined): string | null {
@@ -46,12 +47,13 @@ export class BackupsService {
     // Query all entities in parallel. Deliberately NOT exported: inbound e-receipts
     // (inbound_receipts / inbound_mail_addresses, ABA-644) are transient staging rows holding
     // forwarded mail, and a backup file must never carry them.
-    const [expenses, incomes, budgets, categories, tags, projects, walletBalances, currencyExchanges] = await Promise.all([
+    const [expenses, incomes, budgets, categories, tags, projects, walletBalances, currencyExchanges, children] = await Promise.all([
       this.prisma.expense.findMany({
         where: { accountId, isDeleted: false },
         include: {
           items: { where: { isDeleted: false } },
           expenseTags: { where: { isDeleted: false } },
+          expenseChildren: { where: { isDeleted: false } },
           categorySplits: { where: { isDeleted: false } },
           projectExpenses: { where: { isDeleted: false } },
         },
@@ -69,6 +71,8 @@ export class BackupsService {
       this.prisma.project.findMany({ where: { accountId, isDeleted: false } }),
       this.prisma.walletBalance.findMany({ where: { accountId, isDeleted: false } }),
       this.prisma.currencyExchange.findMany({ where: { accountId, isDeleted: false } }),
+      // Child costs: the user's own data, so it belongs in their export (archived ones too).
+      this.prisma.child.findMany({ where: { accountId, isDeleted: false } }),
     ]);
 
     // Drop the binary receipt images. They are stored as DB blobs and dominate
@@ -89,6 +93,7 @@ export class BackupsService {
       projects: projects.length,
       walletBalances: walletBalances.length,
       currencyExchanges: currencyExchanges.length,
+      children: children.length,
     };
 
     const fileName = `backup_${accountId.slice(0, 8)}_${new Date().toISOString().split('T')[0]}.json`;
@@ -113,6 +118,7 @@ export class BackupsService {
         projects,
         walletBalances,
         currencyExchanges,
+        children,
       },
     };
 
@@ -209,6 +215,16 @@ export class BackupsService {
             errors.push(...errs);
           }
 
+          // Restore children (child costs) — before expenses/incomes, which reference them.
+          let childIdMap = new Map<string, string>();
+          if (backup.data.children?.length) {
+            const { restored, skipped, errs, idMap } = await this.restoreChildren(tx, accountId, backup.data.children, dto.overwrite);
+            childIdMap = idMap;
+            restoredCounts.children = restored;
+            skippedCounts.children = skipped;
+            errors.push(...errs);
+          }
+
           // Restore budgets
           if (backup.data.budgets?.length) {
             const { restored, skipped, errs } = await this.restoreBudgets(tx, accountId, userId, backup.data.budgets, dto.overwrite);
@@ -225,7 +241,7 @@ export class BackupsService {
             errors.push(...errs);
           }
 
-          const maps: RestoreIdMaps = { category: categoryIdMap, tag: tagIdMap, project: projectIdMap };
+          const maps: RestoreIdMaps = { category: categoryIdMap, tag: tagIdMap, project: projectIdMap, child: childIdMap };
 
           // Restore expenses (with items, tags, splits, projects)
           if (backup.data.expenses?.length) {
@@ -356,6 +372,42 @@ export class BackupsService {
     return { restored, skipped, errs, idMap };
   }
 
+  /**
+   * Children match an existing child of the same name (the `(accountId, name)`
+   * unique), like tags. A new row never reuses the backup's id; the device's
+   * clientId is kept unless another child of this account already holds it.
+   * Errors never quote the child's name — it is a minor's personal data.
+   */
+  private async restoreChildren(tx: Prisma.TransactionClient, accountId: string, children: any[], overwrite: boolean) {
+    let restored = 0, skipped = 0;
+    const errs: string[] = [];
+    const idMap = new Map<string, string>();
+    for (const ch of children) {
+      try {
+        const existing = await tx.child.findFirst({ where: { accountId, name: ch.name } });
+        if (existing) idMap.set(ch.id, existing.id);
+        // A soft-deleted same-name child is revived (it holds the unique name), so
+        // restored links never point at a deleted row.
+        if (existing?.isDeleted && !overwrite) {
+          await tx.child.update({ where: { id: existing.id }, data: { isDeleted: false, color: ch.color, archivedAt: ch.archivedAt ? new Date(ch.archivedAt) : null } });
+          restored++;
+          continue;
+        }
+        if (existing && !overwrite) { skipped++; continue; }
+        const archivedAt = ch.archivedAt ? new Date(ch.archivedAt) : null;
+        if (existing && overwrite) {
+          await tx.child.update({ where: { id: existing.id }, data: { color: ch.color, archivedAt, isDeleted: false, encryptedPayload: ch.encryptedPayload, encryptionKeyVersion: ch.encryptionKeyVersion } });
+        } else {
+          const clientTaken = ch.clientId ? await tx.child.findFirst({ where: { accountId, clientId: ch.clientId } }) : null;
+          const created = await tx.child.create({ data: { accountId, name: ch.name, color: ch.color, archivedAt, clientId: clientTaken ? null : (ch.clientId ?? null), encryptedPayload: ch.encryptedPayload, encryptionKeyVersion: ch.encryptionKeyVersion } });
+          idMap.set(ch.id, created.id);
+        }
+        restored++;
+      } catch (e) { errs.push(`child ${ch.id}: ${e instanceof Error ? e.message : String(e)}`); }
+    }
+    return { restored, skipped, errs, idMap };
+  }
+
   private async restoreProjects(tx: Prisma.TransactionClient, accountId: string, projects: any[], overwrite: boolean) {
     let restored = 0, skipped = 0;
     const errs: string[] = [];
@@ -461,7 +513,7 @@ export class BackupsService {
   }
 
   /**
-   * Line items, category splits, tags and project links of one restored expense.
+   * Line items, category splits, tags, project and child links of one restored expense.
    * On overwrite the current ones are retired first, so the expense ends up with
    * exactly the backup's children rather than a union of both.
    */
@@ -471,6 +523,7 @@ export class BackupsService {
       await tx.expenseCategorySplit.updateMany({ where: { expenseId, isDeleted: false }, data: { isDeleted: true } });
       await tx.expenseTag.updateMany({ where: { expenseId, isDeleted: false }, data: { isDeleted: true } });
       await tx.projectExpense.updateMany({ where: { expenseId, isDeleted: false }, data: { isDeleted: true } });
+      await tx.expenseChild.updateMany({ where: { expenseId, isDeleted: false }, data: { isDeleted: true } });
     }
     const items = (exp.items ?? []) as any[];
     if (items.length) {
@@ -478,6 +531,7 @@ export class BackupsService {
         data: items.map((it, i) => ({
           expenseId, description: it.description, canonicalName: it.canonicalName,
           categoryId: remap(maps.category, it.categoryId),
+          childId: remap(maps.child, it.childId),
           quantity: it.quantity ?? 1, unitPrice: it.unitPrice ?? 0, totalPrice: it.totalPrice,
           lineDiscount: it.lineDiscount ?? 0, sortOrder: it.sortOrder ?? i,
           encryptedPayload: it.encryptedPayload, encryptionKeyVersion: it.encryptionKeyVersion,
@@ -508,6 +562,22 @@ export class BackupsService {
         where: { projectId_expenseId: { projectId, expenseId } },
         create: { projectId, expenseId },
         update: { isDeleted: false },
+      });
+    }
+    // Whole-expense child links; one whose child did not come across is dropped.
+    const seenChildren = new Set<string>();
+    for (const link of (exp.expenseChildren ?? []) as any[]) {
+      const childId = remap(maps.child, link?.childId);
+      if (!childId || seenChildren.has(childId)) continue;
+      seenChildren.add(childId);
+      // `share` comes from a file: anything outside (0, 1] would overflow Decimal(5,4)
+      // (or be meaningless) and abort the whole restore — skip that link instead.
+      const share = Number(link.share ?? 1);
+      if (!Number.isFinite(share) || share <= 0 || share > 1) continue;
+      await tx.expenseChild.upsert({
+        where: { expenseId_childId: { expenseId, childId } },
+        create: { expenseId, childId, share },
+        update: { share, isDeleted: false },
       });
     }
   }
@@ -543,6 +613,7 @@ export class BackupsService {
           isDebt: inc.isDebt || false, isDebtRepayment: inc.isDebtRepayment || false,
           isSplitReceivable: false,
           debtContactName: inc.debtContactName, debtDueDate: inc.debtDueDate ? new Date(inc.debtDueDate) : null,
+          childBenefitChildId: remap(maps.child, inc.childBenefitChildId),
           encryptedPayload: inc.encryptedPayload, encryptionKeyVersion: inc.encryptionKeyVersion,
         };
 

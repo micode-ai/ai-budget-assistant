@@ -1,6 +1,7 @@
 import type { Currency, SyncStatus, ExpenseSource, RecurringPeriod } from './primitives';
 import type { Category } from './category';
 import type { ExpenseTag } from './tag';
+import type { ExpenseChildLink } from './child';
 
 export interface ExpenseItem {
   id: string;
@@ -17,6 +18,12 @@ export interface ExpenseItem {
   unitPrice: number;
   totalPrice: number;
   sortOrder: number;
+  /** Child costs: the child this line is attributed to (server PK), or null. */
+  childId?: string | null;
+  /** The line's own category (receipt category split), when the server sent it. */
+  categoryId?: string | null;
+  /** A discount printed against this line, when the server sent it. */
+  lineDiscount?: number | null;
   createdAt: Date;
   updatedAt: Date;
   isDeleted: boolean;
@@ -83,6 +90,16 @@ export interface Expense {
   /** Prisma relation name used in API responses (alias for tags). */
   expenseTags?: ExpenseTag[];
   tagIds?: string[];
+  /** Child costs: whole-expense attribution links returned by the API (server PKs). */
+  expenseChildren?: ExpenseChildLink[];
+  /**
+   * Mobile-only in-memory hydration (web build): true when any live receipt line
+   * of this expense is attributed to a child, read from the list pull's `items`.
+   * The web keeps no line rows in memory, so this is what lets a bulk
+   * "Assign to child" skip per-line expenses without one request per row.
+   * Native never sets it — it reads the lines from SQLite instead.
+   */
+  hasLineChildren?: boolean;
   categorySplits?: ExpenseCategorySplit[];
   /**
    * Mobile-only in-memory hydration: this expense's category splits, bulk-loaded

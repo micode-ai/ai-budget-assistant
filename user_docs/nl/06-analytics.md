@@ -125,6 +125,20 @@ Een tabel met je meest gekochte bonitems:
 
 Tik op **Rapport exporteren** om het scherm [Export & Rapporten](./16-export-reports.md) te openen, waar je PDF-, Excel- en CSV-rapporten kunt genereren, maandelijkse overzichten kunt bekijken en gegevensback-ups kunt beheren.
 
+## Kosten van kinderen
+
+Zie wat elk kind kost, zonder te gokken.
+
+- **Kinderen toevoegen:** Instellingen > Referentiegegevens > Kinderen. Alleen naam en kleur worden opgeslagen. Archiveer een kind in plaats van te verwijderen; de uitgaven blijven toegewezen.
+- **Een hele uitgave toewijzen:** kies bij een nieuwe of bestaande uitgave een of meer kinderen. Bij meerdere kinderen wordt het bedrag gelijk verdeeld tenzij u de aandelen aanpast. Een uitgave gebruikt toewijzing als geheel of per bonregel, niet beide; de app vraagt het voor het wisselen.
+- **Bonregels toewijzen:** wijs na het scannen van een bon afzonderlijke regels (luiers, schoolspullen) aan een kind toe. De app onthoudt uw keuze en stelt die de volgende keer voor. Een suggestie wordt nooit zonder u toegepast. 'Artikelen uitlezen' behoudt de toewijzing van producten die nog op de bon staan en meldt hoeveel er niet konden worden overgenomen.
+- **In bulk:** selecteer meerdere uitgaven en kies Aan kind toewijzen. Uitgaven met regeltoewijzing worden overgeslagen en het aantal wordt getoond.
+- **Totalen:** het kindscherm (en een kaart op het tabblad Analyse) toont deze maand, dit jaar en de verdeling per categorie in uw weergavevaluta. Een totaal met ≈ bevat een benadering omdat een wisselkoers ontbrak; zulke bedragen worden weggelaten in plaats van geraden. Geplande uitgaven en vorderingen uit gedeelde rekeningen tellen niet mee.
+- **800+ en dekking:** lijkt een inkomen op de 800+-uitkering (bijvoorbeeld '800+' of 'rodzina 800' in de omschrijving), dan biedt de app aan het aan een kind te koppelen. Dekking is de ontvangen uitkering gedeeld door wat dat kind in dezelfde periode kostte.
+- **Deelkaart:** een afbeelding met de totalen van een kind. De naam is standaard verborgen; u kunt die tonen.
+- **Overzicht als PDF (Pro, bewerkers):** een 'zestawienie' van de kosten van een kind over maximaal 24 maanden, met totalen, maand- en categorieoverzicht, uitgavenlijst en bonnen. Elke pagina heeft een voettekst dat het in de app is opgesteld op basis van door de gebruiker ingevoerde gegevens, en het tijdstip 'gegevens per'. Het is een samenvatting van uw eigen administratie, geen juridisch document en niet gecertificeerd. Het bevat alleen wat de server heeft bereikt; de app synchroniseert eerst en vraagt u te wachten als er nog iets openstaat. Niet beschikbaar bij accounts met end-to-end-versleuteling.
+- **Gescheiden ouders:** houd de kinderen op een persoonlijk account, zodat de andere ouder uw overige uitgaven niet ziet. Een gedeeld account toont alles aan alle leden.
+
 ## Veelgestelde vragen
 
 - **V: Waarom zie ik geen grafieken?**

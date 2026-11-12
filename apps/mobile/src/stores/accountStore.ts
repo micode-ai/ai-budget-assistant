@@ -23,6 +23,7 @@ import {
   clearAllAccounts,
 } from '@/db/accountRepository';
 import { clearAllExpenses } from '@/db/expenseRepository';
+import { clearAllChildData } from '@/db/childRepository';
 import { clearAllWalletBalances } from '@/db/walletRepository';
 import { clearAllExchanges } from '@/db/currencyExchangeRepository';
 import { usePriceHistoryStore } from './priceHistoryStore';
@@ -30,6 +31,7 @@ import { useMerchantRulesStore } from './merchantRulesStore';
 import { useTagStore } from './tagStore';
 import { useProjectStore } from './projectStore';
 import { useChatStore } from './chatStore';
+import { useChildStore } from './childStore';
 import { useShoppingListTemplateStore } from './shoppingListTemplateStore';
 // Circular by design, like the stores above it: nothing here is
 // dereferenced at module scope, only inside `clearAccountScopedCaches`.
@@ -152,6 +154,8 @@ function clearAccountScopedCaches() {
   useProjectStore.getState().reset();
   useChatStore.getState().reset();
   useShoppingListTemplateStore.getState().reset();
+  // Child costs: children belong to an account (also reset in `logoutAction`).
+  useChildStore.getState().reset();
 }
 
 /**
@@ -257,6 +261,8 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
       // Clear all previous user's data from SQLite
       await clearAllAccounts();
       await clearAllExpenses();
+      // Child costs: children (minors' names), links and queued changes go with the expenses.
+      await clearAllChildData();
       await clearAllWalletBalances();
       await clearAllExchanges();
       // Save accounts to local DB

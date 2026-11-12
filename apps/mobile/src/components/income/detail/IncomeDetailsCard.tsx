@@ -15,6 +15,7 @@ import type { Currency, Income, Tag } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
 import { GroupTransactionBanner } from '@/components/groups/GroupTransactionBanner';
+import { ChildBenefitField } from '@/components/children/ChildBenefitField';
 
 export interface IncomeDetailsCardHandle {
   triggerSave: () => void;
@@ -237,6 +238,9 @@ export const IncomeDetailsCard = forwardRef<IncomeDetailsCardHandle, IncomeDetai
               </Text>
             )}
           </View>
+
+          {/* Child costs: the 800+ mark (written at once, so not in edit mode). */}
+          {!isEditing && <ChildBenefitField income={income} />}
 
           {/* Notes */}
           <View style={styles.detailRow}>

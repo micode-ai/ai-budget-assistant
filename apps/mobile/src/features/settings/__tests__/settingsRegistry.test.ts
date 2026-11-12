@@ -218,7 +218,7 @@ describe('settingsRegistry', () => {
   // draws - so this also pins that a newly promoted row rises into the pane
   // block in its intended place rather than being appended.
   it('records which entries are panes today', () => {
-    expect(SETTINGS_ENTRIES.filter(isPaneEntry).map((e) => e.key)).toEqual(['profile', 'accounts', 'appearance', 'ai', 'widgets', 'notifications', 'bots', 'emailReceipts', 'security', 'connectedApps', 'data', 'categories', 'merchants', 'products', 'tags', 'projects', 'developers', 'about']);
+    expect(SETTINGS_ENTRIES.filter(isPaneEntry).map((e) => e.key)).toEqual(['profile', 'accounts', 'appearance', 'ai', 'widgets', 'notifications', 'bots', 'emailReceipts', 'security', 'connectedApps', 'data', 'categories', 'merchants', 'products', 'tags', 'projects', 'children', 'developers', 'about']);
   });
 });
 

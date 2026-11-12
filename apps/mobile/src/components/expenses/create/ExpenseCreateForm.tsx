@@ -32,6 +32,9 @@ import { CategorySplitSection } from '@/components/expenses/CategorySplitSection
 import { useDebtExpenseFields } from '@/hooks/useDebtExpenseFields';
 import { useRecurringExpenseFields } from '@/hooks/useRecurringExpenseFields';
 import { useCategorySplitEditor } from '@/hooks/useCategorySplitEditor';
+import { useExpenseChildSelection } from '@/hooks/useExpenseChildSelection';
+import { ChildAttributionField } from '@/components/children/ChildAttributionField';
+import { attributeNewExpense } from '@/features/children/attributeNewExpense';
 import { insertSplit } from '@/db/splitRepository';
 import { SUPPORTED_CURRENCIES, generateUUID, formatDate, sortCategoriesAsTree } from '@budget/shared-utils';
 import type { Currency, ExpenseCategorySplit, ShareType } from '@budget/shared-types';
@@ -161,6 +164,10 @@ export function ExpenseCreateForm({ initial, onDone }: ExpenseCreateFormProps) {
 
   const categorySplit = useCategorySplitEditor();
 
+  // Child costs: the "For" row. A new expense has no receipt lines, so there is
+  // nothing to replace — the children are attributed right after the save.
+  const childSelection = useExpenseChildSelection();
+
   useEffect(() => {
     if (!categoriesInitialized) loadCategories();
     loadTags();
@@ -255,6 +262,15 @@ export function ExpenseCreateForm({ initial, onDone }: ExpenseCreateFormProps) {
           };
           await insertSplit(split);
         }
+      }
+
+      if (childSelection.selected.length > 0) {
+        const childIds = childSelection.selected;
+        // Not awaited: on web it waits for the expense's own create to land.
+        attributeNewExpense(newExpense.id, childIds).catch((e) => {
+          console.warn('[children] new expense not attributed:', e instanceof Error ? e.message : String(e));
+          showAlert(t('common.error'), t('children.assignFailed'));
+        });
       }
 
       trackAction('expense_manual', 'completed');
@@ -456,6 +472,9 @@ export function ExpenseCreateForm({ initial, onDone }: ExpenseCreateFormProps) {
             selectedProjectId={selectedProjectId}
             onProjectChange={setSelectedProjectId}
           />
+
+          {/* For (child costs) */}
+          <ChildAttributionField selection={childSelection} style={styles.fieldContainer} />
 
           {/* Recurring Toggle */}
           {!isDebtRepayment && !debt.isDebt && (

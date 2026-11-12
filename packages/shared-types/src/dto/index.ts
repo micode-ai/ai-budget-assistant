@@ -40,3 +40,4 @@ export * from './user';
 export * from './telemetry';
 export * from './group';
 export * from './leaflet';
+export * from './child';

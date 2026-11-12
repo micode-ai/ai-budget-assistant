@@ -2,8 +2,9 @@ import { Modal, View, Text, Pressable, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
-import type { Category, Tag } from '@budget/shared-types';
+import type { Category, Child, Tag } from '@budget/shared-types';
 import { BulkTagPickerSheet } from '@/components/BulkTagPickerSheet';
+import { BulkChildPickerSheet } from '@/components/children/BulkChildPickerSheet';
 import type { LedgerRow } from '@/features/expenses/desktopTable';
 import { ExpenseDialog } from './ExpenseDialog';
 import { CreateDialog } from './CreateDialog';
@@ -61,10 +62,17 @@ interface Props {
   onCloseBulkTagPicker: () => void;
   allTags: Tag[];
   onBulkAddTags: (tagIds: string[]) => void;
+
+  /** Bulk "Assign to child" (child costs) — hosts the SAME `BulkChildPickerSheet`
+   *  the phone's bottom sheet uses, in the bulk pickers' centred panel. */
+  showBulkChildPicker: boolean;
+  onCloseBulkChildPicker: () => void;
+  activeChildren: Child[];
+  onBulkAssignChildren: (childIds: string[]) => void;
 }
 
 /**
- * The five overlay "dialogs" `ExpensesDesktop` can have open — never more
+ * The overlay "dialogs" `ExpensesDesktop` can have open — never more
  * than one at a time, since opening any of them requires closing whatever
  * was open before (`ExpenseDialog`'s scrim covers the row list, the bulk
  * pickers only open from the selection bar which itself sits under any open
@@ -111,6 +119,10 @@ export function ExpensesDesktopDialogs({
   onCloseBulkTagPicker,
   allTags,
   onBulkAddTags,
+  showBulkChildPicker,
+  onCloseBulkChildPicker,
+  activeChildren,
+  onBulkAssignChildren,
 }: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -212,6 +224,37 @@ export function ExpensesDesktopDialogs({
           >
             <View style={styles.pickerPanel}>
               <BulkTagPickerSheet tags={allTags} onConfirm={onBulkAddTags} onClose={onCloseBulkTagPicker} />
+            </View>
+          </div>
+        </Modal>
+      )}
+
+      {showBulkChildPicker && (
+        <Modal visible transparent animationType="fade" onRequestClose={onCloseBulkChildPicker}>
+          <div
+            role="presentation"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) onCloseBulkChildPicker();
+            }}
+            style={{
+              position: 'fixed',
+              top: 0,
+              right: 0,
+              bottom: 0,
+              left: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: theme.colors.overlay,
+              padding: 24,
+            }}
+          >
+            <View style={styles.pickerPanel}>
+              <BulkChildPickerSheet
+                children={activeChildren}
+                onConfirm={onBulkAssignChildren}
+                onClose={onCloseBulkChildPicker}
+              />
             </View>
           </div>
         </Modal>

@@ -9,6 +9,7 @@ import {
   upsertIncome,
   updateIncomeInDb,
   softDeleteIncomeInDb,
+  setIncomeChildBenefit,
 } from '@/db/incomeRepository';
 import { insertIncomeTag, getTagsForIncome } from '@/db/tagRepository';
 import { getCategoryById as getCategoryFromDb, upsertCategory } from '@/db/categoryRepository';
@@ -23,6 +24,7 @@ import { useGamificationStore } from './gamificationStore';
 import { UNCATEGORIZED_CATEGORY_FILTER, countsAsUncategorized } from './categoryFilter';
 import { createAccountScopedInflight } from './accountScopedInflight';
 import { filterIncomeConsumption } from '@/utils/consumption';
+import { serverChildRef, useChildStore } from './childStore';
 
 interface IncomeFilters {
   dateRange: 'week' | 'month' | 'year' | 'all' | 'custom';
@@ -203,6 +205,27 @@ export const useIncomeStore = create<IncomeState>()(
           // -------- PHASE B: decrypt every server record in parallel --------
           const decryptedAll = await Promise.all(serverIncomes.map((si) => maybeDecrypt('income', si, si.accountId)));
 
+          // Child costs: the 800+ mark arrives as a server child PK; map it to
+          // the local child id. Best effort — never fails the income pull.
+          let childIdMap = new Map<string, string>();
+          try {
+            const benefitChildIds = [
+              ...new Set(serverIncomes.map((si: any) => si.childBenefitChildId).filter((v: unknown): v is string => typeof v === 'string')),
+            ];
+            if (benefitChildIds.length > 0) {
+              childIdMap = await useChildStore.getState().resolveServerChildIds(benefitChildIds);
+            }
+          } catch (e) {
+            console.warn('Child id mapping skipped (incomes):', e instanceof Error ? e.message : String(e));
+          }
+          if (useAccountStore.getState().currentAccountId !== accountId) return;
+          /** undefined = leave the local value (absent, or a child not known on this device yet). */
+          const mappedBenefitChild = (si: any): string | null | undefined => {
+            if (si.childBenefitChildId === undefined) return undefined;
+            if (si.childBenefitChildId === null) return null;
+            return childIdMap.get(si.childBenefitChildId);
+          };
+
           // -------- PHASE C: build Income objects --------
           const builtIncomes: Income[] = serverIncomes.map((si, i) => {
             const incomeId = si.clientId || si.id;
@@ -225,6 +248,7 @@ export const useIncomeStore = create<IncomeState>()(
               isDebt: decrypted.isDebt || false,
               isDebtRepayment: decrypted.isDebtRepayment || false,
               isSplitReceivable: decrypted.isSplitReceivable || false,
+              childBenefitChildId: mappedBenefitChild(si) ?? localIncome?.childBenefitChildId ?? null,
               debtContactName: decrypted.debtContactName ?? undefined,
               debtDueDate: decrypted.debtDueDate ? new Date(decrypted.debtDueDate) : undefined,
               relatedDebtExpenseId: decrypted.relatedDebtExpenseId ?? undefined,
@@ -278,6 +302,22 @@ export const useIncomeStore = create<IncomeState>()(
                 }
               }
             });
+
+          // Child costs: write the pulled 800+ mark (kept out of upsertIncome so a
+          // re-upsert never clears a mark). A locally pending income is newer.
+          try {
+            for (let i = 0; i < serverIncomes.length; i++) {
+              const target = mappedBenefitChild(serverIncomes[i]);
+              if (target === undefined) continue;
+              const local = localById.get(builtIncomes[i].id);
+              if (local?.syncStatus === 'pending') continue;
+              if ((local?.childBenefitChildId ?? null) !== target) {
+                await setIncomeChildBenefit(builtIncomes[i].id, target);
+              }
+            }
+          } catch (e) {
+            console.warn('Child benefit mark merge skipped:', e instanceof Error ? e.message : String(e));
+          }
 
           // Refresh category store so UI picks up newly synced data.
           // AWAITED so the next hydrate cycle doesn't contend with a background
@@ -421,10 +461,19 @@ export const useIncomeStore = create<IncomeState>()(
           console.error('Failed to update income in SQLite:', e),
         );
 
-        api.updateIncome(id, updates).catch((e) =>
-          // Expected offline; local SQLite already updated + marked pending.
-          console.warn('Income update sync deferred (offline?):', e),
-        );
+        // Child costs: an 800+ mark travels as the child's server reference.
+        const toServer =
+          updates.childBenefitChildId !== undefined
+            ? serverChildRef(updatedIncome.accountId, updates.childBenefitChildId ?? null).then(
+                (childBenefitChildId) => ({ ...updates, childBenefitChildId }),
+              )
+            : Promise.resolve(updates);
+        toServer
+          .then((payload) => api.updateIncome(id, payload))
+          .catch((e) =>
+            // Expected offline; local SQLite already updated + marked pending.
+            console.warn('Income update sync deferred (offline?):', e),
+          );
       }
     },
 
@@ -510,6 +559,7 @@ export const useIncomeStore = create<IncomeState>()(
             amount: income.amount,
           }, income.accountId);
 
+          const childBenefitChildId = await serverChildRef(income.accountId, income.childBenefitChildId ?? null);
           await api.createIncome({
             localId: income.localId || income.id,
             amount: encPayload.amount ?? income.amount,
@@ -524,6 +574,11 @@ export const useIncomeStore = create<IncomeState>()(
             debtContactName: income.debtContactName || undefined,
             debtDueDate: income.debtDueDate ? (income.debtDueDate instanceof Date ? income.debtDueDate.toISOString() : String(income.debtDueDate)) : undefined,
             relatedDebtExpenseId: income.relatedDebtExpenseId || undefined,
+            // Child costs (800+): a mark is re-sent; a missing one is NOT sent as a
+            // clear — this retry covers every pending row, including ones pending for
+            // an unrelated edit, and must not wipe a mark another device made. An
+            // online unmark goes through updateIncome's own request.
+            childBenefitChildId: childBenefitChildId ?? undefined,
             encryptedPayload,
             encryptionKeyVersion,
           } as any);

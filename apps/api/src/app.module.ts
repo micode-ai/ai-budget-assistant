@@ -28,6 +28,7 @@ import { InsightsModule } from './modules/insights/insights.module';
 import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { TagsModule } from './modules/tags/tags.module';
+import { ChildrenModule } from './modules/children/children.module';
 import { VehiclesModule } from './modules/vehicles/vehicles.module';
 import { ProjectsModule } from './modules/projects/projects.module';
 import { GamificationModule } from './modules/gamification/gamification.module';
@@ -126,6 +127,7 @@ import { PublicDocsModule } from './modules/public-api/docs/public-docs.module';
     AnomalyModule,
     MerchantRulesModule,
     TagsModule,
+    ChildrenModule,
     VehiclesModule,
     ProjectsModule,
     GamificationModule,

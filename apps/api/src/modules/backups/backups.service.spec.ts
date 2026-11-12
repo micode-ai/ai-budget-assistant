@@ -48,6 +48,9 @@ function makePrisma(overrides: Record<string, any> = {}) {
     tag: {
       findMany: jest.fn().mockResolvedValue([]),
     },
+    child: {
+      findMany: jest.fn().mockResolvedValue([]),
+    },
     project: {
       findMany: jest.fn().mockResolvedValue([]),
     },
@@ -83,6 +86,12 @@ function makeTxClient(overrides: Record<string, any> = {}) {
       create: jest.fn().mockImplementation(({ data }) => Promise.resolve({ id: `new-proj-${data.clientId}` })),
       update: jest.fn().mockResolvedValue({}),
     },
+    child: {
+      findFirst: jest.fn().mockResolvedValue(null),
+      create: jest.fn().mockImplementation(({ data }) => Promise.resolve({ id: `new-child-${data.name}` })),
+      update: jest.fn().mockResolvedValue({}),
+    },
+    expenseChild: { upsert: jest.fn().mockResolvedValue({}), updateMany: jest.fn().mockResolvedValue({}) },
     budget: {
       findFirst: jest.fn().mockResolvedValue(null),
       create: jest.fn().mockResolvedValue({}),
@@ -405,4 +414,109 @@ describe('BackupsController — restore guard', () => {
     const guards = Reflect.getMetadata('__guards__', BackupsController.prototype.restoreBackup) ?? [];
     expect(guards.some((g: unknown) => g instanceof ViewerBlockGuard)).toBe(true);
   });
+});
+
+describe('BackupsService — children (child costs)', () => {
+  it('export includes children and links; restore remaps ids', async () => {
+    // Export: children are read account-scoped and the expense links ride along with each expense.
+    const prisma: any = makePrisma();
+    prisma.child.findMany.mockResolvedValue([{ id: 'src-child', accountId: 'acc-src', name: 'Ala', color: '#ff0000', clientId: 'local-a' }]);
+    prisma.expense.findMany.mockResolvedValue([{ id: 'src-exp', clientId: 'exp-c', expenseChildren: [{ childId: 'src-child', share: 1 }] }]);
+    const { jsonStr } = await new BackupsService(prisma).exportBackup('acc-src', 'u1');
+    expect(prisma.child.findMany).toHaveBeenCalledWith({ where: { accountId: 'acc-src', isDeleted: false } });
+    expect(prisma.expense.findMany.mock.calls[0][0].include.expenseChildren).toEqual({ where: { isDeleted: false } });
+    const exported = JSON.parse(jsonStr);
+    expect(exported.data.children).toHaveLength(1);
+    expect(exported.entityCounts.children).toBe(1);
+    expect(exported.data.expenses[0].expenseChildren).toEqual([{ childId: 'src-child', share: 1 }]);
+
+    // Restore into another account: new child row (source id never reused) and every
+    // reference — links, line items, benefit incomes — points at it.
+    const tx: any = makeTxClient();
+    const restorePrisma = makePrisma({ $transaction: jest.fn(async (cb: any) => cb(tx)) });
+    const res = await new BackupsService(restorePrisma as any).restoreBackup('acc-1', 'u1', {
+      data: makeBackupData({
+        children: [{ id: 'src-child', name: 'Ala', color: '#ff0000', clientId: 'local-a', archivedAt: null }],
+        expenses: [{
+          clientId: 'exp-c', amount: 30, currencyCode: 'PLN', date: '2026-01-01',
+          items: [
+            { description: 'Pieluchy', totalPrice: 20, childId: 'src-child' },
+            { description: 'Mleko', totalPrice: 10, childId: 'unknown-child' },
+          ],
+          expenseChildren: [{ childId: 'src-child', share: 1 }, { childId: 'unknown-child', share: 1 }],
+        }],
+        incomes: [{ clientId: 'inc-c', amount: 800, currencyCode: 'PLN', date: '2026-01-02', childBenefitChildId: 'src-child' }],
+      }),
+      overwrite: false,
+    });
+    expect(res.errors).toEqual([]);
+    expect(res.restoredCounts.children).toBe(1);
+
+    const childData = tx.child.create.mock.calls[0][0].data;
+    expect(childData).not.toHaveProperty('id');
+    expect(childData).toMatchObject({ accountId: 'acc-1', name: 'Ala', color: '#ff0000' });
+
+    const items = tx.expenseItem.createMany.mock.calls[0][0].data;
+    expect(items.map((i: any) => i.childId)).toEqual(['new-child-Ala', null]);
+
+    expect(tx.expenseChild.upsert).toHaveBeenCalledTimes(1);
+    expect(tx.expenseChild.upsert.mock.calls[0][0]).toEqual({
+      where: { expenseId_childId: { expenseId: 'new-exp-exp-c', childId: 'new-child-Ala' } },
+      create: { expenseId: 'new-exp-exp-c', childId: 'new-child-Ala', share: 1 },
+      update: { share: 1, isDeleted: false },
+    });
+
+    expect(tx.income.create.mock.calls[0][0].data.childBenefitChildId).toBe('new-child-Ala');
+  });
+
+  it('maps a backup child onto an existing same-name child instead of duplicating it', async () => {
+    const tx: any = makeTxClient();
+    tx.child.findFirst = jest.fn().mockResolvedValue({ id: 'existing-child' });
+    const prisma = makePrisma({ $transaction: jest.fn(async (cb: any) => cb(tx)) });
+    await new BackupsService(prisma as any).restoreBackup('acc-1', 'u1', {
+      data: makeBackupData({
+        children: [{ id: 'src-child', name: 'Ala' }],
+        incomes: [{ clientId: 'inc-c', amount: 800, currencyCode: 'PLN', date: '2026-01-02', childBenefitChildId: 'src-child' }],
+      }),
+      overwrite: false,
+    });
+    expect(tx.child.create).not.toHaveBeenCalled();
+    expect(tx.income.create.mock.calls[0][0].data.childBenefitChildId).toBe('existing-child');
+  });
+});
+
+describe('BackupsService — children restore hardening', () => {
+  function restore(tx: any, data: Record<string, any>) {
+    const prisma = makePrisma({ $transaction: jest.fn(async (cb: any) => cb(tx)) });
+    return new BackupsService(prisma as any).restoreBackup('acc-1', 'u1', { data: makeBackupData(data), overwrite: false });
+  }
+
+  it('revives a soft-deleted same-name child instead of linking to a deleted row', async () => {
+    const tx: any = makeTxClient();
+    tx.child.findFirst = jest.fn().mockResolvedValue({ id: 'deleted-child', isDeleted: true });
+    const res = await restore(tx, {
+      children: [{ id: 'src-child', name: 'Ala', color: '#00ff00' }],
+      incomes: [{ clientId: 'inc-c', amount: 800, currencyCode: 'PLN', date: '2026-01-02', childBenefitChildId: 'src-child' }],
+    });
+    expect(res.errors).toEqual([]);
+    expect(tx.child.update).toHaveBeenCalledWith(expect.objectContaining({
+      where: { id: 'deleted-child' },
+      data: expect.objectContaining({ isDeleted: false }),
+    }));
+    expect(res.restoredCounts.children).toBe(1);
+    expect(tx.income.create.mock.calls[0][0].data.childBenefitChildId).toBe('deleted-child');
+  });
+
+  it.each([['NaN', 'abc'], ['zero', 0], ['negative', -0.5], ['too large', 10], ['over one', 1.5]])(
+    'skips a link with an invalid share (%s) instead of aborting the restore',
+    async (_label, share) => {
+      const tx: any = makeTxClient();
+      const res = await restore(tx, {
+        children: [{ id: 'src-child', name: 'Ala' }],
+        expenses: [{ clientId: 'exp-c', amount: 30, currencyCode: 'PLN', date: '2026-01-01', expenseChildren: [{ childId: 'src-child', share }] }],
+      });
+      expect(res.errors).toEqual([]);
+      expect(tx.expenseChild.upsert).not.toHaveBeenCalled();
+    },
+  );
 });

@@ -359,3 +359,17 @@ export function computeSafeToSpend(inputs: SafeToSpendInputs): SafeToSpendResult
   };
 }
 export * from './budget-projection';
+
+// Child cost attribution (mirror of the API util)
+export {
+  resolveAttributionMode,
+  childAmounts,
+  childCostSummary,
+  benefitCoverage,
+  isChildBenefitDescription,
+  carryChildAttribution,
+  normalizeProductKey,
+  type AttributionMode,
+  type AttribExpense,
+  type AttribItem,
+} from './child-attribution';

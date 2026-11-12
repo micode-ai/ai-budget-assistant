@@ -81,6 +81,15 @@ export class CreateIncomeDto {
   @IsString()
   source?: string;
 
+  /**
+   * Child costs: marks this income as the 800+ benefit for a child — the server
+   * PK or the device's clientId (resolved within the account). `null` clears it,
+   * absent leaves it.
+   */
+  @IsOptional()
+  @IsString()
+  childBenefitChildId?: string | null;
+
   @IsOptional()
   @IsString()
   encryptedPayload?: string;
@@ -144,6 +153,15 @@ export class UpdateIncomeDto {
   @IsOptional()
   @IsUUID()
   relatedDebtExpenseId?: string;
+
+  /**
+   * Child costs: marks this income as the 800+ benefit for a child — the server
+   * PK or the device's clientId (resolved within the account). `null` clears it,
+   * absent leaves it.
+   */
+  @IsOptional()
+  @IsString()
+  childBenefitChildId?: string | null;
 
   @IsOptional()
   @IsString()

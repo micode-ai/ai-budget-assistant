@@ -1,5 +1,6 @@
 import * as SQLite from 'expo-sqlite';
 import * as schema from './schema';
+import { runOnceSync } from './runOnce';
 
 // Open database using expo-sqlite new API (Expo SDK 54)
 const expoDb = SQLite.openDatabaseSync('budget.db');
@@ -691,6 +692,54 @@ export async function initializeDatabase(): Promise<void> {
     // Shopping list item price: price per unit, in the account currency. NULL = not priced.
     try { expoDb.execSync(`ALTER TABLE shopping_list_items ADD COLUMN unit_price REAL`); } catch {}
 
+    // Child costs: children, whole-expense links, line attribution and the 800+ mark.
+    // `children.id` is the local id = the server's clientId; `server_id` is the server PK.
+    expoDb.execSync(`
+      CREATE TABLE IF NOT EXISTS children (
+        id TEXT PRIMARY KEY,
+        server_id TEXT,
+        account_id TEXT NOT NULL,
+        name TEXT NOT NULL,
+        color TEXT,
+        archived_at INTEGER,
+        created_at INTEGER NOT NULL,
+        updated_at INTEGER NOT NULL,
+        is_deleted INTEGER DEFAULT 0,
+        sync_status TEXT NOT NULL DEFAULT 'pending',
+        sync_version INTEGER DEFAULT 0
+      );
+
+      CREATE TABLE IF NOT EXISTS expense_children (
+        id TEXT PRIMARY KEY,
+        expense_id TEXT NOT NULL,
+        child_id TEXT NOT NULL,
+        share REAL NOT NULL,
+        created_at INTEGER NOT NULL,
+        updated_at INTEGER NOT NULL,
+        is_deleted INTEGER DEFAULT 0,
+        sync_version INTEGER DEFAULT 0
+      );
+    `);
+    try { expoDb.execSync(`ALTER TABLE expense_items ADD COLUMN child_id TEXT`); } catch {}
+    // 1 = the server has this line under this id (written from server data). Identity, not
+    // sync_status: an edited server line is `pending` but still known. Backfill synced rows
+    // ONCE (R14): rows written since carry the flag themselves, so a per-launch full-table
+    // UPDATE would only cost startup time.
+    try { expoDb.execSync(`ALTER TABLE expense_items ADD COLUMN server_known INTEGER DEFAULT 0`); } catch {}
+    try {
+      runOnceSync(
+        expoDb,
+        'migration:expense_items_server_known_backfill',
+        `UPDATE expense_items SET server_known = 1 WHERE sync_status = 'synced' AND COALESCE(server_known, 0) = 0`,
+      );
+    } catch {}
+    try { expoDb.execSync(`ALTER TABLE incomes ADD COLUMN child_benefit_child_id TEXT`); } catch {}
+    // Child costs: a line's own discount and category (as the server holds them), so the
+    // device folds receipt discounts and labels line categories exactly as the web and
+    // the statement do. Written from server data and at receipt save.
+    try { expoDb.execSync(`ALTER TABLE expense_items ADD COLUMN line_discount REAL`); } catch {}
+    try { expoDb.execSync(`ALTER TABLE expense_items ADD COLUMN category_id TEXT`); } catch {}
+
     // Group trip wallet: per-member expense shares
     expoDb.execSync(`
       CREATE TABLE IF NOT EXISTS trip_expense_shares (
@@ -773,6 +822,13 @@ export async function initializeDatabase(): Promise<void> {
       // Shopping list indexes
       'CREATE INDEX IF NOT EXISTS idx_shopping_lists_account ON shopping_lists(account_id, is_archived)',
       'CREATE INDEX IF NOT EXISTS idx_shopping_list_items_list ON shopping_list_items(shopping_list_id, is_checked)',
+      // Child costs indexes
+      'CREATE INDEX IF NOT EXISTS idx_children_account ON children(account_id)',
+      'CREATE INDEX IF NOT EXISTS idx_children_server ON children(server_id)',
+      'CREATE UNIQUE INDEX IF NOT EXISTS idx_expense_children_unique ON expense_children(expense_id, child_id)',
+      'CREATE INDEX IF NOT EXISTS idx_expense_children_child ON expense_children(child_id)',
+      'CREATE INDEX IF NOT EXISTS idx_expense_items_child ON expense_items(child_id)',
+      'CREATE INDEX IF NOT EXISTS idx_sync_queue_account ON sync_queue(account_id, entity_type)',
     ];
 
     for (const indexSql of indexes) {

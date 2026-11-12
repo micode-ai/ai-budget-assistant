@@ -1,6 +1,7 @@
 import type { SyncChange } from '@budget/shared-types';
 import { resolveExpenseCategoryId } from '../../expenses/expense-category-resolver.util';
 import { touchExpenses } from '../../expenses/expense-touch.util';
+import { resolveChildIdForWrite } from '../../children/child-resolver.util';
 import { SyncHandlerContext, SyncResult } from '../sync-types';
 
 export async function processExpenseItemChange(
@@ -31,6 +32,11 @@ export async function processExpenseItemChange(
     ? await resolveExpenseCategoryId(ctx.prisma, payload.categoryId, accountId)
     : undefined;
 
+  // Child costs: the device sends its own child id (clientId) or the server PK.
+  // Tri-state like categoryId — `null` clears, absent leaves, and an id that does
+  // not resolve in this account leaves the column alone on update (null on create).
+  const resolvedChildId = await resolveChildIdForWrite(ctx.prisma, accountId, payload.childId);
+
   // Scoped through the parent expense: an item id from another account must read as missing, never
   // be updated, deleted, or returned as conflict serverData.
   const existing = await ctx.prisma.expenseItem.findFirst({
@@ -52,6 +58,7 @@ export async function processExpenseItemChange(
         description: payload.description,
         canonicalName: payload.canonicalName ?? null,
         categoryId: resolvedCategoryId ?? null,
+        childId: resolvedChildId ?? null,
         quantity: payload.quantity ?? 1,
         unitPrice: payload.unitPrice ?? 0,
         totalPrice: payload.totalPrice,
@@ -86,6 +93,7 @@ export async function processExpenseItemChange(
         description: payload.description,
         canonicalName: payload.canonicalName ?? null,
         categoryId: resolvedCategoryId,
+        childId: resolvedChildId,
         quantity: payload.quantity,
         unitPrice: payload.unitPrice,
         totalPrice: payload.totalPrice,

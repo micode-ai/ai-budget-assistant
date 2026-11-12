@@ -30,6 +30,8 @@ export interface Income {
   debtContactName?: string;
   debtDueDate?: Date;
   relatedDebtExpenseId?: string;
+  /** Child costs: set when this income is the 800+ benefit for that child (server PK). */
+  childBenefitChildId?: string | null;
   createdByUserName?: string | null;
   /**
    * The public-API OAuth app that created this income (public client id as `id` + display name, like `Expense.createdByApp`), or null.

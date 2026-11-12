@@ -230,6 +230,8 @@ confidently wrong two times out of three.
   subcategory exists) or a synonym ("beer" beside "alcohol") is stopped by the prompt alone; the validator catches only
   equal names and translations.
 
+**Line attribution to a child** reuses this page's discount folding and the `normalizeProductName` key (`ProductChildRule`); the statement PDF splits whole-attributed expenses across these category splits — see [child-costs](child-costs.md).
+
 ## History
 
 ABA-398 (the feature) · ABA-440 (discount and deposit in the tolerance gate) · ABA-441 (the rule

@@ -79,6 +79,7 @@ export const SETTINGS_PANE_KEYS = [
   'accounts',
   'tags',
   'projects',
+  'children',
   'developers',
   'connectedApps',
 ] as const;
@@ -215,6 +216,10 @@ export const SETTINGS_ENTRIES: readonly SettingsEntry[] = [
   { kind: 'pane', key: 'products', labelKey: 'settingsNav.products', route: '/settings/products', width: 'full' },
   { kind: 'pane', key: 'tags', labelKey: 'settingsNav.tags', route: '/tags/manage', width: 'form' },
   { kind: 'pane', key: 'projects', labelKey: 'settingsNav.projects', route: '/projects', width: 'form' },
+  // Child costs: the account's children (names only). A single-column list of
+  // short rows like tags/projects, so `'form'`. Its label key is new — the
+  // first this registry minted — and exists in all nine locales.
+  { kind: 'pane', key: 'children', labelKey: 'children.title', route: '/settings/children', width: 'form' },
   // Public API: the OAuth apps you registered as a developer. Last before `about`, since
   // almost nobody needs it.
   { kind: 'pane', key: 'developers', labelKey: 'developerApps.title', route: '/settings/developers', width: 'form', requiresFeature: 'publicApi' },

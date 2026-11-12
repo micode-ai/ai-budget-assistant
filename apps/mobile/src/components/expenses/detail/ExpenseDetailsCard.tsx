@@ -29,6 +29,8 @@ import {
 } from '@/components/expenses/TripExpenseSplitPicker';
 import { RecurringExpenseFields } from '@/components/expenses/RecurringExpenseFields';
 import { useRecurringExpenseFields } from '@/hooks/useRecurringExpenseFields';
+import { useExpenseChildSelection } from '@/hooks/useExpenseChildSelection';
+import { ChildAttributionField } from '@/components/children/ChildAttributionField';
 import * as tripExpenseShareRepository from '@/db/tripExpenseShareRepository';
 import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
 import { categoryLabel } from '@/utils/entityLabel';
@@ -95,6 +97,10 @@ export const ExpenseDetailsCard = forwardRef<ExpenseDetailsCardHandle, ExpenseDe
     // Stop Recurring button (rendered by app/expense/[id].tsx) instead.
     const recurring = useRecurringExpenseFields();
 
+    // Child costs: the "For" row. Editable only in edit mode (which only an
+    // editor can enter); view mode and viewers see the chosen children read-only.
+    const childSelection = useExpenseChildSelection(expense);
+
     // Splits and tags
     const [splits, setSplits] = useState<ExpenseCategorySplit[]>([]);
     const [showSplitEditor, setShowSplitEditor] = useState(false);
@@ -158,6 +164,7 @@ export const ExpenseDetailsCard = forwardRef<ExpenseDetailsCardHandle, ExpenseDe
         recurring.setRecurringPeriod('monthly');
         setTripSplitType(persistedTripSplitType);
         setTripShares(persistedTripShares);
+        childSelection.reset();
       }
     }, [isEditing]);
 
@@ -245,6 +252,8 @@ export const ExpenseDetailsCard = forwardRef<ExpenseDetailsCardHandle, ExpenseDe
         }
 
         await setExpenseProject(expense.id, editProjectId);
+        // Reports its own failure; the rest of the edit is already saved.
+        await childSelection.save();
 
         // Splits are deliberately NOT adjusted here. The server owns their
         // integrity: the same PATCH that carries this amount re-derives a
@@ -496,6 +505,14 @@ export const ExpenseDetailsCard = forwardRef<ExpenseDetailsCardHandle, ExpenseDe
             </View>
           </View>
         )}
+
+        {/* For (child costs) */}
+        <ChildAttributionField
+          style={styles.detailRow}
+          selection={childSelection}
+          disabled={!isEditing}
+          displayIds={isEditing ? undefined : (expense.expenseChildren ?? []).map((l) => l.childId)}
+        />
 
         {/* Project */}
         {isEditing ? (

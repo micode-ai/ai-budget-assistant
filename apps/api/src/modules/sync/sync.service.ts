@@ -221,7 +221,7 @@ export class SyncService {
 
   async pullChanges(accountId: string, userId: string, since: Date) {
     // Get all entities updated since the given timestamp
-    const [expenses, expenseItems, budgets, categories, incomes, tags, projects, expenseTags, projectExpenses, categorySplits, portfolioHoldings, investmentTransactions, shoppingLists, shoppingListItems] = await Promise.all([
+    const [expenses, expenseItems, budgets, categories, incomes, tags, projects, expenseTags, projectExpenses, categorySplits, portfolioHoldings, investmentTransactions, shoppingLists, shoppingListItems, children, expenseChildren] = await Promise.all([
       this.prisma.expense.findMany({
         where: {
           accountId,
@@ -261,6 +261,8 @@ export class SyncService {
       this.prisma.investmentTransaction.findMany({ where: { accountId, updatedAt: { gt: since } } }),
       this.prisma.shoppingList.findMany({ where: { accountId, updatedAt: { gt: since } } }),
       this.prisma.shoppingListItem.findMany({ where: { accountId, updatedAt: { gt: since } }, include: { shoppingList: { select: { clientId: true } } } }),
+      this.prisma.child.findMany({ where: { accountId, updatedAt: { gt: since } } }),
+      this.prisma.expenseChild.findMany({ where: { updatedAt: { gt: since }, expense: { accountId } } }),
     ]);
 
     const changes = [
@@ -375,6 +377,24 @@ export class SyncService {
         data: { ...it, shoppingListId: it.shoppingList.clientId },
         version: it.syncVersion,
         timestamp: it.updatedAt.toISOString(),
+      })),
+      // Child costs. A child created on the web has no clientId yet: fall back to the PK.
+      ...children.map((c: { id: string; clientId: string | null; isDeleted: boolean; syncVersion: number; updatedAt: Date }) => ({
+        entityType: 'child' as const,
+        entityId: c.clientId ?? c.id,
+        operation: c.isDeleted ? 'delete' as const : 'update' as const,
+        data: c,
+        version: c.syncVersion,
+        timestamp: c.updatedAt.toISOString(),
+      })),
+      // `share` is a Prisma Decimal: sent as a number, like the REST responses.
+      ...expenseChildren.map((ec: { id: string; share: unknown; isDeleted: boolean; syncVersion: number; updatedAt: Date }) => ({
+        entityType: 'expense_child' as const,
+        entityId: ec.id,
+        operation: ec.isDeleted ? 'delete' as const : 'update' as const,
+        data: { ...ec, share: Number(ec.share) },
+        version: ec.syncVersion,
+        timestamp: ec.updatedAt.toISOString(),
       })),
     ];
 

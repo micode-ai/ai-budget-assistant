@@ -1,5 +1,6 @@
 import { executeSql, withTransaction } from './client';
 import type { ExpenseItem, SyncStatus } from '@budget/shared-types';
+import { getQueuedLineItemIds, remapQueuedItemIds } from './childRepository';
 
 interface ExpenseItemRow {
   id: string;
@@ -16,6 +17,11 @@ interface ExpenseItemRow {
   sync_version: number;
   created_at: number;
   updated_at: number;
+  /** Child costs: line attribution (local child id). Absent on rows read before the column existed. */
+  child_id?: string | null;
+  /** Child costs: the line's own discount and category. Absent on rows read before the columns existed. */
+  line_discount?: number | null;
+  category_id?: string | null;
 }
 
 function rowToExpenseItem(row: ExpenseItemRow): ExpenseItem {
@@ -34,6 +40,9 @@ function rowToExpenseItem(row: ExpenseItemRow): ExpenseItem {
     syncVersion: row.sync_version,
     createdAt: new Date(row.created_at),
     updatedAt: new Date(row.updated_at),
+    childId: row.child_id ?? null,
+    lineDiscount: row.line_discount ?? null,
+    categoryId: row.category_id ?? null,
   };
 }
 
@@ -53,6 +62,12 @@ function expenseItemToParams(item: ExpenseItem): (string | number | null)[] {
     item.syncVersion,
     item.createdAt.getTime(),
     item.updatedAt.getTime(),
+    item.lineDiscount ?? null,
+    item.categoryId ?? null,
+    // Kept last (`child_id`, `server_known`): specs address them from the end of the list.
+    item.childId ?? null,
+    // Written from server data (synced) = the server has this line under this id.
+    item.syncStatus === 'synced' ? 1 : 0,
   ];
 }
 
@@ -69,8 +84,8 @@ export async function insertExpenseItem(item: ExpenseItem): Promise<void> {
     `INSERT INTO expense_items (
       id, local_id, expense_id, description, canonical_name, quantity, unit_price,
       total_price, sort_order, is_deleted, sync_status, sync_version,
-      created_at, updated_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      created_at, updated_at, line_discount, category_id, child_id, server_known
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     expenseItemToParams(item),
   );
 }
@@ -143,8 +158,8 @@ export async function upsertExpenseItem(item: ExpenseItem): Promise<void> {
     `INSERT INTO expense_items (
       id, local_id, expense_id, description, canonical_name, quantity, unit_price,
       total_price, sort_order, is_deleted, sync_status, sync_version,
-      created_at, updated_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      created_at, updated_at, line_discount, category_id, child_id, server_known
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(id) DO UPDATE SET
       description = excluded.description,
       canonical_name = excluded.canonical_name,
@@ -155,7 +170,10 @@ export async function upsertExpenseItem(item: ExpenseItem): Promise<void> {
       is_deleted = excluded.is_deleted,
       sync_status = excluded.sync_status,
       sync_version = excluded.sync_version,
-      updated_at = excluded.updated_at`,
+      updated_at = excluded.updated_at,
+      server_known = MAX(COALESCE(expense_items.server_known, 0), excluded.server_known),
+      line_discount = excluded.line_discount,
+      category_id = excluded.category_id`,
     expenseItemToParams(item),
   );
 }
@@ -210,9 +228,143 @@ export async function deleteItemsByExpenseId(expenseId: string): Promise<void> {
  */
 export async function replaceItemsForExpense(expenseId: string, items: ExpenseItem[]): Promise<void> {
   await withTransaction(async () => {
+    // Child costs: line attribution survives the replace.
+    // - Each incoming row is matched to a local one by id, else by position
+    //   (`sort_order`, the key the adopted rows are built with; an ambiguous
+    //   position matches nothing).
+    // - A matched line with a QUEUED child change keeps its local child: that
+    //   intent has not reached the server, so the server's value is stale.
+    // - Otherwise the incoming `childId` wins (the server's, already mapped to a
+    //   local child id). `undefined` means the caller could not tell (a create
+    //   response carries no child, or the child is unknown here) and keeps the
+    //   local value.
+    // Queued line changes follow their line to its server id.
+    const [previous, queuedLines] = await Promise.all([
+      executeSql<{ id: string; sort_order: number; child_id: string | null }>(
+        'SELECT id, sort_order, child_id FROM expense_items WHERE expense_id = ? AND is_deleted = 0',
+        [expenseId],
+      ),
+      getQueuedLineItemIds(expenseId),
+    ]);
+    const byId = new Map(previous.map((row) => [row.id, row]));
+    const byPosition = new Map<number, { id: string; child_id: string | null } | null>();
+    for (const row of previous) {
+      byPosition.set(row.sort_order, byPosition.has(row.sort_order) ? null : row);
+    }
+    const idMap = new Map<string, string>();
+    const carried = items.map((item) => {
+      const old = byId.get(item.id) ?? byPosition.get(item.sortOrder) ?? null;
+      if (old && old.id !== item.id) idMap.set(old.id, item.id);
+      let childId: string | null;
+      if (old && queuedLines.has(old.id)) childId = old.child_id ?? null;
+      else if (item.childId !== undefined) childId = item.childId;
+      else childId = old?.child_id ?? null;
+      return { ...item, childId };
+    });
+
     await executeSql('DELETE FROM expense_items WHERE expense_id = ?', [expenseId]);
-    for (const item of items) {
+    for (const item of carried) {
       await insertExpenseItem(item);
     }
+    await remapQueuedItemIds(expenseId, idMap);
   });
+}
+
+/**
+ * A hand-added line's push succeeded and the server knows it as `serverId`.
+ * Re-key the local row to that id (its child kept) and mark it server-known,
+ * and point queued child changes at it — so a line attribution made on it is
+ * delivered by the next drain, not held until a cold-start backfill. If a row
+ * under `serverId` already exists (a refetch got there first), that row is the
+ * server's and the local duplicate goes.
+ */
+export async function adoptServerItemId(expenseId: string, localId: string, serverId: string): Promise<void> {
+  await withTransaction(async () => {
+    if (serverId !== localId) {
+      const clash = await executeSql<{ id: string }>('SELECT id FROM expense_items WHERE id = ?', [serverId]);
+      if (clash.length > 0) {
+        await executeSql('DELETE FROM expense_items WHERE id = ?', [localId]);
+        await remapQueuedItemIds(expenseId, new Map([[localId, serverId]]));
+        return;
+      }
+    }
+    await executeSql(
+      "UPDATE expense_items SET id = ?, local_id = ?, server_known = 1, sync_status = 'synced' WHERE id = ?",
+      [serverId, serverId, localId],
+    );
+    if (serverId !== localId) await remapQueuedItemIds(expenseId, new Map([[localId, serverId]]));
+  });
+}
+
+// ─── Child costs: line attribution ───────────────────────────────────────────
+//
+// `child_id` is deliberately NOT in `upsertExpenseItem`'s ON CONFLICT update
+// list: a pull re-upserting a line must not wipe an attribution made on this
+// device. The pull applies the server's value through `setExpenseItemChild`
+// (childSync.ts), and only for expenses with nothing queued.
+
+export async function setExpenseItemChild(itemId: string, childId: string | null): Promise<void> {
+  await executeSql('UPDATE expense_items SET child_id = ? WHERE id = ?', [childId, itemId]);
+}
+
+/** Clear every line's child on one expense; returns the ids of the lines that had one. */
+export async function clearExpenseItemChildren(expenseId: string): Promise<string[]> {
+  const rows = await executeSql<{ id: string }>(
+    'SELECT id FROM expense_items WHERE expense_id = ? AND is_deleted = 0 AND child_id IS NOT NULL',
+    [expenseId],
+  );
+  if (rows.length === 0) return [];
+  await executeSql(
+    'UPDATE expense_items SET child_id = NULL WHERE expense_id = ? AND child_id IS NOT NULL',
+    [expenseId],
+  );
+  return rows.map((r) => r.id);
+}
+
+/** Live attributed lines of the account's live expenses. */
+export async function getAttributedItems(accountId: string): Promise<ExpenseItem[]> {
+  const rows = await executeSql<ExpenseItemRow>(
+    `SELECT ei.* FROM expense_items ei
+     JOIN expenses e ON e.id = ei.expense_id
+     WHERE e.account_id = ? AND e.is_deleted = 0 AND ei.is_deleted = 0 AND ei.child_id IS NOT NULL`,
+    [accountId],
+  );
+  return rows.map(rowToExpenseItem);
+}
+
+/**
+ * Every live line of each live expense that has at least one attributed line.
+ * The child costs screen needs the whole basket, not just the attributed
+ * lines: a receipt discount is folded over all of an expense's lines
+ * (`childAmounts`), so reading only the attributed ones would hand them the
+ * whole discount.
+ */
+export async function getChildLineItems(accountId: string): Promise<ExpenseItem[]> {
+  const rows = await executeSql<ExpenseItemRow>(
+    `SELECT ei.* FROM expense_items ei
+     JOIN expenses e ON e.id = ei.expense_id
+     WHERE e.account_id = ? AND e.is_deleted = 0 AND ei.is_deleted = 0
+       AND ei.expense_id IN (
+         SELECT expense_id FROM expense_items WHERE is_deleted = 0 AND child_id IS NOT NULL
+       )`,
+    [accountId],
+  );
+  return rows.map(rowToExpenseItem);
+}
+
+/**
+ * Child costs: set each line's discount and category to the server's values,
+ * writing only rows that differ. Identity, sync status, `server_known` and the
+ * line's child are left alone.
+ */
+export async function setExpenseItemDetails(
+  items: { id: string; lineDiscount: number | null; categoryId: string | null }[],
+): Promise<void> {
+  for (const item of items) {
+    await executeSql(
+      `UPDATE expense_items SET line_discount = ?, category_id = ?
+       WHERE id = ? AND (line_discount IS NOT ? OR category_id IS NOT ?)`,
+      [item.lineDiscount, item.categoryId, item.id, item.lineDiscount, item.categoryId],
+    );
+  }
 }

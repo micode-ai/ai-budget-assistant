@@ -13,6 +13,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '@budget/shared-utils';
 import { useExpenseStore } from '@/stores/expenseStore';
+import { useAccountStore } from '@/stores/accountStore';
+import { useAccountChildren } from '@/hooks/useAccountChildren';
+import { useChildAttribution } from '@/features/children/useChildAttribution';
+import { ChildLinePicker } from '@/components/children/ChildLinePicker';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import type { ExpenseItem } from '@budget/shared-types';
 
@@ -29,6 +33,14 @@ export function ExpenseItemsSection({ expenseId, currencyCode }: ExpenseItemsSec
     useExpenseStore();
 
   const items = expenseItems[expenseId] || [];
+
+  // Child costs: which child each line is for. Shown only when the account has
+  // children (or a line already names one); viewers see it read-only.
+  const canEdit = useAccountStore((s) => s.canEdit());
+  const kids = useAccountChildren();
+  const attribution = useChildAttribution(expenseId);
+  const showChildren =
+    kids.activeChildren.length > 0 || items.some((i) => !i.isDeleted && !!i.childId);
 
   const [itemModalVisible, setItemModalVisible] = useState(false);
   const [editingItem, setEditingItem] = useState<ExpenseItem | null>(null);
@@ -119,6 +131,16 @@ export function ExpenseItemsSection({ expenseId, currencyCode }: ExpenseItemsSec
                   );
                   return quantityLine ? <Text style={styles.itemMeta}>{quantityLine}</Text> : null;
                 })()}
+                {showChildren && (
+                  <ChildLinePicker
+                    children={kids.activeChildren}
+                    allChildren={kids.children}
+                    value={item.childId ?? null}
+                    suggestion={attribution.suggestions[item.id]}
+                    onChange={(childId) => void attribution.setLine(item.id, childId)}
+                    disabled={!canEdit}
+                  />
+                )}
               </View>
               <View style={styles.itemActions}>
                 <Text style={styles.itemTotal}>{formatCurrency(item.totalPrice, currencyCode)}</Text>

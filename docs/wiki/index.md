@@ -262,6 +262,7 @@ the section you came for — it states what must not break and why. A missing se
   between phone and server, and the five bugs that came from getting it wrong
 - [default-category-seeding](features/default-category-seeding.md) — every new account (not just a
   user's first) gets the localized default category set; `investment` accounts don't
+- [child-costs](features/child-costs.md) — attributing expenses and receipt lines to children, 800+ coverage, share card, Pro statement PDF
 - [tags](features/tags.md) — device-created tags, `clientId`, and using the resolved PK after a lookup
 - [vehicle-fuel-log](features/vehicle-fuel-log.md) — vehicles, fill-ups, l/100 km and cost per km (API only)
 - [merchants](features/merchants.md) — the merchant field, filters, capture reconciliation, rename/merge and grouping suggestions

@@ -64,6 +64,8 @@ rules to forget are keyed by the source ids, so they are read first and passed i
 
 - Desktop: the row context menu and the expense dialog header carry a swap-horizontal action opening `MoveAccountDialog` (`src/components/expenses/desktop/`), targets from `getMoveTargets` (`src/features/expenses/moveTargets.ts`). Expense rows only. Not verified in a browser.
 
+**Child attribution is dropped on a move** (links and line `childId`; the children belong to the source account) — see [child-costs](child-costs.md).
+
 ## History
 
 Introduced with the move endpoint; ABA-351 (clientId reassigned instead of nulled) · ABA-368

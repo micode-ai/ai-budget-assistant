@@ -106,6 +106,8 @@ The pure rule is `features/syncStatus/pendingSyncSummary.ts`. Tap offers "Sync n
 - The queue is pumped by specific screens rather than a connectivity listener, so a queued write can
   wait for the next visit to the right screen (documented for account transfers in particular).
 
+**First consumer of `sync_queue`:** child writes drain through the device queue, pinned to the account by an explicit `X-Account-Id` — see [child-costs](child-costs.md).
+
 ## History
 
 ABA-152 (parallel batches of 10) · ABA-157 (warn, not error) · ABA-356 (the first real test

@@ -12,6 +12,7 @@ import type { ExpenseCreatePrefill } from '@/components/expenses/create/ExpenseC
 import { compressAndEncodeImage } from '@/features/receipt/receiptImage';
 import { captureCurrentLocation, type CapturedLocation } from '@/services/locationCapture';
 import { maybeAskForReview } from '@/features/review/maybeAskForReview';
+import { attributeNewReceiptLines } from '@/features/children/attributeNewExpense';
 import type { ReceiptItem, ScannedReceipt } from '@/features/receipt/useReceiptScanner';
 import type { ReceiptCategorySplit } from '@budget/shared-utils';
 import type { Currency } from '@budget/shared-types';
@@ -29,6 +30,8 @@ interface UseReceiptSaveParams {
   currentSplits: ReceiptCategorySplit[];
   itemCategories: Record<number, string | null>;
   proposedNamesToCreate: string[];
+  /** Child costs: line index -> child picked on the confirm card, written after save. */
+  itemChildren?: Record<number, string | null>;
   /**
    * The bank-captured expense (push or statement import) the user chose to
    * merge this receipt into on the confirm card; undefined saves a new row
@@ -98,6 +101,7 @@ export function useReceiptSave({
   currentSplits,
   itemCategories,
   proposedNamesToCreate,
+  itemChildren,
   mergeWithExpenseId,
   onReset,
   onSaved,
@@ -199,6 +203,19 @@ export function useReceiptSave({
       });
 
       if (created) onExpenseCreated?.(created);
+
+      // Child costs: lines attributed on the confirm card. Fire-and-forget like
+      // the rest of the save; a failure is reported, never swallowed.
+      if (created && itemChildren && Object.values(itemChildren).some(Boolean)) {
+        void attributeNewReceiptLines(created.id, itemChildren)
+          .then((failed) => {
+            if (failed > 0) showAlert(t('common.error'), t('children.lineAttributionFailed', { count: failed }));
+          })
+          .catch((e) => {
+            console.warn('[children] receipt line attribution failed:', e instanceof Error ? e.message : String(e));
+            showAlert(t('common.error'), t('children.lineAttributionFailed', { count: Object.values(itemChildren).filter(Boolean).length }));
+          });
+      }
 
       // The rating ask rides on "Done", never on "Scan another": the user is
       // leaving satisfied, and interrupting a batch-scanning run with a system

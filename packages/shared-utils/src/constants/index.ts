@@ -133,6 +133,10 @@ export const ENCRYPTION_FIELDS: Record<string, { tier1: string[]; tier2: string[
     tier1: ['name'],
     tier2: [],
   },
+  child: {
+    tier1: ['name'],
+    tier2: [],
+  },
   project: {
     tier1: ['name', 'description'],
     tier2: ['budget'],

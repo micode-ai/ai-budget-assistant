@@ -14,6 +14,7 @@ import { ControlRow } from './ControlRow';
 import { AnalyticsSummaryStrip } from './AnalyticsSummaryStrip';
 import { TrendAndWeekdayRow } from './TrendAndWeekdayRow';
 import { BreakdownGrid } from './BreakdownGrid';
+import { useChildrenMonthTotals } from '@/features/children/useChildCosts';
 import { TopItemsCard } from './TopItemsCard';
 import { InsightsCluster } from './InsightsCluster';
 import { DiscoveryRow } from './DiscoveryRow';
@@ -108,6 +109,7 @@ export function AnalyticsDesktop() {
     aiInsightsProGated,
     drillDownParams,
   } = useAnalyticsScreenData();
+  const childTotals = useChildrenMonthTotals({ activeOnly: true });
 
   // Task 7: both dialogs are a single boolean/optional slot, mirroring
   // `ExpensesDesktop`'s `selectedRowId`/`createKind` state — only one of
@@ -198,6 +200,8 @@ export function AnalyticsDesktop() {
                 tagSpending={tagSpending}
                 projectSpending={projectSpending}
                 incomeByCategory={incomeByCategory}
+                childRows={childTotals.active}
+                childCurrency={childTotals.currency}
               />
 
               {itemBreakdown.length > 0 && <TopItemsCard itemBreakdown={itemBreakdown} currency={currency} />}

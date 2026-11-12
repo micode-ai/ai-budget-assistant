@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { router } from 'expo-router';
 import { showAlert } from '@/utils/alert';
 import { getIntlLocale } from '@/i18n';
@@ -11,6 +11,8 @@ import { isReceiptSessionCheckpoint } from '@/features/receipt/receiptScanSessio
 import { useReceiptCategorySplit } from '@/hooks/useReceiptCategorySplit';
 import { useReceiptSave } from '@/hooks/useReceiptSave';
 import { useReceiptScanSession } from '@/hooks/useReceiptScanSession';
+import { useAccountChildren } from '@/hooks/useAccountChildren';
+import { productNameOf, suggestionForLine, useChildSuggestions } from '@/features/children/useChildAttribution';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { resolveExistingMerchant } from '@/utils/merchant';
 import ReceiptCaptureView from '@/components/receipt/ReceiptCaptureView';
@@ -291,11 +293,35 @@ export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpens
     showSplitSheet,
     setShowSplitSheet,
     handleItemCategoryChange,
+    itemChildren,
+    handleItemChildChange,
     handleItemFieldChange,
     handleAddItem,
     handleRemoveItem,
     resetSplitState,
   } = useReceiptCategorySplit(scannedReceipt);
+
+  // Child costs: which child each line is for, with learned suggestions shown
+  // (never applied). No suggestion request for an account without children.
+  const kids = useAccountChildren();
+  const lineNames = useMemo(
+    () => (kids.activeChildren.length > 0 ? items.map(productNameOf) : []),
+    [items, kids.activeChildren.length],
+  );
+  const childSuggestionsByKey = useChildSuggestions(scannedReceipt, lineNames);
+  const lineChildren =
+    kids.activeChildren.length > 0
+      ? {
+          children: kids.activeChildren,
+          allChildren: kids.children,
+          values: itemChildren,
+          suggestionFor: (index: number) =>
+            items[index] && !itemChildren[index]
+              ? suggestionForLine(childSuggestionsByKey, items[index])
+              : undefined,
+          onChange: handleItemChildChange,
+        }
+      : undefined;
 
   const handleReset = () => {
     reset();
@@ -374,6 +400,7 @@ export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpens
     currentSplits,
     itemCategories,
     proposedNamesToCreate,
+    itemChildren,
     mergeWithExpenseId:
       mergeWithBank && mergeableSource(scannedReceipt?.possibleDuplicate)
         ? scannedReceipt?.possibleDuplicate?.expenseId
@@ -439,6 +466,7 @@ export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpens
             onEditItem={handleItemFieldChange}
             onAddItem={handleAddItem}
             onRemoveItem={handleRemoveItem}
+            lineChildren={lineChildren}
             currentSplits={currentSplits}
             splitDropped={splitDropped}
             sheetItemsLength={sheetItems.length}

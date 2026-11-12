@@ -12,6 +12,8 @@ export type SyncEntityType =
   | 'income'
   | 'tag'
   | 'expense_tag'
+  | 'child'
+  | 'expense_child'
   | 'income_tag'
   | 'project'
   | 'project_expense'
@@ -66,6 +68,8 @@ export interface SyncIncomePayload {
   debtContactName?: string;
   debtDueDate?: string;
   relatedDebtExpenseId?: string;
+  /** Child costs: the child this 800+ benefit income is for (id or clientId); `null` clears, absent leaves. */
+  childBenefitChildId?: string | null;
 }
 
 export interface SyncExpenseItemPayload {
@@ -77,6 +81,8 @@ export interface SyncExpenseItemPayload {
   unitPrice?: number;
   totalPrice: number;
   sortOrder?: number;
+  /** Child costs: the child this line is attributed to (id or clientId); `null` clears, absent leaves. */
+  childId?: string | null;
 }
 
 export interface SyncTagPayload {
@@ -144,6 +150,19 @@ export interface SyncShoppingListItemPayload {
   sortOrder?: number;
 }
 
+export interface SyncChildPayload {
+  name: string;
+  color?: string;
+  clientId?: string;
+  archivedAt?: string | null;
+}
+
+export interface SyncExpenseChildPayload {
+  expenseId: string;
+  childId: string;
+  share: number;
+}
+
 export interface SyncExpenseTagPayload {
   expenseId: string;
   tagId: string;
@@ -197,6 +216,8 @@ export type SyncChange =
   | (SyncChangeBase & { entityType: 'shopping_list'; payload: SyncShoppingListPayload })
   | (SyncChangeBase & { entityType: 'shopping_list_item'; payload: SyncShoppingListItemPayload })
   | (SyncChangeBase & { entityType: 'expense_tag'; payload: SyncExpenseTagPayload })
+  | (SyncChangeBase & { entityType: 'child'; payload: SyncChildPayload })
+  | (SyncChangeBase & { entityType: 'expense_child'; payload: SyncExpenseChildPayload })
   | (SyncChangeBase & { entityType: 'income_tag'; payload: SyncIncomeTagPayload })
   | (SyncChangeBase & { entityType: 'project_expense'; payload: SyncProjectExpensePayload })
   | (SyncChangeBase & { entityType: 'project_income'; payload: SyncProjectIncomePayload })

@@ -10,7 +10,7 @@ import { MerchantInput } from '@/components/MerchantInput';
 import PriceFindingsCard from '@/components/receipt/PriceFindingsCard';
 import DuplicateReceiptBanner from '@/components/receipt/DuplicateReceiptBanner';
 import CategorySplitChips from '@/components/receipt/CategorySplitChips';
-import ReceiptItemsEditor from '@/components/receipt/ReceiptItemsEditor';
+import ReceiptItemsEditor, { type ReceiptLineChildren } from '@/components/receipt/ReceiptItemsEditor';
 import { ReceiptImageViewer } from '@/components/receipt/ReceiptImageViewer';
 import type { ReceiptItem, ScannedReceipt } from '@/features/receipt/useReceiptScanner';
 
@@ -29,6 +29,8 @@ interface Props {
   onEditItem: (index: number, patch: Partial<EditableItemFields>) => void;
   onAddItem: (item: EditableItemFields) => void;
   onRemoveItem: (index: number) => void;
+  /** Child costs: per-line "For" pickers; undefined (no children) draws none. */
+  lineChildren?: ReceiptLineChildren;
   currentSplits: ReceiptCategorySplit[];
   splitDropped: boolean;
   /** `sheetItems.length` from `useReceiptCategorySplit` — whether there are any
@@ -67,6 +69,7 @@ export default function ReceiptConfirmCard({
   onEditItem,
   onAddItem,
   onRemoveItem,
+  lineChildren,
   currentSplits,
   splitDropped,
   sheetItemsLength,
@@ -198,6 +201,7 @@ export default function ReceiptConfirmCard({
           onEditItem={onEditItem}
           onAddItem={onAddItem}
           onRemoveItem={onRemoveItem}
+          lineChildren={lineChildren}
         />
 
         <View style={styles.confidenceRow}>

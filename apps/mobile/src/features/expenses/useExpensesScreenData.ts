@@ -16,6 +16,7 @@ import { filterConsumption, filterIncomeConsumption } from '@/utils/consumption'
 import type { Expense, Income } from '@budget/shared-types';
 import { useTagStore } from '@/stores/tagStore';
 import { useExpenseMultiSelect } from '@/hooks/useExpenseMultiSelect';
+import { useAccountChildren } from '@/hooks/useAccountChildren';
 import { buildExpenseMapPoints } from '@/components/map/buildMapPoints';
 
 export type ActiveTab = 'expenses' | 'income';
@@ -99,6 +100,8 @@ export function useExpensesScreenData() {
   const [actionSheetVisible, setActionSheetVisible] = useState(false);
 
   const multiSelect = useExpenseMultiSelect(expenses, bulkUpdateExpenses);
+  // Child costs: the bulk "Assign to child" action offers the active children.
+  const { activeChildren } = useAccountChildren();
 
   useEffect(() => {
     if (tab === 'income' || tab === 'expenses') {
@@ -291,6 +294,7 @@ export function useExpensesScreenData() {
     merchantList,
     allTags,
     canEdit,
+    activeChildren,
     currentAccountId,
     expenseFilters,
     setExpenseFilters,

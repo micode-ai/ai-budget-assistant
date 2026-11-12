@@ -214,6 +214,7 @@ describe('ExpenseCrossAccountService.moveToAccount', () => {
       projectExpense: { updateMany: jest.fn().mockResolvedValue({}) },
       expenseCategorySplit: { updateMany: jest.fn().mockResolvedValue({}) },
       tripExpenseShare: { deleteMany: jest.fn().mockResolvedValue({}) },
+      expenseChild: { updateMany: jest.fn().mockResolvedValue({}) },
       expense: { update: jest.fn().mockResolvedValue({}) },
       expenseItem: { updateMany: jest.fn().mockResolvedValue({}) },
     };
@@ -279,6 +280,21 @@ describe('ExpenseCrossAccountService.moveToAccount', () => {
     expect(tx.tripExpenseShare.deleteMany).toHaveBeenCalledTimes(1);
   });
 
+  it("drops child attribution — whole-expense links and line childIds point at the source account's children", async () => {
+    const { service, tx } = makeService({});
+
+    await service.moveToAccount('acc-src', 'user-1', 'cli-1', { targetAccountId: 'acc-dst' });
+
+    expect(tx.expenseChild.updateMany).toHaveBeenCalledWith({
+      where: { expenseId: 'srv-1', isDeleted: false },
+      data: { isDeleted: true, syncVersion: { increment: 1 } },
+    });
+    expect(tx.expenseItem.updateMany).toHaveBeenCalledWith({
+      where: { expenseId: 'srv-1', childId: { not: null } },
+      data: { childId: null, syncVersion: { increment: 1 } },
+    });
+  });
+
   it('unlearns the product rules this expense taught the source account', async () => {
     const productRules = { forgetRules: jest.fn().mockResolvedValue(undefined) };
     const { service } = makeService({
@@ -315,7 +331,10 @@ describe('ExpenseCrossAccountService.moveToAccount', () => {
 
     await service.moveToAccount('acc-src', 'user-1', 'cli-1', { targetAccountId: 'acc-dst' });
 
-    const calls = tx.expenseItem.updateMany.mock.calls.map((c: any) => c[0]);
+    // Only the category remaps; the child-attribution clear is pinned by its own test.
+    const calls = tx.expenseItem.updateMany.mock.calls
+      .map((c: any) => c[0])
+      .filter((c: any) => 'categoryId' in c.data);
     expect(calls).toHaveLength(2);
     expect(calls.find((c: any) => c.where.categoryId === 'item-cat-a').data.categoryId).toBe('dst-bread');
     expect(calls.find((c: any) => c.where.categoryId === 'item-cat-b').data.categoryId).toBeNull();

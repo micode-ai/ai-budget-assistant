@@ -49,6 +49,16 @@ export class ExpensesService {
   private toExpenseResponse(expense: any) {
     // The scalar FK is the OAuthClient db id: it must not leave the API either (I2).
     const { user, createdByOAuthClient, createdByOAuthClientId: _dbClientId, ...rest } = expense;
+    // Child costs: `share` is a Prisma Decimal, which would serialize as a string.
+    if (Array.isArray(rest.expenseChildren)) {
+      rest.expenseChildren = rest.expenseChildren.map(
+        (l: { expenseId: string; childId: string; share: unknown }) => ({
+          expenseId: l.expenseId,
+          childId: l.childId,
+          share: Number(l.share),
+        }),
+      );
+    }
     // createdByApp.id is the app's PUBLIC client id (aba_ci_…), matching the
     // public API's `created_by_app.id`; the OAuthClient db id never leaves here.
     return {
@@ -559,6 +569,11 @@ export class ExpensesService {
             where: { isDeleted: false },
             include: { tag: true },
           },
+          // Child costs: whole-expense attribution (line attribution is `items[].childId`).
+          expenseChildren: {
+            where: { isDeleted: false },
+            select: { expenseId: true, childId: true, share: true },
+          },
           categorySplits: {
             where: { isDeleted: false },
             include: { category: true },
@@ -601,6 +616,7 @@ export class ExpensesService {
         category: true,
         items: { where: { isDeleted: false }, orderBy: { sortOrder: 'asc' } },
         expenseTags: { where: { isDeleted: false }, include: { tag: true } },
+        expenseChildren: { where: { isDeleted: false }, select: { expenseId: true, childId: true, share: true } },
         categorySplits: { where: { isDeleted: false }, include: { category: true } },
         projectExpenses: { where: { isDeleted: false }, include: { project: true } },
         user: { select: { name: true } },

@@ -125,6 +125,20 @@ Tabela pokazujaca najczesciej kupowane pozycje z paragonow:
 
 Dotknij **Eksportuj raport**, aby otworzyc ekran Eksport i raporty, gdzie mozesz generowac raporty PDF, Excel lub CSV, przegladac podsumowania miesieczne i zarzadzac kopiami zapasowymi danych. Zobacz [Eksport i raporty](./16-export-reports.md) po wiecej szczególów.
 
+## Koszty dzieci
+
+Sprawdź, ile kosztuje Cię każde dziecko, bez zgadywania.
+
+- **Dodawanie dzieci:** Ustawienia > Dane referencyjne > Dzieci. Zapisujemy tylko imię i kolor. Zamiast usuwać, zarchiwizuj dziecko; jego wydatki pozostają przypisane.
+- **Cały wydatek:** przy nowym lub istniejącym wydatku wybierz jedno lub kilkoro dzieci. Przy kilkorgu kwota dzieli się po równo, chyba że zmienisz udziały. Wydatek ma przypisanie całości albo pozycji paragonu, nie oba naraz; aplikacja zapyta przed zmianą.
+- **Pozycje paragonu:** po zeskanowaniu paragonu przypisz pojedyncze pozycje (pieluchy, przybory szkolne) do dziecka. Aplikacja zapamięta wybór i zaproponuje go następnym razem. Propozycja nigdy nie jest stosowana bez Ciebie. „Wyodrębnij pozycje” zachowuje przypisanie produktów, które nadal są na paragonie, i informuje, ilu nie udało się przenieść.
+- **Zbiorczo:** zaznacz kilka wydatków i wybierz Przypisz do dziecka. Wydatki z przypisaniem pozycji są pomijane, a liczba pominiętych jest pokazana.
+- **Sumy:** ekran dziecka (i karta w zakładce Analityka) pokazuje ten miesiąc, ten rok i podział na kategorie w walucie wyświetlania. Suma ze znakiem ≈ zawiera przybliżenie, bo brakowało kursu; takie kwoty są pomijane, nie zgadywane. Wydatki planowane i należności z podziału rachunku nie są liczone.
+- **800+ i pokrycie:** gdy przychód wygląda na świadczenie 800+ (np. „800+” lub „rodzina 800” w opisie), aplikacja proponuje oznaczyć go dla dziecka. Pokrycie to otrzymane świadczenie podzielone przez koszt dziecka w tym samym okresie.
+- **Karta do udostępnienia:** obrazek z sumami dziecka. Imię jest domyślnie ukryte; można je włączyć.
+- **Zestawienie PDF (Pro, edytorzy):** „zestawienie” kosztów dziecka za okres do 24 miesięcy: sumy, podział miesięczny i na kategorie, lista wydatków i paragony. Każda strona ma stopkę, że zestawienie sporządzono w aplikacji na podstawie danych wprowadzonych przez użytkownika, oraz czas „stan danych na”. To podsumowanie Twoich własnych zapisów, nie dokument prawny i nie jest poświadczone. Zawiera tylko to, co dotarło na serwer, więc aplikacja najpierw synchronizuje i prosi o chwilę czekania, jeśli coś jeszcze oczekuje. Niedostępne na kontach z szyfrowaniem end-to-end.
+- **Rodzice w separacji:** trzymajcie dzieci na koncie osobistym, aby drugi rodzic nie widział pozostałych Twoich wydatków. Konto wspólne pokazuje wszystko wszystkim członkom.
+
 ## FAQ
 
 - **P: Dlaczego nie widze zadnych wykresow?**

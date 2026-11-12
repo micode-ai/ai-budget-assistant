@@ -125,6 +125,20 @@ Un tableau affichant vos articles de recus les plus frequemment achetes :
 
 Appuyez sur **Exporter le rapport** pour acceder a l'ecran Export et rapports. Vous pouvez y generer des rapports PDF, Excel ou CSV, consulter votre resume mensuel et gerer les sauvegardes de donnees. Consultez le guide [Export et rapports](./16-export-reports.md) pour plus de details.
 
+## Coûts des enfants
+
+Voyez ce que coûte chaque enfant, sans deviner.
+
+- **Ajouter des enfants :** Réglages > Données de référence > Enfants. Seuls le prénom et la couleur sont enregistrés. Archivez un enfant plutôt que de le supprimer ; ses dépenses restent attribuées.
+- **Attribuer une dépense entière :** sur une dépense nouvelle ou existante, choisissez un ou plusieurs enfants. Avec plusieurs, le montant est partagé à parts égales sauf si vous modifiez les parts. Une dépense utilise l'attribution entière ou celle par lignes du ticket, pas les deux ; l'app demande avant de changer.
+- **Attribuer des lignes de ticket :** après avoir scanné un ticket, affectez des lignes (couches, fournitures scolaires) à un enfant. L'app retient votre choix et le propose la fois suivante. Une suggestion n'est jamais appliquée sans vous. « Extraire les articles » conserve l'attribution des produits encore présents sur le ticket et indique combien n'ont pu être reportés.
+- **En masse :** sélectionnez plusieurs dépenses et choisissez Attribuer à un enfant. Les dépenses avec attribution par lignes sont ignorées et leur nombre est affiché.
+- **Totaux :** l'écran de l'enfant (et une carte dans l'onglet Analyses) affiche ce mois-ci, cette année et la répartition par catégories dans votre devise d'affichage. Un total marqué ≈ contient une approximation faute de taux de change ; ces montants sont exclus plutôt que devinés. Les dépenses planifiées et les créances de notes partagées ne comptent pas.
+- **800+ et couverture :** quand un revenu ressemble à l'allocation 800+ (par ex. « 800+ » ou « rodzina 800 » dans la description), l'app propose de le rattacher à un enfant. La couverture est l'allocation reçue divisée par ce que l'enfant a coûté sur la même période.
+- **Carte à partager :** une image des totaux d'un enfant. Son prénom est masqué par défaut ; vous pouvez l'afficher.
+- **Relevé PDF (Pro, éditeurs) :** une « zestawienie » des coûts d'un enfant sur 24 mois maximum, avec totaux, détail mensuel et par catégorie, liste des dépenses et tickets. Chaque page porte un pied de page indiquant qu'il a été établi dans l'app à partir de données saisies par l'utilisateur, ainsi que l'heure « données au ». C'est un récapitulatif de vos propres enregistrements, pas un document juridique, ni certifié. Il ne contient que ce qui a atteint le serveur ; l'app synchronise d'abord et vous demande d'attendre si quelque chose est en attente. Indisponible sur les comptes à chiffrement de bout en bout.
+- **Parents séparés :** gardez les enfants sur un compte personnel pour que l'autre parent ne voie pas vos autres dépenses. Un compte partagé montre tout à tous les membres.
+
 ## FAQ
 
 - **Q : Pourquoi ne vois-je aucun graphique ?**

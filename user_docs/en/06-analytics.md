@@ -125,6 +125,20 @@ A table showing your most frequently purchased receipt items:
 
 Tap **Export Report** to open the [Export & Reports](./16-export-reports.md) screen where you can generate PDF, Excel, and CSV reports, view monthly digests, and manage data backups.
 
+## Child costs
+
+See what each child costs you, without any guessing.
+
+- **Add children:** Settings > Reference data > Children. Only a name and a colour are stored. Archive a child instead of deleting; their expenses stay attributed.
+- **Attribute a whole expense:** on a new or existing expense choose one or more children. With several children the amount is split equally unless you edit the shares. An expense uses whole-expense attribution or receipt-line attribution, not both; the app asks before switching.
+- **Attribute receipt lines:** after scanning a receipt, assign individual lines (diapers, school supplies) to a child. The app remembers your choice and suggests it next time. A suggestion is never applied without you. "Extract items" keeps the attribution of products that are still on the receipt and tells you how many it could not carry over.
+- **Bulk:** select several expenses and choose Assign to child. Expenses with line attribution are skipped and the count is shown.
+- **Totals:** the child screen (and a card on the Analytics tab) shows this month, this year and a category breakdown in your display currency. A total marked with ≈ includes an approximation because an exchange rate was missing; such amounts are left out rather than guessed. Planned expenses and split-bill receivables are not counted.
+- **800+ and coverage:** when an income looks like the 800+ benefit (for example "800+" or "rodzina 800" in the description) the app offers to mark it for a child. Coverage is the benefit received divided by what that child cost in the same period.
+- **Share card:** create a picture of a child's totals. The child's name is hidden by default; you can switch it on.
+- **Statement PDF (Pro, editors):** a "zestawienie" of a child's costs for a period of up to 24 months, with totals, a monthly and category breakdown, the list of expenses and the receipts. Every page carries a footer saying it was prepared in the app from data entered by the user, and the "data as of" time. It is a summary of your own records, not a legal document and not certified. It contains only what has reached the server, so the app syncs first and asks you to wait if something is still pending. It is not available on accounts with end-to-end encryption.
+- **Separated parents:** keep the children on a personal account, so the other parent does not see your other spending. A shared account shows everything to all members.
+
 ## FAQ
 
 - **Q: Why don't I see any charts?**

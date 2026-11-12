@@ -31,8 +31,10 @@ import { useInboundReceiptStore } from './inboundReceiptStore';
 import { useDeveloperAppsStore } from './developerAppsStore';
 import { useConnectedAppsStore } from './connectedAppsStore';
 import { useChatStore } from './chatStore';
+import { useChildStore } from './childStore';
 import { useScenarioStore } from './scenarioStore';
 import * as investmentRepo from '../db/investmentRepository';
+import { clearAllChildData } from '../db/childRepository';
 import { registerRestoreCredential, attemptRestoreSession } from '../features/auth/restoreCredential';
 import { clearRestoreCredential, isRestoreCredentialAvailable } from '../services/restoreCredentials';
 import { resetTelemetry } from '../services/telemetry';
@@ -694,12 +696,24 @@ export async function logoutAction(set: AuthStoreSet): Promise<void> {
     // Without it, the next person to sign in on this device or browser could
     // read the previous user's chat history.
     useChatStore.getState().reset();
+    // Child costs: child names are minors' data. Like `chatStore`, cleared here
+    // unconditionally as well as on the account switch, so sign-out teardown
+    // does not depend on the `accountStore.reset()` subscription firing.
+    useChildStore.getState().reset();
 
     // Clear investment data from SQLite
     await investmentRepo.clearAllInvestments();
   } catch (error) {
     console.error('Failed to logout:', error);
   } finally {
+    // Child names are minors' data: on a shared device they must not wait for the next
+    // sign-in (`accountStore.initialize`) to be cleared from SQLite. In `finally` (R14):
+    // a throw anywhere above must not leave them behind.
+    try {
+      await clearAllChildData();
+    } catch (e) {
+      console.warn('Failed to clear child data on logout:', e);
+    }
     isLoggingOut = false;
   }
 }

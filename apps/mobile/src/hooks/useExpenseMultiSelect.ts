@@ -2,6 +2,12 @@ import { useState } from 'react';
 import { showAlert } from '@/utils/alert';
 import { useTranslation } from 'react-i18next';
 import type { Expense } from '@budget/shared-types';
+import type { AttributionMode } from '@budget/shared-utils';
+import { useAccountStore } from '@/stores/accountStore';
+import { useChildStore } from '@/stores/childStore';
+import { useExpenseStore } from '@/stores/expenseStore';
+import { loadAttributionModes } from '@/features/children/attributionModes';
+import { planBulkAssign } from '@/features/children/bulkAssign';
 
 type BulkPatch = { categoryId?: string; tagIds?: string[]; isDeleted?: boolean };
 
@@ -14,6 +20,7 @@ export function useExpenseMultiSelect(
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [showBulkCategoryPicker, setShowBulkCategoryPicker] = useState(false);
   const [showBulkTagPicker, setShowBulkTagPicker] = useState(false);
+  const [showBulkChildPicker, setShowBulkChildPicker] = useState(false);
   const [isBulkProcessing, setIsBulkProcessing] = useState(false);
 
   const enterMultiSelect = (firstId: string) => {
@@ -21,6 +28,7 @@ export function useExpenseMultiSelect(
     setSelectedIds(new Set([firstId]));
     setShowBulkCategoryPicker(false);
     setShowBulkTagPicker(false);
+    setShowBulkChildPicker(false);
   };
 
   const exitMultiSelect = () => {
@@ -28,6 +36,7 @@ export function useExpenseMultiSelect(
     setSelectedIds(new Set());
     setShowBulkCategoryPicker(false);
     setShowBulkTagPicker(false);
+    setShowBulkChildPicker(false);
   };
 
   const toggleSelection = (id: string) => {
@@ -88,6 +97,53 @@ export function useExpenseMultiSelect(
     }
   };
 
+  /**
+   * Child costs: attribute every selected expense, as a whole, to `childIds`.
+   * An expense whose receipt lines are attributed is skipped, never replaced —
+   * a bulk action cannot ask per row — and the skipped count is reported.
+   * Sequential on purpose: on web each is one request, and a burst trips the
+   * API proxy's rate limit.
+   */
+  const handleBulkAssignChildren = async (childIds: string[]) => {
+    const accountId = useAccountStore.getState().currentAccountId;
+    if (selectedIds.size === 0 || childIds.length === 0 || !accountId) return;
+    setShowBulkChildPicker(false);
+    setIsBulkProcessing(true);
+    try {
+      const ids = Array.from(selectedIds);
+      // The store's full list, not this hook's (possibly filtered) one: a row the
+      // mode lookup cannot see would default to 'none' and lose its line attribution.
+      const chosen = useExpenseStore.getState().expenses.filter((e) => selectedIds.has(e.id));
+      let modes: Map<string, AttributionMode>;
+      try {
+        modes = await loadAttributionModes(chosen, accountId);
+      } catch (e) {
+        console.warn('[children] attribution modes not read:', e instanceof Error ? e.message : String(e));
+        showAlert(t('common.error'), t('children.assignFailed'));
+        return;
+      }
+      const plan = planBulkAssign(ids, (id) => modes.get(id) ?? 'none');
+      const setExpenseChildren = useChildStore.getState().setExpenseChildren;
+      let assigned = 0;
+      let failed = 0;
+      for (const id of plan.assign) {
+        try {
+          await setExpenseChildren(id, childIds);
+          assigned += 1;
+        } catch (e) {
+          failed += 1;
+          console.warn('[children] bulk attribution failed for one expense:', e instanceof Error ? e.message : String(e));
+        }
+      }
+      const summary = t('children.bulkAssigned', { assigned, skipped: plan.skipped });
+      showAlert('', failed > 0 ? `${summary}
+${t('children.bulkAssignFailed', { count: failed })}` : summary);
+      exitMultiSelect();
+    } finally {
+      setIsBulkProcessing(false);
+    }
+  };
+
   const handleBulkDelete = () => {
     if (selectedIds.size === 0) return;
     showAlert(
@@ -120,6 +176,8 @@ export function useExpenseMultiSelect(
     setShowBulkCategoryPicker,
     showBulkTagPicker,
     setShowBulkTagPicker,
+    showBulkChildPicker,
+    setShowBulkChildPicker,
     isBulkProcessing,
     enterMultiSelect,
     exitMultiSelect,
@@ -128,6 +186,7 @@ export function useExpenseMultiSelect(
     selectIds,
     handleBulkSetCategory,
     handleBulkAddTags,
+    handleBulkAssignChildren,
     handleBulkDelete,
   };
 }

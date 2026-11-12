@@ -20,6 +20,7 @@ import { materializeReceipt, releaseReceipt } from '@/features/receipt/receiptIm
 import { ReceiptImageViewer } from '@/components/receipt/ReceiptImageViewer';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { api } from '@/services/api';
+import { applyCarriedAttribution, resolveLineIdBySortOrder } from '@/features/children/useChildAttribution';
 import { useTheme, useStyles, type Theme } from '@/theme';
 
 interface ReceiptSectionProps {
@@ -169,7 +170,7 @@ export function ReceiptSection({
       }
 
       const existing = await loadExpenseItems(expenseId);
-      const apply = () => {
+      const apply = async () => {
         // Replace, never append: re-running the OCR twice would duplicate lines.
         for (const item of existing) deleteExpenseItem(expenseId, item.id);
         scannedItems.forEach((it, index) => {
@@ -182,7 +183,27 @@ export function ReceiptSection({
             sortOrder: index,
           });
         });
-        showAlert('', t('expenseDetail.extractItemsDone', { count: scannedItems.length }));
+        const done = t('expenseDetail.extractItemsDone', { count: scannedItems.length });
+        if (!existing.some((i) => !i.isDeleted && i.childId)) {
+          showAlert('', done);
+          return;
+        }
+        // Child costs: a line's child follows it onto the regenerated line with
+        // the same normalized product name; the user is told how many could not.
+        setExtracting(true);
+        try {
+          const { lost } = await applyCarriedAttribution({
+            expenseId,
+            oldItems: existing,
+            scanned: scannedItems.map((it) => ({ description: it.description, canonicalName: it.canonicalName })),
+            resolveItemId: (index) => resolveLineIdBySortOrder(expenseId, index),
+          });
+          showAlert('', lost > 0 ? `${done}
+
+${t('children.carryLost', { count: lost })}` : done);
+        } finally {
+          setExtracting(false);
+        }
       };
 
       if (existing.length > 0) {
@@ -191,11 +212,11 @@ export function ReceiptSection({
           t('expenseDetail.extractItemsConfirm', { count: existing.length }),
           [
             { text: t('common.cancel'), style: 'cancel' },
-            { text: t('expenses.merge.confirm'), onPress: apply },
+            { text: t('expenses.merge.confirm'), onPress: () => void apply() },
           ],
         );
       } else {
-        apply();
+        await apply();
       }
     } catch (e) {
       console.warn('[ReceiptSection] Extract items failed:', e);

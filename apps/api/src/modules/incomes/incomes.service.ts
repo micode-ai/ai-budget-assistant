@@ -14,6 +14,7 @@ import {
   resolveExpenseCategoryId,
   resolveCategoryIdForUpdate,
 } from '../expenses/expense-category-resolver.util';
+import { resolveChildIdForWrite } from '../children/child-resolver.util';
 
 const incomeInclude = {
   category: true,
@@ -103,6 +104,8 @@ export class IncomesService {
       });
       isNew = !existing;
       const resolvedCategoryId = await this.resolveCategoryId(dto.categoryId, accountId, dto.categoryName);
+      // Child costs (800+): tri-state, resolved within the account to the server PK.
+      const childBenefitChildId = await resolveChildIdForWrite(tx, accountId, dto.childBenefitChildId);
 
       const incomeData = {
         accountId,
@@ -120,6 +123,7 @@ export class IncomesService {
         debtContactName: dto.debtContactName,
         debtDueDate: dto.debtDueDate ? new Date(dto.debtDueDate) : undefined,
         relatedDebtExpenseId: dto.relatedDebtExpenseId,
+        childBenefitChildId: childBenefitChildId ?? null,
         ...(opts.createdByOAuthClientId && { createdByOAuthClientId: opts.createdByOAuthClientId }),
         // E2EE: pass through encrypted payload if provided
         ...(dto.encryptedPayload !== undefined && { encryptedPayload: dto.encryptedPayload }),
@@ -139,6 +143,7 @@ export class IncomesService {
           debtContactName: dto.debtContactName,
           debtDueDate: dto.debtDueDate ? new Date(dto.debtDueDate) : undefined,
           relatedDebtExpenseId: dto.relatedDebtExpenseId,
+          childBenefitChildId,
           ...(dto.encryptedPayload !== undefined && { encryptedPayload: dto.encryptedPayload }),
           ...(dto.encryptionKeyVersion !== undefined && { encryptionKeyVersion: dto.encryptionKeyVersion }),
         };
@@ -312,6 +317,7 @@ export class IncomesService {
       accountId,
       'income',
     );
+    const childBenefitChildId = await resolveChildIdForWrite(this.prisma, accountId, dto.childBenefitChildId);
 
     const result = await this.prisma.$transaction(async (tx: PrismaClient) => {
       const incomeUpdData = {
@@ -326,6 +332,7 @@ export class IncomesService {
           debtContactName: dto.debtContactName,
           debtDueDate: dto.debtDueDate ? new Date(dto.debtDueDate) : dto.debtDueDate === null ? null : undefined,
           relatedDebtExpenseId: dto.relatedDebtExpenseId,
+          childBenefitChildId,
           syncVersion: { increment: 1 },
           ...(dto.encryptedPayload !== undefined && { encryptedPayload: dto.encryptedPayload }),
           ...(dto.encryptionKeyVersion !== undefined && { encryptionKeyVersion: dto.encryptionKeyVersion }),

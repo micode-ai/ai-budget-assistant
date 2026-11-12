@@ -48,6 +48,8 @@ second device creating the same name take over the tag: the first device's id st
 its references were orphaned until it pulled. The second device's own `pending` duplicate is dropped
 by `tagStore.syncFromServer` on its next pull, since a synced tag of that name now exists (ABA-626).
 
+**Children follow the same pattern.** Device-created children reconcile by `clientId` and the resolved server PK, and adopt-by-name — see [child-costs](child-costs.md).
+
 ## History
 
 ABA-167 (clientId reconciliation, idempotent create, local tag links on bulk) · ABA-419

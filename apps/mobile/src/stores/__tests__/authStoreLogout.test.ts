@@ -113,6 +113,10 @@ jest.mock('../../db/investmentRepository', () => ({
   clearAllInvestments: jest.fn().mockResolvedValue(undefined),
 }));
 
+jest.mock('../../db/childRepository', () => ({
+  clearAllChildData: jest.fn().mockResolvedValue(undefined),
+}));
+
 jest.mock('../../utils/currency', () => ({
   applyCurrencyChange: jest.fn(),
 }));
@@ -144,6 +148,8 @@ import { secureStorage } from '../../services/secureStorage';
 import { api } from '../../services/api';
 import { unregisterPushNotifications } from '../../services/notifications';
 import { clearRestoreCredential, isRestoreCredentialAvailable } from '../../services/restoreCredentials';
+import { clearAllInvestments } from '../../db/investmentRepository';
+import { clearAllChildData } from '../../db/childRepository';
 
 const mockGetItem = secureStorage.getItem as jest.Mock;
 const mockDeleteRestoreCredentials = api.deleteRestoreCredentials as jest.Mock;
@@ -350,5 +356,19 @@ describe('authStore.logout — restore credential cleanup (ABA-465)', () => {
     await useAuthStore.getState().logout();
 
     expect(secureStorage.removeItem).toHaveBeenCalledWith('pendingOAuthConsent');
+  });
+});
+
+describe('authStore.logout — child data (R14)', () => {
+  it('clears child data from SQLite even when an earlier teardown step throws', async () => {
+    jest.clearAllMocks();
+    const err = jest.spyOn(console, 'error').mockImplementation(() => {});
+    (secureStorage.getItem as jest.Mock).mockResolvedValue(null);
+    (clearAllInvestments as jest.Mock).mockRejectedValueOnce(new Error('db locked'));
+
+    await useAuthStore.getState().logout();
+
+    expect(clearAllChildData).toHaveBeenCalledTimes(1);
+    err.mockRestore();
   });
 });

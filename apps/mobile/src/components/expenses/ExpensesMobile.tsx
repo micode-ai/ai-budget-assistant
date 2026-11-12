@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import React, { useCallback } from 'react';
 import { router } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import type { Expense, Income } from '@budget/shared-types';
@@ -22,6 +22,7 @@ import { ExpenseListItem } from '@/components/expenses/ExpenseListItem';
 import { IncomeListItem } from '@/components/expenses/IncomeListItem';
 import { ExpenseFilterBar } from '@/components/expenses/ExpenseFilterBar';
 import { BulkTagPickerSheet } from '@/components/BulkTagPickerSheet';
+import { BulkChildPickerSheet } from '@/components/children/BulkChildPickerSheet';
 import { ExpenseMapView } from '@/components/map/ExpenseMapView';
 import { UncategorizedBanner } from '@/components/categorize/UncategorizedBanner';
 import { InboundReceiptsBanner } from '@/components/inboundMail/InboundReceiptsBanner';
@@ -32,6 +33,10 @@ export function ExpensesMobile() {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
+  const insets = useSafeAreaInsets();
+  // The bulk sheets are bottom-anchored in an edge-to-edge app: their last row
+  // must clear the system nav bar (ABA-483). One source for the base.
+  const sheetPaddingBottom = theme.spacing[10] + insets.bottom;
 
   const {
     activeTab,
@@ -71,6 +76,7 @@ export function ExpensesMobile() {
     merchantList,
     allTags,
     canEdit,
+    activeChildren,
     expenseFilters,
     setExpenseFilters,
     incomeFilters,
@@ -445,6 +451,32 @@ export function ExpensesMobile() {
                 </Text>
               </TouchableOpacity>
 
+              {canEdit && activeChildren.length > 0 && (
+                <TouchableOpacity
+                  style={styles.bulkActionButton}
+                  onPress={() => {
+                    multiSelect.setShowBulkCategoryPicker(false);
+                    multiSelect.setShowBulkTagPicker(false);
+                    multiSelect.setShowBulkChildPicker(true);
+                  }}
+                  disabled={multiSelect.selectedIds.size === 0}
+                >
+                  <Ionicons
+                    name="people-outline"
+                    size={20}
+                    color={multiSelect.selectedIds.size > 0 ? theme.colors.primary : theme.colors.textDisabled}
+                  />
+                  <Text
+                    style={[
+                      styles.bulkActionText,
+                      multiSelect.selectedIds.size === 0 && styles.bulkActionTextDisabled,
+                    ]}
+                  >
+                    {t('children.bulkAssignShort')}
+                  </Text>
+                </TouchableOpacity>
+              )}
+
               <TouchableOpacity
                 style={styles.bulkActionButton}
                 onPress={multiSelect.handleBulkDelete}
@@ -481,7 +513,9 @@ export function ExpensesMobile() {
           activeOpacity={1}
           onPress={() => multiSelect.setShowBulkCategoryPicker(false)}
         >
-          <View style={[styles.modalSheet, { backgroundColor: theme.colors.surface }]}>
+          <View
+            style={[styles.modalSheet, { backgroundColor: theme.colors.surface, paddingBottom: sheetPaddingBottom }]}
+          >
             <View style={styles.modalHeader}>
               <Text style={[styles.modalTitle, { color: theme.colors.textPrimary }]}>
                 {t('expenses.bulkSetCategory')}
@@ -530,13 +564,43 @@ export function ExpensesMobile() {
           activeOpacity={1}
           onPress={() => multiSelect.setShowBulkTagPicker(false)}
         >
-          <View style={[styles.modalSheet, { backgroundColor: theme.colors.surface }]}>
+          <View
+            style={[styles.modalSheet, { backgroundColor: theme.colors.surface, paddingBottom: sheetPaddingBottom }]}
+          >
             <BulkTagPickerSheet
               tags={allTags}
               onConfirm={multiSelect.handleBulkAddTags}
               onClose={() => multiSelect.setShowBulkTagPicker(false)}
             />
           </View>
+        </TouchableOpacity>
+      </Modal>
+
+      {/* Bulk "Assign to child" modal (child costs). Bottom-anchored, so it clears the nav bar. */}
+      <Modal
+        visible={multiSelect.showBulkChildPicker}
+        transparent
+        animationType="slide"
+        onRequestClose={() => multiSelect.setShowBulkChildPicker(false)}
+      >
+        <TouchableOpacity
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => multiSelect.setShowBulkChildPicker(false)}
+        >
+          <TouchableOpacity
+            activeOpacity={1}
+            style={[
+              styles.modalSheet,
+              { backgroundColor: theme.colors.surface, paddingBottom: sheetPaddingBottom },
+            ]}
+          >
+            <BulkChildPickerSheet
+              children={activeChildren}
+              onConfirm={(ids) => void multiSelect.handleBulkAssignChildren(ids)}
+              onClose={() => multiSelect.setShowBulkChildPicker(false)}
+            />
+          </TouchableOpacity>
         </TouchableOpacity>
       </Modal>
 
@@ -785,7 +849,7 @@ const createStyles = (theme: Theme) => ({
     borderTopLeftRadius: theme.borderRadius['2xl'],
     borderTopRightRadius: theme.borderRadius['2xl'],
     padding: theme.spacing[5],
-    paddingBottom: theme.spacing[10],
+    // paddingBottom is inline (`sheetPaddingBottom`): base + insets.bottom (ABA-483).
   },
   modalHeader: {
     flexDirection: 'row' as const,

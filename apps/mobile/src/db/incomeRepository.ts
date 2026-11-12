@@ -28,6 +28,8 @@ interface IncomeRow {
   sync_status: string;
   sync_version: number;
   is_split_receivable: number | null;
+  /** Child costs: 800+ mark (local child id). */
+  child_benefit_child_id?: string | null;
 }
 
 function rowToIncome(row: IncomeRow): Income {
@@ -60,6 +62,7 @@ function rowToIncome(row: IncomeRow): Income {
     syncStatus: row.sync_status as SyncStatus,
     syncVersion: row.sync_version,
     isSplitReceivable: row.is_split_receivable === 1,
+    childBenefitChildId: row.child_benefit_child_id ?? null,
   };
 }
 
@@ -221,6 +224,11 @@ export async function updateIncomeInDb(
     setClauses.push('is_split_receivable = ?');
     params.push(updates.isSplitReceivable ? 1 : 0);
   }
+  // Child costs (800+): undefined leaves the mark alone, null clears it.
+  if (updates.childBenefitChildId !== undefined) {
+    setClauses.push('child_benefit_child_id = ?');
+    params.push(updates.childBenefitChildId ?? null);
+  }
 
   setClauses.push('updated_at = ?');
   params.push(updatedAt.getTime());
@@ -281,4 +289,13 @@ export async function loadRepaymentIncomesForExpense(expenseId: string): Promise
     [expenseId],
   );
   return rows.map(rowToIncome);
+}
+
+/**
+ * Child costs: mark (or unmark with `null`) an income as the 800+ benefit for a
+ * child (local child id). Kept out of `upsertIncome`'s column list so a pull
+ * re-upserting the income never clears a mark made on this device.
+ */
+export async function setIncomeChildBenefit(incomeId: string, childId: string | null): Promise<void> {
+  await executeSql('UPDATE incomes SET child_benefit_child_id = ? WHERE id = ?', [childId, incomeId]);
 }

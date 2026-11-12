@@ -1133,6 +1133,20 @@ A table showing your most frequently purchased receipt items:
 
 Tap **Export Report** to open the Export & Reports screen where you can generate PDF, Excel, and CSV reports, view monthly digests, and manage data backups.
 
+## Child costs
+
+See what each child costs you, without any guessing.
+
+- **Add children:** Settings > Reference data > Children. Only a name and a colour are stored. Archive a child instead of deleting; their expenses stay attributed.
+- **Attribute a whole expense:** on a new or existing expense choose one or more children. With several children the amount is split equally unless you edit the shares. An expense uses whole-expense attribution or receipt-line attribution, not both; the app asks before switching.
+- **Attribute receipt lines:** after scanning a receipt, assign individual lines (diapers, school supplies) to a child. The app remembers your choice and suggests it next time. A suggestion is never applied without you. "Extract items" keeps the attribution of products that are still on the receipt and tells you how many it could not carry over.
+- **Bulk:** select several expenses and choose Assign to child. Expenses with line attribution are skipped and the count is shown.
+- **Totals:** the child screen (and a card on the Analytics tab) shows this month, this year and a category breakdown in your display currency. A total marked with ≈ includes an approximation because an exchange rate was missing; such amounts are left out rather than guessed. Planned expenses and split-bill receivables are not counted.
+- **800+ and coverage:** when an income looks like the 800+ benefit (for example "800+" or "rodzina 800" in the description) the app offers to mark it for a child. Coverage is the benefit received divided by what that child cost in the same period.
+- **Share card:** create a picture of a child's totals. The child's name is hidden by default; you can switch it on.
+- **Statement PDF (Pro, editors):** a "zestawienie" of a child's costs for a period of up to 24 months, with totals, a monthly and category breakdown, the list of expenses and the receipts. Every page carries a footer saying it was prepared in the app from data entered by the user, and the "data as of" time. It is a summary of your own records, not a legal document and not certified. It contains only what has reached the server, so the app syncs first and asks you to wait if something is still pending. It is not available on accounts with end-to-end encryption.
+- **Separated parents:** keep the children on a personal account, so the other parent does not see your other spending. A shared account shows everything to all members.
+
 ## FAQ
 
 - **Q: Why don't I see any charts?**
@@ -6511,6 +6525,20 @@ iOS, Android, Web
 
 Нажмите **Экспорт отчёта**, чтобы перейти на экран Экспорт и отчёты, где можно генерировать PDF, Excel и CSV отчёты, просматривать ежемесячные дайджесты и управлять резервными копиями данных.
 
+## Расходы на детей
+
+Посмотрите, сколько стоит каждый ребёнок, без догадок.
+
+- **Добавление детей:** Настройки > Справочники > Дети. Хранятся только имя и цвет. Вместо удаления архивируйте ребёнка; его расходы остаются привязанными.
+- **Весь расход:** у нового или существующего расхода выберите одного или нескольких детей. При нескольких сумма делится поровну, пока вы не измените доли. Расход использует привязку целиком или по позициям чека, но не обе сразу; приложение спросит перед сменой.
+- **Позиции чека:** после сканирования чека отнесите отдельные позиции (подгузники, школьные принадлежности) к ребёнку. Приложение запомнит выбор и предложит его в следующий раз. Предложение никогда не применяется без вас. «Извлечь позиции» сохраняет привязку товаров, которые остались в чеке, и сообщает, сколько не удалось перенести.
+- **Массово:** выберите несколько расходов и нажмите «Отнести к ребёнку». Расходы с привязкой по позициям пропускаются, количество показывается.
+- **Итоги:** экран ребёнка (и карточка во вкладке «Аналитика») показывает этот месяц, этот год и разбивку по категориям в валюте отображения. Итог со знаком ≈ содержит приближение из-за отсутствия курса; такие суммы исключаются, а не угадываются. Запланированные расходы и долги по разделённым счетам не учитываются.
+- **800+ и покрытие:** если доход похож на пособие 800+ (например, «800+» или «rodzina 800» в описании), приложение предложит отметить его для ребёнка. Покрытие — полученное пособие, делённое на расходы на ребёнка за тот же период.
+- **Карточка для отправки:** картинка с итогами ребёнка. Имя скрыто по умолчанию; его можно включить.
+- **Выписка в PDF (Pro, редакторы):** «zestawienie» расходов на ребёнка за период до 24 месяцев: итоги, разбивка по месяцам и категориям, список расходов и чеки. На каждой странице есть сноска, что документ составлен в приложении по данным, введённым пользователем, и время «данные на». Это сводка ваших собственных записей, а не юридический документ и не заверена. В неё попадает только то, что дошло до сервера, поэтому приложение сначала синхронизируется и просит подождать, если что-то ещё не отправлено. Недоступна для аккаунтов со сквозным шифрованием.
+- **Разведённые родители:** держите детей на личном счёте, чтобы второй родитель не видел остальные ваши расходы. Общий счёт показывает всё всем участникам.
+
 ## Часто задаваемые вопросы
 
 - **В: Почему я не вижу графиков?**
@@ -11867,6 +11895,20 @@ iOS, Android, Web
 
 Натисніть **Експорт звіту**, щоб перейти на екран Експорт і звіти, де можна генерувати PDF, Excel та CSV звіти, переглядати щомісячні дайджести та керувати резервними копіями даних.
 
+## Витрати на дітей
+
+Подивіться, скільки коштує кожна дитина, без здогадок.
+
+- **Додавання дітей:** Налаштування > Довідники > Діти. Зберігаються лише ім'я та колір. Замість видалення архівуйте дитину; її витрати залишаються прив'язаними.
+- **Уся витрата:** у нової чи наявної витрати оберіть одну або кількох дітей. Якщо їх кілька, сума ділиться порівну, доки ви не змінете частки. Витрата має прив'язку цілком або за позиціями чека, але не обидві одразу; застосунок запитає перед зміною.
+- **Позиції чека:** після сканування чека віднесіть окремі позиції (підгузки, шкільне приладдя) до дитини. Застосунок запам'ятає вибір і запропонує його наступного разу. Пропозиція ніколи не застосовується без вас. «Видобути позиції» зберігає прив'язку товарів, що лишилися в чеку, і повідомляє, скільки не вдалося перенести.
+- **Масово:** виберіть кілька витрат і натисніть «Віднести до дитини». Витрати з прив'язкою за позиціями пропускаються, кількість показується.
+- **Підсумки:** екран дитини (і картка у вкладці «Аналітика») показує цей місяць, цей рік і розбивку за категоріями у валюті відображення. Підсумок зі знаком ≈ містить наближення через відсутній курс; такі суми виключаються, а не вгадуються. Заплановані витрати та борги з розділених рахунків не враховуються.
+- **800+ і покриття:** якщо дохід схожий на допомогу 800+ (наприклад, «800+» чи «rodzina 800» в описі), застосунок запропонує позначити його для дитини. Покриття — отримана допомога, поділена на витрати на дитину за той самий період.
+- **Картка для поширення:** зображення з підсумками дитини. Ім'я приховане за замовчуванням; його можна ввімкнути.
+- **Виписка в PDF (Pro, редактори):** «zestawienie» витрат на дитину за період до 24 місяців: підсумки, розбивка за місяцями й категоріями, список витрат і чеки. На кожній сторінці є примітка, що документ складено в застосунку за даними, введеними користувачем, і час «дані станом на». Це зведення ваших власних записів, а не юридичний документ і не засвідчене. До нього потрапляє лише те, що дійшло до сервера, тож застосунок спершу синхронізується й просить зачекати, якщо щось ще не надіслано. Недоступна для акаунтів зі наскрізним шифруванням.
+- **Розлучені батьки:** тримайте дітей на особистому рахунку, щоб другий з батьків не бачив решту ваших витрат. Спільний рахунок показує все всім учасникам.
+
 ## Часті запитання
 
 - **П:** Чому я не бачу жодних графіків?
@@ -17171,6 +17213,20 @@ Tabela pokazujaca najczesciej kupowane pozycje z paragonow:
 
 Dotknij **Eksportuj raport**, aby otworzyc ekran Eksport i raporty, gdzie mozesz generowac raporty PDF, Excel lub CSV, przegladac podsumowania miesieczne i zarzadzac kopiami zapasowymi danych. Zobacz Eksport i raporty po wiecej szczególów.
 
+## Koszty dzieci
+
+Sprawdź, ile kosztuje Cię każde dziecko, bez zgadywania.
+
+- **Dodawanie dzieci:** Ustawienia > Dane referencyjne > Dzieci. Zapisujemy tylko imię i kolor. Zamiast usuwać, zarchiwizuj dziecko; jego wydatki pozostają przypisane.
+- **Cały wydatek:** przy nowym lub istniejącym wydatku wybierz jedno lub kilkoro dzieci. Przy kilkorgu kwota dzieli się po równo, chyba że zmienisz udziały. Wydatek ma przypisanie całości albo pozycji paragonu, nie oba naraz; aplikacja zapyta przed zmianą.
+- **Pozycje paragonu:** po zeskanowaniu paragonu przypisz pojedyncze pozycje (pieluchy, przybory szkolne) do dziecka. Aplikacja zapamięta wybór i zaproponuje go następnym razem. Propozycja nigdy nie jest stosowana bez Ciebie. „Wyodrębnij pozycje” zachowuje przypisanie produktów, które nadal są na paragonie, i informuje, ilu nie udało się przenieść.
+- **Zbiorczo:** zaznacz kilka wydatków i wybierz Przypisz do dziecka. Wydatki z przypisaniem pozycji są pomijane, a liczba pominiętych jest pokazana.
+- **Sumy:** ekran dziecka (i karta w zakładce Analityka) pokazuje ten miesiąc, ten rok i podział na kategorie w walucie wyświetlania. Suma ze znakiem ≈ zawiera przybliżenie, bo brakowało kursu; takie kwoty są pomijane, nie zgadywane. Wydatki planowane i należności z podziału rachunku nie są liczone.
+- **800+ i pokrycie:** gdy przychód wygląda na świadczenie 800+ (np. „800+” lub „rodzina 800” w opisie), aplikacja proponuje oznaczyć go dla dziecka. Pokrycie to otrzymane świadczenie podzielone przez koszt dziecka w tym samym okresie.
+- **Karta do udostępnienia:** obrazek z sumami dziecka. Imię jest domyślnie ukryte; można je włączyć.
+- **Zestawienie PDF (Pro, edytorzy):** „zestawienie” kosztów dziecka za okres do 24 miesięcy: sumy, podział miesięczny i na kategorie, lista wydatków i paragony. Każda strona ma stopkę, że zestawienie sporządzono w aplikacji na podstawie danych wprowadzonych przez użytkownika, oraz czas „stan danych na”. To podsumowanie Twoich własnych zapisów, nie dokument prawny i nie jest poświadczone. Zawiera tylko to, co dotarło na serwer, więc aplikacja najpierw synchronizuje i prosi o chwilę czekania, jeśli coś jeszcze oczekuje. Niedostępne na kontach z szyfrowaniem end-to-end.
+- **Rodzice w separacji:** trzymajcie dzieci na koncie osobistym, aby drugi rodzic nie widział pozostałych Twoich wydatków. Konto wspólne pokazuje wszystko wszystkim członkom.
+
 ## FAQ
 
 - **P: Dlaczego nie widze zadnych wykresow?**
@@ -22471,6 +22527,20 @@ Eine Tabelle mit deinen am haufigsten gekauften Belegartikeln:
 
 Tippe auf **Bericht exportieren**, um zum Export & Berichte-Bildschirm zu gelangen. Dort kannst du PDF-, Excel- oder CSV-Berichte generieren, monatliche Zusammenfassungen ansehen und Daten-Backups verwalten. Siehe Export & Berichte für Details.
 
+## Kinderkosten
+
+Sehen Sie, was jedes Kind kostet, ohne Raten.
+
+- **Kinder hinzufügen:** Einstellungen > Stammdaten > Kinder. Gespeichert werden nur Name und Farbe. Archivieren Sie ein Kind statt es zu löschen; die Ausgaben bleiben zugeordnet.
+- **Ganze Ausgabe zuordnen:** Wählen Sie bei einer neuen oder bestehenden Ausgabe ein oder mehrere Kinder. Bei mehreren wird der Betrag gleichmäßig geteilt, außer Sie ändern die Anteile. Eine Ausgabe nutzt entweder die Zuordnung als Ganzes oder die Zuordnung einzelner Belegpositionen, nicht beides; die App fragt vor dem Wechsel.
+- **Belegpositionen zuordnen:** Ordnen Sie nach dem Scannen einzelne Positionen (Windeln, Schulbedarf) einem Kind zu. Die App merkt sich Ihre Wahl und schlägt sie beim nächsten Mal vor. Ein Vorschlag wird nie ohne Sie angewendet. „Positionen extrahieren“ behält die Zuordnung der Produkte, die noch auf dem Beleg stehen, und nennt die Zahl der nicht übernommenen.
+- **Sammelaktion:** Mehrere Ausgaben markieren und „Kind zuordnen“ wählen. Ausgaben mit Positionszuordnung werden übersprungen, die Anzahl wird angezeigt.
+- **Summen:** Der Kind-Bildschirm (und eine Karte im Analyse-Tab) zeigt diesen Monat, dieses Jahr und die Kategorien in Ihrer Anzeigewährung. Eine Summe mit ≈ enthält eine Näherung, weil ein Wechselkurs fehlte; solche Beträge werden ausgelassen statt geschätzt. Geplante Ausgaben und Forderungen aus geteilten Rechnungen zählen nicht.
+- **800+ und Deckung:** Sieht eine Einnahme wie das Kindergeld 800+ aus (z. B. „800+“ oder „rodzina 800“ in der Beschreibung), bietet die App an, sie einem Kind zuzuordnen. Die Deckung ist das erhaltene Geld geteilt durch die Kosten des Kindes im selben Zeitraum.
+- **Teilen-Karte:** Ein Bild mit den Summen eines Kindes. Der Name ist standardmäßig ausgeblendet und kann eingeblendet werden.
+- **Aufstellung als PDF (Pro, Bearbeiter):** Eine „zestawienie“ der Kosten eines Kindes für bis zu 24 Monate mit Summen, Monats- und Kategorieübersicht, Ausgabenliste und Belegen. Jede Seite trägt eine Fußzeile, dass sie in der App aus vom Nutzer eingegebenen Daten erstellt wurde, und den Zeitpunkt „Datenstand“. Es ist eine Zusammenfassung Ihrer eigenen Aufzeichnungen, kein Rechtsdokument und nicht beglaubigt. Sie enthält nur, was den Server erreicht hat; die App synchronisiert zuerst und bittet um Geduld, wenn noch etwas aussteht. Nicht verfügbar bei Konten mit Ende-zu-Ende-Verschlüsselung.
+- **Getrennte Eltern:** Führen Sie die Kinder in einem persönlichen Konto, damit der andere Elternteil Ihre übrigen Ausgaben nicht sieht. Ein gemeinsames Konto zeigt allen Mitgliedern alles.
+
 ## FAQ
 
 - **F: Warum sehe ich keine Diagramme?**
@@ -27746,6 +27816,20 @@ Una tabla que muestra los articulos de recibos que compras con mas frecuencia:
 
 Toca **Exportar informe** para acceder a la pantalla de Exportacion e informes, donde puedes generar informes PDF, Excel o CSV, ver resumenes mensuales y gestionar copias de seguridad de datos. Ver Exportacion e informes para mas detalles.
 
+## Costes de los hijos
+
+Vea lo que cuesta cada hijo, sin adivinar.
+
+- **Añadir hijos:** Ajustes > Datos de referencia > Hijos. Solo se guardan el nombre y el color. Archive a un hijo en lugar de borrarlo; sus gastos siguen atribuidos.
+- **Atribuir un gasto entero:** en un gasto nuevo o existente elija uno o varios hijos. Con varios, el importe se reparte a partes iguales salvo que edite las partes. Un gasto usa la atribución completa o la de líneas del recibo, no ambas; la app pregunta antes de cambiar.
+- **Atribuir líneas del recibo:** tras escanear un recibo, asigne líneas concretas (pañales, material escolar) a un hijo. La app recuerda su elección y la sugiere la próxima vez. Una sugerencia nunca se aplica sin usted. «Extraer artículos» conserva la atribución de los productos que siguen en el recibo e indica cuántos no pudo conservar.
+- **En bloque:** seleccione varios gastos y elija Asignar a un hijo. Los gastos con atribución por líneas se omiten y se muestra el número.
+- **Totales:** la pantalla del hijo (y una tarjeta en la pestaña Análisis) muestra este mes, este año y el desglose por categorías en su moneda de visualización. Un total con ≈ incluye una aproximación por falta de tipo de cambio; esos importes se excluyen en vez de adivinarse. Los gastos planificados y los cobros pendientes de cuentas divididas no cuentan.
+- **800+ y cobertura:** cuando un ingreso parece la ayuda 800+ (por ejemplo «800+» o «rodzina 800» en la descripción), la app propone marcarlo para un hijo. La cobertura es la ayuda recibida dividida entre lo que costó ese hijo en el mismo periodo.
+- **Tarjeta para compartir:** una imagen con los totales de un hijo. El nombre está oculto por defecto; puede mostrarlo.
+- **Informe PDF (Pro, editores):** una «zestawienie» de los costes de un hijo de hasta 24 meses, con totales, desglose mensual y por categorías, lista de gastos y recibos. Cada página lleva un pie que indica que se elaboró en la app a partir de datos introducidos por el usuario y la hora de «datos a fecha». Es un resumen de sus propios registros, no un documento legal ni certificado. Solo incluye lo que ha llegado al servidor, así que la app sincroniza primero y le pide esperar si algo está pendiente. No está disponible en cuentas con cifrado de extremo a extremo.
+- **Padres separados:** mantengan a los hijos en una cuenta personal para que el otro progenitor no vea el resto de sus gastos. Una cuenta compartida lo muestra todo a todos los miembros.
+
 ## Preguntas frecuentes
 
 - **P: Por que no veo ningun grafico?**
@@ -33010,6 +33094,20 @@ Un tableau affichant vos articles de recus les plus frequemment achetes :
 
 Appuyez sur **Exporter le rapport** pour acceder a l'ecran Export et rapports. Vous pouvez y generer des rapports PDF, Excel ou CSV, consulter votre resume mensuel et gerer les sauvegardes de donnees. Consultez le guide Export et rapports pour plus de details.
 
+## Coûts des enfants
+
+Voyez ce que coûte chaque enfant, sans deviner.
+
+- **Ajouter des enfants :** Réglages > Données de référence > Enfants. Seuls le prénom et la couleur sont enregistrés. Archivez un enfant plutôt que de le supprimer ; ses dépenses restent attribuées.
+- **Attribuer une dépense entière :** sur une dépense nouvelle ou existante, choisissez un ou plusieurs enfants. Avec plusieurs, le montant est partagé à parts égales sauf si vous modifiez les parts. Une dépense utilise l'attribution entière ou celle par lignes du ticket, pas les deux ; l'app demande avant de changer.
+- **Attribuer des lignes de ticket :** après avoir scanné un ticket, affectez des lignes (couches, fournitures scolaires) à un enfant. L'app retient votre choix et le propose la fois suivante. Une suggestion n'est jamais appliquée sans vous. « Extraire les articles » conserve l'attribution des produits encore présents sur le ticket et indique combien n'ont pu être reportés.
+- **En masse :** sélectionnez plusieurs dépenses et choisissez Attribuer à un enfant. Les dépenses avec attribution par lignes sont ignorées et leur nombre est affiché.
+- **Totaux :** l'écran de l'enfant (et une carte dans l'onglet Analyses) affiche ce mois-ci, cette année et la répartition par catégories dans votre devise d'affichage. Un total marqué ≈ contient une approximation faute de taux de change ; ces montants sont exclus plutôt que devinés. Les dépenses planifiées et les créances de notes partagées ne comptent pas.
+- **800+ et couverture :** quand un revenu ressemble à l'allocation 800+ (par ex. « 800+ » ou « rodzina 800 » dans la description), l'app propose de le rattacher à un enfant. La couverture est l'allocation reçue divisée par ce que l'enfant a coûté sur la même période.
+- **Carte à partager :** une image des totaux d'un enfant. Son prénom est masqué par défaut ; vous pouvez l'afficher.
+- **Relevé PDF (Pro, éditeurs) :** une « zestawienie » des coûts d'un enfant sur 24 mois maximum, avec totaux, détail mensuel et par catégorie, liste des dépenses et tickets. Chaque page porte un pied de page indiquant qu'il a été établi dans l'app à partir de données saisies par l'utilisateur, ainsi que l'heure « données au ». C'est un récapitulatif de vos propres enregistrements, pas un document juridique, ni certifié. Il ne contient que ce qui a atteint le serveur ; l'app synchronise d'abord et vous demande d'attendre si quelque chose est en attente. Indisponible sur les comptes à chiffrement de bout en bout.
+- **Parents séparés :** gardez les enfants sur un compte personnel pour que l'autre parent ne voie pas vos autres dépenses. Un compte partagé montre tout à tous les membres.
+
 ## FAQ
 
 - **Q : Pourquoi ne vois-je aucun graphique ?**
@@ -38272,6 +38370,20 @@ iOS, Android, Web
 
 Націсніце **Экспарт справаздачы**, каб адкрыць экран Экспарт і справаздачы. Тут вы можаце генераваць справаздачы ў фарматах PDF, Excel або CSV, праглядаць штомесячны дайджэст і кіраваць рэзервовымі копіямі даных. Больш дэталёва глядзіце ў раздзеле Экспарт і справаздачы.
 
+## Выдаткі на дзяцей
+
+Паглядзіце, колькі каштуе кожнае дзіця, без здагадак.
+
+- **Даданне дзяцей:** Налады > Даведнікі > Дзеці. Захоўваюцца толькі імя і колер. Замест выдалення архівуйце дзіця; яго выдаткі застаюцца прывязанымі.
+- **Увесь выдатак:** у новага ці існуючага выдатку абярыце аднаго ці некалькіх дзяцей. Калі іх некалькі, сума дзеліцца ўроўну, пакуль вы не зменіце долі. Выдатак мае прывязку цалкам або па пазіцыях чэка, але не абедзве адначасова; праграма спытае перад зменай.
+- **Пазіцыі чэка:** пасля сканавання чэка аднясіце асобныя пазіцыі (падгузнікі, школьныя рэчы) да дзіцяці. Праграма запомніць выбар і прапануе яго наступны раз. Прапанова ніколі не ўжываецца без вас. «Вылучыць пазіцыі» захоўвае прывязку тавараў, што засталіся ў чэку, і паведамляе, колькі не атрымалася перанесці.
+- **Масава:** абярыце некалькі выдаткаў і націсніце «Аднесці да дзіцяці». Выдаткі з прывязкай па пазіцыях прапускаюцца, колькасць паказваецца.
+- **Вынікі:** экран дзіцяці (і картка ва ўкладцы «Аналітыка») паказвае гэты месяц, гэты год і разбіўку па катэгорыях у валюце адлюстравання. Вынік са знакам ≈ змяшчае набліжэнне праз адсутны курс; такія сумы выключаюцца, а не здагадваюцца. Запланаваныя выдаткі і даўгі па падзеленых рахунках не ўлічваюцца.
+- **800+ і пакрыццё:** калі даход падобны на дапамогу 800+ (напрыклад, «800+» ці «rodzina 800» у апісанні), праграма прапануе пазначыць яго для дзіцяці. Пакрыццё — атрыманая дапамога, падзеленая на выдаткі на дзіця за той самы перыяд.
+- **Картка для абагульвання:** малюнак з вынікамі дзіцяці. Імя схаванае па змоўчанні; яго можна ўключыць.
+- **Выпіска ў PDF (Pro, рэдактары):** «zestawienie» выдаткаў на дзіця за перыяд да 24 месяцаў: вынікі, разбіўка па месяцах і катэгорыях, спіс выдаткаў і чэкі. На кожнай старонцы ёсць заўвага, што дакумент складзены ў праграме па дадзеных, уведзеных карыстальнікам, і час «дадзеныя на». Гэта зводка вашых уласных запісаў, а не юрыдычны дакумент і не засведчана. У яе трапляе толькі тое, што дайшло да сервера, таму праграма спачатку сінхранізуецца і просіць пачакаць, калі нешта яшчэ не адпраўлена. Недаступная для акаўнтаў са скразным шыфраваннем.
+- **Разведзеныя бацькі:** трымайце дзяцей на асабістым рахунку, каб другі з бацькоў не бачыў астатнія вашы выдаткі. Агульны рахунак паказвае ўсё ўсім удзельнікам.
+
 ## Частыя пытанні
 
 - **П: Чаму я не бачу графікаў?**
@@ -43497,6 +43609,20 @@ Een tabel met je meest gekochte bonitems:
 ## Export
 
 Tik op **Rapport exporteren** om het scherm Export & Rapporten te openen, waar je PDF-, Excel- en CSV-rapporten kunt genereren, maandelijkse overzichten kunt bekijken en gegevensback-ups kunt beheren.
+
+## Kosten van kinderen
+
+Zie wat elk kind kost, zonder te gokken.
+
+- **Kinderen toevoegen:** Instellingen > Referentiegegevens > Kinderen. Alleen naam en kleur worden opgeslagen. Archiveer een kind in plaats van te verwijderen; de uitgaven blijven toegewezen.
+- **Een hele uitgave toewijzen:** kies bij een nieuwe of bestaande uitgave een of meer kinderen. Bij meerdere kinderen wordt het bedrag gelijk verdeeld tenzij u de aandelen aanpast. Een uitgave gebruikt toewijzing als geheel of per bonregel, niet beide; de app vraagt het voor het wisselen.
+- **Bonregels toewijzen:** wijs na het scannen van een bon afzonderlijke regels (luiers, schoolspullen) aan een kind toe. De app onthoudt uw keuze en stelt die de volgende keer voor. Een suggestie wordt nooit zonder u toegepast. 'Artikelen uitlezen' behoudt de toewijzing van producten die nog op de bon staan en meldt hoeveel er niet konden worden overgenomen.
+- **In bulk:** selecteer meerdere uitgaven en kies Aan kind toewijzen. Uitgaven met regeltoewijzing worden overgeslagen en het aantal wordt getoond.
+- **Totalen:** het kindscherm (en een kaart op het tabblad Analyse) toont deze maand, dit jaar en de verdeling per categorie in uw weergavevaluta. Een totaal met ≈ bevat een benadering omdat een wisselkoers ontbrak; zulke bedragen worden weggelaten in plaats van geraden. Geplande uitgaven en vorderingen uit gedeelde rekeningen tellen niet mee.
+- **800+ en dekking:** lijkt een inkomen op de 800+-uitkering (bijvoorbeeld '800+' of 'rodzina 800' in de omschrijving), dan biedt de app aan het aan een kind te koppelen. Dekking is de ontvangen uitkering gedeeld door wat dat kind in dezelfde periode kostte.
+- **Deelkaart:** een afbeelding met de totalen van een kind. De naam is standaard verborgen; u kunt die tonen.
+- **Overzicht als PDF (Pro, bewerkers):** een 'zestawienie' van de kosten van een kind over maximaal 24 maanden, met totalen, maand- en categorieoverzicht, uitgavenlijst en bonnen. Elke pagina heeft een voettekst dat het in de app is opgesteld op basis van door de gebruiker ingevoerde gegevens, en het tijdstip 'gegevens per'. Het is een samenvatting van uw eigen administratie, geen juridisch document en niet gecertificeerd. Het bevat alleen wat de server heeft bereikt; de app synchroniseert eerst en vraagt u te wachten als er nog iets openstaat. Niet beschikbaar bij accounts met end-to-end-versleuteling.
+- **Gescheiden ouders:** houd de kinderen op een persoonlijk account, zodat de andere ouder uw overige uitgaven niet ziet. Een gedeeld account toont alles aan alle leden.
 
 ## Veelgestelde vragen
 

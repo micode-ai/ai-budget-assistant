@@ -43,6 +43,7 @@ jest.mock('../../db/expenseItemRepository', () => ({
   softDeleteExpenseItemInDb: jest.fn().mockResolvedValue(undefined),
   deduplicateItemsByExpenseId: jest.fn().mockResolvedValue(undefined),
   replaceItemsForExpense: jest.fn().mockResolvedValue(undefined),
+  adoptServerItemId: jest.fn().mockResolvedValue(undefined),
 }));
 
 jest.mock('../../db/tagRepository', () => ({
@@ -256,6 +257,62 @@ describe('editing a line reaches the server', () => {
 
     expect(mockApi.createExpenseItem).toHaveBeenCalled();
   });
+
+  it('records the server id in SQLite as server-known once the push succeeds (R12c)', async () => {
+    mockApi.createExpenseItem.mockResolvedValueOnce(serverItem({ id: 'srv-new' }) as any);
+
+    const added = useExpenseStore.getState().addExpenseItem('exp-1', {
+      description: 'Chleb',
+      quantity: 1,
+      unitPrice: 5,
+      totalPrice: 5,
+      sortOrder: 1,
+    });
+    for (let i = 0; i < 6; i++) await Promise.resolve();
+
+    expect(repo.insertExpenseItem).toHaveBeenCalled();
+    expect(repo.adoptServerItemId).toHaveBeenCalledWith('exp-1', added.id, 'srv-new');
+    expect(useExpenseStore.getState().expenseItems['exp-1'].map((i) => i.id)).toEqual(['srv-new']);
+  });
+
+  it('a failed push leaves the line unknown to the server', async () => {
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    mockApi.createExpenseItem.mockRejectedValueOnce(new Error('offline'));
+
+    useExpenseStore.getState().addExpenseItem('exp-1', {
+      description: 'Chleb',
+      quantity: 1,
+      unitPrice: 5,
+      totalPrice: 5,
+      sortOrder: 1,
+    });
+    for (let i = 0; i < 6; i++) await Promise.resolve();
+
+    expect(repo.adoptServerItemId).not.toHaveBeenCalled();
+    warn.mockRestore();
+  });
+});
+
+describe('a scanned line keeps no local line discount (R13)', () => {
+  it('writes lineDiscount null: the create request sends none, so the server line has none', async () => {
+    (api.createExpense as jest.Mock).mockResolvedValueOnce({});
+
+    await useExpenseStore.getState().addExpense({
+      amount: 55,
+      currencyCode: 'PLN',
+      description: 'Biedronka',
+      date: new Date(),
+      categoryId: 'cat-1',
+      accountId: 'acc-1',
+      source: 'ocr',
+      items: [{ description: 'Wino', quantity: 1, unitPrice: 60, totalPrice: 60, sortOrder: 0, lineDiscount: 5 }],
+    } as any);
+
+    const written = repo.insertExpenseItems.mock.calls.at(-1)![0];
+    expect(written[0].lineDiscount).toBeNull();
+    const sent = (api.createExpense as jest.Mock).mock.calls.at(-1)![0];
+    expect(sent.items[0]).not.toHaveProperty('lineDiscount');
+  });
 });
 
 describe('creating an expense adopts the ids its lines were given', () => {
@@ -290,6 +347,44 @@ describe('creating an expense adopts the ids its lines were given', () => {
     const written = repo.replaceItemsForExpense.mock.calls.at(-1)![1];
     expect(written.map((i: any) => i.id)).toEqual(['srv-1', 'srv-2']);
     expect(written.every((i: any) => i.syncStatus === 'synced')).toBe(true);
+  });
+
+  it('keeps a line child attributed before the create response landed (by position)', async () => {
+    let respond!: (v: unknown) => void;
+    (api.createExpense as jest.Mock).mockReturnValueOnce(new Promise((r) => (respond = r)));
+
+    const created = await useExpenseStore.getState().addExpense({
+      amount: 65,
+      currencyCode: 'PLN',
+      description: 'Biedronka',
+      date: new Date(),
+      categoryId: 'cat-1',
+      accountId: 'acc-1',
+      source: 'ocr',
+      items: [
+        { description: 'Wino', quantity: 1, unitPrice: 60, totalPrice: 60, sortOrder: 0 },
+        { description: 'Pieluchy', quantity: 1, unitPrice: 5, totalPrice: 5, sortOrder: 1 },
+      ],
+    } as any);
+    // The confirm card's line attribution lands on the in-memory lines first.
+    useExpenseStore.setState((st) => ({
+      expenseItems: {
+        ...st.expenseItems,
+        [created.id]: st.expenseItems[created.id].map((it) => (it.sortOrder === 1 ? { ...it, childId: 'kid-1' } : it)),
+      },
+    }));
+
+    respond({
+      id: 'srv-exp-1',
+      items: [serverItem({ id: 'srv-1' }), serverItem({ id: 'srv-2', description: 'Pieluchy', sortOrder: 1 })],
+    });
+    for (let i = 0; i < 6; i++) await Promise.resolve();
+
+    const lines = useExpenseStore.getState().expenseItems[created.id];
+    expect(lines.map((l) => [l.id, l.childId ?? null])).toEqual([
+      ['srv-1', null],
+      ['srv-2', 'kid-1'],
+    ]);
   });
 
   it('leaves the local lines alone when the response carries none', async () => {

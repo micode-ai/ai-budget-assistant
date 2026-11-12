@@ -24,6 +24,7 @@ import {
   updateExpenseItemInDb,
   softDeleteExpenseItemInDb,
   deduplicateItemsByExpenseId,
+  adoptServerItemId,
 } from '@/db/expenseItemRepository';
 import { insertExpenseTag, getTagsForExpense } from '@/db/tagRepository';
 import { addExpenseToProject, removeExpenseFromProject, getProjectIdForExpense } from '@/db/projectRepository';
@@ -35,6 +36,7 @@ import { filterConsumption } from '@/utils/consumption';
 import { categoryLabel } from '@/utils/entityLabel';
 import { pullAndMergeExpenses, syncPendingExpenses as doSync, resetExpenseSyncThrottle } from './expenseSync';
 import { useAccountStore } from './accountStore';
+import { useChildStore } from './childStore';
 import { categoryPushRef } from '@/features/categories/categoryPushRef';
 import { useCategoryStore } from './categoryStore';
 import { useGamificationStore } from './gamificationStore';
@@ -248,6 +250,13 @@ export const useExpenseStore = create<ExpenseState>()(
           unitPrice: item.unitPrice ?? 0,
           totalPrice: item.totalPrice,
           sortOrder: item.sortOrder ?? index,
+          // Child costs (R13): no line discount from the scan. The create request
+          // does not send one, so the server's line has none; storing the OCR value
+          // here made a line total jump once the server's lines were adopted, and
+          // differ from the web and the statement. `line_discount` comes only from
+          // server data. The category is kept as scanned (it IS sent).
+          lineDiscount: null,
+          categoryId: item.categoryId ?? null,
           createdAt: now,
           updatedAt: now,
           isDeleted: false,
@@ -379,13 +388,27 @@ export const useExpenseStore = create<ExpenseState>()(
             unitPrice: Number(si.unitPrice ?? 0),
             totalPrice: Number(si.totalPrice ?? 0),
             sortOrder: si.sortOrder ?? index,
+            // Child costs: the line's own discount and category, as the server holds them.
+            lineDiscount: si.lineDiscount != null ? Number(si.lineDiscount) : null,
+            categoryId: si.categoryId ?? null,
             isDeleted: si.isDeleted || false,
             syncStatus: 'synced' as SyncStatus,
             syncVersion: si.syncVersion ?? 0,
             createdAt: si.createdAt ? new Date(si.createdAt) : now,
             updatedAt: si.updatedAt ? new Date(si.updatedAt) : now,
           }));
-          set((state) => ({ expenseItems: { ...state.expenseItems, [id]: adopted } }));
+          // Child costs: the create response carries no line child, but a line may
+          // have been attributed on the confirm card meanwhile. Keep it in memory by
+          // position (`sortOrder`, the key the SQLite replace below uses too).
+          set((state) => {
+            const previousChild = new Map(
+              (state.expenseItems[id] ?? []).map((it) => [it.sortOrder, it.childId] as const),
+            );
+            const withChildren = adopted.map((it) =>
+              previousChild.get(it.sortOrder) ? { ...it, childId: previousChild.get(it.sortOrder) } : it,
+            );
+            return { expenseItems: { ...state.expenseItems, [id]: withChildren } };
+          });
           void replaceItemsForExpense(id, adopted).catch((e) =>
             console.warn('Could not adopt the server ids for the receipt lines:', e),
           );
@@ -776,6 +799,21 @@ export const useExpenseStore = create<ExpenseState>()(
             const serverItems: any[] = await api.getExpenseItems(expenseId);
             if (serverItems && serverItems.length > 0) {
               const now = new Date();
+              // Child costs: the server's line child (a server PK) as a local child id.
+              // `undefined` = unknown here; replaceItemsForExpense then keeps the local value.
+              const serverChildIds = [
+                ...new Set(serverItems.map((si: any) => si.childId).filter((v: unknown): v is string => typeof v === 'string')),
+              ];
+              let childIdMap = new Map<string, string>();
+              if (serverChildIds.length > 0) {
+                try {
+                  childIdMap = await useChildStore.getState().resolveServerChildIds(serverChildIds);
+                } catch (e) {
+                  console.warn('Line child ids not mapped:', e instanceof Error ? e.message : String(e));
+                }
+              }
+              const localChildId = (si: any): string | null | undefined =>
+                si.childId === undefined ? undefined : si.childId === null ? null : childIdMap.get(si.childId);
               items = serverItems.map((si: any, index: number) => ({
                 id: si.id,
                 localId: si.id,
@@ -786,11 +824,15 @@ export const useExpenseStore = create<ExpenseState>()(
                 unitPrice: Number(si.unitPrice ?? 0),
                 totalPrice: Number(si.totalPrice ?? 0),
                 sortOrder: si.sortOrder ?? index,
+                // Child costs: the line's own discount and category, as the server holds them.
+                lineDiscount: si.lineDiscount != null ? Number(si.lineDiscount) : null,
+                categoryId: si.categoryId ?? null,
                 isDeleted: si.isDeleted || false,
                 syncStatus: 'synced' as SyncStatus,
                 syncVersion: si.syncVersion ?? 0,
                 createdAt: si.createdAt ? new Date(si.createdAt) : now,
                 updatedAt: si.updatedAt ? new Date(si.updatedAt) : now,
+                childId: localChildId(si),
               }));
               // Replace, never merge: the local rows hold different (client)
               // ids, and `deduplicateItemsByExpenseId` keeps the row created
@@ -798,6 +840,10 @@ export const useExpenseStore = create<ExpenseState>()(
               // them would keep the unusable id and leave the receipt
               // unsplittable anyway.
               await replaceItemsForExpense(expenseId, items);
+              // Native: read back so memory carries what the replace kept (a queued
+              // local line child). Web has no SQLite and keeps the mapped server rows.
+              const reread = await loadItemsByExpenseId(expenseId);
+              if (reread.length > 0) items = reread;
             }
           } catch {
             // Offline, or the expense hasn't reached the server yet — the create
@@ -842,9 +888,15 @@ export const useExpenseStore = create<ExpenseState>()(
         };
       });
 
+      const inserted = insertExpenseItem(newItem).catch((e) =>
+        console.error('Failed to insert expense item:', e),
+      );
+
       // Same reasoning as the edit above: a hand-added line kept a
       // client-generated id, so it could never be assigned to anyone in a
-      // split. Adopt the id the server gives it.
+      // split. Adopt the id the server gives it — in SQLite too, marked
+      // server-known, so a child attribution queued on this line is sent by
+      // the next drain instead of waiting for a cold-start backfill.
       api
         .createExpenseItem(expenseId, {
           description: itemData.description,
@@ -852,9 +904,12 @@ export const useExpenseStore = create<ExpenseState>()(
           unitPrice: itemData.unitPrice,
           sortOrder: itemData.sortOrder,
         })
-        .then((created: any) => {
+        .then(async (created: any) => {
           const serverId = created?.id;
-          if (!serverId || serverId === id) return;
+          if (!serverId) return;
+          await inserted;
+          await adoptServerItemId(expenseId, id, String(serverId));
+          if (serverId === id) return;
           set((state) => ({
             expenseItems: {
               ...state.expenseItems,
@@ -867,10 +922,6 @@ export const useExpenseStore = create<ExpenseState>()(
           }));
         })
         .catch((e) => console.warn('New expense item not pushed:', e));
-
-      insertExpenseItem(newItem).catch((e) =>
-        console.error('Failed to insert expense item:', e),
-      );
 
       return newItem;
     },
