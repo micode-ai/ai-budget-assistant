@@ -2,10 +2,15 @@ import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import { AiController } from './ai.controller';
 import { ScanReceiptRequestSchema as ApiSchema } from './utils/sanitize';
 
-// The shared-utils copy is type-only for the API at runtime; the spec imports it by path to
-// pin that both copies accept and reject exactly the same bodies.
-// eslint-disable-next-line no-restricted-imports
-import { ScanReceiptRequestSchema as SharedSchema } from '../../../../../packages/shared-utils/src/validation';
+// The shared-utils copy is type-only for the API at runtime; the spec loads it by path to
+// pin that both copies accept and reject exactly the same bodies. It must be a plain
+// require() with a local type, never an `import` or `typeof import(...)`: `nest build`
+// compiles specs too, and any file outside src/ pulled into the program moves the output
+// root, so dist/main.js becomes dist/apps/api/src/main.js and prod cannot start (ABA-751).
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { ScanReceiptRequestSchema: SharedSchema } = require('../../../../../packages/shared-utils/src/validation') as {
+  ScanReceiptRequestSchema: { safeParse(body: unknown): { success: boolean } };
+};
 
 const img = (b = 'AAA', mimeType?: string) => ({ imageBase64: b, mimeType });
 
