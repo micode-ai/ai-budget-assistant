@@ -123,8 +123,10 @@ footer and the "data as of" stamp.
   ("Zestawienie sporządzone w aplikacji AI Budżet na podstawie danych wprowadzonych przez
   użytkownika"); no court headers, nothing "certified". It is a statement of what the user entered,
   not a legal document, and covers only what reached the server.
-- **Pending gate (interim).** The app flushes its sync queue and refuses to request a statement
-  while anything for the account is pending (`statementGate.ts`). Undeliverable line changes (see
+- **Pending gate.** The app flushes its sync queue and refuses to request a statement
+  while anything for the account is pending (`statementGate.ts`), including expense deletes the
+  server has not confirmed (`countPendingDeletes`, ABA-749) — they are gone from the stores, so the
+  store snapshot cannot see them. Undeliverable line changes (see
   above) are reported in the dialog, never counted as pending — otherwise one unknown line would
   block the statement forever. Known window: see Known gaps.
 - **Copy never says a child "costs too much" and never compares children.**
@@ -135,9 +137,9 @@ footer and the "data as of" stamp.
 
 - No tier-upgrade re-encryption exists for any entity, so a plaintext child name created before
   E2EE was enabled stays plaintext until edited.
-- `syncPendingExpenses` marks rows synced after a failed push, and an offline expense delete is never
-  retried (separate issue, ruling R11) — the statement's pending gate can therefore pass with an
-  unsent expense, and the statement may omit a just-entered one on a flaky network.
+- An income's offline delete is still sent once and never retried, so the statement can count an
+  income the user deleted on a flaky network. (The expense side was fixed in
+  [ABA-749](https://github.com/micode-ai/ai-budget-assistant/issues/787).)
 - An offline 800+ unmark can be reverted by a retry.
 - Web "Extract items" waits for new lines sequentially.
 - The reports `PdfGenerator` never draws its page footer (pre-existing, separate issue); the

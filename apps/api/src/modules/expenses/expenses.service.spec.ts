@@ -407,12 +407,14 @@ describe('create() hands off to ExpenseCreatedHooksService', () => {
  * so a test asserting the write got 'c-alc' actually proves resolution ran
  * rather than merely echoing whatever was passed in.
  */
-function makeCategorizedItemsCreateService() {
+function makeCategorizedItemsCreateService(opts: { existing?: boolean; storedItemCount?: number } = {}) {
   const createManyMock = jest.fn().mockResolvedValue({});
+  const itemCountMock = jest.fn().mockResolvedValue(opts.storedItemCount ?? 0);
 
   const findUniqueMock = jest
     .fn()
-    .mockImplementationOnce(async () => null) // existing-by-clientId check -> isNew
+    // existing-by-clientId check -> isNew unless `existing`
+    .mockImplementationOnce(async () => (opts.existing ? { id: 'e-items-1', clientId: 'client-items-1' } : null))
     .mockImplementationOnce(async () => ({
       id: 'e-items-1',
       accountId: 'a1',
@@ -433,7 +435,7 @@ function makeCategorizedItemsCreateService() {
       findUnique: findUniqueMock,
       upsert: jest.fn().mockResolvedValue({ id: 'e-items-1' }),
     },
-    expenseItem: { createMany: createManyMock },
+    expenseItem: { createMany: createManyMock, count: itemCountMock },
     tag: { findMany: jest.fn().mockResolvedValue([]) },
     expenseTag: { createMany: jest.fn().mockResolvedValue({}) },
     project: { findUnique: jest.fn().mockResolvedValue(null), findFirst: jest.fn().mockResolvedValue(null) },
@@ -477,7 +479,7 @@ function makeCategorizedItemsCreateService() {
     createdHooks,
   );
 
-  return { service, prisma, createManyMock, createdHooks };
+  return { service, prisma, createManyMock, createdHooks, itemCountMock };
 }
 
 describe('create with categorized receipt items', () => {
@@ -507,6 +509,31 @@ describe('create with categorized receipt items', () => {
     // Resolved id ('c-alc'), NOT the raw client-supplied value ('Alcohol') —
     // proves the write went through resolution, not a passthrough.
     expect(written[0].categoryId).toBe('c-alc');
+  });
+
+  // ABA-749: the offline retry resends a receipt's lines; the first push may have landed.
+  it('does not add the lines again when a retry reaches a row that already has them', async () => {
+    const { service, createManyMock } = makeCategorizedItemsCreateService({ existing: true, storedItemCount: 1 });
+
+    await service.create('a1', 'u1', baseDto as any);
+
+    expect(createManyMock).not.toHaveBeenCalled();
+  });
+
+  it('writes the lines on a retry that reaches a row with none', async () => {
+    const { service, createManyMock } = makeCategorizedItemsCreateService({ existing: true, storedItemCount: 0 });
+
+    await service.create('a1', 'u1', baseDto as any);
+
+    expect(createManyMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not count stored lines for a brand-new row', async () => {
+    const { service, itemCountMock } = makeCategorizedItemsCreateService();
+
+    await service.create('a1', 'u1', baseDto as any);
+
+    expect(itemCountMock).not.toHaveBeenCalled();
   });
 
   it('computes learnableItems from every categorized item and hands them to the created-hooks service', async () => {

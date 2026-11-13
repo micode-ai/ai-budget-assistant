@@ -11,6 +11,7 @@ import {
   updateExpenseInDb,
   setExpenseServerId,
   softDeleteExpenseInDb,
+  markExpenseDeleteSynced,
   saveReceiptImageLocally,
   getReceiptImageFromDb,
   deleteReceiptImageLocally,
@@ -566,9 +567,12 @@ export const useExpenseStore = create<ExpenseState>()(
         console.error('Failed to soft-delete expense in SQLite:', e),
       );
 
-      api.deleteExpense(id).catch((e) =>
-        console.warn('Expense delete sync deferred (offline?):', e),
-      );
+      // Acknowledged → the soft-deleted row is done. Otherwise it stays `pending`
+      // and syncPendingExpenses resends it (ABA-749).
+      api
+        .deleteExpense(id)
+        .then(() => markExpenseDeleteSynced(id))
+        .catch((e) => console.warn('Expense delete sync deferred (offline?):', e));
     },
 
     bulkUpdateExpenses: async (ids, patch, options) => {

@@ -105,6 +105,12 @@ export interface StatementPreflightDeps {
   flushIncomes: () => Promise<void>;
   /** Queued child-cost changes still deliverable (undeliverable line changes excluded, R12). */
   countQueuedChildChanges: () => Promise<number>;
+  /**
+   * Expense deletes the server has not acknowledged (ABA-749). They are gone from
+   * the stores, so `snapshotPending` cannot see them, yet the server would still
+   * print those expenses.
+   */
+  countPendingDeletes?: () => Promise<number>;
   readEncryptionTier: () => Promise<number>;
 }
 
@@ -133,7 +139,7 @@ export async function statementPreflight(d: StatementPreflightDeps): Promise<Sta
 
   let queued: number;
   try {
-    queued = await d.countQueuedChildChanges();
+    queued = (await d.countQueuedChildChanges()) + ((await d.countPendingDeletes?.()) ?? 0);
   } catch {
     return 'pending';
   }

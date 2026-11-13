@@ -14,6 +14,8 @@ import {
   updateExpenseInDb,
   setExpenseServerId,
   getReceiptImageFromDb,
+  loadPendingExpenseDeleteIds,
+  markExpenseDeleteSynced,
 } from '@/db/expenseRepository';
 import {
   loadItemsByExpenseId,
@@ -165,6 +167,76 @@ async function unackedReceiptFields(expense: Expense) {
   }
 }
 
+/**
+ * Worth trying again later: no response at all (offline), a timeout, a rate limit
+ * or a server error. Any other 4xx is the server refusing this row for good.
+ */
+function isRetriable(e: unknown): boolean {
+  const status = (e as { status?: unknown } | null)?.status;
+  if (typeof status !== 'number') return true;
+  return status >= 500 || status === 408 || status === 429;
+}
+
+/**
+ * The lines of a receipt the server has never acknowledged (no `serverId`): its
+ * first push failed, so they never arrived (ABA-749). Same shape as
+ * `addExpense`'s first push, the category addressed by name for the same reason.
+ * The server writes them only when the row has none, so a retry whose first push
+ * did land cannot double them. An acknowledged row is an edit retry: its lines
+ * are managed through the item endpoints, never resent here.
+ */
+async function unackedItems(expense: Expense) {
+  if (expense.serverId) return undefined;
+  try {
+    const items = (await loadItemsByExpenseId(expense.id)).filter((i) => !i.isDeleted);
+    if (items.length === 0) return undefined;
+    const categories = useCategoryStore.getState();
+    const categoryRef = (id: string | null | undefined) =>
+      id ? categories.getCategoryById?.(id)?.name || id : undefined;
+    return items.map((item) => ({
+      description: item.description,
+      canonicalName: item.canonicalName,
+      quantity: Math.max(0, item.quantity ?? 1),
+      unitPrice: Math.max(0, item.unitPrice ?? 0),
+      totalPrice: Math.max(0, item.totalPrice ?? 0),
+      sortOrder: item.sortOrder,
+      categoryId: categoryRef(item.categoryId),
+    }));
+  } catch (e) {
+    console.warn('[expenseSync] receipt lines not attached to the retry:', e instanceof Error ? e.message : String(e));
+    return undefined;
+  }
+}
+
+/**
+ * Deletes made while the server was unreachable (ABA-749). `deleteExpense` used
+ * to send one fire-and-forget request, so an offline delete was lost and the
+ * next pull brought the expense back. The soft-deleted row stays `pending` in
+ * SQLite until the server confirms; a 404 means the server no longer has it,
+ * which is the same outcome.
+ */
+const PENDING_DELETES_PER_SYNC = 20;
+
+export async function syncPendingExpenseDeletes(): Promise<void> {
+  if (Platform.OS === 'web') return; // no local store to remember a delete in
+  const accountId = useAccountStore.getState().currentAccountId;
+  if (!accountId) return;
+  // Bounded per pass, newest first: an install from before ABA-749 holds every
+  // delete it ever made as pending, and one sync must not fire them all at the API.
+  const ids = await loadPendingExpenseDeleteIds(accountId, PENDING_DELETES_PER_SYNC);
+  for (const id of ids) {
+    try {
+      await api.deleteExpense(id);
+    } catch (e) {
+      if ((e as { status?: unknown } | null)?.status !== 404) {
+        console.warn('[expenseSync] expense delete still pending:', e instanceof Error ? e.message : String(e));
+        continue;
+      }
+    }
+    await markExpenseDeleteSynced(id).catch(() => undefined);
+  }
+}
+
 export async function syncPendingExpenses(
   _set: StoreSet,
   get: StoreGet,
@@ -172,13 +244,13 @@ export async function syncPendingExpenses(
   const pending = get().expenses.filter(
     (e) => e.syncStatus === 'pending' && !e.isDeleted,
   );
-  if (pending.length === 0) return;
 
   for (const expense of pending) {
     try {
       const localTags = await getTagsForExpense(expense.id);
       const localProjectId = await getProjectIdForExpense(expense.id);
       const receiptFields = await unackedReceiptFields(expense);
+      const items = await unackedItems(expense);
 
       const { payload: encPayload, encryptedPayload, encryptionKeyVersion } =
         await maybeEncrypt(
@@ -247,6 +319,7 @@ export async function syncPendingExpenses(
         recurringId: expense.recurringId,
         recurringPeriod: expense.recurringPeriod,
         ...receiptFields,
+        ...(items ? { items } : {}),
         encryptedPayload,
         encryptionKeyVersion,
       } as any);
@@ -261,8 +334,16 @@ export async function syncPendingExpenses(
         }));
         await setExpenseServerId(expense.id, serverPk);
       }
-    } catch {
-      // upsert handles duplicates; other errors skip silently (retry on next pull)
+    } catch (e) {
+      // Only an acknowledged push marks the row synced (ABA-749): marking it on any
+      // error meant an expense whose create failed was never retried and never
+      // reached the server. A refusal (4xx) will not change on retry, so that row
+      // is let go, as before — loudly now.
+      if (isRetriable(e)) {
+        console.warn('[expenseSync] expense push deferred (offline?):', e instanceof Error ? e.message : String(e));
+        continue;
+      }
+      console.warn('[expenseSync] expense push refused by the server:', e instanceof Error ? e.message : String(e));
     }
     _set((state) => ({
       expenses: state.expenses.map((e) =>
@@ -270,6 +351,14 @@ export async function syncPendingExpenses(
       ),
     }));
     updateExpenseInDb(expense.id, {}, new Date(), 'synced').catch(() => {});
+  }
+
+  // After the creates: a delete of a row whose create is still in flight must not
+  // reach the server first.
+  try {
+    await syncPendingExpenseDeletes();
+  } catch (e) {
+    console.warn('[expenseSync] pending deletes not sent:', e instanceof Error ? e.message : String(e));
   }
 }
 
@@ -347,7 +436,20 @@ async function _doPullAndMerge(
     try {
       const serverResult = await api.getExpenses();
       if (useAccountStore.getState().currentAccountId !== accountId) return;
-      const serverExpenses = serverResult.data;
+      // A delete the server has not acknowledged yet wins over the server's copy:
+      // without this the pull re-inserted an expense the user deleted offline (ABA-749).
+      // Best effort: an unreadable list must not cost the whole pull.
+      let pendingDeleteIds = new Set<string>();
+      if (Platform.OS !== 'web') {
+        try {
+          pendingDeleteIds = new Set(await loadPendingExpenseDeleteIds(accountId));
+        } catch (e) {
+          console.warn('[expenseSync] pending deletes unreadable:', e instanceof Error ? e.message : String(e));
+        }
+      }
+      const serverExpenses = serverResult.data.filter(
+        (se: any) => !pendingDeleteIds.has(se.clientId || se.id),
+      );
 
       // ── PHASE A: build local lookup + dedup category/project maps ──
       const localById = new Map<string, Expense>();
@@ -645,7 +747,8 @@ async function _doPullAndMerge(
         // Soft-delete locals that the server no longer returns
         for (const local of localExpenses) {
           if (local.syncStatus === 'synced' && !serverIdSet.has(local.id)) {
-            await softDeleteExpenseInDb(local.id, new Date());
+            // Already gone on the server: nothing to resend.
+            await softDeleteExpenseInDb(local.id, new Date(), 'synced');
           }
         }
       });

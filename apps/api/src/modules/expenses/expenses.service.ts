@@ -334,7 +334,16 @@ export class ExpensesService {
         await this.writeReceiptParts(tx, expense.id, extraParts ?? [], !isNew);
       }
 
-      if (dto.items && dto.items.length > 0) {
+      // An offline retry of a receipt resends its lines (ABA-749), and the first push
+      // may have landed with only its response lost. On the update branch, lines are
+      // written only when the row has none yet, so a retry never doubles them.
+      const hasItems = !!dto.items && dto.items.length > 0;
+      const itemsAlreadyStored =
+        hasItems &&
+        !isNew &&
+        (await tx.expenseItem.count({ where: { expenseId: expense.id, isDeleted: false } })) > 0;
+
+      if (dto.items && hasItems && !itemsAlreadyStored) {
         // Items address a category by the client's own local id — the same
         // reason dto.categoryId (above) and dto.splits[].categoryId (below) are
         // resolved before being written. resolveCategoryId always runs against

@@ -733,6 +733,18 @@ export async function initializeDatabase(): Promise<void> {
         `UPDATE expense_items SET server_known = 1 WHERE sync_status = 'synced' AND COALESCE(server_known, 0) = 0`,
       );
     } catch {}
+    // ABA-749: an expense delete now stays `pending` until the server confirms it, and
+    // pending deletes are resent and block the child statement. Before that, no delete
+    // was ever marked synced, so an existing install holds its whole delete history as
+    // pending. Those are settled: a pull re-inserted any expense the server still had,
+    // so a row still deleted here is one the server no longer returns. Once.
+    try {
+      runOnceSync(
+        expoDb,
+        'migration:expense_pending_deletes_baseline',
+        `UPDATE expenses SET sync_status = 'synced' WHERE is_deleted = 1 AND sync_status = 'pending'`,
+      );
+    } catch {}
     try { expoDb.execSync(`ALTER TABLE incomes ADD COLUMN child_benefit_child_id TEXT`); } catch {}
     // Child costs: a line's own discount and category (as the server holds them), so the
     // device folds receipt discounts and labels line categories exactly as the web and

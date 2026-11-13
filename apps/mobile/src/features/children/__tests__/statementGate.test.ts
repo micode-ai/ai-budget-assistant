@@ -111,9 +111,9 @@ describe('flushLeftPending', () => {
 
 describe('statementPreflight (the gate path the action runs)', () => {
   /**
-   * The expense push marks a row synced even when its request failed, so the
-   * re-count alone can read 0 while an expense never reached the server. The
-   * snapshot taken BEFORE the flush is what catches that.
+   * Before ABA-749 the expense push marked a row synced even when its request
+   * failed, so the re-count alone could read 0 while an expense never reached the
+   * server. The snapshot taken BEFORE the flush still catches an offline flush.
    */
   function deps(over: Partial<Parameters<typeof statementPreflight>[0]> = {}) {
     let pending = 1;
@@ -158,6 +158,14 @@ describe('statementPreflight (the gate path the action runs)', () => {
     await expect(
       statementPreflight(deps({ countQueuedChildChanges: jest.fn(async () => Promise.reject(new Error('db'))) })),
     ).resolves.toBe('pending');
+  });
+
+  it("'pending' while an expense delete has not reached the server, or that count cannot be read (ABA-749)", async () => {
+    await expect(statementPreflight(deps({ countPendingDeletes: jest.fn(async () => 1) }))).resolves.toBe('pending');
+    await expect(
+      statementPreflight(deps({ countPendingDeletes: jest.fn(async () => Promise.reject(new Error('db'))) })),
+    ).resolves.toBe('pending');
+    await expect(statementPreflight(deps({ countPendingDeletes: jest.fn(async () => 0) }))).resolves.toBe('ok');
   });
 
   it("viewer and free tier answer before anything is flushed", async () => {

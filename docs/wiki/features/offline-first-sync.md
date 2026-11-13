@@ -55,6 +55,21 @@ ms. The server calls inside each do not contend — only the local-read phase do
 **Await the post-merge category/project reload.** Fire-and-forget made it contend with the next
 hydrate cycle in the background.
 
+**An expense is `synced` only when the server acknowledged it (ABA-749).** `syncPendingExpenses`
+used to mark the row synced on any error, so an expense whose create failed never reached the
+server. Now a transport failure, timeout, 429 or 5xx leaves it `pending`; only a 4xx refusal (which
+no retry would change) lets it go. A row the server never acknowledged (no `serverId`) resends its
+receipt lines with it, and the API writes lines on the upsert's update branch only when the row has
+none — the first push may have landed with only its response lost.
+
+**An expense delete is `pending` until the server confirms it (ABA-749).** `deleteExpense` marks the
+soft-deleted row synced on success; otherwise `syncPendingExpenseDeletes` resends it at the end of
+every `syncPendingExpenses` (after the creates, at most 20 per pass), a 404 counting as done. The
+pull skips server rows whose local copy is a pending delete — it used to re-insert an expense deleted
+offline. A one-time migration (`expense_pending_deletes_baseline`) marked the pre-ABA-749 history
+synced: back then a pull re-inserted anything the server still had, so those rows were settled.
+Incomes still send their delete once (known gap).
+
 **A failed push while offline is logged with `console.warn`, never `console.error`.** It is an
 *expected* outcome: the row stays `pending` and re-syncs later. RN's dev LogBox renders any
 `console.error` as a blocking full-screen red overlay, which users perceive as an offline-add
@@ -96,7 +111,7 @@ The pure rule is `features/syncStatus/pendingSyncSummary.ts`. Tap offers "Sync n
 
 - **The `sync_queue` table is declared but unused** — never count it; `sync_status` is the real marker.
 - Failed (`error`) rows show at once; `pending` rows only after 5 minutes, so brief offline stays quiet.
-- **Soft-deleted rows are never counted** (`is_deleted = 0` in `loadPendingRows`). A delete is sent once at delete time and its row is never marked synced afterwards, while the push loops skip `isDeleted` rows, so every deleted row stays `pending` forever — counting them showed "Waiting to sync: 52" right after a successful sync ([ABA-729](https://github.com/micode-ai/ai-budget-assistant/issues/766)). The count must equal what a sync would upload. Known gap: a delete that failed offline is never retried, and the chip cannot tell it from one that succeeded.
+- **Soft-deleted rows are never counted** (`is_deleted = 0` in `loadPendingRows`). A delete is sent once at delete time and its row is never marked synced afterwards, while the push loops skip `isDeleted` rows, so every deleted row stays `pending` forever — counting them showed "Waiting to sync: 52" right after a successful sync ([ABA-729](https://github.com/micode-ai/ai-budget-assistant/issues/766)). The count must equal what a sync would upload. Since ABA-749 a failed expense delete stays `pending` and is resent, but the chip still does not count it; an income delete is still sent once.
 - Web renders nothing: the SQLite mock returns no rows. Contract: `docs/contracts/pending-sync-status-indicator.md`.
 
 ## Known gaps

@@ -445,14 +445,39 @@ export async function upsertExpense(expense: Expense): Promise<void> {
   );
 }
 
+/**
+ * A soft delete is `pending` until the server has it: `syncPendingExpenseDeletes`
+ * resends it (ABA-749). Pass `synced` only when the server already holds the
+ * delete — a row a pull found gone from the server.
+ */
 export async function softDeleteExpenseInDb(
   id: string,
   updatedAt: Date,
+  syncStatus: 'pending' | 'synced' = 'pending',
 ): Promise<void> {
   await executeSql(
     'UPDATE expenses SET is_deleted = 1, updated_at = ?, sync_status = ? WHERE id = ?',
-    [updatedAt.getTime(), 'pending', id],
+    [updatedAt.getTime(), syncStatus, id],
   );
+}
+
+/**
+ * Ids of this account's deletes the server has not acknowledged yet (ABA-749),
+ * newest first. `limit` bounds one resend pass: before ABA-749 no delete was ever
+ * marked synced, so an existing install starts with its whole delete history here.
+ */
+export async function loadPendingExpenseDeleteIds(accountId: string, limit?: number): Promise<string[]> {
+  const rows = await executeSql<{ id: string }>(
+    "SELECT id FROM expenses WHERE is_deleted = 1 AND sync_status = 'pending' AND account_id = ? ORDER BY updated_at DESC" +
+      (limit ? ' LIMIT ?' : ''),
+    limit ? [accountId, limit] : [accountId],
+  );
+  return rows.map((r) => r.id);
+}
+
+/** The server holds this delete: stop resending it. */
+export async function markExpenseDeleteSynced(id: string): Promise<void> {
+  await executeSql("UPDATE expenses SET sync_status = 'synced' WHERE id = ? AND is_deleted = 1", [id]);
 }
 
 export async function clearAllExpenses(): Promise<void> {
