@@ -12,7 +12,9 @@ With either off, `/mcp`, `/oauth/register` and the three `/.well-known/oauth-*` 
 public API is unchanged. Public API runbook: `docs/ops/public-api.md`. Design:
 `docs/superpowers/specs/2026-11-12-mcp-connector-design.md`.
 
-**Nothing in this runbook has been applied to production yet.**
+**Steps 1 and 2 were applied on 2026-11-13** (backups `ai-budget.conf.bak-mcp-202611131343` and
+`.env.production.bak-mcp-*`). Step 3 (smoke) is not run; step 4 was run with Claude Code only (see the
+wiki page's Known gaps); the launch gate and step 5 (help text) are still open.
 
 ## Prerequisites
 

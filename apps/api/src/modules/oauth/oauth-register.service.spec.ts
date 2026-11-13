@@ -110,6 +110,9 @@ describe('OAuthRegisterService', () => {
     'Ai budżеt', // Cyrillic е after ż
     'ΜiCοde', // Greek Μ and ο
     'MiСоde', // Cyrillic С and о
+    'AI Budget (official)', // the brand before a label
+    '(AI Budget)', // nothing but a label: checked whole
+    'Claude (AI Budget) (x)', // only the LAST label is ignored
   ])(
     'rejects the look-alike name %s with invalid_client_metadata',
     async (client_name) => {
@@ -129,7 +132,15 @@ describe('OAuthRegisterService', () => {
     },
   );
 
-  it.each(['Claude', 'ChatGPT', 'Budget Helper', 'Помощник по финансам', 'Cursor'])(
+  it.each([
+    'Claude',
+    'ChatGPT',
+    'Budget Helper',
+    'Помощник по финансам',
+    'Cursor',
+    'Claude Code (ai-budget)', // ABA-753: how Claude Code registers a connector the user named after us
+    'Claude Code (AI Budżet)',
+  ])(
     'accepts the ordinary name %s',
     async (client_name) => {
       const { svc } = build();

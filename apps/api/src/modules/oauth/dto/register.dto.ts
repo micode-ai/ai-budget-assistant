@@ -75,10 +75,23 @@ export interface RegistrationResponse {
 const meta = (d: string) => new RegistrationError('invalid_client_metadata', d);
 const redirect = (d: string) => new RegistrationError('invalid_redirect_uri', d);
 
-/** Name containing "AI Budżet" / "AI Budget" / "Budżet", compared case- and diacritic-insensitively. */
+/**
+ * A trailing parenthetical: MCP clients name themselves `<client> (<what the user called the
+ * server>)` — Claude Code registers as `Claude Code (ai-budget)` when the user named the connector
+ * after us (ABA-753). That suffix is the user's own label, not the client's claim to be us.
+ */
+const TRAILING_LABEL_RE = /\s*\([^()]*\)\s*$/u;
+
+/**
+ * Name containing "AI Budżet" / "AI Budget" / "Budżet", compared case- and diacritic-insensitively.
+ * A trailing `(...)` is ignored when something precedes it, so `Claude Code (ai-budget)` passes
+ * while `AI Budget (official)` and `(AI Budget)` do not.
+ */
 export function isLookalikeClientName(name: string): boolean {
+  const head = name.replace(TRAILING_LABEL_RE, '');
+  const checked = head.trim().length > 0 ? head : name;
   // Both forms: as written (catches the Cyrillic `бюджет`) and with confusables folded to Latin.
-  const forms = [normaliseAppName(name), normaliseAppName(name.replace(CONFUSABLE_RE, (c) => CONFUSABLES[c]))];
+  const forms = [normaliseAppName(checked), normaliseAppName(checked.replace(CONFUSABLE_RE, (c) => CONFUSABLES[c]))];
   return forms.some((n) => LOOKALIKES.some((l) => n.includes(l)));
 }
 

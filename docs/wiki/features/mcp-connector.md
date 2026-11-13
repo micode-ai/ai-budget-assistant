@@ -12,7 +12,8 @@ OAuth server: the assistant registers itself (Dynamic Client Registration, RFC 7
 the existing consent page, and every tool call is authorized exactly like a REST call. Nine tools, no
 writes, no receipt images.
 
-Ships dark behind **`PUBLIC_API_ENABLED` and `MCP_ENABLED`** (both must be exactly `true`). Design:
+Gated by **`PUBLIC_API_ENABLED` and `MCP_ENABLED`** (both must be exactly `true`); **enabled in production
+on 2026-11-13** (runbook steps 1-2: nginx blocks and the flag). Design:
 `docs/superpowers/specs/2026-11-12-mcp-connector-design.md`; plan:
 `docs/superpowers/plans/2026-11-12-mcp-connector.md`. Enable/rollback/smoke/launch runbook:
 `docs/ops/mcp.md`. Issue: [ABA-750](https://github.com/micode-ai/ai-budget-assistant/issues/788).
@@ -133,7 +134,11 @@ registration body is capped at 16 KB.
 **The brand is blocked, with confusables.** A `client_name` that contains the product name (case-,
 diacritic- and whitespace-insensitive, a small confusables map folded in, also `micode` and the Polish
 and Russian words for budget, `budżet` and `бюджет`) is `invalid_client_metadata`; an assistant must not be able to present itself as us on
-our own consent page.
+our own consent page. **A trailing `(...)` is not checked when something precedes it** (ABA-753): MCP
+clients register as `<client> (<the user's name for the server>)` — Claude Code sent
+`Claude Code (ai-budget)` for a connector the user named after us and was refused, so every user who
+named it that way could not connect. `AI Budget (official)` and a bare `(AI Budget)` are still refused;
+only the last parenthetical is skipped.
 
 **Everything is dark unless both flags are `true`.** `/mcp`, `/oauth/register` and the three
 `.well-known` documents answer 404 unless `PUBLIC_API_ENABLED` and `MCP_ENABLED` are both exactly `true`
@@ -154,6 +159,13 @@ outcome and duration only — plus, on `internal_error`, the error's class name 
 message.
 
 ## Known gaps
+
+- **First real client run (2026-11-13, Claude Code):** discovery, DCR, consent with `resource`, token
+  and `initialize`/`tools/list` all succeeded; the registration came from the user's own IP (a local
+  client, so the per-IP limit does not bite). claude.ai and ChatGPT are still unchecked: on a claude.ai
+  Team/Enterprise organization only the org owner may add a custom connector, and the ChatGPT account
+  at hand had no custom-connector option. The first `POST /mcp` after the token answered 400 and the
+  client recovered on its own (probably the SDK's protocol-version check); not yet diagnosed.
 
 - **The e2e flow has not been run on a real database** (no local Redis when it was written), and the
   **production smoke (`scripts/mcp-smoke.mjs`) is pending** — both are the first things to do at launch.
