@@ -120,6 +120,8 @@ function setup() {
     replyText: jest.fn().mockResolvedValue(undefined),
     replyButtons: jest.fn().mockResolvedValue(undefined),
     updateButtons: jest.fn().mockResolvedValue(undefined),
+    updateText: jest.fn().mockResolvedValue(undefined),
+    deleteMessage: jest.fn().mockResolvedValue(undefined),
   };
   const handler = new PhotoHandler(
     ocr as never,
@@ -213,7 +215,7 @@ describe('Slack PhotoHandler — long receipt in several photos', () => {
     expect(await h.cache.get(`slack:scan:${tmpId}`)).toMatchObject({ base64: b64('part-two') });
   });
 
-  it('continuation re-reads all parts in one call and replaces the card in place', async () => {
+  it('continuation re-reads all parts in one call and posts the new card at the bottom', async () => {
     const h = setup();
     const { receiptId, rid, tmpId } = await scanThenSecond(h);
 
@@ -232,18 +234,33 @@ describe('Slack PhotoHandler — long receipt in several photos', () => {
     expect(data.scanAttestation).toBe('attparts');
     expect(data.parts).toHaveLength(2);
 
-    expect(h.client.updateButtons).toHaveBeenCalledTimes(1);
-    const [team, channel, ts, text, buttons] = h.client.updateButtons.mock.calls[0];
-    expect([team, channel, ts]).toEqual([TEAM, CHANNEL, 'ts-1']); // the first card's message
-    expect(text).toContain('99.9');
-    expect((buttons as Btn[])[0].id).toBe(`receipt_add:${receiptId}`);
+    // Not an in-place update: the old card (above the question) is deleted and the
+    // new one posted below, where the user is looking.
+    expect(h.client.updateButtons).not.toHaveBeenCalled();
+    expect(h.client.deleteMessage).toHaveBeenCalledWith(TEAM, CHANNEL, 'ts-1'); // the first card's message
+    const last = h.client.sendButtons.mock.calls.length - 1;
+    expect(h.client.sendButtons.mock.calls[last][2]).toContain('99.9');
+    expect((h.client.sendButtons.mock.calls[last][3] as Btn[])[0].id).toBe(`receipt_add:${receiptId}`);
     expect(await h.cache.get(`slack:scan:${tmpId}`)).toBeNull();
   });
 
-  it('re-sends the card when the old one cannot be updated', async () => {
+  it('the tapped question turns into a "reading" note at once and is deleted when the card is posted', async () => {
+    const h = setup();
+    await sendPhoto(h, 'part-one');
+    h.client.sendButtons.mockResolvedValueOnce('ts-q'); // the continuation question
+    await sendPhoto(h, 'part-two');
+    const [, rid, tmpId] = msgIds(h, h.client.sendButtons.mock.calls.length - 1)[0].split(':');
+
+    await h.handler.handlePartCallback(rid, tmpId, state());
+
+    expect(h.client.updateText).toHaveBeenCalledWith(TEAM, CHANNEL, 'ts-q', t('receiptPartsReading', 'en'));
+    expect(h.client.deleteMessage).toHaveBeenCalledWith(TEAM, CHANNEL, 'ts-q');
+  });
+
+  it('still posts the new card when the old one cannot be deleted', async () => {
     const h = setup();
     const { rid, tmpId } = await scanThenSecond(h);
-    h.client.updateButtons.mockRejectedValueOnce(new Error('message_not_found'));
+    h.client.deleteMessage.mockRejectedValueOnce(new Error('message_not_found'));
 
     await h.handler.handlePartCallback(rid, tmpId, state());
 
@@ -523,21 +540,20 @@ describe('Slack PhotoHandler — long receipt in several photos', () => {
 
   // ── The newest card is the one a continuation updates ────────────────────
 
-  it('a card re-posted by a continuation becomes the one the next continuation updates', async () => {
+  it('a card posted by a continuation becomes the one the next continuation replaces', async () => {
     const h = setup();
     const { rid, tmpId } = await scanThenSecond(h);
-    h.client.updateButtons.mockRejectedValueOnce(new Error('message_not_found'));
-    h.client.sendButtons.mockResolvedValueOnce('ts-new'); // the re-posted card
+    h.client.sendButtons.mockResolvedValueOnce('ts-new'); // the new card
     await h.handler.handlePartCallback(rid, tmpId, state());
 
     await sendPhoto(h, 'part-three');
     const [, , tmp3] = msgIds(h, h.client.sendButtons.mock.calls.length - 1)[0].split(':');
     await h.handler.handlePartCallback(rid, tmp3, state());
 
-    expect(h.client.updateButtons).toHaveBeenLastCalledWith(TEAM, CHANNEL, 'ts-new', expect.any(String), expect.any(Array));
+    expect(h.client.deleteMessage).toHaveBeenLastCalledWith(TEAM, CHANNEL, 'ts-new');
   });
 
-  it('a card re-posted after a date change becomes the one a continuation updates', async () => {
+  it('a card re-posted after a date change becomes the one a continuation replaces', async () => {
     const h = setup();
     await sendPhoto(h, 'part-one');
     const receiptId = cardIds(h, 0)[0].split(':')[1];
@@ -549,7 +565,7 @@ describe('Slack PhotoHandler — long receipt in several photos', () => {
     const [, rid, tmpId] = msgIds(h, 1)[0].split(':');
     await h.handler.handlePartCallback(rid, tmpId, state());
 
-    expect(h.client.updateButtons).toHaveBeenLastCalledWith(TEAM, CHANNEL, 'ts-date', expect.any(String), expect.any(Array));
+    expect(h.client.deleteMessage).toHaveBeenLastCalledWith(TEAM, CHANNEL, 'ts-date');
   });
 
   it('a pending receipt that already has 4 parts gets no question: the photo is a new receipt', async () => {
@@ -656,7 +672,7 @@ describe('Slack PhotoHandler — long receipt in several photos', () => {
     await running;
 
     expect(await h.cache.get(`slack:receipt:${receiptId}`)).toBeNull();
-    expect(h.client.updateButtons).not.toHaveBeenCalled();
+    expect(h.client.deleteMessage).not.toHaveBeenCalled();
     expect(h.client.sendButtons).toHaveBeenCalledTimes(1); // only the question
   });
 

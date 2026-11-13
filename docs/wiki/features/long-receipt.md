@@ -57,12 +57,12 @@ regeneration and cross-account move read every part.
 
 **Bots have no timers.** A single photo scans at once. While a confirmation for that user and chat is
 pending (30 min at most, the existing pending TTL), a new photo asks "Continuation of this receipt or
-a new receipt?". "Continuation" re-reads all parts in one call and **replaces the card** (R6). Cache
+a new receipt?". "Continuation" re-reads all parts in one call and **replaces the card** (R6). On Telegram and Slack the tapped question turns into a "reading all parts…" note at once (`receiptPartsReading`), and when the read is done the updated card is **posted at the bottom** and the old card and the note are deleted — never edited in place: the old card sits above the photo and the question, so an in-place edit after a read of up to a minute looked to the user like the tap did nothing (reported 2026-11-13). WhatsApp cannot edit and always sent a new card. Cache
 keys: `{tg|wa|slack}:receipt-latest:{chatId}:{userId}` (the pending pointer), `{prefix}:scan:{tmpId}`
 (the parked photo awaiting the answer), `{prefix}:receipt-busy:{receiptId}` (the lock, 300 s).
 Callback ids: `receipt_part:{receiptId}:{tmpId}` / `receipt_new:{tmpId}` (Telegram, Slack),
 `receipt_part--{receiptId}--{tmpId}` / `receipt_new--{tmpId}` (WhatsApp, `--` because UUIDs contain
-`-`). Slack stores `cardTs` on the pending receipt so a re-posted card replaces the right message; a
+`-`). Slack stores `cardTs` on the pending receipt (the card a continuation deletes) and `questionTs` on the parked scan; a
 Slack multi-image message scans the first image at once and offers the rest one by one (R2).
 
 ## Invariants

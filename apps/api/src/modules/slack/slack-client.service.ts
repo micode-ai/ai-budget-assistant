@@ -152,6 +152,13 @@ export class SlackClientService {
     await c.chat.update({ channel, ts, text: bodyText, blocks: this.buildButtonBlocks(bodyText, buttons) });
   }
 
+  /** Deletes one of the bot's own messages. */
+  async deleteMessage(teamId: string, channel: string, ts: string): Promise<void> {
+    const c = await this.clientFor(teamId);
+    if (!c) return;
+    await c.chat.delete({ channel, ts });
+  }
+
   async replyText(teamId: string, channel: string, ts: string | undefined, text: string): Promise<void> {
     if (ts) return this.updateText(teamId, channel, ts, text);
     return this.sendText(teamId, channel, text);

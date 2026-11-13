@@ -60,6 +60,7 @@ describe('sharedMessages — long receipt in several photos', () => {
     'receiptContinuationQuestion',
     'receiptContinuationYes',
     'receiptContinuationNo',
+    'receiptPartsReading',
     'receiptPartsFull',
     'receiptPartTooLarge',
     'receiptBusy',

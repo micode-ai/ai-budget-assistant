@@ -187,7 +187,7 @@ export class PhotoHandler {
       this.logger.log(`[Photo] file_id: ${photo.file_id}, file_size: ${photo.file_size || 'unknown'}, ${photo.width}x${photo.height}`);
 
       const fileLink = await ctx.telegram.getFileLink(photo.file_id);
-      this.logger.log(`[Photo] Download URL: ${fileLink.href.substring(0, 80)}...`);
+      // Never log fileLink.href: Telegram puts the bot token in the file URL.
 
       const buffer = await downloadFile(fileLink.href);
       this.logger.log(`[Photo] Downloaded ${(buffer.length / 1024).toFixed(1)}KB`);
@@ -233,7 +233,8 @@ export class PhotoHandler {
       await ctx.sendChatAction('typing');
 
       const fileLink = await ctx.telegram.getFileLink(file_id);
-      this.logger.log(`[Document] mime: ${mime_type}, Download URL: ${fileLink.href.substring(0, 80)}...`);
+      // Never log fileLink.href: Telegram puts the bot token in the file URL.
+      this.logger.log(`[Document] mime: ${mime_type}`);
 
       const buffer = await downloadFile(fileLink.href);
       this.logger.log(`[Document] Downloaded ${(buffer.length / 1024).toFixed(1)}KB`);
@@ -556,6 +557,9 @@ export class PhotoHandler {
         onCharged: async () => {
           await this.cache.del(questionScanKey(tmpId));
           await safeAnswerCb(ctx);
+          // The tap must visibly do something: the question loses its buttons at once,
+          // and the read below can take up to a minute.
+          await ctx.editMessageText(t('receiptPartsReading', lang)).catch(() => undefined);
         },
         onAppended: async () => {
           // The window for the next part runs from this part on.
@@ -586,20 +590,21 @@ export class PhotoHandler {
     await this.cache.del(awaitingItemEditKey(telegramUserId), awaitingDateKey(telegramUserId));
 
     await this.replaceCard(ctx, receiptId, result.data, this.buildCardSummary(result.receipt, result.data.language));
+    // The "reading…" note in place of the question has done its job.
+    await ctx.deleteMessage().catch(() => undefined);
   }
 
-  /** Edits the confirm card in place; re-sends it when Telegram refuses the edit. */
+  /**
+   * Posts the updated card at the bottom of the chat and deletes the old one. Not
+   * an in-place edit: the old card sits above the continuation question and the
+   * photo, so an edit there looked to the user like nothing happened.
+   */
   private async replaceCard(ctx: BotContext, receiptId: string, data: PendingReceiptData, summary: string): Promise<void> {
     const markup = this.cardMarkup(receiptId, data.language);
     if (data.cardChatId !== undefined && data.cardMessageId !== undefined) {
-      try {
-        await ctx.telegram.editMessageText(data.cardChatId, data.cardMessageId, undefined, summary, markup);
-        return;
-      } catch (e) {
-        // The card already shows exactly this: re-sending would only duplicate it.
-        if (/message is not modified/i.test(String((e as Error)?.message ?? e))) return;
-        this.logger.warn(`receipt card edit failed, re-sending: ${e}`);
-      }
+      await ctx.telegram.deleteMessage(data.cardChatId, data.cardMessageId).catch((e) => {
+        this.logger.warn(`old receipt card delete failed: ${e}`);
+      });
     }
     const sent = await ctx.reply(summary, markup);
     const messageId = (sent as { message_id?: number } | undefined)?.message_id;

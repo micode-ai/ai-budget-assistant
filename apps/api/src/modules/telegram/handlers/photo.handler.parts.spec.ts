@@ -109,9 +109,11 @@ function photoCtx(opts: { fromId?: number; chatId?: number; userId?: string; pho
     telegram: {
       getFileLink: jest.fn().mockResolvedValue({ href: 'https://t.example/photo.jpg' }),
       editMessageText: jest.fn().mockResolvedValue(undefined),
+      deleteMessage: jest.fn().mockResolvedValue(true),
     },
     reply: jest.fn().mockImplementation(async () => ({ message_id: ++messageId })),
     editMessageText: jest.fn().mockResolvedValue(undefined),
+    deleteMessage: jest.fn().mockResolvedValue(true),
     answerCbQuery: jest.fn().mockResolvedValue(undefined),
   };
 }
@@ -226,20 +228,25 @@ describe('Telegram PhotoHandler — long receipt in several photos', () => {
     expect(data.scanAttestation).toBe('attparts');
     expect(data.parts).toHaveLength(2);
 
-    expect(ctx.telegram.editMessageText).toHaveBeenCalledTimes(1);
-    const [chatId, msgId, , text, extra] = ctx.telegram.editMessageText.mock.calls[0];
-    expect(chatId).toBe(-100);
-    expect(msgId).toBe(cardMessageId);
-    expect(text).toContain('Long Shop');
-    expect(extra.reply_markup.inline_keyboard[0][0].callback_data).toBe(`receipt_add:${receiptId}`);
+    // The tap is visible at once: the question turns into a "reading…" note.
+    expect(ctx.editMessageText).toHaveBeenCalledWith(t('receiptPartsReading', 'en'));
+    // The updated card is posted at the bottom, the old card and the note are deleted.
+    expect(ctx.telegram.editMessageText).not.toHaveBeenCalled();
+    expect(ctx.telegram.deleteMessage).toHaveBeenCalledWith(-100, cardMessageId);
+    expect(ctx.deleteMessage).toHaveBeenCalledTimes(1);
+    const last = ctx.reply.mock.calls[ctx.reply.mock.calls.length - 1];
+    expect(last[0]).toContain('Long Shop');
+    expect(last[1].reply_markup.inline_keyboard[0][0].callback_data).toBe(`receipt_add:${receiptId}`);
+    const sentId = (await ctx.reply.mock.results[ctx.reply.mock.results.length - 1].value).message_id;
+    expect((await h.cache.get(`telegram:receipt:${receiptId}`)).cardMessageId).toBe(sentId);
     expect(await h.cache.get(`telegram:scan:${tmpId}`)).toBeNull();
   });
 
-  it('re-sends the card when the old one cannot be edited', async () => {
+  it('still posts the new card when the old one cannot be deleted', async () => {
     const h = setup();
     const ctx = photoCtx();
     const { part } = await scanThenSecond(h, ctx);
-    ctx.telegram.editMessageText.mockRejectedValueOnce(new Error('message to edit not found'));
+    ctx.telegram.deleteMessage.mockRejectedValueOnce(new Error('message to delete not found'));
     const [, rid, tmpId] = part.split(':');
 
     await h.handler.handlePartCallback(ctx as never, rid, tmpId);
@@ -475,7 +482,7 @@ describe('Telegram PhotoHandler — long receipt in several photos', () => {
 
     read.resolve(longShop());
     await running;
-    expect(ctx.telegram.editMessageText).toHaveBeenCalledTimes(1);
+    expect(ctx.telegram.deleteMessage).toHaveBeenCalledTimes(1);
 
     await h.handler.handleReceiptAddCallback(ctx as never, receiptId);
     expect(h.expenses.create).toHaveBeenCalledTimes(1);
@@ -490,7 +497,7 @@ describe('Telegram PhotoHandler — long receipt in several photos', () => {
     const { receiptId, read, running } = await startSlowContinuation(h, ctx);
 
     await h.handler.handleReceiptCancelCallback(ctx as never, receiptId);
-    expect(ctx.editMessageText).not.toHaveBeenCalled();
+    expect(ctx.editMessageText).not.toHaveBeenCalledWith(t('receiptCancelled', 'en'));
     expect(await h.cache.get(`telegram:receipt:${receiptId}`)).not.toBeNull();
 
     read.resolve(longShop());
@@ -698,19 +705,16 @@ describe('Telegram PhotoHandler — long receipt in several photos', () => {
     expect(h.cache.set).toHaveBeenCalledWith('telegram:receipt-latest:-100:123', receiptId, 1800);
   });
 
-  it('treats "message is not modified" as success and sends no duplicate card', async () => {
+  it('posts exactly one new card per continuation', async () => {
     const h = setup();
     const ctx = photoCtx();
     const { part } = await scanThenSecond(h, ctx);
-    ctx.telegram.editMessageText.mockRejectedValueOnce(
-      new Error('400: Bad Request: message is not modified: specified new message content and reply markup are exactly the same'),
-    );
     const replies = ctx.reply.mock.calls.length;
     const [, rid, tmpId] = part.split(':');
 
     await h.handler.handlePartCallback(ctx as never, rid, tmpId);
 
-    expect(ctx.reply.mock.calls.length).toBe(replies);
+    expect(ctx.reply.mock.calls.length).toBe(replies + 1);
   });
 
   it('cancel and save leave date-edit mode too', async () => {

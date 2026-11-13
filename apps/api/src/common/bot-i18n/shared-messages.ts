@@ -1110,6 +1110,17 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     be: 'Новы чэк',
     nl: 'Nieuwe bon',
   },
+  receiptPartsReading: {
+    en: '📄 Reading all parts of the receipt together — this can take up to a minute…',
+    ru: '📄 Читаю все части чека вместе — это может занять до минуты…',
+    ua: '📄 Читаю всі частини чека разом — це може тривати до хвилини…',
+    de: '📄 Ich lese alle Teile des Belegs zusammen — das kann bis zu einer Minute dauern…',
+    es: '📄 Leyendo todas las partes del recibo juntas; puede tardar hasta un minuto…',
+    fr: '📄 Je lis toutes les parties du reçu ensemble — cela peut prendre jusqu\u2019à une minute…',
+    pl: '📄 Czytam wszystkie części paragonu razem — to może potrwać do minuty…',
+    be: '📄 Чытаю ўсе часткі чэка разам — гэта можа заняць да хвіліны…',
+    nl: '📄 Ik lees alle delen van de bon samen — dit kan tot een minuut duren…',
+  },
   receiptPartsFull: {
     en: 'A receipt can have at most {{max}} photos. Save this one, or send the photo again as a new receipt.',
     ru: 'В одном чеке может быть не больше {{max}} фото. Сохраните этот чек или отправьте фото ещё раз как новый чек.',

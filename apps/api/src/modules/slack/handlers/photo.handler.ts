@@ -74,6 +74,8 @@ interface PendingScanData {
   base64: string;
   mimeType: string;
   language: string;
+  /** The continuation question this image is parked under (shows progress, then is deleted). */
+  questionTs?: string;
 }
 
 interface PendingReceiptData {
@@ -453,10 +455,13 @@ export class PhotoHandler {
     const tmpId = randomUUID().slice(0, 8);
     await this.cache.set<PendingScanData>(questionScanKey(tmpId), scan, PENDING_RECEIPT_TTL_SEC);
     const { slackTeamId, channel, language } = scan;
-    await this.client.sendButtons(slackTeamId, channel, t('receiptContinuationQuestion', language), [
+    const questionTs = await this.client.sendButtons(slackTeamId, channel, t('receiptContinuationQuestion', language), [
       { id: `receipt_part:${shortId}:${tmpId}`, title: t('receiptContinuationYes', language) },
       { id: `receipt_new:${tmpId}`, title: t('receiptContinuationNo', language) },
     ]);
+    if (questionTs) {
+      await this.cache.set<PendingScanData>(questionScanKey(tmpId), { ...scan, questionTs }, PENDING_RECEIPT_TTL_SEC);
+    }
   }
 
   /** The parked image, only for the user who sent it (anyone in a channel can tap). Not consumed. */
@@ -528,7 +533,16 @@ export class PhotoHandler {
         accountId: scan.accountId,
         ttlSec: PENDING_RECEIPT_TTL_SEC,
         // Charged: the image is now consumed.
-        onCharged: () => this.cache.del(questionScanKey(tmpId)),
+        onCharged: async () => {
+          await this.cache.del(questionScanKey(tmpId));
+          // The tap must visibly do something: the question loses its buttons at once,
+          // and the read below can take up to a minute.
+          if (scan.questionTs) {
+            await this.client
+              .updateText(teamId, channel, scan.questionTs, t('receiptPartsReading', language))
+              .catch(() => undefined);
+          }
+        },
         // The window for the next part runs from this part on.
         onAppended: () => this.cache.set(this.pointerKey(channel, slackUserId), shortId, PENDING_RECEIPT_TTL_SEC),
         apply: (current, receipt) => ({ ...current, ...this.receiptFields(receipt) }),
@@ -552,9 +566,17 @@ export class PhotoHandler {
     // armed date prompt must not apply to the new ones.
     await this.cache.del(`slack:awaiting_item_edit:${slackUserId}`, `slack:awaiting_date:${slackUserId}`);
     await this.replaceCard(teamId, channel, shortId, result.data, this.buildCardSummary(result.receipt, language));
+    // The "reading…" note in place of the question has done its job.
+    if (scan.questionTs) {
+      await this.client.deleteMessage(teamId, channel, scan.questionTs).catch(() => undefined);
+    }
   }
 
-  /** Updates the confirm card in place (buttons included); posts it again when Slack refuses the update. */
+  /**
+   * Posts the updated card at the bottom of the channel and deletes the old one.
+   * Not an in-place update: the old card sits above the continuation question and
+   * the image, so an update there looked to the user like nothing happened.
+   */
   private async replaceCard(
     teamId: string,
     channel: string,
@@ -564,12 +586,9 @@ export class PhotoHandler {
   ): Promise<void> {
     const buttons = this.cardButtons(shortId, data.language);
     if (data.cardTs) {
-      try {
-        await this.client.updateButtons(teamId, channel, data.cardTs, summary, buttons);
-        return;
-      } catch (e) {
-        this.logger.warn(`receipt card update failed, re-sending: ${e}`);
-      }
+      await this.client.deleteMessage(teamId, channel, data.cardTs).catch((e) => {
+        this.logger.warn(`old receipt card delete failed: ${e}`);
+      });
     }
     const ts = await this.client.sendButtons(teamId, channel, summary, buttons);
     // The newest card is the one a later continuation updates. Under the lock, so
