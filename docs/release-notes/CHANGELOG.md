@@ -8,6 +8,40 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.40.0 - 2026-11-13
+
+**Children's costs**
+
+- Name your children once, then assign a whole expense or single receipt lines to a child.
+  Each child gets a cost overview on phone and desktop web, an 800+ coverage card, a share card
+  and, on Pro, a PDF expense statement suitable as evidence (ABA-747, ABA-748).
+
+**Promo leaflets**
+
+- Share screenshots or a PDF of a store's promo leaflet and see which promotions match what you
+  usually buy. Results stay until the leaflet expires; open it from the share sheet or the
+  shopping list (ABA-746).
+
+**Receipts**
+
+- A receipt too long for one photo can be shot as 2–4 overlapping parts and becomes one expense,
+  in the app and in the Telegram, WhatsApp and Slack bots (ABA-751).
+- A scanned receipt that duplicates an expense you typed, dictated or sent to a bot is offered
+  as a merge (ABA-743); the bots can now merge a receipt into the matching expense (ABA-745).
+- Receipts paid largely with coupons no longer fail the totals check (ABA-752).
+
+**Reliability**
+
+- An expense saved on a bad connection is retried until the server accepts it, receipt lines
+  included, and an expense deleted offline no longer comes back (ABA-749).
+
+**Behind the scenes**
+
+- A read-only connector for AI assistants (MCP) over the public API, switched off for now
+  (ABA-750). External uptime monitoring; bot logs no longer contain the bot token (ABA-751).
+
+---
+
 ## 1.39.0 - 2026-11-10
 
 **Sharing**
