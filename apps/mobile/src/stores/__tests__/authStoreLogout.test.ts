@@ -371,4 +371,18 @@ describe('authStore.logout — child data (R14)', () => {
     expect(clearAllChildData).toHaveBeenCalledTimes(1);
     err.mockRestore();
   });
+
+  it('keeps child data and its sync queue when the logout throws before the user is signed out (ABA-748)', async () => {
+    jest.clearAllMocks();
+    const err = jest.spyOn(console, 'error').mockImplementation(() => {});
+    (secureStorage.getItem as jest.Mock).mockResolvedValue(null);
+    (clearRestoreCredential as jest.Mock).mockRejectedValueOnce(new Error('keystore unavailable'));
+    useAuthStore.setState({ isAuthenticated: true });
+
+    await useAuthStore.getState().logout();
+
+    expect(useAuthStore.getState().isAuthenticated).toBe(true);
+    expect(clearAllChildData).not.toHaveBeenCalled();
+    err.mockRestore();
+  });
 });

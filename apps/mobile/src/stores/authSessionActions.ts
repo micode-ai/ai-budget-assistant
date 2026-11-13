@@ -566,6 +566,9 @@ export async function biometricLoginAction(set: AuthStoreSet): Promise<void> {
 export async function logoutAction(set: AuthStoreSet): Promise<void> {
   if (isLoggingOut) return;
   isLoggingOut = true;
+  // Set once the auth state actually says signed out. Until then a throw leaves the
+  // user signed in, and their unsynced child writes must stay on the device (ABA-748).
+  let signedOut = false;
   try {
     // Clear push token from server before clearing auth state,
     // but only if we still have a valid token (skip when called
@@ -638,6 +641,7 @@ export async function logoutAction(set: AuthStoreSet): Promise<void> {
         hasSavedSession: false,
       });
     }
+    signedOut = true;
 
     // A consent request stashed while signed out belongs to whoever started it; it must not be
     // resumed into the next session on this device (public API final review). Unconditional, like
@@ -708,11 +712,15 @@ export async function logoutAction(set: AuthStoreSet): Promise<void> {
   } finally {
     // Child names are minors' data: on a shared device they must not wait for the next
     // sign-in (`accountStore.initialize`) to be cleared from SQLite. In `finally` (R14):
-    // a throw anywhere above must not leave them behind.
-    try {
-      await clearAllChildData();
-    } catch (e) {
-      console.warn('Failed to clear child data on logout:', e);
+    // a throw anywhere AFTER the sign-out must not leave them behind. A throw before it
+    // leaves the user signed in, and clearing then would silently drop their queued
+    // offline child writes (ABA-748).
+    if (signedOut) {
+      try {
+        await clearAllChildData();
+      } catch (e) {
+        console.warn('Failed to clear child data on logout:', e);
+      }
     }
     isLoggingOut = false;
   }

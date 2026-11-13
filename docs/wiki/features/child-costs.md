@@ -109,7 +109,9 @@ footer and the "data as of" stamp.
   mid-drain must not send under the new account). Link and line changes for an expense not yet on the
   server wait without burning attempts — otherwise attempts run out and the next pull wipes the local
   links. A child adopted by name resolves to the server PK, not a second local id. The queue and the
-  child tables are cleared on sign-out.
+  child tables are cleared on sign-out — in `logoutAction`'s `finally`, but only once the auth state
+  says signed out (`signedOut`): a logout that throws earlier leaves the user signed in, and
+  clearing then would drop their unsent child writes (ABA-748).
 - **Any client id is resolved `OR:[{id},{clientId}]` and the resolved server PK is written.**
 - **A cross-account move drops child attribution** (links and `childId`) — the children belong to the
   source account.
@@ -152,4 +154,4 @@ footer and the "data as of" stamp.
 
 ## History
 
-[ABA-747](https://github.com/micode-ai/ai-budget-assistant/issues/785) (the feature). Follow-up: [ABA-748](https://github.com/micode-ai/ai-budget-assistant/issues/786) (logout clears queued child data on a failed sign-out).
+[ABA-747](https://github.com/micode-ai/ai-budget-assistant/issues/785) (the feature). [ABA-748](https://github.com/micode-ai/ai-budget-assistant/issues/786) (a logout that failed before signing out no longer clears queued child data).
