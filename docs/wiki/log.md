@@ -332,6 +332,7 @@ Newest last within each section.
 - 2026-11-09 (no issue, query ritual) — what GA4 and Play Console add: GA4 is consent-gated marketing-site only (11 users / 28 d), Play Console is the only view of installs → first opens (36 → 18) and native stability (no crashes/ANRs); reviews stalled since August. Pages: `features/acquisition-tracking.md` (Known gaps).
 - 2026-11-09 (no issue, query ritual) — why no Play review since August: the rating prompt (1.24.0) asks only on a receipt-scan Done or a Wrapped share, a path ~10 users reached; also `hasAction()` is called without `await`. Pages: `features/store-rating-prompt.md` (Known gaps).
 - 2026-11-09 (no issue, query ritual) — who `not-set` is: Android installs whose Play Install Referrer is `(not set)` — Play's "direct" traffic through a bare Play link (Play Console: 20 direct vs 13 explore in 28 d); best-activating source (22/32), ru/ua-heavy; our two guest pages link to Play untagged. Pages: `features/acquisition-tracking.md` (Known gaps).
+- 2026-11-13 (no issue, query ritual) — the 400 on the first `POST /mcp` after Claude Code's token is protocol-version negotiation, not a bug: the client probes MCP revision 2026-07-28 first, our SDK (up to `2025-11-25`, even in 1.32.2) refuses the header, the client falls back to `initialize`. Pages: `features/mcp-connector.md`.
 
 ## Lint passes
 

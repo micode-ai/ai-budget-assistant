@@ -164,8 +164,12 @@ message.
   and `initialize`/`tools/list` all succeeded; the registration came from the user's own IP (a local
   client, so the per-IP limit does not bite). claude.ai and ChatGPT are still unchecked: on a claude.ai
   Team/Enterprise organization only the org owner may add a custom connector, and the ChatGPT account
-  at hand had no custom-connector option. The first `POST /mcp` after the token answered 400 and the
-  client recovered on its own (probably the SDK's protocol-version check); not yet diagnosed.
+  at hand had no custom-connector option. The first `POST /mcp` after the token answers **400 by design**:
+  Claude Code (2.1.323) first probes the 2026-07-28 "modern" MCP revision (stateless, `server/discover`,
+  `MCP-Protocol-Version: 2026-07-28`); `@modelcontextprotocol/sdk` 1.27 — and 1.32.2, the latest as of
+  2026-11-13 — supports only up to `2025-11-25`, so the transport's `validateProtocolVersion` refuses it
+  (the 198-byte body matches only that message) and the client falls back to `initialize` on
+  `2025-11-25`. Not a defect; it goes away when an SDK release adds 2026-07-28 and we upgrade.
 
 - **The e2e flow has not been run on a real database** (no local Redis when it was written), and the
   **production smoke (`scripts/mcp-smoke.mjs`) is pending** — both are the first things to do at launch.
