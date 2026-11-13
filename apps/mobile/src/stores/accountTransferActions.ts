@@ -389,7 +389,9 @@ export function deleteTransferAction(set: StoreSet, get: StoreGet, id: string): 
 
   // Also soft-delete the linked income if this transfer was counted as income
   if (transfer?.countAsIncome && transfer?.linkedIncomeId) {
-    softDeleteIncomeInDb(transfer.linkedIncomeId, new Date()).catch((e) =>
+    // 'synced': the server deletes the linked income with the transfer, and the
+    // transfer's own queue retries that delete — the income resend must not (ABA-754).
+    softDeleteIncomeInDb(transfer.linkedIncomeId, new Date(), 'synced').catch((e) =>
       console.error('Failed to delete linked income from SQLite:', e),
     );
   }

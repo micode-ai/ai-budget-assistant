@@ -745,6 +745,14 @@ export async function initializeDatabase(): Promise<void> {
         `UPDATE expenses SET sync_status = 'synced' WHERE is_deleted = 1 AND sync_status = 'pending'`,
       );
     } catch {}
+    // ABA-754: the same baseline for incomes, whose deletes became resendable later.
+    try {
+      runOnceSync(
+        expoDb,
+        'migration:income_pending_deletes_baseline',
+        `UPDATE incomes SET sync_status = 'synced' WHERE is_deleted = 1 AND sync_status = 'pending'`,
+      );
+    } catch {}
     try { expoDb.execSync(`ALTER TABLE incomes ADD COLUMN child_benefit_child_id TEXT`); } catch {}
     // Child costs: a line's own discount and category (as the server holds them), so the
     // device folds receipt discounts and labels line categories exactly as the web and

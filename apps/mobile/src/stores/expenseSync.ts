@@ -38,6 +38,7 @@ import { api } from '@/services/api';
 import { maybeEncrypt, maybeDecrypt } from '@/services/encryptionHelper';
 import { parseServerLocation } from '@/utils/location';
 import { useAccountStore } from './accountStore';
+import { isRetriableSyncError as isRetriable } from './syncRetry';
 import { useCategoryStore } from './categoryStore';
 import { useProjectStore } from './projectStore';
 import { createAccountScopedInflight } from './accountScopedInflight';
@@ -165,16 +166,6 @@ async function unackedReceiptFields(expense: Expense) {
     console.warn('[expenseSync] receipt not attached to the retry:', e instanceof Error ? e.message : String(e));
     return {};
   }
-}
-
-/**
- * Worth trying again later: no response at all (offline), a timeout, a rate limit
- * or a server error. Any other 4xx is the server refusing this row for good.
- */
-function isRetriable(e: unknown): boolean {
-  const status = (e as { status?: unknown } | null)?.status;
-  if (typeof status !== 'number') return true;
-  return status >= 500 || status === 408 || status === 429;
 }
 
 /**

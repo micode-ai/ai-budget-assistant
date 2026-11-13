@@ -261,14 +261,40 @@ export async function moveIncomeAccountInDb(
   );
 }
 
+/**
+ * A soft delete is `pending` until the server has it: `syncPendingIncomeDeletes`
+ * resends it (ABA-754). Pass `synced` only when the server already holds the
+ * delete — a row a pull found gone, or a transfer's linked income, which the
+ * server deletes together with the transfer.
+ */
 export async function softDeleteIncomeInDb(
   id: string,
   updatedAt: Date,
+  syncStatus: 'pending' | 'synced' = 'pending',
 ): Promise<void> {
   await executeSql(
     'UPDATE incomes SET is_deleted = 1, updated_at = ?, sync_status = ? WHERE id = ?',
-    [updatedAt.getTime(), 'pending', id],
+    [updatedAt.getTime(), syncStatus, id],
   );
+}
+
+/**
+ * Ids of this account's income deletes the server has not acknowledged yet
+ * (ABA-754), newest first. `limit` bounds one resend pass: before ABA-754 no
+ * income delete was ever marked synced.
+ */
+export async function loadPendingIncomeDeleteIds(accountId: string, limit?: number): Promise<string[]> {
+  const rows = await executeSql<{ id: string }>(
+    "SELECT id FROM incomes WHERE is_deleted = 1 AND sync_status = 'pending' AND account_id = ? ORDER BY updated_at DESC" +
+      (limit ? ' LIMIT ?' : ''),
+    limit ? [accountId, limit] : [accountId],
+  );
+  return rows.map((r) => r.id);
+}
+
+/** The server holds this delete: stop resending it. */
+export async function markIncomeDeleteSynced(id: string): Promise<void> {
+  await executeSql("UPDATE incomes SET sync_status = 'synced' WHERE id = ? AND is_deleted = 1", [id]);
 }
 
 export async function clearAllIncomes(): Promise<void> {

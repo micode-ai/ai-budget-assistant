@@ -106,9 +106,9 @@ export interface StatementPreflightDeps {
   /** Queued child-cost changes still deliverable (undeliverable line changes excluded, R12). */
   countQueuedChildChanges: () => Promise<number>;
   /**
-   * Expense deletes the server has not acknowledged (ABA-749). They are gone from
-   * the stores, so `snapshotPending` cannot see them, yet the server would still
-   * print those expenses.
+   * Expense and income deletes the server has not acknowledged (ABA-749, ABA-754).
+   * They are gone from the stores, so `snapshotPending` cannot see them, yet the
+   * server would still print those rows.
    */
   countPendingDeletes?: () => Promise<number>;
   readEncryptionTier: () => Promise<number>;

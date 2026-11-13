@@ -124,8 +124,8 @@ footer and the "data as of" stamp.
   użytkownika"); no court headers, nothing "certified". It is a statement of what the user entered,
   not a legal document, and covers only what reached the server.
 - **Pending gate.** The app flushes its sync queue and refuses to request a statement
-  while anything for the account is pending (`statementGate.ts`), including expense deletes the
-  server has not confirmed (`countPendingDeletes`, ABA-749) — they are gone from the stores, so the
+  while anything for the account is pending (`statementGate.ts`), including expense and income
+  deletes the server has not confirmed (`countPendingDeletes`, ABA-749, ABA-754) — they are gone from the stores, so the
   store snapshot cannot see them. Undeliverable line changes (see
   above) are reported in the dialog, never counted as pending — otherwise one unknown line would
   block the statement forever. Known window: see Known gaps.
@@ -137,9 +137,6 @@ footer and the "data as of" stamp.
 
 - No tier-upgrade re-encryption exists for any entity, so a plaintext child name created before
   E2EE was enabled stays plaintext until edited.
-- An income's offline delete is still sent once and never retried, so the statement can count an
-  income the user deleted on a flaky network. (The expense side was fixed in
-  [ABA-749](https://github.com/micode-ai/ai-budget-assistant/issues/787).)
 - An offline 800+ unmark can be reverted by a retry.
 - Web "Extract items" waits for new lines sequentially.
 - The reports `PdfGenerator` never draws its page footer (pre-existing, separate issue); the

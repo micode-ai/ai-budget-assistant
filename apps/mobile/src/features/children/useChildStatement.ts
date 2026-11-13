@@ -9,6 +9,7 @@ import { serverChildRef } from '@/stores/childStore';
 import { countStatementQueue, drainChildQueue, readEncryptionTier } from '@/stores/childSync';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { loadPendingExpenseDeleteIds } from '@/db/expenseRepository';
+import { loadPendingIncomeDeleteIds } from '@/db/incomeRepository';
 import { useIncomeStore } from '@/stores/incomeStore';
 import { useSubscriptionStore } from '@/stores/subscriptionStore';
 import { useUpgradeStore } from '@/stores/upgradeStore';
@@ -113,8 +114,12 @@ export function useChildStatement(childId: string | null) {
             setUndeliverableLines(queue.undeliverableLines);
             return queue.pending;
           },
+          // Expense and income deletes alike: the statement prints both (ABA-749, ABA-754).
           countPendingDeletes: async () =>
-            Platform.OS === 'web' ? 0 : (await loadPendingExpenseDeleteIds(accountId)).length,
+            Platform.OS === 'web'
+              ? 0
+              : (await loadPendingExpenseDeleteIds(accountId)).length +
+                (await loadPendingIncomeDeleteIds(accountId)).length,
           readEncryptionTier: () => readEncryptionTier(accountId),
         });
         if (gate !== 'ok') {

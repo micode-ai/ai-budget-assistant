@@ -10,7 +10,11 @@ import {
   updateIncomeInDb,
   softDeleteIncomeInDb,
   setIncomeChildBenefit,
+  loadPendingIncomeDeleteIds,
+  markIncomeDeleteSynced,
 } from '@/db/incomeRepository';
+import { syncPendingIncomeDeletes } from './incomeSync';
+import { isRetriableSyncError } from './syncRetry';
 import { insertIncomeTag, getTagsForIncome } from '@/db/tagRepository';
 import { getCategoryById as getCategoryFromDb, upsertCategory } from '@/db/categoryRepository';
 import { categoryPushRef } from '@/features/categories/categoryPushRef';
@@ -170,7 +174,20 @@ export const useIncomeStore = create<IncomeState>()(
         try {
           const serverResult = await api.getIncomes();
           if (useAccountStore.getState().currentAccountId !== accountId) return;
-          const serverIncomes = serverResult.data;
+          // A delete the server has not acknowledged yet wins over the server's copy:
+          // without this the pull re-inserted an income deleted offline (ABA-754).
+          // Best effort: an unreadable list must not cost the whole pull.
+          let pendingDeleteIds = new Set<string>();
+          if (Platform.OS !== 'web') {
+            try {
+              pendingDeleteIds = new Set(await loadPendingIncomeDeleteIds(accountId));
+            } catch (e) {
+              console.warn('[incomeStore] pending deletes unreadable:', e instanceof Error ? e.message : String(e));
+            }
+          }
+          const serverIncomes = serverResult.data.filter(
+            (si: any) => !pendingDeleteIds.has(si.clientId || si.id),
+          );
 
           // -------- PHASE A: build local lookup + dedup category map --------
           const localById = new Map<string, Income>();
@@ -298,7 +315,8 @@ export const useIncomeStore = create<IncomeState>()(
               }
               for (const local of localIncomes) {
                 if (local.syncStatus === 'synced' && !serverIdSet.has(local.id)) {
-                  await softDeleteIncomeInDb(local.id, new Date());
+                  // Already gone on the server: nothing to resend.
+                  await softDeleteIncomeInDb(local.id, new Date(), 'synced');
                 }
               }
             });
@@ -528,10 +546,12 @@ export const useIncomeStore = create<IncomeState>()(
         console.error('Failed to soft-delete income in SQLite:', e),
       );
 
-      api.deleteIncome(id).catch((e) =>
-        // Expected offline; local row soft-deleted + marked pending.
-        console.warn('Income delete sync deferred (offline?):', e),
-      );
+      // Acknowledged → the soft-deleted row is done. Otherwise it stays `pending`
+      // and syncPendingIncomes resends it (ABA-754).
+      api
+        .deleteIncome(id)
+        .then(() => markIncomeDeleteSynced(id))
+        .catch((e) => console.warn('Income delete sync deferred (offline?):', e));
     },
 
     setFilters: (filters) =>
@@ -543,7 +563,6 @@ export const useIncomeStore = create<IncomeState>()(
       const pending = get().incomes.filter(
         (i) => i.syncStatus === 'pending' && !i.isDeleted,
       );
-      if (pending.length === 0) return;
 
       for (const income of pending) {
         try {
@@ -582,8 +601,16 @@ export const useIncomeStore = create<IncomeState>()(
             encryptedPayload,
             encryptionKeyVersion,
           } as any);
-        } catch {
-          // upsert handles duplicates
+        } catch (e) {
+          // Only an acknowledged push marks the row synced (ABA-754, as ABA-749 did for
+          // expenses): marking it on any error meant an income whose create failed was
+          // never retried and never reached the server. A 4xx refusal will not change
+          // on retry, so that row is let go — loudly.
+          if (isRetriableSyncError(e)) {
+            console.warn('[incomeStore] income push deferred (offline?):', e instanceof Error ? e.message : String(e));
+            continue;
+          }
+          console.warn('[incomeStore] income push refused by the server:', e instanceof Error ? e.message : String(e));
         }
         set((state) => ({
           incomes: state.incomes.map((i) =>
@@ -591,6 +618,14 @@ export const useIncomeStore = create<IncomeState>()(
           ),
         }));
         updateIncomeInDb(income.id, {}, new Date(), 'synced').catch(() => {});
+      }
+
+      // After the creates: a delete of a row whose create is still in flight must not
+      // reach the server first.
+      try {
+        await syncPendingIncomeDeletes();
+      } catch (e) {
+        console.warn('[incomeStore] pending deletes not sent:', e instanceof Error ? e.message : String(e));
       }
     },
 

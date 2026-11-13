@@ -68,7 +68,11 @@ every `syncPendingExpenses` (after the creates, at most 20 per pass), a 404 coun
 pull skips server rows whose local copy is a pending delete — it used to re-insert an expense deleted
 offline. A one-time migration (`expense_pending_deletes_baseline`) marked the pre-ABA-749 history
 synced: back then a pull re-inserted anything the server still had, so those rows were settled.
-Incomes still send their delete once (known gap).
+**Incomes follow the same two rules since ABA-754:** `syncPendingIncomes` marks a row synced only on
+an acknowledged push (the retry test is the shared `stores/syncRetry.ts`), and `syncPendingIncomeDeletes`
+(`stores/incomeSync.ts`) resends pending income deletes at the end of every pass, the pull skipping
+them, with its own baseline migration (`income_pending_deletes_baseline`). A transfer's linked income
+is soft-deleted as already `synced`: the server deletes it with the transfer, whose own queue retries.
 
 **A failed push while offline is logged with `console.warn`, never `console.error`.** It is an
 *expected* outcome: the row stays `pending` and re-syncs later. RN's dev LogBox renders any
@@ -111,7 +115,7 @@ The pure rule is `features/syncStatus/pendingSyncSummary.ts`. Tap offers "Sync n
 
 - **The `sync_queue` table is declared but unused** — never count it; `sync_status` is the real marker.
 - Failed (`error`) rows show at once; `pending` rows only after 5 minutes, so brief offline stays quiet.
-- **Soft-deleted rows are never counted** (`is_deleted = 0` in `loadPendingRows`). A delete is sent once at delete time and its row is never marked synced afterwards, while the push loops skip `isDeleted` rows, so every deleted row stays `pending` forever — counting them showed "Waiting to sync: 52" right after a successful sync ([ABA-729](https://github.com/micode-ai/ai-budget-assistant/issues/766)). The count must equal what a sync would upload. Since ABA-749 a failed expense delete stays `pending` and is resent, but the chip still does not count it; an income delete is still sent once.
+- **Soft-deleted rows are never counted** (`is_deleted = 0` in `loadPendingRows`). A delete is sent once at delete time and its row is never marked synced afterwards, while the push loops skip `isDeleted` rows, so every deleted row stays `pending` forever — counting them showed "Waiting to sync: 52" right after a successful sync ([ABA-729](https://github.com/micode-ai/ai-budget-assistant/issues/766)). The count must equal what a sync would upload. Since ABA-749 a failed expense delete stays `pending` and is resent, but the chip still does not count it; the same holds for income deletes since ABA-754.
 - Web renders nothing: the SQLite mock returns no rows. Contract: `docs/contracts/pending-sync-status-indicator.md`.
 
 ## Known gaps
@@ -127,4 +131,4 @@ The pure rule is `features/syncStatus/pendingSyncSummary.ts`. Tap offers "Sync n
 
 ABA-152 (parallel batches of 10) · ABA-157 (warn, not error) · ABA-356 (the first real test
 coverage for the handlers) · ABA-423 (budget/category changes reject instead of silently
-succeeding) · ABA-468 (the 990-line service split into per-entity handler files) · ABA-708 (account scoping on relation and line-item writes) · ABA-722 (pending-sync chip).
+succeeding) · ABA-468 (the 990-line service split into per-entity handler files) · ABA-708 (account scoping on relation and line-item writes) · ABA-722 (pending-sync chip) · ABA-749 (expense push and delete retry) · [ABA-754](https://github.com/micode-ai/ai-budget-assistant/issues/792) (the same for incomes).
