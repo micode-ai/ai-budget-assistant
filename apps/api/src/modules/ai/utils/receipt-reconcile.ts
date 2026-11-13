@@ -79,7 +79,11 @@ export function reconciliationGapPct(receipt: ReconcilableReceipt): number | nul
   // use the per-line total as the more accurate signal (Lidl with RABAT lines)
   const effectiveDiscount = Math.max(basketDiscount, lineDiscounts);
   const expected = linesTotal - effectiveDiscount + positive(receipt.deposit);
-  return (Math.abs(expected - total) / total) * 100;
+  // Measured against the larger of the amount due and the lines, not the amount
+  // due alone: with coupons the basket can be 1746 and the amount due 86, and a
+  // 9-unit misread — 0.5 % of what was read — would count as 10 % and flag a
+  // good reading every time. Without a large discount the two are about equal.
+  return (Math.abs(expected - total) / Math.max(total, linesTotal)) * 100;
 }
 
 /**

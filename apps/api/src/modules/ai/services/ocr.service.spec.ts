@@ -146,6 +146,38 @@ describe('OcrService', () => {
     const normalize = (over: Partial<ParsedReceipt>) =>
       (service as any).validateAndNormalizeReceipt({ ...BASE_PARSED_RECEIPT, ...over }, CONTEXT) as ParsedReceipt;
 
+    it('keeps coupons larger than the amount due when the lines confirm them', () => {
+      // 1746.10 of goods, coupons 1660, 86.10 to pay; no subtotal printed.
+      const result = normalize({
+        items: [
+          { description: 'Item A', totalPrice: 1000 },
+          { description: 'Item B', totalPrice: 746.1 },
+        ],
+        subtotal: undefined,
+        tax: 0,
+        discount: 1660,
+        total: 86.1,
+      });
+
+      expect(result.discount).toBe(1660);
+    });
+
+    it('still drops a discount larger than the amount due that the lines contradict', () => {
+      // Lines sum to the total: the "discount" is the total misread, not a coupon.
+      const result = normalize({
+        items: [
+          { description: 'Item A', totalPrice: 50 },
+          { description: 'Item B', totalPrice: 36.1 },
+        ],
+        subtotal: undefined,
+        tax: 0,
+        discount: 86.1,
+        total: 86.1,
+      });
+
+      expect(result.discount).toBeNull();
+    });
+
     it('clears the VAT a Sinsay receipt reported as a discount', () => {
       // Lines 2,09 + 13,99 = 16,08 = SUMA PLN. `Podatek PTU 3,01` is the VAT.
       const result = normalize({

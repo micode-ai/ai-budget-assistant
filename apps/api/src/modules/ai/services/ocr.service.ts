@@ -693,8 +693,17 @@ User note about this receipt: "${safeNote}"`;
     const depositPaid = deposit ?? 0;
 
     if (discount !== null && total !== null && discount >= total) {
-      this.logger.warn(`[OCR] Discount ${discount} >= total ${total} — discarding implausible discount`);
-      discount = null;
+      // Coupons can take most of a basket (1746 of goods paid with 86), so a
+      // discount larger than the amount due is not misread by itself. Kept only
+      // when the lines confirm it — lines − discount + deposit reconciles with
+      // the total — so a total misread as the discount is still dropped.
+      const gap = reconciliationGapPct({ items: parsed.items, discount, deposit: depositPaid, total });
+      if (gap !== null && gap <= RECEIPT_RECONCILE_TOLERANCE_PCT) {
+        this.logger.log(`[OCR] Discount ${discount} >= total ${total} kept: the lines confirm it`);
+      } else {
+        this.logger.warn(`[OCR] Discount ${discount} >= total ${total} — discarding implausible discount`);
+        discount = null;
+      }
     }
 
     if (subtotal !== null && total !== null) {

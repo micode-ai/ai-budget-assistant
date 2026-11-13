@@ -150,6 +150,15 @@ tolerance from the receipt total, or when fewer than two categories would result
 honest answer; within tolerance the residual goes to the largest group rather than inventing a
 category for it.
 
+**The gap is measured against the larger of the amount due and the lines** ([ABA-752](https://github.com/micode-ai/ai-budget-assistant/issues/790)),
+in `reconciliationGapPct` and both copies of `receiptTotalsReconcile`. A coupon receipt can pay 86 for
+1746 of goods; against the amount due alone, a 9-unit misread (0.5 % of what was read) became 10 % and
+every such receipt failed — re-read, mismatch warning, no split, no attestation. On an ordinary receipt
+the two denominators are about equal, so nothing changed there. For the same reason a discount larger
+than the amount due is no longer discarded outright: it is kept when the lines confirm it
+(lines − discount + deposit reconciles), and still dropped when they do not — the shape of a total
+misread as a discount.
+
 **`depositAmount` must be written at all three `ExpensesService` sites** — create, the create-upsert
 update branch, and `update()` — the same three-site pattern `location` needed. **And it must be
 listed in `findAll`'s explicit `select`**: that method selects fields one by one (unlike `findOne`,
@@ -243,4 +252,4 @@ hand-constructed, so a new constructor dependency silently arrived as `undefined
 splits — see [category-id-resolution](category-id-resolution.md) and the budget attribution util) ·
 ABA-601 (standard names for proposals; the overall category vetoed by the split) · ABA-602
 (a moved expense unlearns its product rules) · ABA-664 (the discount check counts the deposit) ·
-[ABA-696](https://github.com/micode-ai/ai-budget-assistant/issues/729) (category hierarchy; tree in the prompt, equivalence, rerouted proposals).
+[ABA-696](https://github.com/micode-ai/ai-budget-assistant/issues/729) (category hierarchy; tree in the prompt, equivalence, rerouted proposals). · [ABA-752](https://github.com/micode-ai/ai-budget-assistant/issues/790) (coupon receipts: gap against the larger of due and lines; a confirmed discount above the amount due is kept).

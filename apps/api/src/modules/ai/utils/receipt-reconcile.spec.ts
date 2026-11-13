@@ -25,7 +25,22 @@ describe('reconciliationGapPct', () => {
   });
 
   it('is unsigned — over-reading and under-reading are both discrepancies', () => {
-    expect(reconciliationGapPct(receipt([110], { total: 100 }))).toBe(10);
+    // Over-read: 10 against the larger of total and lines (110).
+    expect(reconciliationGapPct(receipt([110], { total: 100 }))).toBeCloseTo(9.09, 2);
+    expect(reconciliationGapPct(receipt([90], { total: 100 }))).toBe(10);
+  });
+
+  it('measures a coupon receipt against what was read, not the small amount due', () => {
+    // 1746.10 of goods, 1660 of coupons, 86.10 due; the lines read 8.60 high.
+    const r = receipt([1000, 754.7], { discount: 1660, total: 86.1 });
+    expect(reconciliationGapPct(r)).toBeCloseTo((8.6 / 1754.7) * 100, 3);
+    expect(needsReread(r, RECEIPT_RECONCILE_TOLERANCE_PCT)).toBe(false);
+  });
+
+  it('still flags a coupon receipt whose lines are badly off', () => {
+    // 1746.10 of goods read as 1900: 154 over, about 8 % of the lines.
+    const r = receipt([1000, 900], { discount: 1660, total: 86.1 });
+    expect(needsReread(r, RECEIPT_RECONCILE_TOLERANCE_PCT)).toBe(true);
   });
 
   it('cannot be measured without usable lines or a usable total', () => {

@@ -79,7 +79,11 @@ export function receiptTotalsReconcile(params: {
   const depositCents =
     typeof deposit === 'number' && Number.isFinite(deposit) && deposit > 0 ? toCents(deposit) : 0;
 
-  const gapPct = (Math.abs(netItemsCents - discountCents + depositCents - totalCents) / totalCents) * 100;
+  // Relative to the larger of the amount due and the lines (see reconciliationGapPct
+  // in the API's receipt-reconcile.ts): a coupon receipt paying 86 for 1746 of goods
+  // must not turn a 0.5 % misread into a 10 % gap.
+  const gapPct =
+    (Math.abs(netItemsCents - discountCents + depositCents - totalCents) / Math.max(totalCents, netItemsCents)) * 100;
   return gapPct <= tolerancePct;
 }
 

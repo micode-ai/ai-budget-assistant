@@ -3,6 +3,7 @@ import {
   RECEIPT_SPLIT_DEFAULTS,
   type SplitInputItem,
   rescaleSplits,
+  receiptTotalsReconcile,
 } from './receipt-category-split';
 
 const item = (
@@ -374,5 +375,25 @@ describe('buildCategorySplits with a basket-level discount', () => {
     expect(buildCategorySplits({ items, total: 240, discount: 0 })).toEqual(
       buildCategorySplits({ items, total: 240 }),
     );
+  });
+});
+
+describe('receiptTotalsReconcile — coupon receipts', () => {
+  it('reconciles a basket paid mostly with coupons when the lines are close', () => {
+    // 1754.70 read for 1746.10 of goods, 1660 of coupons, 86.10 due: 0.5 % of the lines.
+    expect(
+      receiptTotalsReconcile({ items: [{ amount: 1000 }, { amount: 754.7 }], total: 86.1, discount: 1660 }),
+    ).toBe(true);
+  });
+
+  it('still refuses lines that are far from the receipt', () => {
+    expect(
+      receiptTotalsReconcile({ items: [{ amount: 1000 }, { amount: 900 }], total: 86.1, discount: 1660 }),
+    ).toBe(false);
+  });
+
+  it('is unchanged for an ordinary receipt', () => {
+    expect(receiptTotalsReconcile({ items: [{ amount: 60 }, { amount: 30 }], total: 100 })).toBe(false);
+    expect(receiptTotalsReconcile({ items: [{ amount: 60 }, { amount: 37 }], total: 100 })).toBe(true);
   });
 });
