@@ -334,11 +334,12 @@ CURRENCY_PRICING = {
 }
 # be (Belarusian) has no BYN in CURRENCY_PRICING and no Stripe price for it,
 # so it falls back to USD display (confirmed intended behavior, not a bug).
-# br (pt-BR) is the same case: there is no BRL price, so Brazil sees USD. pt (pt-PT) is a
-# eurozone market like de/es/fr/nl and shows the existing EUR price.
+# br (pt-BR) shows BRL (its own row in pricing-data.json and its own Stripe prices,
+# STRIPE_*_PRICE_ID_BRL). pt (pt-PT) is a eurozone market like de/es/fr/nl and shows the
+# existing EUR price.
 LANG_CURRENCY = {
     "en": "USD", "pl": "PLN", "de": "EUR", "es": "EUR", "fr": "EUR",
-    "ru": "RUB", "ua": "UAH", "be": "USD", "nl": "EUR", "pt": "EUR", "br": "USD",
+    "ru": "RUB", "ua": "UAH", "be": "USD", "nl": "EUR", "pt": "EUR", "br": "BRL",
 }
 TIER_KEYS = ["free", "pro", "business"]
 TIER_NAMES = {"free": "Free", "pro": "Pro", "business": "Business"}
@@ -353,10 +354,11 @@ def tier_amounts(lang, tier):
 
 # per-currency display convention: symbol position + decimal separator. USD is the only
 # prefix+dot market; EUR/PLN/RUB/UAH put the symbol after the amount with a comma decimal.
+# BRL is prefix+comma with no space ("R$14,90"), matching the app's formatCurrency.
 # (display only — the JSON-LD Offer price stays a machine-readable dot-decimal number.)
 CURRENCY_FORMAT = {
     "USD": ("pre", "."), "EUR": ("post", ","), "PLN": ("post", ","),
-    "RUB": ("post", ","), "UAH": ("post", ","),
+    "RUB": ("post", ","), "UAH": ("post", ","), "BRL": ("pre", ","),
 }
 def fmt_price(cur, amount):
     pos, dec = CURRENCY_FORMAT.get(cur, ("pre", "."))
@@ -678,7 +680,7 @@ PRICING = {
      ("O app é grátis?", "Sim, os recursos principais são gratuitos para sempre. Pro e Business liberam limites de IA maiores, mais contas e análises avançadas."),
      ("Posso cancelar quando quiser?", "Sim. Cancele quando quiser em Configurações — você mantém o acesso até o fim do período de cobrança atual."),
      ("O que acontece depois do teste grátis?", "Se você não cancelar, o cartão é cobrado automaticamente no fim dos 7 dias de teste. Você recebe um lembrete antes da cobrança."),
-     ("Em qual moeda eu pago?", "Os preços aparecem em uma das moedas aceitas (USD, EUR, PLN, GBP, UAH ou RUB) quando você faz o upgrade no app. Ainda não há preço em reais: no Brasil, a cobrança é em dólares (USD)."),
+     ("Em qual moeda eu pago?", "Os preços aparecem automaticamente na sua moeda local quando você faz o upgrade no app. No Brasil, os preços e a cobrança são em reais (BRL); as outras moedas aceitas são USD, EUR, PLN, GBP, UAH e RUB."),
    ],
  },
 }

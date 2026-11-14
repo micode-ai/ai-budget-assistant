@@ -78,6 +78,7 @@ export class SubscriptionsController {
       dto.priceId,
       dto.successUrl,
       dto.cancelUrl,
+      req.user.currencyCode,
     );
   }
 

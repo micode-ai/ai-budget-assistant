@@ -51,10 +51,41 @@ const PRICING: Record<
   { symbol: string; pro_monthly: number; pro_yearly: number; biz_monthly: number; biz_yearly: number }
 > = pricingData.currencies;
 
+/** The four Stripe price env keys a currency needs before its prices can be offered. */
+export function stripePriceEnvKeys(code: string): string[] {
+  return [
+    `STRIPE_PRO_MONTHLY_PRICE_ID_${code}`,
+    `STRIPE_PRO_YEARLY_PRICE_ID_${code}`,
+    `STRIPE_BUSINESS_MONTHLY_PRICE_ID_${code}`,
+    `STRIPE_BUSINESS_YEARLY_PRICE_ID_${code}`,
+  ];
+}
+
+/**
+ * Display convention per currency for getPlans()' `display` strings. Only
+ * currencies listed here deviate from the legacy `${symbol}${n.toFixed(2)}`
+ * form; BRL follows the app formatter (`formatCurrency(…, 'BRL')` → `R$14,90`,
+ * `R$1.234,50`): prefix symbol, no space, comma decimals, dot thousands.
+ */
+const DISPLAY_FORMAT: Record<string, { decimal: string; thousands: string }> = {
+  BRL: { decimal: ',', thousands: '.' },
+};
+
+export function formatPlanAmount(code: string, symbol: string, amountMinor: number): string {
+  const fixed = (amountMinor / 100).toFixed(2);
+  const fmt = DISPLAY_FORMAT[code];
+  if (!fmt) return `${symbol}${fixed}`;
+  const [int, frac] = fixed.split('.');
+  const grouped = int.replace(/\B(?=(\d{3})+(?!\d))/g, fmt.thousands);
+  return `${symbol}${grouped}${fmt.decimal}${frac}`;
+}
+
 @Injectable()
 export class SubscriptionsService {
   private readonly stripe!: Stripe;
   private readonly logger = new Logger(SubscriptionsService.name);
+  /** Currencies already warned about as unprovisioned — warn once per process, not per request. */
+  private readonly warnedUnprovisioned = new Set<string>();
 
   constructor(
     private readonly prisma: PrismaService,
@@ -137,12 +168,39 @@ export class SubscriptionsService {
     };
   }
 
-  getPlans(currencyCode: string) {
-    const currency = currencyCode.toUpperCase();
-    const p = PRICING[currency] || PRICING.USD;
-    const code = PRICING[currency] ? currency : 'USD';
+  /**
+   * The currency the plans are offered in: the user's own currency when
+   * pricing-data.json has a row for it AND (with Stripe configured) all four of
+   * its STRIPE_*_PRICE_ID_{CUR} env keys are set; otherwise USD. The env check
+   * keeps the displayed currency equal to the charged one — a currency whose
+   * Stripe prices are not provisioned yet (e.g. BRL before its env lines land)
+   * must not show local prices it cannot charge. Without STRIPE_SECRET_KEY
+   * nothing can be charged, so the row alone decides (dev/test).
+   */
+  resolvePlanCurrency(currencyCode: string | null | undefined): string {
+    const requested = (currencyCode || 'USD').toUpperCase();
+    if (!PRICING[requested]) return 'USD';
+    if (requested === 'USD' || !this.stripe) return requested;
+    const provisioned = stripePriceEnvKeys(requested).every(
+      (key) => !!this.configService.get<string>(key),
+    );
+    if (!provisioned) {
+      if (!this.warnedUnprovisioned.has(requested)) {
+        this.warnedUnprovisioned.add(requested);
+        this.logger.warn(
+          `Stripe prices for ${requested} are not configured; offering USD plans instead`,
+        );
+      }
+      return 'USD';
+    }
+    return requested;
+  }
 
-    const fmt = (amount: number) => (amount / 100).toFixed(2);
+  getPlans(currencyCode: string) {
+    const code = this.resolvePlanCurrency(currencyCode);
+    const p = PRICING[code];
+
+    const fmtDisplay = (amount: number) => formatPlanAmount(code, p.symbol, amount);
 
     return {
       currency: code,
@@ -151,9 +209,9 @@ export class SubscriptionsService {
         {
           tier: 'pro' as const,
           name: 'Pro',
-          monthly: { amount: p.pro_monthly, display: `${p.symbol}${fmt(p.pro_monthly)}`, priceEnvKey: `STRIPE_PRO_MONTHLY_PRICE_ID_${code}` },
-          yearly:  { amount: p.pro_yearly,  display: `${p.symbol}${fmt(p.pro_yearly)}`,  priceEnvKey: `STRIPE_PRO_YEARLY_PRICE_ID_${code}` },
-          monthlyEquivalent: `${p.symbol}${fmt(Math.round(p.pro_yearly / 12))}`,
+          monthly: { amount: p.pro_monthly, display: fmtDisplay(p.pro_monthly), priceEnvKey: `STRIPE_PRO_MONTHLY_PRICE_ID_${code}` },
+          yearly:  { amount: p.pro_yearly,  display: fmtDisplay(p.pro_yearly),  priceEnvKey: `STRIPE_PRO_YEARLY_PRICE_ID_${code}` },
+          monthlyEquivalent: fmtDisplay(Math.round(p.pro_yearly / 12)),
           features: [
             '300 AI requests/month',
             'Up to 5 accounts',
@@ -166,9 +224,9 @@ export class SubscriptionsService {
         {
           tier: 'business' as const,
           name: 'Business',
-          monthly: { amount: p.biz_monthly, display: `${p.symbol}${fmt(p.biz_monthly)}`, priceEnvKey: `STRIPE_BUSINESS_MONTHLY_PRICE_ID_${code}` },
-          yearly:  { amount: p.biz_yearly,  display: `${p.symbol}${fmt(p.biz_yearly)}`,  priceEnvKey: `STRIPE_BUSINESS_YEARLY_PRICE_ID_${code}` },
-          monthlyEquivalent: `${p.symbol}${fmt(Math.round(p.biz_yearly / 12))}`,
+          monthly: { amount: p.biz_monthly, display: fmtDisplay(p.biz_monthly), priceEnvKey: `STRIPE_BUSINESS_MONTHLY_PRICE_ID_${code}` },
+          yearly:  { amount: p.biz_yearly,  display: fmtDisplay(p.biz_yearly),  priceEnvKey: `STRIPE_BUSINESS_YEARLY_PRICE_ID_${code}` },
+          monthlyEquivalent: fmtDisplay(Math.round(p.biz_yearly / 12)),
           features: [
             'Unlimited AI requests',
             'Unlimited accounts',
@@ -180,17 +238,26 @@ export class SubscriptionsService {
     };
   }
 
+  /**
+   * The price env keys a user may check out with: the four getPlans() hands
+   * out for their currency, plus the four USD keys (the universal fallback
+   * plans). Anything else — another currency's cheaper PPP price, or an
+   * arbitrary env var name — is refused before any config lookup.
+   */
+  offeredPriceEnvKeys(currencyCode: string | null | undefined): Set<string> {
+    const code = this.resolvePlanCurrency(currencyCode);
+    return new Set([...stripePriceEnvKeys(code), ...stripePriceEnvKeys('USD')]);
+  }
+
+  /**
+   * Exact env lookup of a suffixed price key ("STRIPE_PRO_MONTHLY_PRICE_ID_PLN").
+   * No fallback to the un-suffixed key: it would charge in whatever currency
+   * that bare price is in, not the one displayed. Only called with a key that
+   * passed offeredPriceEnvKeys().
+   */
   resolvePriceId(priceEnvKey: string): string {
-    // priceEnvKey is like "STRIPE_PRO_MONTHLY_PRICE_ID_PLN"
-    // First try the exact env key, then fallback to USD
     const priceId = this.configService.get<string>(priceEnvKey);
     if (priceId) return priceId;
-
-    // Fallback: strip the currency suffix and try without it
-    const fallbackKey = priceEnvKey.replace(/_[A-Z]{3}$/, '');
-    const fallbackId = this.configService.get<string>(fallbackKey);
-    if (fallbackId) return fallbackId;
-
     throw new BadRequestException(`No Stripe price configured for ${priceEnvKey}`);
   }
 
@@ -226,7 +293,12 @@ export class SubscriptionsService {
     priceEnvKey: string,
     successUrl: string,
     cancelUrl: string,
+    currencyCode: string | null | undefined,
   ) {
+    if (!this.offeredPriceEnvKeys(currencyCode).has(priceEnvKey)) {
+      this.logger.warn(`Refused checkout with a price key not offered to user ${userId}`);
+      throw new BadRequestException('This plan is not available for your currency');
+    }
     const stripePriceId = this.resolvePriceId(priceEnvKey);
     const customerId = await this.getOrCreateStripeCustomer(userId);
 
@@ -664,7 +736,8 @@ export class SubscriptionsService {
   private async resolveTierFromPrice(
     priceId: string,
   ): Promise<'free' | 'pro' | 'business'> {
-    const currencies = ['', '_USD', '_EUR', '_PLN', '_GBP', '_UAH', '_RUB'];
+    // Every currency in pricing-data.json, plus the legacy un-suffixed keys.
+    const currencies = ['', ...Object.keys(PRICING).map((code) => `_${code}`)];
 
     for (const suffix of currencies) {
       const proMonthly = this.configService.get<string>(`STRIPE_PRO_MONTHLY_PRICE_ID${suffix}`);

@@ -1,5 +1,8 @@
-import { ForbiddenException } from '@nestjs/common';
-import { SubscriptionsService } from './subscriptions.service';
+import { BadRequestException, ForbiddenException } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
+import { validateSync } from 'class-validator';
+import { SubscriptionsService, formatPlanAmount } from './subscriptions.service';
+import { CreateCheckoutSessionDto } from './dto';
 import * as pricingData from './pricing-data.json';
 
 // Critical subscription paths:
@@ -359,6 +362,204 @@ describe('SubscriptionsService — getPlans', () => {
     const plans = service.getPlans('XYZ');
     expect(plans.currency).toBe('USD');
   });
+});
+
+// ── BRL pricing + "display currency = charged currency" gate ──────────────────
+
+describe('SubscriptionsService — getPlans BRL', () => {
+  const BRL_KEYS = [
+    'STRIPE_PRO_MONTHLY_PRICE_ID_BRL',
+    'STRIPE_PRO_YEARLY_PRICE_ID_BRL',
+    'STRIPE_BUSINESS_MONTHLY_PRICE_ID_BRL',
+    'STRIPE_BUSINESS_YEARLY_PRICE_ID_BRL',
+  ];
+
+  /** A service that behaves as if STRIPE_SECRET_KEY is set, with the given env. */
+  function withStripeEnv(env: Record<string, string>) {
+    const { service } = makeService();
+    (service as any).stripe = {}; // "Stripe configured" — no call is made by getPlans
+    (service as any).configService.get.mockImplementation((key: string) => env[key]);
+    return service;
+  }
+
+  it('returns BRL amounts, R$ display in the app convention and the _BRL env keys', () => {
+    const { service } = makeService();
+    const plans = service.getPlans('BRL');
+    expect(plans.currency).toBe('BRL');
+    expect(plans.symbol).toBe('R$');
+
+    const [pro, biz] = plans.plans;
+    expect(pro.monthly).toEqual({ amount: 1490, display: 'R$14,90', priceEnvKey: 'STRIPE_PRO_MONTHLY_PRICE_ID_BRL' });
+    expect(pro.yearly).toEqual({ amount: 8990, display: 'R$89,90', priceEnvKey: 'STRIPE_PRO_YEARLY_PRICE_ID_BRL' });
+    expect(pro.monthlyEquivalent).toBe('R$7,49');
+    expect(biz.monthly).toEqual({ amount: 5990, display: 'R$59,90', priceEnvKey: 'STRIPE_BUSINESS_MONTHLY_PRICE_ID_BRL' });
+    expect(biz.yearly).toEqual({ amount: 57504, display: 'R$575,04', priceEnvKey: 'STRIPE_BUSINESS_YEARLY_PRICE_ID_BRL' });
+    expect(biz.monthlyEquivalent).toBe('R$47,92');
+  });
+
+  it('is case-insensitive on the user currency code', () => {
+    const { service } = makeService();
+    expect(service.getPlans('brl').currency).toBe('BRL');
+  });
+
+  it('keeps the legacy display for the other currencies (no format change outside BRL)', () => {
+    const { service } = makeService();
+    expect(service.getPlans('PLN').plans[0].monthly.display).toBe('zł14.99');
+    expect(service.getPlans('USD').plans[0].monthly.display).toBe('$4.99');
+  });
+
+  it('offers BRL when Stripe is configured and all four _BRL price ids are set', () => {
+    const env = Object.fromEntries(BRL_KEYS.map((k) => [k, `price_${k}`]));
+    const plans = withStripeEnv(env).getPlans('BRL');
+    expect(plans.currency).toBe('BRL');
+    expect(plans.plans[0].monthly.priceEnvKey).toBe('STRIPE_PRO_MONTHLY_PRICE_ID_BRL');
+  });
+
+  it('offers USD (display AND checkout key) when the _BRL price ids are not provisioned yet', () => {
+    // A bare STRIPE_PRO_MONTHLY_PRICE_ID would let resolvePriceId() charge a BRL
+    // checkout in another currency — the gate must not hand out _BRL keys here.
+    const plans = withStripeEnv({ STRIPE_PRO_MONTHLY_PRICE_ID: 'price_usd_bare' }).getPlans('BRL');
+    expect(plans.currency).toBe('USD');
+    expect(plans.symbol).toBe('$');
+    expect(plans.plans[0].monthly.priceEnvKey).toBe('STRIPE_PRO_MONTHLY_PRICE_ID_USD');
+    expect(plans.plans[0].monthly.display).toBe('$4.99');
+  });
+
+  it('offers USD when only some of the _BRL price ids are set', () => {
+    const plans = withStripeEnv({
+      STRIPE_PRO_MONTHLY_PRICE_ID_BRL: 'price_a',
+      STRIPE_PRO_YEARLY_PRICE_ID_BRL: 'price_b',
+    }).getPlans('BRL');
+    expect(plans.currency).toBe('USD');
+  });
+
+  it('resolvePriceId reads the exact _BRL key when set', () => {
+    const service = withStripeEnv({ STRIPE_PRO_YEARLY_PRICE_ID_BRL: 'price_brl_y' });
+    expect(service.resolvePriceId('STRIPE_PRO_YEARLY_PRICE_ID_BRL')).toBe('price_brl_y');
+  });
+
+  it('resolvePriceId never falls back to the un-suffixed key (it would charge another currency)', () => {
+    const bare = withStripeEnv({ STRIPE_PRO_YEARLY_PRICE_ID: 'price_bare' });
+    expect(() => bare.resolvePriceId('STRIPE_PRO_YEARLY_PRICE_ID_BRL')).toThrow(
+      'No Stripe price configured for STRIPE_PRO_YEARLY_PRICE_ID_BRL',
+    );
+  });
+
+  it('warns about an unprovisioned currency once, not on every request', () => {
+    const service = withStripeEnv({});
+    const warn = jest.spyOn((service as any).logger, 'warn').mockImplementation(() => undefined);
+    service.getPlans('BRL');
+    service.getPlans('BRL');
+    service.getPlans('PLN');
+    expect(warn).toHaveBeenCalledTimes(2); // once for BRL, once for PLN
+  });
+
+  it('webhook tier resolution recognises a _BRL price id from env (no Stripe lookup)', async () => {
+    const service = withStripeEnv({
+      STRIPE_PRO_MONTHLY_PRICE_ID_BRL: 'price_pro_brl',
+      STRIPE_BUSINESS_YEARLY_PRICE_ID_BRL: 'price_biz_brl',
+    });
+    await expect((service as any).resolveTierFromPrice('price_pro_brl')).resolves.toBe('pro');
+    await expect((service as any).resolveTierFromPrice('price_biz_brl')).resolves.toBe('business');
+  });
+});
+
+describe('formatPlanAmount', () => {
+  it('groups BRL thousands with a dot and uses a comma decimal', () => {
+    expect(formatPlanAmount('BRL', 'R$', 123450)).toBe('R$1.234,50');
+    expect(formatPlanAmount('BRL', 'R$', 5)).toBe('R$0,05');
+  });
+
+  it('leaves a currency without a display rule in the legacy form', () => {
+    expect(formatPlanAmount('UAH', '₴', 382900)).toBe('₴3829.00');
+  });
+});
+
+// ── createCheckoutSession price-key allow-list ────────────────────────────────
+//
+// The client sends a price ENV KEY. Without an allow-list a user could pay a
+// cheaper currency's PPP price they were never offered, or name any env var
+// (JWT_SECRET) and have its value sent to Stripe as a price id.
+
+describe('SubscriptionsService — createCheckoutSession allow-list', () => {
+  const ALL = ['BRL', 'USD', 'UAH', 'PLN'].flatMap((c) => [
+    `STRIPE_PRO_MONTHLY_PRICE_ID_${c}`,
+    `STRIPE_PRO_YEARLY_PRICE_ID_${c}`,
+    `STRIPE_BUSINESS_MONTHLY_PRICE_ID_${c}`,
+    `STRIPE_BUSINESS_YEARLY_PRICE_ID_${c}`,
+  ]);
+
+  function checkoutService() {
+    const { service } = makeService();
+    const sessionsCreate = jest.fn().mockResolvedValue({ id: 'cs_1', url: 'https://checkout' });
+    (service as any).stripe = { checkout: { sessions: { create: sessionsCreate } } };
+    const env: Record<string, string> = { JWT_SECRET: 'secret' };
+    for (const k of ALL) env[k] = `price_${k}`;
+    (service as any).configService.get.mockImplementation((key: string) => env[key]);
+    jest.spyOn(service, 'getOrCreateStripeCustomer').mockResolvedValue('cus_1');
+    return { service, sessionsCreate };
+  }
+
+  it('accepts the key offered for the user currency', async () => {
+    const { service, sessionsCreate } = checkoutService();
+    await expect(
+      service.createCheckoutSession('u1', 'STRIPE_PRO_MONTHLY_PRICE_ID_BRL', 's', 'c', 'BRL'),
+    ).resolves.toEqual({ sessionId: 'cs_1', url: 'https://checkout' });
+    expect(sessionsCreate.mock.calls[0][0].line_items).toEqual([
+      { price: 'price_STRIPE_PRO_MONTHLY_PRICE_ID_BRL', quantity: 1 },
+    ]);
+  });
+
+  it('accepts the USD keys for any user', async () => {
+    const { service } = checkoutService();
+    await expect(
+      service.createCheckoutSession('u1', 'STRIPE_BUSINESS_YEARLY_PRICE_ID_USD', 's', 'c', 'BRL'),
+    ).resolves.toBeDefined();
+  });
+
+  it('refuses another currency key (a cheaper PPP price the user was not offered) with 400', async () => {
+    const { service, sessionsCreate } = checkoutService();
+    await expect(
+      service.createCheckoutSession('u1', 'STRIPE_PRO_MONTHLY_PRICE_ID_UAH', 's', 'c', 'BRL'),
+    ).rejects.toBeInstanceOf(BadRequestException);
+    expect(sessionsCreate).not.toHaveBeenCalled();
+  });
+
+  it('refuses an arbitrary env var name with 400 and never reads it', async () => {
+    const { service, sessionsCreate } = checkoutService();
+    const get = (service as any).configService.get as jest.Mock;
+    await expect(
+      service.createCheckoutSession('u1', 'JWT_SECRET', 's', 'c', 'PLN'),
+    ).rejects.toBeInstanceOf(BadRequestException);
+    expect(get).not.toHaveBeenCalledWith('JWT_SECRET');
+    expect(sessionsCreate).not.toHaveBeenCalled();
+  });
+
+  it('a user whose currency has no row (BYN) may only use the USD keys', async () => {
+    const { service } = checkoutService();
+    await expect(
+      service.createCheckoutSession('u1', 'STRIPE_PRO_MONTHLY_PRICE_ID_PLN', 's', 'c', 'BYN'),
+    ).rejects.toBeInstanceOf(BadRequestException);
+    await expect(
+      service.createCheckoutSession('u1', 'STRIPE_PRO_MONTHLY_PRICE_ID_USD', 's', 'c', 'BYN'),
+    ).resolves.toBeDefined();
+  });
+});
+
+describe('CreateCheckoutSessionDto', () => {
+  const check = (priceId: string) =>
+    validateSync(plainToInstance(CreateCheckoutSessionDto, { priceId, successUrl: 's', cancelUrl: 'c' }));
+
+  it('accepts a price env key', () => {
+    expect(check('STRIPE_BUSINESS_YEARLY_PRICE_ID_BRL')).toHaveLength(0);
+  });
+
+  it.each(['JWT_SECRET', 'STRIPE_SECRET_KEY', 'STRIPE_PRO_MONTHLY_PRICE_ID', 'price_123', 'STRIPE_PRO_MONTHLY_PRICE_ID_brl'])(
+    'rejects %s',
+    (priceId) => {
+      expect(check(priceId).length).toBeGreaterThan(0);
+    },
+  );
 });
 
 // ── getOrCreateSubscription (upsert race, ABA-314) ────────────────────────────

@@ -6,6 +6,7 @@
     "PLN": { "symbol": "zł", "pro_monthly": 1499, "pro_yearly": 8999, "biz_monthly": 5999, "biz_yearly": 57588 },
     "GBP": { "symbol": "£", "pro_monthly": 399, "pro_yearly": 2399, "biz_monthly": 1599, "biz_yearly": 15348 },
     "UAH": { "symbol": "₴", "pro_monthly": 9900, "pro_yearly": 59900, "biz_monthly": 39900, "biz_yearly": 382900 },
-    "RUB": { "symbol": "₽", "pro_monthly": 24900, "pro_yearly": 149900, "biz_monthly": 99900, "biz_yearly": 958900 }
+    "RUB": { "symbol": "₽", "pro_monthly": 24900, "pro_yearly": 149900, "biz_monthly": 99900, "biz_yearly": 958900 },
+    "BRL": { "symbol": "R$", "pro_monthly": 1490, "pro_yearly": 8990, "biz_monthly": 5990, "biz_yearly": 57504 }
   }
 }
