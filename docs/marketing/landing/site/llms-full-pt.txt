@@ -1,9 +1,666 @@
 # AI Budget Assistant - Full content (Português (Portugal))
 
-> Espelho em markdown do centro de ajuda do ai-budget.pl em português europeu, para motores de resposta de IA. Consulte o llms.txt para o resumo do produto (em inglês).
+> Espelho em markdown do blogue e do centro de ajuda do ai-budget.pl em português europeu, para motores de resposta de IA. Consulte o llms.txt para o resumo do produto (em inglês).
 
 Source: https://ai-budget.pl/llms.txt
 Public API (OAuth 2.0): https://ai-budget.pl/pt/developers/ - reference https://api.ai-budget.pl/public/docs/en, OpenAPI https://api.ai-budget.pl/public/docs/en/openapi.json
+
+
+# Blog
+
+## Como fazer um orçamento familiar que dura mais de um mês
+URL: https://ai-budget.pl/blog/pt/como-fazer-um-orcamento-familiar/
+
+Quase toda a gente já tentou fazer um orçamento familiar. Abre-se uma folha de Excel em janeiro, anotam-se as despesas com cuidado durante uns dias, e em meados de fevereiro o ficheiro já ninguém o abre. Raramente é falta de força de vontade. Quase sempre é o método.
+
+Um orçamento é apenas um plano para o dinheiro. Não é um castigo nem uma promessa de deixar de jantar fora. Quando funciona, o dinheiro vai para onde a família quer que vá, em vez de se evaporar algures entre o supermercado e o dia 25.
+
+Este guia cobre o essencial: como montar o orçamento, como mantê-lo vivo depois da primeira semana e como geri-lo a dois ou em família sem que cada compra se transforme numa discussão.
+
+## Porque é que a maioria dos orçamentos falha ao fim de poucas semanas?
+
+A maioria dos orçamentos falha porque registar cada despesa à mão dá demasiado trabalho e porque quem partilha o dinheiro não vê os mesmos números. Assim que surge algo mais urgente, o hábito desaparece, normalmente em duas ou três semanas. Um orçamento só sobrevive se o registo for quase automático e se todos virem a mesma imagem atualizada.
+
+A primeira causa é o atrito. Anotar cada café, cada ida à bomba de gasolina e cada compra no Continente é aborrecido o suficiente para se saltar uma transação, depois outra, e de repente o registo já não corresponde à realidade.
+
+A segunda é que o orçamento costuma ser um projeto de uma só pessoa. Uma guarda os talões e faz as contas, a outra gasta sem saber em que ponto está o mês. No fim, ambos ficam surpreendidos, e quase nunca pela positiva.
+
+A terceira é planear para uma versão idealizada de si próprio. Um orçamento que pressupõe que se cozinha todas as refeições e que nunca há uma compra por impulso não é um orçamento, é um desejo. Na primeira vez que se encomenda comida, o plano parece arruinado.
+
+## Como descobrir para onde vai realmente o dinheiro?
+
+Junte um mês de dados reais sobre receitas e despesas, tirados dos extratos bancários e não da memória. A forma mais rápida é importar os últimos 30 dias de movimentos para uma aplicação que atribua categorias automaticamente. Só com essa imagem é possível definir limites que correspondam à vida real da família.
+
+Antes de planear o que quer que seja, passe um mês apenas a observar. Sem limites e sem culpa, só dados. Precisa de respostas honestas a duas perguntas:
+
+- Quanto dinheiro entra de facto por mês (salário líquido, trabalho por conta própria, rendas, abonos)?
+- Para onde vai esse dinheiro, com o máximo de detalhe possível?
+
+Não faça estimativas. Abra o homebanking, exporte o extrato dos últimos 30 dias e percorra-o linha a linha. Quase todos os bancos portugueses permitem exportar os movimentos em CSV, Excel ou PDF, e esse ficheiro pode ser importado diretamente numa aplicação de orçamento, que trata da categorização em segundo plano. Se o formato do seu banco não for reconhecido logo, existe uma forma de o [importar com a ajuda da IA](/blog/pt/importar-extrato-bancario-de-qualquer-banco/).
+
+## Como organizar as despesas da casa em categorias?
+
+Use três grupos: custos fixos (renda ou prestação da casa, eletricidade, água, gás, internet, seguros, subscrições), despesas variáveis essenciais (supermercado, combustível, transportes, farmácia) e gastos discricionários (restaurantes, roupa, lazer). Os fixos mudam pouco e os discricionários mudam muito, por isso é no terceiro grupo que se escondem as maiores surpresas.
+
+Com os dados na mão, agrupe-os. Uma divisão simples que funciona para a maioria das famílias:
+
+**Custos fixos** – renda ou prestação do crédito habitação, condomínio, eletricidade, água, gás, pacote de telecomunicações, seguros, mensalidades de créditos e subscrições. Mudam raramente e são difíceis de reduzir de um mês para o outro. Com crédito habitação a taxa variável, a prestação acompanha a Euribor, por isso vale a pena revê-la sempre que é atualizada.
+
+**Despesas variáveis essenciais** – supermercado, combustível, passe, farmácia, cantina da escola. Dá para cortar nas margens, mas não para eliminar.
+
+**Gastos discricionários** – restaurantes, roupa, saídas, hobbies, tudo o que se escolhe em vez de se precisar. É aqui que costumam aparecer as surpresas.
+
+Quem faz este exercício pela primeira vez descobre quase sempre que os gastos «pequenos» somam mais depressa do que parecia. Duas ou três plataformas de streaming, o café e o pastel de nata diários e umas compras online por impulso podem levar facilmente uma centena de euros por mês sem que ninguém dê por isso.
+
+## Que limites definir e a regra 50/30/20 é realista em Portugal?
+
+A regra 50/30/20 reserva 50% do rendimento líquido para necessidades, 30% para desejos e 20% para poupança e amortização de dívidas. É um ponto de partida, não uma lei: com a habitação ao preço atual em Lisboa ou no Porto, as necessidades podem chegar facilmente aos 60%. Defina os limites a partir dos gastos reais e aperte-os aos poucos.
+
+Exemplo de divisão de 2 000 € de rendimento líquido mensal de uma família segundo a regra 50/30/20 (valores ilustrativos, não são aconselhamento personalizado):
+
+| Grupo de despesas | Percentagem | Valor mensal | O que entra aqui |
+|---|---|---|---|
+| Necessidades | 50% | 1 000 € | habitação, contas da casa, supermercado, transportes, saúde |
+| Desejos | 30% | 600 € | restaurantes, roupa, lazer, streaming |
+| Poupança e dívidas | 20% | 400 € | fundo de emergência, objetivos, amortizações extra |
+| **Total** | **100%** | **2 000 €** | |
+
+Esta divisão é um enquadramento, não uma regra rígida. Se a renda ou a prestação da casa leva uma fatia maior, é normal que as necessidades passem dos 50%. Nesse caso, reduza primeiro a parte dos desejos e evite cortar a poupança por completo.
+
+A armadilha a evitar: não faça o orçamento para a pessoa que gostaria de ser. Faça-o para a família que é hoje e vá ajustando aos poucos. Metas drásticas sabem bem no dia em que se definem e são péssimas de manter.
+
+## O que fazer com os subsídios de férias e de Natal?
+
+Use-os para cobrir as despesas anuais que já sabe que vão chegar, em vez de os tratar como dinheiro extra. Em Portugal, muita gente recebe 14 salários por ano, e essa folga é a melhor forma de pagar o IMI, o IUC, o seguro do carro e o regresso às aulas sem desequilibrar o mês em que caem.
+
+Há uma particularidade portuguesa que facilita muito o orçamento: os subsídios de férias e de Natal. A tentação é gastá-los nas férias e nas prendas, e é para isso que, em parte, existem. Mas se o IMI, o IUC, a revisão do carro e os livros escolares caírem em meses sem subsídio, vão ser pagos com o dinheiro do dia a dia.
+
+Uma abordagem prática: some todas as despesas anuais ou semestrais, divida por 12 e trate o resultado como mais uma linha fixa do orçamento mensal. Os subsídios ajudam a alimentar essa reserva. Assim, quando a nota de cobrança do IMI chega, o dinheiro já lá está.
+
+## Como fazer o orçamento a dois ou em família?
+
+É preciso uma visão partilhada do orçamento, que todos possam atualizar no próprio telemóvel e que mostre de imediato o efeito de cada compra. Uma só pessoa a fazer as contas por todos não aguenta a primeira compra grande feita sem aviso. Comece pelos objetivos comuns, não pela verificação dos talões uns dos outros.
+
+Se mais alguém em casa gasta dinheiro, essa pessoa tem de fazer parte do orçamento. Um orçamento gerido por um e ignorado pelo outro desmorona-se na primeira vez que o outro faz uma compra grande sem combinar.
+
+A solução prática é uma visão partilhada, atualizada em tempo real. Os dois veem os mesmos números, sem mensagens do tipo «já gastaste do dinheiro do supermercado esta semana?». O tema tem um guia próprio: [orçamento a dois sem discussões](/blog/pt/orcamento-a-dois/).
+
+As ferramentas ajudam. O AI Budget Assistant (disponível para Android e no browser em [ai-budget.pl](https://ai-budget.pl)) permite contas partilhadas em que cada pessoa adiciona as despesas no seu telemóvel e o orçamento é atualizado para todos ao mesmo tempo. Também se pode perguntar ao assistente de IA integrado coisas como «quanto gastámos no supermercado este mês?» e obter a resposta na hora, sem fazer contas à mão.
+
+## Qual deve ser o tamanho do fundo de emergência?
+
+A recomendação habitual é de três a seis meses de despesas essenciais, mas um primeiro marco prático são 1 000 € a 2 000 €, o suficiente para uma avaria no carro ou um eletrodoméstico que avaria. Guarde esse dinheiro numa conta separada, para que um pequeno obstáculo o impeça de o usar nas compras do dia a dia.
+
+Antes de avançar para objetivos de poupança maiores, garanta uma almofada financeira. Três a seis meses de despesas pode parecer muito para começar. Um primeiro objetivo de um a dois meses, ou mesmo só 1 000 €, já muda tudo.
+
+O objetivo do fundo de emergência é que uma reparação inesperada ou uma consulta urgente não rebentem com o orçamento inteiro. Sem ele, cada imprevisto vira uma crise e, muitas vezes, um crédito ao consumo caro.
+
+Mantenha este dinheiro ligeiramente afastado da conta à ordem, por exemplo numa conta poupança ou num depósito a prazo com mobilização antecipada. O pequeno atrito de uma conta separada costuma bastar para não lhe tocar.
+
+## Como manter o orçamento simples sem se perder nos detalhes?
+
+Concentre-se primeiro nas linhas maiores: habitação, alimentação, transportes, seguros e subscrições. Veja se está a pagar serviços que já não usa antes de procurar poupar cinco euros no supermercado. Dez a quinze minutos por semana chegam para manter a imagem completa sem otimizar ao cêntimo.
+
+Com o orçamento a funcionar, surge a tentação de otimizar tudo. Resista, pelo menos no início. Passar vinte minutos a analisar como poupar oito euros no supermercado rende muito menos do que confirmar se está a pagar subscrições de que já se esqueceu, ou se o tarifário da eletricidade e do pacote de televisão ainda faz sentido.
+
+É aqui que um gestor de subscrições ajuda. O AI Budget Assistant tem um integrado, que mostra todas as cobranças recorrentes e as datas de renovação num só sítio, e avisa quando uma subscrição sobe de preço. Muitas pessoas descobrem duas ou três de que se tinham esquecido por completo, e isso é dinheiro recuperado sem mudar nada no estilo de vida.
+
+Para registar os gastos sem que isso vire um segundo emprego, o guia de [controlo de despesas](/blog/pt/controlo-de-despesas/) aprofunda as táticas.
+
+## Quais são os erros mais comuns num orçamento familiar?
+
+Os três mais comuns são esquecer as despesas irregulares como o IMI, o IUC, os seguros e as férias, planear para uma versão idealizada de si próprio e desistir depois do primeiro mês que corre mal. Divida os custos anuais por 12, planeie com base nos hábitos reais e trate os primeiros dois ou três meses como calibração.
+
+**Ignorar as despesas irregulares.** Seguro automóvel, IMI, IUC, revisão do carro, regresso às aulas, prendas de Natal. Não são surpresas, são previsíveis. Divida os custos anuais por 12 e inclua-os no orçamento mensal como uma linha própria.
+
+**Desistir depois de um mau mês.** O primeiro mês de orçamento é quase sempre impreciso. Vai subestimar algumas categorias e esquecer outras. É normal. Os primeiros dois ou três meses são calibração, não fracasso.
+
+**Tratar o orçamento como um teto à diversão.** O orçamento diz quanto foi reservado para restaurantes, não se é permitido aproveitá-los. Saber que ainda restam 80 € para jantares fora este mês é informação. Use-a como quiser.
+
+**Tentar fazer tudo à mão.** Uma folha de cálculo funciona enquanto há paciência. Para a maioria das famílias, a paciência acaba antes do mês. Importar extratos, [digitalizar talões](/blog/pt/digitalizar-taloes/) e registar despesas por voz é o que mantém os números atualizados sem esforço.
+
+---
+
+## FAQ: como fazer um orçamento familiar
+
+**Como começar um orçamento sem poupanças e sem margem nenhuma?**
+
+Comece por registar tudo durante 30 dias, sem impor restrições. Ainda não tente mudar comportamentos, limite-se a recolher dados. No fim do mês terá uma imagem real de para onde vai o dinheiro, o que torna o passo seguinte, decidir o que mudar, muito mais concreto e menos assustador.
+
+**Quanto tempo por semana exige um orçamento familiar?**
+
+Com a configuração certa, 10 a 15 minutos por semana chegam. Se importar os movimentos bancários ou usar uma aplicação que categoriza as despesas por si, o tempo desce ainda mais. O objetivo é um sistema que funcione em segundo plano, não um segundo emprego.
+
+**O orçamento funciona com rendimentos irregulares, como recibos verdes?**
+
+Sim, e é ainda mais importante quando o rendimento varia. Baseie o plano de gastos no mês mais fraco habitual. Quando um mês corre melhor, o excedente vai primeiro para o fundo de emergência e para a reserva de impostos e Segurança Social. Assim nunca gasta ao ritmo de um bom mês para depois apertar quando chega um mais lento.
+
+**Como fazer o orçamento com alguém que não quer registar os gastos?**
+
+Comece pela conversa sobre objetivos, não pela conversa sobre orçamento. «Queremos juntar 2 500 € para as férias de agosto» é um ponto de partida muito diferente de «tens de registar todas as compras». Quando os dois veem um objetivo comum, o registo passa a ser uma ferramenta e não vigilância.
+
+**O que é a regra 50/30/20?**
+
+Divide o rendimento líquido em três partes: 50% para necessidades, 30% para desejos e 20% para poupança e amortização de dívidas. Use-a como ponto de partida. Se a habitação pesa muito e as necessidades chegam aos 60%, corte na parte dos desejos em vez de abandonar a poupança.
+
+**Quanto dinheiro deve ter o fundo de emergência?**
+
+O ideal são três a seis meses de despesas essenciais. Se isso parecer longe, comece por 1 000 € a 2 000 € e reforce todos os meses, por exemplo com parte dos subsídios. Mantenha o dinheiro numa conta separada da conta à ordem.
+
+---
+
+*Artigos relacionados: [Controlo de despesas sem esforço](/blog/pt/controlo-de-despesas/) | [Orçamento a dois sem discussões](/blog/pt/orcamento-a-dois/)*
+
+<!-- pillar-downlinks -->
+
+## Guias relacionados
+
+- [Orçamento a dois: como gerir as contas do casal sem discutir](/blog/pt/orcamento-a-dois/)
+- [IA para finanças pessoais: o que ajuda mesmo no orçamento](/blog/pt/ia-para-financas-pessoais/)
+
+## Controlo de despesas: como registar os gastos sem esforço
+URL: https://ai-budget.pl/blog/pt/controlo-de-despesas/
+
+Quase toda a gente já tentou fazer o controlo de despesas. A história repete-se: começa-se com entusiasmo, regista-se tudo durante uma ou duas semanas, escapam umas quantas transações e, discretamente, desiste-se. Não porque a ideia fosse má, mas porque o método exigia demasiado da vida real.
+
+Um bom sistema de controlo de despesas não pede mais disciplina. Reduz o trabalho a quase nada, para que o hábito sobreviva a uma semana atarefada.
+
+Este guia mostra como registar os gastos sem tédio, o que fazer com os dados depois de os ter e como pôr o controlo de despesas a funcionar para duas pessoas, e não apenas para uma.
+
+## Porque é que as pessoas deixam de controlar as despesas?
+
+Sobretudo por falta de automatização: cada registo manual pode ser adiado, especialmente quando se está cansado ou com pressa na caixa. Junte-se a isso a falta de contexto, como um movimento no extrato sem descrição percetível, e o facto de normalmente ser só uma pessoa a registar pela casa toda. A solução é uma ferramenta que registe por si e que seja partilhada.
+
+O motivo mais comum é que o registo manual é simplesmente aborrecido. Tirar o telemóvel na fila do Pingo Doce para escrever «Supermercado – 34,50 € – alimentação» parece bem no primeiro dia e cansa ao décimo.
+
+O segundo motivo é que os dados rapidamente se tornam ilegíveis. Uma lista comprida de movimentos sem categorias nem contexto não diz nada de útil. Veem-se números, não padrões. Quem já tentou perceber o que é «COMPRA 4573 LISBOA PT» três semanas depois sabe do que se trata.
+
+O terceiro pesa mais do que se admite: o controlo é um esforço solitário. Uma pessoa regista cada café e cada abastecimento, a outra não. O resultado é, na melhor das hipóteses, uma imagem parcial. No fim do mês continua sem se saber bem o que aconteceu.
+
+## Que métodos de controlo de despesas funcionam mesmo?
+
+Há três abordagens que funcionam: os envelopes para o dinheiro vivo, a regra das 24 horas para compras por impulso e o registo automático com uma aplicação. Só a aplicação acompanha pagamentos com cartão, MB Way, compras online e subscrições, por isso a maioria das pessoas combina-a com um dos outros dois como travão de comportamento.
+
+Comparação dos métodos de controlo de despesas (avaliação qualitativa, sem dados numéricos):
+
+| Método | Esforço diário | Funciona com cartão, MB Way e compras online | Ideal para |
+|---|---|---|---|
+| Envelopes de dinheiro | Médio (dinheiro vivo, envelopes separados) | Não | Travar gastos por impulso numa categoria |
+| Regra das 24 horas | Baixo | Em parte | Compras maiores não planeadas |
+| Folha de cálculo (Excel, Google Sheets) | Alto (registo manual) | Sim, mas à mão | Um diário de gastos simples |
+| Aplicação com importação de extratos e leitura de talões | Baixo | Sim | Controlo consistente a longo prazo |
+
+### O método dos envelopes
+
+Um clássico. Reserva-se uma quantia fixa em dinheiro para cada categoria e guarda-se literalmente em envelopes separados. Quando o envelope fica vazio, a categoria fecha até ao mês seguinte. Funciona surpreendentemente bem contra os gastos por impulso, mas não serve para compras online, débitos diretos nem pagamentos com cartão, que em Portugal são a grande maioria.
+
+### A regra das 24 horas
+
+Antes de comprar algo acima de um certo valor, por exemplo 50 € ou 100 €, espera-se um dia. Isto trava as compras por impulso, mas é um travão de comportamento e não um método de registo. Continua a não se saber para onde foi o dinheiro.
+
+### Registo automático com uma aplicação
+
+É aqui que a abordagem muda. Em vez de introduzir cada despesa à mão, deixa-se a aplicação trabalhar. Uma boa aplicação de gestão de despesas consegue:
+
+- Importar os movimentos a partir do extrato do banco ou do cartão, em CSV, Excel ou PDF
+- Ler talões com a câmara do telemóvel e extrair o valor, a data e o comerciante automaticamente
+- Categorizar as despesas pelo nome do comerciante, para que o Continente vá sempre para supermercado
+- Aceitar comandos de voz: diga «12 euros de almoço» e a despesa fica registada sem tocar no teclado
+
+Quando adicionar uma despesa leva três segundos em vez de trinta, o hábito aguenta-se muito melhor.
+
+## Importar o extrato bancário é melhor do que registar à mão?
+
+Para a maioria das pessoas, sim. Carregar um extrato em CSV ou PDF dá de uma só vez 30 a 90 dias de histórico categorizado, e a aplicação assinala os prováveis duplicados para que nada seja contado duas vezes. O registo manual fica para o dinheiro vivo e para pequenas compras que nunca passam pela conta bancária.
+
+Se usa o cartão de débito, o cartão de crédito ou o MB Way para quase tudo, importar o extrato é a forma mais rápida de ter a imagem completa. Exporte o extrato do homebanking, carregue-o na aplicação e fica com semanas ou meses de histórico arrumado.
+
+No AI Budget Assistant, o Revolut e o Wise são reconhecidos diretamente. Para os extratos dos bancos portugueses, a aplicação usa a importação universal com IA: identifica sozinha qual é a coluna da data, do valor e da descrição em qualquer ficheiro CSV ou Excel e mostra uma pré-visualização para confirmar antes de guardar. Os extratos em PDF também são lidos pela IA, no plano Pro. O processo está explicado em pormenor no guia sobre [como importar o extrato de qualquer banco](/blog/pt/importar-extrato-bancario-de-qualquer-banco/). Pode começar no Android ou diretamente no browser em [ai-budget.pl](https://ai-budget.pl).
+
+Para quem sai de um sistema manual, isto significa preencher um mês inteiro em poucos minutos, em vez de introduzir centenas de movimentos à mão.
+
+## Posso digitalizar talões em vez de escrever as compras?
+
+Sim. Fotografe o talão e o reconhecimento de texto lê o valor, a data e a loja por si. É especialmente útil para pagamentos em dinheiro e para as compras do supermercado, porque no extrato aparece só o total, enquanto o talão digitalizado mostra o que compõe esse total, artigo a artigo.
+
+A importação do extrato cobre os pagamentos com cartão. E o dinheiro vivo? E as situações em que interessa saber os artigos e não apenas o total?
+
+Fotografar o talão é a resposta prática. A aplicação lê o valor, a data e normalmente o nome da loja sem escrever nada. Para compras pagas em dinheiro, ou quando o detalhe importa (despesas de trabalho, custos partilhados numa viagem), é muito mais rápido do que o registo manual. Há um guia dedicado a [digitalizar talões e aproveitar cada linha](/blog/pt/digitalizar-taloes/).
+
+## Como podem casais e famílias controlar as despesas em conjunto?
+
+A forma mais simples é uma conta partilhada numa aplicação que cada pessoa abre no seu telemóvel. Cada transação fica visível para todos os membros no momento em que é registada, por isso não há surpresas no fim do mês. Também se pode perguntar ao assistente de IA quanto a conta inteira gastou numa categoria.
+
+Aqui está a lacuna que a maioria das aplicações deixa aberta. Se uma pessoa controla os gastos e a outra não, só se vê metade da imagem. Não é possível gerir um orçamento comum com dados parciais.
+
+A solução é uma única conta partilhada onde ambos adicionam as despesas a partir do próprio telemóvel. Quando um paga o supermercado, o outro vê-o em segundos. Quando alguém abastece o carro, o valor entra logo no orçamento comum. No fim do mês não há surpresas, apenas o total real.
+
+O AI Budget Assistant resolve isto com contas partilhadas. Cada pessoa tem o seu acesso e todos veem a mesma imagem em tempo real. O assistente de IA trabalha sobre a conta inteira, por isso pode perguntar-lhe «quanto gastámos em restaurantes este mês?» e a resposta inclui as transações das duas pessoas. Para organizar a vida financeira a dois, veja o guia de [orçamento a dois](/blog/pt/orcamento-a-dois/).
+
+Construir um orçamento útil a partir destes dados é o passo seguinte natural, e o artigo [como fazer um orçamento familiar](/blog/pt/como-fazer-um-orcamento-familiar/) trata disso em profundidade.
+
+## Como definir limites de gastos que não se ignoram?
+
+Observe um mês sem limites e só depois defina-os com margem: se gasta em média 450 € no supermercado, comece por 420 € a 450 €, não por 300 €. Ative um alerta aos 75–80% do limite, porque um aviso depois de já ter ultrapassado o valor chega tarde demais para mudar alguma coisa.
+
+Ter categorias é útil. Ter limites por categoria é mais útil. Mas a maioria das pessoas define os limites uma vez e esquece-os até os ter ultrapassado.
+
+Algumas coisas que ajudam:
+
+**Defina os limites com base no que gasta de facto, não no que gostaria de gastar.** Se nos últimos três meses a média no supermercado foi de 450 €, um limite de 300 € não é um orçamento, é um desejo que vai abandonar à segunda semana. Comece perto do valor real e ajuste aos poucos.
+
+**Receba alertas aos 75–80% do limite, não aos 100%.** Um aviso quando já ultrapassou o limite é inútil. Um aviso quando faltam duas semanas e já vai em 80% do orçamento de alimentação permite agir.
+
+**Reveja semanalmente, não todos os dias.** Revisões diárias criam ansiedade sem informação útil. Dez minutos por semana chegam para perceber se uma categoria está a fugir e dão tempo para corrigir.
+
+## Uma aplicação de controlo de despesas é segura?
+
+Depende da aplicação. Verifique três coisas: se os dados ficam guardados de forma encriptada, se a aplicação funciona offline, para que os dados não tenham de viajar constantemente para a nuvem, e se a política de privacidade é clara. Faça esta verificação antes de instalar, porque vai confiar-lhe informação financeira sensível.
+
+O AI Budget Assistant funciona primeiro offline: as despesas ficam guardadas no telemóvel antes de serem sincronizadas, e é possível ativar a encriptação de ponta a ponta para os dados mais sensíveis.
+
+## Vale a pena pagar por uma aplicação de controlo de despesas?
+
+O plano gratuito costuma cobrir o registo básico. Os planos pagos acrescentam normalmente mais automatização, mais análises e contas partilhadas com mais membros. A pergunta útil é quanto se perde hoje por não saber para onde vai o dinheiro: se os gastos invisíveis custam mais do que o plano, a aplicação paga-se a si própria.
+
+No AI Budget Assistant pode começar no plano Free, sem cartão, e só passar ao Pro ou ao Business se precisar do que eles acrescentam.
+
+---
+
+## FAQ: controlo de despesas
+
+**Qual é a melhor aplicação gratuita para controlo de despesas?**
+
+Depende do que precisa. Se quer importação de extratos, leitura de talões e respostas da IA às perguntas sobre os seus gastos, o AI Budget Assistant tem um plano gratuito que cobre o essencial. Se só precisa de um registo simples, uma folha de cálculo serve. A melhor aplicação é aquela que se continua a usar com regularidade.
+
+**Como controlar as despesas sem me esquecer de as registar?**
+
+Reduza o atrito. Importe os extratos do banco em vez de copiar movimentos. Digitalize os talões em vez de os escrever. Use a voz para registos rápidos: «8 euros de café» demora dois segundos. Quanto menos trabalho manual cada registo exigir, mais fácil é manter o hábito.
+
+**Posso fazer o controlo de despesas com o meu companheiro ou companheira?**
+
+Sim, e é o mais recomendável. Procure uma aplicação com contas partilhadas, em que as duas pessoas adicionam despesas e veem os mesmos totais em tempo real. Controlar finanças comuns em duas aplicações separadas e depois conciliar tudo à mão dá muito mais trabalho do que usar um sistema partilhado desde o início.
+
+**Ao fim de quanto tempo se veem resultados?**
+
+Ao fim de um mês já tem uma imagem clara dos seus padrões de gastos. Mudanças de comportamento com impacto, e a poupança que vem com elas, costumam surgir ao fim de dois ou três meses, quando já se veem tendências e se fazem ajustes conscientes em vez de reações.
+
+**Como registar os gastos em dinheiro que não aparecem no extrato?**
+
+Fotografe o talão, ou adicione a despesa numa frase, por voz ou por escrito, por exemplo «12 euros de almoço». Registe o dinheiro vivo logo a seguir à compra, porque é fácil esquecer. Tudo o que passa pelo banco pode entrar automaticamente através da importação do extrato.
+
+**Qual é a diferença entre controlo de despesas e orçamento?**
+
+O controlo responde a quanto já gastou e em quê. O orçamento é um plano para o futuro: quanto pode gastar em cada categoria. Controle primeiro durante um mês e só depois defina limites, para que assentem em factos e não em desejos.
+
+---
+
+*Artigos relacionados: [Como fazer um orçamento familiar passo a passo](/blog/pt/como-fazer-um-orcamento-familiar/) | [Digitalizar talões: as linhas contam mais do que o total](/blog/pt/digitalizar-taloes/)*
+
+<!-- pillar-downlinks -->
+
+## Guias relacionados
+
+- [Digitalizar talões: as linhas contam mais do que o total](/blog/pt/digitalizar-taloes/)
+
+## Digitalizar talões: as linhas contam mais do que o total
+URL: https://ai-budget.pl/blog/pt/digitalizar-taloes/
+
+Fotografou o talão, a aplicação guardou o valor e a data, e ficou por aí. Sabe que gastou 52,40 € no supermercado na terça-feira. Não sabe quanto disso foi leite, quanto foi carne e quanto foi uma compra pontual que não vai repetir. A maioria das aplicações que prometem digitalizar talões para exatamente aí: uma fotografia mais um total, e o assunto dá-se por encerrado.
+
+É um erro, e não é pequeno. O total é um número por compra. As linhas do talão, produto a produto, com preço e quantidade, são dezenas de dados que juntos mostram algo que um total nunca mostra: o que está realmente a ficar mais caro, onde o compra mais barato e se o preço no talão de hoje é normal ou merece uma segunda olhadela.
+
+## Uma fotografia e um total não chegam
+
+Pergunte a alguém para onde vai o dinheiro do supermercado e a resposta será uma categoria: «alimentação», talvez «coisas para a casa». Isso não é suficientemente concreto para agir. «Alimentação» não diz se foi o café que subiu quinze por cento ou se foram os laticínios. Não diz se o mesmo leite custa mais nesta loja do que na que fica a duas ruas. Não diz se uma linha do talão de hoje custa mais do que costuma pagar por ela nessa mesma loja.
+
+Um talão guardado por uma aplicação que só regista o total faz o mesmo trabalho que o papel enfiado na gaveta: prova que algo aconteceu, mas não ensina nada. Um mês depois tem uma pilha de comprovativos e continua sem perceber porque é que a conta do supermercado não para de subir.
+
+## O que deve ler uma aplicação para digitalizar talões
+
+Uma ferramenta que valha a pena usar não para no total. Lê o comerciante, a data e, sobretudo, cada artigo individualmente: o nome do produto, a quantidade e o preço.
+
+Mas uma lista de produtos só faz metade do trabalho se os nomes não forem consistentes. Uma loja imprime «LEITE UHT M/G MIMOSA 1L», outra imprime «MIMOSA LEITE MEIO GORDO 1 L». Se a aplicação guardar os dois como produtos diferentes, nunca vai conseguir construir o histórico de preço daquele pacote de leite em concreto. O [AI Budget Assistant](https://ai-budget.pl) normaliza o nome para algo como «Leite Mimosa Meio-Gordo 1 L», mantendo o tamanho e a variante mas retirando códigos internos e abreviaturas, para que o mesmo produto fique agrupado corretamente seja qual for a loja ou o mês em que o comprou.
+
+A forma como os descontos são tratados também conta. Muitos talões portugueses imprimem o desconto numa linha própria, com valor negativo, logo a seguir ao produto em promoção, ou somam-no ao cartão de cliente. Uma boa leitura incorpora essa linha no desconto, em vez de a contar como um segundo «produto» negativo que estraga o histórico. Caso contrário, o gráfico de preço de um produto parece cair a pique para zero, o que não significa nada.
+
+## Digitalize pela câmara, pela galeria, em PDF ou por mensagem
+
+A digitalização funciona como seria de esperar: uma fotografia tirada logo à saída da caixa, uma imagem da galeria de um talão de ontem, ou um PDF de uma fatura enviada por e-mail. Nem é preciso abrir a aplicação. Se for mais prático enviar a fotografia ao bot no Telegram, no WhatsApp ou no Slack, a mesma leitura corre exatamente da mesma forma e a despesa fica na mesma conta.
+
+## O que os artigos dão que o total nunca dará
+
+É aqui que as linhas deixam de ser uma curiosidade e passam a ser úteis.
+
+**A sua inflação pessoal.** Quando a aplicação sabe que pagou 2,49 € pela mesma manteiga em janeiro e 2,99 € em julho, consegue traçar a evolução do preço desse produto em concreto, em vez de adivinhar a partir de um índice nacional que mede um cabaz muito diferente do seu. O Índice de inflação pessoal é construído a partir daquilo que compra de facto, não de uma média do país.
+
+**Uma verificação de preços na hora.** Logo depois de digitalizar um talão, a aplicação compara cada linha com o que costuma pagar por esse produto nessa mesma loja ao longo das últimas semanas. Se uma linha custa visivelmente mais do que o habitual, vê-o no próprio ecrã da digitalização, e se enviou o talão a um bot, a mesma nota chega na resposta. Uma distinção importante: isto não é deteção de fraude. A aplicação não tem forma de provar que uma promoção não foi aplicada na caixa. Diz apenas que uma linha custa mais do que o habitual e que vale a pena verificar o talão antes de sair da loja.
+
+**Um mapa de despesas.** A morada da loja impressa no talão é convertida numa localização, por isso cada compra digitalizada aparece também no Mapa de despesas. Não há nada a mais para tocar.
+
+Há ainda duas vantagens menos visíveis mas muito práticas: o mesmo histórico de preços alimenta o Escudo contra a inflação, que sugere o que vale a pena comprar já antes de subir, e as sugestões de reposição e os alertas de promoções da lista de compras.
+
+## Como fica isto na prática
+
+Imagine que faz as compras na mesma loja todas as semanas. Ao fim de uns meses a digitalizar talões, em vez de «quanto gastei em supermercado», passa a ter respostas muito mais concretas: «o café subiu-me dezoito por cento em seis meses, sobretudo em março», «o mesmo leite no Continente ao pé do trabalho custa mais 20 cêntimos do que no Lidl onde faço as compras grandes» e «o talão de hoje tem uma linha mais cara do que o habitual, vou verificá-la antes de sair». Nenhuma destas respostas vem de um total. Todas vêm das linhas.
+
+## O que a digitalização de talões não faz
+
+Mais vale dizê-lo claramente do que prometer mais do que a aplicação entrega. A leitura precisa de um talão legível. Um desconto escrito à mão, papel térmico desbotado ou um talão amarrotado no bolso podem não ser lidos corretamente, e nesse caso terá de corrigir os dados à mão. Uma despesa registada manualmente, sem fotografia do talão, não tem artigos, por isso não contribui em nada para o histórico de preços, mesmo que o valor e a categoria estejam certos.
+
+A aplicação também não gere garantias, não trata do IRS nem está ligada ao e-Fatura ou ao Portal das Finanças. Pedir fatura com NIF continua a ser consigo. A digitalização faz uma coisa: regista exatamente o que comprou e por quanto.
+
+## Comece pelo talão que já tem no bolso
+
+Não precisa de mudar nenhum hábito para isto funcionar. O talão já vai parar ao bolso ou ao saco das compras. Em vez de o deitar fora, uma fotografia na aplicação ou enviada a um bot transforma-o em dados que se acumulam sozinhos, mês após mês, sem folhas de cálculo e sem ter de decorar preços.
+
+Se está a começar a organizar as finanças, o guia de [controlo de despesas](/blog/pt/controlo-de-despesas/) mostra como combinar talões, extratos e registo por voz, e o artigo sobre [como fazer um orçamento familiar](/blog/pt/como-fazer-um-orcamento-familiar/) ajuda a transformar esses dados num plano. O AI Budget Assistant é gratuito para começar no browser em [ai-budget.pl](https://ai-budget.pl), sem cartão, e está disponível para Android no [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant).
+
+## FAQ: digitalizar talões
+
+**É seguro digitalizar talões numa aplicação?**
+A fotografia do talão é processada para ler o comerciante, a data, o valor e os artigos, e o resultado fica na sua própria conta na aplicação. Não precisa de escrever nada à mão nem de guardar o papel mais tempo do que quiser, só por precaução.
+
+**Porque é que a aplicação se interessa pelos produtos e não apenas pelo total?**
+Porque o total só diz quanto gastou, não em quê. Sem os artigos não é possível calcular uma inflação pessoal a partir das suas compras reais, comparar o preço do mesmo produto entre lojas ou verificar se uma linha do talão custa mais do que o habitual.
+
+**O que acontece se o talão estiver ilegível ou amarrotado?**
+A leitura pode não apanhar todas as linhas corretamente, ou nenhuma. Nesse caso, corrige os dados à mão no ecrã da digitalização antes de guardar a despesa. Acrescentos escritos à mão e papel térmico muito desbotado são os casos que mais vezes precisam de correção.
+
+**Uma despesa registada à mão, sem digitalizar, também cria histórico de preços?**
+Não. Uma despesa introduzida manualmente tem valor, categoria e data, mas não tem artigos, por isso não contribui para a inflação pessoal nem para a comparação de preços entre lojas. Só os talões digitalizados com artigos reconhecidos alimentam essas funcionalidades.
+
+**Posso digitalizar talões sem abrir a aplicação?**
+Sim. Uma fotografia do talão enviada ao bot no Telegram, no WhatsApp ou no Slack é lida pelo mesmo reconhecimento e fica na mesma conta que uma digitalização feita dentro da aplicação.
+
+**A aplicação está ligada ao e-Fatura?**
+Não. A digitalização serve para o seu controlo de despesas e não comunica com o Portal das Finanças. Para as deduções no IRS, continue a pedir fatura com NIF e a validar as faturas no e-Fatura como habitualmente.
+
+---
+
+*Artigos relacionados: [Controlo de despesas sem esforço](/blog/pt/controlo-de-despesas/) | [Como fazer um orçamento familiar](/blog/pt/como-fazer-um-orcamento-familiar/) | [IA para finanças pessoais](/blog/pt/ia-para-financas-pessoais/)*
+
+## IA para finanças pessoais: o que ajuda mesmo no orçamento
+URL: https://ai-budget.pl/blog/pt/ia-para-financas-pessoais/
+
+A maioria dos orçamentos não falha porque as pessoas sejam más a gerir dinheiro. Falha por causa do atrito. Registar cada despesa à mão é cansativo, e olhar para um gráfico dos gastos do mês passado diz o que já aconteceu, mas nada sobre o que fazer a seguir. A inteligência artificial resolve estes dois problemas de forma concreta, e este guia explica exatamente como, incluindo aquilo que a IA ainda não consegue fazer por si.
+
+## Porque é que o orçamento tradicional falha
+
+Há dois atritos que matam a maioria dos orçamentos.
+
+O primeiro é o **atrito do registo**. Um orçamento vale o que valem os dados que tem, e ter esses dados implica registar cada transação. Fazê-lo à mão, dia após dia, é precisamente o tipo de tarefa pequena e repetitiva contra a qual a força de vontade perde. Começa-se com energia, falham-se uns dias, acumula-se atraso, vem a culpa e desiste-se. O plano estava certo. Foi o registo que ganhou.
+
+O segundo é que o orçamento tradicional **olha para trás**. Regista-se tudo durante um mês, abre-se o relatório e descobre-se que se gastou demais em restaurantes. Útil, mas é uma autópsia. O dinheiro já saiu, e um gráfico estático não diz o que está prestes a correr mal nem o que mudar. É conduzir a olhar só pelo retrovisor.
+
+A IA ataca os dois: elimina o atrito no momento da despesa e transforma um registo passivo em algo que responde a perguntas e avisa a tempo.
+
+## A IA elimina o atrito do registo
+
+É o ganho prático mais importante, porque resolve exatamente o problema que mata os orçamentos. Em vez de escrever, passa a ter três formas mais rápidas de registar os gastos.
+
+**Voz.** Diga «gastei quarenta euros no supermercado» e fica registado. Sem navegar pela aplicação, sem teclado, basta falar.
+
+**Fotografia do talão.** Tire uma fotografia ao talão e a leitura com IA extrai o valor, a data e o comerciante, e até cada artigo. Uma ida às compras passa a ser uma fotografia de dois segundos em vez de uma sessão de escrita. O tema tem um guia próprio: [digitalizar talões](/blog/pt/digitalizar-taloes/).
+
+**Mensagens em linguagem corrente.** Diga ao assistente, por palavras suas, o que gastou, como escreveria a um amigo, e ele percebe e regista. Funciona também a partir do Telegram, do WhatsApp ou do Slack.
+
+E há um quarto caminho que nem exige registo: importar o extrato do banco. Quando o formato não é reconhecido, a IA identifica as colunas por si, o que é especialmente útil em Portugal, onde cada banco exporta à sua maneira. Veja como em [importar o extrato de qualquer banco](/blog/pt/importar-extrato-bancario-de-qualquer-banco/).
+
+Isto importa muito mais do que parece. Os orçamentos desmoronam-se porque registar é uma maçada, e quando a IA reduz o registo a segundos, o controlo sobrevive para lá das primeiras semanas. A tecnologia não é o objetivo; o objetivo é tirar do caminho o atrito que levava a desistir.
+
+## A IA dá respostas, não só gráficos
+
+As aplicações tradicionais entregam painéis e deixam a interpretação consigo. Com IA, basta perguntar. Em português corrente, faz a pergunta que realmente tem, «quanto gastámos no supermercado este mês?», «qual é a minha maior categoria?», «posso pagar um fim de semana de 300 € no Algarve?», e recebe uma resposta direta, tirada dos seus dados reais.
+
+É uma mudança a sério. Um gráfico exige saber o que procurar e como o ler. Uma pergunta só exige curiosidade. O orçamento deixa de ser um relatório estático para estudar e passa a ser uma espécie de assistente financeiro a quem se pode perguntar tudo. Encontrar uma informação deixa de custar esforço, por isso passa a consultar os números com mais frequência, e isso já é meio caminho andado.
+
+Um pormenor importante na pergunta sobre o fim de semana: a decisão sobre se pode ou não pagá-lo não é inventada pelo modelo de linguagem. É calculada de forma determinística a partir das receitas, das contas por pagar e dos objetivos de poupança, e a IA limita-se a explicá-la por palavras.
+
+## Inteligência proativa: avisos antes de dar por isso
+
+A coisa mais valiosa que a IA faz é vigiar os gastos para que não tenha de ser o próprio a fazê-lo, e avisar quando algo não bate certo. É o salto de olhar para trás para olhar para a frente.
+
+Um bom sistema assinala, por exemplo:
+
+- **Cobranças duplicadas** – o mesmo pagamento cobrado duas vezes, fácil de passar despercebido e aborrecido de encontrar à mão.
+- **Aumentos de preço de subscrições** – um serviço de streaming, um ginásio ou um tarifário que sobe discretamente, o tipo de aumento que custa dinheiro durante meses antes de alguém reparar.
+- **Picos de gastos invulgares** – uma categoria muito acima do padrão habitual, assinalada enquanto ainda é possível reagir, e não depois de o mês ter acabado.
+
+Estes alertas apanham as fugas de dinheiro que escapam até a quem revê tudo com cuidado. Não tem de auditar cada linha; o sistema fá-lo e só interrompe quando há algo que valha a pena saber.
+
+## A IA aprende com as suas correções
+
+Há ainda um ganho mais discreto. Quando corrige a categoria de uma despesa, por exemplo, se a aplicação classificar uma compra na farmácia como «Compras» e a passar para «Saúde e fitness», essa correção fica memorizada para esse comerciante. Nas importações seguintes, essa loja vai diretamente para a categoria certa. Ao fim de algumas semanas, a categorização passa a refletir a forma como a sua família organiza o dinheiro, e não uma lista genérica.
+
+## O que a IA não é
+
+A honestidade importa aqui, porque o entusiasmo à volta da IA merece um contrapeso. A IA não vai resolver as suas finanças por si. Elimina o atrito e mostra a verdade, mas as decisões continuam a ser suas. Pode mostrar-lhe, de forma clara e imediata, que está a gastar demais em comida encomendada, mas não o pode pôr a cozinhar. Pode avisar que um objetivo está a atrasar-se, mas não lhe pode pôr dinheiro.
+
+Também não é um consultor financeiro: não escolhe investimentos, não trata do IRS e não substitui uma conversa com o banco sobre o crédito habitação. As previsões e as poupanças que mostra são estimativas baseadas nos seus próprios dados, não garantias.
+
+A IA é uma ferramenta que torna os bons hábitos financeiros muito mais fáceis, retirando as partes aborrecidas e pondo a informação certa à sua frente no momento certo. Não substitui as escolhas que só o próprio pode fazer. Trate-a como o assistente que faz o trabalho chato e o mantém informado, e não como piloto automático, e vai tirar-lhe o máximo partido.
+
+## Como tudo se junta
+
+Tudo o que foi descrito acima é aquilo em que o [AI Budget Assistant](https://ai-budget.pl) assenta. Regista os gastos por voz, com uma fotografia do talão ou com uma mensagem em linguagem corrente ao assistente. Faz perguntas como «quanto gastámos em X este mês?» e obtém a resposta na hora. E a aplicação assinala por iniciativa própria as cobranças duplicadas, os aumentos de preço das subscrições e os picos invulgares numa categoria, antes de lhe custarem dinheiro.
+
+O resultado é um orçamento com quase nenhum do atrito que fazia o orçamento parecer um segundo emprego. O registo não custa nada, a informação está à distância de uma pergunta e o sistema vigia por si. É gratuito para começar no browser em [ai-budget.pl](https://ai-budget.pl), sem cartão, e no [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant) para Android.
+
+Se está a construir as bases, [como fazer um orçamento familiar](/blog/pt/como-fazer-um-orcamento-familiar/) explica a estrutura por baixo de tudo isto.
+
+---
+
+## FAQ: IA para finanças pessoais
+
+**Como é que a IA pode ajudar a gerir as finanças pessoais?**
+
+A IA ataca as duas razões pelas quais os orçamentos falham. Elimina o atrito do registo, permitindo registar os gastos por voz, com uma fotografia do talão ou com uma mensagem em vez de escrever tudo à mão, por isso o controlo dura. E torna o orçamento prospetivo: pode fazer perguntas em linguagem corrente e ter respostas imediatas, e recebe avisos sobre cobranças duplicadas, aumentos de subscrições e picos de gastos antes de custarem dinheiro.
+
+**É seguro usar uma aplicação com IA para as minhas finanças?**
+
+Uma aplicação séria deve manter os dados sob o seu controlo e oferecer proteções como a encriptação. A IA processa os dados das transações para categorizar os gastos e responder às suas perguntas, não para partilhar a sua informação. No AI Budget Assistant, numa conta com encriptação de ponta a ponta total, os dados nem sequer chegam ao modelo de IA. Pode começar gratuitamente no browser sem introduzir cartão.
+
+**A IA consegue registar as despesas automaticamente?**
+
+A IA torna o registo quase automático, não totalmente invisível. Lê talões a partir de uma fotografia, percebe a voz e as mensagens escritas, categoriza os movimentos importados do banco e aprende com as suas correções, para que as importações seguintes se arrumem sozinhas. Continua a confirmar o que foi registado, mas o trabalho pesado fica feito.
+
+**Qual é a melhor aplicação de IA para finanças pessoais?**
+
+Procure uma que elimine o atrito do registo (voz, fotografia do talão, linguagem corrente), responda a perguntas em linguagem natural e avise por iniciativa própria de problemas como cobranças duplicadas e aumentos de preço. O AI Budget Assistant faz as três coisas, e junta importação de extratos, contas partilhadas e objetivos de poupança, gratuito para começar no browser ou no Android. A melhor aplicação é a que dá tão pouco trabalho que continua a usá-la.
+
+**A IA substitui um consultor financeiro?**
+
+Não. A IA organiza os seus dados, responde a perguntas sobre eles e assinala anomalias, mas não recomenda investimentos nem trata da sua situação fiscal. As projeções que mostra são estimativas baseadas no seu histórico. As decisões importantes continuam a ser suas.
+
+---
+
+*Artigos relacionados: [Como fazer um orçamento familiar](/blog/pt/como-fazer-um-orcamento-familiar/) | [Controlo de despesas sem esforço](/blog/pt/controlo-de-despesas/)*
+
+## Importar extrato bancário de qualquer banco com IA
+URL: https://ai-budget.pl/blog/pt/importar-extrato-bancario-de-qualquer-banco/
+
+Exportou o extrato do homebanking, carregou o ficheiro na aplicação de orçamento à espera de ver os movimentos arrumados, e em vez disso apareceu um ecrã a pedir para indicar as colunas, ou pior, uma lista vazia. O formato do seu banco simplesmente não é um dos que a aplicação reconhece à primeira. Em Portugal isto acontece muito: cada banco exporta à sua maneira, uns com a data do movimento e a data-valor, outros com débito e crédito em colunas separadas, outros com cabeçalhos repetidos ou linhas de saldo pelo meio.
+
+A boa notícia: «não está na lista» não quer dizer «não dá para importar». Este artigo explica exatamente o que acontece nos bastidores quando o AI Budget Assistant não reconhece o formato de um ficheiro, e porque é que o mecanismo que entra em ação é mais seguro do que pode parecer à primeira vista.
+
+## Porque é que nenhuma lista de bancos está completa
+
+Qualquer aplicação que importe extratos tem de decidir de antemão que formatos reconhece diretamente. O AI Budget Assistant reconhece à primeira, por exemplo, os ficheiros do Revolut e do Wise, muito usados em Portugal, e os de vários bancos polacos, o mercado onde a aplicação nasceu. Os bancos portugueses não têm, para já, um leitor dedicado.
+
+Manter um leitor próprio para cada formato de cada banco, para sempre, não é realista. Há bancos grandes e pequenos, contas de empresa com exportações diferentes, contas noutros países e exportações de outras aplicações de finanças que alguém quer trazer ao mudar de ferramenta. E qualquer formato novo ficaria «não suportado» durante meses até alguém escrever uma regra para ele. Por isso, em vez de esperar que a lista cresça até chegar ao seu banco, a aplicação tem um mecanismo que tenta perceber sozinho a estrutura de um ficheiro que nunca viu.
+
+## Como obter o extrato no homebanking
+
+O ponto de partida é sempre o mesmo, seja qual for o banco: no homebanking ou na aplicação do banco, abra a lista de movimentos da conta, escolha o período e procure uma opção de exportação ou de transferência do extrato. Os formatos mais úteis, por ordem de preferência:
+
+- **CSV ou Excel (XLSX)** – o melhor ponto de partida, porque cada movimento já vem numa linha e cada dado numa coluna.
+- **PDF** – funciona, mas exige leitura do texto do documento, por isso é uma funcionalidade do plano Pro.
+
+Os nomes dos menus variam de banco para banco, mas a opção costuma estar junto da pesquisa de movimentos. Se o banco só oferecer PDF para períodos longos, exporte em CSV mês a mês: é mais rápido de rever.
+
+## O que acontece quando o ficheiro não é reconhecido
+
+Quando carrega um CSV ou uma folha de cálculo XLSX e nenhum dos leitores incorporados reconhece a disposição, entra em ação um modelo de IA. A tarefa dele é estreita e muito concreta: não lê valores nem datas. Limita-se a indicar **que coluna é qual** – qual tem a data do movimento, qual o valor (ou as colunas de débito e crédito, quando vêm separadas), qual a descrição ou o comerciante. Esses nomes de colunas são depois comparados, palavra por palavra, com os cabeçalhos que existem de facto no seu ficheiro. Se o modelo «inventar» uma coluna que não está lá, a resposta inteira é rejeitada, e não aceite em silêncio. Só depois dessa verificação é que as mesmas regras determinísticas usadas no mapeamento manual de colunas leem os números e as datas.
+
+Nos extratos em PDF, uma funcionalidade do plano Pro, o mecanismo é diferente, porque de um PDF não se tiram simplesmente nomes de colunas: o modelo tem de extrair as próprias linhas de movimentos a partir do texto da página. Sempre que o extrato tem saldo inicial e saldo final, a aplicação confere se a soma dos movimentos encontrados bate certo. Se não bater, ou se o extrato não tiver saldo final para comparar, avisa-o de que podem faltar linhas, em vez de fingir que está tudo completo.
+
+## O que este mecanismo nunca faz
+
+A distinção é importante, porque é fácil assumir que «a IA importa o extrato» significa que o modelo adivinha os números. Não é o caso. Em CSV e XLSX, o modelo nunca devolve um valor nem uma data: devolve apenas nomes de colunas, e esses nomes são sempre confirmados contra os cabeçalhos reais do ficheiro. Os números e as datas são lidos pelo mesmo código previsível que trata o mapeamento manual. O mecanismo ajuda a reconhecer a estrutura; não anda a olhar para os seus gastos.
+
+Mesmo assim, não é uma garantia de exatidão perfeita à primeira tentativa, como nenhum mecanismo de reconhecimento de formatos é. Por isso, antes de qualquer movimento chegar ao orçamento, recebe uma pré-visualização para confirmar, descrita mais abaixo.
+
+## O que vê e autoriza antes de algo sair do telemóvel
+
+Antes de qualquer parte do ficheiro chegar ao modelo de IA, a aplicação pede o seu consentimento, uma vez por conta, num ecrã intitulado «Deixar a IA ler este extrato?», e mostra exatamente o que vai ser enviado. Num CSV ou XLSX, é a linha de cabeçalho e até dez linhas de exemplo, nunca o ficheiro inteiro nem o histórico completo. Num extrato em PDF, são as primeiras vinte linhas do texto extraído. Vê tudo isto antes de decidir: pode tocar em «Usar IA» ou em «Vou mapear manualmente».
+
+Se a conta tiver a encriptação de ponta a ponta total ativa (o modo de privacidade máxima da aplicação), este mecanismo nem sequer corre. Dados que a própria aplicação não consegue desencriptar também não podem ser enviados a nenhum modelo de IA, por isso essas contas usam apenas o mapeamento manual de colunas, mais seguro, embora custe um toque a mais.
+
+## Revê e corrige antes de guardar
+
+Depois de o modelo propor o mapeamento, não recebe um resultado em bruto sem contexto. Vê uma fila de etiquetas editáveis com o que foi reconhecido, algo como «Data → Data Mov.» ou «Descrição → Descritivo». Se alguma estiver errada, a opção «Errado? Toque para corrigir» abre o mesmo mapeador manual de colunas, já preenchido com a proposta do modelo, para corrigir uma coluna em vez de começar do zero. Se o ficheiro não tiver coluna de moeda, a aplicação diz em que moeda leu as linhas e deixa alterá-la antes de importar.
+
+É a mesma pré-visualização que acompanha qualquer importação no AI Budget Assistant, quer o banco tenha sido reconhecido de imediato quer só com a ajuda da IA: a lista completa de movimentos para rever antes de entrar no orçamento, com as categorias já sugeridas a partir do comerciante e com os movimentos que já existem na conta desmarcados, para que importar o mesmo ficheiro duas vezes não crie duplicados.
+
+## Da segunda vez é mais rápido
+
+Assim que o mapeamento de um formato se confirma correto, a sua forma – apenas os nomes das colunas e o modo como as datas e os valores estão escritos, sem nenhum dado pessoal nem nenhum movimento – fica guardada num dicionário global de formatos. A pessoa seguinte que carregar um extrato do mesmo banco já não precisa do passo de IA: o formato é reconhecido à primeira. De certa forma, é o primeiro utilizador a «desbloquear» o formato do seu banco para todos os que vêm depois.
+
+## Como experimentar
+
+Se tem um ficheiro de um banco que desistiu de importar porque a aplicação não o reconhecia, vale a pena tentar de novo. Vá a **Definições → Importar transações** no [AI Budget Assistant](https://ai-budget.pl), escolha o ficheiro CSV, XLSX ou PDF e, se nenhum leitor incorporado o reconhecer, verá o ecrã de consentimento descrito acima em vez de uma lista vazia. Depois de aceitar, recebe uma pré-visualização com o mapeamento sugerido para confirmar, como em qualquer outra importação.
+
+Importar o extrato é o atalho mais rápido para um [controlo de despesas](/blog/pt/controlo-de-despesas/) completo, e o ponto de partida natural para [fazer um orçamento familiar](/blog/pt/como-fazer-um-orcamento-familiar/) com números reais em vez de estimativas. A aplicação é gratuita no browser em [ai-budget.pl](https://ai-budget.pl), sem cartão, e está disponível para Android no [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant).
+
+---
+
+## FAQ: importar extrato bancário
+
+**O que acontece se o meu banco não for suportado diretamente?**
+
+Se carregar um CSV ou XLSX que nenhum leitor incorporado reconhece, o AI Budget Assistant tenta perceber sozinho qual é a coluna da data, do valor e da descrição, e mostra-lhe o resultado para rever e corrigir. Nos extratos em PDF (uma funcionalidade do plano Pro), o mecanismo extrai as linhas de movimentos diretamente do texto do documento. Em ambos os casos, recebe uma pré-visualização completa antes de qualquer coisa ser guardada.
+
+**A aplicação tem suporte específico para os bancos portugueses?**
+
+Não há, para já, leitores dedicados a bancos portugueses. Os extratos de qualquer banco português passam pela importação universal: a IA identifica as colunas de um CSV ou XLSX, ou lê o PDF no plano Pro, e o resultado é sempre confirmado por si na pré-visualização. O Revolut e o Wise, muito usados em Portugal, são reconhecidos diretamente.
+
+**A IA pode enganar-se e registar um valor errado?**
+
+Em CSV e XLSX, o modelo de IA nunca lê valores nem datas: indica apenas que coluna é qual, e esses nomes são confirmados contra os cabeçalhos reais do ficheiro, por isso uma coluna inventada é rejeitada. Os números são lidos pelo mesmo mecanismo do mapeamento manual. Em qualquer caso, vê a pré-visualização de cada movimento antes de guardar e pode corrigir o que parecer errado.
+
+**O conteúdo do meu extrato é enviado para algum lado?**
+
+Antes de qualquer parte do ficheiro chegar ao modelo de IA, aparece um ecrã de consentimento, uma vez por conta, que mostra exatamente o que vai ser enviado: a linha de cabeçalho e até dez linhas de exemplo num CSV ou XLSX, ou as primeiras vinte linhas de texto num PDF. As contas com encriptação de ponta a ponta total não usam este mecanismo, porque a aplicação não tem acesso aos dados para os enviar.
+
+**Se importar o mesmo extrato duas vezes, os movimentos ficam duplicados?**
+
+Não. Na pré-visualização, os movimentos que já existem na conta aparecem desmarcados, por isso pode voltar a importar um extrato com períodos sobrepostos sem duplicar despesas. Se um movimento for mesmo diferente, basta voltar a marcá-lo.
+
+---
+
+*Artigos relacionados: [Controlo de despesas sem esforço](/blog/pt/controlo-de-despesas/) | [IA para finanças pessoais](/blog/pt/ia-para-financas-pessoais/)*
+
+## Orçamento a dois: como gerir as contas do casal sem discutir
+URL: https://ai-budget.pl/blog/pt/orcamento-a-dois/
+
+O dinheiro é um dos temas que mais faz os casais discutir, e a maior parte dessas discussões nem é sobre dinheiro. É sobre transparência, sobre justiça e sobre o ressentimento silencioso que cresce quando um sente que controla tudo e o outro não faz ideia de como estão as contas. Um orçamento a dois não serve para vigiar os gastos de ninguém. Serve para combinarem para onde querem ir juntos, para que o dia a dia deixe de ser uma fonte de atrito.
+
+Este guia explica porque é que os orçamentos de casal costumam falhar, os três modelos que os casais usam na prática e como acompanhar tudo sem que uma das pessoas se transforme no contabilista lá de casa.
+
+## Porque é que o orçamento do casal costuma correr mal
+
+Há padrões que se repetem vezes sem conta.
+
+**Hábitos diferentes.** Um é poupado e torce o nariz a um jantar de 60 €. O outro vê o dinheiro como algo para aproveitar agora. Nenhum está errado, mas se o orçamento for feito à medida de um só desses instintos, o outro vai ignorá-lo em silêncio.
+
+**O «quem pagou o quê».** Um paga o supermercado, o outro a luz e a internet, um terceiro pagamento cai no cartão da conta conjunta, e no fim do mês já ninguém se lembra dos pormenores. Só a contabilidade mental cansa, e alimenta a desconfiança de que um está a contribuir mais do que o outro.
+
+**Falta de visão partilhada.** É o mais importante. Quando só um vê a imagem completa, o outro anda às cegas. Faz uma compra que lhe parece razoável e depois ouve que o dinheiro do supermercado já tinha acabado. Isso soa a vigilância, não a trabalho de equipa, e é a forma mais rápida de alguém deixar de participar.
+
+Se o vosso orçamento já desabou antes, a causa está quase de certeza num destes três. Corrijam o sistema, não a força de vontade.
+
+## Os três modelos que os casais usam na prática
+
+Não há uma estrutura certa para todos. Escolham a que encaixa nos vossos rendimentos e na vossa maneira de ser, e ajustem depois.
+
+### Tudo em comum
+
+Os dois rendimentos entram num único bolo, todas as despesas saem dele, e não há «teu» nem «meu». É o modelo mais simples de acompanhar e costuma servir a casais com rendimentos parecidos ou uma longa vida em comum, muitas vezes com uma conta conjunta onde caem os dois salários. O risco é a pessoa que ganha menos sentir que tem de justificar cada gasto pessoal, e é por isso que o dinheiro pessoal (já lá vamos) é aqui mais importante.
+
+### Proporcional aos rendimentos
+
+As despesas comuns dividem-se na proporção do que cada um ganha. Se um recebe 1 800 € líquidos por mês e o outro 1 200 €, o primeiro paga cerca de 60% da renda ou da prestação da casa, do supermercado e das contas, e o segundo 40%. Cada um fica com o resto para si. É o modelo mais justo quando os rendimentos são desiguais e desarma a tensão do «mas eu ganho mais» antes de ela aparecer.
+
+### O teu, o meu e o nosso
+
+Cada um mantém a sua conta pessoal, e ambos transferem um valor fixo todos os meses para uma conta conjunta que cobre as despesas e os objetivos comuns. Preserva a independência e financia a vida a dois. É popular entre casais que chegaram à relação com hábitos financeiros já formados, ou que vivem em união de facto há pouco tempo e não querem juntar tudo.
+
+Seja qual for o modelo, o objetivo é o mesmo: uma divisão clara e combinada, para que nenhuma compra isolada vire debate.
+
+## Dinheiro pessoal para cada um
+
+Esta regra evita mais discussões do que qualquer outra. Reservem uma parte do orçamento que cada um pode gastar no que quiser, sem justificar nada. Um hobby, comida encomendada, um gadget, uma rodada de imperiais. Tanto faz.
+
+Mesmo um valor modesto, por exemplo 100 € a 150 € por pessoa por mês, elimina a maior parte do atrito. O poupado deixa de fiscalizar o café do outro. O gastador deixa de se sentir vigiado. Desde que o valor seja igual (ou proporcional, se escolheram esse modelo), é visto como justo. Os gastos que não têm de ser explicados são o que impede o orçamento a dois de parecer uma trela.
+
+## Falem de objetivos comuns, não de restrições comuns
+
+«Estamos a pôr de lado 300 € por mês para duas semanas nos Açores no próximo verão» soa completamente diferente de «tens de gastar menos». A conta é a mesma, a reação é oposta. Uma é um projeto em que os dois estão envolvidos. A outra é uma crítica.
+
+Por isso, comecem pelos objetivos. Uma viagem, a entrada para a casa, o fundo de emergência, o casamento, sair das dívidas. Quando os dois veem um objetivo a aproximar-se, o orçamento passa a ser a ferramenta que vos leva lá e não uma lista de coisas proibidas. Se estão a começar do zero na parte prática, o guia [como fazer um orçamento familiar](/blog/pt/como-fazer-um-orcamento-familiar/) explica como criar categorias e definir limites realistas.
+
+## Como acompanhar tudo a dois
+
+É aqui que a maioria dos casais falha. Combinam o modelo, definem objetivos e depois percebem que manter o orçamento atualizado obriga um deles a andar atrás de todos os talões. Essa pessoa cansa-se e o sistema morre.
+
+A solução é uma única visão partilhada, que os dois atualizam a partir do próprio telemóvel, em tempo real. Não uma folha de Excel de que um é dono. Não uma sessão mensal de acerto de contas. Uma imagem viva que os dois podem abrir a qualquer momento e em que ambos confiam.
+
+É exatamente para isto que existem as contas partilhadas no AI Budget Assistant. Cada pessoa regista as suas despesas no seu telemóvel, no momento em que acontecem, e a visão comum atualiza-se para os dois de imediato. Acaba o «registaste as compras do supermercado?», porque quem fez as compras já as adicionou. As funções permitem escolher o nível de acesso certo: o **Proprietário** gere a conta, o **Editor** pode adicionar e editar despesas e o **Leitor** só pode ver os dados (útil se um dos dois quer apenas acompanhar, ou para um filho adolescente a aprender a gerir dinheiro).
+
+Como registar é rápido, o registo acontece mesmo. Pode adicionar uma despesa a falar, com uma fotografia do talão ([digitalizar talões](/blog/pt/digitalizar-taloes/) tem um guia próprio) ou escrevendo ao assistente em linguagem corrente. Há também um chat de IA partilhado onde podem mencionar o outro com @ para comentar um movimento, e perguntar ao assistente coisas como «quanto gastámos juntos este mês?» ou «quanto falta para o objetivo das férias?», com uma resposta que junta as transações dos dois. Para compras maiores, a votação de compras em família permite propor uma despesa e decidir em conjunto antes de pagar. Sem somas à mão e sem exportar nada para uma folha de cálculo.
+
+O AI Budget Assistant é gratuito para começar, funciona diretamente no browser em [ai-budget.pl](https://ai-budget.pl), sem cartão, e está também no [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant) para Android. Se quiserem experimentar a visão partilhada, os dois ficam lá dentro em poucos minutos.
+
+## Uma conversa mensal sobre dinheiro, sem tensão
+
+Uma vez por mês, sentem-se quinze minutos. Não para se auditarem um ao outro, mas para olharem juntos para os números e responderem a três perguntas:
+
+1. Cumprimos a meta de poupança deste mês ou ficámos aquém?
+2. Os nossos objetivos estão mais perto ou estão a atrasar-se?
+3. Houve alguma surpresa, e podíamos tê-la previsto?
+
+A última é a que mais conta. Se a mesma «surpresa» aparece todos os meses ou todos os anos (o seguro do carro, o IMI, o aniversário dos amigos, a revisão do carro), não é surpresa nenhuma. É uma linha que se esqueceram de pôr no orçamento. Acrescentá-la elimina uma fonte recorrente de stress.
+
+Mantenham o tom colaborativo. São duas pessoas a olhar para o mesmo ecrã, do mesmo lado, a caminho dos mesmos objetivos. A visão partilhada faz o trabalho pesado, porque os números já lá estão e já foram aceites por ambos. Não há muito para discutir quando os dois olham para a mesma imagem honesta. Para registar tudo com o mínimo de esforço, o guia de [controlo de despesas](/blog/pt/controlo-de-despesas/) mostra como combinar a importação de extratos, os talões e a voz.
+
+---
+
+## FAQ: orçamento a dois
+
+**Os casais devem juntar todo o dinheiro ou manter contas separadas?**
+
+Não há uma resposta universal. Juntar tudo é o mais simples e serve casais com rendimentos parecidos e muita confiança. Manter parte do dinheiro separado, com o modelo «o teu, o meu e o nosso», preserva a independência e costuma reduzir o atrito em casais que chegaram com hábitos já formados. O modelo proporcional é o mais justo quando os rendimentos são muito diferentes. Escolham de acordo com a vossa situação e revejam se deixar de funcionar.
+
+**Como deixar de discutir por causa de dinheiro?**
+
+A maioria das discussões nasce da falta de transparência e da sensação de injustiça, não dos gastos em si. Deem a cada um uma verba pessoal que nunca tem de justificar, combinem uma divisão clara das despesas comuns e usem uma única visão partilhada que os dois veem em tempo real. Quando os números estão à vista e as regras estão combinadas à partida, as compras individuais deixam de ser motivo de discussão.
+
+**Qual é a melhor aplicação para fazer um orçamento a dois?**
+
+Procurem uma com contas verdadeiramente partilhadas, em que os dois registam a partir do próprio telemóvel e veem os mesmos números atualizados, e com controlo de funções para definir o nível de acesso de cada um. O AI Budget Assistant faz isto e junta um chat de IA partilhado a que podem perguntar «quanto gastámos juntos este mês?». É gratuito para começar no browser ou no Android, sem cartão.
+
+**Como dividir as despesas se um ganha mais do que o outro?**
+
+Usem o modelo proporcional. Dividam as despesas comuns na mesma proporção do peso de cada um no rendimento total, para que quem ganha mais pague uma fatia maior da casa e das contas e cada um fique com um valor justo para si. Isto evita o ressentimento de uma divisão a meias quando os rendimentos são desiguais, e ajusta-se sozinho se algum dos salários mudar.
+
+**É preciso ter uma conta conjunta no banco para fazer um orçamento a dois?**
+
+Não. A conta conjunta facilita o modelo «tudo em comum» e o «teu, meu e nosso», mas o orçamento pode ser partilhado mesmo com contas bancárias separadas. O que importa é que as despesas dos dois fiquem registadas no mesmo sítio, por exemplo numa conta partilhada na aplicação, onde cada um adiciona os seus gastos.
+
+---
+
+*Artigos relacionados: [Como fazer um orçamento familiar](/blog/pt/como-fazer-um-orcamento-familiar/) | [Controlo de despesas sem esforço](/blog/pt/controlo-de-despesas/)*
 
 
 # Help center

@@ -680,7 +680,7 @@ PRICING = {
      ("O app é grátis?", "Sim, os recursos principais são gratuitos para sempre. Pro e Business liberam limites de IA maiores, mais contas e análises avançadas."),
      ("Posso cancelar quando quiser?", "Sim. Cancele quando quiser em Configurações — você mantém o acesso até o fim do período de cobrança atual."),
      ("O que acontece depois do teste grátis?", "Se você não cancelar, o cartão é cobrado automaticamente no fim dos 7 dias de teste. Você recebe um lembrete antes da cobrança."),
-     ("Em qual moeda eu pago?", "Os preços aparecem automaticamente na sua moeda local quando você faz o upgrade no app. No Brasil, os preços e a cobrança são em reais (BRL); as outras moedas aceitas são USD, EUR, PLN, GBP, UAH e RUB."),
+     ("Em qual moeda eu pago?", "Os preços seguem a moeda escolhida no app, que pode ser o real (BRL), e você paga na moeda do preço mostrado ao fazer o upgrade. As outras moedas aceitas são USD, EUR, PLN, GBP, UAH e RUB."),
    ],
  },
 }
@@ -756,14 +756,14 @@ ABOUT = {
         "<h2>O que é o AI Budget Assistant</h2><p>O AI Budget Assistant é uma aplicação de finanças pessoais e familiares que reúne despesas, orçamentos, objetivos de poupança, dívidas e importação bancária num só lugar, com um assistente de IA que trata do aborrecido registo de dados. Registe despesas por voz ou com uma fotografia do talão, faça perguntas em linguagem simples e partilhe um orçamento com a família em tempo real. Funciona em Android e no navegador, em 11 idiomas.</p>"
         "<h2>Quem está por trás</h2><p>A aplicação é desenvolvida e gerida pela <strong>MiCode Sp. z o.o.</strong>, uma empresa de software sediada na Polónia (ver <a href=\"https://mi-code.pl/\">mi-code.pl</a>). Criamos ferramentas práticas, que respeitam a privacidade, para gerir o dinheiro sem folhas de cálculo.</p>"
         "<h2>A nossa abordagem</h2><p>Concentramo-nos em três coisas: registar dados sem esforço graças à IA, gerir o orçamento em família em tempo real e manter privados os seus dados financeiros. As funcionalidades principais são gratuitas; as ferramentas avançadas estão disponíveis no plano Pro.</p>"
-        f"<h2>Contacto</h2><p>Perguntas ou sugestões: <a href=\"mailto:perevertkinma@gmail.com\">perevertkinma@gmail.com</a>. Instale a aplicação a partir do <a href=\"{play_url('body', 'pt')}\">Google Play</a> ou abra a <a href=\"https://app.ai-budget.pl\">versão web</a>. Leia o nosso <a href=\"/blog/en/\">blog</a> com guias de orçamento (em inglês).</p>"),
+        f"<h2>Contacto</h2><p>Perguntas ou sugestões: <a href=\"mailto:perevertkinma@gmail.com\">perevertkinma@gmail.com</a>. Instale a aplicação a partir do <a href=\"{play_url('body', 'pt')}\">Google Play</a> ou abra a <a href=\"https://app.ai-budget.pl\">versão web</a>. Leia o nosso <a href=\"/blog/pt/\">blog</a> com guias de orçamento.</p>"),
  "br": ("Sobre nós - AI Budget Assistant",
         "Sobre o AI Budget Assistant, um app de finanças pessoais e familiares com assistente de IA, da MiCode Sp. z o.o.",
         "Sobre o AI Budget Assistant",
         "<h2>O que é o AI Budget Assistant</h2><p>O AI Budget Assistant é um app de finanças pessoais e familiares que reúne despesas, orçamentos, metas de economia, dívidas e importação de extratos em um só lugar, com um assistente de IA que faz por você a parte chata de registrar os dados. Registre despesas por voz ou com uma foto do recibo, faça perguntas em linguagem simples e compartilhe um orçamento com a família em tempo real. Funciona no Android e no navegador, em 11 idiomas.</p>"
         "<h2>Quem está por trás</h2><p>O app é desenvolvido e mantido pela <strong>MiCode Sp. z o.o.</strong>, uma empresa de software com sede na Polônia (veja <a href=\"https://mi-code.pl/\">mi-code.pl</a>). Criamos ferramentas práticas, que respeitam a privacidade, para cuidar do dinheiro sem planilhas.</p>"
         "<h2>Nossa abordagem</h2><p>Focamos em três coisas: registrar dados sem esforço com a ajuda da IA, controlar o orçamento em família em tempo real e manter seus dados financeiros privados. Os recursos principais são gratuitos; as ferramentas avançadas estão no plano Pro.</p>"
-        f"<h2>Contato</h2><p>Dúvidas ou sugestões: <a href=\"mailto:perevertkinma@gmail.com\">perevertkinma@gmail.com</a>. Baixe o app no <a href=\"{play_url('body', 'br')}\">Google Play</a> ou abra a <a href=\"https://app.ai-budget.pl\">versão web</a>. Leia nosso <a href=\"/blog/en/\">blog</a> com guias de orçamento (em inglês).</p>"),
+        f"<h2>Contato</h2><p>Dúvidas ou sugestões: <a href=\"mailto:perevertkinma@gmail.com\">perevertkinma@gmail.com</a>. Baixe o app no <a href=\"{play_url('body', 'br')}\">Google Play</a> ou abra a <a href=\"https://app.ai-budget.pl\">versão web</a>. Leia nosso <a href=\"/blog/br/\">blog</a> com guias de orçamento.</p>"),
 }
 _b = os.environ.get("LANDING_BASE", "preview").strip("/")
 BASE = ("/" + _b) if _b else ""
@@ -1109,7 +1109,7 @@ C = {
      ("Posso importar transações do banco?", "Sim, da Wise e de bancos por CSV ou PDF, com deteção automática de duplicados. Se o formato do seu banco não for reconhecido, a importação com IA lê o extrato."),
    ],
    "cta_band": "Assuma o controlo do seu dinheiro, só para si ou em família.", "cta_band_btn": "Comece grátis",
-   "blog_cta": "Leia os guias no blog (em inglês)",
+   "blog_cta": "Leia os guias no blog",
    "footer": "AI Budget Assistant - aplicação de finanças tudo-em-um com assistente de IA.", "rights": "Todos os direitos reservados.",
  },
  "br": {
@@ -1138,7 +1138,7 @@ C = {
      ("Posso importar transações do banco?", "Sim, da Wise e de bancos via CSV ou PDF, com detecção automática de duplicatas. Se o formato do seu banco não for reconhecido, a importação com IA lê o extrato."),
    ],
    "cta_band": "Assuma o controle do seu dinheiro, sozinho ou em família.", "cta_band_btn": "Comece grátis",
-   "blog_cta": "Leia os guias no blog (em inglês)",
+   "blog_cta": "Leia os guias no blog",
    "footer": "AI Budget Assistant - app de finanças completo com assistente de IA.", "rights": "Todos os direitos reservados.",
  },
 }
@@ -1244,7 +1244,7 @@ def og_default(lang):
     return f"{SITE}/{sec}/{lang}/assets/og-default.png"
 
 BLOG_SRC = os.path.join(ROOT, "..", "seo")
-FROM_BLOG_PAIRS = ["black-friday", "christmas", "tax-refund", "live-on-2000", "budget", "split-bill", "auto-capture", "receipts", "ai-budget", "inflation", "expense-map", "family", "shared-budget", "bank-import", "import-revolut", "import-mbank", "import-pko", "import-ing", "import-millennium", "import-pekao", "import-alior", "import-erste", "best-apps", "vs-monefy", "vs-wallet", "vs-ynab", "vs-moneymanager", "saving"]  # curated homepage -> article internal links (every list item renders; no truncation). USP + high-intent topics first. The seasonal `christmas` and `black-friday` are included, at the front, on the owner's explicit request (every blog article should appear here); `school` stays absent for now.
+FROM_BLOG_PAIRS = ["black-friday", "christmas", "tax-refund", "live-on-2000", "budget", "split-bill", "auto-capture", "receipts", "ai-budget", "inflation", "expense-map", "family", "shared-budget", "bank-import", "import-revolut", "import-mbank", "import-pko", "import-ing", "import-millennium", "import-pekao", "import-alior", "import-erste", "ai-bank-import", "best-apps", "vs-monefy", "vs-wallet", "vs-ynab", "vs-moneymanager", "saving"]  # curated homepage -> article internal links (every list item renders; no truncation). USP + high-intent topics first. The seasonal `christmas` and `black-friday` are included, at the front, on the owner's explicit request (every blog article should appear here); `school` stays absent for now.
 
 def _blog_front(path):
     raw = open(path, encoding="utf-8").read()
@@ -2193,11 +2193,11 @@ LLMS_FULL_INTRO = {
     "be": ("Беларуская", "Люстэрка ў фармаце markdown блога і цэнтра дапамогі ai-budget.pl на "
            "беларускай мове, для AI-пошукавых сістэм. Кароткае апісанне прадукту (на "
            "англійскай) у llms.txt."),
-    # pt/br have no blog articles yet, so their mirrors carry the help center only.
-    "pt": ("Português (Portugal)", "Espelho em markdown do centro de ajuda do ai-budget.pl em português "
+    # pt/br mirrors carry the help center and the pt/br blog articles.
+    "pt": ("Português (Portugal)", "Espelho em markdown do blogue e do centro de ajuda do ai-budget.pl em português "
            "europeu, para motores de resposta de IA. Consulte o llms.txt para o resumo do produto "
            "(em inglês)."),
-    "br": ("Português (Brasil)", "Espelho em markdown da central de ajuda do ai-budget.pl em português "
+    "br": ("Português (Brasil)", "Espelho em markdown do blog e da central de ajuda do ai-budget.pl em português "
            "do Brasil, para mecanismos de resposta de IA. Veja o llms.txt para o resumo do produto "
            "(em inglês)."),
 }
@@ -2684,10 +2684,10 @@ LLMS_TXT_I18N = {
             "Resumo semanal por voz das suas despesas no bot de Telegram, WhatsApp ou Slack (opcional)",
             "Totais de depósitos de embalagens pagos e de descontos recebidos, a partir dos talões digitalizados",
         ],
-        "blog_desc": "guias sobre orçamento, controlo de despesas e poupança (em inglês)",
+        "blog_desc": "guias sobre orçamento, controlo de despesas e poupança",
         "help_desc": "como usar cada funcionalidade da aplicação",
         "pricing_desc": "planos Free, Pro e Business",
-        "full_desc": "espelho em markdown do centro de ajuda em português (Portugal)",
+        "full_desc": "espelho em markdown do blogue e do centro de ajuda em português (Portugal)",
         "full_en_note": "versão em inglês",
         "webapp_desc": "inicie sessão e use o AI Budget Assistant no navegador",
         "play_desc": "aplicação Android",
@@ -2733,7 +2733,7 @@ LLMS_TXT_I18N = {
             "Resumo semanal por voz dos seus gastos pelo bot do Telegram, WhatsApp ou Slack (opcional)",
             "Totais de vasilhame pago e de descontos recebidos, a partir dos recibos escaneados",
         ],
-        "blog_desc": "guias sobre orçamento, controle de gastos e economia (em inglês)",
+        "blog_desc": "guias sobre orçamento, controle de gastos e economia",
         "help_desc": "como usar cada recurso do app",
         "pricing_desc": "planos Free, Pro e Business",
         "full_desc": "espelho em markdown da central de ajuda em português (Brasil)",

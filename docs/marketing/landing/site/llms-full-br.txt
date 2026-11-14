@@ -1,9 +1,667 @@
 # AI Budget Assistant - Full content (Português (Brasil))
 
-> Espelho em markdown da central de ajuda do ai-budget.pl em português do Brasil, para mecanismos de resposta de IA. Veja o llms.txt para o resumo do produto (em inglês).
+> Espelho em markdown do blog e da central de ajuda do ai-budget.pl em português do Brasil, para mecanismos de resposta de IA. Veja o llms.txt para o resumo do produto (em inglês).
 
 Source: https://ai-budget.pl/llms.txt
 Public API (OAuth 2.0): https://ai-budget.pl/br/developers/ - reference https://api.ai-budget.pl/public/docs/en, OpenAPI https://api.ai-budget.pl/public/docs/en/openapi.json
+
+
+# Blog
+
+## Como fazer um orçamento familiar que dura além do mês 1
+URL: https://ai-budget.pl/blog/br/como-fazer-um-orcamento-familiar/
+
+Quase todo mundo já tentou organizar as contas da casa. Você abre uma planilha no começo do mês, anota tudo com capricho por alguns dias, esquece um Pix aqui, uma compra no débito ali, e quando chega a fatura do cartão a planilha já está abandonada. O problema raramente é falta de força de vontade. É o método.
+
+Um orçamento familiar é só um plano para o seu dinheiro. Não é castigo nem promessa de nunca mais pedir comida no fim de semana. Quando funciona, ele garante que o salário vá para onde você realmente quer, e não suma em algum lugar entre o mercado, o aplicativo de transporte e o dia 30.
+
+Este guia mostra como fazer um orçamento familiar do zero, como fazer ele durar e como dividir essa tarefa com o parceiro ou a família sem transformar cada compra em discussão.
+
+## Por que a maioria dos orçamentos não passa do primeiro mês?
+
+A maioria dos orçamentos morre porque anotar cada gasto à mão dá trabalho demais e porque as pessoas que dividem o dinheiro não enxergam os mesmos números. Quando aparece algo mais urgente, o hábito some, quase sempre em duas ou três semanas. Um orçamento só sobrevive se o registro for rápido e todos virem o mesmo quadro atualizado.
+
+O motivo número um é o atrito. Lançar cada compra manualmente é tão chato que você pula uma transação, depois outra, e de repente a planilha não bate com nada.
+
+O segundo motivo é que o orçamento costuma ser um projeto solitário. Uma pessoa anota tudo enquanto a outra gasta sem ver o quadro geral. No fim do mês os dois se surpreendem, e quase nunca de um jeito bom.
+
+O terceiro: a gente planeja para uma versão idealizada de si mesmo. Um orçamento que pressupõe marmita todos os dias e zero compra por impulso não é orçamento, é ficção. Na primeira pizza de sexta-feira, o plano inteiro parece ter ido por água abaixo.
+
+## Como descobrir para onde o dinheiro está indo de verdade?
+
+Junte um mês de dados reais de receitas e gastos, tirados do extrato do banco e da fatura do cartão, não da memória. O jeito mais rápido é importar os últimos 30 dias de transações para um app que já sugere as categorias. Só com esse retrato dá para definir limites que combinam com a sua vida.
+
+Antes de planejar qualquer coisa, passe um mês apenas observando. Sem limites, sem culpa, só dados. Você precisa de respostas honestas para duas perguntas:
+
+- Quanto dinheiro entra de fato por mês (salário, freela, aluguel de um imóvel, qualquer renda extra)?
+- Para onde ele vai, com o máximo de detalhe possível?
+
+Não chute. Abra o extrato da conta e a fatura do cartão dos últimos 30 dias e passe linha por linha. Lembre que no Brasil o cartão de crédito embaralha o calendário: a compra é de um mês, o pagamento é do outro, e as parcelas se espalham pelos meses seguintes. Anote as parcelas em andamento como compromisso fixo até a última.
+
+Se o seu banco permite baixar o extrato em CSV, Excel ou PDF, você pode importar esse histórico de uma vez e pular a digitação. A categorização acontece em segundo plano.
+
+## Como separar os gastos da casa em categorias?
+
+Use três grupos: custos fixos (aluguel ou financiamento, condomínio, luz, água, internet, plano de saúde, assinaturas), gastos variáveis essenciais (mercado, transporte, farmácia) e gastos livres (restaurante, delivery, roupas, lazer). Os fixos mudam pouco e os livres mudam muito, por isso as maiores surpresas costumam estar no terceiro grupo.
+
+Com os dados na mão, agrupe. Uma divisão simples que funciona para a maioria das famílias:
+
+**Custos fixos**: aluguel ou prestação do financiamento, condomínio, contas de consumo, plano de saúde, escola, parcelas de empréstimo, assinaturas. Mudam raramente e são difíceis de cortar rápido.
+
+**Gastos variáveis essenciais**: mercado, combustível ou transporte público, remédios, gás. Dá para apertar nas bordas, mas não eliminar.
+
+**Gastos livres**: restaurante, delivery, roupas, viagens de fim de semana, hobbies, tudo o que você escolhe e não precisa. É aqui que moram as maiores surpresas.
+
+Quem faz esse exercício quase sempre descobre que as compras "pequenas" somam rápido. Dois ou três streamings, o cafezinho de todo dia, o delivery do domingo e umas compras parceladas na internet podem levar algumas centenas de reais por mês sem que ninguém perceba.
+
+## Que limites definir? A regra 50/30/20 funciona no Brasil?
+
+A regra 50/30/20 destina 50% da renda líquida às necessidades, 30% aos desejos e 20% à reserva, aos objetivos e à quitação de dívidas. É um ponto de partida, não uma lei: em cidade grande, com aluguel alto, as necessidades podem chegar a 60%. Defina os limites a partir do gasto real e aperte aos poucos.
+
+Exemplo de divisão de uma renda líquida de R$ 5.000 pela regra 50/30/20 (valores ilustrativos, não é recomendação personalizada):
+
+| Grupo | Parte | Valor mensal | O que entra aqui |
+|---|---|---|---|
+| Necessidades | 50% | R$ 2.500 | aluguel, condomínio, contas, mercado, transporte, farmácia |
+| Desejos | 30% | R$ 1.500 | restaurante, delivery, roupas, lazer, streaming |
+| Reserva e dívidas | 20% | R$ 1.000 | reserva de emergência, metas, amortizar dívidas |
+| **Total** | **100%** | **R$ 5.000** | |
+
+Se você mora numa capital e o aluguel sozinho já come um terço da renda, seus "50%" podem virar 60% ou mais. Tudo bem: ajuste as proporções à sua realidade, mas tente não zerar a parte da reserva.
+
+A armadilha a evitar é orçar para quem você gostaria de ser. Orce para quem você é hoje e faça ajustes pequenos a partir daí. Metas drásticas são ótimas de definir e péssimas de manter.
+
+## Como fazer o orçamento em casal ou em família?
+
+Vocês precisam de uma visão única do orçamento, que cada um atualiza do próprio celular e que mostra o efeito de cada compra na hora. Uma pessoa fazendo as contas de todo mundo desmorona na primeira compra grande em conjunto. Comece por objetivos em comum, não por cobrar comprovante um do outro.
+
+Se mais alguém na casa gasta dinheiro, essa pessoa precisa fazer parte do orçamento. Um plano mantido por um e ignorado pelo outro cai na primeira vez que alguém faz uma compra grande sem combinar.
+
+A solução prática é um orçamento compartilhado e atualizado em tempo real. Os dois veem os mesmos números, sem ficar mandando mensagem do tipo "você já gastou a verba do mercado desta semana?".
+
+Ferramentas ajudam aqui. O AI Budget Assistant (para Android e no navegador em [ai-budget.pl](https://ai-budget.pl)) tem contas compartilhadas em que cada pessoa adiciona os gastos do próprio celular e o orçamento se atualiza para todos ao mesmo tempo. Você também pode perguntar ao assistente de IA "quanto gastamos no mercado este mês?" e receber a resposta na hora, sem fazer conta nenhuma. Os detalhes de como dividir as despesas entre duas rendas diferentes estão no guia de [finanças do casal](/blog/br/financas-do-casal/).
+
+## De quanto deve ser a reserva de emergência e por onde começar?
+
+A recomendação mais comum é de três a seis meses dos gastos essenciais, mas um primeiro marco prático é juntar um mês de despesas fixas, o suficiente para segurar um conserto do carro ou uma geladeira que pifou. Deixe esse dinheiro separado da conta do dia a dia, em uma aplicação com liquidez diária, para não gastá-lo por impulso.
+
+Antes de correr atrás de objetivos maiores, garanta um colchão. Três a seis meses de despesas pode parecer muito no começo. Um mês já muda tudo, porque tira você do cheque especial e do rotativo do cartão na primeira emergência.
+
+A função da reserva é simples: um imprevisto não pode virar crise financeira. Sem ela, cada surpresa acaba em juros, que no Brasil estão entre os mais altos do mundo.
+
+Guarde esse dinheiro um pouco longe da conta corrente. O pequeno atrito de ter que transferir costuma bastar para você não usá-lo em compras do dia a dia.
+
+## Como manter o orçamento simples sem se perder nos detalhes?
+
+Comece pelas linhas maiores: moradia, mercado, transporte, plano de saúde e assinaturas. Veja se está pagando por serviços que nem usa antes de caçar R$ 5 de economia no mercado. Dez a quinze minutos por semana bastam para manter o quadro geral sem otimizar migalhas.
+
+Com o orçamento rodando, bate a vontade de otimizar tudo. Resista, pelo menos no começo. Passar vinte minutos tentando economizar R$ 8 no mercado rende muito menos do que conferir se você está pagando assinaturas esquecidas.
+
+É aí que um gerenciador de assinaturas ajuda. O AI Budget Assistant tem um embutido, que mostra cada cobrança recorrente e a data de renovação em um só lugar. Muita gente encontra dois ou três serviços que tinha esquecido, dinheiro recuperado sem mudar nada no estilo de vida.
+
+Para registrar os gastos do dia a dia sem depender de planilha, veja o guia de [controle de gastos](/blog/br/controle-de-gastos/). E se você quer entender o que a inteligência artificial realmente faz por um orçamento, sem exagero, leia [IA para finanças pessoais](/blog/br/ia-para-financas-pessoais/).
+
+## Quais são os erros mais comuns no orçamento familiar?
+
+Os três mais comuns são esquecer os gastos anuais, como IPVA, IPTU, seguro e material escolar, orçar para uma versão idealizada de si mesmo e desistir depois do primeiro mês que deu errado. Divida os custos anuais por doze, planeje com base nos hábitos reais e trate os dois ou três primeiros meses como calibragem.
+
+**Ignorar os gastos do começo do ano.** Janeiro e fevereiro no Brasil são uma maratona: IPVA, IPTU, matrícula e material escolar, seguro do carro. Nada disso é surpresa, é previsível. Some os valores do ano, divida por 12 e reserve essa parcela todo mês. Se você recebe 13º salário, decida antes de ele cair para onde ele vai, em vez de deixar que ele se dissolva em dezembro.
+
+**Desistir depois de um mês ruim.** O primeiro mês de orçamento quase sempre sai errado. Você vai subestimar umas categorias e esquecer outras. É normal. Os primeiros dois ou três meses são calibragem, não fracasso.
+
+**Tratar o orçamento como teto para a diversão.** O orçamento diz quanto você separou para restaurante, não se você tem permissão de aproveitar. Saber que ainda restam R$ 200 para sair este mês é informação. Use como quiser.
+
+---
+
+## FAQ: como fazer um orçamento familiar
+
+**Como começar um orçamento sem nenhuma sobra no fim do mês?**
+
+Comece registrando tudo por 30 dias, sem nenhuma restrição. Ainda não tente mudar o comportamento, só colete dados. No fim do mês você terá um retrato real de para onde o dinheiro vai, e decidir o que mudar fica muito mais concreto e menos assustador.
+
+**Quanto tempo por semana o orçamento toma?**
+
+Com a configuração certa, 10 a 15 minutos por semana bastam. Se você importa o extrato do banco ou usa um app que já categoriza os gastos, o tempo cai ainda mais. O objetivo é um sistema que roda em segundo plano, não um segundo emprego.
+
+**Orçamento funciona com renda variável?**
+
+Funciona, e faz ainda mais diferença. Baseie o plano no seu mês mais fraco típico. Quando vier um mês melhor, a sobra vai primeiro para a reserva de emergência ou para as metas. Assim você nunca gasta como no mês bom para depois se apertar no mês fraco.
+
+**Como fazer orçamento com um parceiro que não quer anotar gastos?**
+
+Comece pela conversa sobre objetivos, não sobre controle. "Queremos viajar no fim do ano com R$ 6.000 guardados" é um ponto de partida muito diferente de "você precisa anotar tudo". Quando os dois enxergam uma meta em comum, o registro vira ferramenta, não vigilância.
+
+**O que é a regra 50/30/20?**
+
+Ela divide a renda líquida em três partes: 50% para necessidades, 30% para desejos e 20% para reserva e dívidas. Use como ponto de partida. Se o aluguel é alto e as necessidades chegam a 60%, corte da parte dos desejos em vez de abandonar a reserva.
+
+**Quanto guardar na reserva de emergência?**
+
+O ideal são três a seis meses dos gastos essenciais. Se isso parece distante, comece com um mês de despesas fixas e vá aumentando todo mês. Mantenha o dinheiro separado da conta corrente, com resgate rápido, para ele não se misturar com o dia a dia.
+
+---
+
+*Artigos relacionados: [Controle de gastos sem planilha](/blog/br/controle-de-gastos/) | [Finanças do casal: orçamento a dois sem brigas](/blog/br/financas-do-casal/)*
+
+<!-- pillar-downlinks -->
+
+## Guias relacionados
+
+- [Finanças do casal: orçamento a dois sem brigas](/blog/br/financas-do-casal/)
+- [IA para finanças pessoais: o que ela faz de verdade](/blog/br/ia-para-financas-pessoais/)
+
+## Controle de gastos: como manter sem planilha
+URL: https://ai-budget.pl/blog/br/controle-de-gastos/
+
+Quase todo mundo já tentou fazer controle de gastos. A história costuma ser a mesma: você baixa um modelo de planilha de gastos, anota tudo com cuidado por uma ou duas semanas, esquece uns Pix, umas compras por aproximação, e em silêncio desiste. Não porque a ideia fosse ruim, mas porque o método exigia esforço demais para a vida real.
+
+Um bom controle de gastos não exige que você vire uma pessoa mais disciplinada. Ele reduz o trabalho a quase zero, para que o hábito sobreviva a uma semana corrida.
+
+Este guia mostra como controlar os gastos sem tédio, o que fazer com os dados depois e como fazer o controle funcionar para duas pessoas, e não só para quem gosta de números.
+
+## Por que as pessoas param de controlar os gastos?
+
+Principalmente por falta de automação: cada lançamento manual pode ser pulado, ainda mais quando você está cansado ou com pressa no caixa. Some a isso transações sem contexto, como um Pix com nome estranho no extrato, e o fato de que normalmente uma só pessoa anota pela casa inteira. A solução é uma ferramenta que registra por você e é compartilhada.
+
+O motivo mais comum é que digitar é chato. Pegar o celular na fila do mercado para escrever "Mercado – R$ 87,40 – alimentação" parece tranquilo no primeiro dia e exaustivo no décimo.
+
+O segundo é que os dados ficam ilegíveis rápido. Uma lista comprida de transações sem categoria não diz nada. Você vê números, não padrões.
+
+O terceiro, e esse pesa mais do que se admite: o controle é solitário. Uma pessoa anota cada cafezinho e cada abastecida, a outra não. O resultado é, no máximo, meio retrato. No fim do mês ninguém sabe direito o que aconteceu.
+
+## Quais métodos de controle de gastos funcionam?
+
+Quatro abordagens são as mais usadas: envelopes para dinheiro vivo, a regra das 24 horas para compras por impulso, a planilha de gastos e um app de finanças pessoais com importação de extrato. Só o app acompanha cartão, Pix, compras online e assinaturas sem digitação, por isso a maioria combina o app com uma das outras como freio de comportamento.
+
+Comparação dos métodos (avaliação qualitativa, sem dados numéricos):
+
+| Método | Esforço diário | Funciona para cartão, Pix e compras online | Melhor para |
+|---|---|---|---|
+| Envelopes de dinheiro | Médio (sacar, separar) | Não | Frear o impulso em uma categoria |
+| Regra das 24 horas | Baixo | Em parte | Compras maiores não planejadas |
+| Planilha de gastos (Excel, Google Sheets) | Alto (tudo à mão) | Sim, mas digitando | Um diário simples de gastos |
+| App com importação de extrato e leitura de recibos | Baixo | Sim | Controle consistente no longo prazo |
+
+### O método dos envelopes
+
+Um clássico. Você separa um valor em dinheiro para cada categoria e guarda, literalmente, em envelopes diferentes. Acabou o envelope, acabou a categoria no mês. Funciona surpreendentemente bem para conter impulsos, mas não serve para nada que passe pelo cartão, pelo Pix ou por assinatura.
+
+### A regra das 24 horas
+
+Antes de comprar qualquer coisa acima de um certo valor, digamos R$ 200, você espera um dia. Isso quebra o impulso, mas é um freio de comportamento, não um método de registro. Você continua sem saber para onde foi o dinheiro.
+
+### A planilha de gastos
+
+A planilha é o ponto de partida de quase todo mundo, e não é à toa: é grátis, flexível e você vê cada fórmula. O problema é que ela depende 100% de você. Cada compra tem que ser digitada, cada categoria escolhida, cada parcela do cartão lembrada. E planilha não avisa nada: ela só mostra que você estourou o mercado depois que estourou. Se a sua planilha sobreviveu meses, ótimo. Se ela morre todo mês de março, o problema é o atrito, não você.
+
+### Controle automático com um app
+
+É aqui que a abordagem muda. Em vez de digitar cada gasto, o app faz o trabalho pesado. Um app de finanças pessoais moderno pode:
+
+- Importar o extrato do seu banco ou a fatura do cartão em CSV, Excel ou PDF
+- Ler a foto do recibo e extrair valor, data e estabelecimento automaticamente
+- Sugerir a categoria pelo nome do estabelecimento e aprender com as suas correções, para que o supermercado de sempre vá direto para "Mercado"
+- Aceitar comandos de voz: diga "gastei 25 reais no almoço" e o gasto é registrado sem você tocar no teclado
+
+Quando lançar um gasto leva três segundos em vez de trinta, o hábito fica muito mais fácil de manter.
+
+## Importar o extrato é melhor do que lançar à mão?
+
+Para a maioria das pessoas, sim. Carregar o extrato em CSV, Excel ou PDF traz 30 a 90 dias de histórico de uma vez, já com categorias sugeridas, e o app marca possíveis duplicados para nada ser contado duas vezes. Deixe o lançamento manual para o dinheiro vivo e as compras que nunca passam pelo banco.
+
+Se você usa cartão e Pix para quase tudo, importar o extrato é o caminho mais rápido para um retrato completo. Baixe o extrato no internet banking, envie para o app e você tem semanas ou meses de histórico categorizados.
+
+O AI Budget Assistant não tem leitores dedicados para bancos brasileiros, mas isso não impede a importação: quando o app não reconhece o formato do arquivo, a IA identifica quais colunas são data, valor e descrição, e você confere tudo numa prévia antes de salvar. O passo a passo, incluindo o que acontece com os seus dados, está no guia de [como importar o extrato bancário](/blog/br/importar-extrato-bancario/). Você pode começar no Android ou direto no navegador em [ai-budget.pl](https://ai-budget.pl).
+
+Para quem está saindo de uma planilha, isso significa preencher um mês inteiro em poucos minutos, em vez de digitar centenas de linhas.
+
+## Dá para escanear o recibo em vez de digitar a compra?
+
+Dá. Fotografe o cupom fiscal e o reconhecimento de texto lê o valor, a data e a loja para você. Isso é especialmente útil para o mercado e para compras em dinheiro, porque no extrato a compra aparece só como um total, enquanto o recibo mostra o que formou esse total, item por item.
+
+A importação cobre o cartão e a conta. E o dinheiro vivo? E quando você quer saber o que tinha dentro da compra, e não só o total?
+
+Tirar uma foto do recibo resolve. O app lê os itens sem digitação nenhuma. Para o mercado pago em dinheiro ou para compras em que o detalhe importa, como gastos de trabalho ou de uma viagem em grupo, é bem mais rápido do que lançar à mão. O que dá para fazer com esses itens, de comparar preços a enxergar sua inflação pessoal, está no guia sobre [escanear nota fiscal](/blog/br/escanear-nota-fiscal/).
+
+## Como casais e famílias podem controlar os gastos juntos?
+
+O jeito mais simples é uma conta compartilhada em um app que cada pessoa abre no próprio celular. Cada transação aparece para todos os membros na hora, então não há surpresa no fim do mês. Você ainda pode perguntar ao assistente de IA quanto a casa inteira gastou em uma categoria.
+
+Esse é o buraco que a maioria dos apps de controle de gastos deixa aberto. Se você anota e o seu parceiro não, vocês têm metade do retrato. Não dá para administrar um orçamento compartilhado com dados pela metade.
+
+A solução é uma única conta compartilhada em que os dois lançam os gastos do próprio celular. Quando um faz o mercado, o outro vê em segundos. Quando alguém abastece o carro, o orçamento comum já sabe.
+
+O AI Budget Assistant faz isso com contas compartilhadas. Cada pessoa tem o próprio login e enxerga o mesmo quadro em tempo real. O assistente de IA trabalha sobre a conta inteira, então você pode perguntar "quanto gastamos com delivery este mês?" e a resposta soma as transações dos dois. Montar um orçamento em cima desses dados é o próximo passo natural, explicado no guia [como fazer um orçamento familiar](/blog/br/como-fazer-um-orcamento-familiar/).
+
+## Como definir limites que eu não vou ignorar?
+
+Observe um mês sem limites e depois defina os limites com folga: se você gasta em média R$ 1.200 no mercado, comece em R$ 1.100 a R$ 1.200, não em R$ 700. Ative avisos antes do limite, porque um alerta depois de estourar chega tarde demais para mudar alguma coisa.
+
+Ter categorias ajuda. Ter um limite por categoria ajuda mais. Mas a maioria define o limite uma vez e só olha de novo quando já passou.
+
+Algumas coisas que fazem diferença:
+
+**Defina o limite pelo que você gasta, não pelo que gostaria de gastar.** Se os últimos três meses deram média de R$ 1.200 no mercado, um limite de R$ 700 não é orçamento, é desejo que você vai abandonar na segunda semana.
+
+**Receba o aviso antes de chegar a 100%.** No AI Budget Assistant, o orçamento avisa quando você atinge 50%, 80% e 100% do limite. Um aviso de 80% com duas semanas pela frente é algo que dá para usar.
+
+**Alinhe o mês ao seu salário.** Se você recebe no dia 5, faz pouco sentido o orçamento virar no dia 1. Na conta, a opção "Mês financeiro" permite que o mês comece no dia em que o dinheiro entra.
+
+**Revise toda semana, não todo dia.** Revisão diária gera ansiedade sem informação útil. Dez minutos por semana bastam para ver se uma categoria está acima do normal e ainda dá tempo de corrigir.
+
+## Um app de controle de gastos é seguro?
+
+Depende do app. Verifique três coisas: se os dados ficam armazenados com criptografia, se o app funciona offline para os dados não precisarem ir para a nuvem o tempo todo e se a política de privacidade é clara. Confira isso antes de instalar, porque você está entregando informações financeiras sensíveis.
+
+O AI Budget Assistant é offline-first: o gasto é salvo primeiro no celular e só depois sincronizado. E quem quer o máximo de privacidade pode ativar a criptografia de ponta a ponta na conta.
+
+## Vale a pena pagar por um app de controle de gastos?
+
+O plano Free normalmente cobre o controle básico. Planos pagos acrescentam mais automação, análises e recursos avançados. A pergunta útil é quanto você perde hoje por não controlar: se gastos sem controle custam mais do que a assinatura, o plano se paga sozinho.
+
+No AI Budget Assistant, o plano Free já inclui o controle completo de despesas, lançamentos por voz, leitura de recibos e importação de extrato, com uma cota mensal de solicitações de IA. Os planos Pro e Business acrescentam mais cota de IA, membros convidados para uma conta compartilhada e recursos como a leitura de extratos em PDF pela IA. Comece no Free e só pense em upgrade se sentir falta de algo.
+
+---
+
+## FAQ: controle de gastos
+
+**Qual é o melhor app de controle de gastos grátis?**
+
+Depende do que você precisa. Se quer importar o extrato, escanear recibos e fazer perguntas sobre seus gastos em linguagem natural, o AI Budget Assistant tem um plano Free que cobre tudo isso, dentro de uma cota mensal de IA. Se você só quer um diário simples, uma planilha resolve. O melhor app é aquele que você vai usar de forma consistente.
+
+**Planilha de gastos ou aplicativo: qual é melhor?**
+
+A planilha é grátis e flexível, mas depende de você digitar cada compra e não avisa quando um limite está perto de estourar. Um app importa o extrato, lê recibos, sugere categorias e compartilha os números com a família em tempo real. Se a sua planilha não passa do segundo mês, troque o método, não a disciplina.
+
+**Como controlar os gastos sem esquecer de anotar?**
+
+Reduza o atrito. Importe o extrato em vez de digitar o mês inteiro. Fotografe o recibo em vez de escrever os itens. Use a voz para os lançamentos rápidos ("25 reais de almoço" leva dois segundos). Quanto menos trabalho cada lançamento exige, mais chance o hábito tem de durar.
+
+**Dá para fazer controle de gastos com o parceiro?**
+
+Dá, e vale a pena. Procure um app com conta compartilhada em que os dois lançam gastos e veem os mesmos totais em tempo real. Controlar finanças comuns em duas planilhas separadas e conciliar tudo no fim do mês dá muito mais trabalho do que usar um sistema único desde o começo.
+
+**Como controlar os gastos em dinheiro vivo, que não aparecem no extrato?**
+
+Fotografe o recibo ou registre o gasto numa frase, por voz ou texto, como "12 reais de pastel". Lance o dinheiro vivo logo depois da compra, porque mais tarde é fácil esquecer. Tudo o que passa pelo banco pode entrar de uma vez pela importação do extrato.
+
+**Qual a diferença entre controle de gastos e orçamento?**
+
+O controle responde quanto você já gastou e com quê. O orçamento é um plano para o futuro: quanto você pode gastar em cada categoria. Controle por um mês primeiro e depois defina os limites, para que eles se apoiem em fatos e não em desejos.
+
+---
+
+*Artigos relacionados: [Como fazer um orçamento familiar passo a passo](/blog/br/como-fazer-um-orcamento-familiar/) | [Como importar o extrato bancário de qualquer banco](/blog/br/importar-extrato-bancario/)*
+
+<!-- pillar-downlinks -->
+
+## Guias relacionados
+
+- [Escanear nota fiscal: o app que lê cada item, não só o total](/blog/br/escanear-nota-fiscal/)
+
+## Escanear nota fiscal: o app que lê cada item, não só o total
+URL: https://ai-budget.pl/blog/br/escanear-nota-fiscal/
+
+Você fotografou o cupom do mercado, o app guardou o valor e a data, e acabou. Você sabe que gastou R$ 312,48 no supermercado na terça. Não sabe quanto disso foi carne, quanto foi café, quanto foi produto de limpeza e quanto foi aquela compra que não vai se repetir. A maioria dos apps que prometem escanear nota fiscal para exatamente aí: uma foto e um total, caso encerrado.
+
+É um desperdício, e não pequeno. O total é um número por compra. As linhas do cupom, produto por produto, com preço e quantidade, são dezenas de dados que juntos mostram o que um total nunca mostra: o que está realmente ficando mais caro na sua cesta, onde você compra mais barato e se o preço do cupom de hoje é normal ou merece uma segunda olhada.
+
+## Uma foto e um total não bastam
+
+Pergunte a alguém para onde vai o dinheiro do mercado e a resposta vem em categoria: "comida", talvez "coisas de casa". Isso não ajuda a decidir nada. "Comida" não diz se o café subiu 20% ou se foi o leite. Não diz se o mesmo azeite está mais caro neste mercado do que no atacarejo do outro lado da avenida. Não diz se uma linha do cupom de hoje custa mais do que você costuma pagar naquela mesma loja.
+
+Um cupom fiscal guardado por um app que só registra o total faz o mesmo trabalho de um papel amassado na gaveta: prova que a compra aconteceu, mas não ensina nada. Um mês depois você tem uma pilha de comprovantes e continua sem saber por que a conta do mercado não para de subir.
+
+## O que um app para escanear nota fiscal deveria ler
+
+Um leitor que vale a pena não para no total. Ele lê o estabelecimento, a data e, principalmente, cada item separadamente: nome do produto, quantidade e preço.
+
+Mas uma lista de produtos é só metade do trabalho se os nomes não forem consistentes. O cupom de um mercado imprime "LT INT ITAMBE 1L", o de outro imprime "LEITE UHT INTEGRAL ITAMBE 1 LITRO", às vezes com o código de barras na frente. Se o app salvar isso como dois produtos diferentes, você nunca terá o histórico de preço daquela caixinha de leite. O [AI Budget Assistant](https://ai-budget.pl) normaliza o nome para algo como "Leite UHT Integral Itambé 1 L": mantém o tamanho e a variante, mas tira códigos e números internos, para que o mesmo produto se agrupe corretamente em qualquer loja e em qualquer mês.
+
+O jeito de tratar os descontos também importa. Muitos cupons imprimem o desconto como uma linha própria, com valor negativo ligado a um produto específico, coisa comum em programa de fidelidade de supermercado. Um bom leitor incorpora essa linha ao desconto do item, em vez de contá-la como um segundo "produto" negativo que bagunça o histórico. Do contrário, o gráfico de preço do produto parece ter despencado a zero, o que não significa nada.
+
+## Câmera, galeria, PDF ou um chat
+
+Escanear funciona do jeito que você espera: uma foto da câmera na saída do caixa, uma imagem da galeria para um cupom de dias atrás ou um PDF. Cupom de mercado grande é comprido, e o app sabe disso: se ele não cabe numa foto, você pode fotografá-lo por partes, e o app junta as linhas e confere se a soma bate com o total.
+
+Você nem precisa abrir o app. Se for mais prático mandar a foto pelo Telegram, pelo WhatsApp ou para o bot do Slack, o mesmo reconhecimento roda do mesmo jeito, e a despesa cai na mesma conta.
+
+## O que os itens dão que o total nunca vai dar
+
+É aqui que os itens deixam de ser curiosidade e passam a ser úteis.
+
+**Sua inflação pessoal.** O IPCA mede a cesta média do país, não a sua. Quando o app sabe que você pagou R$ 32,90 no café em janeiro e R$ 41,50 em julho, ele mostra a evolução do preço daquele produto ao longo do tempo, com base no que você realmente compra, em vez de adivinhar a partir de um índice nacional que acompanha outra cesta.
+
+**Uma conferência de preço na hora.** Logo depois de escanear, o app compara cada linha com o que você costuma pagar por aquele produto naquela mesma loja nas últimas semanas. Se uma linha está bem acima do seu preço habitual, você vê isso na tela do escaneamento, e se mandou o cupom para um bot, o mesmo aviso volta na resposta. Uma distinção importante: isso não é detecção de cobrança indevida. O app não tem como provar que uma promoção deixou de ser aplicada no caixa. Ele só diz que um item está mais caro do que o habitual e que vale a pena conferir antes de sair da loja.
+
+**Um mapa de gastos.** O endereço da loja impresso no cupom vira uma localização, e cada compra escaneada também aparece num mapa de gastos. Não há nada a mais para tocar.
+
+Duas coisas menores, mas bem úteis, completam o quadro: o mesmo histórico de preços alimenta o Escudo contra a inflação, que sugere o que vale a pena estocar antes de subir, e as sugestões de reposição e alertas de oferta da lista de compras.
+
+## O que o app não faz com a sua nota fiscal
+
+Melhor dizer com todas as letras do que prometer mais do que o app entrega.
+
+O app lê a **foto** do cupom ou da nota, não o QR Code da NFC-e. Ele não consulta a Sefaz, não puxa a nota pelo seu CPF, não se conecta a programas como Nota Fiscal Paulista ou Nota Fiscal Gaúcha e não serve para declaração de imposto. Também não guarda garantias do que você comprou.
+
+O leitor precisa de um cupom legível. Papel térmico desbotado, cupom amassado no bolso ou impressão falhada podem não ser lidos corretamente, e aí você corrige os dados à mão na tela do escaneamento antes de salvar. E uma despesa digitada manualmente, sem foto do cupom, não tem itens, então não entra no histórico de preços, mesmo que o valor e a categoria estejam certos.
+
+## Como isso fica no dia a dia
+
+Digamos que você faz o mercado grande uma vez por semana e completa na padaria e no hortifrúti. Depois de alguns meses escaneando os cupons, em vez de "quanto gastei no mercado" você passa a ter respostas bem mais específicas: "o café subiu 26% para mim em seis meses, quase tudo em março", "o mesmo sabão em pó custa R$ 4 a mais no mercado perto do trabalho do que no atacarejo" e "o cupom de hoje tem uma linha acima do preço habitual, vou conferir antes de ir embora". Nenhuma dessas respostas vem do total. Todas vêm dos itens.
+
+Se você está começando a organizar as finanças, esses dados também tornam o [controle de gastos](/blog/br/controle-de-gastos/) muito mais preciso, e servem de base para [fazer um orçamento familiar](/blog/br/como-fazer-um-orcamento-familiar/) com limites que combinam com a sua cesta de verdade.
+
+## Comece pelo cupom que já está no seu bolso
+
+Você não precisa mudar hábito nenhum. O cupom já vai parar no bolso ou na sacola. Em vez de jogá-lo fora, uma foto no app, ou enviada a um bot, transforma esse papel em dados que se acumulam sozinhos, mês após mês, sem planilha e sem precisar decorar preço. O AI Budget Assistant é gratuito para começar no navegador em [ai-budget.pl](https://ai-budget.pl), sem cartão de crédito, e está no [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant) para Android.
+
+## FAQ
+
+**É seguro escanear a nota fiscal num app?**
+A foto do cupom é processada para ler o estabelecimento, a data, o valor e os itens, e o resultado fica na sua própria conta no app. Você não precisa digitar nada nem guardar o papel por mais tempo do que quiser.
+
+**O app lê o QR Code da NFC-e ou consulta a Sefaz?**
+Não. O app lê o texto impresso na foto do cupom ou da nota, não o QR Code, e não tem integração com a Sefaz, com o CPF na nota nem com programas estaduais de nota fiscal. Por isso funciona com qualquer cupom legível, de qualquer estado.
+
+**Por que o app se importa com cada produto e não só com o total?**
+Porque o total só diz quanto você gastou, não com quê. Sem os itens não dá para calcular a sua inflação pessoal a partir das suas compras, comparar o preço do mesmo produto entre lojas nem perceber que uma linha do cupom está mais cara do que o habitual.
+
+**O que acontece se o cupom estiver apagado ou amassado?**
+O leitor pode não ler todas as linhas corretamente, ou não ler nada. Nesse caso, você corrige os dados à mão na tela do escaneamento antes de salvar a despesa. Papel térmico muito desbotado é o caso mais comum que precisa de ajuste.
+
+**Uma despesa digitada à mão também entra no histórico de preços?**
+Não. Uma despesa digitada tem valor, categoria e data, mas não tem itens, então não alimenta a inflação pessoal nem a comparação de preços entre lojas. Só os cupons escaneados com itens reconhecidos alimentam esses recursos.
+
+**Dá para escanear o cupom sem abrir o app?**
+Dá. Uma foto do cupom enviada pelo Telegram, pelo WhatsApp ou para o bot do Slack passa pelo mesmo reconhecimento e cai na mesma conta que um escaneamento feito dentro do app.
+
+---
+
+*Artigos relacionados: [Controle de gastos sem planilha](/blog/br/controle-de-gastos/) | [IA para finanças pessoais: o que ela faz de verdade](/blog/br/ia-para-financas-pessoais/)*
+
+## Finanças do casal: orçamento a dois sem brigas
+URL: https://ai-budget.pl/blog/br/financas-do-casal/
+
+Dinheiro é um dos assuntos que mais geram briga entre casais, e a maioria dessas brigas não é sobre dinheiro. É sobre transparência, sobre sensação de justiça e sobre aquele ressentimento silencioso de quem acha que carrega a planilha sozinho enquanto o outro não faz ideia de como as contas estão. Organizar as finanças do casal não é controlar o que o outro gasta. É combinar para onde vocês vão juntos, para que o dia a dia pare de ser fonte de atrito.
+
+Este guia mostra por que o orçamento a dois costuma desandar, os três modelos que os casais realmente usam e como acompanhar tudo sem que uma pessoa vire a contadora da casa.
+
+## Por que o orçamento a dois costuma desandar
+
+Alguns padrões aparecem de novo e de novo.
+
+**Hábitos diferentes.** Um é poupador e se assusta com um jantar de R$ 250. O outro acha que dinheiro existe para aproveitar agora. Nenhum dos dois está errado, mas se o orçamento é montado só em cima de um desses instintos, o outro vai ignorá-lo em silêncio.
+
+**O "quem pagou o quê".** Um faz o mercado, o outro paga a luz, um Pix vai para o condomínio, uma compra parcelada cai no cartão de um dos dois, e no fim do mês ninguém lembra direito. Só a contabilidade mental já cansa, e ela alimenta a desconfiança de que alguém está contribuindo mais.
+
+**Falta de visão compartilhada.** Esse é o principal. Quando só um enxerga o quadro completo, o outro está no escuro. Faz uma compra que parece razoável e depois ouve que a verba do mercado já tinha acabado. Isso soa como fiscalização, não como parceria, e é o jeito mais rápido de fazer alguém parar de participar.
+
+Se o orçamento de vocês já desmoronou antes, quase certamente foi por um desses três motivos. Conserte o sistema, não a força de vontade.
+
+## Os três modelos que os casais realmente usam
+
+Não existe uma estrutura única correta. Escolham a que combina com as rendas e com o temperamento de vocês, e ajustem com o tempo.
+
+### Tudo junto
+
+As duas rendas vão para um só caixa, todas as despesas saem dele e não existe "meu" nem "seu", muitas vezes com uma conta conjunta no banco. É o mais simples de acompanhar e costuma servir a casais com rendas parecidas ou muitos anos de vida em comum. O risco é quem ganha menos sentir que precisa justificar cada gasto pessoal, por isso o dinheiro livre para cada um (mais sobre isso abaixo) importa ainda mais aqui.
+
+### Proporcional à renda
+
+Vocês dividem as despesas comuns na proporção do que cada um ganha. Se um recebe R$ 6.000 por mês e o outro R$ 3.000, quem ganha mais paga cerca de dois terços do aluguel, do mercado e das contas. O resto fica com cada um. É o modelo mais justo quando as rendas são diferentes, e ele desarma o "mas eu ganho mais" antes de começar.
+
+### O meu, o seu e o nosso
+
+Cada um mantém a própria conta, e os dois mandam um valor fixo, por Pix mesmo, para uma conta comum que paga as despesas da casa e os objetivos do casal. Preserva a independência e ainda financia a vida a dois. É comum entre casais que chegaram à relação com hábitos financeiros já formados e não querem juntar tudo.
+
+Qualquer que seja o modelo, o objetivo é o mesmo: uma divisão clara e combinada, para que nenhuma compra isolada vire debate.
+
+## Dinheiro livre para cada um
+
+Essa regra evita mais brigas do que qualquer outra. Separem uma parte do orçamento que cada um pode gastar com o que quiser, sem justificar nada. Um hobby, um delivery, uma camisa de time, uma cerveja com os amigos. Não importa.
+
+Mesmo um valor modesto, digamos R$ 300 para cada um por mês, elimina boa parte do atrito. O poupador para de fiscalizar o café do outro. Quem gosta de gastar para de se sentir vigiado. Desde que o valor seja igual (ou proporcional, se vocês escolheram esse modelo), ele soa justo. Gasto que ninguém precisa explicar é o que impede o orçamento a dois de parecer uma coleira.
+
+## Objetivos em comum, não restrições em comum
+
+"Vamos guardar R$ 800 por mês para passar o Réveillon no Nordeste" soa completamente diferente de "você precisa gastar menos". A conta é a mesma; a reação, oposta. Um é um projeto dos dois. O outro é uma crítica.
+
+Então comecem pelos objetivos. Uma viagem, a entrada do apartamento, a reserva de emergência, o casamento, sair do vermelho. Quando os dois veem uma meta se aproximando, o orçamento vira a ferramenta que leva vocês até lá, e não uma lista de proibições. Se vocês estão começando do zero na parte prática, o guia [como fazer um orçamento familiar](/blog/br/como-fazer-um-orcamento-familiar/) mostra como montar as categorias e definir limites realistas.
+
+## Como acompanhar tudo juntos, na prática
+
+É aqui que a maioria dos casais tropeça. Combinam o modelo, definem os objetivos e percebem que manter o orçamento em dia exige que alguém corra atrás de cada recibo. Essa pessoa cansa, e o sistema morre.
+
+A solução é uma visão única, que os dois atualizam do próprio celular, em tempo real. Não uma planilha que é "de alguém". Não uma reunião mensal para conciliar extratos. Um retrato vivo que os dois podem abrir a qualquer hora e confiar.
+
+É para isso que existem as contas compartilhadas do AI Budget Assistant. Cada um lança os próprios gastos do próprio celular, na hora da compra, e a visão compartilhada se atualiza para os dois. Não existe mais "você lançou o mercado?", porque quem fez a compra já lançou. Os papéis definem o nível de acesso: **Proprietário**, que administra a conta; **Editor**, que adiciona e altera transações; e **Visualizador**, que vê tudo sem editar, útil se um dos dois só quer acompanhar, ou para um filho adolescente aprendendo a lidar com dinheiro.
+
+Como lançar é rápido, o lançamento de fato acontece. Dá para registrar um gasto falando, fotografando o recibo ou escrevendo uma frase para o assistente; as formas mais rápidas estão no guia de [controle de gastos](/blog/br/controle-de-gastos/). Há também uma conversa compartilhada com a IA em que você pode @mencionar o parceiro para comentar uma transação ou fazer uma pergunta, e perguntar ao assistente "quanto gastamos juntos este mês?" ou "quanto falta para a meta da viagem?". A resposta soma as transações dos dois, sem conta de cabeça e sem exportar nada para planilha.
+
+O AI Budget Assistant é gratuito para começar, funciona direto no navegador em [ai-budget.pl](https://ai-budget.pl), sem cartão de crédito, e está no [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant) para Android. Convidar o parceiro para uma conta compartilhada faz parte dos planos pagos: o Pro permite até cinco membros por conta, e o Business, quantos vocês precisarem.
+
+## Uma conversa mensal sobre dinheiro, sem tensão
+
+Uma vez por mês, sentem por quinze minutos. Não para auditar um ao outro. Para olhar o painel juntos e responder a três perguntas:
+
+1. Batemos a meta de economia este mês ou ficamos abaixo?
+2. Nossos objetivos estão se aproximando ou escapando?
+3. Algo nos surpreendeu, e daria para ter previsto?
+
+A última pergunta é a mais importante. Se a mesma "surpresa" aparece todo ano (o IPVA, o seguro do carro, o material escolar, o presente de aniversário da sogra), ela não é surpresa. É uma linha que vocês esqueceram de colocar no orçamento. Colocá-la tira uma fonte recorrente de estresse.
+
+Mantenham o tom de parceria. São duas pessoas olhando para a mesma tela, do mesmo lado, rumo aos mesmos objetivos. A visão compartilhada faz o trabalho pesado, porque os números já estão lá e já foram combinados. Não há o que discutir quando os dois olham para o mesmo retrato honesto.
+
+---
+
+## FAQ: finanças do casal
+
+**Casal deve juntar todo o dinheiro ou manter contas separadas?**
+
+Não existe resposta certa para todo mundo. Juntar tudo é o mais simples e serve a casais com rendas parecidas e muita confiança. Manter uma parte separada, no modelo "o meu, o seu e o nosso", preserva a independência e costuma reduzir o atrito para quem chegou à relação com hábitos já formados. O modelo proporcional é o mais justo quando as rendas são muito diferentes. Escolham pela situação de vocês e revisem se parar de funcionar.
+
+**Como parar de brigar por dinheiro?**
+
+A maioria das brigas vem da falta de transparência e da sensação de injustiça, não do gasto em si. Deem a cada um um valor livre que nunca precisa ser justificado, combinem uma divisão clara das despesas comuns e usem uma visão compartilhada que os dois veem em tempo real. Quando os números estão à vista e as regras foram combinadas antes, compras isoladas deixam de virar discussão.
+
+**Qual é o melhor app para o casal controlar as finanças juntos?**
+
+Procure um com conta compartilhada de verdade, em que os dois lançam do próprio celular e veem os mesmos números ao vivo, com controle de papéis para definir o nível de acesso. O AI Budget Assistant faz isso e acrescenta uma conversa compartilhada com a IA, em que vocês podem perguntar "quanto gastamos juntos este mês?". Dá para começar grátis no navegador ou no Android, sem cartão; convidar membros para a conta faz parte dos planos Pro e Business.
+
+**Como dividir as despesas se um ganha mais que o outro?**
+
+Usem o modelo proporcional. Dividam as despesas comuns de acordo com a parte de cada um na renda total, para que quem ganha mais cubra uma fatia maior do aluguel e das contas e cada um fique com um valor pessoal justo. Isso evita o ressentimento de uma divisão meio a meio quando as rendas são desiguais, e se ajusta sozinho se uma das rendas mudar.
+
+**Vale a pena ter uma conta conjunta no banco?**
+
+Pode valer, principalmente no modelo "tudo junto" ou como a conta do "nosso". Mas a conta conjunta resolve onde o dinheiro fica, não a visibilidade sobre ele: os gastos feitos no cartão de cada um continuam fora dela. Por isso uma visão compartilhada do orçamento, que reúne os gastos dos dois, costuma importar mais do que o tipo de conta no banco.
+
+---
+
+*Artigos relacionados: [Como fazer um orçamento familiar passo a passo](/blog/br/como-fazer-um-orcamento-familiar/) | [Controle de gastos sem planilha](/blog/br/controle-de-gastos/)*
+
+## IA para finanças pessoais: o que ela faz de verdade
+URL: https://ai-budget.pl/blog/br/ia-para-financas-pessoais/
+
+A maioria dos orçamentos não fracassa porque as pessoas são ruins com dinheiro. Fracassa por atrito. Lançar cada gasto à mão é chato, e olhar um gráfico do mês passado mostra o que já aconteceu, mas não diz nada sobre o que fazer agora. A inteligência artificial resolve esses dois problemas de forma concreta, e este guia explica exatamente como, incluindo o que a IA ainda não faz por você.
+
+## Por que o controle financeiro tradicional não para em pé
+
+Dois atritos específicos derrubam a maioria dos orçamentos.
+
+O primeiro é o **atrito do registro**. Um orçamento é tão bom quanto os dados que ele tem, e colocar esses dados lá significa registrar cada transação. Fazer isso à mão, dia após dia, é exatamente o tipo de tarefinha repetitiva contra a qual a força de vontade perde. A pessoa começa animada, pula uns dias, acumula atraso, sente culpa e larga a planilha. O plano estava certo. A digitação venceu.
+
+O segundo é que o controle tradicional **olha para trás**. Você anota tudo por um mês, abre o relatório e descobre que exagerou no delivery. Bom saber, mas é uma autópsia. O dinheiro já foi, e um gráfico parado não diz o que está prestes a dar errado nem o que mudar. É dirigir olhando pelo retrovisor.
+
+A IA ataca os dois de frente: tira o atrito do registro no momento do gasto e transforma um histórico passivo em algo que responde perguntas e avisa a tempo.
+
+## A IA tira o atrito do registro
+
+Esse é o ganho prático mais importante, porque resolve justamente o problema que mata a maioria dos orçamentos. Em vez de digitar, você tem três caminhos mais rápidos.
+
+**Voz.** Diga "gastei 45 reais na farmácia" e pronto, está registrado. Sem navegar pelo app, sem teclado.
+
+**Foto do recibo.** Fotografe o cupom fiscal e a leitura por IA extrai o valor, a data, o estabelecimento e até os itens. Uma compra inteira de mercado vira uma foto de dois segundos. Os detalhes estão no guia sobre [escanear nota fiscal](/blog/br/escanear-nota-fiscal/).
+
+**Comandos em linguagem natural.** Escreva para o assistente do jeito que você mandaria mensagem para um amigo, "paguei 120 de luz ontem", e ele entende e registra. Antes de qualquer lançamento ser salvo, o app mostra o que entendeu e pede a sua confirmação.
+
+Isso importa muito mais do que parece. Orçamentos desmoronam porque registrar é um saco. Quando a IA faz o registro levar segundos em vez de minutos, o controle sobrevive além das duas primeiras semanas. A tecnologia não é o ponto. O ponto é tirar o atrito que fazia você desistir.
+
+O mesmo vale para o histórico: em vez de digitar meses de lançamentos, você envia o extrato do banco e a IA entende o formato do arquivo, mesmo de um banco que o app nunca viu. Como isso funciona, e por que ela nunca "chuta" valores, está no guia de [importar extrato bancário](/blog/br/importar-extrato-bancario/).
+
+## A IA dá respostas, não só gráficos
+
+Apps de finanças tradicionais entregam painéis e deixam a interpretação com você. Com IA, você simplesmente pergunta. Em português, do jeito que a dúvida aparece: "quanto gastamos no mercado este mês?", "qual é a minha maior categoria?", "dá para pagar um fim de semana na praia de R$ 900?". A resposta vem dos seus dados reais.
+
+É uma mudança de verdade. Um gráfico exige que você saiba o que procurar e como ler. Uma pergunta só exige curiosidade. O orçamento deixa de ser um relatório que você precisa estudar e vira algo mais parecido com um assistente financeiro que você pode entrevistar. Encontrar uma resposta deixa de dar trabalho, então você volta a olhar, e isso já é metade da batalha.
+
+Uma ressalva honesta sobre a pergunta "dá para pagar?": no AI Budget Assistant, quem decide a resposta não é o modelo de linguagem. O app calcula um número determinístico, o mesmo "Livre para gastar hoje" que aparece na tela inicial, a partir do saldo, das contas e assinaturas que ainda vão vencer e das suas metas. A IA só explica esse resultado em palavras. Assim a resposta não depende do humor do modelo.
+
+## Inteligência proativa: avisos antes de você perceber
+
+O mais valioso que a IA faz é vigiar os gastos por você e falar quando algo foge do normal. É o salto de olhar para trás para olhar para frente.
+
+Um bom app de finanças com IA mostra coisas como:
+
+- **Cobranças duplicadas**: o mesmo pagamento caindo duas vezes, fácil de passar batido e chato de achar à mão.
+- **Aumento de preço de assinatura**: um streaming ou aplicativo que sobe o preço em silêncio, o tipo de aumento que custa meses antes de alguém notar.
+- **Picos de gasto**: uma categoria bem acima do padrão, sinalizada enquanto ainda dá para reagir, e não depois que o mês acabou.
+
+Esses alertas pegam os vazamentos que escapam até de quem revisa tudo com cuidado. Você não precisa auditar cada linha; o sistema faz isso e só interrompe quando há algo que vale a pena saber.
+
+## O que a IA não é
+
+Aqui a honestidade importa, porque o oba-oba em torno de IA merece um contrapeso. A IA não vai consertar as suas finanças por você. Ela tira o atrito e mostra a verdade, mas as decisões continuam sendo suas. Ela consegue mostrar, na hora e com clareza, que o delivery está pesando demais, mas não cozinha por você. Pode avisar que uma meta está atrasando, mas não deposita dinheiro nela.
+
+Ela também não é consultora de investimentos e não substitui um planejador financeiro quando a decisão é grande, como financiar um imóvel. E projeções são estimativas: o futuro sempre pode sair diferente do padrão dos meses anteriores.
+
+A IA é uma ferramenta que torna o bom comportamento financeiro muito mais fácil, tirando a parte chata e colocando a informação certa na sua frente na hora certa. Trate-a como a assistente que cuida da burocracia e mantém você informado, não como piloto automático, e ela vai render muito mais.
+
+## Como tudo se junta num app
+
+Tudo isso é a base do [AI Budget Assistant](https://ai-budget.pl). Você registra os gastos por voz, por foto do recibo ou mandando uma frase para o assistente. Pergunta "quanto gastamos com X este mês?" e recebe a resposta na hora. E o app avisa sobre cobranças duplicadas, aumentos de preço de assinatura e picos de gasto antes que eles custem caro.
+
+O resultado é um orçamento quase sem o atrito que fazia o controle financeiro parecer um segundo emprego. É gratuito para começar no navegador em [ai-budget.pl](https://ai-budget.pl), sem cartão de crédito, e está no [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant) para Android. O plano Free inclui uma cota mensal de solicitações de IA; os planos Pro e Business ampliam essa cota.
+
+Se você está montando a base, [como fazer um orçamento familiar](/blog/br/como-fazer-um-orcamento-familiar/) mostra a estrutura por baixo de tudo, e o guia de [controle de gastos](/blog/br/controle-de-gastos/) mostra como um registro sem esforço mantém o orçamento vivo.
+
+---
+
+## FAQ: IA para finanças pessoais
+
+**Como a IA ajuda nas finanças pessoais?**
+
+A IA ataca os dois motivos pelos quais os orçamentos fracassam. Ela tira o atrito do registro, deixando você lançar gastos por voz, foto do recibo ou uma frase em vez de digitação, e assim o controle dura. E torna o orçamento voltado para frente: você faz perguntas em português e recebe respostas na hora, e o app avisa sobre cobranças duplicadas, aumentos de assinatura e picos de gasto antes que pesem no bolso.
+
+**É seguro usar um app com IA para as minhas finanças?**
+
+Um app sério deve deixar os seus dados sob o seu controle e oferecer proteções como criptografia dos campos sensíveis. A IA processa os detalhes das transações para categorizar gastos e responder às suas perguntas, não para compartilhar suas informações. No AI Budget Assistant, quem quer o máximo de privacidade pode ativar a criptografia de ponta a ponta; nesse modo os dados não são enviados ao modelo de IA, e os recursos de IA que dependem deles ficam desativados.
+
+**A IA consegue controlar os gastos automaticamente?**
+
+Ela torna o registro quase automático, não totalmente sem você. Lê recibos por foto, entende voz e linguagem natural, sugere categorias para as transações importadas do extrato e aprende com as suas correções, para que as próximas importações se organizem sozinhas. Você ainda confirma o que foi capturado, mas o trabalho pesado já está feito.
+
+**Qual é o melhor app de finanças pessoais com IA?**
+
+Procure um que realmente tire o atrito do registro (voz, foto do recibo, linguagem natural), responda perguntas em português e avise sobre problemas como cobranças duplicadas e aumentos de preço. O AI Budget Assistant faz as três coisas, além de importar extratos, ter contas compartilhadas e metas de economia, e é gratuito para começar no navegador ou no Android, sem cartão de crédito. O melhor app é aquele fácil o bastante para você continuar usando.
+
+**A IA pode decidir por mim se eu posso fazer uma compra?**
+
+Ela pode mostrar quanto está livre para gastar hoje depois de cobrir as contas e as metas, e explicar o cálculo. A decisão continua sendo sua. Trate o número como uma estimativa bem informada, não como uma garantia, porque gastos e receitas futuros podem mudar.
+
+---
+
+*Artigos relacionados: [Como fazer um orçamento familiar passo a passo](/blog/br/como-fazer-um-orcamento-familiar/) | [Escanear nota fiscal: o app que lê cada item](/blog/br/escanear-nota-fiscal/)*
+
+## Como importar o extrato bancário de qualquer banco
+URL: https://ai-budget.pl/blog/br/importar-extrato-bancario/
+
+Você baixa o extrato no internet banking, abre o app de finanças esperando que tudo se encaixe sozinho, e o que aparece é uma tela pedindo para mapear colunas, ou pior, uma lista de transações vazia. É uma frustração conhecida, principalmente no dia em que você finalmente decide colocar três meses de gastos em dia de uma vez.
+
+A verdade é que nenhum app de finanças tem um leitor pronto para cada banco, conta digital, cooperativa e fintech que existe no Brasil. A boa notícia: "o app não conhece o meu banco" não significa "não dá para importar". Este artigo mostra exatamente o que acontece por trás quando o AI Budget Assistant não reconhece o formato de um arquivo, e por que a solução que entra em ação é mais segura do que parece.
+
+## Por que nenhuma lista de bancos fica completa
+
+Todo app que importa extratos precisa decidir quais formatos vai reconhecer de cara. O AI Budget Assistant nasceu na Europa: ele tem leitores dedicados para alguns bancos europeus e para serviços como a Wise, mas **não tem leitores dedicados para bancos brasileiros**. Dizemos isso com todas as letras porque é justamente o ponto deste artigo.
+
+Mesmo um app brasileiro não conseguiria manter um leitor para cada formato para sempre. Cada banco exporta de um jeito: um usa ponto e vírgula, outro vírgula; um põe o valor numa coluna só com sinal de menos, outro separa crédito e débito; um escreve a data como 05/11/2026, outro como 2026-11-05. Bancos mudam o layout sem avisar. Em vez de esperar a lista crescer até chegar ao seu banco, o app tem um mecanismo que tenta entender a estrutura de um arquivo que ele nunca viu.
+
+## Antes de tudo: qual arquivo baixar do banco
+
+O app aceita três formatos:
+
+- **CSV**: a opção mais confiável quando o banco oferece.
+- **Excel (XLSX)**: funciona igual ao CSV. Se o banco só entrega o formato antigo **.xls**, abra o arquivo no Excel ou no Google Sheets e salve como XLSX ou CSV.
+- **PDF**: o extrato ou a fatura do cartão em PDF, lidos pela IA (recurso do plano Pro).
+
+O formato **OFX**, que muitos bancos brasileiros oferecem pensando em programas de contabilidade, **não é aceito**. Se ele for a única opção no internet banking, procure a exportação em PDF, Excel ou CSV, que costuma estar na mesma tela.
+
+## O que acontece quando o arquivo não é reconhecido
+
+Quando você envia um CSV ou XLSX e nenhum dos leitores prontos reconhece o layout, um modelo de IA entra em cena. O trabalho dele é estreito e bem definido: ele não lê valores nem datas. Ele só aponta **qual coluna é qual**: qual tem a data da transação, qual tem o valor, qual tem a descrição ou o nome do estabelecimento. Esses nomes de coluna são então conferidos, palavra por palavra, com os cabeçalhos que existem de verdade no seu arquivo. Se o modelo "inventar" uma coluna que não está lá, a resposta inteira é rejeitada, e não aceita em silêncio. Só depois dessa checagem as mesmas regras determinísticas usadas no mapeamento manual leem os números e as datas.
+
+Com o extrato em **PDF**, o mecanismo é outro, porque não dá para tirar nomes de coluna de um PDF: o modelo precisa extrair as próprias linhas de transação do texto da página. Para não deixar furos passarem calados, o app compara a soma das transações encontradas com o saldo inicial e final do extrato. Se não bater, ou se o documento não tiver saldo final para comparar, você vê um aviso pedindo para revisar a lista.
+
+## O que esse mecanismo nunca faz
+
+A distinção importa, porque é fácil imaginar que "a IA importa o extrato" quer dizer "o modelo chuta os números". Não quer. No caminho do CSV e do XLSX, o modelo nunca devolve um valor ou uma data: ele só devolve nomes de coluna, sempre conferidos com os cabeçalhos reais do arquivo. Os números são lidos pelo mesmo código previsível que faz o mapeamento manual. É um ajudante para reconhecer estrutura, não alguém olhando seus gastos e estimando.
+
+Ainda assim, não é garantia de acerto perfeito de primeira, como nenhum reconhecimento de formato é. Por isso, antes de qualquer coisa chegar ao seu orçamento, existe uma prévia para conferir.
+
+## O que você vê e autoriza antes de qualquer dado sair do celular
+
+Antes de qualquer parte do arquivo chegar ao modelo de IA, o app pede a sua autorização, uma vez por conta, e mostra exatamente o que será enviado. Para um CSV ou XLSX, são a linha de cabeçalho e até 10 linhas de exemplo, não o arquivo inteiro nem todo o seu histórico. Para um PDF, são as primeiras 20 linhas de texto do extrato. Você lê isso na tela "Deixar a IA ler este extrato?" antes de qualquer coisa acontecer, e pode escolher "Vou mapear manualmente".
+
+Se a sua conta tem criptografia de ponta a ponta, esse mecanismo nem roda. Dados que o próprio app não consegue decifrar não podem ser enviados a modelo nenhum, então essas contas usam só o mapeamento manual de colunas: mais privado, com um toque a mais.
+
+## Você revisa e corrige antes de salvar
+
+Depois que o modelo propõe o mapeamento, você não recebe um resultado cru, sem contexto. Aparece uma linha de etiquetas editáveis mostrando o que ele reconheceu, algo como "Data → Data Lançamento" ou "Valor → Valor (R$)". Se alguma estiver errada, a opção "Errado? Toque para corrigir" abre o mesmo mapeador manual, já preenchido com o palpite do modelo, para você corrigir uma coluna em vez de recomeçar do zero.
+
+Se o arquivo não tiver coluna de moeda, o app avisa que leu todas as linhas na moeda da conta, para você conferir antes de importar. Essa é a mesma prévia de qualquer importação no AI Budget Assistant: a lista completa das transações para revisar, com categorias já sugeridas pelo estabelecimento e possíveis duplicados marcados, para que importar o mesmo período duas vezes não conte nada em dobro. E se algo der errado depois, "Desfazer importação" remove as transações daquele arquivo de uma vez.
+
+## Da segunda vez é mais rápido
+
+Quando o mapeamento de um formato se confirma correto, o formato dele (só os nomes das colunas e o jeito de escrever datas e valores, sem nenhum dado seu ou das suas transações) vai para um dicionário global de formatos. A próxima pessoa que enviar um extrato daquele mesmo banco nem precisa da etapa de IA: o formato já é reconhecido de cara. De certo modo, você é quem "destrava" o formato do seu banco para todo mundo que vier depois.
+
+## Como testar
+
+Se você tem um extrato que nunca conseguiu importar em app nenhum, vale tentar de novo. Envie o CSV, o Excel ou o PDF para o [AI Budget Assistant](https://ai-budget.pl), e se nenhum leitor pronto reconhecer o arquivo, você verá a tela de autorização descrita acima em vez de uma lista vazia. Depois de aceitar, chega a prévia com o mapeamento sugerido para conferir, como em qualquer outra importação.
+
+Com o histórico dentro do app, o próximo passo é transformar esses números em hábito: o guia de [controle de gastos](/blog/br/controle-de-gastos/) mostra como manter tudo em dia sem planilha, e [como fazer um orçamento familiar](/blog/br/como-fazer-um-orcamento-familiar/) mostra como definir limites a partir desses dados reais. O app é gratuito no navegador em [ai-budget.pl](https://ai-budget.pl), sem cartão de crédito, e está no [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant) para Android.
+
+---
+
+## FAQ: importar extrato bancário
+
+**O que acontece se o app não reconhecer o meu banco?**
+
+Se você enviar um CSV ou XLSX que nenhum leitor pronto reconhece, o AI Budget Assistant tenta descobrir sozinho qual coluna é a data, qual é o valor e qual é a descrição, e mostra o resultado para você revisar e corrigir. No extrato em PDF (recurso do plano Pro), o mecanismo extrai as linhas de transação direto do texto do documento. Nos dois casos, você vê a prévia completa antes de qualquer coisa ser salva.
+
+**O app tem suporte específico ao Nubank, Itaú, Bradesco ou outros bancos brasileiros?**
+
+Não há leitores dedicados para bancos brasileiros. O extrato do seu banco em CSV, Excel ou PDF passa pela importação universal com IA descrita neste artigo, que identifica o formato e mostra uma prévia para conferir. Quando um formato se confirma correto, ele passa a ser reconhecido de cara nas próximas importações.
+
+**A IA pode errar e lançar um valor errado?**
+
+No CSV e no XLSX, o modelo de IA nunca lê valores nem datas: ele só indica qual coluna é qual, e esses nomes são conferidos com os cabeçalhos reais do arquivo, então uma coluna inventada é rejeitada. Os números são lidos pelo mesmo mecanismo do mapeamento manual. De qualquer forma, você vê a prévia de cada transação antes de salvar e pode corrigir o que parecer estranho.
+
+**O conteúdo do meu extrato é enviado para algum lugar?**
+
+Antes de qualquer parte do arquivo chegar ao modelo de IA, aparece uma tela de autorização, uma vez por conta, mostrando exatamente o que será enviado: a linha de cabeçalho e até 10 linhas de exemplo de um CSV ou XLSX, ou as primeiras 20 linhas de texto de um PDF. Contas com criptografia de ponta a ponta não usam esse mecanismo, porque o app não tem acesso aos dados para enviá-los ao modelo.
+
+**Posso importar um arquivo OFX?**
+
+Não. O app aceita CSV, Excel (XLSX) e PDF. A maioria dos bancos oferece pelo menos um desses formatos na mesma tela em que oferece o OFX; procure a opção de exportar o extrato em PDF ou em planilha.
+
+**E se eu importar o mesmo período duas vezes?**
+
+A prévia marca as transações que parecem já existir, para nada ser contado em dobro. E se você importar o arquivo errado, a opção "Desfazer importação" remove de uma vez todas as transações daquele arquivo.
+
+---
+
+*Artigos relacionados: [Controle de gastos sem planilha](/blog/br/controle-de-gastos/) | [IA para finanças pessoais: o que ela faz de verdade](/blog/br/ia-para-financas-pessoais/)*
 
 
 # Help center

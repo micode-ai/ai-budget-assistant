@@ -216,6 +216,13 @@ Wave 12 notes:
 
 Seasonal backlog with publish windows: `new-year` (late Dec). (`christmas` and `black-friday` shipped in Wave 11 above.) (`year-review`, originally slotted here for early Dec, shipped early as Wave 8's `wrapped` topic instead — see above.)
 
+## Wave 13 — Portuguese locales (pt-PT, pt-BR), 2026-11-14
+
+- Two new blog languages, `pt` (European Portuguese, hreflang `pt-PT`) and `br` (Brazilian Portuguese, hreflang `pt-BR`), shipped with 6 starter topics each, localized per market (not translated from each other): `budget` (pillar, 01), `expenses` (pillar, 02), `shared-budget` (04), `ai-budget` (15), `receipts` (20), `ai-bank-import` (22). 12 articles, all dated 2026-11-14, same `pair` as the other 9 languages so hreflang alternates cluster all 11 languages.
+- The pt/br file counts are intentionally lower than the other 9 languages until the remaining topics are localized; the "all languages or none" rule applies to the original 9, and pt/br are a staged rollout. Pillar down-links in pt/br list only the children that exist in that language (`build_pillar_links.py` reports the rest as MISSING, which is expected).
+- `ai-bank-import` is a child of `expenses` in no `CLUSTERS` list (pre-existing gap, left as is); it was added to the landing `FROM_BLOG_PAIRS`.
+- Blog total: 33 topics in 9 languages (297 articles) plus 12 pt/br articles = 309.
+
 ## Article conventions (per piece)
 - Frontmatter: `title` (<=60, keyword), `meta_description` (<=155), `target_keyword`, `slug`, `pair`, `lang`, **`date`** (`YYYY-MM-DD`).
 - **`date` is REQUIRED on every new file and is the publication date** (ABA-394). It drives the newest-first order of the blog index, the visible date on each card, and `datePublished` in the article's JSON-LD. It is deliberately NOT derived from git: `git_date()` is the *last-commit* date, so a later edit to an old article would silently promote it to the top of the index and rewrite its publication date. Use the same `date` in all 9 language files of a topic.

@@ -45,7 +45,7 @@
 
 ## Documentation
 
-- [Blog](https://ai-budget.pl/blog/en/): guias sobre orçamento, controle de gastos e economia (em inglês)
+- [Blog](https://ai-budget.pl/blog/br/): guias sobre orçamento, controle de gastos e economia
 - [Ajuda](https://ai-budget.pl/help/br/): como usar cada recurso do app
 - [Preços](https://ai-budget.pl/br/pricing/): planos Free, Pro e Business
 - [API para desenvolvedores](https://ai-budget.pl/br/developers/): API REST gratuita com OAuth 2.0 (PKCE) para despesas, recibos e categorias; [API](https://api.ai-budget.pl/public/docs/en), [OpenAPI](https://api.ai-budget.pl/public/docs/en/openapi.json)

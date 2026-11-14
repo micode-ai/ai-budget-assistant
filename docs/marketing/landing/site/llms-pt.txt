@@ -45,11 +45,11 @@
 
 ## Documentation
 
-- [Blog](https://ai-budget.pl/blog/en/): guias sobre orçamento, controlo de despesas e poupança (em inglês)
+- [Blog](https://ai-budget.pl/blog/pt/): guias sobre orçamento, controlo de despesas e poupança
 - [Ajuda](https://ai-budget.pl/help/pt/): como usar cada funcionalidade da aplicação
 - [Preços](https://ai-budget.pl/pt/pricing/): planos Free, Pro e Business
 - [API para programadores](https://ai-budget.pl/pt/developers/): API REST gratuita com OAuth 2.0 (PKCE) para despesas, talões e categorias; [API](https://api.ai-budget.pl/public/docs/en), [OpenAPI](https://api.ai-budget.pl/public/docs/en/openapi.json)
-- [llms-full-pt.txt](https://ai-budget.pl/llms-full-pt.txt): espelho em markdown do centro de ajuda em português (Portugal)
+- [llms-full-pt.txt](https://ai-budget.pl/llms-full-pt.txt): espelho em markdown do blogue e do centro de ajuda em português (Portugal)
 - [llms.txt](https://ai-budget.pl/llms.txt): versão em inglês
 
 ## Links
