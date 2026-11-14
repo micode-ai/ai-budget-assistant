@@ -8,6 +8,33 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.41.0 - 2026-11-15
+
+**Languages and currency**
+
+- AI Budget is now available in Portuguese (Portugal) and Portuguese (Brazil), as two complete
+  languages across the app, the Telegram, WhatsApp and Slack bots, notifications, e-mails, PDFs,
+  the AI chat and the help center. The Brazilian real (BRL) is added as a currency (ABA-755).
+- Pro and Business can be bought in Brazilian reais (ABA-757).
+
+**Reliability**
+
+- An income saved on a bad connection is retried until the server accepts it, and an income
+  deleted offline is retried too instead of coming back (ABA-754).
+
+**Help**
+
+- The help center no longer describes receipt deposits as money you get back; it says the
+  deposit is already paid (ABA-756).
+
+**Behind the scenes**
+
+- AI assistants (MCP) can now connect even when the connector is named after the app, such as
+  "ai-budget" (ABA-753). Portuguese blog articles and localized landing screenshots on the
+  marketing site (ABA-758).
+
+---
+
 ## 1.40.0 - 2026-11-13
 
 **Children's costs**
