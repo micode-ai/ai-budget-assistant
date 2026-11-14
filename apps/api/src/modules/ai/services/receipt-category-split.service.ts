@@ -68,6 +68,8 @@ const LANGUAGE_NAMES: Record<string, string> = {
   ua: 'Ukrainian',
   be: 'Belarusian',
   nl: 'Dutch',
+  pt: 'European Portuguese',
+  br: 'Brazilian Portuguese',
 };
 const languageName = (language?: string): string => LANGUAGE_NAMES[language ?? ''] ?? 'English';
 

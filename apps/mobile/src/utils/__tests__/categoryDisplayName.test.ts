@@ -80,5 +80,9 @@ describe('catalogLocale', () => {
     expect(catalogLocale('uk')).toBe('ua');
     expect(catalogLocale('nl-NL')).toBe('nl');
     expect(catalogLocale(undefined)).toBe('en');
+    expect(catalogLocale('pt-BR')).toBe('br');
+    expect(catalogLocale('pt')).toBe('pt');
+    expect(catalogLocale('br')).toBe('br');
+    expect(catalogLocale('pt-PT')).toBe('pt');
   });
 });

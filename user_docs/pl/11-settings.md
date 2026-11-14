@@ -42,7 +42,7 @@ Wybrana waluta jest podswietlona. Ustawia to domyslna walute dla nowych wydatkow
 
 ### Jezyk
 
-Wybierz z 9 obslugiwanych jezykow:
+Wybierz z 11 obslugiwanych jezykow:
 
 | Kod | Jezyk |
 |---|---|
@@ -55,6 +55,8 @@ Wybierz z 9 obslugiwanych jezykow:
 | DE | Deutsch |
 | BY | Беларуская |
 | NL | Nederlands |
+| PT | Português (Portugal) |
+| BR | Português (Brasil) |
 
 Dotknij element jezyka, aby przelaczyc. Interfejs aktualizuje sie natychmiast.
 

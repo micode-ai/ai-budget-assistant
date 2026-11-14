@@ -3,6 +3,7 @@ import { initReactI18next } from 'react-i18next';
 import { getLocales } from 'expo-localization';
 import { secureStorage } from '@/services/secureStorage';
 import { api } from '@/services/api';
+import { resolveAppLocale } from '@budget/shared-utils';
 
 import en from './locales/en';
 import ru from './locales/ru';
@@ -13,6 +14,8 @@ import fr from './locales/fr';
 import de from './locales/de';
 import be from './locales/be';
 import nl from './locales/nl';
+import pt from './locales/pt';
+import br from './locales/br';
 
 export const SUPPORTED_LANGUAGES = [
   { code: 'en', label: 'English', flag: 'EN' },
@@ -24,6 +27,8 @@ export const SUPPORTED_LANGUAGES = [
   { code: 'de', label: 'Deutsch', flag: 'DE' },
   { code: 'be', label: 'Беларуская', flag: 'BY' },
   { code: 'nl', label: 'Nederlands', flag: 'NL' },
+  { code: 'pt', label: 'Português (Portugal)', flag: 'PT' },
+  { code: 'br', label: 'Português (Brasil)', flag: 'BR' },
 ] as const;
 
 const intlLocaleMap: Record<string, string> = {
@@ -36,6 +41,8 @@ const intlLocaleMap: Record<string, string> = {
   de: 'de-DE',
   be: 'be-BY',
   nl: 'nl-NL',
+  pt: 'pt-PT',
+  br: 'pt-BR',
 };
 
 export function getIntlLocale(): string {
@@ -52,15 +59,15 @@ const resources = {
   de: { translation: de },
   be: { translation: be },
   nl: { translation: nl },
+  pt: { translation: pt },
+  br: { translation: br },
 };
 
 function getDeviceLanguage(): string {
-  const locales = getLocales();
-  const deviceLang = locales[0]?.languageCode || 'en';
-  // Map 'uk' (ISO 639-1 for Ukrainian) to our 'ua' code
-  if (deviceLang === 'uk') return 'ua';
-  if (Object.keys(resources).includes(deviceLang)) return deviceLang;
-  return 'en';
+  const first = getLocales()[0];
+  // An external tag: `uk` -> `ua`, `pt-BR`/bare `pt` -> `br`, other `pt-*` -> `pt`.
+  const tag = first?.languageTag || [first?.languageCode, first?.regionCode].filter(Boolean).join('-');
+  return resolveAppLocale(tag, Object.keys(resources)) ?? 'en';
 }
 
 i18n.use(initReactI18next).init({
@@ -71,6 +78,16 @@ i18n.use(initReactI18next).init({
     escapeValue: false,
   },
 });
+
+// i18next picks plural forms with `new Intl.PluralRules(lng)`. Raw `br` is Breton to Intl
+// (one/two/few/many/other — "2 weeks" would fall through to English) and bare `pt` is ICU's
+// Brazilian rule (0 singular). Resolve plurals through the real Intl tags instead.
+const pluralLocaleMap: Record<string, string> = { br: 'pt-BR', pt: 'pt-PT' };
+const pluralResolver = i18n.services.pluralResolver as {
+  getRule: (code: string, options?: object) => Intl.PluralRules | undefined;
+};
+const getPluralRule = pluralResolver.getRule.bind(pluralResolver);
+pluralResolver.getRule = (code, options) => getPluralRule(pluralLocaleMap[code] ?? code, options);
 
 export async function loadSavedLanguage() {
   const saved = await secureStorage.getItem('appLanguage');

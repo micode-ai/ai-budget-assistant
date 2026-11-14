@@ -13,6 +13,8 @@
     "pl": ["Dodaj wydatek", "Skanuj paragon", "Głos"],
     "ru": ["Добавить расход", "Сканировать чек", "Голос"],
     "uk": ["Додати витрату", "Сканувати чек", "Голос"],
-    "be": ["Дадаць выдатак", "Сканаваць чэк", "Голас"]
+    "be": ["Дадаць выдатак", "Сканаваць чэк", "Голас"],
+    "pt": ["Adicionar despesa", "Digitalizar talão", "Voz"],
+    "br": ["Adicionar despesa", "Escanear recibo", "Voz"]
   }
 }

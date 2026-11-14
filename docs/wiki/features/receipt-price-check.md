@@ -99,4 +99,4 @@ label (`товаров: {{count}}`) rather than before an agreeing noun. Do not 
 ABA-373 (API, plan 1) and the mobile plan 2 that made the release gate flippable — the
 `price_overcharge` card, the per-currency "found overpayments" total on the analytics inflation
 section (**never a blended total**: summing would require FX, which this feature forbids), and the
-`receiptCheck.*` strings in nine locales.
+`receiptCheck.*` strings in eleven locales.

@@ -42,7 +42,7 @@ Die ausgewahlte Wahrung ist hervorgehoben. Dies legt die Standardwahrung fur neu
 
 ### Sprache
 
-Wahle aus 9 unterstutzten Sprachen:
+Wahle aus 11 unterstutzten Sprachen:
 
 | Code | Sprache |
 |---|---|
@@ -55,6 +55,8 @@ Wahle aus 9 unterstutzten Sprachen:
 | DE | Deutsch |
 | BY | Беларуская |
 | NL | Nederlands |
+| PT | Português (Portugal) |
+| BR | Português (Brasil) |
 
 Tippe auf einen Sprachchip, um zu wechseln. Die Oberflache aktualisiert sich sofort.
 

@@ -1268,6 +1268,230 @@ const translations: Record<string, {
       `${p.name} — ${p.promoPrice} ${p.currencyCode} bij ${p.chain} t/m ${promoDay(p.validTo)}${p.condition ? ` (${p.condition})` : ''}${p.usualPrice ? `, normaal betaal je ${p.usualPrice} ${p.currencyCode}` : ''}`,
     leafletPromoBody: (items) => `Volgens een folder: ${items}. Controleer in de winkel.`,
   },
+  pt: {
+    sharedExpenseTitle: ({ accountName }) => `Nova despesa em «${accountName}»`,
+    sharedExpenseBody: ({ creatorName, currencyCode, amount, description }) =>
+      `${creatorName} adicionou ${currencyCode} ${amount} para ${description}`,
+    budgetThresholdTitle: ({ budgetName, threshold }) => `Orçamento «${budgetName}» a ${threshold}%`,
+    budgetThresholdBody: ({ currencyCode, spent, total }) =>
+      `Utilizou ${currencyCode} ${spent} de ${currencyCode} ${total}.`,
+    budgetExceededTitle: ({ budgetName }) => `Orçamento «${budgetName}» ultrapassado!`,
+    budgetExceededBody: ({ currencyCode, spent, total }) =>
+      `Já gastou ${currencyCode} ${spent} do seu orçamento de ${currencyCode} ${total}.`,
+    budgetCategoryThresholdTitle: ({ categoryName, threshold }) => `${categoryName}: ${threshold}% utilizado`,
+    budgetCategoryThresholdBody: ({ budgetName, categoryName, threshold }) =>
+      `Orçamento «${budgetName}» — ${categoryName} chegou a ${threshold}% do limite`,
+    budgetCategoryExceededTitle: ({ categoryName }) => `${categoryName} acima do limite`,
+    budgetCategoryExceededBody: ({ budgetName, categoryName }) =>
+      `Orçamento «${budgetName}» — ${categoryName} ultrapassou o valor atribuído`,
+    anomalyTitle: ({ categoryName }) => `Gastos invulgares em ${categoryName}`,
+    anomalyBody: ({ categoryName, percent }) =>
+      `Este mês gastou mais ${percent}% do que o habitual em ${categoryName}.`,
+    subscriptionActivatedTitle: () => 'Subscrição ativada!',
+    subscriptionActivatedBody: ({ tier }) => `O seu período experimental terminou. A subscrição ${tier} está agora ativa.`,
+    paymentSuccessTitle: () => 'Pagamento efetuado',
+    paymentSuccessBody: ({ amount, currency, tier }) => `O pagamento de ${amount} ${currency} pela subscrição ${tier} foi efetuado com sucesso.`,
+    paymentFailedTitle: () => 'Falha no pagamento',
+    paymentFailedBody: () => 'O pagamento da subscrição falhou. Atualize o método de pagamento para manter o acesso.',
+    trialReminderTitle: () => 'O período experimental termina amanhã',
+    trialReminderBody: ({ tier }) => `O seu período experimental ${tier} termina amanhã. Depois disso, o pagamento será cobrado.`,
+    trialReminderEmailSubject: () => 'O seu período experimental termina amanhã',
+    trialReminderEmailHtml: (name, { tier }) =>
+      `<h2>Olá, ${name}!</h2><p>O seu período experimental <strong>${tier}</strong> termina amanhã.</p><p>Após o período experimental, a subscrição será cobrada automaticamente no seu cartão.</p><p>Se não quiser continuar, cancele a subscrição na secção Subscrição da aplicação.</p>`,
+    trialReminderIn3Title: () => 'O período experimental termina daqui a 3 dias',
+    trialReminderIn3Body: ({ tier }) => `O seu período experimental ${tier} termina daqui a 3 dias. Depois disso, o pagamento será cobrado.`,
+    trialReminderIn3EmailSubject: () => 'O seu período experimental termina daqui a 3 dias',
+    trialReminderIn3EmailHtml: (name, { tier }) =>
+      `<h2>Olá, ${name}!</h2><p>O seu período experimental <strong>${tier}</strong> termina daqui a 3 dias.</p><p>Após o período experimental, a subscrição será cobrada automaticamente no seu cartão.</p><p>Se não quiser continuar, cancele a subscrição na secção Subscrição da aplicação.</p>`,
+    newReferralTitle: () => 'Nova recomendação!',
+    newReferralBody: ({ name }) => `O seu amigo ${name} registou-se com o seu código de recomendação!`,
+    referralQualifiedTitle: () => 'Recomendação confirmada!',
+    referralQualifiedBody: ({ name, bonus }) => `A sua recomendação ${name} está agora ativa! Ganhou +${bonus} pedidos de IA.`,
+    referralMilestone5Title: () => '5 recomendações!',
+    referralMilestone5Body: () => 'Ganhou um mês grátis de Pro! Consulte o seu e-mail.',
+    debtUpcomingTitle: ({ contactName, days }) => `Dívida vence ${days === 1 ? 'daqui a 1 dia' : `daqui a ${days} dias`}: ${contactName}`,
+    debtUpcomingBody: ({ amount, currencyCode, type }) =>
+      type === 'lent'
+        ? `Emprestou ${currencyCode} ${amount} — o reembolso vence em breve`
+        : `Pediu emprestado ${currencyCode} ${amount} — o reembolso vence em breve`,
+    debtOverdueTitle: ({ contactName }) => `Dívida em atraso: ${contactName}`,
+    debtOverdueBody: ({ amount, currencyCode, type }) =>
+      type === 'lent'
+        ? `Os ${currencyCode} ${amount} que emprestou estão agora em atraso`
+        : `Os ${currencyCode} ${amount} que pediu emprestado estão agora em atraso`,
+    recurringExpenseTitle: ({ description }) => `Despesa recorrente registada: ${description}`,
+    recurringExpenseBody: ({ amount, currencyCode, period }) =>
+      `${currencyCode} ${amount} registado automaticamente (${period})`,
+    chatMentionTitle: ({ senderName }) => `${senderName} fez-lhe uma menção`,
+    chatMentionBody: ({ preview }) => preview,
+    priceIncreaseTitle: ({ merchant }) => `${merchant} ficou mais caro`,
+    priceIncreaseBody: ({ merchant, oldAmount, newAmount, currencyCode, percent }) =>
+      `${merchant} cobrou ${currencyCode} ${newAmount}, antes ${currencyCode} ${oldAmount} (+${percent}%).`,
+    duplicateChargeTitle: () => 'Possível cobrança duplicada',
+    duplicateChargeBody: ({ merchant, amount, currencyCode }) =>
+      `${merchant} cobrou ${currencyCode} ${amount} duas vezes em dois dias. Vale a pena verificar.`,
+    recurringSuggestionTitle: ({ merchant }) => `${merchant} parece uma subscrição`,
+    recurringSuggestionBody: ({ merchant, amount, currencyCode }) =>
+      `${merchant} cobra ${currencyCode} ${amount} regularmente. Acompanhar como subscrição?`,
+    subscriptionReminderTitle: ({ name }) => `${name} renova-se daqui a 3 dias`,
+    subscriptionReminderBody: ({ name, amount, currencyCode }) => `Serão cobrados ${amount} ${currencyCode} por ${name}`,
+    subscriptionChargedTitle: ({ name }) => `Cobrança de ${name}`,
+    subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} de ${name} adicionados às suas despesas`,
+    trackingGapTitle: () => 'Está na hora de registar as suas despesas!',
+    trackingGapBody: () => 'Não registou nada há mais de 3 dias. Adicione uma transação para manter o orçamento em dia.',
+    activationNudgeTitle: () => 'A primeira despesa demora poucos segundos',
+    activationNudgeBody: () => 'Fotografe qualquer talão e preenchemos a loja, o valor e os artigos por si. Ou introduza-a à mão.',
+    shoppingReminderTitle: () => 'Hora de repor?',
+    shoppingReminderBody: (product: string, extraCount: number) =>
+      extraCount > 0
+        ? `Costuma voltar a comprar ${product} e mais ${extraCount} por esta altura.`
+        : `Costuma voltar a comprar ${product} por esta altura.`,
+    shoppingDealTitle: () => 'Descida de preço!',
+    shoppingDealBody: (product: string, merchant: string, dropPct: number) =>
+      `${product} está ${dropPct}% mais barato em ${merchant} neste momento.`,
+    inflationShieldTitle: () => 'Hora de fazer stock?',
+    inflationShieldBody: (product: string, monthlyChangePct: number) =>
+      `Os preços de ${product} estão a subir ~${monthlyChangePct}%/mês — agora é uma boa altura para fazer stock.`,
+    monthlyWrappedTitle: () => 'O resumo do seu mês está pronto',
+    monthlyWrappedBody: () => 'A categoria principal, a maior compra e a comparação com o mês passado — deslize para ver.',
+    groupActivityTitle: (groupName) => `Nova atividade em «${groupName}»`,
+    groupActivityBody: () => 'Alguém adicionou uma despesa ou um pagamento. Abra o grupo para ver os saldos.',
+    groupOwnerTitle: (groupName) => `Passou a ser o proprietário de «${groupName}»`,
+    groupOwnerBody: () => 'Pode gerir o link do grupo, arquivá-lo ou eliminá-lo.',
+    groupReminderOweTitle: (g) => `Acerte contas em «${g}»`,
+    groupReminderOweBody: (p) => `Deve ${p.amount} ${p.currencyCode} em «${p.groupName}». Toque para registar um pagamento, mesmo que seja só uma parte.`,
+    groupReminderOwedTitle: (g) => `«${g}»: devem-lhe dinheiro`,
+    groupReminderOwedBody: (p) => `Devem-lhe ${p.amount} ${p.currencyCode} em «${p.groupName}». Partilhe o link do grupo para lembrar os outros ou registe um pagamento que recebeu.`,
+    possibleMergeTitle: ({ merchant }) => `A mesma compra em duas moedas? — ${merchant}`,
+    possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
+      `${amountA} ${currencyA} e ${amountB} ${currencyB} em ${merchant} parecem ser uma só transação. Juntá-las?`,
+    tripSettleUpTitle: ({ tripName }) => `${tripName} terminou`,
+    tripSettleUpBody: () => 'Está na hora de acertar contas com o grupo da viagem',
+    accountInvitationTitle: ({ inviterName }) => `${inviterName} enviou-lhe um convite`,
+    accountInvitationBody: ({ accountName }) => `Junte-se a «${accountName}» — toque para aceitar ou recusar.`,
+    splitPaymentClaimedTitle: ({ name }) => `${name} diz que já pagou`,
+    splitPaymentClaimedBody: ({ amount, currencyCode }) => `Confirme o pagamento de ${amount} ${currencyCode} na aplicação.`,
+    rateWatchHitTitle: ({ fromCurrency, toCurrency }) => `Objetivo ${fromCurrency}/${toCurrency} atingido`,
+    rateWatchHitBody: ({ fromCurrency, toCurrency, rate }) => `1 ${fromCurrency} vale agora ${rate} ${toCurrency}. Toque para trocar.`,
+    splitItemFlaggedTitle: ({ name }) => `${name} assinalou um problema na divisão`,
+    splitItemFlaggedBody: () => 'Essa pessoa indicou que algo não está certo na parte dela. Abra a aplicação para verificar.',
+    leafletPromoTitle: () => 'Num folheto: os seus produtos habituais',
+    leafletPromoItem: (p) =>
+      `${p.name} — ${p.promoPrice} ${p.currencyCode} no ${p.chain} até ${promoDay(p.validTo)}${p.condition ? ` (${p.condition})` : ''}${p.usualPrice ? `, costuma pagar ${p.usualPrice} ${p.currencyCode}` : ''}`,
+    leafletPromoBody: (items) => `Segundo um folheto: ${items}. Verifique na loja.`,
+  },
+  br: {
+    sharedExpenseTitle: ({ accountName }) => `Nova despesa em “${accountName}”`,
+    sharedExpenseBody: ({ creatorName, currencyCode, amount, description }) =>
+      `${creatorName} adicionou ${currencyCode} ${amount} para ${description}`,
+    budgetThresholdTitle: ({ budgetName, threshold }) => `Orçamento “${budgetName}” em ${threshold}%`,
+    budgetThresholdBody: ({ currencyCode, spent, total }) =>
+      `${currencyCode} ${spent} de ${currencyCode} ${total} usados.`,
+    budgetExceededTitle: ({ budgetName }) => `Orçamento “${budgetName}” estourado!`,
+    budgetExceededBody: ({ currencyCode, spent, total }) =>
+      `Você já gastou ${currencyCode} ${spent} do seu orçamento de ${currencyCode} ${total}.`,
+    budgetCategoryThresholdTitle: ({ categoryName, threshold }) => `${categoryName}: ${threshold}% usado`,
+    budgetCategoryThresholdBody: ({ budgetName, categoryName, threshold }) =>
+      `Orçamento “${budgetName}” — ${categoryName} chegou a ${threshold}% do limite`,
+    budgetCategoryExceededTitle: ({ categoryName }) => `${categoryName} acima do limite`,
+    budgetCategoryExceededBody: ({ budgetName, categoryName }) =>
+      `Orçamento “${budgetName}” — ${categoryName} passou do valor reservado`,
+    anomalyTitle: ({ categoryName }) => `Gastos fora do comum em ${categoryName}`,
+    anomalyBody: ({ categoryName, percent }) =>
+      `Neste mês você gastou ${percent}% a mais que o normal em ${categoryName}.`,
+    subscriptionActivatedTitle: () => 'Assinatura ativada!',
+    subscriptionActivatedBody: ({ tier }) => `Seu período de teste terminou. A assinatura ${tier} agora está ativa.`,
+    paymentSuccessTitle: () => 'Pagamento aprovado',
+    paymentSuccessBody: ({ amount, currency, tier }) => `O pagamento de ${amount} ${currency} pela assinatura ${tier} foi aprovado.`,
+    paymentFailedTitle: () => 'Falha no pagamento',
+    paymentFailedBody: () => 'O pagamento da assinatura falhou. Atualize sua forma de pagamento para manter o acesso.',
+    trialReminderTitle: () => 'O período de teste termina amanhã',
+    trialReminderBody: ({ tier }) => `Seu período de teste ${tier} termina amanhã. Depois disso, o pagamento será cobrado.`,
+    trialReminderEmailSubject: () => 'Seu período de teste termina amanhã',
+    trialReminderEmailHtml: (name, { tier }) =>
+      `<h2>Olá, ${name}!</h2><p>Seu período de teste <strong>${tier}</strong> termina amanhã.</p><p>Depois do período de teste, a assinatura será cobrada automaticamente no seu cartão.</p><p>Se não quiser continuar, cancele a assinatura na seção Assinatura do app.</p>`,
+    trialReminderIn3Title: () => 'O período de teste termina em 3 dias',
+    trialReminderIn3Body: ({ tier }) => `Seu período de teste ${tier} termina em 3 dias. Depois disso, o pagamento será cobrado.`,
+    trialReminderIn3EmailSubject: () => 'Seu período de teste termina em 3 dias',
+    trialReminderIn3EmailHtml: (name, { tier }) =>
+      `<h2>Olá, ${name}!</h2><p>Seu período de teste <strong>${tier}</strong> termina em 3 dias.</p><p>Depois do período de teste, a assinatura será cobrada automaticamente no seu cartão.</p><p>Se não quiser continuar, cancele a assinatura na seção Assinatura do app.</p>`,
+    newReferralTitle: () => 'Nova indicação!',
+    newReferralBody: ({ name }) => `Seu amigo ${name} se cadastrou com o seu código de indicação!`,
+    referralQualifiedTitle: () => 'Indicação confirmada!',
+    referralQualifiedBody: ({ name, bonus }) => `Sua indicação ${name} agora está ativa! Você ganhou +${bonus} solicitações de IA.`,
+    referralMilestone5Title: () => '5 indicações!',
+    referralMilestone5Body: () => 'Você ganhou um mês grátis de Pro! Confira seu e-mail.',
+    debtUpcomingTitle: ({ contactName, days }) => `Dívida vence em ${days} dia${days === 1 ? '' : 's'}: ${contactName}`,
+    debtUpcomingBody: ({ amount, currencyCode, type }) =>
+      type === 'lent'
+        ? `Você emprestou ${currencyCode} ${amount} — o pagamento vence em breve`
+        : `Você pegou emprestado ${currencyCode} ${amount} — o pagamento vence em breve`,
+    debtOverdueTitle: ({ contactName }) => `Dívida atrasada: ${contactName}`,
+    debtOverdueBody: ({ amount, currencyCode, type }) =>
+      type === 'lent'
+        ? `Os ${currencyCode} ${amount} que você emprestou estão atrasados`
+        : `Os ${currencyCode} ${amount} que você pegou emprestado estão atrasados`,
+    recurringExpenseTitle: ({ description }) => `Despesa recorrente registrada: ${description}`,
+    recurringExpenseBody: ({ amount, currencyCode, period }) =>
+      `${currencyCode} ${amount} registrado automaticamente (${period})`,
+    chatMentionTitle: ({ senderName }) => `${senderName} mencionou você`,
+    chatMentionBody: ({ preview }) => preview,
+    priceIncreaseTitle: ({ merchant }) => `${merchant} ficou mais caro`,
+    priceIncreaseBody: ({ merchant, oldAmount, newAmount, currencyCode, percent }) =>
+      `${merchant} cobrou ${currencyCode} ${newAmount}, antes era ${currencyCode} ${oldAmount} (+${percent}%).`,
+    duplicateChargeTitle: () => 'Possível cobrança duplicada',
+    duplicateChargeBody: ({ merchant, amount, currencyCode }) =>
+      `${merchant} cobrou ${currencyCode} ${amount} duas vezes em dois dias. Vale a pena conferir.`,
+    recurringSuggestionTitle: ({ merchant }) => `${merchant} parece uma assinatura`,
+    recurringSuggestionBody: ({ merchant, amount, currencyCode }) =>
+      `${merchant} cobra ${currencyCode} ${amount} com frequência. Acompanhar como assinatura?`,
+    subscriptionReminderTitle: ({ name }) => `${name} renova em 3 dias`,
+    subscriptionReminderBody: ({ name, amount, currencyCode }) => `Serão cobrados ${amount} ${currencyCode} por ${name}`,
+    subscriptionChargedTitle: ({ name }) => `Cobrança de ${name}`,
+    subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} de ${name} adicionados às suas despesas`,
+    trackingGapTitle: () => 'Hora de registrar suas despesas!',
+    trackingGapBody: () => 'Você não registra nada há mais de 3 dias. Adicione uma transação para manter seu orçamento em dia.',
+    activationNudgeTitle: () => 'Sua primeira despesa leva poucos segundos',
+    activationNudgeBody: () => 'Fotografe qualquer recibo e nós preenchemos a loja, o valor e os itens para você. Ou digite à mão.',
+    shoppingReminderTitle: () => 'Hora de repor?',
+    shoppingReminderBody: (product: string, extraCount: number) =>
+      extraCount > 0
+        ? `Você costuma comprar ${product} e mais ${extraCount} por volta desta época.`
+        : `Você costuma comprar ${product} por volta desta época.`,
+    shoppingDealTitle: () => 'O preço caiu!',
+    shoppingDealBody: (product: string, merchant: string, dropPct: number) =>
+      `${product} está ${dropPct}% mais barato em ${merchant} agora.`,
+    inflationShieldTitle: () => 'Hora de estocar?',
+    inflationShieldBody: (product: string, monthlyChangePct: number) =>
+      `Os preços de ${product} estão subindo ~${monthlyChangePct}%/mês — agora é uma boa hora para estocar.`,
+    monthlyWrappedTitle: () => 'O resumo do seu mês está pronto',
+    monthlyWrappedBody: () => 'A categoria principal, a maior compra e a comparação com o mês passado — deslize para ver.',
+    groupActivityTitle: (groupName) => `Nova atividade em “${groupName}”`,
+    groupActivityBody: () => 'Alguém adicionou uma despesa ou um pagamento. Abra o grupo para ver os saldos.',
+    groupOwnerTitle: (groupName) => `Agora você é o proprietário de “${groupName}”`,
+    groupOwnerBody: () => 'Você pode gerenciar o link do grupo, arquivá-lo ou excluí-lo.',
+    groupReminderOweTitle: (g) => `Acerte as contas em “${g}”`,
+    groupReminderOweBody: (p) => `Você deve ${p.amount} ${p.currencyCode} em “${p.groupName}”. Toque para registrar um pagamento, mesmo que seja só uma parte.`,
+    groupReminderOwedTitle: (g) => `“${g}”: devem dinheiro a você`,
+    groupReminderOwedBody: (p) => `Devem a você ${p.amount} ${p.currencyCode} em “${p.groupName}”. Compartilhe o link do grupo para lembrar os outros ou registre um pagamento que você recebeu.`,
+    possibleMergeTitle: ({ merchant }) => `A mesma compra em duas moedas? — ${merchant}`,
+    possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
+      `${amountA} ${currencyA} e ${amountB} ${currencyB} em ${merchant} parecem ser uma única transação. Juntar?`,
+    tripSettleUpTitle: ({ tripName }) => `${tripName} terminou`,
+    tripSettleUpBody: () => 'Hora de acertar as contas com o grupo da viagem',
+    accountInvitationTitle: ({ inviterName }) => `${inviterName} convidou você`,
+    accountInvitationBody: ({ accountName }) => `Entre em “${accountName}” — toque para aceitar ou recusar.`,
+    splitPaymentClaimedTitle: ({ name }) => `${name} diz que já pagou`,
+    splitPaymentClaimedBody: ({ amount, currencyCode }) => `Confirme o pagamento de ${amount} ${currencyCode} no app.`,
+    rateWatchHitTitle: ({ fromCurrency, toCurrency }) => `Meta de cotação ${fromCurrency}/${toCurrency} atingida`,
+    rateWatchHitBody: ({ fromCurrency, toCurrency, rate }) => `1 ${fromCurrency} agora vale ${rate} ${toCurrency}. Toque para trocar.`,
+    splitItemFlaggedTitle: ({ name }) => `${name} apontou um problema na divisão`,
+    splitItemFlaggedBody: () => 'Essa pessoa disse que há algo errado na parte dela. Abra o app para conferir.',
+    leafletPromoTitle: () => 'Em um folheto: seus produtos de sempre',
+    leafletPromoItem: (p) =>
+      `${p.name} — ${p.promoPrice} ${p.currencyCode} no ${p.chain} até ${promoDay(p.validTo)}${p.condition ? ` (${p.condition})` : ''}${p.usualPrice ? `, você costuma pagar ${p.usualPrice} ${p.currencyCode}` : ''}`,
+    leafletPromoBody: (items) => `Segundo um folheto: ${items}. Confira na loja.`,
+  },
 };
 
 function t(lang: Lang) {

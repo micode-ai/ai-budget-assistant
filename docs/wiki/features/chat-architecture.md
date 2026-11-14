@@ -153,8 +153,16 @@ three tiers:
 - **Cyrillic** (ratio above 0.3): `ў` → Belarusian first; then `ї/є/ґ` → Ukrainian; then `і` →
   Belarusian if `ы`/`э` also appear (Ukrainian lacks them), else Ukrainian; otherwise Russian.
 - `äöüß` → German; Polish diacritics → Polish.
-- **French vs Spanish** on unique letters only — the shared `é` decides nothing. Ambiguous Latin
-  text returns English so tier 2 can resolve it.
+- **Portuguese** runs before French/Spanish, because it shares `á/é/ç/à/ê/ô` with them: `ã/õ` →
+  Portuguese; otherwise a short word list (`gastei`, `hoje`, `não`, `conta`, …), vetoed by letters
+  Portuguese never writes (`ñ ¿ ¡`, French `è ë î ï ù û ÿ œ æ`) and by Spanish-only words
+  (`SPANISH_ONLY_WORDS`). Neither list may hold a word both languages write — `mercado` and
+  `gasto(s)` were removed for exactly that. Text cannot tell the variants apart, so `detectUserLanguage` resolves `Portuguese` to
+  the UI locale's variant (`pt` → European, `br` → Brazilian) and to **Brazilian** otherwise; the
+  fixed-string helpers treat a bare `Portuguese` as Brazilian.
+- **French vs Spanish** on unique letters only — the shared `é` decides nothing. With no unique
+  letter, a few one-language words decide (`j'ai`, `payé`, `combien` / `gasté`, `hoy`, `cuenta`);
+  a shared word like `café` does not. Ambiguous Latin text returns English so tier 2 can resolve it.
 - Dutch by a small function-word list.
 
 Confirm and reject do not get the turn's message, so `detectConversationLanguage` runs the same

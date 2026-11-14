@@ -426,6 +426,8 @@ export class PurchaseRequestsService {
         es: '🛒 Nueva solicitud de compra',
         be: '🛒 Новы запыт на куплю',
         nl: '🛒 Nieuw aankoopverzoek',
+        pt: '🛒 Novo pedido de compra',
+        br: '🛒 Nova solicitação de compra',
       },
       purchase_request_voted_title: {
         en: 'New vote on your request',
@@ -437,6 +439,8 @@ export class PurchaseRequestsService {
         es: 'Nuevo voto',
         be: 'Новы голас',
         nl: 'Nieuwe stem',
+        pt: 'Novo voto no seu pedido',
+        br: 'Novo voto na sua solicitação',
       },
       purchase_request_approved_title: {
         en: '✅ Purchase request approved!',
@@ -448,6 +452,8 @@ export class PurchaseRequestsService {
         es: '✅ ¡Solicitud aprobada!',
         be: '✅ Запыт адобраны!',
         nl: '✅ Aanvraag goedgekeurd!',
+        pt: '✅ Pedido de compra aprovado!',
+        br: '✅ Solicitação de compra aprovada!',
       },
       purchase_request_rejected_title: {
         en: '❌ Purchase request rejected',
@@ -459,6 +465,8 @@ export class PurchaseRequestsService {
         es: '❌ Solicitud rechazada',
         be: '❌ Запыт адхілены',
         nl: '❌ Aanvraag afgewezen',
+        pt: '❌ Pedido de compra recusado',
+        br: '❌ Solicitação de compra recusada',
       },
     };
     return map[key]?.[lang] ?? map[key]?.['en'] ?? key;

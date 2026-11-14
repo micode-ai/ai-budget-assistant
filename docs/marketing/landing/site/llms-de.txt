@@ -1,6 +1,6 @@
 # AI Budget Assistant
 
-> Kostenlose KI-gestützte Haushaltsbuch-App für Einzelpersonen und Familien. Erfasse Ausgaben per Sprache oder Kassenbon-Foto, plane Budgets und Sparziele, verwalte Abos, importiere Bankauszüge und führe gemeinsam in Echtzeit Haushaltsbuch. Mehrwährungsfähig, 9 Sprachen, Android und Web.
+> Kostenlose KI-gestützte Haushaltsbuch-App für Einzelpersonen und Familien. Erfasse Ausgaben per Sprache oder Kassenbon-Foto, plane Budgets und Sparziele, verwalte Abos, importiere Bankauszüge und führe gemeinsam in Echtzeit Haushaltsbuch. Mehrwährungsfähig, 11 Sprachen, Android und Web.
 
 ## Product
 
@@ -8,8 +8,8 @@
 - Start: 2026-04
 - Preise: Kostenloser Kern; Pro- und Business-Abo
 - Plattformen: Android, Web
-- Sprachen: Polski, English, Deutsch, Español, Français, Русский, Українська, Беларуская, Nederlands
-- Währungen: USD, EUR, PLN, GBP, UAH, RUB, BYN
+- Sprachen: Polski, English, Deutsch, Español, Français, Русский, Українська, Беларуская, Nederlands, Português (Portugal), Português (Brasil)
+- Währungen: USD, EUR, PLN, GBP, UAH, RUB, BYN, BRL
 
 ## Key Features
 

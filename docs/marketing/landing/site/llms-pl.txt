@@ -1,6 +1,6 @@
 # AI Budget Assistant
 
-> Darmowa aplikacja budżetowa oparta na AI dla osób i rodzin. Dodawaj wydatki głosem lub zdjęciem paragonu, planuj budżety i cele oszczędnościowe, zarządzaj subskrypcjami, importuj wyciągi bankowe i prowadź wspólny budżet w czasie rzeczywistym. Wiele walut, 9 języków, Android i przeglądarka.
+> Darmowa aplikacja budżetowa oparta na AI dla osób i rodzin. Dodawaj wydatki głosem lub zdjęciem paragonu, planuj budżety i cele oszczędnościowe, zarządzaj subskrypcjami, importuj wyciągi bankowe i prowadź wspólny budżet w czasie rzeczywistym. Wiele walut, 11 języków, Android i przeglądarka.
 
 ## Product
 
@@ -8,8 +8,8 @@
 - Premiera: 2026-04
 - Cena: darmowy rdzeń; plany Pro i Business
 - Platformy: Android, Web
-- Języki: Polski, English, Deutsch, Español, Français, Русский, Українська, Беларуская, Nederlands
-- Waluty: USD, EUR, PLN, GBP, UAH, RUB, BYN
+- Języki: Polski, English, Deutsch, Español, Français, Русский, Українська, Беларуская, Nederlands, Português (Portugal), Português (Brasil)
+- Waluty: USD, EUR, PLN, GBP, UAH, RUB, BYN, BRL
 
 ## Key Features
 

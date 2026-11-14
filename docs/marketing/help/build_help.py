@@ -36,6 +36,9 @@ DOCS = os.path.join(ROOT, "..", "..", "..", "user_docs")
 IMG_SRC = os.path.join(DOCS, "img")
 SITE = bb.SITE
 LANGS = ["en", "pl", "de", "es", "fr", "ru", "ua", "be", "nl"]  # en = x-default
+# pt (pt-PT) / br (pt-BR): the shared page chrome (build_blog.py I18N, LANG_NAMES, LOCALE) must know
+# a language before its help pages can render, so they switch on as soon as it does (Task 10).
+LANGS += [l for l in ("pt", "br") if l in bb.LANG_NAMES]
 DEFAULT_LANG = "en"
 THIN_WORDS = 250  # below this a help page is noindex,follow and dropped from the sitemap
 
@@ -58,7 +61,7 @@ SECTIONS = [
 ]
 
 HELP_NAV = {"en": "Help", "pl": "Pomoc", "de": "Hilfe", "es": "Ayuda", "fr": "Aide",
-            "ru": "Помощь", "ua": "Довідка", "be": "Дапамога", "nl": "Help"}
+            "ru": "Помощь", "ua": "Довідка", "be": "Дапамога", "nl": "Help", "pt": "Ajuda", "br": "Ajuda"}
 # (indexTitle, indexDesc, indexH1, indexIntro, relatedHeading)
 HELP_I18N = {
  "en": ("Help & Guides | AI Budget Assistant",
@@ -88,6 +91,12 @@ HELP_I18N = {
  "nl": ("Help en handleidingen | AI Budget Assistant",
         "Stapsgewijze hulp: uitgaven, budgetten, bankimport, de AI-assistent, versleuteling en meer.",
         "Help en handleidingen", "Hoe je AI Budget Assistant gebruikt, functie voor functie.", "Meer help-onderwerpen"),
+ "pt": ("Ajuda e guias | AI Budget Assistant",
+        "Ajuda passo a passo: despesas, orçamentos, importação do banco, assistente de IA, encriptação e mais.",
+        "Ajuda e guias", "Como usar o AI Budget Assistant, funcionalidade a funcionalidade.", "Mais tópicos de ajuda"),
+ "br": ("Ajuda e guias | AI Budget Assistant",
+        "Ajuda passo a passo: despesas, orçamentos, importação do banco, assistente de IA, criptografia e mais.",
+        "Ajuda e guias", "Como usar o AI Budget Assistant, recurso por recurso.", "Mais tópicos de ajuda"),
 }
 
 # help section slug -> the blog article `pair` it maps to (reverse of build_blog.PAIR_TO_HELP);
@@ -307,7 +316,8 @@ def build():
 <title>Help - AI Budget Assistant</title>
 <link rel="canonical" href="{SITE}/help/{DEFAULT_LANG}/">
 <script>(function(){{var L={langs_js};var m={{uk:'ua'}};
-var n=(navigator.language||'en').slice(0,2).toLowerCase();n=m[n]||n;
+var f=(navigator.language||'en').toLowerCase(),n=f.slice(0,2);n=m[n]||n;
+if(n==='pt')n=(f==='pt'||f.slice(3,5)==='br')?'br':'pt';
 location.replace(L.indexOf(n)>=0?'/help/'+n+'/':'/help/{DEFAULT_LANG}/');}})();</script>
 </head><body>
 <p>Continue to help: <a href="/help/en/">English</a> | <a href="/help/pl/">Polski</a></p>

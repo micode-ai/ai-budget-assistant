@@ -15,7 +15,7 @@
 - **Eksport i raporty** — raporty PDF/Excel/CSV, podsumowania miesięczne, zaszyfrowane kopie zapasowe, raporty e-mail
 - **Wiele kont** — konta Osobiste, Wspolne i Firmowe z dostepem opartym na rolach (Wlasciciel, Edytor, Obserwator)
 - **Offline-first** — dane zapisuja sie lokalnie i synchronizuja automatycznie po polaczeniu z siecia
-- **8 jezykow** — English, Deutsch, Espanol, Francais, Polski, Russkij, Ukrainska, Беларуская
+- **11 jezykow** — English, Deutsch, Espanol, Francais, Polski, Russkij, Ukrainska, Беларуская, Nederlands, Português (Portugal), Português (Brasil)
 
 ## Spis tresci
 

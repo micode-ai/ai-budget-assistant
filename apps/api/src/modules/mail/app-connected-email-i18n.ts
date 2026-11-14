@@ -124,6 +124,28 @@ const translations: Record<string, AppConnectedCopy> = {
     warning: 'Was jij dit niet of herken je deze app niet? Ontkoppel hem dan nu.',
     manage: 'Gekoppelde apps beheren',
   },
+  pt: {
+    subject: ({ appName }) => `${appName} foi ligada à sua conta — AI Budget`,
+    heading: 'Foi ligada uma nova aplicação',
+    quote: ['«', '»'],
+    body: ({ appName, accounts, count, connectedByName }) =>
+      count === 1
+        ? `${connectedByName} ligou ${appName} à conta ${accounts}. A aplicação pode agora aceder aos dados desta conta, dentro das permissões concedidas.`
+        : `${connectedByName} ligou ${appName} às contas ${accounts}. A aplicação pode agora aceder aos dados destas contas, dentro das permissões concedidas.`,
+    warning: 'Se não foi por si ou não reconhece esta aplicação, desligue-a agora.',
+    manage: 'Gerir aplicações ligadas',
+  },
+  br: {
+    subject: ({ appName }) => `${appName} foi conectado à sua conta — AI Budget`,
+    heading: 'Um novo app foi conectado',
+    quote: ['“', '”'],
+    body: ({ appName, accounts, count, connectedByName }) =>
+      count === 1
+        ? `${connectedByName} conectou ${appName} à conta ${accounts}. Agora o app pode acessar os dados dessa conta, dentro das permissões concedidas.`
+        : `${connectedByName} conectou ${appName} às contas ${accounts}. Agora o app pode acessar os dados dessas contas, dentro das permissões concedidas.`,
+    warning: 'Se não foi você ou se você não reconhece este app, desconecte-o agora.',
+    manage: 'Gerenciar apps conectados',
+  },
 };
 
 export const APP_CONNECTED_LANGS = Object.keys(translations);

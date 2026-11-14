@@ -302,3 +302,10 @@ describe('FatFinderService', () => {
     });
   });
 });
+
+describe('FatFinderService prompt language names', () => {
+  it('asks the model for European Portuguese for pt and Brazilian Portuguese for br', () => {
+    const names = (FatFinderService as any).LANGUAGE_NAMES as Record<string, string>;
+    expect([names.pt, names.br]).toEqual(['European Portuguese', 'Brazilian Portuguese']);
+  });
+});

@@ -42,7 +42,7 @@ La devise selectionnee est mise en surbrillance. Cela definit la devise par defa
 
 ### Langue
 
-Choisissez parmi 9 langues prises en charge :
+Choisissez parmi 11 langues prises en charge :
 
 | Code | Langue |
 |---|---|
@@ -55,6 +55,8 @@ Choisissez parmi 9 langues prises en charge :
 | DE | Deutsch |
 | BY | Беларуская |
 | NL | Nederlands |
+| PT | Português (Portugal) |
+| BR | Português (Brasil) |
 
 Appuyez sur une pastille de langue pour changer. L'interface se met a jour immediatement.
 

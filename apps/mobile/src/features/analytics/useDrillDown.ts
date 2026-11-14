@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { api } from '@/services/api';
+import { getIntlLocale } from '@/i18n';
 import type { DrillDownLevel, ChartConfig, ChartDataPoint } from '@budget/shared-types';
 import type { DrillDownResponse } from '@budget/shared-types';
 
@@ -30,7 +31,8 @@ export function useDrillDown(params: DrillDownParams) {
   const localizeResponse = useCallback(
     (response: DrillDownResponse): DrillDownResponse => {
       const level = response.chart.drillDown?.currentLevel;
-      const locale = i18n.language;
+      // Intl needs the real tag: a raw `br` is Breton to Intl.
+      const locale = getIntlLocale();
 
       // Localize chart title
       let title = response.chart.title;

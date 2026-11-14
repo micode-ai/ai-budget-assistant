@@ -105,7 +105,7 @@ banner on the Analytics tab with the selected year. It is a paging `ScrollView` 
 
 A **hide amounts** toggle masks every figure in both share paths through the same `money()`
 helper, so the text and the image cannot disagree about what is hidden. Copy is the `wrapped.*`
-namespace in all nine locales.
+namespace in all eleven locales.
 
 ## Invariants
 

@@ -19,7 +19,7 @@ const MAX_OUTPUT_CHARS = 1200;
 const URL_LIKE_PATTERN = /https?:\/\/|www\./i;
 const MENTION_PATTERN = /@/;
 
-/** Maps the app's 9 locale codes to the language name the model is told to reply in. */
+/** Maps the app's locale codes to the language name the model is told to reply in. */
 const LANGUAGE_NAMES: Record<string, string> = {
   en: 'English',
   pl: 'Polish',
@@ -30,6 +30,8 @@ const LANGUAGE_NAMES: Record<string, string> = {
   ua: 'Ukrainian',
   be: 'Belarusian',
   nl: 'Dutch',
+  pt: 'European Portuguese',
+  br: 'Brazilian Portuguese',
 };
 
 function languageName(lang: string): string {

@@ -822,7 +822,7 @@ describe('GroupGuestController', () => {
       const keys = ['restoreSummary', 'restoreFormTitle', 'restoreCodeLabel', 'restoreButton', 'msgBadCode', 'msgAlreadyIn', 'expenseAddedBy', 'settleAmountLabel', 'settlePartialHint', 'msgTooMuch'] as const;
       const { getGroupGuestStrings } = await import('./helpers/group-guest-page-i18n');
       const en = getGroupGuestStrings('en');
-      for (const lang of ['pl', 'de', 'es', 'fr', 'ru', 'ua', 'be', 'nl']) {
+      for (const lang of ['pl', 'de', 'es', 'fr', 'ru', 'ua', 'be', 'nl', 'pt', 'br']) {
         const t = getGroupGuestStrings(lang);
         for (const k of keys) {
           expect(t.t(k, 'X')).toBeTruthy();
@@ -916,7 +916,7 @@ describe('GroupGuestController', () => {
       const keys = ['amountPlainLabel', 'currencyLabel', 'fxHint', 'msgAddedFx', 'msgNoRate'] as const;
       const { getGroupGuestStrings } = await import('./helpers/group-guest-page-i18n');
       const en = getGroupGuestStrings('en');
-      for (const lang of ['pl', 'de', 'es', 'fr', 'ru', 'ua', 'be', 'nl']) {
+      for (const lang of ['pl', 'de', 'es', 'fr', 'ru', 'ua', 'be', 'nl', 'pt', 'br']) {
         const t = getGroupGuestStrings(lang);
         for (const k of keys) {
           expect(t.t(k, 'PLN')).toBeTruthy();

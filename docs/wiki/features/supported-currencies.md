@@ -20,4 +20,4 @@ The set of currency codes a user can pick for expenses, wallets, budgets and the
 No per-bank resolution of `kr`; the group-bot symbol regex lists only the original symbols.
 
 ## History
-ABA-721 added CZK, SEK, NOK, DKK, HUF, RON, CHF.
+ABA-721 added CZK, SEK, NOK, DKK, HUF, RON, CHF. ABA-755 added BRL (`R$`, formatted `pt-BR`, symbol checked before `$` in every parser).

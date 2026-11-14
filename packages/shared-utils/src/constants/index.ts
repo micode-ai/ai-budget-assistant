@@ -19,6 +19,7 @@ export const SUPPORTED_CURRENCIES: { code: Currency; name: string; symbol: strin
   { code: 'HUF', name: 'Hungarian Forint', symbol: 'Ft' },
   { code: 'RON', name: 'Romanian Leu', symbol: 'lei' },
   { code: 'CHF', name: 'Swiss Franc', symbol: 'CHF' },
+  { code: 'BRL', name: 'Brazilian Real', symbol: 'R$' },
 ];
 
 // Budget periods

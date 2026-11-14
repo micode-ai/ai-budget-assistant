@@ -15,7 +15,7 @@
 - **Investment Portfolio** — track stocks, ETFs, crypto, bonds with real-time prices and benchmark comparison
 - **Multiple Accounts** — Personal, Shared, Business, and Investment accounts with role-based access (Owner, Editor, Viewer)
 - **Offline-First** — data saves locally and syncs automatically when online
-- **8 Languages** — English, Deutsch, Espanol, Francais, Polski, Русский, Українська, Беларуская
+- **11 Languages** — English, Deutsch, Espanol, Francais, Polski, Русский, Українська, Беларуская, Nederlands, Português (Portugal), Português (Brasil)
 
 ## Table of Contents
 

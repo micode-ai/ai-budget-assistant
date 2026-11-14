@@ -1,6 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import { StoryService } from './story.service';
+import { localizeStoryBlocks, translateUncategorized } from '../../common/utils/translate';
 import { PrismaService } from '../../database/prisma.service';
 import { BudgetsService } from '../budgets/budgets.service';
 import { SubscriptionsService } from '../subscriptions/subscriptions.service';
@@ -378,5 +379,29 @@ describe('StoryService', () => {
       expect(res.fxApproximate).toBe(true);
       expect(promptSent()).toContain('- Total spent: 100.00');
     });
+  });
+});
+
+describe('StoryService.computePeriod locale', () => {
+  it('labels a month in Brazilian Portuguese for br', () => {
+    const { periodLabel } = (StoryService.prototype as any).computePeriod(new Date(2026, 4, 10), 'month', 'br');
+    expect(periodLabel).toBe('Maio 2026');
+  });
+});
+
+describe('StoryService prompt language names', () => {
+  it('asks the model for European Portuguese for pt and Brazilian Portuguese for br', () => {
+    const names = (StoryService as any).LANGUAGE_NAMES as Record<string, string>;
+    expect([names.pt, names.br]).toEqual(['European Portuguese', 'Brazilian Portuguese']);
+  });
+});
+
+describe('story label safety net for pt and br', () => {
+  it('replaces leftover English labels with Portuguese ones in both variants', () => {
+    const blocks = [{ label: 'Uncategorized' }, { label: 'Total' }, { name: 'Other' }];
+    const expected = [{ label: 'Sem categoria' }, { label: 'Total' }, { name: 'Outros' }];
+    expect(localizeStoryBlocks(blocks, 'pt')).toEqual(expected);
+    expect(localizeStoryBlocks(blocks, 'br')).toEqual(expected);
+    expect(translateUncategorized('br')).toBe('Sem categoria');
   });
 });

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="pt-PT"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Análise | AI Budget Assistant</title>
+<meta name="description" content="Visualize os seus padrões de gastos com gráficos interativos.">
+<link rel="canonical" href="https://ai-budget.pl/help/pt/analytics/"><meta name="robots" content="index,follow,max-image-preview:large">
+<meta property="og:type" content="article"><meta property="og:site_name" content="AI Budget Assistant">
+<meta property="og:locale" content="pt_PT"><meta property="og:title" content="Análise | AI Budget Assistant">
+<meta property="og:description" content="Visualize os seus padrões de gastos com gráficos interativos."><meta property="og:url" content="https://ai-budget.pl/help/pt/analytics/">
+<meta property="og:image" content="https://ai-budget.pl/help/pt/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Análise | AI Budget Assistant">
+<meta name="twitter:description" content="Visualize os seus padrões de gastos com gráficos interativos."><meta name="twitter:image" content="https://ai-budget.pl/help/pt/assets/og-default.png">
+<link rel="alternate" hreflang="en" href="https://ai-budget.pl/help/en/analytics/">
+<link rel="alternate" hreflang="pl" href="https://ai-budget.pl/help/pl/analytics/">
+<link rel="alternate" hreflang="de" href="https://ai-budget.pl/help/de/analytics/">
+<link rel="alternate" hreflang="es" href="https://ai-budget.pl/help/es/analytics/">
+<link rel="alternate" hreflang="fr" href="https://ai-budget.pl/help/fr/analytics/">
+<link rel="alternate" hreflang="ru" href="https://ai-budget.pl/help/ru/analytics/">
+<link rel="alternate" hreflang="uk" href="https://ai-budget.pl/help/ua/analytics/">
+<link rel="alternate" hreflang="be" href="https://ai-budget.pl/help/be/analytics/">
+<link rel="alternate" hreflang="nl" href="https://ai-budget.pl/help/nl/analytics/">
+<link rel="alternate" hreflang="pt-PT" href="https://ai-budget.pl/help/pt/analytics/">
+<link rel="alternate" hreflang="pt-BR" href="https://ai-budget.pl/help/br/analytics/">
+<link rel="alternate" hreflang="x-default" href="https://ai-budget.pl/help/en/analytics/">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MiCode Sp. z o.o.", "alternateName": ["MICODE sp. z o.o.", "MiCode"], "taxID": "5833510147", "founder": {"@id": "https://ai-budget.pl/#author"}, "url": "https://mi-code.pl/", "sameAs": ["https://mi-code.pl/", "https://github.com/micode-ai", "https://www.instagram.com/micode.development/", "https://www.wikidata.org/wiki/Q141551004"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Análise | AI Budget Assistant", "description": "Visualize os seus padrões de gastos com gráficos interativos.", "inLanguage": "pt-PT", "datePublished": "2026-06-19", "dateModified": "2026-11-14", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/pt/analytics/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/pt/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/pt/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Início", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Ajuda", "item": "https://ai-budget.pl/help/pt/"}, {"@type": "ListItem", "position": 3, "name": "Análise | AI Budget Assistant", "item": "https://ai-budget.pl/help/pt/analytics/"}]}]}</script>
+<style>
+:root{--o:#B45309;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
+*{box-sizing:border-box}
+html,body{overflow-x:hidden}
+body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.7}
+.wrap{max-width:760px;margin:0 auto;padding:0 22px}
+header.site{position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);z-index:10}
+header.site .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+.brand{font-weight:800;color:var(--ink);text-decoration:none;font-size:18px}.brand span{color:var(--o)}
+.nav{display:flex;align-items:center;gap:16px}.nav>a{color:var(--mut);font-weight:600;font-size:15px;text-decoration:none}
+.btn-login{color:#fff!important;background:var(--o);padding:8px 14px;border-radius:8px}
+.langmenu{position:relative}.langmenu>summary{list-style:none;cursor:pointer;color:var(--mut);font-weight:600;font-size:15px}
+.langmenu>summary::-webkit-details-marker{display:none}
+.langlist{position:absolute;top:150%;right:0;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,.12);padding:6px;min-width:170px;z-index:20}
+.langlist a{display:block;padding:9px 12px;border-radius:8px;color:#3a3a42;font-size:14px;font-weight:600;text-decoration:none}
+.langlist a:hover{background:#fff3e6}.langlist a.active{color:var(--o)}
+nav.crumb{font-size:13px;color:var(--mut);padding:16px 0}nav.crumb a{color:var(--mut)}
+article h1{font-size:32px;line-height:1.25;margin:8px 0 16px}
+article h2{font-size:23px;margin:34px 0 10px}article h3{font-size:18px;margin:24px 0 8px}
+article p,article li{font-size:17px;color:#27272e}article a{color:var(--o)}article ul{padding-left:22px}
+article .byline{color:var(--mut);font-size:14px;margin:-6px 0 20px}
+article img{display:block;width:100%;max-width:320px;height:auto;margin:20px auto;border-radius:14px;border:1px solid var(--line)}
+hr{border:0;border-top:1px solid var(--line);margin:32px 0}
+.tablewrap{overflow-x:auto;margin:18px 0}
+article table{border-collapse:collapse;width:100%;font-size:15px}
+article th,article td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top}
+article th{background:#faf6f1;font-weight:700}
+article tbody tr:nth-child(even) td{background:#fafafb}
+.cta{margin:36px 0;padding:22px;border:1px solid var(--line);border-radius:14px;background:#fffaf4}
+.cta h3{margin:0 0 6px}.cta p{margin:0 0 14px;color:var(--mut);font-size:15px}
+.btn{display:inline-block;margin:4px 8px 4px 0;padding:11px 18px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px}
+.btn.p{background:var(--o);color:#fff}.btn.s{background:#fff;color:var(--ink);border:1px solid #e3e3e8}
+.related{margin:36px 0}.related h2{font-size:20px}
+.related a{display:block;padding:12px 0;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink);font-weight:600}
+.card{display:block;padding:18px 0;border-bottom:1px solid var(--line);text-decoration:none}
+.card h2{margin:0 0 6px;font-size:21px;color:var(--ink)}.card p{margin:0;color:var(--mut);font-size:15px}
+.cmeta{font-size:13px;color:var(--mut);margin:0 0 4px!important}
+.cfoot{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px!important}
+.ccat{background:#f1f1f4;color:#3a3a42;border-radius:4px;padding:2px 8px;font-size:12px}
+.more{color:var(--o);font-weight:600;font-size:14px}
+.card:hover h2{text-decoration:underline}
+.blogfilter>input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 4px}
+.chip{background:#f1f1f4;color:#3a3a42;border-radius:999px;padding:5px 13px;font-size:13px;cursor:pointer;user-select:none}
+.chip:hover{background:#e4e4ea}
+#bc-all:checked~.chips label[for=bc-all],#bc-budget:checked~.chips label[for=bc-budget],
+#bc-expenses:checked~.chips label[for=bc-expenses],#bc-saving:checked~.chips label[for=bc-saving]{background:var(--o);color:#fff}
+#bc-budget:checked~.cards>.card:not(.cat-budget),
+#bc-expenses:checked~.cards>.card:not(.cat-expenses),
+#bc-saving:checked~.cards>.card:not(.cat-saving){display:none}
+.blogfilter>input:focus-visible~.chips label{outline:2px solid var(--o);outline-offset:2px}
+footer.site{border-top:1px solid var(--line);background:#fafafb;color:#63636b;font-size:14px;text-align:center;margin-top:48px}
+footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-items:center;gap:16px}
+.f-links{display:flex;gap:18px;flex-wrap:wrap;justify-content:center}.f-links a{color:var(--mut);font-weight:600;text-decoration:none}
+.f-co{display:flex;align-items:center;justify-content:center;gap:12px;border-top:1px solid var(--line);padding-top:16px;width:100%}
+.f-co img{height:30px;width:30px}
+.f-badge{display:flex;justify-content:center;align-items:center;gap:16px;flex-wrap:wrap}.f-badge .b-sf{height:34px;width:108px}.f-badge .b-pp{height:34px;width:120px}.f-badge .b-fo{height:34px;width:88px}.f-badge .b-fz{height:34px;width:144px}.f-badge .b-ls{height:34px;width:109px}.f-badge .b-un{height:34px;width:130px}.f-badge .b-tc{height:34px;width:109px}.f-badge .b-swb{height:34px;width:136px}.f-badge .b-lf{height:34px;width:126px}.f-badge .b-as{height:34px;width:130px}
+.cc{position:fixed;left:16px;right:16px;bottom:16px;max-width:560px;margin:0 auto;background:#1a1a1d;color:#fff;border-radius:14px;padding:16px 18px;box-shadow:0 12px 40px rgba(0,0,0,.35);z-index:60;font-size:14px;display:none}
+.cc.show{display:block}.cc p{margin:0 0 12px;line-height:1.5}
+.cc .row{display:flex;gap:10px;justify-content:flex-end}
+.cc button{cursor:pointer;border:0;border-radius:8px;padding:9px 16px;font-weight:700;font-size:14px}
+.cc .ok{background:var(--o);color:#fff}.cc .no{background:#2e2e33;color:#cfcfd6}
+.lang-short{display:none}
+@media(max-width:760px){header.site .wrap{padding:0 16px}.brand{font-size:16px;white-space:nowrap}.nav{gap:10px}.btn-login{padding:8px 12px}}
+@media(max-width:480px){.lang-full{display:none}.lang-short{display:inline}}
+.calc{border:1px solid #e5e5ea;border-radius:12px;padding:16px 18px;margin:20px 0}.calc h3{margin:0 0 10px}.calc label{display:block;margin:10px 0 4px;font-weight:600}.calc input,.calc select{width:100%;max-width:260px;padding:8px;font-size:16px;border-radius:8px;border:1px solid #ccc}.calc output{display:block;font-size:18px;font-weight:700}</style></head><body>
+<header class="site"><div class="wrap"><a class="brand" href="/pt/">AI <span>Budget</span> Assistant</a>
+<nav class="nav"><details class="langmenu"><summary><span class="lang-full">Português (Portugal)</span><span class="lang-short">PT</span> &#9662;</summary><div class="langlist"><a class="" href="https://ai-budget.pl/help/en/analytics/">English</a><a class="" href="https://ai-budget.pl/help/pl/analytics/">Polski</a><a class="" href="https://ai-budget.pl/help/de/analytics/">Deutsch</a><a class="" href="https://ai-budget.pl/help/es/analytics/">Español</a><a class="" href="https://ai-budget.pl/help/fr/analytics/">Français</a><a class="" href="https://ai-budget.pl/help/ru/analytics/">Русский</a><a class="" href="https://ai-budget.pl/help/ua/analytics/">Українська</a><a class="" href="https://ai-budget.pl/help/be/analytics/">Беларуская</a><a class="" href="https://ai-budget.pl/help/nl/analytics/">Nederlands</a><a class="active" href="https://ai-budget.pl/help/pt/analytics/">Português (Portugal)</a><a class="" href="https://ai-budget.pl/help/br/analytics/">Português (Brasil)</a></div></details><a href="/blog/en/">Blog</a><a class="btn-login" href="https://app.ai-budget.pl?src=help&amp;loc=nav&amp;lang=pt-PT">Iniciar sessão</a></nav></div></header>
+<main class="wrap"><nav class="crumb"><a href="/pt/">Início</a> / <a href="/help/pt/">Ajuda</a> / <span>Análise</span></nav><article><h1>Análise</h1>
+<blockquote>
+<p>Visualize os seus padrões de gastos com gráficos interativos. Filtre por período e moeda, explore os detalhes e receba análises com IA para compreender melhor as suas finanças.</p>
+</blockquote>
+<h2>Visão geral</h2>
+<p>O separador <strong>Análise</strong> dá uma visão completa dos seus gastos através de gráficos, análises e exploração de dados. Todos os dados se baseiam nas despesas da conta selecionada.</p>
+<p><img alt="Ecrã Análise com a história dos seus gastos e as receitas por categoria" src="/help/assets/img/analytics.jpg" /></p>
+<h2>Período e filtros</h2>
+<p>No topo do ecrã Análise:</p>
+<ul>
+<li><strong>Seletor de período</strong>: <strong>Semana</strong> | <strong>Mês</strong> | <strong>Ano</strong></li>
+<li><strong>Filtro de moeda</strong>: <strong>Todas</strong> as moedas, ou selecione uma em concreto (USD, EUR, PLN, etc.)</li>
+</ul>
+<p>O período selecionado afeta todos os gráficos e análises abaixo.</p>
+<h2>Cartões de resumo</h2>
+<ul>
+<li><strong>Total gasto</strong> — o total das suas despesas no período selecionado</li>
+<li><strong>face ao período anterior</strong> — «mais do que no período anterior» ou «menos do que no período anterior» (semana/mês/ano), com a percentagem</li>
+<li><strong>face à média de 3 meses</strong> — aparece por baixo da comparação com o período anterior quando tiver pelo menos 1 mês completo de dados anteriores, por exemplo «18% acima da média de 3 meses» (verde = abaixo da média, vermelho = acima da média)</li>
+<li><strong>Média por dia</strong> — gasto médio diário</li>
+</ul>
+<h2>Carrossel de análises com IA</h2>
+<p>Um carrossel com deslocação horizontal de análises geradas por IA (requer o plano Pro):</p>
+<ul>
+<li><strong>Anomalias nos gastos</strong> — gastos invulgares detetados (por exemplo, «mais 78% do que o habitual em Transportes»)</li>
+<li><strong>Previsões do orçamento</strong> — quando se prevê que o orçamento se esgote</li>
+<li><strong>Oportunidades de poupança</strong> — sugestões para reduzir os gastos</li>
+<li><strong>Comparação de categorias</strong> — como os seus gastos se comparam entre categorias</li>
+<li><strong>Mudanças de tendência</strong> — alterações significativas nos padrões de gastos</li>
+</ul>
+<p>Cada cartão de análise tem um nível de gravidade: crítico (vermelho), aviso (amarelo) ou informação (azul).</p>
+<blockquote>
+<p><strong>Nota:</strong> Os utilizadores do plano Free veem um convite para fazer upgrade: «Faça upgrade para Pro para ter análises de IA.»</p>
+</blockquote>
+<h2>Gráficos</h2>
+<h3>Receitas por categoria (gráfico circular)</h3>
+<ul>
+<li>Reparte as suas receitas por categoria no período selecionado</li>
+<li>Só aparece quando tem receitas com categorias (por exemplo, Salário, Trabalho independente, Dividendos, Rendas)</li>
+<li>Usa uma paleta de verdes/azul-petróleo para se distinguir dos gráficos de despesas</li>
+<li>As receitas sem categoria são agrupadas em «Outras»</li>
+<li>Aparece por cima do gráfico de tendência de gastos</li>
+<li>As categorias de receita funcionam da mesma forma: as categorias principais mostram o total das suas subcategorias, e tocar numa delas mostra o seu detalhe.</li>
+</ul>
+<h3>Tendência de gastos (gráfico de barras)</h3>
+<ul>
+<li>Mostra os gastos diários ou mensais ao longo do período selecionado</li>
+<li>Interativo: toque em qualquer barra para ver o detalhe desse intervalo de tempo</li>
+</ul>
+<h3>Gastos por categoria (gráfico circular)</h3>
+<ul>
+<li>Repartição por categoria com percentagens</li>
+<li>Cores por categoria</li>
+<li>Toque numa fatia de uma categoria principal (marcada com ›) para ver as suas subcategorias; tocar numa fatia sem subcategorias apenas a destaca</li>
+<li><strong>As subcategorias somam-se à categoria principal</strong> — o gráfico circular mostra só as categorias de topo, e o montante de uma categoria principal inclui as suas subcategorias. As categorias principais com subcategorias estão marcadas com ›. Toque numa (na fatia ou na sua linha) para redesenhar o gráfico para essa categoria: as suas subcategorias, mais «<Categoria principal> (sem subcategoria)» para os gastos registados diretamente na categoria principal. Toque no caminho «Todas as categorias › <Categoria principal>» para voltar. O detalhe é reposto sempre que os dados da análise são recalculados — uma transação nova ou editada, uma sincronização, uma mudança de idioma, ou uma mudança de período, conta ou moeda. Os gastos numa subcategoria eliminada ficam numa fatia de topo à parte, porque a aplicação não guarda no dispositivo as categorias eliminadas. Os indicadores «face à média» de uma categoria principal usam o montante somado. O mesmo funciona nos cartões de análise da versão web para computador.</li>
+</ul>
+<h3>Orçamento vs. real (gráfico de barras agrupadas)</h3>
+<ul>
+<li>Comparação lado a lado dos limites do orçamento com os gastos reais</li>
+<li>Mostra <strong>Dentro do previsto</strong> ou <strong>Acima do orçamento</strong> para cada categoria</li>
+<li>Só aparece se tiver orçamentos ativos</li>
+</ul>
+<h3>Gastos por dia da semana (gráfico semanal)</h3>
+<ul>
+<li>Análise de padrões que mostra os dias em que gasta mais</li>
+<li>Observação: «O dia em que mais gasta: sábado»</li>
+</ul>
+<h3>Por comerciante</h3>
+<ul>
+<li>Os principais comerciantes onde gastou dinheiro no período selecionado</li>
+<li>Mostra até 8 comerciantes individuais; os restantes são agrupados em «Outros»</li>
+<li>Só aparece quando pelo menos uma despesa tem comerciante preenchido</li>
+</ul>
+<p>Se a mesma loja aparecer com vários nomes, abra <strong>Definições → Comerciantes</strong> para os arrumar: toque em <strong>Selecionar</strong>, marque as variantes e use <strong>Juntar</strong> para as unir num só nome. A aplicação também sugere grupos prováveis (por exemplo, várias entradas <em>Biedronka</em>) que pode juntar com um só toque — para que contem como um único comerciante nestes gráficos.</p>
+<h3>Por membro</h3>
+<ul>
+<li>Quem registou quanto dos gastos no período selecionado.</li>
+<li>Só aparece em contas partilhadas com pelo menos dois membros com gastos.</li>
+</ul>
+<h3>Por etiqueta / Por projeto</h3>
+<ul>
+<li><strong>Distribuição por etiqueta</strong> — gastos agrupados pelas suas etiquetas personalizadas</li>
+<li><strong>Comparação de projetos</strong> — gastos agrupados por projeto</li>
+<li>Ajuda a acompanhar gastos temáticos (por exemplo, todas as despesas com #café ou os custos do projeto «Férias»)</li>
+</ul>
+<h2>Ver em detalhe</h2>
+<p>Toque em qualquer elemento de um gráfico para explorar em mais detalhe:</p>
+<ol>
+<li>Vista <strong>Ano</strong> — toque na barra de um mês para ampliar esse mês</li>
+<li>Vista <strong>Mês</strong> — toque numa semana para ampliar essa semana</li>
+<li>Vista <strong>Semana</strong> — toque num dia para ver as transações desse dia</li>
+<li>Vista <strong>Dia</strong> — veja as transações individuais</li>
+</ol>
+<p>Use o botão <strong>Voltar</strong> para subir de nível.</p>
+<h2>Observações rápidas</h2>
+<p>Por baixo dos gráficos, encontra observações rápidas em texto:</p>
+<ul>
+<li><strong>Categoria principal</strong> — a categoria em que mais gastou neste período</li>
+<li><strong>Dia de maior gasto</strong> — o dia com mais gastos</li>
+<li><strong>Dica de orçamento diário</strong> — gasto diário recomendado para se manter dentro do previsto</li>
+<li><strong>Poupança nos talões</strong> — total poupado com descontos. Toque para ver que lojas lhe deram os maiores descontos e de que talões vieram.</li>
+<li><strong>Depósitos pagos</strong> — total de depósitos de embalagens retornáveis («kaucja»/«Pfand»/«statiegeld») pagos nos talões digitalizados. Toque para ver a mesma repartição por loja/talão. Corresponde ao que pagou na caixa, não a um reembolso — as garrafas e latas devolvidas não são registadas.</li>
+</ul>
+<p>As duas linhas só aparecem quando tiver um desconto ou um depósito registado no período, e apenas se a sua conta não estiver totalmente encriptada (nesse caso a aplicação não consegue ler os valores para os repartir).</p>
+<h2>Artigos mais comprados</h2>
+<p>Uma tabela com os artigos de talão que compra com mais frequência:
+- Nome do artigo
+- Total gasto
+- Número de compras</p>
+<h2>Exportar</h2>
+<p>Toque em <strong>Exportar relatório</strong> para abrir o ecrã <a href="/help/pt/export-reports/">Exportação e relatórios</a>, onde pode gerar relatórios em PDF, Excel e CSV, ver os resumos mensais e gerir as cópias de segurança dos dados.</p>
+<h2>Custos dos filhos</h2>
+<p>Veja quanto lhe custa cada filho, sem adivinhar.</p>
+<ul>
+<li><strong>Adicionar filhos:</strong> Definições &gt; Dados de referência &gt; Filhos. Só são guardados um nome e uma cor. Arquive um filho em vez de o eliminar; as despesas dele continuam atribuídas.</li>
+<li><strong>Atribuir uma despesa inteira:</strong> numa despesa nova ou existente, escolha um ou mais filhos. Com vários filhos, o montante é dividido em partes iguais, a menos que edite as partes. Uma despesa usa a atribuição da despesa inteira ou a atribuição por linha do talão, não as duas; a aplicação pergunta antes de mudar.</li>
+<li><strong>Atribuir linhas do talão:</strong> depois de digitalizar um talão, atribua linhas individuais (fraldas, material escolar) a um filho. A aplicação memoriza a sua escolha e sugere-a da próxima vez. Uma sugestão nunca é aplicada sem a sua confirmação. «Extrair artigos» mantém a atribuição dos produtos que continuam no talão e indica quantos não conseguiu transferir.</li>
+<li><strong>Em massa:</strong> selecione várias despesas e escolha Atribuir a filho. As despesas com atribuição por linha são ignoradas e a contagem é mostrada.</li>
+<li><strong>Totais:</strong> o ecrã do filho (e um cartão no separador Análise) mostra este mês, este ano e uma repartição por categoria na sua moeda de apresentação. Um total marcado com ≈ inclui uma aproximação porque faltava uma taxa de câmbio; esses montantes são deixados de fora em vez de serem adivinhados. As despesas planeadas e os valores a receber de contas divididas não são contados.</li>
+<li><strong>800+ e cobertura:</strong> quando uma receita parece ser o subsídio 800+ (por exemplo, «800+» ou «rodzina 800» na descrição), a aplicação propõe marcá-la para um filho. A cobertura é o subsídio recebido dividido pelo que esse filho custou no mesmo período.</li>
+<li><strong>Cartão para partilhar:</strong> crie uma imagem com os totais de um filho. O nome do filho fica oculto por predefinição; pode ativá-lo.</li>
+<li><strong>Extrato em PDF (Pro, editores):</strong> um «zestawienie» dos custos de um filho num período de até 24 meses, com totais, repartição mensal e por categoria, a lista de despesas e os talões. Cada página tem um rodapé a indicar que foi preparada na aplicação a partir de dados introduzidos pelo utilizador, e o momento a que os dados se referem. É um resumo dos seus próprios registos, não um documento legal nem certificado. Contém apenas o que já chegou ao servidor, por isso a aplicação sincroniza primeiro e pede-lhe que aguarde se ainda houver algo pendente. Não está disponível em contas com encriptação ponto a ponto.</li>
+<li><strong>Pais separados:</strong> mantenha os filhos numa conta pessoal, para que o outro progenitor não veja os seus restantes gastos. Uma conta partilhada mostra tudo a todos os membros.</li>
+</ul>
+<h2>Perguntas frequentes</h2>
+<ul>
+<li>
+<p><strong>P: Porque é que não vejo nenhum gráfico?</strong>
+  <strong>R:</strong> Os gráficos aparecem depois de ter dados de despesas. Adicione primeiro algumas despesas e depois consulte a Análise.</p>
+</li>
+<li>
+<p><strong>P: Como são geradas as análises com IA?</strong>
+  <strong>R:</strong> As análises são geradas a partir dos seus padrões de gastos, comparando-os com dados históricos e identificando anomalias. Requer uma subscrição Pro ou Business.</p>
+</li>
+</ul>
+<hr />
+<p><em>Ver também: <a href="/help/pt/budgets/">Orçamentos</a> | <a href="/help/pt/spending-story/">História dos gastos</a> | <a href="/help/pt/export-reports/">Exportação e relatórios</a></em></p></article><aside class="cta"><h3>Controle o seu dinheiro com IA</h3><p>Registe despesas por voz ou com uma fotografia do talão, acompanhe orçamentos e poupanças, em família. Comece grátis.</p><a class="btn p" href="https://app.ai-budget.pl?src=help&amp;loc=cta&amp;lang=pt-PT">Abrir a aplicação</a><a class="btn s" href="https://play.google.com/store/apps/details?id=com.budget.assistant&amp;referrer=src%3Dhelp%26loc%3Dcta%26lang%3Dpt-PT%26utm_source%3Dhelp%26utm_medium%3Dcta">Disponível no Google Play</a></aside><section class="related"><h2>Mais tópicos de ajuda</h2><a href="/help/pt/getting-started/">Primeiros passos</a><a href="/help/pt/dashboard/">Painel</a><a href="/help/pt/expenses-and-income/">Despesas e receitas</a><a href="/help/pt/voice-and-receipt/">Entrada por voz e digitalização de talões</a><a href="/help/pt/budgets/">Orçamentos</a><a href="/help/pt/ai-chat/">Chat IA</a><a href="/help/pt/spending-story/">História dos gastos</a><a href="/help/pt/accounts/">Contas</a><a href="/help/pt/wallet-and-exchange/">Carteira e câmbio</a><a href="/help/pt/settings/">Definições</a><a href="/help/pt/subscription/">Planos de subscrição</a><a href="/help/pt/gamification/">Conquistas e gamificação</a><a href="/help/pt/investments/">Carteira de investimentos</a><a href="/help/pt/encryption/">Encriptação ponto a ponto</a><a href="/help/pt/export-reports/">Exportação e relatórios</a><a href="/help/pt/debts-and-loans/">Dívidas e empréstimos</a><a href="/help/pt/savings-goals/">Objetivos de poupança</a><a href="/help/pt/fat-finder/">Fat Finder (auditoria de despesas)</a><a href="/help/pt/ai-response-mode/">Modo de resposta da IA</a><a href="/help/pt/widgets/">Widgets do ecrã principal</a><a href="/help/pt/chat-bots/">Bots de chat — Telegram, WhatsApp e Slack</a><a href="/help/pt/scenario-simulator/">Simulador de cenários</a><a href="/help/pt/referral/">Convidar amigos — Programa de recomendação</a><a href="/help/pt/bank-import/">Importar transações do seu banco</a><a href="/help/pt/reference-data/">Dados de referência</a><a href="/help/pt/subscription-manager/">Gestor de subscrições</a><a href="/help/pt/web-app/">Aplicação web</a><a href="/help/pt/anomaly-alerts/">Alertas: atividade invulgar</a><a href="/help/pt/safe-to-spend/">Planear com antecedência — Seguro para gastar, capacidade de compra e captura automática</a><a href="/help/pt/purchase-requests/">Pedidos de compra</a><a href="/help/pt/family-feed/">Feed da família</a><a href="/help/pt/group-trip-wallet/">Carteira de viagem em grupo</a><a href="/help/pt/personal-inflation-index/">Índice de inflação pessoal</a><a href="/help/pt/expense-map/">Mapa de despesas</a><a href="/help/pt/shopping-list/">Lista de compras inteligente</a><a href="/help/pt/wrapped/">Financial Wrapped — o seu ano em dinheiro</a><a href="/help/pt/inflation-shield/">Escudo contra a inflação — abasteça-se antes de os preços subirem</a><a href="/help/pt/receipt-price-check/">Verificação de preços no talão — isto custa mais do que costuma pagar?</a><a href="/help/pt/receipt-split/">Dividir o talão — receber dos amigos, sem precisarem da aplicação</a><a href="/help/pt/real-salary/">Salário real — o seu aumento acompanha os seus próprios preços?</a><a href="/help/pt/shared-groups/">Grupos partilhados — dividir despesas contínuas com amigos, sem que eles precisem da aplicação</a><a href="/help/pt/connected-apps/">Aplicações ligadas e programadores</a></section></main><footer class="site"><div class="wrap"><div class="f-links"><a href="/blog/en/">Blog</a><a href="/help/pt/">Ajuda</a><a href="/pt/about/">Sobre nós</a><a href="/pt/developers/">API para programadores</a><a href="/en/privacy/">Privacidade</a><a href="/en/terms/">Termos</a><a href="/en/cookies/">Cookies</a><a href="https://app.ai-budget.pl?src=help&amp;loc=footer&amp;lang=pt-PT">Iniciar sessão</a><a href="https://play.google.com/store/apps/details?id=com.budget.assistant&amp;referrer=src%3Dhelp%26loc%3Dfooter%26lang%3Dpt-PT%26utm_source%3Dhelp%26utm_medium%3Dfooter">Google Play</a></div><div class="f-badge"><a href="https://startupfa.me/s/ai-budget?utm_source=ai-budget.pl" target="_blank" rel="nofollow noopener"><img class="b-sf" src="/assets/startup-fame-badge.webp" alt="AI Budget - Featured on Startup Fame" width="108" height="34" loading="lazy"></a><a href="https://peerpush.com/p/ai-budget-assistant" target="_blank" rel="nofollow noopener"><img class="b-pp" src="https://peerpush.com/p/ai-budget-assistant/badge.png" alt="AI Budget Assistant on PeerPush" width="120" height="34" loading="lazy"></a><a href="https://bestaibrands.com/ai-budget-assistant" target="_blank" rel="nofollow noopener" style="text-decoration:none;"><div style="display:inline-flex;flex-direction:column;align-items:center;background:#fff;border:1px solid #eee;border-radius:12px;padding:8px 32px;height:54px;justify-content:center;font-family:sans-serif;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);"><div style="font-size:8px;color:#999;font-weight:bold;text-transform:uppercase;letter-spacing:0.2em;line-height:1;margin-bottom:4px;white-space:nowrap;">Featured On</div><div style="font-size:14px;font-weight:bold;color:#000;letter-spacing:-0.01em;line-height:1;white-space:nowrap;">bestaibrands.com</div></div></a><a href="https://firsto.co/projects/ai-budget-assistant" target="_blank" rel="nofollow noopener"><img class="b-fo" src="https://firsto.co/images/badges/find-us-on-firsto.svg" alt="AI Budget Assistant | Firsto Launch" width="88" height="34" loading="lazy"></a><a href="https://liftoapp.com/product/ai-budget-assistant" target="_blank" rel="nofollow noopener"><img class="b-lf" src="https://liftoapp.com/badges/featured-dark.svg" alt="AI Budget Assistant - Featured on Lifto" width="126" height="34" loading="lazy"></a></div><div class="f-badge"><a href="https://fazier.com/launches/ai-budget.pl" target="_blank" rel="nofollow noopener"><img class="b-fz" src="https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=featured&amp;theme=light" alt="AI Budget Assistant on Fazier" width="144" height="34" loading="lazy"></a><a href="https://launchstag.com/p/tool-1789044587266" target="_blank" rel="nofollow noopener"><img class="b-ls" src="https://launchstag.com/badge-light.svg" alt="AI Budget Assistant - Featured on Launchstag" width="109" height="34" loading="lazy"></a><a href="https://www.uneed.best/tool/ai-budget-assistant" target="_blank" rel="nofollow noopener"><img class="b-un" src="https://www.uneed.best/EMBED3B.png" alt="AI Budget Assistant - Launching Soon on Uneed" width="130" height="34" loading="lazy"></a><a href="https://tools.cafe/p/tool-1789322958894" target="_blank" rel="nofollow noopener"><img class="b-tc" src="https://tools.cafe/b/light.svg" alt="AI Budget Assistant - Featured on tools.cafe" width="109" height="34" loading="lazy"></a><a href="https://sellwithboost.com" target="_blank" rel="nofollow noopener"><img class="b-swb" src="https://sellwithboost.com/badge/listing.svg" alt="AI Budget Assistant - Listed on Sell With Boost" width="136" height="34" loading="lazy"></a><a href="https://alphashot.com/products/ai-budget-assistant?utm_source=alphashot&amp;utm_medium=badge&amp;utm_campaign=embed" target="_blank" rel="nofollow noopener"><img class="b-as" src="https://alphashot.com/badge/ai-budget-assistant.svg" alt="AI Budget Assistant - Featured on AlphaShot" width="130" height="34" loading="lazy"></a></div><div class="f-co"><a href="https://mi-code.pl/" target="_blank" rel="noopener"><img src="/assets/mi_code_logo.svg" alt="MiCode Sp. z o.o." width="30" height="30"></a><span>&copy; 2026 AI Budget Assistant &mdash; <a href="https://mi-code.pl/" target="_blank" rel="noopener" style="color:inherit">MiCode Sp. z o.o.</a>. Todos os direitos reservados.</span></div></div></footer>
+<div class="cc" id="cc"><p>Utilizamos cookies para medir o tráfego e melhorar o site. <a href="/en/cookies/" style="color:#F58320;text-decoration:underline">Saber mais</a></p><div class="row"><button class="no" id="cc-no">Recusar</button><button class="ok" id="cc-ok">Aceitar</button></div></div>
+<script>(function(){var ID="G-WMEFHYETVX",K="cc-consent";function L(){var s=document.createElement("script");s.async=1;s.src="https://www.googletagmanager.com/gtag/js?id="+ID;document.head.appendChild(s);window.dataLayer=window.dataLayer||[];function g(){dataLayer.push(arguments);}window.gtag=g;g("js",new Date());g("config",ID);}var v=localStorage.getItem(K),b=document.getElementById("cc");if(v==="granted"){L();}else if(!v&&b){b.classList.add("show");document.getElementById("cc-ok").onclick=function(){localStorage.setItem(K,"granted");b.classList.remove("show");L();};document.getElementById("cc-no").onclick=function(){localStorage.setItem(K,"denied");b.classList.remove("show");};}})();</script></body></html>

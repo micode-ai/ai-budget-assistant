@@ -73,6 +73,14 @@ describe('MoneyManagerParser', () => {
       expect(rows[0].date).toBe('2024-02-25');
     });
 
+    it('reads BRL from the currency column', () => {
+      const text = [
+        'Date,Account,Category,Subcategory,Note,Amount,Income/Expense,Description,Currency,Account Type',
+        '2024-02-01,Cash,Food,,Padaria,25.90,Expense,,BRL,Cash',
+      ].join('\n');
+      expect(parser.parse(text).rows.map((r) => r.currencyCode)).toEqual(['BRL']);
+    });
+
     it('reports the detected headers', () => {
       const { detectedHeaders } = parser.parse(fixture);
       expect(detectedHeaders).toEqual(headers);

@@ -72,7 +72,7 @@ describe('ActivationNudgeCron', () => {
 
 describe('activation nudge copy', () => {
   it('exists in every language and never falls back to English for a translated one', () => {
-    const langs = ['en', 'ru', 'ua', 'pl', 'es', 'fr', 'de', 'be', 'nl'] as const;
+    const langs = ['en', 'ru', 'ua', 'pl', 'es', 'fr', 'de', 'be', 'nl', 'pt', 'br'] as const;
     for (const l of langs) {
       expect(ni18n.activationNudgeTitle(l)).toBeTruthy();
       expect(ni18n.activationNudgeBody(l)).toBeTruthy();

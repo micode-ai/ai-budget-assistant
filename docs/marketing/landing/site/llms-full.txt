@@ -3450,7 +3450,7 @@ URL: https://ai-budget.pl/help/en/getting-started/
 4. Create a **Password** (minimum 8 characters, must include an uppercase letter A-Z, a lowercase letter a-z, and a number 0-9)
 5. Confirm your password
 6. Select your preferred **Currency** (USD, EUR, PLN, GBP, UAH, RUB, or BYN)
-7. Select your preferred **Language** (English, Deutsch, Espanol, Francais, Polski, Русский, Українська, or Беларуская)
+7. Select your preferred **Language** (English, Deutsch, Espanol, Francais, Polski, Русский, Українська, Беларуская, Nederlands, Português (Portugal) or Português (Brasil))
 8. Tap **Create Account**
 9. Check your email for a **6-digit verification code**
 10. Enter the code in the app and tap **Verify**
@@ -4056,6 +4056,23 @@ Caught up on a week of paper receipts? After you save one, the confirmation prom
 
 While you're scanning, a small counter shows how many receipts you've saved this session. Every 15 receipts, the app checks in with a friendly reminder that you can keep going or take a break — your progress is already saved either way. The counter resets once you leave the screen; it's just there to give you a sense of progress during one sitting.
 
+### Long Receipt in Several Photos
+
+A receipt too long for one readable photo can be photographed in pieces and read as **one** receipt.
+
+**In the app**
+
+1. On the receipt screen tap **Long receipt? Photograph it in parts**
+2. Photograph the receipt from top to bottom, with a small overlap between photos (the last line of one photo should be visible again at the top of the next) — you can add up to **4 parts**
+3. Tap **Read receipt**. You get one confirmation card with every line once; the overlapping lines are not counted twice
+4. If the line totals don't match the receipt total, the app warns you and offers **Retake parts** instead of saving
+
+Each part counts as one receipt scan against your monthly AI limit, so a three-part receipt uses three scans. A PDF cannot be combined with photos. The expense keeps all its photos: open the receipt on the expense and tap a part to view it.
+
+**In the Telegram, WhatsApp and Slack bots**
+
+Send the photos one after another. The first photo is read at once. While its confirmation card is still open, send the next photo — the bot asks whether it is a **Continuation** or a **New receipt**. Choose **Continuation** and the card is rebuilt from all the photos together (corrections you typed on the old card are not kept, so check the new one). Photos must be JPEG, PNG or WebP and not too large; the bot tells you if one is refused.
+
 ### Already-Scanned Receipts
 
 The app warns you before a receipt ends up in your expenses twice:
@@ -4063,8 +4080,9 @@ The app warns you before a receipt ends up in your expenses twice:
 - **The same file again** — if you pick a photo or PDF that was already scanned and saved, you are asked *before* it is read, so no AI request is spent. Choose **Open** to see the saved expense, **Scan anyway** to read it again, or **Cancel**.
 - **The same receipt, new photo** — after reading, if an expense with the same store, amount and date (±1 day) already exists, the confirmation screen shows a yellow notice with an **Open** button. You can still save: it may be a genuine second purchase.
 - **Already recorded by your bank** — if the matching expense came from a bank notification or a bank statement import, the notice says so and offers **Merge into one expense**. With it ticked, saving keeps the receipt (its items, photo and category) and replaces the bank entry, so the purchase is counted once. The box starts unticked when only the amount and date matched — check before merging.
+- **Already added by hand** — if you entered this purchase yourself earlier — typed, by voice or as a message to the bot (say, „Netto”, while the receipt prints „Netto nr 541”), the notice says so and offers the same **Merge into one expense**. This box starts unticked, because a hand-entered expense can be a separate purchase — tick it if it is the same one. The receipt replaces your entry; your notes, tags and project carry over. If you leave it, the pair also shows up later in alerts with a merge button.
 
-The Telegram, WhatsApp and Slack bots give the same warnings, with a **Scan anyway** button.
+The Telegram, WhatsApp and Slack bots give the same warnings, with a **Scan anyway** button. When the match is your own entry or the bank's copy, pressing **Add expense** asks whether to merge: **Merge** keeps the receipt and folds the other entry into it, **Keep both** saves the receipt separately.
 
 ### Sharing from Another App (Android)
 
@@ -4470,6 +4488,20 @@ A table showing your most frequently purchased receipt items:
 ## Export
 
 Tap **Export Report** to open the [Export & Reports](./16-export-reports.md) screen where you can generate PDF, Excel, and CSV reports, view monthly digests, and manage data backups.
+
+## Child costs
+
+See what each child costs you, without any guessing.
+
+- **Add children:** Settings > Reference data > Children. Only a name and a colour are stored. Archive a child instead of deleting; their expenses stay attributed.
+- **Attribute a whole expense:** on a new or existing expense choose one or more children. With several children the amount is split equally unless you edit the shares. An expense uses whole-expense attribution or receipt-line attribution, not both; the app asks before switching.
+- **Attribute receipt lines:** after scanning a receipt, assign individual lines (diapers, school supplies) to a child. The app remembers your choice and suggests it next time. A suggestion is never applied without you. "Extract items" keeps the attribution of products that are still on the receipt and tells you how many it could not carry over.
+- **Bulk:** select several expenses and choose Assign to child. Expenses with line attribution are skipped and the count is shown.
+- **Totals:** the child screen (and a card on the Analytics tab) shows this month, this year and a category breakdown in your display currency. A total marked with ≈ includes an approximation because an exchange rate was missing; such amounts are left out rather than guessed. Planned expenses and split-bill receivables are not counted.
+- **800+ and coverage:** when an income looks like the 800+ benefit (for example "800+" or "rodzina 800" in the description) the app offers to mark it for a child. Coverage is the benefit received divided by what that child cost in the same period.
+- **Share card:** create a picture of a child's totals. The child's name is hidden by default; you can switch it on.
+- **Statement PDF (Pro, editors):** a "zestawienie" of a child's costs for a period of up to 24 months, with totals, a monthly and category breakdown, the list of expenses and the receipts. Every page carries a footer saying it was prepared in the app from data entered by the user, and the "data as of" time. It is a summary of your own records, not a legal document and not certified. It contains only what has reached the server, so the app syncs first and asks you to wait if something is still pending. It is not available on accounts with end-to-end encryption.
+- **Separated parents:** keep the children on a personal account, so the other parent does not see your other spending. A shared account shows everything to all members.
 
 ## FAQ
 
@@ -5293,7 +5325,7 @@ Your email is updated immediately and new login tokens are issued. If you close 
 
 ### Language
 
-Choose from 9 supported languages:
+Choose from 11 supported languages:
 
 | Code | Language |
 |---|---|
@@ -5306,6 +5338,8 @@ Choose from 9 supported languages:
 | DE | Deutsch |
 | BY | Беларуская |
 | NL | Nederlands |
+| PT | Português (Portugal) |
+| BR | Português (Brasil) |
 
 Tap a language chip to switch. The interface updates immediately.
 
@@ -7960,6 +7994,21 @@ You also get a push notification when something is due for restocking. A given i
 The app compares the price you've recently paid for a tracked product against its average price over the last 90 days. If a store's latest price for a product is meaningfully below that average, it shows up as a chip in the **Deals for you** row, with the store name and the discount percentage. Tap a chip to add the item to your list.
 
 Deals are also delivered as a push notification when a genuine drop is detected, so you don't have to open the app to catch a good price — but the same price drop won't be pushed more than once a week, so you're not nudged about it repeatedly.
+
+## Check a Promo Leaflet
+
+Got a store's promo leaflet as photos or a PDF? The app can tell you which of the products **you actually buy** are in it, and compare the promo price with what you usually pay.
+
+- **From the shopping list**, tap **Check a leaflet** and pick screenshots of the leaflet (on the web, drop them or a PDF onto the page).
+- **From another app (Android)**, share the screenshots or the PDF to AI Budget and choose **Promo leaflet** in the question that appears.
+
+The app reads the leaflet and shows only the promos on products from your own purchases and shopping list, each with the promo price and — when you have bought the product before in the same currency — what you usually pay, as *usually X → Y*. Products you do not buy are never shown, and the leaflet itself is not kept: only the extracted prices are stored. Prices are shown *according to a leaflet — check in store* — the shop may differ. Tap **Add to list** on an item to put it on your shopping list.
+
+**Your leaflets.** The leaflet screen keeps a list of your leaflets that are still running: the shop, until when, and how many of your products are in each. Tap one to see its products again and add them to your list (if the photo picker opens first, just close it).
+
+**How many pages you can read.** Leaflet pages have their own monthly allowance, separate from your AI requests: 20 pages on Free, 200 on Pro and 500 on Business. One share reads up to 10 pages (a PDF up to about 7 MB — for a larger one, share screenshots of the pages instead). Anything beyond that is skipped and the screen tells you how many pages were left out.
+
+**Community promos (optional).** If you share anonymous prices (Settings → Data → **Share anonymous prices**), the promo prices from leaflets you read are shared the same way — only the shop, the product, the price and the dates, never your name, your account or the leaflet image. Once community promos are switched on in the app and several shoppers confirm the same promo, other people who buy at that shop and usually buy that product get at most one notification a day, saying until when the promo runs — and only once it has started. Tapping it opens your leaflets. Turn it off in Settings → Notifications → **Leaflet promos on your usual products**.
 
 ## Managing Notifications
 

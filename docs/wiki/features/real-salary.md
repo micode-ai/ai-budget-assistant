@@ -26,7 +26,7 @@ the one-page PDF "brief" download (`POST /insights/real-salary/brief`) is Pro-ga
   `official_inflation_rates`; `apps/api/src/modules/insights/real-salary/eurostat.client.ts` —
   `EurostatClient.fetchLatest`/`parseJsonStat` (JSON-stat 2.0)
 - `apps/api/src/modules/insights/real-salary/coicop.ts` — `DIVISIONS`, `isDivision`,
-  `divisionForSeedIcon`, `countryFromTimezone`, `isEurostatCountry`, `divisionLabel` (9 languages)
+  `divisionForSeedIcon`, `countryFromTimezone`, `isEurostatCountry`, `divisionLabel` (11 languages)
 - `apps/api/src/modules/insights/real-salary/coicop-classifier.service.ts` —
   `CoicopClassifierService.ensureClassified`
 - `apps/api/src/modules/insights/real-salary/real-salary.validation.ts` — `validateSalaryProfile`,
@@ -242,7 +242,7 @@ with data already present never re-fetches.
 **The brief PDF (`RealSalaryBriefPdf.render`) uses no LLM** — every number is read straight off the
 already-computed `RealSalaryResponse` — and refuses to render a response whose `status !== 'ready'`
 (the controller turns that rejection into `409` with `{ message, status }` before any PDF work
-starts). All 9 app languages render through the one `Inter`/`Inter-Bold` font pair already
+starts). All 11 app languages render through the one `Inter`/`Inter-Bold` font pair already
 registered for reports (`pdf-generator.ts`'s `FONT_REGULAR`/`FONT_BOLD`) — Cyrillic and Polish
 glyph coverage was checked by eye; the covering test only asserts a valid `%PDF-` header and a
 plausible byte length, not glyph rendering.

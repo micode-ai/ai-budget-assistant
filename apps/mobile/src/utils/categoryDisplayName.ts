@@ -1,6 +1,6 @@
 import i18next from 'i18next';
 import type { TFunction } from 'i18next';
-import { catalogKeyForName, catalogName } from '@budget/shared-utils';
+import { catalogKeyForName, catalogName, resolveAppLocale } from '@budget/shared-utils';
 
 /**
  * The fields the display rule reads. Structural on purpose: callers pass full
@@ -14,15 +14,20 @@ export interface DisplayableCategory {
   isSystem?: boolean | null;
 }
 
+const APP_LOCALES = ['en', 'de', 'es', 'fr', 'pl', 'ru', 'ua', 'be', 'nl', 'pt', 'br'];
+
 /**
- * The catalog locale for an i18next language code. The app's Ukrainian code is
- * `ua` (ISO `uk` is mapped to it in `i18n/index.ts`); a region suffix is
- * dropped; anything the catalog does not know reads as English inside
- * `catalogName` itself.
+ * The catalog locale for a language code or tag. The app's Ukrainian code is
+ * `ua` (ISO `uk` maps to it) and Portuguese is `pt` / `br`. An input that is
+ * already an app code is returned as is (the stored `i18next.language`, so `pt`
+ * stays European); an external tag goes through `resolveAppLocale` (`pt-BR` is
+ * `br`). Other region suffixes are dropped; anything the catalog does
+ * not know reads as English inside `catalogName` itself.
  */
 export function catalogLocale(language: string | null | undefined): string {
-  const base = (language || 'en').toLowerCase().split(/[-_]/)[0];
-  return base === 'uk' ? 'ua' : base;
+  const tag = language || 'en';
+  if (APP_LOCALES.includes(tag.toLowerCase())) return tag.toLowerCase();
+  return resolveAppLocale(tag, APP_LOCALES) ?? tag.toLowerCase().split(/[-_]/)[0];
 }
 
 /**

@@ -22,6 +22,7 @@
 export const SUPPORTED_CURRENCIES = new Set<string>([
   'USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN',
   'CZK', 'SEK', 'NOK', 'DKK', 'HUF', 'RON', 'CHF',
+  'BRL',
 ]);
 
 // ---------------------------------------------------------------------------
@@ -61,6 +62,8 @@ export const SYMBOL_TO_ISO: Record<string, string> = {
   'lei': 'RON',
   'LEI': 'RON',
   'CHF': 'CHF',
+  'R$': 'BRL',
+  'BRL': 'BRL',
   // No unsupported currency is mapped here — this map is symbol → ISO for
   // currencies the app can actually store. See DETECTABLE_UNSUPPORTED below for
   // the ones we recognise only in order to say why we are skipping them.

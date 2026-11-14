@@ -4,6 +4,7 @@ import * as nodemailer from 'nodemailer';
 import type { Transporter } from 'nodemailer';
 import { APP_CONNECTED_LANGS, appConnectedCopy } from './app-connected-email-i18n';
 import { onboardingEmailCopy } from './onboarding-email-i18n';
+import { toIntlLocale } from '../../common/utils/app-locale';
 
 @Injectable()
 export class MailService {
@@ -387,7 +388,7 @@ export class MailService {
 
   /**
    * "An app was connected to your account" (Public API, spec §9). Localized by the recipient's
-   * `user.language` (nine app languages, English fallback). `appName` comes from a third-party
+   * `user.language` (eleven app languages, English fallback). `appName` comes from a third-party
    * developer, so every interpolated value is HTML-escaped.
    */
   async sendAppConnectedEmail(params: {
@@ -402,9 +403,9 @@ export class MailService {
     const [open, close] = copy.quote;
     const quoted = params.accountNames.map((n) => `${open}${escapeHtml(n)}${close}`);
     // The Intl locale follows the copy actually selected: an unknown code (or `xx`) must not fall
-    // through to the host default, and the app's `ua` is `uk` in BCP-47.
+    // through to the host default, and app codes are not BCP-47 (`ua` is `uk`, `br` is `pt-BR`).
     const known = params.lang && APP_CONNECTED_LANGS.includes(params.lang) ? params.lang : 'en';
-    const accounts = new Intl.ListFormat(known === 'ua' ? 'uk' : known, { type: 'conjunction' }).format(quoted);
+    const accounts = new Intl.ListFormat(toIntlLocale(known), { type: 'conjunction' }).format(quoted);
     const esc = {
       appName: escapeHtml(params.appName),
       accounts,

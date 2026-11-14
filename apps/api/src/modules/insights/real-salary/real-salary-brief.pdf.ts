@@ -4,7 +4,7 @@ import type { RealSalaryResponse } from '@budget/shared-types';
 import { FONT_BOLD, FONT_REGULAR } from '../../reports/generators/pdf-generator';
 import { divisionLabel } from './coicop';
 
-export const BRIEF_LANGS: readonly string[] = ['en', 'pl', 'de', 'es', 'fr', 'ru', 'ua', 'be', 'nl'];
+export const BRIEF_LANGS: readonly string[] = ['en', 'pl', 'de', 'es', 'fr', 'ru', 'ua', 'be', 'nl', 'pt', 'br'];
 
 interface BriefLabels {
   title: string;
@@ -108,6 +108,24 @@ const L: Record<string, BriefLabels> = {
     sources: (c, m) => `Bronnen: mijn uitgaven in de app; Eurostat HICP${c ? ` voor ${c}` : ''}${m ? `, ${m}` : ''}; mijn gescande bonnen.`,
     sourcesReceiptsOnly: 'Bronnen: alleen mijn uitgaven in de app en mijn gescande bonnen — geen officiële cijfers voor mijn land.',
     disclaimer: 'Een schatting op basis van mijn uitgaven en openbare prijsstatistieken — geen financieel advies.',
+  },
+  pt: {
+    title: 'O meu salário real', subtitle: (m) => `Inflação pessoal face ao salário${m ? ` · dados ${m}` : ''}`,
+    pay: 'Variação do salário, 12 meses', inflation: 'A minha inflação', real: 'Variação real do salário',
+    required: 'Aumento necessário para acompanhar', byCategory: 'Onde os preços subiram para mim', share: 'Peso nos meus gastos',
+    rate: 'Variação de preços', receipts: 'os meus talões', official: 'dados oficiais', drivers: 'Maiores causas',
+    sources: (c, m) => `Fontes: os meus gastos na aplicação; IHPC do Eurostat${c ? ` para ${c}` : ''}${m ? `, ${m}` : ''}; os meus talões digitalizados.`,
+    sourcesReceiptsOnly: 'Fontes: apenas os meus gastos na aplicação e os meus talões digitalizados — sem dados oficiais para o meu país.',
+    disclaimer: 'Uma estimativa a partir dos meus gastos e de estatísticas públicas de preços — não é aconselhamento financeiro.',
+  },
+  br: {
+    title: 'Meu salário real', subtitle: (m) => `Inflação pessoal x salário${m ? ` · dados ${m}` : ''}`,
+    pay: 'Variação do salário, 12 meses', inflation: 'Minha inflação', real: 'Variação real do salário',
+    required: 'Aumento necessário para acompanhar', byCategory: 'Onde os preços subiram para mim', share: 'Peso nos meus gastos',
+    rate: 'Variação de preços', receipts: 'meus recibos', official: 'dados oficiais', drivers: 'Maiores causas',
+    sources: (c, m) => `Fontes: meus gastos no app; IHPC do Eurostat${c ? ` para ${c}` : ''}${m ? `, ${m}` : ''}; meus recibos escaneados.`,
+    sourcesReceiptsOnly: 'Fontes: apenas meus gastos no app e meus recibos escaneados — sem dados oficiais para o meu país.',
+    disclaimer: 'Uma estimativa com base nos meus gastos e em estatísticas públicas de preços — não é consultoria financeira.',
   },
 };
 

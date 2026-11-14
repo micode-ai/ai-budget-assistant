@@ -3445,7 +3445,7 @@ URL: https://ai-budget.pl/help/fr/getting-started/
 4. Creez un **Mot de passe** (minimum 8 caracteres, doit inclure une lettre majuscule A-Z, une lettre minuscule a-z et un chiffre 0-9)
 5. Confirmez votre mot de passe
 6. Selectionnez votre **Devise** preferee (USD, EUR, PLN, GBP, UAH, RUB ou BYN)
-7. Selectionnez votre **Langue** preferee (English, Deutsch, Espanol, Francais, Polski, Pyccкий, Yкpaїнcькa ou Беларуская)
+7. Selectionnez votre **Langue** preferee (English, Deutsch, Espanol, Francais, Polski, Pyccкий, Yкpaїнcькa, Беларуская, Nederlands, Português (Portugal) ou Português (Brasil))
 8. Appuyez sur **Creer un compte**
 9. Vérifiez votre e-mail pour un **code de vérification à 6 chiffres**
 10. Entrez le code dans l'application et appuyez sur **Vérifier**
@@ -4051,6 +4051,23 @@ Vous avez accumulé une semaine de reçus papier ? Après en avoir enregistré u
 
 Pendant que vous scannez, un petit compteur indique combien de reçus vous avez enregistrés dans cette session. Tous les 15 reçus, l'application vous rappelle amicalement que vous pouvez continuer ou faire une pause — votre progression est déjà enregistrée dans tous les cas. Le compteur se réinitialise dès que vous quittez l'écran ; il sert uniquement à donner un sentiment de progression pendant une session.
 
+### Reçu long en plusieurs photos
+
+Un reçu trop long pour une seule photo lisible peut être photographié en plusieurs morceaux et lu comme **un seul** reçu.
+
+**Dans l'application**
+
+1. Sur l'écran du reçu, touchez **Reçu long ? Photographiez-le en plusieurs parties**
+2. Photographiez le reçu de haut en bas avec un petit chevauchement entre les photos (la dernière ligne d'une photo doit réapparaître en haut de la suivante) ; vous pouvez ajouter jusqu'à **4 parties**
+3. Touchez **Lire le reçu**. Vous obtenez une seule carte de confirmation où chaque ligne apparaît une fois ; les lignes du chevauchement ne sont pas comptées deux fois
+4. Si la somme des lignes ne correspond pas au total du reçu, l'application vous prévient et propose **Reprendre les parties** au lieu d'enregistrer
+
+Chaque partie compte comme un scan de reçu dans votre limite mensuelle d'IA : un reçu en trois parties utilise donc trois scans. Un PDF ne peut pas être combiné avec des photos. La dépense conserve toutes les photos : ouvrez le reçu sur la dépense et touchez une partie pour la voir.
+
+**Dans les bots Telegram, WhatsApp et Slack**
+
+Envoyez les photos l'une après l'autre. La première photo est lue tout de suite. Tant que sa carte de confirmation est ouverte, envoyez la photo suivante : le bot demande s'il s'agit d'une **Suite** ou d'un **Nouveau reçu**. Choisissez **Suite** et la carte est reconstruite à partir de toutes les photos ensemble (les corrections saisies sur l'ancienne carte ne sont pas conservées, vérifiez donc la nouvelle). Les photos doivent être en JPEG, PNG ou WebP et pas trop lourdes ; le bot vous le dit s'il en refuse une.
+
 ### Reçus déjà scannés
 
 L'application vous prévient avant qu'un reçu n'apparaisse deux fois dans vos dépenses :
@@ -4058,8 +4075,9 @@ L'application vous prévient avant qu'un reçu n'apparaisse deux fois dans vos d
 - **Le même fichier à nouveau** — si vous choisissez une photo ou un PDF déjà scanné et enregistré, la question vous est posée *avant* la lecture, donc aucune requête IA n'est consommée. **Ouvrir** affiche la dépense enregistrée, **Scanner quand même** relit le reçu, **Annuler** annule.
 - **Le même reçu, nouvelle photo** — si, après lecture, une dépense avec le même magasin, le même montant et la même date (±1 jour) existe déjà, l'écran de confirmation affiche un avis jaune avec un bouton **Ouvrir**. Vous pouvez tout de même enregistrer : il peut s'agir d'un vrai second achat.
 - **Déjà enregistré par votre banque** — si la dépense correspondante provient d'une notification bancaire ou d'un relevé importé, l'avis l'indique et propose **Fusionner en une seule dépense**. Case cochée, l'enregistrement conserve le reçu (articles, photo et catégorie) et remplace l'entrée bancaire : l'achat n'est compté qu'une fois. Si seuls le montant et la date correspondent, la case est décochée au départ — vérifiez avant de fusionner.
+- **Déjà saisi à la main** — si vous aviez ajouté cet achat vous-même — saisi, à la voix ou par message au bot — (par exemple « Netto », alors que le reçu indique « Netto nr 541 »), l'avis l'indique et propose le même **Fusionner en une seule dépense**. Ici la case est décochée au départ, car une saisie manuelle peut être un autre achat : cochez-la si c'est le même. Le reçu remplace votre saisie ; vos notes, tags et projet sont repris. Sinon, la paire apparaîtra plus tard dans les alertes avec un bouton de fusion.
 
-Les bots Telegram, WhatsApp et Slack préviennent de la même façon et proposent un bouton **Scanner quand même**.
+Les bots Telegram, WhatsApp et Slack préviennent de la même façon et proposent un bouton **Scanner quand même**. Si la correspondance est votre propre saisie ou la copie de la banque, après **Ajouter dépense** le bot demande s'il faut fusionner : **Fusionner** garde le reçu et y intègre l'autre entrée, **Garder les deux** enregistre le reçu séparément.
 
 ### Partager depuis une autre app (Android)
 
@@ -4464,6 +4482,20 @@ Un tableau affichant vos articles de recus les plus frequemment achetes :
 ## Exporter
 
 Appuyez sur **Exporter le rapport** pour acceder a l'ecran Export et rapports. Vous pouvez y generer des rapports PDF, Excel ou CSV, consulter votre resume mensuel et gerer les sauvegardes de donnees. Consultez le guide [Export et rapports](./16-export-reports.md) pour plus de details.
+
+## Coûts des enfants
+
+Voyez ce que coûte chaque enfant, sans deviner.
+
+- **Ajouter des enfants :** Réglages > Données de référence > Enfants. Seuls le prénom et la couleur sont enregistrés. Archivez un enfant plutôt que de le supprimer ; ses dépenses restent attribuées.
+- **Attribuer une dépense entière :** sur une dépense nouvelle ou existante, choisissez un ou plusieurs enfants. Avec plusieurs, le montant est partagé à parts égales sauf si vous modifiez les parts. Une dépense utilise l'attribution entière ou celle par lignes du ticket, pas les deux ; l'app demande avant de changer.
+- **Attribuer des lignes de ticket :** après avoir scanné un ticket, affectez des lignes (couches, fournitures scolaires) à un enfant. L'app retient votre choix et le propose la fois suivante. Une suggestion n'est jamais appliquée sans vous. « Extraire les articles » conserve l'attribution des produits encore présents sur le ticket et indique combien n'ont pu être reportés.
+- **En masse :** sélectionnez plusieurs dépenses et choisissez Attribuer à un enfant. Les dépenses avec attribution par lignes sont ignorées et leur nombre est affiché.
+- **Totaux :** l'écran de l'enfant (et une carte dans l'onglet Analyses) affiche ce mois-ci, cette année et la répartition par catégories dans votre devise d'affichage. Un total marqué ≈ contient une approximation faute de taux de change ; ces montants sont exclus plutôt que devinés. Les dépenses planifiées et les créances de notes partagées ne comptent pas.
+- **800+ et couverture :** quand un revenu ressemble à l'allocation 800+ (par ex. « 800+ » ou « rodzina 800 » dans la description), l'app propose de le rattacher à un enfant. La couverture est l'allocation reçue divisée par ce que l'enfant a coûté sur la même période.
+- **Carte à partager :** une image des totaux d'un enfant. Son prénom est masqué par défaut ; vous pouvez l'afficher.
+- **Relevé PDF (Pro, éditeurs) :** une « zestawienie » des coûts d'un enfant sur 24 mois maximum, avec totaux, détail mensuel et par catégorie, liste des dépenses et tickets. Chaque page porte un pied de page indiquant qu'il a été établi dans l'app à partir de données saisies par l'utilisateur, ainsi que l'heure « données au ». C'est un récapitulatif de vos propres enregistrements, pas un document juridique, ni certifié. Il ne contient que ce qui a atteint le serveur ; l'app synchronise d'abord et vous demande d'attendre si quelque chose est en attente. Indisponible sur les comptes à chiffrement de bout en bout.
+- **Parents séparés :** gardez les enfants sur un compte personnel pour que l'autre parent ne voie pas vos autres dépenses. Un compte partagé montre tout à tous les membres.
 
 ## FAQ
 
@@ -5259,7 +5291,7 @@ La devise selectionnee est mise en surbrillance. Cela definit la devise par defa
 
 ### Langue
 
-Choisissez parmi 9 langues prises en charge :
+Choisissez parmi 11 langues prises en charge :
 
 | Code | Langue |
 |---|---|
@@ -5272,6 +5304,8 @@ Choisissez parmi 9 langues prises en charge :
 | DE | Deutsch |
 | BY | Беларуская |
 | NL | Nederlands |
+| PT | Português (Portugal) |
+| BR | Português (Brasil) |
 
 Appuyez sur une pastille de langue pour changer. L'interface se met a jour immediatement.
 
@@ -7839,6 +7873,21 @@ Vous recevez aussi une notification push quand quelque chose est à réapprovisi
 L'app compare le prix récemment payé pour un produit suivi à son prix moyen sur les 90 derniers jours. Si le dernier prix d'un magasin pour un produit est nettement inférieur à cette moyenne, il apparaît sous forme de puce dans la ligne **Promotions pour vous**, avec le nom du magasin et le pourcentage de réduction. Touchez une puce pour ajouter l'article à votre liste.
 
 Les promotions sont également envoyées sous forme de notification push lorsqu'une vraie baisse est détectée, pour que vous n'ayez pas besoin d'ouvrir l'app pour ne pas la manquer — mais une même baisse de prix ne vous sera pas signalée plus d'une fois par semaine, pour éviter de vous relancer sur la même chose.
+
+## Vérifier un prospectus promo
+
+Vous avez le prospectus promo d'un magasin en photos ou en PDF ? L'appli vous indique lesquels des produits **que vous achetez vraiment** s'y trouvent et compare le prix promo à ce que vous payez d'habitude.
+
+- **Depuis la liste de courses**, touchez **Vérifier un prospectus** et choisissez des captures du prospectus (sur le web, déposez-les ou un PDF sur la page).
+- **Depuis une autre appli (Android)**, partagez les captures ou le PDF vers AI Budget et choisissez **Prospectus promo** dans la question qui s'affiche.
+
+L'appli lit le prospectus et n'affiche que les promos sur des produits de vos achats et de votre liste, chacune avec le prix promo et — si vous avez déjà acheté le produit dans la même devise — ce que vous payez d'habitude, sous la forme *d’habitude X → Y*. Les produits que vous n'achetez pas ne sont jamais affichés, et le prospectus lui-même n'est pas conservé : seuls les prix extraits le sont. Les prix sont indiqués *d'après un prospectus — à vérifier en magasin* — le magasin peut différer. Touchez **Ajouter à la liste** sur un article pour le mettre sur votre liste de courses.
+
+**Vos prospectus.** L'écran du prospectus garde la liste de vos prospectus encore en cours : le magasin, jusqu'à quand, et combien de vos produits chacun contient. Touchez-en un pour revoir ses produits et les ajouter à votre liste (si le sélecteur de photos s'ouvre d'abord, fermez-le simplement).
+
+**Combien de pages vous pouvez lire.** Les pages de prospectus ont leur propre quota mensuel, distinct de vos requêtes IA : 20 pages en Free, 200 en Pro et 500 en Business. Un partage lit jusqu'à 10 pages (un PDF jusqu'à environ 7 Mo — au-delà, partagez plutôt des captures des pages). Le reste est ignoré et l'écran indique combien de pages ont été laissées de côté.
+
+**Promos de la communauté (facultatif).** Si vous partagez des prix anonymes (Réglages → Données → **Partager des prix anonymes**), les prix promo des prospectus que vous lisez sont partagés de la même façon — uniquement le magasin, le produit, le prix et les dates, jamais votre nom, votre compte ni l'image du prospectus. Une fois les promos de la communauté activées dans l'appli, quand plusieurs acheteurs confirment la même promo, les personnes qui achètent dans ce magasin et y prennent d'habitude ce produit reçoivent au plus une notification par jour, qui indique jusqu'à quand dure la promo — et seulement une fois qu'elle a commencé. La toucher ouvre vos prospectus. Désactivez-la dans Réglages → Notifications → **Promos des prospectus sur vos produits**.
 
 ## Gérer les notifications
 

@@ -15,7 +15,7 @@
 - **Exportacion e informes** — informes PDF/Excel/CSV, resumenes mensuales, copias de seguridad cifradas, informes por email
 - **Multiples cuentas** — cuentas Personal, Compartida y Empresa con control de acceso basado en roles (Propietario, Editor, Observador)
 - **Sin conexion primero** — los datos se guardan localmente y se sincronizan automaticamente cuando hay conexion
-- **8 idiomas** — English, Deutsch, Espanol, Francais, Polski, Russki, Ukrainska, Беларуская
+- **11 idiomas** — English, Deutsch, Espanol, Francais, Polski, Russki, Ukrainska, Беларуская, Nederlands, Português (Portugal), Português (Brasil)
 
 ## Tabla de contenidos
 

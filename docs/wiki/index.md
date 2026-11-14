@@ -85,7 +85,7 @@ the section you came for — it states what must not break and why. A missing se
 - [android-launcher-shortcuts](features/android-launcher-shortcuts.md) — long-press app icon shortcuts: add expense, scan receipt, voice.
 - [web-build-and-hosting](features/web-build-and-hosting.md) — the Expo web build, platform splits,
   the two nginx containers, and the deploy traps that have bitten
-- [marketing-site](features/marketing-site.md) — the three static generators, nine languages, and
+- [marketing-site](features/marketing-site.md) — the three static generators, nine blog languages (eleven on the landing and help), and
   the regeneration commands that must not be run with the wrong environment
 - [acquisition-tracking](features/acquisition-tracking.md) — link tagging, first-touch capture,
   GA4 events, Play install referrer
@@ -193,6 +193,7 @@ the section you came for — it states what must not break and why. A missing se
 - [expense-detail-editing](features/expense-detail-editing.md) — project links, currency relabel, extracting items from a receipt attached later
 - [wallet-balance-history](features/wallet-balance-history.md) — monthly per-currency net change as signed bars, the wallet-local currency toggle
 - [base-currency](features/base-currency.md) — changing `user.currencyCode` on the client, optimistically and through one action
+- [portuguese-locales](features/portuguese-locales.md) — European (`pt`) and Brazilian (`br`) Portuguese: internal vs external codes, never `br` into `Intl`, the chat variant
 - [supported-currencies](features/supported-currencies.md) — the currency list and every place that copies it
 
 ### Capturing expenses automatically

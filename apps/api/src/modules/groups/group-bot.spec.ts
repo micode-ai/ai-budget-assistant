@@ -15,6 +15,8 @@ describe('parseGroupCommand (ABA-658)', () => {
     expect(parseGroupCommand('25 eur taxi')).toMatchObject({ currencyCode: 'EUR', description: 'taxi' });
     expect(parseGroupCommand('40 zł obiad')).toMatchObject({ currencyCode: 'PLN', description: 'obiad' });
     expect(parseGroupCommand('10 Br')).toMatchObject({ currencyCode: 'BYN' });
+    expect(parseGroupCommand('R$25 almoço')).toMatchObject({ amount: 25, currencyCode: 'BRL', description: 'almoço' });
+    expect(parseGroupCommand('25 R$')).toMatchObject({ amount: 25, currencyCode: 'BRL' });
   });
 
   it('treats unknown upper-case codes as a currency (to be refused) but keeps lower-case words', () => {

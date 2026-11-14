@@ -15,7 +15,7 @@
 - **Export et rapports** — rapports PDF/Excel/CSV, resumes mensuels, sauvegardes chiffrees, rapports par email
 - **Comptes multiples** — comptes Personnel, Partage et Professionnel avec controle d'acces base sur les roles (Proprietaire, Editeur, Observateur)
 - **Mode hors-ligne** — les donnees sont enregistrees localement et synchronisees automatiquement une fois en ligne
-- **8 langues** — English, Deutsch, Espanol, Francais, Polski, Pyccкий, Yкpaїнcькa, Беларуская
+- **11 langues** — English, Deutsch, Espanol, Francais, Polski, Pyccкий, Yкpaїнcькa, Беларуская, Nederlands, Português (Portugal), Português (Brasil)
 
 ## Table des matieres
 

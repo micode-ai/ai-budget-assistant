@@ -1,11 +1,11 @@
 ---
 name: i18n-add-strings
-description: Use when adding, renaming, or removing i18n keys in the mobile app. Ensures all 9 locale files (en/de/es/fr/pl/ru/ua/be/nl) stay in sync. Triggers on any change to apps/mobile/src/i18n/locales/.
+description: Use when adding, renaming, or removing i18n keys in the mobile app. Ensures all 11 locale files (en/de/es/fr/pl/ru/ua/be/nl/pt/br) stay in sync. Triggers on any change to apps/mobile/src/i18n/locales/.
 ---
 
-# Adding i18n Strings Across All 9 Locales
+# Adding i18n Strings Across All 11 Locales
 
-The mobile app has 9 locale files at `apps/mobile/src/i18n/locales/`:
+The mobile app has 11 locale files at `apps/mobile/src/i18n/locales/`:
 
 | Locale | File | Language |
 |---|---|---|
@@ -18,8 +18,10 @@ The mobile app has 9 locale files at `apps/mobile/src/i18n/locales/`:
 | `ua` | `ua.ts` | Ukrainian |
 | `be` | `be.ts` | Belarusian |
 | `nl` | `nl.ts` | Dutch |
+| `pt` | `pt.ts` | Portuguese (Portugal) — Intl `pt-PT` |
+| `br` | `br.ts` | Portuguese (Brazil) — Intl `pt-BR`; never pass `br` raw to `Intl.*` (Breton), use `toIntlLocale` |
 
-All 9 files must have the same key structure. A key missing in one locale breaks that language at runtime.
+All 11 files must have the same key structure. A key missing in one locale breaks that language at runtime.
 
 ## Workflow
 
@@ -27,9 +29,10 @@ All 9 files must have the same key structure. A key missing in one locale breaks
 
 This is the source of truth. Place the new key under the appropriate section (e.g., `common`, `dates`, `expenses`, `budget`). Match the existing nesting style.
 
-### 2. Translate to the remaining 8 locales
+### 2. Translate to the remaining 10 locales
 
-For each of `de`, `es`, `fr`, `pl`, `ru`, `ua`, `be`, `nl`:
+For each of `de`, `es`, `fr`, `pl`, `ru`, `ua`, `be`, `nl`, `pt`, `br`:
+- `pt` (European) and `br` (Brazilian) are separate variants (see `apps/mobile/src/i18n/PT_BR_GLOSSARY.md`) — never copy one into the other.
 - Add the key at the same nesting path as in `en.ts`.
 - Keep translations concise — mobile UI has limited horizontal space.
 - Match the tone of surrounding strings (formal vs casual is locale-specific).
@@ -47,7 +50,7 @@ After editing, list the new key(s) and grep each locale to confirm presence:
 grep -l "bulkDelete" apps/mobile/src/i18n/locales/*.ts
 ```
 
-You should see all 9 files. If fewer, you missed a locale.
+You should see all 11 files. If fewer, you missed a locale.
 
 ### 4. Typecheck the call sites
 
@@ -66,15 +69,15 @@ t('expenses.bulkDelete')
 
 ## Renaming or deleting a key
 
-- Renaming: change the key in **all 9 files** in one pass, then update all `t('old.key')` call sites.
-- Deleting: remove from all 9 files. Grep for residual usages before committing:
+- Renaming: change the key in **all 11 files** in one pass, then update all `t('old.key')` call sites.
+- Deleting: remove from all 11 files. Grep for residual usages before committing:
   ```bash
   grep -rn "t('removed.key')" apps/mobile
   ```
 
 ## Common mistakes
 
-- Adding the key only to `en.ts` and forgetting the other 8. Causes runtime fallback to English (or worse, the key string itself shown to the user).
+- Adding the key only to `en.ts` and forgetting the other 10. Causes runtime fallback to English (or worse, the key string itself shown to the user).
 - Copying Russian into `ua` or `be`. They are separate languages with their own vocabulary.
 - Mismatched nesting — `en.ts` has `expenses.bulkDelete` but `de.ts` has it under `common`. The lookup fails silently.
 - Mixing string interpolation tokens. If `en` uses `{{count}}`, every locale must use `{{count}}` (not `{count}` or `%d`).

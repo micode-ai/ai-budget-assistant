@@ -45,6 +45,6 @@ describe('guest page manual-rate marker (ABA-654 M2)', () => {
       expect(dict.msgBusy.length).toBeGreaterThan(0);
       if (lang !== 'en') expect(dict.manualRateTag).not.toBe(GROUP_GUEST_TRANSLATIONS.en.manualRateTag);
     }
-    expect(Object.keys(GROUP_GUEST_TRANSLATIONS)).toHaveLength(9);
+    expect(Object.keys(GROUP_GUEST_TRANSLATIONS)).toHaveLength(11);
   });
 });

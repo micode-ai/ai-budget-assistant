@@ -74,7 +74,7 @@ export function BudgetDetailView({
   onDeleted,
   desktop = false,
 }: BudgetDetailViewProps) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const { deleteBudget, getBudgetProgress } = useBudgetStore();
@@ -128,7 +128,7 @@ export function BudgetDetailView({
   const monthlyHeading = (() => {
     if (budget.period !== 'monthly') return null;
     const { start, end } = financialMonth(referenceDate, anchorDay);
-    return formatFinancialMonth(start, end, i18n.language);
+    return formatFinancialMonth(start, end, getIntlLocale());
   })();
 
   const handleDelete = () => {

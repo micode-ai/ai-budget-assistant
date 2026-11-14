@@ -295,3 +295,12 @@ describe('parseNotification — generic fallback', () => {
     expect(result).toBeNull();
   });
 });
+
+describe('BRL notifications', () => {
+  it('parses "R$ 52,90" as BRL', () => {
+    const r = parseGeneric('Pix', 'Compra aprovada R$ 52,90 PADARIA');
+    expect(r).not.toBeNull();
+    expect(r?.amount).toBeCloseTo(52.9);
+    expect(r?.currencyCode).toBe('BRL');
+  });
+});

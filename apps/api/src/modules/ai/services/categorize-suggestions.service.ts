@@ -88,6 +88,7 @@ interface ModelOutcome {
 const LANGUAGE_NAMES: Record<string, string> = {
   en: 'English', pl: 'Polish', de: 'German', es: 'Spanish', fr: 'French',
   ru: 'Russian', ua: 'Ukrainian', be: 'Belarusian', nl: 'Dutch',
+  pt: 'European Portuguese', br: 'Brazilian Portuguese',
 };
 
 /** NaN-guarded; default 5 passes per account per day. */

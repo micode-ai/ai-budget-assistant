@@ -18,6 +18,7 @@ export const BOT_GROUP_DESCRIPTION_MAX = 120;
 
 const SYMBOLS: Record<string, string> = {
   '₴': 'UAH',
+  R$: 'BRL',
   $: 'USD',
   '€': 'EUR',
   zł: 'PLN',
@@ -25,7 +26,8 @@ const SYMBOLS: Record<string, string> = {
   '₽': 'RUB',
   Br: 'BYN',
 };
-const SYMBOL_RE = '(?:₴|\\$|€|zł|£|₽|Br)';
+// `R$` is listed before `$`, so a Brazilian amount is never read as dollars.
+const SYMBOL_RE = '(?:₴|R\\$|\\$|€|zł|£|₽|Br)';
 const COMMAND_RE = new RegExp(
   `^(${SYMBOL_RE})?\\s*(\\d+(?:[.,]\\d+)?)\\s*(${SYMBOL_RE}(?![A-Za-z]))?\\s*(.*)$`,
   's',

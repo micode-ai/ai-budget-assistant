@@ -3465,7 +3465,7 @@ URL: https://ai-budget.pl/help/es/getting-started/
 4. Crea una **Contrasena** (minimo 8 caracteres, debe incluir una letra mayuscula A-Z, una letra minuscula a-z y un numero 0-9)
 5. Confirma tu contrasena
 6. Selecciona tu **Moneda** preferida (USD, EUR, PLN, GBP, UAH, RUB o BYN)
-7. Selecciona tu **Idioma** preferido (English, Deutsch, Espanol, Francais, Polski, Russki, Ukrainska o Беларуская)
+7. Selecciona tu **Idioma** preferido (English, Deutsch, Espanol, Francais, Polski, Russki, Ukrainska, Беларуская, Nederlands, Português (Portugal) o Português (Brasil))
 8. Toca **Crear cuenta**
 9. Revisa tu correo para obtener un **código de verificación de 6 dígitos**
 10. Ingresa el código en la aplicación y toca **Verificar**
@@ -4071,6 +4071,23 @@ Funciona igual tanto si escaneas desde la aplicación como desde los bots de Tel
 
 Mientras escaneas, un pequeño contador muestra cuántos recibos has guardado en esta sesión. Cada 15 recibos, la app te avisa con un recordatorio amistoso de que puedes seguir o tomar un descanso — tu progreso ya está guardado de cualquier forma. El contador se reinicia al salir de la pantalla; solo está para darte una sensación de progreso durante una sesión.
 
+### Recibo largo en varias fotos
+
+Un recibo demasiado largo para una foto legible se puede fotografiar por partes y leer como **un solo** recibo.
+
+**En la app**
+
+1. En la pantalla del recibo toca **¿Recibo largo? Fotografíalo por partes**
+2. Fotografía el recibo de arriba abajo con un pequeño solapamiento entre fotos (la última línea de una foto debe verse de nuevo arriba en la siguiente); puedes añadir hasta **4 partes**
+3. Toca **Leer recibo**. Obtendrás una tarjeta de confirmación con cada línea una sola vez; las líneas del solapamiento no se cuentan dos veces
+4. Si la suma de las líneas no coincide con el total del recibo, la app te avisa y ofrece **Volver a fotografiar las partes** en lugar de guardar
+
+Cada parte cuenta como un escaneo de recibo en tu límite mensual de IA, así que un recibo de tres partes usa tres escaneos. Un PDF no se puede combinar con fotos. El gasto conserva todas las fotos: abre el recibo en el gasto y toca una parte para verla.
+
+**En los bots de Telegram, WhatsApp y Slack**
+
+Envía las fotos una tras otra. La primera foto se lee de inmediato. Mientras su tarjeta de confirmación siga abierta, envía la siguiente foto: el bot pregunta si es una **Continuación** o un **Recibo nuevo**. Elige **Continuación** y la tarjeta se reconstruye con todas las fotos juntas (las correcciones escritas en la tarjeta anterior no se conservan, así que revisa la nueva). Las fotos deben ser JPEG, PNG o WebP y no demasiado grandes; el bot te avisa si rechaza alguna.
+
 ### Recibos ya escaneados
 
 La app te avisa antes de que un recibo acabe dos veces en tus gastos:
@@ -4078,8 +4095,9 @@ La app te avisa antes de que un recibo acabe dos veces en tus gastos:
 - **El mismo archivo otra vez** — si eliges una foto o un PDF que ya se escaneó y guardó, se te pregunta *antes* de leerlo, así que no se gasta ninguna solicitud de IA. **Abrir** muestra el gasto guardado, **Escanear igualmente** lo vuelve a leer y **Cancelar** lo cancela.
 - **El mismo recibo, foto nueva** — si tras leerlo ya existe un gasto con la misma tienda, importe y fecha (±1 día), la pantalla de confirmación muestra un aviso amarillo con un botón **Abrir**. Aun así puedes guardarlo: puede ser una segunda compra real.
 - **Ya registrado por tu banco** — si el gasto coincidente vino de una notificación del banco o de un extracto importado, el aviso lo indica y ofrece **Unir en un solo gasto**. Con la casilla marcada, al guardar se conserva el recibo (artículos, foto y categoría) y se sustituye la entrada del banco, así la compra cuenta una sola vez. Si solo coinciden el importe y la fecha, la casilla empieza desmarcada: compruébalo antes de unir.
+- **Ya añadido a mano** — si antes registraste tú esta compra —a mano, por voz o con un mensaje al bot— (por ejemplo, «Netto», mientras el recibo dice «Netto nr 541»), el aviso lo indica y ofrece el mismo **Unir en un solo gasto**. Aquí la casilla empieza desmarcada, porque un gasto manual puede ser otra compra: márcala si es la misma. El recibo sustituye tu entrada; tus notas, etiquetas y proyecto se conservan. Si no la marcas, la pareja aparecerá después en las alertas con un botón para unir.
 
-Los bots de Telegram, WhatsApp y Slack avisan igual y ofrecen un botón **Escanear igualmente**.
+Los bots de Telegram, WhatsApp y Slack avisan igual y ofrecen un botón **Escanear igualmente**. Si la coincidencia es una entrada tuya o la copia del banco, al pulsar **Agregar gasto** el bot pregunta si unirlas: **Unir** conserva el recibo e integra la otra entrada, **Mantener ambos** guarda el recibo por separado.
 
 ### Compartir desde otra app (Android)
 
@@ -4484,6 +4502,20 @@ Una tabla que muestra los articulos de recibos que compras con mas frecuencia:
 ## Exportar
 
 Toca **Exportar informe** para acceder a la pantalla de Exportacion e informes, donde puedes generar informes PDF, Excel o CSV, ver resumenes mensuales y gestionar copias de seguridad de datos. Ver [Exportacion e informes](./16-export-reports.md) para mas detalles.
+
+## Costes de los hijos
+
+Vea lo que cuesta cada hijo, sin adivinar.
+
+- **Añadir hijos:** Ajustes > Datos de referencia > Hijos. Solo se guardan el nombre y el color. Archive a un hijo en lugar de borrarlo; sus gastos siguen atribuidos.
+- **Atribuir un gasto entero:** en un gasto nuevo o existente elija uno o varios hijos. Con varios, el importe se reparte a partes iguales salvo que edite las partes. Un gasto usa la atribución completa o la de líneas del recibo, no ambas; la app pregunta antes de cambiar.
+- **Atribuir líneas del recibo:** tras escanear un recibo, asigne líneas concretas (pañales, material escolar) a un hijo. La app recuerda su elección y la sugiere la próxima vez. Una sugerencia nunca se aplica sin usted. «Extraer artículos» conserva la atribución de los productos que siguen en el recibo e indica cuántos no pudo conservar.
+- **En bloque:** seleccione varios gastos y elija Asignar a un hijo. Los gastos con atribución por líneas se omiten y se muestra el número.
+- **Totales:** la pantalla del hijo (y una tarjeta en la pestaña Análisis) muestra este mes, este año y el desglose por categorías en su moneda de visualización. Un total con ≈ incluye una aproximación por falta de tipo de cambio; esos importes se excluyen en vez de adivinarse. Los gastos planificados y los cobros pendientes de cuentas divididas no cuentan.
+- **800+ y cobertura:** cuando un ingreso parece la ayuda 800+ (por ejemplo «800+» o «rodzina 800» en la descripción), la app propone marcarlo para un hijo. La cobertura es la ayuda recibida dividida entre lo que costó ese hijo en el mismo periodo.
+- **Tarjeta para compartir:** una imagen con los totales de un hijo. El nombre está oculto por defecto; puede mostrarlo.
+- **Informe PDF (Pro, editores):** una «zestawienie» de los costes de un hijo de hasta 24 meses, con totales, desglose mensual y por categorías, lista de gastos y recibos. Cada página lleva un pie que indica que se elaboró en la app a partir de datos introducidos por el usuario y la hora de «datos a fecha». Es un resumen de sus propios registros, no un documento legal ni certificado. Solo incluye lo que ha llegado al servidor, así que la app sincroniza primero y le pide esperar si algo está pendiente. No está disponible en cuentas con cifrado de extremo a extremo.
+- **Padres separados:** mantengan a los hijos en una cuenta personal para que el otro progenitor no vea el resto de sus gastos. Una cuenta compartida lo muestra todo a todos los miembros.
 
 ## Preguntas frecuentes
 
@@ -5281,7 +5313,7 @@ La moneda seleccionada se resalta. Esto establece la moneda predeterminada para 
 
 ### Idioma
 
-Elige entre 9 idiomas disponibles:
+Elige entre 11 idiomas disponibles:
 
 | Codigo | Idioma |
 |---|---|
@@ -5294,6 +5326,8 @@ Elige entre 9 idiomas disponibles:
 | DE | Deutsch |
 | BY | Беларуская |
 | NL | Nederlands |
+| PT | Português (Portugal) |
+| BR | Português (Brasil) |
 
 Toca una ficha de idioma para cambiar. La interfaz se actualiza de inmediato.
 
@@ -7861,6 +7895,21 @@ También recibes una notificación push cuando algo está pendiente de reponer. 
 La app compara el precio que has pagado recientemente por un producto rastreado con su precio medio de los últimos 90 días. Si el último precio de una tienda para un producto está significativamente por debajo de esa media, aparece como un chip en la fila **Ofertas para ti**, con el nombre de la tienda y el porcentaje de descuento. Toca un chip para añadir el artículo a tu lista.
 
 Las ofertas también se envían como notificación push cuando se detecta una bajada genuina, para que no tengas que abrir la app para no perdértela — pero la misma bajada de precio no se te enviará más de una vez por semana, para que no te avisen repetidamente de lo mismo.
+
+## Revisar un folleto de ofertas
+
+¿Tienes el folleto de ofertas de una tienda en fotos o PDF? La app te dice cuáles de los productos **que realmente compras** aparecen en él y compara el precio de oferta con lo que sueles pagar.
+
+- **Desde la lista de compras**, toca **Revisar un folleto** y elige capturas del folleto (en la web, arrástralas o un PDF a la página).
+- **Desde otra app (Android)**, comparte las capturas o el PDF con AI Budget y elige **Folleto de ofertas** en la pregunta que aparece.
+
+La app lee el folleto y muestra solo las ofertas de productos de tus compras y de tu lista, cada una con el precio de oferta y — si ya compraste el producto en la misma moneda — lo que sueles pagar, como *sueles pagar X → Y*. Los productos que no compras nunca se muestran, y el folleto no se guarda: solo los precios extraídos. Los precios se muestran *según un folleto — compruébalo en la tienda* — la tienda puede diferir. Toca **Añadir a la lista** en un producto para ponerlo en tu lista de compras.
+
+**Tus folletos.** La pantalla del folleto guarda una lista de tus folletos que siguen vigentes: la tienda, hasta cuándo y cuántos de tus productos hay en cada uno. Toca uno para volver a ver sus productos y añadirlos a tu lista (si primero se abre el selector de fotos, ciérralo).
+
+**Cuántas páginas puedes leer.** Las páginas de folletos tienen su propio cupo mensual, aparte de tus consultas de IA: 20 páginas en Free, 200 en Pro y 500 en Business. Un envío lee hasta 10 páginas (un PDF de hasta unos 7 MB; si es más grande, comparte capturas de las páginas). Lo demás se omite y la pantalla te dice cuántas páginas quedaron fuera.
+
+**Ofertas de la comunidad (opcional).** Si compartes precios anónimos (Ajustes → Datos → **Compartir precios anónimos**), los precios de oferta de los folletos que lees se comparten igual: solo la tienda, el producto, el precio y las fechas, nunca tu nombre, tu cuenta ni la imagen del folleto. Una vez que las ofertas de la comunidad estén activadas en la app y varios compradores confirmen la misma oferta, quienes compran en esa tienda y suelen comprar ese producto reciben como máximo una notificación al día, que dice hasta cuándo dura la oferta — y solo cuando ya ha empezado. Al tocarla se abren tus folletos. Desactívala en Ajustes → Notificaciones → **Ofertas de folletos en tus productos**.
 
 ## Gestionar notificaciones
 

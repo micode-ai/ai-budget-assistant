@@ -14,7 +14,7 @@ const DATA: RealSalaryResponse = {
 describe('RealSalaryBriefPdf', () => {
   it('renders a PDF in every app language (Cyrillic and Polish glyphs included)', async () => {
     const pdf = new RealSalaryBriefPdf();
-    expect(BRIEF_LANGS).toEqual(['en', 'pl', 'de', 'es', 'fr', 'ru', 'ua', 'be', 'nl']);
+    expect(BRIEF_LANGS).toEqual(['en', 'pl', 'de', 'es', 'fr', 'ru', 'ua', 'be', 'nl', 'pt', 'br']);
     for (const lang of BRIEF_LANGS) {
       const buf = await pdf.render(DATA, lang);
       expect(buf.subarray(0, 5).toString()).toBe('%PDF-');

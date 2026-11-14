@@ -17,6 +17,7 @@ const currencyConfig: Record<Currency, { symbol: string; locale: string; positio
   HUF: { symbol: 'Ft', locale: 'hu-HU', position: 'after' },
   RON: { symbol: 'lei', locale: 'ro-RO', position: 'after' },
   CHF: { symbol: 'CHF', locale: 'de-CH', position: 'before' },
+  BRL: { symbol: 'R$', locale: 'pt-BR', position: 'before' },
 };
 
 export function formatCurrency(amount: number, currency: Currency | string): string {
@@ -373,3 +374,6 @@ export {
   type AttribExpense,
   type AttribItem,
 } from './child-attribution';
+
+// App locale resolver and Intl mapper (twin of the API's common/utils/app-locale.ts)
+export { resolveAppLocale, resolveAcceptLanguage, toIntlLocale } from './app-locale';

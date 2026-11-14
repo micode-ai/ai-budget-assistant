@@ -35,7 +35,7 @@ SITE = "sc-domain:ai-budget.pl"
 ORIGIN = "https://ai-budget.pl"
 SCOPE = "https://www.googleapis.com/auth/webmasters.readonly"
 API = "https://searchconsole.googleapis.com/webmasters/v3/sites/{}/searchAnalytics/query"
-LANGS = ["pl", "en", "de", "es", "fr", "ru", "ua", "be", "nl"]
+LANGS = ["pl", "en", "de", "es", "fr", "ru", "ua", "be", "nl", "pt", "br"]
 
 # Data in Search Console lags about two days, and the last days are revised.
 # A week is reported only once its Sunday is at least LAG_DAYS old.

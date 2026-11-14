@@ -10,6 +10,8 @@
  * delinquent. This is a neutral "here is your share" page, not a collections notice.
  */
 
+import { resolveAcceptLanguage, resolveAppLocale } from '../../../common/utils/app-locale';
+
 type Lang = string;
 
 export interface GuestPageStrings {
@@ -98,8 +100,8 @@ export interface GuestPageStrings {
   pickedConfirmNo: string;
 }
 
-// Same 9 locales the mobile app supports (src/i18n/locales/*.ts). Order mirrors
-// notification-i18n.ts (en, ru, ua, pl, es, fr, de, be, nl).
+// Same locales the mobile app supports (src/i18n/locales/*.ts). Order mirrors
+// notification-i18n.ts (en, ru, ua, pl, es, fr, de, be, nl, pt, br).
 const translations: Record<string, GuestPageStrings> = {
   en: {
     title: (merchant) => `Your share at ${merchant}`,
@@ -434,6 +436,80 @@ const translations: Record<string, GuestPageStrings> = {
     pickedConfirmYes: 'Ja, dat ben ik',
     pickedConfirmNo: 'Nee, terug',
   },
+  pt: {
+    title: (merchant) => `A sua parte em ${merchant}`,
+    greeting: (guestName) => `Olá, ${guestName}!`,
+    paidByLine: (payerName) => `${payerName} pagou por todos`,
+    yourItemsHeading: 'Os seus artigos',
+    sharedMarker: (count: number) => `dividido por ${count}`,
+    shareMarker: (percent: number) => `os seus ${percent}%`,
+    equalShareNote: 'A sua parte igual da conta',
+    viewReceipt: 'Ver o talão',
+    yourShareLabel: 'A sua parte',
+    payButton: (methodLabel) => `Pagar com ${methodLabel}`,
+    methodLabel: (method) =>
+      ({ revolut: 'Revolut', paypal: 'PayPal', blik: 'BLIK', cash: 'Dinheiro', other: 'Outro' } as Record<string, string>)[method] ?? method,
+    blikInstructions: (handle) => `Envie um pagamento BLIK para ${handle}`,
+    otherInstructions: (handle) => `Pague diretamente: ${handle}`,
+    cashInstructions: (handle) => `Acerte em dinheiro: ${handle}`,
+    noPaymentInfo: 'Ainda não foram partilhados dados de pagamento.',
+    iPaidButton: 'Já paguei',
+    claimedNotice: 'Marcado como pago — obrigado!',
+    settledNotice: 'Pagamento confirmado. Obrigado!',
+    flagSomethingWrong: 'Há algo errado aqui?',
+    flagWholeShareSummary: 'Há algo errado com toda a sua parte?',
+    flagNotePlaceholder: 'Nota opcional (por exemplo, «eu não estava lá»)',
+    flagSubmit: 'Comunicar',
+    flagReported: 'Comunicado — quem pagou já foi avisado.',
+    notFoundTitle: 'Este link não está disponível',
+    notFoundBody: 'Pode ter expirado ou os dados podem ter mudado.',
+    poweredBy: 'Divida contas facilmente com o AI Budget Assistant',
+    ctaButton: 'Divida a sua própria conta',
+    getAndroid: 'Disponível no Google Play',
+    genericMerchant: 'o seu talão',
+    groupPickerTitle: (merchant) => `Quem é? — ${merchant}`,
+    groupPickerHint: 'Toque no seu nome para ver a sua parte',
+    pickedConfirmQuestion: (name) => `É ${name}?`,
+    pickedConfirmYes: 'Sim, sou eu',
+    pickedConfirmNo: 'Não, voltar',
+  },
+  br: {
+    title: (merchant) => `Sua parte em ${merchant}`,
+    greeting: (guestName) => `Olá, ${guestName}!`,
+    paidByLine: (payerName) => `${payerName} pagou por todo mundo`,
+    yourItemsHeading: 'Seus itens',
+    sharedMarker: (count: number) => `dividido por ${count}`,
+    shareMarker: (percent: number) => `seus ${percent}%`,
+    equalShareNote: 'Sua parte igual da conta',
+    viewReceipt: 'Ver o recibo',
+    yourShareLabel: 'Sua parte',
+    payButton: (methodLabel) => `Pagar com ${methodLabel}`,
+    methodLabel: (method) =>
+      ({ revolut: 'Revolut', paypal: 'PayPal', blik: 'BLIK', cash: 'Dinheiro', other: 'Outro' } as Record<string, string>)[method] ?? method,
+    blikInstructions: (handle) => `Envie um pagamento BLIK para ${handle}`,
+    otherInstructions: (handle) => `Pague diretamente: ${handle}`,
+    cashInstructions: (handle) => `Acerte em dinheiro: ${handle}`,
+    noPaymentInfo: 'Nenhum dado de pagamento foi compartilhado ainda.',
+    iPaidButton: 'Já paguei',
+    claimedNotice: 'Marcado como pago — obrigado!',
+    settledNotice: 'Pagamento confirmado. Obrigado!',
+    flagSomethingWrong: 'Há algo errado aqui?',
+    flagWholeShareSummary: 'Há algo errado com toda a sua parte?',
+    flagNotePlaceholder: 'Observação opcional (por exemplo, “eu não estava nessa”)',
+    flagSubmit: 'Avisar',
+    flagReported: 'Aviso enviado — quem pagou já foi notificado.',
+    notFoundTitle: 'Este link não está disponível',
+    notFoundBody: 'Ele pode ter expirado ou os dados podem ter mudado.',
+    poweredBy: 'Divida contas com facilidade usando o AI Budget Assistant',
+    ctaButton: 'Divida a sua própria conta',
+    getAndroid: 'Disponível no Google Play',
+    genericMerchant: 'seu recibo',
+    groupPickerTitle: (merchant) => `Quem é você? — ${merchant}`,
+    groupPickerHint: 'Toque no seu nome para ver a sua parte',
+    pickedConfirmQuestion: (name) => `Você é ${name}?`,
+    pickedConfirmYes: 'Sim, sou eu',
+    pickedConfirmNo: 'Não, voltar',
+  },
 };
 
 export function getGuestPageStrings(lang: Lang): GuestPageStrings {
@@ -441,13 +517,6 @@ export function getGuestPageStrings(lang: Lang): GuestPageStrings {
 }
 
 const SUPPORTED_LANGS = Object.keys(translations);
-
-// Real browsers send valid BCP-47 tags in Accept-Language. This app's internal locale
-// key for Ukrainian is "ua" (matching src/i18n/locales/ua.ts and every other lang-keyed
-// table in this codebase, e.g. notification-i18n.ts) — but the correct ISO 639-1 tag for
-// Ukrainian is "uk", not "ua" (which is actually Ukraine's ISO 3166-1 country code). Alias
-// it here so a browser's real "uk" header resolves to this app's "ua" strings.
-const ACCEPT_LANGUAGE_ALIASES: Record<string, string> = { uk: 'ua' };
 
 interface GuestLangRequest {
   query?: Record<string, unknown>;
@@ -461,18 +530,17 @@ interface GuestLangRequest {
 export function resolveGuestLang(req: GuestLangRequest | undefined | null): Lang {
   const queryLang = req?.query?.lang;
   if (typeof queryLang === 'string') {
-    const normalized = queryLang.toLowerCase();
-    if (SUPPORTED_LANGS.includes(normalized)) return normalized;
+    // Our links carry internal codes, so ?lang=pt is European; browser headers are external tags, so Accept-Language pt is Brazilian.
+    const exact = queryLang.toLowerCase();
+    if (SUPPORTED_LANGS.includes(exact)) return exact;
+    const resolved = resolveAppLocale(queryLang, SUPPORTED_LANGS);
+    if (resolved) return resolved;
   }
 
   const acceptLanguage = req?.headers?.['accept-language'];
   if (typeof acceptLanguage === 'string' && acceptLanguage.length > 0) {
-    for (const part of acceptLanguage.split(',')) {
-      const tag = part.split(';')[0].trim().toLowerCase();
-      const primary = tag.split('-')[0];
-      const mapped = ACCEPT_LANGUAGE_ALIASES[primary] ?? primary;
-      if (SUPPORTED_LANGS.includes(mapped)) return mapped;
-    }
+    const resolved = resolveAcceptLanguage(acceptLanguage, SUPPORTED_LANGS);
+    if (resolved) return resolved;
   }
 
   return 'en';

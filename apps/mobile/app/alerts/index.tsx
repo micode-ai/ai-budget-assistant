@@ -11,6 +11,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
+import { getIntlLocale } from '@/i18n';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { useAlertStore } from '@/stores/alertStore';
 import { useAccountStore } from '@/stores/accountStore';
@@ -33,7 +34,7 @@ const NORMALIZABLE = new Set<AnomalyAlert['type']>([
 ]);
 
 export default function AlertsScreen() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
 
@@ -177,7 +178,7 @@ export default function AlertsScreen() {
             <Text style={styles.alertTitle}>{title}</Text>
             {body.length > 0 && <Text style={styles.alertBody}>{body}</Text>}
             <Text style={styles.alertDate}>
-              {new Date(item.createdAt).toLocaleDateString(i18n.language, {
+              {new Date(item.createdAt).toLocaleDateString(getIntlLocale(), {
                 day: 'numeric',
                 month: 'short',
               })}

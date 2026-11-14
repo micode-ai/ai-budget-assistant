@@ -43,6 +43,8 @@ export class AiInsightsService {
     es: 'Spanish',
     fr: 'French',
     pl: 'Polish',
+    pt: 'European Portuguese',
+    br: 'Brazilian Portuguese',
   };
 
   async getAIInsights(accountId: string, language?: string, userId?: string) {

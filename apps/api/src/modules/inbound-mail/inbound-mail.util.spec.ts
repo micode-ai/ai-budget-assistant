@@ -70,13 +70,13 @@ describe('misc helpers', () => {
 });
 
 describe('inbound push copy', () => {
-  const NINE = ['en', 'de', 'es', 'fr', 'pl', 'ru', 'ua', 'be', 'nl'];
+  const ALL_LANGS = ['en', 'de', 'es', 'fr', 'pl', 'ru', 'ua', 'be', 'nl', 'pt', 'br'];
 
-  it('exists in all 9 languages', () => {
-    expect([...INBOUND_PUSH_LANGUAGES].sort()).toEqual([...NINE].sort());
+  it('exists in every app language', () => {
+    expect([...INBOUND_PUSH_LANGUAGES].sort()).toEqual([...ALL_LANGS].sort());
   });
 
-  it.each(NINE)('%s: every string is non-empty, the count appears and the verification push carries no code', (lang) => {
+  it.each(ALL_LANGS)('%s: every string is non-empty, the count appears and the verification push carries no code', (lang) => {
     expect(inboundMailPush.verificationTitle()(lang).length).toBeGreaterThan(3);
     expect(inboundMailPush.verificationTitle()(lang)).not.toMatch(/\d{4}/);
     expect(inboundMailPush.verificationBody()(lang)).not.toMatch(/\d{4}/);

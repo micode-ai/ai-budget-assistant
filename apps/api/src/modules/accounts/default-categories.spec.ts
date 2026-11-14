@@ -8,7 +8,7 @@ import { catalogKeyForName } from '../../common/utils/category-catalog';
  * categories.
  */
 describe('default categories slot alignment', () => {
-  const locales = ['en', 'de', 'es', 'fr', 'pl', 'ru', 'ua', 'be', 'nl'];
+  const locales = ['en', 'de', 'es', 'fr', 'pl', 'ru', 'ua', 'be', 'nl', 'pt', 'br'];
 
   it.each(locales)('every %s name resolves to its own index', (locale) => {
     getDefaultCategories(locale).forEach((c, i) => {
@@ -19,7 +19,7 @@ describe('default categories slot alignment', () => {
     });
   });
 
-  it('all nine locales have the same length', () => {
+  it('all locales have the same length', () => {
     const lengths = new Set(locales.map((l) => getDefaultCategories(l).length));
     expect(lengths.size).toBe(1);
   });

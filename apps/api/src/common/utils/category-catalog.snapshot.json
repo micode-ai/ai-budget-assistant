@@ -799,5 +799,183 @@
    "icon": "📦",
    "color": "#636E72"
   }
+ ],
+ "pt": [
+  {
+   "name": "Comida e restaurantes",
+   "icon": "🍔",
+   "color": "#FF6B6B"
+  },
+  {
+   "name": "Supermercado",
+   "icon": "🛒",
+   "color": "#4ECDC4"
+  },
+  {
+   "name": "Álcool",
+   "icon": "🍺",
+   "color": "#D63031"
+  },
+  {
+   "name": "Casa",
+   "icon": "🧴",
+   "color": "#00CEC9"
+  },
+  {
+   "name": "Transportes",
+   "icon": "🚗",
+   "color": "#45B7D1"
+  },
+  {
+   "name": "Compras",
+   "icon": "🛍️",
+   "color": "#96CEB4"
+  },
+  {
+   "name": "Entretenimento",
+   "icon": "🎬",
+   "color": "#FFEAA7"
+  },
+  {
+   "name": "Contas e serviços",
+   "icon": "💡",
+   "color": "#DFE6E9"
+  },
+  {
+   "name": "Saúde",
+   "icon": "💊",
+   "color": "#A29BFE"
+  },
+  {
+   "name": "Educação",
+   "icon": "📚",
+   "color": "#6C5CE7"
+  },
+  {
+   "name": "Vestuário",
+   "icon": "👕",
+   "color": "#FD79A8"
+  },
+  {
+   "name": "Presentes",
+   "icon": "🎁",
+   "color": "#E17055"
+  },
+  {
+   "name": "Viagens",
+   "icon": "✈️",
+   "color": "#00B894"
+  },
+  {
+   "name": "Subscrições",
+   "icon": "📱",
+   "color": "#0984E3"
+  },
+  {
+   "name": "Salário",
+   "icon": "💰",
+   "color": "#00B894",
+   "type": "income"
+  },
+  {
+   "name": "Trabalho independente",
+   "icon": "💻",
+   "color": "#6C5CE7",
+   "type": "income"
+  },
+  {
+   "name": "Outros",
+   "icon": "📦",
+   "color": "#636E72"
+  }
+ ],
+ "br": [
+  {
+   "name": "Comida e restaurantes",
+   "icon": "🍔",
+   "color": "#FF6B6B"
+  },
+  {
+   "name": "Mercado",
+   "icon": "🛒",
+   "color": "#4ECDC4"
+  },
+  {
+   "name": "Bebidas alcoólicas",
+   "icon": "🍺",
+   "color": "#D63031"
+  },
+  {
+   "name": "Casa",
+   "icon": "🧴",
+   "color": "#00CEC9"
+  },
+  {
+   "name": "Transporte",
+   "icon": "🚗",
+   "color": "#45B7D1"
+  },
+  {
+   "name": "Compras",
+   "icon": "🛍️",
+   "color": "#96CEB4"
+  },
+  {
+   "name": "Lazer",
+   "icon": "🎬",
+   "color": "#FFEAA7"
+  },
+  {
+   "name": "Contas e serviços",
+   "icon": "💡",
+   "color": "#DFE6E9"
+  },
+  {
+   "name": "Saúde",
+   "icon": "💊",
+   "color": "#A29BFE"
+  },
+  {
+   "name": "Educação",
+   "icon": "📚",
+   "color": "#6C5CE7"
+  },
+  {
+   "name": "Roupas",
+   "icon": "👕",
+   "color": "#FD79A8"
+  },
+  {
+   "name": "Presentes",
+   "icon": "🎁",
+   "color": "#E17055"
+  },
+  {
+   "name": "Viagens",
+   "icon": "✈️",
+   "color": "#00B894"
+  },
+  {
+   "name": "Assinaturas",
+   "icon": "📱",
+   "color": "#0984E3"
+  },
+  {
+   "name": "Salário",
+   "icon": "💰",
+   "color": "#00B894",
+   "type": "income"
+  },
+  {
+   "name": "Freelance",
+   "icon": "💻",
+   "color": "#6C5CE7",
+   "type": "income"
+  },
+  {
+   "name": "Outros",
+   "icon": "📦",
+   "color": "#636E72"
+  }
  ]
 }

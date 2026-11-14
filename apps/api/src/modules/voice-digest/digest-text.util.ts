@@ -1,7 +1,7 @@
 import type { DigestFacts } from './digest-facts.util';
 
 /** Languages the weekly voice digest can narrate in. */
-export const DIGEST_LANGS: readonly string[] = ['en', 'pl', 'de', 'es', 'fr', 'ru', 'ua', 'be', 'nl'];
+export const DIGEST_LANGS: readonly string[] = ['en', 'pl', 'de', 'es', 'fr', 'ru', 'ua', 'be', 'nl', 'pt', 'br'];
 
 interface LangTemplates {
   weekOnly: (amt: number, cur: string) => string;
@@ -163,6 +163,36 @@ const TEMPLATES: Record<string, LangTemplates> = {
     restock: (list) => `Bijna op: ${list}.`,
     realChange: (signedPct) => `Salaris na jouw inflatie: ${signedPct} over het jaar.`,
   },
+  pt: {
+    weekOnly: (amt, cur) => `Esta semana gastou ${amt} ${cur} em despesas do dia a dia.`,
+    weekWithChange: (amt, cur, absPct, dir, usualAmt) =>
+      `Esta semana gastou ${amt} ${cur} em despesas do dia a dia, ${absPct}% ${dir} do que o habitual (normalmente cerca de ${usualAmt} ${cur}).`,
+    dirBelow: 'menos',
+    dirAbove: 'mais',
+    topRise: (category, pct) => `${category} subiu ${pct}%.`,
+    safeToSpend: (amt, cur) => `Hoje pode gastar com segurança ${amt} ${cur}.`,
+    payday: (days) => `Dias até ao salário: ${days}.`,
+    shieldItem: (name, absPct, dir) => `${name} pode ${dir} ${absPct}% no próximo mês.`,
+    dirRise: 'subir',
+    dirFall: 'descer',
+    restock: (list) => `Está a acabar: ${list}.`,
+    realChange: (signedPct) => `Salário depois da sua inflação: ${signedPct} ao longo do ano.`,
+  },
+  br: {
+    weekOnly: (amt, cur) => `Nesta semana você gastou ${amt} ${cur} em despesas do dia a dia.`,
+    weekWithChange: (amt, cur, absPct, dir, usualAmt) =>
+      `Nesta semana você gastou ${amt} ${cur} em despesas do dia a dia, ${absPct}% ${dir} que o normal (normalmente cerca de ${usualAmt} ${cur}).`,
+    dirBelow: 'a menos',
+    dirAbove: 'a mais',
+    topRise: (category, pct) => `${category} subiu ${pct}%.`,
+    safeToSpend: (amt, cur) => `Hoje você pode gastar com segurança ${amt} ${cur}.`,
+    payday: (days) => `Dias até o salário: ${days}.`,
+    shieldItem: (name, absPct, dir) => `${name} pode ${dir} ${absPct}% no mês que vem.`,
+    dirRise: 'subir',
+    dirFall: 'cair',
+    restock: (list) => `Está acabando: ${list}.`,
+    realChange: (signedPct) => `Salário depois da sua inflação: ${signedPct} ao longo do ano.`,
+  },
 };
 
 /**
@@ -316,9 +346,14 @@ export function isFaithful(text: string, f: DigestFacts): boolean {
   return found.every((n) => allowed.some((a) => Math.abs(a - n) <= 0.5));
 }
 
-/** WhatsApp template locale: ua -> uk, be -> ru, others unchanged, unknown -> en. */
+/**
+ * WhatsApp template locale (Meta's language codes, not BCP-47): ua -> uk, be -> ru,
+ * pt -> pt_PT, br -> pt_BR, others unchanged, unknown -> en.
+ */
 export function templateLanguage(lang: string): string {
   if (lang === 'ua') return 'uk';
   if (lang === 'be') return 'ru';
+  if (lang === 'pt') return 'pt_PT';
+  if (lang === 'br') return 'pt_BR';
   return DIGEST_LANGS.includes(lang) ? lang : 'en';
 }

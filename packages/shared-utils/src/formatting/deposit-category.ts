@@ -19,6 +19,8 @@ const DEPOSIT_CATEGORY_NAMES: Record<string, string> = {
   ru: 'Залог за тару',
   ua: 'Застава за тару',
   be: 'Закладзь за тару',
+  pt: 'Depósito de embalagens',
+  br: 'Vasilhame',
 };
 
 const RESERVED = new Set(Object.values(DEPOSIT_CATEGORY_NAMES).map((n) => n.trim().toLowerCase()));

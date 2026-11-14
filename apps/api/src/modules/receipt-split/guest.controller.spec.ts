@@ -1519,10 +1519,11 @@ describe('renderGuestPage — each pay block now names its destination method an
  * `undefined`/a crash would only surface in production for that one language's guests.
  */
 describe('guest-page-i18n — methodLabel + payButton exist and produce real text in all 9 languages', () => {
-  const langs = ['en', 'ru', 'ua', 'pl', 'es', 'fr', 'de', 'be', 'nl'];
+  const langs = ['en', 'ru', 'ua', 'pl', 'es', 'fr', 'de', 'be', 'nl', 'pt', 'br'];
 
   it.each(langs)('lang "%s" resolves a non-empty method label and pay-button string for every method', (lang) => {
     const strings = getGuestPageStrings(lang);
+    if (lang !== 'en') expect(strings.yourShareLabel).not.toBe(getGuestPageStrings('en').yourShareLabel);
     for (const method of ['revolut', 'paypal', 'blik', 'cash', 'other']) {
       const label = strings.methodLabel(method);
       expect(typeof label).toBe('string');
@@ -1539,5 +1540,22 @@ describe('guest-page-i18n — methodLabel + payButton exist and produce real tex
     expect(strings.methodLabel('revolut')).toBe('Revolut');
     expect(strings.methodLabel('paypal')).toBe('PayPal');
     expect(strings.methodLabel('blik')).toBe('BLIK');
+  });
+});
+
+describe('resolveGuestLang — external language tags', () => {
+  const { resolveGuestLang } = require('./helpers/guest-page-i18n');
+  const withHeader = (h: string) => resolveGuestLang({ query: {}, headers: { 'accept-language': h } });
+
+  it('maps pt-BR to br, other pt-* to pt, uk to ua', () => {
+    expect(withHeader('pt-BR,pt;q=0.9')).toBe('br');
+    expect(withHeader('pt-PT')).toBe('pt');
+    expect(withHeader('uk-UA')).toBe('ua');
+  });
+
+  it('treats ?lang= internal codes as exact and resolves external tags', () => {
+    expect(resolveGuestLang({ query: { lang: 'pt' }, headers: {} })).toBe('pt');
+    expect(resolveGuestLang({ query: { lang: 'pt-BR' }, headers: {} })).toBe('br');
+    expect(withHeader('pt')).toBe('br');
   });
 });

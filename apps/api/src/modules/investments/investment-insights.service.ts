@@ -22,6 +22,8 @@ export class InvestmentInsightsService {
     es: 'Spanish',
     fr: 'French',
     pl: 'Polish',
+    pt: 'European Portuguese',
+    br: 'Brazilian Portuguese',
     be: 'Belarusian',
   };
 

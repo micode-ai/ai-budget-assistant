@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Entrada por voz e escaneamento de recibos</title>
+<meta name="description" content="Deixe a IA trabalhar.">
+<link rel="canonical" href="https://ai-budget.pl/help/br/voice-and-receipt/"><meta name="robots" content="index,follow,max-image-preview:large">
+<meta property="og:type" content="article"><meta property="og:site_name" content="AI Budget Assistant">
+<meta property="og:locale" content="pt_BR"><meta property="og:title" content="Entrada por voz e escaneamento de recibos">
+<meta property="og:description" content="Deixe a IA trabalhar."><meta property="og:url" content="https://ai-budget.pl/help/br/voice-and-receipt/">
+<meta property="og:image" content="https://ai-budget.pl/help/br/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Entrada por voz e escaneamento de recibos">
+<meta name="twitter:description" content="Deixe a IA trabalhar."><meta name="twitter:image" content="https://ai-budget.pl/help/br/assets/og-default.png">
+<link rel="alternate" hreflang="en" href="https://ai-budget.pl/help/en/voice-and-receipt/">
+<link rel="alternate" hreflang="pl" href="https://ai-budget.pl/help/pl/voice-and-receipt/">
+<link rel="alternate" hreflang="de" href="https://ai-budget.pl/help/de/voice-and-receipt/">
+<link rel="alternate" hreflang="es" href="https://ai-budget.pl/help/es/voice-and-receipt/">
+<link rel="alternate" hreflang="fr" href="https://ai-budget.pl/help/fr/voice-and-receipt/">
+<link rel="alternate" hreflang="ru" href="https://ai-budget.pl/help/ru/voice-and-receipt/">
+<link rel="alternate" hreflang="uk" href="https://ai-budget.pl/help/ua/voice-and-receipt/">
+<link rel="alternate" hreflang="be" href="https://ai-budget.pl/help/be/voice-and-receipt/">
+<link rel="alternate" hreflang="nl" href="https://ai-budget.pl/help/nl/voice-and-receipt/">
+<link rel="alternate" hreflang="pt-PT" href="https://ai-budget.pl/help/pt/voice-and-receipt/">
+<link rel="alternate" hreflang="pt-BR" href="https://ai-budget.pl/help/br/voice-and-receipt/">
+<link rel="alternate" hreflang="x-default" href="https://ai-budget.pl/help/en/voice-and-receipt/">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MiCode Sp. z o.o.", "alternateName": ["MICODE sp. z o.o.", "MiCode"], "taxID": "5833510147", "founder": {"@id": "https://ai-budget.pl/#author"}, "url": "https://mi-code.pl/", "sameAs": ["https://mi-code.pl/", "https://github.com/micode-ai", "https://www.instagram.com/micode.development/", "https://www.wikidata.org/wiki/Q141551004"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Entrada por voz e escaneamento de recibos", "description": "Deixe a IA trabalhar.", "inLanguage": "pt-BR", "datePublished": "2026-06-19", "dateModified": "2026-11-14", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/br/voice-and-receipt/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/br/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/br/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Início", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Ajuda", "item": "https://ai-budget.pl/help/br/"}, {"@type": "ListItem", "position": 3, "name": "Entrada por voz e escaneamento de recibos", "item": "https://ai-budget.pl/help/br/voice-and-receipt/"}]}]}</script>
+<style>
+:root{--o:#B45309;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
+*{box-sizing:border-box}
+html,body{overflow-x:hidden}
+body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.7}
+.wrap{max-width:760px;margin:0 auto;padding:0 22px}
+header.site{position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);z-index:10}
+header.site .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+.brand{font-weight:800;color:var(--ink);text-decoration:none;font-size:18px}.brand span{color:var(--o)}
+.nav{display:flex;align-items:center;gap:16px}.nav>a{color:var(--mut);font-weight:600;font-size:15px;text-decoration:none}
+.btn-login{color:#fff!important;background:var(--o);padding:8px 14px;border-radius:8px}
+.langmenu{position:relative}.langmenu>summary{list-style:none;cursor:pointer;color:var(--mut);font-weight:600;font-size:15px}
+.langmenu>summary::-webkit-details-marker{display:none}
+.langlist{position:absolute;top:150%;right:0;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,.12);padding:6px;min-width:170px;z-index:20}
+.langlist a{display:block;padding:9px 12px;border-radius:8px;color:#3a3a42;font-size:14px;font-weight:600;text-decoration:none}
+.langlist a:hover{background:#fff3e6}.langlist a.active{color:var(--o)}
+nav.crumb{font-size:13px;color:var(--mut);padding:16px 0}nav.crumb a{color:var(--mut)}
+article h1{font-size:32px;line-height:1.25;margin:8px 0 16px}
+article h2{font-size:23px;margin:34px 0 10px}article h3{font-size:18px;margin:24px 0 8px}
+article p,article li{font-size:17px;color:#27272e}article a{color:var(--o)}article ul{padding-left:22px}
+article .byline{color:var(--mut);font-size:14px;margin:-6px 0 20px}
+article img{display:block;width:100%;max-width:320px;height:auto;margin:20px auto;border-radius:14px;border:1px solid var(--line)}
+hr{border:0;border-top:1px solid var(--line);margin:32px 0}
+.tablewrap{overflow-x:auto;margin:18px 0}
+article table{border-collapse:collapse;width:100%;font-size:15px}
+article th,article td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top}
+article th{background:#faf6f1;font-weight:700}
+article tbody tr:nth-child(even) td{background:#fafafb}
+.cta{margin:36px 0;padding:22px;border:1px solid var(--line);border-radius:14px;background:#fffaf4}
+.cta h3{margin:0 0 6px}.cta p{margin:0 0 14px;color:var(--mut);font-size:15px}
+.btn{display:inline-block;margin:4px 8px 4px 0;padding:11px 18px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px}
+.btn.p{background:var(--o);color:#fff}.btn.s{background:#fff;color:var(--ink);border:1px solid #e3e3e8}
+.related{margin:36px 0}.related h2{font-size:20px}
+.related a{display:block;padding:12px 0;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink);font-weight:600}
+.card{display:block;padding:18px 0;border-bottom:1px solid var(--line);text-decoration:none}
+.card h2{margin:0 0 6px;font-size:21px;color:var(--ink)}.card p{margin:0;color:var(--mut);font-size:15px}
+.cmeta{font-size:13px;color:var(--mut);margin:0 0 4px!important}
+.cfoot{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px!important}
+.ccat{background:#f1f1f4;color:#3a3a42;border-radius:4px;padding:2px 8px;font-size:12px}
+.more{color:var(--o);font-weight:600;font-size:14px}
+.card:hover h2{text-decoration:underline}
+.blogfilter>input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 4px}
+.chip{background:#f1f1f4;color:#3a3a42;border-radius:999px;padding:5px 13px;font-size:13px;cursor:pointer;user-select:none}
+.chip:hover{background:#e4e4ea}
+#bc-all:checked~.chips label[for=bc-all],#bc-budget:checked~.chips label[for=bc-budget],
+#bc-expenses:checked~.chips label[for=bc-expenses],#bc-saving:checked~.chips label[for=bc-saving]{background:var(--o);color:#fff}
+#bc-budget:checked~.cards>.card:not(.cat-budget),
+#bc-expenses:checked~.cards>.card:not(.cat-expenses),
+#bc-saving:checked~.cards>.card:not(.cat-saving){display:none}
+.blogfilter>input:focus-visible~.chips label{outline:2px solid var(--o);outline-offset:2px}
+footer.site{border-top:1px solid var(--line);background:#fafafb;color:#63636b;font-size:14px;text-align:center;margin-top:48px}
+footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-items:center;gap:16px}
+.f-links{display:flex;gap:18px;flex-wrap:wrap;justify-content:center}.f-links a{color:var(--mut);font-weight:600;text-decoration:none}
+.f-co{display:flex;align-items:center;justify-content:center;gap:12px;border-top:1px solid var(--line);padding-top:16px;width:100%}
+.f-co img{height:30px;width:30px}
+.f-badge{display:flex;justify-content:center;align-items:center;gap:16px;flex-wrap:wrap}.f-badge .b-sf{height:34px;width:108px}.f-badge .b-pp{height:34px;width:120px}.f-badge .b-fo{height:34px;width:88px}.f-badge .b-fz{height:34px;width:144px}.f-badge .b-ls{height:34px;width:109px}.f-badge .b-un{height:34px;width:130px}.f-badge .b-tc{height:34px;width:109px}.f-badge .b-swb{height:34px;width:136px}.f-badge .b-lf{height:34px;width:126px}.f-badge .b-as{height:34px;width:130px}
+.cc{position:fixed;left:16px;right:16px;bottom:16px;max-width:560px;margin:0 auto;background:#1a1a1d;color:#fff;border-radius:14px;padding:16px 18px;box-shadow:0 12px 40px rgba(0,0,0,.35);z-index:60;font-size:14px;display:none}
+.cc.show{display:block}.cc p{margin:0 0 12px;line-height:1.5}
+.cc .row{display:flex;gap:10px;justify-content:flex-end}
+.cc button{cursor:pointer;border:0;border-radius:8px;padding:9px 16px;font-weight:700;font-size:14px}
+.cc .ok{background:var(--o);color:#fff}.cc .no{background:#2e2e33;color:#cfcfd6}
+.lang-short{display:none}
+@media(max-width:760px){header.site .wrap{padding:0 16px}.brand{font-size:16px;white-space:nowrap}.nav{gap:10px}.btn-login{padding:8px 12px}}
+@media(max-width:480px){.lang-full{display:none}.lang-short{display:inline}}
+.calc{border:1px solid #e5e5ea;border-radius:12px;padding:16px 18px;margin:20px 0}.calc h3{margin:0 0 10px}.calc label{display:block;margin:10px 0 4px;font-weight:600}.calc input,.calc select{width:100%;max-width:260px;padding:8px;font-size:16px;border-radius:8px;border:1px solid #ccc}.calc output{display:block;font-size:18px;font-weight:700}</style></head><body>
+<header class="site"><div class="wrap"><a class="brand" href="/br/">AI <span>Budget</span> Assistant</a>
+<nav class="nav"><details class="langmenu"><summary><span class="lang-full">Português (Brasil)</span><span class="lang-short">BR</span> &#9662;</summary><div class="langlist"><a class="" href="https://ai-budget.pl/help/en/voice-and-receipt/">English</a><a class="" href="https://ai-budget.pl/help/pl/voice-and-receipt/">Polski</a><a class="" href="https://ai-budget.pl/help/de/voice-and-receipt/">Deutsch</a><a class="" href="https://ai-budget.pl/help/es/voice-and-receipt/">Español</a><a class="" href="https://ai-budget.pl/help/fr/voice-and-receipt/">Français</a><a class="" href="https://ai-budget.pl/help/ru/voice-and-receipt/">Русский</a><a class="" href="https://ai-budget.pl/help/ua/voice-and-receipt/">Українська</a><a class="" href="https://ai-budget.pl/help/be/voice-and-receipt/">Беларуская</a><a class="" href="https://ai-budget.pl/help/nl/voice-and-receipt/">Nederlands</a><a class="" href="https://ai-budget.pl/help/pt/voice-and-receipt/">Português (Portugal)</a><a class="active" href="https://ai-budget.pl/help/br/voice-and-receipt/">Português (Brasil)</a></div></details><a href="/blog/en/">Blog</a><a class="btn-login" href="https://app.ai-budget.pl?src=help&amp;loc=nav&amp;lang=pt-BR">Entrar</a></nav></div></header>
+<main class="wrap"><nav class="crumb"><a href="/br/">Início</a> / <a href="/help/br/">Ajuda</a> / <span>Entrada por voz e escaneamento de recibos</span></nav><article><h1>Entrada por voz e escaneamento de recibos</h1>
+<blockquote>
+<p>Deixe a IA trabalhar. Fale a despesa com naturalidade ou fotografe um recibo — o app extrai automaticamente o valor, a descrição, o estabelecimento e a categoria.</p>
+</blockquote>
+<h2>Despesa por voz</h2>
+<p><img alt="Tela de despesa por voz" src="/help/assets/img/voice-expense-4.jpg" /></p>
+<h3>Como funciona</h3>
+<ol>
+<li>Toque em <strong>Entrada por voz</strong> nas ações rápidas do Painel, ou toque em <strong>+</strong> na tela Transações e escolha <strong>Entrada por voz</strong></li>
+<li>Você verá um grande ícone de microfone com o texto <strong>“Toque para começar a falar”</strong></li>
+<li>Toque no botão do microfone para começar a gravar</li>
+<li>Fale com naturalidade, por exemplo: <em>“Café no Starbucks, cinco dólares”</em></li>
+<li>Toque de novo para parar a gravação</li>
+<li>O app processa sua fala e extrai os dados da despesa</li>
+</ol>
+<h3>Tela de confirmação</h3>
+<p>Depois do processamento, você verá uma confirmação com os dados reconhecidos:</p>
+<ul>
+<li><strong>Valor</strong> — extraído da sua fala (editável)</li>
+<li><strong>Descrição</strong> — a que se refere a despesa (editável)</li>
+<li><strong>Estabelecimento</strong> — onde você gastou (editável)</li>
+<li><strong>Categoria</strong> — atribuída automaticamente (editável)</li>
+<li>Indicador de <strong>confiança</strong> — Confiança alta ou Confiança média</li>
+</ul>
+<p>Revise os dados, faça as correções necessárias e então:
+- Toque em <strong>Salvar despesa</strong> para confirmar e salvar
+- Toque em <strong>Tentar novamente</strong> para gravar de novo</p>
+<p>Depois de salvar, você pode tocar em <strong>Adicionar outra</strong> para gravar uma nova despesa por voz.</p>
+<h3>Dicas para melhores resultados</h3>
+<ul>
+<li>Fale com clareza e diga tanto o item/descrição quanto o valor</li>
+<li>Diga o nome do estabelecimento, se for relevante (por exemplo, “Almoço no McDonald&rsquo;s, doze euros”)</li>
+<li>Informe a moeda se ela for diferente da sua moeda padrão</li>
+<li>Mantenha a simplicidade — uma despesa por gravação</li>
+</ul>
+<h2>Escanear recibo</h2>
+<p><img alt="Tela Escanear recibo" src="/help/assets/img/scan-receipt-4.jpg" /></p>
+<h3>Como funciona</h3>
+<ol>
+<li>Toque em <strong>Escanear recibo</strong> nas ações rápidas do Painel, ou toque em <strong>+</strong> na tela Transações e escolha <strong>Escanear recibo</strong></li>
+<li>Você verá três opções:
+   - <strong>Tirar foto</strong> — abre a câmera para fotografar o recibo
+   - <strong>Escolher da galeria</strong> — selecione uma foto existente
+   - <strong>Enviar PDF</strong> — escolha um arquivo PDF (faturas digitais, recibos escaneados de até 10 MB)</li>
+<li>Se quiser, escreva <strong>Instruções adicionais para a IA</strong> (por exemplo, “Dividir em partes iguais entre duas pessoas”, “Ignorar a gorjeta”)</li>
+<li>O app analisa o recibo e extrai os dados</li>
+</ol>
+<h3>Tela de confirmação</h3>
+<p>Depois da análise da IA, você verá:</p>
+<ul>
+<li><strong>Valor total</strong> — extraído do recibo (editável)</li>
+<li><strong>Descrição</strong> — resumo gerado (editável)</li>
+<li><strong>Estabelecimento</strong> — nome da loja/restaurante (editável)</li>
+<li><strong>Categoria</strong> — atribuída automaticamente (editável)</li>
+<li><strong>Data</strong> — tirada do recibo (editável)</li>
+<li><strong>Itens</strong> — itens individuais com quantidades e preços (se forem detectados) — toque em um item para editá-lo, excluí-lo ou adicionar um que o escaneamento não pegou (veja <strong>Editar itens</strong> abaixo)</li>
+<li><strong>Desconto</strong> — valor do desconto (se constar no recibo)</li>
+<li>Indicador de <strong>confiança</strong> — alta ou média</li>
+<li>Opção <strong>Salvar imagem do recibo</strong> — mantém a foto anexada à despesa</li>
+</ul>
+<p>Revise e corrija os dados e então:
+- Toque em <strong>Salvar despesa</strong> para confirmar
+- Toque em <strong>Escanear de novo</strong> para tentar outra foto</p>
+<h3>Ampliar o recibo</h3>
+<p>Toque na pequena foto do recibo na tela de confirmação — ou no recibo na tela de detalhes de uma despesa — para abri-lo em tela cheia. No celular, faça o gesto de pinça para ampliar (até 5×), toque duas vezes para ampliar naquele ponto e toque duas vezes de novo para ver o recibo inteiro, e arraste com um dedo para se mover enquanto estiver ampliado. No navegador, role a roda do mouse para ampliar onde está o ponteiro, arraste para se mover, clique duas vezes para ampliar ou reduzir, ou use os botões <strong>+</strong>, <strong>−</strong> e de ajuste no canto. O recibo sempre abre mostrando a página inteira. Recibos em PDF abrem como antes.</p>
+<h3>Dicas para melhores resultados</h3>
+<ul>
+<li>Fotografe com boa iluminação — evite sombras e reflexos</li>
+<li>Garanta que o recibo inteiro esteja visível e plano</li>
+<li>Segure a câmera com firmeza para evitar fotos tremidas</li>
+<li>Use <strong>Instruções adicionais para a IA</strong> para casos especiais (por exemplo, “Isto está em EUR”, “Ignorar o primeiro item”)</li>
+</ul>
+<h3>Editar itens</h3>
+<p>A extração por IA nem sempre é perfeita — um dígito de um preço pode se perder, um desconto pode se misturar a um preço unitário ou o escaneamento pode deixar passar uma linha inteira. Você não precisa escanear de novo nem excluir a despesa inteira para corrigir:</p>
+<ul>
+<li><strong>Toque em qualquer item</strong> da lista para editar o nome, a quantidade, o preço unitário ou o preço total. Toque em <strong>Salvar</strong> para aplicar a correção.</li>
+<li><strong>Toque no ícone da lixeira</strong> ao lado de um item para removê-lo — útil para uma linha duplicada ou inventada.</li>
+<li><strong>Toque em + Adicionar item</strong> no fim da lista para adicionar uma linha que o escaneamento não pegou.</li>
+</ul>
+<p>Todos os itens são listados — não há limite, por mais itens que o recibo tenha. Qualquer alteração atualiza na hora a divisão por categoria e os totais, então o que você salva sempre corresponde ao que está na tela. O total geral do recibo, o desconto e o vasilhame ficam como foram escaneados; só os itens individuais podem ser editados.</p>
+<h3>Divisão por categoria</h3>
+<p>Recibos de supermercado costumam misturar vários tipos de itens na mesma compra — alimentos, produtos de limpeza, bebidas alcoólicas. Quando o app reconhece mais de um tipo de item em um recibo, ele divide automaticamente a despesa entre as categorias correspondentes, em vez de colocar tudo em uma só.</p>
+<ul>
+<li>Na tela de confirmação, aparece acima da lista de itens uma fileira de chips de categoria, com o título <strong>Dividir por categoria</strong> (por exemplo, “Mercado 180 · Casa 35 · Bebidas alcoólicas 25”), mostrando como o total será dividido.</li>
+<li>Toque em <strong>Alterar categorias</strong> para abrir a lista de todos os itens e ajustar a categoria de cada um. Suas alterações valem na hora — e ficam memorizadas, para que o mesmo produto seja classificado corretamente na próxima vez que você o escanear.</li>
+<li>Se os itens não somarem um valor próximo o bastante do total do recibo, o app usa uma única categoria em vez de adivinhar.</li>
+<li>O vasilhame de garrafas e latas é reconhecido e mostrado em uma categoria própria, para você ver quanto dos seus gastos corresponde a vasilhame já pago.</li>
+<li>Isso também conta para os seus orçamentos por categoria — um orçamento em uma categoria que só aparece dentro de uma divisão de recibo, como Bebidas alcoólicas ou um orçamento de vasilhame, finalmente acompanha os gastos corretamente, e um orçamento de Mercado deixa de contar os produtos de casa ou o vasilhame do mesmo recibo.</li>
+<li>Às vezes nenhuma das suas categorias existentes serve para um grupo de itens. Quando isso acontece, o app sugere uma categoria nova, mostrada como um chip marcado com <strong>+</strong> (por exemplo, “+ Produtos de limpeza 10”). Nada é criado ainda — toque em <strong>Alterar categorias</strong> para passar esses itens para uma das suas categorias existentes, ou deixe como sugerido. A nova categoria só é criada de fato quando você salva o recibo.</li>
+<li>O app não inventa mais uma categoria que duplique uma que você já tem — uma tradução, um sinônimo ou uma parte de uma categoria existente (por exemplo “Pão” ao lado de “Mercado”). Esses itens vão para a sua categoria existente ou para uma subcategoria dela; uma categoria nova só é sugerida para um tipo de gasto realmente novo, e o app nunca cria subcategorias por você.</li>
+</ul>
+<p>Funciona do mesmo jeito se você escanear pelo app ou pelos bots do Telegram, WhatsApp ou Slack.</p>
+<h3>Escanear uma pilha de recibos</h3>
+<p>Acumulou uma semana de recibos de papel? Depois de salvar um, a mensagem de confirmação oferece duas opções em vez de simplesmente fechar a tela:</p>
+<ul>
+<li><strong>Escanear outro</strong> — volta direto para a câmera sem sair da tela, para você dar conta de uma pilha inteira em sequência</li>
+<li><strong>Concluído</strong> — encerra e leva você de volta para onde começou</li>
+</ul>
+<p>Enquanto você escaneia, um pequeno contador mostra quantos recibos você salvou nesta sessão. A cada 15 recibos, o app mostra um lembrete amigável de que você pode continuar ou fazer uma pausa — seu progresso já está salvo de qualquer forma. O contador zera quando você sai da tela; ele serve só para dar uma noção de progresso durante uma sessão.</p>
+<h3>Recibo comprido em várias fotos</h3>
+<p>Um recibo comprido demais para uma única foto legível pode ser fotografado em partes e lido como <strong>um só</strong> recibo.</p>
+<p><strong>No app</strong></p>
+<ol>
+<li>Na tela do recibo, toque em <strong>Recibo comprido? Fotografe por partes</strong></li>
+<li>Fotografe o recibo de cima para baixo, com uma pequena sobreposição entre as fotos (a última linha de uma foto deve aparecer de novo no topo da seguinte) — você pode adicionar até <strong>4 partes</strong></li>
+<li>Toque em <strong>Ler recibo</strong>. Você recebe um único cartão de confirmação com cada linha uma só vez; as linhas sobrepostas não são contadas duas vezes</li>
+<li>Se os totais das linhas não baterem com o total do recibo, o app avisa e oferece <strong>Refazer partes</strong> em vez de salvar</li>
+</ol>
+<p>Cada parte conta como um escaneamento de recibo no seu limite mensal de IA, então um recibo em três partes usa três escaneamentos. Um PDF não pode ser combinado com fotos. A despesa guarda todas as fotos: abra o recibo na despesa e toque em uma parte para vê-la.</p>
+<p><strong>Nos bots do Telegram, WhatsApp e Slack</strong></p>
+<p>Envie as fotos uma depois da outra. A primeira foto é lida na hora. Enquanto o cartão de confirmação ainda estiver aberto, envie a próxima foto — o bot pergunta se é uma <strong>Continuação</strong> ou um <strong>Recibo novo</strong>. Escolha <strong>Continuação</strong> e o cartão é refeito a partir de todas as fotos juntas (as correções que você digitou no cartão antigo não são mantidas, então confira o novo). As fotos precisam ser JPEG, PNG ou WebP e não muito grandes; o bot avisa se alguma for recusada.</p>
+<h3>Recibos já escaneados</h3>
+<p>O app avisa antes que um recibo entre duas vezes nas suas despesas:</p>
+<ul>
+<li><strong>O mesmo arquivo de novo</strong> — se você escolher uma foto ou um PDF que já foi escaneado e salvo, o app pergunta <em>antes</em> de lê-lo, então nenhuma solicitação de IA é gasta. Escolha <strong>Abrir</strong> para ver a despesa salva, <strong>Escanear mesmo assim</strong> para lê-lo de novo, ou <strong>Cancelar</strong>.</li>
+<li><strong>O mesmo recibo, foto nova</strong> — depois da leitura, se já existir uma despesa com a mesma loja, o mesmo valor e a mesma data (±1 dia), a tela de confirmação mostra um aviso amarelo com um botão <strong>Abrir</strong>. Você ainda pode salvar: pode ser de fato uma segunda compra.</li>
+<li><strong>Já registrado pelo banco</strong> — se a despesa correspondente veio de uma notificação do banco ou de uma importação de extrato bancário, o aviso informa isso e oferece <strong>Juntar em uma só despesa</strong>. Com a opção marcada, ao salvar o recibo é mantido (itens, foto e categoria) e substitui o lançamento do banco, para que a compra seja contada uma só vez. A caixa começa desmarcada quando só o valor e a data coincidem — confira antes de juntar.</li>
+<li><strong>Já adicionado manualmente</strong> — se você mesmo registrou esta compra antes — digitada, por voz ou em uma mensagem ao bot (por exemplo, “Netto”, enquanto o recibo imprime “Netto nr 541”) — o aviso informa isso e oferece a mesma opção <strong>Juntar em uma só despesa</strong>. Esta caixa começa desmarcada, porque uma despesa digitada manualmente pode ser uma compra diferente — marque-a se for a mesma. O recibo substitui seu lançamento; suas notas, tags e projeto são transferidos. Se você deixar como está, o par também aparece mais tarde nos alertas, com um botão para juntar.</li>
+</ul>
+<p>Os bots do Telegram, WhatsApp e Slack dão os mesmos avisos, com um botão <strong>Escanear mesmo assim</strong>. Quando a correspondência é um lançamento seu ou a cópia do banco, ao tocar em <strong>Adicionar despesa</strong> o bot pergunta se você quer juntar: <strong>Juntar</strong> mantém o recibo e incorpora o outro lançamento a ele, <strong>Manter os dois</strong> salva o recibo separadamente.</p>
+<h3>Compartilhar a partir de outro app (Android)</h3>
+<p>Recebeu um recibo como captura de tela, uma confirmação do app do banco ou um recibo eletrônico em PDF? Você não precisa abrir o escâner:</p>
+<ol>
+<li>Em qualquer app (galeria, Gmail, seu banco, o app de uma loja), toque em <strong>Compartilhar</strong></li>
+<li>Escolha <strong>AI Budget</strong></li>
+<li>O app abre direto na tela de confirmação já preenchida — confira e toque em <strong>Salvar</strong></li>
+</ol>
+<p>Você pode compartilhar <strong>imagens e PDFs</strong>, até <strong>10 arquivos por vez</strong> (um PDF de até 10 MB). Vários arquivos viram despesas separadas, uma após a outra — o título mostra seu progresso (“Recibo 2 de 5”) e <strong>Próximo</strong> leva você ao arquivo seguinte. Se um arquivo não puder ser lido, escolha <strong>Pular</strong> ou <strong>Inserir manualmente</strong>. Ao fechar a tela, o app pergunta antes de descartar os arquivos que ainda estão na fila. Cada arquivo conta como um escaneamento de recibo no seu limite de IA; se o limite acabar, os arquivos restantes ficam para depois.</p>
+<p><strong>Textos de pagamento:</strong> selecione um SMS do banco, um e-mail ou uma mensagem de chat, toque em <strong>Compartilhar</strong> e escolha AI Budget. O app lê o valor e o estabelecimento e abre o formulário de nova despesa já preenchido — confira e salve. Um texto que não pareça um pagamento (um anúncio, uma transação recusada) nunca vira uma despesa. Somente Android.</p>
+<p>O compartilhamento funciona somente no Android. No iPhone e no app web, use <strong>Escanear recibo</strong>.</p>
+<h3>Encaminhar recibos eletrônicos por e-mail</h3>
+<p>Muitas lojas físicas e on-line enviam por e-mail um recibo ou uma confirmação de pedido. Em vez de escaneá-lo, você pode encaminhá-lo para o seu endereço privado. Cada e-mail encaminhado aparece no app como uma despesa esperando por você. <strong>Nada é salvo até você confirmar.</strong></p>
+<blockquote>
+<p><strong>Em liberação gradual.</strong> Este recurso está sendo ativado aos poucos. Se você vir <strong>Recibos por e-mail</strong> em <strong>Configurações</strong>, já pode usá-lo. Se ainda não vir, ele ainda não chegou à sua conta.</p>
+</blockquote>
+<h4>Obter seu endereço</h4>
+<ol>
+<li>Abra <strong>Configurações</strong> → <strong>Recibos por e-mail</strong></li>
+<li>Toque em <strong>Criar meu endereço</strong>. Só proprietários e editores da conta podem fazer isso.</li>
+<li>Em <strong>Seu endereço privado</strong>, toque em <strong>Copiar</strong></li>
+<li>Em <strong>Adicionar recibos a</strong>, escolha a conta onde os recibos confirmados serão salvos. Só aparecem as contas que você pode editar.</li>
+</ol>
+<p>O endereço pertence a você, não à conta. Os membros de uma conta compartilhada nunca veem os e-mails que você encaminha.</p>
+<h4>Configurar o encaminhamento no Gmail</h4>
+<ol>
+<li>No Gmail, abra <strong>Configurações</strong> → <strong>Ver todas as configurações</strong> → <strong>Encaminhamento e POP/IMAP</strong> → <strong>Adicionar um endereço de encaminhamento</strong> e cole seu endereço privado</li>
+<li>O Gmail envia um código de confirmação para esse endereço. Ele aparece no app em <strong>Configurações</strong> → <strong>Recibos por e-mail</strong>, em um cartão <strong>Código de confirmação do Gmail</strong>, com um botão <strong>Copiar</strong>. Digite o código no Gmail. O código só é mostrado no app, nunca em uma notificação, e só por cerca de 30 minutos. Se ele já tiver sumido, peça ao Gmail para enviá-lo de novo.</li>
+<li>Crie um <strong>filtro</strong> (<strong>Configurações</strong> → <strong>Filtros e endereços bloqueados</strong>) para o endereço do remetente da loja, ou para um assunto como “recibo” ou “pedido”, e escolha <strong>Encaminhar para</strong> o seu endereço</li>
+</ol>
+<p>Não encaminhe todos os seus e-mails. Use um filtro. Isso protege sua privacidade, e mensagens sem relação não gastam seu limite de IA.</p>
+<h4>Configurar o encaminhamento no Outlook</h4>
+<ol>
+<li>No Outlook, abra <strong>Configurações</strong> → <strong>Email</strong> → <strong>Regras</strong> e adicione uma regra para as mensagens da loja ou com “recibo” no assunto</li>
+<li>Escolha a ação <strong>Encaminhar para</strong> e digite seu endereço privado</li>
+</ol>
+<p>Algumas contas Outlook.com e Microsoft 365 bloqueiam o encaminhamento automático para endereços externos. Se for o caso da sua, encaminhe cada recibo manualmente. Um encaminhamento manual pelo celular funciona tão bem quanto.</p>
+<h4>Confirmar um recibo</h4>
+<p>Quando um recibo encaminhado é lido, você recebe uma notificação. Você também verá um banner na tela Transações, <strong>Recibos por e-mail a confirmar: N</strong>. Você sempre pode abrir a lista em <strong>Configurações</strong> → <strong>Recibos por e-mail</strong> → <strong>Abrir a caixa de recibos por e-mail</strong>.</p>
+<ul>
+<li>A aba <strong>A confirmar</strong> lista os recibos esperando por você. Toque em um para abrir a tela de confirmação de recibo de sempre, confira os dados e toque em <strong>Salvar despesa</strong>.</li>
+<li>Se o recibo parecer uma despesa que você já tem, você vê o mesmo aviso de duplicidade de um recibo escaneado, incluindo <strong>Juntar em uma só despesa</strong>.</li>
+<li>Toque em <strong>Descartar</strong> para descartar um recibo sem salvá-lo.</li>
+<li>A aba <strong>Tratados</strong> mostra o que foi ignorado: um recibo que você já tem, um e-mail sem nenhum recibo, um que não pôde ser lido, ou um que ficou sem leitura porque seu limite de IA foi atingido. Quando for o caso, toque em <strong>Tentar novamente</strong>.</li>
+</ul>
+<p>Cada recibo eletrônico lido conta como um escaneamento de recibo no seu limite de IA. Duplicatas e e-mails sem recibo são ignorados sem gastá-lo. Se uma loja só enviar um link para o recibo, encaminhe o PDF, porque links nunca são abertos. Uma foto do recibo pode ficar guardada com a despesa. Um PDF ou um e-mail simples não é anexado. A lista precisa de conexão com a internet.</p>
+<h4>Se seu endereço vazar</h4>
+<p>Toque em <strong>Trocar endereço</strong>. O endereço antigo para de funcionar na hora, e os e-mails enviados para ele são rejeitados. Depois, atualize a regra de encaminhamento na sua caixa de e-mail para o novo endereço. O Gmail pede um código de confirmação de novo. Para parar de receber recibos eletrônicos de vez, toque em <strong>Desativar endereço</strong>.</p>
+<h4>Privacidade e retenção</h4>
+<ul>
+<li>Nosso servidor lê um e-mail encaminhado enquanto o processa, assim como qualquer recibo que você escaneia.</li>
+<li>Só o recibo em si é guardado, nunca o e-mail inteiro. Links no e-mail nunca são abertos, e as imagens nunca são carregadas.</li>
+<li>O recibo armazenado é excluído assim que você o confirma ou descarta.</li>
+<li>Os itens que você não confirmar são excluídos automaticamente após 30 dias.</li>
+<li>Os recibos por e-mail <strong>não estão disponíveis</strong> para contas com <strong>Nível 2 — Criptografia total</strong>. Com a criptografia de Nível 1 eles funcionam, mas os itens não confirmados são excluídos após 7 dias. Veja <a href="/help/br/encryption/">Criptografia</a>.</li>
+</ul>
+<h2>Receita por voz</h2>
+<p>Registre pagamentos recebidos por voz — o mesmo fluxo da despesa por voz, otimizado para receitas.</p>
+<h3>Como funciona</h3>
+<ol>
+<li>Toque em <strong>Receita por voz</strong> nas ações rápidas do Painel, ou toque no ícone do microfone no rodapé do formulário <strong>Adicionar receita</strong></li>
+<li>Toque no botão (verde) do microfone para começar a gravar</li>
+<li>Fale com naturalidade, por exemplo: <em>“Recebi 500 do cliente, honorários de consultoria”</em></li>
+<li>Toque de novo para parar a gravação</li>
+<li>O app extrai o valor, a descrição e a <strong>categoria de receita</strong> que melhor corresponde</li>
+</ol>
+<h3>Tela de confirmação</h3>
+<ul>
+<li><strong>Valor</strong> — extraído da sua fala (editável)</li>
+<li><strong>Descrição</strong> — a que se refere o pagamento (editável)</li>
+<li><strong>Categoria</strong> — categoria de receita atribuída automaticamente (editável)</li>
+<li><strong>Moeda</strong> — detectada ou, por padrão, a sua moeda base</li>
+</ul>
+<p>Toque em <strong>Salvar receita</strong> para confirmar, ou em <strong>Tentar novamente</strong> para gravar de novo.</p>
+<h3>Dicas para melhores resultados</h3>
+<ul>
+<li>Diga o valor e uma breve descrição</li>
+<li>Informe a moeda se ela for diferente da sua moeda padrão</li>
+</ul>
+<hr />
+<h2>Escanear fatura</h2>
+<p>Fotografe ou envie uma fatura ou um comprovante de pagamento para registrar a receita automaticamente.</p>
+<h3>Como funciona</h3>
+<ol>
+<li>Toque em <strong>Escanear fatura</strong> nas ações rápidas do Painel, ou toque no ícone de documento no rodapé do formulário <strong>Adicionar receita</strong></li>
+<li>Escolha <strong>Tirar foto</strong>, <strong>Escolher da galeria</strong> ou <strong>Enviar PDF</strong></li>
+<li>Se quiser, escreva instruções adicionais para a IA</li>
+<li>O app extrai o valor total, a data e a categoria</li>
+</ol>
+<h3>Tela de confirmação</h3>
+<ul>
+<li><strong>Valor total</strong> — extraído do documento</li>
+<li><strong>Descrição</strong> — resumo gerado</li>
+<li><strong>Categoria</strong> — categoria de receita atribuída automaticamente</li>
+<li><strong>Data</strong> — tirada do documento</li>
+</ul>
+<p>Revise os dados, toque em ✓ para salvar ou no ícone de lápis para abrir o formulário completo <strong>Adicionar receita</strong> com os dados já preenchidos.</p>
+<blockquote>
+<p><strong>Observação:</strong> O OCR de faturas extrai apenas o total e a data. Os itens das faturas são ignorados de propósito, para evitar contagem em dobro em documentos de cobrança com várias linhas.</p>
+</blockquote>
+<hr />
+<h2>Perguntas frequentes</h2>
+<ul>
+<li>
+<p><strong>P: Quais idiomas a entrada por voz suporta?</strong>
+  <strong>R:</strong> A entrada por voz funciona melhor no idioma configurado no app. Ela suporta todos os idiomas do app.</p>
+</li>
+<li>
+<p><strong>P: Posso escanear recibos em qualquer idioma?</strong>
+  <strong>R:</strong> Sim, a IA consegue processar recibos na maioria dos idiomas e extrai os valores e os itens independentemente do idioma do recibo.</p>
+</li>
+<li>
+<p><strong>P: Quais arquivos PDF são suportados?</strong>
+  <strong>R:</strong> São suportados tanto PDFs digitais (por exemplo, faturas da Amazon ou do PayPal) quanto recibos escaneados em PDF. O tamanho máximo do arquivo é 10 MB. PDFs digitais com texto selecionável são processados mais rápido e com mais precisão. Para melhores resultados com PDFs escaneados, garanta que o escaneamento esteja nítido e com bom contraste.</p>
+</li>
+<li>
+<p><strong>P: Por que o valor ficou errado depois do escaneamento?</strong>
+  <strong>R:</strong> A extração por IA nem sempre é perfeita. Sempre revise a tela de confirmação e corrija os erros antes de salvar. Recibos borrados ou danificados podem gerar resultados menos precisos. Se um item específico estiver errado, toque nele para editá-lo diretamente — veja <strong>Editar itens</strong> acima.</p>
+</li>
+<li>
+<p><strong>P: A entrada por voz e o escaneamento de recibos usam minhas solicitações de IA?</strong>
+  <strong>R:</strong> Sim, cada entrada por voz ou escaneamento de recibo usa uma solicitação de IA da sua cota mensal.</p>
+</li>
+<li>
+<p><strong>P: Por que um recibo ficou dividido entre várias categorias nos meus gráficos?</strong>
+  <strong>R:</strong> Quando um recibo mistura claramente tipos diferentes de itens (por exemplo, mercado e bebidas alcoólicas), o app o divide automaticamente entre as categorias correspondentes nos seus gráficos de gastos — e também nos seus orçamentos por categoria. Toque em <strong>Alterar categorias</strong> na tela de confirmação do recibo para ajustá-lo — as correções ficam memorizadas para a próxima vez.</p>
+</li>
+</ul>
+<hr />
+<p><em>Veja também: <a href="/help/br/expenses-and-income/">Despesas e receitas</a> | <a href="/help/br/ai-chat/">Chat IA</a></em></p></article><aside class="cta"><h3>Organize seu dinheiro com IA</h3><p>Registre despesas por voz ou com uma foto do recibo, acompanhe orçamentos e economias, junto com a família. Comece grátis.</p><a class="btn p" href="https://app.ai-budget.pl?src=help&amp;loc=cta&amp;lang=pt-BR">Abrir o app</a><a class="btn s" href="https://play.google.com/store/apps/details?id=com.budget.assistant&amp;referrer=src%3Dhelp%26loc%3Dcta%26lang%3Dpt-BR%26utm_source%3Dhelp%26utm_medium%3Dcta">Disponível no Google Play</a></aside><section class="related"><h2>Mais tópicos de ajuda</h2><a href="/help/br/getting-started/">Primeiros passos</a><a href="/help/br/dashboard/">Painel</a><a href="/help/br/expenses-and-income/">Despesas e receitas</a><a href="/help/br/budgets/">Orçamentos</a><a href="/help/br/analytics/">Análises</a><a href="/help/br/ai-chat/">Chat IA</a><a href="/help/br/spending-story/">História dos gastos</a><a href="/help/br/accounts/">Contas</a><a href="/help/br/wallet-and-exchange/">Carteira e câmbio</a><a href="/help/br/settings/">Configurações</a><a href="/help/br/subscription/">Planos de assinatura</a><a href="/help/br/gamification/">Conquistas e gamificação</a><a href="/help/br/investments/">Carteira de investimentos</a><a href="/help/br/encryption/">Criptografia de ponta a ponta</a><a href="/help/br/export-reports/">Exportação e relatórios</a><a href="/help/br/debts-and-loans/">Dívidas e empréstimos</a><a href="/help/br/savings-goals/">Metas de economia</a><a href="/help/br/fat-finder/">Fat Finder (auditoria de despesas)</a><a href="/help/br/ai-response-mode/">Modo de resposta da IA</a><a href="/help/br/widgets/">Widgets da tela inicial</a><a href="/help/br/chat-bots/">Bots de chat — Telegram, WhatsApp e Slack</a><a href="/help/br/scenario-simulator/">Simulador de cenários</a><a href="/help/br/referral/">Convidar amigos — Programa de indicação</a><a href="/help/br/bank-import/">Importar transações do seu banco</a><a href="/help/br/reference-data/">Dados de referência</a><a href="/help/br/subscription-manager/">Gerenciador de assinaturas</a><a href="/help/br/web-app/">App web</a><a href="/help/br/anomaly-alerts/">Alertas: atividade incomum</a><a href="/help/br/safe-to-spend/">Planejando com antecedência — Livre para gastar, capacidade de compra e captura automática</a><a href="/help/br/purchase-requests/">Pedidos de compra</a><a href="/help/br/family-feed/">Feed da família</a><a href="/help/br/group-trip-wallet/">Carteira de viagem em grupo</a><a href="/help/br/personal-inflation-index/">Índice de inflação pessoal</a><a href="/help/br/expense-map/">Mapa de despesas</a><a href="/help/br/shopping-list/">Lista de compras inteligente</a><a href="/help/br/wrapped/">Financial Wrapped — seu ano em dinheiro</a><a href="/help/br/inflation-shield/">Escudo contra a inflação — estoque antes que os preços subam</a><a href="/help/br/receipt-price-check/">Conferência de preços no recibo — isso custa mais do que você costuma pagar?</a><a href="/help/br/receipt-split/">Dividir o recibo — receba dos amigos, sem eles precisarem do app</a><a href="/help/br/real-salary/">Salário real — seu aumento acompanha os seus próprios preços?</a><a href="/help/br/shared-groups/">Grupos compartilhados — divida despesas contínuas com amigos, sem que eles precisem do app</a><a href="/help/br/connected-apps/">Apps conectados e desenvolvedores</a></section></main><footer class="site"><div class="wrap"><div class="f-links"><a href="/blog/en/">Blog</a><a href="/help/br/">Ajuda</a><a href="/br/about/">Sobre nós</a><a href="/br/developers/">API para desenvolvedores</a><a href="/en/privacy/">Privacidade</a><a href="/en/terms/">Termos</a><a href="/en/cookies/">Cookies</a><a href="https://app.ai-budget.pl?src=help&amp;loc=footer&amp;lang=pt-BR">Entrar</a><a href="https://play.google.com/store/apps/details?id=com.budget.assistant&amp;referrer=src%3Dhelp%26loc%3Dfooter%26lang%3Dpt-BR%26utm_source%3Dhelp%26utm_medium%3Dfooter">Google Play</a></div><div class="f-badge"><a href="https://startupfa.me/s/ai-budget?utm_source=ai-budget.pl" target="_blank" rel="nofollow noopener"><img class="b-sf" src="/assets/startup-fame-badge.webp" alt="AI Budget - Featured on Startup Fame" width="108" height="34" loading="lazy"></a><a href="https://peerpush.com/p/ai-budget-assistant" target="_blank" rel="nofollow noopener"><img class="b-pp" src="https://peerpush.com/p/ai-budget-assistant/badge.png" alt="AI Budget Assistant on PeerPush" width="120" height="34" loading="lazy"></a><a href="https://bestaibrands.com/ai-budget-assistant" target="_blank" rel="nofollow noopener" style="text-decoration:none;"><div style="display:inline-flex;flex-direction:column;align-items:center;background:#fff;border:1px solid #eee;border-radius:12px;padding:8px 32px;height:54px;justify-content:center;font-family:sans-serif;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);"><div style="font-size:8px;color:#999;font-weight:bold;text-transform:uppercase;letter-spacing:0.2em;line-height:1;margin-bottom:4px;white-space:nowrap;">Featured On</div><div style="font-size:14px;font-weight:bold;color:#000;letter-spacing:-0.01em;line-height:1;white-space:nowrap;">bestaibrands.com</div></div></a><a href="https://firsto.co/projects/ai-budget-assistant" target="_blank" rel="nofollow noopener"><img class="b-fo" src="https://firsto.co/images/badges/find-us-on-firsto.svg" alt="AI Budget Assistant | Firsto Launch" width="88" height="34" loading="lazy"></a><a href="https://liftoapp.com/product/ai-budget-assistant" target="_blank" rel="nofollow noopener"><img class="b-lf" src="https://liftoapp.com/badges/featured-dark.svg" alt="AI Budget Assistant - Featured on Lifto" width="126" height="34" loading="lazy"></a></div><div class="f-badge"><a href="https://fazier.com/launches/ai-budget.pl" target="_blank" rel="nofollow noopener"><img class="b-fz" src="https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=featured&amp;theme=light" alt="AI Budget Assistant on Fazier" width="144" height="34" loading="lazy"></a><a href="https://launchstag.com/p/tool-1789044587266" target="_blank" rel="nofollow noopener"><img class="b-ls" src="https://launchstag.com/badge-light.svg" alt="AI Budget Assistant - Featured on Launchstag" width="109" height="34" loading="lazy"></a><a href="https://www.uneed.best/tool/ai-budget-assistant" target="_blank" rel="nofollow noopener"><img class="b-un" src="https://www.uneed.best/EMBED3B.png" alt="AI Budget Assistant - Launching Soon on Uneed" width="130" height="34" loading="lazy"></a><a href="https://tools.cafe/p/tool-1789322958894" target="_blank" rel="nofollow noopener"><img class="b-tc" src="https://tools.cafe/b/light.svg" alt="AI Budget Assistant - Featured on tools.cafe" width="109" height="34" loading="lazy"></a><a href="https://sellwithboost.com" target="_blank" rel="nofollow noopener"><img class="b-swb" src="https://sellwithboost.com/badge/listing.svg" alt="AI Budget Assistant - Listed on Sell With Boost" width="136" height="34" loading="lazy"></a><a href="https://alphashot.com/products/ai-budget-assistant?utm_source=alphashot&amp;utm_medium=badge&amp;utm_campaign=embed" target="_blank" rel="nofollow noopener"><img class="b-as" src="https://alphashot.com/badge/ai-budget-assistant.svg" alt="AI Budget Assistant - Featured on AlphaShot" width="130" height="34" loading="lazy"></a></div><div class="f-co"><a href="https://mi-code.pl/" target="_blank" rel="noopener"><img src="/assets/mi_code_logo.svg" alt="MiCode Sp. z o.o." width="30" height="30"></a><span>&copy; 2026 AI Budget Assistant &mdash; <a href="https://mi-code.pl/" target="_blank" rel="noopener" style="color:inherit">MiCode Sp. z o.o.</a>. Todos os direitos reservados.</span></div></div></footer>
+<div class="cc" id="cc"><p>Usamos cookies para medir o tráfego e melhorar o site. <a href="/en/cookies/" style="color:#F58320;text-decoration:underline">Saiba mais</a></p><div class="row"><button class="no" id="cc-no">Recusar</button><button class="ok" id="cc-ok">Aceitar</button></div></div>
+<script>(function(){var ID="G-WMEFHYETVX",K="cc-consent";function L(){var s=document.createElement("script");s.async=1;s.src="https://www.googletagmanager.com/gtag/js?id="+ID;document.head.appendChild(s);window.dataLayer=window.dataLayer||[];function g(){dataLayer.push(arguments);}window.gtag=g;g("js",new Date());g("config",ID);}var v=localStorage.getItem(K),b=document.getElementById("cc");if(v==="granted"){L();}else if(!v&&b){b.classList.add("show");document.getElementById("cc-ok").onclick=function(){localStorage.setItem(K,"granted");b.classList.remove("show");L();};document.getElementById("cc-no").onclick=function(){localStorage.setItem(K,"denied");b.classList.remove("show");};}})();</script></body></html>

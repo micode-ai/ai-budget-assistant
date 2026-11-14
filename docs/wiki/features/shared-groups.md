@@ -39,7 +39,7 @@ API (`apps/api/src/modules/groups/`):
 - `apps/api/src/modules/groups/group-merge.ts` and `apps/api/src/modules/groups/group-merge.service.ts` — merging
   two members: the pure consent rule, plan and balance check, and the one transaction that applies them (ABA-657)
 - `apps/api/src/modules/groups/helpers/group-guest-page.ts` and
-  `apps/api/src/modules/groups/helpers/group-guest-page-i18n.ts` — the script-free HTML page, 9 locales
+  `apps/api/src/modules/groups/helpers/group-guest-page-i18n.ts` — the script-free HTML page, 11 locales
 - `apps/api/src/modules/groups/guards/` — `GroupMemberGuard`, `GroupOwnerGuard`, `GroupActiveGuard`
 - `apps/api/src/modules/groups/group-bot.service.ts` and `apps/api/src/modules/groups/group-bot.ts` — adding
   an expense from Telegram, WhatsApp and Slack (ABA-658); the bots' `handlers/group.handler.ts` render it
@@ -256,7 +256,7 @@ balances and takes any amount up to the bound (ABA-652). Sends are fire-and-forg
 `logFireAndForget`. The preference is `User.notifyGroupReminders` (default `true`), `groupReminders`
 on `GET/PATCH /users/me/notification-preferences`, toggled in `NotificationsSettings.tsx` (the phone
 screen and the desktop settings pane are the same component) and included in the master switch.
-Copy: four push strings × 9 locales in `notification-i18n.ts`; the amount prints as `42.00 PLN`
+Copy: four push strings × 11 locales in `notification-i18n.ts`; the amount prints as `42.00 PLN`
 (currency code, like debt reminders). Related: [debt-reminders](debt-reminders.md).
 
 **Multi-currency (ABA-654).** The group currency is the **ledger currency**; an expense may be entered
@@ -273,7 +273,7 @@ written before the migration (no backfill needed). `amount = round2(originalAmou
   A manual rate is bounded: when the provider has a rate for the pair, one more than 3x above or below it is
   400 `FX_RATE_IMPLAUSIBLE` (`FX_MANUAL_RATE_FACTOR`, create and edit alike); with no provider rate there is
   nothing to compare and it stands. `fxRateSource` is always stored, and the guest activity row shows a
-  "manual rate" tag (`manualRateTag`, 9 languages) beside the original figure. **Known gap:** an edit that
+  "manual rate" tag (`manualRateTag`, 11 languages) beside the original figure. **Known gap:** an edit that
   changes the rate does not record the previous one anywhere (the group event log only holds member events).
 - **Currencies.** The group's own, or one of `SUPPORTED_RATE_CURRENCIES` (exported by
   `exchange-rate.service.ts`, the provider's list); anything else is 400 `CURRENCY_UNSUPPORTED`. A
@@ -387,7 +387,7 @@ optional basket `discountAmount`, and each member claims the lines they had (`Gr
   `setMyClaims(..., {scope: l-keys, strict: false})`: the ids are intersected with the expense's real lines, a
   planted or foreign id is ignored, explicit bp on kept lines stays, newly ticked lines divide equally; 303 with
   flash `claimed`. Guests claim equal shares only and never create itemised expenses. `Sec-Fetch-Site`,
-  `Referrer-Policy: same-origin` and the CSP are unchanged. 11 strings x 9 locales in
+  `Referrer-Policy: same-origin` and the CSP are unchanged. 11 strings x 11 locales in
   `group-guest-page-i18n.ts`.
 - **App UI (ABA-656).** Pure logic in `apps/mobile/src/features/groups/groupItems.ts` (unit-tested; nothing renders
   in CI).
@@ -592,7 +592,7 @@ Prisma only, so `GroupsService` can inject it for the link-code path without a c
   `GroupButton write` (offline-gated). The same sheet serves the phone screen and the desktop members dialog.
   `GroupLinkView` (the same centred screen on both) shows the offer when `processGroupLink` reports
   `mergeOffer`: **Merge “Ania” into your account** (`mergeGroupLink`) or **Not now**; the post-sign-in flush
-  instead re-opens `/groups/link?code=` so the screen asks again. 16 strings x 9 locales; no guest-page copy
+  instead re-opens `/groups/link?code=` so the screen asks again. 16 strings x 11 locales; no guest-page copy
   changed.
 
 **Settling in the app (ABA-652).** `GroupSettleView` has an editable amount: it opens at the
@@ -935,7 +935,7 @@ theme legibility are unverified until someone looks at a device and the deployed
   three to a share row (a deleted share is respected and not recreated).
 - **State** lives in `groupBudgetStore` keyed by group id (mirror view, links view, a `failed` flag), so the
   members dialog and the page under it read one copy; reset on sign-out in `authSessionActions.ts`. i18n:
-  namespace `groupBudget` (84 keys x 9 locales).
+  namespace `groupBudget` (84 keys x 11 locales).
 
 **Invariants from the security review (ABA-660 follow-up).** Server side, `apps/api` only.
 - **Only legs I wrote are ever auto-linked (H1).** Tier 1 requires `CashLeg.authoredByMe`: the group
@@ -1000,7 +1000,7 @@ member. Anything else, and a group over the 20-share cap, gets "add it in the ap
   unsupported code or a missing rate is refused with a clear message and nothing is written; a rate
   that disappears between card and confirm keeps the draft for a retry.
 - **Date** is the server's calendar day (UTC), as for every other bot write. Strings: 13 `group*` keys
-  in `common/bot-i18n/shared-messages.ts` (9 languages, pinned by `shared-messages.spec.ts`) plus one
+  in `common/bot-i18n/shared-messages.ts` (11 languages, pinned by `shared-messages.spec.ts`) plus one
   `helpText` line per bot.
 
 ## Desktop

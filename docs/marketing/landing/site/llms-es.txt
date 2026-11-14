@@ -1,6 +1,6 @@
 # AI Budget Assistant
 
-> Aplicación de presupuesto gratuita con IA para personas y familias. Registra gastos por voz o foto del recibo, planifica presupuestos y metas de ahorro, gestiona suscripciones, importa extractos bancarios y lleva un presupuesto compartido en tiempo real. Múltiples divisas, 9 idiomas, Android y web.
+> Aplicación de presupuesto gratuita con IA para personas y familias. Registra gastos por voz o foto del recibo, planifica presupuestos y metas de ahorro, gestiona suscripciones, importa extractos bancarios y lleva un presupuesto compartido en tiempo real. Múltiples divisas, 11 idiomas, Android y web.
 
 ## Product
 
@@ -8,8 +8,8 @@
 - Lanzamiento: 2026-04
 - Precio: Núcleo gratuito; planes Pro y Business
 - Plataformas: Android, Web
-- Idiomas: Polski, English, Deutsch, Español, Français, Русский, Українська, Беларуская, Nederlands
-- Divisas: USD, EUR, PLN, GBP, UAH, RUB, BYN
+- Idiomas: Polski, English, Deutsch, Español, Français, Русский, Українська, Беларуская, Nederlands, Português (Portugal), Português (Brasil)
+- Divisas: USD, EUR, PLN, GBP, UAH, RUB, BYN, BRL
 
 ## Key Features
 

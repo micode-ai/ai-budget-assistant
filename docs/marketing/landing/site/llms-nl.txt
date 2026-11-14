@@ -1,6 +1,6 @@
 # AI Budget Assistant
 
-> Gratis AI-gestuurde budget-app voor individuen en gezinnen. Leg uitgaven vast via spraak of een foto van het bonnetje, plan budgetten en spaardoelen, beheer abonnementen, importeer bankafschriften en budgetteer samen in realtime. Meerdere valuta, 9 talen, Android en web.
+> Gratis AI-gestuurde budget-app voor individuen en gezinnen. Leg uitgaven vast via spraak of een foto van het bonnetje, plan budgetten en spaardoelen, beheer abonnementen, importeer bankafschriften en budgetteer samen in realtime. Meerdere valuta, 11 talen, Android en web.
 
 ## Product
 
@@ -8,8 +8,8 @@
 - Gelanceerd: 2026-04
 - Prijzen: Gratis kern; Pro- en Business-abonnement
 - Platforms: Android, Web
-- Talen: Polski, English, Deutsch, Español, Français, Русский, Українська, Беларуская, Nederlands
-- Valuta: USD, EUR, PLN, GBP, UAH, RUB, BYN
+- Talen: Polski, English, Deutsch, Español, Français, Русский, Українська, Беларуская, Nederlands, Português (Portugal), Português (Brasil)
+- Valuta: USD, EUR, PLN, GBP, UAH, RUB, BYN, BRL
 
 ## Key Features
 

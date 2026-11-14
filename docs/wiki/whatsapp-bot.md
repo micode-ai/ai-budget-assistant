@@ -13,7 +13,7 @@ A NestJS module (`modules/whatsapp/`) embedded in the API that lets users intera
 - `apps/api/src/modules/whatsapp/whatsapp-client.service.ts` — `WhatsAppClientService`, outbound Graph API calls
 - `apps/api/src/modules/whatsapp/whatsapp-link.service.ts` — link codes and the `getLink()` membership join
 - `apps/api/src/modules/whatsapp/handlers/` — among them `ChatHandler`, `VoiceHandler`, `PhotoHandler`, `CommandHandler`, `ExpenseHandler`, `IncomeHandler`, `CategoryHandler`, `CategorizeHandler`, `PurchaseRequestHandler`; `ls` the directory for the current set
-- `apps/api/src/modules/whatsapp/helpers/i18n.ts` — WhatsApp-specific copy over the shared bot dictionary `common/bot-i18n/shared-messages.ts`, built with `createBotT(..., { markup: 'markdown' })`, which converts the canonical HTML tags to WhatsApp markdown at read time (9 languages)
+- `apps/api/src/modules/whatsapp/helpers/i18n.ts` — WhatsApp-specific copy over the shared bot dictionary `common/bot-i18n/shared-messages.ts`, built with `createBotT(..., { markup: 'markdown' })`, which converts the canonical HTML tags to WhatsApp markdown at read time (11 languages)
 - `apps/mobile/app/settings/bots.tsx` — QR code + 6-hex link code + deep-link to `wa.me`
 
 ## Key concepts

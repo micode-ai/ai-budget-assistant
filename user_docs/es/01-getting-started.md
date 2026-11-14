@@ -10,7 +10,7 @@
 4. Crea una **Contrasena** (minimo 8 caracteres, debe incluir una letra mayuscula A-Z, una letra minuscula a-z y un numero 0-9)
 5. Confirma tu contrasena
 6. Selecciona tu **Moneda** preferida (USD, EUR, PLN, GBP, UAH, RUB o BYN)
-7. Selecciona tu **Idioma** preferido (English, Deutsch, Espanol, Francais, Polski, Russki, Ukrainska o Беларуская)
+7. Selecciona tu **Idioma** preferido (English, Deutsch, Espanol, Francais, Polski, Russki, Ukrainska, Беларуская, Nederlands, Português (Portugal) o Português (Brasil))
 8. Toca **Crear cuenta**
 9. Revisa tu correo para obtener un **código de verificación de 6 dígitos**
 10. Ingresa el código en la aplicación y toca **Verificar**

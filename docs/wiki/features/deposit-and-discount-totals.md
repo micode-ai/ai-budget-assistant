@@ -31,7 +31,7 @@ the lines miss the receipt total by more than 5% — so on exactly the trips whe
 whole question there was nothing to find. Answering through the category also made the model guess
 its name in the **account owner's** language plus a date range. A discount is never its own category
 at all: the split spreads a basket-wide discount across the item groups. Reading a number makes the
-answer independent of region by construction — one code path serves all nine locales.
+answer independent of region by construction — one code path serves all eleven locales.
 
 **The prompt carries the local word.** `kaucja`/`Pfand`/`statiegeld`/`consigne`/`залог за тару` (and
 the loanword `кауция` a Russian speaker in Poland uses); `rabat`/`zniżka`/`opust`, `Rabatt`,

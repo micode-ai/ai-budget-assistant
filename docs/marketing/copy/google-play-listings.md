@@ -1,6 +1,6 @@
 # Google Play Store Listings — all locales (2026 style)
 
-Store-listing copy for **AI Budget Assistant** (`com.budget.assistant`), 9 locales.
+Store-listing copy for **AI Budget Assistant** (`com.budget.assistant`), 11 locales.
 Paste each block into Google Play Console > Grow > Store presence > **Custom store listings** per language.
 
 > Limits: App name ≤ 30 · Short description ≤ 80 · Full description ≤ 4000.
@@ -59,7 +59,7 @@ SEE THE FULL PICTURE
 
 PRIVATE & OFFLINE-FIRST
 • Add anything anywhere — it syncs when you're back online
-• Available in 9 languages
+• Available in 11 languages
 
 Free to start. Upgrade to Pro or Business for higher AI limits, more members and advanced tools.
 
@@ -118,7 +118,7 @@ AI Budget: учёт расходов
 
 ПРИВАТНО И ОФЛАЙН
 • Добавляйте записи где угодно — синхронизация при сети
-• Доступно на 9 языках
+• Доступно на 11 языках
 
 Бесплатно для старта. Pro и Business — больше AI-запросов, участников и продвинутых инструментов.
 
@@ -183,7 +183,7 @@ PEŁNY OBRAZ FINANSÓW
 
 PRYWATNIE I OFFLINE
 • Dodawaj wszędzie — zsynchronizuje się po powrocie online
-• Dostępne w 9 językach
+• Dostępne w 11 językach
 
 Zacznij za darmo. Pro i Business dają wyższe limity AI, więcej osób i zaawansowane narzędzia.
 
@@ -242,7 +242,7 @@ AI Budget: облік витрат
 
 ПРИВАТНО Й ОФЛАЙН
 • Додавайте будь-де — синхронізація щойно з'явиться мережа
-• Доступно 9 мовами
+• Доступно 11 мовами
 
 Безкоштовно для старту. Pro і Business — більше AI-запитів, учасників і просунутих інструментів.
 
@@ -301,7 +301,7 @@ LA IMAGEN COMPLETA
 
 PRIVADO Y SIN CONEXIÓN
 • Añade desde cualquier lugar: se sincroniza al volver online
-• Disponible en 9 idiomas
+• Disponible en 11 idiomas
 
 Empieza gratis. Pro y Business: más límites de IA, más miembros y herramientas avanzadas.
 
@@ -360,7 +360,7 @@ UNE VUE D'ENSEMBLE
 
 PRIVÉ ET HORS LIGNE
 • Ajoutez partout : synchronisation dès le retour en ligne
-• Disponible en 9 langues
+• Disponible en 11 langues
 
 Gratuit pour commencer. Pro et Business : plus de limites IA, plus de membres et d'outils avancés.
 
@@ -419,7 +419,7 @@ DAS GANZE BILD
 
 PRIVAT UND OFFLINE-FIRST
 • Überall erfassen — synchronisiert, sobald du online bist
-• In 9 Sprachen verfügbar
+• In 11 Sprachen verfügbar
 
 Kostenlos starten. Pro und Business: höhere KI-Limits, mehr Mitglieder und erweiterte Tools.
 
@@ -478,7 +478,7 @@ AI Budget Assistant
 
 ПРЫВАТНА І АФЛАЙН
 • Дадавайце дзе заўгодна — сінхранізацыя, калі з'явіцца сетка
-• Даступна на 9 мовах
+• Даступна на 11 мовах
 
 Бясплатна для старту. Pro і Business — больш AI-запытаў, удзельнікаў і прасунутых інструментаў.
 
@@ -537,9 +537,135 @@ HET COMPLETE PLAATJE
 
 PRIVÉ EN OFFLINE-FIRST
 • Voeg overal toe — synchroniseert zodra je weer online bent
-• Beschikbaar in 9 talen
+• Beschikbaar in 11 talen
 
 Gratis te beginnen. Pro en Business: hogere AI-limieten, meer leden en geavanceerde tools.
 
 Neem de controle over je geld — alleen of samen. Download vandaag AI Budget Assistant.
+```
+
+---
+
+## Portuguese — Portugal (pt-PT)
+
+**App name (≤30):**
+```
+AI Budget: orçamento familiar
+```
+
+**Short (≤80):**
+```
+Controlo de despesas e orçamento familiar com IA: fotografe o talão e pronto.
+```
+
+**Full (≤4000):**
+```
+O seu dinheiro sob controlo — sem o trabalho aborrecido. O AI Budget Assistant reúne despesas, orçamentos, objetivos de poupança, dívidas, subscrições e importação bancária numa só aplicação, com uma IA que trata das partes chatas. Faça o orçamento só para si ou partilhe-o com a família, em tempo real.
+
+Basta falar com o seu dinheiro:
+«Quanto gastei no supermercado este mês?» — e a resposta chega em segundos.
+
+UMA APLICAÇÃO PARA TUDO
+• Despesas e receitas com categorias, etiquetas e projetos
+• Orçamentos flexíveis com o histórico completo de cada período
+• Objetivos de poupança, dívidas e acompanhamento de investimentos
+• Gestor de subscrições com calendário de renovações
+• Várias moedas, incluindo o euro, com taxas de câmbio atualizadas
+
+O SEU ASSISTENTE DE IA PARA AS FINANÇAS
+• Registe despesas a escrever ou a falar — sem formulários
+• Fotografe o talão: a IA lê os artigos, o total e o comerciante
+• Os artigos do talão são distribuídos pelas categorias automaticamente
+• Pergunte em linguagem simples e receba a resposta de imediato
+• Alertas inteligentes detetam cobranças duplicadas e aumentos de preço
+• Uma pontuação de saúde financeira mostra como está
+
+ORÇAMENTO EM FAMÍLIA
+• Conta partilhada — todos veem o mesmo dinheiro em tempo real
+• Transforme qualquer conversa com a IA num chat de grupo, com @menções
+• Papéis de proprietário, editor e leitor
+• Divida despesas com amigos: cada um recebe um link com a parte que lhe cabe, sem instalar nada
+
+IMPORTAÇÃO BANCÁRIA
+• Extratos CSV ou PDF da Wise, do Revolut e de outros bancos
+• Se o formato do seu banco não for reconhecido, a importação com IA lê o extrato
+• Deteção inteligente de duplicados
+• Anule qualquer importação com um toque
+
+O QUADRO COMPLETO
+• Tendências de despesa, repartição por categoria e por comerciante
+• Análises com IA que destacam o que importa
+• Funciona no telemóvel, no tablet e no navegador
+
+PRIVADO E OFFLINE-FIRST
+• Registe em qualquer lugar — sincroniza quando voltar a ter rede
+• Encriptação ponta a ponta opcional
+• Disponível em 11 idiomas, incluindo português de Portugal
+
+Comece grátis. Os planos Pro e Business trazem mais pedidos de IA, mais membros e ferramentas avançadas.
+
+Assuma o controlo do seu dinheiro — só para si ou em família. Instale hoje o AI Budget Assistant.
+```
+
+---
+
+## Portuguese — Brazil (pt-BR)
+
+**App name (≤30):**
+```
+AI Budget: controle de gastos
+```
+
+**Short (≤80):**
+```
+Controle de gastos e orçamento com IA: tire foto do recibo e a IA organiza tudo.
+```
+
+**Full (≤4000):**
+```
+Seu dinheiro sob controle — sem dor de cabeça. O AI Budget Assistant reúne despesas, orçamentos, metas de economia, dívidas, assinaturas e importação de extratos em um só app, com uma IA que faz a parte chata por você. Controle tudo sozinho ou compartilhe com a família, em tempo real.
+
+É só conversar com o seu dinheiro:
+“Quanto eu gastei no mercado este mês?” — e a resposta chega em segundos.
+
+UM APP PARA TUDO
+• Despesas e receitas com categorias, tags e projetos
+• Orçamentos flexíveis com o histórico completo de cada período
+• Metas de economia, dívidas e acompanhamento de investimentos
+• Gerenciador de assinaturas com calendário de renovações
+• Várias moedas, incluindo o real, com cotações atualizadas
+
+SEU ASSISTENTE DE IA PARA AS FINANÇAS
+• Registre despesas digitando ou falando — sem formulários
+• Tire foto do recibo ou da nota fiscal: a IA lê os itens, o total e o estabelecimento
+• Os itens do recibo vão para as categorias certas automaticamente
+• Pergunte em linguagem simples e receba a resposta na hora
+• Alertas inteligentes pegam cobranças duplicadas e aumentos de preço
+• Uma pontuação de saúde financeira mostra como você está
+
+ORÇAMENTO EM FAMÍLIA
+• Conta compartilhada — todo mundo vê o mesmo dinheiro em tempo real
+• Transforme qualquer conversa com a IA em um chat em grupo, com @menções
+• Papéis de proprietário, editor e visualizador
+• Divida a conta com os amigos: cada um recebe um link com quanto deve, sem instalar nada
+
+IMPORTAÇÃO DE EXTRATOS
+• Extratos CSV ou PDF da Wise, do Revolut e de outros bancos
+• Se o formato do seu banco não for reconhecido, a importação com IA lê o extrato
+• Detecção inteligente de duplicatas
+• Desfaça qualquer importação com um toque
+
+A VISÃO COMPLETA
+• Tendências de gastos, divisão por categoria e por estabelecimento
+• Insights com IA que mostram o que importa
+• Funciona no celular, no tablet e no navegador
+
+PRIVADO E OFFLINE-FIRST
+• Registre em qualquer lugar — sincroniza quando você voltar a ficar online
+• Criptografia de ponta a ponta opcional
+• Disponível em 11 idiomas, incluindo português do Brasil
+
+Comece grátis. Os planos Pro e Business trazem mais solicitações de IA, mais membros e ferramentas avançadas.
+
+Assuma o controle do seu dinheiro — sozinho ou em família. Baixe o AI Budget Assistant hoje mesmo.
 ```

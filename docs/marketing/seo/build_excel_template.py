@@ -102,6 +102,24 @@ T = {
                     "Падпіскі", "Пакупкі", "Дзеці", "Зберажэнні", "Пагашэнне даўгоў", "Забавы"],
            "note": "Выдаткі запісвайце дадатнымі сумамі. Паступленні — з катэгорыяй «Даход».",
            "app": "Надакучыла ўводзіць кожны радок? AI Budget Assistant запісвае выдаткі голасам або па фота чэка: https://ai-budget.pl/be/"},
+    "pt": {"tx": "Movimentos", "sum": "Resumo", "cats": "Categorias",
+           "cols": ["Data", "Categoria", "Descrição", "Valor", "Conta"],
+           "income": "Receitas", "total": "Total gasto", "balance": "Saldo (receitas - despesas)",
+           "start": "Saldo inicial", "category": "Categoria",
+           "months": ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
+           "list": ["Habitação", "Supermercado", "Restaurantes", "Transportes", "Contas da casa", "Saúde",
+                    "Subscrições", "Compras", "Filhos", "Poupança", "Pagamento de dívidas", "Lazer"],
+           "note": "Registe as despesas como valores positivos. Use a categoria «Receitas» para o dinheiro que entra.",
+           "app": "Não quer escrever cada linha à mão? O AI Budget Assistant regista despesas por voz ou com uma fotografia do talão: https://ai-budget.pl/pt/"},
+    "br": {"tx": "Lançamentos", "sum": "Resumo", "cats": "Categorias",
+           "cols": ["Data", "Categoria", "Descrição", "Valor", "Conta"],
+           "income": "Receitas", "total": "Total gasto", "balance": "Saldo (receitas - despesas)",
+           "start": "Saldo inicial", "category": "Categoria",
+           "months": ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
+           "list": ["Moradia", "Mercado", "Restaurantes", "Transporte", "Contas da casa", "Saúde",
+                    "Assinaturas", "Compras", "Filhos", "Economia", "Pagamento de dívidas", "Lazer"],
+           "note": "Registre as despesas como valores positivos. Use a categoria “Receitas” para o dinheiro que entra.",
+           "app": "Cansou de digitar cada linha? O AI Budget Assistant registra despesas por voz ou com uma foto do recibo: https://ai-budget.pl/br/"},
 }
 
 HEAD = Font(bold=True, color="FFFFFF")
@@ -184,6 +202,8 @@ def build(lang):
 
 
 if __name__ == "__main__":
-    for lang in T:
+    import sys
+    # optional language list (`... pt br`) so adding a language does not rewrite every other binary
+    for lang in (sys.argv[1:] or T):
         build(lang)
         print("wrote", lang)

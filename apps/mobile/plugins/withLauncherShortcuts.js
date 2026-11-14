@@ -20,6 +20,10 @@ function shortcutsXml(pkg) {
   return `<?xml version="1.0" encoding="utf-8"?>\n<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">\n${items}\n</shortcuts>\n`;
 }
 
+// Android resource qualifiers that are not just `values-<key>`. `br` is the app's Brazilian code (Android
+// reads a bare `br` as Breton); bare `values-pt` carries the Brazilian copy, per the bare-pt rule.
+const DIRS = { en: ['values'], pt: ['values-pt-rPT'], br: ['values-pt-rBR', 'values-pt'] };
+
 function stringsXml(lang) {
   const labels = cfg.labels[lang];
   const rows = cfg.shortcuts.map((s, i) => `  <string name="${s.key}">${esc(labels[i])}</string>`);
@@ -40,10 +44,12 @@ module.exports = (config) => {
     fs.mkdirSync(path.join(res, 'xml'), { recursive: true });
     fs.writeFileSync(path.join(res, 'xml/shortcuts.xml'), shortcutsXml(pkg));
     for (const lang of Object.keys(cfg.labels)) {
-      const dir = path.join(res, lang === 'en' ? 'values' : `values-${lang}`);
-      fs.mkdirSync(dir, { recursive: true });
-      // en labels go to a dedicated file so they never clobber values/strings.xml
-      fs.writeFileSync(path.join(dir, 'launcher_shortcuts.xml'), stringsXml(lang));
+      for (const name of DIRS[lang] || [`values-${lang}`]) {
+        const dir = path.join(res, name);
+        fs.mkdirSync(dir, { recursive: true });
+        // en labels go to a dedicated file so they never clobber values/strings.xml
+        fs.writeFileSync(path.join(dir, 'launcher_shortcuts.xml'), stringsXml(lang));
+      }
     }
     return c;
   }]);

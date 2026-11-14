@@ -42,7 +42,7 @@ La moneda seleccionada se resalta. Esto establece la moneda predeterminada para 
 
 ### Idioma
 
-Elige entre 9 idiomas disponibles:
+Elige entre 11 idiomas disponibles:
 
 | Codigo | Idioma |
 |---|---|
@@ -55,6 +55,8 @@ Elige entre 9 idiomas disponibles:
 | DE | Deutsch |
 | BY | Беларуская |
 | NL | Nederlands |
+| PT | Português (Portugal) |
+| BR | Português (Brasil) |
 
 Toca una ficha de idioma para cambiar. La interfaz se actualiza de inmediato.
 

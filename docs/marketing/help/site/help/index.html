@@ -3,8 +3,9 @@
 <meta name="robots" content="noindex,follow">
 <title>Help - AI Budget Assistant</title>
 <link rel="canonical" href="https://ai-budget.pl/help/en/">
-<script>(function(){var L=["en", "pl", "de", "es", "fr", "ru", "ua", "be", "nl"];var m={uk:'ua'};
-var n=(navigator.language||'en').slice(0,2).toLowerCase();n=m[n]||n;
+<script>(function(){var L=["en", "pl", "de", "es", "fr", "ru", "ua", "be", "nl", "pt", "br"];var m={uk:'ua'};
+var f=(navigator.language||'en').toLowerCase(),n=f.slice(0,2);n=m[n]||n;
+if(n==='pt')n=(f==='pt'||f.slice(3,5)==='br')?'br':'pt';
 location.replace(L.indexOf(n)>=0?'/help/'+n+'/':'/help/en/');})();</script>
 </head><body>
 <p>Continue to help: <a href="/help/en/">English</a> | <a href="/help/pl/">Polski</a></p>

@@ -5,6 +5,7 @@ import { EXCLUDE_SPLIT_RECEIVABLE } from '../../common/utils/expense-filters';
 import type { DrillDownLevel, ChartConfig, ChartDataPoint, SavingsSummaryResponse } from '@budget/shared-types';
 import { formatInTimezone, yearMonthIdInTimezone, calendarPartsInTimezone } from '../../common/utils/timezone';
 import { ExchangeRateService } from '../currency-exchange/exchange-rate.service';
+import { toIntlLocale } from '../../common/utils/app-locale';
 import { getRatesSafe, convertAmount } from '../../common/utils/fx';
 import { summariseDeposits, type DepositConverter } from '../ai/utils/deposit-summary';
 import { summariseDiscounts, type DiscountConverter } from '../ai/utils/discount-summary';
@@ -585,7 +586,8 @@ export class AnalyticsService {
      *  anyone east of UTC. See ABA-503. */
     timezone?: string,
   ) {
-    const effectiveLocale = locale || 'en';
+    // App codes ('br', 'ua') are not valid Intl tags; real BCP-47 tags pass through.
+    const effectiveLocale = locale && /^[a-z]{2}$/i.test(locale) ? toIntlLocale(locale.toLowerCase()) : locale || 'en-US';
     if (await this.isFullEncryption(accountId)) {
       return {
         encryptionRestricted: true,

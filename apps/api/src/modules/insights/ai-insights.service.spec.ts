@@ -150,3 +150,10 @@ describe('AiInsightsService', () => {
     });
   });
 });
+
+describe('AiInsightsService prompt language names', () => {
+  it('asks the model for European Portuguese for pt and Brazilian Portuguese for br', () => {
+    const names = (AiInsightsService as any).LANGUAGE_NAMES as Record<string, string>;
+    expect([names.pt, names.br]).toEqual(['European Portuguese', 'Brazilian Portuguese']);
+  });
+});

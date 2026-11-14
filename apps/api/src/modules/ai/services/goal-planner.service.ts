@@ -119,6 +119,8 @@ export class GoalPlannerService {
       ua: 'Ukrainian',
       be: 'Belarusian',
       nl: 'Dutch',
+      pt: 'European Portuguese',
+      br: 'Brazilian Portuguese',
     };
     const languageName = languageMap[userLanguage] || 'English';
 

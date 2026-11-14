@@ -1,6 +1,6 @@
 # AI Budget Assistant
 
-> Application de budget gratuite propulsée par l'IA pour particuliers et familles. Enregistrez vos dépenses par la voix ou en photographiant un ticket de caisse, planifiez budgets et objectifs d'épargne, gérez vos abonnements, importez vos relevés bancaires et gérez un budget partagé en temps réel. Multidevises, 9 langues, Android et web.
+> Application de budget gratuite propulsée par l'IA pour particuliers et familles. Enregistrez vos dépenses par la voix ou en photographiant un ticket de caisse, planifiez budgets et objectifs d'épargne, gérez vos abonnements, importez vos relevés bancaires et gérez un budget partagé en temps réel. Multidevises, 11 langues, Android et web.
 
 ## Product
 
@@ -8,8 +8,8 @@
 - Lancement: 2026-04
 - Tarifs: Cœur gratuit ; formules Pro et Business
 - Plateformes: Android, Web
-- Langues: Polski, English, Deutsch, Español, Français, Русский, Українська, Беларуская, Nederlands
-- Devises: USD, EUR, PLN, GBP, UAH, RUB, BYN
+- Langues: Polski, English, Deutsch, Español, Français, Русский, Українська, Беларуская, Nederlands, Português (Portugal), Português (Brasil)
+- Devises: USD, EUR, PLN, GBP, UAH, RUB, BYN, BRL
 
 ## Key Features
 

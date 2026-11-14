@@ -22,7 +22,7 @@ app's offline English seeds were two catalogs joined only by name. Design:
 - Catalog (duplicated pair, parity test in mobile):
   `apps/api/src/common/utils/category-catalog.ts` · mirror
   `packages/shared-utils/src/formatting/category-catalog.ts` — key, type, icon, colour, seeded flag
-  and the name in all nine locales, plus legacy aliases (names older app builds wrote)
+  and the name in all eleven locales, plus legacy aliases (names older app builds wrote)
 - `apps/api/src/common/utils/category-key.util.ts` — `matchKeyedCategory` (create rule, key first),
   `matchExistingCategory` (resolve rule, exact name first), `findKeyedCategory`, `createOrReuseKeyed`
 - `apps/api/src/modules/categories/categories.service.ts` — server-owned key, rename and type rules

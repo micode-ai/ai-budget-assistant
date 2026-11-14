@@ -15,7 +15,7 @@ server pull follows. On web there is no SQLite (see
 - `apps/mobile/src/stores/` — Zustand stores
 - `apps/mobile/src/db/schema/index.ts` — SQLite schema (Drizzle); `src/db/*Repository.ts` — data access
 - `apps/mobile/src/services/api.ts` — the composed `api` singleton
-- `apps/mobile/src/i18n/locales/` — nine locales
+- `apps/mobile/src/i18n/locales/` — eleven locales (`pt` European, `br` Brazilian)
 
 ## Feature pages
 
@@ -114,7 +114,7 @@ config is `"orientation": "default"` because Android 16 ignores a manifest lock 
 
 **`useAppVersionCheck` never blocks boot** — fail-silent, 6 h in-memory cache, no-op on web.
 
-**Nine locales, all updated together.** `en.ts` is the source; a missing key renders the key string,
+**Eleven locales, all updated together.** `en.ts` is the source; a missing key renders the key string,
 because i18next falls back to the key, not to English.
 
 ## Known gaps

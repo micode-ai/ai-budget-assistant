@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="pt-PT"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Entrada por voz e digitalização de talões</title>
+<meta name="description" content="Deixe a IA trabalhar.">
+<link rel="canonical" href="https://ai-budget.pl/help/pt/voice-and-receipt/"><meta name="robots" content="index,follow,max-image-preview:large">
+<meta property="og:type" content="article"><meta property="og:site_name" content="AI Budget Assistant">
+<meta property="og:locale" content="pt_PT"><meta property="og:title" content="Entrada por voz e digitalização de talões">
+<meta property="og:description" content="Deixe a IA trabalhar."><meta property="og:url" content="https://ai-budget.pl/help/pt/voice-and-receipt/">
+<meta property="og:image" content="https://ai-budget.pl/help/pt/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Entrada por voz e digitalização de talões">
+<meta name="twitter:description" content="Deixe a IA trabalhar."><meta name="twitter:image" content="https://ai-budget.pl/help/pt/assets/og-default.png">
+<link rel="alternate" hreflang="en" href="https://ai-budget.pl/help/en/voice-and-receipt/">
+<link rel="alternate" hreflang="pl" href="https://ai-budget.pl/help/pl/voice-and-receipt/">
+<link rel="alternate" hreflang="de" href="https://ai-budget.pl/help/de/voice-and-receipt/">
+<link rel="alternate" hreflang="es" href="https://ai-budget.pl/help/es/voice-and-receipt/">
+<link rel="alternate" hreflang="fr" href="https://ai-budget.pl/help/fr/voice-and-receipt/">
+<link rel="alternate" hreflang="ru" href="https://ai-budget.pl/help/ru/voice-and-receipt/">
+<link rel="alternate" hreflang="uk" href="https://ai-budget.pl/help/ua/voice-and-receipt/">
+<link rel="alternate" hreflang="be" href="https://ai-budget.pl/help/be/voice-and-receipt/">
+<link rel="alternate" hreflang="nl" href="https://ai-budget.pl/help/nl/voice-and-receipt/">
+<link rel="alternate" hreflang="pt-PT" href="https://ai-budget.pl/help/pt/voice-and-receipt/">
+<link rel="alternate" hreflang="pt-BR" href="https://ai-budget.pl/help/br/voice-and-receipt/">
+<link rel="alternate" hreflang="x-default" href="https://ai-budget.pl/help/en/voice-and-receipt/">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MiCode Sp. z o.o.", "alternateName": ["MICODE sp. z o.o.", "MiCode"], "taxID": "5833510147", "founder": {"@id": "https://ai-budget.pl/#author"}, "url": "https://mi-code.pl/", "sameAs": ["https://mi-code.pl/", "https://github.com/micode-ai", "https://www.instagram.com/micode.development/", "https://www.wikidata.org/wiki/Q141551004"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Entrada por voz e digitalização de talões", "description": "Deixe a IA trabalhar.", "inLanguage": "pt-PT", "datePublished": "2026-06-19", "dateModified": "2026-11-14", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/pt/voice-and-receipt/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/pt/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/pt/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Início", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Ajuda", "item": "https://ai-budget.pl/help/pt/"}, {"@type": "ListItem", "position": 3, "name": "Entrada por voz e digitalização de talões", "item": "https://ai-budget.pl/help/pt/voice-and-receipt/"}]}]}</script>
+<style>
+:root{--o:#B45309;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
+*{box-sizing:border-box}
+html,body{overflow-x:hidden}
+body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.7}
+.wrap{max-width:760px;margin:0 auto;padding:0 22px}
+header.site{position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);z-index:10}
+header.site .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+.brand{font-weight:800;color:var(--ink);text-decoration:none;font-size:18px}.brand span{color:var(--o)}
+.nav{display:flex;align-items:center;gap:16px}.nav>a{color:var(--mut);font-weight:600;font-size:15px;text-decoration:none}
+.btn-login{color:#fff!important;background:var(--o);padding:8px 14px;border-radius:8px}
+.langmenu{position:relative}.langmenu>summary{list-style:none;cursor:pointer;color:var(--mut);font-weight:600;font-size:15px}
+.langmenu>summary::-webkit-details-marker{display:none}
+.langlist{position:absolute;top:150%;right:0;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,.12);padding:6px;min-width:170px;z-index:20}
+.langlist a{display:block;padding:9px 12px;border-radius:8px;color:#3a3a42;font-size:14px;font-weight:600;text-decoration:none}
+.langlist a:hover{background:#fff3e6}.langlist a.active{color:var(--o)}
+nav.crumb{font-size:13px;color:var(--mut);padding:16px 0}nav.crumb a{color:var(--mut)}
+article h1{font-size:32px;line-height:1.25;margin:8px 0 16px}
+article h2{font-size:23px;margin:34px 0 10px}article h3{font-size:18px;margin:24px 0 8px}
+article p,article li{font-size:17px;color:#27272e}article a{color:var(--o)}article ul{padding-left:22px}
+article .byline{color:var(--mut);font-size:14px;margin:-6px 0 20px}
+article img{display:block;width:100%;max-width:320px;height:auto;margin:20px auto;border-radius:14px;border:1px solid var(--line)}
+hr{border:0;border-top:1px solid var(--line);margin:32px 0}
+.tablewrap{overflow-x:auto;margin:18px 0}
+article table{border-collapse:collapse;width:100%;font-size:15px}
+article th,article td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top}
+article th{background:#faf6f1;font-weight:700}
+article tbody tr:nth-child(even) td{background:#fafafb}
+.cta{margin:36px 0;padding:22px;border:1px solid var(--line);border-radius:14px;background:#fffaf4}
+.cta h3{margin:0 0 6px}.cta p{margin:0 0 14px;color:var(--mut);font-size:15px}
+.btn{display:inline-block;margin:4px 8px 4px 0;padding:11px 18px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px}
+.btn.p{background:var(--o);color:#fff}.btn.s{background:#fff;color:var(--ink);border:1px solid #e3e3e8}
+.related{margin:36px 0}.related h2{font-size:20px}
+.related a{display:block;padding:12px 0;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink);font-weight:600}
+.card{display:block;padding:18px 0;border-bottom:1px solid var(--line);text-decoration:none}
+.card h2{margin:0 0 6px;font-size:21px;color:var(--ink)}.card p{margin:0;color:var(--mut);font-size:15px}
+.cmeta{font-size:13px;color:var(--mut);margin:0 0 4px!important}
+.cfoot{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px!important}
+.ccat{background:#f1f1f4;color:#3a3a42;border-radius:4px;padding:2px 8px;font-size:12px}
+.more{color:var(--o);font-weight:600;font-size:14px}
+.card:hover h2{text-decoration:underline}
+.blogfilter>input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 4px}
+.chip{background:#f1f1f4;color:#3a3a42;border-radius:999px;padding:5px 13px;font-size:13px;cursor:pointer;user-select:none}
+.chip:hover{background:#e4e4ea}
+#bc-all:checked~.chips label[for=bc-all],#bc-budget:checked~.chips label[for=bc-budget],
+#bc-expenses:checked~.chips label[for=bc-expenses],#bc-saving:checked~.chips label[for=bc-saving]{background:var(--o);color:#fff}
+#bc-budget:checked~.cards>.card:not(.cat-budget),
+#bc-expenses:checked~.cards>.card:not(.cat-expenses),
+#bc-saving:checked~.cards>.card:not(.cat-saving){display:none}
+.blogfilter>input:focus-visible~.chips label{outline:2px solid var(--o);outline-offset:2px}
+footer.site{border-top:1px solid var(--line);background:#fafafb;color:#63636b;font-size:14px;text-align:center;margin-top:48px}
+footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-items:center;gap:16px}
+.f-links{display:flex;gap:18px;flex-wrap:wrap;justify-content:center}.f-links a{color:var(--mut);font-weight:600;text-decoration:none}
+.f-co{display:flex;align-items:center;justify-content:center;gap:12px;border-top:1px solid var(--line);padding-top:16px;width:100%}
+.f-co img{height:30px;width:30px}
+.f-badge{display:flex;justify-content:center;align-items:center;gap:16px;flex-wrap:wrap}.f-badge .b-sf{height:34px;width:108px}.f-badge .b-pp{height:34px;width:120px}.f-badge .b-fo{height:34px;width:88px}.f-badge .b-fz{height:34px;width:144px}.f-badge .b-ls{height:34px;width:109px}.f-badge .b-un{height:34px;width:130px}.f-badge .b-tc{height:34px;width:109px}.f-badge .b-swb{height:34px;width:136px}.f-badge .b-lf{height:34px;width:126px}.f-badge .b-as{height:34px;width:130px}
+.cc{position:fixed;left:16px;right:16px;bottom:16px;max-width:560px;margin:0 auto;background:#1a1a1d;color:#fff;border-radius:14px;padding:16px 18px;box-shadow:0 12px 40px rgba(0,0,0,.35);z-index:60;font-size:14px;display:none}
+.cc.show{display:block}.cc p{margin:0 0 12px;line-height:1.5}
+.cc .row{display:flex;gap:10px;justify-content:flex-end}
+.cc button{cursor:pointer;border:0;border-radius:8px;padding:9px 16px;font-weight:700;font-size:14px}
+.cc .ok{background:var(--o);color:#fff}.cc .no{background:#2e2e33;color:#cfcfd6}
+.lang-short{display:none}
+@media(max-width:760px){header.site .wrap{padding:0 16px}.brand{font-size:16px;white-space:nowrap}.nav{gap:10px}.btn-login{padding:8px 12px}}
+@media(max-width:480px){.lang-full{display:none}.lang-short{display:inline}}
+.calc{border:1px solid #e5e5ea;border-radius:12px;padding:16px 18px;margin:20px 0}.calc h3{margin:0 0 10px}.calc label{display:block;margin:10px 0 4px;font-weight:600}.calc input,.calc select{width:100%;max-width:260px;padding:8px;font-size:16px;border-radius:8px;border:1px solid #ccc}.calc output{display:block;font-size:18px;font-weight:700}</style></head><body>
+<header class="site"><div class="wrap"><a class="brand" href="/pt/">AI <span>Budget</span> Assistant</a>
+<nav class="nav"><details class="langmenu"><summary><span class="lang-full">Português (Portugal)</span><span class="lang-short">PT</span> &#9662;</summary><div class="langlist"><a class="" href="https://ai-budget.pl/help/en/voice-and-receipt/">English</a><a class="" href="https://ai-budget.pl/help/pl/voice-and-receipt/">Polski</a><a class="" href="https://ai-budget.pl/help/de/voice-and-receipt/">Deutsch</a><a class="" href="https://ai-budget.pl/help/es/voice-and-receipt/">Español</a><a class="" href="https://ai-budget.pl/help/fr/voice-and-receipt/">Français</a><a class="" href="https://ai-budget.pl/help/ru/voice-and-receipt/">Русский</a><a class="" href="https://ai-budget.pl/help/ua/voice-and-receipt/">Українська</a><a class="" href="https://ai-budget.pl/help/be/voice-and-receipt/">Беларуская</a><a class="" href="https://ai-budget.pl/help/nl/voice-and-receipt/">Nederlands</a><a class="active" href="https://ai-budget.pl/help/pt/voice-and-receipt/">Português (Portugal)</a><a class="" href="https://ai-budget.pl/help/br/voice-and-receipt/">Português (Brasil)</a></div></details><a href="/blog/en/">Blog</a><a class="btn-login" href="https://app.ai-budget.pl?src=help&amp;loc=nav&amp;lang=pt-PT">Iniciar sessão</a></nav></div></header>
+<main class="wrap"><nav class="crumb"><a href="/pt/">Início</a> / <a href="/help/pt/">Ajuda</a> / <span>Entrada por voz e digitalização de talões</span></nav><article><h1>Entrada por voz e digitalização de talões</h1>
+<blockquote>
+<p>Deixe a IA trabalhar. Diga a despesa com naturalidade ou fotografe um talão — a aplicação extrai automaticamente o montante, a descrição, o comerciante e a categoria.</p>
+</blockquote>
+<h2>Despesa por voz</h2>
+<p><img alt="Ecrã de despesa por voz" src="/help/assets/img/voice-expense-4.jpg" /></p>
+<h3>Como funciona</h3>
+<ol>
+<li>Toque em <strong>Entrada por voz</strong> nas ações rápidas do Painel, ou toque em <strong>+</strong> no ecrã Transações e escolha <strong>Entrada por voz</strong></li>
+<li>Aparece um grande ícone de microfone com o texto <strong>«Toque para começar a falar»</strong></li>
+<li>Toque no botão do microfone para começar a gravar</li>
+<li>Fale com naturalidade, por exemplo: <em>«Café no Starbucks, cinco dólares»</em></li>
+<li>Toque novamente para parar a gravação</li>
+<li>A aplicação processa o que disse e extrai os dados da despesa</li>
+</ol>
+<h3>Ecrã de confirmação</h3>
+<p>Depois do processamento, aparece uma confirmação com os dados reconhecidos:</p>
+<ul>
+<li><strong>Montante</strong> — extraído do que disse (editável)</li>
+<li><strong>Descrição</strong> — a que se refere a despesa (editável)</li>
+<li><strong>Comerciante</strong> — onde gastou (editável)</li>
+<li><strong>Categoria</strong> — atribuída automaticamente (editável)</li>
+<li>Indicador de <strong>confiança</strong> — Confiança elevada ou Confiança média</li>
+</ul>
+<p>Reveja os dados, corrija o que for preciso e depois:
+- Toque em <strong>Guardar despesa</strong> para confirmar e guardar
+- Toque em <strong>Tentar novamente</strong> para gravar de novo</p>
+<p>Depois de guardar, pode tocar em <strong>Adicionar outra</strong> para gravar uma nova despesa por voz.</p>
+<h3>Dicas para melhores resultados</h3>
+<ul>
+<li>Fale com clareza e diga tanto o artigo/descrição como o montante</li>
+<li>Indique o nome do comerciante, se for relevante (por exemplo, «Almoço no McDonald&rsquo;s, doze euros»)</li>
+<li>Indique a moeda se for diferente da sua moeda predefinida</li>
+<li>Mantenha a simplicidade — uma despesa por gravação</li>
+</ul>
+<h2>Digitalizar talão</h2>
+<p><img alt="Ecrã Digitalizar talão" src="/help/assets/img/scan-receipt-4.jpg" /></p>
+<h3>Como funciona</h3>
+<ol>
+<li>Toque em <strong>Digitalizar talão</strong> nas ações rápidas do Painel, ou toque em <strong>+</strong> no ecrã Transações e escolha <strong>Digitalizar talão</strong></li>
+<li>Aparecem três opções:
+   - <strong>Tirar fotografia</strong> — abre a câmara para fotografar o talão
+   - <strong>Escolher da galeria</strong> — selecione uma fotografia existente
+   - <strong>Carregar PDF</strong> — escolha um ficheiro PDF (faturas digitais, talões digitalizados até 10 MB)</li>
+<li>Opcionalmente, escreva <strong>Instruções adicionais para a IA</strong> (por exemplo, «Dividir em partes iguais entre duas pessoas», «Ignorar a gorjeta»)</li>
+<li>A aplicação analisa o talão e extrai os dados</li>
+</ol>
+<h3>Ecrã de confirmação</h3>
+<p>Depois da análise da IA, verá:</p>
+<ul>
+<li><strong>Montante total</strong> — extraído do talão (editável)</li>
+<li><strong>Descrição</strong> — resumo gerado (editável)</li>
+<li><strong>Comerciante</strong> — nome da loja/restaurante (editável)</li>
+<li><strong>Categoria</strong> — atribuída automaticamente (editável)</li>
+<li><strong>Data</strong> — retirada do talão (editável)</li>
+<li><strong>Artigos</strong> — linhas individuais com quantidades e preços (se forem detetadas) — toque num artigo para o editar, eliminar ou acrescentar um que a digitalização não apanhou (veja <strong>Editar artigos</strong> abaixo)</li>
+<li><strong>Desconto</strong> — valor do desconto (se constar do talão)</li>
+<li>Indicador de <strong>confiança</strong> — elevada ou média</li>
+<li>Opção <strong>Guardar imagem do talão</strong> — mantém a fotografia anexada à despesa</li>
+</ul>
+<p>Reveja e corrija os dados e depois:
+- Toque em <strong>Guardar despesa</strong> para confirmar
+- Toque em <strong>Digitalizar de novo</strong> para tentar outra fotografia</p>
+<h3>Ampliar o talão</h3>
+<p>Toque na pequena fotografia do talão no ecrã de confirmação — ou no talão no ecrã de detalhes de uma despesa — para o abrir em ecrã inteiro. No telemóvel, afaste dois dedos para ampliar (até 5×), toque duas vezes para ampliar nesse ponto e toque duas vezes de novo para ver o talão inteiro, e arraste com um dedo para se deslocar enquanto estiver ampliado. No navegador, use a roda do rato para ampliar onde está o ponteiro, arraste para se deslocar, faça duplo clique para ampliar ou reduzir, ou use os botões <strong>+</strong>, <strong>−</strong> e de ajuste no canto. O talão abre sempre a mostrar a página inteira. Os talões em PDF abrem como antes.</p>
+<h3>Dicas para melhores resultados</h3>
+<ul>
+<li>Fotografe com boa iluminação — evite sombras e reflexos</li>
+<li>Garanta que o talão inteiro está visível e plano</li>
+<li>Segure a câmara com firmeza para evitar fotografias tremidas</li>
+<li>Use <strong>Instruções adicionais para a IA</strong> para casos especiais (por exemplo, «Isto está em EUR», «Ignorar o primeiro artigo»)</li>
+</ul>
+<h3>Editar artigos</h3>
+<p>A extração por IA nem sempre é perfeita — pode perder-se um algarismo de um preço, um desconto pode infiltrar-se num preço unitário ou a digitalização pode falhar uma linha inteira. Não é preciso digitalizar de novo nem eliminar a despesa inteira para corrigir:</p>
+<ul>
+<li><strong>Toque em qualquer artigo</strong> da lista para editar o nome, a quantidade, o preço unitário ou o preço total. Toque em <strong>Guardar</strong> para aplicar a correção.</li>
+<li><strong>Toque no ícone do caixote do lixo</strong> junto a um artigo para o remover — útil para uma linha duplicada ou inventada.</li>
+<li><strong>Toque em + Adicionar artigo</strong> no fim da lista para acrescentar uma linha que a digitalização não apanhou.</li>
+</ul>
+<p>Todos os artigos são listados — não há limite, por muitos que o talão tenha. Qualquer alteração atualiza de imediato a divisão por categoria e os totais, para que o que guarda corresponda sempre ao que está no ecrã. O total geral do talão, o desconto e o depósito mantêm-se como foram digitalizados; só as linhas individuais são editáveis.</p>
+<h3>Divisão por categoria</h3>
+<p>Os talões de supermercado misturam muitas vezes vários tipos de artigos na mesma compra — alimentação, produtos para a casa, bebidas alcoólicas. Quando a aplicação reconhece mais do que um tipo de artigo num talão, divide automaticamente a despesa pelas categorias correspondentes, em vez de a pôr toda numa só.</p>
+<ul>
+<li>No ecrã de confirmação, aparece por cima da lista de artigos uma fila de botões de categoria, com o título <strong>Dividir por categoria</strong> (por exemplo, «Supermercado 180 · Casa 35 · Álcool 25»), que mostra como o total será repartido.</li>
+<li>Toque em <strong>Alterar categorias</strong> para abrir a lista de todos os artigos e ajustar a categoria de cada um. As alterações aplicam-se de imediato — e ficam memorizadas, para que o mesmo produto seja classificado corretamente da próxima vez que o digitalizar.</li>
+<li>Se os artigos não somarem um valor suficientemente próximo do total do talão, a aplicação recorre a uma única categoria em vez de adivinhar.</li>
+<li>Os depósitos de garrafas e latas são reconhecidos e mostrados na sua própria categoria, para que veja quanto dos seus gastos corresponde a depósitos de embalagens já pagos.</li>
+<li>Isto conta também para os orçamentos por categoria — um orçamento numa categoria que só aparece dentro de uma divisão de talão, como Álcool ou um orçamento de depósitos, passa finalmente a acompanhar os gastos corretamente, e um orçamento de Supermercado deixa de contar os produtos para a casa ou o depósito do mesmo talão.</li>
+<li>Por vezes nenhuma das suas categorias existentes serve para um grupo de artigos. Nesse caso, a aplicação sugere uma categoria nova, mostrada como um botão marcado com <strong>+</strong> (por exemplo, «+ Produtos de limpeza 10»). Nada é criado ainda — toque em <strong>Alterar categorias</strong> para passar esses artigos para uma das suas categorias existentes, ou deixe como sugerido. A nova categoria só é efetivamente criada quando guardar o talão.</li>
+<li>A aplicação já não inventa uma categoria que duplique uma que já tem — uma tradução, um sinónimo ou uma parte de uma categoria existente (por exemplo «Pão» ao lado de «Supermercado»). Esses artigos vão para a sua categoria existente ou para uma subcategoria dela; só é sugerida uma categoria nova para um tipo de gasto realmente novo, e a aplicação nunca cria subcategorias por si.</li>
+</ul>
+<p>Funciona da mesma forma quer digitalize na aplicação, quer através dos bots de Telegram, WhatsApp ou Slack.</p>
+<h3>Digitalizar uma pilha de talões</h3>
+<p>Tem uma semana de talões em papel por registar? Depois de guardar um, a mensagem de confirmação oferece duas opções em vez de simplesmente fechar o ecrã:</p>
+<ul>
+<li><strong>Digitalizar outro</strong> — volta diretamente à câmara sem sair do ecrã, para despachar uma pilha inteira de seguida</li>
+<li><strong>Concluído</strong> — termina e volta ao ponto de partida</li>
+</ul>
+<p>Enquanto digitaliza, um pequeno contador mostra quantos talões guardou nesta sessão. A cada 15 talões, a aplicação deixa um lembrete simpático de que pode continuar ou fazer uma pausa — o seu progresso já está guardado em qualquer dos casos. O contador volta a zero quando sai do ecrã; serve apenas para dar uma noção do progresso durante uma sessão.</p>
+<h3>Talão comprido em várias fotografias</h3>
+<p>Um talão demasiado comprido para caber numa fotografia legível pode ser fotografado por partes e lido como <strong>um só</strong> talão.</p>
+<p><strong>Na aplicação</strong></p>
+<ol>
+<li>No ecrã do talão, toque em <strong>Talão comprido? Fotografe-o por partes</strong></li>
+<li>Fotografe o talão de cima para baixo, com uma pequena sobreposição entre fotografias (a última linha de uma fotografia deve voltar a ver-se no topo da seguinte) — pode acrescentar até <strong>4 partes</strong></li>
+<li>Toque em <strong>Ler talão</strong>. Recebe um único cartão de confirmação com cada linha uma só vez; as linhas sobrepostas não são contadas duas vezes</li>
+<li>Se os totais das linhas não corresponderem ao total do talão, a aplicação avisa e oferece <strong>Repetir partes</strong> em vez de guardar</li>
+</ol>
+<p>Cada parte conta como uma digitalização de talão no seu limite mensal de IA, por isso um talão em três partes usa três digitalizações. Um PDF não pode ser combinado com fotografias. A despesa mantém todas as fotografias: abra o talão na despesa e toque numa parte para a ver.</p>
+<p><strong>Nos bots de Telegram, WhatsApp e Slack</strong></p>
+<p>Envie as fotografias uma a seguir à outra. A primeira fotografia é lida de imediato. Enquanto o cartão de confirmação ainda estiver aberto, envie a fotografia seguinte — o bot pergunta se é uma <strong>Continuação</strong> ou um <strong>Talão novo</strong>. Escolha <strong>Continuação</strong> e o cartão é refeito a partir de todas as fotografias em conjunto (as correções que escreveu no cartão antigo não são mantidas, por isso verifique o novo). As fotografias têm de ser JPEG, PNG ou WebP e não demasiado grandes; o bot avisa se alguma for recusada.</p>
+<h3>Talões já digitalizados</h3>
+<p>A aplicação avisa antes de um talão acabar duas vezes nas suas despesas:</p>
+<ul>
+<li><strong>O mesmo ficheiro outra vez</strong> — se escolher uma fotografia ou um PDF que já foi digitalizado e guardado, é-lhe perguntado <em>antes</em> de ser lido, por isso não se gasta nenhum pedido de IA. Escolha <strong>Abrir</strong> para ver a despesa guardada, <strong>Digitalizar mesmo assim</strong> para o ler de novo, ou <strong>Cancelar</strong>.</li>
+<li><strong>O mesmo talão, fotografia nova</strong> — depois da leitura, se já existir uma despesa com a mesma loja, o mesmo montante e a mesma data (±1 dia), o ecrã de confirmação mostra um aviso amarelo com um botão <strong>Abrir</strong>. Pode guardar na mesma: pode ser mesmo uma segunda compra.</li>
+<li><strong>Já registado pelo banco</strong> — se a despesa correspondente veio de uma notificação bancária ou de uma importação de extrato bancário, o aviso indica-o e oferece <strong>Juntar numa só despesa</strong>. Com a opção marcada, ao guardar mantém-se o talão (os artigos, a fotografia e a categoria) e substitui-se a entrada do banco, para que a compra seja contada uma só vez. A caixa começa desmarcada quando só o montante e a data coincidem — verifique antes de juntar.</li>
+<li><strong>Já adicionado à mão</strong> — se registou esta compra antes — escrita, por voz ou numa mensagem ao bot (por exemplo, «Netto», enquanto o talão imprime «Netto nr 541») — o aviso indica-o e oferece a mesma opção <strong>Juntar numa só despesa</strong>. Esta caixa começa desmarcada, porque uma despesa introduzida à mão pode ser uma compra diferente — marque-a se for a mesma. O talão substitui a sua entrada; as notas, as etiquetas e o projeto são transferidos. Se a deixar, o par aparece mais tarde também nos alertas, com um botão para juntar.</li>
+</ul>
+<p>Os bots de Telegram, WhatsApp e Slack dão os mesmos avisos, com um botão <strong>Ler mesmo assim</strong>. Quando a correspondência é uma entrada sua ou a cópia do banco, ao premir <strong>Adicionar despesa</strong> é perguntado se pretende juntar: <strong>Juntar</strong> mantém o talão e integra nele a outra entrada, <strong>Manter ambos</strong> guarda o talão separadamente.</p>
+<h3>Partilhar a partir de outra aplicação (Android)</h3>
+<p>Recebeu um talão como captura de ecrã, uma confirmação da aplicação do banco ou um talão eletrónico em PDF? Não precisa de abrir o digitalizador:</p>
+<ol>
+<li>Em qualquer aplicação (galeria, Gmail, o seu banco, a aplicação de uma loja), toque em <strong>Partilhar</strong></li>
+<li>Escolha <strong>AI Budget</strong></li>
+<li>A aplicação abre diretamente no ecrã de confirmação já preenchido — verifique e toque em <strong>Guardar</strong></li>
+</ol>
+<p>Pode partilhar <strong>imagens e PDFs</strong>, até <strong>10 ficheiros de cada vez</strong> (um PDF até 10 MB). Vários ficheiros dão origem a despesas separadas, uma após outra — o título mostra o progresso («Talão 2 de 5») e <strong>Seguinte</strong> passa ao ficheiro seguinte. Se um ficheiro não puder ser lido, escolha <strong>Saltar</strong> ou <strong>Introduzir manualmente</strong>. Ao fechar o ecrã, é-lhe perguntado antes de descartar os ficheiros ainda em espera. Cada ficheiro conta como uma digitalização de talão no seu limite de IA; se o limite se esgotar, os restantes ficheiros ficam para mais tarde.</p>
+<p><strong>Textos de pagamento:</strong> selecione um SMS do banco, um e-mail ou uma mensagem de chat, toque em <strong>Partilhar</strong> e escolha AI Budget. A aplicação lê o montante e o comerciante e abre o formulário de nova despesa já preenchido — verifique e guarde. Um texto que não pareça um pagamento (um anúncio, uma transação recusada) nunca é transformado numa despesa. Apenas Android.</p>
+<p>A partilha funciona apenas no Android. No iPhone e na aplicação web, use <strong>Digitalizar talão</strong>.</p>
+<h3>Reencaminhar talões eletrónicos por e-mail</h3>
+<p>Muitas lojas físicas e online enviam-lhe por e-mail um talão ou uma confirmação de encomenda. Em vez de o digitalizar, pode reencaminhá-lo para o seu endereço privado. Cada e-mail reencaminhado aparece na aplicação como uma despesa à sua espera. <strong>Nada é guardado até o confirmar.</strong></p>
+<blockquote>
+<p><strong>Em implementação gradual.</strong> Esta funcionalidade está a ser ativada aos poucos. Se vir <strong>Talões por e-mail</strong> em <strong>Definições</strong>, pode usá-la. Se ainda não a vir, ainda não chegou à sua conta.</p>
+</blockquote>
+<h4>Obter o seu endereço</h4>
+<ol>
+<li>Abra <strong>Definições</strong> → <strong>Talões por e-mail</strong></li>
+<li>Toque em <strong>Criar o meu endereço</strong>. Só os proprietários e editores da conta o podem fazer.</li>
+<li>Em <strong>O seu endereço privado</strong>, toque em <strong>Copiar</strong></li>
+<li>Em <strong>Adicionar talões a</strong>, escolha a conta onde os talões confirmados são guardados. Só aparecem as contas que pode editar.</li>
+</ol>
+<p>O endereço pertence-lhe a si, não à conta. Os membros de uma conta partilhada nunca veem os e-mails que reencaminha.</p>
+<h4>Configurar o reencaminhamento no Gmail</h4>
+<ol>
+<li>No Gmail, abra <strong>Definições</strong> → <strong>Ver todas as definições</strong> → <strong>Encaminhamento e POP/IMAP</strong> → <strong>Adicionar um endereço de encaminhamento</strong> e cole o seu endereço privado</li>
+<li>O Gmail envia um código de confirmação para esse endereço. O código aparece na aplicação em <strong>Definições</strong> → <strong>Talões por e-mail</strong>, num cartão <strong>Código de confirmação do Gmail</strong>, com um botão <strong>Copiar</strong>. Introduza o código no Gmail. O código só é mostrado na aplicação, nunca numa notificação, e apenas durante cerca de 30 minutos. Se já tiver desaparecido, peça ao Gmail para o enviar de novo.</li>
+<li>Crie um <strong>filtro</strong> (<strong>Definições</strong> → <strong>Filtros e endereços bloqueados</strong>) para o endereço do remetente da loja, ou para um assunto como «talão», «recibo» ou «encomenda», e escolha <strong>Encaminhar para</strong> o seu endereço</li>
+</ol>
+<p>Não reencaminhe todo o seu correio. Use um filtro. Protege a sua privacidade, e mensagens sem relação não gastam o seu limite de IA.</p>
+<h4>Configurar o reencaminhamento no Outlook</h4>
+<ol>
+<li>No Outlook, abra <strong>Definições</strong> → <strong>Correio</strong> → <strong>Regras</strong> e adicione uma regra para as mensagens da loja ou com «talão» no assunto</li>
+<li>Escolha a ação <strong>Reencaminhar para</strong> e introduza o seu endereço privado</li>
+</ol>
+<p>Algumas contas Outlook.com e Microsoft 365 bloqueiam o reencaminhamento automático para endereços externos. Se for o caso da sua, reencaminhe cada talão à mão. Um reencaminhamento manual a partir do telemóvel funciona igualmente bem.</p>
+<h4>Confirmar um talão</h4>
+<p>Quando um talão reencaminhado é lido, recebe uma notificação. Verá também uma faixa no ecrã Transações, <strong>Talões por e-mail por confirmar: N</strong>. Pode sempre abrir a lista a partir de <strong>Definições</strong> → <strong>Talões por e-mail</strong> → <strong>Abrir a caixa de talões por e-mail</strong>.</p>
+<ul>
+<li>O separador <strong>Por confirmar</strong> lista os talões à sua espera. Toque num para abrir o habitual ecrã de confirmação de talão, verifique os dados e toque em <strong>Guardar despesa</strong>.</li>
+<li>Se o talão parecer uma despesa que já tem, vê o mesmo aviso de duplicado que para um talão digitalizado, incluindo <strong>Juntar numa só despesa</strong>.</li>
+<li>Toque em <strong>Descartar</strong> para eliminar um talão sem o guardar.</li>
+<li>O separador <strong>Tratados</strong> mostra o que foi ignorado: um talão que já tem, um e-mail sem nenhum talão, um que não pôde ser lido, ou um que ficou por ler porque o seu limite de IA foi atingido. Quando se aplica, toque em <strong>Tentar novamente</strong>.</li>
+</ul>
+<p>Cada talão eletrónico lido conta como uma digitalização de talão no seu limite de IA. Os duplicados e os e-mails sem talão são ignorados sem o gastar. Se uma loja só enviar um link para o talão, reencaminhe antes o PDF, porque os links nunca são abertos. Uma fotografia do talão pode ficar guardada com a despesa. Um PDF ou um e-mail simples não é anexado. A lista precisa de ligação à internet.</p>
+<h4>Se o seu endereço for divulgado</h4>
+<p>Toque em <strong>Mudar endereço</strong>. O endereço antigo deixa de funcionar de imediato, e o correio enviado para ele é rejeitado. Depois, atualize a regra de reencaminhamento na sua caixa de correio para o novo endereço. O Gmail volta a pedir um código de confirmação. Para deixar de receber talões eletrónicos de vez, toque em <strong>Desativar endereço</strong>.</p>
+<h4>Privacidade e conservação</h4>
+<ul>
+<li>O nosso servidor lê um e-mail reencaminhado enquanto o processa, tal como qualquer talão que digitalize.</li>
+<li>Só o talão em si é guardado, nunca o e-mail inteiro. Os links no e-mail nunca são abertas e as imagens nunca são carregadas.</li>
+<li>O talão guardado é eliminado assim que o confirmar ou descartar.</li>
+<li>Os itens que não confirmar são eliminados automaticamente após 30 dias.</li>
+<li>Os talões por e-mail <strong>não estão disponíveis</strong> para contas com <strong>Nível 2 — Encriptação total</strong>. Com a encriptação de Nível 1 funcionam, mas os itens não confirmados são eliminados após 7 dias. Veja <a href="/help/pt/encryption/">Encriptação</a>.</li>
+</ul>
+<h2>Receita por voz</h2>
+<p>Registe pagamentos recebidos por voz — o mesmo fluxo da despesa por voz, otimizado para receitas.</p>
+<h3>Como funciona</h3>
+<ol>
+<li>Toque em <strong>Receita por voz</strong> nas ações rápidas do Painel, ou toque no ícone do microfone no rodapé do formulário <strong>Adicionar receita</strong></li>
+<li>Toque no botão (verde) do microfone para começar a gravar</li>
+<li>Fale com naturalidade, por exemplo: <em>«Recebi 500 do cliente, honorários de consultoria»</em></li>
+<li>Toque novamente para parar a gravação</li>
+<li>A aplicação extrai o montante, a descrição e a <strong>categoria de receita</strong> que melhor corresponde</li>
+</ol>
+<h3>Ecrã de confirmação</h3>
+<ul>
+<li><strong>Montante</strong> — extraído do que disse (editável)</li>
+<li><strong>Descrição</strong> — a que se refere o pagamento (editável)</li>
+<li><strong>Categoria</strong> — categoria de receita atribuída automaticamente (editável)</li>
+<li><strong>Moeda</strong> — detetada ou, por omissão, a sua moeda base</li>
+</ul>
+<p>Toque em <strong>Guardar receita</strong> para confirmar, ou em <strong>Tentar novamente</strong> para gravar de novo.</p>
+<h3>Dicas para melhores resultados</h3>
+<ul>
+<li>Diga o montante e uma breve descrição</li>
+<li>Indique a moeda se for diferente da sua moeda predefinida</li>
+</ul>
+<hr />
+<h2>Digitalizar fatura</h2>
+<p>Fotografe ou carregue uma fatura ou um comprovativo de pagamento para registar a receita automaticamente.</p>
+<h3>Como funciona</h3>
+<ol>
+<li>Toque em <strong>Digitalizar fatura</strong> nas ações rápidas do Painel, ou toque no ícone de documento no rodapé do formulário <strong>Adicionar receita</strong></li>
+<li>Escolha <strong>Tirar fotografia</strong>, <strong>Escolher da galeria</strong> ou <strong>Carregar PDF</strong></li>
+<li>Opcionalmente, escreva instruções adicionais para a IA</li>
+<li>A aplicação extrai o montante total, a data e a categoria</li>
+</ol>
+<h3>Ecrã de confirmação</h3>
+<ul>
+<li><strong>Montante total</strong> — extraído do documento</li>
+<li><strong>Descrição</strong> — resumo gerado</li>
+<li><strong>Categoria</strong> — categoria de receita atribuída automaticamente</li>
+<li><strong>Data</strong> — retirada do documento</li>
+</ul>
+<p>Reveja os dados, toque em ✓ para guardar ou no ícone do lápis para abrir o formulário completo <strong>Adicionar receita</strong> com os dados já preenchidos.</p>
+<blockquote>
+<p><strong>Nota:</strong> O OCR de faturas extrai apenas o total e a data. As linhas das faturas são ignoradas de propósito, para evitar contagens a dobrar em documentos de faturação com várias linhas.</p>
+</blockquote>
+<hr />
+<h2>Perguntas frequentes</h2>
+<ul>
+<li>
+<p><strong>P: Que idiomas suporta a entrada por voz?</strong>
+  <strong>R:</strong> A entrada por voz funciona melhor no idioma definido na aplicação. Suporta todos os idiomas da aplicação.</p>
+</li>
+<li>
+<p><strong>P: Posso digitalizar talões em qualquer idioma?</strong>
+  <strong>R:</strong> Sim, a IA consegue processar talões na maioria dos idiomas e extrai os montantes e os artigos independentemente do idioma do talão.</p>
+</li>
+<li>
+<p><strong>P: Que ficheiros PDF são suportados?</strong>
+  <strong>R:</strong> São suportados tanto PDFs digitais (por exemplo, faturas da Amazon ou do PayPal) como talões digitalizados em PDF. O tamanho máximo do ficheiro é 10 MB. Os PDFs digitais com texto selecionável são processados mais depressa e com mais precisão. Para melhores resultados com PDFs digitalizados, garanta que a digitalização é nítida e com bom contraste.</p>
+</li>
+<li>
+<p><strong>P: Porque é que o montante ficou errado depois da digitalização?</strong>
+  <strong>R:</strong> A extração por IA nem sempre é perfeita. Reveja sempre o ecrã de confirmação e corrija os erros antes de guardar. Talões desfocados ou danificados podem dar resultados menos precisos. Se uma linha concreta estiver errada, toque nela para a editar diretamente — veja <strong>Editar artigos</strong> acima.</p>
+</li>
+<li>
+<p><strong>P: A entrada por voz e a digitalização de talões gastam os meus pedidos de IA?</strong>
+  <strong>R:</strong> Sim, cada entrada por voz ou digitalização de talão usa um pedido de IA da sua quota mensal.</p>
+</li>
+<li>
+<p><strong>P: Porque é que um talão ficou dividido por várias categorias nos meus gráficos?</strong>
+  <strong>R:</strong> Quando um talão mistura claramente tipos diferentes de artigos (por exemplo, mercearia e bebidas alcoólicas), a aplicação divide-o automaticamente pelas categorias correspondentes nos seus gráficos de gastos — e também nos seus orçamentos por categoria. Toque em <strong>Alterar categorias</strong> no ecrã de confirmação do talão para o ajustar — as correções ficam memorizadas para a próxima vez.</p>
+</li>
+</ul>
+<hr />
+<p><em>Ver também: <a href="/help/pt/expenses-and-income/">Despesas e receitas</a> | <a href="/help/pt/ai-chat/">Chat IA</a></em></p></article><aside class="cta"><h3>Controle o seu dinheiro com IA</h3><p>Registe despesas por voz ou com uma fotografia do talão, acompanhe orçamentos e poupanças, em família. Comece grátis.</p><a class="btn p" href="https://app.ai-budget.pl?src=help&amp;loc=cta&amp;lang=pt-PT">Abrir a aplicação</a><a class="btn s" href="https://play.google.com/store/apps/details?id=com.budget.assistant&amp;referrer=src%3Dhelp%26loc%3Dcta%26lang%3Dpt-PT%26utm_source%3Dhelp%26utm_medium%3Dcta">Disponível no Google Play</a></aside><section class="related"><h2>Mais tópicos de ajuda</h2><a href="/help/pt/getting-started/">Primeiros passos</a><a href="/help/pt/dashboard/">Painel</a><a href="/help/pt/expenses-and-income/">Despesas e receitas</a><a href="/help/pt/budgets/">Orçamentos</a><a href="/help/pt/analytics/">Análise</a><a href="/help/pt/ai-chat/">Chat IA</a><a href="/help/pt/spending-story/">História dos gastos</a><a href="/help/pt/accounts/">Contas</a><a href="/help/pt/wallet-and-exchange/">Carteira e câmbio</a><a href="/help/pt/settings/">Definições</a><a href="/help/pt/subscription/">Planos de subscrição</a><a href="/help/pt/gamification/">Conquistas e gamificação</a><a href="/help/pt/investments/">Carteira de investimentos</a><a href="/help/pt/encryption/">Encriptação ponto a ponto</a><a href="/help/pt/export-reports/">Exportação e relatórios</a><a href="/help/pt/debts-and-loans/">Dívidas e empréstimos</a><a href="/help/pt/savings-goals/">Objetivos de poupança</a><a href="/help/pt/fat-finder/">Fat Finder (auditoria de despesas)</a><a href="/help/pt/ai-response-mode/">Modo de resposta da IA</a><a href="/help/pt/widgets/">Widgets do ecrã principal</a><a href="/help/pt/chat-bots/">Bots de chat — Telegram, WhatsApp e Slack</a><a href="/help/pt/scenario-simulator/">Simulador de cenários</a><a href="/help/pt/referral/">Convidar amigos — Programa de recomendação</a><a href="/help/pt/bank-import/">Importar transações do seu banco</a><a href="/help/pt/reference-data/">Dados de referência</a><a href="/help/pt/subscription-manager/">Gestor de subscrições</a><a href="/help/pt/web-app/">Aplicação web</a><a href="/help/pt/anomaly-alerts/">Alertas: atividade invulgar</a><a href="/help/pt/safe-to-spend/">Planear com antecedência — Seguro para gastar, capacidade de compra e captura automática</a><a href="/help/pt/purchase-requests/">Pedidos de compra</a><a href="/help/pt/family-feed/">Feed da família</a><a href="/help/pt/group-trip-wallet/">Carteira de viagem em grupo</a><a href="/help/pt/personal-inflation-index/">Índice de inflação pessoal</a><a href="/help/pt/expense-map/">Mapa de despesas</a><a href="/help/pt/shopping-list/">Lista de compras inteligente</a><a href="/help/pt/wrapped/">Financial Wrapped — o seu ano em dinheiro</a><a href="/help/pt/inflation-shield/">Escudo contra a inflação — abasteça-se antes de os preços subirem</a><a href="/help/pt/receipt-price-check/">Verificação de preços no talão — isto custa mais do que costuma pagar?</a><a href="/help/pt/receipt-split/">Dividir o talão — receber dos amigos, sem precisarem da aplicação</a><a href="/help/pt/real-salary/">Salário real — o seu aumento acompanha os seus próprios preços?</a><a href="/help/pt/shared-groups/">Grupos partilhados — dividir despesas contínuas com amigos, sem que eles precisem da aplicação</a><a href="/help/pt/connected-apps/">Aplicações ligadas e programadores</a></section></main><footer class="site"><div class="wrap"><div class="f-links"><a href="/blog/en/">Blog</a><a href="/help/pt/">Ajuda</a><a href="/pt/about/">Sobre nós</a><a href="/pt/developers/">API para programadores</a><a href="/en/privacy/">Privacidade</a><a href="/en/terms/">Termos</a><a href="/en/cookies/">Cookies</a><a href="https://app.ai-budget.pl?src=help&amp;loc=footer&amp;lang=pt-PT">Iniciar sessão</a><a href="https://play.google.com/store/apps/details?id=com.budget.assistant&amp;referrer=src%3Dhelp%26loc%3Dfooter%26lang%3Dpt-PT%26utm_source%3Dhelp%26utm_medium%3Dfooter">Google Play</a></div><div class="f-badge"><a href="https://startupfa.me/s/ai-budget?utm_source=ai-budget.pl" target="_blank" rel="nofollow noopener"><img class="b-sf" src="/assets/startup-fame-badge.webp" alt="AI Budget - Featured on Startup Fame" width="108" height="34" loading="lazy"></a><a href="https://peerpush.com/p/ai-budget-assistant" target="_blank" rel="nofollow noopener"><img class="b-pp" src="https://peerpush.com/p/ai-budget-assistant/badge.png" alt="AI Budget Assistant on PeerPush" width="120" height="34" loading="lazy"></a><a href="https://bestaibrands.com/ai-budget-assistant" target="_blank" rel="nofollow noopener" style="text-decoration:none;"><div style="display:inline-flex;flex-direction:column;align-items:center;background:#fff;border:1px solid #eee;border-radius:12px;padding:8px 32px;height:54px;justify-content:center;font-family:sans-serif;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);"><div style="font-size:8px;color:#999;font-weight:bold;text-transform:uppercase;letter-spacing:0.2em;line-height:1;margin-bottom:4px;white-space:nowrap;">Featured On</div><div style="font-size:14px;font-weight:bold;color:#000;letter-spacing:-0.01em;line-height:1;white-space:nowrap;">bestaibrands.com</div></div></a><a href="https://firsto.co/projects/ai-budget-assistant" target="_blank" rel="nofollow noopener"><img class="b-fo" src="https://firsto.co/images/badges/find-us-on-firsto.svg" alt="AI Budget Assistant | Firsto Launch" width="88" height="34" loading="lazy"></a><a href="https://liftoapp.com/product/ai-budget-assistant" target="_blank" rel="nofollow noopener"><img class="b-lf" src="https://liftoapp.com/badges/featured-dark.svg" alt="AI Budget Assistant - Featured on Lifto" width="126" height="34" loading="lazy"></a></div><div class="f-badge"><a href="https://fazier.com/launches/ai-budget.pl" target="_blank" rel="nofollow noopener"><img class="b-fz" src="https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=featured&amp;theme=light" alt="AI Budget Assistant on Fazier" width="144" height="34" loading="lazy"></a><a href="https://launchstag.com/p/tool-1789044587266" target="_blank" rel="nofollow noopener"><img class="b-ls" src="https://launchstag.com/badge-light.svg" alt="AI Budget Assistant - Featured on Launchstag" width="109" height="34" loading="lazy"></a><a href="https://www.uneed.best/tool/ai-budget-assistant" target="_blank" rel="nofollow noopener"><img class="b-un" src="https://www.uneed.best/EMBED3B.png" alt="AI Budget Assistant - Launching Soon on Uneed" width="130" height="34" loading="lazy"></a><a href="https://tools.cafe/p/tool-1789322958894" target="_blank" rel="nofollow noopener"><img class="b-tc" src="https://tools.cafe/b/light.svg" alt="AI Budget Assistant - Featured on tools.cafe" width="109" height="34" loading="lazy"></a><a href="https://sellwithboost.com" target="_blank" rel="nofollow noopener"><img class="b-swb" src="https://sellwithboost.com/badge/listing.svg" alt="AI Budget Assistant - Listed on Sell With Boost" width="136" height="34" loading="lazy"></a><a href="https://alphashot.com/products/ai-budget-assistant?utm_source=alphashot&amp;utm_medium=badge&amp;utm_campaign=embed" target="_blank" rel="nofollow noopener"><img class="b-as" src="https://alphashot.com/badge/ai-budget-assistant.svg" alt="AI Budget Assistant - Featured on AlphaShot" width="130" height="34" loading="lazy"></a></div><div class="f-co"><a href="https://mi-code.pl/" target="_blank" rel="noopener"><img src="/assets/mi_code_logo.svg" alt="MiCode Sp. z o.o." width="30" height="30"></a><span>&copy; 2026 AI Budget Assistant &mdash; <a href="https://mi-code.pl/" target="_blank" rel="noopener" style="color:inherit">MiCode Sp. z o.o.</a>. Todos os direitos reservados.</span></div></div></footer>
+<div class="cc" id="cc"><p>Utilizamos cookies para medir o tráfego e melhorar o site. <a href="/en/cookies/" style="color:#F58320;text-decoration:underline">Saber mais</a></p><div class="row"><button class="no" id="cc-no">Recusar</button><button class="ok" id="cc-ok">Aceitar</button></div></div>
+<script>(function(){var ID="G-WMEFHYETVX",K="cc-consent";function L(){var s=document.createElement("script");s.async=1;s.src="https://www.googletagmanager.com/gtag/js?id="+ID;document.head.appendChild(s);window.dataLayer=window.dataLayer||[];function g(){dataLayer.push(arguments);}window.gtag=g;g("js",new Date());g("config",ID);}var v=localStorage.getItem(K),b=document.getElementById("cc");if(v==="granted"){L();}else if(!v&&b){b.classList.add("show");document.getElementById("cc-ok").onclick=function(){localStorage.setItem(K,"granted");b.classList.remove("show");L();};document.getElementById("cc-no").onclick=function(){localStorage.setItem(K,"denied");b.classList.remove("show");};}})();</script></body></html>

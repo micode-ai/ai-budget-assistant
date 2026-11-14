@@ -9,7 +9,7 @@
  * language. Keys are camelCase English slugs and permanent once shipped. A key
  * is unique per TYPE (expense "gifts" and income "gifts" are different rows).
  */
-export type CatalogLocale = 'en' | 'de' | 'es' | 'fr' | 'pl' | 'ru' | 'ua' | 'be' | 'nl';
+export type CatalogLocale = 'en' | 'de' | 'es' | 'fr' | 'pl' | 'ru' | 'ua' | 'be' | 'nl' | 'pt' | 'br';
 
 export interface CatalogEntry {
   key: string;
@@ -38,6 +38,8 @@ export const CATEGORY_CATALOG: readonly CatalogEntry[] = [
       ua: 'Їжа та ресторани',
       be: 'Ежа і рэстараны',
       nl: 'Eten & restaurants',
+      pt: 'Comida e restaurantes',
+      br: 'Comida e restaurantes',
     },
   },
   {
@@ -56,6 +58,8 @@ export const CATEGORY_CATALOG: readonly CatalogEntry[] = [
       ua: 'Продукти',
       be: 'Прадукты',
       nl: 'Boodschappen',
+      pt: 'Supermercado',
+      br: 'Mercado',
     },
   },
   {
@@ -74,6 +78,8 @@ export const CATEGORY_CATALOG: readonly CatalogEntry[] = [
       ua: 'Алкоголь',
       be: 'Алкаголь',
       nl: 'Alcohol',
+      pt: 'Álcool',
+      br: 'Bebidas alcoólicas',
     },
   },
   {
@@ -92,6 +98,8 @@ export const CATEGORY_CATALOG: readonly CatalogEntry[] = [
       ua: 'Побутова хімія',
       be: 'Бытавая хімія',
       nl: 'Huishouden',
+      pt: 'Casa',
+      br: 'Casa',
     },
   },
   {
@@ -110,6 +118,8 @@ export const CATEGORY_CATALOG: readonly CatalogEntry[] = [
       ua: 'Транспорт',
       be: 'Транспарт',
       nl: 'Vervoer',
+      pt: 'Transportes',
+      br: 'Transporte',
     },
   },
   {
@@ -128,6 +138,8 @@ export const CATEGORY_CATALOG: readonly CatalogEntry[] = [
       ua: 'Покупки',
       be: 'Пакупкі',
       nl: 'Winkelen',
+      pt: 'Compras',
+      br: 'Compras',
     },
   },
   {
@@ -146,6 +158,8 @@ export const CATEGORY_CATALOG: readonly CatalogEntry[] = [
       ua: 'Розваги',
       be: 'Забавы',
       nl: 'Entertainment',
+      pt: 'Entretenimento',
+      br: 'Lazer',
     },
   },
   {
@@ -164,6 +178,8 @@ export const CATEGORY_CATALOG: readonly CatalogEntry[] = [
       ua: 'Рахунки та комунальні',
       be: 'Рахункі і камунальныя',
       nl: 'Rekeningen',
+      pt: 'Contas e serviços',
+      br: 'Contas e serviços',
     },
   },
   {
@@ -182,6 +198,8 @@ export const CATEGORY_CATALOG: readonly CatalogEntry[] = [
       ua: "Здоров'я",
       be: "Здароў'е",
       nl: 'Gezondheid',
+      pt: 'Saúde',
+      br: 'Saúde',
     },
   },
   {
@@ -200,6 +218,8 @@ export const CATEGORY_CATALOG: readonly CatalogEntry[] = [
       ua: 'Освіта',
       be: 'Адукацыя',
       nl: 'Onderwijs',
+      pt: 'Educação',
+      br: 'Educação',
     },
   },
   {
@@ -218,6 +238,8 @@ export const CATEGORY_CATALOG: readonly CatalogEntry[] = [
       ua: 'Одяг',
       be: 'Адзенне',
       nl: 'Kleding',
+      pt: 'Vestuário',
+      br: 'Roupas',
     },
   },
   {
@@ -236,6 +258,8 @@ export const CATEGORY_CATALOG: readonly CatalogEntry[] = [
       ua: 'Подарунки',
       be: 'Падарункі',
       nl: 'Cadeaus',
+      pt: 'Presentes',
+      br: 'Presentes',
     },
   },
   {
@@ -254,6 +278,8 @@ export const CATEGORY_CATALOG: readonly CatalogEntry[] = [
       ua: 'Подорожі',
       be: 'Падарожжы',
       nl: 'Reizen',
+      pt: 'Viagens',
+      br: 'Viagens',
     },
   },
   {
@@ -272,6 +298,8 @@ export const CATEGORY_CATALOG: readonly CatalogEntry[] = [
       ua: 'Підписки',
       be: 'Падпіскі',
       nl: 'Abonnementen',
+      pt: 'Subscrições',
+      br: 'Assinaturas',
     },
   },
   {
@@ -290,6 +318,8 @@ export const CATEGORY_CATALOG: readonly CatalogEntry[] = [
       ua: 'Зарплата',
       be: 'Зарплата',
       nl: 'Salaris',
+      pt: 'Salário',
+      br: 'Salário',
     },
   },
   {
@@ -308,6 +338,8 @@ export const CATEGORY_CATALOG: readonly CatalogEntry[] = [
       ua: 'Фріланс',
       be: 'Фрыланс',
       nl: 'Freelance',
+      pt: 'Trabalho independente',
+      br: 'Freelance',
     },
   },
   {
@@ -326,6 +358,8 @@ export const CATEGORY_CATALOG: readonly CatalogEntry[] = [
       ua: 'Інше',
       be: 'Іншае',
       nl: 'Overig',
+      pt: 'Outros',
+      br: 'Outros',
     },
   },
   {
@@ -344,6 +378,8 @@ export const CATEGORY_CATALOG: readonly CatalogEntry[] = [
       ua: 'Застава за тару',
       be: 'Закладзь за тару',
       nl: 'Statiegeld',
+      pt: 'Depósito de embalagens',
+      br: 'Vasilhame',
     },
   },
   {
@@ -362,6 +398,8 @@ export const CATEGORY_CATALOG: readonly CatalogEntry[] = [
       ua: 'Кава та напої',
       be: 'Кава і напоі',
       nl: 'Koffie & drankjes',
+      pt: 'Café e bebidas',
+      br: 'Café e bebidas',
     },
   },
   {
@@ -380,6 +418,8 @@ export const CATEGORY_CATALOG: readonly CatalogEntry[] = [
       ua: 'Особиста гігієна',
       be: 'Асабістая гігіена',
       nl: 'Persoonlijke verzorging',
+      pt: 'Cuidados pessoais',
+      br: 'Cuidados pessoais',
     },
   },
   {
@@ -398,6 +438,8 @@ export const CATEGORY_CATALOG: readonly CatalogEntry[] = [
       ua: 'Інвестиції',
       be: 'Інвестыцыі',
       nl: 'Beleggingen',
+      pt: 'Investimentos',
+      br: 'Investimentos',
     },
   },
   {
@@ -416,6 +458,8 @@ export const CATEGORY_CATALOG: readonly CatalogEntry[] = [
       ua: 'Подарунки',
       be: 'Падарункі',
       nl: 'Cadeaus',
+      pt: 'Presentes',
+      br: 'Presentes',
     },
   },
   {
@@ -434,6 +478,8 @@ export const CATEGORY_CATALOG: readonly CatalogEntry[] = [
       ua: 'Інший дохід',
       be: 'Іншы даход',
       nl: 'Overige inkomsten',
+      pt: 'Outras receitas',
+      br: 'Outras receitas',
     },
   },
 ];
@@ -454,7 +500,7 @@ const ALIASES: ReadonlyArray<{ key: string; type: 'expense' | 'income'; names: r
 
 const normalize = (name: string): string => name.normalize('NFC').trim().replace(/\s+/g, ' ').toLowerCase();
 
-const LOCALE_LIST: readonly CatalogLocale[] = ['en', 'de', 'es', 'fr', 'pl', 'ru', 'ua', 'be', 'nl'];
+const LOCALE_LIST: readonly CatalogLocale[] = ['en', 'de', 'es', 'fr', 'pl', 'ru', 'ua', 'be', 'nl', 'pt', 'br'];
 
 let keyByTypedName: Map<string, string> | null = null;
 
@@ -469,7 +515,7 @@ function buildIndex(): Map<string, string> {
   return index;
 }
 
-/** The catalog key a name stands for in ANY of the nine languages, or null. */
+/** The catalog key a name stands for in ANY of the app languages, or null. */
 export function catalogKeyForName(name: string, type: 'expense' | 'income'): string | null {
   if (!keyByTypedName) keyByTypedName = buildIndex();
   return keyByTypedName.get(`${type}:${normalize(name)}`) ?? null;

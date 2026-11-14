@@ -11,7 +11,7 @@
  * leaf the AI module depends on — importing the service back into it would
  * invert that dependency.
  *
- * Why recognition is by NAME across all nine languages rather than by the one
+ * Why recognition is by NAME across all app languages rather than by the one
  * name the account owner's language resolves to: the owner can change their
  * language, and a shared account can change owner, but a category already
  * created keeps the name it was born with. Matching the whole table means a
@@ -29,6 +29,8 @@ export const DEPOSIT_CATEGORY_NAMES: Record<string, string> = {
   ru: 'Залог за тару',
   ua: 'Застава за тару',
   be: 'Закладзь за тару',
+  pt: 'Depósito de embalagens',
+  br: 'Vasilhame',
 };
 
 /** The deposit category's name in the account owner's language. */

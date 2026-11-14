@@ -6,6 +6,8 @@ const uncategorizedMap: Record<string, string> = {
   es: 'Sin categoría',
   fr: 'Non catégorisé',
   de: 'Nicht kategorisiert',
+  pt: 'Sem categoria',
+  br: 'Sem categoria',
 };
 
 const totalMap: Record<string, string> = {
@@ -16,6 +18,8 @@ const totalMap: Record<string, string> = {
   es: 'Total',
   fr: 'Total',
   de: 'Gesamt',
+  pt: 'Total',
+  br: 'Total',
 };
 
 const otherMap: Record<string, string> = {
@@ -26,6 +30,8 @@ const otherMap: Record<string, string> = {
   es: 'Otros',
   fr: 'Autre',
   de: 'Sonstige',
+  pt: 'Outros',
+  br: 'Outros',
 };
 
 export function translateUncategorized(language?: string): string {

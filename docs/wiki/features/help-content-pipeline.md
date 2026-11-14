@@ -10,7 +10,7 @@ generated, and the generated artifacts are committed.
 
 ## Entry points
 
-- `user_docs/<lang>/NN-slug.md` — the source, nine languages
+- `user_docs/<lang>/NN-slug.md` — the source, eleven languages
 - `scripts/generate-help-content.js` — builds the in-app bundle; its `SECTIONS` array
 - `apps/mobile/src/help/sections.ts` — the in-app section registry
 - `apps/mobile/src/help/content.ts` — **generated**; never edit
@@ -63,7 +63,7 @@ how `38-shopping-list` drifted out of sync until it was backfilled much later.
 **Do not create `app/help.tsx`.** The route is served by `app/help/index.tsx`; a sibling file
 shadows it.
 
-**Edit all nine locales.** `en`, `de`, `es`, `fr`, `pl`, `ru`, `ua`, `be`, `nl`. Visible text uses
+**Edit all eleven locales.** `en`, `de`, `es`, `fr`, `pl`, `ru`, `ua`, `be`, `nl`, `pt` (Portugal), `br` (Brazil). Visible text uses
 each language's real orthography — only slugs are ASCII. Nine German articles once shipped with
 ASCII transliterations (`fuer`, `groesste`) in exactly the two fields Google renders.
 
@@ -80,7 +80,9 @@ The env-less default builds a `noindex` preview that will silently overwrite the
 production site with the wrong robots directive and base path.
 
 **`docs/marketing` is gitignored.** A newly generated file needs `git add -f` or it 404s in
-production while looking fine locally.
+production while looking fine locally. Force-add the generated files by path, never a whole
+directory: `-f` overrides every ignore rule, so `git add -f docs/marketing/help` also tracks the
+`__pycache__/*.pyc` the build leaves behind.
 
 **CSS is inlined per page**, so editing it re-touches every committed HTML file on regenerate —
 expect a large, boring diff and check it is only that.

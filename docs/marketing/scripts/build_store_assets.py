@@ -182,6 +182,28 @@ COPY = {
    "06-bank-import": ("Importeer je bank in seconden", "Wise en Poolse banken - CSV of PDF"),
    "07-subscriptions":("Mis nooit een verlenging", "Een agenda die je abonnementen bewaakt"),
  },
+ # pt/br: copy is ready, but there are no pt/br device screenshots in FILES yet, so
+ # `marketing pt br` prints "no source, skipping" until they are captured and listed above.
+ # No Portuguese or Brazilian bank has its own parser: the import line names Wise/Revolut
+ # and the AI import that reads any other bank's statement.
+ "pt": {
+   "01-home":        ("Toda a sua vida financeira numa só aplicação", "Despesas, orçamentos e objetivos - em família"),
+   "02-ai-chat":     ("Basta perguntar - a IA responde", "Perguntas em linguagem simples, respostas imediatas"),
+   "03-receipt-scan":("Fotografe o talão - já está", "A IA lê os artigos, o total e o comerciante"),
+   "04-analytics":   ("Veja para onde vai o seu dinheiro", "Tendências, categorias e análises com IA"),
+   "05-budget-detail":("Orçamentos que cumpre mesmo", "Acompanhe cada orçamento com o histórico completo"),
+   "06-bank-import": ("Importe o seu banco em segundos", "Wise, Revolut e qualquer banco com IA - CSV ou PDF"),
+   "07-subscriptions":("Nunca perca uma renovação", "Um calendário que mantém as subscrições sob controlo"),
+ },
+ "br": {
+   "01-home":        ("Toda a sua vida financeira em um só app", "Despesas, orçamentos e metas - em família"),
+   "02-ai-chat":     ("É só perguntar - a IA responde", "Perguntas em linguagem simples, respostas na hora"),
+   "03-receipt-scan":("Fotografe o recibo e pronto", "A IA lê os itens, o total e o estabelecimento"),
+   "04-analytics":   ("Veja para onde vai seu dinheiro", "Tendências, categorias e insights com IA"),
+   "05-budget-detail":("Orçamentos que você cumpre de verdade", "Acompanhe cada orçamento com o histórico completo"),
+   "06-bank-import": ("Importe seu banco em segundos", "Wise, Revolut e qualquer banco com IA - CSV ou PDF"),
+   "07-subscriptions":("Nunca perca uma renovação", "Um calendário que deixa suas assinaturas sob controle"),
+ },
 }
 
 # ---------- design ----------

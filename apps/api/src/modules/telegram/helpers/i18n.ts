@@ -26,6 +26,8 @@ const platformMessages: Record<string, Record<string, string>> = {
     pl: 'Najpierw połącz swoje konto. Użyj /link <kod>.',
     be: 'Спачатку прывяжыце акаўнт. Выкарыстоўвайце /link <код>.',
     nl: 'Koppel je account eerst. Gebruik /link <code>.',
+    pt: 'Associe primeiro a sua conta. Use /link <código>.',
+    br: 'Vincule sua conta primeiro. Use /link <código>.',
   },
   welcomeBack: {
     en: 'Welcome back! You are linked to account <b>{{account}}</b>.\n\nSend /help to see available commands.',
@@ -37,6 +39,8 @@ const platformMessages: Record<string, Record<string, string>> = {
     pl: 'Witaj ponownie! Jesteś połączony z kontem <b>{{account}}</b>.\n\nWyślij /help, aby zobaczyć dostępne polecenia.',
     be: 'З вяртаннем! Вы прывязаны да акаўнта <b>{{account}}</b>.\n\nАдпраўце /help для спісу каманд.',
     nl: 'Welkom terug! Je bent gekoppeld aan account <b>{{account}}</b>.\n\nStuur /help om de beschikbare opdrachten te zien.',
+    pt: 'Bem-vindo de volta! Está associado à conta <b>{{account}}</b>.\n\nEnvie /help para ver os comandos disponíveis.',
+    br: 'Bem-vindo de volta! Você está vinculado à conta <b>{{account}}</b>.\n\nEnvie /help para ver os comandos disponíveis.',
   },
   welcomeNew: {
     en: '👋 Welcome to Budget Assistant Bot!\n\nTo get started, link your account:\n1. Open the app → Settings → Telegram Bot\n2. Tap "Connect Telegram"\n3. Send the code here: /link YOUR_CODE\n\nExample: <code>/link A3K9F2</code>',
@@ -48,6 +52,8 @@ const platformMessages: Record<string, Record<string, string>> = {
     pl: '👋 Witaj w Budget Assistant Bot!\n\nAby rozpocząć, połącz swoje konto:\n1. Otwórz aplikację → Ustawienia → Telegram Bot\n2. Dotknij „Połącz Telegram"\n3. Wyślij kod tutaj: /link TWÓJ_KOD\n\nPrzykład: <code>/link A3K9F2</code>',
     be: '👋 Сардэчна запрашаем у Budget Assistant Bot!\n\nДля пачатку прывяжыце акаўнт:\n1. Адкрыйце праграму → Налады → Telegram Бот\n2. Націсніце «Падключыць Telegram»\n3. Адпраўце код сюды: /link ВАШ_КОД\n\nПрыклад: <code>/link A3K9F2</code>',
     nl: '👋 Welkom bij Budget Assistant Bot!\n\nKoppel je account om te beginnen:\n1. Open de app → Instellingen → Telegram Bot\n2. Tik op "Telegram koppelen"\n3. Stuur de code hier: /link JOUW_CODE\n\nVoorbeeld: <code>/link A3K9F2</code>',
+    pt: '👋 Bem-vindo ao Budget Assistant Bot!\n\nPara começar, associe a sua conta:\n1. Abra a aplicação → Definições → Bot do Telegram\n2. Toque em «Ligar o Telegram»\n3. Envie o código aqui: /link O_SEU_CÓDIGO\n\nExemplo: <code>/link A3K9F2</code>',
+    br: '👋 Bem-vindo ao Budget Assistant Bot!\n\nPara começar, vincule sua conta:\n1. Abra o app → Configurações → Bot do Telegram\n2. Toque em “Conectar o Telegram”\n3. Envie o código aqui: /link SEU_CÓDIGO\n\nExemplo: <code>/link A3K9F2</code>',
   },
   linkSuccess: {
     en: '✅ Account linked successfully!\n\nYou can now:\n• Add expenses: <code>/expense 50 lunch</code>\n• Add incomes: <code>/income 3000 salary</code>\n• Send voice messages to add expenses/chat\n• Send receipt photos to scan them\n• Chat with AI — just type any question\n\nSend /help for all commands.',
@@ -59,6 +65,8 @@ const platformMessages: Record<string, Record<string, string>> = {
     pl: '✅ Konto połączone!\n\nTeraz możesz:\n• Dodawać wydatki: <code>/expense 50 obiad</code>\n• Dodawać dochody: <code>/income 3000 pensja</code>\n• Wysyłać wiadomości głosowe\n• Wysyłać zdjęcia paragonów\n• Rozmawiać z AI — po prostu wpisz pytanie\n\nWyślij /help, aby zobaczyć polecenia.',
     be: '✅ Акаўнт паспяхова прывязаны!\n\nЦяпер вы можаце:\n• Дадаваць выдаткі: <code>/expense 50 абед</code>\n• Дадаваць даходы: <code>/income 3000 зарплата</code>\n• Адпраўляць галасавыя\n• Адпраўляць фота чэкаў\n• Размаўляць з ІІ — проста напішыце пытанне\n\nАдпраўце /help для спісу каманд.',
     nl: '✅ Account succesvol gekoppeld!\n\nJe kunt nu:\n• Uitgaven toevoegen: <code>/expense 50 lunch</code>\n• Inkomsten toevoegen: <code>/income 3000 salaris</code>\n• Spraakberichten sturen om uitgaven toe te voegen/te chatten\n• Foto\'s van bonnen sturen om te scannen\n• Chatten met AI — typ gewoon een vraag\n\nStuur /help voor alle opdrachten.',
+    pt: '✅ Conta associada com sucesso!\n\nAgora pode:\n• Adicionar despesas: <code>/expense 50 almoço</code>\n• Adicionar receitas: <code>/income 3000 salário</code>\n• Enviar mensagens de voz para adicionar despesas ou conversar\n• Enviar fotografias de talões para os ler\n• Conversar com a IA — basta escrever qualquer pergunta\n\nEnvie /help para ver todos os comandos.',
+    br: '✅ Conta vinculada com sucesso!\n\nAgora você pode:\n• Adicionar despesas: <code>/expense 50 almoço</code>\n• Adicionar receitas: <code>/income 3000 salário</code>\n• Enviar mensagens de voz para adicionar despesas ou conversar\n• Enviar fotos de recibos para escaneá-los\n• Conversar com a IA — é só digitar qualquer pergunta\n\nEnvie /help para ver todos os comandos.',
   },
   unlinkSuccess: {
     en: '✅ Your Telegram has been unlinked. Send /link <code> to connect again.',
@@ -70,6 +78,8 @@ const platformMessages: Record<string, Record<string, string>> = {
     pl: '✅ Telegram odłączony. Wyślij /link <kod>, aby połączyć ponownie.',
     be: '✅ Telegram адвязаны. Адпраўце /link <код> для паўторнага падключэння.',
     nl: '✅ Je Telegram is losgekoppeld. Stuur /link <code> om opnieuw te verbinden.',
+    pt: '✅ O seu Telegram foi desassociado. Envie /link <código> para voltar a ligá-lo.',
+    br: '✅ Seu Telegram foi desvinculado. Envie /link <código> para conectar de novo.',
   },
   helpText: {
     en: '<b>Available commands:</b>\n\n/expense &lt;amount&gt; [description] — Add an expense\n/income &lt;amount&gt; [description] — Add income\n/group &lt;amount&gt; [currency] [description] — Add to a shared group\n/category [type] &lt;name&gt; — Create a category\n/categories — List &amp; delete categories\n/categorize — Sort uncategorized expenses\n/usage — View AI usage and limits\n/digest on|off|now — Weekly voice digest\n/account — Switch between accounts\n/newchat — Start a new AI conversation\n/unlink — Disconnect Telegram\n/help — Show this message\n\n<b>Other features:</b>\n🎤 Send a <b>voice message</b> to add expenses or chat with AI\n📷 Send a <b>receipt photo</b> to scan and create an expense\n💬 Just type any message to <b>chat with the AI assistant</b>',
@@ -81,6 +91,8 @@ const platformMessages: Record<string, Record<string, string>> = {
     pl: '<b>Dostępne polecenia:</b>\n\n/expense &lt;kwota&gt; [opis] — Dodaj wydatek\n/income &lt;kwota&gt; [opis] — Dodaj dochód\n/group &lt;kwota&gt; [waluta] [opis] — Dodaj do wspólnej grupy\n/category [typ] &lt;nazwa&gt; — Utwórz kategorię\n/categories — Lista kategorii\n/categorize — Uporządkuj wydatki bez kategorii\n/usage — Użycie AI i limity\n/digest on|off|now — Cotygodniowe podsumowanie głosowe\n/account — Zmień konto\n/newchat — Nowa rozmowa z AI\n/unlink — Odłącz Telegram\n/help — Pokaż to polecenie\n\n<b>Inne funkcje:</b>\n🎤 Wyślij <b>wiadomość głosową</b>\n📷 Wyślij <b>zdjęcie paragonu</b>\n💬 Napisz, aby <b>porozmawiać z AI</b>',
     be: '<b>Даступныя каманды:</b>\n\n/expense &lt;сума&gt; [апісанне] — Дадаць выдатак\n/income &lt;сума&gt; [апісанне] — Дадаць даход\n/group &lt;сума&gt; [валюта] [апісанне] — Дадаць у агульную групу\n/category [тып] &lt;назва&gt; — Стварыць катэгорыю\n/categories — Спіс катэгорый\n/categorize — Разабраць выдаткі без катэгорыі\n/usage — Выкарыстанне AI і ліміты\n/digest on|off|now — Штотыднёвы галасавы дайджэст\n/account — Пераключыць акаўнт\n/newchat — Новая размова з ІІ\n/unlink — Адвязаць Telegram\n/help — Паказаць гэта паведамленне\n\n<b>Іншыя магчымасці:</b>\n🎤 Адпраўце <b>галасавое паведамленне</b>\n📷 Адпраўце <b>фота чэка</b>\n💬 Проста напішыце для <b>чата з ІІ</b>',
     nl: '<b>Beschikbare opdrachten:</b>\n\n/expense &lt;bedrag&gt; [omschrijving] — Uitgave toevoegen\n/income &lt;bedrag&gt; [omschrijving] — Inkomsten toevoegen\n/group &lt;bedrag&gt; [valuta] [omschrijving] — Aan een gedeelde groep toevoegen\n/category [type] &lt;naam&gt; — Categorie aanmaken\n/categories — Categorieën weergeven &amp; verwijderen\n/categorize — Ongecategoriseerde uitgaven sorteren\n/usage — AI-gebruik en limieten bekijken\n/digest on|off|now — Wekelijkse spraaksamenvatting\n/account — Tussen accounts wisselen\n/newchat — Nieuw AI-gesprek starten\n/unlink — Telegram ontkoppelen\n/help — Dit bericht tonen\n\n<b>Andere functies:</b>\n🎤 Stuur een <b>spraakbericht</b> om uitgaven toe te voegen of te chatten met AI\n📷 Stuur een <b>foto van een bon</b> om te scannen en een uitgave aan te maken\n💬 Typ gewoon een bericht om <b>met de AI-assistent te chatten</b>',
+    pt: '<b>Comandos disponíveis:</b>\n\n/expense &lt;valor&gt; [descrição] — Adicionar uma despesa\n/income &lt;valor&gt; [descrição] — Adicionar uma receita\n/group &lt;valor&gt; [moeda] [descrição] — Adicionar a um grupo partilhado\n/category [tipo] &lt;nome&gt; — Criar uma categoria\n/categories — Listar e eliminar categorias\n/categorize — Organizar despesas sem categoria\n/usage — Ver a utilização e os limites de IA\n/digest on|off|now — Resumo semanal por voz\n/account — Mudar de conta\n/newchat — Iniciar uma nova conversa com a IA\n/unlink — Desligar o Telegram\n/help — Mostrar esta mensagem\n\n<b>Outras funcionalidades:</b>\n🎤 Envie uma <b>mensagem de voz</b> para adicionar despesas ou conversar com a IA\n📷 Envie uma <b>fotografia do talão</b> para o ler e criar uma despesa\n💬 Escreva qualquer mensagem para <b>conversar com o assistente de IA</b>',
+    br: '<b>Comandos disponíveis:</b>\n\n/expense &lt;valor&gt; [descrição] — Adicionar uma despesa\n/income &lt;valor&gt; [descrição] — Adicionar uma receita\n/group &lt;valor&gt; [moeda] [descrição] — Adicionar a um grupo compartilhado\n/category [tipo] &lt;nome&gt; — Criar uma categoria\n/categories — Listar e excluir categorias\n/categorize — Organizar despesas sem categoria\n/usage — Ver o uso e os limites de IA\n/digest on|off|now — Resumo semanal por voz\n/account — Trocar de conta\n/newchat — Iniciar uma nova conversa com a IA\n/unlink — Desconectar o Telegram\n/help — Mostrar esta mensagem\n\n<b>Outros recursos:</b>\n🎤 Envie uma <b>mensagem de voz</b> para adicionar despesas ou conversar com a IA\n📷 Envie uma <b>foto do recibo</b> para escaneá-lo e criar uma despesa\n💬 Digite qualquer mensagem para <b>conversar com o assistente de IA</b>',
   },
 };
 

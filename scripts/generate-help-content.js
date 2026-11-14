@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const LANGUAGES = ['en', 'ru', 'ua', 'pl', 'de', 'es', 'fr', 'be', 'nl'];
+const LANGUAGES = ['en', 'ru', 'ua', 'pl', 'de', 'es', 'fr', 'be', 'nl', 'pt', 'br'];
 
 const SECTIONS = [
   '00-index',
@@ -141,7 +141,7 @@ export interface HelpSection {
   body: string;
 }
 
-export type HelpLanguage = 'en' | 'ru' | 'ua' | 'pl' | 'de' | 'es' | 'fr' | 'be' | 'nl';
+export type HelpLanguage = 'en' | 'ru' | 'ua' | 'pl' | 'de' | 'es' | 'fr' | 'be' | 'nl' | 'pt' | 'br';
 
 export const helpContent: Record<HelpLanguage, HelpSection[]> = {\n`;
 

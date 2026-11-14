@@ -3460,7 +3460,7 @@ URL: https://ai-budget.pl/help/nl/getting-started/
 4. Maak een **Wachtwoord** aan (minimaal 8 tekens, moet een hoofdletter A-Z, een kleine letter a-z en een cijfer 0-9 bevatten)
 5. Bevestig je wachtwoord
 6. Selecteer je voorkeurs **Valuta** (USD, EUR, PLN, GBP, UAH, RUB of BYN)
-7. Selecteer je voorkeurs **Taal** (English, Deutsch, Espanol, Francais, Polski, Русский, Українська of Беларуская)
+7. Selecteer je voorkeurs **Taal** (English, Deutsch, Espanol, Francais, Polski, Русский, Українська, Беларуская, Nederlands, Português (Portugal) of Português (Brasil))
 8. Tik op **Account aanmaken**
 9. Controleer je e-mail op een **6-cijferige verificatiecode**
 10. Voer de code in de app in en tik op **Verifiëren**
@@ -4066,6 +4066,23 @@ Heb je een week aan papieren bonnen verzameld? Na het opslaan van een bon krijg 
 
 Terwijl je scant, laat een kleine teller zien hoeveel bonnen je deze sessie al hebt opgeslagen. Elke 15 bonnen geeft de app een vriendelijke herinnering dat je door kunt gaan of een pauze kunt nemen — je voortgang is sowieso al opgeslagen. De teller wordt gereset zodra je het scherm verlaat; hij is er alleen om je een gevoel van voortgang te geven tijdens één sessie.
 
+### Lange bon in meerdere foto's
+
+Een bon die te lang is voor één leesbare foto kun je in delen fotograferen en als **één** bon laten lezen.
+
+**In de app**
+
+1. Tik op het bonscherm op **Lange bon? Fotografeer hem in delen**
+2. Fotografeer de bon van boven naar beneden met een kleine overlap tussen de foto's (de laatste regel van een foto moet bovenaan de volgende weer zichtbaar zijn); je kunt tot **4 delen** toevoegen
+3. Tik op **Bon uitlezen**. Je krijgt één bevestigingskaart waarop elke regel één keer staat; regels in de overlap worden niet dubbel geteld
+4. Komt het totaal van de regels niet overeen met het totaal van de bon, dan waarschuwt de app je en biedt **Delen opnieuw maken** aan in plaats van opslaan
+
+Elk deel telt als één bonscan voor je maandelijkse AI-limiet, dus een bon van drie delen gebruikt drie scans. Een pdf kan niet met foto's worden gecombineerd. De uitgave bewaart alle foto's: open de bon bij de uitgave en tik op een deel om het te bekijken.
+
+**In de bots voor Telegram, WhatsApp en Slack**
+
+Stuur de foto's na elkaar. De eerste foto wordt direct gelezen. Zolang de bevestigingskaart nog openstaat, stuur je de volgende foto: de bot vraagt of het een **Vervolg** of een **Nieuwe bon** is. Kies **Vervolg** en de kaart wordt opnieuw opgebouwd uit alle foto's samen (correcties die je op de oude kaart typte blijven niet behouden, controleer dus de nieuwe). Foto's moeten JPEG, PNG of WebP zijn en niet te groot; de bot meldt het als er een wordt geweigerd.
+
 ### Al gescande bonnen
 
 De app waarschuwt je voordat een bon twee keer in je uitgaven belandt:
@@ -4073,8 +4090,9 @@ De app waarschuwt je voordat een bon twee keer in je uitgaven belandt:
 - **Hetzelfde bestand opnieuw** — kies je een foto of PDF die al gescand en opgeslagen is, dan krijg je de vraag *vóór* het uitlezen, zodat er geen AI-verzoek wordt verbruikt. **Openen** toont de opgeslagen uitgave, **Toch scannen** leest de bon opnieuw, **Annuleren** annuleert.
 - **Dezelfde bon, nieuwe foto** — bestaat er na het uitlezen al een uitgave met dezelfde winkel, hetzelfde bedrag en dezelfde datum (±1 dag), dan toont het bevestigingsscherm een gele melding met een knop **Openen**. Opslaan kan nog steeds: het kan echt een tweede aankoop zijn.
 - **Al vastgelegd door je bank** — kwam de overeenkomende uitgave uit een bankmelding of een geïmporteerd afschrift, dan zegt de melding dat en biedt **Samenvoegen tot één uitgave** aan. Aangevinkt bewaart opslaan het bonnetje (artikelen, foto en categorie) en vervangt het de bankregel, zodat de aankoop één keer telt. Komen alleen bedrag en datum overeen, dan staat het vakje eerst uit — controleer vóór het samenvoegen.
+- **Al handmatig toegevoegd** — heb je deze aankoop eerder zelf toegevoegd — getypt, met je stem of als bericht aan de bot (bijvoorbeeld „Netto”, terwijl de bon „Netto nr 541” toont), dan zegt de melding dat en biedt hetzelfde **Samenvoegen tot één uitgave** aan. Het vakje staat hier eerst uit, want een handmatige uitgave kan een aparte aankoop zijn — vink het aan als het dezelfde is. De bon vervangt je invoer; notities, tags en project worden overgenomen. Laat je het uit, dan verschijnt het paar later in de meldingen met een knop om samen te voegen.
 
-De bots in Telegram, WhatsApp en Slack waarschuwen op dezelfde manier en bieden een knop **Toch scannen**.
+De bots in Telegram, WhatsApp en Slack waarschuwen op dezelfde manier en bieden een knop **Toch scannen**. Is de overeenkomst je eigen invoer of de kopie van de bank, dan vraagt de bot na **Uitgave toevoegen** of je wilt samenvoegen: **Samenvoegen** houdt de bon en voegt de andere invoer erin, **Beide houden** slaat de bon apart op.
 
 ### Delen vanuit een andere app (Android)
 
@@ -4479,6 +4497,20 @@ Een tabel met je meest gekochte bonitems:
 ## Export
 
 Tik op **Rapport exporteren** om het scherm [Export & Rapporten](./16-export-reports.md) te openen, waar je PDF-, Excel- en CSV-rapporten kunt genereren, maandelijkse overzichten kunt bekijken en gegevensback-ups kunt beheren.
+
+## Kosten van kinderen
+
+Zie wat elk kind kost, zonder te gokken.
+
+- **Kinderen toevoegen:** Instellingen > Referentiegegevens > Kinderen. Alleen naam en kleur worden opgeslagen. Archiveer een kind in plaats van te verwijderen; de uitgaven blijven toegewezen.
+- **Een hele uitgave toewijzen:** kies bij een nieuwe of bestaande uitgave een of meer kinderen. Bij meerdere kinderen wordt het bedrag gelijk verdeeld tenzij u de aandelen aanpast. Een uitgave gebruikt toewijzing als geheel of per bonregel, niet beide; de app vraagt het voor het wisselen.
+- **Bonregels toewijzen:** wijs na het scannen van een bon afzonderlijke regels (luiers, schoolspullen) aan een kind toe. De app onthoudt uw keuze en stelt die de volgende keer voor. Een suggestie wordt nooit zonder u toegepast. 'Artikelen uitlezen' behoudt de toewijzing van producten die nog op de bon staan en meldt hoeveel er niet konden worden overgenomen.
+- **In bulk:** selecteer meerdere uitgaven en kies Aan kind toewijzen. Uitgaven met regeltoewijzing worden overgeslagen en het aantal wordt getoond.
+- **Totalen:** het kindscherm (en een kaart op het tabblad Analyse) toont deze maand, dit jaar en de verdeling per categorie in uw weergavevaluta. Een totaal met ≈ bevat een benadering omdat een wisselkoers ontbrak; zulke bedragen worden weggelaten in plaats van geraden. Geplande uitgaven en vorderingen uit gedeelde rekeningen tellen niet mee.
+- **800+ en dekking:** lijkt een inkomen op de 800+-uitkering (bijvoorbeeld '800+' of 'rodzina 800' in de omschrijving), dan biedt de app aan het aan een kind te koppelen. Dekking is de ontvangen uitkering gedeeld door wat dat kind in dezelfde periode kostte.
+- **Deelkaart:** een afbeelding met de totalen van een kind. De naam is standaard verborgen; u kunt die tonen.
+- **Overzicht als PDF (Pro, bewerkers):** een 'zestawienie' van de kosten van een kind over maximaal 24 maanden, met totalen, maand- en categorieoverzicht, uitgavenlijst en bonnen. Elke pagina heeft een voettekst dat het in de app is opgesteld op basis van door de gebruiker ingevoerde gegevens, en het tijdstip 'gegevens per'. Het is een samenvatting van uw eigen administratie, geen juridisch document en niet gecertificeerd. Het bevat alleen wat de server heeft bereikt; de app synchroniseert eerst en vraagt u te wachten als er nog iets openstaat. Niet beschikbaar bij accounts met end-to-end-versleuteling.
+- **Gescheiden ouders:** houd de kinderen op een persoonlijk account, zodat de andere ouder uw overige uitgaven niet ziet. Een gedeeld account toont alles aan alle leden.
 
 ## Veelgestelde vragen
 
@@ -5287,7 +5319,7 @@ Je e-mail wordt direct bijgewerkt en er worden nieuwe inlogtokens uitgegeven. Al
 
 ### Taal
 
-Kies uit 9 ondersteunde talen:
+Kies uit 11 ondersteunde talen:
 
 | Code | Taal |
 |---|---|
@@ -5300,6 +5332,8 @@ Kies uit 9 ondersteunde talen:
 | DE | Deutsch |
 | BY | Беларуская |
 | NL | Nederlands |
+| PT | Português (Portugal) |
+| BR | Português (Brasil) |
 
 Tik op een taalchip om te wisselen. De interface wordt direct bijgewerkt.
 
@@ -7943,6 +7977,21 @@ Je krijgt ook een pushmelding wanneer iets aangevuld moet worden. Een bepaald pr
 De app vergelijkt de prijs die je onlangs betaalde voor een bijgehouden product met het gemiddelde van de afgelopen 90 dagen. Als de recentste prijs van een winkel voor een product duidelijk onder dat gemiddelde ligt, verschijnt hij als chip in de rij **Aanbiedingen voor jou**, met de winkelnaam en het kortingspercentage. Tik op een chip om het artikel aan je lijst toe te voegen.
 
 Aanbiedingen worden ook als pushmelding bezorgd zodra een echte prijsdaling wordt gedetecteerd, zodat je de app niet hoeft te openen om een goede prijs niet te missen — dezelfde prijsdaling wordt echter niet vaker dan één keer per week gemeld, zodat je niet herhaaldelijk op hetzelfde wordt gewezen.
+
+## Een folder bekijken
+
+Heb je de folder van een winkel als foto's of pdf? De app laat zien welke van de producten **die je echt koopt** erin staan en vergelijkt de aanbiedingsprijs met wat je normaal betaalt.
+
+- **Vanuit de boodschappenlijst** tik je op **Folder bekijken** en kies je schermafbeeldingen van de folder (op het web sleep je ze of een pdf naar de pagina).
+- **Vanuit een andere app (Android)** deel je de schermafbeeldingen of de pdf met AI Budget en kies je **Folder** in de vraag die verschijnt.
+
+De app leest de folder en toont alleen aanbiedingen voor producten uit je aankopen en boodschappenlijst, elk met de aanbiedingsprijs en — als je het product al eerder in dezelfde valuta kocht — wat je normaal betaalt, als *meestal X → Y*. Producten die je niet koopt worden nooit getoond, en de folder zelf wordt niet bewaard: alleen de uitgelezen prijzen. Prijzen worden getoond *volgens een folder — controleer het in de winkel* — de winkel kan afwijken. Tik bij een item op **Op de lijst** om het op je boodschappenlijst te zetten.
+
+**Je folders.** Het folderscherm houdt een lijst bij van je folders die nog lopen: de winkel, tot wanneer en hoeveel van je producten erin staan. Tik op een folder om de producten opnieuw te zien en aan je lijst toe te voegen (opent eerst de fotokiezer, sluit die dan gewoon).
+
+**Hoeveel pagina's je kunt lezen.** Folderpagina's hebben een eigen maandelijks tegoed, los van je AI-verzoeken: 20 pagina's bij Free, 200 bij Pro en 500 bij Business. Eén keer delen leest maximaal 10 pagina's (een pdf tot ongeveer 7 MB — deel bij een grotere in plaats daarvan screenshots van de pagina's). De rest wordt overgeslagen en het scherm laat weten hoeveel pagina's er zijn weggelaten.
+
+**Aanbiedingen van de community (optioneel).** Als je anonieme prijzen deelt (Instellingen → Gegevens → **Anonieme prijzen delen**), worden de aanbiedingsprijzen uit folders die je leest op dezelfde manier gedeeld — alleen winkel, product, prijs en data, nooit je naam, je account of de folderafbeelding. Zodra community-aanbiedingen in de app zijn ingeschakeld en meerdere kopers dezelfde aanbieding bevestigen, krijgen anderen die bij die winkel kopen en dat product meestal kopen hooguit één melding per dag, met tot wanneer de aanbieding loopt — en pas als ze begonnen is. Erop tikken opent je folders. Uitzetten kan bij Instellingen → Meldingen → **Folderaanbiedingen voor je producten**.
 
 ## Meldingen beheren
 

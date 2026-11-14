@@ -166,6 +166,38 @@ const translations: Record<string, OnboardingEmailCopy> = {
     unsubscribedTitle: 'Je bent afgemeld',
     unsubscribedBody: 'We sturen je geen introductie-e-mails meer. E-mails over je account en beveiliging blijven gewoon komen.',
   },
+  pt: {
+    subject: 'A primeira despesa demora poucos segundos — AI Budget',
+    heading: 'Comece por uma despesa',
+    greeting: (name) => `Olá, ${name},`,
+    intro: 'Registou-se há alguns dias, mas ainda não adicionou nada. A aplicação só se torna útil quando sabe para onde vai o seu dinheiro — e o primeiro passo é pequeno:',
+    tips: [
+      'Fotografe qualquer talão — a aplicação lê a loja, o valor e cada artigo.',
+      'Ou introduza uma despesa à mão, ou escreva-a simplesmente no chat, por exemplo «café 12».',
+      'Num computador, importe o extrato bancário dos últimos 3 meses e veja um relatório que mostra para onde foi o seu dinheiro.',
+    ],
+    cta: 'Adicionar a primeira despesa',
+    footer: 'Recebe este e-mail único porque criou uma conta no AI Budget.',
+    unsubscribe: 'Não quer receber e-mails como este? Anular a subscrição',
+    unsubscribedTitle: 'Subscrição anulada',
+    unsubscribedBody: 'Não voltaremos a enviar-lhe e-mails de introdução. Os e-mails sobre a conta e a segurança não são afetados.',
+  },
+  br: {
+    subject: 'Sua primeira despesa leva poucos segundos — AI Budget',
+    heading: 'Comece com uma despesa',
+    greeting: (name) => `Olá, ${name},`,
+    intro: 'Você se cadastrou há alguns dias, mas ainda não adicionou nada. O app só fica útil quando sabe para onde vai o seu dinheiro — e o primeiro passo é pequeno:',
+    tips: [
+      'Fotografe qualquer recibo — o app lê a loja, o valor e cada item.',
+      'Ou digite uma despesa à mão, ou simplesmente escreva no chat, por exemplo “café 12”.',
+      'No computador, importe o extrato bancário dos últimos 3 meses e veja um relatório que mostra para onde foi o seu dinheiro.',
+    ],
+    cta: 'Adicionar minha primeira despesa',
+    footer: 'Você está recebendo este e-mail único porque criou uma conta no AI Budget.',
+    unsubscribe: 'Não quer receber e-mails como este? Cancelar a inscrição',
+    unsubscribedTitle: 'Inscrição cancelada',
+    unsubscribedBody: 'Não vamos mais enviar e-mails de boas-vindas. Os e-mails sobre a conta e a segurança continuam normalmente.',
+  },
 };
 
 export const ONBOARDING_EMAIL_LANGS = Object.keys(translations);

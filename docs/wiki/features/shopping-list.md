@@ -138,7 +138,7 @@ removing via chat is how "I already bought X" is handled.
 `getDeals` (both free endpoints, so the tool bypasses no gate). The system prompt separates it from
 `get_inflation_shield`: this is today's restock and deals, the shield is long-term stock-up advice.
 
-Confirmations are deterministic in nine languages (`PromptBuilder.getShoppingListAddText` /
+Confirmations are deterministic in eleven languages (`PromptBuilder.getShoppingListAddText` /
 `…RemoveText`), and the phone renders its own result cards. The phone sees a chat-added item on its
 next pull.
 

@@ -82,6 +82,22 @@ const copy: Record<string, Copy> = {
     quotaTitle: () => 'Er wacht een e-bon',
     quotaBody: () => 'Je AI-limiet is op, dus de bon is niet gelezen. Probeer opnieuw na het resetten van de limiet.',
   },
+  pt: {
+    receiptsTitle: (n) => (n === 1 ? '1 novo talão eletrónico para confirmar' : `${n} novos talões eletrónicos para confirmar`),
+    receiptsBody: () => 'Reencaminhado por e-mail. Nada é guardado até confirmar.',
+    verificationTitle: () => 'Confirmação de reencaminhamento do Gmail recebida',
+    verificationBody: () => 'Abra a aplicação para ver o seu código e concluir a configuração do reencaminhamento.',
+    quotaTitle: () => 'Há um talão eletrónico à espera',
+    quotaBody: () => 'A sua quota de IA esgotou-se, por isso não foi lido. Tente novamente quando a quota for renovada ou faça upgrade.',
+  },
+  br: {
+    receiptsTitle: (n) => (n === 1 ? '1 novo recibo eletrônico para confirmar' : `${n} novos recibos eletrônicos para confirmar`),
+    receiptsBody: () => 'Encaminhado por e-mail. Nada é salvo até você confirmar.',
+    verificationTitle: () => 'Confirmação de encaminhamento do Gmail recebida',
+    verificationBody: () => 'Abra o app para ver seu código e terminar de configurar o encaminhamento.',
+    quotaTitle: () => 'Há um recibo eletrônico aguardando',
+    quotaBody: () => 'Sua cota de IA acabou, por isso ele não foi lido. Tente de novo quando a cota renovar ou faça upgrade.',
+  },
 };
 
 export const INBOUND_PUSH_LANGUAGES = Object.keys(copy);

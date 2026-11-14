@@ -15,7 +15,7 @@
 - **Export & Berichte** — PDF/Excel/CSV-Berichte, monatliche Zusammenfassungen, verschlüsselte Backups, E-Mail-Berichte
 - **Mehrere Konten** — Personlich, Gemeinsam und Geschaftlich mit rollenbasierter Zugriffskontrolle (Eigentumer, Bearbeiter, Betrachter)
 - **Offline-First** — Daten werden lokal gespeichert und automatisch synchronisiert, wenn du online bist
-- **8 Sprachen** — English, Deutsch, Espanol, Francais, Polski, Русский, Українська, Беларуская
+- **11 Sprachen** — English, Deutsch, Espanol, Francais, Polski, Русский, Українська, Беларуская, Nederlands, Português (Portugal), Português (Brasil)
 
 ## Inhaltsverzeichnis
 

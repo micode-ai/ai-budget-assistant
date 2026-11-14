@@ -236,11 +236,15 @@ CONSENT = {
  "ua": ("Ми використовуємо файли cookie для аналізу трафіку та покращення сайту.", "Прийняти", "Відхилити"),
  "be": ("Мы выкарыстоўваем файлы cookie для аналізу трафіку і паляпшэння сайта.", "Прыняць", "Адхіліць"),
  "nl": ("We gebruiken cookies om verkeer te meten en de site te verbeteren.", "Accepteren", "Weigeren"),
+ "pt": ("Utilizamos cookies para medir o tráfego e melhorar o site.", "Aceitar", "Recusar"),
+ "br": ("Usamos cookies para medir o tráfego e melhorar o site.", "Aceitar", "Recusar"),
 }
 MORE = {"en": "Learn more", "pl": "Więcej", "de": "Mehr", "es": "Más", "fr": "En savoir plus",
-        "ru": "Подробнее", "ua": "Докладніше", "be": "Падрабязней", "nl": "Meer"}
+        "ru": "Подробнее", "ua": "Докладніше", "be": "Падрабязней", "nl": "Meer",
+        "pt": "Saber mais", "br": "Saiba mais"}
 FROM_BLOG_TITLE = {"en": "From the blog", "pl": "Z bloga", "de": "Aus dem Blog", "es": "Del blog",
-                   "fr": "Du blog", "ru": "Из блога", "ua": "З блогу", "be": "З блога", "nl": "Uit de blog"}
+                   "fr": "Du blog", "ru": "Из блога", "ua": "З блогу", "be": "З блога", "nl": "Uit de blog",
+                   "pt": "Do blog", "br": "Do blog"}
 LEGAL_BASE = "https://micode-ai.github.io/ai-budget-assistant"
 SUPPORT_EMAIL = "perevertkinma@gmail.com"
 LEGAL_LABELS = {  # (privacy, terms, cookies)
@@ -248,7 +252,8 @@ LEGAL_LABELS = {  # (privacy, terms, cookies)
  "de": ("Datenschutz", "AGB", "Cookies"), "es": ("Privacidad", "Términos", "Cookies"),
  "fr": ("Confidentialité", "Conditions", "Cookies"), "ru": ("Конфиденциальность", "Условия", "Cookie"),
  "ua": ("Конфіденційність", "Умови", "Cookie"), "be": ("Прыватнасць", "Умовы", "Cookie"),
- "nl": ("Privacy", "Voorwaarden", "Cookies")}
+ "nl": ("Privacy", "Voorwaarden", "Cookies"),
+ "pt": ("Privacidade", "Termos", "Cookies"), "br": ("Privacidade", "Termos", "Cookies")}
 # Cookie Policy page content (pl + en; other langs link to the en page)
 COOKIES = {
  "en": ("Cookie Policy - AI Budget Assistant",
@@ -301,9 +306,11 @@ def about_url(lang):
     return "/about/" if lang == "pl" else f"/{lang}/about/"
 
 ABOUT_LABELS = {"en": "About", "pl": "O nas", "de": "Über uns", "es": "Acerca de", "fr": "À propos",
-                "ru": "О нас", "ua": "Про нас", "be": "Пра нас", "nl": "Over ons"}
+                "ru": "О нас", "ua": "Про нас", "be": "Пра нас", "nl": "Over ons",
+                "pt": "Sobre nós", "br": "Sobre nós"}
 HELP_LABELS = {"en": "Help", "pl": "Pomoc", "de": "Hilfe", "es": "Ayuda", "fr": "Aide",
-               "ru": "Помощь", "ua": "Довідка", "be": "Дапамога", "nl": "Help"}
+               "ru": "Помощь", "ua": "Довідка", "be": "Дапамога", "nl": "Help",
+               "pt": "Ajuda", "br": "Ajuda"}
 
 # Pricing (ABA landing pricing page): single source of truth is
 # apps/api/src/modules/subscriptions/pricing-data.json (tech-debt
@@ -327,9 +334,11 @@ CURRENCY_PRICING = {
 }
 # be (Belarusian) has no BYN in CURRENCY_PRICING and no Stripe price for it,
 # so it falls back to USD display (confirmed intended behavior, not a bug).
+# br (pt-BR) is the same case: there is no BRL price, so Brazil sees USD. pt (pt-PT) is a
+# eurozone market like de/es/fr/nl and shows the existing EUR price.
 LANG_CURRENCY = {
     "en": "USD", "pl": "PLN", "de": "EUR", "es": "EUR", "fr": "EUR",
-    "ru": "RUB", "ua": "UAH", "be": "USD", "nl": "EUR",
+    "ru": "RUB", "ua": "UAH", "be": "USD", "nl": "EUR", "pt": "EUR", "br": "USD",
 }
 TIER_KEYS = ["free", "pro", "business"]
 TIER_NAMES = {"free": "Free", "pro": "Pro", "business": "Business"}
@@ -404,7 +413,7 @@ def pricing_url(lang):
 
 PRICING_LABELS = {
     "en": "Pricing", "pl": "Cennik", "de": "Preise", "es": "Precios", "fr": "Tarifs",
-    "ru": "Тарифы", "ua": "Тарифи", "be": "Тарыфы", "nl": "Prijzen",
+    "ru": "Тарифы", "ua": "Тарифи", "be": "Тарыфы", "nl": "Prijzen", "pt": "Preços", "br": "Preços",
 }
 
 PRICING = {
@@ -624,72 +633,135 @@ PRICING = {
      ("In welke valuta betaal ik?", "Prijzen worden automatisch getoond in je lokale valuta (USD, EUR, PLN, GBP, UAH of RUB) wanneer je in de app upgradet."),
    ],
  },
+ "pt": {
+   "title": "Preços - AI Budget Assistant",
+   "meta": "Preços simples e transparentes do AI Budget Assistant. Grátis para sempre, ou mude para Pro ou Business para mais pedidos de IA, contas e análises.",
+   "h1": "Preços simples e transparentes",
+   "sub": "Comece grátis. Os planos Pro e Business têm um período experimental gratuito de 7 dias.",
+   "toggle_monthly": "Mensal", "toggle_yearly": "Anual", "toggle_save": "Poupe no plano anual",
+   "popular": "POPULAR", "cta_free": "Abrir a aplicação", "cta_paid": "Iniciar período experimental",
+   "per_month": "/mês", "per_year": "/ano",
+   "tier_free_subtitle": "Tudo o que precisa para começar a fazer o orçamento",
+   "tier_free_features": ["Controlo completo de despesas e orçamentos", "Registo por voz e digitalização de talões", "Importação de extratos bancários",
+                            "Bots de Telegram, WhatsApp e Slack", "Até 3 contas", "1 membro por conta", "50 pedidos de IA por mês"],
+   "tier_pro_subtitle": "Para utilizadores avançados e famílias pequenas", "tier_pro_intro": "Tudo do Free, e ainda:",
+   "tier_pro_features": ["300 pedidos de IA por mês", "Até 5 contas", "Até 5 membros por conta",
+                           "Análises preditivas", "Deteção de despesas anómalas", "Moedas ilimitadas"],
+   "tier_biz_subtitle": "Para agregados familiares maiores e equipas", "tier_biz_intro": "Tudo do Pro, e ainda:",
+   "tier_biz_features": ["Pedidos de IA ilimitados", "Contas ilimitadas", "Membros ilimitados", "Relatórios avançados"],
+   "faq_title": "Perguntas sobre preços",
+   "faq": [
+     ("A aplicação é gratuita?", "Sim, as funcionalidades principais são gratuitas para sempre. Pro e Business desbloqueiam limites de IA mais altos, mais contas e análises avançadas."),
+     ("Posso cancelar a qualquer momento?", "Sim. Cancele a qualquer momento nas Definições — mantém o acesso até ao fim do período de faturação em curso."),
+     ("O que acontece depois do período experimental?", "Se não cancelar, o cartão é cobrado automaticamente no fim do período experimental de 7 dias. Recebe um lembrete antes de a cobrança começar."),
+     ("Em que moeda pago?", "Os preços são apresentados automaticamente na sua moeda local (USD, EUR, PLN, GBP, UAH ou RUB) quando faz o upgrade na aplicação."),
+   ],
+ },
+ "br": {
+   "title": "Preços - AI Budget Assistant",
+   "meta": "Preços simples e transparentes do AI Budget Assistant. Grátis para sempre, ou passe para Pro ou Business: mais solicitações de IA, contas e análises.",
+   "h1": "Preços simples e transparentes",
+   "sub": "Comece grátis. Os planos Pro e Business têm 7 dias de teste grátis.",
+   "toggle_monthly": "Mensal", "toggle_yearly": "Anual", "toggle_save": "Economize no anual",
+   "popular": "POPULAR", "cta_free": "Abrir o app", "cta_paid": "Começar teste grátis",
+   "per_month": "/mês", "per_year": "/ano",
+   "tier_free_subtitle": "Tudo o que você precisa para começar a organizar seu orçamento",
+   "tier_free_features": ["Controle completo de despesas e orçamentos", "Registro por voz e leitura de recibos", "Importação de extratos bancários",
+                            "Bots de Telegram, WhatsApp e Slack", "Até 3 contas", "1 membro por conta", "50 solicitações de IA por mês"],
+   "tier_pro_subtitle": "Para quem usa bastante e famílias pequenas", "tier_pro_intro": "Tudo do Free, e mais:",
+   "tier_pro_features": ["300 solicitações de IA por mês", "Até 5 contas", "Até 5 membros por conta",
+                           "Análises preditivas", "Detecção de gastos fora do padrão", "Moedas ilimitadas"],
+   "tier_biz_subtitle": "Para famílias maiores e equipes", "tier_biz_intro": "Tudo do Pro, e mais:",
+   "tier_biz_features": ["Solicitações de IA ilimitadas", "Contas ilimitadas", "Membros ilimitados", "Relatórios avançados"],
+   "faq_title": "Dúvidas sobre preços",
+   "faq": [
+     ("O app é grátis?", "Sim, os recursos principais são gratuitos para sempre. Pro e Business liberam limites de IA maiores, mais contas e análises avançadas."),
+     ("Posso cancelar quando quiser?", "Sim. Cancele quando quiser em Configurações — você mantém o acesso até o fim do período de cobrança atual."),
+     ("O que acontece depois do teste grátis?", "Se você não cancelar, o cartão é cobrado automaticamente no fim dos 7 dias de teste. Você recebe um lembrete antes da cobrança."),
+     ("Em qual moeda eu pago?", "Os preços aparecem em uma das moedas aceitas (USD, EUR, PLN, GBP, UAH ou RUB) quando você faz o upgrade no app. Ainda não há preço em reais: no Brasil, a cobrança é em dólares (USD)."),
+   ],
+ },
 }
 
 ABOUT = {
  "en": ("About - AI Budget Assistant",
         "About AI Budget Assistant, a personal and family finance app with an AI assistant, built by MiCode Sp. z o.o.",
         "About AI Budget Assistant",
-        "<h2>What is AI Budget Assistant</h2><p>AI Budget Assistant is a personal and family finance app that brings expenses, budgets, savings goals, debts and bank import into one place, with an AI assistant that does the tedious data entry for you. Add expenses by voice or a photo of a receipt, ask questions in plain language, and share one budget with your family in real time. It works on Android and on the web, in 9 languages.</p>"
+        "<h2>What is AI Budget Assistant</h2><p>AI Budget Assistant is a personal and family finance app that brings expenses, budgets, savings goals, debts and bank import into one place, with an AI assistant that does the tedious data entry for you. Add expenses by voice or a photo of a receipt, ask questions in plain language, and share one budget with your family in real time. It works on Android and on the web, in 11 languages.</p>"
         "<h2>Who is behind it</h2><p>The app is built and operated by <strong>MiCode Sp. z o.o.</strong>, a software company based in Poland (see <a href=\"https://mi-code.pl/\">mi-code.pl</a>). We build practical, privacy-respecting tools that help people manage money without spreadsheets.</p>"
         "<h2>Our approach</h2><p>We focus on three things: making data entry effortless with AI, letting families budget together in real time, and keeping your financial data private. The core features are free; advanced tools are available on Pro.</p>"
         f"<h2>Contact</h2><p>Questions or feedback: <a href=\"mailto:perevertkinma@gmail.com\">perevertkinma@gmail.com</a>. Get the app on <a href=\"{play_url('body', 'en')}\">Google Play</a> or open the <a href=\"https://app.ai-budget.pl\">web version</a>. Read our <a href=\"/blog/en/\">blog</a> for budgeting guides.</p>"),
  "pl": ("O nas - AI Budget Assistant",
         "O AI Budget Assistant, aplikacji do finansów osobistych i rodzinnych z asystentem AI, stworzonej przez MiCode Sp. z o.o.",
         "O AI Budget Assistant",
-        "<h2>Czym jest AI Budget Assistant</h2><p>AI Budget Assistant to aplikacja do finansów osobistych i rodzinnych, która łączy wydatki, budżety, cele oszczędnościowe, długi i import z banku w jednym miejscu, a asystent AI wykonuje za Ciebie żmudne wpisywanie danych. Dodawaj wydatki głosem lub zdjęciem paragonu, pytaj zwykłym językiem i prowadź wspólny budżet z rodziną na żywo. Działa na Androidzie i w przeglądarce, w 9 językach.</p>"
+        "<h2>Czym jest AI Budget Assistant</h2><p>AI Budget Assistant to aplikacja do finansów osobistych i rodzinnych, która łączy wydatki, budżety, cele oszczędnościowe, długi i import z banku w jednym miejscu, a asystent AI wykonuje za Ciebie żmudne wpisywanie danych. Dodawaj wydatki głosem lub zdjęciem paragonu, pytaj zwykłym językiem i prowadź wspólny budżet z rodziną na żywo. Działa na Androidzie i w przeglądarce, w 11 językach.</p>"
         "<h2>Kto za tym stoi</h2><p>Aplikację tworzy i prowadzi <strong>MiCode Sp. z o.o.</strong>, polska firma programistyczna (zobacz <a href=\"https://mi-code.pl/\">mi-code.pl</a>). Budujemy praktyczne narzędzia szanujące prywatność, które pomagają zarządzać pieniędzmi bez arkuszy kalkulacyjnych.</p>"
         "<h2>Nasze podejście</h2><p>Skupiamy się na trzech rzeczach: bezwysiłkowym wpisywaniu danych dzięki AI, wspólnym budżecie rodziny na żywo i prywatności Twoich danych finansowych. Podstawowe funkcje są darmowe; zaawansowane narzędzia dostępne są w planie Pro.</p>"
         f"<h2>Kontakt</h2><p>Pytania lub opinie: <a href=\"mailto:perevertkinma@gmail.com\">perevertkinma@gmail.com</a>. Pobierz aplikację z <a href=\"{play_url('body', 'pl')}\">Google Play</a> lub otwórz <a href=\"https://app.ai-budget.pl\">wersję webową</a>. Czytaj nasz <a href=\"/blog/pl/\">blog</a> z poradnikami.</p>"),
  "de": ("Über uns - AI Budget Assistant",
         "Über AI Budget Assistant, eine App für persönliche und Familienfinanzen mit KI-Assistent, von MiCode Sp. z o.o.",
         "Über AI Budget Assistant",
-        "<h2>Was ist AI Budget Assistant</h2><p>AI Budget Assistant ist eine App für persönliche und Familienfinanzen, die Ausgaben, Budgets, Sparziele, Schulden und Bankimport an einem Ort vereint, mit einem KI-Assistenten, der die mühsame Dateneingabe für dich übernimmt. Erfasse Ausgaben per Sprache oder Beleg-Foto, stelle Fragen in normaler Sprache und führe ein gemeinsames Budget mit deiner Familie in Echtzeit. Verfügbar auf Android und im Web, in 9 Sprachen.</p>"
+        "<h2>Was ist AI Budget Assistant</h2><p>AI Budget Assistant ist eine App für persönliche und Familienfinanzen, die Ausgaben, Budgets, Sparziele, Schulden und Bankimport an einem Ort vereint, mit einem KI-Assistenten, der die mühsame Dateneingabe für dich übernimmt. Erfasse Ausgaben per Sprache oder Beleg-Foto, stelle Fragen in normaler Sprache und führe ein gemeinsames Budget mit deiner Familie in Echtzeit. Verfügbar auf Android und im Web, in 11 Sprachen.</p>"
         "<h2>Wer dahintersteht</h2><p>Die App wird von <strong>MiCode Sp. z o.o.</strong> entwickelt und betrieben, einem Softwareunternehmen aus Polen (siehe <a href=\"https://mi-code.pl/\">mi-code.pl</a>). Wir bauen praktische, datenschutzfreundliche Werkzeuge, die beim Geldmanagement ohne Tabellen helfen.</p>"
         "<h2>Unser Ansatz</h2><p>Wir konzentrieren uns auf drei Dinge: müheloses Erfassen von Daten mit KI, gemeinsames Budgetieren der Familie in Echtzeit und den Schutz deiner Finanzdaten. Die Kernfunktionen sind kostenlos; erweiterte Werkzeuge gibt es mit Pro.</p>"
         f"<h2>Kontakt</h2><p>Fragen oder Feedback: <a href=\"mailto:perevertkinma@gmail.com\">perevertkinma@gmail.com</a>. Hol dir die App bei <a href=\"{play_url('body', 'de')}\">Google Play</a> oder öffne die <a href=\"https://app.ai-budget.pl\">Web-Version</a>. Lies unseren <a href=\"/blog/de/\">Blog</a> mit Budget-Ratgebern.</p>"),
  "es": ("Acerca de - AI Budget Assistant",
         "Acerca de AI Budget Assistant, una app de finanzas personales y familiares con asistente de IA, de MiCode Sp. z o.o.",
         "Acerca de AI Budget Assistant",
-        "<h2>Qué es AI Budget Assistant</h2><p>AI Budget Assistant es una app de finanzas personales y familiares que reúne gastos, presupuestos, metas de ahorro, deudas e importación bancaria en un solo lugar, con un asistente de IA que hace por ti el tedioso registro de datos. Añade gastos por voz o con una foto del recibo, pregunta en lenguaje natural y gestiona un presupuesto compartido con tu familia en tiempo real. Funciona en Android y en la web, en 9 idiomas.</p>"
+        "<h2>Qué es AI Budget Assistant</h2><p>AI Budget Assistant es una app de finanzas personales y familiares que reúne gastos, presupuestos, metas de ahorro, deudas e importación bancaria en un solo lugar, con un asistente de IA que hace por ti el tedioso registro de datos. Añade gastos por voz o con una foto del recibo, pregunta en lenguaje natural y gestiona un presupuesto compartido con tu familia en tiempo real. Funciona en Android y en la web, en 11 idiomas.</p>"
         "<h2>Quién está detrás</h2><p>La app está desarrollada y operada por <strong>MiCode Sp. z o.o.</strong>, una empresa de software de Polonia (ver <a href=\"https://mi-code.pl/\">mi-code.pl</a>). Creamos herramientas prácticas y respetuosas con la privacidad que ayudan a gestionar el dinero sin hojas de cálculo.</p>"
         "<h2>Nuestro enfoque</h2><p>Nos centramos en tres cosas: registrar datos sin esfuerzo con IA, presupuestar en familia en tiempo real y mantener privados tus datos financieros. Las funciones básicas son gratuitas; las herramientas avanzadas están en Pro.</p>"
         f"<h2>Contacto</h2><p>Preguntas o comentarios: <a href=\"mailto:perevertkinma@gmail.com\">perevertkinma@gmail.com</a>. Consigue la app en <a href=\"{play_url('body', 'es')}\">Google Play</a> o abre la <a href=\"https://app.ai-budget.pl\">versión web</a>. Lee nuestro <a href=\"/blog/es/\">blog</a> con guías de presupuesto.</p>"),
  "fr": ("À propos - AI Budget Assistant",
         "À propos d'AI Budget Assistant, une appli de finances personnelles et familiales avec assistant IA, de MiCode Sp. z o.o.",
         "À propos d'AI Budget Assistant",
-        "<h2>Qu'est-ce qu'AI Budget Assistant</h2><p>AI Budget Assistant est une appli de finances personnelles et familiales qui réunit dépenses, budgets, objectifs d'épargne, dettes et import bancaire au même endroit, avec un assistant IA qui se charge de la saisie fastidieuse à votre place. Ajoutez des dépenses à la voix ou par photo de reçu, posez des questions en langage courant et gérez un budget partagé avec votre famille en temps réel. Disponible sur Android et sur le web, en 9 langues.</p>"
+        "<h2>Qu'est-ce qu'AI Budget Assistant</h2><p>AI Budget Assistant est une appli de finances personnelles et familiales qui réunit dépenses, budgets, objectifs d'épargne, dettes et import bancaire au même endroit, avec un assistant IA qui se charge de la saisie fastidieuse à votre place. Ajoutez des dépenses à la voix ou par photo de reçu, posez des questions en langage courant et gérez un budget partagé avec votre famille en temps réel. Disponible sur Android et sur le web, en 11 langues.</p>"
         "<h2>Qui est derrière</h2><p>L'appli est développée et exploitée par <strong>MiCode Sp. z o.o.</strong>, une société de logiciels basée en Pologne (voir <a href=\"https://mi-code.pl/\">mi-code.pl</a>). Nous créons des outils pratiques et respectueux de la vie privée pour gérer son argent sans tableur.</p>"
         "<h2>Notre approche</h2><p>Nous nous concentrons sur trois choses : une saisie sans effort grâce à l'IA, un budget familial partagé en temps réel et la confidentialité de vos données financières. Les fonctions de base sont gratuites ; les outils avancés sont disponibles avec Pro.</p>"
         f"<h2>Contact</h2><p>Questions ou retours : <a href=\"mailto:perevertkinma@gmail.com\">perevertkinma@gmail.com</a>. Téléchargez l'appli sur <a href=\"{play_url('body', 'fr')}\">Google Play</a> ou ouvrez la <a href=\"https://app.ai-budget.pl\">version web</a>. Lisez notre <a href=\"/blog/fr/\">blog</a> avec des guides budgétaires.</p>"),
  "ru": ("О нас - AI Budget Assistant",
         "О приложении AI Budget Assistant - финансы для себя и семьи с ИИ-ассистентом, от MiCode Sp. z o.o.",
         "О AI Budget Assistant",
-        "<h2>Что такое AI Budget Assistant</h2><p>AI Budget Assistant - приложение для личных и семейных финансов, которое объединяет расходы, бюджеты, цели накоплений, долги и импорт из банка в одном месте, а ИИ-ассистент берёт на себя рутинный ввод данных. Добавляйте траты голосом или фото чека, задавайте вопросы обычным языком и ведите общий бюджет с семьёй в реальном времени. Работает на Android и в вебе, на 9 языках.</p>"
+        "<h2>Что такое AI Budget Assistant</h2><p>AI Budget Assistant - приложение для личных и семейных финансов, которое объединяет расходы, бюджеты, цели накоплений, долги и импорт из банка в одном месте, а ИИ-ассистент берёт на себя рутинный ввод данных. Добавляйте траты голосом или фото чека, задавайте вопросы обычным языком и ведите общий бюджет с семьёй в реальном времени. Работает на Android и в вебе, на 11 языках.</p>"
         "<h2>Кто за этим стоит</h2><p>Приложение разрабатывает и поддерживает <strong>MiCode Sp. z o.o.</strong>, софтверная компания из Польши (см. <a href=\"https://mi-code.pl/\">mi-code.pl</a>). Мы делаем практичные инструменты с уважением к приватности, которые помогают управлять деньгами без таблиц.</p>"
         "<h2>Наш подход</h2><p>Мы сосредоточены на трёх вещах: лёгкий ввод данных с помощью ИИ, общий семейный бюджет в реальном времени и приватность ваших финансовых данных. Базовые функции бесплатны; продвинутые инструменты доступны в Pro.</p>"
         f"<h2>Контакт</h2><p>Вопросы или отзывы: <a href=\"mailto:perevertkinma@gmail.com\">perevertkinma@gmail.com</a>. Скачайте приложение в <a href=\"{play_url('body', 'ru')}\">Google Play</a> или откройте <a href=\"https://app.ai-budget.pl\">веб-версию</a>. Читайте наш <a href=\"/blog/ru/\">блог</a> с гайдами по бюджету.</p>"),
  "ua": ("Про нас - AI Budget Assistant",
         "Про застосунок AI Budget Assistant - фінанси для себе та родини з ШІ-асистентом, від MiCode Sp. z o.o.",
         "Про AI Budget Assistant",
-        "<h2>Що таке AI Budget Assistant</h2><p>AI Budget Assistant - застосунок для особистих і сімейних фінансів, який поєднує витрати, бюджети, цілі заощаджень, борги та імпорт із банку в одному місці, а ШІ-асистент бере на себе рутинне введення даних. Додавайте витрати голосом або фото чека, ставте запитання звичайною мовою та ведіть спільний бюджет із родиною в реальному часі. Працює на Android і у вебі, 9 мовами.</p>"
+        "<h2>Що таке AI Budget Assistant</h2><p>AI Budget Assistant - застосунок для особистих і сімейних фінансів, який поєднує витрати, бюджети, цілі заощаджень, борги та імпорт із банку в одному місці, а ШІ-асистент бере на себе рутинне введення даних. Додавайте витрати голосом або фото чека, ставте запитання звичайною мовою та ведіть спільний бюджет із родиною в реальному часі. Працює на Android і у вебі, 11 мовами.</p>"
         "<h2>Хто за цим стоїть</h2><p>Застосунок розробляє та підтримує <strong>MiCode Sp. z o.o.</strong>, софтверна компанія з Польщі (див. <a href=\"https://mi-code.pl/\">mi-code.pl</a>). Ми створюємо практичні інструменти з повагою до приватності, які допомагають керувати грошима без таблиць.</p>"
         "<h2>Наш підхід</h2><p>Ми зосереджені на трьох речах: легке введення даних за допомогою ШІ, спільний сімейний бюджет у реальному часі та приватність ваших фінансових даних. Базові функції безкоштовні; розширені інструменти доступні в Pro.</p>"
         f"<h2>Контакт</h2><p>Запитання чи відгуки: <a href=\"mailto:perevertkinma@gmail.com\">perevertkinma@gmail.com</a>. Завантажте застосунок у <a href=\"{play_url('body', 'ua')}\">Google Play</a> або відкрийте <a href=\"https://app.ai-budget.pl\">веб-версію</a>. Читайте наш <a href=\"/blog/ua/\">блог</a> з гайдами щодо бюджету.</p>"),
  "be": ("Пра нас - AI Budget Assistant",
         "Пра дадатак AI Budget Assistant - фінансы для сябе і сям'і з ШІ-памочнікам, ад MiCode Sp. z o.o.",
         "Пра AI Budget Assistant",
-        "<h2>Што такое AI Budget Assistant</h2><p>AI Budget Assistant - дадатак для асабістых і сямейных фінансаў, які аб'ядноўвае выдаткі, бюджэты, мэты зберажэнняў, даўгі і імпарт з банка ў адным месцы, а ШІ-памочнік бярэ на сябе руцінны ўвод даных. Дадавайце выдаткі голасам або фота чэка, задавайце пытанні звычайнай мовай і вядзіце агульны бюджэт з сям'ёй у рэальным часе. Працуе на Android і ў вебе, на 9 мовах.</p>"
+        "<h2>Што такое AI Budget Assistant</h2><p>AI Budget Assistant - дадатак для асабістых і сямейных фінансаў, які аб'ядноўвае выдаткі, бюджэты, мэты зберажэнняў, даўгі і імпарт з банка ў адным месцы, а ШІ-памочнік бярэ на сябе руцінны ўвод даных. Дадавайце выдаткі голасам або фота чэка, задавайце пытанні звычайнай мовай і вядзіце агульны бюджэт з сям'ёй у рэальным часе. Працуе на Android і ў вебе, на 11 мовах.</p>"
         "<h2>Хто за гэтым стаіць</h2><p>Дадатак распрацоўвае і падтрымлівае <strong>MiCode Sp. z o.o.</strong>, софтверная кампанія з Польшчы (гл. <a href=\"https://mi-code.pl/\">mi-code.pl</a>). Мы ствараем практычныя інструменты з павагай да прыватнасці, якія дапамагаюць кіраваць грашыма без табліц.</p>"
         "<h2>Наш падыход</h2><p>Мы засяроджаны на трох рэчах: лёгкі ўвод даных з дапамогай ШІ, агульны сямейны бюджэт у рэальным часе і прыватнасць вашых фінансавых даных. Базавыя функцыі бясплатныя; пашыраныя інструменты даступныя ў Pro.</p>"
         f"<h2>Кантакт</h2><p>Пытанні ці водгукі: <a href=\"mailto:perevertkinma@gmail.com\">perevertkinma@gmail.com</a>. Спампуйце дадатак у <a href=\"{play_url('body', 'be')}\">Google Play</a> або адкрыйце <a href=\"https://app.ai-budget.pl\">веб-версію</a>. Чытайце наш <a href=\"/blog/be/\">блог</a> з гайдамі па бюджэце.</p>"),
  "nl": ("Over ons - AI Budget Assistant",
         "Over AI Budget Assistant, een app voor persoonlijke en gezinsfinanciën met een AI-assistent, van MiCode Sp. z o.o.",
         "Over AI Budget Assistant",
-        "<h2>Wat is AI Budget Assistant</h2><p>AI Budget Assistant is een app voor persoonlijke en gezinsfinanciën die uitgaven, budgetten, spaardoelen, schulden en bankimport op één plek samenbrengt, met een AI-assistent die het saaie invoeren voor je doet. Voeg uitgaven toe met spraak of een bonfoto, stel vragen in gewone taal en beheer een gedeeld budget met je gezin in realtime. Werkt op Android en op het web, in 9 talen.</p>"
+        "<h2>Wat is AI Budget Assistant</h2><p>AI Budget Assistant is een app voor persoonlijke en gezinsfinanciën die uitgaven, budgetten, spaardoelen, schulden en bankimport op één plek samenbrengt, met een AI-assistent die het saaie invoeren voor je doet. Voeg uitgaven toe met spraak of een bonfoto, stel vragen in gewone taal en beheer een gedeeld budget met je gezin in realtime. Werkt op Android en op het web, in 11 talen.</p>"
         "<h2>Wie erachter zit</h2><p>De app wordt gebouwd en beheerd door <strong>MiCode Sp. z o.o.</strong>, een softwarebedrijf uit Polen (zie <a href=\"https://mi-code.pl/\">mi-code.pl</a>). We bouwen praktische, privacyvriendelijke tools die helpen geld te beheren zonder spreadsheets.</p>"
         "<h2>Onze aanpak</h2><p>We richten ons op drie dingen: moeiteloos gegevens invoeren met AI, samen met het gezin budgetteren in realtime en de privacy van je financiële gegevens. De kernfuncties zijn gratis; geavanceerde tools zijn beschikbaar met Pro.</p>"
         f"<h2>Contact</h2><p>Vragen of feedback: <a href=\"mailto:perevertkinma@gmail.com\">perevertkinma@gmail.com</a>. Download de app in <a href=\"{play_url('body', 'nl')}\">Google Play</a> of open de <a href=\"https://app.ai-budget.pl\">webversie</a>. Lees onze <a href=\"/blog/nl/\">blog</a> met budgetgidsen.</p>"),
+ # The blog has no pt/br articles yet, so both point at the English blog and say so.
+ "pt": ("Sobre nós - AI Budget Assistant",
+        "Sobre o AI Budget Assistant, uma aplicação de finanças pessoais e familiares com assistente de IA, da MiCode Sp. z o.o.",
+        "Sobre o AI Budget Assistant",
+        "<h2>O que é o AI Budget Assistant</h2><p>O AI Budget Assistant é uma aplicação de finanças pessoais e familiares que reúne despesas, orçamentos, objetivos de poupança, dívidas e importação bancária num só lugar, com um assistente de IA que trata do aborrecido registo de dados. Registe despesas por voz ou com uma fotografia do talão, faça perguntas em linguagem simples e partilhe um orçamento com a família em tempo real. Funciona em Android e no navegador, em 11 idiomas.</p>"
+        "<h2>Quem está por trás</h2><p>A aplicação é desenvolvida e gerida pela <strong>MiCode Sp. z o.o.</strong>, uma empresa de software sediada na Polónia (ver <a href=\"https://mi-code.pl/\">mi-code.pl</a>). Criamos ferramentas práticas, que respeitam a privacidade, para gerir o dinheiro sem folhas de cálculo.</p>"
+        "<h2>A nossa abordagem</h2><p>Concentramo-nos em três coisas: registar dados sem esforço graças à IA, gerir o orçamento em família em tempo real e manter privados os seus dados financeiros. As funcionalidades principais são gratuitas; as ferramentas avançadas estão disponíveis no plano Pro.</p>"
+        f"<h2>Contacto</h2><p>Perguntas ou sugestões: <a href=\"mailto:perevertkinma@gmail.com\">perevertkinma@gmail.com</a>. Instale a aplicação a partir do <a href=\"{play_url('body', 'pt')}\">Google Play</a> ou abra a <a href=\"https://app.ai-budget.pl\">versão web</a>. Leia o nosso <a href=\"/blog/en/\">blog</a> com guias de orçamento (em inglês).</p>"),
+ "br": ("Sobre nós - AI Budget Assistant",
+        "Sobre o AI Budget Assistant, um app de finanças pessoais e familiares com assistente de IA, da MiCode Sp. z o.o.",
+        "Sobre o AI Budget Assistant",
+        "<h2>O que é o AI Budget Assistant</h2><p>O AI Budget Assistant é um app de finanças pessoais e familiares que reúne despesas, orçamentos, metas de economia, dívidas e importação de extratos em um só lugar, com um assistente de IA que faz por você a parte chata de registrar os dados. Registre despesas por voz ou com uma foto do recibo, faça perguntas em linguagem simples e compartilhe um orçamento com a família em tempo real. Funciona no Android e no navegador, em 11 idiomas.</p>"
+        "<h2>Quem está por trás</h2><p>O app é desenvolvido e mantido pela <strong>MiCode Sp. z o.o.</strong>, uma empresa de software com sede na Polônia (veja <a href=\"https://mi-code.pl/\">mi-code.pl</a>). Criamos ferramentas práticas, que respeitam a privacidade, para cuidar do dinheiro sem planilhas.</p>"
+        "<h2>Nossa abordagem</h2><p>Focamos em três coisas: registrar dados sem esforço com a ajuda da IA, controlar o orçamento em família em tempo real e manter seus dados financeiros privados. Os recursos principais são gratuitos; as ferramentas avançadas estão no plano Pro.</p>"
+        f"<h2>Contato</h2><p>Dúvidas ou sugestões: <a href=\"mailto:perevertkinma@gmail.com\">perevertkinma@gmail.com</a>. Baixe o app no <a href=\"{play_url('body', 'br')}\">Google Play</a> ou abra a <a href=\"https://app.ai-budget.pl\">versão web</a>. Leia nosso <a href=\"/blog/en/\">blog</a> com guias de orçamento (em inglês).</p>"),
 }
 _b = os.environ.get("LANDING_BASE", "preview").strip("/")
 BASE = ("/" + _b) if _b else ""
@@ -728,9 +800,11 @@ def offer_node(lang, tier, amount, url, unit=None):
 
 DEFAULT_LANG = "pl"
 LOCALE = {"pl": "pl_PL", "en": "en_US", "de": "de_DE", "es": "es_ES", "fr": "fr_FR",
-          "ru": "ru_RU", "ua": "uk_UA", "be": "be_BY", "nl": "nl_NL"}
+          "ru": "ru_RU", "ua": "uk_UA", "be": "be_BY", "nl": "nl_NL",
+          "pt": "pt_PT", "br": "pt_BR"}
 LANG_NAMES = {"pl": "Polski", "en": "English", "de": "Deutsch", "es": "Español", "fr": "Français",
-              "ru": "Русский", "ua": "Українська", "be": "Беларуская", "nl": "Nederlands"}
+              "ru": "Русский", "ua": "Українська", "be": "Беларуская", "nl": "Nederlands",
+              "pt": "Português (Portugal)", "br": "Português (Brasil)"}
 
 # Each feature: (title, description, screenshot-file in feature_graphics/marketing/<lang>/)
 C = {
@@ -1003,6 +1077,68 @@ C = {
    "blog_cta": "Lees gidsen op de blog",
    "footer": "AI Budget Assistant - alles-in-een finance-app met een AI-assistent.", "rights": "Alle rechten voorbehouden.",
  },
+ # pt = Portugal (PT-PT, no "você"), br = Brazil (PT-BR, "você"); terms per
+ # apps/mobile/src/i18n/PT_BR_GLOSSARY.md. No bank is named beyond what the app parses
+ # (there is no Portuguese or Brazilian bank parser; the AI import reads those statements).
+ # The blog has no pt/br articles yet, so blog_cta says the guides are in English.
+ "pt": {
+   "title": "AI Budget Assistant - orçamento familiar com IA",
+   "desc": "Aplicação de orçamento familiar e controlo de despesas com IA: registe gastos por voz ou fotografe o talão e gira as poupanças em família. Grátis.",
+   "nav_blog": "Blog", "nav_login": "Iniciar sessão",
+   "hero_h1": "Orçamento familiar com assistente de IA",
+   "hero_sub": "Despesas, orçamentos, poupanças e as finanças da família numa só aplicação. A IA trata do trabalho aborrecido. Comece grátis.",
+   "cta_primary": "Abrir a aplicação", "cta_secondary": "Disponível no Google Play",
+   "intro_title": "Controlo de despesas sem folhas de cálculo",
+   "intro": "O AI Budget Assistant é uma aplicação de orçamento familiar que reúne despesas, orçamentos, objetivos de poupança, dívidas e importação bancária num só lugar. Em vez de escrever cada talão à mão, basta registar a despesa por voz ou com uma fotografia, e o assistente de IA responde a perguntas sobre o seu dinheiro em linguagem simples. Faça o orçamento só para si ou em família, em tempo real, no telemóvel, no tablet e no navegador.",
+   "features_title": "Tudo numa só aplicação", "features_hint": "Toque numa funcionalidade para a ver na aplicação", "see": "Ver na aplicação",
+   "features": [
+     ("Assistente de IA", "Registe despesas por voz ou com uma fotografia do talão e pergunte em linguagem simples quanto gastou.", "02-ai-chat.png"),
+     ("Orçamento partilhado", "Uma só conta: toda a família vê as mesmas despesas e o orçamento familiar em tempo real.", "01-home.png"),
+     ("Digitalizar talões", "Fotografe o talão e a IA lê os artigos, o total e o comerciante.", "03-receipt-scan.png"),
+     ("Orçamentos e objetivos", "Orçamentos flexíveis com histórico, objetivos de poupança e controlo de dívidas.", "05-budget-detail.png"),
+     ("Análise de despesas", "Tendências, repartição por categoria e por comerciante, e análises com IA.", "04-analytics.png"),
+     ("Importação bancária", "Importe transações da Wise e de bancos (CSV ou PDF) com deteção de duplicados.", "06-bank-import.png"),
+   ],
+   "faq_title": "Perguntas frequentes",
+   "faq": [
+     ("A aplicação de orçamento é gratuita?", "Sim, as funcionalidades principais são gratuitas. O plano Pro aumenta os limites de IA e desbloqueia análises avançadas."),
+     ("Como registo despesas?", "Por voz, com uma fotografia do talão ou à mão. A IA reconhece os artigos, o total e o comerciante."),
+     ("Posso fazer o orçamento familiar em conjunto?", "Sim. Uma conta partilhada permite que todos vejam as mesmas despesas e orçamentos em tempo real."),
+     ("Posso importar transações do banco?", "Sim, da Wise e de bancos por CSV ou PDF, com deteção automática de duplicados. Se o formato do seu banco não for reconhecido, a importação com IA lê o extrato."),
+   ],
+   "cta_band": "Assuma o controlo do seu dinheiro, só para si ou em família.", "cta_band_btn": "Comece grátis",
+   "blog_cta": "Leia os guias no blog (em inglês)",
+   "footer": "AI Budget Assistant - aplicação de finanças tudo-em-um com assistente de IA.", "rights": "Todos os direitos reservados.",
+ },
+ "br": {
+   "title": "Controle de gastos com IA - AI Budget Assistant",
+   "desc": "App de controle de gastos com IA: registre despesas por voz ou com uma foto do recibo, controle orçamentos e economias, junto com a família. Grátis.",
+   "nav_blog": "Blog", "nav_login": "Entrar",
+   "hero_h1": "Controle de gastos com assistente de IA",
+   "hero_sub": "Despesas, orçamentos, metas de economia e as finanças da família em um só app. A IA faz o trabalho chato por você. Comece grátis.",
+   "cta_primary": "Abrir o app", "cta_secondary": "Disponível no Google Play",
+   "intro_title": "Controle de gastos sem planilha",
+   "intro": "O AI Budget Assistant é um app de controle de gastos que reúne despesas, orçamentos, metas de economia, dívidas e importação de extratos em um só lugar. Em vez de digitar cada recibo, você registra a despesa por voz ou com uma foto, e o assistente de IA responde perguntas sobre o seu dinheiro em linguagem simples. Controle o orçamento sozinho ou com a família, em tempo real, no celular, no tablet e no navegador.",
+   "features_title": "Tudo em um só app", "features_hint": "Toque em um recurso para vê-lo no app", "see": "Ver no app",
+   "features": [
+     ("Assistente de IA", "Registre despesas por voz ou com uma foto do recibo e pergunte em linguagem simples quanto você gastou.", "02-ai-chat.png"),
+     ("Orçamento compartilhado", "Uma só conta: toda a família vê as mesmas despesas e o orçamento da casa em tempo real.", "01-home.png"),
+     ("Escanear recibos", "Tire uma foto do recibo e a IA lê os itens, o total e o estabelecimento.", "03-receipt-scan.png"),
+     ("Orçamentos e metas", "Orçamentos flexíveis com histórico, metas de economia e controle de dívidas.", "05-budget-detail.png"),
+     ("Análise de gastos", "Tendências, divisão por categoria e por estabelecimento, e insights com IA.", "04-analytics.png"),
+     ("Importação de extratos", "Importe transações da Wise e de bancos (CSV ou PDF) com detecção de duplicatas.", "06-bank-import.png"),
+   ],
+   "faq_title": "Perguntas frequentes",
+   "faq": [
+     ("O app de controle de gastos é grátis?", "Sim, os recursos principais são gratuitos. O plano Pro aumenta os limites de IA e libera análises avançadas."),
+     ("Como eu registro despesas?", "Por voz, com uma foto do recibo ou manualmente. A IA reconhece os itens, o total e o estabelecimento."),
+     ("Posso controlar o orçamento junto com a família?", "Sim. Uma conta compartilhada permite que todos vejam as mesmas despesas e orçamentos em tempo real."),
+     ("Posso importar transações do banco?", "Sim, da Wise e de bancos via CSV ou PDF, com detecção automática de duplicatas. Se o formato do seu banco não for reconhecido, a importação com IA lê o extrato."),
+   ],
+   "cta_band": "Assuma o controle do seu dinheiro, sozinho ou em família.", "cta_band_btn": "Comece grátis",
+   "blog_cta": "Leia os guias no blog (em inglês)",
+   "footer": "AI Budget Assistant - app de finanças completo com assistente de IA.", "rights": "Todos os direitos reservados.",
+ },
 }
 
 CSS = """
@@ -1097,6 +1233,13 @@ def lp(lang):
     if lang == DEFAULT_LANG:
         return f"{BASE}/" if BASE else "/"
     return f"{BASE}/{lang}/"
+
+def og_default(lang):
+    """The per-language share card. The blog draws one only for a language that has articles,
+    so pt/br (no articles yet) use the help center's card, which is drawn for every help
+    language - otherwise their og:image would 404."""
+    sec = "blog" if bb.blog_has_lang(lang) else "help"
+    return f"{SITE}/{sec}/{lang}/assets/og-default.png"
 
 BLOG_SRC = os.path.join(ROOT, "..", "seo")
 FROM_BLOG_PAIRS = ["black-friday", "christmas", "tax-refund", "live-on-2000", "budget", "split-bill", "auto-capture", "receipts", "ai-budget", "inflation", "expense-map", "family", "shared-budget", "bank-import", "import-revolut", "import-mbank", "import-pko", "import-ing", "import-millennium", "import-pekao", "import-alior", "import-erste", "best-apps", "vs-monefy", "vs-wallet", "vs-ynab", "vs-moneymanager", "saving"]  # curated homepage -> article internal links (every list item renders; no truncation). USP + high-intent topics first. The seasonal `christmas` and `black-friday` are included, at the front, on the owner's explicit request (every blog article should appear here); `school` stays absent for now.
@@ -1211,13 +1354,16 @@ IOS_TEXT = {
     "ua": ("Маєте iPhone? AI Budget працює в браузері: відкрийте його в Safari й натисніть «Поділитися» → «На початковий екран».", "Відкрити"),
     "be": ("Маеце iPhone? AI Budget працуе ў браўзеры: адкрыйце яго ў Safari і націсніце «Падзяліцца» → «На экран „Дадому“».", "Адкрыць"),
     "nl": ("Op een iPhone? AI Budget werkt in je browser: open het in Safari en tik op Deel → ‘Zet op beginscherm’.", "Openen"),
+    "pt": ("Tem um iPhone? O AI Budget funciona no navegador: abra-o no Safari e toque em Partilhar → «Adicionar ao ecrã principal».", "Abrir"),
+    "br": ("Tem iPhone? O AI Budget funciona no navegador: abra no Safari e toque em Compartilhar → “Adicionar à Tela de Início”.", "Abrir"),
 }
 IOS_HTML = ('<script>(function(){'
             'var ua=navigator.userAgent||"",ios=/iPad|iPhone|iPod/.test(ua)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);'
             'if(!ios||navigator.standalone===true)return;'
             'var T=' + json.dumps({k: list(v) for k, v in IOS_TEXT.items()}, ensure_ascii=False) + ';'
-            'var lg=(document.documentElement.lang||"en").slice(0,2);if(lg==="uk")lg="ua";var t=T[lg]||T.en;'
-            'var APP="' + APP + '",PLAY="' + PLAY + '",dest=APP+"/?src=landing&loc=ios&lang="+lg;'
+            'var hl=document.documentElement.lang||"en",lg=hl.slice(0,2);if(lg==="uk")lg="ua";if(hl==="pt-BR")lg="br";'
+            'var t=T[lg]||T.en;'
+            'var APP="' + APP + '",PLAY="' + PLAY + '",dest=APP+"/?src=landing&loc=ios&lang="+(lg==="pt"||lg==="br"?hl:lg);'
             'function fix(){var as=document.querySelectorAll("a[href]");for(var i=0;i<as.length;i++){'
             # a Play BUTTON is hidden (the "Open the app" button already sits beside it); an inline/footer Play
             # link keeps its place but points at the web app and says so
@@ -1247,7 +1393,7 @@ def consent_html(lang):
 
 def footer_html(lang):
     t = C[lang]
-    blog = f"/blog/{lang}/"
+    blog = bb.blog_url(lang)
     pl, tl, cl = LEGAL_LABELS[lang]
     return (f'<footer><div class="wrap"><div class="f-links">'
             f'<a href="{blog}">{t["nav_blog"]}</a>'
@@ -1668,6 +1814,76 @@ DEVELOPERS = {
   "docs": "Alle endpoints (Swagger) met een stapsgewijze handleiding:",
   "openapi": "OpenAPI-schema (JSON)",
  },
+ "pt": {
+  "title": "API para programadores - AI Budget Assistant",
+  "meta": "API REST pública do AI Budget com OAuth 2.0 e PKCE: despesas, talões, categorias e várias contas numa só ligação. Gratuita, sem revisão da aplicação.",
+  "h1": "API do AI Budget para programadores",
+  "lead": "O AI Budget tem uma API REST pública com autorização OAuth 2.0 – «Ligar ao AI Budget». Com o consentimento do utilizador, a sua aplicação pode ler e escrever as despesas dele e obter os talões e as categorias. O utilizador escolhe o que partilha e pode revogar o acesso a qualquer momento.",
+  "btn_docs": "Referência da API", "btn_register": "Registar uma aplicação", "btn_blog": "Como a construímos",
+  "h_can": "O que a API já faz hoje",
+  "can": [
+   "Ler, criar, alterar e eliminar despesas (<code>/public/v1/expenses</code>).",
+   "Sincronizar através do feed de alterações <code>/public/v1/expenses/changes</code>: consulte-o periodicamente e receba as despesas novas, alteradas e eliminadas – as eliminações chegam como entradas <code>delete</code> (tombstones).",
+   "Transferir as imagens dos talões anexados às despesas.",
+   "Ler as categorias de despesa da conta.",
+   "Abranger várias contas numa só ligação: o utilizador assinala as contas que partilha (pessoal, empresa, família…) e cada pedido indica a conta no cabeçalho <code>X-Account-Id</code>. <code>GET /public/v1/accounts</code> devolve as contas partilhadas com o respetivo tipo.",
+   "Ler, adicionar, alterar e eliminar receitas (<code>/public/v1/incomes</code>), com um feed de alterações próprio; as receitas criadas por uma transferência entre contas são só de leitura.",
+   "Ler orçamentos com o progresso do período atual, e criá-los, alterá-los e eliminá-los (<code>/public/v1/budgets</code>).",
+   "Ler totais de análise (<code>/public/v1/analytics/summary</code>, <code>by-category</code>, <code>monthly</code>) convertidos para a moeda de apresentação do utilizador.",
+   "Permissões (scopes): <code>expenses:read</code>, <code>expenses:write</code>, <code>receipts:read</code>, <code>categories:read</code>, <code>incomes:read</code>, <code>incomes:write</code>, <code>budgets:read</code>, <code>budgets:write</code>, <code>analytics:read</code>.",
+  ],
+  "later": "Por agora, a API abrange despesas, talões, categorias, receitas, orçamentos e totais de análise. Objetivos e outros recursos poderão chegar mais tarde.",
+  "h_free": "Gratuita e sem revisão",
+  "free": "O acesso à API é gratuito. Qualquer programador regista a aplicação no AI Budget (<strong>Definições → Programadores</strong>) – sem revisão manual nem esperas. Os limites de pedidos aplicam-se por ligação e por aplicação.",
+  "h_priv": "A privacidade do utilizador",
+  "priv": "É o utilizador que decide que contas partilha, e pode desligar a sua aplicação a qualquer momento em <strong>Definições → Aplicações ligadas</strong> (<a href=\"__HELP__\">como funciona</a>). As contas com encriptação ponta a ponta continuam protegidas: uma conta com encriptação de texto só pode ser ligada em modo de leitura, e uma conta totalmente encriptada não pode ser ligada.",
+  "h_start": "Comece em 3 passos",
+  "steps": [
+   "<strong>Registe uma aplicação</strong> em <strong>Definições → Programadores</strong>: indique um nome e um redirect URI e recebe um <code>client_id</code> e um <code>client_secret</code>.",
+   "<strong>Envie o utilizador</strong> para o URL de autorização <code>https://app.ai-budget.pl/authorize</code> com PKCE. O utilizador inicia sessão, assinala as contas e aprova as permissões.",
+   "<strong>Troque o código</strong> por um token em <code>POST /oauth/token</code> e chame <code>https://api.ai-budget.pl/public/v1</code> com o cabeçalho <code>Authorization: Bearer …</code>.",
+  ],
+  "h_example": "Primeira integração: eKsięgowy AI",
+  "example": "<a href=\"https://eksiegowyai.pl/\">eKsięgowy AI</a> liga, através da API, a conta da empresa e a conta pessoal de um utilizador e mantém-nas estritamente separadas.",
+  "h_docs": "Documentação",
+  "docs": "Todos os endpoints (Swagger), com um guia passo a passo:",
+  "openapi": "Esquema OpenAPI (JSON)",
+ },
+ "br": {
+  "title": "API para desenvolvedores - AI Budget Assistant",
+  "meta": "API REST pública do AI Budget com OAuth 2.0 e PKCE: despesas, recibos, categorias e várias contas em uma só conexão. Gratuita, sem revisão do app.",
+  "h1": "API do AI Budget para desenvolvedores",
+  "lead": "O AI Budget tem uma API REST pública com autorização OAuth 2.0 – “Conectar ao AI Budget”. Com o consentimento do usuário, seu app pode ler e gravar as despesas dele e baixar recibos e categorias. O usuário escolhe o que compartilhar e pode revogar o acesso a qualquer momento.",
+  "btn_docs": "Referência da API", "btn_register": "Registrar um app", "btn_blog": "Como construímos",
+  "h_can": "O que a API já faz hoje",
+  "can": [
+   "Ler, criar, alterar e excluir despesas (<code>/public/v1/expenses</code>).",
+   "Sincronizar pelo feed de alterações <code>/public/v1/expenses/changes</code>: consulte-o periodicamente e receba despesas novas, alteradas e excluídas – as exclusões chegam como entradas <code>delete</code> (tombstones).",
+   "Baixar as imagens dos recibos anexados às despesas.",
+   "Ler as categorias de despesa da conta.",
+   "Atender várias contas com uma só conexão: o usuário marca as contas que compartilha (pessoal, empresa, família…) e cada requisição indica a conta no cabeçalho <code>X-Account-Id</code>. <code>GET /public/v1/accounts</code> retorna as contas compartilhadas com o tipo de cada uma.",
+   "Ler, adicionar, alterar e excluir receitas (<code>/public/v1/incomes</code>), com um feed de alterações próprio; receitas criadas por uma transferência entre contas são somente leitura.",
+   "Ler orçamentos com o progresso do período atual, além de criá-los, alterá-los e excluí-los (<code>/public/v1/budgets</code>).",
+   "Ler totais de análise (<code>/public/v1/analytics/summary</code>, <code>by-category</code>, <code>monthly</code>) convertidos para a moeda de exibição do usuário.",
+   "Permissões (scopes): <code>expenses:read</code>, <code>expenses:write</code>, <code>receipts:read</code>, <code>categories:read</code>, <code>incomes:read</code>, <code>incomes:write</code>, <code>budgets:read</code>, <code>budgets:write</code>, <code>analytics:read</code>.",
+  ],
+  "later": "Por enquanto, a API cobre despesas, recibos, categorias, receitas, orçamentos e totais de análise. Metas e outros recursos podem vir depois.",
+  "h_free": "Gratuita e sem revisão",
+  "free": "O acesso à API é gratuito. Qualquer desenvolvedor registra o próprio app no AI Budget (<strong>Configurações → Desenvolvedores</strong>) – sem revisão manual e sem espera. Os limites de requisições valem por conexão e por app.",
+  "h_priv": "A privacidade do usuário",
+  "priv": "O usuário decide quais contas compartilhar e pode desconectar seu app a qualquer momento em <strong>Configurações → Apps conectados</strong> (<a href=\"__HELP__\">como funciona</a>). Contas com criptografia de ponta a ponta continuam protegidas: uma conta com criptografia de texto só pode ser conectada como somente leitura, e uma conta totalmente criptografada não pode ser conectada.",
+  "h_start": "Comece em 3 passos",
+  "steps": [
+   "<strong>Registre um app</strong> em <strong>Configurações → Desenvolvedores</strong>: informe um nome e um redirect URI e receba um <code>client_id</code> e um <code>client_secret</code>.",
+   "<strong>Envie o usuário</strong> para a URL de autorização <code>https://app.ai-budget.pl/authorize</code> com PKCE. O usuário entra, marca as contas e aprova as permissões.",
+   "<strong>Troque o código</strong> por um token em <code>POST /oauth/token</code> e chame <code>https://api.ai-budget.pl/public/v1</code> com o cabeçalho <code>Authorization: Bearer …</code>.",
+  ],
+  "h_example": "Primeira integração: eKsięgowy AI",
+  "example": "<a href=\"https://eksiegowyai.pl/\">eKsięgowy AI</a> conecta pela API a conta da empresa e a conta pessoal de um usuário e mantém as duas estritamente separadas.",
+  "h_docs": "Documentação",
+  "docs": "Todos os endpoints (Swagger), com um guia passo a passo:",
+  "openapi": "Schema OpenAPI (JSON)",
+ },
 }
 
 def developers_page(lang):
@@ -1736,7 +1952,7 @@ def pricing_page(lang):
     url = SITE + pricing_url(lang)
     alts = [(l, SITE + pricing_url(l)) for l in LANG_NAMES if l in PRICING] + [("x-default", SITE + pricing_url("en"))]
     alt_tags = "".join(f'<link rel="alternate" hreflang="{bcp47(hl)}" href="{href}">' for hl, href in alts)
-    og = f"{SITE}/blog/{lang}/assets/og-default.png"
+    og = og_default(lang)
     # A subscription to a SaaS app is NOT a shippable Product: marking the three tiers up as
     # `Product` pulled this page into Search Console's merchant-listings validation, which then
     # demanded image/description/brand/gtin + offers.availability/shippingDetails/
@@ -1791,7 +2007,7 @@ def pricing_page(lang):
 
 def jsonld(lang, langs):
     t = C[lang]; url = SITE + lp(lang)
-    og = f"{SITE}/blog/{lang}/assets/og-default.png"
+    og = og_default(lang)
     return {"@context": "https://schema.org", "@graph": [
         {"@type": "WebSite", "@id": f"{SITE}/#website", "name": "AI Budget Assistant",
          "alternateName": ["AI Budget", "AI Budget App"], "url": url,
@@ -1804,16 +2020,16 @@ def jsonld(lang, langs):
          "downloadUrl": PLAY, "sameAs": APP_SAMEAS,
          "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
          "featureList": FEATURES_EN + [
-             "Multi-currency: USD, EUR, PLN, GBP, UAH, RUB, BYN",
-             "9 interface languages",
+             "Multi-currency: USD, EUR, PLN, GBP, UAH, RUB, BYN, BRL",
+             f"{len(LANG_NAMES)} interface languages",
          ],
          "screenshot": [
-             {"@type": "ImageObject", "url": f"{SITE}/assets/screens/{lang}/01-home.png", "name": "Home dashboard"},
-             {"@type": "ImageObject", "url": f"{SITE}/assets/screens/{lang}/02-ai-chat.png", "name": "AI assistant"},
-             {"@type": "ImageObject", "url": f"{SITE}/assets/screens/{lang}/03-receipt-scan.png", "name": "Receipt scanning"},
-             {"@type": "ImageObject", "url": f"{SITE}/assets/screens/{lang}/04-analytics.png", "name": "Spending analytics"},
-             {"@type": "ImageObject", "url": f"{SITE}/assets/screens/{lang}/05-budget-detail.png", "name": "Budget tracking"},
-             {"@type": "ImageObject", "url": f"{SITE}/assets/screens/{lang}/06-bank-import.png", "name": "Bank import"},
+             {"@type": "ImageObject", "url": f"{SITE}/assets/screens/{screens_lang(lang)}/01-home.png", "name": "Home dashboard"},
+             {"@type": "ImageObject", "url": f"{SITE}/assets/screens/{screens_lang(lang)}/02-ai-chat.png", "name": "AI assistant"},
+             {"@type": "ImageObject", "url": f"{SITE}/assets/screens/{screens_lang(lang)}/03-receipt-scan.png", "name": "Receipt scanning"},
+             {"@type": "ImageObject", "url": f"{SITE}/assets/screens/{screens_lang(lang)}/04-analytics.png", "name": "Spending analytics"},
+             {"@type": "ImageObject", "url": f"{SITE}/assets/screens/{screens_lang(lang)}/05-budget-detail.png", "name": "Budget tracking"},
+             {"@type": "ImageObject", "url": f"{SITE}/assets/screens/{screens_lang(lang)}/06-bank-import.png", "name": "Bank import"},
          ]},
         {"@type": "FAQPage", "mainEntity": [
             {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in t["faq"]]},
@@ -1823,7 +2039,7 @@ def head(lang, langs):
     t = C[lang]; url = SITE + lp(lang)
     alts = "".join(f'<link rel="alternate" hreflang="{bcp47(l)}" href="{SITE+lp(l)}">' for l in langs)
     alts += f'<link rel="alternate" hreflang="x-default" href="{SITE + (lp("en") if "en" in langs else lp(lang))}">'
-    og = f"{SITE}/blog/{lang}/assets/og-default.png"
+    og = og_default(lang)
     return f"""<!DOCTYPE html><html lang="{bcp47(lang)}"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{html.escape(t['title'])}</title>
@@ -1837,6 +2053,13 @@ def head(lang, langs):
 {alts}
 <script type="application/ld+json">{json.dumps(jsonld(lang, langs), ensure_ascii=False)}</script>
 <style>{CSS}</style></head><body>"""
+
+def screens_lang(lang):
+    """Whose screenshots a language's page shows. A language with no captured screenshots of its
+    own (pt, br today) shows the English ones from /assets/screens/en/ rather than publishing a
+    byte-for-byte copy under its own path. It switches over as soon as
+    feature_graphics/by-language/<lang>/ exists."""
+    return lang if os.path.isdir(os.path.join(FEAT, lang)) else "en"
 
 _SHOT_DIMS = {}
 def shot_dims(lang, shot):
@@ -1857,7 +2080,7 @@ def shot_dims(lang, shot):
 
 def page(lang, langs):
     t = C[lang]
-    blog = f"/blog/{lang}/"
+    blog = bb.blog_url(lang)
     langlinks = "".join(f'<a class="{"active" if l==lang else ""}" href="{lp(l)}" data-lang="{bcp47(l)}">{LANG_NAMES[l]}</a>' for l in langs)
     langmenu = f'<details class="langmenu"><summary><span class="lang-full">{LANG_NAMES[lang]}</span><span class="lang-short">{lang.upper()}</span> &#9662;</summary><div class="langlist">{langlinks}</div></details>'
     cards, lbs = "", ""
@@ -1869,8 +2092,8 @@ def page(lang, langs):
                   f'<span class="see">{html.escape(t["see"])} &rarr;</span></label>')
         lbs += (f'<input class="lbcb" type="checkbox" id="{cid}">'
                 f'<div class="lb"><label class="bg" for="{cid}"></label><label class="x" for="{cid}">&times;</label>'
-                f'<picture><source type="image/webp" srcset="{BASE}/assets/screens/{lang}/{os.path.splitext(shot)[0]}.webp">'
-                f'<img loading="lazy" width="{iw}" height="{ih}" src="{BASE}/assets/screens/{lang}/{shot}" alt="{html.escape(h)} - AI Budget Assistant"></picture></div>')
+                f'<picture><source type="image/webp" srcset="{BASE}/assets/screens/{screens_lang(lang)}/{os.path.splitext(shot)[0]}.webp">'
+                f'<img loading="lazy" width="{iw}" height="{ih}" src="{BASE}/assets/screens/{screens_lang(lang)}/{shot}" alt="{html.escape(h)} - AI Budget Assistant"></picture></div>')
     faq = "".join(f'<div class="qa"><h3>{html.escape(q)}</h3><p>{html.escape(a)}</p></div>' for q, a in t["faq"])
     fb = "".join(
         f'<li><a href="/blog/{lang}/{BLOG_IDX[(lang, pr)][0]}/">{html.escape(BLOG_IDX[(lang, pr)][1])}</a></li>'
@@ -1898,7 +2121,7 @@ def page(lang, langs):
 
 def copy_assets(langs):
     shutil.copytree(os.path.join(ROOT, "assets"), os.path.join(OUT, "assets"), dirs_exist_ok=True)
-    for lang in langs:
+    for lang in sorted({screens_lang(l) for l in langs}):
         dst = os.path.join(OUT, "assets", "screens", lang)
         os.makedirs(dst, exist_ok=True)
         for shot in {s for _, _, s in C[lang]["features"]}:
@@ -1968,9 +2191,16 @@ LLMS_FULL_INTRO = {
     "be": ("Беларуская", "Люстэрка ў фармаце markdown блога і цэнтра дапамогі ai-budget.pl на "
            "беларускай мове, для AI-пошукавых сістэм. Кароткае апісанне прадукту (на "
            "англійскай) у llms.txt."),
+    # pt/br have no blog articles yet, so their mirrors carry the help center only.
+    "pt": ("Português (Portugal)", "Espelho em markdown do centro de ajuda do ai-budget.pl em português "
+           "europeu, para motores de resposta de IA. Consulte o llms.txt para o resumo do produto "
+           "(em inglês)."),
+    "br": ("Português (Brasil)", "Espelho em markdown da central de ajuda do ai-budget.pl em português "
+           "do Brasil, para mecanismos de resposta de IA. Veja o llms.txt para o resumo do produto "
+           "(em inglês)."),
 }
 # Languages that get a llms-full-<lang>.txt sibling, beyond the canonical English one.
-LLMS_FULL_LANGS = ["de", "nl", "pl", "ru", "es", "fr", "ua", "be"]
+LLMS_FULL_LANGS = ["de", "nl", "pl", "ru", "es", "fr", "ua", "be", "pt", "br"]
 
 # The ONE English feature list (ABA-674). llms.txt renders it under "## Key Features", the
 # SoftwareApplication featureList is this plus two product facts, and every
@@ -2025,7 +2255,7 @@ LLMS_TXT_I18N = {
         "tagline": "Kostenlose KI-gestützte Haushaltsbuch-App für Einzelpersonen und Familien. "
                    "Erfasse Ausgaben per Sprache oder Kassenbon-Foto, plane Budgets und Sparziele, "
                    "verwalte Abos, importiere Bankauszüge und führe gemeinsam in Echtzeit "
-                   "Haushaltsbuch. Mehrwährungsfähig, 9 Sprachen, Android und Web.",
+                   "Haushaltsbuch. Mehrwährungsfähig, 11 Sprachen, Android und Web.",
         "name_label": "Name", "launched_label": "Start", "pricing_label": "Preise",
         "platforms_label": "Plattformen", "languages_label": "Sprachen", "currencies_label": "Währungen",
         "pricing_value": "Kostenloser Kern; Pro- und Business-Abo",
@@ -2074,7 +2304,7 @@ LLMS_TXT_I18N = {
         "tagline": "Gratis AI-gestuurde budget-app voor individuen en gezinnen. Leg uitgaven vast "
                    "via spraak of een foto van het bonnetje, plan budgetten en spaardoelen, beheer "
                    "abonnementen, importeer bankafschriften en budgetteer samen in realtime. "
-                   "Meerdere valuta, 9 talen, Android en web.",
+                   "Meerdere valuta, 11 talen, Android en web.",
         "name_label": "Naam", "launched_label": "Gelanceerd", "pricing_label": "Prijzen",
         "platforms_label": "Platforms", "languages_label": "Talen", "currencies_label": "Valuta",
         "pricing_value": "Gratis kern; Pro- en Business-abonnement",
@@ -2123,7 +2353,7 @@ LLMS_TXT_I18N = {
         "tagline": "Darmowa aplikacja budżetowa oparta na AI dla osób i rodzin. Dodawaj wydatki "
                    "głosem lub zdjęciem paragonu, planuj budżety i cele oszczędnościowe, zarządzaj "
                    "subskrypcjami, importuj wyciągi bankowe i prowadź wspólny budżet w czasie "
-                   "rzeczywistym. Wiele walut, 9 języków, Android i przeglądarka.",
+                   "rzeczywistym. Wiele walut, 11 języków, Android i przeglądarka.",
         "name_label": "Nazwa", "launched_label": "Premiera", "pricing_label": "Cena",
         "platforms_label": "Platformy", "languages_label": "Języki", "currencies_label": "Waluty",
         "pricing_value": "darmowy rdzeń; plany Pro i Business",
@@ -2169,7 +2399,7 @@ LLMS_TXT_I18N = {
         "sitemap_desc": "wszystkie indeksowalne adresy URL",
     },
     "ru": {
-        "tagline": "Бесплатное AI-приложение для ведения бюджета — для отдельных пользователей и семей. Добавляйте расходы голосом или фото чека, планируйте бюджеты и накопительные цели, управляйте подписками, импортируйте банковские выписки и ведите общий бюджет в реальном времени. Мультивалютность, 9 языков, Android и веб.",
+        "tagline": "Бесплатное AI-приложение для ведения бюджета — для отдельных пользователей и семей. Добавляйте расходы голосом или фото чека, планируйте бюджеты и накопительные цели, управляйте подписками, импортируйте банковские выписки и ведите общий бюджет в реальном времени. Мультивалютность, 11 языков, Android и веб.",
         "name_label": "Название", "launched_label": "Запуск",
         "pricing_label": "Цена", "platforms_label": "Платформы",
         "languages_label": "Языки", "currencies_label": "Валюты",
@@ -2219,7 +2449,7 @@ LLMS_TXT_I18N = {
         "tagline": "Aplicación de presupuesto gratuita con IA para personas y familias. Registra "
                    "gastos por voz o foto del recibo, planifica presupuestos y metas de ahorro, "
                    "gestiona suscripciones, importa extractos bancarios y lleva un presupuesto "
-                   "compartido en tiempo real. Múltiples divisas, 9 idiomas, Android y web.",
+                   "compartido en tiempo real. Múltiples divisas, 11 idiomas, Android y web.",
         "name_label": "Nombre", "launched_label": "Lanzamiento", "pricing_label": "Precio",
         "platforms_label": "Plataformas", "languages_label": "Idiomas", "currencies_label": "Divisas",
         "pricing_value": "Núcleo gratuito; planes Pro y Business",
@@ -2269,7 +2499,7 @@ LLMS_TXT_I18N = {
                    "familles. Enregistrez vos dépenses par la voix ou en photographiant un "
                    "ticket de caisse, planifiez budgets et objectifs d'épargne, gérez vos "
                    "abonnements, importez vos relevés bancaires et gérez un budget partagé en "
-                   "temps réel. Multidevises, 9 langues, Android et web.",
+                   "temps réel. Multidevises, 11 langues, Android et web.",
         "name_label": "Nom", "launched_label": "Lancement", "pricing_label": "Tarifs",
         "platforms_label": "Plateformes", "languages_label": "Langues", "currencies_label": "Devises",
         "pricing_value": "Cœur gratuit ; formules Pro et Business",
@@ -2318,7 +2548,7 @@ LLMS_TXT_I18N = {
         "tagline": "Безкоштовний AI-застосунок для ведення бюджету — для окремих користувачів і "
                    "родин. Додавайте витрати голосом або фото чека, плануйте бюджети та "
                    "накопичувальні цілі, керуйте підписками, імпортуйте банківські виписки та "
-                   "ведіть спільний бюджет у реальному часі. Мультивалютність, 9 мов, Android і веб.",
+                   "ведіть спільний бюджет у реальному часі. Мультивалютність, 11 мов, Android і веб.",
         "name_label": "Назва", "launched_label": "Запуск", "pricing_label": "Ціна",
         "platforms_label": "Платформи", "languages_label": "Мови", "currencies_label": "Валюти",
         "pricing_value": "безкоштовне ядро; тарифи Pro та Business",
@@ -2367,7 +2597,7 @@ LLMS_TXT_I18N = {
         "tagline": "Бясплатны дадатак для вядзення бюджэту на аснове ШІ — для асобных "
                    "карыстальнікаў і сем'яў. Дадавайце выдаткі голасам або фота чэка, плануйце "
                    "бюджэты і мэты па назапашванні, кіруйце падпіскамі, імпартуйце банкаўскія "
-                   "выпіскі і вядзіце супольны бюджэт у рэальным часе. Розныя валюты, 9 моў, "
+                   "выпіскі і вядзіце супольны бюджэт у рэальным часе. Розныя валюты, 11 моў, "
                    "Android і вэб.",
         "name_label": "Назва", "launched_label": "Запуск", "pricing_label": "Цана",
         "platforms_label": "Платформы", "languages_label": "Мовы", "currencies_label": "Валюты",
@@ -2413,6 +2643,104 @@ LLMS_TXT_I18N = {
         "company_desc": "кампанія, якая стаіць за дадаткам",
         "sitemap_desc": "усе індэксуемыя URL",
     },
+    "pt": {
+        "tagline": "Aplicação de orçamento gratuita com IA para pessoas e famílias. Registe despesas "
+                   "por voz ou com uma fotografia do talão, planeie orçamentos e objetivos de poupança, "
+                   "faça a gestão de subscrições, importe extratos bancários e partilhe um orçamento em "
+                   "tempo real. Várias moedas, 11 idiomas, Android e web.",
+        "name_label": "Nome", "launched_label": "Lançamento", "pricing_label": "Preço",
+        "platforms_label": "Plataformas", "languages_label": "Idiomas", "currencies_label": "Moedas",
+        "pricing_value": "núcleo gratuito; planos Pro e Business",
+        "features": [
+            "Registo de despesas por voz: registe despesas a falar naturalmente, com transcrição por IA",
+            "Digitalização de talões: fotografe um talão para extrair o valor, o comerciante e a categoria por OCR",
+            "Captura de notificações bancárias: a aplicação Android lê as notificações push do banco e cria despesas no próprio dispositivo (mais de 40 bancos europeus, ainda sem bancos portugueses; sem credenciais)",
+            "Importação bancária: extratos CSV e PDF da Wise, do Revolut e de bancos polacos (mBank, PKO BP, ING, Millennium, Pekao, Erste, Alior); os extratos de qualquer outro banco, incluindo os portugueses, são lidos pela importação com IA",
+            "Migração do Monefy, Wallet by BudgetBakers e Money Manager, mantendo as suas próprias categorias",
+            "Divisão de contas: os amigos recebem um link de convidado com a parte de cada um, sem instalar a aplicação",
+            "Carteira de viagem: conta partilhada temporária com divisão entre várias pessoas e acerto de contas",
+            "Grupos de despesas partilhadas (casa, viagem, compras): amigos sem conta entram por um link no navegador, veem quem deve a quem e acertam contas",
+            "Listas de compras partilhadas",
+            "Índice de inflação pessoal e Inflation Shield a partir dos preços dos seus próprios talões",
+            "Financial Wrapped: o resumo do ano em cartões",
+            "Controlo de dívidas com lembretes de vencimento",
+            "Alertas de taxa de câmbio",
+            "Assistente de chat com IA: faça perguntas sobre finanças e dê comandos em linguagem natural",
+            "Contas familiares partilhadas com papéis de proprietário/editor/leitor e feed de atividade em tempo real",
+            "Votação e aprovação de compras em grupo",
+            "Orçamentos por categoria com histórico, alertas e acompanhamento por período",
+            "Objetivos de poupança com registo de contribuições",
+            "Gestor de subscrições com lembretes de renovação e simulação de cobrança automática",
+            "Bots de Telegram, WhatsApp e Slack",
+            "Arquitetura offline-first; encriptação ponta a ponta opcional",
+            "Seguro para gastar: quanto pode gastar por dia, a partir do saldo menos os compromissos futuros",
+            "Deteção de anomalias: cobranças duplicadas, aumentos de preço, picos de despesa",
+            "Divisão do talão por categoria: as linhas de um talão de supermercado são distribuídas por categorias de despesa",
+            "Categorias em dois níveis: as subcategorias contam para o orçamento da categoria principal",
+            "Mapa de despesas: despesas no mapa a partir da morada do talão, de um pin manual ou do GPS",
+            "Salário real: se o seu salário acompanha a sua inflação pessoal",
+            "Resumo semanal por voz das suas despesas no bot de Telegram, WhatsApp ou Slack (opcional)",
+            "Totais de depósitos de embalagens pagos e de descontos recebidos, a partir dos talões digitalizados",
+        ],
+        "blog_desc": "guias sobre orçamento, controlo de despesas e poupança (em inglês)",
+        "help_desc": "como usar cada funcionalidade da aplicação",
+        "pricing_desc": "planos Free, Pro e Business",
+        "full_desc": "espelho em markdown do centro de ajuda em português (Portugal)",
+        "full_en_note": "versão em inglês",
+        "webapp_desc": "inicie sessão e use o AI Budget Assistant no navegador",
+        "play_desc": "aplicação Android",
+        "company_desc": "a empresa por trás da aplicação",
+        "sitemap_desc": "todos os URL indexáveis",
+    },
+    "br": {
+        "tagline": "App de orçamento gratuito com IA para pessoas e famílias. Registre despesas por voz "
+                   "ou com uma foto do recibo, planeje orçamentos e metas de economia, gerencie "
+                   "assinaturas, importe extratos bancários e compartilhe um orçamento em tempo real. "
+                   "Várias moedas, 11 idiomas, Android e web.",
+        "name_label": "Nome", "launched_label": "Lançamento", "pricing_label": "Preço",
+        "platforms_label": "Plataformas", "languages_label": "Idiomas", "currencies_label": "Moedas",
+        "pricing_value": "núcleo gratuito; planos Pro e Business",
+        "features": [
+            "Registro de despesas por voz: registre despesas falando naturalmente, com transcrição por IA",
+            "Leitura de recibos: tire uma foto de um recibo para extrair valor, estabelecimento e categoria por OCR",
+            "Captura de notificações do banco: o app Android lê as notificações push do banco e cria despesas no próprio aparelho (mais de 40 bancos europeus, sem precisar de senha)",
+            "Importação de extratos: extratos CSV e PDF da Wise, do Revolut e de bancos poloneses (mBank, PKO BP, ING, Millennium, Pekao, Erste, Alior); extratos de qualquer outro banco, inclusive brasileiro, são lidos pela importação com IA",
+            "Migração do Monefy, Wallet by BudgetBakers e Money Manager, mantendo suas próprias categorias",
+            "Divisão de contas: os amigos recebem um link de convidado com a parte de cada um, sem instalar o app",
+            "Carteira de viagem: conta compartilhada temporária com divisão entre várias pessoas e acerto de contas",
+            "Grupos de despesas compartilhadas (casa, viagem, mercado): amigos sem conta entram por um link no navegador, veem quem deve a quem e acertam as contas",
+            "Listas de compras compartilhadas",
+            "Índice de inflação pessoal e Inflation Shield com base nos preços dos seus próprios recibos",
+            "Financial Wrapped: a retrospectiva do ano em cards",
+            "Controle de dívidas com lembretes de vencimento",
+            "Alertas de cotação",
+            "Assistente de chat com IA: faça perguntas sobre finanças e dê comandos em linguagem natural",
+            "Contas familiares compartilhadas com papéis de proprietário/editor/visualizador e feed de atividades em tempo real",
+            "Votação e aprovação de compras em grupo",
+            "Orçamentos por categoria com histórico, alertas e acompanhamento por período",
+            "Metas de economia com registro de contribuições",
+            "Gerenciador de assinaturas com lembretes de renovação e simulação de cobrança automática",
+            "Bots de Telegram, WhatsApp e Slack",
+            "Arquitetura offline-first; criptografia de ponta a ponta opcional",
+            "Livre para gastar: quanto dá para gastar por dia, a partir do saldo menos os compromissos futuros",
+            "Detecção de anomalias: cobranças duplicadas, aumentos de preço, picos de gastos",
+            "Divisão do recibo por categoria: os itens de um recibo de supermercado são distribuídos entre categorias de despesa",
+            "Categorias em dois níveis: as subcategorias entram no orçamento da categoria principal",
+            "Mapa de despesas: despesas no mapa a partir do endereço do recibo, de um pin manual ou do GPS",
+            "Salário real: se o seu salário acompanha a sua inflação pessoal",
+            "Resumo semanal por voz dos seus gastos pelo bot do Telegram, WhatsApp ou Slack (opcional)",
+            "Totais de vasilhame pago e de descontos recebidos, a partir dos recibos escaneados",
+        ],
+        "blog_desc": "guias sobre orçamento, controle de gastos e economia (em inglês)",
+        "help_desc": "como usar cada recurso do app",
+        "pricing_desc": "planos Free, Pro e Business",
+        "full_desc": "espelho em markdown da central de ajuda em português (Brasil)",
+        "full_en_note": "versão em inglês",
+        "webapp_desc": "entre e use o AI Budget Assistant no navegador",
+        "play_desc": "app para Android",
+        "company_desc": "a empresa por trás do app",
+        "sitemap_desc": "todas as URLs indexáveis",
+    },
 }
 
 # The API line of each llms-<lang>.txt (ABA-710).
@@ -2425,6 +2753,8 @@ LLMS_API_DESC = {
     "fr": "API REST gratuite avec OAuth 2.0 (PKCE) pour les dépenses, les tickets et les catégories",
     "ua": "безкоштовне REST API з OAuth 2.0 (PKCE) для витрат, чеків і категорій",
     "be": "бясплатнае REST API з OAuth 2.0 (PKCE) для выдаткаў, чэкаў і катэгорый",
+    "pt": "API REST gratuita com OAuth 2.0 (PKCE) para despesas, talões e categorias",
+    "br": "API REST gratuita com OAuth 2.0 (PKCE) para despesas, recibos e categorias",
 }
 
 def check_feature_lists():
@@ -2450,12 +2780,12 @@ def write_llms_txt_localized(lang):
         f"- {t['pricing_label']}: {t['pricing_value']}\n"
         f"- {t['platforms_label']}: Android, Web\n"
         f"- {t['languages_label']}: {langs_line}\n"
-        f"- {t['currencies_label']}: USD, EUR, PLN, GBP, UAH, RUB, BYN\n\n"
+        f"- {t['currencies_label']}: USD, EUR, PLN, GBP, UAH, RUB, BYN, BRL\n\n"
         f"## Key Features\n\n"
         + "".join(f"- {feat}\n" for feat in t["features"])
         + "\n"
         f"## Documentation\n\n"
-        f"- [Blog]({SITE}/blog/{lang}/): {t['blog_desc']}\n"
+        f"- [Blog]({SITE}{bb.blog_url(lang)}): {t['blog_desc']}\n"
         f"- [{HELP_LABELS.get(lang, 'Help')}]({SITE}/help/{lang}/): {t['help_desc']}\n"
         f"- [{PRICING_LABELS.get(lang, 'Pricing')}]({SITE}{pricing_url(lang)}): {t['pricing_desc']}\n"
         f"- [{DEV_LABELS[lang]}]({SITE}{dev_url(lang)}): {LLMS_API_DESC[lang]}; "
@@ -2523,19 +2853,19 @@ def build():
         d = os.path.join(OUT, "cookies") if lang == "pl" else os.path.join(OUT, "en", "cookies")
         os.makedirs(d, exist_ok=True)
         open(os.path.join(d, "index.html"), "w", encoding="utf-8", newline="\n").write(cookies_page(lang))
-    # About page (all 9 languages)
+    # About page (every language)
     for lang in [l for l in LANG_NAMES if l in ABOUT]:
         sub = "about" if lang == "pl" else os.path.join(lang, "about")
         d = os.path.join(OUT, sub)
         os.makedirs(d, exist_ok=True)
         open(os.path.join(d, "index.html"), "w", encoding="utf-8", newline="\n").write(about_page(lang))
-    # Developers / public API page (all 9 languages, ABA-710)
+    # Developers / public API page (every language, ABA-710)
     for lang in [l for l in LANG_NAMES if l in DEVELOPERS]:
         sub = "developers" if lang == "pl" else os.path.join(lang, "developers")
         d = os.path.join(OUT, sub)
         os.makedirs(d, exist_ok=True)
         open(os.path.join(d, "index.html"), "w", encoding="utf-8", newline="\n").write(developers_page(lang))
-    # Pricing page (all 9 languages)
+    # Pricing page (every language)
     for lang in [l for l in LANG_NAMES if l in PRICING]:
         sub = "pricing" if lang == "pl" else os.path.join(lang, "pricing")
         d = os.path.join(OUT, sub)
@@ -2610,7 +2940,7 @@ def build():
             the same alt text the <img> itself already carries, so the two never disagree."""
             parts = []
             for h, _desc, shot in C[lang]["features"]:
-                loc = f"{SITE}/assets/screens/{lang}/{shot}"
+                loc = f"{SITE}/assets/screens/{screens_lang(lang)}/{shot}"
                 caption = html.escape(f"{h} - AI Budget Assistant")
                 parts.append(f'<image:image><image:loc>{loc}</image:loc>'
                              f'<image:caption>{caption}</image:caption></image:image>')
@@ -2664,14 +2994,14 @@ def build():
             f"> Free AI-powered budget app for individuals and families. "
             f"Track expenses by voice or receipt photo, plan budgets and savings goals, "
             f"manage subscriptions, import bank statements, and budget together in real time. "
-            f"Multi-currency, 9 languages, Android and web.\n\n"
+            f"Multi-currency, 11 languages, Android and web.\n\n"
             f"## Product\n\n"
             f"- Name: AI Budget Assistant\n"
             f"- Launched: April 2026\n"
             f"- Pricing: Free core; Pro and Business subscription tiers\n"
             f"- Platforms: Android, Web\n"
-            f"- Languages: English, Polish, German, Spanish, French, Russian, Ukrainian, Belarusian, Dutch\n"
-            f"- Currencies: USD, EUR, PLN, GBP, UAH, RUB, BYN\n\n"
+            f"- Languages: English, Polish, German, Spanish, French, Russian, Ukrainian, Belarusian, Dutch, Portuguese (Portugal), Portuguese (Brazil)\n"
+            f"- Currencies: USD, EUR, PLN, GBP, UAH, RUB, BYN, BRL\n\n"
             f"## Key Features\n\n"
             + "".join(f"- {feat}\n" for feat in FEATURES_EN)
             + "\n"

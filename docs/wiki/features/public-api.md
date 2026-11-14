@@ -137,7 +137,7 @@ it holds). A co-owner sees a connection only with the granted accounts they are 
 owner/editor of, never the grantor's other accounts; their Disconnect removes only those accounts
 (`DELETE /connected-apps/:grantId/accounts/:accountId` removes one), and only the grantor revokes
 the whole connection. An emptied grant is revoked. When an editor connects an app, the grantor and
-every owner get the "app connected" e-mail (9 languages, by recipient's `user.language`; the list
+every owner get the "app connected" e-mail (11 languages, by recipient's `user.language`; the list
 of accounts is formatted with `Intl`, `ua` mapped to `uk`): the grantor one mail listing the added
 accounts, each owner only their own accounts, at most once per added (app, account) per day
 (`CacheService.setIfAbsentStrict` on `oauth:mail:connected:<client>:<account>`, 24 h), so a
@@ -177,7 +177,7 @@ by the newer whitespace rule on update (R13); `OAuthClient.ownerUserId` is nulla
 every query that joins the owner tolerates `null`. Clients also have a `source` (`manual` / `mcp_dcr`);
 developer-app listings are `manual` only.
 
-**Help** is the `45-connected-apps` section in all nine locales, registered in the three help
+**Help** is the `45-connected-apps` section in all eleven locales, registered in the three help
 registries at launch (2026-11-02); it was kept dark until the flag went on (Ruling 32).
 
 ## Invariants

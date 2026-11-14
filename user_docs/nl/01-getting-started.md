@@ -10,7 +10,7 @@
 4. Maak een **Wachtwoord** aan (minimaal 8 tekens, moet een hoofdletter A-Z, een kleine letter a-z en een cijfer 0-9 bevatten)
 5. Bevestig je wachtwoord
 6. Selecteer je voorkeurs **Valuta** (USD, EUR, PLN, GBP, UAH, RUB of BYN)
-7. Selecteer je voorkeurs **Taal** (English, Deutsch, Espanol, Francais, Polski, Русский, Українська of Беларуская)
+7. Selecteer je voorkeurs **Taal** (English, Deutsch, Espanol, Francais, Polski, Русский, Українська, Беларуская, Nederlands, Português (Portugal) of Português (Brasil))
 8. Tik op **Account aanmaken**
 9. Controleer je e-mail op een **6-cijferige verificatiecode**
 10. Voer de code in de app in en tik op **Verifiëren**

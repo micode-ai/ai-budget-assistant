@@ -4048,7 +4048,7 @@ URL: https://ai-budget.pl/help/pl/getting-started/
 4. Utworz **Haslo** (minimum 8 znakow, musi zawierac wielka litere A-Z, mala litere a-z i cyfre 0-9)
 5. Potwierdz haslo w polu **Potwierdz haslo**
 6. Wybierz preferowana **Walute** (USD, EUR, PLN, GBP, UAH, RUB lub BYN)
-7. Wybierz preferowany **Jezyk** (English, Deutsch, Espanol, Francais, Polski, Russkij, Ukrainska lub Беларуская)
+7. Wybierz preferowany **Jezyk** (English, Deutsch, Espanol, Francais, Polski, Russkij, Ukrainska, Беларуская, Nederlands, Português (Portugal) lub Português (Brasil))
 8. Dotknij **Utwórz konto**
 9. Sprawdź swoją pocztę — otrzymasz **6-cyfrowy kod weryfikacyjny**
 10. Wprowadź kod w aplikacji i naciśnij **Zweryfikuj**
@@ -4654,6 +4654,23 @@ Uzbierał się tydzień papierowych paragonów? Po zapisaniu jednego z nich potw
 
 Podczas skanowania mały licznik pokazuje, ile paragonów zapisano w tej sesji. Co 15 paragonów aplikacja przypomina, że można kontynuować lub zrobić przerwę — postęp jest już zapisany niezależnie od wyboru. Licznik resetuje się po opuszczeniu ekranu; służy tylko do pokazania postępu w trakcie jednej sesji.
 
+### Długi paragon w kilku zdjęciach
+
+Paragon zbyt długi na jedno czytelne zdjęcie można sfotografować w częściach i odczytać jako **jeden** paragon.
+
+**W aplikacji**
+
+1. Na ekranie paragonu dotknij **Długi paragon? Zrób zdjęcia w częściach**
+2. Fotografuj paragon od góry do dołu, z niewielką zakładką między zdjęciami (ostatnia linia jednego zdjęcia powinna być znów widoczna na górze następnego) — możesz dodać do **4 części**
+3. Dotknij **Odczytaj paragon**. Dostaniesz jedną kartę potwierdzenia, na której każda pozycja występuje raz; pozycje w zakładce nie są liczone dwa razy
+4. Jeśli suma pozycji nie zgadza się z sumą paragonu, aplikacja ostrzeże Cię i zaproponuje **Zrób części ponownie** zamiast zapisu
+
+Każda część liczy się jako jedno skanowanie paragonu w Twoim miesięcznym limicie AI, więc paragon z trzech części zużywa trzy skanowania. PDF nie można łączyć ze zdjęciami. Wydatek zachowuje wszystkie zdjęcia: otwórz paragon przy wydatku i dotknij części, aby ją obejrzeć.
+
+**W botach Telegram, WhatsApp i Slack**
+
+Wysyłaj zdjęcia jedno po drugim. Pierwsze zdjęcie jest odczytywane od razu. Dopóki jego karta potwierdzenia jest otwarta, wyślij następne zdjęcie — bot zapyta, czy to **Dalsza część** czy **Nowy paragon**. Wybierz **Dalsza część**, a karta zostanie zbudowana od nowa ze wszystkich zdjęć (poprawki wpisane na starej karcie nie zostają, więc sprawdź nową). Zdjęcia muszą być w formacie JPEG, PNG lub WebP i nie za duże; bot powie, jeśli któreś odrzuci.
+
 ### Paragony już zeskanowane
 
 Aplikacja ostrzeże Cię, zanim paragon trafi do wydatków dwa razy:
@@ -4661,8 +4678,9 @@ Aplikacja ostrzeże Cię, zanim paragon trafi do wydatków dwa razy:
 - **Ten sam plik ponownie** — jeśli wybierzesz zdjęcie lub PDF, który został już zeskanowany i zapisany, zobaczysz pytanie *przed* odczytem, więc żadne zapytanie AI nie zostanie zużyte. **Otwórz** pokaże zapisany wydatek, **Skanuj mimo to** odczyta paragon ponownie, **Anuluj** — anuluje.
 - **Ten sam paragon, nowe zdjęcie** — jeśli po odczycie istnieje już wydatek z tym samym sklepem, kwotą i datą (±1 dzień), na ekranie potwierdzenia pojawi się żółty komunikat z przyciskiem **Otwórz**. Nadal możesz zapisać: to może być naprawdę drugi zakup.
 - **Już zapisane przez bank** — jeśli pasujący wydatek pochodzi z powiadomienia banku albo z importu wyciągu, komunikat to pokazuje i proponuje **Połącz w jeden wydatek**. Gdy pole jest zaznaczone, zapis zachowa paragon (pozycje, zdjęcie i kategorię) i zastąpi wpis z banku, więc zakup zostanie policzony raz. Jeśli zgadzają się tylko kwota i data, pole jest na początku odznaczone — sprawdź przed połączeniem.
+- **Już dodane ręcznie** — jeśli wcześniej dodałeś ten zakup sam — wpisując, głosem albo wiadomością do bota (np. „Netto”, a na paragonie jest „Netto nr 541”), komunikat to pokazuje i proponuje to samo **Połącz w jeden wydatek**. To pole jest na początku odznaczone, bo ręczny wpis może być osobnym zakupem — zaznacz je, jeśli to ten sam. Paragon zastąpi Twój wpis; notatki, tagi i projekt zostaną przeniesione. Jeśli go nie zaznaczysz, para pojawi się też później w alertach z przyciskiem połączenia.
 
-Boty w Telegramie, WhatsAppie i Slacku ostrzegają tak samo i oferują przycisk **Skanuj mimo to**.
+Boty w Telegramie, WhatsAppie i Slacku ostrzegają tak samo i oferują przycisk **Skanuj mimo to**. Gdy pasujący wpis to Twój własny lub kopia z banku, po **Dodaj wydatek** bot zapyta o połączenie: **Połącz** zachowa paragon i dołączy do niego drugi wpis, **Zostaw oba** zapisze paragon osobno.
 
 ### Udostępnianie z innej aplikacji (Android)
 
@@ -5067,6 +5085,20 @@ Tabela pokazujaca najczesciej kupowane pozycje z paragonow:
 ## Eksport
 
 Dotknij **Eksportuj raport**, aby otworzyc ekran Eksport i raporty, gdzie mozesz generowac raporty PDF, Excel lub CSV, przegladac podsumowania miesieczne i zarzadzac kopiami zapasowymi danych. Zobacz [Eksport i raporty](./16-export-reports.md) po wiecej szczególów.
+
+## Koszty dzieci
+
+Sprawdź, ile kosztuje Cię każde dziecko, bez zgadywania.
+
+- **Dodawanie dzieci:** Ustawienia > Dane referencyjne > Dzieci. Zapisujemy tylko imię i kolor. Zamiast usuwać, zarchiwizuj dziecko; jego wydatki pozostają przypisane.
+- **Cały wydatek:** przy nowym lub istniejącym wydatku wybierz jedno lub kilkoro dzieci. Przy kilkorgu kwota dzieli się po równo, chyba że zmienisz udziały. Wydatek ma przypisanie całości albo pozycji paragonu, nie oba naraz; aplikacja zapyta przed zmianą.
+- **Pozycje paragonu:** po zeskanowaniu paragonu przypisz pojedyncze pozycje (pieluchy, przybory szkolne) do dziecka. Aplikacja zapamięta wybór i zaproponuje go następnym razem. Propozycja nigdy nie jest stosowana bez Ciebie. „Wyodrębnij pozycje” zachowuje przypisanie produktów, które nadal są na paragonie, i informuje, ilu nie udało się przenieść.
+- **Zbiorczo:** zaznacz kilka wydatków i wybierz Przypisz do dziecka. Wydatki z przypisaniem pozycji są pomijane, a liczba pominiętych jest pokazana.
+- **Sumy:** ekran dziecka (i karta w zakładce Analityka) pokazuje ten miesiąc, ten rok i podział na kategorie w walucie wyświetlania. Suma ze znakiem ≈ zawiera przybliżenie, bo brakowało kursu; takie kwoty są pomijane, nie zgadywane. Wydatki planowane i należności z podziału rachunku nie są liczone.
+- **800+ i pokrycie:** gdy przychód wygląda na świadczenie 800+ (np. „800+” lub „rodzina 800” w opisie), aplikacja proponuje oznaczyć go dla dziecka. Pokrycie to otrzymane świadczenie podzielone przez koszt dziecka w tym samym okresie.
+- **Karta do udostępnienia:** obrazek z sumami dziecka. Imię jest domyślnie ukryte; można je włączyć.
+- **Zestawienie PDF (Pro, edytorzy):** „zestawienie” kosztów dziecka za okres do 24 miesięcy: sumy, podział miesięczny i na kategorie, lista wydatków i paragony. Każda strona ma stopkę, że zestawienie sporządzono w aplikacji na podstawie danych wprowadzonych przez użytkownika, oraz czas „stan danych na”. To podsumowanie Twoich własnych zapisów, nie dokument prawny i nie jest poświadczone. Zawiera tylko to, co dotarło na serwer, więc aplikacja najpierw synchronizuje i prosi o chwilę czekania, jeśli coś jeszcze oczekuje. Niedostępne na kontach z szyfrowaniem end-to-end.
+- **Rodzice w separacji:** trzymajcie dzieci na koncie osobistym, aby drugi rodzic nie widział pozostałych Twoich wydatków. Konto wspólne pokazuje wszystko wszystkim członkom.
 
 ## FAQ
 
@@ -5866,7 +5898,7 @@ Wybrana waluta jest podswietlona. Ustawia to domyslna walute dla nowych wydatkow
 
 ### Jezyk
 
-Wybierz z 9 obslugiwanych jezykow:
+Wybierz z 11 obslugiwanych jezykow:
 
 | Kod | Jezyk |
 |---|---|
@@ -5879,6 +5911,8 @@ Wybierz z 9 obslugiwanych jezykow:
 | DE | Deutsch |
 | BY | Беларуская |
 | NL | Nederlands |
+| PT | Português (Portugal) |
+| BR | Português (Brasil) |
 
 Dotknij element jezyka, aby przelaczyc. Interfejs aktualizuje sie natychmiast.
 
@@ -8480,6 +8514,21 @@ Dostajesz też powiadomienie push, gdy coś wymaga uzupełnienia. Dany produkt j
 Aplikacja porównuje cenę, jaką ostatnio zapłaciłeś za śledzony produkt, z jego średnią ceną z ostatnich 90 dni. Jeśli najnowsza cena danego produktu w jakimś sklepie jest wyraźnie niższa od tej średniej, pojawia się jako etykieta w wierszu **Promocje dla Ciebie**, z nazwą sklepu i procentem rabatu. Stuknij etykietę, aby dodać produkt do listy.
 
 Promocje są też dostarczane jako powiadomienie push, gdy wykryta zostanie prawdziwa obniżka, więc nie musisz otwierać aplikacji, żeby jej nie przegapić — ta sama obniżka ceny nie zostanie jednak wysłana częściej niż raz w tygodniu, więc nie będziesz o niej przypominany wielokrotnie.
+
+## Sprawdź gazetkę promocyjną
+
+Masz gazetkę promocyjną sklepu w formie zdjęć lub PDF? Aplikacja pokaże, które z produktów, **które naprawdę kupujesz**, w niej są, i porówna cenę promocyjną z tym, ile zwykle płacisz.
+
+- **Z listy zakupów** dotknij **Sprawdź gazetkę** i wybierz zrzuty ekranu gazetki (w wersji webowej upuść je lub plik PDF na stronę).
+- **Z innej aplikacji (Android)** udostępnij zrzuty ekranu lub PDF do AI Budżet i wybierz **Gazetka promocyjna** w pytaniu, które się pojawi.
+
+Aplikacja czyta gazetkę i pokazuje tylko promocje na produkty z Twoich zakupów i listy zakupów: cenę promocyjną oraz — jeśli kupowałeś już ten produkt w tej samej walucie — ile zwykle płacisz, jako *zwykle X → Y*. Produkty, których nie kupujesz, nigdy się nie pokazują, a sama gazetka nie jest zapisywana — zostają tylko odczytane ceny. Ceny są podane *według gazetki — sprawdź w sklepie* — sklep może się różnić. Dotknij **Dodaj do listy** przy pozycji, aby dodać ją do listy zakupów.
+
+**Twoje gazetki.** Ekran gazetki zachowuje listę Twoich gazetek, które jeszcze obowiązują: sklep, do kiedy i ile Twoich produktów jest w każdej. Dotknij jednej, aby znów zobaczyć jej produkty i dodać je do listy (jeśli najpierw otworzy się wybór zdjęć, po prostu go zamknij).
+
+**Ile stron możesz sprawdzić.** Strony gazetek mają własny miesięczny limit, osobny od zapytań AI: 20 stron w Free, 200 w Pro i 500 w Business. Jedno udostępnienie czyta do 10 stron (PDF do około 7 MB — przy większym udostępnij zamiast tego zrzuty stron). Reszta jest pomijana, a ekran mówi, ile stron pominięto.
+
+**Promocje społeczności (opcjonalnie).** Jeśli udostępniasz anonimowe ceny (Ustawienia → Dane → **Udostępniaj anonimowe ceny**), ceny promocyjne z gazetek, które czytasz, są udostępniane w ten sam sposób — tylko sklep, produkt, cena i daty, nigdy Twoje imię, konto ani obraz gazetki. Gdy promocje społeczności zostaną włączone w aplikacji, a tę samą promocję potwierdzi kilku kupujących, inni, którzy kupują w tym sklepie i zwykle kupują ten produkt, dostają najwyżej jedno powiadomienie dziennie z informacją, do kiedy trwa promocja — i dopiero gdy już się zaczęła. Dotknięcie go otwiera Twoje gazetki. Wyłączysz je w Ustawienia → Powiadomienia → **Promocje z gazetek na Twoje produkty**.
 
 ## Zarządzanie powiadomieniami
 

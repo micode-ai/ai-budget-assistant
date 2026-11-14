@@ -24,3 +24,17 @@ describe('supported currencies (ABA-721)', () => {
     }
   });
 });
+
+describe('BRL', () => {
+  it('is supported end to end', () => {
+    expect(() => CurrencySchema.parse('BRL')).not.toThrow();
+    expect(SUPPORTED_CURRENCIES).toContainEqual({ code: 'BRL', name: 'Brazilian Real', symbol: 'R$' });
+  });
+
+  it('formats with the symbol before the pt-BR number', () => {
+    // Same 'before' convention as USD/GBP/CHF: symbol glued to a pt-BR formatted number.
+    const number = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(1234.5);
+    expect(number).toBe('1.234,50');
+    expect(formatCurrency(1234.5, 'BRL')).toBe('R$1.234,50');
+  });
+});

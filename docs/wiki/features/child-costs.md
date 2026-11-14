@@ -131,7 +131,7 @@ footer and the "data as of" stamp.
   block the statement forever. Known window: see Known gaps.
 - **Copy never says a child "costs too much" and never compares children.**
 - **Repo rules that bite here:** schema change and migration in one commit; no runtime import from
-  `@budget/shared-*` in `apps/api`; `logFireAndForget`; nine locales; phone + desktop together.
+  `@budget/shared-*` in `apps/api`; `logFireAndForget`; eleven locales; phone + desktop together.
 
 ## Known gaps
 

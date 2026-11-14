@@ -32,7 +32,7 @@ export type StatementStatus =
   | { kind: 'saved'; location: string }
   | { kind: 'refused'; reason: Exclude<StatementFailure, 'pro'> };
 
-const STATEMENT_LOCALES = new Set(['en', 'pl', 'de', 'es', 'fr', 'ru', 'ua', 'be', 'nl']);
+const STATEMENT_LOCALES = new Set(['en', 'pl', 'de', 'es', 'fr', 'ru', 'ua', 'be', 'nl', 'pt', 'br']);
 
 function warn(message: string, e?: unknown): void {
   // Expected failures (offline, a refusal): console.warn, never console.error (ABA-157).

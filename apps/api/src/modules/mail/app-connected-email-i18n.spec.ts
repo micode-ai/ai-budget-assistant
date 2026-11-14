@@ -10,5 +10,8 @@ describe('appConnectedCopy', () => {
 
   it('returns the requested language when it exists', () => {
     expect(appConnectedCopy('nl')).not.toBe(appConnectedCopy('en'));
+    expect(appConnectedCopy('pt')).not.toBe(appConnectedCopy('en'));
+    expect(appConnectedCopy('br')).not.toBe(appConnectedCopy('en'));
+    expect(appConnectedCopy('pt')).not.toBe(appConnectedCopy('br'));
   });
 });

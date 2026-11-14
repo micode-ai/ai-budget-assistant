@@ -43,7 +43,7 @@ never drawn (the app closed first) is re-evaluated on the next save, because `sh
 **Phone sheet, desktop dialog, one hook.** Both frames read `useFasterCaptureSuggestion`, so a
 resize across 1024 px swaps the frame and keeps the state. The sheet adds `insets.bottom` (ABA-483).
 
-**Copy lives in all nine locales** under `captureSuggestion.*`; a test asserts every key is present
+**Copy lives in all eleven locales** under `captureSuggestion.*`; a test asserts every key is present
 and non-empty, because i18next renders the key string for a missing one.
 
 ## Known gaps

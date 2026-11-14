@@ -223,16 +223,20 @@ CONSENT = {
  "ua": ("Ми використовуємо файли cookie для аналізу трафіку та покращення сайту.", "Прийняти", "Відхилити"),
  "be": ("Мы выкарыстоўваем файлы cookie для аналізу трафіку і паляпшэння сайта.", "Прыняць", "Адхіліць"),
  "nl": ("We gebruiken cookies om verkeer te meten en de site te verbeteren.", "Accepteren", "Weigeren"),
+ "pt": ("Utilizamos cookies para medir o tráfego e melhorar o site.", "Aceitar", "Recusar"),
+ "br": ("Usamos cookies para medir o tráfego e melhorar o site.", "Aceitar", "Recusar"),
 }
 MORE = {"en": "Learn more", "pl": "Więcej", "de": "Mehr", "es": "Más", "fr": "En savoir plus",
-        "ru": "Подробнее", "ua": "Докладніше", "be": "Падрабязней", "nl": "Meer"}
+        "ru": "Подробнее", "ua": "Докладніше", "be": "Падрабязней", "nl": "Meer",
+        "pt": "Saber mais", "br": "Saiba mais"}
 LEGAL_BASE = "https://micode-ai.github.io/ai-budget-assistant"
 LEGAL_LABELS = {
  "en": ("Privacy", "Terms", "Cookies"), "pl": ("Prywatność", "Regulamin", "Cookie"),
  "de": ("Datenschutz", "AGB", "Cookies"), "es": ("Privacidad", "Términos", "Cookies"),
  "fr": ("Confidentialité", "Conditions", "Cookies"), "ru": ("Конфиденциальность", "Условия", "Cookie"),
  "ua": ("Конфіденційність", "Умови", "Cookie"), "be": ("Прыватнасць", "Умовы", "Cookie"),
- "nl": ("Privacy", "Voorwaarden", "Cookies")}
+ "nl": ("Privacy", "Voorwaarden", "Cookies"),
+ "pt": ("Privacidade", "Termos", "Cookies"), "br": ("Privacidade", "Termos", "Cookies")}
 def priv_url(lang):
     return "/privacy/" if lang == "pl" else "/en/privacy/"
 def terms_url(lang):
@@ -247,31 +251,47 @@ def dev_url(lang):
 DEV_LABELS = {"en": "API for developers", "pl": "API dla deweloperów", "de": "API für Entwickler",
               "es": "API para desarrolladores", "fr": "API pour développeurs",
               "ru": "API для разработчиков", "ua": "API для розробників",
-              "be": "API для распрацоўшчыкаў", "nl": "API voor ontwikkelaars"}
+              "be": "API для распрацоўшчыкаў", "nl": "API voor ontwikkelaars",
+              "pt": "API para programadores", "br": "API para desenvolvedores"}
 def home_url(lang):
     # language-matched landing home: pl at apex /, others at /<lang>/ (mirrors landing lp())
     return "/" if lang == "pl" else f"/{lang}/"
+def blog_url(lang):
+    """The blog index for a language. A language with no articles yet (pt, br) gets no
+    /blog/<lang>/ page at all, so every link to it from the landing, help and llms files goes
+    to the English blog (x-default) instead of a 404. It switches over by itself as soon as
+    the first article in that language exists."""
+    return f"/blog/{lang}/" if blog_has_lang(lang) else f"/blog/{DEFAULT_LANG}/"
+def blog_has_lang(lang):
+    return any(l == lang for l, _ in blog_index())
 ABOUT_LABELS = {"en": "About", "pl": "O nas", "de": "Über uns", "es": "Acerca de", "fr": "À propos",
-                "ru": "О нас", "ua": "Про нас", "be": "Пра нас", "nl": "Over ons"}
+                "ru": "О нас", "ua": "Про нас", "be": "Пра нас", "nl": "Over ons",
+                "pt": "Sobre nós", "br": "Sobre nós"}
 HELP_LABELS = {"en": "Help", "pl": "Pomoc", "de": "Hilfe", "es": "Ayuda", "fr": "Aide",
-               "ru": "Помощь", "ua": "Довідка", "be": "Дапамога", "nl": "Help"}
+               "ru": "Помощь", "ua": "Довідка", "be": "Дапамога", "nl": "Help",
+               "pt": "Ajuda", "br": "Ajuda"}
 PUBLISH_DATE = "2026-06-19"
 DEFAULT_LANG = "en"  # x-default
 LOCALE = {"pl": "pl_PL", "en": "en_US", "de": "de_DE", "es": "es_ES", "fr": "fr_FR",
-          "ru": "ru_RU", "ua": "uk_UA", "be": "be_BY", "nl": "nl_NL"}
+          "ru": "ru_RU", "ua": "uk_UA", "be": "be_BY", "nl": "nl_NL",
+          "pt": "pt_PT", "br": "pt_BR"}
 LANG_NAMES = {"pl": "Polski", "en": "English", "de": "Deutsch", "es": "Español", "fr": "Français",
-              "ru": "Русский", "ua": "Українська", "be": "Беларуская", "nl": "Nederlands"}
+              "ru": "Русский", "ua": "Українська", "be": "Беларуская", "nl": "Nederlands",
+              "pt": "Português (Portugal)", "br": "Português (Brasil)"}
 
 # "ua" is our internal key + URL segment, but it is a COUNTRY code; the valid ISO 639-1
 # language tag for Ukrainian is "uk". Emit bcp47(lang) for <html lang>, hreflang and
 # JSON-LD inLanguage only — never for dict lookups or URL paths (which stay /ua/).
-BCP47 = {"ua": "uk"}
+# Same for the two Portuguese variants: internal `pt`/`br` (paths /pt/, /br/), tags pt-PT/pt-BR.
+# A bare "br" must never reach a lang/hreflang attribute — it is the tag for Breton.
+BCP47 = {"ua": "uk", "pt": "pt-PT", "br": "pt-BR"}
 def bcp47(l):
     return BCP47.get(l, l)
 
 # visible "Updated <date>" byline label per language
 UPDATED = {"en": "Updated", "pl": "Zaktualizowano", "de": "Aktualisiert", "es": "Actualizado",
-           "fr": "Mis à jour", "ru": "Обновлено", "ua": "Оновлено", "be": "Абноўлена", "nl": "Bijgewerkt"}
+           "fr": "Mis à jour", "ru": "Обновлено", "ua": "Оновлено", "be": "Абноўлена", "nl": "Bijgewerkt",
+           "pt": "Atualizado", "br": "Atualizado"}
 
 _date_cache = {}
 def git_date(path, fallback=PUBLISH_DATE):
@@ -314,9 +334,12 @@ AUTHOR_BIO = {
     "ua": "Mikhail Peraviortkin — засновник MiCode Sp. z o.o., компанії, що створює AI Budget Assistant, і автор посібників у цьому блозі.",
     "be": "Mikhail Peraviortkin — заснавальнік MiCode Sp. z o.o., кампаніі, якая стварае AI Budget Assistant, і аўтар дапаможнікаў у гэтым блогу.",
     "nl": "Mikhail Peraviortkin is de oprichter van MiCode Sp. z o.o., het bedrijf achter AI Budget Assistant, en schrijft de gidsen op deze blog.",
+    "pt": "Mikhail Peraviortkin é o fundador da MiCode Sp. z o.o., a empresa que desenvolve o AI Budget Assistant, e escreve os guias deste blog.",
+    "br": "Mikhail Peraviortkin é o fundador da MiCode Sp. z o.o., a empresa que desenvolve o AI Budget Assistant, e escreve os guias deste blog.",
 }
 AUTHOR_LABEL = {"en": "Author", "pl": "Autor", "de": "Autor", "es": "Autor", "fr": "Auteur",
-                "ru": "Автор", "ua": "Автор", "be": "Аўтар", "nl": "Auteur"}
+                "ru": "Автор", "ua": "Автор", "be": "Аўтар", "nl": "Auteur",
+                "pt": "Autor", "br": "Autor"}
 def author_node(lang="en"):
     return {"@type": "Person", "@id": AUTHOR_ID, "name": AUTHOR["name"],
             "url": author_url(lang), "jobTitle": AUTHOR["jobTitle"], "sameAs": AUTHOR["sameAs"],
@@ -372,26 +395,31 @@ def category_of(pair):
 # Blog index listing labels (mirrors the mi-code blog listing: date, reading time, filter chips).
 READ_MIN = {"en": "{n} min read", "pl": "{n} min czytania", "de": "{n} Min. Lesezeit",
             "es": "{n} min de lectura", "fr": "{n} min de lecture", "ru": "{n} мин чтения",
-            "ua": "{n} хв читання", "be": "{n} хв чытання", "nl": "{n} min leestijd"}
+            "ua": "{n} хв читання", "be": "{n} хв чытання", "nl": "{n} min leestijd",
+            "pt": "{n} min de leitura", "br": "{n} min de leitura"}
 READ_ARTICLE = {"en": "Read the article", "pl": "Czytaj artykuł", "de": "Artikel lesen",
                 "es": "Leer el artículo", "fr": "Lire l'article", "ru": "Читать статью",
-                "ua": "Читати статтю", "be": "Чытаць артыкул", "nl": "Lees het artikel"}
+                "ua": "Читати статтю", "be": "Чытаць артыкул", "nl": "Lees het artikel",
+                "pt": "Ler o artigo", "br": "Ler o artigo"}
 CAT_ALL = {"en": "All", "pl": "Wszystkie", "de": "Alle", "es": "Todos", "fr": "Tous",
-           "ru": "Все", "ua": "Усі", "be": "Усе", "nl": "Alle"}
+           "ru": "Все", "ua": "Усі", "be": "Усе", "nl": "Alle", "pt": "Todos", "br": "Todos"}
 CAT_LABELS = {
     "budget": {"en": "Budgeting", "pl": "Budżet", "de": "Budget", "es": "Presupuesto",
-               "fr": "Budget", "ru": "Бюджет", "ua": "Бюджет", "be": "Бюджэт", "nl": "Budget"},
+               "fr": "Budget", "ru": "Бюджет", "ua": "Бюджет", "be": "Бюджэт", "nl": "Budget",
+               "pt": "Orçamento", "br": "Orçamento"},
     "expenses": {"en": "Expenses", "pl": "Wydatki", "de": "Ausgaben", "es": "Gastos",
-                 "fr": "Dépenses", "ru": "Расходы", "ua": "Витрати", "be": "Выдаткі", "nl": "Uitgaven"},
+                 "fr": "Dépenses", "ru": "Расходы", "ua": "Витрати", "be": "Выдаткі", "nl": "Uitgaven",
+                 "pt": "Despesas", "br": "Gastos"},
     "saving": {"en": "Saving", "pl": "Oszczędzanie", "de": "Sparen", "es": "Ahorro",
                "fr": "Épargne", "ru": "Сбережения", "ua": "Заощадження", "be": "Ашчаджэнне",
-               "nl": "Sparen"},
+               "nl": "Sparen", "pt": "Poupança", "br": "Economia"},
 }
 HELP_CTA = {"en": "Step-by-step guide in the Help center", "pl": "Poradnik krok po kroku w Centrum pomocy",
             "de": "Schritt-für-Schritt-Anleitung im Hilfebereich", "es": "Guía paso a paso en el Centro de ayuda",
             "fr": "Guide pas à pas dans le centre d'aide", "ru": "Пошаговая инструкция в Справке",
             "ua": "Покрокова інструкція в Довідці", "be": "Пакрокавая інструкцыя ў Даведцы",
-            "nl": "Stapsgewijze gids in het Helpcentrum"}
+            "nl": "Stapsgewijze gids in het Helpcentrum",
+            "pt": "Guia passo a passo no Centro de ajuda", "br": "Guia passo a passo na Central de ajuda"}
 
 I18N = {
  "en": {"home": "Home", "blog": "Blog", "login": "Log in",
@@ -466,6 +494,22 @@ I18N = {
    "ctaText": "Voeg uitgaven toe met spraak of een bonfoto, volg budgetten en sparen, samen met je gezin. Gratis te starten.",
    "btnWeb": "App openen", "btnPlay": "Download in Google Play",
    "footer": "AI Budget Assistant - alles-in-één finance-app met een AI-assistent.", "rights": "Alle rechten voorbehouden."},
+ "pt": {"home": "Início", "blog": "Blog", "login": "Iniciar sessão",
+   "blogTitle": "Blog sobre orçamento e poupança | AI Budget Assistant",
+   "blogDesc": "Guias práticos: como fazer um orçamento familiar, controlar despesas e poupar dinheiro com um assistente de IA.",
+   "blogH1": "Blog sobre orçamento e poupança", "blogIntro": "Guias sobre finanças pessoais, orçamento familiar e poupança.",
+   "related": "Artigos relacionados", "ctaTitle": "Controle o seu dinheiro com IA",
+   "ctaText": "Registe despesas por voz ou com uma fotografia do talão, acompanhe orçamentos e poupanças, em família. Comece grátis.",
+   "btnWeb": "Abrir a aplicação", "btnPlay": "Disponível no Google Play",
+   "footer": "AI Budget Assistant - aplicação de finanças tudo-em-um com assistente de IA.", "rights": "Todos os direitos reservados."},
+ "br": {"home": "Início", "blog": "Blog", "login": "Entrar",
+   "blogTitle": "Blog sobre orçamento e economia | AI Budget Assistant",
+   "blogDesc": "Guias práticos: como montar um orçamento, controlar gastos e economizar dinheiro com um assistente de IA.",
+   "blogH1": "Blog sobre orçamento e economia", "blogIntro": "Guias sobre finanças pessoais, orçamento e economia.",
+   "related": "Artigos relacionados", "ctaTitle": "Organize seu dinheiro com IA",
+   "ctaText": "Registre despesas por voz ou com uma foto do recibo, acompanhe orçamentos e economias, junto com a família. Comece grátis.",
+   "btnWeb": "Abrir o app", "btnPlay": "Disponível no Google Play",
+   "footer": "AI Budget Assistant - app de finanças completo com assistente de IA.", "rights": "Todos os direitos reservados."},
 }
 OG_TEXT = {
     "en": ("Budget with an", "AI assistant", "Expenses, budgets, savings - with your family"),
@@ -574,6 +618,10 @@ CALC_I18N = {
            "Обов’язкові витрати на місяць", "Скільки місяців", "Цільова подушка", "Відкладаєте щомісяця", "Місяців до мети"),
     "be": ("Калькулятар", "Чысты даход за месяц", "Патрэбы (50%)", "Жаданні (30%)", "Зберажэнні і даўгі (20%)",
            "Абавязковыя выдаткі за месяц", "Колькі месяцаў", "Мэтавая падушка", "Адкладаеце штомесяц", "Месяцаў да мэты"),
+    "pt": ("Calculadora", "Rendimento líquido mensal", "Necessidades (50%)", "Desejos (30%)", "Poupança e dívidas (20%)",
+           "Despesas essenciais por mês", "Meses de cobertura", "Fundo de emergência", "Poupança por mês", "Meses até ao objetivo"),
+    "br": ("Calculadora", "Renda líquida mensal", "Necessidades (50%)", "Desejos (30%)", "Economia e dívidas (20%)",
+           "Despesas essenciais por mês", "Meses de cobertura", "Reserva de emergência", "Economia por mês", "Meses até a meta"),
 }
 CALC_CSS = (".calc{border:1px solid #e5e5ea;border-radius:12px;padding:16px 18px;margin:20px 0}"
             ".calc h3{margin:0 0 10px}.calc label{display:block;margin:10px 0 4px;font-weight:600}"
@@ -763,13 +811,13 @@ def head(lang, title, desc, url, jsonld, alternates, og_path, langmenu, og_type=
 <script type="application/ld+json">{json.dumps(jsonld, ensure_ascii=False)}</script>
 <style>{CSS}</style></head><body>
 <header class="site"><div class="wrap"><a class="brand" href="{home_url(lang)}">AI <span>Budget</span> Assistant</a>
-<nav class="nav">{langmenu}<a href="/blog/{lang}/">{t['blog']}</a><a class="btn-login" href="{app_url('nav', lang, src)}">{t['login']}</a></nav></div></header>
+<nav class="nav">{langmenu}<a href="{blog_url(lang)}">{t['blog']}</a><a class="btn-login" href="{app_url('nav', lang, src)}">{t['login']}</a></nav></div></header>
 """
 
 def foot(lang, src="blog"):
     t = I18N[lang]
     return (f'<footer class="site"><div class="wrap">'
-            f'<div class="f-links"><a href="/blog/{lang}/">{t["blog"]}</a>'
+            f'<div class="f-links"><a href="{blog_url(lang)}">{t["blog"]}</a>'
             f'<a href="/help/{lang}/">{HELP_LABELS[lang]}</a>'
             f'<a href="{about_url(lang)}">{ABOUT_LABELS[lang]}</a>'
             f'<a href="{dev_url(lang)}">{DEV_LABELS[lang]}</a>'

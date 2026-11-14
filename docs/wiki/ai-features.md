@@ -77,7 +77,7 @@ The two shopping-list writes are the deliberate exceptions that execute immediat
 [chat-architecture](features/chat-architecture.md#the-confirmation-flow).
 
 **Language detection** resolves the reply language from the current message's unique letters first,
-then the user's UI locale, then recent history — all nine app locales. See
+then the user's UI locale, then recent history — all eleven app locales. See
 [chat-architecture](features/chat-architecture.md#language).
 
 **Usage and cost.** AI usage is metered per user and limits are enforced server-side; `AiUsageBadge`

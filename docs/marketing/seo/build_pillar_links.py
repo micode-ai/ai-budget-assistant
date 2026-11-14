@@ -1,4 +1,4 @@
-"""Add pillar -> cluster down-links to the 3 blog pillars in all 9 languages.
+"""Add pillar -> cluster down-links to the 3 blog pillars in every blog language.
 
 Reads each article's frontmatter (title/slug/pair/lang) from the Markdown sources,
 then appends (or replaces) a localized "Related guides" block at the end of each
@@ -11,7 +11,7 @@ import re
 import sys
 
 ROOT = os.path.join("docs", "marketing", "seo")
-LANGS = ["pl", "en", "de", "es", "fr", "ru", "ua", "be", "nl"]
+LANGS = ["pl", "en", "de", "es", "fr", "ru", "ua", "be", "nl", "pt", "br"]
 
 # pillar pair -> cluster pairs, imported so the down-links and the blog index category
 # filter can never disagree about which pillar a topic belongs to (same `bb` import
@@ -30,6 +30,8 @@ LABEL = {
     "ua": "Схожі посібники",
     "be": "Падобныя дапаможнікі",
     "nl": "Gerelateerde gidsen",
+    "pt": "Guias relacionados",
+    "br": "Guias relacionados",
 }
 
 MARKER = "<!-- pillar-downlinks -->"
@@ -53,6 +55,8 @@ def main():
     idx = {}
     for lang in LANGS:
         d = ROOT if lang == "pl" else os.path.join(ROOT, lang)
+        if not os.path.isdir(d):  # a registered language with no articles yet (pt, br)
+            continue
         for name in sorted(os.listdir(d)):
             if not re.match(r"^\d\d-.*\.md$", name):
                 continue
@@ -69,7 +73,8 @@ def main():
         for pillar, children in CLUSTERS.items():
             key = (lang, pillar)
             if key not in idx:
-                print(f"  MISSING pillar {pillar} for {lang}")
+                if any(l == lang for l, _ in idx):  # silent for a language with no articles yet
+                    print(f"  MISSING pillar {pillar} for {lang}")
                 continue
             _, _, path = idx[key]
             items = []

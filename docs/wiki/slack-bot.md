@@ -7,7 +7,7 @@ A NestJS module (`modules/slack/`) embedded in the API that lets users interact 
 - `apps/api/src/modules/slack/slack.module.ts` — module registration
 - `apps/api/src/modules/slack/slack-bot.controller.ts` — `POST /slack/events` and `POST /slack/interactivity` (both excluded from `/api/v1` prefix in `main.ts`)
 - `apps/api/src/modules/slack/handlers/` — `ChatHandler`, `VoiceHandler`, `PhotoHandler`, `CommandHandler`, `ExpenseHandler`, `IncomeHandler`, `CategoryHandler`
-- `apps/api/src/modules/slack/helpers/i18n.ts` — Slack-specific copy only, spread over the shared 9-language dictionary in `apps/api/src/common/bot-i18n/shared-messages.ts`
+- `apps/api/src/modules/slack/helpers/i18n.ts` — Slack-specific copy only, spread over the shared 11-language dictionary in `apps/api/src/common/bot-i18n/shared-messages.ts`
 - `apps/api/src/modules/slack/helpers/verify-signature.ts` — `v0=` HMAC-SHA256 signature verification
 - `apps/mobile/app/settings/bots.tsx` — "Slack" section with 6-char link code + status + unlink
 

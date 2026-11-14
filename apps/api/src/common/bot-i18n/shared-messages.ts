@@ -14,6 +14,7 @@
  * pattern. Do not add a 4th near-duplicate; extend this file instead.
  */
 
+import { resolveAppLocale } from '../utils/app-locale';
 import type { EditableItem } from '../utils/receipt-item-edit';
 
 export type BotMarkup = 'html' | 'markdown';
@@ -36,7 +37,10 @@ export function createBotT(messages: Record<string, Record<string, string>>, opt
   return function t(key: string, lang?: string, params?: Record<string, string>): string {
     const entry = messages[key];
     if (!entry) return key;
-    let text = entry[lang || 'en'] || entry.en || key;
+    // Stored codes are internal and exact ('pt' is European); only external tags are resolved.
+    const exact = lang?.toLowerCase();
+    const resolved = exact && Object.prototype.hasOwnProperty.call(entry, exact) ? exact : (resolveAppLocale(lang, Object.keys(entry)) ?? 'en');
+    let text = entry[resolved] || entry.en || key;
     text = convertMarkup(text, markup);
     const merged = defaultParams || params ? { ...defaultParams, ...params } : undefined;
     if (merged) {
@@ -167,6 +171,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '\u270f\ufe0f Pozycje',
     be: '\u270f\ufe0f \u041f\u0430\u0437\u0456\u0446\u044b\u0456',
     nl: '\u270f\ufe0f Regels',
+    pt: '\u270f\ufe0f Artigos',
+    br: '\u270f\ufe0f Itens',
   },
   editReceipt: {
     en: '\u270f\ufe0f Edit',
@@ -178,6 +184,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '\u270f\ufe0f Popraw',
     be: '\u270f\ufe0f \u041f\u0440\u0430\u0432\u043a\u0430',
     nl: '\u270f\ufe0f Bewerken',
+    pt: '\u270f\ufe0f Corrigir',
+    br: '\u270f\ufe0f Corrigir',
   },
   editReceiptPrompt: {
     en: 'What would you like to fix?',
@@ -189,6 +197,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: 'Co poprawi\u0107?',
     be: '\u0428\u0442\u043e \u0432\u044b\u043f\u0440\u0430\u0432\u0456\u0446\u044c?',
     nl: 'Wat wil je aanpassen?',
+    pt: 'O que pretende corrigir?',
+    br: 'O que voc\u00ea quer corrigir?',
   },
   itemEditHint: {
     en: '\u270f\ufe0f Send one correction per message:\n<code>3 = 14.69</code> \u2014 price of line 3\n<code>3: Rye bread</code> \u2014 rename line 3\n<code>3 -</code> \u2014 delete line 3\n<code>+ Bread 5.99</code> \u2014 add a line\n<code>= 233.98</code> \u2014 receipt total\nWhen you are done, tap \u201cAdd expense\u201d.',
@@ -200,6 +210,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '\u270f\ufe0f Wysy\u0142aj po jednej poprawce w wiadomo\u015bci:\n<code>3 = 14,69</code> \u2014 cena pozycji 3\n<code>3: Chleb \u017cytni</code> \u2014 zmie\u0144 nazw\u0119 pozycji 3\n<code>3 -</code> \u2014 usu\u0144 pozycj\u0119 3\n<code>+ Chleb 5,99</code> \u2014 dodaj pozycj\u0119\n<code>= 233,98</code> \u2014 suma paragonu\nGdy sko\u0144czysz, dotknij \u201eDodaj wydatek\u201d.',
     be: '\u270f\ufe0f \u0410\u0434\u043f\u0440\u0430\u045e\u043b\u044f\u0439\u0446\u0435 \u043f\u0430 \u0430\u0434\u043d\u043e\u0439 \u043f\u0440\u0430\u0432\u0446\u044b \u045e \u043f\u0430\u0432\u0435\u0434\u0430\u043c\u043b\u0435\u043d\u043d\u0456:\n<code>3 = 14,69</code> \u2014 \u0446\u0430\u043d\u0430 \u0440\u0430\u0434\u043a\u0430 3\n<code>3: \u0425\u043b\u0435\u0431</code> \u2014 \u043f\u0435\u0440\u0430\u0439\u043c\u0435\u043d\u0430\u0432\u0430\u0446\u044c \u0440\u0430\u0434\u043e\u043a 3\n<code>3 -</code> \u2014 \u0432\u044b\u0434\u0430\u043b\u0456\u0446\u044c \u0440\u0430\u0434\u043e\u043a 3\n<code>+ \u0425\u043b\u0435\u0431 5,99</code> \u2014 \u0434\u0430\u0434\u0430\u0446\u044c \u0440\u0430\u0434\u043e\u043a\n<code>= 233,98</code> \u2014 \u0456\u0442\u043e\u0433 \u0447\u044d\u043a\u0430\n\u041a\u0430\u043b\u0456 \u0441\u043a\u043e\u043d\u0447\u044b\u0446\u0435 \u2014 \u043d\u0430\u0446\u0456\u0441\u043d\u0456\u0446\u0435 \u00ab\u0414\u0430\u0434\u0430\u0446\u044c \u0432\u044b\u0434\u0430\u0442\u043a\u0456\u00bb.',
     nl: '\u270f\ufe0f Stuur \u00e9\u00e9n correctie per bericht:\n<code>3 = 14,69</code> \u2014 prijs van regel 3\n<code>3: Roggebrood</code> \u2014 regel 3 hernoemen\n<code>3 -</code> \u2014 regel 3 verwijderen\n<code>+ Brood 5,99</code> \u2014 regel toevoegen\n<code>= 233,98</code> \u2014 bontotaal\nAls je klaar bent, tik je op \u201eUitgave toevoegen\u201d.',
+    pt: '\u270f\ufe0f Envie uma corre\u00e7\u00e3o por mensagem:\n<code>3 = 14,69</code> \u2014 pre\u00e7o da linha 3\n<code>3: P\u00e3o de centeio</code> \u2014 mudar o nome da linha 3\n<code>3 -</code> \u2014 eliminar a linha 3\n<code>+ P\u00e3o 5,99</code> \u2014 adicionar uma linha\n<code>= 233,98</code> \u2014 total do tal\u00e3o\nQuando terminar, toque em \u00abAdicionar despesa\u00bb.',
+    br: '\u270f\ufe0f Envie uma corre\u00e7\u00e3o por mensagem:\n<code>3 = 14,69</code> \u2014 pre\u00e7o da linha 3\n<code>3: P\u00e3o de centeio</code> \u2014 renomear a linha 3\n<code>3 -</code> \u2014 excluir a linha 3\n<code>+ P\u00e3o 5,99</code> \u2014 adicionar uma linha\n<code>= 233,98</code> \u2014 total do recibo\nQuando terminar, toque em \u201cAdicionar despesa\u201d.',
   },
   itemSumLine: {
     en: 'Lines: {{sum}} \u00b7 receipt total: {{total}}',
@@ -211,6 +223,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: 'Pozycje: {{sum}} \u00b7 suma paragonu: {{total}}',
     be: '\u0421\u0443\u043c\u0430 \u043f\u0430\u0437\u0456\u0446\u044b\u0439: {{sum}} \u00b7 \u0456\u0442\u043e\u0433 \u0447\u044d\u043a\u0430: {{total}}',
     nl: 'Regels: {{sum}} \u00b7 bontotaal: {{total}}',
+    pt: 'Linhas: {{sum}} \u00b7 total do tal\u00e3o: {{total}}',
+    br: 'Linhas: {{sum}} \u00b7 total do recibo: {{total}}',
   },
   itemsEmpty: {
     en: 'No lines left. Add one with: + Bread 5.99',
@@ -222,6 +236,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: 'Nie zosta\u0142y \u017cadne pozycje. Dodaj tak: + Chleb 5,99',
     be: '\u041f\u0430\u0437\u0456\u0446\u044b\u0439 \u043d\u0435 \u0437\u0430\u0441\u0442\u0430\u043b\u043e\u0441\u044f. \u0414\u0430\u0434\u0430\u0439\u0446\u0435 \u0442\u0430\u043a: + \u0425\u043b\u0435\u0431 5,99',
     nl: 'Geen regels meer. Voeg er een toe: + Brood 5,99',
+    pt: 'N\u00e3o resta nenhuma linha. Adicione uma assim: + P\u00e3o 5,99',
+    br: 'N\u00e3o sobrou nenhuma linha. Adicione uma assim: + P\u00e3o 5,99',
   },
   itemsUpdated: {
     en: '\u2705 Updated',
@@ -233,6 +249,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '\u2705 Zaktualizowano',
     be: '\u2705 \u0410\u0431\u043d\u043e\u045e\u043b\u0435\u043d\u0430',
     nl: '\u2705 Bijgewerkt',
+    pt: '\u2705 Atualizado',
+    br: '\u2705 Atualizado',
   },
   itemEditInvalid: {
     en: '\u274c I did not understand that.',
@@ -244,6 +262,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '\u274c Nie zrozumia\u0142em polecenia.',
     be: '\u274c \u041d\u0435 \u0437\u0440\u0430\u0437\u1d43\u043c\u0435\u045e \u043a\u0430\u043c\u0430\u043d\u0434\u0443.',
     nl: '\u274c Dat begreep ik niet.',
+    pt: '\u274c N\u00e3o percebi.',
+    br: '\u274c N\u00e3o entendi.',
   },
   itemEditNoSuchLine: {
     en: '\u274c There is no line {{index}} on this receipt.',
@@ -255,6 +275,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '\u274c Na tym paragonie nie ma pozycji {{index}}.',
     be: '\u274c \u0420\u0430\u0434\u043a\u0430 {{index}} \u0443 \u0433\u044d\u0442\u044b\u043c \u0447\u044d\u043a\u0443 \u043d\u044f\u043c\u0430.',
     nl: '\u274c Regel {{index}} staat niet op dit bonnetje.',
+    pt: '\u274c Este tal\u00e3o n\u00e3o tem a linha {{index}}.',
+    br: '\u274c Este recibo n\u00e3o tem a linha {{index}}.',
   },
   itemEditInvalidAmount: {
     en: '\u274c The price has to be greater than zero.',
@@ -266,6 +288,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '\u274c Cena musi by\u0107 wi\u0119ksza od zera.',
     be: '\u274c \u0426\u0430\u043d\u0430 \u043c\u0443\u0441\u0456\u0446\u044c \u0431\u044b\u0446\u044c \u0431\u043e\u043b\u044c\u0448 \u0437\u0430 \u043d\u0443\u043b\u044c.',
     nl: '\u274c De prijs moet groter zijn dan nul.',
+    pt: '\u274c O pre\u00e7o tem de ser maior do que zero.',
+    br: '\u274c O pre\u00e7o precisa ser maior que zero.',
   },
   itemEditEmptyDescription: {
     en: '\u274c The name cannot be empty.',
@@ -277,6 +301,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '\u274c Nazwa nie mo\u017ce by\u0107 pusta.',
     be: '\u274c \u041d\u0430\u0437\u0432\u0430 \u043d\u0435 \u043c\u043e\u0436\u0430 \u0431\u044b\u0446\u044c \u043f\u0443\u0441\u0442\u043e\u0439.',
     nl: '\u274c De naam mag niet leeg zijn.',
+    pt: '\u274c O nome n\u00e3o pode ficar vazio.',
+    br: '\u274c O nome n\u00e3o pode ficar vazio.',
   },
   aiLimitReached: {
     en: '⚠️ AI request limit reached. Upgrade your subscription for more AI features.',
@@ -288,6 +314,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '⚠️ Limit zapytań AI osiągnięty. Uaktualnij subskrypcję, aby uzyskać więcej funkcji AI.',
     be: '⚠️ Ліміт AI-запытаў вычарпаны. Абнавіце падпіску для большай колькасці AI-функцый.',
     nl: '⚠️ AI-verzoeklimiet bereikt. Upgrade je abonnement voor meer AI-functies.',
+    pt: '⚠️ Atingiu o limite de pedidos de IA. Faça upgrade da sua subscrição para ter mais funcionalidades de IA.',
+    br: '⚠️ Você atingiu o limite de solicitações de IA. Faça upgrade da sua assinatura para ter mais recursos de IA.',
   },
   somethingWrong: {
     en: 'Something went wrong. Please try again later.',
@@ -299,6 +327,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: 'Coś poszło nie tak. Spróbuj ponownie później.',
     be: 'Нешта пайшло не так. Паспрабуйце пазней.',
     nl: 'Er is iets misgegaan. Probeer het later opnieuw.',
+    pt: 'Algo correu mal. Tente novamente mais tarde.',
+    br: 'Algo deu errado. Tente novamente mais tarde.',
   },
   speechNotRecognized: {
     en: 'Could not recognize speech. Please try again.',
@@ -310,6 +340,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: 'Nie udało się rozpoznać mowy. Spróbuj ponownie.',
     be: 'Не атрымалася распазнаць маўленне. Паспрабуйце яшчэ раз.',
     nl: 'Spraak kon niet worden herkend. Probeer het opnieuw.',
+    pt: 'Não foi possível reconhecer a fala. Tente novamente.',
+    br: 'Não foi possível reconhecer a fala. Tente novamente.',
   },
   receiptScanFailed: {
     en: '❌ Could not scan the receipt. Please try again or add the expense manually.',
@@ -321,6 +353,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '❌ Nie udało się zeskanować paragonu. Spróbuj ponownie lub dodaj wydatek ręcznie.',
     be: '❌ Не атрымалася адсканаваць чэк. Паспрабуйце яшчэ раз або дадайце выдатак уручную.',
     nl: '❌ De bon kon niet worden gescand. Probeer het opnieuw of voeg de uitgave handmatig toe.',
+    pt: '❌ Não foi possível ler o talão. Tente novamente ou adicione a despesa manualmente.',
+    br: '❌ Não foi possível ler o recibo. Tente novamente ou adicione a despesa manualmente.',
   },
   voiceFailed: {
     en: '❌ Could not process the voice message. Please try again.',
@@ -332,6 +366,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '❌ Nie udało się przetworzyć wiadomości głosowej. Spróbuj ponownie.',
     be: '❌ Не атрымалася апрацаваць галасавое паведамленне. Паспрабуйце яшчэ раз.',
     nl: '❌ Het spraakbericht kon niet worden verwerkt. Probeer het opnieuw.',
+    pt: '❌ Não foi possível processar a mensagem de voz. Tente novamente.',
+    br: '❌ Não foi possível processar a mensagem de voz. Tente novamente.',
   },
   receiptScanned: {
     en: '📄 <b>Receipt scanned</b>',
@@ -343,6 +379,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '📄 <b>Paragon zeskanowany</b>',
     be: '📄 <b>Чэк адсканаваны</b>',
     nl: '📄 <b>Bon gescand</b>',
+    pt: '📄 <b>Talão lido</b>',
+    br: '📄 <b>Recibo escaneado</b>',
   },
   priceCheckSummary: {
     en: '⚠️ Above your usual price — items: {{count}}, difference: about {{amount}}. Worth checking the receipt.',
@@ -354,6 +392,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '⚠️ Drożej niż zwykle — pozycje: {{count}}, różnica: około {{amount}}. Warto sprawdzić paragon.',
     be: '⚠️ Даражэй, чым звычайна — тавараў: {{count}}, розніца: прыблізна {{amount}}. Варта праверыць чэк.',
     nl: '⚠️ Duurder dan gebruikelijk — artikelen: {{count}}, verschil: ongeveer {{amount}}. Het is de moeite waard om de bon te controleren.',
+    pt: '⚠️ Acima do preço habitual — artigos: {{count}}, diferença: cerca de {{amount}}. Vale a pena verificar o talão.',
+    br: '⚠️ Acima do preço de costume — itens: {{count}}, diferença: cerca de {{amount}}. Vale a pena conferir o recibo.',
   },
   categorySplit: {
     en: '🗂️ Split across categories: {{list}}',
@@ -365,6 +405,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '🗂️ Podział na kategorie: {{list}}',
     be: '🗂️ Разбіўка па катэгорыях: {{list}}',
     nl: '🗂️ Verdeling over categorieën: {{list}}',
+    pt: '🗂️ Dividido por categorias: {{list}}',
+    br: '🗂️ Dividido entre categorias: {{list}}',
   },
   shoppingListChecked: {
     en: '🛒 Checked off your shopping list: {{count}}',
@@ -376,6 +418,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '🛒 Odhaczono na liście zakupów: {{count}}',
     be: '🛒 Адзначана ў спісе пакупак: {{count}}',
     nl: '🛒 Afgevinkt op je boodschappenlijst: {{count}}',
+    pt: '🛒 Riscados da lista de compras: {{count}}',
+    br: '🛒 Marcados na lista de compras: {{count}}',
   },
   confirm: {
     en: '✅ Confirm',
@@ -387,6 +431,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '✅ Potwierdź',
     be: '✅ Пацвердзіць',
     nl: '✅ Bevestigen',
+    pt: '✅ Confirmar',
+    br: '✅ Confirmar',
   },
   cancel: {
     en: '❌ Cancel',
@@ -398,6 +444,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '❌ Anuluj',
     be: '❌ Адмяніць',
     nl: '❌ Annuleren',
+    pt: '❌ Cancelar',
+    br: '❌ Cancelar',
   },
   addExpense: {
     en: '✅ Add expense',
@@ -409,6 +457,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '✅ Dodaj wydatek',
     be: '✅ Дадаць выдатак',
     nl: '✅ Uitgave toevoegen',
+    pt: '✅ Adicionar despesa',
+    br: '✅ Adicionar despesa',
   },
   expenseCreated: {
     en: '✅ Expense created',
@@ -420,6 +470,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '✅ Wydatek utworzony',
     be: '✅ Выдатак створаны',
     nl: '✅ Uitgave aangemaakt',
+    pt: '✅ Despesa criada',
+    br: '✅ Despesa criada',
   },
   incomeCreated: {
     en: '✅ Income added',
@@ -431,6 +483,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '✅ Dochód dodany',
     be: '✅ Даход дададзены',
     nl: '✅ Inkomsten toegevoegd',
+    pt: '✅ Receita adicionada',
+    br: '✅ Receita adicionada',
   },
   cancelled: {
     en: '❌ Cancelled',
@@ -442,6 +496,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '❌ Anulowano',
     be: '❌ Адменена',
     nl: '❌ Geannuleerd',
+    pt: '❌ Cancelado',
+    br: '❌ Cancelado',
   },
   receiptCancelled: {
     en: '❌ Receipt scan cancelled.',
@@ -453,6 +509,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '❌ Skanowanie paragonu anulowane.',
     be: '❌ Сканаванне чэка адменена.',
     nl: '❌ Bonscan geannuleerd.',
+    pt: '❌ Leitura do talão cancelada.',
+    br: '❌ Leitura do recibo cancelada.',
   },
   usageTitle: {
     en: '📊 <b>AI Usage This Month</b>',
@@ -464,6 +522,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '📊 <b>Użycie AI w tym miesiącu</b>',
     be: '📊 <b>Выкарыстанне AI гэтага месяца</b>',
     nl: '📊 <b>AI-gebruik deze maand</b>',
+    pt: '📊 <b>Utilização de IA este mês</b>',
+    br: '📊 <b>Uso de IA neste mês</b>',
   },
   used: {
     en: 'Used',
@@ -475,6 +535,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: 'Wykorzystano',
     be: 'Выкарыстана',
     nl: 'Gebruikt',
+    pt: 'Utilizado',
+    br: 'Usado',
   },
   tier: {
     en: 'Tier',
@@ -486,6 +548,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: 'Plan',
     be: 'Тарыф',
     nl: 'Niveau',
+    pt: 'Plano',
+    br: 'Plano',
   },
   breakdown: {
     en: 'Breakdown',
@@ -497,6 +561,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: 'Podział',
     be: 'Разбіўка',
     nl: 'Overzicht',
+    pt: 'Discriminação',
+    br: 'Detalhamento',
   },
   resets: {
     en: 'Resets',
@@ -508,6 +574,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: 'Resetuje się',
     be: 'Скід',
     nl: 'Herstelt',
+    pt: 'Renovação',
+    br: 'Renovação',
   },
   changeDate: {
     en: '📅 Change date',
@@ -519,6 +587,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '📅 Zmień datę',
     be: '📅 Змяніць дату',
     nl: '📅 Datum wijzigen',
+    pt: '📅 Alterar data',
+    br: '📅 Alterar data',
   },
   sendDate: {
     en: '📅 Send the correct date in format <b>DD.MM.YYYY</b> (e.g., 28.03.2026):',
@@ -530,6 +600,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '📅 Wyślij poprawną datę w formacie <b>DD.MM.RRRR</b> (np. 28.03.2026):',
     be: '📅 Адпраўце правільную дату ў фармаце <b>ДД.ММ.ГГГГ</b> (напрыклад, 28.03.2026):',
     nl: '📅 Stuur de juiste datum in het formaat <b>DD.MM.YYYY</b> (bijv. 28.03.2026):',
+    pt: '📅 Envie a data correta no formato <b>DD.MM.AAAA</b> (por exemplo, 28.03.2026):',
+    br: '📅 Envie a data correta no formato <b>DD.MM.AAAA</b> (por exemplo, 28.03.2026):',
   },
   dateUpdated: {
     en: '✅ Date updated to {{date}}',
@@ -541,6 +613,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '✅ Data zmieniona na {{date}}',
     be: '✅ Дата зменена на {{date}}',
     nl: '✅ Datum bijgewerkt naar {{date}}',
+    pt: '✅ Data alterada para {{date}}',
+    br: '✅ Data alterada para {{date}}',
   },
   invalidDate: {
     en: '❌ Invalid date format. Please use DD.MM.YYYY',
@@ -552,6 +626,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '❌ Nieprawidłowy format daty. Użyj DD.MM.RRRR',
     be: '❌ Няправільны фармат даты. Выкарыстоўвайце ДД.ММ.ГГГГ',
     nl: '❌ Ongeldig datumformaat. Gebruik DD.MM.YYYY',
+    pt: '❌ Formato de data inválido. Use DD.MM.AAAA',
+    br: '❌ Formato de data inválido. Use DD.MM.AAAA',
   },
   linkProvideCode: {
     en: 'Please provide a link code.\n\nUsage: <code>/link YOUR_CODE</code>',
@@ -563,6 +639,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: 'Podaj kod połączenia.\n\nUżycie: <code>/link TWÓJ_KOD</code>',
     be: 'Пакажыце код прывязкі.\n\nВыкарыстанне: <code>/link ВАШ_КОД</code>',
     nl: 'Geef een koppelcode op.\n\nGebruik: <code>/link JOUW_CODE</code>',
+    pt: 'Indique um código de associação.\n\nUtilização: <code>/link O_SEU_CÓDIGO</code>',
+    br: 'Informe um código de vinculação.\n\nUso: <code>/link SEU_CÓDIGO</code>',
   },
   newChatStarted: {
     en: '🔄 New conversation started. Ask me anything!',
@@ -574,6 +652,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '🔄 Nowa rozmowa rozpoczęta. Pytaj o cokolwiek!',
     be: '🔄 Новая размова пачата. Пытайце што заўгодна!',
     nl: '🔄 Nieuw gesprek gestart. Stel me van alles!',
+    pt: '🔄 Nova conversa iniciada. Pergunte o que quiser!',
+    br: '🔄 Nova conversa iniciada. Pergunte o que quiser!',
   },
   chooseAccount: {
     en: 'Choose an account:',
@@ -585,6 +665,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: 'Wybierz konto:',
     be: 'Абярыце акаўнт:',
     nl: 'Kies een account:',
+    pt: 'Escolha uma conta:',
+    br: 'Escolha uma conta:',
   },
   oneAccount: {
     en: 'You have one account: <b>{{name}}</b> (already active).',
@@ -596,6 +678,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: 'Masz jedno konto: <b>{{name}}</b> (już aktywne).',
     be: 'У вас адзін акаўнт: <b>{{name}}</b> (ужо актыўны).',
     nl: 'Je hebt één account: <b>{{name}}</b> (al actief).',
+    pt: 'Tem uma conta: <b>{{name}}</b> (já está ativa).',
+    br: 'Você tem uma conta: <b>{{name}}</b> (já está ativa).',
   },
   activeAccount: {
     en: '✅ Active account: <b>{{name}}</b>',
@@ -607,6 +691,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '✅ Aktywne konto: <b>{{name}}</b>',
     be: '✅ Актыўны акаўнт: <b>{{name}}</b>',
     nl: '✅ Actief account: <b>{{name}}</b>',
+    pt: '✅ Conta ativa: <b>{{name}}</b>',
+    br: '✅ Conta ativa: <b>{{name}}</b>',
   },
   viewerRestricted: {
     en: '🔒 You have view-only access. Only editors and owners can create or modify data.',
@@ -618,6 +704,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '🔒 Masz tylko dostęp do odczytu. Edytować mogą tylko edytorzy i właściciele.',
     be: '🔒 У вас толькі правы прагляду. Рэдагаваць могуць толькі рэдактары і ўладальнікі.',
     nl: '🔒 Je hebt alleen leestoegang. Alleen redacteurs en eigenaren kunnen gegevens aanmaken of wijzigen.',
+    pt: '🔒 Tem acesso só de leitura. Apenas editores e proprietários podem criar ou alterar dados.',
+    br: '🔒 Você tem acesso somente para visualização. Apenas editores e proprietários podem criar ou alterar dados.',
   },
   // Same template in all three bots, brand swapped only — injected via each
   // module's `createBotT(..., { defaultParams: { platform: '<Brand>' } })`.
@@ -631,6 +719,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: 'Twój {{platform}} nie jest połączony z żadnym kontem.',
     be: 'Ваш {{platform}} не прывязаны ні да якога акаўнта.',
     nl: 'Je {{platform}} is niet gekoppeld aan een account.',
+    pt: 'O seu {{platform}} não está associado a nenhuma conta.',
+    br: 'Seu {{platform}} não está vinculado a nenhuma conta.',
   },
   // Only whatsapp/slack use welcomeBack/linkSuccess (identical between the
   // two — both say "help", no leading slash); telegram overrides both with
@@ -645,6 +735,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: 'Witaj ponownie! Jesteś połączony z kontem <b>{{account}}</b>.\n\nWyślij help, aby zobaczyć dostępne polecenia.',
     be: 'З вяртаннем! Вы прывязаны да акаўнта <b>{{account}}</b>.\n\nАдпраўце help для спісу каманд.',
     nl: 'Welkom terug! Je bent gekoppeld aan account <b>{{account}}</b>.\n\nStuur help om de beschikbare opdrachten te zien.',
+    pt: 'Bem-vindo de volta! Está associado à conta <b>{{account}}</b>.\n\nEnvie help para ver os comandos disponíveis.',
+    br: 'Bem-vindo de volta! Você está vinculado à conta <b>{{account}}</b>.\n\nEnvie help para ver os comandos disponíveis.',
   },
   linkSuccess: {
     en: '✅ Account linked successfully!\n\nYou can now:\n• Add expenses: <code>expense 50 lunch</code>\n• Add incomes: <code>income 3000 salary</code>\n• Send voice messages to add expenses/chat\n• Send receipt photos to scan them\n• Chat with AI — just type any question\n\nSend help for all commands.',
@@ -656,6 +748,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '✅ Konto połączone!\n\nTeraz możesz:\n• Dodawać wydatki: <code>expense 50 obiad</code>\n• Dodawać dochody: <code>income 3000 pensja</code>\n• Wysyłać wiadomości głosowe\n• Wysyłać zdjęcia paragonów\n• Rozmawiać z AI — po prostu wpisz pytanie\n\nWyślij help, aby zobaczyć polecenia.',
     be: '✅ Акаўнт паспяхова прывязаны!\n\nЦяпер вы можаце:\n• Дадаваць выдаткі: <code>expense 50 абед</code>\n• Дадаваць даходы: <code>income 3000 зарплата</code>\n• Адпраўляць галасавыя\n• Адпраўляць фота чэкаў\n• Размаўляць з ІІ — проста напішыце пытанне\n\nАдпраўце help для спісу каманд.',
     nl: '✅ Account succesvol gekoppeld!\n\nJe kunt nu:\n• Uitgaven toevoegen: <code>expense 50 lunch</code>\n• Inkomsten toevoegen: <code>income 3000 salaris</code>\n• Spraakberichten sturen om uitgaven toe te voegen/te chatten\n• Foto\'s van bonnen sturen om te scannen\n• Chatten met AI — typ gewoon een vraag\n\nStuur help voor alle opdrachten.',
+    pt: '✅ Conta associada com sucesso!\n\nAgora pode:\n• Adicionar despesas: <code>expense 50 almoço</code>\n• Adicionar receitas: <code>income 3000 salário</code>\n• Enviar mensagens de voz para adicionar despesas ou conversar\n• Enviar fotografias de talões para os ler\n• Conversar com a IA — basta escrever qualquer pergunta\n\nEnvie help para ver todos os comandos.',
+    br: '✅ Conta vinculada com sucesso!\n\nAgora você pode:\n• Adicionar despesas: <code>expense 50 almoço</code>\n• Adicionar receitas: <code>income 3000 salário</code>\n• Enviar mensagens de voz para adicionar despesas ou conversar\n• Enviar fotos de recibos para escaneá-los\n• Conversar com a IA — é só digitar qualquer pergunta\n\nEnvie help para ver todos os comandos.',
   },
   // The category-management flow (categoryUsage..categoryDeleted) is only
   // used by whatsapp/slack today — telegram simply never calls these keys.
@@ -669,6 +763,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: 'Utwórz kategorię:\n\n  category expense Jedzenie\n  category income Pensja\n  category Zakupy — zapyta o typ\n\nWyślij <b>categories</b>, aby zobaczyć.',
     be: 'Стварыць катэгорыю:\n\n  category expense Ежа\n  category income Зарплата\n  category Пакупкі — запытае тып\n\nАдпраўце <b>categories</b> для прагляду.',
     nl: 'Maak een categorie aan:\n\n  category expense Boodschappen\n  category income Salaris\n  category Winkelen — vraagt om type\n\nGebruik <b>categories</b> om alle categorieën te zien.',
+    pt: 'Criar uma categoria:\n\n  category expense Alimentação\n  category income Salário\n  category Compras — vai perguntar o tipo\n\nUse <b>categories</b> para ver todas as categorias.',
+    br: 'Criar uma categoria:\n\n  category expense Alimentação\n  category income Salário\n  category Compras — vai perguntar o tipo\n\nUse <b>categories</b> para ver todas as categorias.',
   },
   categoryNameRequired: {
     en: '❌ Please provide a category name.\n\nExample: category expense Food',
@@ -680,6 +776,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '❌ Podaj nazwę kategorii.\n\nPrzykład: category expense Jedzenie',
     be: '❌ Пакажыце назву катэгорыі.\n\nПрыклад: category expense Ежа',
     nl: '❌ Geef een categorienaam op.\n\nVoorbeeld: category expense Boodschappen',
+    pt: '❌ Indique o nome da categoria.\n\nExemplo: category expense Alimentação',
+    br: '❌ Informe o nome da categoria.\n\nExemplo: category expense Alimentação',
   },
   categoryNameTooLong: {
     en: '❌ Category name must be 50 characters or less.',
@@ -691,6 +789,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '❌ Nazwa kategorii może mieć maksymalnie 50 znaków.',
     be: '❌ Назва катэгорыі не павінна перавышаць 50 сімвалаў.',
     nl: '❌ De categorienaam mag maximaal 50 tekens lang zijn.',
+    pt: '❌ O nome da categoria pode ter no máximo 50 caracteres.',
+    br: '❌ O nome da categoria pode ter no máximo 50 caracteres.',
   },
   categoryChooseType: {
     en: 'Choose type for category "{{name}}":',
@@ -702,6 +802,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: 'Wybierz typ dla kategorii "{{name}}":',
     be: 'Выберыце тып для катэгорыі "{{name}}":',
     nl: 'Kies het type voor categorie "{{name}}":',
+    pt: 'Escolha o tipo da categoria «{{name}}»:',
+    br: 'Escolha o tipo da categoria “{{name}}”:',
   },
   categoryExpenseBtn: {
     en: '💰 Expense',
@@ -713,6 +815,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '💰 Wydatek',
     be: '💰 Выдатак',
     nl: '💰 Uitgave',
+    pt: '💰 Despesa',
+    br: '💰 Despesa',
   },
   categoryIncomeBtn: {
     en: '📈 Income',
@@ -724,6 +828,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '📈 Dochód',
     be: '📈 Даход',
     nl: '📈 Inkomsten',
+    pt: '📈 Receita',
+    br: '📈 Receita',
   },
   categoryNone: {
     en: 'No categories yet. Create one with:\n  category expense Food\n  category income Salary',
@@ -735,6 +841,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: 'Brak kategorii. Utwórz z:\n  category expense Jedzenie\n  category income Pensja',
     be: 'Катэгорый пакуль няма. Стварыце:\n  category expense Ежа\n  category income Зарплата',
     nl: 'Nog geen categorieën. Maak er een aan met:\n  category expense Boodschappen\n  category income Salaris',
+    pt: 'Ainda não há categorias. Crie uma com:\n  category expense Alimentação\n  category income Salário',
+    br: 'Ainda não há categorias. Crie uma com:\n  category expense Alimentação\n  category income Salário',
   },
   categoriesTitle: {
     en: 'Categories',
@@ -746,6 +854,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: 'Kategorie',
     be: 'Катэгорыі',
     nl: 'Categorieën',
+    pt: 'Categorias',
+    br: 'Categorias',
   },
   categoryTooMany: {
     en: 'You have {{count}} custom categories. Manage them in the app — too many for chat.',
@@ -757,6 +867,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: 'Masz {{count}} niestandardowych kategorii. Zarządzaj nimi w aplikacji.',
     be: 'У вас {{count}} карыстальніцкіх катэгорый. Кіруйце імі ў праграме.',
     nl: 'Je hebt {{count}} aangepaste categorieën. Beheer ze in de app — te veel voor de chat.',
+    pt: 'Tem {{count}} categorias personalizadas. Faça a gestão delas na aplicação — são demasiadas para o chat.',
+    br: 'Você tem {{count}} categorias personalizadas. Gerencie-as no app — são muitas para o chat.',
   },
   categoryDeleteBtn: {
     en: 'Tap to delete',
@@ -768,6 +880,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: 'Dotknij, aby usunąć',
     be: 'Націсніце для выдалення',
     nl: 'Tik om te verwijderen',
+    pt: 'Toque para eliminar',
+    br: 'Toque para excluir',
   },
   categoryTypeExpense: {
     en: 'Expense',
@@ -779,6 +893,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: 'Wydatek',
     be: 'Выдатак',
     nl: 'Uitgave',
+    pt: 'Despesa',
+    br: 'Despesa',
   },
   categoryTypeIncome: {
     en: 'Income',
@@ -790,6 +906,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: 'Dochód',
     be: 'Даход',
     nl: 'Inkomsten',
+    pt: 'Receita',
+    br: 'Receita',
   },
   categoryExpired: {
     en: '❌ The category creation request has expired. Please try again.',
@@ -801,6 +919,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '❌ Żądanie utworzenia kategorii wygasło. Spróbuj ponownie.',
     be: '❌ Запыт на стварэнне катэгорыі прасрочаны. Паспрабуйце яшчэ раз.',
     nl: '❌ Het verzoek om een categorie aan te maken is verlopen. Probeer het opnieuw.',
+    pt: '❌ O pedido de criação da categoria expirou. Tente novamente.',
+    br: '❌ A solicitação de criação da categoria expirou. Tente novamente.',
   },
   categoryCreated: {
     en: '✅ Category created: {{emoji}} <b>{{name}}</b> ({{type}})',
@@ -812,6 +932,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '✅ Kategoria utworzona: {{emoji}} <b>{{name}}</b> ({{type}})',
     be: '✅ Катэгорыя створана: {{emoji}} <b>{{name}}</b> ({{type}})',
     nl: '✅ Categorie aangemaakt: {{emoji}} <b>{{name}}</b> ({{type}})',
+    pt: '✅ Categoria criada: {{emoji}} <b>{{name}}</b> ({{type}})',
+    br: '✅ Categoria criada: {{emoji}} <b>{{name}}</b> ({{type}})',
   },
   categoryAlreadyExists: {
     en: '❌ Category "<b>{{name}}</b>" already exists for {{type}}.',
@@ -823,6 +945,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '❌ Kategoria "<b>{{name}}</b>" już istnieje dla {{type}}.',
     be: '❌ Катэгорыя "<b>{{name}}</b>" ужо існуе для {{type}}.',
     nl: '❌ Categorie "<b>{{name}}</b>" bestaat al voor {{type}}.',
+    pt: '❌ A categoria «<b>{{name}}</b>» já existe para {{type}}.',
+    br: '❌ A categoria “<b>{{name}}</b>” já existe para {{type}}.',
   },
   categoryDeleted: {
     en: '✅ Category deleted.',
@@ -834,6 +958,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '✅ Kategoria usunięta.',
     be: '✅ Катэгорыя выдалена.',
     nl: '✅ Categorie verwijderd.',
+    pt: '✅ Categoria eliminada.',
+    br: '✅ Categoria excluída.',
   },
   // /categorize (bot-categorize-command) — sequential Yes/Skip/Stop review of
   // CategorizeSuggestionsService's batched proposal. Identical copy across all
@@ -849,6 +975,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '🎉 Brak wydatków bez kategorii — wszystko uporządkowane!',
     be: '🎉 Выдаткаў без катэгорыі няма — усё разабрана!',
     nl: '🎉 Geen ongecategoriseerde uitgaven — helemaal bij!',
+    pt: '🎉 Neste momento não há despesas sem categoria — está tudo em dia!',
+    br: '🎉 No momento não há despesas sem categoria — está tudo em dia!',
   },
   categorizeIntro: {
     en: '🗂️ Found {{groups}} group(s) covering {{count}} uncategorized expense(s). I\'ll go through them one by one — reply with the button to file, skip, or stop anytime and finish the rest in the app.',
@@ -860,6 +988,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '🗂️ Znaleziono grup: {{groups}}, wydatków bez kategorii: {{count}}. Przejdziemy je po kolei — możesz przypisać, pominąć albo zatrzymać się w dowolnym momencie i dokończyć w aplikacji.',
     be: '🗂️ Знойдзена груп: {{groups}}, выдаткаў без катэгорыі: {{count}}. Разбяром іх па адной — можна размеркаваць, прапусціць або спыніцца ў любы момант і дараабіць у праграме.',
     nl: '🗂️ {{groups}} groep(en) gevonden met {{count}} ongecategoriseerde uitgave(n). We gaan ze één voor één langs — toewijzen, overslaan, of op elk moment stoppen en de rest in de app afronden.',
+    pt: '🗂️ Encontrei {{groups}} grupo(s) com {{count}} despesa(s) sem categoria. Vou passar por eles um a um — responda com o botão para classificar, saltar ou parar a qualquer momento e terminar o resto na aplicação.',
+    br: '🗂️ Encontrei {{groups}} grupo(s) com {{count}} despesa(s) sem categoria. Vou passar por eles um por um — responda com o botão para classificar, pular ou parar a qualquer momento e terminar o resto no app.',
   },
   categorizeLimitNote: {
     en: '\n\n⚠️ Today\'s AI sorting limit is reached — only matches found without AI are shown.',
@@ -871,6 +1001,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '\n\n⚠️ Osiągnięto dzienny limit sortowania AI — pokazane są tylko dopasowania znalezione bez AI.',
     be: '\n\n⚠️ Дзённы ліміт AI-разбору вычарпаны — паказаны толькі супадзенні, знойдзеныя без ІІ.',
     nl: '\n\n⚠️ De dagelijkse AI-sorteerlimiet is bereikt — alleen zonder AI gevonden overeenkomsten worden getoond.',
+    pt: '\n\n⚠️ O limite diário de organização por IA foi atingido — só são mostradas as correspondências encontradas sem IA.',
+    br: '\n\n⚠️ O limite diário de organização por IA foi atingido — só aparecem as correspondências encontradas sem IA.',
   },
   categorizeGroupPromptExisting: {
     en: '📂 {{count}} expense(s) look like <b>{{name}}</b> — file them there?',
@@ -882,6 +1014,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '📂 {{count}} wydatek(ów) wygląda na <b>{{name}}</b> — przypisać je tam?',
     be: '📂 Падобна, {{count}} выдатак(аў) належыць да катэгорыі <b>{{name}}</b> — размеркаваць туды?',
     nl: '📂 {{count}} uitgave(n) lijken op <b>{{name}}</b> — daar onderbrengen?',
+    pt: '📂 {{count}} despesa(s) parecem ser <b>{{name}}</b> — classificá-las nesta categoria?',
+    br: '📂 {{count}} despesa(s) parecem ser <b>{{name}}</b> — classificar nessa categoria?',
   },
   categorizeGroupPromptNew: {
     en: '🆕 {{count}} expense(s) could form a new category <b>{{name}}</b> — create it and file them?',
@@ -893,6 +1027,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '🆕 {{count}} wydatek(ów) mógłby utworzyć nową kategorię <b>{{name}}</b> — utworzyć ją i przypisać?',
     be: '🆕 {{count}} выдатак(аў) могуць утварыць новую катэгорыю <b>{{name}}</b> — стварыць яе і размеркаваць туды?',
     nl: '🆕 {{count}} uitgave(n) zouden een nieuwe categorie <b>{{name}}</b> kunnen vormen — aanmaken en onderbrengen?',
+    pt: '🆕 {{count}} despesa(s) podem formar uma nova categoria <b>{{name}}</b> — criá-la e classificá-las nela?',
+    br: '🆕 {{count}} despesa(s) podem formar uma nova categoria <b>{{name}}</b> — criar e classificar nela?',
   },
   categorizeYesBtn: {
     en: '✅ Yes',
@@ -904,6 +1040,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '✅ Tak',
     be: '✅ Так',
     nl: '✅ Ja',
+    pt: '✅ Sim',
+    br: '✅ Sim',
   },
   categorizeNoBtn: {
     en: '⏭️ Skip',
@@ -915,6 +1053,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '⏭️ Pomiń',
     be: '⏭️ Прапусціць',
     nl: '⏭️ Overslaan',
+    pt: '⏭️ Saltar',
+    br: '⏭️ Pular',
   },
   categorizeStopBtn: {
     en: '🛑 Stop',
@@ -926,6 +1066,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '🛑 Zatrzymaj',
     be: '🛑 Стоп',
     nl: '🛑 Stoppen',
+    pt: '🛑 Parar',
+    br: '🛑 Parar',
   },
   categorizeApplied: {
     en: '✅ Filed {{count}} expense(s) under <b>{{name}}</b>.',
@@ -937,6 +1079,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '✅ {{count}} wydatek(ów) przypisano do <b>{{name}}</b>.',
     be: '✅ {{count}} выдатак(аў) аднесена да катэгорыі <b>{{name}}</b>.',
     nl: '✅ {{count}} uitgave(n) ondergebracht bij <b>{{name}}</b>.',
+    pt: '✅ {{count}} despesa(s) classificada(s) em <b>{{name}}</b>.',
+    br: '✅ {{count}} despesa(s) classificada(s) em <b>{{name}}</b>.',
   },
   categorizeSkipped: {
     en: '⏭️ Skipped <b>{{name}}</b> — still uncategorized.',
@@ -948,6 +1092,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '⏭️ Pominięto: <b>{{name}}</b> — nadal bez kategorii.',
     be: '⏭️ Прапушчана: <b>{{name}}</b> — па-ранейшаму без катэгорыі.',
     nl: '⏭️ Overgeslagen: <b>{{name}}</b> — blijft ongecategoriseerd.',
+    pt: '⏭️ <b>{{name}}</b> saltado — continua sem categoria.',
+    br: '⏭️ <b>{{name}}</b> pulado — continua sem categoria.',
   },
   categorizeDone: {
     en: '🏁 Done. Filed {{appliedExpenses}} expense(s) across {{appliedGroups}} group(s). {{remaining}} still uncategorized — run the categorize command anytime, or finish them in the app.',
@@ -959,6 +1105,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '🏁 Gotowe. Przypisano {{appliedExpenses}} wydatek(ów) w {{appliedGroups}} grupie/grupach. Pozostało bez kategorii: {{remaining}} — uruchom ponownie w dowolnym momencie albo dokończ w aplikacji.',
     be: '🏁 Гатова. Разабрана {{appliedExpenses}} выдатак(аў) у {{appliedGroups}} групе(ах). Засталося без катэгорыі: {{remaining}} — запусціце разбор зноў у любы момант або дараабіце ў праграме.',
     nl: '🏁 Klaar. {{appliedExpenses}} uitgave(n) ondergebracht in {{appliedGroups}} groep(en). {{remaining}} nog ongecategoriseerd — voer het commando later opnieuw uit, of rond de rest af in de app.',
+    pt: '🏁 Concluído. {{appliedExpenses}} despesa(s) classificada(s) em {{appliedGroups}} grupo(s). Ainda há {{remaining}} sem categoria — execute o comando categorize quando quiser, ou termine na aplicação.',
+    br: '🏁 Pronto. {{appliedExpenses}} despesa(s) classificada(s) em {{appliedGroups}} grupo(s). Ainda há {{remaining}} sem categoria — execute o comando categorize quando quiser, ou termine no app.',
   },
   categorizeStoppedSummary: {
     en: '🛑 Stopped. Filed {{appliedExpenses}} expense(s) across {{appliedGroups}} group(s) so far. {{remaining}} left — run the categorize command anytime, or finish them in the app.',
@@ -970,6 +1118,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '🛑 Zatrzymano. Do tej pory przypisano {{appliedExpenses}} wydatek(ów) w {{appliedGroups}} grupie/grupach. Zostało: {{remaining}} — uruchom ponownie w dowolnym momencie albo dokończ w aplikacji.',
     be: '🛑 Спынена. Пакуль разабрана {{appliedExpenses}} выдатак(аў) у {{appliedGroups}} групе(ах). Засталося: {{remaining}} — запусціце зноў у любы момант або дараабіце ў праграме.',
     nl: '🛑 Gestopt. Tot nu toe {{appliedExpenses}} uitgave(n) ondergebracht in {{appliedGroups}} groep(en). {{remaining}} over — voer het commando later opnieuw uit, of rond de rest af in de app.',
+    pt: '🛑 Parado. Até agora, {{appliedExpenses}} despesa(s) classificada(s) em {{appliedGroups}} grupo(s). Faltam {{remaining}} — execute o comando categorize quando quiser, ou termine na aplicação.',
+    br: '🛑 Parado. Até agora, {{appliedExpenses}} despesa(s) classificada(s) em {{appliedGroups}} grupo(s). Faltam {{remaining}} — execute o comando categorize quando quiser, ou termine no app.',
   },
   categorizeAlreadyHandled: {
     en: 'That step already finished. Start a new pass with the categorize command.',
@@ -981,6 +1131,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: 'Ten krok już się zakończył. Uruchom nowe przejście poleceniem categorize.',
     be: 'Гэты крок ужо апрацаваны. Запусціце разбор зноў камандай categorize.',
     nl: 'Die stap is al afgerond. Start een nieuwe ronde met het categorize-commando.',
+    pt: 'Este passo já terminou. Comece uma nova ronda com o comando categorize.',
+    br: 'Essa etapa já terminou. Comece uma nova rodada com o comando categorize.',
   },
   // ABA-603: the receipt was already scanned. No markup in these — callers
   // escape the whole line (Telegram HTML), as with `categorySplit`.
@@ -994,6 +1146,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '⚠️ Ten paragon został już dodany: {{what}}. Zeskanować go mimo to?',
     be: '⚠️ Гэты чэк ужо дададзены: {{what}}. Усё роўна распазнаць нанова?',
     nl: '⚠️ Deze bon is al toegevoegd: {{what}}. Toch opnieuw scannen?',
+    pt: '⚠️ Este talão já foi adicionado: {{what}}. Ler novamente mesmo assim?',
+    br: '⚠️ Este recibo já foi adicionado: {{what}}. Escanear de novo mesmo assim?',
   },
   receiptDuplicateLikely: {
     en: '⚠️ A matching expense already exists: {{what}}. This may be the same receipt.',
@@ -1005,6 +1159,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '⚠️ Pasujący wydatek już istnieje: {{what}}. To może być ten sam paragon.',
     be: '⚠️ Падобны выдатак ужо ёсць: {{what}}. Магчыма, гэта той жа чэк.',
     nl: '⚠️ Er bestaat al een overeenkomende uitgave: {{what}}. Dit kan dezelfde bon zijn.',
+    pt: '⚠️ Já existe uma despesa correspondente: {{what}}. Pode ser o mesmo talão.',
+    br: '⚠️ Já existe uma despesa correspondente: {{what}}. Pode ser o mesmo recibo.',
   },
   // Merge a scanned receipt into the matching expense (ABA-744). Button labels: WhatsApp caps them at 20 characters.
   receiptMergeQuestion: {
@@ -1017,6 +1173,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '🔗 Masz już {{what}}. Połączyć paragon z tym wpisem? Zostanie paragon, a notatki, tagi i projekt zostaną przeniesione.',
     be: '🔗 У вас ужо ёсць {{what}}. Аб’яднаць чэк з гэтым запісам? Застанецца чэк, а нататкі, тэгі і праект перанясуцца.',
     nl: '🔗 Je hebt al {{what}}. De bon samenvoegen met die uitgave? De bon blijft; notities, tags en project worden overgenomen.',
+    pt: '🔗 Já tem {{what}}. Juntar este talão a essa despesa? O talão é mantido; as notas, etiquetas e o projeto passam para ela.',
+    br: '🔗 Você já tem {{what}}. Juntar este recibo a essa despesa? O recibo é mantido; notas, tags e projeto são transferidos.',
   },
   receiptMergeYes: {
     en: 'Merge',
@@ -1028,6 +1186,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: 'Połącz',
     be: 'Аб’яднаць',
     nl: 'Samenvoegen',
+    pt: 'Juntar',
+    br: 'Juntar',
   },
   receiptKeepBoth: {
     en: 'Keep both',
@@ -1039,6 +1199,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: 'Zostaw oba',
     be: 'Пакінуць абодва',
     nl: 'Beide houden',
+    pt: 'Manter ambos',
+    br: 'Manter os dois',
   },
   receiptMergedNote: {
     en: '🔗 Merged with {{what}} — counted once.',
@@ -1050,6 +1212,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '🔗 Połączono z {{what}} — liczone raz.',
     be: '🔗 Аб’яднана з {{what}} — улічана адзін раз.',
     nl: '🔗 Samengevoegd met {{what}} — telt één keer.',
+    pt: '🔗 Juntado a {{what}} — contado uma só vez.',
+    br: '🔗 Juntado com {{what}} — contado uma única vez.',
   },
   // Button label — WhatsApp caps reply buttons at 20 characters.
   scanAnyway: {
@@ -1062,6 +1226,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: 'Skanuj mimo to',
     be: 'Усё роўна распазнаць',
     nl: 'Toch scannen',
+    pt: 'Ler mesmo assim',
+    br: 'Escanear mesmo assim',
   },
   scanRequestExpired: {
     en: 'This request has expired. Please send the receipt again.',
@@ -1073,6 +1239,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: 'To żądanie wygasło. Wyślij paragon ponownie.',
     be: 'Запыт састарэў. Адпраўце чэк яшчэ раз.',
     nl: 'Dit verzoek is verlopen. Stuur de bon opnieuw.',
+    pt: 'Este pedido expirou. Envie o talão novamente.',
+    br: 'Esta solicitação expirou. Envie o recibo novamente.',
   },
   // Long receipt in several photos: asked when a photo arrives while a receipt
   // confirmation is still pending in that chat.
@@ -1086,6 +1254,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '🧾 To zdjęcie to dalsza część paragonu powyżej czy nowy paragon?',
     be: '🧾 Гэта фота — працяг чэка вышэй ці новы чэк?',
     nl: '🧾 Is deze foto het vervolg van de bon hierboven of een nieuwe bon?',
+    pt: '🧾 Esta fotografia é a continuação do talão acima ou um talão novo?',
+    br: '🧾 Esta foto é a continuação do recibo acima ou um recibo novo?',
   },
   // Button labels — WhatsApp caps reply buttons at 20 characters.
   receiptContinuationYes: {
@@ -1098,6 +1268,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: 'Dalsza część',
     be: 'Працяг',
     nl: 'Vervolg',
+    pt: 'Continuação',
+    br: 'Continuação',
   },
   receiptContinuationNo: {
     en: 'New receipt',
@@ -1109,6 +1281,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: 'Nowy paragon',
     be: 'Новы чэк',
     nl: 'Nieuwe bon',
+    pt: 'Talão novo',
+    br: 'Recibo novo',
   },
   receiptPartsReading: {
     en: '📄 Reading all parts of the receipt together — this can take up to a minute…',
@@ -1120,6 +1294,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '📄 Czytam wszystkie części paragonu razem — to może potrwać do minuty…',
     be: '📄 Чытаю ўсе часткі чэка разам — гэта можа заняць да хвіліны…',
     nl: '📄 Ik lees alle delen van de bon samen — dit kan tot een minuut duren…',
+    pt: '\ud83d\udcc4 A ler todas as partes do tal\u00e3o em conjunto \u2014 pode demorar at\u00e9 um minuto\u2026',
+    br: '\ud83d\udcc4 Lendo todas as partes do recibo juntas \u2014 isso pode levar at\u00e9 um minuto\u2026',
   },
   receiptPartsFull: {
     en: 'A receipt can have at most {{max}} photos. Save this one, or send the photo again as a new receipt.',
@@ -1131,6 +1307,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: 'Paragon może mieć najwyżej {{max}} zdjęcia. Zapisz ten paragon albo wyślij zdjęcie ponownie jako nowy paragon.',
     be: 'У адным чэку можа быць не больш за {{max}} фота. Захавайце гэты чэк або адпраўце фота яшчэ раз як новы чэк.',
     nl: 'Een bon kan maximaal {{max}} foto\'s hebben. Sla deze op of stuur de foto opnieuw als nieuwe bon.',
+    pt: 'Um talão pode ter no máximo {{max}} fotografias. Guarde este ou envie a fotografia novamente como um talão novo.',
+    br: 'Um recibo pode ter no máximo {{max}} fotos. Salve este ou envie a foto novamente como um recibo novo.',
   },
   // Callback toast while a receipt's parts are being read (Telegram caps toasts at 200 characters).
   receiptBusy: {
@@ -1143,6 +1321,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '⏳ Paragon jest jeszcze odczytywany — poczekaj chwilę, potem kliknij ponownie.',
     be: '⏳ Чэк яшчэ распазнаецца — пачакайце крыху і націсніце зноў.',
     nl: '⏳ De bon wordt nog gelezen — wacht even en tik dan opnieuw.',
+    pt: '⏳ Ainda a ler o talão — aguarde um momento e toque novamente.',
+    br: '⏳ Ainda lendo o recibo — aguarde um momento e toque de novo.',
   },
   receiptPartTooLarge: {
     en: 'This photo is too large to add to the receipt. Finish the receipt above first (Add or Cancel), then send this photo again — or send a smaller photo to add it as the next part.',
@@ -1154,6 +1334,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: 'To zdjęcie jest za duże, by dodać je do paragonu. Najpierw zakończ paragon powyżej (Dodaj lub Anuluj), a potem wyślij to zdjęcie ponownie — albo wyślij mniejsze zdjęcie, by dodać je jako kolejną część.',
     be: 'Гэта фота занадта вялікае, каб дадаць яго да чэка. Спачатку завяршыце чэк вышэй (Дадаць або Скасаваць) і адпраўце гэта фота зноў — або адпраўце меншае фота, каб дадаць яго наступнай часткай.',
     nl: 'Deze foto is te groot om aan de bon toe te voegen. Rond eerst de bon hierboven af (Toevoegen of Annuleren) en stuur deze foto daarna opnieuw — of stuur een kleinere foto om die als volgend deel toe te voegen.',
+    pt: 'Esta fotografia é demasiado grande para ser adicionada ao talão. Termine primeiro o talão acima (Adicionar ou Cancelar) e depois envie esta fotografia novamente — ou envie uma fotografia mais pequena para a adicionar como a parte seguinte.',
+    br: 'Esta foto é grande demais para ser adicionada ao recibo. Termine primeiro o recibo acima (Adicionar ou Cancelar) e depois envie esta foto de novo — ou envie uma foto menor para adicioná-la como a próxima parte.',
   },
   // Voice digest bot commands (ABA voice-digest Task 10) — `digest on|off|now`,
   // identical copy across all three bots post markup-conversion.
@@ -1167,6 +1349,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '🔊 Cotygodniowe podsumowanie głosowe jest włączone — {{day}}, {{hour}} w Twoim czasie. Zmień to w aplikacji: Ustawienia → Boty czatu.',
     be: '🔊 Штотыднёвы галасавы дайджэст уключаны — {{day}}, {{hour}} па вашым часе. Змяніць можна ў праграме: Налады → Чат-боты.',
     nl: '🔊 De wekelijkse spraaksamenvatting staat aan — {{day}} om {{hour}} (jouw tijd). Wijzig dit in de app: Instellingen → Chat bots.',
+    pt: '🔊 O resumo semanal por voz está ativado — {{day}} às {{hour}} (hora local). Altere-o na aplicação: Definições → Bots de chat.',
+    br: '🔊 O resumo semanal por voz está ativado — {{day}} às {{hour}} (seu horário). Altere no app: Configurações → Bots de chat.',
   },
   digestOff: {
     en: '🔇 Weekly voice digest is off.',
@@ -1178,6 +1362,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '🔇 Cotygodniowe podsumowanie głosowe jest wyłączone.',
     be: '🔇 Штотыднёвы галасавы дайджэст выключаны.',
     nl: '🔇 De wekelijkse spraaksamenvatting staat uit.',
+    pt: '🔇 O resumo semanal por voz está desativado.',
+    br: '🔇 O resumo semanal por voz está desativado.',
   },
   digestNowLimit: {
     en: '⏳ You already got a digest preview today. Try again tomorrow.',
@@ -1189,6 +1375,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '⏳ Dzisiaj masz już podgląd podsumowania. Spróbuj ponownie jutro.',
     be: '⏳ Вы ўжо атрымалі папярэдні дайджэст сёння. Паспрабуйце заўтра.',
     nl: '⏳ Je hebt vandaag al een voorproefje van de samenvatting gehad. Probeer het morgen opnieuw.',
+    pt: '⏳ Já recebeu hoje uma pré-visualização do resumo. Tente novamente amanhã.',
+    br: '⏳ Você já recebeu hoje uma prévia do resumo. Tente novamente amanhã.',
   },
   digestPreparing: {
     en: '🎙️ Preparing your voice digest — this may take a moment…',
@@ -1200,6 +1388,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '🎙️ Przygotowujemy Twoje podsumowanie głosowe — to może chwilę potrwać…',
     be: '🎙️ Рыхтуем ваш галасавы дайджэст — гэта можа заняць крыху часу…',
     nl: '🎙️ Je spraaksamenvatting wordt voorbereid — dit kan even duren…',
+    pt: '🎙️ A preparar o seu resumo por voz — pode demorar um momento…',
+    br: '🎙️ Preparando seu resumo por voz — isso pode levar um momento…',
   },
   digestEmpty: {
     en: '🤷 Nothing to report this week — no activity to summarize yet.',
@@ -1211,6 +1401,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '🤷 W tym tygodniu nie ma nic do zgłoszenia — brak jeszcze aktywności do podsumowania.',
     be: '🤷 На гэтым тыдні няма чаго паказаць — пакуль няма актыўнасці для зводкі.',
     nl: '🤷 Deze week is er niets te melden — nog geen activiteit om samen te vatten.',
+    pt: '🤷 Nada a relatar esta semana — ainda não há atividade para resumir.',
+    br: '🤷 Nada para contar nesta semana — ainda não há atividade para resumir.',
   },
   digestUnavailable: {
     en: '⚠️ The voice digest is not available right now. Please try again later.',
@@ -1222,6 +1414,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '⚠️ Podsumowanie głosowe jest teraz niedostępne. Spróbuj ponownie później.',
     be: '⚠️ Галасавы дайджэст зараз недаступны. Паспрабуйце пазней.',
     nl: '⚠️ De spraaksamenvatting is nu niet beschikbaar. Probeer het later opnieuw.',
+    pt: '⚠️ O resumo por voz não está disponível de momento. Tente novamente mais tarde.',
+    br: '⚠️ O resumo por voz não está disponível no momento. Tente novamente mais tarde.',
   },
   digestExpired: {
     en: '⌛ This digest is no longer available to play. Send digest now for a fresh one.',
@@ -1233,6 +1427,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '⌛ Tego podsumowania nie można już odtworzyć. Wyślij digest now, aby otrzymać nowe.',
     be: '⌛ Гэты дайджэст больш нельга праслухаць. Адпраўце digest now, каб атрымаць новы.',
     nl: '⌛ Deze samenvatting kan niet meer worden afgespeeld. Stuur digest now voor een nieuwe.',
+    pt: '⌛ Este resumo já não pode ser reproduzido. Envie digest now para receber um novo.',
+    br: '⌛ Este resumo não pode mais ser reproduzido. Envie digest now para receber um novo.',
   },
   // {{command}} = "/digest on" (Telegram) or "digest on" (WhatsApp/Slack) —
   // appended as a separate line to each bot's link-success reply.
@@ -1246,6 +1442,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '💡 Wskazówka: otrzymuj krótkie podsumowanie głosowe co tydzień — wyślij {{command}}',
     be: '💡 Парада: атрымлівайце кароткую галасавую зводку кожны тыдзень — адпраўце {{command}}',
     nl: '💡 Tip: ontvang elke week een korte spraaksamenvatting — stuur {{command}}',
+    pt: '💡 Dica: receba um breve resumo por voz todas as semanas — envie {{command}}',
+    br: '💡 Dica: receba um resumo curto por voz toda semana — envie {{command}}',
   },
   // ABA-658: adding an expense to a shared group from any bot. {{command}} = "/group" (Telegram) or
   // "group" (WhatsApp/Slack). {{group}} and {{description}} are user content, escaped by the caller.
@@ -1259,6 +1457,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: 'Dodaj wydatek do wspólnej grupy: <code>{{command}} kwota [waluta] [opis]</code>\nNa przykład: <code>{{command}} 120 pizza</code> lub <code>{{command}} 25 EUR taksówka</code>',
     be: 'Дадаць выдатак у агульную групу: <code>{{command}} сума [валюта] [апісанне]</code>\nНапрыклад: <code>{{command}} 120 піца</code> або <code>{{command}} 25 EUR таксі</code>',
     nl: 'Een uitgave aan een gedeelde groep toevoegen: <code>{{command}} bedrag [valuta] [omschrijving]</code>\nBijvoorbeeld: <code>{{command}} 120 pizza</code> of <code>{{command}} 25 EUR taxi</code>',
+    pt: 'Adicione uma despesa a um grupo partilhado: <code>{{command}} valor [moeda] [descrição]</code>\nPor exemplo: <code>{{command}} 120 pizza</code> ou <code>{{command}} 25 EUR táxi</code>',
+    br: 'Adicione uma despesa a um grupo compartilhado: <code>{{command}} valor [moeda] [descrição]</code>\nPor exemplo: <code>{{command}} 120 pizza</code> ou <code>{{command}} 25 EUR táxi</code>',
   },
   groupNone: {
     en: 'You are not in any active group yet. Create or join one in the app under Groups.',
@@ -1270,6 +1470,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: 'Nie należysz jeszcze do żadnej aktywnej grupy. Utwórz grupę lub dołącz do niej w aplikacji, w sekcji Grupy.',
     be: 'Вы пакуль не ўваходзіце ні ў адну актыўную групу. Стварыце групу або далучыцеся да яе ў праграме, у раздзеле «Групы».',
     nl: 'Je zit nog niet in een actieve groep. Maak er een aan of word lid in de app, onder Groepen.',
+    pt: 'Ainda não está em nenhum grupo ativo. Crie um ou junte-se a um na aplicação, em Grupos.',
+    br: 'Você ainda não está em nenhum grupo ativo. Crie ou entre em um no app, em Grupos.',
   },
   groupPick: {
     en: 'Which group is this expense for?',
@@ -1281,6 +1483,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: 'Do której grupy dodać ten wydatek?',
     be: 'У якую групу дадаць гэты выдатак?',
     nl: 'Bij welke groep hoort deze uitgave?',
+    pt: 'Para que grupo é esta despesa?',
+    br: 'Para qual grupo é esta despesa?',
   },
   // At most 20 characters: it is the WhatsApp list button and the Slack select placeholder.
   groupPickButton: {
@@ -1293,6 +1497,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: 'Wybierz grupę',
     be: 'Выбраць групу',
     nl: 'Kies een groep',
+    pt: 'Escolher um grupo',
+    br: 'Escolher um grupo',
   },
   groupConfirmCard: {
     en: '<b>{{group}}</b> · {{amount}} · {{description}} · paid by you · split equally among {{count}}\nAdd it to the group?',
@@ -1304,6 +1510,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '<b>{{group}}</b> · {{amount}} · {{description}} · płacisz ty · po równo na {{count}} os.\nDodać do grupy?',
     be: '<b>{{group}}</b> · {{amount}} · {{description}} · плацілі вы · пароўну на {{count}}\nДадаць у групу?',
     nl: '<b>{{group}}</b> · {{amount}} · {{description}} · betaald door jou · gelijk verdeeld over {{count}}\nAan de groep toevoegen?',
+    pt: '<b>{{group}}</b> · {{amount}} · {{description}} · pago por si · dividido em partes iguais por {{count}}\nAdicionar ao grupo?',
+    br: '<b>{{group}}</b> · {{amount}} · {{description}} · pago por você · dividido igualmente entre {{count}}\nAdicionar ao grupo?',
   },
   groupAdded: {
     en: '✅ Added to <b>{{group}}</b>: {{amount}}, split equally.',
@@ -1315,6 +1523,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '✅ Dodano do <b>{{group}}</b>: {{amount}}, po równo.',
     be: '✅ Дададзена ў <b>{{group}}</b>: {{amount}}, пароўну.',
     nl: '✅ Toegevoegd aan <b>{{group}}</b>: {{amount}}, gelijk verdeeld.',
+    pt: '✅ Adicionado a <b>{{group}}</b>: {{amount}}, dividido em partes iguais.',
+    br: '✅ Adicionado a <b>{{group}}</b>: {{amount}}, dividido igualmente.',
   },
   groupCancelled: {
     en: 'Cancelled — nothing was added to the group.',
@@ -1326,6 +1536,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: 'Anulowano — nic nie dodano do grupy.',
     be: 'Скасавана — у групу нічога не дададзена.',
     nl: 'Geannuleerd — er is niets aan de groep toegevoegd.',
+    pt: 'Cancelado — nada foi adicionado ao grupo.',
+    br: 'Cancelado — nada foi adicionado ao grupo.',
   },
   groupExpired: {
     en: '⌛ This request has expired. Send the command again.',
@@ -1337,6 +1549,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '⌛ To żądanie wygasło. Wyślij polecenie ponownie.',
     be: '⌛ Тэрмін дзеяння запыту скончыўся. Адпраўце каманду яшчэ раз.',
     nl: '⌛ Dit verzoek is verlopen. Stuur de opdracht opnieuw.',
+    pt: '⌛ Este pedido expirou. Envie o comando novamente.',
+    br: '⌛ Esta solicitação expirou. Envie o comando novamente.',
   },
   groupNotAvailable: {
     en: '⚠️ That group is no longer available: it was archived or you are no longer a member. Nothing was added.',
@@ -1348,6 +1562,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '⚠️ Ta grupa nie jest już dostępna: została zarchiwizowana albo nie jesteś już jej członkiem. Nic nie dodano.',
     be: '⚠️ Гэтая група больш недаступная: яна ў архіве або вы больш не ўдзельнік. Нічога не дададзена.',
     nl: '⚠️ Die groep is niet meer beschikbaar: hij is gearchiveerd of je bent geen lid meer. Er is niets toegevoegd.',
+    pt: '⚠️ Esse grupo já não está disponível: foi arquivado ou deixou de ser membro. Nada foi adicionado.',
+    br: '⚠️ Esse grupo não está mais disponível: foi arquivado ou você não é mais membro. Nada foi adicionado.',
   },
   groupRateLimited: {
     en: '⏳ Too many group commands in a short time. Wait a minute and try again.',
@@ -1359,6 +1575,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '⏳ Zbyt wiele poleceń grupowych w krótkim czasie. Poczekaj minutę i spróbuj ponownie.',
     be: '⏳ Занадта шмат групавых каманд за кароткі час. Пачакайце хвіліну і паспрабуйце зноў.',
     nl: '⏳ Te veel groepsopdrachten in korte tijd. Wacht een minuut en probeer het opnieuw.',
+    pt: '⏳ Demasiados comandos de grupo em pouco tempo. Aguarde um minuto e tente novamente.',
+    br: '⏳ Muitos comandos de grupo em pouco tempo. Aguarde um minuto e tente novamente.',
   },
   groupPrivateOnly: {
     en: 'Please use this command in a private chat with me.',
@@ -1370,6 +1588,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: 'Użyj tej komendy w prywatnej rozmowie ze mną.',
     be: 'Выкарыстоўвайце гэтую каманду ў асабістым чаце са мной.',
     nl: 'Gebruik dit commando in een privéchat met mij.',
+    pt: 'Use este comando numa conversa privada comigo.',
+    br: 'Use este comando em uma conversa privada comigo.',
   },
   groupFxUnavailable: {
     en: '⚠️ There is no exchange rate for {{currency}} right now, so nothing was added. Try again later, or add the expense in the app with your own rate.',
@@ -1381,6 +1601,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '⚠️ W tej chwili nie ma kursu dla {{currency}}, więc nic nie dodano. Spróbuj później albo dodaj wydatek w aplikacji z własnym kursem.',
     be: '⚠️ Зараз няма курсу для {{currency}}, таму нічога не дададзена. Паспрабуйце пазней або дадайце выдатак у праграме са сваім курсам.',
     nl: '⚠️ Er is nu geen wisselkoers voor {{currency}}, dus er is niets toegevoegd. Probeer het later opnieuw of voeg de uitgave in de app toe met je eigen koers.',
+    pt: '⚠️ De momento não há taxa de câmbio para {{currency}}, por isso nada foi adicionado. Tente novamente mais tarde ou adicione a despesa na aplicação com a sua própria taxa.',
+    br: '⚠️ No momento não há cotação para {{currency}}, por isso nada foi adicionado. Tente novamente mais tarde ou adicione a despesa no app com sua própria cotação.',
   },
   groupCurrencyUnsupported: {
     en: '⚠️ {{currency}} is not supported for group expenses. Use the group\'s currency or one of USD, EUR, PLN, GBP, UAH, RUB, BYN.',
@@ -1392,6 +1614,8 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '⚠️ Waluta {{currency}} nie jest obsługiwana w wydatkach grupy. Użyj waluty grupy lub jednej z: USD, EUR, PLN, GBP, UAH, RUB, BYN.',
     be: '⚠️ {{currency}} не падтрымліваецца для выдаткаў групы. Выкарыстоўвайце валюту групы або адну з: USD, EUR, PLN, GBP, UAH, RUB, BYN.',
     nl: '⚠️ {{currency}} wordt niet ondersteund voor groepsuitgaven. Gebruik de valuta van de groep of een van USD, EUR, PLN, GBP, UAH, RUB, BYN.',
+    pt: '⚠️ {{currency}} não é suportada em despesas de grupo. Use a moeda do grupo ou uma destas: USD, EUR, PLN, GBP, UAH, RUB, BYN.',
+    br: '⚠️ {{currency}} não é aceita em despesas de grupo. Use a moeda do grupo ou uma destas: USD, EUR, PLN, GBP, UAH, RUB, BYN.',
   },
   groupOpenInApp: {
     en: 'This one cannot be added from the chat. Please add it in the app, under Groups.',
@@ -1403,30 +1627,32 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: 'Tego wydatku nie można dodać z czatu. Dodaj go w aplikacji, w sekcji Grupy.',
     be: 'Гэты выдатак нельга дадаць з чата. Дадайце яго ў праграме, у раздзеле «Групы».',
     nl: 'Deze uitgave kan niet vanuit de chat worden toegevoegd. Voeg hem toe in de app, onder Groepen.',
+    pt: 'Esta não pode ser adicionada a partir do chat. Adicione-a na aplicação, em Grupos.',
+    br: 'Esta não pode ser adicionada pelo chat. Adicione no app, em Grupos.',
   },
   // The description when the command carries none.
   groupExpenseDefault: {
-    en: 'Expense', ru: 'Расход', ua: 'Витрата', de: 'Ausgabe', es: 'Gasto', fr: 'Dépense', pl: 'Wydatek', be: 'Выдатак', nl: 'Uitgave',
+    en: 'Expense', ru: 'Расход', ua: 'Витрата', de: 'Ausgabe', es: 'Gasto', fr: 'Dépense', pl: 'Wydatek', be: 'Выдатак', nl: 'Uitgave', pt: 'Despesa', br: 'Despesa',
   },
   weekday0: {
-    en: 'Sunday', ru: 'воскресенье', ua: 'неділя', de: 'Sonntag', es: 'domingo', fr: 'dimanche', pl: 'niedziela', be: 'нядзеля', nl: 'zondag',
+    en: 'Sunday', ru: 'воскресенье', ua: 'неділя', de: 'Sonntag', es: 'domingo', fr: 'dimanche', pl: 'niedziela', be: 'нядзеля', nl: 'zondag', pt: 'domingo', br: 'domingo',
   },
   weekday1: {
-    en: 'Monday', ru: 'понедельник', ua: 'понеділок', de: 'Montag', es: 'lunes', fr: 'lundi', pl: 'poniedziałek', be: 'панядзелак', nl: 'maandag',
+    en: 'Monday', ru: 'понедельник', ua: 'понеділок', de: 'Montag', es: 'lunes', fr: 'lundi', pl: 'poniedziałek', be: 'панядзелак', nl: 'maandag', pt: 'segunda-feira', br: 'segunda-feira',
   },
   weekday2: {
-    en: 'Tuesday', ru: 'вторник', ua: 'вівторок', de: 'Dienstag', es: 'martes', fr: 'mardi', pl: 'wtorek', be: 'аўторак', nl: 'dinsdag',
+    en: 'Tuesday', ru: 'вторник', ua: 'вівторок', de: 'Dienstag', es: 'martes', fr: 'mardi', pl: 'wtorek', be: 'аўторак', nl: 'dinsdag', pt: 'terça-feira', br: 'terça-feira',
   },
   weekday3: {
-    en: 'Wednesday', ru: 'среда', ua: 'середа', de: 'Mittwoch', es: 'miércoles', fr: 'mercredi', pl: 'środa', be: 'серада', nl: 'woensdag',
+    en: 'Wednesday', ru: 'среда', ua: 'середа', de: 'Mittwoch', es: 'miércoles', fr: 'mercredi', pl: 'środa', be: 'серада', nl: 'woensdag', pt: 'quarta-feira', br: 'quarta-feira',
   },
   weekday4: {
-    en: 'Thursday', ru: 'четверг', ua: 'четвер', de: 'Donnerstag', es: 'jueves', fr: 'jeudi', pl: 'czwartek', be: 'чацвер', nl: 'donderdag',
+    en: 'Thursday', ru: 'четверг', ua: 'четвер', de: 'Donnerstag', es: 'jueves', fr: 'jeudi', pl: 'czwartek', be: 'чацвер', nl: 'donderdag', pt: 'quinta-feira', br: 'quinta-feira',
   },
   weekday5: {
-    en: 'Friday', ru: 'пятница', ua: 'п\'ятниця', de: 'Freitag', es: 'viernes', fr: 'vendredi', pl: 'piątek', be: 'пятніца', nl: 'vrijdag',
+    en: 'Friday', ru: 'пятница', ua: 'п\'ятниця', de: 'Freitag', es: 'viernes', fr: 'vendredi', pl: 'piątek', be: 'пятніца', nl: 'vrijdag', pt: 'sexta-feira', br: 'sexta-feira',
   },
   weekday6: {
-    en: 'Saturday', ru: 'суббота', ua: 'субота', de: 'Samstag', es: 'sábado', fr: 'samedi', pl: 'sobota', be: 'субота', nl: 'zaterdag',
+    en: 'Saturday', ru: 'суббота', ua: 'субота', de: 'Samstag', es: 'sábado', fr: 'samedi', pl: 'sobota', be: 'субота', nl: 'zaterdag', pt: 'sábado', br: 'sábado',
   },
 };

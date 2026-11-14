@@ -41,6 +41,8 @@ export class FatFinderService {
     es: 'Spanish',
     fr: 'French',
     pl: 'Polish',
+    pt: 'European Portuguese',
+    br: 'Brazilian Portuguese',
   };
 
   constructor(

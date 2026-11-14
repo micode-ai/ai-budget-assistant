@@ -10,7 +10,7 @@ Workflows for routine multi-step tasks. Invoke with `/<skill-name>` or rely on a
 |---|---|
 | [`finish-aba-task`](skills/finish-aba-task/SKILL.md) | **Final step of every coding task.** Creates the `ABA-{N}` issue, ingests what was learned into `docs/wiki/`, updates user_docs (CLAUDE.md only for repo-wide rules). |
 | [`wiki-query`](skills/wiki-query/SKILL.md) | Answering how something works or diagnosing a bug — read the wiki before the code, file the finding back. |
-| [`i18n-add-strings`](skills/i18n-add-strings/SKILL.md) | Adding, renaming, or removing i18n keys across all 9 locale files. |
+| [`i18n-add-strings`](skills/i18n-add-strings/SKILL.md) | Adding, renaming, or removing i18n keys across all 11 locale files. |
 | [`add-help-section`](skills/add-help-section/SKILL.md) | Adding or editing a help section (user_docs × 9, three registrations for a new section, regenerate app + public site). |
 | [`bootstrap-api-module`](skills/bootstrap-api-module/SKILL.md) | Creating a new NestJS module with the project's canonical structure. |
 

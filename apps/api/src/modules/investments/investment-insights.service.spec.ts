@@ -160,3 +160,10 @@ describe('InvestmentInsightsService.getInvestmentInsights', () => {
     );
   });
 });
+
+describe('InvestmentInsightsService prompt language names', () => {
+  it('asks the model for European Portuguese for pt and Brazilian Portuguese for br', () => {
+    const names = (InvestmentInsightsService as any).LANGUAGE_NAMES as Record<string, string>;
+    expect([names.pt, names.br]).toEqual(['European Portuguese', 'Brazilian Portuguese']);
+  });
+});

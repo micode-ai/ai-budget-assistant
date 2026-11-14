@@ -1,6 +1,6 @@
 import { createBotT, sharedMessages } from './shared-messages';
 
-const LANGS = ['en', 'ru', 'ua', 'de', 'es', 'fr', 'pl', 'be', 'nl'];
+const LANGS = ['en', 'ru', 'ua', 'de', 'es', 'fr', 'pl', 'be', 'nl', 'pt', 'br'];
 
 describe('sharedMessages — the group command keys (ABA-658)', () => {
   const groupKeys = Object.keys(sharedMessages).filter((k) => k.startsWith('group'));
@@ -27,7 +27,7 @@ describe('sharedMessages — the group command keys (ABA-658)', () => {
     );
   });
 
-  it.each(groupKeys)('%s is translated into all 9 languages with the same placeholders', (key) => {
+  it.each(groupKeys)('%s is translated into every language with the same placeholders', (key) => {
     const entry = sharedMessages[key];
     const placeholders = (s: string) => (s.match(/\{\{\w+\}\}/g) ?? []).sort().join(',');
     for (const lang of LANGS) {
@@ -66,7 +66,7 @@ describe('sharedMessages — long receipt in several photos', () => {
     'receiptBusy',
   ];
 
-  it.each(keys)('%s is translated into all 9 languages with the same placeholders', (key) => {
+  it.each(keys)('%s is translated into every language with the same placeholders', (key) => {
     const entry = sharedMessages[key];
     const placeholders = (s: string) => (s.match(/\{\{\w+\}\}/g) ?? []).sort().join(',');
     for (const lang of LANGS) {
@@ -79,5 +79,17 @@ describe('sharedMessages — long receipt in several photos', () => {
     for (const key of ['receiptContinuationYes', 'receiptContinuationNo']) {
       for (const lang of LANGS) expect([...sharedMessages[key][lang]].length).toBeLessThanOrEqual(20);
     }
+  });
+});
+
+describe('createBotT — external language tags', () => {
+  const t = createBotT(sharedMessages, { markup: 'html' });
+
+  it('resolves pt-br / pt to Brazilian and pt-PT to European', () => {
+    expect(t('receiptBusy', 'pt-br')).toBe(t('receiptBusy', 'br'));
+    expect(t('receiptBusy', 'pt')).toBe(sharedMessages.receiptBusy.pt);
+    expect(t('receiptBusy', 'pt-PT')).toBe(sharedMessages.receiptBusy.pt);
+    expect(t('receiptBusy', 'constructor')).toBe(sharedMessages.receiptBusy.en);
+    expect(t('receiptBusy', 'xx')).toBe(t('receiptBusy', 'en'));
   });
 });

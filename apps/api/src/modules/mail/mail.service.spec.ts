@@ -17,8 +17,8 @@ const base = {
 };
 
 describe('MailService.sendAppConnectedEmail', () => {
-  it('covers all nine app languages', () => {
-    expect([...APP_CONNECTED_LANGS].sort()).toEqual(['be', 'de', 'en', 'es', 'fr', 'nl', 'pl', 'ru', 'ua']);
+  it('covers every app language', () => {
+    expect([...APP_CONNECTED_LANGS].sort()).toEqual(['be', 'br', 'de', 'en', 'es', 'fr', 'nl', 'pl', 'pt', 'ru', 'ua']);
   });
 
   it('localizes by the recipient language', async () => {

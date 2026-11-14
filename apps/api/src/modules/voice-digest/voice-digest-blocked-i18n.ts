@@ -56,6 +56,14 @@ const MESSAGES: Record<string, BlockedMessages> = {
     title: 'Spraaksamenvatting gepauzeerd',
     body: (ch) => `We konden je niet bereiken via ${ch}. Zet het weer aan in Instellingen → Chatbots.`,
   },
+  pt: {
+    title: 'Resumo por voz em pausa',
+    body: (ch) => `Não conseguimos enviar-lhe o resumo através do ${ch}. Volte a ativá-lo em Definições → Bots de chat.`,
+  },
+  br: {
+    title: 'Resumo por voz pausado',
+    body: (ch) => `Não conseguimos falar com você pelo ${ch}. Ative de novo em Configurações → Bots de chat.`,
+  },
 };
 
 function messagesFor(lang: string): BlockedMessages {

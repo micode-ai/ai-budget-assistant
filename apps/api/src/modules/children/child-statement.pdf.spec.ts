@@ -88,7 +88,7 @@ describe('renderChildStatementPdf', () => {
   });
 
   it('every supported locale has a footer sentence', () => {
-    for (const l of ['en', 'pl', 'de', 'es', 'fr', 'ru', 'ua', 'be', 'nl']) {
+    for (const l of ['en', 'pl', 'de', 'es', 'fr', 'ru', 'ua', 'be', 'nl', 'pt', 'br']) {
       expect(STATEMENT_FOOTER[l]).toBeTruthy();
       expect(childStatementTranslator(l)('footer')).toBe(STATEMENT_FOOTER[l]);
     }
@@ -185,7 +185,7 @@ describe('renderChildStatementPdf', () => {
     const all = pageTexts(await render(data({ locale: 'en', receiptsOmitted: 7 }))).join(' ');
     expect(all).toContain(t('receiptsOmitted', { count: 7 }));
     expect(t('receiptsOmitted', { count: 7 })).toContain('7');
-    for (const l of ['pl', 'de', 'es', 'fr', 'ru', 'ua', 'be', 'nl']) {
+    for (const l of ['pl', 'de', 'es', 'fr', 'ru', 'ua', 'be', 'nl', 'pt', 'br']) {
       expect(childStatementTranslator(l)('receiptsOmitted', { count: 7 })).not.toBe(t('receiptsOmitted', { count: 7 }));
     }
   });

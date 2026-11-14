@@ -10,6 +10,7 @@ import { getAiCostMultiplier, resolveAiModel } from '../ai/services/model-resolv
 import { logCacheUsage } from '../ai/utils/log-cache-usage';
 import { STORY_RESPONSE_SCHEMA, stripNulls } from './story-blocks.util';
 import { ExchangeRateService } from '../currency-exchange/exchange-rate.service';
+import { toIntlLocale } from '../../common/utils/app-locale';
 import { getRatesSafe, convertAmount } from '../../common/utils/fx';
 import { EXCLUDE_SPLIT_RECEIVABLE } from '../../common/utils/expense-filters';
 
@@ -150,18 +151,8 @@ export class StoryService {
     return this.generateStory(accountId, periodStart, periodEnd, periodLabel, language, encryptionTier, responseMode, userId, baseCurrency, aiModelPref);
   }
 
-  private static readonly LOCALE_MAP: Record<string, string> = {
-    en: 'en-US',
-    ru: 'ru-RU',
-    ua: 'uk-UA',
-    de: 'de-DE',
-    es: 'es-ES',
-    fr: 'fr-FR',
-    pl: 'pl-PL',
-  };
-
   private computePeriod(now: Date, period: 'week' | 'month', language?: string) {
-    const locale = StoryService.LOCALE_MAP[language || 'en'] || 'en-US';
+    const locale = toIntlLocale(language || 'en');
 
     if (period === 'month') {
       const periodStart = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -193,6 +184,8 @@ export class StoryService {
     es: 'Spanish',
     fr: 'French',
     pl: 'Polish',
+    pt: 'European Portuguese',
+    br: 'Brazilian Portuguese',
   };
 
   private async generateStory(

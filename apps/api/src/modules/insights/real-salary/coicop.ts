@@ -132,6 +132,20 @@ const LABELS: Record<string, Labels> = {
     CP10: 'Onderwijs', CP11: 'Restaurants en hotels', CP12: 'Verzekeringen en financiën',
     CP13: 'Persoonlijke verzorging en overig',
   },
+  pt: {
+    TOTAL: 'Tudo o resto', CP01: 'Alimentação e bebidas não alcoólicas', CP02: 'Álcool e tabaco',
+    CP03: 'Vestuário e calçado', CP04: 'Habitação, água, eletricidade e gás', CP05: 'Casa e mobiliário',
+    CP06: 'Saúde', CP07: 'Transportes', CP08: 'Telefone e internet', CP09: 'Lazer e cultura',
+    CP10: 'Educação', CP11: 'Restaurantes e hotéis', CP12: 'Seguros e serviços financeiros',
+    CP13: 'Cuidados pessoais e outros',
+  },
+  br: {
+    TOTAL: 'Todo o resto', CP01: 'Alimentos e bebidas não alcoólicas', CP02: 'Álcool e tabaco',
+    CP03: 'Roupas e calçados', CP04: 'Moradia e contas da casa', CP05: 'Casa e móveis',
+    CP06: 'Saúde', CP07: 'Transporte', CP08: 'Telefone e internet', CP09: 'Lazer e cultura',
+    CP10: 'Educação', CP11: 'Restaurantes e hotéis', CP12: 'Seguros e serviços financeiros',
+    CP13: 'Cuidados pessoais e outros',
+  },
 };
 
 export function divisionLabel(division: CoicopDivision, lang: string): string {

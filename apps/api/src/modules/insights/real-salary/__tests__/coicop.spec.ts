@@ -46,8 +46,9 @@ describe('coicop', () => {
   });
 
   it('labels divisions in every app language, falling back to English', () => {
-    for (const lang of ['en', 'pl', 'de', 'es', 'fr', 'ru', 'ua', 'be', 'nl']) {
+    for (const lang of ['en', 'pl', 'de', 'es', 'fr', 'ru', 'ua', 'be', 'nl', 'pt', 'br']) {
       for (const d of DIVISIONS) expect(divisionLabel(d, lang).length).toBeGreaterThan(2);
+      if (lang !== 'en') expect(divisionLabel('CP01', lang)).not.toBe(divisionLabel('CP01', 'en'));
     }
     expect(divisionLabel('CP01', 'xx')).toBe(divisionLabel('CP01', 'en'));
     expect(divisionLabel('CP01', 'constructor')).toBe(divisionLabel('CP01', 'en'));

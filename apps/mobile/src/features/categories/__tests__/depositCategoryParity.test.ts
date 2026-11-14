@@ -18,7 +18,7 @@ describe('deposit category names parity', () => {
   it('API util and shared-utils mirror hold the same table', () => {
     const api = names(read('apps/api/src/common/utils/deposit-category.ts'));
     const mirror = names(read('packages/shared-utils/src/formatting/deposit-category.ts'));
-    expect(api).toHaveLength(9);
+    expect(api).toHaveLength(11);
     expect(mirror).toEqual(api);
   });
 });

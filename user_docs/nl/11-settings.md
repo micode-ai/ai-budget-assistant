@@ -55,7 +55,7 @@ Je e-mail wordt direct bijgewerkt en er worden nieuwe inlogtokens uitgegeven. Al
 
 ### Taal
 
-Kies uit 9 ondersteunde talen:
+Kies uit 11 ondersteunde talen:
 
 | Code | Taal |
 |---|---|
@@ -68,6 +68,8 @@ Kies uit 9 ondersteunde talen:
 | DE | Deutsch |
 | BY | Беларуская |
 | NL | Nederlands |
+| PT | Português (Portugal) |
+| BR | Português (Brasil) |
 
 Tik op een taalchip om te wisselen. De interface wordt direct bijgewerkt.
 

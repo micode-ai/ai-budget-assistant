@@ -3,7 +3,7 @@ import * as ni18n from './notification-i18n';
 // The debt reminder goes to the debt's owner, who can be either the lender or
 // the borrower. Polish once shipped the lender's wording for both, telling a
 // borrower "Pożyczyłeś…" (you lent) about money they owe.
-const LANGS = ['en', 'ru', 'ua', 'pl', 'es', 'fr', 'de', 'be', 'nl'];
+const LANGS = ['en', 'ru', 'ua', 'pl', 'es', 'fr', 'de', 'be', 'nl', 'pt', 'br'];
 
 describe('debt reminder bodies', () => {
   const base = { contactName: 'Kuba', amount: '50', currencyCode: 'PLN' };
@@ -61,6 +61,8 @@ describe('leaflet promo push copy', () => {
     de: /im laden prüfen/i,
     be: /праверце ў краме/i,
     nl: /controleer in de winkel/i,
+    pt: /verifique na loja/i,
+    br: /confira na loja/i,
   };
   const withUsual = { name: 'Masło 200g', chain: 'Biedronka', promoPrice: '4.99', currencyCode: 'PLN', usualPrice: '7.49', condition: null, validTo: '2026-11-16' };
   // The promo's end date travels with every line, so a push never reads as "on forever".
@@ -74,10 +76,12 @@ describe('leaflet promo push copy', () => {
     de: /bis 16\.11/,
     be: /да 16\.11/,
     nl: /t\/m 16\.11/,
+    pt: /até 16\.11/,
+    br: /até 16\.11/,
   };
   const withoutUsual = { ...withUsual, usualPrice: null };
 
-  it('has all 9 languages', () => {
+  it('has every language', () => {
     expect(Object.keys(CHECK_IN_STORE).sort()).toEqual([...LANGS].sort());
   });
 

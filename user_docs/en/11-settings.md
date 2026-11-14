@@ -55,7 +55,7 @@ Your email is updated immediately and new login tokens are issued. If you close 
 
 ### Language
 
-Choose from 9 supported languages:
+Choose from 11 supported languages:
 
 | Code | Language |
 |---|---|
@@ -68,6 +68,8 @@ Choose from 9 supported languages:
 | DE | Deutsch |
 | BY | Беларуская |
 | NL | Nederlands |
+| PT | Português (Portugal) |
+| BR | Português (Brasil) |
 
 Tap a language chip to switch. The interface updates immediately.
 

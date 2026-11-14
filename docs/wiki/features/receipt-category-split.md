@@ -138,7 +138,7 @@ and peanuts under *Kaucja* — then the save-time learner wrote those as rules, 
 deterministic and self-re-teaching. `classify()` splits its input into assignable and deposit
 categories via `isDepositCategoryName`: deposit ones are kept out of the prompt AND out of
 `validCategoryIds`, so an existing poisoned rule is ignored rather than honoured. Recognition
-matches **all nine** locale names, never just the owner's current language — an owner can switch
+matches **all eleven** locale names, never just the owner's current language — an owner can switch
 language and a shared account can change owner, but a category keeps the name it was born with.
 
 **The deposit is never routed through `proposals`**, so it never has to clear the 10%

@@ -27,6 +27,8 @@ const platformMessages: Record<string, Record<string, string>> = {
     pl: '💭 Chwila…',
     be: '💭 Секунду…',
     nl: '💭 Een moment…',
+    pt: '💭 Um momento…',
+    br: '💭 Só um momento…',
   },
   linkFirst: {
     en: 'Please link your account first. Send `link YOUR_CODE` — get the code in the app (Settings → Chat bots).',
@@ -38,6 +40,8 @@ const platformMessages: Record<string, Record<string, string>> = {
     pl: 'Najpierw połącz swoje konto. Wyślij `link TWÓJ_KOD` — kod znajdziesz w aplikacji (Ustawienia → Boty czatu).',
     be: 'Спачатку прывяжыце акаўнт. Адпраўце `link ВАШ_КОД` — код атрымайце ў праграме (Налады → Чат-боты).',
     nl: 'Koppel je account eerst. Stuur `link JOUW_CODE` — haal de code op in de app (Instellingen → Chat bots).',
+    pt: 'Associe primeiro a sua conta. Envie `link O_SEU_CÓDIGO` — obtenha o código na aplicação (Definições → Bots de chat).',
+    br: 'Vincule sua conta primeiro. Envie `link SEU_CÓDIGO` — pegue o código no app (Configurações → Bots de chat).',
   },
   welcomeNew: {
     en: '👋 Welcome to Budget Assistant!\n\nTo connect this Slack workspace to your account, open the app:\n1. Settings → Chat bots\n2. Tap "Connect Slack"\n3. Send the code here: `link YOUR_CODE`\n\nExample: `link A3K9F2`',
@@ -49,6 +53,8 @@ const platformMessages: Record<string, Record<string, string>> = {
     pl: '👋 Witaj w Budget Assistant!\n\nAby połączyć tego Slacka z kontem, otwórz aplikację:\n1. Ustawienia → Boty czatu\n2. Dotknij „Połącz Slack"\n3. Wyślij kod tutaj: `link TWÓJ_KOD`\n\nPrzykład: `link A3K9F2`',
     be: '👋 Сардэчна запрашаем у Budget Assistant!\n\nКаб прывязаць гэты Slack да акаўнта, адкрыйце праграму:\n1. Налады → Чат-боты\n2. Націсніце «Падключыць Slack»\n3. Адпраўце код сюды: `link ВАШ_КОД`\n\nПрыклад: `link A3K9F2`',
     nl: '👋 Welkom bij Budget Assistant!\n\nOm deze Slack-werkruimte aan je account te koppelen, open de app:\n1. Instellingen → Chat bots\n2. Tik op "Slack koppelen"\n3. Stuur de code hier: `link JOUW_CODE`\n\nVoorbeeld: `link A3K9F2`',
+    pt: '👋 Bem-vindo ao Budget Assistant!\n\nPara ligar este espaço de trabalho do Slack à sua conta, abra a aplicação:\n1. Definições → Bots de chat\n2. Toque em «Ligar o Slack»\n3. Envie o código aqui: `link O_SEU_CÓDIGO`\n\nExemplo: `link A3K9F2`',
+    br: '👋 Bem-vindo ao Budget Assistant!\n\nPara conectar este workspace do Slack à sua conta, abra o app:\n1. Configurações → Bots de chat\n2. Toque em “Conectar o Slack”\n3. Envie o código aqui: `link SEU_CÓDIGO`\n\nExemplo: `link A3K9F2`',
   },
   unlinkSuccess: {
     en: '✅ Your Slack has been unlinked. Send `link YOUR_CODE` to connect again.',
@@ -60,6 +66,8 @@ const platformMessages: Record<string, Record<string, string>> = {
     pl: '✅ Slack odłączony. Wyślij `link TWÓJ_KOD`, aby połączyć ponownie.',
     be: '✅ Slack адвязаны. Адпраўце `link ВАШ_КОД` для паўторнага падключэння.',
     nl: '✅ Je Slack is losgekoppeld. Stuur `link JOUW_CODE` om opnieuw te verbinden.',
+    pt: '✅ O seu Slack foi desassociado. Envie `link O_SEU_CÓDIGO` para voltar a ligá-lo.',
+    br: '✅ Seu Slack foi desvinculado. Envie `link SEU_CÓDIGO` para conectar de novo.',
   },
   helpText: {
     en: '*Available commands:*\n\nexpense <amount> [description] — Add an expense\nincome <amount> [description] — Add income\ngroup <amount> [currency] [description] — Add to a shared group\ncategory [type] <name> — Create a category\ncategories — List & delete categories\ncategorize — Sort uncategorized expenses\nusage — View AI usage and limits\ndigest on|off|now — Weekly voice digest\naccount — Switch between accounts\nnewchat — Start a new AI conversation\nunlink — Disconnect Slack\nhelp — Show this message\n\n*Other features:*\n🎤 Send a *voice message* to add expenses or chat with AI\n📷 Send a *receipt photo* to scan and create an expense\n💬 Just type any message to *chat with the AI assistant*',
@@ -71,6 +79,8 @@ const platformMessages: Record<string, Record<string, string>> = {
     pl: '*Dostępne polecenia:*\n\nexpense <kwota> [opis] — Dodaj wydatek\nincome <kwota> [opis] — Dodaj dochód\ngroup <kwota> [waluta] [opis] — Dodaj do wspólnej grupy\ncategory [typ] <nazwa> — Utwórz kategorię\ncategories — Lista kategorii\ncategorize — Uporządkuj wydatki bez kategorii\nusage — Użycie AI i limity\ndigest on|off|now — Cotygodniowe podsumowanie głosowe\naccount — Zmień konto\nnewchat — Nowa rozmowa z AI\nunlink — Odłącz Slack\nhelp — Pokaż to polecenie\n\n*Inne funkcje:*\n🎤 Wyślij *wiadomość głosową*\n📷 Wyślij *zdjęcie paragonu*\n💬 Napisz, aby *porozmawiać z AI*',
     be: '*Даступныя каманды:*\n\nexpense <сума> [апісанне] — Дадаць выдатак\nincome <сума> [апісанне] — Дадаць даход\ngroup <сума> [валюта] [апісанне] — Дадаць у агульную групу\ncategory [тып] <назва> — Стварыць катэгорыю\ncategories — Спіс катэгорый\ncategorize — Разабраць выдаткі без катэгорыі\nusage — Выкарыстанне AI і ліміты\ndigest on|off|now — Штотыднёвы галасавы дайджэст\naccount — Пераключыць акаўнт\nnewchat — Новая размова з ІІ\nunlink — Адвязаць Slack\nhelp — Паказаць гэта паведамленне\n\n*Іншыя магчымасці:*\n🎤 Адпраўце *галасавое паведамленне*\n📷 Адпраўце *фота чэка*\n💬 Проста напішыце для *чата з ІІ*',
     nl: '*Beschikbare opdrachten:*\n\nexpense <bedrag> [omschrijving] — Uitgave toevoegen\nincome <bedrag> [omschrijving] — Inkomsten toevoegen\ngroup <bedrag> [valuta] [omschrijving] — Aan een gedeelde groep toevoegen\ncategory [type] <naam> — Categorie aanmaken\ncategories — Categorieën weergeven & verwijderen\ncategorize — Ongecategoriseerde uitgaven sorteren\nusage — AI-gebruik en limieten bekijken\ndigest on|off|now — Wekelijkse spraaksamenvatting\naccount — Tussen accounts wisselen\nnewchat — Nieuw AI-gesprek starten\nunlink — Slack ontkoppelen\nhelp — Dit bericht tonen\n\n*Andere functies:*\n🎤 Stuur een *spraakbericht* om uitgaven toe te voegen of te chatten met AI\n📷 Stuur een *foto van een bon* om te scannen en een uitgave aan te maken\n💬 Typ gewoon een bericht om *met de AI-assistent te chatten*',
+    pt: '*Comandos disponíveis:*\n\nexpense <valor> [descrição] — Adicionar uma despesa\nincome <valor> [descrição] — Adicionar uma receita\ngroup <valor> [moeda] [descrição] — Adicionar a um grupo partilhado\ncategory [tipo] <nome> — Criar uma categoria\ncategories — Listar e eliminar categorias\ncategorize — Organizar despesas sem categoria\nusage — Ver a utilização e os limites de IA\ndigest on|off|now — Resumo semanal por voz\naccount — Mudar de conta\nnewchat — Iniciar uma nova conversa com a IA\nunlink — Desligar o Slack\nhelp — Mostrar esta mensagem\n\n*Outras funcionalidades:*\n🎤 Envie uma *mensagem de voz* para adicionar despesas ou conversar com a IA\n📷 Envie uma *fotografia do talão* para o ler e criar uma despesa\n💬 Escreva qualquer mensagem para *conversar com o assistente de IA*',
+    br: '*Comandos disponíveis:*\n\nexpense <valor> [descrição] — Adicionar uma despesa\nincome <valor> [descrição] — Adicionar uma receita\ngroup <valor> [moeda] [descrição] — Adicionar a um grupo compartilhado\ncategory [tipo] <nome> — Criar uma categoria\ncategories — Listar e excluir categorias\ncategorize — Organizar despesas sem categoria\nusage — Ver o uso e os limites de IA\ndigest on|off|now — Resumo semanal por voz\naccount — Trocar de conta\nnewchat — Iniciar uma nova conversa com a IA\nunlink — Desconectar o Slack\nhelp — Mostrar esta mensagem\n\n*Outros recursos:*\n🎤 Envie uma *mensagem de voz* para adicionar despesas ou conversar com a IA\n📷 Envie uma *foto do recibo* para escaneá-lo e criar uma despesa\n💬 Digite qualquer mensagem para *conversar com o assistente de IA*',
   },
 };
 

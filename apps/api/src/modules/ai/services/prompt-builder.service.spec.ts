@@ -161,4 +161,90 @@ describe('PromptBuilder language detection', () => {
       expect(out[0]).toBe("I'd like to SUMMARY. Please confirm or cancel.");
     });
   });
+
+  describe('Portuguese (pt / br)', () => {
+    it('detects Portuguese by ã/õ and by a common-word list, before the French/Spanish block', () => {
+      expect(pb.detectLanguage('Gastei 20 euros no café hoje')).toBe('Portuguese');
+      expect(pb.detectLanguage('Comprei pão e feijão')).toBe('Portuguese');
+      expect(pb.detectLanguage('Quanto gastei este mês? Você sabe?')).toBe('Portuguese');
+      // "gastos" is ordinary Portuguese, so it must not count as a Spanish-only word.
+      expect(pb.detectLanguage('Quanto foram os meus gastos esta semana?')).not.toBe('Spanish');
+    });
+
+    it('does not steal clear French or Spanish messages', () => {
+      expect(pb.detectLanguage("J'ai payé 5 euros au café")).toBe('French');
+      expect(pb.detectLanguage('Gasté 20 euros en el café')).toBe('Spanish');
+      expect(pb.detectLanguage('Gasté 20 euros en el mercado mañana')).toBe('Spanish');
+      expect(pb.detectLanguage('Gasté 20 euros en el mercado')).not.toBe('Portuguese');
+      expect(pb.detectLanguage('Ça va coûter combien à la fin du mois ?')).toBe('French');
+    });
+
+    it('maps the pt and br UI locales to their variant names', () => {
+      expect(pb.localeToLanguageName('pt')).toBe('European Portuguese');
+      expect(pb.localeToLanguageName('br')).toBe('Brazilian Portuguese');
+    });
+
+    it('resolves full external tags with the app locale rule', () => {
+      expect(pb.localeToLanguageName('pt-BR')).toBe('Brazilian Portuguese');
+      expect(pb.localeToLanguageName('pt_br')).toBe('Brazilian Portuguese');
+      expect(pb.localeToLanguageName('pt-PT')).toBe('European Portuguese');
+      expect(pb.localeToLanguageName('uk-UA')).toBe('Ukrainian');
+      expect(pb.localeToLanguageName('fr-CA')).toBe('French');
+      expect(pb.localeToLanguageName('ja')).toBeNull();
+    });
+
+    it('answers a detected Portuguese message in the UI variant, Brazilian otherwise', () => {
+      expect(pb.detectUserLanguage('Comprei pão', [], 'pt')).toBe('European Portuguese');
+      expect(pb.detectUserLanguage('Comprei pão', [], 'br')).toBe('Brazilian Portuguese');
+      expect(pb.detectUserLanguage('Comprei pão', [], 'en')).toBe('Brazilian Portuguese');
+      expect(pb.detectUserLanguage('Comprei pão', [], undefined)).toBe('Brazilian Portuguese');
+      expect(pb.detectUserLanguage('ok', [], 'pt')).toBe('European Portuguese');
+      expect(pb.detectUserLanguage('ok', [], 'br')).toBe('Brazilian Portuguese');
+    });
+
+    it('resolves a Portuguese assistant history to a variant, never the bare name', () => {
+      const history = [{ role: 'assistant', content: 'Não encontrei despesas hoje.' }];
+      expect(pb.detectUserLanguage('ok', history, undefined)).toBe('Brazilian Portuguese');
+    });
+
+    describe('every fixed-string helper answers both variants in Portuguese', () => {
+      const variants = ['European Portuguese', 'Brazilian Portuguese'];
+      const english = 'English';
+      const helpers: Array<[string, (l: string) => string]> = [
+        ['buildActionSummary', (l) => pb.buildActionSummary('create_category', { name: 'Pets', type: 'expense' }, l)],
+        ['buildActionSummary (undo_last_action)', (l) => pb.buildActionSummary('undo_last_action', { originalActionType: 'create_expense', originalResultData: { amount: 5, currencyCode: 'EUR' } }, l)],
+        ['getConfirmPromptText', (l) => pb.getConfirmPromptText(l, 'S')],
+        ['getConfirmText', (l) => pb.getConfirmText(l, 'S')],
+        ['getFailText', (l) => pb.getFailText(l, 'E')],
+        ['getShoppingListAddText', (l) => pb.getShoppingListAddText(l, 'L', ['milk'])],
+        ['getShoppingListRemoveText (removed)', (l) => pb.getShoppingListRemoveText(l, ['milk'], [])],
+        ['getShoppingListRemoveText (nothing)', (l) => pb.getShoppingListRemoveText(l, [], [])],
+        ['getShoppingListRemoveText (not found)', (l) => pb.getShoppingListRemoveText(l, ['milk'], ['eggs'])],
+        ['getRejectText', (l) => pb.getRejectText(l)],
+        ['getUndoConfirmText', (l) => pb.getUndoConfirmText(l, { undoneEntityType: 'expense', amount: 5, currencyCode: 'EUR' })],
+        ['getUndoUnavailableText (stale)', (l) => pb.getUndoUnavailableText(l, 'stale')],
+        ['getUndoUnavailableText (nothing)', (l) => pb.getUndoUnavailableText(l, 'nothing')],
+      ];
+      it.each(helpers)('%s', (_name, fn) => {
+        for (const v of variants) expect(fn(v)).not.toBe(fn(english));
+        // A bare 'Portuguese' (should one ever reach a helper) reads as Brazilian.
+        expect(fn('Portuguese')).toBe(fn('Brazilian Portuguese'));
+      });
+    });
+
+    it('prefixes an undo summary in Portuguese, not English', () => {
+      const args = { originalActionType: 'create_expense', originalResultData: { amount: 5, currencyCode: 'EUR' } };
+      expect(pb.buildActionSummary('undo_last_action', args, 'European Portuguese')).toBe('anular a última ação: despesa 5 EUR');
+      expect(pb.buildActionSummary('undo_last_action', args, 'Brazilian Portuguese')).toBe('desfazer a última ação: despesa 5 EUR');
+      expect(pb.buildActionSummary('undo_last_action', args, 'Portuguese')).toBe('desfazer a última ação: despesa 5 EUR');
+    });
+
+    it('addresses the European variant without "você"', () => {
+      const pt = [
+        pb.getConfirmPromptText('European Portuguese', 'S'), pb.getRejectText('European Portuguese'),
+        pb.getUndoUnavailableText('European Portuguese', 'stale'), pb.getUndoUnavailableText('European Portuguese', 'nothing'),
+      ].join(' ');
+      expect(pt).not.toMatch(/você/i);
+    });
+  });
 });

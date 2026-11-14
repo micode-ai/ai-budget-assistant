@@ -34,15 +34,15 @@ prompt.
 **An entry's `id` is permanent once shipped**, in two senses: the persisted last-seen pointer
 references it, and so does its copy.
 
-**Copy lives in the nine locale files**, at `whatsNew.entries.<id>.title` / `.body` — not as fields
+**Copy lives in the eleven locale files**, at `whatsNew.entries.<id>.title` / `.body` — not as fields
 on the entry. It was plain English at first, on a recorded rationale citing blog and help markdown as
 precedent for staying outside the i18n system — which was backwards, since those are exactly the two
-long-form surfaces this repo does translate into all nine. The effect was localized chrome wrapped
+long-form surfaces this repo does translate into all eleven. The effect was localized chrome wrapped
 around English copy, in the one section whose whole job is telling people about features they would
 otherwise never find, in an app whose primary market is Poland.
 
 **A missing key renders the key string to the user.** i18next falls back to the key, not to English,
-so a test asserts every entry has non-empty copy in all nine bundles and that no bundle carries copy
+so a test asserts every entry has non-empty copy in all eleven bundles and that no bundle carries copy
 for an id the array no longer has — verified to fail on a deliberately broken key rather than
 passing vacuously.
 
@@ -57,7 +57,7 @@ onboarding.
 
 **Browsing the history never calls `markSeen`.** Only the one-time spotlight does.
 
-**A future headline feature appends one entry plus its copy in all nine locales as part of its own
+**A future headline feature appends one entry plus its copy in all eleven locales as part of its own
 PR**, at the same review weight as its i18n, help and schema updates.
 
 ## Known gaps

@@ -10,6 +10,8 @@
  * See docs/contracts/shopping-list-guest-share-link.md.
  */
 
+import { resolveAcceptLanguage, resolveAppLocale, toIntlLocale } from '../../../common/utils/app-locale';
+
 type Lang = string;
 
 export interface GuestListPageStrings {
@@ -32,8 +34,8 @@ export interface GuestListPageStrings {
   intlLocale: string;
 }
 
-// Same 9 locales / same ordering convention as
-// receipt-split/helpers/guest-page-i18n.ts (en, ru, ua, pl, es, fr, de, be, nl).
+// Same locales / same ordering convention as
+// receipt-split/helpers/guest-page-i18n.ts (en, ru, ua, pl, es, fr, de, be, nl, pt, br).
 const translations: Record<string, GuestListPageStrings> = {
   en: {
     title: (listName) => `${listName} — Shopping list`,
@@ -47,7 +49,7 @@ const translations: Record<string, GuestListPageStrings> = {
     getAndroid: 'Get it on Google Play',
     totalRemaining: 'Still to buy',
     totalAll: 'Whole list',
-    intlLocale: 'en-US',
+    intlLocale: toIntlLocale('en'),
   },
   ru: {
     title: (listName) => `${listName} — Список покупок`,
@@ -61,7 +63,7 @@ const translations: Record<string, GuestListPageStrings> = {
     getAndroid: 'Доступно в Google Play',
     totalRemaining: 'Осталось купить',
     totalAll: 'Весь список',
-    intlLocale: 'ru-RU',
+    intlLocale: toIntlLocale('ru'),
   },
   ua: {
     title: (listName) => `${listName} — Список покупок`,
@@ -75,7 +77,7 @@ const translations: Record<string, GuestListPageStrings> = {
     getAndroid: 'Доступно в Google Play',
     totalRemaining: 'Залишилось купити',
     totalAll: 'Весь список',
-    intlLocale: 'uk-UA',
+    intlLocale: toIntlLocale('ua'),
   },
   pl: {
     title: (listName) => `${listName} — Lista zakupów`,
@@ -89,7 +91,7 @@ const translations: Record<string, GuestListPageStrings> = {
     getAndroid: 'Dostępne w Google Play',
     totalRemaining: 'Zostało do kupienia',
     totalAll: 'Cała lista',
-    intlLocale: 'pl-PL',
+    intlLocale: toIntlLocale('pl'),
   },
   es: {
     title: (listName) => `${listName} — Lista de compras`,
@@ -103,7 +105,7 @@ const translations: Record<string, GuestListPageStrings> = {
     getAndroid: 'Disponible en Google Play',
     totalRemaining: 'Falta por comprar',
     totalAll: 'Toda la lista',
-    intlLocale: 'es-ES',
+    intlLocale: toIntlLocale('es'),
   },
   fr: {
     title: (listName) => `${listName} — Liste de courses`,
@@ -117,7 +119,7 @@ const translations: Record<string, GuestListPageStrings> = {
     getAndroid: 'Disponible sur Google Play',
     totalRemaining: 'Reste à acheter',
     totalAll: 'Toute la liste',
-    intlLocale: 'fr-FR',
+    intlLocale: toIntlLocale('fr'),
   },
   de: {
     title: (listName) => `${listName} — Einkaufsliste`,
@@ -131,7 +133,7 @@ const translations: Record<string, GuestListPageStrings> = {
     getAndroid: 'Bei Google Play erhältlich',
     totalRemaining: 'Noch zu kaufen',
     totalAll: 'Ganze Liste',
-    intlLocale: 'de-DE',
+    intlLocale: toIntlLocale('de'),
   },
   be: {
     title: (listName) => `${listName} — Спіс пакупак`,
@@ -145,7 +147,7 @@ const translations: Record<string, GuestListPageStrings> = {
     getAndroid: 'Даступна ў Google Play',
     totalRemaining: 'Засталося купіць',
     totalAll: 'Увесь спіс',
-    intlLocale: 'be-BY',
+    intlLocale: toIntlLocale('be'),
   },
   nl: {
     title: (listName) => `${listName} — Boodschappenlijst`,
@@ -159,14 +161,39 @@ const translations: Record<string, GuestListPageStrings> = {
     getAndroid: 'Verkrijgbaar bij Google Play',
     totalRemaining: 'Nog te kopen',
     totalAll: 'Hele lijst',
-    intlLocale: 'nl-NL',
+    intlLocale: toIntlLocale('nl'),
+  },
+  pt: {
+    title: (listName) => `${listName} — Lista de compras`,
+    heading: (listName) => listName,
+    subheading: 'Risque os artigos à medida que faz as compras',
+    emptyList: 'Esta lista ainda está vazia.',
+    notFoundTitle: 'Link indisponível',
+    notFoundBody: 'Este link para a lista de compras já não está ativo.',
+    poweredBy: 'Partilhado com o AI Budget Assistant',
+    ctaButton: 'Obter a aplicação',
+    getAndroid: 'Disponível no Google Play',
+    totalRemaining: 'Ainda por comprar',
+    totalAll: 'Lista completa',
+    intlLocale: toIntlLocale('pt'),
+  },
+  br: {
+    title: (listName) => `${listName} — Lista de compras`,
+    heading: (listName) => listName,
+    subheading: 'Marque os itens enquanto faz as compras',
+    emptyList: 'Esta lista ainda está vazia.',
+    notFoundTitle: 'Link indisponível',
+    notFoundBody: 'Este link da lista de compras não está mais ativo.',
+    poweredBy: 'Compartilhado com o AI Budget Assistant',
+    ctaButton: 'Baixar o app',
+    getAndroid: 'Disponível no Google Play',
+    totalRemaining: 'Ainda falta comprar',
+    totalAll: 'Lista inteira',
+    intlLocale: toIntlLocale('br'),
   },
 };
 
 const SUPPORTED_LANGS = Object.keys(translations);
-
-// Same "ua" vs ISO "uk" alias as receipt-split/helpers/guest-page-i18n.ts.
-const ACCEPT_LANGUAGE_ALIASES: Record<string, string> = { uk: 'ua' };
 
 interface GuestLangRequest {
   query?: Record<string, unknown>;
@@ -176,18 +203,17 @@ interface GuestLangRequest {
 export function resolveGuestListLang(req: GuestLangRequest | undefined | null): Lang {
   const queryLang = req?.query?.lang;
   if (typeof queryLang === 'string') {
-    const normalized = queryLang.toLowerCase();
-    if (SUPPORTED_LANGS.includes(normalized)) return normalized;
+    // Our links carry internal codes, so ?lang=pt is European; browser headers are external tags, so Accept-Language pt is Brazilian.
+    const exact = queryLang.toLowerCase();
+    if (SUPPORTED_LANGS.includes(exact)) return exact;
+    const resolved = resolveAppLocale(queryLang, SUPPORTED_LANGS);
+    if (resolved) return resolved;
   }
 
   const acceptLanguage = req?.headers?.['accept-language'];
   if (typeof acceptLanguage === 'string' && acceptLanguage.length > 0) {
-    for (const part of acceptLanguage.split(',')) {
-      const tag = part.split(';')[0].trim().toLowerCase();
-      const primary = tag.split('-')[0];
-      const mapped = ACCEPT_LANGUAGE_ALIASES[primary] ?? primary;
-      if (SUPPORTED_LANGS.includes(mapped)) return mapped;
-    }
+    const resolved = resolveAcceptLanguage(acceptLanguage, SUPPORTED_LANGS);
+    if (resolved) return resolved;
   }
 
   return 'en';

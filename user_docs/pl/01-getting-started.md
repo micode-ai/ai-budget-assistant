@@ -10,7 +10,7 @@
 4. Utworz **Haslo** (minimum 8 znakow, musi zawierac wielka litere A-Z, mala litere a-z i cyfre 0-9)
 5. Potwierdz haslo w polu **Potwierdz haslo**
 6. Wybierz preferowana **Walute** (USD, EUR, PLN, GBP, UAH, RUB lub BYN)
-7. Wybierz preferowany **Jezyk** (English, Deutsch, Espanol, Francais, Polski, Russkij, Ukrainska lub Беларуская)
+7. Wybierz preferowany **Jezyk** (English, Deutsch, Espanol, Francais, Polski, Russkij, Ukrainska, Беларуская, Nederlands, Português (Portugal) lub Português (Brasil))
 8. Dotknij **Utwórz konto**
 9. Sprawdź swoją pocztę — otrzymasz **6-cyfrowy kod weryfikacyjny**
 10. Wprowadź kod w aplikacji i naciśnij **Zweryfikuj**

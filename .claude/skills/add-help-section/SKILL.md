@@ -1,6 +1,6 @@
 ---
 name: add-help-section
-description: Use when adding or editing a section in the help system — the in-app help (mobile Settings → Help) and the public help center are both generated from user_docs markdown. Covers the 9 locales, the three registrations a NEW section needs (scripts/generate-help-content.js, src/help/sections.ts, docs/marketing/help/build_help.py), and regenerating content.ts and the public site. NEVER edit apps/mobile/src/help/content.ts manually.
+description: Use when adding or editing a section in the help system — the in-app help (mobile Settings → Help) and the public help center are both generated from user_docs markdown. Covers the 11 locales, the three registrations a NEW section needs (scripts/generate-help-content.js, src/help/sections.ts, docs/marketing/help/build_help.py), and regenerating content.ts and the public site. NEVER edit apps/mobile/src/help/content.ts manually.
 ---
 
 # Adding or Editing a Help Section
@@ -11,7 +11,7 @@ The in-app help screen is powered by auto-generated `apps/mobile/src/help/conten
 
 | When | What to edit |
 |---|---|
-| Adding/editing content text | `user_docs/<lang>/NN-slug.md` for **all 9 locales** |
+| Adding/editing content text | `user_docs/<lang>/NN-slug.md` for **all 11 locales** |
 | Adding a new section (not editing) | Also `scripts/generate-help-content.js` `SECTIONS` array |
 | Adding a new section (not editing) | Also `apps/mobile/src/help/sections.ts` |
 | Adding a new section (not editing) | Also `docs/marketing/help/build_help.py` `SECTIONS` — without it the section is silently missing from the public help site |
@@ -29,9 +29,9 @@ The `id` is a kebab-case string used in the URL: `/help/<id>`. The `NN-slug` is 
 ls user_docs/en/
 ```
 
-### 2. Create markdown for all 9 locales
+### 2. Create markdown for all 11 locales
 
-Create `user_docs/<lang>/NN-slug.md` for each of: `en`, `de`, `es`, `fr`, `pl`, `ru`, `ua`, `be`, `nl`. Visible text uses each language's real orthography; only the slug is ASCII.
+Create `user_docs/<lang>/NN-slug.md` for each of: `en`, `de`, `es`, `fr`, `pl`, `ru`, `ua`, `be`, `nl`, `pt`, `br`. Visible text uses each language's real orthography; only the slug is ASCII.
 
 Each file follows the project's markdown conventions — look at a sibling file for the structure (title heading, intro paragraph, subsections).
 
@@ -61,11 +61,11 @@ The first writes `apps/mobile/src/help/content.ts`; the other two rebuild the pu
 npm run typecheck
 ```
 
-Then open the help screen in dev and confirm the new section appears in all 9 languages.
+Then open the help screen in dev and confirm the new section appears in all 11 languages.
 
 ## Editing an EXISTING section
 
-Just edit the `user_docs/<lang>/NN-slug.md` files (all 9 locales) and regenerate (step 4). No registration needed.
+Just edit the `user_docs/<lang>/NN-slug.md` files (all 11 locales) and regenerate (step 4). No registration needed.
 
 ## Common mistakes
 

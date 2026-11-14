@@ -13,7 +13,7 @@ A Telegraf-based Telegram bot embedded in the NestJS API (`modules/telegram/`) t
 - `apps/api/src/modules/telegram/telegram-bot.controller.ts` — `POST /telegram/webhook` (excluded from the `/api/v1` prefix in `apps/api/src/global-prefix-exclusions.ts`)
 - `apps/api/src/modules/telegram/handlers/` — one file per handler; `ls` the directory for the current set
 - `apps/api/src/modules/telegram/telegram-link.service.ts` + `UsersController` (`POST /users/me/telegram-link-code`, `GET/DELETE /users/me/telegram-link`) — account linking
-- `apps/api/src/modules/telegram/helpers/i18n.ts` — Telegram-specific copy over the shared bot dictionary `common/bot-i18n/shared-messages.ts` (9 languages, resolved from `user.language`)
+- `apps/api/src/modules/telegram/helpers/i18n.ts` — Telegram-specific copy over the shared bot dictionary `common/bot-i18n/shared-messages.ts` (11 languages, resolved from `user.language`)
 - `apps/api/src/modules/telegram/telegram.service.ts` — `TelegramService`, the **ops** notifier (not the assistant bot)
 
 ## Key concepts

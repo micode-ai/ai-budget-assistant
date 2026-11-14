@@ -17,7 +17,7 @@ pre-filled by OCR, and the user taps Save. Several files are a queue — one car
 - Root hook: `src/hooks/useShareIntake.ts` (composed in `app/_layout.tsx`).
 - Screen: `app/expense/receipt.tsx?source=share` → `ReceiptExpenseView` `shareMode`;
   `useReceiptScanner.processSharedFile`; `useReceiptSave`'s `queue` param.
-- Copy: `shareIntake.*` in all 9 locales; user docs `user_docs/*/04-voice-and-receipt.md`.
+- Copy: `shareIntake.*` in all 11 locales; user docs `user_docs/*/04-voice-and-receipt.md`.
 
 ## Key concepts
 **Files are copied natively, at once.** The read grant on a foreign `content://` URI is

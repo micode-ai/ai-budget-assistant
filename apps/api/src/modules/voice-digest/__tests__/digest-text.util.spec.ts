@@ -168,6 +168,11 @@ describe('templateLanguage', () => {
     expect(templateLanguage('be')).toBe('ru');
   });
 
+  it("maps pt and br to Meta's pt_PT and pt_BR", () => {
+    expect(templateLanguage('pt')).toBe('pt_PT');
+    expect(templateLanguage('br')).toBe('pt_BR');
+  });
+
   it('leaves other known languages unchanged', () => {
     expect(templateLanguage('en')).toBe('en');
     expect(templateLanguage('pl')).toBe('pl');

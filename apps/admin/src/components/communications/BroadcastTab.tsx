@@ -95,6 +95,8 @@ export function BroadcastTab() {
                   <SelectItem value="pl">Polish</SelectItem>
                   <SelectItem value="be">Belarusian</SelectItem>
                   <SelectItem value="nl">Dutch</SelectItem>
+                  <SelectItem value="pt">Portuguese (Portugal)</SelectItem>
+                  <SelectItem value="br">Portuguese (Brazil)</SelectItem>
                 </SelectContent>
               </Select>
             </div>

@@ -73,7 +73,7 @@ every period — history and alerts included — so re-parenting changes past fi
 
 **Equivalence, not substring matching.** `findEquivalentCategory` decides a candidate name duplicates
 an existing category by normalized equality, or by sharing a default-category slot
-(`defaultCategorySlot`) across all nine locales — so "Zakupy spożywcze" equals "Groceries" and
+(`defaultCategorySlot`) across all eleven locales — so "Zakupy spożywcze" equals "Groceries" and
 "Deposit" equals "Kaucja". Substring matching is rejected on purpose: "Car" or "Dom" would misfire.
 
 **Automatic vs explicit creation.** Automatic paths (receipt proposals, categorize-uncategorized,

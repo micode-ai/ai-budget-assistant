@@ -10,7 +10,7 @@
 4. Create a **Password** (minimum 8 characters, must include an uppercase letter A-Z, a lowercase letter a-z, and a number 0-9)
 5. Confirm your password
 6. Select your preferred **Currency** (USD, EUR, PLN, GBP, UAH, RUB, or BYN)
-7. Select your preferred **Language** (English, Deutsch, Espanol, Francais, Polski, Русский, Українська, or Беларуская)
+7. Select your preferred **Language** (English, Deutsch, Espanol, Francais, Polski, Русский, Українська, Беларуская, Nederlands, Português (Portugal) or Português (Brasil))
 8. Tap **Create Account**
 9. Check your email for a **6-digit verification code**
 10. Enter the code in the app and tap **Verify**

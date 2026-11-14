@@ -25,6 +25,11 @@ Articles pair across languages by a frontmatter `pair` key, which must be identi
 files or hreflang breaks. Slugs are localized and ASCII-transliterated per language; `en` is
 `x-default`.
 
+**The landing and the help center have eleven: the nine plus `pt` (Portugal) and `br` (Brazil).**
+Their hreflang is `pt-PT` and `pt-BR` — never a raw `br`, which is Breton. The blog has no pt/br
+articles, so those landings link to the English blog and say so, and their mirrors carry the help
+center only.
+
 **The blog owns the chrome.** `build_help.py` imports `build_blog` rather than copying its header,
 footer and CSS, so help pages inherit the language switcher and styling for free. CSS is inlined
 per page, so a style change re-touches every committed HTML file.
@@ -34,7 +39,7 @@ all nine languages, and the blog's brand and breadcrumb link back to the languag
 via `home_url(lang)`. Do not hardcode `/` or an `en`/`pl`-only blog link in either generator.
 
 **On iOS the landing must not send people to Google Play (ABA-645).** `track_html()` appends
-`IOS_HTML`, a small script (text in `IOS_TEXT`, 9 languages) that runs only on an iPhone/iPad not
+`IOS_HTML`, a small script (text in `IOS_TEXT`, 11 languages) that runs only on an iPhone/iPad not
 already standalone: it hides the Google Play `.btn` buttons, repoints inline Play links to
 `app.ai-budget.pl/?src=landing&loc=ios&lang=<lang>` labelled with that domain, and shows a fixed
 dismissible bar (`localStorage` `ios-bar-off`) explaining Add to Home Screen. Desktop and Android
@@ -92,7 +97,7 @@ encryption presented as the default — in all nine languages at once, because t
 hand-written copies. Since ABA-674 there is one English list, `FEATURES_EN` in `build_landing.py`:
 `llms.txt` renders it and `featureList` is it plus two product facts. Each `LLMS_TXT_I18N[lang]
 ["features"]` translates it item for item, and `check_feature_lists()` stops the build when a
-translation's length differs — so a new feature goes in at the same index in all nine lists. The
+translation's length differs — so a new feature goes in at the same index in every language's list. The
 check keeps the lists in step; it cannot see a translation that says something else. Check a
 claim against the wiki before adding it, and never list a feature that is flag-gated off in
 production (receipt price-check alerts, Community Price Map). Do not name the AI model; it goes

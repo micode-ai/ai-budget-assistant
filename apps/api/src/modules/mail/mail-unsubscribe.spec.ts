@@ -55,8 +55,8 @@ describe('MailUnsubscribeController', () => {
 });
 
 describe('onboardingEmailCopy', () => {
-  it('covers all nine app languages with distinct copy', () => {
-    expect(ONBOARDING_EMAIL_LANGS.sort()).toEqual(['be', 'de', 'en', 'es', 'fr', 'nl', 'pl', 'ru', 'ua']);
+  it('covers every app language with distinct copy', () => {
+    expect(ONBOARDING_EMAIL_LANGS.sort()).toEqual(['be', 'br', 'de', 'en', 'es', 'fr', 'nl', 'pl', 'pt', 'ru', 'ua']);
     for (const l of ONBOARDING_EMAIL_LANGS) {
       if (l !== 'en') expect(onboardingEmailCopy(l).intro).not.toBe(onboardingEmailCopy('en').intro);
     }

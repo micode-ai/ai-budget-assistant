@@ -14,7 +14,7 @@ you have just edited:
    add one line to the `## Ingests` section of `docs/wiki/log.md`.
 3. Update `CLAUDE.md` **only if a repo-wide rule changed** (see step 4 — it is the schema now, not
    the content store).
-4. Update user docs (`user_docs/<lang>/NN-slug.md`) for all 9 locales — if the change is
+4. Update user docs (`user_docs/<lang>/NN-slug.md`) for all 11 locales — if the change is
    user-visible.
 
 Steps 1 and 2 always run. Step 4 runs when the change is user-visible; when unsure whether it is,
@@ -118,8 +118,8 @@ Do NOT append a new feature description to it — that is what the wiki is for.
 
 ### 5. Update user docs (if user-visible)
 
-- Edit `user_docs/<lang>/NN-slug.md` for **all 9 locales**: `en`, `de`, `es`, `fr`, `pl`, `ru`,
-  `ua`, `be`, `nl`.
+- Edit `user_docs/<lang>/NN-slug.md` for **all 11 locales**: `en`, `de`, `es`, `fr`, `pl`, `ru`,
+  `ua`, `be`, `nl`, `pt`, `br`.
 - Visible text uses each language's real orthography — only slugs are ASCII.
 - Extending an existing section needs no registration. A **new** section must be registered in
   three places: `scripts/generate-help-content.js` SECTIONS, `src/help/sections.ts`, and

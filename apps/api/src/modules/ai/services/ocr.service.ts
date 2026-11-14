@@ -190,10 +190,11 @@ const DATE_FORMAT_BY_LANG: Record<string, ReceiptDateFormat> = {
   ru: 'DD.MM.YYYY',
   ua: 'DD.MM.YYYY',
   be: 'DD.MM.YYYY',
-  // DD/MM/YYYY (France / Italy / Spain / UK / Belgium)
+  // DD/MM/YYYY (France / Italy / Spain / UK / Belgium / Brazil)
   fr: 'DD/MM/YYYY',
   it: 'DD/MM/YYYY',
   es: 'DD/MM/YYYY',
+  br: 'DD/MM/YYYY',
   // DD-MM-YYYY (Portugal / Netherlands / Denmark)
   pt: 'DD-MM-YYYY',
   nl: 'DD-MM-YYYY',

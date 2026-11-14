@@ -1,6 +1,7 @@
 import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
+import { getIntlLocale } from '@/i18n';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import type { SavingsGoal, GoalCheckpoint, GoalCategoryLimit } from '@budget/shared-types';
 
@@ -11,7 +12,7 @@ interface GoalAIPlanProps {
 }
 
 export function GoalAIPlan({ goal, isRegenerating, onRegenerate }: GoalAIPlanProps) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
 
@@ -23,17 +24,7 @@ export function GoalAIPlan({ goal, isRegenerating, onRegenerate }: GoalAIPlanPro
 
   const formatDate = (date: Date | string): string => {
     const d = date instanceof Date ? date : new Date(date);
-    const localeMap: Record<string, string> = {
-      en: 'en-US',
-      ru: 'ru-RU',
-      de: 'de-DE',
-      es: 'es-ES',
-      fr: 'fr-FR',
-      pl: 'pl-PL',
-      ua: 'uk-UA',
-      be: 'be-BY',
-    };
-    const locale = localeMap[i18n.language] || 'en-US';
+    const locale = getIntlLocale();
     return d.toLocaleDateString(locale, { month: 'short', day: 'numeric', year: 'numeric' });
   };
 

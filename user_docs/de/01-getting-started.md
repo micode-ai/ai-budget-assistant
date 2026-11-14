@@ -10,7 +10,7 @@
 4. Erstelle ein **Passwort** (mindestens 8 Zeichen, muss einen Grossbuchstaben A-Z, einen Kleinbuchstaben a-z und eine Zahl 0-9 enthalten)
 5. Bestatige dein Passwort
 6. Wahle deine bevorzugte **Wahrung** (USD, EUR, PLN, GBP, UAH, RUB oder BYN)
-7. Wahle deine bevorzugte **Sprache** (English, Deutsch, Espanol, Francais, Polski, Русский, Українська oder Беларуская)
+7. Wahle deine bevorzugte **Sprache** (English, Deutsch, Espanol, Francais, Polski, Русский, Українська, Беларуская, Nederlands, Português (Portugal) oder Português (Brasil))
 8. Tippe auf **Konto erstellen**
 9. Überprüfen Sie Ihre E-Mail auf einen **6-stelligen Verifizierungscode**
 10. Geben Sie den Code in der App ein und tippen Sie auf **Verifizieren**

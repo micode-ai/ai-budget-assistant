@@ -1,4 +1,6 @@
 const CURRENCY_SYMBOLS: Record<string, string> = {
+  // Before '$': a prefix match on 'R$' must win over the bare dollar sign.
+  'R$': 'BRL',
   '₴': 'UAH',
   '$': 'USD',
   '€': 'EUR',
@@ -6,6 +8,12 @@ const CURRENCY_SYMBOLS: Record<string, string> = {
   '£': 'GBP',
   '₽': 'RUB',
 };
+
+/** 'reais' is the spoken plural of the Brazilian real (bare 'real' is left out: "50 real estate fee"). */
+function normalizeCode(raw: string): string {
+  const code = raw.toUpperCase();
+  return code === 'REAIS' ? 'BRL' : code;
+}
 
 export interface ParsedAmount {
   amount: number;
@@ -46,7 +54,7 @@ export function parseAmount(text: string): ParsedAmount | null {
   }
 
   // Try: amount + symbol (e.g., "50$ groceries", "100₴ taxi")
-  const symbolAfterMatch = trimmed.match(/^(\d+(?:[.,]\d+)?)\s*([₴$€£₽]|zł)\s*(.*)?$/);
+  const symbolAfterMatch = trimmed.match(/^(\d+(?:[.,]\d+)?)\s*(R\$|[₴$€£₽]|zł)\s*(.*)?$/);
   if (symbolAfterMatch) {
     const amount = parseFloat(symbolAfterMatch[1].replace(',', '.'));
     if (isNaN(amount) || amount <= 0) return null;
@@ -59,13 +67,13 @@ export function parseAmount(text: string): ParsedAmount | null {
   }
 
   // Try: amount + currency code (e.g., "100 UAH taxi", "50 EUR dinner")
-  const codeMatch = trimmed.match(/^(\d+(?:[.,]\d+)?)\s+(USD|EUR|PLN|GBP|UAH|RUB|BYN|CZK|SEK|NOK|DKK|HUF|RON|CHF)\b\s*(.*)?$/i);
+  const codeMatch = trimmed.match(/^(\d+(?:[.,]\d+)?)\s+(USD|EUR|PLN|GBP|UAH|RUB|BYN|CZK|SEK|NOK|DKK|HUF|RON|CHF|BRL|REAIS)\b\s*(.*)?$/i);
   if (codeMatch) {
     const amount = parseFloat(codeMatch[1].replace(',', '.'));
     if (isNaN(amount) || amount <= 0) return null;
     return {
       amount,
-      currencyCode: codeMatch[2].toUpperCase(),
+      currencyCode: normalizeCode(codeMatch[2]),
       description: codeMatch[3]?.trim() || undefined,
     };
   }

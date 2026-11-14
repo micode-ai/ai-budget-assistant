@@ -42,6 +42,7 @@ const SYMBOL_TO_CURRENCY: Array<[RegExp, string]> = [
   [/₴/, 'UAH'],
   [/₽/, 'RUB'],
   [/\bBr\b/, 'BYN'],
+  [/R\$/, 'BRL'], // before the bare $ rule
   [/\$/, 'USD'],
 ];
 
@@ -176,7 +177,7 @@ function directionOf(raw: string): 'income' | 'expense' | null {
 }
 
 function currencyFromSymbol(raw: string): string | undefined {
-  const code = raw.match(/\b(PLN|EUR|USD|GBP|UAH|RUB|BYN|CZK|SEK|NOK|DKK|HUF|RON|CHF)\b/i);
+  const code = raw.match(/\b(PLN|EUR|USD|GBP|UAH|RUB|BYN|CZK|SEK|NOK|DKK|HUF|RON|CHF|BRL)\b/i);
   if (code) return code[1].toUpperCase();
   return SYMBOL_TO_CURRENCY.find(([re]) => re.test(raw))?.[1];
 }

@@ -3,10 +3,10 @@ import * as path from 'path';
 
 const cfg = require('../../../../plugins/launcherShortcuts.json');
 const mobileRoot = path.resolve(__dirname, '../../../..');
-const LOCALES = ['en', 'de', 'es', 'fr', 'nl', 'pl', 'ru', 'uk', 'be'];
+const LOCALES = ['en', 'de', 'es', 'fr', 'nl', 'pl', 'ru', 'uk', 'be', 'pt', 'br'];
 
 describe('launcher shortcuts config', () => {
-  it('has labels for all 9 locales, one per shortcut', () => {
+  it('has labels for all 11 locales, one per shortcut', () => {
     expect(Object.keys(cfg.labels).sort()).toEqual([...LOCALES].sort());
     for (const l of LOCALES) expect(cfg.labels[l]).toHaveLength(cfg.shortcuts.length);
   });

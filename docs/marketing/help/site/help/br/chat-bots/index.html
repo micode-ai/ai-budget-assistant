@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bots de chat — Telegram, WhatsApp e Slack</title>
+<meta name="description" content="Gerencie suas finanças direto do Telegram, do WhatsApp ou do Slack.">
+<link rel="canonical" href="https://ai-budget.pl/help/br/chat-bots/"><meta name="robots" content="index,follow,max-image-preview:large">
+<meta property="og:type" content="article"><meta property="og:site_name" content="AI Budget Assistant">
+<meta property="og:locale" content="pt_BR"><meta property="og:title" content="Bots de chat — Telegram, WhatsApp e Slack">
+<meta property="og:description" content="Gerencie suas finanças direto do Telegram, do WhatsApp ou do Slack."><meta property="og:url" content="https://ai-budget.pl/help/br/chat-bots/">
+<meta property="og:image" content="https://ai-budget.pl/help/br/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Bots de chat — Telegram, WhatsApp e Slack">
+<meta name="twitter:description" content="Gerencie suas finanças direto do Telegram, do WhatsApp ou do Slack."><meta name="twitter:image" content="https://ai-budget.pl/help/br/assets/og-default.png">
+<link rel="alternate" hreflang="en" href="https://ai-budget.pl/help/en/chat-bots/">
+<link rel="alternate" hreflang="pl" href="https://ai-budget.pl/help/pl/chat-bots/">
+<link rel="alternate" hreflang="de" href="https://ai-budget.pl/help/de/chat-bots/">
+<link rel="alternate" hreflang="es" href="https://ai-budget.pl/help/es/chat-bots/">
+<link rel="alternate" hreflang="fr" href="https://ai-budget.pl/help/fr/chat-bots/">
+<link rel="alternate" hreflang="ru" href="https://ai-budget.pl/help/ru/chat-bots/">
+<link rel="alternate" hreflang="uk" href="https://ai-budget.pl/help/ua/chat-bots/">
+<link rel="alternate" hreflang="be" href="https://ai-budget.pl/help/be/chat-bots/">
+<link rel="alternate" hreflang="nl" href="https://ai-budget.pl/help/nl/chat-bots/">
+<link rel="alternate" hreflang="pt-PT" href="https://ai-budget.pl/help/pt/chat-bots/">
+<link rel="alternate" hreflang="pt-BR" href="https://ai-budget.pl/help/br/chat-bots/">
+<link rel="alternate" hreflang="x-default" href="https://ai-budget.pl/help/en/chat-bots/">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MiCode Sp. z o.o.", "alternateName": ["MICODE sp. z o.o.", "MiCode"], "taxID": "5833510147", "founder": {"@id": "https://ai-budget.pl/#author"}, "url": "https://mi-code.pl/", "sameAs": ["https://mi-code.pl/", "https://github.com/micode-ai", "https://www.instagram.com/micode.development/", "https://www.wikidata.org/wiki/Q141551004"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Bots de chat — Telegram, WhatsApp e Slack", "description": "Gerencie suas finanças direto do Telegram, do WhatsApp ou do Slack.", "inLanguage": "pt-BR", "datePublished": "2026-06-19", "dateModified": "2026-11-14", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/br/chat-bots/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/br/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/br/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Início", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Ajuda", "item": "https://ai-budget.pl/help/br/"}, {"@type": "ListItem", "position": 3, "name": "Bots de chat — Telegram, WhatsApp e Slack", "item": "https://ai-budget.pl/help/br/chat-bots/"}]}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "P: Posso conectar o Telegram, o WhatsApp e o Slack?", "acceptedAnswer": {"@type": "Answer", "text": "Sim — são vínculos independentes e todos funcionam ao mesmo tempo."}}, {"@type": "Question", "name": "P: Em que idioma o bot responde?", "acceptedAnswer": {"@type": "Answer", "text": "No idioma definido em Configurações → Aparência."}}, {"@type": "Question", "name": "P: Preciso de uma assinatura para usar os bots?", "acceptedAnswer": {"@type": "Answer", "text": "Os bots usam solicitações de IA da cota mensal do seu plano. Quem usa o plano Free tem um limite mensal menor."}}]}]}</script>
+<style>
+:root{--o:#B45309;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
+*{box-sizing:border-box}
+html,body{overflow-x:hidden}
+body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.7}
+.wrap{max-width:760px;margin:0 auto;padding:0 22px}
+header.site{position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);z-index:10}
+header.site .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+.brand{font-weight:800;color:var(--ink);text-decoration:none;font-size:18px}.brand span{color:var(--o)}
+.nav{display:flex;align-items:center;gap:16px}.nav>a{color:var(--mut);font-weight:600;font-size:15px;text-decoration:none}
+.btn-login{color:#fff!important;background:var(--o);padding:8px 14px;border-radius:8px}
+.langmenu{position:relative}.langmenu>summary{list-style:none;cursor:pointer;color:var(--mut);font-weight:600;font-size:15px}
+.langmenu>summary::-webkit-details-marker{display:none}
+.langlist{position:absolute;top:150%;right:0;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,.12);padding:6px;min-width:170px;z-index:20}
+.langlist a{display:block;padding:9px 12px;border-radius:8px;color:#3a3a42;font-size:14px;font-weight:600;text-decoration:none}
+.langlist a:hover{background:#fff3e6}.langlist a.active{color:var(--o)}
+nav.crumb{font-size:13px;color:var(--mut);padding:16px 0}nav.crumb a{color:var(--mut)}
+article h1{font-size:32px;line-height:1.25;margin:8px 0 16px}
+article h2{font-size:23px;margin:34px 0 10px}article h3{font-size:18px;margin:24px 0 8px}
+article p,article li{font-size:17px;color:#27272e}article a{color:var(--o)}article ul{padding-left:22px}
+article .byline{color:var(--mut);font-size:14px;margin:-6px 0 20px}
+article img{display:block;width:100%;max-width:320px;height:auto;margin:20px auto;border-radius:14px;border:1px solid var(--line)}
+hr{border:0;border-top:1px solid var(--line);margin:32px 0}
+.tablewrap{overflow-x:auto;margin:18px 0}
+article table{border-collapse:collapse;width:100%;font-size:15px}
+article th,article td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top}
+article th{background:#faf6f1;font-weight:700}
+article tbody tr:nth-child(even) td{background:#fafafb}
+.cta{margin:36px 0;padding:22px;border:1px solid var(--line);border-radius:14px;background:#fffaf4}
+.cta h3{margin:0 0 6px}.cta p{margin:0 0 14px;color:var(--mut);font-size:15px}
+.btn{display:inline-block;margin:4px 8px 4px 0;padding:11px 18px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px}
+.btn.p{background:var(--o);color:#fff}.btn.s{background:#fff;color:var(--ink);border:1px solid #e3e3e8}
+.related{margin:36px 0}.related h2{font-size:20px}
+.related a{display:block;padding:12px 0;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink);font-weight:600}
+.card{display:block;padding:18px 0;border-bottom:1px solid var(--line);text-decoration:none}
+.card h2{margin:0 0 6px;font-size:21px;color:var(--ink)}.card p{margin:0;color:var(--mut);font-size:15px}
+.cmeta{font-size:13px;color:var(--mut);margin:0 0 4px!important}
+.cfoot{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px!important}
+.ccat{background:#f1f1f4;color:#3a3a42;border-radius:4px;padding:2px 8px;font-size:12px}
+.more{color:var(--o);font-weight:600;font-size:14px}
+.card:hover h2{text-decoration:underline}
+.blogfilter>input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 4px}
+.chip{background:#f1f1f4;color:#3a3a42;border-radius:999px;padding:5px 13px;font-size:13px;cursor:pointer;user-select:none}
+.chip:hover{background:#e4e4ea}
+#bc-all:checked~.chips label[for=bc-all],#bc-budget:checked~.chips label[for=bc-budget],
+#bc-expenses:checked~.chips label[for=bc-expenses],#bc-saving:checked~.chips label[for=bc-saving]{background:var(--o);color:#fff}
+#bc-budget:checked~.cards>.card:not(.cat-budget),
+#bc-expenses:checked~.cards>.card:not(.cat-expenses),
+#bc-saving:checked~.cards>.card:not(.cat-saving){display:none}
+.blogfilter>input:focus-visible~.chips label{outline:2px solid var(--o);outline-offset:2px}
+footer.site{border-top:1px solid var(--line);background:#fafafb;color:#63636b;font-size:14px;text-align:center;margin-top:48px}
+footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-items:center;gap:16px}
+.f-links{display:flex;gap:18px;flex-wrap:wrap;justify-content:center}.f-links a{color:var(--mut);font-weight:600;text-decoration:none}
+.f-co{display:flex;align-items:center;justify-content:center;gap:12px;border-top:1px solid var(--line);padding-top:16px;width:100%}
+.f-co img{height:30px;width:30px}
+.f-badge{display:flex;justify-content:center;align-items:center;gap:16px;flex-wrap:wrap}.f-badge .b-sf{height:34px;width:108px}.f-badge .b-pp{height:34px;width:120px}.f-badge .b-fo{height:34px;width:88px}.f-badge .b-fz{height:34px;width:144px}.f-badge .b-ls{height:34px;width:109px}.f-badge .b-un{height:34px;width:130px}.f-badge .b-tc{height:34px;width:109px}.f-badge .b-swb{height:34px;width:136px}.f-badge .b-lf{height:34px;width:126px}.f-badge .b-as{height:34px;width:130px}
+.cc{position:fixed;left:16px;right:16px;bottom:16px;max-width:560px;margin:0 auto;background:#1a1a1d;color:#fff;border-radius:14px;padding:16px 18px;box-shadow:0 12px 40px rgba(0,0,0,.35);z-index:60;font-size:14px;display:none}
+.cc.show{display:block}.cc p{margin:0 0 12px;line-height:1.5}
+.cc .row{display:flex;gap:10px;justify-content:flex-end}
+.cc button{cursor:pointer;border:0;border-radius:8px;padding:9px 16px;font-weight:700;font-size:14px}
+.cc .ok{background:var(--o);color:#fff}.cc .no{background:#2e2e33;color:#cfcfd6}
+.lang-short{display:none}
+@media(max-width:760px){header.site .wrap{padding:0 16px}.brand{font-size:16px;white-space:nowrap}.nav{gap:10px}.btn-login{padding:8px 12px}}
+@media(max-width:480px){.lang-full{display:none}.lang-short{display:inline}}
+.calc{border:1px solid #e5e5ea;border-radius:12px;padding:16px 18px;margin:20px 0}.calc h3{margin:0 0 10px}.calc label{display:block;margin:10px 0 4px;font-weight:600}.calc input,.calc select{width:100%;max-width:260px;padding:8px;font-size:16px;border-radius:8px;border:1px solid #ccc}.calc output{display:block;font-size:18px;font-weight:700}</style></head><body>
+<header class="site"><div class="wrap"><a class="brand" href="/br/">AI <span>Budget</span> Assistant</a>
+<nav class="nav"><details class="langmenu"><summary><span class="lang-full">Português (Brasil)</span><span class="lang-short">BR</span> &#9662;</summary><div class="langlist"><a class="" href="https://ai-budget.pl/help/en/chat-bots/">English</a><a class="" href="https://ai-budget.pl/help/pl/chat-bots/">Polski</a><a class="" href="https://ai-budget.pl/help/de/chat-bots/">Deutsch</a><a class="" href="https://ai-budget.pl/help/es/chat-bots/">Español</a><a class="" href="https://ai-budget.pl/help/fr/chat-bots/">Français</a><a class="" href="https://ai-budget.pl/help/ru/chat-bots/">Русский</a><a class="" href="https://ai-budget.pl/help/ua/chat-bots/">Українська</a><a class="" href="https://ai-budget.pl/help/be/chat-bots/">Беларуская</a><a class="" href="https://ai-budget.pl/help/nl/chat-bots/">Nederlands</a><a class="" href="https://ai-budget.pl/help/pt/chat-bots/">Português (Portugal)</a><a class="active" href="https://ai-budget.pl/help/br/chat-bots/">Português (Brasil)</a></div></details><a href="/blog/en/">Blog</a><a class="btn-login" href="https://app.ai-budget.pl?src=help&amp;loc=nav&amp;lang=pt-BR">Entrar</a></nav></div></header>
+<main class="wrap"><nav class="crumb"><a href="/br/">Início</a> / <a href="/help/br/">Ajuda</a> / <span>Bots de chat — Telegram, WhatsApp e Slack</span></nav><article><h1>Bots de chat — Telegram, WhatsApp e Slack</h1>
+<blockquote>
+<p>Gerencie suas finanças direto do Telegram, do WhatsApp ou do Slack. Converse com a IA, adicione despesas, escaneie recibos e envie mensagens de voz — sem abrir o app.</p>
+</blockquote>
+<h2>Visão geral</h2>
+<p>Conecte sua conta ao <strong>Telegram</strong>, ao <strong>WhatsApp</strong>, ao <strong>Slack</strong> ou a qualquer combinação deles ao mesmo tempo. Os três bots oferecem exatamente os mesmos recursos — use o mensageiro que preferir.</p>
+<p>Para conectar: <strong>Configurações → Bots de chat</strong>.</p>
+<h2>Vincular sua conta</h2>
+<h3>Telegram</h3>
+<ol>
+<li>Toque em <strong>Conectar o Telegram</strong> — aparece um código de 6 caracteres (válido por 10 minutos)</li>
+<li>Abra o Telegram e encontre o bot</li>
+<li>Envie <code>/link SEU_CODIGO</code> (por exemplo, <code>/link A3F2B1</code>)</li>
+<li>Você verá “Conta vinculada com sucesso!”</li>
+</ol>
+<h3>WhatsApp</h3>
+<ol>
+<li>Toque em <strong>Conectar o WhatsApp</strong> — aparecem um código e um QR code</li>
+<li>Toque em <strong>Abrir o WhatsApp</strong> (a mensagem já vem preenchida) ou escaneie o QR code</li>
+<li>Envie <code>link SEU_CODIGO</code> para o bot</li>
+<li>Você verá “Conta vinculada com sucesso!”</li>
+</ol>
+<h3>Slack</h3>
+<ol>
+<li>Toque em <strong>Conectar o Slack</strong> — aparece um código de 6 caracteres (válido por 10 minutos)</li>
+<li>Abra o Slack, encontre o app <strong>AI Budget Assistant</strong> e abra uma mensagem direta com ele</li>
+<li>Envie <code>link SEU_CODIGO</code> (por exemplo, <code>link A3F2B1</code>)</li>
+<li>Você verá “Conta vinculada com sucesso!”</li>
+</ol>
+<blockquote>
+<p>O Telegram, o WhatsApp e o Slack podem estar todos conectados à mesma conta ao mesmo tempo.</p>
+</blockquote>
+<h2>O que você pode fazer</h2>
+<ul>
+<li><strong>Adicionar despesas ou receitas</strong>: escreva naturalmente ou use comandos</li>
+<li><strong>Chat de IA</strong>: faça qualquer pergunta sobre finanças — a mesma IA do app</li>
+<li><strong>Mensagens de voz</strong>: fale a despesa ou a pergunta (2 solicitações de IA por mensagem)</li>
+<li><strong>Fotos de recibos</strong>: envie uma foto para escanear automaticamente (2 solicitações de IA por foto)</li>
+<li><strong>Ver o uso da IA</strong>: <code>/usage</code></li>
+<li><strong>Trocar de conta</strong>: <code>/account</code></li>
+</ul>
+<h2>Comandos</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Comando</th>
+<th>O que faz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/link CÓDIGO</code></td>
+<td>Vincula o mensageiro ao app</td>
+</tr>
+<tr>
+<td><code>/expense 50 almoço</code></td>
+<td>Adiciona uma despesa</td>
+</tr>
+<tr>
+<td><code>/group 120 pizza</code></td>
+<td>Adiciona uma despesa a um grupo compartilhado</td>
+</tr>
+<tr>
+<td><code>/income 3000 salário</code></td>
+<td>Adiciona uma receita</td>
+</tr>
+<tr>
+<td><code>/category expense Alimentação</code></td>
+<td>Cria uma categoria</td>
+</tr>
+<tr>
+<td><code>/usage</code></td>
+<td>Mostra o uso e os limites de solicitações de IA</td>
+</tr>
+<tr>
+<td><code>/account</code></td>
+<td>Troca a conta ativa</td>
+</tr>
+<tr>
+<td><code>/newchat</code></td>
+<td>Inicia uma nova conversa com a IA</td>
+</tr>
+<tr>
+<td><code>/unlink</code></td>
+<td>Desconecta o bot</td>
+</tr>
+<tr>
+<td><code>/help</code></td>
+<td>Mostra todos os comandos</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>No <strong>WhatsApp</strong> e no <strong>Slack</strong>, os comandos funcionam com ou sem a <code>/</code> no início. Você também pode digitar só um valor e uma descrição: <code>50 almoço</code>.</p>
+</blockquote>
+<h2>Adicionar uma despesa a um grupo compartilhado</h2>
+<p>Envie <code>/group 120 pizza</code> para adicionar uma despesa a um dos seus grupos compartilhados (no WhatsApp e no Slack, <code>group 120 pizza</code> também funciona). Se você participa de vários grupos, o bot pergunta qual — escolha na lista. Depois confira o cartão: grupo, valor, descrição, <em>pago por você</em>, <em>dividido igualmente</em> — e toque em <strong>Confirmar</strong>, ou em <strong>Cancelar</strong> para não adicionar nada. Você é sempre quem pagou, e a despesa é sempre dividida igualmente entre todos os membros; para outro pagador ou outra divisão, adicione a despesa no app. Para usar outra moeda, coloque-a depois do valor (<code>/group 25 EUR táxi</code>): a despesa é convertida para a moeda do grupo pela cotação do dia e, se não houver cotação disponível, o bot avisa e não adiciona nada. Grupos arquivados não são oferecidos, e isso não usa solicitações de IA.</p>
+<h2>Escanear recibos</h2>
+<ol>
+<li>Tire uma foto de um recibo e envie para o bot</li>
+<li>O bot extrai o valor, a data e o estabelecimento por OCR</li>
+<li>Se a data estiver errada, envie a data correta no formato <code>DD.MM.AAAA</code></li>
+<li>Confirme para adicionar a despesa, ou cancele</li>
+</ol>
+<h3>Corrigir as linhas escaneadas</h3>
+<p>Às vezes o OCR lê um preço errado, inventa uma linha ou pula outra. Toque em <strong>✏️ Itens</strong> (no WhatsApp: <strong>✏️ Corrigir → Itens</strong>) e envie uma correção por mensagem:</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Mensagem</th>
+<th>O que faz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>3 = 14,69</code></td>
+<td>define o preço da linha 3</td>
+</tr>
+<tr>
+<td><code>3: Pão de centeio</code></td>
+<td>renomeia a linha 3</td>
+</tr>
+<tr>
+<td><code>3 -</code></td>
+<td>exclui a linha 3</td>
+</tr>
+<tr>
+<td><code>+ Pão 5,99</code></td>
+<td>adiciona uma linha</td>
+</tr>
+<tr>
+<td><code>= 233,98</code></td>
+<td>corrige o total do recibo</td>
+</tr>
+</tbody>
+</table></div>
+<p>Tanto <code>14,69</code> quanto <code>14.69</code> funcionam. Depois de cada correção, o bot reenvia a lista numerada e uma linha <code>Linhas: … · total do recibo: …</code> — quando os dois valores não batem, ainda tem algo lido errado no recibo. A divisão por categorias é refeita a partir das linhas corrigidas, então corrija também o total quando mudar um preço.</p>
+<p>Quando terminar, toque em <strong>Adicionar despesa</strong> — nada é salvo antes disso, e cancelar descarta todas as correções. Aqui só dá para corrigir as linhas e o total; para mudar a categoria de uma linha, abra a despesa no app.</p>
+<h2>Várias contas</h2>
+<p>Se você tem várias contas (por exemplo, “Pessoal” e “Família”):
+- Mencione o nome da conta na mensagem: “Mostre as despesas em Família” — a IA consulta essa conta só para essa mensagem
+- Use <code>/account</code> para trocar de vez a conta padrão do bot</p>
+<h2>Custo em solicitações de IA</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Ação</th>
+<th>Solicitações de IA usadas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mensagem de texto / chat de IA</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Mensagem de voz</td>
+<td>2</td>
+</tr>
+<tr>
+<td>Foto de recibo</td>
+<td>2</td>
+</tr>
+</tbody>
+</table></div>
+<p>Quando seu limite é atingido, o bot avisa você em vez de processar a solicitação. Use <code>/usage</code> para ver quantas solicitações ainda restam.</p>
+<h2>Moedas suportadas</h2>
+<p>O bot reconhece os símbolos de moeda: ₴ (UAH), $ (USD), € (EUR), zł (PLN), £ (GBP), ₽ (RUB).</p>
+<p><strong>Exemplos:</strong> <code>/expense 50$ almoço</code> · <code>50 zł almoço</code> · <code>expense 100₴ mercado</code></p>
+<h2>Perguntas frequentes</h2>
+<p><strong>P: Posso conectar o Telegram, o WhatsApp e o Slack?</strong>
+Sim — são vínculos independentes e todos funcionam ao mesmo tempo.</p>
+<p><strong>P: Em que idioma o bot responde?</strong>
+No idioma definido em Configurações → Aparência.</p>
+<p><strong>P: Preciso de uma assinatura para usar os bots?</strong>
+Os bots usam solicitações de IA da cota mensal do seu plano. Quem usa o plano Free tem um limite mensal menor.</p>
+<hr />
+<p><em>Veja também: <a href="/help/br/ai-chat/">Chat de IA</a> | <a href="/help/br/accounts/">Contas</a> | <a href="/help/br/settings/">Configurações</a></em></p></article><aside class="cta"><h3>Organize seu dinheiro com IA</h3><p>Registre despesas por voz ou com uma foto do recibo, acompanhe orçamentos e economias, junto com a família. Comece grátis.</p><a class="btn p" href="https://app.ai-budget.pl?src=help&amp;loc=cta&amp;lang=pt-BR">Abrir o app</a><a class="btn s" href="https://play.google.com/store/apps/details?id=com.budget.assistant&amp;referrer=src%3Dhelp%26loc%3Dcta%26lang%3Dpt-BR%26utm_source%3Dhelp%26utm_medium%3Dcta">Disponível no Google Play</a></aside><section class="related"><h2>Mais tópicos de ajuda</h2><a href="/help/br/getting-started/">Primeiros passos</a><a href="/help/br/dashboard/">Painel</a><a href="/help/br/expenses-and-income/">Despesas e receitas</a><a href="/help/br/voice-and-receipt/">Entrada por voz e escaneamento de recibos</a><a href="/help/br/budgets/">Orçamentos</a><a href="/help/br/analytics/">Análises</a><a href="/help/br/ai-chat/">Chat IA</a><a href="/help/br/spending-story/">História dos gastos</a><a href="/help/br/accounts/">Contas</a><a href="/help/br/wallet-and-exchange/">Carteira e câmbio</a><a href="/help/br/settings/">Configurações</a><a href="/help/br/subscription/">Planos de assinatura</a><a href="/help/br/gamification/">Conquistas e gamificação</a><a href="/help/br/investments/">Carteira de investimentos</a><a href="/help/br/encryption/">Criptografia de ponta a ponta</a><a href="/help/br/export-reports/">Exportação e relatórios</a><a href="/help/br/debts-and-loans/">Dívidas e empréstimos</a><a href="/help/br/savings-goals/">Metas de economia</a><a href="/help/br/fat-finder/">Fat Finder (auditoria de despesas)</a><a href="/help/br/ai-response-mode/">Modo de resposta da IA</a><a href="/help/br/widgets/">Widgets da tela inicial</a><a href="/help/br/scenario-simulator/">Simulador de cenários</a><a href="/help/br/referral/">Convidar amigos — Programa de indicação</a><a href="/help/br/bank-import/">Importar transações do seu banco</a><a href="/help/br/reference-data/">Dados de referência</a><a href="/help/br/subscription-manager/">Gerenciador de assinaturas</a><a href="/help/br/web-app/">App web</a><a href="/help/br/anomaly-alerts/">Alertas: atividade incomum</a><a href="/help/br/safe-to-spend/">Planejando com antecedência — Livre para gastar, capacidade de compra e captura automática</a><a href="/help/br/purchase-requests/">Pedidos de compra</a><a href="/help/br/family-feed/">Feed da família</a><a href="/help/br/group-trip-wallet/">Carteira de viagem em grupo</a><a href="/help/br/personal-inflation-index/">Índice de inflação pessoal</a><a href="/help/br/expense-map/">Mapa de despesas</a><a href="/help/br/shopping-list/">Lista de compras inteligente</a><a href="/help/br/wrapped/">Financial Wrapped — seu ano em dinheiro</a><a href="/help/br/inflation-shield/">Escudo contra a inflação — estoque antes que os preços subam</a><a href="/help/br/receipt-price-check/">Conferência de preços no recibo — isso custa mais do que você costuma pagar?</a><a href="/help/br/receipt-split/">Dividir o recibo — receba dos amigos, sem eles precisarem do app</a><a href="/help/br/real-salary/">Salário real — seu aumento acompanha os seus próprios preços?</a><a href="/help/br/shared-groups/">Grupos compartilhados — divida despesas contínuas com amigos, sem que eles precisem do app</a><a href="/help/br/connected-apps/">Apps conectados e desenvolvedores</a></section></main><footer class="site"><div class="wrap"><div class="f-links"><a href="/blog/en/">Blog</a><a href="/help/br/">Ajuda</a><a href="/br/about/">Sobre nós</a><a href="/br/developers/">API para desenvolvedores</a><a href="/en/privacy/">Privacidade</a><a href="/en/terms/">Termos</a><a href="/en/cookies/">Cookies</a><a href="https://app.ai-budget.pl?src=help&amp;loc=footer&amp;lang=pt-BR">Entrar</a><a href="https://play.google.com/store/apps/details?id=com.budget.assistant&amp;referrer=src%3Dhelp%26loc%3Dfooter%26lang%3Dpt-BR%26utm_source%3Dhelp%26utm_medium%3Dfooter">Google Play</a></div><div class="f-badge"><a href="https://startupfa.me/s/ai-budget?utm_source=ai-budget.pl" target="_blank" rel="nofollow noopener"><img class="b-sf" src="/assets/startup-fame-badge.webp" alt="AI Budget - Featured on Startup Fame" width="108" height="34" loading="lazy"></a><a href="https://peerpush.com/p/ai-budget-assistant" target="_blank" rel="nofollow noopener"><img class="b-pp" src="https://peerpush.com/p/ai-budget-assistant/badge.png" alt="AI Budget Assistant on PeerPush" width="120" height="34" loading="lazy"></a><a href="https://bestaibrands.com/ai-budget-assistant" target="_blank" rel="nofollow noopener" style="text-decoration:none;"><div style="display:inline-flex;flex-direction:column;align-items:center;background:#fff;border:1px solid #eee;border-radius:12px;padding:8px 32px;height:54px;justify-content:center;font-family:sans-serif;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);"><div style="font-size:8px;color:#999;font-weight:bold;text-transform:uppercase;letter-spacing:0.2em;line-height:1;margin-bottom:4px;white-space:nowrap;">Featured On</div><div style="font-size:14px;font-weight:bold;color:#000;letter-spacing:-0.01em;line-height:1;white-space:nowrap;">bestaibrands.com</div></div></a><a href="https://firsto.co/projects/ai-budget-assistant" target="_blank" rel="nofollow noopener"><img class="b-fo" src="https://firsto.co/images/badges/find-us-on-firsto.svg" alt="AI Budget Assistant | Firsto Launch" width="88" height="34" loading="lazy"></a><a href="https://liftoapp.com/product/ai-budget-assistant" target="_blank" rel="nofollow noopener"><img class="b-lf" src="https://liftoapp.com/badges/featured-dark.svg" alt="AI Budget Assistant - Featured on Lifto" width="126" height="34" loading="lazy"></a></div><div class="f-badge"><a href="https://fazier.com/launches/ai-budget.pl" target="_blank" rel="nofollow noopener"><img class="b-fz" src="https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=featured&amp;theme=light" alt="AI Budget Assistant on Fazier" width="144" height="34" loading="lazy"></a><a href="https://launchstag.com/p/tool-1789044587266" target="_blank" rel="nofollow noopener"><img class="b-ls" src="https://launchstag.com/badge-light.svg" alt="AI Budget Assistant - Featured on Launchstag" width="109" height="34" loading="lazy"></a><a href="https://www.uneed.best/tool/ai-budget-assistant" target="_blank" rel="nofollow noopener"><img class="b-un" src="https://www.uneed.best/EMBED3B.png" alt="AI Budget Assistant - Launching Soon on Uneed" width="130" height="34" loading="lazy"></a><a href="https://tools.cafe/p/tool-1789322958894" target="_blank" rel="nofollow noopener"><img class="b-tc" src="https://tools.cafe/b/light.svg" alt="AI Budget Assistant - Featured on tools.cafe" width="109" height="34" loading="lazy"></a><a href="https://sellwithboost.com" target="_blank" rel="nofollow noopener"><img class="b-swb" src="https://sellwithboost.com/badge/listing.svg" alt="AI Budget Assistant - Listed on Sell With Boost" width="136" height="34" loading="lazy"></a><a href="https://alphashot.com/products/ai-budget-assistant?utm_source=alphashot&amp;utm_medium=badge&amp;utm_campaign=embed" target="_blank" rel="nofollow noopener"><img class="b-as" src="https://alphashot.com/badge/ai-budget-assistant.svg" alt="AI Budget Assistant - Featured on AlphaShot" width="130" height="34" loading="lazy"></a></div><div class="f-co"><a href="https://mi-code.pl/" target="_blank" rel="noopener"><img src="/assets/mi_code_logo.svg" alt="MiCode Sp. z o.o." width="30" height="30"></a><span>&copy; 2026 AI Budget Assistant &mdash; <a href="https://mi-code.pl/" target="_blank" rel="noopener" style="color:inherit">MiCode Sp. z o.o.</a>. Todos os direitos reservados.</span></div></div></footer>
+<div class="cc" id="cc"><p>Usamos cookies para medir o tráfego e melhorar o site. <a href="/en/cookies/" style="color:#F58320;text-decoration:underline">Saiba mais</a></p><div class="row"><button class="no" id="cc-no">Recusar</button><button class="ok" id="cc-ok">Aceitar</button></div></div>
+<script>(function(){var ID="G-WMEFHYETVX",K="cc-consent";function L(){var s=document.createElement("script");s.async=1;s.src="https://www.googletagmanager.com/gtag/js?id="+ID;document.head.appendChild(s);window.dataLayer=window.dataLayer||[];function g(){dataLayer.push(arguments);}window.gtag=g;g("js",new Date());g("config",ID);}var v=localStorage.getItem(K),b=document.getElementById("cc");if(v==="granted"){L();}else if(!v&&b){b.classList.add("show");document.getElementById("cc-ok").onclick=function(){localStorage.setItem(K,"granted");b.classList.remove("show");L();};document.getElementById("cc-no").onclick=function(){localStorage.setItem(K,"denied");b.classList.remove("show");};}})();</script></body></html>

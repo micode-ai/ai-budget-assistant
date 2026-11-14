@@ -10,7 +10,7 @@ import {
   type CatalogLocale,
 } from './category-catalog';
 
-const LOCALES: CatalogLocale[] = ['en', 'de', 'es', 'fr', 'pl', 'ru', 'ua', 'be', 'nl'];
+const LOCALES: CatalogLocale[] = ['en', 'de', 'es', 'fr', 'pl', 'ru', 'ua', 'be', 'nl', 'pt', 'br'];
 const norm = (s: string) => s.normalize('NFC').trim().replace(/\s+/g, ' ').toLowerCase();
 
 describe('category catalog', () => {

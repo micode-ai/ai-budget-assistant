@@ -181,6 +181,11 @@ describe('validateExtractedRows', () => {
     expect(validateExtractedRows(raw)).toHaveLength(2);
   });
 
+  it('accepts a BRL row', () => {
+    const raw = JSON.stringify({ rows: [{ date: '2026-01-15', amount: -52.9, currencyCode: 'BRL', description: 'Padaria' }] });
+    expect(validateExtractedRows(raw)).toHaveLength(1);
+  });
+
   it('drops rows with an unparseable date', () => {
     const raw = JSON.stringify({ rows: [{ date: 'last tuesday', amount: -5, currencyCode: 'PLN', description: 'x' }] });
     expect(validateExtractedRows(raw)).toEqual([]);

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { getResponseModeInstruction, AiResponseMode } from './response-mode.helper';
 import { sanitizeForPrompt } from '../utils/sanitize';
+import { resolveAppLocale } from '../../../common/utils/app-locale';
 import type { UserContext } from './user-context-builder.service';
 import type { ChatActionType } from '@budget/shared-types';
 
@@ -22,7 +23,23 @@ const ACTION_SUMMARY_WORDS: Record<string, ActionSummaryWords> = {
   French: { expense: 'dépense', expenseDesc: ' — ', income: 'revenu', budget: 'budget', budgetFor: 'pour', category: 'nouvelle catégorie', categoryExpense: '(dépenses)', categoryIncome: '(revenus)', repayment: 'remboursement de dette', repaymentFrom: 'de', newDebt: 'nouvelle dette :', lent: 'prêté à', borrowed: 'emprunté à', goal: 'objectif mis à jour' },
   Polish: { expense: 'wydatek', expenseDesc: ' — ', income: 'przychód', budget: 'budżet', budgetFor: 'na', category: 'nowa kategoria', categoryExpense: '(wydatki)', categoryIncome: '(przychody)', repayment: 'spłata długu', repaymentFrom: 'od', newDebt: 'nowy dług:', lent: 'pożyczono', borrowed: 'pożyczono od', goal: 'aktualizacja celu' },
   Dutch: { expense: 'uitgave', expenseDesc: ' — ', income: 'inkomsten', budget: 'budget', budgetFor: 'voor', category: 'nieuwe categorie', categoryExpense: '(uitgaven)', categoryIncome: '(inkomsten)', repayment: 'schuldaflossing', repaymentFrom: 'van', newDebt: 'nieuwe schuld:', lent: 'geleend aan', borrowed: 'geleend van', goal: 'spaardoel bijgewerkt' },
+  'European Portuguese': { expense: 'despesa', expenseDesc: ' — ', income: 'receita', budget: 'orçamento', budgetFor: 'de', category: 'nova categoria', categoryExpense: '(despesas)', categoryIncome: '(receitas)', repayment: 'reembolso de dívida', repaymentFrom: 'de', newDebt: 'nova dívida:', lent: 'emprestado a', borrowed: 'pedido emprestado a', goal: 'saldo do objetivo atualizado' },
+  'Brazilian Portuguese': { expense: 'despesa', expenseDesc: ' — ', income: 'receita', budget: 'orçamento', budgetFor: 'de', category: 'nova categoria', categoryExpense: '(despesas)', categoryIncome: '(receitas)', repayment: 'pagamento de dívida', repaymentFrom: 'de', newDebt: 'nova dívida:', lent: 'emprestado a', borrowed: 'pego emprestado de', goal: 'saldo da meta atualizado' },
 };
+
+/** Whole-word, case-insensitive match that also works on accented words (a regex word boundary is ASCII-only). */
+function wordMatch(text: string, alternatives: string): boolean {
+  return new RegExp(`(?<!\\p{L})(?:${alternatives})(?!\\p{L})`, 'iu').test(text);
+}
+
+/**
+ * Words Spanish writes and Portuguese does not. "gasto"/"gastos" are deliberately absent:
+ * they are ordinary Portuguese too.
+ */
+const SPANISH_ONLY_WORDS = 'gasté|pagué|compré|hoy|ayer|dinero|cuenta|presupuesto';
+
+/** The two variant names a detected 'Portuguese' resolves to; the bare name reads as Brazilian. */
+const PORTUGUESE_VARIANTS = new Set(['European Portuguese', 'Brazilian Portuguese']);
 
 @Injectable()
 export class PromptBuilder {
@@ -40,6 +57,18 @@ export class PromptBuilder {
     if (/[äöüßÄÖÜ]/.test(text)) return 'German';
     if (/[ąćęłńśźżĄĆĘŁŃŚŹŻ]/.test(text)) return 'Polish';
 
+    // Portuguese runs BEFORE the French/Spanish block: it shares á/é/ç/à/ê/ô with
+    // them, so those letters would otherwise misfile it. "ã"/"õ" are Portuguese-only.
+    // The word path is vetoed by letters Portuguese never writes (Spanish ñ/¿/¡,
+    // French è/ë/î/ï/ù/û/ÿ/œ/æ) and by Spanish-only words, so a Spanish message that
+    // also holds a word both languages write stays Spanish.
+    if (/[ãõÃÕ]/.test(text)) return 'Portuguese';
+    if (
+      wordMatch(text, 'gastei|paguei|comprei|hoje|ontem|não|você|despesa|receita|conta|dinheiro|orçamento')
+      && !/[ñÑ¿¡èëîïùûÿœæÈËÎÏÙÛŸŒÆ]/.test(text)
+      && !wordMatch(text, SPANISH_ONLY_WORDS)
+    ) return 'Portuguese';
+
     // French and Spanish share the accented letter "é"/"É", so it must NOT decide
     // between them (it is one of the most common letters in French: dépense, café,
     // été). Decide on characters UNIQUE to each language; only when none of those
@@ -50,6 +79,10 @@ export class PromptBuilder {
     if (frenchUnique && !spanishMarker) return 'French';
     if (spanishMarker && !frenchUnique) return 'Spanish';
     if (frenchUnique && spanishMarker) return 'French';
+    // No unique letter: a few words only one of the two writes ("payé"/"gasté" carry
+    // just the shared "é"). Shared words like "café" stay ambiguous for the UI locale.
+    if (wordMatch(text, "j['’]ai|payé|dépensé|aujourd['’]hui|combien|argent")) return 'French';
+    if (wordMatch(text, SPANISH_ONLY_WORDS)) return 'Spanish';
 
     if (/\b(het|een|ik|niet|uitgave|inkomsten|vandaag|gisteren|betaald|boodschappen|rekening|geld)\b/i.test(text)) return 'Dutch';
     return 'English';
@@ -69,8 +102,15 @@ export class PromptBuilder {
       fr: 'French',
       pl: 'Polish',
       nl: 'Dutch',
+      pt: 'European Portuguese',
+      br: 'Brazilian Portuguese',
     };
-    return map[locale.toLowerCase().split('-')[0]] ?? null;
+    // An internal code first (`pt` is European here, never re-resolved); a full tag such as
+    // `pt-BR` or `uk-UA` goes through the app locale rule.
+    const exact = map[locale.toLowerCase()];
+    if (exact) return exact;
+    const resolved = resolveAppLocale(locale, Object.keys(map));
+    return resolved ? map[resolved] : null;
   }
 
   detectUserLanguage(
@@ -81,7 +121,7 @@ export class PromptBuilder {
     // 1. Strongest signal: the language detected from the current message's
     //    script/unique characters (Cyrillic, German, Polish, clear FR/ES, …).
     const fromMessage = this.detectLanguage(userMessage);
-    if (fromMessage !== 'English') return fromMessage;
+    if (fromMessage !== 'English') return this.resolveVariant(fromMessage, uiLanguage);
 
     // 2. Ambiguous or plain-ASCII message: honor the user's app UI language.
     //    This is what fixes "interface is French but the AI replies in Spanish" —
@@ -94,9 +134,19 @@ export class PromptBuilder {
     const recentAssistantMessages = history.filter(m => m.role === 'assistant').slice(-3);
     if (recentAssistantMessages.length > 0) {
       const detectedFromHistory = this.detectLanguage(recentAssistantMessages.map(m => m.content).join(' '));
-      if (detectedFromHistory !== 'English') return detectedFromHistory;
+      if (detectedFromHistory !== 'English') return this.resolveVariant(detectedFromHistory, uiLanguage);
     }
     return 'English';
+  }
+
+  /**
+   * Text alone cannot tell European from Brazilian Portuguese, so a detected 'Portuguese' takes
+   * the variant of the UI locale when that is a Portuguese one, and Brazilian otherwise.
+   */
+  private resolveVariant(detected: string, uiLanguage?: string | null): string {
+    if (detected !== 'Portuguese') return detected;
+    const fromUi = this.localeToLanguageName(uiLanguage);
+    return fromUi && PORTUGUESE_VARIANTS.has(fromUi) ? fromUi : 'Brazilian Portuguese';
   }
 
   buildSystemPrompt(
@@ -120,7 +170,7 @@ export class PromptBuilder {
     return `You are a helpful financial assistant helping a user manage their budget and expenses.
 Format your responses using Markdown: use **bold**, lists, headers (##), and tables where appropriate for clarity.
 
-Currency symbol mapping: ₴=UAH, $=USD, €=EUR, zł/zl=PLN, £=GBP, ₽=RUB, Br=BYN, Kč=CZK, Ft=HUF, lei=RON, Fr./CHF=CHF. A bare "kr" is ambiguous (SEK, NOK or DKK): use the ISO code if the user gave one, otherwise ask.
+Currency symbol mapping: ₴=UAH, $=USD, €=EUR, zł/zl=PLN, £=GBP, ₽=RUB, Br=BYN, Kč=CZK, Ft=HUF, lei=RON, Fr./CHF=CHF, R$=BRL. A bare "kr" is ambiguous (SEK, NOK or DKK): use the ISO code if the user gave one, otherwise ask.
 CRITICAL currency rule: every amount in the tool results and dynamic context carries its OWN
 \`currencyCode\` field. ALWAYS label each amount with the currency from that field — use the ISO code
 (e.g. "123.45 PLN") or the matching symbol from the mapping above (PLN→zł, USD→$, EUR→€). NEVER show an
@@ -292,6 +342,8 @@ ${JSON.stringify(contextData, null, 2)}
   }
 
   buildActionSummary(actionType: ChatActionType, args: Record<string, unknown>, lang = 'English'): string {
+    // A bare 'Portuguese' reads as Brazilian, like every other fixed-string helper.
+    const key = lang === 'Portuguese' ? 'Brazilian Portuguese' : lang;
     // Checked first, before the per-language switch below, so the 5 original-write branches
     // never need an "undo" case of their own — this just re-describes the original write (via a
     // recursive call, reconstructing its own arg shape from the captured originalResultData) and
@@ -321,9 +373,11 @@ ${JSON.stringify(contextData, null, 2)}
         French: 'annuler la dernière action',
         Polish: 'cofnięcie ostatniej akcji',
         Dutch: 'de laatste actie ongedaan maken',
+        'European Portuguese': 'anular a última ação',
+        'Brazilian Portuguese': 'desfazer a última ação',
         English: 'undo the last action',
       };
-      const prefix = prefixes[lang] ?? prefixes.English;
+      const prefix = prefixes[key] ?? prefixes.English;
       return inner ? `${prefix}: ${inner}` : prefix;
     }
 
@@ -342,7 +396,7 @@ ${JSON.stringify(contextData, null, 2)}
     const optCur = typeof args.currencyCode === 'string' && args.currencyCode ? ` ${args.currencyCode}` : '';
     const repayAmt = `${args.amount}${optCur}`;
     const newAmt = `${args.newAmount}${optCur}`;
-    const w = ACTION_SUMMARY_WORDS[lang] ?? ACTION_SUMMARY_WORDS.English;
+    const w = ACTION_SUMMARY_WORDS[key] ?? ACTION_SUMMARY_WORDS.English;
 
     switch (actionType) {
       case 'create_expense':
@@ -381,6 +435,8 @@ ${JSON.stringify(contextData, null, 2)}
       case 'French': return `Je souhaite effectuer : ${summary}. Veuillez confirmer ou annuler.`;
       case 'Polish': return `Chcę wykonać: ${summary}. Potwierdź lub anuluj.`;
       case 'Dutch': return `Ik wil het volgende uitvoeren: ${summary}. Bevestig of annuleer alstublieft.`;
+      case 'European Portuguese': return `Pretendo executar o seguinte: ${summary}. Confirme ou cancele.`;
+      case 'Brazilian Portuguese': case 'Portuguese': return `Quero executar o seguinte: ${summary}. Confirme ou cancele.`;
       default: return `I'd like to ${summary}. Please confirm or cancel.`;
     }
   }
@@ -395,6 +451,8 @@ ${JSON.stringify(contextData, null, 2)}
       case 'French': return `✅ Terminé ! ${summary} — créé avec succès.`;
       case 'Polish': return `✅ Gotowe! ${summary} — utworzono pomyślnie.`;
       case 'Dutch': return `✅ Klaar! ${summary} — succesvol aangemaakt.`;
+      case 'European Portuguese': return `✅ Concluído! ${summary} — criado com sucesso.`;
+      case 'Brazilian Portuguese': case 'Portuguese': return `✅ Pronto! ${summary} — criado com sucesso.`;
       default: return `✅ Done! ${summary} — successfully created.`;
     }
   }
@@ -410,6 +468,8 @@ ${JSON.stringify(contextData, null, 2)}
       case 'French': return `❌ Erreur : ${err}`;
       case 'Polish': return `❌ Błąd: ${err}`;
       case 'Dutch': return `❌ Fout: ${err}`;
+      case 'European Portuguese': return `❌ Erro: ${err}`;
+      case 'Brazilian Portuguese': case 'Portuguese': return `❌ Erro: ${err}`;
       default: return `❌ Failed to execute: ${err}`;
     }
   }
@@ -426,6 +486,8 @@ ${JSON.stringify(contextData, null, 2)}
       case 'French': return `🛒 Ajouté à la liste « ${list} » : ${items}.`;
       case 'Polish': return `🛒 Dodano do listy „${list}": ${items}.`;
       case 'Dutch': return `🛒 Toegevoegd aan lijst "${list}": ${items}.`;
+      case 'European Portuguese': return `🛒 Adicionado à lista «${list}»: ${items}.`;
+      case 'Brazilian Portuguese': case 'Portuguese': return `🛒 Adicionado à lista “${list}”: ${items}.`;
       default: return `🛒 Added to "${list}": ${items}.`;
     }
   }
@@ -443,6 +505,8 @@ ${JSON.stringify(contextData, null, 2)}
         case 'French': return removed ? `🛒 Retiré de la liste : ${removed}.` : `🛒 Rien à retirer trouvé dans la liste.`;
         case 'Polish': return removed ? `🛒 Usunięto z listy: ${removed}.` : `🛒 Nie znalazłem tego na liście.`;
         case 'Dutch': return removed ? `🛒 Verwijderd van de lijst: ${removed}.` : `🛒 Niets gevonden om van de lijst te verwijderen.`;
+        case 'European Portuguese': return removed ? `🛒 Removido da lista: ${removed}.` : `🛒 Não encontrei nada para remover da lista.`;
+        case 'Brazilian Portuguese': case 'Portuguese': return removed ? `🛒 Removido da lista: ${removed}.` : `🛒 Não encontrei isso na lista.`;
         default: return removed ? `🛒 Removed from your list: ${removed}.` : `🛒 Couldn't find that on your list.`;
       }
     })();
@@ -456,6 +520,8 @@ ${JSON.stringify(contextData, null, 2)}
       case 'French': return `${base} Introuvable : ${notFound}.`;
       case 'Polish': return `${base} Nie znaleziono: ${notFound}.`;
       case 'Dutch': return `${base} Niet gevonden: ${notFound}.`;
+      case 'European Portuguese': return `${base} Não encontrados: ${notFound}.`;
+      case 'Brazilian Portuguese': case 'Portuguese': return `${base} Não encontrados: ${notFound}.`;
       default: return `${base} Not found: ${notFound}.`;
     }
   }
@@ -470,6 +536,8 @@ ${JSON.stringify(contextData, null, 2)}
       case 'French': return 'Action annulée. Dites-moi si vous avez besoin d\'autre chose.';
       case 'Polish': return 'Anulowano. Daj znać, jeśli potrzebujesz czegoś jeszcze.';
       case 'Dutch': return 'Actie geannuleerd. Laat het me weten als je nog iets nodig hebt.';
+      case 'European Portuguese': return 'Ação cancelada. Diga-me se precisar de mais alguma coisa.';
+      case 'Brazilian Portuguese': case 'Portuguese': return 'Ação cancelada. Me avise se precisar de mais alguma coisa.';
       default: return 'Action cancelled. Let me know if you need anything else.';
     }
   }
@@ -501,6 +569,8 @@ ${JSON.stringify(contextData, null, 2)}
       case 'French': return `↩️ Annulé${suffix}.`;
       case 'Polish': return `↩️ Cofnięto${suffix}.`;
       case 'Dutch': return `↩️ Ongedaan gemaakt${suffix}.`;
+      case 'European Portuguese': return `↩️ Anulado${suffix}.`;
+      case 'Brazilian Portuguese': case 'Portuguese': return `↩️ Desfeito${suffix}.`;
       default: return `↩️ Undone${suffix}.`;
     }
   }
@@ -522,6 +592,8 @@ ${JSON.stringify(contextData, null, 2)}
         case 'French': return 'Trop de temps s\'est écoulé pour annuler cela. Modifiez ou supprimez l\'entrée manuellement dans l\'onglet "Transactions".';
         case 'Polish': return 'Minęło zbyt dużo czasu, aby to cofnąć. Edytuj lub usuń wpis ręcznie w zakładce "Transakcje".';
         case 'Dutch': return 'Er is te veel tijd verstreken om dat ongedaan te maken. Bewerk of verwijder de invoer handmatig in het tabblad "Transacties".';
+        case 'European Portuguese': return 'Já passou demasiado tempo para anular isso. Edite ou elimine o registo manualmente no separador «Transações».';
+        case 'Brazilian Portuguese': case 'Portuguese': return 'Já passou tempo demais para desfazer isso. Edite ou exclua o registro manualmente na aba “Transações”.';
         default: return 'Too much time has passed to undo that. Edit or delete the entry manually from the Transactions tab.';
       }
     }
@@ -534,6 +606,8 @@ ${JSON.stringify(contextData, null, 2)}
       case 'French': return 'Il n\'y a rien à annuler pour le moment.';
       case 'Polish': return 'Nie ma teraz nic do cofnięcia.';
       case 'Dutch': return 'Er is nu niets om ongedaan te maken.';
+      case 'European Portuguese': return 'Não há nada recente para anular.';
+      case 'Brazilian Portuguese': case 'Portuguese': return 'Não há nada recente para desfazer.';
       default: return "There's nothing recent I can undo.";
     }
   }

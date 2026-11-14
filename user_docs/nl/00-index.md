@@ -15,7 +15,7 @@
 - **Beleggingsportefeuille** — houd aandelen, ETF's, crypto en obligaties bij met realtime koersen en benchmarkvergelijking
 - **Meerdere accounts** — Persoonlijke, Gedeelde, Zakelijke en Beleggingsaccounts met rolgebaseerde toegang (Eigenaar, Bewerker, Kijker)
 - **Offline-first** — gegevens worden lokaal opgeslagen en automatisch gesynchroniseerd wanneer je online bent
-- **8 talen** — English, Deutsch, Espanol, Francais, Polski, Русский, Українська, Беларуская
+- **11 talen** — English, Deutsch, Espanol, Francais, Polski, Русский, Українська, Беларуская, Nederlands, Português (Portugal), Português (Brasil)
 
 ## Inhoudsopgave
 

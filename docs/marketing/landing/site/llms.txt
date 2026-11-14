@@ -1,6 +1,6 @@
 # AI Budget Assistant
 
-> Free AI-powered budget app for individuals and families. Track expenses by voice or receipt photo, plan budgets and savings goals, manage subscriptions, import bank statements, and budget together in real time. Multi-currency, 9 languages, Android and web.
+> Free AI-powered budget app for individuals and families. Track expenses by voice or receipt photo, plan budgets and savings goals, manage subscriptions, import bank statements, and budget together in real time. Multi-currency, 11 languages, Android and web.
 
 ## Product
 
@@ -8,8 +8,8 @@
 - Launched: April 2026
 - Pricing: Free core; Pro and Business subscription tiers
 - Platforms: Android, Web
-- Languages: English, Polish, German, Spanish, French, Russian, Ukrainian, Belarusian, Dutch
-- Currencies: USD, EUR, PLN, GBP, UAH, RUB, BYN
+- Languages: English, Polish, German, Spanish, French, Russian, Ukrainian, Belarusian, Dutch, Portuguese (Portugal), Portuguese (Brazil)
+- Currencies: USD, EUR, PLN, GBP, UAH, RUB, BYN, BRL
 
 ## Key Features
 
@@ -50,7 +50,7 @@
 - [Pricing](https://ai-budget.pl/pricing/): Free, Pro and Business plans
 - [Public API for developers](https://ai-budget.pl/en/developers/): free REST API with OAuth 2.0 (PKCE) for expenses, receipts and categories; [API reference](https://api.ai-budget.pl/public/docs/en), [OpenAPI schema](https://api.ai-budget.pl/public/docs/en/openapi.json)
 - [Full content for LLMs](https://ai-budget.pl/llms-full.txt): English markdown mirror of the blog and help center
-- Full content mirrors in other languages: [Deutsch](https://ai-budget.pl/llms-full-de.txt), [Nederlands](https://ai-budget.pl/llms-full-nl.txt), [Polski](https://ai-budget.pl/llms-full-pl.txt), [Русский](https://ai-budget.pl/llms-full-ru.txt), [Español](https://ai-budget.pl/llms-full-es.txt), [Français](https://ai-budget.pl/llms-full-fr.txt), [Українська](https://ai-budget.pl/llms-full-ua.txt), [Беларуская](https://ai-budget.pl/llms-full-be.txt)
+- Full content mirrors in other languages: [Deutsch](https://ai-budget.pl/llms-full-de.txt), [Nederlands](https://ai-budget.pl/llms-full-nl.txt), [Polski](https://ai-budget.pl/llms-full-pl.txt), [Русский](https://ai-budget.pl/llms-full-ru.txt), [Español](https://ai-budget.pl/llms-full-es.txt), [Français](https://ai-budget.pl/llms-full-fr.txt), [Українська](https://ai-budget.pl/llms-full-ua.txt), [Беларуская](https://ai-budget.pl/llms-full-be.txt), [Português (Portugal)](https://ai-budget.pl/llms-full-pt.txt), [Português (Brasil)](https://ai-budget.pl/llms-full-br.txt)
 
 ## Links
 
