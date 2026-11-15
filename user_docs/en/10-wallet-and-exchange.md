@@ -43,7 +43,7 @@ At the top of the Wallet screen, the **Balance History** card shows how your tot
 - **Green bars** mean your balance grew that month; **red bars** mean it shrank.
 - Tap any bar to see the exact change for that month.
 - Use the **6M / 12M** toggle to switch between the last 6 or 12 months.
-- Amounts follow the currency you pick in the currency chips, converted at the latest exchange rates.
+- Amounts follow the currency you pick in the currency chips. Past months are converted at the exchange rate of each month's last day; the current month, and UAH, RUB and BYN (which the reference rates do not cover), use the latest rates.
 - If you have corrected your balance, that correction is drawn as a separate grey part of the bar (with a legend), so you can see how much money went untracked. Tap the bar to see tracked change and correction separately.
 
 ## Setting Initial Balance

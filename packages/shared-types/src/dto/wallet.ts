@@ -148,6 +148,14 @@ export interface WalletMonthlyDeltaPoint {
 export interface WalletMonthlyHistoryResponse {
   months: WalletMonthlyDeltaPoint[];
   currencies: string[];
+  /**
+   * Month-end EUR-based rates (`1 EUR = rates[X] X`) per PAST month 'YYYY-MM',
+   * so each month converts at its own closing rate. Absent for the current
+   * month, for a month the rate source could not answer, and from servers
+   * before ABA-771; a currency missing from a month's table (UAH, RUB, BYN
+   * are not in the ECB set) converts at today's rate.
+   */
+  monthEndRates?: Record<string, Record<string, number>>;
 }
 
 export interface CreateExchangeRateWatchDto {

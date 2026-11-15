@@ -1270,6 +1270,7 @@ export default {
     noHistoryYet: 'Adicione transações para ver a evolução do seu saldo',
     untrackedCorrection: 'Correção de saldo',
     trackedChange: 'Registrado',
+    historyRatesNote: 'Os meses anteriores usam a cotação do fim de cada mês.',
   },
   exchange: {
     title: 'Câmbio',

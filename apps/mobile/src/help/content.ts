@@ -1758,7 +1758,7 @@ At the top of the Wallet screen, the **Balance History** card shows how your tot
 - **Green bars** mean your balance grew that month; **red bars** mean it shrank.
 - Tap any bar to see the exact change for that month.
 - Use the **6M / 12M** toggle to switch between the last 6 or 12 months.
-- Amounts follow the currency you pick in the currency chips, converted at the latest exchange rates.
+- Amounts follow the currency you pick in the currency chips. Past months are converted at the exchange rate of each month's last day; the current month, and UAH, RUB and BYN (which the reference rates do not cover), use the latest rates.
 - If you have corrected your balance, that correction is drawn as a separate grey part of the bar (with a legend), so you can see how much money went untracked. Tap the bar to see tracked change and correction separately.
 
 ## Setting Initial Balance
@@ -7158,7 +7158,7 @@ iOS, Android, Web
 - **Зелёные столбцы** означают, что баланс вырос в этом месяце; **красные столбцы** означают, что он снизился.
 - Нажмите на любой столбец, чтобы увидеть точное изменение за этот месяц.
 - Используйте переключатель **6 мес. / 12 мес.**, чтобы переключаться между последними 6 или 12 месяцами.
-- Суммы отображаются в валюте, которую вы выбираете в чипах валюты, с конвертацией по актуальным курсам обмена.
+- Суммы отображаются в валюте, которую вы выбираете в чипах валюты. Прошлые месяцы пересчитаны по курсу на их последний день; текущий месяц, а также UAH, RUB и BYN (их нет в справочных курсах) — по актуальным курсам.
 - Если вы корректировали баланс, корректировка рисуется отдельной серой частью столбца (с легендой), так видно, сколько денег осталось неучтённым. Нажмите на столбец, чтобы увидеть учтённое изменение и корректировку отдельно.
 
 ## Установка начального баланса
@@ -12574,7 +12574,7 @@ iOS, Android, Web
 - **Зелені стовпці** означають, що баланс зріс у цьому місяці; **червоні стовпці** означають, що він зменшився.
 - Натисніть на будь-який стовпець, щоб побачити точну зміну за цей місяць.
 - Використовуйте перемикач **6М / 12М**, щоб переключатися між останніми 6 або 12 місяцями.
-- Суми відображаються у валюті, яку ви обираєте у валютних чіпах, конвертованій за актуальними курсами обміну.
+- Суми відображаються у валюті, яку ви обираєте у валютних чіпах. Минулі місяці перераховано за курсом на їхній останній день; поточний місяць, а також UAH, RUB і BYN (їх немає в довідкових курсах) — за актуальними курсами.
 - Якщо ви коригували баланс, коригування малюється окремою сірою частиною стовпця (з легендою), тож видно, скільки грошей залишилось неврахованими. Натисніть на стовпець, щоб побачити враховану зміну й коригування окремо.
 
 ## Обмін валют
@@ -17909,7 +17909,7 @@ W górnej części ekranu Portfela karta **Historia salda** pokazuje, jak zmieni
 - **Zielone słupki** oznaczają, że saldo wzrosło w danym miesiącu; **czerwone słupki** oznaczają, że zmalało.
 - Dotknij dowolnego słupka, aby zobaczyć dokładną zmianę w danym miesiącu.
 - Użyj przełącznika **6M / 12M**, aby przełączyć między ostatnimi 6 lub 12 miesiącami.
-- Kwoty są wyświetlane w walucie wybranej w elementach waluty, przeliczonej po aktualnych kursach wymiany.
+- Kwoty są wyświetlane w walucie wybranej w elementach waluty. Poprzednie miesiące przeliczane są po kursie z ostatniego dnia miesiąca; bieżący miesiąc oraz UAH, RUB i BYN (których nie obejmują kursy referencyjne) — po kursach bieżących.
 - Jeśli skorygowano saldo, korekta jest rysowana jako osobna szara część słupka (z legendą), dzięki czemu widać, ile pieniędzy nie zostało zarejestrowanych. Dotknij słupka, aby zobaczyć osobno zmianę zarejestrowaną i korektę.
 
 ## Wymiana walut
@@ -23231,7 +23231,7 @@ Oben auf dem Geldborse-Bildschirm zeigt die Karte **Saldoverlauf**, wie sich dei
 - **Grune Balken** bedeuten, dass dein Saldo in diesem Monat gewachsen ist; **rote Balken** bedeuten, dass er gesunken ist.
 - Tippe auf einen Balken, um die genaue Veranderung fur diesen Monat zu sehen.
 - Nutze den **6M / 12M**-Schalter, um zwischen den letzten 6 oder 12 Monaten zu wechseln.
-- Die Betrage richten sich nach der Wahrung, die du bei den Wahrungschips auswahlst, umgerechnet zu den aktuellen Wechselkursen.
+- Die Beträge richten sich nach der Währung, die du bei den Währungschips auswählst. Vergangene Monate werden zum Wechselkurs ihres letzten Tages umgerechnet; der laufende Monat sowie UAH, RUB und BYN (nicht in den Referenzkursen enthalten) nutzen die aktuellen Kurse.
 - Wenn Sie Ihren Saldo korrigiert haben, wird die Korrektur als separater grauer Teil des Balkens (mit Legende) dargestellt, so sehen Sie, wie viel Geld nicht erfasst wurde. Tippen Sie auf den Balken, um erfasste Änderung und Korrektur getrennt zu sehen.
 
 ## Anfangssaldo festlegen
@@ -28558,7 +28558,7 @@ En la parte superior de la pantalla de Billetera, la tarjeta **Historial de sald
 - Las **barras verdes** significan que tu saldo crecio ese mes; las **barras rojas** significan que disminuyo.
 - Toca cualquier barra para ver el cambio exacto de ese mes.
 - Usa el selector **6M / 12M** para alternar entre los ultimos 6 o 12 meses.
-- Los importes siguen la moneda que elijas en las fichas de moneda, convertidos a las tasas de cambio mas recientes.
+- Los importes siguen la moneda que elijas en las fichas de moneda. Los meses pasados se convierten al tipo de cambio de su último día; el mes en curso y UAH, RUB y BYN (que los tipos de referencia no incluyen) usan los tipos actuales.
 - Si has corregido tu saldo, la corrección se dibuja como una parte gris separada de la barra (con leyenda), para que veas cuánto dinero no se registró. Toca la barra para ver por separado el cambio registrado y la corrección.
 
 ## Transferencias entre cuentas
@@ -33855,7 +33855,7 @@ En haut de l'ecran Portefeuille, la carte **Historique du solde** montre comment
 - Les **barres vertes** indiquent que votre solde a augmente ce mois-la ; les **barres rouges** indiquent qu'il a diminue.
 - Appuyez sur une barre pour voir le changement exact de ce mois.
 - Utilisez le bouton **6M / 12M** pour basculer entre les 6 ou 12 derniers mois.
-- Les montants suivent la devise que vous selectionnez dans les pastilles de devise, convertis aux taux de change les plus recents.
+- Les montants suivent la devise choisie dans les pastilles de devise. Les mois passés sont convertis au taux de leur dernier jour ; le mois en cours, ainsi que UAH, RUB et BYN (absents des taux de référence), utilisent les taux actuels.
 - Si vous avez corrigé votre solde, la correction est dessinée comme une partie grise distincte de la barre (avec légende), pour voir combien d’argent n’a pas été suivi. Touchez la barre pour voir séparément la variation suivie et la correction.
 
 ## Change de devises
@@ -39141,7 +39141,7 @@ iOS, Android, Web
 - **Зялёныя слупкі** азначаюць, што баланс вырас у гэтым месяцы; **чырвоныя слупкі** азначаюць, што ён знізіўся.
 - Націсніце на любы слупок, каб убачыць дакладную змену за гэты месяц.
 - Выкарыстоўвайце перамыкач **6 мес. / 12 мес.**, каб пераключацца паміж апошнімі 6 або 12 месяцамі.
-- Сумы адлюстроўваюцца ў валюце, якую вы выбіраеце ў чыпах валюты, з канвертацыяй па актуальных курсах абмену.
+- Сумы адлюстроўваюцца ў валюце, якую вы выбіраеце ў чыпах валюты. Мінулыя месяцы пералічаны па курсе на іх апошні дзень; бягучы месяц, а таксама UAH, RUB і BYN (іх няма ў даведачных курсах) — па актуальных курсах.
 - Калі вы карэкціравалі баланс, карэкціроўка малюецца асобнай шэрай часткай слупка (з легендай), таму відаць, колькі грошай засталося неўлічанымі. Націсніце на слупок, каб убачыць уліковую змену і карэкціроўку паасобку.
 
 ## Устаноўка пачатковага балансу
@@ -44404,7 +44404,7 @@ Bovenaan het Portemonnee-scherm toont de kaart **Saldogeschiedenis** hoe je tota
 - **Groene staven** betekenen dat je saldo die maand is gegroeid; **rode staven** betekenen dat het is gekrompen.
 - Tik op een staaf om de exacte verandering voor die maand te zien.
 - Gebruik de schakelaar **6M / 12M** om te wisselen tussen de laatste 6 of 12 maanden.
-- Bedragen volgen de valuta die je kiest in de valutachips, omgerekend tegen de meest recente wisselkoersen.
+- Bedragen volgen de valuta die je kiest in de valutachips. Afgelopen maanden worden omgerekend tegen de koers van hun laatste dag; de lopende maand en UAH, RUB en BYN (niet in de referentiekoersen) gebruiken de meest recente koersen.
 - Als u uw saldo hebt gecorrigeerd, wordt die correctie als apart grijs deel van de balk getekend (met legenda), zodat u ziet hoeveel geld niet is bijgehouden. Tik op de balk om bijgehouden wijziging en correctie apart te zien.
 
 ## Beginsaldo instellen
@@ -49809,7 +49809,7 @@ No topo do ecrã Carteira, o cartão **Histórico do saldo** mostra, num gráfic
 - As **barras verdes** indicam que o saldo cresceu nesse mês; as **barras vermelhas** indicam que diminuiu.
 - Toque numa barra para ver a variação exata desse mês.
 - Use o seletor **6M / 12M** para alternar entre os últimos 6 ou 12 meses.
-- Os montantes seguem a moeda escolhida nos botões de moeda, convertidos às taxas de câmbio mais recentes.
+- Os montantes seguem a moeda escolhida nos botões de moeda. Os meses anteriores são convertidos à taxa do seu último dia; o mês em curso e UAH, RUB e BYN (que as taxas de referência não incluem) usam as taxas mais recentes.
 - Se tiver corrigido o saldo, essa correção é desenhada como uma parte cinzenta separada da barra (com legenda), para que veja quanto dinheiro ficou por registar. Toque na barra para ver em separado a variação registada e a correção.
 
 ## Definir o saldo inicial
@@ -55225,7 +55225,7 @@ No topo da tela Carteira, o cartão **Histórico do saldo** mostra, em um gráfi
 - **Barras verdes** indicam que seu saldo cresceu naquele mês; **barras vermelhas** indicam que diminuiu.
 - Toque em qualquer barra para ver a variação exata daquele mês.
 - Use o seletor **6M / 12M** para alternar entre os últimos 6 ou 12 meses.
-- Os valores seguem a moeda escolhida nos botões de moeda, convertidos pelas cotações mais recentes.
+- Os valores seguem a moeda escolhida nos botões de moeda. Os meses anteriores são convertidos pela cotação do último dia de cada mês; o mês atual e UAH, RUB e BYN (que as cotações de referência não incluem) usam as cotações mais recentes.
 - Se você corrigiu seu saldo, essa correção aparece como uma parte cinza separada da barra (com legenda), para você ver quanto dinheiro ficou sem registro. Toque na barra para ver a variação registrada e a correção separadamente.
 
 ## Definindo o saldo inicial

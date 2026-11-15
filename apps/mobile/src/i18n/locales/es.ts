@@ -1272,6 +1272,7 @@ export default {
     noHistoryYet: 'Agrega transacciones para ver la tendencia de tu saldo',
     untrackedCorrection: 'Corrección de saldo',
     trackedChange: 'Registrado',
+    historyRatesNote: 'Los meses pasados usan el tipo de cambio de cierre de cada mes.',
   },
   exchange: {
     title: 'Cambio',

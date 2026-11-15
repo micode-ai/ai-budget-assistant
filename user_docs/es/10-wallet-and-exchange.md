@@ -60,7 +60,7 @@ En la parte superior de la pantalla de Billetera, la tarjeta **Historial de sald
 - Las **barras verdes** significan que tu saldo crecio ese mes; las **barras rojas** significan que disminuyo.
 - Toca cualquier barra para ver el cambio exacto de ese mes.
 - Usa el selector **6M / 12M** para alternar entre los ultimos 6 o 12 meses.
-- Los importes siguen la moneda que elijas en las fichas de moneda, convertidos a las tasas de cambio mas recientes.
+- Los importes siguen la moneda que elijas en las fichas de moneda. Los meses pasados se convierten al tipo de cambio de su último día; el mes en curso y UAH, RUB y BYN (que los tipos de referencia no incluyen) usan los tipos actuales.
 - Si has corregido tu saldo, la corrección se dibuja como una parte gris separada de la barra (con leyenda), para que veas cuánto dinero no se registró. Toca la barra para ver por separado el cambio registrado y la corrección.
 
 ## Transferencias entre cuentas

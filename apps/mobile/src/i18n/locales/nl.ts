@@ -1272,6 +1272,7 @@ export default {
     noHistoryYet: 'Voeg transacties toe om de saldotrend te zien',
     untrackedCorrection: 'Saldocorrectie',
     trackedChange: 'Geregistreerd',
+    historyRatesNote: 'Afgelopen maanden gebruiken de wisselkoers van het einde van elke maand.',
   },
   exchange: {
     title: 'Omwisselen',

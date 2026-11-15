@@ -1272,6 +1272,7 @@ export default {
     noHistoryYet: 'Füge Transaktionen hinzu, um den Guthabentrend zu sehen',
     untrackedCorrection: 'Saldokorrektur',
     trackedChange: 'Erfasst',
+    historyRatesNote: 'Vergangene Monate nutzen den Wechselkurs vom jeweiligen Monatsende.',
   },
   exchange: {
     title: 'Umtausch',

@@ -7,7 +7,7 @@ import { useExchangeRateStore, convertAmount } from '@/stores/exchangeRateStore'
 import { formatCurrency } from '@budget/shared-utils';
 import { getIntlLocale } from '@/i18n';
 import { WalletMonthlyChart } from './WalletMonthlyChart';
-import { buildMonthlyBars } from '@/features/wallet/monthlyBars';
+import { buildMonthlyBars, monthAwareConverter } from '@/features/wallet/monthlyBars';
 
 const MONTH_WINDOWS: Array<6 | 12> = [6, 12];
 
@@ -26,7 +26,7 @@ export function WalletBalanceCard({ displayCurrency }: Props) {
   const theme = useTheme();
   const styles = useStyles(createStyles);
 
-  const { monthlyHistory, selectedMonths, isHistoryLoading, loadMonthlyHistory, walletSummary } =
+  const { monthlyHistory, monthlyHistoryRates, selectedMonths, isHistoryLoading, loadMonthlyHistory, walletSummary } =
     useWalletStore();
   const rates = useExchangeRateStore((s) => s.rates);
 
@@ -46,9 +46,13 @@ export function WalletBalanceCard({ displayCurrency }: Props) {
 
   if (walletSummary.length === 0) return null;
 
+  // Each past month at its own closing rate (ABA-771), today's rate otherwise.
+  const hasMonthRates = Object.keys(monthlyHistoryRates).length > 0;
   const bars = buildMonthlyBars(
     monthlyHistory,
-    (amount, currency) => convertAmount(amount, currency, displayCurrency, rates),
+    monthAwareConverter(monthlyHistoryRates, displayCurrency, (amount, currency) =>
+      convertAmount(amount, currency, displayCurrency, rates),
+    ),
     (m) => monthLabel(m),
   );
 
@@ -101,6 +105,7 @@ export function WalletBalanceCard({ displayCurrency }: Props) {
             adjustmentLabel={t('wallet.untrackedCorrection')}
             trackedLabel={t('wallet.trackedChange')}
           />
+          {hasMonthRates && <Text style={styles.ratesNote}>{t('wallet.historyRatesNote')}</Text>}
         </>
       )}
     </View>
@@ -127,6 +132,11 @@ const createStyles = (theme: Theme) => ({
   title: {
     ...theme.textStyles.h3,
     color: theme.colors.textPrimary,
+  },
+  ratesNote: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
+    marginTop: theme.spacing[2],
   },
   periodSelector: {
     flexDirection: 'row' as const,

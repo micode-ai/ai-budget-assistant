@@ -1,10 +1,11 @@
+import { CurrencyExchangeModule } from '../currency-exchange/currency-exchange.module';
 import { Module } from '@nestjs/common';
 import { WalletController } from './wallet.controller';
 import { WalletService } from './wallet.service';
 import { WalletCurrencyModule } from './wallet-currency.module';
 
 @Module({
-  imports: [WalletCurrencyModule],
+  imports: [WalletCurrencyModule, CurrencyExchangeModule],
   controllers: [WalletController],
   providers: [WalletService],
   exports: [WalletService],

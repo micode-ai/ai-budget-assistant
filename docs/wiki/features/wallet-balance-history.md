@@ -36,8 +36,18 @@ the window gets an entry, including empty ones.
 `getSummary()`, back-calculating the start as `currentBalance − rangeDelta`, and walking forward.
 The current client does not call it.
 
+**Month-end rates (ABA-771).** The monthly endpoint also returns `monthEndRates`: EUR-based
+closing rates for every month but the current one, from `HistoricalRateService`
+(`currency-exchange/historical-rate.service.ts`). That service reads the ECB reference rates via
+Frankfurter for the month's last day (a weekend answers with the last business day), with no key
+and no user data sent. It caches in Redis under `fxh:EUR:YYYY-MM` for 90 days and is fail-soft: a
+month it cannot fetch is just absent. On the client, `monthAwareConverter` (`features/wallet/monthlyBars.ts`)
+converts a month at its own closing rate when that table has both currencies, and otherwise at
+today's rate: the current month, an unanswered month, and UAH, RUB and BYN, which the ECB set
+lacks.
+
 **The chart.** `WalletBalanceCard` converts each month's deltas into its `displayCurrency` prop
-with today's FX rates and renders a gifted-charts `BarChart` with signed bars — negatives below the
+(see above; a note under the chart says past months use closing rates) and renders a gifted-charts `BarChart` with signed bars — negatives below the
 axis via `mostNegativeValue` / `noOfSectionsBelowXAxis`, green at or above zero and red below, the
 value on tap and no per-bar labels (they overlapped) — plus a 6M/12M toggle and the latest month's
 delta. The wallet screen's own currency chip row drives `displayCurrency` for the total card and
@@ -72,9 +82,10 @@ gains a real timestamp column, bucket that one with `yearMonthIdInTimezone`.
 - The daily series (`getBalanceHistory`) still builds its window from the server's local clock and
   keys days with `toISOString()`; it is unused by the current client and was not given the monthly
   series' timezone treatment.
-- Past months are converted at today's rates, not the rates of that month.
+- UAH, RUB and BYN still convert at today's rate in past months (not in the ECB set).
+- The total-balance card is today's value at today's rates by design; only the history uses month-end rates.
 
 ## History
 
 ABA-257 (daily sparkline) · ABA-258 (monthly signed bars, the wallet-local currency toggle;
-`WalletBalanceCard` replaced `WalletSparklineCard`).
+`WalletBalanceCard` replaced `WalletSparklineCard`) · ABA-771 (past months at month-end rates).

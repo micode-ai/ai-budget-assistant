@@ -1272,6 +1272,7 @@ export default {
     noHistoryYet: 'Ajoutez des transactions pour voir l\'évolution de votre solde',
     untrackedCorrection: 'Correction de solde',
     trackedChange: 'Suivi',
+    historyRatesNote: 'Les mois passés utilisent le taux de change de fin de chaque mois.',
   },
   exchange: {
     title: 'Change',

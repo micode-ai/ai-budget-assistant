@@ -8,8 +8,10 @@ import {
   Query,
   UseGuards,
   Req,
+  Optional,
 } from '@nestjs/common';
 import { WalletService } from './wallet.service';
+import { HistoricalRateService } from '../currency-exchange/historical-rate.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
 import { ViewerBlockGuard } from '../accounts/guards/account-role.guard';
@@ -20,7 +22,12 @@ import { SetWalletBalanceDto, CreateWalletAdjustmentDto } from './dto';
 @Controller('wallet')
 @UseGuards(JwtAuthGuard, AccountContextGuard)
 export class WalletController {
-  constructor(private readonly walletService: WalletService) {}
+  constructor(
+    private readonly walletService: WalletService,
+    // Optional: month-end rates only refine the chart; without them every
+    // month converts at today's rate, as before.
+    @Optional() private readonly historicalRates?: HistoricalRateService,
+  ) {}
 
   @Post()
   @UseGuards(new ViewerBlockGuard())
@@ -75,7 +82,13 @@ export class WalletController {
   ) {
     const parsedMonths = months ? parseInt(months, 10) : 6;
     const safeMonths = Number.isNaN(parsedMonths) ? 6 : parsedMonths;
-    return this.walletService.getMonthlyBalanceHistory(req.accountId, safeMonths, req.user.timezone);
+    const history = await this.walletService.getMonthlyBalanceHistory(req.accountId, safeMonths, req.user.timezone);
+    // Every month but the last (the current one, still moving) converts at its
+    // own closing rate on the client (wallet-balance-history.md).
+    const pastMonths = history.months.slice(0, -1).map((m) => m.month);
+    const monthEndRates =
+      this.historicalRates && pastMonths.length > 0 ? await this.historicalRates.getMonthEndRates(pastMonths) : {};
+    return { ...history, monthEndRates };
   }
 
   @Delete(':currencyCode')

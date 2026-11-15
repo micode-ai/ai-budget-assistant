@@ -1273,6 +1273,7 @@ export default {
     noHistoryYet: 'Дадайце транзакцыі, каб убачыць дынаміку балансу',
     untrackedCorrection: 'Карэкціроўка балансу',
     trackedChange: 'Улічана',
+    historyRatesNote: 'Мінулыя месяцы пералічаны па курсе на канец кожнага месяца.',
   },
   exchange: {
     title: 'Абмен валют',

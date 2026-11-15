@@ -56,7 +56,7 @@ En haut de l'ecran Portefeuille, la carte **Historique du solde** montre comment
 - Les **barres vertes** indiquent que votre solde a augmente ce mois-la ; les **barres rouges** indiquent qu'il a diminue.
 - Appuyez sur une barre pour voir le changement exact de ce mois.
 - Utilisez le bouton **6M / 12M** pour basculer entre les 6 ou 12 derniers mois.
-- Les montants suivent la devise que vous selectionnez dans les pastilles de devise, convertis aux taux de change les plus recents.
+- Les montants suivent la devise choisie dans les pastilles de devise. Les mois passés sont convertis au taux de leur dernier jour ; le mois en cours, ainsi que UAH, RUB et BYN (absents des taux de référence), utilisent les taux actuels.
 - Si vous avez corrigé votre solde, la correction est dessinée comme une partie grise distincte de la barre (avec légende), pour voir combien d’argent n’a pas été suivi. Touchez la barre pour voir séparément la variation suivie et la correction.
 
 ## Change de devises

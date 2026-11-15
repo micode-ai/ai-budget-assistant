@@ -1282,6 +1282,7 @@ export default {
     noHistoryYet: 'Додайте транзакції, щоб побачити динаміку балансу',
     untrackedCorrection: 'Коригування балансу',
     trackedChange: 'Враховано',
+    historyRatesNote: 'Минулі місяці перераховано за курсом на кінець кожного місяця.',
   },
   exchange: {
     title: 'Обмін валют',

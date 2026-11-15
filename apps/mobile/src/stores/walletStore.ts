@@ -85,6 +85,8 @@ interface WalletState {
   walletSummary: WalletSummary[];
   accountSummaries: Record<string, WalletSummary[]>;
   monthlyHistory: WalletMonthlyDeltaPoint[];
+  /** Month-end EUR-based rates per past month, from the same response (ABA-771). */
+  monthlyHistoryRates: Record<string, Record<string, number>>;
   selectedMonths: 6 | 12;
   isHistoryLoading: boolean;
   isLoading: boolean;
@@ -194,6 +196,7 @@ export const useWalletStore = create<WalletState>()(
     walletSummary: [],
     accountSummaries: loadCachedAccountSummaries(),
     monthlyHistory: [],
+    monthlyHistoryRates: {},
     selectedMonths: 6,
     isHistoryLoading: false,
     isLoading: false,
@@ -223,7 +226,7 @@ export const useWalletStore = create<WalletState>()(
       try {
         const result = await api.getWalletMonthlyHistory(months);
         if (useAccountStore.getState().currentAccountId !== accountId) return;
-        set({ monthlyHistory: result.months, isHistoryLoading: false });
+        set({ monthlyHistory: result.months, monthlyHistoryRates: result.monthEndRates ?? {}, isHistoryLoading: false });
       } catch {
         set({ isHistoryLoading: false });
       }
@@ -240,7 +243,7 @@ export const useWalletStore = create<WalletState>()(
 
         if (_walletAccountId !== accountId) {
           _walletAccountId = accountId;
-          set({ walletBalances: [], exchanges: [], transfers: [], walletSummary: [], monthlyHistory: [], lastPullAt: null, adjustmentTotals: loadCachedAdjustmentTotals(accountId) });
+          set({ walletBalances: [], exchanges: [], transfers: [], walletSummary: [], monthlyHistory: [], monthlyHistoryRates: {}, lastPullAt: null, adjustmentTotals: loadCachedAdjustmentTotals(accountId) });
         }
 
         // 1. Load from local DB
@@ -444,7 +447,7 @@ export const useWalletStore = create<WalletState>()(
       // next user must not see the previous one's figures.
       accountSummariesStorage.delete(ACCOUNT_SUMMARIES_KEY);
       _walletAccountId = null;
-      set({ walletBalances: [], exchanges: [], transfers: [], walletSummary: [], accountSummaries: {}, monthlyHistory: [], selectedMonths: 6, isHistoryLoading: false, isLoading: false, error: null, lastPullAt: null, adjustmentTotals: {} });
+      set({ walletBalances: [], exchanges: [], transfers: [], walletSummary: [], accountSummaries: {}, monthlyHistory: [], monthlyHistoryRates: {}, selectedMonths: 6, isHistoryLoading: false, isLoading: false, error: null, lastPullAt: null, adjustmentTotals: {} });
     },
   })),
 );

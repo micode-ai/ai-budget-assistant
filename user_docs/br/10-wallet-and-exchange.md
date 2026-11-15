@@ -43,7 +43,7 @@ No topo da tela Carteira, o cartão **Histórico do saldo** mostra, em um gráfi
 - **Barras verdes** indicam que seu saldo cresceu naquele mês; **barras vermelhas** indicam que diminuiu.
 - Toque em qualquer barra para ver a variação exata daquele mês.
 - Use o seletor **6M / 12M** para alternar entre os últimos 6 ou 12 meses.
-- Os valores seguem a moeda escolhida nos botões de moeda, convertidos pelas cotações mais recentes.
+- Os valores seguem a moeda escolhida nos botões de moeda. Os meses anteriores são convertidos pela cotação do último dia de cada mês; o mês atual e UAH, RUB e BYN (que as cotações de referência não incluem) usam as cotações mais recentes.
 - Se você corrigiu seu saldo, essa correção aparece como uma parte cinza separada da barra (com legenda), para você ver quanto dinheiro ficou sem registro. Toque na barra para ver a variação registrada e a correção separadamente.
 
 ## Definindo o saldo inicial

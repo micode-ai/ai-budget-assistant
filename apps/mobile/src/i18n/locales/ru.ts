@@ -1282,6 +1282,7 @@ export default {
     noHistoryYet: 'Добавьте транзакции, чтобы увидеть динамику баланса',
     untrackedCorrection: 'Корректировка баланса',
     trackedChange: 'Учтено',
+    historyRatesNote: 'Прошлые месяцы пересчитаны по курсу на конец каждого месяца.',
   },
   exchange: {
     title: 'Обмен валют',

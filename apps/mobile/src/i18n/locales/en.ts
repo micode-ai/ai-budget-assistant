@@ -1276,6 +1276,7 @@ export default {
     noHistoryYet: 'Add transactions to see your balance trend',
     untrackedCorrection: 'Balance correction',
     trackedChange: 'Tracked',
+    historyRatesNote: "Past months use each month's closing exchange rate.",
   },
   exchange: {
     title: 'Exchange',

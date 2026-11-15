@@ -5070,7 +5070,7 @@ Bovenaan het Portemonnee-scherm toont de kaart **Saldogeschiedenis** hoe je tota
 - **Groene staven** betekenen dat je saldo die maand is gegroeid; **rode staven** betekenen dat het is gekrompen.
 - Tik op een staaf om de exacte verandering voor die maand te zien.
 - Gebruik de schakelaar **6M / 12M** om te wisselen tussen de laatste 6 of 12 maanden.
-- Bedragen volgen de valuta die je kiest in de valutachips, omgerekend tegen de meest recente wisselkoersen.
+- Bedragen volgen de valuta die je kiest in de valutachips. Afgelopen maanden worden omgerekend tegen de koers van hun laatste dag; de lopende maand en UAH, RUB en BYN (niet in de referentiekoersen) gebruiken de meest recente koersen.
 - Als u uw saldo hebt gecorrigeerd, wordt die correctie als apart grijs deel van de balk getekend (met legenda), zodat u ziet hoeveel geld niet is bijgehouden. Tik op de balk om bijgehouden wijziging en correctie apart te zien.
 
 ## Beginsaldo instellen

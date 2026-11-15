@@ -1282,6 +1282,7 @@ export default {
     noHistoryYet: 'Dodaj transakcje, aby zobaczyć trend salda',
     untrackedCorrection: 'Korekta salda',
     trackedChange: 'Zarejestrowane',
+    historyRatesNote: 'Poprzednie miesiące przeliczono po kursie z końca każdego miesiąca.',
   },
   exchange: {
     title: 'Kantor',
