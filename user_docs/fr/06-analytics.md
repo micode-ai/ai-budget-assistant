@@ -34,6 +34,10 @@ Affiche ce que vous avez **gagné**, **dépensé** et **épargné** sur la péri
 
 Indique quelle part de vos dépenses est **fixe** — de l'argent qui part chaque période quoi qu'il arrive — et liste les plus grosses dépenses fixes. Une dépense compte comme fixe si elle est récurrente ou si elle correspond à l'un de vos abonnements actifs du gestionnaire d'abonnements (même nom, ou même catégorie et même montant). Tout le reste est variable. Pour qu'un loyer ou un autre paiement régulier compte comme fixe, marquez-le comme récurrent ou ajoutez-le comme abonnement.
 
+## 30 prochains jours
+
+Affiché lorsque vous consultez la période en cours. C'est une estimation de votre solde pour chacun des 30 prochains jours : le solde d'aujourd'hui, plus les revenus qui arrivent chaque mois, moins les renouvellements d'abonnements et les dépenses récurrentes à leur date, moins une journée type de dépenses courantes. Si le solde devait passer sous zéro, la carte indique à partir de quel jour, et les barres sous la ligne le montrent. **À venir** liste les prochains paiements et revenus. Les versements vers les objectifs d'épargne ne sont pas déduits et les revenus non mensuels ne sont pas comptés : c'est un repère, pas une promesse.
+
 ## Carousel d'aperçus IA
 
 Un carousel horizontal defilable d'aperçus generes par l'IA (plan Pro requis) :

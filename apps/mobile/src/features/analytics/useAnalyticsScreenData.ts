@@ -10,6 +10,7 @@ import { useInsightsStore } from '@/stores/insightsStore';
 import { useTagStore } from '@/stores/tagStore';
 import { useProjectStore } from '@/stores/projectStore';
 import { useAnalytics, type TimeRange } from '@/features/analytics/useAnalytics';
+import { useCashFlowForecast } from '@/features/analytics/useCashFlowForecast';
 import { getIntlLocale } from '@/i18n';
 import { usePeriodNavigation } from '@/hooks/usePeriodNavigation';
 import { usePriceHistoryStore } from '@/stores/priceHistoryStore';
@@ -40,6 +41,9 @@ export function useAnalyticsScreenData() {
     selectedYear,
   );
   const { dailySpending, categorySpending, merchantSpending, memberSpending, incomeByCategory, summary, itemBreakdown, dayOfWeekSpending, periodComparison, anomalies, predictions, cashFlowAnalytics, dateRange, tagSpending, projectSpending } = analytics;
+
+  // Forward-looking, so only meaningful while the CURRENT period is open.
+  const cashFlowForecast = useCashFlowForecast(isCurrentPeriod);
 
   const { aiInsights, aiInsightsProGated, loadAIInsights } = useInsightsStore();
   const { loadRates } = useExchangeRateStore();
@@ -126,6 +130,7 @@ export function useAnalyticsScreenData() {
     anomalies,
     predictions,
     cashFlowAnalytics,
+    cashFlowForecast,
     tagSpending,
     projectSpending,
     aiInsights,

@@ -5,6 +5,7 @@ import { AiInsightsService } from './ai-insights.service';
 import { StoryService } from './story.service';
 import { FatFinderService } from './fat-finder.service';
 import { SafeToSpendService } from './safe-to-spend.service';
+import { CashFlowForecastService } from './cash-flow-forecast.service';
 import { WrappedService } from './wrapped.service';
 import { InflationShieldService } from './inflation-shield.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -30,6 +31,7 @@ export class InsightsController {
     private readonly inflationShieldService: InflationShieldService,
     private readonly realSalaryService: RealSalaryService,
     private readonly realSalaryBriefPdf: RealSalaryBriefPdf,
+    private readonly cashFlowForecastService: CashFlowForecastService,
   ) {}
 
   @Get()
@@ -50,6 +52,16 @@ export class InsightsController {
   async getSafeToSpend(@Req() req: AuthenticatedRequest) {
     const baseCurrency = req.user.currencyCode || 'USD';
     return this.safeToSpendService.compute(req.accountId, req.user.id, baseCurrency);
+  }
+
+  /**
+   * GET /insights/cash-flow-forecast
+   * The next 30 days of the account's balance, day by day. Read-only and FREE
+   * (no tier guard), like safe-to-spend; viewers may read it.
+   */
+  @Get('cash-flow-forecast')
+  async getCashFlowForecast(@Req() req: AuthenticatedRequest) {
+    return this.cashFlowForecastService.getForecast(req.accountId, req.user.currencyCode || 'USD');
   }
 
   /**

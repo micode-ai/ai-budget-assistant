@@ -17,6 +17,9 @@ chat. It is deterministic — no model computes it — and free on every tier.
   `checkAffordability`, `safeToSpendCacheKey`
 - `apps/api/src/modules/insights/safe-to-spend.util.ts` — `computeSafeToSpend`, the pure formula
   (API copy)
+- `apps/api/src/modules/insights/cash-flow-forecast.util.ts` — the date rules (subscription
+  renewals, recurring due dates, monthly income cadence), shared with the
+  [30-day forecast](cash-flow-forecast.md) so the two never disagree on when money moves
 - `packages/shared-utils/src/formatting/index.ts` — the mirror copy of `computeSafeToSpend` the app
   uses offline
 - `apps/api/src/modules/insights/insights.controller.ts` — `GET /insights/safe-to-spend`

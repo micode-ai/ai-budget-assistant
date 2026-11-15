@@ -6,19 +6,19 @@ import { CacheService } from '../../common/cache/cache.service';
 import { EXCLUDE_SPLIT_RECEIVABLE } from '../../common/utils/expense-filters';
 import { getRatesSafe, convertAmount } from '../../common/utils/fx';
 import { computeSafeToSpend } from './safe-to-spend.util';
+import {
+  detectMonthlyIncomeSeries,
+  recurringOccurrences,
+  subscriptionOccurrences,
+  MIN_OCCURRENCES,
+  type BillingCycle,
+} from './cash-flow-forecast.util';
 import type { SafeToSpendResponse, AffordabilityVerdict } from '@budget/shared-types';
 
 // How far back we look when inferring monthly income (90 days)
 const INCOME_LOOKBACK_DAYS = 90;
-// Gap range that signals a monthly cadence (matches anomaly module's recurring_suggestion)
-const MONTHLY_GAP_MIN = 25;
-const MONTHLY_GAP_MAX = 35;
-// Minimum occurrences to establish a recurring income series
-const MIN_OCCURRENCES = 2;
 // Cache TTL for safe-to-spend results (5 minutes)
 const CACHE_TTL_SEC = 300;
-
-type BillingCycle = 'monthly' | 'yearly' | 'quarterly' | 'weekly';
 
 /**
  * Returns the cache key for a safe-to-spend result.
@@ -32,37 +32,6 @@ export function safeToSpendCacheKey(accountId: string, baseCurrency: string): st
  * Advance a Date by one billing cycle.
  * Mirror of the `addCycle` logic in subscription-renewal.cron.ts.
  */
-function addCycle(date: Date, cycle: BillingCycle): Date {
-  const next = new Date(date);
-  switch (cycle) {
-    case 'weekly':
-      next.setDate(next.getDate() + 7);
-      break;
-    case 'monthly':
-      next.setMonth(next.getMonth() + 1);
-      break;
-    case 'quarterly':
-      next.setMonth(next.getMonth() + 3);
-      break;
-    case 'yearly':
-      next.setFullYear(next.getFullYear() + 1);
-      break;
-  }
-  return next;
-}
-
-/**
- * Advance a Date by one recurring-expense period.
- * Mirror of `addPeriod` in expense-recurring.cron.ts.
- */
-function addPeriod(date: Date, period: string): Date {
-  const next = new Date(date);
-  if (period === 'weekly') next.setDate(next.getDate() + 7);
-  else if (period === 'monthly') next.setMonth(next.getMonth() + 1);
-  else if (period === 'yearly') next.setFullYear(next.getFullYear() + 1);
-  return next;
-}
-
 @Injectable()
 export class SafeToSpendService {
   private readonly logger = new Logger(SafeToSpendService.name);
@@ -118,45 +87,15 @@ export class SafeToSpendService {
       return { expectedIncome: 0, nextDate: null, fxApproximate: false };
     }
 
-    // Group by normalized description + rounded-amount bucket (same currency)
-    // bucket = round(amount, -1) so small float fluctuations don't split series
-    type Group = { dates: Date[]; amount: number; currencyCode: string };
-    const groups = new Map<string, Group>();
-
-    for (const inc of incomes) {
-      const amt = Number(inc.amount);
-      const bucket = Math.round(amt / 10) * 10;
-      const key = `${(inc.description || '').trim().toLowerCase()}|${bucket}|${inc.currencyCode}`;
-      if (!groups.has(key)) {
-        groups.set(key, { dates: [], amount: amt, currencyCode: inc.currencyCode });
-      }
-      groups.get(key)!.dates.push(new Date(inc.date));
-    }
-
+    // Grouping and the monthly-cadence rule live in cash-flow-forecast.util.ts,
+    // shared with the 30-day forecast so both expect income on the same day.
     let bestExpected = 0;
     let bestNextDate: Date | null = null;
     let fxApproximate = false;
 
-    for (const group of groups.values()) {
-      const { dates, amount, currencyCode } = group;
-      if (dates.length < MIN_OCCURRENCES) continue;
-
-      // Check gaps between consecutive dates
-      let allMonthly = true;
-      for (let i = 1; i < dates.length; i++) {
-        const gap = (dates[i].getTime() - dates[i - 1].getTime()) / (24 * 60 * 60 * 1000);
-        if (gap < MONTHLY_GAP_MIN || gap > MONTHLY_GAP_MAX) {
-          allMonthly = false;
-          break;
-        }
-      }
-      if (!allMonthly) continue;
-
-      // Predict next occurrence: lastDate + avg gap
-      const lastDate = dates[dates.length - 1];
-      const avgGapMs =
-        (dates[dates.length - 1].getTime() - dates[0].getTime()) / (dates.length - 1);
-      const nextDate = new Date(lastDate.getTime() + avgGapMs);
+    for (const series of detectMonthlyIncomeSeries(incomes)) {
+      const { amount, currencyCode } = series;
+      const nextDate = new Date(series.lastDate.getTime() + series.avgGapMs);
 
       // Only use this series if the next occurrence is before or on end of current month
       if (nextDate > endOfCurrentMonth) continue;
@@ -229,19 +168,8 @@ export class SafeToSpendService {
         continue;
       }
 
-      // Walk nextRenewalDate forward, counting occurrences within (today, horizon]
-      let nextDate = new Date(sub.nextRenewalDate);
-      // If the renewal is before today, advance until it's in range
-      while (nextDate < today) {
-        nextDate = addCycle(nextDate, cycle);
-      }
-
-      // Count all occurrences in the horizon window
-      let current = new Date(nextDate);
-      while (current <= horizon) {
-        total += convertedAmount!;
-        current = addCycle(current, cycle);
-      }
+      // Occurrences in [today, horizon] — date rule shared with the forecast.
+      total += convertedAmount! * subscriptionOccurrences(new Date(sub.nextRenewalDate), cycle, today, horizon).length;
     }
 
     return { total: Math.round(total * 100) / 100, fxApproximate };
@@ -308,18 +236,8 @@ export class SafeToSpendService {
         continue;
       }
 
-      // Advance nextDue until it's strictly after today
-      let nextDue = addPeriod(new Date(template.date), period);
-      while (nextDue <= today) {
-        nextDue = addPeriod(nextDue, period);
-      }
-
-      // Count all occurrences ≤ horizon
-      let current = new Date(nextDue);
-      while (current <= horizon) {
-        total += convertedAmount!;
-        current = addPeriod(current, period);
-      }
+      // Occurrences in (today, horizon] — date rule shared with the forecast.
+      total += convertedAmount! * recurringOccurrences(new Date(template.date), period, today, horizon).length;
     }
 
     return { total: Math.round(total * 100) / 100, fxApproximate };

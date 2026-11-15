@@ -34,6 +34,10 @@ Pokazuje, ile w wybranym okresie **zarobiono**, **wydano** i ile **zostało**, a
 
 Pokazuje, jaka część wydatków to koszty **stałe** — pieniądze, które i tak wychodzą w każdym okresie — i wymienia największe z nich. Wydatek liczy się jako stały, gdy jest cykliczny albo pasuje do jednej z aktywnych subskrypcji w menedżerze subskrypcji (ta sama nazwa albo ta sama kategoria i kwota). Wszystko inne jest zmienne. Aby czynsz lub inna regularna płatność liczyła się jako stała, oznacz ją jako cykliczną albo dodaj jako subskrypcję.
 
+## Najbliższe 30 dni
+
+Widoczne, gdy oglądasz bieżący okres. To szacunek salda na każdy z najbliższych 30 dni: dzisiejsze saldo, plus przychody wpływające co miesiąc, minus odnowienia subskrypcji i wydatki cykliczne w ich terminach, minus typowy dzień codziennych wydatków. Jeśli saldo miałoby spaść poniżej zera, karta podaje, od którego dnia, a słupki pod linią to pokazują. **Nadchodzące** wymienia najbliższe płatności i wpływy. Wpłaty na cele oszczędnościowe nie są odejmowane, a przychody, które nie przychodzą co miesiąc, nie są liczone – traktuj tę liczbę jako wskazówkę, nie obietnicę.
+
 ## Karuzela wnioskow AI
 
 Poziomo przewijana karuzela wnioskow generowanych przez AI (wymaga planu Pro):

@@ -5,6 +5,7 @@ import { InsightsService } from './insights.service';
 import { AiInsightsService } from './ai-insights.service';
 import { StoryService } from './story.service';
 import { FatFinderService } from './fat-finder.service';
+import { CashFlowForecastService } from './cash-flow-forecast.service';
 import { SafeToSpendService } from './safe-to-spend.service';
 import { WrappedService } from './wrapped.service';
 import { InflationShieldService } from './inflation-shield.service';
@@ -42,6 +43,7 @@ import { InflationShieldTrackingModule } from './inflation-shield-tracking.modul
     StoryService,
     FatFinderService,
     SafeToSpendService,
+    CashFlowForecastService,
     WrappedService,
     InflationShieldService,
     InsightNotificationLedger,

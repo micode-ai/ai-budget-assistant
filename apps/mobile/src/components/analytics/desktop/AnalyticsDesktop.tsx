@@ -14,6 +14,7 @@ import { ControlRow } from './ControlRow';
 import { AnalyticsSummaryStrip } from './AnalyticsSummaryStrip';
 import { TrendAndWeekdayRow } from './TrendAndWeekdayRow';
 import { CashFlowRow } from './CashFlowRow';
+import { CashFlowForecastCard } from '../CashFlowForecastCard';
 import { BreakdownGrid } from './BreakdownGrid';
 import { useChildrenMonthTotals } from '@/features/children/useChildCosts';
 import { TopItemsCard } from './TopItemsCard';
@@ -105,6 +106,7 @@ export function AnalyticsDesktop() {
     periodComparison,
     predictions,
     cashFlowAnalytics,
+    cashFlowForecast,
     tagSpending,
     projectSpending,
     aiInsights,
@@ -187,6 +189,8 @@ export function AnalyticsDesktop() {
           ) : (
             <>
               <CashFlowRow analytics={cashFlowAnalytics} currency={currency} />
+
+              {cashFlowForecast && <CashFlowForecastCard forecast={cashFlowForecast} />}
 
               <TrendAndWeekdayRow
                 dailySpending={dailySpending}

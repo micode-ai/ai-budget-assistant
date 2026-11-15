@@ -34,6 +34,10 @@ Toont wat je in de gekozen periode hebt **verdiend**, **uitgegeven** en **overge
 
 Toont welk deel van je uitgaven **vast** is — geld dat elke periode hoe dan ook vertrekt — en somt de grootste vaste lasten op. Een uitgave telt als vast als ze terugkerend is of overeenkomt met een van je actieve abonnementen in de abonnementenbeheerder (zelfde naam, of zelfde categorie en bedrag). Al het andere is variabel. Wil je dat huur of een andere vaste betaling als vast telt, markeer die dan als terugkerend of voeg hem toe als abonnement.
 
+## Komende 30 dagen
+
+Zichtbaar terwijl je de huidige periode bekijkt. Het is een schatting van je saldo voor elk van de komende 30 dagen: het saldo van vandaag, plus inkomsten die elke maand binnenkomen, min abonnementsverlengingen en terugkerende uitgaven op hun datum, min een gemiddelde dag aan dagelijkse uitgaven. Zou het saldo onder nul zakken, dan noemt de kaart vanaf welke dag, en de staven onder de lijn laten het zien. **Binnenkort** toont de volgende betalingen en inkomsten. Inleg voor spaardoelen wordt niet afgetrokken en inkomsten die niet maandelijks komen tellen niet mee – zie het als richtlijn, niet als belofte.
+
 ## AI-inzichtencarrousel
 
 Een horizontaal scrollbare carrousel met door AI gegenereerde inzichten (Pro-abonnement vereist):

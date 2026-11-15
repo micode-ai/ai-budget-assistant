@@ -19,6 +19,35 @@ export interface SafeToSpendResponse {
   computedAt: string;             // ISO datetime
 }
 
+/** One day of the 30-day cash-flow forecast (GET /insights/cash-flow-forecast). */
+export interface CashFlowForecastDay {
+  date: string;                   // YYYY-MM-DD, local day
+  balance: number;                // projected end-of-day balance, base currency
+  scheduled: number;              // net scheduled movements that day (income +, charges −)
+}
+
+export interface CashFlowForecastEvent {
+  date: string;                   // YYYY-MM-DD
+  kind: 'income' | 'subscription' | 'recurring';
+  label: string;                  // subscription name, recurring expense or income description
+  amount: number;                 // signed, base currency
+}
+
+export interface CashFlowForecastResponse {
+  baseCurrency: string;
+  /** Fully encrypted account: no figures at all. */
+  encryptionRestricted?: boolean;
+  startBalance: number;           // today's wallet balance, base currency
+  typicalDailySpend: number;      // everyday spending assumed per day (0 when history is short)
+  spendingHistoryShort: boolean;  // < 14 days of history: everyday spending not estimated
+  days: CashFlowForecastDay[];    // today first, 31 entries
+  events: CashFlowForecastEvent[];
+  lowest: { date: string; balance: number };
+  endBalance: number;
+  fxApproximate: boolean;
+  computedAt: string;
+}
+
 export interface AffordabilityVerdict {
   affordable: boolean;
   amount: number;

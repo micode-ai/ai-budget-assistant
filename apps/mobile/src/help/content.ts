@@ -1046,6 +1046,10 @@ Shows what you **earned**, **spent** and **kept** in the selected period, and th
 
 Shows how much of your spending is **fixed** — money that leaves every period anyway — and lists the largest fixed costs. An expense counts as fixed when it is a recurring expense, or when it matches one of your active subscriptions in the subscription manager (same name, or same category and amount). Everything else is flexible. To have rent or another regular payment counted as fixed, mark it as recurring or add it as a subscription.
 
+## Next 30 Days
+
+Shown while you are looking at the current period. It is an estimate of your balance for each of the next 30 days: today's wallet balance, plus income that arrives every month, minus subscription renewals and recurring expenses on their dates, minus a typical day of everyday spending. If the balance would drop below zero, the card says from which day, and the bars below the line show it. **Coming up** lists the next payments and income. Savings-goal contributions are not subtracted, and income that does not come monthly is not counted, so treat the figure as a guide, not a promise.
+
 ## AI Insights Carousel
 
 A horizontal scrollable carousel of AI-generated insights (Pro plan required):
@@ -6454,6 +6458,10 @@ iOS, Android, Web
 
 Показывает, какая часть трат **обязательная** — деньги, которые уходят в каждом периоде в любом случае, — и перечисляет самые крупные обязательные расходы. Расход считается обязательным, если он регулярный или совпадает с одной из ваших активных подписок в менеджере подписок (то же название или та же категория и сумма). Всё остальное — свободные расходы. Чтобы аренда или другой регулярный платёж считался обязательным, отметьте его как регулярный или добавьте как подписку.
 
+## Ближайшие 30 дней
+
+Показывается, когда открыт текущий период. Это оценка баланса на каждый из ближайших 30 дней: сегодняшний баланс, плюс доходы, которые приходят каждый месяц, минус продления подписок и регулярные расходы в их даты, минус обычный день повседневных трат. Если баланс уйдёт ниже нуля, карточка покажет, с какого дня, а столбцы под линией это отразят. В блоке **Впереди** — ближайшие платежи и поступления. Взносы в цели не вычитаются, а нерегулярные доходы не учитываются, поэтому считайте цифру ориентиром, а не обещанием.
+
 ## Карусель ИИ-инсайтов
 
 Горизонтально прокручиваемая карусель ИИ-генерируемых инсайтов (требуется план Pro):
@@ -11840,6 +11848,10 @@ iOS, Android, Web
 
 Показує, яка частина витрат **обов'язкова** — гроші, що йдуть у кожному періоді за будь-яких умов, — і перелічує найбільші обов'язкові витрати. Витрата вважається обов'язковою, якщо вона регулярна або збігається з однією з ваших активних підписок у менеджері підписок (та сама назва або та сама категорія й сума). Усе інше — вільні витрати. Щоб оренда чи інший регулярний платіж вважався обов'язковим, позначте його як регулярний або додайте як підписку.
 
+## Найближчі 30 днів
+
+Показується, коли відкрито поточний період. Це оцінка балансу на кожен із найближчих 30 днів: сьогоднішній баланс, плюс доходи, що надходять щомісяця, мінус продовження підписок і регулярні витрати в їхні дати, мінус звичайний день повсякденних витрат. Якщо баланс опуститься нижче нуля, картка покаже, з якого дня, а стовпці під лінією це відобразять. У блоці **Попереду** — найближчі платежі й надходження. Внески в цілі не віднімаються, а нерегулярні доходи не враховуються, тож сприймайте цифру як орієнтир, а не обіцянку.
+
 ## Карусель ШІ-інсайтів
 
 Горизонтальна прокручувана карусель ШІ-інсайтів (потрібен тариф Pro):
@@ -17174,6 +17186,10 @@ Pokazuje, ile w wybranym okresie **zarobiono**, **wydano** i ile **zostało**, a
 
 Pokazuje, jaka część wydatków to koszty **stałe** — pieniądze, które i tak wychodzą w każdym okresie — i wymienia największe z nich. Wydatek liczy się jako stały, gdy jest cykliczny albo pasuje do jednej z aktywnych subskrypcji w menedżerze subskrypcji (ta sama nazwa albo ta sama kategoria i kwota). Wszystko inne jest zmienne. Aby czynsz lub inna regularna płatność liczyła się jako stała, oznacz ją jako cykliczną albo dodaj jako subskrypcję.
 
+## Najbliższe 30 dni
+
+Widoczne, gdy oglądasz bieżący okres. To szacunek salda na każdy z najbliższych 30 dni: dzisiejsze saldo, plus przychody wpływające co miesiąc, minus odnowienia subskrypcji i wydatki cykliczne w ich terminach, minus typowy dzień codziennych wydatków. Jeśli saldo miałoby spaść poniżej zera, karta podaje, od którego dnia, a słupki pod linią to pokazują. **Nadchodzące** wymienia najbliższe płatności i wpływy. Wpłaty na cele oszczędnościowe nie są odejmowane, a przychody, które nie przychodzą co miesiąc, nie są liczone – traktuj tę liczbę jako wskazówkę, nie obietnicę.
+
 ## Karuzela wnioskow AI
 
 Poziomo przewijana karuzela wnioskow generowanych przez AI (wymaga planu Pro):
@@ -22504,6 +22520,10 @@ Zeigt, was du im gewählten Zeitraum **verdient**, **ausgegeben** und **behalten
 
 Zeigt, welcher Teil deiner Ausgaben **fix** ist — Geld, das in jedem Zeitraum ohnehin abfließt — und listet die größten Fixkosten auf. Eine Ausgabe gilt als fix, wenn sie wiederkehrend ist oder zu einem deiner aktiven Abos im Abo-Manager passt (gleicher Name oder gleiche Kategorie und gleicher Betrag). Alles andere ist flexibel. Damit Miete oder eine andere regelmäßige Zahlung als fix zählt, markiere sie als wiederkehrend oder lege sie als Abo an.
 
+## Die nächsten 30 Tage
+
+Wird angezeigt, solange du den aktuellen Zeitraum ansiehst. Es ist eine Schätzung deines Kontostands für jeden der nächsten 30 Tage: der heutige Kontostand, plus Einnahmen, die jeden Monat kommen, minus Abo-Verlängerungen und wiederkehrende Ausgaben an ihren Terminen, minus ein typischer Tag mit Alltagsausgaben. Würde der Stand unter null fallen, nennt die Karte den Tag, ab dem das passiert, und die Balken unter der Linie zeigen es. **Demnächst** listet die nächsten Zahlungen und Einnahmen. Sparziel-Einzahlungen werden nicht abgezogen und nicht monatliche Einnahmen nicht mitgezählt – nimm die Zahl als Orientierung, nicht als Zusage.
+
 ## KI-Einblicke-Karussell
 
 Ein horizontal scrollbares Karussell mit KI-generierten Einblicken (Pro-Plan erforderlich):
@@ -27809,6 +27829,10 @@ Muestra lo que **ingresaste**, **gastaste** y **ahorraste** en el periodo selecc
 
 Muestra qué parte de tus gastos es **fija** — dinero que sale cada periodo de todos modos — y lista los gastos fijos más grandes. Un gasto cuenta como fijo si es recurrente o si coincide con una de tus suscripciones activas del gestor de suscripciones (mismo nombre, o misma categoría e importe). Todo lo demás es variable. Para que el alquiler u otro pago periódico cuente como fijo, márcalo como recurrente o añádelo como suscripción.
 
+## Próximos 30 días
+
+Se muestra mientras ves el periodo actual. Es una estimación de tu saldo para cada uno de los próximos 30 días: el saldo de hoy, más los ingresos que llegan cada mes, menos las renovaciones de suscripciones y los gastos recurrentes en sus fechas, menos un día típico de gasto cotidiano. Si el saldo fuera a bajar de cero, la tarjeta indica a partir de qué día, y las barras bajo la línea lo muestran. **Próximamente** enumera los siguientes pagos e ingresos. Las aportaciones a metas de ahorro no se restan y los ingresos que no son mensuales no se cuentan, así que tómalo como una orientación, no como una promesa.
+
 ## Carrusel de informacion IA
 
 Un carrusel horizontal desplazable con informacion generada por IA (requiere plan Pro):
@@ -33103,6 +33127,10 @@ Affiche ce que vous avez **gagné**, **dépensé** et **épargné** sur la péri
 
 Indique quelle part de vos dépenses est **fixe** — de l'argent qui part chaque période quoi qu'il arrive — et liste les plus grosses dépenses fixes. Une dépense compte comme fixe si elle est récurrente ou si elle correspond à l'un de vos abonnements actifs du gestionnaire d'abonnements (même nom, ou même catégorie et même montant). Tout le reste est variable. Pour qu'un loyer ou un autre paiement régulier compte comme fixe, marquez-le comme récurrent ou ajoutez-le comme abonnement.
 
+## 30 prochains jours
+
+Affiché lorsque vous consultez la période en cours. C'est une estimation de votre solde pour chacun des 30 prochains jours : le solde d'aujourd'hui, plus les revenus qui arrivent chaque mois, moins les renouvellements d'abonnements et les dépenses récurrentes à leur date, moins une journée type de dépenses courantes. Si le solde devait passer sous zéro, la carte indique à partir de quel jour, et les barres sous la ligne le montrent. **À venir** liste les prochains paiements et revenus. Les versements vers les objectifs d'épargne ne sont pas déduits et les revenus non mensuels ne sont pas comptés : c'est un repère, pas une promesse.
+
 ## Carousel d'aperçus IA
 
 Un carousel horizontal defilable d'aperçus generes par l'IA (plan Pro requis) :
@@ -38395,6 +38423,10 @@ iOS, Android, Web
 
 Паказвае, якая частка выдаткаў **абавязковая** — грошы, якія сыходзяць у кожным перыядзе ў любым выпадку, — і пералічвае найбуйнейшыя абавязковыя выдаткі. Выдатак лічыцца абавязковым, калі ён рэгулярны або супадае з адной з вашых актыўных падпісак у менеджары падпісак (тая ж назва або тая ж катэгорыя і сума). Усё астатняе — свабодныя выдаткі. Каб арэнда ці іншы рэгулярны плацеж лічыўся абавязковым, адзначце яго як рэгулярны або дадайце як падпіску.
 
+## Бліжэйшыя 30 дзён
+
+Паказваецца, калі адкрыты бягучы перыяд. Гэта ацэнка балансу на кожны з бліжэйшых 30 дзён: сённяшні баланс, плюс даходы, што прыходзяць штомесяц, мінус падаўжэнні падпісак і рэгулярныя выдаткі ў іх даты, мінус звычайны дзень штодзённых выдаткаў. Калі баланс апусціцца ніжэй за нуль, картка пакажа, з якога дня, а слупкі пад лініяй гэта адлюструюць. У блоку **Наперадзе** — бліжэйшыя плацяжы і паступленні. Унёскі ў мэты не адымаюцца, а нерэгулярныя даходы не ўлічваюцца, таму лічыце лічбу арыенцірам, а не абяцаннем.
+
 ## Карусель ІІ-інсайтаў
 
 Гарызантальна пракручваемая карусель ІІ-генераваных інсайтаў (патрабуецца план Pro):
@@ -43650,6 +43682,10 @@ Toont wat je in de gekozen periode hebt **verdiend**, **uitgegeven** en **overge
 ## Vast vs variabel
 
 Toont welk deel van je uitgaven **vast** is — geld dat elke periode hoe dan ook vertrekt — en somt de grootste vaste lasten op. Een uitgave telt als vast als ze terugkerend is of overeenkomt met een van je actieve abonnementen in de abonnementenbeheerder (zelfde naam, of zelfde categorie en bedrag). Al het andere is variabel. Wil je dat huur of een andere vaste betaling als vast telt, markeer die dan als terugkerend of voeg hem toe als abonnement.
+
+## Komende 30 dagen
+
+Zichtbaar terwijl je de huidige periode bekijkt. Het is een schatting van je saldo voor elk van de komende 30 dagen: het saldo van vandaag, plus inkomsten die elke maand binnenkomen, min abonnementsverlengingen en terugkerende uitgaven op hun datum, min een gemiddelde dag aan dagelijkse uitgaven. Zou het saldo onder nul zakken, dan noemt de kaart vanaf welke dag, en de staven onder de lijn laten het zien. **Binnenkort** toont de volgende betalingen en inkomsten. Inleg voor spaardoelen wordt niet afgetrokken en inkomsten die niet maandelijks komen tellen niet mee – zie het als richtlijn, niet als belofte.
 
 ## AI-inzichtencarrousel
 
@@ -49033,6 +49069,10 @@ Mostra o que **ganhou**, **gastou** e **poupou** no período selecionado, e que 
 ## Fixas vs variáveis
 
 Mostra que parte das suas despesas é **fixa** — dinheiro que sai em cada período de qualquer forma — e lista as maiores despesas fixas. Uma despesa conta como fixa se for recorrente ou se corresponder a uma das suas subscrições ativas no gestor de subscrições (mesmo nome, ou mesma categoria e montante). Tudo o resto é variável. Para que a renda ou outro pagamento regular conte como fixo, marque-o como recorrente ou adicione-o como subscrição.
+
+## Próximos 30 dias
+
+Aparece quando está a ver o período atual. É uma estimativa do seu saldo para cada um dos próximos 30 dias: o saldo de hoje, mais as receitas que chegam todos os meses, menos as renovações de subscrições e as despesas recorrentes nas respetivas datas, menos um dia típico de gastos do dia a dia. Se o saldo for ficar abaixo de zero, o cartão indica a partir de que dia, e as barras abaixo da linha mostram-no. **A seguir** lista os próximos pagamentos e receitas. As contribuições para objetivos de poupança não são descontadas e as receitas que não são mensais não contam, por isso encare o valor como uma orientação, não uma promessa.
 
 ## Carrossel de análises com IA
 
@@ -54442,6 +54482,10 @@ Mostra quanto você **ganhou**, **gastou** e **economizou** no período selecion
 ## Fixas vs variáveis
 
 Mostra quanto dos seus gastos é **fixo** — dinheiro que sai todo período de qualquer jeito — e lista as maiores despesas fixas. Uma despesa conta como fixa quando é recorrente ou quando bate com uma das suas assinaturas ativas no gerenciador de assinaturas (mesmo nome, ou mesma categoria e valor). Todo o resto é variável. Para que o aluguel ou outro pagamento regular conte como fixo, marque-o como recorrente ou cadastre-o como assinatura.
+
+## Próximos 30 dias
+
+Aparece quando você está vendo o período atual. É uma estimativa do seu saldo para cada um dos próximos 30 dias: o saldo de hoje, mais as receitas que entram todo mês, menos as renovações de assinaturas e as despesas recorrentes nas datas delas, menos um dia típico de gastos do dia a dia. Se o saldo for ficar abaixo de zero, o cartão mostra a partir de que dia, e as barras abaixo da linha indicam isso. **Próximos lançamentos** lista os próximos pagamentos e receitas. Aportes em metas de economia não são descontados e receitas que não são mensais não entram, então use o valor como referência, não como promessa.
 
 ## Carrossel de insights com IA
 

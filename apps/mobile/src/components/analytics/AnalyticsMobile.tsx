@@ -9,7 +9,7 @@ import {
   AnalyticsHeader, SummaryCards, SpendingTrendChart, CategoryBreakdown,
   IncomeCategoryBreakdown, MerchantBreakdown, MemberBreakdown, TagBreakdown, ProjectBreakdown,
   DayOfWeekSection, QuickInsights, TopReceiptItems, AiInsightsSection,
-  InflationIndexSection, SavingsDetailSheet, CashFlowCard, CommitmentsCard,
+  InflationIndexSection, SavingsDetailSheet, CashFlowCard, CommitmentsCard, CashFlowForecastCard,
 } from '@/components/analytics';
 import { useAnalyticsScreenData } from '@/features/analytics/useAnalyticsScreenData';
 import { useSavingsDetail } from '@/hooks/useSavingsDetail';
@@ -51,6 +51,7 @@ export function AnalyticsMobile() {
     anomalies,
     predictions,
     cashFlowAnalytics,
+    cashFlowForecast,
     tagSpending,
     projectSpending,
     aiInsights,
@@ -97,6 +98,7 @@ export function AnalyticsMobile() {
         {cashFlowAnalytics.commitments && cashFlowAnalytics.commitments.fixed + cashFlowAnalytics.commitments.flexible > 0 && (
           <CommitmentsCard commitments={cashFlowAnalytics.commitments} currency={currency} />
         )}
+        {cashFlowForecast && <CashFlowForecastCard forecast={cashFlowForecast} />}
 
         <TouchableOpacity
           style={styles.storyBanner}

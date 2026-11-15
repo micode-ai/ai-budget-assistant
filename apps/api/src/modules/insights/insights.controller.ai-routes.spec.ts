@@ -28,6 +28,7 @@ function buildController(overrides: {
     undefined as any, // inflationShieldService — not exercised here
     undefined as any, // realSalaryService — not exercised here
     undefined as any, // realSalaryBriefPdf — not exercised here
+    undefined as any, // cashFlowForecastService — not exercised here
   );
 
   return { ctrl, insightsService, aiInsightsService, storyService, fatFinderService };
