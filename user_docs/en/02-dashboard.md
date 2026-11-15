@@ -83,6 +83,8 @@ A combined card showing your monthly totals side by side:
 - **Income** (left, green) — your total income for the current month (e.g., **+$2,482.52**). Tap to go to the **Transactions** tab (Income view)
 - **Expenses** (right) — your total expenses for the current month (e.g., **-$4,838.99**). Tap to go to the **Transactions** tab (Expenses view)
 
+If your account has a **Financial Month** (for example, starting on payday, the 10th), both totals cover that period — 10 October – 9 November rather than the calendar month — and the dates are shown above them.
+
 ## Net Profit
 
 Below the income and expenses cards, the **Net Profit** widget shows how much money you actually saved or lost this month, and tracks the trend over the last 6 months as a line chart:

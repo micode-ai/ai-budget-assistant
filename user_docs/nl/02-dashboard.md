@@ -83,6 +83,8 @@ Een gecombineerde kaart die je maandtotalen naast elkaar toont:
 - **Inkomsten** (links, groen) — je totale inkomsten voor de huidige maand (bijv. **+$2.482,52**). Tik om naar het tabblad **Transacties** te gaan (Inkomstenweergave)
 - **Uitgaven** (rechts) — je totale uitgaven voor de huidige maand (bijv. **-$4.838,99**). Tik om naar het tabblad **Transacties** te gaan (Uitgavenweergave)
 
+Heeft je account een **Financiële maand** (bijvoorbeeld vanaf betaaldag, de 10e), dan gaan beide totalen over die periode — 10 oktober – 9 november in plaats van de kalendermaand — en staan de data erboven.
+
 ## Nettowinst
 
 Onder de inkomsten- en uitgavenkaarten toont de widget **Nettowinst** hoeveel geld je deze maand daadwerkelijk hebt gespaard of verloren, en volgt de trend over de afgelopen 6 maanden als een lijngrafiek:

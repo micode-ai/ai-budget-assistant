@@ -83,6 +83,8 @@ Une carte combinee affichant vos totaux mensuels cote a cote :
 - **Revenus** (gauche, vert) — votre revenu total du mois en cours (par ex. **+2 482,52 $**). Appuyez pour acceder a l'onglet **Transactions** (vue Revenus)
 - **Depenses** (droite) — vos depenses totales du mois en cours (par ex. **-4 838,99 $**). Appuyez pour acceder a l'onglet **Transactions** (vue Depenses)
 
+Si votre compte a un **Mois financier** (par exemple à partir du jour de paie, le 10), les deux totaux couvrent cette période — du 10 octobre au 9 novembre au lieu du mois civil — et les dates s'affichent au-dessus.
+
 ## Benefice net
 
 Sous les cartes de revenus et de depenses, le widget **Benefice net** indique combien d'argent vous avez reellement economise ou perdu ce mois-ci, et suit la tendance des 6 derniers mois sous forme de graphique en courbes :

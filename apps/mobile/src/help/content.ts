@@ -270,6 +270,8 @@ A combined card showing your monthly totals side by side:
 - **Income** (left, green) — your total income for the current month (e.g., **+\$2,482.52**). Tap to go to the **Transactions** tab (Income view)
 - **Expenses** (right) — your total expenses for the current month (e.g., **-\$4,838.99**). Tap to go to the **Transactions** tab (Expenses view)
 
+If your account has a **Financial Month** (for example, starting on payday, the 10th), both totals cover that period — 10 October – 9 November rather than the calendar month — and the dates are shown above them.
+
 ## Net Profit
 
 Below the income and expenses cards, the **Net Profit** widget shows how much money you actually saved or lost this month, and tracks the trend over the last 6 months as a line chart:
@@ -5690,6 +5692,8 @@ iOS, Android, Web
 - **Доходы** (слева, зелёным) — общий доход за текущий месяц (например, **+\$2 482,52**). Нажмите для перехода на вкладку **Транзакции** (вид доходов)
 - **Расходы** (справа) — общие расходы за текущий месяц (например, **-\$4 838,99**). Нажмите для перехода на вкладку **Транзакции** (вид расходов)
 
+Если у аккаунта задан **Финансовый месяц** (например, с дня зарплаты, 10-го), обе суммы считаются за этот период — 10 октября – 9 ноября, а не за календарный месяц, — и даты показаны над ними.
+
 ## Чистая прибыль
 
 Под карточками доходов и расходов виджет **Чистая прибыль** показывает, сколько денег вы реально сэкономили или потратили в этом месяце, и отслеживает тренд за последние 6 месяцев в виде линейного графика:
@@ -11087,6 +11091,8 @@ iOS, Android, Web
 - **Доходи** (ліворуч, зеленим) — загальний дохід за поточний місяць (наприклад, **+\$2,482.52**). Натисніть, щоб перейти на вкладку **Транзакції** (перегляд доходів)
 - **Витрати** (праворуч) — загальні витрати за поточний місяць (наприклад, **-\$4,838.99**). Натисніть, щоб перейти на вкладку **Транзакції** (перегляд витрат)
 
+Якщо в акаунті задано **Фінансовий місяць** (наприклад, із дня зарплати, 10-го), обидві суми рахуються за цей період — 10 жовтня – 9 листопада, а не за календарний місяць, — і дати показано над ними.
+
 ## Чистий прибуток
 
 Під картками доходів та витрат віджет **Чистий прибуток** показує, скільки грошей ви реально заощадили або витратили цього місяця, і відстежує тренд за останні 6 місяців у вигляді лінійного графіка:
@@ -16432,6 +16438,8 @@ Polaczona karta z miesiecznymi sumami obok siebie:
 - **Przychody** (po lewej, na zielono) — laczne przychody za biezacy miesiac (np. **+2 482,52 \$**). Dotknij, aby przejsc do zakladki **Transakcje** (widok Przychody)
 - **Wydatki** (po prawej) — laczne wydatki za biezacy miesiac (np. **-4 838,99 \$**). Dotknij, aby przejsc do zakladki **Transakcje** (widok Wydatki)
 
+Jeśli konto ma **Miesiąc finansowy** (na przykład od dnia wypłaty, 10.), obie sumy obejmują ten okres — 10 października – 9 listopada zamiast miesiąca kalendarzowego — a daty widać nad nimi.
+
 ## Zysk netto
 
 Ponizej kart przychodow i wydatkow widget **Zysk netto** pokazuje, ile pieniedzy naprawde zaoszczedziles lub straciles w tym miesiacu, i sledzi trend z ostatnich 6 miesiecy jako wykres liniowy:
@@ -21773,6 +21781,8 @@ Eine kombinierte Karte mit deinen monatlichen Summen nebeneinander:
 - **Einnahmen** (links, grun) — dein Gesamteinkommen fur den aktuellen Monat (z.B. **+2.482,52 \$**). Tippe, um zum **Transaktionen**-Tab (Einkommen-Ansicht) zu gelangen
 - **Ausgaben** (rechts) — deine Gesamtausgaben fur den aktuellen Monat (z.B. **-4.838,99 \$**). Tippe, um zum **Transaktionen**-Tab (Ausgaben-Ansicht) zu gelangen
 
+Hat dein Konto einen **Finanzmonat** (zum Beispiel ab dem Zahltag, dem 10.), umfassen beide Summen diesen Zeitraum — 10. Oktober – 9. November statt des Kalendermonats — und die Daten stehen darüber.
+
 ## Nettogewinn
 
 Unterhalb der Einkommen- und Ausgabenkarten zeigt das **Nettogewinn**-Widget, wie viel Geld du in diesem Monat tatsachlich gespart oder verloren hast, und verfolgt den Trend der letzten 6 Monate als Liniendiagramm:
@@ -27089,6 +27099,8 @@ Una tarjeta combinada con tus totales mensuales lado a lado:
 - **Ingresos** (izquierda, verde) — tus ingresos totales del mes actual (por ejemplo, **+\$2,482.52**). Toca para ir a la pestana **Transacciones** (vista de Ingresos)
 - **Gastos** (derecha) — tus gastos totales del mes actual (por ejemplo, **-\$4,838.99**). Toca para ir a la pestana **Transacciones** (vista de Gastos)
 
+Si tu cuenta tiene un **Mes financiero** (por ejemplo, desde el día de cobro, el 10), ambos totales cubren ese periodo —del 10 de octubre al 9 de noviembre en lugar del mes natural— y las fechas aparecen encima.
+
 ## Beneficio neto
 
 Debajo de las tarjetas de ingresos y gastos, el widget de **Beneficio neto** muestra cuanto dinero has ahorrado o perdido realmente este mes y rastrea la tendencia de los ultimos 6 meses como un grafico de lineas:
@@ -32394,6 +32406,8 @@ Une carte combinee affichant vos totaux mensuels cote a cote :
 - **Revenus** (gauche, vert) — votre revenu total du mois en cours (par ex. **+2 482,52 \$**). Appuyez pour acceder a l'onglet **Transactions** (vue Revenus)
 - **Depenses** (droite) — vos depenses totales du mois en cours (par ex. **-4 838,99 \$**). Appuyez pour acceder a l'onglet **Transactions** (vue Depenses)
 
+Si votre compte a un **Mois financier** (par exemple à partir du jour de paie, le 10), les deux totaux couvrent cette période — du 10 octobre au 9 novembre au lieu du mois civil — et les dates s'affichent au-dessus.
+
 ## Benefice net
 
 Sous les cartes de revenus et de depenses, le widget **Benefice net** indique combien d'argent vous avez reellement economise ou perdu ce mois-ci, et suit la tendance des 6 derniers mois sous forme de graphique en courbes :
@@ -37697,6 +37711,8 @@ iOS, Android, Web
 - **Даходы** (злева, зялёным) — агульны даход за бягучы месяц (напрыклад, **+\$2 482,52**). Націсніце для пераходу на ўкладку **Транзакцыі** (від даходаў)
 - **Выдаткі** (справа) — агульныя выдаткі за бягучы месяц (напрыклад, **-\$4 838,99**). Націсніце для пераходу на ўкладку **Транзакцыі** (від выдаткаў)
 
+Калі ў акаўнта зададзены **Фінансавы месяц** (напрыклад, з дня заробку, 10-га), абедзве сумы лічацца за гэты перыяд — 10 кастрычніка – 9 лістапада, а не за каляндарны месяц, — і даты паказаны над імі.
+
 ## Чысты прыбытак
 
 Пад карткамі даходаў і выдаткаў віджэт **Чысты прыбытак** паказвае, колькі грошай вы рэальна зэканомілі або страцілі ў гэтым месяцы, і адсочвае тэндэнцыю за апошнія 6 месяцаў у выглядзе лінейнага графіка:
@@ -42963,6 +42979,8 @@ Een gecombineerde kaart die je maandtotalen naast elkaar toont:
 
 - **Inkomsten** (links, groen) — je totale inkomsten voor de huidige maand (bijv. **+\$2.482,52**). Tik om naar het tabblad **Transacties** te gaan (Inkomstenweergave)
 - **Uitgaven** (rechts) — je totale uitgaven voor de huidige maand (bijv. **-\$4.838,99**). Tik om naar het tabblad **Transacties** te gaan (Uitgavenweergave)
+
+Heeft je account een **Financiële maand** (bijvoorbeeld vanaf betaaldag, de 10e), dan gaan beide totalen over die periode — 10 oktober – 9 november in plaats van de kalendermaand — en staan de data erboven.
 
 ## Nettowinst
 
@@ -48356,6 +48374,8 @@ Um cartão combinado mostra os totais do mês lado a lado:
 
 - **Receitas** (à esquerda, a verde) — o total de receitas do mês em curso (por exemplo, **+\$2,482.52**). Toque para ir para o separador **Transações** (vista de receitas)
 - **Despesas** (à direita) — o total de despesas do mês em curso (por exemplo, **-\$4,838.99**). Toque para ir para o separador **Transações** (vista de despesas)
+
+Se a sua conta tiver um **Mês financeiro** (por exemplo, a começar no dia do ordenado, dia 10), os dois totais cobrem esse período — de 10 de outubro a 9 de novembro em vez do mês civil — e as datas aparecem por cima.
 
 ## Lucro líquido
 
@@ -53776,6 +53796,8 @@ Um cartão combinado mostra seus totais do mês lado a lado:
 
 - **Receitas** (à esquerda, em verde) — o total de receitas do mês corrente (por exemplo, **+\$2,482.52**). Toque para ir para a aba **Transações** (visão de receitas)
 - **Despesas** (à direita) — o total de despesas do mês corrente (por exemplo, **-\$4,838.99**). Toque para ir para a aba **Transações** (visão de despesas)
+
+Se a sua conta tiver um **Mês financeiro** (por exemplo, começando no dia do pagamento, dia 10), os dois totais cobrem esse período — de 10 de outubro a 9 de novembro em vez do mês do calendário — e as datas aparecem acima deles.
 
 ## Lucro líquido
 

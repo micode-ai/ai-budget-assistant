@@ -3646,6 +3646,8 @@ Una tarjeta combinada con tus totales mensuales lado a lado:
 - **Ingresos** (izquierda, verde) — tus ingresos totales del mes actual (por ejemplo, **+$2,482.52**). Toca para ir a la pestana **Transacciones** (vista de Ingresos)
 - **Gastos** (derecha) — tus gastos totales del mes actual (por ejemplo, **-$4,838.99**). Toca para ir a la pestana **Transacciones** (vista de Gastos)
 
+Si tu cuenta tiene un **Mes financiero** (por ejemplo, desde el día de cobro, el 10), ambos totales cubren ese periodo —del 10 de octubre al 9 de noviembre en lugar del mes natural— y las fechas aparecen encima.
+
 ## Beneficio neto
 
 Debajo de las tarjetas de ingresos y gastos, el widget de **Beneficio neto** muestra cuanto dinero has ahorrado o perdido realmente este mes y rastrea la tendencia de los ultimos 6 meses como un grafico de lineas:

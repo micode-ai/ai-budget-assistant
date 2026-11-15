@@ -27,7 +27,7 @@ export function resolveFinancialMonth(
  * @testing-library/react-native in this repo to render the hook itself.
  */
 export function readAnchorDay(): number | null {
-  return useAccountStore.getState().currentAccount()?.monthAnchorDay ?? null;
+  return useAccountStore.getState().currentAccount?.()?.monthAnchorDay ?? null;
 }
 
 /** `YYYY-MM-DD` for `now` in local time — a memo key that rolls over at midnight. */

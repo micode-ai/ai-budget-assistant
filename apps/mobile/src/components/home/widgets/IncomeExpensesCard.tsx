@@ -3,7 +3,10 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
-import { formatCurrency, getStartOfMonth, getEndOfMonth } from '@budget/shared-utils';
+import { formatCurrency, formatFinancialMonth } from '@budget/shared-utils';
+import { useFinancialMonth } from '@/hooks/useFinancialMonth';
+import { transactionDay } from '@/features/analytics/localDayKey';
+import { getIntlLocale } from '@/i18n';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { filterConsumption } from '@/utils/consumption';
@@ -42,23 +45,25 @@ export function IncomeExpensesCard({ ctx, showCounts = false }: IncomeExpensesCa
   // filterConsumption-applied, not deleted) - "the same data the totals
   // come from", so the count can never disagree with the amount above it.
   const { expenses: rawExpenses } = useExpenseStore();
+  // The account's financial month — the window the totals above come from (ABA-778).
+  const { anchorDay, current } = useFinancialMonth();
   const expenseCount = useMemo(() => {
     if (!showCounts) return 0;
-    const now = new Date();
-    const start = getStartOfMonth(now);
-    const end = getEndOfMonth(now);
     return filterConsumption(rawExpenses).filter((e) => {
       if (e.isDeleted) return false;
-      const d = new Date(e.date);
-      return d >= start && d <= end;
+      const d = transactionDay(e.date);
+      return d >= current.start && d <= current.end;
     }).length;
-  }, [rawExpenses, showCounts]);
+  }, [rawExpenses, showCounts, current]);
+  // An anchored month spans two calendar months; say which days these totals cover.
+  const periodRange = anchorDay !== null ? formatFinancialMonth(current.start, current.end, getIntlLocale()).range : null;
 
   return (
     <TouchableOpacity key="incomeExpenses" style={styles.card} activeOpacity={0.7} onPress={() => router.push({ pathname: '/(tabs)/expenses' })}>
       <View style={styles.chevronHint}>
         <Ionicons name="chevron-forward" size={16} color={theme.colors.textTertiary} />
       </View>
+      {periodRange && <Text style={styles.periodRange}>{periodRange}</Text>}
       <View style={styles.incomeExpenseRow}>
         <View style={styles.incomeExpenseCol}>
           <Text style={styles.incomeExpenseLabel}>{t('dashboard.totalIncome')}</Text>
@@ -95,6 +100,11 @@ const createStyles = (theme: Theme) => ({
     marginBottom: theme.spacing[4],
     borderWidth: 2,
     borderColor: theme.colors.borderLight,
+  },
+  periodRange: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
+    marginBottom: theme.spacing[2],
   },
   chevronHint: {
     position: 'absolute' as const,

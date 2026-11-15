@@ -15,6 +15,9 @@ import { useQuickActionStore } from '@/stores/quickActionStore';
 import { useAlertStore } from '@/stores/alertStore';
 import { useInvitationStore } from '@/stores/invitationStore';
 import { useSafeToSpend } from '@/features/insights/useSafeToSpend';
+import { useFinancialMonth } from '@/hooks/useFinancialMonth';
+import { recomputeExpenseTotals } from '@/stores/expenseStore';
+import { recomputeIncomeTotals } from '@/stores/incomeStore';
 
 /**
  * Owns all Zustand store subscriptions + derived data + effects for the home
@@ -56,6 +59,16 @@ export function useHomeScreenData() {
     ),
     [borrowedDebts, currency, rates],
   );
+
+  // The month totals follow the account's financial month (ABA-778). They are
+  // recomputed by the stores when rows change; a moved anchor (edited, or a
+  // different account) changes the window without changing any row, so the
+  // screen that shows them recomputes on it.
+  const { anchorDay } = useFinancialMonth();
+  useEffect(() => {
+    recomputeExpenseTotals();
+    recomputeIncomeTotals();
+  }, [anchorDay]);
 
   useEffect(() => {
     if (currentAccountId) {

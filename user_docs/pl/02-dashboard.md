@@ -83,6 +83,8 @@ Polaczona karta z miesiecznymi sumami obok siebie:
 - **Przychody** (po lewej, na zielono) — laczne przychody za biezacy miesiac (np. **+2 482,52 $**). Dotknij, aby przejsc do zakladki **Transakcje** (widok Przychody)
 - **Wydatki** (po prawej) — laczne wydatki za biezacy miesiac (np. **-4 838,99 $**). Dotknij, aby przejsc do zakladki **Transakcje** (widok Wydatki)
 
+Jeśli konto ma **Miesiąc finansowy** (na przykład od dnia wypłaty, 10.), obie sumy obejmują ten okres — 10 października – 9 listopada zamiast miesiąca kalendarzowego — a daty widać nad nimi.
+
 ## Zysk netto
 
 Ponizej kart przychodow i wydatkow widget **Zysk netto** pokazuje, ile pieniedzy naprawde zaoszczedziles lub straciles w tym miesiacu, i sledzi trend z ostatnich 6 miesiecy jako wykres liniowy:

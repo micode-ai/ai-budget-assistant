@@ -2,7 +2,9 @@ import { Platform } from 'react-native';
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 import type { Income, Currency, IncomeSource, SyncStatus } from '@budget/shared-types';
-import { generateUUID, getStartOfMonth, getEndOfMonth, getStartOfWeek, getEndOfWeek } from '@budget/shared-utils';
+import { generateUUID, getStartOfMonth, getEndOfMonth, getStartOfWeek, getEndOfWeek, financialMonth } from '@budget/shared-utils';
+import { readAnchorDay } from '@/hooks/useFinancialMonth';
+import { transactionDay } from '@/features/analytics/localDayKey';
 import {
   loadAllIncomes,
   insertIncome,
@@ -88,10 +90,14 @@ interface IncomeState {
   reset: () => void;
 }
 
-export function computeIncomeTotalsByCurrency(incomes: Income[]): Record<string, number> {
-  const now = new Date();
-  const startOfMonth = getStartOfMonth(now);
-  const endOfMonth = getEndOfMonth(now);
+/**
+ * "This month" is the account's FINANCIAL month (salary on the 10th → 10th–9th,
+ * calendar month without an anchor), the same window the budgets and the
+ * Analytics month view use (ABA-778). Each row is placed by its calendar day
+ * (`transactionDay`), so a server date-only row is not shifted west of UTC.
+ */
+export function computeIncomeTotalsByCurrency(incomes: Income[], anchorDay: number | null = readAnchorDay(), now: Date = new Date()): Record<string, number> {
+  const { start: startOfMonth, end: endOfMonth } = financialMonth(now, anchorDay);
 
   const totals: Record<string, number> = {};
   // filterIncomeConsumption drops split-receivable incomes (shared-groups
@@ -100,7 +106,7 @@ export function computeIncomeTotalsByCurrency(incomes: Income[]): Record<string,
   filterIncomeConsumption(incomes)
     .filter((i) => !i.isDeleted)
     .filter((i) => {
-      const incomeDate = new Date(i.date);
+      const incomeDate = transactionDay(i.date);
       return incomeDate >= startOfMonth && incomeDate <= endOfMonth;
     })
     .forEach((i) => {
@@ -708,11 +714,14 @@ export const useIncomeStore = create<IncomeState>()(
 );
 
 // Auto-recompute totals whenever incomes change
+/** Exported so a screen can recompute when the financial month moves (ABA-778). */
+export function recomputeIncomeTotals(incomes: Income[] = useIncomeStore.getState().incomes) {
+  const incomeTotalsByCurrency = computeIncomeTotalsByCurrency(incomes);
+  const totalThisMonth = Object.values(incomeTotalsByCurrency).reduce((sum, v) => sum + v, 0);
+  useIncomeStore.setState({ totalThisMonth, incomeTotalsByCurrency });
+}
+
 useIncomeStore.subscribe(
   (s) => s.incomes,
-  (incomes) => {
-    const incomeTotalsByCurrency = computeIncomeTotalsByCurrency(incomes);
-    const totalThisMonth = Object.values(incomeTotalsByCurrency).reduce((sum, v) => sum + v, 0);
-    useIncomeStore.setState({ totalThisMonth, incomeTotalsByCurrency });
-  },
+  (incomes) => recomputeIncomeTotals(incomes),
 );

@@ -3630,6 +3630,8 @@ Eine kombinierte Karte mit deinen monatlichen Summen nebeneinander:
 - **Einnahmen** (links, grun) — dein Gesamteinkommen fur den aktuellen Monat (z.B. **+2.482,52 $**). Tippe, um zum **Transaktionen**-Tab (Einkommen-Ansicht) zu gelangen
 - **Ausgaben** (rechts) — deine Gesamtausgaben fur den aktuellen Monat (z.B. **-4.838,99 $**). Tippe, um zum **Transaktionen**-Tab (Ausgaben-Ansicht) zu gelangen
 
+Hat dein Konto einen **Finanzmonat** (zum Beispiel ab dem Zahltag, dem 10.), umfassen beide Summen diesen Zeitraum — 10. Oktober – 9. November statt des Kalendermonats — und die Daten stehen darüber.
+
 ## Nettogewinn
 
 Unterhalb der Einkommen- und Ausgabenkarten zeigt das **Nettogewinn**-Widget, wie viel Geld du in diesem Monat tatsachlich gespart oder verloren hast, und verfolgt den Trend der letzten 6 Monate als Liniendiagramm:

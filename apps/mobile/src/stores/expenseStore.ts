@@ -5,7 +5,9 @@ const noReceiptParts = new Set<string>();
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 import type { Expense, ExpenseItem, ExpenseCategorySplit, SyncStatus, MergeExpensesFieldChoices, ExpenseShareDto, ShareType, ReceiptImagePart } from '@budget/shared-types';
-import { generateUUID, getStartOfMonth, getEndOfMonth, getStartOfWeek, getEndOfWeek } from '@budget/shared-utils';
+import { generateUUID, getStartOfMonth, getEndOfMonth, getStartOfWeek, getEndOfWeek, financialMonth } from '@budget/shared-utils';
+import { readAnchorDay } from '@/hooks/useFinancialMonth';
+import { transactionDay } from '@/features/analytics/localDayKey';
 import {
   insertExpense,
   updateExpenseInDb,
@@ -1293,10 +1295,14 @@ export const useExpenseStore = create<ExpenseState>()(
 // `__tests__/expenseTotalsByCurrency.test.ts`) — the model is
 // `widgetData.test.ts`: call the real function and assert on what it produced,
 // so deleting the `filterConsumption` call below makes the test fail.
-export function computeExpenseTotalsByCurrency(expenses: Expense[]): Record<string, number> {
-  const now = new Date();
-  const startOfMonth = getStartOfMonth(now);
-  const endOfMonth = getEndOfMonth(now);
+/**
+ * "This month" is the account's FINANCIAL month (salary on the 10th → 10th–9th,
+ * calendar month without an anchor), the same window the budgets and the
+ * Analytics month view use (ABA-778). Each row is placed by its calendar day
+ * (`transactionDay`), so a server date-only row is not shifted west of UTC.
+ */
+export function computeExpenseTotalsByCurrency(expenses: Expense[], anchorDay: number | null = readAnchorDay(), now: Date = new Date()): Record<string, number> {
+  const { start: startOfMonth, end: endOfMonth } = financialMonth(now, anchorDay);
 
   const totals: Record<string, number> = {};
   // filterConsumption drops split-receivable debt rows — the money already
@@ -1310,7 +1316,7 @@ export function computeExpenseTotalsByCurrency(expenses: Expense[]): Record<stri
   filterConsumption(expenses)
     .filter((e) => !e.isDeleted)
     .filter((e) => {
-      const expenseDate = new Date(e.date);
+      const expenseDate = transactionDay(e.date);
       return expenseDate >= startOfMonth && expenseDate <= endOfMonth;
     })
     .forEach((e) => {
@@ -1320,6 +1326,17 @@ export function computeExpenseTotalsByCurrency(expenses: Expense[]): Record<stri
 }
 
 // Auto-recompute totalThisMonth whenever expenses change
+/**
+ * Recomputes the month totals in place. Exported so a screen can call it when
+ * the financial month moves (anchor edited, account switched) — that changes
+ * the window without changing a single row (ABA-778).
+ */
+export function recomputeExpenseTotals(expenses: Expense[] = useExpenseStore.getState().expenses) {
+  const expenseTotalsByCurrency = computeExpenseTotalsByCurrency(expenses);
+  const accountCurrency = useAccountStore.getState().currentAccount?.()?.currencyCode || 'USD';
+  useExpenseStore.setState({ totalThisMonth: expenseTotalsByCurrency[accountCurrency] || 0, expenseTotalsByCurrency });
+}
+
 useExpenseStore.subscribe(
   (s) => s.expenses,
   (expenses) => {

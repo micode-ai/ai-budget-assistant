@@ -287,6 +287,42 @@ describe('computeExpenseTotalsByCurrency — split-receivable exclusion', () => 
   });
 });
 
+describe('computeExpenseTotalsByCurrency — financial month (ABA-778)', () => {
+  const row = (id: string, amount: number, date: Date) =>
+    ({
+      id, localId: id, userId: 'u1', accountId: 'acc-1', amount, currencyCode: 'PLN', date,
+      isRecurring: false, source: 'manual', isDebt: false, isDebtRepayment: false,
+      createdAt: date, updatedAt: date, isDeleted: false, syncStatus: 'synced', syncVersion: 0,
+    }) as Expense;
+
+  it('sums the anchored period, not the calendar month', () => {
+    // Salary on the 10th; on 5 November the current period is 10 Oct – 9 Nov.
+    const now = new Date(2026, 10, 5, 12);
+    const totals = computeExpenseTotalsByCurrency(
+      [
+        row('in-oct', 10, new Date(2026, 9, 12, 9)),
+        row('in-nov', 20, new Date(2026, 10, 3, 9)),
+        row('before', 400, new Date(2026, 9, 9, 9)),
+        // a server date-only row on the period's first day
+        row('first-day', 5, new Date(Date.UTC(2026, 9, 10))),
+      ],
+      10,
+      now,
+    );
+    expect(totals.PLN).toBe(35);
+  });
+
+  it('is the calendar month without an anchor', () => {
+    const now = new Date(2026, 10, 5, 12);
+    const totals = computeExpenseTotalsByCurrency(
+      [row('oct', 10, new Date(2026, 9, 12, 9)), row('nov', 20, new Date(2026, 10, 3, 9))],
+      null,
+      now,
+    );
+    expect(totals.PLN).toBe(20);
+  });
+});
+
 describe('expenseStore — addExpense carries the OCR canonicalName to the server', () => {
   beforeEach(() => {
     jest.useFakeTimers();

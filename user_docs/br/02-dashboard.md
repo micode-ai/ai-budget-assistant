@@ -83,6 +83,8 @@ Um cartão combinado mostra seus totais do mês lado a lado:
 - **Receitas** (à esquerda, em verde) — o total de receitas do mês corrente (por exemplo, **+$2,482.52**). Toque para ir para a aba **Transações** (visão de receitas)
 - **Despesas** (à direita) — o total de despesas do mês corrente (por exemplo, **-$4,838.99**). Toque para ir para a aba **Transações** (visão de despesas)
 
+Se a sua conta tiver um **Mês financeiro** (por exemplo, começando no dia do pagamento, dia 10), os dois totais cobrem esse período — de 10 de outubro a 9 de novembro em vez do mês do calendário — e as datas aparecem acima deles.
+
 ## Lucro líquido
 
 Abaixo dos cartões de receitas e despesas, o widget **Lucro líquido** mostra quanto dinheiro você realmente economizou ou perdeu neste mês e acompanha a tendência dos últimos 6 meses em um gráfico de linhas:
