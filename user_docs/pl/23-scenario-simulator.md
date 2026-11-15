@@ -10,7 +10,7 @@ Wszystkie obliczenia są lokalne. Żadne dane nie są wysyłane, historia transa
 
 ## Jak uzyskać dostęp
 
-Otwórz zakładkę **Analityka** i dotknij banera **Symulator scenariuszy** u góry ekranu.
+Otwórz zakładkę **Analityka** i dotknij kafelka **Symulator scenariuszy** u góry ekranu.
 
 ## Skąd pochodzą kwoty
 

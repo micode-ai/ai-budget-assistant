@@ -16,3 +16,4 @@ export { MemberBreakdown } from './MemberBreakdown';
 export { CashFlowCard } from './CashFlowCard';
 export { CommitmentsCard } from './CommitmentsCard';
 export { CashFlowForecastCard } from './CashFlowForecastCard';
+export { DiscoveryStrip } from './DiscoveryStrip';

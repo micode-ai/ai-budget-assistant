@@ -10,7 +10,7 @@ De functie **Uitgavenverhaal** maakt een persoonlijk, verhalend rapport van je f
 
 ## Hoe te openen
 
-- Tik op het tabblad **Analyse** op de banner **Bekijk je uitgavenverhaal**
+- Tik op het tabblad **Analyse** op de kaart **Bekijk je uitgavenverhaal**
 - Het verhaal wordt automatisch gegenereerd op basis van je geselecteerde periode
 
 ## Periodeschakelaar

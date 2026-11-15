@@ -12,7 +12,7 @@ C'est **gratuit pour tout le monde**. Seul le PDF d'une page « arguments pour l
 
 ## Où le trouver
 
-Ouvrez l'onglet **Analyses** et touchez la bannière **Salaire réel** (« Votre salaire face à votre propre inflation »). La première fois que vous l'ouvrez, on vous demande de confirmer votre salaire avant que quoi que ce soit puisse être calculé.
+Ouvrez l'onglet **Analyses** et touchez la carte **Salaire réel** (« Votre salaire face à votre propre inflation »). La première fois que vous l'ouvrez, on vous demande de confirmer votre salaire avant que quoi que ce soit puisse être calculé.
 
 ## Configurer votre salaire
 

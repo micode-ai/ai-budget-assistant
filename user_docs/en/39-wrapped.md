@@ -20,7 +20,7 @@ Cards you might see (only cards that have data are shown):
 ## How to open it
 
 1. Go to the **Analytics** tab.
-2. Tap the **Wrapped** banner (the gift icon).
+2. Tap the **Wrapped** card (the gift icon).
 3. The full-screen card deck opens for the selected year.
 
 ## Swiping through your year
@@ -46,7 +46,7 @@ Wrapped needs a bit of history to be worth showing. If you've only tracked a few
 
 ## Month in review
 
-There is also a short deck for a single month. On the **1st of each month** you get a push — *Your month in review is ready* — when the month just ended has enough data; tap it to open the deck. You can also open it any time from the **Month in review** banner on the **Analytics** tab, next to Wrapped.
+There is also a short deck for a single month. On the **1st of each month** you get a push — *Your month in review is ready* — when the month just ended has enough data; tap it to open the deck. You can also open it any time from the **Month in review** card on the **Analytics** tab, next to Wrapped.
 
 The monthly deck has its own cards (again, only those with data):
 

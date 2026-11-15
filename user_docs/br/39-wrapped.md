@@ -20,7 +20,7 @@ Cards que você pode ver (só aparecem os cards que têm dados):
 ## Como abrir
 
 1. Vá até a aba **Análises**.
-2. Toque no banner **Wrapped** (o ícone de presente).
+2. Toque no cartão **Wrapped** (o ícone de presente).
 3. O conjunto de cards em tela cheia abre para o ano selecionado.
 
 ## Percorrendo seu ano
@@ -46,7 +46,7 @@ O Wrapped precisa de um pouco de histórico para valer a pena. Se você registro
 
 ## Resumo do mês
 
-Também existe uma versão curta para um único mês. No **dia 1º de cada mês** você recebe uma notificação — *O resumo do seu mês está pronto* — quando o mês que acabou de terminar tem dados suficientes; toque nela para abrir os cards. Você também pode abrir a qualquer momento pelo banner **Resumo do mês** na aba **Análises**, ao lado do Wrapped.
+Também existe uma versão curta para um único mês. No **dia 1º de cada mês** você recebe uma notificação — *O resumo do seu mês está pronto* — quando o mês que acabou de terminar tem dados suficientes; toque nela para abrir os cards. Você também pode abrir a qualquer momento pelo cartão **Resumo do mês** na aba **Análises**, ao lado do Wrapped.
 
 A versão mensal tem cards próprios (de novo, só os que têm dados):
 

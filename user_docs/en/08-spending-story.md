@@ -10,7 +10,7 @@ The **Spending Story** feature creates a personalized, narrative-style report of
 
 ## How to Access
 
-- From the **Analytics** tab, tap the **View Your Spending Story** banner
+- From the **Analytics** tab, tap the **View Your Spending Story** card
 - The story generates automatically based on your selected period
 
 ## Period Toggle

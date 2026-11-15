@@ -12,7 +12,7 @@ Het is **gratis voor iedereen**. Alleen de pdf van één pagina met "argumenten 
 
 ## Waar je het vindt
 
-Open het tabblad **Analyse** en tik op de banner **Reëel salaris** ("Je loon tegenover je eigen inflatie"). De eerste keer dat je het opent, wordt je gevraagd je salaris te bevestigen voordat er iets berekend kan worden.
+Open het tabblad **Analyse** en tik op de kaart **Reëel salaris** ("Je loon tegenover je eigen inflatie"). De eerste keer dat je het opent, wordt je gevraagd je salaris te bevestigen voordat er iets berekend kan worden.
 
 ## Je salaris instellen
 

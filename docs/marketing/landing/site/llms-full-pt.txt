@@ -2009,7 +2009,7 @@ A funcionalidade **História dos gastos** cria um relatório personalizado, em e
 
 ## Como aceder
 
-- No separador **Análise**, toque no banner **Ver a história dos seus gastos**
+- No separador **Análise**, toque no cartão **Ver a história dos seus gastos**
 - A história é gerada automaticamente com base no período selecionado
 
 ## Seletor de período
@@ -4117,7 +4117,7 @@ Todos os cálculos são feitos no dispositivo — nenhum dado é enviado para la
 
 ## Como aceder
 
-Abra o separador **Análise** e toque no banner **Simulador de cenários** no topo do ecrã.
+Abra o separador **Análise** e toque no cartão **Simulador de cenários** no topo do ecrã.
 
 ## Como são calculados os números
 
@@ -5274,7 +5274,7 @@ Cartões que pode ver (só aparecem os cartões com dados):
 ## Como abrir
 
 1. Vá ao separador **Análise**.
-2. Toque no banner **Wrapped** (o ícone do presente).
+2. Toque no cartão **Wrapped** (o ícone do presente).
 3. Abre-se o baralho de cartões em ecrã inteiro para o ano selecionado.
 
 ## Percorrer o seu ano
@@ -5300,7 +5300,7 @@ O Wrapped precisa de algum histórico para valer a pena. Se registou poucos movi
 
 ## Resumo do mês
 
-Existe também um baralho curto para um único mês. No **dia 1 de cada mês** recebe uma notificação — *O resumo do seu mês está pronto* — quando o mês que acabou de terminar tem dados suficientes; toque nela para abrir o baralho. Também o pode abrir a qualquer momento a partir do banner **Resumo do mês** no separador **Análise**, ao lado do Wrapped.
+Existe também um baralho curto para um único mês. No **dia 1 de cada mês** recebe uma notificação — *O resumo do seu mês está pronto* — quando o mês que acabou de terminar tem dados suficientes; toque nela para abrir o baralho. Também o pode abrir a qualquer momento a partir do cartão **Resumo do mês** no separador **Análise**, ao lado do Wrapped.
 
 O baralho mensal tem os seus próprios cartões (mais uma vez, só os que têm dados):
 
@@ -5519,7 +5519,7 @@ Por exemplo: o seu salário subiu **+5%**, mas a sua inflação pessoal ficou em
 
 ## Onde o encontrar
 
-Abra o separador **Análise** e toque no banner **Salário real** («O seu salário face à sua própria inflação»). Da primeira vez que o abrir, ser-lhe-á pedido que confirme o seu salário antes de ser possível calcular o que quer que seja.
+Abra o separador **Análise** e toque no cartão **Salário real** («O seu salário face à sua própria inflação»). Da primeira vez que o abrir, ser-lhe-á pedido que confirme o seu salário antes de ser possível calcular o que quer que seja.
 
 ## Configurar o seu salário
 

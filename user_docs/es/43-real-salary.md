@@ -12,7 +12,7 @@ Es **gratis para todos**. Solo el PDF de una página con «argumentos para tu su
 
 ## Dónde encontrarlo
 
-Abre la pestaña **Análisis** y toca el banner **Salario real** («Tu sueldo frente a tu propia inflación»). La primera vez que lo abras, se te pedirá que confirmes tu sueldo antes de poder calcular nada.
+Abre la pestaña **Análisis** y toca la tarjeta **Salario real** («Tu sueldo frente a tu propia inflación»). La primera vez que lo abras, se te pedirá que confirmes tu sueldo antes de poder calcular nada.
 
 ## Configurar tu sueldo
 

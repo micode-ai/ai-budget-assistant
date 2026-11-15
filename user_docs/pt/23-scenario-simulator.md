@@ -10,7 +10,7 @@ Todos os cálculos são feitos no dispositivo — nenhum dado é enviado para la
 
 ## Como aceder
 
-Abra o separador **Análise** e toque no banner **Simulador de cenários** no topo do ecrã.
+Abra o separador **Análise** e toque no cartão **Simulador de cenários** no topo do ecrã.
 
 ## Como são calculados os números
 

@@ -54,8 +54,8 @@ the one-page PDF "brief" download (`POST /insights/real-salary/brief`) is Pro-ga
   `parseMonthlyAmount`, `manualCurrency`, `briefErrorKind`); `apps/mobile/src/services/realSalary.api.ts`
 - `apps/mobile/src/components/real-salary/` — `RealSalaryShareCard.tsx` (thin `ShareImageCard`
   wrapper, ABA-353 convention), `CountryPickerSheet.tsx`, `DivisionPickerSheet.tsx`
-- Entry points into the screen: a banner in the Analytics tab on both mobile
-  (`AnalyticsMobile.tsx`) and desktop web (`analytics/desktop/DiscoveryRow.tsx`), both reading
+- Entry points into the screen: an entry in `components/analytics/discoveryItems.ts`, rendered by
+  the phone `DiscoveryStrip` and the desktop `analytics/desktop/DiscoveryRow.tsx`, reading
   `realSalary.entryTitle`/`entrySub` and pushing `/real-salary`.
 
 ## Key concepts

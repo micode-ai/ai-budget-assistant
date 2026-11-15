@@ -2010,7 +2010,7 @@ O recurso **História dos gastos** cria um relatório personalizado, em estilo n
 
 ## Como acessar
 
-- Na aba **Análises**, toque no banner **Ver a história dos seus gastos**
+- Na aba **Análises**, toque no cartão **Ver a história dos seus gastos**
 - A história é gerada automaticamente com base no período selecionado
 
 ## Seletor de período
@@ -4118,7 +4118,7 @@ Todos os cálculos são feitos no aparelho — nenhum dado é enviado para lugar
 
 ## Como acessar
 
-Abra a aba **Análises** e toque no banner **Simulador de cenários** no topo da tela.
+Abra a aba **Análises** e toque no cartão **Simulador de cenários** no topo da tela.
 
 ## Como os números são calculados
 
@@ -5275,7 +5275,7 @@ Cards que você pode ver (só aparecem os cards que têm dados):
 ## Como abrir
 
 1. Vá até a aba **Análises**.
-2. Toque no banner **Wrapped** (o ícone de presente).
+2. Toque no cartão **Wrapped** (o ícone de presente).
 3. O conjunto de cards em tela cheia abre para o ano selecionado.
 
 ## Percorrendo seu ano
@@ -5301,7 +5301,7 @@ O Wrapped precisa de um pouco de histórico para valer a pena. Se você registro
 
 ## Resumo do mês
 
-Também existe uma versão curta para um único mês. No **dia 1º de cada mês** você recebe uma notificação — *O resumo do seu mês está pronto* — quando o mês que acabou de terminar tem dados suficientes; toque nela para abrir os cards. Você também pode abrir a qualquer momento pelo banner **Resumo do mês** na aba **Análises**, ao lado do Wrapped.
+Também existe uma versão curta para um único mês. No **dia 1º de cada mês** você recebe uma notificação — *O resumo do seu mês está pronto* — quando o mês que acabou de terminar tem dados suficientes; toque nela para abrir os cards. Você também pode abrir a qualquer momento pelo cartão **Resumo do mês** na aba **Análises**, ao lado do Wrapped.
 
 A versão mensal tem cards próprios (de novo, só os que têm dados):
 
@@ -5520,7 +5520,7 @@ Por exemplo: seu salário subiu **+5%**, mas sua inflação pessoal ficou em **+
 
 ## Onde encontrar
 
-Abra a aba **Análises** e toque no banner **Salário real** (“Seu salário vs. sua própria inflação”). Na primeira vez que você abrir, vai precisar confirmar seu salário antes que qualquer coisa possa ser calculada.
+Abra a aba **Análises** e toque no cartão **Salário real** (“Seu salário vs. sua própria inflação”). Na primeira vez que você abrir, vai precisar confirmar seu salário antes que qualquer coisa possa ser calculada.
 
 ## Configurando seu salário
 

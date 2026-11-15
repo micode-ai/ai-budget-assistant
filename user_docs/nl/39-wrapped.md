@@ -20,7 +20,7 @@ Kaarten die je kunt tegenkomen (alleen kaarten met data worden getoond):
 ## Zo open je het
 
 1. Ga naar het tabblad **Analyse**.
-2. Tik op de banner **Jaaroverzicht** (het cadeau-icoon).
+2. Tik op de kaart **Jaaroverzicht** (het cadeau-icoon).
 3. De volledige-scherm kaartenstapel opent voor het geselecteerde jaar.
 
 ## Door je jaar swipen
@@ -46,7 +46,7 @@ Het Jaaroverzicht heeft wat geschiedenis nodig om de moeite waard te zijn. Als j
 
 ## Maandoverzicht
 
-Er is ook een korte stapel kaarten voor één maand. Op de **1e van elke maand** krijg je een melding — *Je maandoverzicht staat klaar* — als de afgelopen maand genoeg data heeft; tik erop om de kaarten te openen. Je kunt het ook altijd openen via de banner **Maandoverzicht** op het tabblad **Analyse**, naast het jaaroverzicht.
+Er is ook een korte stapel kaarten voor één maand. Op de **1e van elke maand** krijg je een melding — *Je maandoverzicht staat klaar* — als de afgelopen maand genoeg data heeft; tik erop om de kaarten te openen. Je kunt het ook altijd openen via de kaart **Maandoverzicht** op het tabblad **Analyse**, naast het jaaroverzicht.
 
 De maandstapel heeft eigen kaarten (ook hier alleen die met data):
 

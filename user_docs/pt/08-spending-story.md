@@ -10,7 +10,7 @@ A funcionalidade **História dos gastos** cria um relatório personalizado, em e
 
 ## Como aceder
 
-- No separador **Análise**, toque no banner **Ver a história dos seus gastos**
+- No separador **Análise**, toque no cartão **Ver a história dos seus gastos**
 - A história é gerada automaticamente com base no período selecionado
 
 ## Seletor de período

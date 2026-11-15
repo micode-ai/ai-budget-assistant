@@ -20,7 +20,7 @@ Tarjetas que podrías ver (solo se muestran las que tienen datos):
 ## Cómo abrirlo
 
 1. Ve a la pestaña **Análisis**.
-2. Toca el banner **Resumen del año** (el icono del regalo).
+2. Toca la tarjeta **Resumen del año** (el icono del regalo).
 3. Se abre el mazo de tarjetas a pantalla completa para el año seleccionado.
 
 ## Desliza a través de tu año
@@ -46,7 +46,7 @@ El Resumen del año necesita algo de historial para que merezca la pena mostrarl
 
 ## Resumen del mes
 
-También hay un mazo corto para un solo mes. El **día 1 de cada mes** recibes una notificación — *Tu resumen del mes está listo* — cuando el mes que acaba de terminar tiene datos suficientes; tócala para abrir las tarjetas. También puedes abrirlo en cualquier momento desde el banner **Resumen del mes** de la pestaña **Análisis**, junto al resumen del año.
+También hay un mazo corto para un solo mes. El **día 1 de cada mes** recibes una notificación — *Tu resumen del mes está listo* — cuando el mes que acaba de terminar tiene datos suficientes; tócala para abrir las tarjetas. También puedes abrirlo en cualquier momento desde la tarjeta **Resumen del mes** de la pestaña **Análisis**, junto al resumen del año.
 
 El mazo mensual tiene sus propias tarjetas (de nuevo, solo las que tienen datos):
 

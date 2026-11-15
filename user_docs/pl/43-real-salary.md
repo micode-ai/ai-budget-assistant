@@ -12,7 +12,7 @@ Funkcja jest **darmowa dla wszystkich**. Tylko jednostronicowy PDF „argumenty 
 
 ## Gdzie ją znaleźć
 
-Otwórz zakładkę **Analityka** i dotknij baneru **Realna pensja** („Twoja pensja a Twoja własna inflacja"). Przy pierwszym otwarciu zostaniesz poproszony/a o potwierdzenie pensji, zanim cokolwiek zostanie obliczone.
+Otwórz zakładkę **Analityka** i dotknij kafelka **Realna pensja** („Twoja pensja a Twoja własna inflacja"). Przy pierwszym otwarciu zostaniesz poproszony/a o potwierdzenie pensji, zanim cokolwiek zostanie obliczone.
 
 ## Ustawianie pensji
 

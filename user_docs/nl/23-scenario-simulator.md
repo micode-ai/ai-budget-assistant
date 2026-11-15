@@ -10,7 +10,7 @@ Alle berekeningen zijn lokaal — er worden geen gegevens ergens naartoe gestuur
 
 ## Hoe je het opent
 
-Open het tabblad **Analyses** en tik op de banner **Scenariosimulator** boven aan het scherm.
+Open het tabblad **Analyses** en tik op de kaart **Scenariosimulator** boven aan het scherm.
 
 ## Hoe de cijfers worden berekend
 

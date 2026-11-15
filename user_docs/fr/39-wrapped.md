@@ -20,7 +20,7 @@ Cartes que vous pourriez voir (seules les cartes contenant des données sont aff
 ## Comment l'ouvrir
 
 1. Allez dans l'onglet **Analyses**.
-2. Appuyez sur la bannière **Rétro de l'année** (l'icône cadeau).
+2. Appuyez sur la carte **Rétro de l'année** (l'icône cadeau).
 3. Le jeu de cartes plein écran s'ouvre pour l'année sélectionnée.
 
 ## Parcourir votre année
@@ -46,7 +46,7 @@ La Rétro a besoin d'un peu d'historique pour valoir la peine d'être affichée.
 
 ## Bilan du mois
 
-Il existe aussi un court paquet de cartes pour un seul mois. Le **1er de chaque mois**, vous recevez une notification — *Le bilan de votre mois est prêt* — quand le mois écoulé contient assez de données ; touchez-la pour ouvrir les cartes. Vous pouvez aussi l'ouvrir à tout moment depuis la bannière **Bilan du mois** de l'onglet **Analyses**, à côté de la rétro de l'année.
+Il existe aussi un court paquet de cartes pour un seul mois. Le **1er de chaque mois**, vous recevez une notification — *Le bilan de votre mois est prêt* — quand le mois écoulé contient assez de données ; touchez-la pour ouvrir les cartes. Vous pouvez aussi l'ouvrir à tout moment depuis la carte **Bilan du mois** de l'onglet **Analyses**, à côté de la rétro de l'année.
 
 Le paquet mensuel a ses propres cartes (là encore, seulement celles qui ont des données) :
 

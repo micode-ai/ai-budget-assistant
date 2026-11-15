@@ -20,7 +20,7 @@ Karten, die dir begegnen können (nur Karten mit Daten werden angezeigt):
 ## So öffnest du ihn
 
 1. Gehe zum Tab **Analysen**.
-2. Tippe auf das Banner **Jahresrückblick** (das Geschenk-Symbol).
+2. Tippe auf die Karte **Jahresrückblick** (das Geschenk-Symbol).
 3. Der Kartenstapel öffnet sich im Vollbild für das ausgewählte Jahr.
 
 ## Durch dein Jahr wischen
@@ -46,7 +46,7 @@ Der Jahresrückblick braucht etwas Verlauf, damit sich die Anzeige lohnt. Wenn d
 
 ## Monatsrückblick
 
-Es gibt auch einen kurzen Kartenstapel für einen einzelnen Monat. Am **1. jedes Monats** bekommst du eine Benachrichtigung — *Dein Monatsrückblick ist fertig* —, wenn der vergangene Monat genug Daten hat; tippe darauf, um die Karten zu öffnen. Du kannst ihn auch jederzeit über das Banner **Monatsrückblick** im Tab **Analysen** neben dem Jahresrückblick öffnen.
+Es gibt auch einen kurzen Kartenstapel für einen einzelnen Monat. Am **1. jedes Monats** bekommst du eine Benachrichtigung — *Dein Monatsrückblick ist fertig* —, wenn der vergangene Monat genug Daten hat; tippe darauf, um die Karten zu öffnen. Du kannst ihn auch jederzeit über die Karte **Monatsrückblick** im Tab **Analysen** neben dem Jahresrückblick öffnen.
 
 Der Monatsstapel hat eigene Karten (auch hier nur solche mit Daten):
 

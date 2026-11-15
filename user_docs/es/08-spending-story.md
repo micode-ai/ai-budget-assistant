@@ -10,7 +10,7 @@ La funcion **Historia de gastos** crea un informe personalizado en estilo narrat
 
 ## Como acceder
 
-- Desde la pestana **Analisis**, toca el banner **Ver tu Historia de gastos**
+- Desde la pestana **Analisis**, toca la tarjeta **Ver tu Historia de gastos**
 - La historia se genera automaticamente basandose en el periodo seleccionado
 
 ## Selector de periodo

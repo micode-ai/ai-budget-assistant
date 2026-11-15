@@ -12,7 +12,7 @@ Por exemplo: o seu salário subiu **+5%**, mas a sua inflação pessoal ficou em
 
 ## Onde o encontrar
 
-Abra o separador **Análise** e toque no banner **Salário real** («O seu salário face à sua própria inflação»). Da primeira vez que o abrir, ser-lhe-á pedido que confirme o seu salário antes de ser possível calcular o que quer que seja.
+Abra o separador **Análise** e toque no cartão **Salário real** («O seu salário face à sua própria inflação»). Da primeira vez que o abrir, ser-lhe-á pedido que confirme o seu salário antes de ser possível calcular o que quer que seja.
 
 ## Configurar o seu salário
 

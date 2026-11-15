@@ -10,7 +10,7 @@ La fonctionnalite **Histoire des depenses** cree un rapport personnalise, sous f
 
 ## Comment y acceder
 
-- Depuis l'onglet **Analyses**, appuyez sur la banniere **Voir votre histoire des depenses**
+- Depuis l'onglet **Analyses**, appuyez sur la carte **Voir votre histoire des depenses**
 - L'histoire se genere automatiquement en fonction de la periode selectionnee
 
 ## Selection de la periode

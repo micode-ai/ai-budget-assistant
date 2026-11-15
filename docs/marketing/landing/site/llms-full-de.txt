@@ -4764,7 +4764,7 @@ Die **Ausgabengeschichte**-Funktion erstellt einen personalisierten, erzahlerisc
 
 ## Zugriff
 
-- Tippe im **Analysen**-Tab auf das Banner **Deine Ausgabengeschichte ansehen**
+- Tippe im **Analysen**-Tab auf die Karte **Deine Ausgabengeschichte ansehen**
 - Die Geschichte wird automatisch basierend auf deinem ausgewahlten Zeitraum generiert
 
 ## Zeitraum-Umschalter
@@ -6824,7 +6824,7 @@ Alle Berechnungen erfolgen lokal. Es werden keine Daten gesendet, die Transaktio
 
 ## Zugriff
 
-Öffne den **Analyse**-Tab und tippe auf das **Szenario-Simulator**-Banner oben auf dem Bildschirm.
+Öffne den **Analyse**-Tab und tippe auf die **Szenario-Simulator**-Karte oben auf dem Bildschirm.
 
 ## Woher kommen die Beträge
 
@@ -7942,7 +7942,7 @@ Karten, die dir begegnen können (nur Karten mit Daten werden angezeigt):
 ## So öffnest du ihn
 
 1. Gehe zum Tab **Analysen**.
-2. Tippe auf das Banner **Jahresrückblick** (das Geschenk-Symbol).
+2. Tippe auf die Karte **Jahresrückblick** (das Geschenk-Symbol).
 3. Der Kartenstapel öffnet sich im Vollbild für das ausgewählte Jahr.
 
 ## Durch dein Jahr wischen
@@ -7968,7 +7968,7 @@ Der Jahresrückblick braucht etwas Verlauf, damit sich die Anzeige lohnt. Wenn d
 
 ## Monatsrückblick
 
-Es gibt auch einen kurzen Kartenstapel für einen einzelnen Monat. Am **1. jedes Monats** bekommst du eine Benachrichtigung — *Dein Monatsrückblick ist fertig* —, wenn der vergangene Monat genug Daten hat; tippe darauf, um die Karten zu öffnen. Du kannst ihn auch jederzeit über das Banner **Monatsrückblick** im Tab **Analysen** neben dem Jahresrückblick öffnen.
+Es gibt auch einen kurzen Kartenstapel für einen einzelnen Monat. Am **1. jedes Monats** bekommst du eine Benachrichtigung — *Dein Monatsrückblick ist fertig* —, wenn der vergangene Monat genug Daten hat; tippe darauf, um die Karten zu öffnen. Du kannst ihn auch jederzeit über die Karte **Monatsrückblick** im Tab **Analysen** neben dem Jahresrückblick öffnen.
 
 Der Monatsstapel hat eigene Karten (auch hier nur solche mit Daten):
 
@@ -8187,7 +8187,7 @@ Die Funktion ist **für alle kostenlos**. Nur das einseitige PDF-„Argumentepap
 
 ## Wo du ihn findest
 
-Öffne den Tab **Analysen** und tippe auf das Banner **Reallohn** („Dein Gehalt im Vergleich zu deiner eigenen Inflation"). Beim ersten Öffnen wirst du gebeten, dein Gehalt zu bestätigen, bevor überhaupt etwas berechnet werden kann.
+Öffne den Tab **Analysen** und tippe auf die Karte **Reallohn** („Dein Gehalt im Vergleich zu deiner eigenen Inflation"). Beim ersten Öffnen wirst du gebeten, dein Gehalt zu bestätigen, bevor überhaupt etwas berechnet werden kann.
 
 ## Dein Gehalt einrichten
 

@@ -12,7 +12,7 @@ It's **free for everyone**. Only the one-page "raise brief" PDF you can download
 
 ## Where to find it
 
-Open the **Analytics** tab and tap the **Real salary** banner ("Your pay vs your own inflation"). The first time you open it, you'll be asked to confirm your salary before it can calculate anything.
+Open the **Analytics** tab and tap the **Real salary** card ("Your pay vs your own inflation"). The first time you open it, you'll be asked to confirm your salary before it can calculate anything.
 
 ## Setting up your salary
 

@@ -12,7 +12,7 @@ Die Funktion ist **für alle kostenlos**. Nur das einseitige PDF-„Argumentepap
 
 ## Wo du ihn findest
 
-Öffne den Tab **Analysen** und tippe auf das Banner **Reallohn** („Dein Gehalt im Vergleich zu deiner eigenen Inflation"). Beim ersten Öffnen wirst du gebeten, dein Gehalt zu bestätigen, bevor überhaupt etwas berechnet werden kann.
+Öffne den Tab **Analysen** und tippe auf die Karte **Reallohn** („Dein Gehalt im Vergleich zu deiner eigenen Inflation"). Beim ersten Öffnen wirst du gebeten, dein Gehalt zu bestätigen, bevor überhaupt etwas berechnet werden kann.
 
 ## Dein Gehalt einrichten
 

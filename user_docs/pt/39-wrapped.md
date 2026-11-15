@@ -20,7 +20,7 @@ Cartões que pode ver (só aparecem os cartões com dados):
 ## Como abrir
 
 1. Vá ao separador **Análise**.
-2. Toque no banner **Wrapped** (o ícone do presente).
+2. Toque no cartão **Wrapped** (o ícone do presente).
 3. Abre-se o baralho de cartões em ecrã inteiro para o ano selecionado.
 
 ## Percorrer o seu ano
@@ -46,7 +46,7 @@ O Wrapped precisa de algum histórico para valer a pena. Se registou poucos movi
 
 ## Resumo do mês
 
-Existe também um baralho curto para um único mês. No **dia 1 de cada mês** recebe uma notificação — *O resumo do seu mês está pronto* — quando o mês que acabou de terminar tem dados suficientes; toque nela para abrir o baralho. Também o pode abrir a qualquer momento a partir do banner **Resumo do mês** no separador **Análise**, ao lado do Wrapped.
+Existe também um baralho curto para um único mês. No **dia 1 de cada mês** recebe uma notificação — *O resumo do seu mês está pronto* — quando o mês que acabou de terminar tem dados suficientes; toque nela para abrir o baralho. Também o pode abrir a qualquer momento a partir do cartão **Resumo do mês** no separador **Análise**, ao lado do Wrapped.
 
 O baralho mensal tem os seus próprios cartões (mais uma vez, só os que têm dados):
 

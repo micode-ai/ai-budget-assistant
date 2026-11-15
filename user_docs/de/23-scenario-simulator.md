@@ -10,7 +10,7 @@ Alle Berechnungen erfolgen lokal. Es werden keine Daten gesendet, die Transaktio
 
 ## Zugriff
 
-Öffne den **Analyse**-Tab und tippe auf das **Szenario-Simulator**-Banner oben auf dem Bildschirm.
+Öffne den **Analyse**-Tab und tippe auf die **Szenario-Simulator**-Karte oben auf dem Bildschirm.
 
 ## Woher kommen die Beträge
 

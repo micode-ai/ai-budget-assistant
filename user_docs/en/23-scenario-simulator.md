@@ -10,7 +10,7 @@ All calculations are local — no data is sent anywhere, and nothing is changed 
 
 ## How to Access
 
-Open the **Analytics** tab and tap the **Scenario Simulator** banner at the top of the screen.
+Open the **Analytics** tab and tap the **Scenario Simulator** card at the top of the screen.
 
 ## How the Numbers Are Calculated
 

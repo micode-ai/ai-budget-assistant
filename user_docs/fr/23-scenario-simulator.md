@@ -10,7 +10,7 @@ Tous les calculs sont locaux. Aucune donnée n'est envoyée, l'historique des tr
 
 ## Comment y accéder
 
-Ouvrez l'onglet **Analyse** et appuyez sur la bannière du **Simulateur de scénarios** en haut de l'écran.
+Ouvrez l'onglet **Analyse** et appuyez sur la carte du **Simulateur de scénarios** en haut de l'écran.
 
 ## D'où viennent les montants
 

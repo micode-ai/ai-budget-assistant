@@ -1452,7 +1452,7 @@ The **Spending Story** feature creates a personalized, narrative-style report of
 
 ## How to Access
 
-- From the **Analytics** tab, tap the **View Your Spending Story** banner
+- From the **Analytics** tab, tap the **View Your Spending Story** card
 - The story generates automatically based on your selected period
 
 ## Period Toggle
@@ -3630,7 +3630,7 @@ All calculations are local — no data is sent anywhere, and nothing is changed 
 
 ## How to Access
 
-Open the **Analytics** tab and tap the **Scenario Simulator** banner at the top of the screen.
+Open the **Analytics** tab and tap the **Scenario Simulator** card at the top of the screen.
 
 ## How the Numbers Are Calculated
 
@@ -4846,7 +4846,7 @@ Cards you might see (only cards that have data are shown):
 ## How to open it
 
 1. Go to the **Analytics** tab.
-2. Tap the **Wrapped** banner (the gift icon).
+2. Tap the **Wrapped** card (the gift icon).
 3. The full-screen card deck opens for the selected year.
 
 ## Swiping through your year
@@ -4872,7 +4872,7 @@ Wrapped needs a bit of history to be worth showing. If you've only tracked a few
 
 ## Month in review
 
-There is also a short deck for a single month. On the **1st of each month** you get a push — *Your month in review is ready* — when the month just ended has enough data; tap it to open the deck. You can also open it any time from the **Month in review** banner on the **Analytics** tab, next to Wrapped.
+There is also a short deck for a single month. On the **1st of each month** you get a push — *Your month in review is ready* — when the month just ended has enough data; tap it to open the deck. You can also open it any time from the **Month in review** card on the **Analytics** tab, next to Wrapped.
 
 The monthly deck has its own cards (again, only those with data):
 
@@ -5107,7 +5107,7 @@ It's **free for everyone**. Only the one-page "raise brief" PDF you can download
 
 ## Where to find it
 
-Open the **Analytics** tab and tap the **Real salary** banner ("Your pay vs your own inflation"). The first time you open it, you'll be asked to confirm your salary before it can calculate anything.
+Open the **Analytics** tab and tap the **Real salary** card ("Your pay vs your own inflation"). The first time you open it, you'll be asked to confirm your salary before it can calculate anything.
 
 ## Setting up your salary
 
@@ -6850,7 +6850,7 @@ iOS, Android, Web
 
 ## Как получить доступ
 
-- На вкладке **Аналитика** нажмите баннер **Посмотреть историю расходов**
+- На вкладке **Аналитика** нажмите карточку **Посмотреть историю расходов**
 - История генерируется автоматически на основе выбранного периода
 
 ## Переключатель периода
@@ -9029,7 +9029,7 @@ OCR иногда неверно читает цену, выдумывает ст
 
 ## Как открыть
 
-Перейдите на вкладку **Аналитика** и нажмите баннер **Сценарный симулятор** в верхней части экрана.
+Перейдите на вкладку **Аналитика** и нажмите карточку **Сценарный симулятор** в верхней части экрана.
 
 ## Откуда берутся суммы
 
@@ -10226,7 +10226,7 @@ OCR иногда неверно читает цену, выдумывает ст
 ## Как открыть
 
 1. Перейдите на вкладку **Аналитика**.
-2. Нажмите на баннер **Итоги года** (иконка подарка).
+2. Нажмите на карточку **Итоги года** (иконка подарка).
 3. Откроется полноэкранная колода карточек за выбранный год.
 
 ## Пролистывание года
@@ -10252,7 +10252,7 @@ OCR иногда неверно читает цену, выдумывает ст
 
 ## Итоги месяца
 
-Есть и короткая колода для одного месяца. **1-го числа каждого месяца** приходит уведомление — *Итоги месяца готовы*, — если за прошедший месяц достаточно данных; нажмите на него, чтобы открыть карточки. Открыть их можно и в любой момент — баннер **Итоги месяца** на вкладке **Аналитика**, рядом с итогами года.
+Есть и короткая колода для одного месяца. **1-го числа каждого месяца** приходит уведомление — *Итоги месяца готовы*, — если за прошедший месяц достаточно данных; нажмите на него, чтобы открыть карточки. Открыть их можно и в любой момент — карточка **Итоги месяца** на вкладке **Аналитика**, рядом с итогами года.
 
 У месячной колоды свои карточки (тоже только те, по которым есть данные):
 
@@ -10487,7 +10487,7 @@ OCR иногда неверно читает цену, выдумывает ст
 
 ## Где её найти
 
-Откройте вкладку **Аналитика** и нажмите на баннер **Реальная зарплата** («Ваша зарплата против вашей личной инфляции»). При первом открытии вас попросят подтвердить зарплату, прежде чем что-либо можно будет рассчитать.
+Откройте вкладку **Аналитика** и нажмите на карточку **Реальная зарплата** («Ваша зарплата против вашей личной инфляции»). При первом открытии вас попросят подтвердить зарплату, прежде чем что-либо можно будет рассчитать.
 
 ## Настройка зарплаты
 
@@ -12241,7 +12241,7 @@ iOS, Android, Web
 
 ## Як отримати доступ
 
-- З вкладки **Аналітика** натисніть банер **Переглянути історію витрат**
+- З вкладки **Аналітика** натисніть картку **Переглянути історію витрат**
 - Історія генерується автоматично на основі обраного періоду
 
 ## Перемикач періоду
@@ -14392,7 +14392,7 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 ## Як відкрити
 
-Перейдіть на вкладку **Аналітика** і натисніть банер **Симулятор сценаріїв** у верхній частині екрана.
+Перейдіть на вкладку **Аналітика** і натисніть картку **Симулятор сценаріїв** у верхній частині екрана.
 
 ## Звідки беруться суми
 
@@ -15576,7 +15576,7 @@ OCR іноді неправильно читає ціну, вигадує ряд
 ## Як відкрити
 
 1. Перейдіть на вкладку **Аналітика**.
-2. Торкніться банера **Підсумки року** (іконка подарунка).
+2. Торкніться картки **Підсумки року** (іконка подарунка).
 3. Відкриється повноекранна колода карток за обраний рік.
 
 ## Гортання свого року
@@ -15602,7 +15602,7 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 ## Підсумки місяця
 
-Є й коротка колода для одного місяця. **1-го числа кожного місяця** надходить сповіщення — *Підсумки місяця готові*, — якщо за минулий місяць достатньо даних; натисніть на нього, щоб відкрити картки. Відкрити їх можна й будь-коли — банер **Підсумки місяця** на вкладці **Аналітика**, поруч із підсумками року.
+Є й коротка колода для одного місяця. **1-го числа кожного місяця** надходить сповіщення — *Підсумки місяця готові*, — якщо за минулий місяць достатньо даних; натисніть на нього, щоб відкрити картки. Відкрити їх можна й будь-коли — картка **Підсумки місяця** на вкладці **Аналітика**, поруч із підсумками року.
 
 Місячна колода має власні картки (теж лише ті, для яких є дані):
 
@@ -15837,7 +15837,7 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 ## Де її знайти
 
-Відкрийте вкладку **Аналітика** і торкніться банера **Реальна зарплата** («Ваша зарплата проти вашої особистої інфляції»). Під час першого відкриття вас попросять підтвердити зарплату, перш ніж щось можна буде розрахувати.
+Відкрийте вкладку **Аналітика** і торкніться картки **Реальна зарплата** («Ваша зарплата проти вашої особистої інфляції»). Під час першого відкриття вас попросять підтвердити зарплату, перш ніж щось можна буде розрахувати.
 
 ## Налаштування зарплати
 
@@ -17580,7 +17580,7 @@ Funkcja **Historia wydatkow** tworzy spersonalizowany, narracyjny raport z Twoje
 
 ## Jak uzyskac dostep
 
-- Z zakladki **Analityka** dotknij baner **Zobacz swoja historie wydatkow**
+- Z zakladki **Analityka** dotknij kafelka **Zobacz swoja historie wydatkow**
 - Historia generuje sie automatycznie na podstawie wybranego okresu
 
 ## Przelacznik okresu
@@ -19721,7 +19721,7 @@ Wszystkie obliczenia są lokalne. Żadne dane nie są wysyłane, historia transa
 
 ## Jak uzyskać dostęp
 
-Otwórz zakładkę **Analityka** i dotknij banera **Symulator scenariuszy** u góry ekranu.
+Otwórz zakładkę **Analityka** i dotknij kafelka **Symulator scenariuszy** u góry ekranu.
 
 ## Skąd pochodzą kwoty
 
@@ -20911,7 +20911,7 @@ Karty, które możesz zobaczyć (widoczne są tylko te, dla których są dane):
 ## Jak to otworzyć
 
 1. Przejdź do zakładki **Analityka**.
-2. Dotknij baneru **Podsumowanie roku** (ikona prezentu).
+2. Dotknij kafelka **Podsumowanie roku** (ikona prezentu).
 3. Otworzy się pełnoekranowy zestaw kart dla wybranego roku.
 
 ## Przesuwanie przez swój rok
@@ -20937,7 +20937,7 @@ Podsumowanie roku potrzebuje trochę historii, żeby miało sens jego wyświetla
 
 ## Podsumowanie miesiąca
 
-Jest też krótka talia kart dla jednego miesiąca. **1. dnia każdego miesiąca** dostaniesz powiadomienie — *Podsumowanie miesiąca gotowe* — jeśli w miniony miesiąc jest wystarczająco dużo danych; dotknij go, aby otworzyć karty. Możesz je też otworzyć w każdej chwili z banera **Podsumowanie miesiąca** na karcie **Analityka**, obok podsumowania roku.
+Jest też krótka talia kart dla jednego miesiąca. **1. dnia każdego miesiąca** dostaniesz powiadomienie — *Podsumowanie miesiąca gotowe* — jeśli w miniony miesiąc jest wystarczająco dużo danych; dotknij go, aby otworzyć karty. Możesz je też otworzyć w każdej chwili z kafelka **Podsumowanie miesiąca** na karcie **Analityka**, obok podsumowania roku.
 
 Miesięczna talia ma własne karty (również tylko te, dla których są dane):
 
@@ -21172,7 +21172,7 @@ Funkcja jest **darmowa dla wszystkich**. Tylko jednostronicowy PDF „argumenty 
 
 ## Gdzie ją znaleźć
 
-Otwórz zakładkę **Analityka** i dotknij baneru **Realna pensja** („Twoja pensja a Twoja własna inflacja"). Przy pierwszym otwarciu zostaniesz poproszony/a o potwierdzenie pensji, zanim cokolwiek zostanie obliczone.
+Otwórz zakładkę **Analityka** i dotknij kafelka **Realna pensja** („Twoja pensja a Twoja własna inflacja"). Przy pierwszym otwarciu zostaniesz poproszony/a o potwierdzenie pensji, zanim cokolwiek zostanie obliczone.
 
 ## Ustawianie pensji
 
@@ -22915,7 +22915,7 @@ Die **Ausgabengeschichte**-Funktion erstellt einen personalisierten, erzahlerisc
 
 ## Zugriff
 
-- Tippe im **Analysen**-Tab auf das Banner **Deine Ausgabengeschichte ansehen**
+- Tippe im **Analysen**-Tab auf die Karte **Deine Ausgabengeschichte ansehen**
 - Die Geschichte wird automatisch basierend auf deinem ausgewahlten Zeitraum generiert
 
 ## Zeitraum-Umschalter
@@ -25044,7 +25044,7 @@ Alle Berechnungen erfolgen lokal. Es werden keine Daten gesendet, die Transaktio
 
 ## Zugriff
 
-Öffne den **Analyse**-Tab und tippe auf das **Szenario-Simulator**-Banner oben auf dem Bildschirm.
+Öffne den **Analyse**-Tab und tippe auf die **Szenario-Simulator**-Karte oben auf dem Bildschirm.
 
 ## Woher kommen die Beträge
 
@@ -26221,7 +26221,7 @@ Karten, die dir begegnen können (nur Karten mit Daten werden angezeigt):
 ## So öffnest du ihn
 
 1. Gehe zum Tab **Analysen**.
-2. Tippe auf das Banner **Jahresrückblick** (das Geschenk-Symbol).
+2. Tippe auf die Karte **Jahresrückblick** (das Geschenk-Symbol).
 3. Der Kartenstapel öffnet sich im Vollbild für das ausgewählte Jahr.
 
 ## Durch dein Jahr wischen
@@ -26247,7 +26247,7 @@ Der Jahresrückblick braucht etwas Verlauf, damit sich die Anzeige lohnt. Wenn d
 
 ## Monatsrückblick
 
-Es gibt auch einen kurzen Kartenstapel für einen einzelnen Monat. Am **1. jedes Monats** bekommst du eine Benachrichtigung — *Dein Monatsrückblick ist fertig* —, wenn der vergangene Monat genug Daten hat; tippe darauf, um die Karten zu öffnen. Du kannst ihn auch jederzeit über das Banner **Monatsrückblick** im Tab **Analysen** neben dem Jahresrückblick öffnen.
+Es gibt auch einen kurzen Kartenstapel für einen einzelnen Monat. Am **1. jedes Monats** bekommst du eine Benachrichtigung — *Dein Monatsrückblick ist fertig* —, wenn der vergangene Monat genug Daten hat; tippe darauf, um die Karten zu öffnen. Du kannst ihn auch jederzeit über die Karte **Monatsrückblick** im Tab **Analysen** neben dem Jahresrückblick öffnen.
 
 Der Monatsstapel hat eigene Karten (auch hier nur solche mit Daten):
 
@@ -26482,7 +26482,7 @@ Die Funktion ist **für alle kostenlos**. Nur das einseitige PDF-„Argumentepap
 
 ## Wo du ihn findest
 
-Öffne den Tab **Analysen** und tippe auf das Banner **Reallohn** („Dein Gehalt im Vergleich zu deiner eigenen Inflation"). Beim ersten Öffnen wirst du gebeten, dein Gehalt zu bestätigen, bevor überhaupt etwas berechnet werden kann.
+Öffne den Tab **Analysen** und tippe auf die Karte **Reallohn** („Dein Gehalt im Vergleich zu deiner eigenen Inflation"). Beim ersten Öffnen wirst du gebeten, dein Gehalt zu bestätigen, bevor überhaupt etwas berechnet werden kann.
 
 ## Dein Gehalt einrichten
 
@@ -28225,7 +28225,7 @@ La funcion **Historia de gastos** crea un informe personalizado en estilo narrat
 
 ## Como acceder
 
-- Desde la pestana **Analisis**, toca el banner **Ver tu Historia de gastos**
+- Desde la pestana **Analisis**, toca la tarjeta **Ver tu Historia de gastos**
 - La historia se genera automaticamente basandose en el periodo seleccionado
 
 ## Selector de periodo
@@ -30349,7 +30349,7 @@ Todos los cálculos son locales. No se envían datos a ningún lugar y el histor
 
 ## Cómo acceder
 
-Abre la pestaña **Análisis** y toca el banner del **Simulador de escenarios** en la parte superior de la pantalla.
+Abre la pestaña **Análisis** y toca la tarjeta del **Simulador de escenarios** en la parte superior de la pantalla.
 
 ## De dónde vienen los importes
 
@@ -31520,7 +31520,7 @@ Tarjetas que podrías ver (solo se muestran las que tienen datos):
 ## Cómo abrirlo
 
 1. Ve a la pestaña **Análisis**.
-2. Toca el banner **Resumen del año** (el icono del regalo).
+2. Toca la tarjeta **Resumen del año** (el icono del regalo).
 3. Se abre el mazo de tarjetas a pantalla completa para el año seleccionado.
 
 ## Desliza a través de tu año
@@ -31546,7 +31546,7 @@ El Resumen del año necesita algo de historial para que merezca la pena mostrarl
 
 ## Resumen del mes
 
-También hay un mazo corto para un solo mes. El **día 1 de cada mes** recibes una notificación — *Tu resumen del mes está listo* — cuando el mes que acaba de terminar tiene datos suficientes; tócala para abrir las tarjetas. También puedes abrirlo en cualquier momento desde el banner **Resumen del mes** de la pestaña **Análisis**, junto al resumen del año.
+También hay un mazo corto para un solo mes. El **día 1 de cada mes** recibes una notificación — *Tu resumen del mes está listo* — cuando el mes que acaba de terminar tiene datos suficientes; tócala para abrir las tarjetas. También puedes abrirlo en cualquier momento desde la tarjeta **Resumen del mes** de la pestaña **Análisis**, junto al resumen del año.
 
 El mazo mensual tiene sus propias tarjetas (de nuevo, solo las que tienen datos):
 
@@ -31781,7 +31781,7 @@ Es **gratis para todos**. Solo el PDF de una página con «argumentos para tu su
 
 ## Dónde encontrarlo
 
-Abre la pestaña **Análisis** y toca el banner **Salario real** («Tu sueldo frente a tu propia inflación»). La primera vez que lo abras, se te pedirá que confirmes tu sueldo antes de poder calcular nada.
+Abre la pestaña **Análisis** y toca la tarjeta **Salario real** («Tu sueldo frente a tu propia inflación»). La primera vez que lo abras, se te pedirá que confirmes tu sueldo antes de poder calcular nada.
 
 ## Configurar tu sueldo
 
@@ -33524,7 +33524,7 @@ La fonctionnalite **Histoire des depenses** cree un rapport personnalise, sous f
 
 ## Comment y acceder
 
-- Depuis l'onglet **Analyses**, appuyez sur la banniere **Voir votre histoire des depenses**
+- Depuis l'onglet **Analyses**, appuyez sur la carte **Voir votre histoire des depenses**
 - L'histoire se genere automatiquement en fonction de la periode selectionnee
 
 ## Selection de la periode
@@ -35646,7 +35646,7 @@ Tous les calculs sont locaux. Aucune donnée n'est envoyée, l'historique des tr
 
 ## Comment y accéder
 
-Ouvrez l'onglet **Analyse** et appuyez sur la bannière du **Simulateur de scénarios** en haut de l'écran.
+Ouvrez l'onglet **Analyse** et appuyez sur la carte du **Simulateur de scénarios** en haut de l'écran.
 
 ## D'où viennent les montants
 
@@ -36817,7 +36817,7 @@ Cartes que vous pourriez voir (seules les cartes contenant des données sont aff
 ## Comment l'ouvrir
 
 1. Allez dans l'onglet **Analyses**.
-2. Appuyez sur la bannière **Rétro de l'année** (l'icône cadeau).
+2. Appuyez sur la carte **Rétro de l'année** (l'icône cadeau).
 3. Le jeu de cartes plein écran s'ouvre pour l'année sélectionnée.
 
 ## Parcourir votre année
@@ -36843,7 +36843,7 @@ La Rétro a besoin d'un peu d'historique pour valoir la peine d'être affichée.
 
 ## Bilan du mois
 
-Il existe aussi un court paquet de cartes pour un seul mois. Le **1er de chaque mois**, vous recevez une notification — *Le bilan de votre mois est prêt* — quand le mois écoulé contient assez de données ; touchez-la pour ouvrir les cartes. Vous pouvez aussi l'ouvrir à tout moment depuis la bannière **Bilan du mois** de l'onglet **Analyses**, à côté de la rétro de l'année.
+Il existe aussi un court paquet de cartes pour un seul mois. Le **1er de chaque mois**, vous recevez une notification — *Le bilan de votre mois est prêt* — quand le mois écoulé contient assez de données ; touchez-la pour ouvrir les cartes. Vous pouvez aussi l'ouvrir à tout moment depuis la carte **Bilan du mois** de l'onglet **Analyses**, à côté de la rétro de l'année.
 
 Le paquet mensuel a ses propres cartes (là encore, seulement celles qui ont des données) :
 
@@ -37078,7 +37078,7 @@ C'est **gratuit pour tout le monde**. Seul le PDF d'une page « arguments pour l
 
 ## Où le trouver
 
-Ouvrez l'onglet **Analyses** et touchez la bannière **Salaire réel** (« Votre salaire face à votre propre inflation »). La première fois que vous l'ouvrez, on vous demande de confirmer votre salaire avant que quoi que ce soit puisse être calculé.
+Ouvrez l'onglet **Analyses** et touchez la carte **Salaire réel** (« Votre salaire face à votre propre inflation »). La première fois que vous l'ouvrez, on vous demande de confirmer votre salaire avant que quoi que ce soit puisse être calculé.
 
 ## Configurer votre salaire
 
@@ -38821,7 +38821,7 @@ iOS, Android, Web
 
 ## Як атрымаць доступ
 
-- На ўкладцы **Аналітыка** націсніце банер **Паглядзець гісторыю выдаткаў**
+- На ўкладцы **Аналітыка** націсніце картку **Паглядзець гісторыю выдаткаў**
 - Гісторыя генеруецца аўтаматычна на аснове абранага перыяду
 
 ## Пераключальнік перыяду
@@ -40938,7 +40938,7 @@ OCR часам няправільна чытае цану, выдумляе ра
 
 ## Як адкрыць
 
-Перайдзіце на ўкладку **Аналітыка** і націсніце банер **Сцэнарны сімулятар** у верхняй частцы экрана.
+Перайдзіце на ўкладку **Аналітыка** і націсніце картку **Сцэнарны сімулятар** у верхняй частцы экрана.
 
 ## Адкуль бяруцца сумы
 
@@ -42078,7 +42078,7 @@ OCR часам няправільна чытае цану, выдумляе ра
 ## Як адкрыць
 
 1. Перайдзіце на ўкладку **Аналітыка**.
-2. Дакраніцеся да банера **Вынікі году** (іконка падарунка).
+2. Дакраніцеся да карткі **Вынікі году** (іконка падарунка).
 3. Адкрыецца поўнаэкранная калода картак за абраны год.
 
 ## Гартанне свайго году
@@ -42339,7 +42339,7 @@ OCR часам няправільна чытае цану, выдумляе ра
 
 ## Дзе яго знайсці
 
-Адкрыйце ўкладку **Аналітыка** і дакраніцеся да банера **Рэальны заробак** («Ваш заробак супраць вашай асабістай інфляцыі»). Пры першым адкрыцці вас папросяць пацвердзіць заробак, перш чым можна будзе штосьці разлічыць.
+Адкрыйце ўкладку **Аналітыка** і дакраніцеся да карткі **Рэальны заробак** («Ваш заробак супраць вашай асабістай інфляцыі»). Пры першым адкрыцці вас папросяць пацвердзіць заробак, перш чым можна будзе штосьці разлічыць.
 
 ## Наладжванне заробку
 
@@ -44082,7 +44082,7 @@ De functie **Uitgavenverhaal** maakt een persoonlijk, verhalend rapport van je f
 
 ## Hoe te openen
 
-- Tik op het tabblad **Analyse** op de banner **Bekijk je uitgavenverhaal**
+- Tik op het tabblad **Analyse** op de kaart **Bekijk je uitgavenverhaal**
 - Het verhaal wordt automatisch gegenereerd op basis van je geselecteerde periode
 
 ## Periodeschakelaar
@@ -46256,7 +46256,7 @@ Alle berekeningen zijn lokaal — er worden geen gegevens ergens naartoe gestuur
 
 ## Hoe je het opent
 
-Open het tabblad **Analyses** en tik op de banner **Scenariosimulator** boven aan het scherm.
+Open het tabblad **Analyses** en tik op de kaart **Scenariosimulator** boven aan het scherm.
 
 ## Hoe de cijfers worden berekend
 
@@ -47465,7 +47465,7 @@ Kaarten die je kunt tegenkomen (alleen kaarten met data worden getoond):
 ## Zo open je het
 
 1. Ga naar het tabblad **Analyse**.
-2. Tik op de banner **Jaaroverzicht** (het cadeau-icoon).
+2. Tik op de kaart **Jaaroverzicht** (het cadeau-icoon).
 3. De volledige-scherm kaartenstapel opent voor het geselecteerde jaar.
 
 ## Door je jaar swipen
@@ -47491,7 +47491,7 @@ Het Jaaroverzicht heeft wat geschiedenis nodig om de moeite waard te zijn. Als j
 
 ## Maandoverzicht
 
-Er is ook een korte stapel kaarten voor één maand. Op de **1e van elke maand** krijg je een melding — *Je maandoverzicht staat klaar* — als de afgelopen maand genoeg data heeft; tik erop om de kaarten te openen. Je kunt het ook altijd openen via de banner **Maandoverzicht** op het tabblad **Analyse**, naast het jaaroverzicht.
+Er is ook een korte stapel kaarten voor één maand. Op de **1e van elke maand** krijg je een melding — *Je maandoverzicht staat klaar* — als de afgelopen maand genoeg data heeft; tik erop om de kaarten te openen. Je kunt het ook altijd openen via de kaart **Maandoverzicht** op het tabblad **Analyse**, naast het jaaroverzicht.
 
 De maandstapel heeft eigen kaarten (ook hier alleen die met data):
 
@@ -47726,7 +47726,7 @@ Het is **gratis voor iedereen**. Alleen de pdf van één pagina met "argumenten 
 
 ## Waar je het vindt
 
-Open het tabblad **Analyse** en tik op de banner **Reëel salaris** ("Je loon tegenover je eigen inflatie"). De eerste keer dat je het opent, wordt je gevraagd je salaris te bevestigen voordat er iets berekend kan worden.
+Open het tabblad **Analyse** en tik op de kaart **Reëel salaris** ("Je loon tegenover je eigen inflatie"). De eerste keer dat je het opent, wordt je gevraagd je salaris te bevestigen voordat er iets berekend kan worden.
 
 ## Je salaris instellen
 
@@ -49485,7 +49485,7 @@ A funcionalidade **História dos gastos** cria um relatório personalizado, em e
 
 ## Como aceder
 
-- No separador **Análise**, toque no banner **Ver a história dos seus gastos**
+- No separador **Análise**, toque no cartão **Ver a história dos seus gastos**
 - A história é gerada automaticamente com base no período selecionado
 
 ## Seletor de período
@@ -51663,7 +51663,7 @@ Todos os cálculos são feitos no dispositivo — nenhum dado é enviado para la
 
 ## Como aceder
 
-Abra o separador **Análise** e toque no banner **Simulador de cenários** no topo do ecrã.
+Abra o separador **Análise** e toque no cartão **Simulador de cenários** no topo do ecrã.
 
 ## Como são calculados os números
 
@@ -52879,7 +52879,7 @@ Cartões que pode ver (só aparecem os cartões com dados):
 ## Como abrir
 
 1. Vá ao separador **Análise**.
-2. Toque no banner **Wrapped** (o ícone do presente).
+2. Toque no cartão **Wrapped** (o ícone do presente).
 3. Abre-se o baralho de cartões em ecrã inteiro para o ano selecionado.
 
 ## Percorrer o seu ano
@@ -52905,7 +52905,7 @@ O Wrapped precisa de algum histórico para valer a pena. Se registou poucos movi
 
 ## Resumo do mês
 
-Existe também um baralho curto para um único mês. No **dia 1 de cada mês** recebe uma notificação — *O resumo do seu mês está pronto* — quando o mês que acabou de terminar tem dados suficientes; toque nela para abrir o baralho. Também o pode abrir a qualquer momento a partir do banner **Resumo do mês** no separador **Análise**, ao lado do Wrapped.
+Existe também um baralho curto para um único mês. No **dia 1 de cada mês** recebe uma notificação — *O resumo do seu mês está pronto* — quando o mês que acabou de terminar tem dados suficientes; toque nela para abrir o baralho. Também o pode abrir a qualquer momento a partir do cartão **Resumo do mês** no separador **Análise**, ao lado do Wrapped.
 
 O baralho mensal tem os seus próprios cartões (mais uma vez, só os que têm dados):
 
@@ -53140,7 +53140,7 @@ Por exemplo: o seu salário subiu **+5%**, mas a sua inflação pessoal ficou em
 
 ## Onde o encontrar
 
-Abra o separador **Análise** e toque no banner **Salário real** («O seu salário face à sua própria inflação»). Da primeira vez que o abrir, ser-lhe-á pedido que confirme o seu salário antes de ser possível calcular o que quer que seja.
+Abra o separador **Análise** e toque no cartão **Salário real** («O seu salário face à sua própria inflação»). Da primeira vez que o abrir, ser-lhe-á pedido que confirme o seu salário antes de ser possível calcular o que quer que seja.
 
 ## Configurar o seu salário
 
@@ -54899,7 +54899,7 @@ O recurso **História dos gastos** cria um relatório personalizado, em estilo n
 
 ## Como acessar
 
-- Na aba **Análises**, toque no banner **Ver a história dos seus gastos**
+- Na aba **Análises**, toque no cartão **Ver a história dos seus gastos**
 - A história é gerada automaticamente com base no período selecionado
 
 ## Seletor de período
@@ -57077,7 +57077,7 @@ Todos os cálculos são feitos no aparelho — nenhum dado é enviado para lugar
 
 ## Como acessar
 
-Abra a aba **Análises** e toque no banner **Simulador de cenários** no topo da tela.
+Abra a aba **Análises** e toque no cartão **Simulador de cenários** no topo da tela.
 
 ## Como os números são calculados
 
@@ -58293,7 +58293,7 @@ Cards que você pode ver (só aparecem os cards que têm dados):
 ## Como abrir
 
 1. Vá até a aba **Análises**.
-2. Toque no banner **Wrapped** (o ícone de presente).
+2. Toque no cartão **Wrapped** (o ícone de presente).
 3. O conjunto de cards em tela cheia abre para o ano selecionado.
 
 ## Percorrendo seu ano
@@ -58319,7 +58319,7 @@ O Wrapped precisa de um pouco de histórico para valer a pena. Se você registro
 
 ## Resumo do mês
 
-Também existe uma versão curta para um único mês. No **dia 1º de cada mês** você recebe uma notificação — *O resumo do seu mês está pronto* — quando o mês que acabou de terminar tem dados suficientes; toque nela para abrir os cards. Você também pode abrir a qualquer momento pelo banner **Resumo do mês** na aba **Análises**, ao lado do Wrapped.
+Também existe uma versão curta para um único mês. No **dia 1º de cada mês** você recebe uma notificação — *O resumo do seu mês está pronto* — quando o mês que acabou de terminar tem dados suficientes; toque nela para abrir os cards. Você também pode abrir a qualquer momento pelo cartão **Resumo do mês** na aba **Análises**, ao lado do Wrapped.
 
 A versão mensal tem cards próprios (de novo, só os que têm dados):
 
@@ -58554,7 +58554,7 @@ Por exemplo: seu salário subiu **+5%**, mas sua inflação pessoal ficou em **+
 
 ## Onde encontrar
 
-Abra a aba **Análises** e toque no banner **Salário real** (“Seu salário vs. sua própria inflação”). Na primeira vez que você abrir, vai precisar confirmar seu salário antes que qualquer coisa possa ser calculada.
+Abra a aba **Análises** e toque no cartão **Salário real** (“Seu salário vs. sua própria inflação”). Na primeira vez que você abrir, vai precisar confirmar seu salário antes que qualquer coisa possa ser calculada.
 
 ## Configurando seu salário
 

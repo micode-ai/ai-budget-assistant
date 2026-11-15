@@ -10,7 +10,7 @@ Die **Ausgabengeschichte**-Funktion erstellt einen personalisierten, erzahlerisc
 
 ## Zugriff
 
-- Tippe im **Analysen**-Tab auf das Banner **Deine Ausgabengeschichte ansehen**
+- Tippe im **Analysen**-Tab auf die Karte **Deine Ausgabengeschichte ansehen**
 - Die Geschichte wird automatisch basierend auf deinem ausgewahlten Zeitraum generiert
 
 ## Zeitraum-Umschalter

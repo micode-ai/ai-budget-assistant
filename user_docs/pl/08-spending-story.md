@@ -10,7 +10,7 @@ Funkcja **Historia wydatkow** tworzy spersonalizowany, narracyjny raport z Twoje
 
 ## Jak uzyskac dostep
 
-- Z zakladki **Analityka** dotknij baner **Zobacz swoja historie wydatkow**
+- Z zakladki **Analityka** dotknij kafelka **Zobacz swoja historie wydatkow**
 - Historia generuje sie automatycznie na podstawie wybranego okresu
 
 ## Przelacznik okresu

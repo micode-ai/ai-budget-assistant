@@ -10,7 +10,7 @@ O recurso **História dos gastos** cria um relatório personalizado, em estilo n
 
 ## Como acessar
 
-- Na aba **Análises**, toque no banner **Ver a história dos seus gastos**
+- Na aba **Análises**, toque no cartão **Ver a história dos seus gastos**
 - A história é gerada automaticamente com base no período selecionado
 
 ## Seletor de período

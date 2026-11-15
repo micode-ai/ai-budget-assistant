@@ -10,7 +10,7 @@ Todos os cálculos são feitos no aparelho — nenhum dado é enviado para lugar
 
 ## Como acessar
 
-Abra a aba **Análises** e toque no banner **Simulador de cenários** no topo da tela.
+Abra a aba **Análises** e toque no cartão **Simulador de cenários** no topo da tela.
 
 ## Como os números são calculados
 

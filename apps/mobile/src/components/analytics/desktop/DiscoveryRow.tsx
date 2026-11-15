@@ -1,9 +1,8 @@
 import { View, Text, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
-import { previousMonthParams } from '@/features/insights/previousMonth';
+import { discoveryItems } from '../discoveryItems';
 
 /**
  * Story / Scenario Simulator / Wrapped / Month in review (ABA-641) / Real salary, demoted from mid-scroll full-width
@@ -20,51 +19,14 @@ export function DiscoveryRow({ selectedYear, onOpenStory }: { selectedYear: numb
 
   return (
     <View style={styles.discoveryRow}>
-      <Pressable
-        style={styles.discoveryCard}
-        onPress={onOpenStory}
-        accessibilityRole="button"
-      >
-        <Ionicons name="book-outline" size={20} color={theme.colors.primary} />
-        <Text style={styles.discoveryTitle} numberOfLines={1}>{t('story.viewStory')}</Text>
-        <Text style={styles.discoverySubtitle} numberOfLines={1}>{t('story.title')}</Text>
-      </Pressable>
-
-      <Pressable style={styles.discoveryCard} onPress={() => router.push('/scenario-simulator')} accessibilityRole="button">
-        <Ionicons name="flask-outline" size={20} color={theme.colors.primary} />
-        <Text style={styles.discoveryTitle} numberOfLines={1}>{t('scenarioSimulator.title')}</Text>
-        <Text style={styles.discoverySubtitle} numberOfLines={1}>{t('scenarioSimulator.subtitle')}</Text>
-      </Pressable>
-
-      <Pressable
-        style={styles.discoveryCard}
-        onPress={() => router.push({ pathname: '/wrapped', params: { year: String(selectedYear) } })}
-        accessibilityRole="button"
-      >
-        <Ionicons name="gift-outline" size={20} color={theme.colors.primary} />
-        <Text style={styles.discoveryTitle} numberOfLines={1}>{t('wrapped.title')}</Text>
-        <Text style={styles.discoverySubtitle} numberOfLines={1}>{t('wrapped.introSub')}</Text>
-      </Pressable>
-
-      <Pressable
-        style={styles.discoveryCard}
-        onPress={() => router.push({ pathname: '/wrapped', params: previousMonthParams() })}
-        accessibilityRole="button"
-      >
-        <Ionicons name="calendar-outline" size={20} color={theme.colors.primary} />
-        <Text style={styles.discoveryTitle} numberOfLines={1}>{t('wrapped.monthTitle')}</Text>
-        <Text style={styles.discoverySubtitle} numberOfLines={1}>{t('wrapped.monthIntroSub')}</Text>
-      </Pressable>
-
-      <Pressable
-        style={styles.discoveryCard}
-        onPress={() => router.push('/real-salary')}
-        accessibilityRole="button"
-      >
-        <Ionicons name="trending-up-outline" size={20} color={theme.colors.primary} />
-        <Text style={styles.discoveryTitle} numberOfLines={1}>{t('realSalary.entryTitle')}</Text>
-        <Text style={styles.discoverySubtitle} numberOfLines={1}>{t('realSalary.entrySub')}</Text>
-      </Pressable>
+      {/* The list lives in ../discoveryItems.ts, shared with the phone strip. */}
+      {discoveryItems(selectedYear, onOpenStory).map((item) => (
+        <Pressable key={item.key} style={styles.discoveryCard} onPress={item.onPress} accessibilityRole="button">
+          <Ionicons name={item.icon} size={20} color={theme.colors.primary} />
+          <Text style={styles.discoveryTitle} numberOfLines={1}>{t(item.titleKey)}</Text>
+          <Text style={styles.discoverySubtitle} numberOfLines={1}>{t(item.subtitleKey)}</Text>
+        </Pressable>
+      ))}
     </View>
   );
 }

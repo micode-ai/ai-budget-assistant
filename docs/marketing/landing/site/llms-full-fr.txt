@@ -4760,7 +4760,7 @@ La fonctionnalite **Histoire des depenses** cree un rapport personnalise, sous f
 
 ## Comment y acceder
 
-- Depuis l'onglet **Analyses**, appuyez sur la banniere **Voir votre histoire des depenses**
+- Depuis l'onglet **Analyses**, appuyez sur la carte **Voir votre histoire des depenses**
 - L'histoire se genere automatiquement en fonction de la periode selectionnee
 
 ## Selection de la periode
@@ -6813,7 +6813,7 @@ Tous les calculs sont locaux. Aucune donnée n'est envoyée, l'historique des tr
 
 ## Comment y accéder
 
-Ouvrez l'onglet **Analyse** et appuyez sur la bannière du **Simulateur de scénarios** en haut de l'écran.
+Ouvrez l'onglet **Analyse** et appuyez sur la carte du **Simulateur de scénarios** en haut de l'écran.
 
 ## D'où viennent les montants
 
@@ -7925,7 +7925,7 @@ Cartes que vous pourriez voir (seules les cartes contenant des données sont aff
 ## Comment l'ouvrir
 
 1. Allez dans l'onglet **Analyses**.
-2. Appuyez sur la bannière **Rétro de l'année** (l'icône cadeau).
+2. Appuyez sur la carte **Rétro de l'année** (l'icône cadeau).
 3. Le jeu de cartes plein écran s'ouvre pour l'année sélectionnée.
 
 ## Parcourir votre année
@@ -7951,7 +7951,7 @@ La Rétro a besoin d'un peu d'historique pour valoir la peine d'être affichée.
 
 ## Bilan du mois
 
-Il existe aussi un court paquet de cartes pour un seul mois. Le **1er de chaque mois**, vous recevez une notification — *Le bilan de votre mois est prêt* — quand le mois écoulé contient assez de données ; touchez-la pour ouvrir les cartes. Vous pouvez aussi l'ouvrir à tout moment depuis la bannière **Bilan du mois** de l'onglet **Analyses**, à côté de la rétro de l'année.
+Il existe aussi un court paquet de cartes pour un seul mois. Le **1er de chaque mois**, vous recevez une notification — *Le bilan de votre mois est prêt* — quand le mois écoulé contient assez de données ; touchez-la pour ouvrir les cartes. Vous pouvez aussi l'ouvrir à tout moment depuis la carte **Bilan du mois** de l'onglet **Analyses**, à côté de la rétro de l'année.
 
 Le paquet mensuel a ses propres cartes (là encore, seulement celles qui ont des données) :
 
@@ -8170,7 +8170,7 @@ C'est **gratuit pour tout le monde**. Seul le PDF d'une page « arguments pour l
 
 ## Où le trouver
 
-Ouvrez l'onglet **Analyses** et touchez la bannière **Salaire réel** (« Votre salaire face à votre propre inflation »). La première fois que vous l'ouvrez, on vous demande de confirmer votre salaire avant que quoi que ce soit puisse être calculé.
+Ouvrez l'onglet **Analyses** et touchez la carte **Salaire réel** (« Votre salaire face à votre propre inflation »). La première fois que vous l'ouvrez, on vous demande de confirmer votre salaire avant que quoi que ce soit puisse être calculé.
 
 ## Configurer votre salaire
 

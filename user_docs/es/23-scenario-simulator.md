@@ -10,7 +10,7 @@ Todos los cálculos son locales. No se envían datos a ningún lugar y el histor
 
 ## Cómo acceder
 
-Abre la pestaña **Análisis** y toca el banner del **Simulador de escenarios** en la parte superior de la pantalla.
+Abre la pestaña **Análisis** y toca la tarjeta del **Simulador de escenarios** en la parte superior de la pantalla.
 
 ## De dónde vienen los importes
 

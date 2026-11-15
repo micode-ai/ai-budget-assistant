@@ -20,7 +20,7 @@ Karty, które możesz zobaczyć (widoczne są tylko te, dla których są dane):
 ## Jak to otworzyć
 
 1. Przejdź do zakładki **Analityka**.
-2. Dotknij baneru **Podsumowanie roku** (ikona prezentu).
+2. Dotknij kafelka **Podsumowanie roku** (ikona prezentu).
 3. Otworzy się pełnoekranowy zestaw kart dla wybranego roku.
 
 ## Przesuwanie przez swój rok
@@ -46,7 +46,7 @@ Podsumowanie roku potrzebuje trochę historii, żeby miało sens jego wyświetla
 
 ## Podsumowanie miesiąca
 
-Jest też krótka talia kart dla jednego miesiąca. **1. dnia każdego miesiąca** dostaniesz powiadomienie — *Podsumowanie miesiąca gotowe* — jeśli w miniony miesiąc jest wystarczająco dużo danych; dotknij go, aby otworzyć karty. Możesz je też otworzyć w każdej chwili z banera **Podsumowanie miesiąca** na karcie **Analityka**, obok podsumowania roku.
+Jest też krótka talia kart dla jednego miesiąca. **1. dnia każdego miesiąca** dostaniesz powiadomienie — *Podsumowanie miesiąca gotowe* — jeśli w miniony miesiąc jest wystarczająco dużo danych; dotknij go, aby otworzyć karty. Możesz je też otworzyć w każdej chwili z kafelka **Podsumowanie miesiąca** na karcie **Analityka**, obok podsumowania roku.
 
 Miesięczna talia ma własne karty (również tylko te, dla których są dane):
 

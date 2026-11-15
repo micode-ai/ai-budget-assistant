@@ -4775,7 +4775,7 @@ De functie **Uitgavenverhaal** maakt een persoonlijk, verhalend rapport van je f
 
 ## Hoe te openen
 
-- Tik op het tabblad **Analyse** op de banner **Bekijk je uitgavenverhaal**
+- Tik op het tabblad **Analyse** op de kaart **Bekijk je uitgavenverhaal**
 - Het verhaal wordt automatisch gegenereerd op basis van je geselecteerde periode
 
 ## Periodeschakelaar
@@ -6879,7 +6879,7 @@ Alle berekeningen zijn lokaal — er worden geen gegevens ergens naartoe gestuur
 
 ## Hoe je het opent
 
-Open het tabblad **Analyses** en tik op de banner **Scenariosimulator** boven aan het scherm.
+Open het tabblad **Analyses** en tik op de kaart **Scenariosimulator** boven aan het scherm.
 
 ## Hoe de cijfers worden berekend
 
@@ -8029,7 +8029,7 @@ Kaarten die je kunt tegenkomen (alleen kaarten met data worden getoond):
 ## Zo open je het
 
 1. Ga naar het tabblad **Analyse**.
-2. Tik op de banner **Jaaroverzicht** (het cadeau-icoon).
+2. Tik op de kaart **Jaaroverzicht** (het cadeau-icoon).
 3. De volledige-scherm kaartenstapel opent voor het geselecteerde jaar.
 
 ## Door je jaar swipen
@@ -8055,7 +8055,7 @@ Het Jaaroverzicht heeft wat geschiedenis nodig om de moeite waard te zijn. Als j
 
 ## Maandoverzicht
 
-Er is ook een korte stapel kaarten voor één maand. Op de **1e van elke maand** krijg je een melding — *Je maandoverzicht staat klaar* — als de afgelopen maand genoeg data heeft; tik erop om de kaarten te openen. Je kunt het ook altijd openen via de banner **Maandoverzicht** op het tabblad **Analyse**, naast het jaaroverzicht.
+Er is ook een korte stapel kaarten voor één maand. Op de **1e van elke maand** krijg je een melding — *Je maandoverzicht staat klaar* — als de afgelopen maand genoeg data heeft; tik erop om de kaarten te openen. Je kunt het ook altijd openen via de kaart **Maandoverzicht** op het tabblad **Analyse**, naast het jaaroverzicht.
 
 De maandstapel heeft eigen kaarten (ook hier alleen die met data):
 
@@ -8274,7 +8274,7 @@ Het is **gratis voor iedereen**. Alleen de pdf van één pagina met "argumenten 
 
 ## Waar je het vindt
 
-Open het tabblad **Analyse** en tik op de banner **Reëel salaris** ("Je loon tegenover je eigen inflatie"). De eerste keer dat je het opent, wordt je gevraagd je salaris te bevestigen voordat er iets berekend kan worden.
+Open het tabblad **Analyse** en tik op de kaart **Reëel salaris** ("Je loon tegenover je eigen inflatie"). De eerste keer dat je het opent, wordt je gevraagd je salaris te bevestigen voordat er iets berekend kan worden.
 
 ## Je salaris instellen
 

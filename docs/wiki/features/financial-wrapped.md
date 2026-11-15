@@ -27,9 +27,9 @@ just ended — twelve reasons a year to come back and share instead of one.
 - `packages/shared-types/src/dto/insights.ts` — `WrappedResponse`, the `WrappedCard` union
 - Mobile: `apps/mobile/app/wrapped/index.tsx` (the deck), `apps/mobile/src/features/insights/useWrapped.ts`,
   `apps/mobile/src/services/analytics.api.ts` (`getWrapped`),
-  `apps/mobile/src/components/wrapped/WrappedShareCard.tsx`, the entry banners in
-  `apps/mobile/src/components/analytics/AnalyticsMobile.tsx` and the desktop
-  `analytics/desktop/DiscoveryRow.tsx`, `src/features/insights/previousMonth.ts`
+  `apps/mobile/src/components/wrapped/WrappedShareCard.tsx`, the entries in
+  `apps/mobile/src/components/analytics/discoveryItems.ts` (rendered by the phone `DiscoveryStrip`
+  and the desktop `analytics/desktop/DiscoveryRow.tsx`), `src/features/insights/previousMonth.ts`
 
 ## Key concepts
 
@@ -84,8 +84,8 @@ exclusions as the yearly deck), and `assembleMonthlyWrapped` builds it. The resp
   `InsightNotificationLedger` under `wrapped:{userId}:{YYYY-MM}`. Push `type: 'monthly_wrapped'`
   with `year`/`month` routes to `/wrapped` in `services/notifications.ts`; opt-out is the
   `monthlyWrapped` notification preference.
-- **Entries**: a **Month in review** banner on the Analytics tab (and a tile in the desktop
-  `DiscoveryRow`) always opens the month just ended (`previousMonthParams`).
+- **Entries**: a **Month in review** card in the Analytics tab's discover strip (and a tile in the
+  desktop `DiscoveryRow`) always opens the month just ended (`previousMonthParams`).
 
 ### Caching
 
@@ -95,7 +95,7 @@ Redis `wrapped:{accountId}:{baseCurrency}:{year}`, TTL 3600 s; a monthly deck us
 ### Mobile
 
 `app/wrapped/index.tsx` is registered as a `fullScreenModal` in `app/_layout.tsx` and opened from a
-banner on the Analytics tab with the selected year. It is a paging `ScrollView` over
+card in the Analytics tab's discover strip with the selected year. It is a paging `ScrollView` over
 `expo-linear-gradient` cards with progress dots — no new native module. Sharing:
 
 - **text** — `Share.share({ message })` composed from `wrapped.share*` strings;
@@ -131,7 +131,7 @@ namespace in all eleven locales.
 - `personal_inflation` for the just-ended year is really the last 12 months from today, not that
   calendar year.
 - Deferred: a seasonal home widget, and a home-screen card for the monthly deck in the first days of
-  the month (today the push and the Analytics banner are the only entries).
+  the month (today the push and the Analytics card are the only entries).
 - The monthly push uses server-local time for "the month just ended", like the deck's date ranges;
   for a user far from the server's timezone the edges of the month shift by their offset.
 
