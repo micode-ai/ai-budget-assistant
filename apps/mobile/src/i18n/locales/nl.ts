@@ -378,6 +378,7 @@ export default {
     commitmentsEmpty: 'Geen vaste lasten gevonden. Markeer een uitgave als terugkerend of voeg je abonnementen toe om ze hier te zien.',
     forecastTitle: 'Komende 30 dagen',
     forecastShort: 'Het geld kan rond {{date}} krap worden',
+    forecastAlreadyShort: 'Je saldo staat al onder nul',
     forecastLowest: 'Laagste punt: {{amount}} op {{date}}',
     forecastToday: 'Vandaag',
     forecastLowestLabel: 'Laagste',

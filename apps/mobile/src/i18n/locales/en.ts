@@ -378,6 +378,7 @@ export default {
     commitmentsEmpty: 'No fixed costs found. Mark an expense as recurring or add your subscriptions to see them here.',
     forecastTitle: 'Next 30 days',
     forecastShort: 'Money may run short around {{date}}',
+    forecastAlreadyShort: 'Your balance is already below zero',
     forecastLowest: 'Lowest point: {{amount}} on {{date}}',
     forecastToday: 'Today',
     forecastLowestLabel: 'Lowest',

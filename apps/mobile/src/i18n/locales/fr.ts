@@ -378,6 +378,7 @@ export default {
     commitmentsEmpty: 'Aucune dépense fixe trouvée. Marquez une dépense comme récurrente ou ajoutez vos abonnements pour les voir ici.',
     forecastTitle: '30 prochains jours',
     forecastShort: 'L\'argent pourrait manquer vers le {{date}}',
+    forecastAlreadyShort: 'Votre solde est déjà en dessous de zéro',
     forecastLowest: 'Point le plus bas : {{amount}} le {{date}}',
     forecastToday: 'Aujourd\'hui',
     forecastLowestLabel: 'Minimum',

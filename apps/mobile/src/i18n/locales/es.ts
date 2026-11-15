@@ -378,6 +378,7 @@ export default {
     commitmentsEmpty: 'No se encontraron gastos fijos. Marca un gasto como recurrente o añade tus suscripciones para verlos aquí.',
     forecastTitle: 'Próximos 30 días',
     forecastShort: 'El dinero podría escasear hacia el {{date}}',
+    forecastAlreadyShort: 'Tu saldo ya está por debajo de cero',
     forecastLowest: 'Punto más bajo: {{amount}} el {{date}}',
     forecastToday: 'Hoy',
     forecastLowestLabel: 'Mínimo',

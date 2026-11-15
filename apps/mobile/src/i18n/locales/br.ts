@@ -378,6 +378,7 @@ export default {
     commitmentsEmpty: 'Nenhuma despesa fixa encontrada. Marque uma despesa como recorrente ou cadastre suas assinaturas para vê-las aqui.',
     forecastTitle: 'Próximos 30 dias',
     forecastShort: 'O dinheiro pode ficar curto por volta de {{date}}',
+    forecastAlreadyShort: 'Seu saldo já está abaixo de zero',
     forecastLowest: 'Ponto mais baixo: {{amount}} em {{date}}',
     forecastToday: 'Hoje',
     forecastLowestLabel: 'Mínimo',

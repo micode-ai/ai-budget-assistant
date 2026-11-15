@@ -378,6 +378,7 @@ export default {
     commitmentsEmpty: 'Абавязковых выдаткаў не знойдзена. Адзначце выдатак як рэгулярны або дадайце падпіскі, каб убачыць іх тут.',
     forecastTitle: 'Бліжэйшыя 30 дзён',
     forecastShort: 'Грошы могуць скончыцца каля {{date}}',
+    forecastAlreadyShort: 'Баланс ужо ніжэй за нуль',
     forecastLowest: 'Мінімум: {{amount}} {{date}}',
     forecastToday: 'Сёння',
     forecastLowestLabel: 'Мінімум',

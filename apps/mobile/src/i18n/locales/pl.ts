@@ -380,6 +380,7 @@ export default {
     commitmentsEmpty: 'Nie znaleziono kosztów stałych. Oznacz wydatek jako cykliczny lub dodaj subskrypcje, aby je tu zobaczyć.',
     forecastTitle: 'Najbliższe 30 dni',
     forecastShort: 'Pieniędzy może zabraknąć około {{date}}',
+    forecastAlreadyShort: 'Saldo jest już poniżej zera',
     forecastLowest: 'Najniższy stan: {{amount}} w dniu {{date}}',
     forecastToday: 'Dziś',
     forecastLowestLabel: 'Minimum',

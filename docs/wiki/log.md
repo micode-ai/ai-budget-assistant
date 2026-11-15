@@ -332,6 +332,7 @@ Newest last within each section.
 - 2026-11-15 · [ABA-765](https://github.com/micode-ai/ai-budget-assistant/issues/803) — Analytics merchants now grouped by `trim().toLowerCase()` (display-only, labelled with the most common spelling) with visits and average ticket per merchant; closes the case-sensitive known gap. Pages: `features/analytics-tab-breakdowns.md`.
 - 2026-11-15 · [ABA-766](https://github.com/micode-ai/ai-budget-assistant/issues/804) — Analytics phone tab: the five discover banners became one horizontal `DiscoveryStrip`; the entry list moved to the shared `discoveryItems.ts` (desktop `DiscoveryRow` renders the same list). Pages: `analytics-insights.md`, `features/financial-wrapped.md`, `features/real-salary.md`.
 - 2026-11-15 · [ABA-767](https://github.com/micode-ai/ai-budget-assistant/issues/805) — financial month wave 2: the Analytics month view, its comparisons, chips, anomalies and monthly bars follow `monthAnchorDay` (period named by its start month, span shown under the label); daily bars and the peak day keyed by the local day (`localDayKey`) instead of the UTC one. Pages: `features/analytics-period-comparisons.md`, `features/budgets.md`, `features/analytics-cash-flow.md`.
+- 2026-11-15 · [ABA-768](https://github.com/micode-ai/ai-budget-assistant/issues/806) — forecast card on an already-negative wallet said "may run short around <today>"; now says the balance is already below zero. Pages: `features/cash-flow-forecast.md`.
 
 ## Queries
 

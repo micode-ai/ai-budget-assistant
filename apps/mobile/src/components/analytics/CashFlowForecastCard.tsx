@@ -49,6 +49,9 @@ export function CashFlowForecastCard({ forecast }: Props) {
   // the money runs out, not about the deepest point, which can be weeks later.
   const firstShort = forecast.days.find((d) => d.balance < 0);
   const runsShort = firstShort !== undefined;
+  // Already below zero today: "may run short around <today>" reads as a
+  // prediction about something that has already happened.
+  const alreadyShort = forecast.days[0].balance < 0;
   const lowestIndex = forecast.days.findIndex((d) => d.date === forecast.lowest.date);
 
   return (
@@ -62,7 +65,9 @@ export function CashFlowForecastCard({ forecast }: Props) {
             color={runsShort ? theme.colors.danger : theme.colors.textSecondary}
           />
           <Text style={[styles.headline, runsShort && { color: theme.colors.danger }]}>
-            {runsShort
+            {alreadyShort
+              ? t('analytics.forecastAlreadyShort')
+              : runsShort
               ? t('analytics.forecastShort', { date: fmtDay(firstShort.date) })
               : t('analytics.forecastLowest', {
                   amount: formatCurrency(forecast.lowest.balance, currency),

@@ -380,6 +380,7 @@ export default {
     commitmentsEmpty: 'Обов\'язкових витрат не знайдено. Позначте витрату як регулярну або додайте підписки, щоб побачити їх тут.',
     forecastTitle: 'Найближчі 30 днів',
     forecastShort: 'Гроші можуть закінчитися близько {{date}}',
+    forecastAlreadyShort: 'Баланс уже нижче нуля',
     forecastLowest: 'Мінімум: {{amount}} {{date}}',
     forecastToday: 'Сьогодні',
     forecastLowestLabel: 'Мінімум',

@@ -378,6 +378,7 @@ export default {
     commitmentsEmpty: 'Keine Fixkosten gefunden. Markiere eine Ausgabe als wiederkehrend oder erfasse deine Abos, um sie hier zu sehen.',
     forecastTitle: 'Die nächsten 30 Tage',
     forecastShort: 'Das Geld könnte um den {{date}} knapp werden',
+    forecastAlreadyShort: 'Dein Kontostand liegt bereits unter null',
     forecastLowest: 'Tiefster Stand: {{amount}} am {{date}}',
     forecastToday: 'Heute',
     forecastLowestLabel: 'Tiefststand',

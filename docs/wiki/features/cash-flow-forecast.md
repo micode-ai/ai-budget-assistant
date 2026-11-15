@@ -47,7 +47,9 @@ balance); every later day also subtracts the typical day. `lowest` is the minimu
 `endBalance` the last day.
 
 **Card**: the headline names the **first day below zero** when there is one ("money may run short
-around …"), otherwise the lowest point. It also shows today / lowest / in 30 days, 31 bars (red
+around …"), otherwise the lowest point. When today's balance is already negative it says so
+instead (`analytics.forecastAlreadyShort`, ABA-768): a run-short date of today is a prediction about
+the past. It also shows today / lowest / in 30 days, 31 bars (red
 below zero, amber at the lowest day, green on income days), the next six events, and a note that
 this is an estimate. The card is shown only while the current period is open.
 
@@ -69,7 +71,10 @@ this is an estimate. The card is shown only while the current period is open.
 - Planned purchases (`isPlanned`) and debts due are not scheduled outflows yet.
 - Irregular income (no monthly cadence) is ignored, so a freelancer's forecast is pessimistic.
 - No push when the forecast first dips below zero.
+- The start is the wallet balance: an account that never set opening balances can start far from
+  its real money (Safe-to-Spend shares this).
 
 ## History
 
-ABA-764: the forecast, and the shared date rules extracted from Safe-to-Spend.
+ABA-764: the forecast, and the shared date rules extracted from Safe-to-Spend. ABA-768: the
+already-below-zero headline.
