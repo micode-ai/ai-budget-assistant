@@ -24,7 +24,7 @@ export {
 export type { BillingCycle, IncomeRow, MonthlyIncomeSeries } from '../../common/utils/cash-flow-dates';
 import { isoDay } from '../../common/utils/cash-flow-dates';
 
-export type ForecastEventKind = 'income' | 'subscription' | 'recurring';
+export type ForecastEventKind = 'income' | 'subscription' | 'recurring' | 'planned' | 'debt';
 
 export interface ForecastEvent {
   date: Date;

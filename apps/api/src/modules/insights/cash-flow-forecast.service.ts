@@ -121,6 +121,37 @@ export class CashFlowForecastService {
       }),
     ]);
 
+    // Planned purchases (approved purchase requests) and borrowed debts due
+    // are money the user has committed to pay. Money OTHERS owe the user (lent
+    // debts) is deliberately not assumed to come back — a forecast should not
+    // lean on someone else's punctuality (ABA-775).
+    const [planned, borrowedDue] = await Promise.all([
+      this.prisma.expense.findMany({
+        where: { accountId, isDeleted: false, isPlanned: true, ...EXCLUDE_SPLIT_RECEIVABLE, date: { lte: until } },
+        select: { amount: true, currencyCode: true, date: true, description: true, merchant: true },
+      }),
+      this.prisma.income.findMany({
+        where: { accountId, isDeleted: false, isDebt: true, debtDueDate: { not: null, lte: until } },
+        select: { id: true, amount: true, currencyCode: true, debtDueDate: true, debtContactName: true },
+      }),
+    ]);
+    const repaid = new Map<string, number>();
+    if (borrowedDue.length > 0) {
+      const repayments = await this.prisma.expense.findMany({
+        where: {
+          accountId,
+          isDeleted: false,
+          isDebtRepayment: true,
+          relatedDebtIncomeId: { in: borrowedDue.map((d) => d.id) },
+        },
+        select: { relatedDebtIncomeId: true, amount: true },
+      });
+      for (const r of repayments) {
+        if (!r.relatedDebtIncomeId) continue;
+        repaid.set(r.relatedDebtIncomeId, (repaid.get(r.relatedDebtIncomeId) ?? 0) + Number(r.amount));
+      }
+    }
+
     let startBalance = 0;
     for (const b of wallet.balances) {
       const v = toBase(b.currentBalance, b.currencyCode);
@@ -152,6 +183,31 @@ export class CashFlowForecastService {
       for (const date of recurringOccurrences(new Date(tpl.date), tpl.recurringPeriod as string, today, until)) {
         events.push({ date, kind: 'recurring', label: tpl.description ?? '', amount: -amount });
       }
+    }
+
+    // Anything already overdue is placed on today: still owed, still intended.
+    const onOrAfterToday = (d: Date) => (d < today ? today : d);
+    for (const p of planned) {
+      const amount = toBase(Number(p.amount), p.currencyCode);
+      if (amount === null) continue;
+      events.push({
+        date: onOrAfterToday(new Date(p.date)),
+        kind: 'planned',
+        label: p.description || p.merchant || '',
+        amount: -amount,
+      });
+    }
+    for (const debt of borrowedDue) {
+      const remaining = Number(debt.amount) - (repaid.get(debt.id) ?? 0);
+      if (remaining <= 0 || !debt.debtDueDate) continue;
+      const amount = toBase(remaining, debt.currencyCode);
+      if (amount === null) continue;
+      events.push({
+        date: onOrAfterToday(new Date(debt.debtDueDate)),
+        kind: 'debt',
+        label: debt.debtContactName ?? '',
+        amount: -amount,
+      });
     }
 
     // Typical everyday spending: the average day over the history window,

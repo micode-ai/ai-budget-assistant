@@ -30,7 +30,7 @@ export interface CashFlowForecastDay {
 
 export interface CashFlowForecastEvent {
   date: string;                   // YYYY-MM-DD
-  kind: 'income' | 'subscription' | 'recurring';
+  kind: 'income' | 'subscription' | 'recurring' | 'planned' | 'debt';
   label: string;                  // subscription name, recurring expense or income description
   amount: number;                 // signed, base currency
 }

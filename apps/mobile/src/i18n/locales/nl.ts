@@ -387,6 +387,8 @@ export default {
     forecastKind_income: 'Inkomen',
     forecastKind_subscription: 'Abonnement',
     forecastKind_recurring: 'Terugkerende uitgave',
+    forecastKind_planned: 'Geplande aankoop',
+    forecastKind_debt: 'Terug te betalen schuld',
     forecastNote: 'Een schatting: je saldo plus vaste inkomsten, min geplande betalingen en dagelijkse uitgaven van ongeveer {{amount}} per dag.',
     forecastNoteShortHistory: 'Een schatting: je saldo plus vaste inkomsten, min geplande betalingen. Dagelijkse uitgaven zijn nog niet meegenomen: er is te weinig geschiedenis.',
     forecastNoteFx: 'Bedragen in andere valuta zijn omgerekend tegen de koers van vandaag.',

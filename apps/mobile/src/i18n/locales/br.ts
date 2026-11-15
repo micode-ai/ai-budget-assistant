@@ -387,6 +387,8 @@ export default {
     forecastKind_income: 'Receita',
     forecastKind_subscription: 'Assinatura',
     forecastKind_recurring: 'Despesa recorrente',
+    forecastKind_planned: 'Compra planejada',
+    forecastKind_debt: 'Dívida a pagar',
     forecastNote: 'Uma estimativa: seu saldo mais as receitas regulares, menos os pagamentos programados e gastos do dia a dia de cerca de {{amount}} por dia.',
     forecastNoteShortHistory: 'Uma estimativa: seu saldo mais as receitas regulares, menos os pagamentos programados. Os gastos do dia a dia ainda não entram: há pouco histórico.',
     forecastNoteFx: 'Valores em outras moedas são convertidos pela cotação de hoje.',

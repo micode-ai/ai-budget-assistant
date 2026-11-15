@@ -38,7 +38,7 @@ Pokazuje, jaka część wydatków to koszty **stałe** — pieniądze, które i 
 
 ## Najbliższe 30 dni
 
-Widoczne, gdy oglądasz bieżący okres. To szacunek salda na każdy z najbliższych 30 dni: dzisiejsze saldo, plus przychody wpływające co miesiąc, minus odnowienia subskrypcji i wydatki cykliczne w ich terminach, minus typowy dzień codziennych wydatków. Jeśli saldo miałoby spaść poniżej zera, karta podaje, od którego dnia, a słupki pod linią to pokazują. **Nadchodzące** wymienia najbliższe płatności i wpływy. Wpłaty na cele oszczędnościowe nie są odejmowane, a przychody, które nie przychodzą co miesiąc, nie są liczone – traktuj tę liczbę jako wskazówkę, nie obietnicę.
+Widoczne, gdy oglądasz bieżący okres. To szacunek salda na każdy z najbliższych 30 dni: dzisiejsze saldo, plus przychody wpływające co miesiąc, minus odnowienia subskrypcji i wydatki cykliczne w ich terminach, minus typowy dzień codziennych wydatków. Jeśli saldo miałoby spaść poniżej zera, karta podaje, od którego dnia, a słupki pod linią to pokazują. **Nadchodzące** wymienia najbliższe płatności i wpływy. Wpłaty na cele oszczędnościowe nie są odejmowane, a przychody, które nie przychodzą co miesiąc, nie są liczone – traktuj tę liczbę jako wskazówkę, nie obietnicę. Planowane zakupy i długi z terminem spłaty też są odejmowane w ich dniu (zaległe — dziś); pieniądze, które inni są Ci winni, nie są liczone.
 
 ## Karuzela wnioskow AI
 

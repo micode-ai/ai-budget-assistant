@@ -1617,7 +1617,7 @@ Mostra que parte das suas despesas é **fixa** — dinheiro que sai em cada per�
 
 ## Próximos 30 dias
 
-Aparece quando está a ver o período atual. É uma estimativa do seu saldo para cada um dos próximos 30 dias: o saldo de hoje, mais as receitas que chegam todos os meses, menos as renovações de subscrições e as despesas recorrentes nas respetivas datas, menos um dia típico de gastos do dia a dia. Se o saldo for ficar abaixo de zero, o cartão indica a partir de que dia, e as barras abaixo da linha mostram-no. **A seguir** lista os próximos pagamentos e receitas. As contribuições para objetivos de poupança não são descontadas e as receitas que não são mensais não contam, por isso encare o valor como uma orientação, não uma promessa.
+Aparece quando está a ver o período atual. É uma estimativa do seu saldo para cada um dos próximos 30 dias: o saldo de hoje, mais as receitas que chegam todos os meses, menos as renovações de subscrições e as despesas recorrentes nas respetivas datas, menos um dia típico de gastos do dia a dia. Se o saldo for ficar abaixo de zero, o cartão indica a partir de que dia, e as barras abaixo da linha mostram-no. **A seguir** lista os próximos pagamentos e receitas. As contribuições para objetivos de poupança não são descontadas e as receitas que não são mensais não contam, por isso encare o valor como uma orientação, não uma promessa. As compras planeadas e as dívidas com data de pagamento também são descontadas na respetiva data (as em atraso, hoje); o dinheiro que lhe devem não é contado.
 
 ## Carrossel de análises com IA
 

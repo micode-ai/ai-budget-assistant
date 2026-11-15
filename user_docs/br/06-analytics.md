@@ -38,7 +38,7 @@ Mostra quanto dos seus gastos é **fixo** — dinheiro que sai todo período de 
 
 ## Próximos 30 dias
 
-Aparece quando você está vendo o período atual. É uma estimativa do seu saldo para cada um dos próximos 30 dias: o saldo de hoje, mais as receitas que entram todo mês, menos as renovações de assinaturas e as despesas recorrentes nas datas delas, menos um dia típico de gastos do dia a dia. Se o saldo for ficar abaixo de zero, o cartão mostra a partir de que dia, e as barras abaixo da linha indicam isso. **Próximos lançamentos** lista os próximos pagamentos e receitas. Aportes em metas de economia não são descontados e receitas que não são mensais não entram, então use o valor como referência, não como promessa.
+Aparece quando você está vendo o período atual. É uma estimativa do seu saldo para cada um dos próximos 30 dias: o saldo de hoje, mais as receitas que entram todo mês, menos as renovações de assinaturas e as despesas recorrentes nas datas delas, menos um dia típico de gastos do dia a dia. Se o saldo for ficar abaixo de zero, o cartão mostra a partir de que dia, e as barras abaixo da linha indicam isso. **Próximos lançamentos** lista os próximos pagamentos e receitas. Aportes em metas de economia não são descontados e receitas que não são mensais não entram, então use o valor como referência, não como promessa. Compras planejadas e dívidas suas com vencimento também são descontadas na data (as atrasadas, hoje); o dinheiro que outras pessoas te devem não entra.
 
 ## Carrossel de insights com IA
 

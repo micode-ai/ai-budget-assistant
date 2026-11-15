@@ -387,6 +387,8 @@ export default {
     forecastKind_income: 'Revenu',
     forecastKind_subscription: 'Abonnement',
     forecastKind_recurring: 'Dépense récurrente',
+    forecastKind_planned: 'Achat prévu',
+    forecastKind_debt: 'Dette à rembourser',
     forecastNote: 'Une estimation : votre solde plus vos revenus réguliers, moins les paiements prévus et environ {{amount}} de dépenses courantes par jour.',
     forecastNoteShortHistory: 'Une estimation : votre solde plus vos revenus réguliers, moins les paiements prévus. Les dépenses courantes ne sont pas encore incluses : l\'historique est trop court.',
     forecastNoteFx: 'Les montants en d\'autres devises sont convertis au taux du jour.',

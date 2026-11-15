@@ -387,6 +387,8 @@ export default {
     forecastKind_income: 'Income',
     forecastKind_subscription: 'Subscription',
     forecastKind_recurring: 'Recurring expense',
+    forecastKind_planned: 'Planned purchase',
+    forecastKind_debt: 'Debt due',
     forecastNote: 'An estimate: your balance plus regular income, minus scheduled payments and everyday spending of about {{amount}} a day.',
     forecastNoteShortHistory: 'An estimate: your balance plus regular income, minus scheduled payments. Everyday spending is not included yet: there is too little history.',
     forecastNoteFx: 'Amounts in other currencies are converted at today\'s rate.',

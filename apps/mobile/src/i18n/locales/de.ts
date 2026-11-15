@@ -387,6 +387,8 @@ export default {
     forecastKind_income: 'Einnahme',
     forecastKind_subscription: 'Abo',
     forecastKind_recurring: 'Wiederkehrende Ausgabe',
+    forecastKind_planned: 'Geplanter Kauf',
+    forecastKind_debt: 'Fällige Schuld',
     forecastNote: 'Eine Schätzung: dein Kontostand plus regelmäßige Einnahmen, minus geplante Zahlungen und Alltagsausgaben von etwa {{amount}} pro Tag.',
     forecastNoteShortHistory: 'Eine Schätzung: dein Kontostand plus regelmäßige Einnahmen, minus geplante Zahlungen. Alltagsausgaben sind noch nicht enthalten: Es gibt zu wenig Verlauf.',
     forecastNoteFx: 'Beträge in anderen Währungen werden zum heutigen Kurs umgerechnet.',

@@ -387,6 +387,8 @@ export default {
     forecastKind_income: 'Даход',
     forecastKind_subscription: 'Падпіска',
     forecastKind_recurring: 'Рэгулярны выдатак',
+    forecastKind_planned: 'Запланаваная пакупка',
+    forecastKind_debt: 'Вяртанне доўгу',
     forecastNote: 'Ацэнка: ваш баланс плюс рэгулярныя даходы, мінус запланаваныя плацяжы і штодзённыя выдаткі каля {{amount}} у дзень.',
     forecastNoteShortHistory: 'Ацэнка: ваш баланс плюс рэгулярныя даходы, мінус запланаваныя плацяжы. Штодзённыя выдаткі пакуль не ўлічаны: замала гісторыі.',
     forecastNoteFx: 'Сумы ў іншых валютах пералічаны па сённяшнім курсе.',

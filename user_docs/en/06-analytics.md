@@ -38,7 +38,7 @@ Shows how much of your spending is **fixed** — money that leaves every period 
 
 ## Next 30 Days
 
-Shown while you are looking at the current period. It is an estimate of your balance for each of the next 30 days: today's wallet balance, plus income that arrives every month, minus subscription renewals and recurring expenses on their dates, minus a typical day of everyday spending. If the balance would drop below zero, the card says from which day, and the bars below the line show it. **Coming up** lists the next payments and income. Savings-goal contributions are not subtracted, and income that does not come monthly is not counted, so treat the figure as a guide, not a promise.
+Shown while you are looking at the current period. It is an estimate of your balance for each of the next 30 days: today's wallet balance, plus income that arrives every month, minus subscription renewals and recurring expenses on their dates, minus a typical day of everyday spending. If the balance would drop below zero, the card says from which day, and the bars below the line show it. **Coming up** lists the next payments and income. Savings-goal contributions are not subtracted, and income that does not come monthly is not counted, so treat the figure as a guide, not a promise. Planned purchases and money you owe with a due date are subtracted on their dates too (overdue ones today); money others owe you is not counted.
 
 ## AI Insights Carousel
 

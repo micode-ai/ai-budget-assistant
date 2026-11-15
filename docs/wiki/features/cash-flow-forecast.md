@@ -36,6 +36,10 @@ tier.
   forward, and a renewal due today counts.
 - **Recurring expenses**: the newest row per `recurringId`, stepped by `recurringPeriod`,
   strictly after today. Today's instance is assumed already booked by the 08:00 cron.
+- **Planned purchases** (`isPlanned` expenses, approved purchase requests) on their date, and
+  **borrowed debts due** (`Income.isDebt` with `debtDueDate`, minus repayments linked by
+  `relatedDebtIncomeId`) — both as outflows; anything already overdue is placed on today (ABA-775).
+  Lent debts (money others owe the user) are deliberately NOT assumed to come back.
 
 **Everyday spending**: the average day of the last 90 days. It leaves out rows in a recurring
 series and rows that pay an active subscription (`paysSubscription`, the same name-or-category+amount rule as
@@ -69,7 +73,6 @@ this is an estimate. The card is shown only while the current period is open.
 
 ## Known gaps
 
-- Planned purchases (`isPlanned`) and debts due are not scheduled outflows yet.
 - Irregular income (no monthly cadence) is ignored, so a freelancer's forecast is pessimistic.
 - No push when the forecast first dips below zero.
 - The start is the wallet balance. When it was never set, `walletBalanceUnset` makes the card say
@@ -79,4 +82,4 @@ this is an estimate. The card is shown only while the current period is open.
 ## History
 
 ABA-764: the forecast, and the shared date rules extracted from Safe-to-Spend. ABA-768: the
-already-below-zero headline.
+already-below-zero headline. ABA-775: planned purchases and borrowed debts due.

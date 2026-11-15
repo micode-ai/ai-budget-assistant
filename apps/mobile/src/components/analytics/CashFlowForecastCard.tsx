@@ -18,6 +18,8 @@ const EVENT_ICON = {
   income: 'arrow-down-circle-outline',
   subscription: 'card-outline',
   recurring: 'repeat-outline',
+  planned: 'cart-outline',
+  debt: 'people-outline',
 } as const;
 
 /** `YYYY-MM-DD` as a LOCAL date — never `new Date(string)`, which reads it as UTC. */

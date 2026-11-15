@@ -389,6 +389,8 @@ export default {
     forecastKind_income: 'Przychód',
     forecastKind_subscription: 'Subskrypcja',
     forecastKind_recurring: 'Wydatek cykliczny',
+    forecastKind_planned: 'Planowany zakup',
+    forecastKind_debt: 'Termin spłaty długu',
     forecastNote: 'Szacunek: saldo plus regularne przychody, minus zaplanowane płatności i codzienne wydatki ok. {{amount}} dziennie.',
     forecastNoteShortHistory: 'Szacunek: saldo plus regularne przychody, minus zaplanowane płatności. Codzienne wydatki nie są jeszcze uwzględnione: historia jest za krótka.',
     forecastNoteFx: 'Kwoty w innych walutach są przeliczane po dzisiejszym kursie.',
