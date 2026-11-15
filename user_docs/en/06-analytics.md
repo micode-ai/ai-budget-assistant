@@ -15,6 +15,8 @@ At the top of the Analytics screen:
 - **Time range toggle**: **Week** | **Month** | **Year**
 - **Currency filter**: **All** currencies, or select a specific one (USD, EUR, PLN, etc.)
 
+If your account has a **Financial Month** (for example, starting on payday, the 10th), the **Month** view follows it: *October* then covers 10 October – 9 November, and the exact dates are shown under the month name. Comparisons with earlier months and the monthly bars use the same periods. Week and Year views stay on the calendar.
+
 The selected range affects all charts and insights below.
 
 ## Summary Cards

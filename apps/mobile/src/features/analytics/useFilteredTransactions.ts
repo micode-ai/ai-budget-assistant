@@ -3,7 +3,8 @@ import { useExpenseStore } from '@/stores/expenseStore';
 import { useIncomeStore } from '@/stores/incomeStore';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { useExchangeRateStore, convertAmount } from '@/stores/exchangeRateStore';
-import { getStartOfMonth, getEndOfMonth, getStartOfWeek, getEndOfWeek } from '@budget/shared-utils';
+import { financialMonth, getStartOfWeek, getEndOfWeek } from '@budget/shared-utils';
+import { useFinancialMonth } from '@/hooks/useFinancialMonth';
 import { filterConsumption, filterIncomeConsumption } from '@/utils/consumption';
 import type { TimeRange } from './useAnalytics';
 
@@ -20,6 +21,9 @@ export function useFilteredTransactions(
   const incomes = useMemo(() => filterIncomeConsumption(rawIncomes), [rawIncomes]);
   const { categories } = useCategoryStore();
   const { rates } = useExchangeRateStore();
+  // The account's financial month (salary on the 10th → 10th–9th). Month view
+  // only; null = calendar month. Read through the one sanctioned hook.
+  const { anchorDay } = useFinancialMonth();
 
   const displayCurrency = currencyCode || useExchangeRateStore.getState().baseCurrency || 'USD';
 
@@ -39,11 +43,15 @@ export function useFilteredTransactions(
         endDate = getEndOfWeek(now);
         break;
       case 'month': {
-        const m = selectedMonth != null ? selectedMonth - 1 : now.getMonth();
-        const y = selectedYear ?? now.getFullYear();
-        const target = new Date(y, m, 1);
-        startDate = getStartOfMonth(target);
-        endDate = getEndOfMonth(target);
+        // `selectedMonth` names the month the (financial) period STARTS in —
+        // "October" is 10 Oct – 9 Nov for an anchor on the 10th, the same
+        // labelling convention as formatFinancialMonth.
+        const fallback = financialMonth(now, anchorDay).start;
+        const m = selectedMonth != null ? selectedMonth - 1 : fallback.getMonth();
+        const y = selectedYear ?? fallback.getFullYear();
+        const daysInTarget = new Date(y, m + 1, 0).getDate();
+        const insideTarget = new Date(y, m, Math.min(anchorDay ?? 1, daysInTarget), 12);
+        ({ start: startDate, end: endDate } = financialMonth(insideTarget, anchorDay));
         break;
       }
       case 'year': {
@@ -56,7 +64,7 @@ export function useFilteredTransactions(
     }
 
     return { startDate, endDate };
-  }, [timeRange, selectedMonth, selectedYear]);
+  }, [timeRange, selectedMonth, selectedYear, anchorDay]);
 
   const filteredExpenses = useMemo(
     () =>
@@ -85,5 +93,5 @@ export function useFilteredTransactions(
     [toDisplayCurrency],
   );
 
-  return { expenses, incomes, categories, filteredExpenses, filteredIncomes, getAmount, toDisplayCurrency, dateRange, displayCurrency };
+  return { expenses, incomes, categories, filteredExpenses, filteredIncomes, getAmount, toDisplayCurrency, dateRange, displayCurrency, anchorDay };
 }

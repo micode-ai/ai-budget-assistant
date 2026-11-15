@@ -34,6 +34,7 @@ export function AnalyticsMobile() {
     selectedYear,
     isCurrentPeriod,
     getPeriodLabel,
+    getPeriodRange,
     goToPrevPeriod,
     goToNextPeriod,
     resetToCurrentPeriod,
@@ -78,6 +79,7 @@ export function AnalyticsMobile() {
           selectedYear={selectedYear}
           isCurrentPeriod={isCurrentPeriod}
           getPeriodLabel={getPeriodLabel}
+          getPeriodRange={getPeriodRange}
           goToPrevPeriod={goToPrevPeriod}
           goToNextPeriod={goToNextPeriod}
         />

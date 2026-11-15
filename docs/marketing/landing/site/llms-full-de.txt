@@ -4364,6 +4364,8 @@ Am oberen Rand des Analysen-Bildschirms:
 - **Zeitbereich-Umschalter**: **Woche** | **Monat** | **Jahr**
 - **Wahrungsfilter**: **Alle** Wahrungen, oder wahle eine bestimmte (USD, EUR, PLN, usw.)
 
+Wenn dein Konto einen **Finanzmonat** hat (zum Beispiel ab dem Zahltag, dem 10.), folgt ihm die **Monats**-Ansicht: *Oktober* umfasst dann den 10. Oktober – 9. November, und die genauen Daten stehen unter dem Monatsnamen. Vergleiche mit früheren Monaten und die Monatsbalken nutzen dieselben Zeiträume. Wochen- und Jahresansicht bleiben beim Kalender.
+
 Der ausgewahlte Bereich beeinflusst alle Diagramme und Einblicke darunter.
 
 ## Ubersichtskarten

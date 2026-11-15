@@ -35,6 +35,20 @@ to the `*ToDate` keys ("the same days of the previous period").
 **Calendar, not milliseconds.** The previous month is the previous calendar month. Shifting back
 by the period's length gave about 29 Jan – 28 Feb for March.
 
+**Months are financial months (ABA-767).** With an account anchor day (`monthAnchorDay`, salary
+on the 10th), the month view follows the anchor:
+- *October* is 10 Oct – 9 Nov. `selectedMonth` names the month the period starts in, the
+  `formatFinancialMonth` convention.
+- `usePeriodNavigation` opens on the current financial month (on 5 Nov that is still October).
+- `getPeriodRange()` prints the exact span under the label.
+- `useFilteredTransactions` builds the range with `financialMonth`. `comparablePreviousWindow`,
+  `trailingMonthWindows` and `monthWindowsEndingAt` step with `shiftFinancialMonth`.
+- A `null` anchor is exactly the calendar month. Week and year views stay calendar.
+
+**Day keys are local.** `localDayKey` keys the daily trend and the highest-spending day by the
+local calendar day; a bare `YYYY-MM-DD` is kept as-is. `useDailySpending` iterates every local day
+of the range, so an anchored month spanning two calendar months gets all its bars.
+
 **Avg per day** divides by `elapsedDays`: days so far while in progress, the whole period
 otherwise.
 
@@ -68,15 +82,13 @@ render its list. It applies the same rules, adapted to the server:
 
 ## Known gaps
 
-- Periods are calendar periods: the financial month (`monthAnchorDay`) is not applied here (see
-  [budgets](budgets.md)).
+- The Story and Reports links from this tab still pass a calendar month; their server side has
+  not moved to the financial month yet (see [budgets](budgets.md)).
 - The average divides by three even for an account with only one earlier month of history. This
   is the chips' long-standing rule; the server counts only months with any spend.
-- Day keys in `useSummaryAnalytics` (highest-spending day) and `useDailySpending` still go through
-  `toISOString()` and may shift by a day in UTC+ zones. This has not been verified on a device.
 
 ## History
 
-ABA-762: same-days comparisons, a calendar previous period, avg per day over elapsed days,
+ABA-767: financial months in the month view and local day keys. ABA-762: same-days comparisons, a calendar previous period, avg per day over elapsed days,
 anomalies derived from the chips, a currency-safe server list, and the year view including
 31 December.

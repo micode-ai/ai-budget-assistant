@@ -30,7 +30,7 @@ export function useCategoryAnalytics(
   selectedYear?: number,
 ) {
   const { t } = useTranslation();
-  const { expenses, filteredExpenses, categories, getAmount, toDisplayCurrency, dateRange } =
+  const { expenses, filteredExpenses, categories, getAmount, toDisplayCurrency, dateRange, anchorDay } =
     useFilteredTransactions(timeRange, currencyCode, selectedMonth, selectedYear);
 
   const categorySpending = useMemo((): CategorySpending[] => {
@@ -51,7 +51,7 @@ export function useCategoryAnalytics(
       timeRange === 'month'
         ? // Same days of each trailing month while this one is in progress
           // (periodWindows.ts) — a half-month against whole months is not a trend.
-          trailingMonthWindows(dateRange, TRAILING_MONTHS).map((window) => {
+          trailingMonthWindows(dateRange, TRAILING_MONTHS, new Date(), anchorDay).map((window) => {
             const monthExpenses = expenses.filter((e) => {
               if (e.isDeleted) return false;
               if (currencyCode && e.currencyCode !== currencyCode) return false;
@@ -104,7 +104,7 @@ export function useCategoryAnalytics(
         ...(children.length > 0 ? { children } : {}),
       };
     });
-  }, [filteredExpenses, expenses, categories, t, getAmount, toDisplayCurrency, timeRange, dateRange, currencyCode]);
+  }, [filteredExpenses, expenses, categories, t, getAmount, toDisplayCurrency, timeRange, dateRange, currencyCode, anchorDay]);
 
   return { categorySpending };
 }

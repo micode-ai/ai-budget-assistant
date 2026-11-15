@@ -1027,6 +1027,8 @@ At the top of the Analytics screen:
 - **Time range toggle**: **Week** | **Month** | **Year**
 - **Currency filter**: **All** currencies, or select a specific one (USD, EUR, PLN, etc.)
 
+If your account has a **Financial Month** (for example, starting on payday, the 10th), the **Month** view follows it: *October* then covers 10 October – 9 November, and the exact dates are shown under the month name. Comparisons with earlier months and the monthly bars use the same periods. Week and Year views stay on the calendar.
+
 The selected range affects all charts and insights below.
 
 ## Summary Cards
@@ -6440,6 +6442,8 @@ iOS, Android, Web
 - **Переключатель периода**: **Неделя** | **Месяц** | **Год**
 - **Фильтр по валюте**: **Все** валюты или выбрать конкретную (USD, EUR, PLN и т.д.)
 
+Если у аккаунта задан **Финансовый месяц** (например, с дня зарплаты, 10-го), режим **Месяц** следует ему: *октябрь* тогда — это 10 октября – 9 ноября, а точные даты показаны под названием месяца. Сравнения с прошлыми месяцами и столбцы по месяцам используют те же периоды. Режимы «Неделя» и «Год» остаются календарными.
+
 Выбранный диапазон влияет на все графики и инсайты ниже.
 
 ## Сводные карточки
@@ -11831,6 +11835,8 @@ iOS, Android, Web
 - **Перемикач часового діапазону**: **Тиждень** | **Місяць** | **Рік**
 - **Фільтр валюти**: **Усі** валюти або оберіть конкретну (USD, EUR, PLN тощо)
 
+Якщо в акаунті задано **Фінансовий місяць** (наприклад, із дня зарплати, 10-го), режим **Місяць** йому слідує: *жовтень* тоді — це 10 жовтня – 9 листопада, а точні дати показано під назвою місяця. Порівняння з минулими місяцями та стовпці за місяцями використовують ті самі періоди. Режими «Тиждень» і «Рік» лишаються календарними.
+
 Обраний діапазон впливає на всі графіки та інсайти нижче.
 
 ## Картки підсумків
@@ -17170,6 +17176,8 @@ U gory ekranu Analityki:
 - **Przelacznik zakresu czasowego**: **Tydzien** | **Miesiac** | **Rok**
 - **Filtr waluty**: **Wszystkie** waluty lub wybierz konkretna (USD, EUR, PLN itd.)
 
+Jeśli konto ma ustawiony **Miesiąc finansowy** (na przykład od dnia wypłaty, 10.), widok **Miesiąc** go uwzględnia: *październik* obejmuje wtedy 10 października – 9 listopada, a dokładne daty widać pod nazwą miesiąca. Porównania z wcześniejszymi miesiącami i słupki miesięczne używają tych samych okresów. Widoki Tydzień i Rok zostają kalendarzowe.
+
 Wybrany zakres wplywa na wszystkie wykresy i wnioski ponizej.
 
 ## Karty podsumowania
@@ -22505,6 +22513,8 @@ Am oberen Rand des Analysen-Bildschirms:
 - **Zeitbereich-Umschalter**: **Woche** | **Monat** | **Jahr**
 - **Wahrungsfilter**: **Alle** Wahrungen, oder wahle eine bestimmte (USD, EUR, PLN, usw.)
 
+Wenn dein Konto einen **Finanzmonat** hat (zum Beispiel ab dem Zahltag, dem 10.), folgt ihm die **Monats**-Ansicht: *Oktober* umfasst dann den 10. Oktober – 9. November, und die genauen Daten stehen unter dem Monatsnamen. Vergleiche mit früheren Monaten und die Monatsbalken nutzen dieselben Zeiträume. Wochen- und Jahresansicht bleiben beim Kalender.
+
 Der ausgewahlte Bereich beeinflusst alle Diagramme und Einblicke darunter.
 
 ## Ubersichtskarten
@@ -27815,6 +27825,8 @@ En la parte superior de la pantalla de Analisis:
 - **Selector de rango de tiempo**: **Semana** | **Mes** | **Ano**
 - **Filtro de moneda**: **Todas** las monedas, o selecciona una especifica (USD, EUR, PLN, etc.)
 
+Si tu cuenta tiene un **Mes financiero** (por ejemplo, que empieza el día de cobro, el 10), la vista **Mes** lo sigue: *octubre* abarca entonces del 10 de octubre al 9 de noviembre, y las fechas exactas aparecen bajo el nombre del mes. Las comparaciones con meses anteriores y las barras mensuales usan los mismos periodos. Las vistas Semana y Año siguen el calendario.
+
 El rango seleccionado afecta a todos los graficos e informacion que aparecen debajo.
 
 ## Tarjetas de resumen
@@ -33114,6 +33126,8 @@ En haut de l'ecran Analyses :
 - **Selection de la periode** : **Semaine** | **Mois** | **Annee**
 - **Filtre par devise** : **Toutes** les devises, ou selectionnez-en une specifique (USD, EUR, PLN, etc.)
 
+Si votre compte a un **Mois financier** (par exemple, à partir du jour de paie, le 10), la vue **Mois** le suit : *octobre* couvre alors du 10 octobre au 9 novembre, et les dates exactes s'affichent sous le nom du mois. Les comparaisons avec les mois précédents et les barres mensuelles utilisent les mêmes périodes. Les vues Semaine et Année restent calendaires.
+
 La periode selectionnee affecte tous les graphiques et aperçus ci-dessous.
 
 ## Cartes de synthese
@@ -38411,6 +38425,8 @@ iOS, Android, Web
 - **Пераключальнік перыяду**: **Тыдзень** | **Месяц** | **Год**
 - **Фільтр па валюце**: **Усе** валюты або выбраць канкрэтную (USD, EUR, PLN, GBP, UAH, RUB, BYN і г.д.)
 
+Калі ў акаўнта зададзены **Фінансавы месяц** (напрыклад, з дня заробку, 10-га), рэжым **Месяц** ідзе за ім: *кастрычнік* тады — гэта 10 кастрычніка – 9 лістапада, а дакладныя даты паказаны пад назвай месяца. Параўнанні з мінулымі месяцамі і слупкі па месяцах выкарыстоўваюць тыя ж перыяды. Рэжымы «Тыдзень» і «Год» застаюцца каляндарнымі.
+
 Абраны дыяпазон уплывае на ўсе графікі і інсайты ніжэй.
 
 ## Зводныя карткі
@@ -43671,6 +43687,8 @@ Bovenaan het scherm Analyse:
 
 - **Schakelaar tijdsbereik**: **Week** | **Maand** | **Jaar**
 - **Valutafilter**: **Alle** valuta's, of selecteer een specifieke (USD, EUR, PLN, enz.)
+
+Heeft je account een **Financiële maand** (bijvoorbeeld vanaf betaaldag, de 10e), dan volgt de **Maand**-weergave die: *oktober* loopt dan van 10 oktober tot 9 november, en de precieze data staan onder de maandnaam. Vergelijkingen met eerdere maanden en de maandstaven gebruiken dezelfde periodes. Week- en Jaarweergave blijven kalendermaanden volgen.
 
 Het geselecteerde bereik beïnvloedt alle grafieken en inzichten hieronder.
 
@@ -49059,6 +49077,8 @@ No topo do ecrã Análise:
 
 - **Seletor de período**: **Semana** | **Mês** | **Ano**
 - **Filtro de moeda**: **Todas** as moedas, ou selecione uma em concreto (USD, EUR, PLN, etc.)
+
+Se a sua conta tiver um **Mês financeiro** (por exemplo, a começar no dia do ordenado, dia 10), a vista **Mês** segue-o: *outubro* passa a ser de 10 de outubro a 9 de novembro, e as datas exatas aparecem por baixo do nome do mês. As comparações com meses anteriores e as barras mensais usam os mesmos períodos. As vistas Semana e Ano continuam a seguir o calendário.
 
 O período selecionado afeta todos os gráficos e análises abaixo.
 
@@ -54473,6 +54493,8 @@ No topo da tela Análises:
 
 - **Seletor de período**: **Semana** | **Mês** | **Ano**
 - **Filtro de moeda**: **Todas** as moedas, ou selecione uma específica (USD, EUR, PLN etc.)
+
+Se a sua conta tiver um **Mês financeiro** (por exemplo, começando no dia do pagamento, dia 10), a visualização **Mês** segue esse mês: *outubro* passa a ir de 10 de outubro a 9 de novembro, e as datas exatas aparecem abaixo do nome do mês. As comparações com meses anteriores e as barras mensais usam os mesmos períodos. As visualizações Semana e Ano continuam no calendário.
 
 O período selecionado afeta todos os gráficos e insights abaixo.
 

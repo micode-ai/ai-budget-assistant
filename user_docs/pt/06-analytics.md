@@ -15,6 +15,8 @@ No topo do ecrã Análise:
 - **Seletor de período**: **Semana** | **Mês** | **Ano**
 - **Filtro de moeda**: **Todas** as moedas, ou selecione uma em concreto (USD, EUR, PLN, etc.)
 
+Se a sua conta tiver um **Mês financeiro** (por exemplo, a começar no dia do ordenado, dia 10), a vista **Mês** segue-o: *outubro* passa a ser de 10 de outubro a 9 de novembro, e as datas exatas aparecem por baixo do nome do mês. As comparações com meses anteriores e as barras mensais usam os mesmos períodos. As vistas Semana e Ano continuam a seguir o calendário.
+
 O período selecionado afeta todos os gráficos e análises abaixo.
 
 ## Cartões de resumo

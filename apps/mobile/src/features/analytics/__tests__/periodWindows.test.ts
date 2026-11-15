@@ -66,3 +66,28 @@ describe('periodWindows', () => {
     expect(whole.end).toEqual(new Date(2026, 5, 1));
   });
 });
+
+describe('financial months (anchor day)', () => {
+  // Salary on the 10th: "October" is 10 Oct – 9 Nov.
+  const october = { startDate: new Date(2026, 9, 10), endDate: new Date(2026, 10, 9, 23, 59, 59, 999) };
+
+  it('compares with the previous FINANCIAL month, cut to the same days', () => {
+    const w = comparablePreviousWindow('month', october, new Date(2026, 9, 14, 9), 10);
+    expect(w.start).toEqual(new Date(2026, 8, 10));
+    expect(w.end).toEqual(new Date(2026, 8, 15)); // 10–14 Sep inclusive
+  });
+
+  it('walks trailing financial months back from the anchor', () => {
+    const ws = trailingMonthWindows(october, 2, new Date(2027, 0, 1), 10);
+    expect(ws.map((w) => [w.start, w.end])).toEqual([
+      [new Date(2026, 8, 10), new Date(2026, 9, 10)],
+      [new Date(2026, 7, 10), new Date(2026, 8, 10)],
+    ]);
+  });
+
+  it('clamps an anchor above a short month to its last day', () => {
+    const march = { startDate: new Date(2026, 2, 31), endDate: new Date(2026, 3, 29, 23, 59, 59, 999) };
+    const w = comparablePreviousWindow('month', march, new Date(2027, 0, 1), 31);
+    expect(w.start).toEqual(new Date(2026, 1, 28)); // February has no 31st
+  });
+});

@@ -124,9 +124,12 @@ over a `budgets` array. The public `useBudgetStore` API is unchanged across its 
   wrong* rather than right. The machinery exists — the Repeat toggle, `UserSubscription`, the
   anomaly engine's `recurring_suggestion` — and `SafeToSpendService` already separates obligations;
   wiring a nudge would be new functionality.
-- Financial month is Wave 1 only: analytics, home totals, the calendar widget, safe-to-spend,
-  Wrapped/story, Fat Finder, reports and the AI user-context summary are still calendar-month. The
-  constraint is that the server and client halves of one number migrate together.
+- Financial month: wave 1 (budgets) and wave 2 (the Analytics tab's month view, ABA-767 — see
+  [analytics-period-comparisons](analytics-period-comparisons.md)) are done. Home totals, the
+  calendar widget, safe-to-spend, Wrapped/story, Fat Finder, reports and the AI user-context summary
+  are still calendar-month. The constraint is that the server and client halves of one number
+  migrate together — which is why the Analytics links to Story and Reports still pass a calendar
+  month.
 - `GET /budgets/:id/history?periods=N` (max 12) returns `[]` for `custom`-period budgets. Mobile
   keeps the result in memory only.
 

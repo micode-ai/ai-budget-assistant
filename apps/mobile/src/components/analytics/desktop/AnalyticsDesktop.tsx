@@ -90,6 +90,7 @@ export function AnalyticsDesktop() {
     selectedYear,
     isCurrentPeriod,
     getPeriodLabel,
+    getPeriodRange,
     goToPrevPeriod,
     goToNextPeriod,
     resetToCurrentPeriod,
@@ -145,6 +146,7 @@ export function AnalyticsDesktop() {
         selectedYear={selectedYear}
         isCurrentPeriod={isCurrentPeriod}
         getPeriodLabel={getPeriodLabel}
+        getPeriodRange={getPeriodRange}
         goToPrevPeriod={goToPrevPeriod}
         goToNextPeriod={goToNextPeriod}
         selectedCurrency={selectedCurrency}

@@ -34,7 +34,7 @@ export function useCashFlowAnalytics(
   selectedMonth?: number,
   selectedYear?: number,
 ): CashFlowAnalytics {
-  const { expenses, incomes, filteredExpenses, filteredIncomes, toDisplayCurrency, dateRange } =
+  const { expenses, incomes, filteredExpenses, filteredIncomes, toDisplayCurrency, dateRange, anchorDay } =
     useFilteredTransactions(timeRange, currencyCode, selectedMonth, selectedYear);
 
   const currentAccountId = useAccountStore((s) => s.currentAccountId);
@@ -65,11 +65,11 @@ export function useCashFlowAnalytics(
     const windows =
       timeRange === 'year'
         ? monthWindowsEndingAt(new Date(dateRange.startDate.getFullYear(), 11, 1), 12)
-        : monthWindowsEndingAt(dateRange.startDate, MONTH_VIEW_HISTORY);
+        : monthWindowsEndingAt(dateRange.startDate, MONTH_VIEW_HISTORY, anchorDay);
     const byCurrency = <T extends { isDeleted?: boolean; currencyCode: string }>(rows: T[]) =>
       rows.filter((r) => !r.isDeleted && (!currencyCode || r.currencyCode === currencyCode));
     return monthlyCashFlow(byCurrency(expenses), byCurrency(incomes), windows, toDisplayCurrency);
-  }, [timeRange, dateRange, expenses, incomes, currencyCode, toDisplayCurrency]);
+  }, [timeRange, dateRange, expenses, incomes, currencyCode, toDisplayCurrency, anchorDay]);
 
   const commitments = useMemo(() => {
     if (!currentAccountId || loadedFor !== currentAccountId) return null;

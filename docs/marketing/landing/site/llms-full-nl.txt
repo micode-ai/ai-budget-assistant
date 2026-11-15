@@ -4375,6 +4375,8 @@ Bovenaan het scherm Analyse:
 - **Schakelaar tijdsbereik**: **Week** | **Maand** | **Jaar**
 - **Valutafilter**: **Alle** valuta's, of selecteer een specifieke (USD, EUR, PLN, enz.)
 
+Heeft je account een **Financiële maand** (bijvoorbeeld vanaf betaaldag, de 10e), dan volgt de **Maand**-weergave die: *oktober* loopt dan van 10 oktober tot 9 november, en de precieze data staan onder de maandnaam. Vergelijkingen met eerdere maanden en de maandstaven gebruiken dezelfde periodes. Week- en Jaarweergave blijven kalendermaanden volgen.
+
 Het geselecteerde bereik beïnvloedt alle grafieken en inzichten hieronder.
 
 ## Samenvattingskaarten

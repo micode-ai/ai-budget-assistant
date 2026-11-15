@@ -4963,6 +4963,8 @@ U gory ekranu Analityki:
 - **Przelacznik zakresu czasowego**: **Tydzien** | **Miesiac** | **Rok**
 - **Filtr waluty**: **Wszystkie** waluty lub wybierz konkretna (USD, EUR, PLN itd.)
 
+Jeśli konto ma ustawiony **Miesiąc finansowy** (na przykład od dnia wypłaty, 10.), widok **Miesiąc** go uwzględnia: *październik* obejmuje wtedy 10 października – 9 listopada, a dokładne daty widać pod nazwą miesiąca. Porównania z wcześniejszymi miesiącami i słupki miesięczne używają tych samych okresów. Widoki Tydzień i Rok zostają kalendarzowe.
+
 Wybrany zakres wplywa na wszystkie wykresy i wnioski ponizej.
 
 ## Karty podsumowania

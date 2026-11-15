@@ -1595,6 +1595,8 @@ No topo da tela Análises:
 - **Seletor de período**: **Semana** | **Mês** | **Ano**
 - **Filtro de moeda**: **Todas** as moedas, ou selecione uma específica (USD, EUR, PLN etc.)
 
+Se a sua conta tiver um **Mês financeiro** (por exemplo, começando no dia do pagamento, dia 10), a visualização **Mês** segue esse mês: *outubro* passa a ir de 10 de outubro a 9 de novembro, e as datas exatas aparecem abaixo do nome do mês. As comparações com meses anteriores e as barras mensais usam os mesmos períodos. As visualizações Semana e Ano continuam no calendário.
+
 O período selecionado afeta todos os gráficos e insights abaixo.
 
 ## Cartões de resumo

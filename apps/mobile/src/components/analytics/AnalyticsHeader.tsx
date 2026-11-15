@@ -15,6 +15,8 @@ interface Props {
   selectedYear: number;
   isCurrentPeriod: boolean;
   getPeriodLabel: () => string;
+  /** "10 Oct – 9 Nov" for an anchored financial month, else null (no second line). */
+  getPeriodRange?: () => string | null;
   goToPrevPeriod: () => void;
   goToNextPeriod: () => void;
 }
@@ -27,6 +29,7 @@ export function AnalyticsHeader({
   availableCurrencies,
   isCurrentPeriod,
   getPeriodLabel,
+  getPeriodRange,
   goToPrevPeriod,
   goToNextPeriod,
 }: Props) {
@@ -71,7 +74,10 @@ export function AnalyticsHeader({
           <TouchableOpacity onPress={goToPrevPeriod} hitSlop={8}>
             <Ionicons name="chevron-back" size={22} color={theme.colors.primary} />
           </TouchableOpacity>
-          <Text style={styles.monthPickerLabel}>{getPeriodLabel()}</Text>
+          <View style={styles.periodLabelBlock}>
+            <Text style={styles.monthPickerLabel}>{getPeriodLabel()}</Text>
+            {!!getPeriodRange?.() && <Text style={styles.periodRange}>{getPeriodRange?.()}</Text>}
+          </View>
           <TouchableOpacity onPress={goToNextPeriod} hitSlop={8} disabled={isCurrentPeriod}>
             <Ionicons
               name="chevron-forward"
@@ -141,6 +147,13 @@ const createStyles = (theme: Theme) => ({
     justifyContent: 'center' as const,
     gap: theme.spacing[3],
     marginBottom: theme.spacing[4],
+  },
+  periodLabelBlock: {
+    alignItems: 'center' as const,
+  },
+  periodRange: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
   },
   monthPickerLabel: {
     ...theme.textStyles.bodyLargeSemiBold,

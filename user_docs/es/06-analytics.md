@@ -15,6 +15,8 @@ En la parte superior de la pantalla de Analisis:
 - **Selector de rango de tiempo**: **Semana** | **Mes** | **Ano**
 - **Filtro de moneda**: **Todas** las monedas, o selecciona una especifica (USD, EUR, PLN, etc.)
 
+Si tu cuenta tiene un **Mes financiero** (por ejemplo, que empieza el día de cobro, el 10), la vista **Mes** lo sigue: *octubre* abarca entonces del 10 de octubre al 9 de noviembre, y las fechas exactas aparecen bajo el nombre del mes. Las comparaciones con meses anteriores y las barras mensuales usan los mismos periodos. Las vistas Semana y Año siguen el calendario.
+
 El rango seleccionado afecta a todos los graficos e informacion que aparecen debajo.
 
 ## Tarjetas de resumen

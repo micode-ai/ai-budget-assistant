@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useFilteredTransactions } from './useFilteredTransactions';
+import { localDayKey } from './localDayKey';
 import type { TimeRange, DailySpending } from './useAnalytics';
 
 export function useDailySpending(
@@ -17,19 +18,16 @@ export function useDailySpending(
     const result: DailySpending[] = [];
 
     const rangeYear = dateRange.startDate.getFullYear();
-    const rangeMonth = dateRange.startDate.getMonth();
 
-    if (timeRange === 'week') {
-      for (let i = 0; i < 7; i++) {
-        const date = new Date(dateRange.startDate);
-        date.setDate(date.getDate() + i);
-        dailyMap.set(date.toISOString().split('T')[0], 0);
-      }
-    } else if (timeRange === 'month') {
-      const daysInMonth = new Date(rangeYear, rangeMonth + 1, 0).getDate();
-      for (let i = 1; i <= daysInMonth; i++) {
-        const date = new Date(rangeYear, rangeMonth, i);
-        dailyMap.set(date.toISOString().split('T')[0], 0);
+    if (timeRange !== 'year') {
+      // Every LOCAL day of the range — a financial month (10 Oct – 9 Nov)
+      // spans two calendar months, and a `toISOString()` key would shift each
+      // day by one in any zone east of UTC.
+      const s = dateRange.startDate;
+      for (let i = 0; ; i++) {
+        const date = new Date(s.getFullYear(), s.getMonth(), s.getDate() + i);
+        if (date > dateRange.endDate) break;
+        dailyMap.set(localDayKey(date), 0);
       }
     } else {
       for (let i = 0; i < 12; i++) {
@@ -38,11 +36,8 @@ export function useDailySpending(
     }
 
     filteredExpenses.forEach((expense) => {
-      const date = new Date(expense.date);
-      const key =
-        timeRange === 'year'
-          ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
-          : date.toISOString().split('T')[0];
+      const dayKey = localDayKey(expense.date);
+      const key = timeRange === 'year' ? dayKey.slice(0, 7) : dayKey;
       dailyMap.set(key, (dailyMap.get(key) || 0) + getAmount(expense));
     });
 
@@ -53,9 +48,10 @@ export function useDailySpending(
         dayLabel = t(`analytics.months.${monthKeys[parseInt(dateKey.split('-')[1]) - 1]}`);
       } else if (timeRange === 'week') {
         const dayKeys = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'] as const;
-        dayLabel = t(`analytics.days.${dayKeys[new Date(dateKey).getDay()]}`);
+        const [y, m, d] = dateKey.split('-').map(Number);
+        dayLabel = t(`analytics.days.${dayKeys[new Date(y, m - 1, d).getDay()]}`);
       } else {
-        dayLabel = new Date(dateKey).getDate().toString();
+        dayLabel = String(Number(dateKey.slice(8, 10)));
       }
       result.push({ date: dateKey, amount, dayLabel });
     });

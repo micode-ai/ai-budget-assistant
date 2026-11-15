@@ -13,6 +13,8 @@ export interface ControlRowProps {
   selectedYear: number;
   isCurrentPeriod: boolean;
   getPeriodLabel: () => string;
+  /** "10 Oct – 9 Nov" for an anchored financial month, else null (no second line). */
+  getPeriodRange?: () => string | null;
   goToPrevPeriod: () => void;
   goToNextPeriod: () => void;
   selectedCurrency: Currency | undefined;
@@ -36,6 +38,7 @@ export function ControlRow({
   selectedYear,
   isCurrentPeriod,
   getPeriodLabel,
+  getPeriodRange,
   goToPrevPeriod,
   goToNextPeriod,
   selectedCurrency,
@@ -79,7 +82,10 @@ export function ControlRow({
             <Pressable onPress={goToPrevPeriod} accessibilityRole="button" hitSlop={8}>
               <Ionicons name="chevron-back" size={20} color={theme.colors.primary} />
             </Pressable>
+            <View style={styles.periodLabelBlock}>
             <Text style={styles.periodNavLabel}>{getPeriodLabel()}</Text>
+            {!!getPeriodRange?.() && <Text style={styles.periodRange}>{getPeriodRange?.()}</Text>}
+          </View>
             <Pressable onPress={goToNextPeriod} accessibilityRole="button" hitSlop={8} disabled={isCurrentPeriod}>
               <Ionicons
                 name="chevron-forward"
@@ -157,6 +163,13 @@ const createStyles = (theme: Theme) => ({
     flexDirection: 'row' as const,
     alignItems: 'center' as const,
     gap: theme.spacing[2],
+  },
+  periodLabelBlock: {
+    alignItems: 'center' as const,
+  },
+  periodRange: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
   },
   periodNavLabel: {
     ...theme.textStyles.bodyMedium,

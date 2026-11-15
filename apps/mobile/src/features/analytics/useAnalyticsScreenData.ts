@@ -32,7 +32,7 @@ export function useAnalyticsScreenData() {
   const [selectedCurrency, setSelectedCurrency] = useState<Currency | undefined>(undefined);
   const intlLocale = getIntlLocale();
 
-  const { selectedMonth, selectedYear, isCurrentPeriod, getPeriodLabel, goToPrevPeriod, goToNextPeriod, resetToCurrentPeriod } =
+  const { selectedMonth, selectedYear, isCurrentPeriod, getPeriodLabel, getPeriodRange, goToPrevPeriod, goToNextPeriod, resetToCurrentPeriod } =
     usePeriodNavigation(selectedRange, intlLocale);
 
   const analytics = useAnalytics(
@@ -113,6 +113,7 @@ export function useAnalyticsScreenData() {
     selectedYear,
     isCurrentPeriod,
     getPeriodLabel,
+    getPeriodRange,
     goToPrevPeriod,
     goToNextPeriod,
     resetToCurrentPeriod,

@@ -12,8 +12,14 @@
  *
  * Every window here is half-open: `start <= date < end`.
  *
+ * MONTHS ARE FINANCIAL MONTHS. With an account anchor day (salary on the
+ * 10th) a "month" runs 10th–9th, and "the month before" is the previous such
+ * period (shared-utils `financialMonth`/`shiftFinancialMonth`). With no anchor
+ * (`null`) that is exactly the calendar month.
+ *
  * Pure and store-free so it can be unit-tested directly.
  */
+import { financialMonth, shiftFinancialMonth } from '@budget/shared-utils';
 import type { TimeRange } from './useAnalytics';
 
 export interface DateRange {
@@ -73,10 +79,16 @@ function sameDays(start: Date, nextStart: Date, days: number | null): DateWindow
  * progress. `partial` tells the UI to say "at this point last month" rather
  * than "last month".
  */
+/** Start of the financial month `delta` periods away from the one starting at `start`. */
+function monthStart(start: Date, delta: number, anchorDay: number | null): Date {
+  return financialMonth(shiftFinancialMonth(start, delta, anchorDay), anchorDay).start;
+}
+
 export function comparablePreviousWindow(
   timeRange: TimeRange,
   range: DateRange,
   now: Date = new Date(),
+  anchorDay: number | null = null,
 ): DateWindow & { partial: boolean } {
   const s = range.startDate;
   let prevStart: Date;
@@ -85,7 +97,7 @@ export function comparablePreviousWindow(
       prevStart = addDays(s, -7);
       break;
     case 'month':
-      prevStart = new Date(s.getFullYear(), s.getMonth() - 1, 1);
+      prevStart = monthStart(s, -1, anchorDay);
       break;
     case 'year':
       prevStart = new Date(s.getFullYear() - 1, 0, 1);
@@ -100,14 +112,17 @@ export function comparablePreviousWindow(
  * same number of days while the period is in progress (the 31st compares with
  * all of February). Index 0 is the month right before.
  */
-export function trailingMonthWindows(range: DateRange, count: number, now: Date = new Date()): DateWindow[] {
+export function trailingMonthWindows(
+  range: DateRange,
+  count: number,
+  now: Date = new Date(),
+  anchorDay: number | null = null,
+): DateWindow[] {
   const days = isInProgress(range, now) ? elapsedDays(range, now) : null;
   const s = range.startDate;
   return Array.from({ length: count }, (_, idx) => {
     const i = idx + 1;
-    const start = new Date(s.getFullYear(), s.getMonth() - i, 1);
-    const nextStart = new Date(s.getFullYear(), s.getMonth() - i + 1, 1);
-    return sameDays(start, nextStart, days);
+    return sameDays(monthStart(s, -i, anchorDay), monthStart(s, -i + 1, anchorDay), days);
   });
 }
 

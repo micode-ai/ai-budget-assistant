@@ -61,7 +61,7 @@ recurring or adding subscriptions.
 - Renewals carry no link to their subscription. Marking them at booking time would remove the
   matching heuristic.
 - A user cannot mark a category (rent, utilities) as fixed; that needs a schema field and sync.
-- Periods are calendar periods; the financial month is not applied (see [budgets](budgets.md)).
+- The month view's periods follow the account's financial month (ABA-767); the year view's 12 bars stay calendar months.
 
 ## History
 

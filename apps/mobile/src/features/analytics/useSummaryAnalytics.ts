@@ -7,6 +7,7 @@ import { buildParentOf, normalizeCategoryKeys } from './buildParentOf';
 import { rollUpCategoryTotals } from './categoryRollup';
 import { groupExpensesByCategory, computeVsAverage } from './categoryGrouping';
 import { elapsedDays, inWindow, trailingMonthWindows } from './periodWindows';
+import { localDayKey } from './localDayKey';
 import type { TimeRange, AnalyticsSummary } from './useAnalytics';
 
 const TRAILING_MONTHS = 3;
@@ -18,7 +19,7 @@ export function useSummaryAnalytics(
   selectedYear?: number,
 ) {
   const { t } = useTranslation();
-  const { expenses, filteredExpenses, categories, getAmount, toDisplayCurrency, dateRange } =
+  const { expenses, filteredExpenses, categories, getAmount, toDisplayCurrency, dateRange, anchorDay } =
     useFilteredTransactions(timeRange, currencyCode, selectedMonth, selectedYear);
 
   const summary = useMemo((): AnalyticsSummary => {
@@ -41,7 +42,7 @@ export function useSummaryAnalytics(
 
     const dailyTotals = new Map<string, number>();
     filteredExpenses.forEach((e) => {
-      const dateKey = new Date(e.date).toISOString().split('T')[0];
+      const dateKey = localDayKey(e.date);
       dailyTotals.set(dateKey, (dailyTotals.get(dateKey) || 0) + getAmount(e));
     });
 
@@ -80,7 +81,7 @@ export function useSummaryAnalytics(
     // current total, so like is compared with like.
     let vsAverage = 0;
     if (timeRange === 'month') {
-      const monthlyTotals = trailingMonthWindows(dateRange, TRAILING_MONTHS).map((w) =>
+      const monthlyTotals = trailingMonthWindows(dateRange, TRAILING_MONTHS, new Date(), anchorDay).map((w) =>
         expenses
           .filter((e) => {
             if (e.isDeleted) return false;
@@ -103,7 +104,7 @@ export function useSummaryAnalytics(
       highestSpendingDay,
       mostExpensiveCategory,
     };
-  }, [filteredExpenses, expenses, categories, dateRange, timeRange, currencyCode, getAmount, toDisplayCurrency, t]);
+  }, [filteredExpenses, expenses, categories, dateRange, timeRange, currencyCode, getAmount, toDisplayCurrency, t, anchorDay]);
 
   return { summary };
 }

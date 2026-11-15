@@ -4360,6 +4360,8 @@ En haut de l'ecran Analyses :
 - **Selection de la periode** : **Semaine** | **Mois** | **Annee**
 - **Filtre par devise** : **Toutes** les devises, ou selectionnez-en une specifique (USD, EUR, PLN, etc.)
 
+Si votre compte a un **Mois financier** (par exemple, à partir du jour de paie, le 10), la vue **Mois** le suit : *octobre* couvre alors du 10 octobre au 9 novembre, et les dates exactes s'affichent sous le nom du mois. Les comparaisons avec les mois précédents et les barres mensuelles utilisent les mêmes périodes. Les vues Semaine et Année restent calendaires.
+
 La periode selectionnee affecte tous les graphiques et aperçus ci-dessous.
 
 ## Cartes de synthese

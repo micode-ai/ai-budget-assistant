@@ -97,3 +97,13 @@ describe('classifyCommitments', () => {
     expect(classifyCommitments([], [sub()], convert).fixedShare).toBe(0);
   });
 });
+
+describe('monthWindowsEndingAt with an anchor day', () => {
+  it('returns financial months ending with the one containing the date', () => {
+    const ws = monthWindowsEndingAt(new Date(2026, 9, 10), 2, 10);
+    expect(ws.map((w) => [w.start, w.end])).toEqual([
+      [new Date(2026, 8, 10), new Date(2026, 9, 10)],
+      [new Date(2026, 9, 10), new Date(2026, 10, 10)],
+    ]);
+  });
+});

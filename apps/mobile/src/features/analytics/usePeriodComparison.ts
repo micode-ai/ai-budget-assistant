@@ -9,15 +9,15 @@ export function usePeriodComparison(
   selectedMonth?: number,
   selectedYear?: number,
 ) {
-  const { expenses, filteredExpenses, getAmount, toDisplayCurrency, dateRange } =
+  const { expenses, filteredExpenses, getAmount, toDisplayCurrency, dateRange, anchorDay } =
     useFilteredTransactions(timeRange, currencyCode, selectedMonth, selectedYear);
 
   const periodComparison = useMemo((): PeriodComparison => {
     const currentTotal = filteredExpenses.reduce((sum, e) => sum + getAmount(e), 0);
 
-    // The calendar period before, cut to the same days while this one is in
+    // The period before (financial months honour the anchor day), cut to the same days while this one is in
     // progress — see periodWindows.ts for why a partial-vs-whole comparison is wrong.
-    const window = comparablePreviousWindow(timeRange, dateRange);
+    const window = comparablePreviousWindow(timeRange, dateRange, new Date(), anchorDay);
 
     const previousTotal = expenses
       .filter((e) => {
@@ -35,7 +35,7 @@ export function usePeriodComparison(
           : 0;
 
     return { currentTotal, previousTotal, changePercent, isPartial: window.partial };
-  }, [filteredExpenses, expenses, dateRange, timeRange, currencyCode, getAmount, toDisplayCurrency]);
+  }, [filteredExpenses, expenses, dateRange, timeRange, currencyCode, getAmount, toDisplayCurrency, anchorDay]);
 
   return { periodComparison };
 }

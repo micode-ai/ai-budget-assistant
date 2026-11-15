@@ -21,6 +21,7 @@
  * "fixed" about something the app only guessed would be worse than
  * under-counting, so nothing else is inferred.
  */
+import { financialMonth, shiftFinancialMonth } from '@budget/shared-utils';
 import type { DateWindow } from './periodWindows';
 import { inWindow } from './periodWindows';
 
@@ -96,14 +97,15 @@ export function monthlyCashFlow(
   }));
 }
 
-/** The `count` calendar months ending with the one containing `end`, oldest first. */
-export function monthWindowsEndingAt(end: Date, count: number): DateWindow[] {
+/**
+ * The `count` (financial) months ending with the one containing `end`, oldest
+ * first. `anchorDay` null = calendar months.
+ */
+export function monthWindowsEndingAt(end: Date, count: number, anchorDay: number | null = null): DateWindow[] {
+  const startOf = (delta: number) => financialMonth(shiftFinancialMonth(end, delta, anchorDay), anchorDay).start;
   return Array.from({ length: count }, (_, idx) => {
     const back = count - 1 - idx;
-    return {
-      start: new Date(end.getFullYear(), end.getMonth() - back, 1),
-      end: new Date(end.getFullYear(), end.getMonth() - back + 1, 1),
-    };
+    return { start: startOf(-back), end: startOf(-back + 1) };
   });
 }
 
