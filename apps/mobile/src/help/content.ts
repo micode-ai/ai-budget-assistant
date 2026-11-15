@@ -235,7 +235,7 @@ The circular gauge in the top-right of the card fills proportionally to your sco
 | Budget adherence | 25 | % of active budgets not exceeding their limit |
 | Savings rate | 25 | Maps your monthly savings % linearly (0% → 0 pts, 20%+ → 25 pts) |
 | Goal progress | 25 | % of active savings goals on track toward their deadline |
-| Debt health | 25 | Deducted proportionally for overdue debts |
+| Debt health | 25 | Reduced by the share of the money still owed that is overdue — a large overdue debt costs more than a small one |
 
 > **"Not enough data"** appears when fewer than two components have data (e.g., a brand-new account with no budgets, goals, debts, or income yet).
 
@@ -5651,7 +5651,7 @@ iOS, Android, Web
 | Соблюдение бюджета | 25 | % активных бюджетов, не превышающих лимит |
 | Норма сбережений | 25 | Линейное отображение % ежемесячных сбережений (0% → 0 баллов, 20%+ → 25 баллов) |
 | Прогресс по целям | 25 | % активных сберегательных целей, идущих по графику |
-| Состояние долгов | 25 | Пропорциональный вычет за просроченные долги |
+| Состояние долгов | 25 | Снижается на долю просроченной суммы среди ещё не погашенных долгов — крупный просроченный долг весит больше мелкого |
 
 > **«Недостаточно данных»** отображается, когда менее двух компонентов имеют данные (например, совсем новый счёт без бюджетов, целей, долгов или доходов).
 
@@ -11044,7 +11044,7 @@ iOS, Android, Web
 | Дотримання бюджету | 25 | % активних бюджетів, що не перевищують ліміт |
 | Норма заощаджень | 25 | Лінійне відображення % щомісячних заощаджень (0% → 0 балів, 20%+ → 25 балів) |
 | Прогрес цілей | 25 | % активних цілей заощаджень, що йдуть за графіком |
-| Стан боргів | 25 | Пропорційне вирахування за простроченими боргами |
+| Стан боргів | 25 | Знижується на частку простроченої суми серед ще не погашених боргів — великий прострочений борг важить більше за дрібний |
 
 > **«Недостатньо даних»** відображається, коли менше двох компонентів мають дані (наприклад, зовсім новий рахунок без бюджетів, цілей, боргів або доходів).
 
@@ -16385,7 +16385,7 @@ Okrągły wskaźnik w prawym górnym rogu karty wypełnia się proporcjonalnie d
 | Przestrzeganie budżetu | 25 | % aktywnych budżetów nieprzekraczających limitu |
 | Stopa oszczędności | 25 | Liniowe mapowanie % miesięcznych oszczędności (0% → 0 pkt, 20%+ → 25 pkt) |
 | Postęp celów | 25 | % aktywnych celów oszczędnościowych realizowanych terminowo |
-| Stan zadłużenia | 25 | Proporcjonalne odliczenie za przeterminowane długi |
+| Stan zadłużenia | 25 | Obniżany o udział przeterminowanej części kwoty do spłaty — duży przeterminowany dług waży więcej niż mały |
 
 > **„Za mało danych"** pojawia się, gdy mniej niż dwa składniki mają dane (np. zupełnie nowe konto bez budżetów, celów, długów ani przychodów).
 
@@ -21722,7 +21722,7 @@ Die Kreisanzeige oben rechts auf der Karte füllt sich proportional zur Punktzah
 | Budgeteinhaltung | 25 | % der aktiven Budgets, die das Limit nicht überschreiten |
 | Sparquote | 25 | Bildet Ihren monatlichen Sparanteil linear ab (0% → 0 Pkt, 20%+ → 25 Pkt) |
 | Zielfortschritt | 25 | % der aktiven Sparziele auf dem Weg zum Zieldatum |
-| Schuldengesundheit | 25 | Proportionaler Abzug für überfällige Schulden |
+| Schuldengesundheit | 25 | Verringert um den überfälligen Anteil der noch offenen Summe — eine große überfällige Schuld zählt mehr als eine kleine |
 
 > **„Nicht genug Daten"** erscheint, wenn weniger als zwei Komponenten Daten haben (z.B. ein brandneues Konto ohne Budgets, Ziele, Schulden oder Einkommen).
 
@@ -27034,7 +27034,7 @@ El indicador circular en la parte superior derecha de la tarjeta se llena propor
 | Cumplimiento del presupuesto | 25 | % de presupuestos activos sin superar el límite |
 | Tasa de ahorro | 25 | Mapea tu % de ahorro mensual linealmente (0% → 0 pts, 20%+ → 25 pts) |
 | Progreso de metas | 25 | % de metas de ahorro activas en camino hacia su fecha límite |
-| Salud de deudas | 25 | Deducción proporcional por deudas vencidas |
+| Salud de deudas | 25 | Se reduce según la parte del dinero pendiente que está vencida: una deuda vencida grande pesa más que una pequeña |
 
 > **«Datos insuficientes»** aparece cuando menos de dos componentes tienen datos (p. ej., una cuenta nueva sin presupuestos, metas, deudas ni ingresos todavía).
 
@@ -32335,7 +32335,7 @@ La jauge circulaire en haut à droite de la carte se remplit proportionnellement
 | Respect du budget | 25 | % des budgets actifs ne dépassant pas la limite |
 | Taux d'épargne | 25 | Cartographie votre % d'épargne mensuelle linéairement (0% → 0 pts, 20%+ → 25 pts) |
 | Avancement des objectifs | 25 | % des objectifs d'épargne actifs en bonne voie |
-| Santé des dettes | 25 | Déduction proportionnelle pour les dettes en retard |
+| Santé des dettes | 25 | Réduite selon la part de la somme restant due qui est en retard — une grosse dette en retard pèse plus qu'une petite |
 
 > **« Pas assez de données »** s'affiche lorsque moins de deux composantes ont des données (p. ex., un nouveau compte sans budgets, objectifs, dettes ou revenus).
 
@@ -37634,7 +37634,7 @@ iOS, Android, Web
 | Выкананне бюджэту | 25 | % актыўных бюджэтаў, якія не перавышаюць ліміт |
 | Норма зберажэнняў | 25 | Лінейнае адлюстраванне % штомесачных зберажэнняў (0% → 0 балаў, 20%+ → 25 балаў) |
 | Прагрэс мэтаў | 25 | % актыўных мэтаў зберажэнняў, якія ідуць па графіку |
-| Стан запазычанасцяў | 25 | Прапарцыйнае адлічэнне за прасрочаныя запазычанасці |
+| Стан запазычанасцяў | 25 | Зніжаецца на долю пратэрмінаванай сумы сярод яшчэ не пагашаных запазычанасцяў — буйная пратэрмінаваная запазычанасць важыць больш за дробную |
 
 > **«Недастаткова дадзеных»** адлюстроўваецца, калі менш за два кампаненты маюць дадзеныя (напрыклад, зусім новы рахунак без бюджэтаў, мэтаў, запазычанасцяў або даходаў).
 
@@ -42897,7 +42897,7 @@ De cirkelvormige meter rechtsboven op de kaart vult zich evenredig met je score.
 | Budgetnaleving | 25 | % van actieve budgetten dat de limiet niet overschrijdt |
 | Spaarquote | 25 | Zet je maandelijkse spaarpercentage lineair om (0% → 0 ptn, 20%+ → 25 ptn) |
 | Doelvoortgang | 25 | % van actieve spaardoelen die op schema liggen voor hun deadline |
-| Schuldgezondheid | 25 | Evenredig afgetrokken voor achterstallige schulden |
+| Schuldgezondheid | 25 | Verlaagd met het achterstallige deel van het nog openstaande bedrag — een grote achterstallige schuld telt zwaarder dan een kleine |
 
 > **"Onvoldoende gegevens"** verschijnt wanneer minder dan twee onderdelen gegevens hebben (bijv. een gloednieuw account zonder budgetten, doelen, schulden of inkomsten).
 
@@ -48286,7 +48286,7 @@ O indicador circular no canto superior direito do cartão enche-se na proporçã
 | Cumprimento do orçamento | 25 | % dos orçamentos ativos que não ultrapassam o limite |
 | Taxa de poupança | 25 | Converte a % de poupança mensal de forma linear (0% → 0 pts, 20% ou mais → 25 pts) |
 | Progresso dos objetivos | 25 | % dos objetivos de poupança ativos em linha com o prazo |
-| Saúde das dívidas | 25 | Desconto proporcional por dívidas em atraso |
+| Saúde das dívidas | 25 | Reduzida pela parte do valor ainda em dívida que está em atraso — uma dívida grande em atraso pesa mais do que uma pequena |
 
 > **«Ainda não há dados suficientes»** aparece quando menos de dois componentes têm dados (por exemplo, numa conta nova, ainda sem orçamentos, objetivos, dívidas ou receitas).
 
@@ -53702,7 +53702,7 @@ O indicador circular no canto superior direito do cartão se preenche na propor�
 | Cumprimento do orçamento | 25 | % dos orçamentos ativos que não ultrapassam o limite |
 | Taxa de economia | 25 | Converte sua % de economia mensal de forma linear (0% → 0 pts, 20% ou mais → 25 pts) |
 | Progresso das metas | 25 | % das metas de economia ativas no ritmo certo para o prazo |
-| Saúde das dívidas | 25 | Desconto proporcional por dívidas atrasadas |
+| Saúde das dívidas | 25 | Reduzida pela parte do valor ainda devido que está atrasada — uma dívida grande atrasada pesa mais que uma pequena |
 
 > **“Ainda não há dados suficientes”** aparece quando menos de dois componentes têm dados (por exemplo, em uma conta nova, ainda sem orçamentos, metas, dívidas ou receitas).
 

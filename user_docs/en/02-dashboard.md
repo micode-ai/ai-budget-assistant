@@ -48,7 +48,7 @@ The circular gauge in the top-right of the card fills proportionally to your sco
 | Budget adherence | 25 | % of active budgets not exceeding their limit |
 | Savings rate | 25 | Maps your monthly savings % linearly (0% → 0 pts, 20%+ → 25 pts) |
 | Goal progress | 25 | % of active savings goals on track toward their deadline |
-| Debt health | 25 | Deducted proportionally for overdue debts |
+| Debt health | 25 | Reduced by the share of the money still owed that is overdue — a large overdue debt costs more than a small one |
 
 > **"Not enough data"** appears when fewer than two components have data (e.g., a brand-new account with no budgets, goals, debts, or income yet).
 

@@ -4195,7 +4195,7 @@ Okrągły wskaźnik w prawym górnym rogu karty wypełnia się proporcjonalnie d
 | Przestrzeganie budżetu | 25 | % aktywnych budżetów nieprzekraczających limitu |
 | Stopa oszczędności | 25 | Liniowe mapowanie % miesięcznych oszczędności (0% → 0 pkt, 20%+ → 25 pkt) |
 | Postęp celów | 25 | % aktywnych celów oszczędnościowych realizowanych terminowo |
-| Stan zadłużenia | 25 | Proporcjonalne odliczenie za przeterminowane długi |
+| Stan zadłużenia | 25 | Obniżany o udział przeterminowanej części kwoty do spłaty — duży przeterminowany dług waży więcej niż mały |
 
 > **„Za mało danych"** pojawia się, gdy mniej niż dwa składniki mają dane (np. zupełnie nowe konto bez budżetów, celów, długów ani przychodów).
 

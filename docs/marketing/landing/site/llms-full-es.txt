@@ -3612,7 +3612,7 @@ El indicador circular en la parte superior derecha de la tarjeta se llena propor
 | Cumplimiento del presupuesto | 25 | % de presupuestos activos sin superar el límite |
 | Tasa de ahorro | 25 | Mapea tu % de ahorro mensual linealmente (0% → 0 pts, 20%+ → 25 pts) |
 | Progreso de metas | 25 | % de metas de ahorro activas en camino hacia su fecha límite |
-| Salud de deudas | 25 | Deducción proporcional por deudas vencidas |
+| Salud de deudas | 25 | Se reduce según la parte del dinero pendiente que está vencida: una deuda vencida grande pesa más que una pequeña |
 
 > **«Datos insuficientes»** aparece cuando menos de dos componentes tienen datos (p. ej., una cuenta nueva sin presupuestos, metas, deudas ni ingresos todavía).
 

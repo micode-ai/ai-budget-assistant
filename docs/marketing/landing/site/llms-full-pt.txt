@@ -825,7 +825,7 @@ O indicador circular no canto superior direito do cartão enche-se na proporçã
 | Cumprimento do orçamento | 25 | % dos orçamentos ativos que não ultrapassam o limite |
 | Taxa de poupança | 25 | Converte a % de poupança mensal de forma linear (0% → 0 pts, 20% ou mais → 25 pts) |
 | Progresso dos objetivos | 25 | % dos objetivos de poupança ativos em linha com o prazo |
-| Saúde das dívidas | 25 | Desconto proporcional por dívidas em atraso |
+| Saúde das dívidas | 25 | Reduzida pela parte do valor ainda em dívida que está em atraso — uma dívida grande em atraso pesa mais do que uma pequena |
 
 > **«Ainda não há dados suficientes»** aparece quando menos de dois componentes têm dados (por exemplo, numa conta nova, ainda sem orçamentos, objetivos, dívidas ou receitas).
 

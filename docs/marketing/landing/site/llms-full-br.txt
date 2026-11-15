@@ -826,7 +826,7 @@ O indicador circular no canto superior direito do cartão se preenche na propor�
 | Cumprimento do orçamento | 25 | % dos orçamentos ativos que não ultrapassam o limite |
 | Taxa de economia | 25 | Converte sua % de economia mensal de forma linear (0% → 0 pts, 20% ou mais → 25 pts) |
 | Progresso das metas | 25 | % das metas de economia ativas no ritmo certo para o prazo |
-| Saúde das dívidas | 25 | Desconto proporcional por dívidas atrasadas |
+| Saúde das dívidas | 25 | Reduzida pela parte do valor ainda devido que está atrasada — uma dívida grande atrasada pesa mais que uma pequena |
 
 > **“Ainda não há dados suficientes”** aparece quando menos de dois componentes têm dados (por exemplo, em uma conta nova, ainda sem orçamentos, metas, dívidas ou receitas).
 

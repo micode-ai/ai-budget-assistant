@@ -27,8 +27,10 @@ explanation of each. Computed entirely on the device — no server call, no AI c
   linear from 0% (0 points) to 20% or more (25). Excluded when there is no income.
 - *Goal progress* — share of active goals on track, meaning the saved amount is at least the linear
   pace from creation to deadline. Excluded when there are no active goals.
-- *Debt health* — always included: 25 points with no debts or none overdue, otherwise scaled by the
-  share of debts not overdue.
+- *Debt health* — always included: 25 points with no debts or none overdue, otherwise
+  `round((1 − overdueShare) × 25)`, where overdueShare is the overdue part of the still-outstanding
+  AMOUNT (`remainingAmount`, converted to the base currency; repaid debts weigh nothing) — pure
+  `computeDebtHealth` in `features/analytics/debtHealth.ts` (ABA-769). It used to count debts.
 
 The score normalises over the included components only, so a missing signal neither helps nor
 hurts. With fewer than two included components `hasEnoughData` is false and no score is shown.
@@ -45,8 +47,10 @@ the prop is absent (meaning ready), because SQLite is authoritative. Details on
 
 ## Known gaps
 
-- Debt health counts debts, not amounts: one small overdue loan weighs the same as a large one.
+- Lent and borrowed debts weigh the same: an overdue debt someone owes the user lowers the score as
+  much as one the user owes.
 
 ## History
 
-ABA-193 (the score and widget) · ABA-521 (readiness gate on web).
+ABA-193 (the score and widget) · ABA-521 (readiness gate on web) · ABA-769 (debts weighed by
+amount).

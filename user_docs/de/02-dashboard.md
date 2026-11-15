@@ -48,7 +48,7 @@ Die Kreisanzeige oben rechts auf der Karte füllt sich proportional zur Punktzah
 | Budgeteinhaltung | 25 | % der aktiven Budgets, die das Limit nicht überschreiten |
 | Sparquote | 25 | Bildet Ihren monatlichen Sparanteil linear ab (0% → 0 Pkt, 20%+ → 25 Pkt) |
 | Zielfortschritt | 25 | % der aktiven Sparziele auf dem Weg zum Zieldatum |
-| Schuldengesundheit | 25 | Proportionaler Abzug für überfällige Schulden |
+| Schuldengesundheit | 25 | Verringert um den überfälligen Anteil der noch offenen Summe — eine große überfällige Schuld zählt mehr als eine kleine |
 
 > **„Nicht genug Daten"** erscheint, wenn weniger als zwei Komponenten Daten haben (z.B. ein brandneues Konto ohne Budgets, Ziele, Schulden oder Einkommen).
 

@@ -2,7 +2,8 @@ import { useMemo } from 'react';
 import { useBudgetStore } from '@/stores/budgetStore';
 import { useDebtStore } from '@/stores/debtStore';
 import { useGoalStore } from '@/stores/goalStore';
-import { useExchangeRateStore } from '@/stores/exchangeRateStore';
+import { useExchangeRateStore, convertAmount } from '@/stores/exchangeRateStore';
+import { computeDebtHealth } from './debtHealth';
 
 export type HealthComponentKey = 'budgetAdherence' | 'savingsRate' | 'goalProgress' | 'debtHealth';
 export type HealthColorKey = 'red' | 'yellow' | 'green';
@@ -33,7 +34,7 @@ export function useFinancialHealthScore(): FinancialHealthScore {
   const { budgets, getBudgetProgress } = useBudgetStore();
   const { lentDebts, borrowedDebts } = useDebtStore();
   const { goals } = useGoalStore();
-  const { convertedIncomeTotal, convertedExpenseTotal } = useExchangeRateStore();
+  const { convertedIncomeTotal, convertedExpenseTotal, rates, baseCurrency } = useExchangeRateStore();
 
   return useMemo(() => {
     const components: HealthScoreComponent[] = [];
@@ -136,30 +137,19 @@ export function useFinancialHealthScore(): FinancialHealthScore {
       });
     }
 
-    // 4. Debt health — always included; no debt = full 25 pts
-    const allDebts = [...lentDebts, ...borrowedDebts];
-    const totalDebt = allDebts.length;
-    const overdueCount = allDebts.filter((d) => d.status === 'overdue').length;
-    if (totalDebt === 0 || overdueCount === 0) {
-      components.push({
-        key: 'debtHealth',
-        points: 25,
-        maxPoints: 25,
-        included: true,
-        detailKey: 'healthScore.detail.noOverdueDebts',
-      });
-    } else {
-      const ratio = 1 - overdueCount / totalDebt;
-      const points = Math.round(ratio * 25);
-      components.push({
-        key: 'debtHealth',
-        points,
-        maxPoints: 25,
-        included: true,
-        detailKey: 'healthScore.detail.overdueDebts',
-        detailParams: { overdueCount },
-      });
-    }
+    // 4. Debt health — always included; no debt = full 25 pts. Weighted by
+    // the overdue share of the outstanding AMOUNT, not by count (debtHealth.ts).
+    const debtHealth = computeDebtHealth([...lentDebts, ...borrowedDebts], (amount, currency) =>
+      baseCurrency ? convertAmount(amount, currency, baseCurrency, rates) : amount,
+    );
+    components.push({
+      key: 'debtHealth',
+      points: debtHealth.points,
+      maxPoints: 25,
+      included: true,
+      detailKey: debtHealth.overdueCount === 0 ? 'healthScore.detail.noOverdueDebts' : 'healthScore.detail.overdueDebts',
+      ...(debtHealth.overdueCount > 0 ? { detailParams: { overdueCount: debtHealth.overdueCount } } : {}),
+    });
 
     const includedComponents = components.filter((c) => c.included);
     const hasEnoughData = includedComponents.length >= 2;
@@ -173,5 +163,5 @@ export function useFinancialHealthScore(): FinancialHealthScore {
     const score = Math.round((rawPoints / maxPossible) * 100);
 
     return { score, hasEnoughData, colorKey: colorForScore(score), components };
-  }, [budgets, getBudgetProgress, lentDebts, borrowedDebts, goals, convertedIncomeTotal, convertedExpenseTotal]);
+  }, [budgets, getBudgetProgress, lentDebts, borrowedDebts, goals, convertedIncomeTotal, convertedExpenseTotal, rates, baseCurrency]);
 }

@@ -48,7 +48,7 @@ La jauge circulaire en haut à droite de la carte se remplit proportionnellement
 | Respect du budget | 25 | % des budgets actifs ne dépassant pas la limite |
 | Taux d'épargne | 25 | Cartographie votre % d'épargne mensuelle linéairement (0% → 0 pts, 20%+ → 25 pts) |
 | Avancement des objectifs | 25 | % des objectifs d'épargne actifs en bonne voie |
-| Santé des dettes | 25 | Déduction proportionnelle pour les dettes en retard |
+| Santé des dettes | 25 | Réduite selon la part de la somme restant due qui est en retard — une grosse dette en retard pèse plus qu'une petite |
 
 > **« Pas assez de données »** s'affiche lorsque moins de deux composantes ont des données (p. ex., un nouveau compte sans budgets, objectifs, dettes ou revenus).
 

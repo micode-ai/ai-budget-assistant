@@ -3607,7 +3607,7 @@ De cirkelvormige meter rechtsboven op de kaart vult zich evenredig met je score.
 | Budgetnaleving | 25 | % van actieve budgetten dat de limiet niet overschrijdt |
 | Spaarquote | 25 | Zet je maandelijkse spaarpercentage lineair om (0% → 0 ptn, 20%+ → 25 ptn) |
 | Doelvoortgang | 25 | % van actieve spaardoelen die op schema liggen voor hun deadline |
-| Schuldgezondheid | 25 | Evenredig afgetrokken voor achterstallige schulden |
+| Schuldgezondheid | 25 | Verlaagd met het achterstallige deel van het nog openstaande bedrag — een grote achterstallige schuld telt zwaarder dan een kleine |
 
 > **"Onvoldoende gegevens"** verschijnt wanneer minder dan twee onderdelen gegevens hebben (bijv. een gloednieuw account zonder budgetten, doelen, schulden of inkomsten).
 
