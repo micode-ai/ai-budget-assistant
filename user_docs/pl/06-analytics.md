@@ -34,7 +34,7 @@ Pokazuje, ile w wybranym okresie **zarobiono**, **wydano** i ile **zostało**, a
 
 ## Stałe a zmienne
 
-Pokazuje, jaka część wydatków to koszty **stałe** — pieniądze, które i tak wychodzą w każdym okresie — i wymienia największe z nich. Wydatek liczy się jako stały, gdy jest cykliczny albo pasuje do jednej z aktywnych subskrypcji w menedżerze subskrypcji (ta sama nazwa albo ta sama kategoria i kwota). Wszystko inne jest zmienne. Aby czynsz lub inna regularna płatność liczyła się jako stała, oznacz ją jako cykliczną albo dodaj jako subskrypcję.
+Pokazuje, jaka część wydatków to koszty **stałe** — pieniądze, które i tak wychodzą w każdym okresie — i wymienia największe z nich. Wydatek liczy się jako stały, gdy jest cykliczny albo pasuje do jednej z aktywnych subskrypcji w menedżerze subskrypcji (ta sama nazwa albo ta sama kategoria i kwota). Wszystko inne jest zmienne. Aby czynsz lub inna regularna płatność liczyła się jako stała, oznacz ją jako cykliczną albo dodaj jako subskrypcję. Obciążenia, które menedżer subskrypcji zapisuje automatycznie przy odnowieniu, zawsze liczą się jako stałe — nawet po zmianie nazwy lub anulowaniu subskrypcji.
 
 ## Najbliższe 30 dni
 

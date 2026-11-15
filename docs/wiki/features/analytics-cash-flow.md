@@ -36,6 +36,8 @@ labelled "Overspent". The savings rate is kept ÷ earned, or none at all when no
 year view, the 12 months of that year; in the week view, no chart.
 
 **Fixed** means only what the app *knows* repeats:
+0. an expense a subscription renewal booked (`userSubscriptionId`, ABA-776) — counted as that
+   subscription even after it was renamed or the subscription cancelled, or
 1. an expense in a recurring series (`recurringId`), or
 2. an expense matching an **active** tracked subscription. A match is either the same name
    (description or merchant, trimmed, case-insensitive), or the same category, the same currency
@@ -58,11 +60,10 @@ recurring or adding subscriptions.
 
 ## Known gaps
 
-- Renewals carry no link to their subscription. Marking them at booking time would remove the
-  matching heuristic.
+- Renewals booked before ABA-776 have no `userSubscriptionId` and still rely on the name/amount match.
 - A user cannot mark a category (rent, utilities) as fixed; that needs a schema field and sync.
 - The month view's periods follow the account's financial month (ABA-767); the year view's 12 bars stay calendar months.
 
 ## History
 
-ABA-763: both cards, phone and desktop.
+ABA-763: both cards, phone and desktop. ABA-776: renewals linked by `userSubscriptionId`.

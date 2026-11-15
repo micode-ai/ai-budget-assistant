@@ -173,6 +173,12 @@ export interface Expense {
    */
   isSplitReceivable?: boolean;
   /**
+   * The tracked subscription whose renewal booked this expense (ABA-776). Set only by the
+   * server's renewal cron; absent/null on every other row. Lets the app count the charge as a
+   * fixed cost without matching it by name and amount.
+   */
+  userSubscriptionId?: string | null;
+  /**
    * Budget mirror (ABA-660): set on a `source: 'group'` share row, the group expense it mirrors.
    * Amount, date and currency of such a row follow the group and are read-only; the category is the
    * user's. Absent on every other row.

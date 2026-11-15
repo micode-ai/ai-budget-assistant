@@ -604,6 +604,10 @@ model Expense {
   isDeleted           Boolean   @default(false) @map("is_deleted")
   isPlanned           Boolean   @default(false) @map("is_planned")
   isSplitReceivable   Boolean   @default(false) @map("is_split_receivable")
+  /// The tracked subscription whose renewal booked this expense (ABA-776). Set only by
+  /// SubscriptionRenewalCron; null for everything else. A plain id, no FK: deleting the
+  /// subscription must not touch the expense history.
+  userSubscriptionId  String?   @map("user_subscription_id")
   syncVersion         Int       @default(0) @map("sync_version")
   createdAt           DateTime  @default(now()) @map("created_at")
   updatedAt           DateTime  @updatedAt @map("updated_at")

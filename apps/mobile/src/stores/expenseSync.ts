@@ -581,6 +581,7 @@ async function _doPullAndMerge(
           isDebtRepayment: decrypted.isDebtRepayment || false,
           isPlanned: decrypted.isPlanned || false,
           isSplitReceivable: decrypted.isSplitReceivable || false,
+          userSubscriptionId: (decrypted as { userSubscriptionId?: string | null }).userSubscriptionId ?? null,
           debtContactName: decrypted.debtContactName ?? undefined,
           debtDueDate: decrypted.debtDueDate
             ? new Date(decrypted.debtDueDate)

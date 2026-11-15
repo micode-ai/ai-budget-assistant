@@ -118,6 +118,18 @@ describe('handleDueRenewals', () => {
     expect(ops).toHaveLength(2);
   });
 
+  it('links the booked expense to its subscription (ABA-776)', async () => {
+    const { cron, prisma } = makeCron({
+      findManySubscriptions: jest.fn().mockResolvedValue([makeDueSub()]),
+    });
+
+    await cron.handleDueRenewals();
+
+    expect(prisma.expense.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({ userSubscriptionId: 'sub-1', accountId: 'acc-1' }),
+    });
+  });
+
   it('skips subscription when account has no members', async () => {
     const sub = makeDueSub();
     const { cron, prisma } = makeCron({

@@ -107,6 +107,10 @@ export class SubscriptionRenewalCron {
                 categoryId: sub.categoryId ?? null,
                 date: chargeDate,
                 source: 'manual',
+                // Links the booked charge back to its subscription so the app's
+                // fixed-vs-flexible card and the forecast need not guess it from
+                // the name and amount (ABA-776).
+                userSubscriptionId: sub.id,
               },
             }),
             this.prisma.userSubscription.update({

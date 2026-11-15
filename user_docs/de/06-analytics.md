@@ -34,7 +34,7 @@ Zeigt, was du im gewählten Zeitraum **verdient**, **ausgegeben** und **behalten
 
 ## Fix vs. flexibel
 
-Zeigt, welcher Teil deiner Ausgaben **fix** ist — Geld, das in jedem Zeitraum ohnehin abfließt — und listet die größten Fixkosten auf. Eine Ausgabe gilt als fix, wenn sie wiederkehrend ist oder zu einem deiner aktiven Abos im Abo-Manager passt (gleicher Name oder gleiche Kategorie und gleicher Betrag). Alles andere ist flexibel. Damit Miete oder eine andere regelmäßige Zahlung als fix zählt, markiere sie als wiederkehrend oder lege sie als Abo an.
+Zeigt, welcher Teil deiner Ausgaben **fix** ist — Geld, das in jedem Zeitraum ohnehin abfließt — und listet die größten Fixkosten auf. Eine Ausgabe gilt als fix, wenn sie wiederkehrend ist oder zu einem deiner aktiven Abos im Abo-Manager passt (gleicher Name oder gleiche Kategorie und gleicher Betrag). Alles andere ist flexibel. Damit Miete oder eine andere regelmäßige Zahlung als fix zählt, markiere sie als wiederkehrend oder lege sie als Abo an. Abbuchungen, die der Abo-Manager bei einer Verlängerung automatisch bucht, zählen immer als fix — auch wenn du sie umbenennst oder das Abo kündigst.
 
 ## Die nächsten 30 Tage
 

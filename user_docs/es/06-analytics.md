@@ -34,7 +34,7 @@ Muestra lo que **ingresaste**, **gastaste** y **ahorraste** en el periodo selecc
 
 ## Fijos vs variables
 
-Muestra qué parte de tus gastos es **fija** — dinero que sale cada periodo de todos modos — y lista los gastos fijos más grandes. Un gasto cuenta como fijo si es recurrente o si coincide con una de tus suscripciones activas del gestor de suscripciones (mismo nombre, o misma categoría e importe). Todo lo demás es variable. Para que el alquiler u otro pago periódico cuente como fijo, márcalo como recurrente o añádelo como suscripción.
+Muestra qué parte de tus gastos es **fija** — dinero que sale cada periodo de todos modos — y lista los gastos fijos más grandes. Un gasto cuenta como fijo si es recurrente o si coincide con una de tus suscripciones activas del gestor de suscripciones (mismo nombre, o misma categoría e importe). Todo lo demás es variable. Para que el alquiler u otro pago periódico cuente como fijo, márcalo como recurrente o añádelo como suscripción. Los cargos que el gestor de suscripciones registra automáticamente al renovarse siempre cuentan como fijos, aunque les cambies el nombre o canceles la suscripción.
 
 ## Próximos 30 días
 

@@ -10,6 +10,8 @@
  * passes the same filtered list), so the two figures can never disagree.
  *
  * Fixed is deliberately conservative — only what the app KNOWS repeats:
+ *   0. an expense a subscription renewal booked (`userSubscriptionId`, ABA-776 —
+ *      counted even if the subscription was since cancelled: it was paid), or
  *   1. an expense in a recurring series (`recurringId`), or
  *   2. an expense matching an ACTIVE tracked subscription: same name as the
  *      subscription (description or merchant, case-insensitive), or same
@@ -34,6 +36,8 @@ export interface CashFlowExpense {
   merchant?: string | null;
   categoryId?: string | null;
   recurringId?: string | null;
+  /** Set by the server when a subscription renewal booked this row (ABA-776). */
+  userSubscriptionId?: string | null;
 }
 
 export interface CashFlowIncome {
@@ -158,7 +162,15 @@ export function classifyCommitments(
   for (const e of expenses) {
     const amount = convert(e.amount, e.currencyCode);
     let item: Omit<CommitmentItem, 'amount'> | null = null;
-    if (e.recurringId) {
+    if (e.userSubscriptionId) {
+      // Booked by a renewal and linked to it: no guessing needed (ABA-776).
+      const sub = subscriptions.find((s) => s.id === e.userSubscriptionId);
+      item = {
+        key: `s:${e.userSubscriptionId}`,
+        label: sub?.name || e.description?.trim() || '',
+        kind: 'subscription',
+      };
+    } else if (e.recurringId) {
       item = { key: `r:${e.recurringId}`, label: e.description?.trim() || e.merchant?.trim() || '', kind: 'recurring' };
     } else {
       const sub = matchSubscription(e, subscriptions);

@@ -117,6 +117,7 @@ export class CashFlowForecastService {
           merchant: true,
           categoryId: true,
           recurringId: true,
+          userSubscriptionId: true,
         },
       }),
     ]);
@@ -221,7 +222,7 @@ export class CashFlowForecastService {
       if (historyDays >= MIN_HISTORY_DAYS) {
         let total = 0;
         for (const e of recentSpend) {
-          if (e.recurringId || paysSubscription(e, subs)) continue;
+          if (e.recurringId || e.userSubscriptionId || paysSubscription(e, subs)) continue;
           const v = toBase(Number(e.amount), e.currencyCode);
           if (v !== null) total += v;
         }

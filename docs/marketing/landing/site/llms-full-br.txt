@@ -1614,7 +1614,7 @@ Mostra quanto você **ganhou**, **gastou** e **economizou** no período selecion
 
 ## Fixas vs variáveis
 
-Mostra quanto dos seus gastos é **fixo** — dinheiro que sai todo período de qualquer jeito — e lista as maiores despesas fixas. Uma despesa conta como fixa quando é recorrente ou quando bate com uma das suas assinaturas ativas no gerenciador de assinaturas (mesmo nome, ou mesma categoria e valor). Todo o resto é variável. Para que o aluguel ou outro pagamento regular conte como fixo, marque-o como recorrente ou cadastre-o como assinatura.
+Mostra quanto dos seus gastos é **fixo** — dinheiro que sai todo período de qualquer jeito — e lista as maiores despesas fixas. Uma despesa conta como fixa quando é recorrente ou quando bate com uma das suas assinaturas ativas no gerenciador de assinaturas (mesmo nome, ou mesma categoria e valor). Todo o resto é variável. Para que o aluguel ou outro pagamento regular conte como fixo, marque-o como recorrente ou cadastre-o como assinatura. As cobranças que o gerenciador de assinaturas lança automaticamente na renovação sempre contam como fixas, mesmo que você mude o nome delas ou cancele a assinatura.
 
 ## Próximos 30 dias
 

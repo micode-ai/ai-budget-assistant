@@ -4394,7 +4394,7 @@ Toont wat je in de gekozen periode hebt **verdiend**, **uitgegeven** en **overge
 
 ## Vast vs variabel
 
-Toont welk deel van je uitgaven **vast** is — geld dat elke periode hoe dan ook vertrekt — en somt de grootste vaste lasten op. Een uitgave telt als vast als ze terugkerend is of overeenkomt met een van je actieve abonnementen in de abonnementenbeheerder (zelfde naam, of zelfde categorie en bedrag). Al het andere is variabel. Wil je dat huur of een andere vaste betaling als vast telt, markeer die dan als terugkerend of voeg hem toe als abonnement.
+Toont welk deel van je uitgaven **vast** is — geld dat elke periode hoe dan ook vertrekt — en somt de grootste vaste lasten op. Een uitgave telt als vast als ze terugkerend is of overeenkomt met een van je actieve abonnementen in de abonnementenbeheerder (zelfde naam, of zelfde categorie en bedrag). Al het andere is variabel. Wil je dat huur of een andere vaste betaling als vast telt, markeer die dan als terugkerend of voeg hem toe als abonnement. Afschrijvingen die de abonnementenbeheerder bij een verlenging automatisch boekt, tellen altijd als vast — ook als je ze hernoemt of het abonnement opzegt.
 
 ## Komende 30 dagen
 

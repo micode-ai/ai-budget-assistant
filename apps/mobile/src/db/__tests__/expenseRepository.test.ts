@@ -114,7 +114,10 @@ describe('createdByApp — "Added via <app>" (public API)', () => {
     const [sql, params] = mockExecuteSql.mock.calls[0];
     const placeholders = (sql.match(/VALUES \(([^)]*)\)/)![1].match(/\?/g) || []).length;
     expect(placeholders).toBe(params.length);
-    expect(params.slice(-2)).toEqual(['aba_ci_x', 'AI Accounting']);
+    // App columns, then the renewal link (ABA-776) as the last column.
+    expect(params.slice(-3, -1)).toEqual(['aba_ci_x', 'AI Accounting']);
+    expect(params[params.length - 1]).toBeNull();
+    expect(sql).toContain('user_subscription_id = COALESCE(excluded.user_subscription_id, user_subscription_id)');
     expect(sql).toContain('created_by_app_id = COALESCE(excluded.created_by_app_id, created_by_app_id)');
     expect(sql).toContain('created_by_app_name = COALESCE(excluded.created_by_app_name, created_by_app_name)');
   });

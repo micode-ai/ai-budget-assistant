@@ -34,7 +34,7 @@ Mostra o que **ganhou**, **gastou** e **poupou** no período selecionado, e que 
 
 ## Fixas vs variáveis
 
-Mostra que parte das suas despesas é **fixa** — dinheiro que sai em cada período de qualquer forma — e lista as maiores despesas fixas. Uma despesa conta como fixa se for recorrente ou se corresponder a uma das suas subscrições ativas no gestor de subscrições (mesmo nome, ou mesma categoria e montante). Tudo o resto é variável. Para que a renda ou outro pagamento regular conte como fixo, marque-o como recorrente ou adicione-o como subscrição.
+Mostra que parte das suas despesas é **fixa** — dinheiro que sai em cada período de qualquer forma — e lista as maiores despesas fixas. Uma despesa conta como fixa se for recorrente ou se corresponder a uma das suas subscrições ativas no gestor de subscrições (mesmo nome, ou mesma categoria e montante). Tudo o resto é variável. Para que a renda ou outro pagamento regular conte como fixo, marque-o como recorrente ou adicione-o como subscrição. As cobranças que o gestor de subscrições regista automaticamente em cada renovação contam sempre como fixas, mesmo que lhes mude o nome ou cancele a subscrição.
 
 ## Próximos 30 dias
 

@@ -1046,7 +1046,7 @@ Shows what you **earned**, **spent** and **kept** in the selected period, and th
 
 ## Fixed vs Flexible
 
-Shows how much of your spending is **fixed** — money that leaves every period anyway — and lists the largest fixed costs. An expense counts as fixed when it is a recurring expense, or when it matches one of your active subscriptions in the subscription manager (same name, or same category and amount). Everything else is flexible. To have rent or another regular payment counted as fixed, mark it as recurring or add it as a subscription.
+Shows how much of your spending is **fixed** — money that leaves every period anyway — and lists the largest fixed costs. An expense counts as fixed when it is a recurring expense, or when it matches one of your active subscriptions in the subscription manager (same name, or same category and amount). Everything else is flexible. To have rent or another regular payment counted as fixed, mark it as recurring or add it as a subscription. Charges the subscription manager books automatically on a renewal always count as fixed, even after you rename them or cancel the subscription.
 
 ## Next 30 Days
 
@@ -6463,7 +6463,7 @@ iOS, Android, Web
 
 ## Обязательные и свободные расходы
 
-Показывает, какая часть трат **обязательная** — деньги, которые уходят в каждом периоде в любом случае, — и перечисляет самые крупные обязательные расходы. Расход считается обязательным, если он регулярный или совпадает с одной из ваших активных подписок в менеджере подписок (то же название или та же категория и сумма). Всё остальное — свободные расходы. Чтобы аренда или другой регулярный платёж считался обязательным, отметьте его как регулярный или добавьте как подписку.
+Показывает, какая часть трат **обязательная** — деньги, которые уходят в каждом периоде в любом случае, — и перечисляет самые крупные обязательные расходы. Расход считается обязательным, если он регулярный или совпадает с одной из ваших активных подписок в менеджере подписок (то же название или та же категория и сумма). Всё остальное — свободные расходы. Чтобы аренда или другой регулярный платёж считался обязательным, отметьте его как регулярный или добавьте как подписку. Списания, которые менеджер подписок записывает автоматически при продлении, всегда считаются обязательными — даже если вы их переименуете или отмените подписку.
 
 ## Ближайшие 30 дней
 
@@ -11858,7 +11858,7 @@ iOS, Android, Web
 
 ## Обов'язкові та вільні витрати
 
-Показує, яка частина витрат **обов'язкова** — гроші, що йдуть у кожному періоді за будь-яких умов, — і перелічує найбільші обов'язкові витрати. Витрата вважається обов'язковою, якщо вона регулярна або збігається з однією з ваших активних підписок у менеджері підписок (та сама назва або та сама категорія й сума). Усе інше — вільні витрати. Щоб оренда чи інший регулярний платіж вважався обов'язковим, позначте його як регулярний або додайте як підписку.
+Показує, яка частина витрат **обов'язкова** — гроші, що йдуть у кожному періоді за будь-яких умов, — і перелічує найбільші обов'язкові витрати. Витрата вважається обов'язковою, якщо вона регулярна або збігається з однією з ваших активних підписок у менеджері підписок (та сама назва або та сама категорія й сума). Усе інше — вільні витрати. Щоб оренда чи інший регулярний платіж вважався обов'язковим, позначте його як регулярний або додайте як підписку. Списання, які менеджер підписок записує автоматично під час продовження, завжди вважаються обов'язковими — навіть якщо ви їх перейменуєте або скасуєте підписку.
 
 ## Найближчі 30 днів
 
@@ -17201,7 +17201,7 @@ Pokazuje, ile w wybranym okresie **zarobiono**, **wydano** i ile **zostało**, a
 
 ## Stałe a zmienne
 
-Pokazuje, jaka część wydatków to koszty **stałe** — pieniądze, które i tak wychodzą w każdym okresie — i wymienia największe z nich. Wydatek liczy się jako stały, gdy jest cykliczny albo pasuje do jednej z aktywnych subskrypcji w menedżerze subskrypcji (ta sama nazwa albo ta sama kategoria i kwota). Wszystko inne jest zmienne. Aby czynsz lub inna regularna płatność liczyła się jako stała, oznacz ją jako cykliczną albo dodaj jako subskrypcję.
+Pokazuje, jaka część wydatków to koszty **stałe** — pieniądze, które i tak wychodzą w każdym okresie — i wymienia największe z nich. Wydatek liczy się jako stały, gdy jest cykliczny albo pasuje do jednej z aktywnych subskrypcji w menedżerze subskrypcji (ta sama nazwa albo ta sama kategoria i kwota). Wszystko inne jest zmienne. Aby czynsz lub inna regularna płatność liczyła się jako stała, oznacz ją jako cykliczną albo dodaj jako subskrypcję. Obciążenia, które menedżer subskrypcji zapisuje automatycznie przy odnowieniu, zawsze liczą się jako stałe — nawet po zmianie nazwy lub anulowaniu subskrypcji.
 
 ## Najbliższe 30 dni
 
@@ -22540,7 +22540,7 @@ Zeigt, was du im gewählten Zeitraum **verdient**, **ausgegeben** und **behalten
 
 ## Fix vs. flexibel
 
-Zeigt, welcher Teil deiner Ausgaben **fix** ist — Geld, das in jedem Zeitraum ohnehin abfließt — und listet die größten Fixkosten auf. Eine Ausgabe gilt als fix, wenn sie wiederkehrend ist oder zu einem deiner aktiven Abos im Abo-Manager passt (gleicher Name oder gleiche Kategorie und gleicher Betrag). Alles andere ist flexibel. Damit Miete oder eine andere regelmäßige Zahlung als fix zählt, markiere sie als wiederkehrend oder lege sie als Abo an.
+Zeigt, welcher Teil deiner Ausgaben **fix** ist — Geld, das in jedem Zeitraum ohnehin abfließt — und listet die größten Fixkosten auf. Eine Ausgabe gilt als fix, wenn sie wiederkehrend ist oder zu einem deiner aktiven Abos im Abo-Manager passt (gleicher Name oder gleiche Kategorie und gleicher Betrag). Alles andere ist flexibel. Damit Miete oder eine andere regelmäßige Zahlung als fix zählt, markiere sie als wiederkehrend oder lege sie als Abo an. Abbuchungen, die der Abo-Manager bei einer Verlängerung automatisch bucht, zählen immer als fix — auch wenn du sie umbenennst oder das Abo kündigst.
 
 ## Die nächsten 30 Tage
 
@@ -27854,7 +27854,7 @@ Muestra lo que **ingresaste**, **gastaste** y **ahorraste** en el periodo selecc
 
 ## Fijos vs variables
 
-Muestra qué parte de tus gastos es **fija** — dinero que sale cada periodo de todos modos — y lista los gastos fijos más grandes. Un gasto cuenta como fijo si es recurrente o si coincide con una de tus suscripciones activas del gestor de suscripciones (mismo nombre, o misma categoría e importe). Todo lo demás es variable. Para que el alquiler u otro pago periódico cuente como fijo, márcalo como recurrente o añádelo como suscripción.
+Muestra qué parte de tus gastos es **fija** — dinero que sale cada periodo de todos modos — y lista los gastos fijos más grandes. Un gasto cuenta como fijo si es recurrente o si coincide con una de tus suscripciones activas del gestor de suscripciones (mismo nombre, o misma categoría e importe). Todo lo demás es variable. Para que el alquiler u otro pago periódico cuente como fijo, márcalo como recurrente o añádelo como suscripción. Los cargos que el gestor de suscripciones registra automáticamente al renovarse siempre cuentan como fijos, aunque les cambies el nombre o canceles la suscripción.
 
 ## Próximos 30 días
 
@@ -33157,7 +33157,7 @@ Affiche ce que vous avez **gagné**, **dépensé** et **épargné** sur la péri
 
 ## Fixes vs variables
 
-Indique quelle part de vos dépenses est **fixe** — de l'argent qui part chaque période quoi qu'il arrive — et liste les plus grosses dépenses fixes. Une dépense compte comme fixe si elle est récurrente ou si elle correspond à l'un de vos abonnements actifs du gestionnaire d'abonnements (même nom, ou même catégorie et même montant). Tout le reste est variable. Pour qu'un loyer ou un autre paiement régulier compte comme fixe, marquez-le comme récurrent ou ajoutez-le comme abonnement.
+Indique quelle part de vos dépenses est **fixe** — de l'argent qui part chaque période quoi qu'il arrive — et liste les plus grosses dépenses fixes. Une dépense compte comme fixe si elle est récurrente ou si elle correspond à l'un de vos abonnements actifs du gestionnaire d'abonnements (même nom, ou même catégorie et même montant). Tout le reste est variable. Pour qu'un loyer ou un autre paiement régulier compte comme fixe, marquez-le comme récurrent ou ajoutez-le comme abonnement. Les prélèvements que le gestionnaire d'abonnements enregistre automatiquement à chaque renouvellement comptent toujours comme fixes, même si vous les renommez ou résiliez l'abonnement.
 
 ## 30 prochains jours
 
@@ -38458,7 +38458,7 @@ iOS, Android, Web
 
 ## Абавязковыя і свабодныя выдаткі
 
-Паказвае, якая частка выдаткаў **абавязковая** — грошы, якія сыходзяць у кожным перыядзе ў любым выпадку, — і пералічвае найбуйнейшыя абавязковыя выдаткі. Выдатак лічыцца абавязковым, калі ён рэгулярны або супадае з адной з вашых актыўных падпісак у менеджары падпісак (тая ж назва або тая ж катэгорыя і сума). Усё астатняе — свабодныя выдаткі. Каб арэнда ці іншы рэгулярны плацеж лічыўся абавязковым, адзначце яго як рэгулярны або дадайце як падпіску.
+Паказвае, якая частка выдаткаў **абавязковая** — грошы, якія сыходзяць у кожным перыядзе ў любым выпадку, — і пералічвае найбуйнейшыя абавязковыя выдаткі. Выдатак лічыцца абавязковым, калі ён рэгулярны або супадае з адной з вашых актыўных падпісак у менеджары падпісак (тая ж назва або тая ж катэгорыя і сума). Усё астатняе — свабодныя выдаткі. Каб арэнда ці іншы рэгулярны плацеж лічыўся абавязковым, адзначце яго як рэгулярны або дадайце як падпіску. Спісанні, якія менеджар падпісак запісвае аўтаматычна пры падаўжэнні, заўсёды лічацца абавязковымі — нават калі вы іх перайменуеце або скасуеце падпіску.
 
 ## Бліжэйшыя 30 дзён
 
@@ -43723,7 +43723,7 @@ Toont wat je in de gekozen periode hebt **verdiend**, **uitgegeven** en **overge
 
 ## Vast vs variabel
 
-Toont welk deel van je uitgaven **vast** is — geld dat elke periode hoe dan ook vertrekt — en somt de grootste vaste lasten op. Een uitgave telt als vast als ze terugkerend is of overeenkomt met een van je actieve abonnementen in de abonnementenbeheerder (zelfde naam, of zelfde categorie en bedrag). Al het andere is variabel. Wil je dat huur of een andere vaste betaling als vast telt, markeer die dan als terugkerend of voeg hem toe als abonnement.
+Toont welk deel van je uitgaven **vast** is — geld dat elke periode hoe dan ook vertrekt — en somt de grootste vaste lasten op. Een uitgave telt als vast als ze terugkerend is of overeenkomt met een van je actieve abonnementen in de abonnementenbeheerder (zelfde naam, of zelfde categorie en bedrag). Al het andere is variabel. Wil je dat huur of een andere vaste betaling als vast telt, markeer die dan als terugkerend of voeg hem toe als abonnement. Afschrijvingen die de abonnementenbeheerder bij een verlenging automatisch boekt, tellen altijd als vast — ook als je ze hernoemt of het abonnement opzegt.
 
 ## Komende 30 dagen
 
@@ -49115,7 +49115,7 @@ Mostra o que **ganhou**, **gastou** e **poupou** no período selecionado, e que 
 
 ## Fixas vs variáveis
 
-Mostra que parte das suas despesas é **fixa** — dinheiro que sai em cada período de qualquer forma — e lista as maiores despesas fixas. Uma despesa conta como fixa se for recorrente ou se corresponder a uma das suas subscrições ativas no gestor de subscrições (mesmo nome, ou mesma categoria e montante). Tudo o resto é variável. Para que a renda ou outro pagamento regular conte como fixo, marque-o como recorrente ou adicione-o como subscrição.
+Mostra que parte das suas despesas é **fixa** — dinheiro que sai em cada período de qualquer forma — e lista as maiores despesas fixas. Uma despesa conta como fixa se for recorrente ou se corresponder a uma das suas subscrições ativas no gestor de subscrições (mesmo nome, ou mesma categoria e montante). Tudo o resto é variável. Para que a renda ou outro pagamento regular conte como fixo, marque-o como recorrente ou adicione-o como subscrição. As cobranças que o gestor de subscrições regista automaticamente em cada renovação contam sempre como fixas, mesmo que lhes mude o nome ou cancele a subscrição.
 
 ## Próximos 30 dias
 
@@ -54533,7 +54533,7 @@ Mostra quanto você **ganhou**, **gastou** e **economizou** no período selecion
 
 ## Fixas vs variáveis
 
-Mostra quanto dos seus gastos é **fixo** — dinheiro que sai todo período de qualquer jeito — e lista as maiores despesas fixas. Uma despesa conta como fixa quando é recorrente ou quando bate com uma das suas assinaturas ativas no gerenciador de assinaturas (mesmo nome, ou mesma categoria e valor). Todo o resto é variável. Para que o aluguel ou outro pagamento regular conte como fixo, marque-o como recorrente ou cadastre-o como assinatura.
+Mostra quanto dos seus gastos é **fixo** — dinheiro que sai todo período de qualquer jeito — e lista as maiores despesas fixas. Uma despesa conta como fixa quando é recorrente ou quando bate com uma das suas assinaturas ativas no gerenciador de assinaturas (mesmo nome, ou mesma categoria e valor). Todo o resto é variável. Para que o aluguel ou outro pagamento regular conte como fixo, marque-o como recorrente ou cadastre-o como assinatura. As cobranças que o gerenciador de assinaturas lança automaticamente na renovação sempre contam como fixas, mesmo que você mude o nome delas ou cancele a assinatura.
 
 ## Próximos 30 dias
 

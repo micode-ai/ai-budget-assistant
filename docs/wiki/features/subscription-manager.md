@@ -45,7 +45,10 @@ the renewal date, `source: 'manual'`.
 
 ## Known gaps
 
-- The booked expense is `source: 'manual'`, so nothing distinguishes it from a hand-entered one. The Analytics tab's fixed-vs-flexible card has to recognise renewals by matching name or category + amount instead ([analytics-cash-flow](analytics-cash-flow.md)).
+- The booked expense is still `source: 'manual'`, but since ABA-776 it carries `userSubscriptionId`
+  (set only by the renewal cron, no FK), which the fixed-vs-flexible card and the forecast read
+  directly ([analytics-cash-flow](analytics-cash-flow.md)). Renewals booked before ABA-776 have no
+  link and are still recognised by name or category + amount.
 
 ## History
 

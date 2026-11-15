@@ -34,7 +34,7 @@ Shows what you **earned**, **spent** and **kept** in the selected period, and th
 
 ## Fixed vs Flexible
 
-Shows how much of your spending is **fixed** — money that leaves every period anyway — and lists the largest fixed costs. An expense counts as fixed when it is a recurring expense, or when it matches one of your active subscriptions in the subscription manager (same name, or same category and amount). Everything else is flexible. To have rent or another regular payment counted as fixed, mark it as recurring or add it as a subscription.
+Shows how much of your spending is **fixed** — money that leaves every period anyway — and lists the largest fixed costs. An expense counts as fixed when it is a recurring expense, or when it matches one of your active subscriptions in the subscription manager (same name, or same category and amount). Everything else is flexible. To have rent or another regular payment counted as fixed, mark it as recurring or add it as a subscription. Charges the subscription manager books automatically on a renewal always count as fixed, even after you rename them or cancel the subscription.
 
 ## Next 30 Days
 

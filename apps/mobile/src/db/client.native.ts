@@ -667,6 +667,9 @@ export async function initializeDatabase(): Promise<void> {
     // Group trip wallet: who paid the expense (migration for existing DBs)
     try { expoDb.execSync(`ALTER TABLE expenses ADD COLUMN paid_by_user_id TEXT`); } catch {}
 
+    // The subscription whose renewal booked the expense (ABA-776)
+    try { expoDb.execSync(`ALTER TABLE expenses ADD COLUMN user_subscription_id TEXT`); } catch {}
+
     // Group trip wallet: trip status/dates on accounts (migration for existing DBs)
     try { expoDb.execSync(`ALTER TABLE accounts ADD COLUMN trip_status TEXT`); } catch {}
     try { expoDb.execSync(`ALTER TABLE accounts ADD COLUMN trip_start_date INTEGER`); } catch {}

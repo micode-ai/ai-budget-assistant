@@ -4379,7 +4379,7 @@ Affiche ce que vous avez **gagné**, **dépensé** et **épargné** sur la péri
 
 ## Fixes vs variables
 
-Indique quelle part de vos dépenses est **fixe** — de l'argent qui part chaque période quoi qu'il arrive — et liste les plus grosses dépenses fixes. Une dépense compte comme fixe si elle est récurrente ou si elle correspond à l'un de vos abonnements actifs du gestionnaire d'abonnements (même nom, ou même catégorie et même montant). Tout le reste est variable. Pour qu'un loyer ou un autre paiement régulier compte comme fixe, marquez-le comme récurrent ou ajoutez-le comme abonnement.
+Indique quelle part de vos dépenses est **fixe** — de l'argent qui part chaque période quoi qu'il arrive — et liste les plus grosses dépenses fixes. Une dépense compte comme fixe si elle est récurrente ou si elle correspond à l'un de vos abonnements actifs du gestionnaire d'abonnements (même nom, ou même catégorie et même montant). Tout le reste est variable. Pour qu'un loyer ou un autre paiement régulier compte comme fixe, marquez-le comme récurrent ou ajoutez-le comme abonnement. Les prélèvements que le gestionnaire d'abonnements enregistre automatiquement à chaque renouvellement comptent toujours comme fixes, même si vous les renommez ou résiliez l'abonnement.
 
 ## 30 prochains jours
 

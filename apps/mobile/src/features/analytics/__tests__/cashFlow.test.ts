@@ -107,3 +107,15 @@ describe('monthWindowsEndingAt with an anchor day', () => {
     ]);
   });
 });
+
+describe('classifyCommitments with a linked renewal (ABA-776)', () => {
+  it('counts an expense booked by a renewal as that subscription, even after it was cancelled', () => {
+    const r = classifyCommitments(
+      [{ amount: 45, currencyCode: 'PLN', date: '', description: 'renamed later', userSubscriptionId: 's1' }],
+      [sub({ isActive: false, name: 'Music' })],
+      convert,
+    );
+    expect(r.fixed).toBe(45);
+    expect(r.items).toEqual([{ key: 's:s1', label: 'Music', kind: 'subscription', amount: 45 }]);
+  });
+});

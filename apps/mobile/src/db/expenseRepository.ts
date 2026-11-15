@@ -37,6 +37,7 @@ interface ExpenseRow {
   created_by_app_id: string | null;
   created_by_app_name: string | null;
   paid_by_user_id: string | null;
+  user_subscription_id?: string | null;
   created_at: number;
   updated_at: number;
   is_deleted: number;
@@ -88,6 +89,7 @@ function rowToExpense(row: ExpenseRow): Expense {
         ? { id: row.created_by_app_id, name: row.created_by_app_name }
         : null,
     paidByUserId: row.paid_by_user_id ?? null,
+    userSubscriptionId: row.user_subscription_id ?? null,
     createdAt: new Date(row.created_at),
     updatedAt: new Date(row.updated_at),
     isDeleted: row.is_deleted === 1,
@@ -138,6 +140,7 @@ function expenseToParams(expense: Expense): (string | number | null)[] {
     expense.isSplitReceivable ? 1 : 0,
     expense.createdByApp?.id ?? null,
     expense.createdByApp?.name ?? null,
+    expense.userSubscriptionId ?? null,
   ];
 }
 
@@ -166,8 +169,8 @@ export async function insertExpense(expense: Expense): Promise<void> {
       created_by_user_name,
       created_at, updated_at,
       is_deleted, sync_status, sync_version, is_planned, paid_by_user_id, is_split_receivable,
-      created_by_app_id, created_by_app_name
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      created_by_app_id, created_by_app_name, user_subscription_id
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     expenseToParams(expense),
   );
 }
@@ -399,8 +402,8 @@ export async function upsertExpense(expense: Expense): Promise<void> {
       created_by_user_name,
       created_at, updated_at,
       is_deleted, sync_status, sync_version, is_planned, paid_by_user_id, is_split_receivable,
-      created_by_app_id, created_by_app_name
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      created_by_app_id, created_by_app_name, user_subscription_id
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(id) DO UPDATE SET
       local_id = excluded.local_id,
       server_id = excluded.server_id,
@@ -440,7 +443,8 @@ export async function upsertExpense(expense: Expense): Promise<void> {
       is_deleted = excluded.is_deleted,
       sync_status = excluded.sync_status,
       sync_version = excluded.sync_version,
-      is_split_receivable = excluded.is_split_receivable`,
+      is_split_receivable = excluded.is_split_receivable,
+      user_subscription_id = COALESCE(excluded.user_subscription_id, user_subscription_id)`,
     expenseToParams(expense),
   );
 }

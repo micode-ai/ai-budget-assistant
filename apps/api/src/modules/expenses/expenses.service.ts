@@ -583,6 +583,7 @@ export class ExpensesService {
           isDebtRepayment: true,
           isPlanned: true,
           isSplitReceivable: true,
+          userSubscriptionId: true,
           paidByUserId: true,
           debtContactName: true,
           debtDueDate: true,
