@@ -511,3 +511,23 @@ describe('the range table and the ceiling derived from it', () => {
     }
   });
 });
+
+describe('buildNetProfitSeries — financial months (ABA-779)', () => {
+  it('buckets 10th–9th periods when the account has an anchor day', () => {
+    // 5 November with salary on the 10th: the current period is 10 Oct – 9 Nov.
+    const now = new Date(2026, 10, 5, 12);
+    const row = (amount: number, date: Date) => ({ amount, currencyCode: 'PLN', date, isDeleted: false });
+    const { points, currentNetProfit } = buildNetProfitSeries({
+      monthCount: 2,
+      now,
+      anchorDay: 10,
+      incomes: [row(1000, new Date(2026, 9, 10, 8))], // payday opens the current period
+      expenses: [row(300, new Date(2026, 10, 3, 8)), row(50, new Date(2026, 9, 9, 8))], // 9 Oct is the previous one
+      convert: (a) => a,
+      formatLabel: (d) => `${d.getMonth() + 1}/${d.getDate()}`,
+    });
+    expect(points.map((p) => p.label)).toEqual(['9/10', '10/10']);
+    expect(currentNetProfit).toBe(700);
+    expect(points[0].value).toBe(-50);
+  });
+});

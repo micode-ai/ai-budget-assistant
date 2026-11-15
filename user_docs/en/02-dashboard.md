@@ -95,6 +95,8 @@ Below the income and expenses cards, the **Net Profit** widget shows how much mo
 
 > **Formula:** Net Profit = Total Income − Total Expenses (both converted to your base currency)
 
+With a **Financial Month** set, each point is one such period (10th to 9th, for example) instead of a calendar month.
+
 ## Net Capital
 
 The **Net Capital** widget shows your total net worth across all wallet currencies, converted to your base currency:

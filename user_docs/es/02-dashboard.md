@@ -95,6 +95,8 @@ Debajo de las tarjetas de ingresos y gastos, el widget de **Beneficio neto** mue
 
 > **Formula:** Beneficio neto = Ingresos totales − Gastos totales (ambos convertidos a tu moneda base)
 
+Con un **Mes financiero** configurado, cada punto es uno de esos periodos (por ejemplo, del 10 al 9) en lugar de un mes natural.
+
 ## Capital neto
 
 El widget de **Capital neto** muestra tu patrimonio total en todas las billeteras de divisas, convertido a tu moneda base:

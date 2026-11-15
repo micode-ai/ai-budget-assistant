@@ -127,9 +127,9 @@ over a `budgets` array. The public `useBudgetStore` API is unchanged across its 
 - Financial month: wave 1 (budgets), wave 2 (the Analytics tab's month view, ABA-767 — see
   [analytics-period-comparisons](analytics-period-comparisons.md)) and the home Income & Expenses
   totals with the Health Score savings rate (ABA-778, `computeExpenseTotalsByCurrency` /
-  `computeIncomeTotalsByCurrency`, recomputed by `useHomeScreenData` when the anchor moves) are
-  done. Safe-to-spend, Wrapped/story, Fat Finder, reports, the Net Profit trend and the AI
-  user-context summary are still calendar-month; the calendar widget is calendar by nature. The constraint is that the server and client halves of one number
+  `computeIncomeTotalsByCurrency`, recomputed by `useHomeScreenData` when the anchor moves) and the
+  home Net Profit trend (ABA-779, `netProfitSeries.monthBuckets`) are done. Safe-to-spend,
+  Wrapped/story, Fat Finder, reports and the AI user-context summary are still calendar-month; the calendar widget is calendar by nature. The constraint is that the server and client halves of one number
   migrate together — which is why the Analytics links to Story and Reports still pass a calendar
   month.
 - `GET /budgets/:id/history?periods=N` (max 12) returns `[]` for `custom`-period budgets. Mobile

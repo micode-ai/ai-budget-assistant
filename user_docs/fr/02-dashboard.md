@@ -95,6 +95,8 @@ Sous les cartes de revenus et de depenses, le widget **Benefice net** indique co
 
 > **Formule :** Benefice net = Revenus totaux − Depenses totales (tous deux convertis dans votre devise de base)
 
+Avec un **Mois financier** défini, chaque point correspond à une telle période (du 10 au 9, par exemple) au lieu d'un mois civil.
+
 ## Capital net
 
 Le widget **Capital net** affiche votre patrimoine total sur tous vos portefeuilles de devises, converti dans votre devise de base :

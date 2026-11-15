@@ -3653,6 +3653,8 @@ Onder de inkomsten- en uitgavenkaarten toont de widget **Nettowinst** hoeveel ge
 
 > **Formule:** Nettowinst = Totale inkomsten − Totale uitgaven (beide omgerekend naar je basisvaluta)
 
+Met een ingestelde **Financiële maand** is elk punt zo'n periode (bijvoorbeeld van de 10e tot de 9e) in plaats van een kalendermaand.
+
 ## Nettokapitaal
 
 De widget **Nettokapitaal** toont je totale nettowaarde over alle portemonneevaluta's, omgerekend naar je basisvaluta:

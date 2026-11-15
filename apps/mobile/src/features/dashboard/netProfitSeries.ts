@@ -1,4 +1,6 @@
 import type { ChartDataPoint } from '@budget/shared-types';
+import { financialMonth, shiftFinancialMonth } from '@budget/shared-utils';
+import { transactionDay } from '@/features/analytics/localDayKey';
 
 /**
  * The net-profit trend series, and the TWO counts that decide what the hero
@@ -117,16 +119,14 @@ interface MonthBucket {
  * drawn beside it — a second copy of this arithmetic is exactly how a chart
  * and its own "is it worth drawing" verdict drift apart.
  */
-function monthBuckets(now: Date, monthCount: number): MonthBucket[] {
+function monthBuckets(now: Date, monthCount: number, anchorDay: number | null = null): MonthBucket[] {
+  // FINANCIAL months (ABA-779): with salary on the 10th each bucket is a
+  // 10th–9th period, the same window the home totals and budgets use; with no
+  // anchor `financialMonth` is exactly the calendar month, ending 23:59:59.999
+  // on its last day so that day's transactions stay in their own month.
   return Array.from({ length: monthCount }, (_, i) => {
     const offset = monthCount - 1 - i;
-    const d = new Date(now.getFullYear(), now.getMonth() - offset, 1);
-    const start = new Date(d.getFullYear(), d.getMonth(), 1);
-    const end = new Date(d.getFullYear(), d.getMonth() + 1, 0);
-    // Without this, end is midnight on the last day and every transaction
-    // made during that day falls out of its own month.
-    end.setHours(23, 59, 59, 999);
-    return { start, end };
+    return financialMonth(shiftFinancialMonth(now, -offset, anchorDay), anchorDay);
   });
 }
 
@@ -134,7 +134,8 @@ function monthBuckets(now: Date, monthCount: number): MonthBucket[] {
 function rowsInMonth(rows: NetProfitRow[], { start, end }: MonthBucket): NetProfitRow[] {
   return rows.filter((row) => {
     if (row.isDeleted) return false;
-    const dt = new Date(row.date);
+    // The row's calendar day, so a server date-only row is not shifted west of UTC.
+    const dt = transactionDay(row.date);
     return dt >= start && dt <= end;
   });
 }
@@ -146,6 +147,8 @@ export interface PopulatedMonthsInputs {
   now: Date;
   incomes: NetProfitRow[];
   expenses: NetProfitRow[];
+  /** The account's financial-month anchor; null/absent = calendar months. */
+  anchorDay?: number | null;
 }
 
 /**
@@ -163,8 +166,9 @@ export function countPopulatedMonthsInWindow({
   now,
   incomes,
   expenses,
+  anchorDay = null,
 }: PopulatedMonthsInputs): number {
-  return monthBuckets(now, monthCount).filter(
+  return monthBuckets(now, monthCount, anchorDay).filter(
     (bucket) => rowsInMonth(incomes, bucket).length > 0 || rowsInMonth(expenses, bucket).length > 0,
   ).length;
 }
@@ -194,10 +198,11 @@ export function buildNetProfitSeries({
   expenses,
   convert,
   formatLabel,
+  anchorDay = null,
 }: NetProfitSeriesInputs): NetProfitSeries {
   let populatedMonthsInRange = 0;
 
-  const points: ChartDataPoint[] = monthBuckets(now, monthCount).map((bucket) => {
+  const points: ChartDataPoint[] = monthBuckets(now, monthCount, anchorDay).map((bucket) => {
     const label = formatLabel(bucket.start);
 
     const monthIncomes = rowsInMonth(incomes, bucket);

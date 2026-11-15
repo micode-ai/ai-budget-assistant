@@ -95,6 +95,8 @@ Por baixo dos cartões de receitas e despesas, o widget **Lucro líquido** mostr
 
 > **Fórmula:** Lucro líquido = Total de receitas − Total de despesas (ambos convertidos para a sua moeda base)
 
+Com um **Mês financeiro** definido, cada ponto é um desses períodos (por exemplo, do dia 10 ao dia 9) em vez de um mês civil.
+
 ## Património líquido
 
 O widget **Património líquido** mostra o seu património total em todas as moedas da carteira, convertido para a moeda base:

@@ -95,6 +95,8 @@ Unterhalb der Einkommen- und Ausgabenkarten zeigt das **Nettogewinn**-Widget, wi
 
 > **Formel:** Nettogewinn = Gesamteinkommen − Gesamtausgaben (beide in Basiswahrung umgerechnet)
 
+Mit einem **Finanzmonat** steht jeder Punkt für einen solchen Zeitraum (zum Beispiel vom 10. bis zum 9.) statt für einen Kalendermonat.
+
 ## Nettokapital
 
 Das **Nettokapital**-Widget zeigt dein gesamtes Nettovermogen uber alle Wahrungsgeldborsen, umgerechnet in deine Basiswahrung:

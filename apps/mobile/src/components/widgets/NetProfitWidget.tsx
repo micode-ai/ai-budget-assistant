@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useFinancialMonth } from '@/hooks/useFinancialMonth';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -147,8 +148,12 @@ export function NetProfitWidget({
   // only thing about it either window uses, so this recomputes once a month
   // rather than on every render (the day-bucketed shape `useFinancialMonth`
   // uses, tightened to the coarsest key that is still correct here).
+  // Keyed by the start of the CURRENT FINANCIAL MONTH (ABA-779): with an
+  // anchor day the period turns on the anchor, not on the 1st, and that turn
+  // is the only thing about `now` the buckets use.
+  const { anchorDay, current } = useFinancialMonth();
   const clock = new Date();
-  const monthKey = `${clock.getFullYear()}-${clock.getMonth()}`;
+  const monthKey = `${current.start.getTime()}`;
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const now = useMemo(() => clock, [monthKey]);
 
@@ -168,8 +173,9 @@ export function NetProfitWidget({
         convert: (amount, currencyCode) =>
           convertAmount(amount, currencyCode, displayCurrency, rates),
         formatLabel: (start) => start.toLocaleDateString(intlLocale, { month: 'short' }),
+        anchorDay,
       }),
-    [expenses, incomes, rates, displayCurrency, intlLocale, monthCount, now],
+    [expenses, incomes, rates, displayCurrency, intlLocale, monthCount, now, anchorDay],
   );
 
   // The chips' OWN input, and deliberately a separate memo with a separate
@@ -184,8 +190,9 @@ export function NetProfitWidget({
         now,
         incomes,
         expenses,
+        anchorDay,
       }),
-    [expenses, incomes, now],
+    [expenses, incomes, now, anchorDay],
   );
 
   // `null` is this widget's existing "no figure" value, already handled at

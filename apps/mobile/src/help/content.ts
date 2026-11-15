@@ -282,6 +282,8 @@ Below the income and expenses cards, the **Net Profit** widget shows how much mo
 
 > **Formula:** Net Profit = Total Income − Total Expenses (both converted to your base currency)
 
+With a **Financial Month** set, each point is one such period (10th to 9th, for example) instead of a calendar month.
+
 ## Net Capital
 
 The **Net Capital** widget shows your total net worth across all wallet currencies, converted to your base currency:
@@ -5704,6 +5706,8 @@ iOS, Android, Web
 
 > **Формула:** Чистая прибыль = Общий доход − Общие расходы (оба показателя конвертируются в базовую валюту)
 
+Если задан **Финансовый месяц**, каждая точка — это такой период (например, с 10-го по 9-е), а не календарный месяц.
+
 ## Чистый капитал
 
 Виджет **Чистый капитал** показывает ваше общее состояние по всем валютным кошелькам, конвертированное в базовую валюту:
@@ -11103,6 +11107,8 @@ iOS, Android, Web
 
 > **Формула:** Чистий прибуток = Загальний дохід − Загальні витрати (обидва показники конвертуються в базову валюту)
 
+Якщо задано **Фінансовий місяць**, кожна точка — це такий період (наприклад, з 10-го по 9-те), а не календарний місяць.
+
 ## Чистий капітал
 
 Віджет **Чистий капітал** показує ваш загальний стан за всіма валютними гаманцями, конвертований у базову валюту:
@@ -16450,6 +16456,8 @@ Ponizej kart przychodow i wydatkow widget **Zysk netto** pokazuje, ile pieniedzy
 
 > **Wzor:** Zysk netto = Laczne przychody − Laczne wydatki (oba przeliczone na walute bazowa)
 
+Przy ustawionym **Miesiącu finansowym** każdy punkt to taki okres (na przykład od 10. do 9.), a nie miesiąc kalendarzowy.
+
 ## Kapital netto
 
 Widget **Kapital netto** pokazuje Twoj laczny majatek netto we wszystkich portfelach walutowych, przeliczony na walute bazowa:
@@ -21793,6 +21801,8 @@ Unterhalb der Einkommen- und Ausgabenkarten zeigt das **Nettogewinn**-Widget, wi
 
 > **Formel:** Nettogewinn = Gesamteinkommen − Gesamtausgaben (beide in Basiswahrung umgerechnet)
 
+Mit einem **Finanzmonat** steht jeder Punkt für einen solchen Zeitraum (zum Beispiel vom 10. bis zum 9.) statt für einen Kalendermonat.
+
 ## Nettokapital
 
 Das **Nettokapital**-Widget zeigt dein gesamtes Nettovermogen uber alle Wahrungsgeldborsen, umgerechnet in deine Basiswahrung:
@@ -27111,6 +27121,8 @@ Debajo de las tarjetas de ingresos y gastos, el widget de **Beneficio neto** mue
 
 > **Formula:** Beneficio neto = Ingresos totales − Gastos totales (ambos convertidos a tu moneda base)
 
+Con un **Mes financiero** configurado, cada punto es uno de esos periodos (por ejemplo, del 10 al 9) en lugar de un mes natural.
+
 ## Capital neto
 
 El widget de **Capital neto** muestra tu patrimonio total en todas las billeteras de divisas, convertido a tu moneda base:
@@ -32418,6 +32430,8 @@ Sous les cartes de revenus et de depenses, le widget **Benefice net** indique co
 
 > **Formule :** Benefice net = Revenus totaux − Depenses totales (tous deux convertis dans votre devise de base)
 
+Avec un **Mois financier** défini, chaque point correspond à une telle période (du 10 au 9, par exemple) au lieu d'un mois civil.
+
 ## Capital net
 
 Le widget **Capital net** affiche votre patrimoine total sur tous vos portefeuilles de devises, converti dans votre devise de base :
@@ -37723,6 +37737,8 @@ iOS, Android, Web
 
 > **Формула:** Чысты прыбытак = Агульны даход − Агульныя выдаткі (абодва паказчыкі канвертуюцца ў базавую валюту)
 
+Калі зададзены **Фінансавы месяц**, кожная кропка — гэта такі перыяд (напрыклад, з 10-га па 9-е), а не каляндарны месяц.
+
 ## Чысты капітал
 
 Віджэт **Чысты капітал** паказвае ваш агульны чысты стан па ўсіх валютных кашальках, сканвертаваны ў базавую валюту:
@@ -42991,6 +43007,8 @@ Onder de inkomsten- en uitgavenkaarten toont de widget **Nettowinst** hoeveel ge
 - Tik op een datapunt in de grafiek om de exacte waarde voor die maand te zien
 
 > **Formule:** Nettowinst = Totale inkomsten − Totale uitgaven (beide omgerekend naar je basisvaluta)
+
+Met een ingestelde **Financiële maand** is elk punt zo'n periode (bijvoorbeeld van de 10e tot de 9e) in plaats van een kalendermaand.
 
 ## Nettokapitaal
 
@@ -48386,6 +48404,8 @@ Por baixo dos cartões de receitas e despesas, o widget **Lucro líquido** mostr
 - Toque num ponto do gráfico para ver o valor exato desse mês
 
 > **Fórmula:** Lucro líquido = Total de receitas − Total de despesas (ambos convertidos para a sua moeda base)
+
+Com um **Mês financeiro** definido, cada ponto é um desses períodos (por exemplo, do dia 10 ao dia 9) em vez de um mês civil.
 
 ## Património líquido
 
@@ -53808,6 +53828,8 @@ Abaixo dos cartões de receitas e despesas, o widget **Lucro líquido** mostra q
 - Toque em um ponto do gráfico para ver o valor exato daquele mês
 
 > **Fórmula:** Lucro líquido = Total de receitas − Total de despesas (ambos convertidos para sua moeda base)
+
+Com um **Mês financeiro** definido, cada ponto é um desses períodos (por exemplo, do dia 10 ao dia 9) em vez de um mês do calendário.
 
 ## Patrimônio líquido
 

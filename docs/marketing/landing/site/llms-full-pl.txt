@@ -4241,6 +4241,8 @@ Ponizej kart przychodow i wydatkow widget **Zysk netto** pokazuje, ile pieniedzy
 
 > **Wzor:** Zysk netto = Laczne przychody − Laczne wydatki (oba przeliczone na walute bazowa)
 
+Przy ustawionym **Miesiącu finansowym** każdy punkt to taki okres (na przykład od 10. do 9.), a nie miesiąc kalendarzowy.
+
 ## Kapital netto
 
 Widget **Kapital netto** pokazuje Twoj laczny majatek netto we wszystkich portfelach walutowych, przeliczony na walute bazowa:
