@@ -210,7 +210,14 @@ describe('telemetry (web)', () => {
     });
     // No raw size and no new top-level field: an API a deploy behind must accept the batch.
     expect(Object.keys(body).sort()).toEqual(['events', 'platform', 'sessionId']);
-    expect(JSON.stringify(body)).not.toContain('1280');
+    // The raw width must appear nowhere — checked field by field, not as a
+    // substring of the JSON, which the event timestamp (epoch ms) can contain
+    // by chance (it did in CI: ts 1794770128089).
+    for (const event of body.events) {
+      expect(Object.keys(event).sort()).toEqual(['name', 'props', 'ts']);
+      expect(Object.values(event.props)).not.toContain(1280);
+      expect(Object.values(event.props)).not.toContain('1280');
+    }
   });
 
   it('reports an installed PWA as standalone', async () => {

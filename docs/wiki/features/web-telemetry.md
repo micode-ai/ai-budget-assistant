@@ -122,6 +122,11 @@ and the two display values exist — never the raw width or the user agent, whic
 branch** and is hand-maintained. Disclosing only in the marketing copy means a user accepts, at
 registration, a policy omitting the data category being collected.
 
+**Test "nothing extra is sent" field by field, never by substring.** The batch carries
+epoch-millisecond timestamps, so asserting that its JSON does not *contain* a value (the mocked
+window width `1280`) fails whenever a `ts` happens to include those digits — it turned CI red on
+2026-11-15 (ABA-780). Assert the exact keys of each event and that no prop equals the value.
+
 ## Known gaps
 
 - `ms` is reserved and allow-listed but **no call site passes it**; the column is always absent.
