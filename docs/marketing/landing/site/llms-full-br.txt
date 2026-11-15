@@ -3309,6 +3309,8 @@ Os totais aparecem na **sua moeda de exibição** — a que está no seletor da 
 4. O relatório é gerado e **salvo**. No Android, um seletor de pastas abre e o arquivo é gravado onde você escolher - em seguida o app mostra o caminho. No iOS, o menu de compartilhamento abre para você usar “Salvar em Arquivos”. No app web, o arquivo é simplesmente baixado. Se você cancelar o seletor de pastas, nada é salvo; o relatório continua disponível mais abaixo.
 5. O relatório também aparece em **Relatórios recentes**, mais abaixo, para acesso futuro
 
+Se a sua conta tiver um **Mês financeiro** (por exemplo, começando no dia do pagamento, dia 10), **Este mês** começa nesse dia e **Mês específico** cobre esse período — *outubro* vai de 10 de outubro a 9 de novembro. Semana, trimestre e ano continuam no calendário.
+
 Abaixo dos botões, você vê as datas exatas que o relatório vai cobrir — as mesmas impressas no cabeçalho do arquivo. Se um período personalizado estiver incompleto ou se a data de início for posterior à de fim, o botão **Gerar** fica desativado.
 
 Se você abrir esta tela pelo botão **Exportar relatório** na aba Análises, o período que você estava vendo vem junto - volte até junho lá e o relatório será preparado para junho, não para o mês atual. Um período ainda em andamento termina hoje; um período já encerrado cobre toda a sua duração.

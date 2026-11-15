@@ -9,7 +9,7 @@
  * last day of the previous month, and a yearly one on 31 December of the year
  * before — the same class of bug `src/utils/dateInput.ts` was written to stop.
  */
-import { getStartOfWeek } from '@budget/shared-utils';
+import { getStartOfWeek, financialMonth, shiftFinancialMonth } from '@budget/shared-utils';
 import { toDateInputValue } from '@/utils/dateInput';
 
 export type ReportRangeMode =
@@ -52,9 +52,26 @@ function previousQuarter(now: Date): { start: Date; end: Date } {
  * or one whose start is after its end. The screen keeps Generate disabled and
  * says why rather than silently sending a backwards range.
  */
+/**
+ * The financial month that STARTS in the month of `monthAnchor` (salary on the
+ * 10th: any day of October → 10 Oct – 9 Nov); the calendar month without an
+ * anchor day (ABA-783).
+ */
+function financialMonthOf(monthAnchor: Date, anchorDay: number | null): { start: Date; end: Date } {
+  const y = monthAnchor.getFullYear();
+  const m = monthAnchor.getMonth();
+  const inside = new Date(y, m, anchorDay ? Math.min(anchorDay, new Date(y, m + 1, 0).getDate()) : 15, 12);
+  return financialMonth(inside, anchorDay);
+}
+
+/**
+ * `anchorDay` is the account's financial-month anchor (ABA-783): the month
+ * presets follow it; week, quarter and year stay calendar.
+ */
 export function resolveReportDateRange(
   selection: ReportRangeSelection,
   now: Date = new Date(),
+  anchorDay: number | null = null,
 ): ReportDateRange | null {
   const today = toDateInputValue(now);
 
@@ -67,7 +84,7 @@ export function resolveReportDateRange(
 
     case 'month':
       return {
-        startDate: toDateInputValue(new Date(now.getFullYear(), now.getMonth(), 1)),
+        startDate: toDateInputValue(financialMonth(now, anchorDay).start),
         endDate: today,
       };
 
@@ -85,8 +102,7 @@ export function resolveReportDateRange(
     case 'specificMonth': {
       const anchor = selection.monthAnchor;
       if (!anchor || Number.isNaN(anchor.getTime())) return null;
-      const start = new Date(anchor.getFullYear(), anchor.getMonth(), 1);
-      const end = new Date(anchor.getFullYear(), anchor.getMonth() + 1, 0);
+      const { start, end } = financialMonthOf(anchor, anchorDay);
       return { startDate: toDateInputValue(start), endDate: toDateInputValue(end) };
     }
 
@@ -133,6 +149,7 @@ export function reportSelectionFromAnalytics(
     year?: string | number | null;
   },
   now: Date = new Date(),
+  anchorDay: number | null = null,
 ): ReportRangeSelection | null {
   const { range } = params;
 
@@ -160,7 +177,10 @@ export function reportSelectionFromAnalytics(
   const month = toInt(params.month);
   if (month === null || month < 1 || month > 12) return null;
 
-  if (year === now.getFullYear() && month === now.getMonth() + 1) return { mode: 'month' };
+  // Analytics names a financial month by the month it starts in (ABA-767), so
+  // "the current one" is the one the current financial month started in.
+  const currentStart = financialMonth(now, anchorDay).start;
+  if (year === currentStart.getFullYear() && month === currentStart.getMonth() + 1) return { mode: 'month' };
   return { mode: 'specificMonth', monthAnchor: new Date(year, month - 1, 1) };
 }
 
@@ -168,11 +188,13 @@ export function reportSelectionFromAnalytics(
  * Month anchors for the "specific month" picker, newest first, starting with
  * the month `now` falls in.
  */
-export function buildRecentMonthAnchors(count: number, now: Date = new Date()): Date[] {
+export function buildRecentMonthAnchors(count: number, now: Date = new Date(), anchorDay: number | null = null): Date[] {
   const total = Math.max(0, Math.floor(count));
   const anchors: Date[] = [];
+  // Newest first, starting with the CURRENT financial month — on 5 November with
+  // salary on the 10th that is October. Each anchor is its period's first day.
   for (let i = 0; i < total; i += 1) {
-    anchors.push(new Date(now.getFullYear(), now.getMonth() - i, 1));
+    anchors.push(financialMonth(shiftFinancialMonth(now, -i, anchorDay), anchorDay).start);
   }
   return anchors;
 }

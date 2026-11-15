@@ -36,6 +36,8 @@ Les totaux sont exprimes dans **votre devise d'affichage**, celle du bouton sur 
 4. Le rapport est genere et **enregistre**. Sous Android, un selecteur de dossier s'ouvre et le fichier est ecrit la ou vous l'indiquez - l'application vous montre ensuite le chemin. Sous iOS, la feuille de partage s'ouvre pour vous permettre d'utiliser "Enregistrer dans Fichiers". Dans la version web, le fichier se telecharge simplement. Si vous annulez le selecteur de dossier, rien n'est enregistre : le rapport vous attend toujours dans la liste ci-dessous.
 5. Le rapport apparait egalement dans **Rapports recents** pour un acces ulterieur
 
+Si votre compte a un **Mois financier** (par exemple à partir du jour de paie, le 10), **Ce mois-ci** commence ce jour-là et **Mois précis** couvre cette période — *octobre* va du 10 octobre au 9 novembre. Semaine, trimestre et année restent calendaires.
+
 Sous les boutons figurent les dates exactes que couvrira le rapport — les memes que celles imprimees dans l'en-tete du fichier. Si une periode personnalisee est incomplete, ou si son debut est apres sa fin, **Generer** reste desactive.
 
 Si vous ouvrez cet ecran via **Exporter le rapport** dans l'onglet Analyses, la periode que vous consultiez vous suit : si vous y etiez revenu a juin, le rapport est prepare pour juin et non pour le mois en cours. Une periode en cours s'arrete aujourd'hui ; une periode terminee couvre toute son etendue.

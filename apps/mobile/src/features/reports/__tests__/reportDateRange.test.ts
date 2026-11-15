@@ -237,3 +237,33 @@ describe('formatDigestPeriod', () => {
     expect(formatDigestPeriod('2026-13', 'pl-PL')).toBe('2026-13');
   });
 });
+
+describe('financial month (ABA-783)', () => {
+  // 5 November 2026, salary on the 10th: the current period is 10 Oct – 9 Nov.
+  const now = new Date(2026, 10, 5, 12);
+
+  it('"this month" starts on the anchor day of the current period', () => {
+    expect(resolveReportDateRange({ mode: 'month' }, now, 10)).toEqual({ startDate: '2026-10-10', endDate: '2026-11-05' });
+  });
+
+  it('a specific month is the financial month that starts in it', () => {
+    expect(resolveReportDateRange({ mode: 'specificMonth', monthAnchor: new Date(2026, 8, 1) }, now, 10)).toEqual({
+      startDate: '2026-09-10',
+      endDate: '2026-10-09',
+    });
+  });
+
+  it('the month picker starts with the current financial month', () => {
+    const anchors = buildRecentMonthAnchors(2, now, 10);
+    expect(anchors).toEqual([new Date(2026, 9, 10), new Date(2026, 8, 10)]);
+  });
+
+  it('maps the Analytics current financial month to the "month" preset', () => {
+    expect(reportSelectionFromAnalytics({ range: 'month', month: 10, year: 2026 }, now, 10)).toEqual({ mode: 'month' });
+    expect(reportSelectionFromAnalytics({ range: 'month', month: 11, year: 2026 }, now, null)).toEqual({ mode: 'month' });
+  });
+
+  it('quarter stays the previous calendar quarter', () => {
+    expect(resolveReportDateRange({ mode: 'quarter' }, now, 10)).toEqual({ startDate: '2026-07-01', endDate: '2026-09-30' });
+  });
+});

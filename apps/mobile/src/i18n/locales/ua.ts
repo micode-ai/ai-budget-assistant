@@ -2542,7 +2542,7 @@ export default {
     thisMonth: 'Цей місяць',
     lastQuarter: 'Минулий квартал',
     thisYear: 'Цей рік',
-    specificMonth: 'Конкретний місяц',
+    specificMonth: 'Конкретний місяць',
     customRange: 'Власний період',
     selectMonth: 'Виберіть місяц',
     selectMonthHint: 'Виберіть місяц вище',

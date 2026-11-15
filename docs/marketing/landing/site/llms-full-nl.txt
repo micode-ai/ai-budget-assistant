@@ -6070,6 +6070,8 @@ De totalen staan in **jouw weergavevaluta** — die van de knop op het startsche
 4. Het rapport wordt gegenereerd en **opgeslagen**. Op Android opent een mapkiezer en wordt het bestand weggeschreven waar jij het aanwijst - de app laat daarna het pad zien. Op iOS opent het deelvenster, zodat je "Bewaar in Bestanden" kunt gebruiken. In de webversie wordt het bestand gewoon gedownload. Annuleer je de mapkiezer, dan wordt er niets opgeslagen; het rapport wacht nog in de lijst hieronder.
 5. Het rapport verschijnt ook hieronder in **Recente rapporten** voor toekomstige toegang
 
+Heeft je account een **Financiële maand** (bijvoorbeeld vanaf betaaldag, de 10e), dan begint **Deze maand** op die dag en beslaat **Specifieke maand** die periode — *oktober* is 10 oktober – 9 november. Week, kwartaal en jaar blijven kalenderperiodes.
+
 Onder de knoppen staan de exacte datums die het rapport dekt — dezelfde datums die in de kop van het bestand worden afgedrukt. Is een eigen periode onvolledig, of ligt het begin na het einde, dan blijft **Genereren** uitgeschakeld.
 
 Open je dit scherm via **Rapport exporteren** op het tabblad Analyse, dan gaat de periode die je bekeek mee - ben je daar teruggebladerd naar juni, dan wordt het rapport voor juni gemaakt en niet voor de huidige maand. Een lopende periode eindigt vandaag; een afgeronde beslaat haar volle bereik.

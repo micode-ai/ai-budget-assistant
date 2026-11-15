@@ -2791,6 +2791,8 @@ Totals are shown in **your display currency** — the one on the pill on the hom
 4. The report is generated and **saved**. On Android a folder picker opens and the file is written where you choose - the app then shows you the path. On iOS the share sheet opens so you can "Save to Files". In the web app it simply downloads. Cancel the folder picker and nothing is saved; the report still waits for you below.
 5. The report also appears in **Recent Reports** below for future access
 
+If your account has a **Financial Month** (for example, starting on payday, the 10th), **This Month** starts on that day and **Specific month** covers that period — *October* is 10 October – 9 November. Week, quarter and year stay on the calendar.
+
 Under the buttons you can see the exact dates the report will cover — the same dates printed in the file's header. If a custom range is incomplete, or its start is after its end, **Generate** stays disabled.
 
 Opening this screen through **Export Report** on the Analytics tab carries the period you were looking at over with you - page back to June there and the report is prepared for June, not for the current month. A period that is still running ends today; a finished one covers its full span.
@@ -8205,6 +8207,8 @@ AI Budget Assistant предлагает три уровня подписки. �
 4. Отчёт создаётся и **сохраняется**. На Android открывается выбор папки, и файл записывается туда, куда вы укажете — приложение затем покажет путь. На iOS открывается системное меню, откуда доступно «Сохранить в Файлы». В веб-версии файл просто скачивается. Если отменить выбор папки, ничего не сохранится — отчёт всё равно останется в списке ниже.
 5. Отчёт также появляется в разделе **Недавние отчёты** ниже для дальнейшего доступа
 
+Если у аккаунта задан **Финансовый месяц** (например, с дня зарплаты, 10-го), **Этот месяц** начинается с этого дня, а **Конкретный месяц** охватывает такой период — *октябрь* — это 10 октября – 9 ноября. Неделя, квартал и год остаются календарными.
+
 Под кнопками видны точные даты, которые попадут в отчёт — те же даты печатаются в заголовке файла. Если свой период указан не полностью или его начало позже конца, кнопка **Создать** остаётся неактивной.
 
 Если открыть этот экран кнопкой **Экспортировать отчёт** на вкладке Аналитика, сюда переносится тот период, который вы там смотрели — отлистали до июня, значит отчёт готовится за июнь, а не за текущий месяц. Незакончившийся период заканчивается сегодняшним днём, завершённый берётся целиком.
@@ -13603,6 +13607,8 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 4. Звіт створюється і **зберігається**. На Android відкривається вибір теки, і файл записується туди, куди ви вкажете — застосунок потім покаже шлях. На iOS відкривається системний діалог, звідки доступно «Зберегти у Файли». У веб-версії файл просто завантажується. Якщо скасувати вибір теки, нічого не збережеться — звіт усе одно залишиться у списку нижче.
 5. Звіт також з'являється в розділі **Останні звіти** для подальшого доступу
 
+Якщо в акаунті задано **Фінансовий місяць** (наприклад, із дня зарплати, 10-го), **Цей місяць** починається з цього дня, а **Конкретний місяць** охоплює такий період — *жовтень* — це 10 жовтня – 9 листопада. Тиждень, квартал і рік лишаються календарними.
+
 Під кнопками видно точні дати, які потраплять у звіт — ті самі дати друкуються в заголовку файлу. Якщо власний період указано не повністю або його початок пізніше кінця, кнопка **Створити** залишається неактивною.
 
 Якщо відкрити цей екран кнопкою **Експортувати звіт** на вкладці Аналітика, сюди переноситься той період, який ви там дивилися — відлистали до червня, отже звіт готується за червень, а не за поточний місяць. Незавершений період завершується сьогоднішнім днем, завершений береться повністю.
@@ -18951,6 +18957,8 @@ Sumy sa podawane w **Twojej walucie wyswietlania** — tej z przycisku na ekrani
 4. Raport zostaje wygenerowany i **zapisany**. Na Androidzie otwiera sie wybor folderu i plik ladowany jest tam, gdzie wskazesz - aplikacja pokaze potem sciezke. Na iOS otwiera sie arkusz udostepniania, wiec mozesz uzyc "Zapisz w Plikach". W wersji przegladarkowej plik po prostu sie pobiera. Jesli anulujesz wybor folderu, nic nie zostanie zapisane - raport nadal czeka na liscie ponizej.
 5. Raport pojawi sie takze w **Ostatnich raportach** w celu pozniejszego dostepu
 
+Jeśli konto ma **Miesiąc finansowy** (na przykład od dnia wypłaty, 10.), **Ten miesiąc** zaczyna się tego dnia, a **Konkretny miesiąc** obejmuje ten okres — *październik* to 10 października – 9 listopada. Tydzień, kwartał i rok pozostają kalendarzowe.
+
 Pod przyciskami widac dokladne daty, ktore obejmie raport — te same daty sa wpisane w naglowku pliku. Jesli wlasny zakres jest niepelny albo jego poczatek jest po koncu, przycisk **Generuj** pozostaje nieaktywny.
 
 Otwarcie tego ekranu przyciskiem **Eksportuj raport** na zakladce Analityka przenosi tu okres, ktory wlasnie ogladasz - jesli cofnales sie tam do czerwca, raport bedzie przygotowany za czerwiec, a nie za biezacy miesiac. Okres trwajacy konczy sie na dzisiaj, zakonczony obejmuje caly swoj zakres.
@@ -24297,6 +24305,8 @@ Die Summen erscheinen in **deiner Anzeigewährung** — der aus der Schaltfläch
 4. Der Bericht wird erstellt und **gespeichert**. Unter Android öffnet sich eine Ordnerauswahl und die Datei wird dort abgelegt, wo du sie hinlegst - die App zeigt dir danach den Pfad. Unter iOS öffnet sich das Teilen-Blatt, sodass du "In Dateien speichern" nutzen kannst. In der Web-App wird die Datei einfach heruntergeladen. Brichst du die Ordnerauswahl ab, wird nichts gespeichert - der Bericht wartet weiter unten in der Liste.
 5. Der Bericht erscheint auch unter **Kürzlich erstellte Berichte** für späteren Zugriff
 
+Hat dein Konto einen **Finanzmonat** (zum Beispiel ab dem Zahltag, dem 10.), beginnt **Dieser Monat** an diesem Tag und **Bestimmter Monat** umfasst diesen Zeitraum — *Oktober* ist dann der 10. Oktober – 9. November. Woche, Quartal und Jahr bleiben beim Kalender.
+
 Unter den Schaltflächen stehen die genauen Daten, die der Bericht abdeckt — dieselben Daten stehen im Kopf der Datei. Ist ein eigener Zeitraum unvollständig oder liegt sein Start nach dem Ende, bleibt **Erstellen** deaktiviert.
 
 Wenn du diesen Bildschirm über **Bericht exportieren** im Analyse-Tab öffnest, wird der Zeitraum mitgenommen, den du dort angesehen hast - bist du dort auf Juni zurückgeblättert, wird der Bericht für Juni erstellt und nicht für den aktuellen Monat. Ein laufender Zeitraum endet heute, ein abgeschlossener umfasst seine volle Spanne.
@@ -29621,6 +29631,8 @@ Los totales se muestran en **tu moneda de visualizacion**, la del boton en la pa
 4. El informe se genera y se **guarda**. En Android se abre un selector de carpeta y el archivo se escribe donde tu indiques; despues la aplicacion te muestra la ruta. En iOS se abre el dialogo para compartir, para que puedas usar "Guardar en Archivos". En la version web simplemente se descarga. Si cancelas el selector de carpeta no se guarda nada; el informe sigue esperando en la lista de abajo.
 5. El informe tambien aparece en **Informes recientes** para acceder mas tarde
 
+Si tu cuenta tiene un **Mes financiero** (por ejemplo, desde el día de cobro, el 10), **Este mes** empieza ese día y **Mes concreto** cubre ese periodo —*octubre* va del 10 de octubre al 9 de noviembre—. Semana, trimestre y año siguen el calendario.
+
 Debajo de los botones se ven las fechas exactas que cubrira el informe: las mismas que se imprimen en la cabecera del archivo. Si un rango personalizado esta incompleto, o su inicio es posterior al fin, **Generar** permanece desactivado.
 
 Si abres esta pantalla con **Exportar informe** en la pestana Analiticas, se trae el periodo que estabas viendo: si alli retrocediste a junio, el informe se prepara para junio y no para el mes actual. Un periodo en curso termina hoy; uno cerrado cubre su rango completo.
@@ -34931,6 +34943,8 @@ Les totaux sont exprimes dans **votre devise d'affichage**, celle du bouton sur 
 3. Appuyez sur **Generer**
 4. Le rapport est genere et **enregistre**. Sous Android, un selecteur de dossier s'ouvre et le fichier est ecrit la ou vous l'indiquez - l'application vous montre ensuite le chemin. Sous iOS, la feuille de partage s'ouvre pour vous permettre d'utiliser "Enregistrer dans Fichiers". Dans la version web, le fichier se telecharge simplement. Si vous annulez le selecteur de dossier, rien n'est enregistre : le rapport vous attend toujours dans la liste ci-dessous.
 5. Le rapport apparait egalement dans **Rapports recents** pour un acces ulterieur
+
+Si votre compte a un **Mois financier** (par exemple à partir du jour de paie, le 10), **Ce mois-ci** commence ce jour-là et **Mois précis** couvre cette période — *octobre* va du 10 octobre au 9 novembre. Semaine, trimestre et année restent calendaires.
 
 Sous les boutons figurent les dates exactes que couvrira le rapport — les memes que celles imprimees dans l'en-tete du fichier. Si une periode personnalisee est incomplete, ou si son debut est apres sa fin, **Generer** reste desactive.
 
@@ -40248,6 +40262,8 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 4. Справаздача ствараецца і **захоўваецца**. На Android адкрываецца выбар папкі, і файл запісваецца туды, куда вы ўкажаце — дадатак потым пакажа шлях. На iOS адкрываецца сістэмнае меню, адкуль даступна «Захаваць у Файлы». У вэб-версіі файл проста спампоўваецца. Калі скасаваць выбар папкі, нічога не захаваецца — справаздача ўсё роўна застанецца ў спісе ніжэй.
 5. Справаздача таксама з'яўляецца ў раздзеле **Апошнія справаздачы** для далейшага доступу
 
+Калі ў акаўнта зададзены **Фінансавы месяц** (напрыклад, з дня заробку, 10-га), **Гэты месяц** пачынаецца з гэтага дня, а **Канкрэтны месяц** ахоплівае такі перыяд — *кастрычнік* — гэта 10 кастрычніка – 9 лістапада. Тыдзень, квартал і год застаюцца каляндарнымі.
+
 Пад кнопкамі відаць дакладныя даты, якія трапяць у справаздачу — тыя ж даты друкуюцца ў загалоўку файла. Калі свой перыяд пазначаны не цалкам або яго пачатак пазней за канец, кнопка **Стварыць** застаецца неактыўнай.
 
 Калі адкрыць гэты экран кнопкай **Экспартаваць справаздачу** на закладцы Аналітыка, сюда пераносіцца той перыяд, які вы там глядзелі — адлісталі да чэрвеня, значыць справаздача гатуецца за чэрвень, а не за цяперашні месяц. Незакончаны перыяд заканчваецца сённяшнім днём, завершаны бярэцца цалкам.
@@ -45528,6 +45544,8 @@ De totalen staan in **jouw weergavevaluta** — die van de knop op het startsche
 3. Tik op **Genereren**
 4. Het rapport wordt gegenereerd en **opgeslagen**. Op Android opent een mapkiezer en wordt het bestand weggeschreven waar jij het aanwijst - de app laat daarna het pad zien. Op iOS opent het deelvenster, zodat je "Bewaar in Bestanden" kunt gebruiken. In de webversie wordt het bestand gewoon gedownload. Annuleer je de mapkiezer, dan wordt er niets opgeslagen; het rapport wacht nog in de lijst hieronder.
 5. Het rapport verschijnt ook hieronder in **Recente rapporten** voor toekomstige toegang
+
+Heeft je account een **Financiële maand** (bijvoorbeeld vanaf betaaldag, de 10e), dan begint **Deze maand** op die dag en beslaat **Specifieke maand** die periode — *oktober* is 10 oktober – 9 november. Week, kwartaal en jaar blijven kalenderperiodes.
 
 Onder de knoppen staan de exacte datums die het rapport dekt — dezelfde datums die in de kop van het bestand worden afgedrukt. Is een eigen periode onvolledig, of ligt het begin na het einde, dan blijft **Genereren** uitgeschakeld.
 
@@ -50949,6 +50967,8 @@ Os totais são apresentados na **sua moeda de apresentação** — a que aparece
 3. Toque em **Gerar**
 4. O relatório é gerado e **guardado**. No Android abre-se um seletor de pastas e o ficheiro é gravado onde escolher - a aplicação mostra depois o caminho. No iOS abre-se a folha de partilha para poder usar «Guardar em Ficheiros». Na aplicação web o ficheiro é simplesmente transferido. Se cancelar o seletor de pastas, nada é guardado; o relatório continua disponível mais abaixo.
 5. O relatório aparece também em **Relatórios recentes**, mais abaixo, para acesso futuro
+
+Se a sua conta tiver um **Mês financeiro** (por exemplo, a começar no dia do ordenado, dia 10), **Este mês** começa nesse dia e **Mês específico** cobre esse período — *outubro* vai de 10 de outubro a 9 de novembro. Semana, trimestre e ano continuam a seguir o calendário.
 
 Por baixo dos botões vê as datas exatas que o relatório vai abranger — as mesmas que ficam impressas no cabeçalho do ficheiro. Se um período personalizado estiver incompleto ou a data de início for posterior à de fim, o botão **Gerar** fica desativado.
 
@@ -56377,6 +56397,8 @@ Os totais aparecem na **sua moeda de exibição** — a que está no seletor da 
 3. Toque em **Gerar**
 4. O relatório é gerado e **salvo**. No Android, um seletor de pastas abre e o arquivo é gravado onde você escolher - em seguida o app mostra o caminho. No iOS, o menu de compartilhamento abre para você usar “Salvar em Arquivos”. No app web, o arquivo é simplesmente baixado. Se você cancelar o seletor de pastas, nada é salvo; o relatório continua disponível mais abaixo.
 5. O relatório também aparece em **Relatórios recentes**, mais abaixo, para acesso futuro
+
+Se a sua conta tiver um **Mês financeiro** (por exemplo, começando no dia do pagamento, dia 10), **Este mês** começa nesse dia e **Mês específico** cobre esse período — *outubro* vai de 10 de outubro a 9 de novembro. Semana, trimestre e ano continuam no calendário.
 
 Abaixo dos botões, você vê as datas exatas que o relatório vai cobrir — as mesmas impressas no cabeçalho do arquivo. Se um período personalizado estiver incompleto ou se a data de início for posterior à de fim, o botão **Gerar** fica desativado.
 

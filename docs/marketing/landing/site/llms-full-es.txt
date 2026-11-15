@@ -6066,6 +6066,8 @@ Los totales se muestran en **tu moneda de visualizacion**, la del boton en la pa
 4. El informe se genera y se **guarda**. En Android se abre un selector de carpeta y el archivo se escribe donde tu indiques; despues la aplicacion te muestra la ruta. En iOS se abre el dialogo para compartir, para que puedas usar "Guardar en Archivos". En la version web simplemente se descarga. Si cancelas el selector de carpeta no se guarda nada; el informe sigue esperando en la lista de abajo.
 5. El informe tambien aparece en **Informes recientes** para acceder mas tarde
 
+Si tu cuenta tiene un **Mes financiero** (por ejemplo, desde el día de cobro, el 10), **Este mes** empieza ese día y **Mes concreto** cubre ese periodo —*octubre* va del 10 de octubre al 9 de noviembre—. Semana, trimestre y año siguen el calendario.
+
 Debajo de los botones se ven las fechas exactas que cubrira el informe: las mismas que se imprimen en la cabecera del archivo. Si un rango personalizado esta incompleto, o su inicio es posterior al fin, **Generar** permanece desactivado.
 
 Si abres esta pantalla con **Exportar informe** en la pestana Analiticas, se trae el periodo que estabas viendo: si alli retrocediste a junio, el informe se prepara para junio y no para el mes actual. Un periodo en curso termina hoy; uno cerrado cubre su rango completo.

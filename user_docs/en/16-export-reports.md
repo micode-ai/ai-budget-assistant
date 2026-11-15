@@ -36,6 +36,8 @@ Totals are shown in **your display currency** — the one on the pill on the hom
 4. The report is generated and **saved**. On Android a folder picker opens and the file is written where you choose - the app then shows you the path. On iOS the share sheet opens so you can "Save to Files". In the web app it simply downloads. Cancel the folder picker and nothing is saved; the report still waits for you below.
 5. The report also appears in **Recent Reports** below for future access
 
+If your account has a **Financial Month** (for example, starting on payday, the 10th), **This Month** starts on that day and **Specific month** covers that period — *October* is 10 October – 9 November. Week, quarter and year stay on the calendar.
+
 Under the buttons you can see the exact dates the report will cover — the same dates printed in the file's header. If a custom range is incomplete, or its start is after its end, **Generate** stays disabled.
 
 Opening this screen through **Export Report** on the Analytics tab carries the period you were looking at over with you - page back to June there and the report is prepared for June, not for the current month. A period that is still running ends today; a finished one covers its full span.

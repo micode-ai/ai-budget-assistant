@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import { useFinancialMonth } from '@/hooks/useFinancialMonth';
 import {
   View,
   Text,
@@ -61,8 +62,10 @@ export default function ReportsScreen() {
   // user was actually looking at. Seeded once: the screen is pushed over the
   // tabs, so going back pops it and re-entry remounts with the fresh params.
   const params = useLocalSearchParams<{ range?: string; month?: string; year?: string }>();
+  // The month presets follow the account's financial month (ABA-783).
+  const { anchorDay } = useFinancialMonth();
   // eslint-disable-next-line react-hooks/exhaustive-deps -- launch params, read once on mount
-  const seed = useMemo(() => reportSelectionFromAnalytics(params), []);
+  const seed = useMemo(() => reportSelectionFromAnalytics(params, new Date(), anchorDay), []);
 
   const [selectedFormat, setSelectedFormat] = useState<ReportFormat>('csv');
   const [rangeMode, setRangeMode] = useState<ReportRangeMode>(seed?.mode ?? 'month');
@@ -82,7 +85,7 @@ export default function ReportsScreen() {
   const intlLocale = getIntlLocale();
 
   const monthOptions = useMemo(() => {
-    const anchors = buildRecentMonthAnchors(MONTH_PICKER_COUNT);
+    const anchors = buildRecentMonthAnchors(MONTH_PICKER_COUNT, new Date(), anchorDay);
     const seeded = seed?.monthAnchor;
     // Analytics can page back further than the picker offers; keep that month
     // reachable instead of showing the strip with nothing selected.
@@ -95,7 +98,7 @@ export default function ReportsScreen() {
       anchors.push(seeded);
     }
     return anchors;
-  }, [seed]);
+  }, [seed, anchorDay]);
 
   const monthScrollRef = useRef<ScrollView>(null);
   const monthRevealed = useRef(false);
@@ -111,8 +114,8 @@ export default function ReportsScreen() {
   // `null` while a custom range is half-picked or backwards — Generate stays
   // disabled rather than sending a range the report cannot honour.
   const resolvedRange = useMemo(
-    () => resolveReportDateRange({ mode: rangeMode, monthAnchor, customStart, customEnd }),
-    [rangeMode, monthAnchor, customStart, customEnd],
+    () => resolveReportDateRange({ mode: rangeMode, monthAnchor, customStart, customEnd }, new Date(), anchorDay),
+    [rangeMode, monthAnchor, customStart, customEnd, anchorDay],
   );
 
   const handleGenerate = async () => {

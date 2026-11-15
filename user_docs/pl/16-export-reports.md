@@ -36,6 +36,8 @@ Sumy sa podawane w **Twojej walucie wyswietlania** — tej z przycisku na ekrani
 4. Raport zostaje wygenerowany i **zapisany**. Na Androidzie otwiera sie wybor folderu i plik ladowany jest tam, gdzie wskazesz - aplikacja pokaze potem sciezke. Na iOS otwiera sie arkusz udostepniania, wiec mozesz uzyc "Zapisz w Plikach". W wersji przegladarkowej plik po prostu sie pobiera. Jesli anulujesz wybor folderu, nic nie zostanie zapisane - raport nadal czeka na liscie ponizej.
 5. Raport pojawi sie takze w **Ostatnich raportach** w celu pozniejszego dostepu
 
+Jeśli konto ma **Miesiąc finansowy** (na przykład od dnia wypłaty, 10.), **Ten miesiąc** zaczyna się tego dnia, a **Konkretny miesiąc** obejmuje ten okres — *październik* to 10 października – 9 listopada. Tydzień, kwartał i rok pozostają kalendarzowe.
+
 Pod przyciskami widac dokladne daty, ktore obejmie raport — te same daty sa wpisane w naglowku pliku. Jesli wlasny zakres jest niepelny albo jego poczatek jest po koncu, przycisk **Generuj** pozostaje nieaktywny.
 
 Otwarcie tego ekranu przyciskiem **Eksportuj raport** na zakladce Analityka przenosi tu okres, ktory wlasnie ogladasz - jesli cofnales sie tam do czerwca, raport bedzie przygotowany za czerwiec, a nie za biezacy miesiac. Okres trwajacy konczy sie na dzisiaj, zakonczony obejmuje caly swoj zakres.

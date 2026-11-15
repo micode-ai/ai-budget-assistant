@@ -21,6 +21,13 @@ that saves or shares the result.
 **The screen holds only chips and pickers**; every boundary is resolved by the pure module. Five
 modes: the presets, `specificMonth` (a 24-month picker) and `custom` (an arbitrary pair).
 
+**Month presets follow the financial month (ABA-783).** The pure functions take the account's
+`anchorDay` (the screen passes `useFinancialMonth().anchorDay`): "this month" starts on the
+current financial month's first day, `specificMonth` is the financial month that STARTS in the
+picked month, the picker lists financial months starting with the current one, and Analytics'
+current financial month maps to the `month` preset. Week, quarter and year stay calendar by design;
+the server's monthly digest is still a calendar month.
+
 **Report generation in all three formats is FREE**, as is backup export/restore. The only paid part
 is scheduled e-mail delivery: the weekly summary is `business`, the monthly digest e-mail `pro`+.
 The in-app digest card is free. The orphaned `tierBadge` styles on the reports screen are dead

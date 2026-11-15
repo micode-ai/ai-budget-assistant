@@ -36,6 +36,8 @@ Die Summen erscheinen in **deiner Anzeigewährung** — der aus der Schaltfläch
 4. Der Bericht wird erstellt und **gespeichert**. Unter Android öffnet sich eine Ordnerauswahl und die Datei wird dort abgelegt, wo du sie hinlegst - die App zeigt dir danach den Pfad. Unter iOS öffnet sich das Teilen-Blatt, sodass du "In Dateien speichern" nutzen kannst. In der Web-App wird die Datei einfach heruntergeladen. Brichst du die Ordnerauswahl ab, wird nichts gespeichert - der Bericht wartet weiter unten in der Liste.
 5. Der Bericht erscheint auch unter **Kürzlich erstellte Berichte** für späteren Zugriff
 
+Hat dein Konto einen **Finanzmonat** (zum Beispiel ab dem Zahltag, dem 10.), beginnt **Dieser Monat** an diesem Tag und **Bestimmter Monat** umfasst diesen Zeitraum — *Oktober* ist dann der 10. Oktober – 9. November. Woche, Quartal und Jahr bleiben beim Kalender.
+
 Unter den Schaltflächen stehen die genauen Daten, die der Bericht abdeckt — dieselben Daten stehen im Kopf der Datei. Ist ein eigener Zeitraum unvollständig oder liegt sein Start nach dem Ende, bleibt **Erstellen** deaktiviert.
 
 Wenn du diesen Bildschirm über **Bericht exportieren** im Analyse-Tab öffnest, wird der Zeitraum mitgenommen, den du dort angesehen hast - bist du dort auf Juni zurückgeblättert, wird der Bericht für Juni erstellt und nicht für den aktuellen Monat. Ein laufender Zeitraum endet heute, ein abgeschlossener umfasst seine volle Spanne.
