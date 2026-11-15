@@ -334,6 +334,7 @@ Newest last within each section.
 - 2026-11-15 · [ABA-767](https://github.com/micode-ai/ai-budget-assistant/issues/805) — financial month wave 2: the Analytics month view, its comparisons, chips, anomalies and monthly bars follow `monthAnchorDay` (period named by its start month, span shown under the label); daily bars and the peak day keyed by the local day (`localDayKey`) instead of the UTC one. Pages: `features/analytics-period-comparisons.md`, `features/budgets.md`, `features/analytics-cash-flow.md`.
 - 2026-11-15 · [ABA-768](https://github.com/micode-ai/ai-budget-assistant/issues/806) — forecast card on an already-negative wallet said "may run short around <today>"; now says the balance is already below zero. Pages: `features/cash-flow-forecast.md`.
 - 2026-11-15 · [ABA-769](https://github.com/micode-ai/ai-budget-assistant/issues/807) — Health Score debt component now weighs the overdue share of the outstanding amount (base currency) instead of the overdue count; closes the known gap. Pages: `features/financial-health-score.md`.
+- 2026-11-15 · [ABA-770](https://github.com/micode-ai/ai-budget-assistant/issues/808) — `localDayKey` (ABA-767) read server `@db.Date` values (UTC midnight) in local time and moved them a day back west of UTC; exact UTC midnight is now read as date-only. Found while reading `wallet-balance-history.md`'s invariant on date-only movements. Pages: `features/analytics-period-comparisons.md`.
 
 ## Queries
 

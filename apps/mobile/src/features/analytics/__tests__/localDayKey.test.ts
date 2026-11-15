@@ -15,3 +15,10 @@ describe('localDayKey', () => {
     expect(localDayKey(iso)).toBe('2026-06-01');
   });
 });
+
+describe('localDayKey with server date-only values', () => {
+  it('reads UTC midnight as the calendar date it stores, in any zone', () => {
+    expect(localDayKey('2026-11-02T00:00:00.000Z')).toBe('2026-11-02');
+    expect(localDayKey(new Date(Date.UTC(2026, 10, 2)))).toBe('2026-11-02');
+  });
+});
