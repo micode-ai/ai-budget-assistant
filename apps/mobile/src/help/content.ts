@@ -1038,6 +1038,14 @@ The selected range affects all charts and insights below.
 
 While the period is still running, both comparisons use the same days: on the 5th, your first five days are compared with the first five days of the previous period (and of the last three months), so an unfinished month never looks like a big saving. **Avg per Day** counts only the days so far. The "3-month average" line appears in the Month view.
 
+## Income vs Spending
+
+Shows what you **earned**, **spent** and **kept** in the selected period, and the share of your income you kept (the savings rate). If you spent more than you earned, the last figure reads **Overspent**. Below, bars compare income and spending month by month: the last 6 months in the Month view, every month of the year in the Year view.
+
+## Fixed vs Flexible
+
+Shows how much of your spending is **fixed** — money that leaves every period anyway — and lists the largest fixed costs. An expense counts as fixed when it is a recurring expense, or when it matches one of your active subscriptions in the subscription manager (same name, or same category and amount). Everything else is flexible. To have rent or another regular payment counted as fixed, mark it as recurring or add it as a subscription.
+
 ## AI Insights Carousel
 
 A horizontal scrollable carousel of AI-generated insights (Pro plan required):
@@ -6438,6 +6446,14 @@ iOS, Android, Web
 
 Пока период не закончился, оба сравнения идут по тем же дням: 5-го числа ваши первые пять дней сравниваются с первыми пятью днями прошлого периода (и трёх последних месяцев), поэтому незаконченный месяц не выглядит как большая экономия. **Среднее в день** считается только по прошедшим дням. Строка со средним за 3 месяца показывается в режиме «Месяц».
 
+## Доходы и расходы
+
+Показывает, сколько за выбранный период **заработано**, **потрачено** и сколько **осталось**, а также какую долю дохода вы сохранили (норма сбережений). Если потрачено больше, чем заработано, последняя цифра подписана **Перерасход**. Ниже столбцы сравнивают доходы и расходы по месяцам: последние 6 месяцев в режиме «Месяц» и все месяцы года в режиме «Год».
+
+## Обязательные и свободные расходы
+
+Показывает, какая часть трат **обязательная** — деньги, которые уходят в каждом периоде в любом случае, — и перечисляет самые крупные обязательные расходы. Расход считается обязательным, если он регулярный или совпадает с одной из ваших активных подписок в менеджере подписок (то же название или та же категория и сумма). Всё остальное — свободные расходы. Чтобы аренда или другой регулярный платёж считался обязательным, отметьте его как регулярный или добавьте как подписку.
+
 ## Карусель ИИ-инсайтов
 
 Горизонтально прокручиваемая карусель ИИ-генерируемых инсайтов (требуется план Pro):
@@ -11816,6 +11832,14 @@ iOS, Android, Web
 
 Поки період не завершився, обидва порівняння йдуть за тими самими днями: 5-го числа ваші перші п'ять днів порівнюються з першими п'ятьма днями минулого періоду (і трьох останніх місяців), тож незавершений місяць не виглядає як велика економія. **Середнє за день** рахується лише за днями, що минули. Рядок із середнім за 3 місяці показується в режимі «Місяць».
 
+## Доходи та витрати
+
+Показує, скільки за обраний період **зароблено**, **витрачено** і скільки **залишилося**, а також яку частку доходу ви зберегли (норма заощаджень). Якщо витрачено більше, ніж зароблено, остання цифра підписана **Перевитрата**. Нижче стовпці порівнюють доходи й витрати по місяцях: останні 6 місяців у режимі «Місяць» і всі місяці року в режимі «Рік».
+
+## Обов'язкові та вільні витрати
+
+Показує, яка частина витрат **обов'язкова** — гроші, що йдуть у кожному періоді за будь-яких умов, — і перелічує найбільші обов'язкові витрати. Витрата вважається обов'язковою, якщо вона регулярна або збігається з однією з ваших активних підписок у менеджері підписок (та сама назва або та сама категорія й сума). Усе інше — вільні витрати. Щоб оренда чи інший регулярний платіж вважався обов'язковим, позначте його як регулярний або додайте як підписку.
+
 ## Карусель ШІ-інсайтів
 
 Горизонтальна прокручувана карусель ШІ-інсайтів (потрібен тариф Pro):
@@ -17142,6 +17166,14 @@ Wybrany zakres wplywa na wszystkie wykresy i wnioski ponizej.
 
 Dopóki okres trwa, oba porównania dotyczą tych samych dni: 5. dnia miesiąca twoje pierwsze pięć dni porównujemy z pierwszymi pięcioma dniami poprzedniego okresu (i ostatnich trzech miesięcy), więc rozpoczęty miesiąc nigdy nie wygląda jak duża oszczędność. **Średnio dziennie** liczy tylko dni, które już minęły. Wiersz ze średnią z 3 miesięcy pojawia się w widoku Miesiąc.
 
+## Przychody a wydatki
+
+Pokazuje, ile w wybranym okresie **zarobiono**, **wydano** i ile **zostało**, a także jaką część przychodów udało się zatrzymać (stopa oszczędności). Jeśli wydatki przekroczyły przychody, ostatnia wartość ma etykietę **Przekroczono**. Poniżej słupki porównują przychody i wydatki miesiąc po miesiącu: ostatnie 6 miesięcy w widoku Miesiąc i wszystkie miesiące roku w widoku Rok.
+
+## Stałe a zmienne
+
+Pokazuje, jaka część wydatków to koszty **stałe** — pieniądze, które i tak wychodzą w każdym okresie — i wymienia największe z nich. Wydatek liczy się jako stały, gdy jest cykliczny albo pasuje do jednej z aktywnych subskrypcji w menedżerze subskrypcji (ta sama nazwa albo ta sama kategoria i kwota). Wszystko inne jest zmienne. Aby czynsz lub inna regularna płatność liczyła się jako stała, oznacz ją jako cykliczną albo dodaj jako subskrypcję.
+
 ## Karuzela wnioskow AI
 
 Poziomo przewijana karuzela wnioskow generowanych przez AI (wymaga planu Pro):
@@ -22464,6 +22496,14 @@ Der ausgewahlte Bereich beeinflusst alle Diagramme und Einblicke darunter.
 
 Solange der Zeitraum läuft, vergleichen beide Angaben dieselben Tage: Am 5. werden deine ersten fünf Tage mit den ersten fünf Tagen des Vorzeitraums (und der letzten drei Monate) verglichen, sodass ein angefangener Monat nie wie eine große Ersparnis aussieht. **Durchschnitt pro Tag** zählt nur die bisherigen Tage. Die Zeile zum 3-Monats-Schnitt erscheint in der Monatsansicht.
 
+## Einnahmen vs. Ausgaben
+
+Zeigt, was du im gewählten Zeitraum **verdient**, **ausgegeben** und **behalten** hast, und welchen Anteil deiner Einnahmen du behalten hast (Sparquote). Hast du mehr ausgegeben als verdient, steht dort **Mehr ausgegeben**. Darunter vergleichen Balken Einnahmen und Ausgaben Monat für Monat: die letzten 6 Monate in der Monatsansicht, alle Monate des Jahres in der Jahresansicht.
+
+## Fix vs. flexibel
+
+Zeigt, welcher Teil deiner Ausgaben **fix** ist — Geld, das in jedem Zeitraum ohnehin abfließt — und listet die größten Fixkosten auf. Eine Ausgabe gilt als fix, wenn sie wiederkehrend ist oder zu einem deiner aktiven Abos im Abo-Manager passt (gleicher Name oder gleiche Kategorie und gleicher Betrag). Alles andere ist flexibel. Damit Miete oder eine andere regelmäßige Zahlung als fix zählt, markiere sie als wiederkehrend oder lege sie als Abo an.
+
 ## KI-Einblicke-Karussell
 
 Ein horizontal scrollbares Karussell mit KI-generierten Einblicken (Pro-Plan erforderlich):
@@ -27761,6 +27801,14 @@ El rango seleccionado afecta a todos los graficos e informacion que aparecen deb
 
 Mientras el periodo está en curso, ambas comparaciones usan los mismos días: el día 5, tus primeros cinco días se comparan con los primeros cinco días del periodo anterior (y de los últimos tres meses), así un mes a medias nunca parece un gran ahorro. **Promedio por día** cuenta solo los días transcurridos. La línea del promedio de 3 meses aparece en la vista Mes.
 
+## Ingresos vs gastos
+
+Muestra lo que **ingresaste**, **gastaste** y **ahorraste** en el periodo seleccionado, y qué parte de tus ingresos ahorraste (tasa de ahorro). Si gastaste más de lo que ingresaste, la última cifra indica **Gastado de más**. Debajo, unas barras comparan ingresos y gastos mes a mes: los últimos 6 meses en la vista Mes y todos los meses del año en la vista Año.
+
+## Fijos vs variables
+
+Muestra qué parte de tus gastos es **fija** — dinero que sale cada periodo de todos modos — y lista los gastos fijos más grandes. Un gasto cuenta como fijo si es recurrente o si coincide con una de tus suscripciones activas del gestor de suscripciones (mismo nombre, o misma categoría e importe). Todo lo demás es variable. Para que el alquiler u otro pago periódico cuente como fijo, márcalo como recurrente o añádelo como suscripción.
+
 ## Carrusel de informacion IA
 
 Un carrusel horizontal desplazable con informacion generada por IA (requiere plan Pro):
@@ -33047,6 +33095,14 @@ La periode selectionnee affecte tous les graphiques et aperçus ci-dessous.
 
 Tant que la période est en cours, les deux comparaisons portent sur les mêmes jours : le 5, vos cinq premiers jours sont comparés aux cinq premiers jours de la période précédente (et des trois derniers mois), si bien qu'un mois entamé ne ressemble jamais à une grosse économie. **Moy. par jour** ne compte que les jours écoulés. La ligne de la moyenne sur 3 mois apparaît dans la vue Mois.
 
+## Revenus vs dépenses
+
+Affiche ce que vous avez **gagné**, **dépensé** et **épargné** sur la période choisie, ainsi que la part de vos revenus que vous avez gardée (taux d'épargne). Si vous avez dépensé plus que vous n'avez gagné, le dernier chiffre indique **Dépassement**. En dessous, des barres comparent revenus et dépenses mois par mois : les 6 derniers mois en vue Mois, tous les mois de l'année en vue Année.
+
+## Fixes vs variables
+
+Indique quelle part de vos dépenses est **fixe** — de l'argent qui part chaque période quoi qu'il arrive — et liste les plus grosses dépenses fixes. Une dépense compte comme fixe si elle est récurrente ou si elle correspond à l'un de vos abonnements actifs du gestionnaire d'abonnements (même nom, ou même catégorie et même montant). Tout le reste est variable. Pour qu'un loyer ou un autre paiement régulier compte comme fixe, marquez-le comme récurrent ou ajoutez-le comme abonnement.
+
 ## Carousel d'aperçus IA
 
 Un carousel horizontal defilable d'aperçus generes par l'IA (plan Pro requis) :
@@ -38331,6 +38387,14 @@ iOS, Android, Web
 
 Пакуль перыяд не скончыўся, абодва параўнанні ідуць па тых жа днях: 5-га чысла вашы першыя пяць дзён параўноўваюцца з першымі пяццю днямі мінулага перыяду (і трох апошніх месяцаў), таму незавершаны месяц не выглядае як вялікая эканомія. **Сярэдняе за дзень** лічыцца толькі па днях, што прайшлі. Радок з сярэднім за 3 месяцы паказваецца ў рэжыме «Месяц».
 
+## Даходы і выдаткі
+
+Паказвае, колькі за абраны перыяд **зароблена**, **выдаткавана** і колькі **засталося**, а таксама якую долю даходу вы захавалі (норма зберажэнняў). Калі выдаткавана больш, чым зароблена, апошняя лічба падпісана **Перавыдатак**. Ніжэй слупкі параўноўваюць даходы і выдаткі па месяцах: апошнія 6 месяцаў у рэжыме «Месяц» і ўсе месяцы года ў рэжыме «Год».
+
+## Абавязковыя і свабодныя выдаткі
+
+Паказвае, якая частка выдаткаў **абавязковая** — грошы, якія сыходзяць у кожным перыядзе ў любым выпадку, — і пералічвае найбуйнейшыя абавязковыя выдаткі. Выдатак лічыцца абавязковым, калі ён рэгулярны або супадае з адной з вашых актыўных падпісак у менеджары падпісак (тая ж назва або тая ж катэгорыя і сума). Усё астатняе — свабодныя выдаткі. Каб арэнда ці іншы рэгулярны плацеж лічыўся абавязковым, адзначце яго як рэгулярны або дадайце як падпіску.
+
 ## Карусель ІІ-інсайтаў
 
 Гарызантальна пракручваемая карусель ІІ-генераваных інсайтаў (патрабуецца план Pro):
@@ -43578,6 +43642,14 @@ Het geselecteerde bereik beïnvloedt alle grafieken en inzichten hieronder.
 - **Gem. per dag** — gemiddelde dagelijkse uitgaven
 
 Zolang de periode loopt, vergelijken beide regels dezelfde dagen: op de 5e worden je eerste vijf dagen vergeleken met de eerste vijf dagen van de vorige periode (en van de laatste drie maanden), zodat een lopende maand nooit op een grote besparing lijkt. **Gem. per dag** telt alleen de dagen tot nu toe. De regel met het 3-maands gemiddelde verschijnt in de maandweergave.
+
+## Inkomsten vs uitgaven
+
+Toont wat je in de gekozen periode hebt **verdiend**, **uitgegeven** en **overgehouden**, en welk deel van je inkomsten je hebt overgehouden (spaarquote). Heb je meer uitgegeven dan verdiend, dan staat er **Te veel uitgegeven**. Daaronder vergelijken staven inkomsten en uitgaven per maand: de laatste 6 maanden in de maandweergave, alle maanden van het jaar in de jaarweergave.
+
+## Vast vs variabel
+
+Toont welk deel van je uitgaven **vast** is — geld dat elke periode hoe dan ook vertrekt — en somt de grootste vaste lasten op. Een uitgave telt als vast als ze terugkerend is of overeenkomt met een van je actieve abonnementen in de abonnementenbeheerder (zelfde naam, of zelfde categorie en bedrag). Al het andere is variabel. Wil je dat huur of een andere vaste betaling als vast telt, markeer die dan als terugkerend of voeg hem toe als abonnement.
 
 ## AI-inzichtencarrousel
 
@@ -48953,6 +49025,14 @@ O período selecionado afeta todos os gráficos e análises abaixo.
 - **Média por dia** — gasto médio diário
 
 Enquanto o período decorre, ambas as comparações usam os mesmos dias: no dia 5, os seus primeiros cinco dias são comparados com os primeiros cinco dias do período anterior (e dos últimos três meses), pelo que um mês a meio nunca parece uma grande poupança. A **Média por dia** conta apenas os dias já decorridos. A linha da média de 3 meses aparece na vista Mês.
+
+## Receitas vs despesas
+
+Mostra o que **ganhou**, **gastou** e **poupou** no período selecionado, e que parte das suas receitas conseguiu guardar (taxa de poupança). Se gastou mais do que ganhou, o último valor indica **Gasto a mais**. Por baixo, barras comparam receitas e despesas mês a mês: os últimos 6 meses na vista Mês e todos os meses do ano na vista Ano.
+
+## Fixas vs variáveis
+
+Mostra que parte das suas despesas é **fixa** — dinheiro que sai em cada período de qualquer forma — e lista as maiores despesas fixas. Uma despesa conta como fixa se for recorrente ou se corresponder a uma das suas subscrições ativas no gestor de subscrições (mesmo nome, ou mesma categoria e montante). Tudo o resto é variável. Para que a renda ou outro pagamento regular conte como fixo, marque-o como recorrente ou adicione-o como subscrição.
 
 ## Carrossel de análises com IA
 
@@ -54354,6 +54434,14 @@ O período selecionado afeta todos os gráficos e insights abaixo.
 - **Média por dia** — gasto médio diário
 
 Enquanto o período está em andamento, as duas comparações usam os mesmos dias: no dia 5, seus primeiros cinco dias são comparados com os primeiros cinco dias do período anterior (e dos últimos três meses), então um mês pela metade nunca parece uma grande economia. A **Média por dia** conta só os dias que já passaram. A linha da média de 3 meses aparece na visualização Mês.
+
+## Receitas vs despesas
+
+Mostra quanto você **ganhou**, **gastou** e **economizou** no período selecionado, e que parte da sua renda você guardou (taxa de economia). Se você gastou mais do que ganhou, o último valor aparece como **Gasto a mais**. Abaixo, barras comparam receitas e despesas mês a mês: os últimos 6 meses na visualização Mês e todos os meses do ano na visualização Ano.
+
+## Fixas vs variáveis
+
+Mostra quanto dos seus gastos é **fixo** — dinheiro que sai todo período de qualquer jeito — e lista as maiores despesas fixas. Uma despesa conta como fixa quando é recorrente ou quando bate com uma das suas assinaturas ativas no gerenciador de assinaturas (mesmo nome, ou mesma categoria e valor). Todo o resto é variável. Para que o aluguel ou outro pagamento regular conte como fixo, marque-o como recorrente ou cadastre-o como assinatura.
 
 ## Carrossel de insights com IA
 

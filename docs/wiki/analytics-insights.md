@@ -15,6 +15,7 @@ The spending analysis layer: server-side aggregations (`modules/analytics/`, `mo
 - `apps/mobile/src/components/interactive-charts/` — drill-down charts with `ChartRenderer`
 
 ## Feature pages
+- [analytics-cash-flow](features/analytics-cash-flow.md) — income vs spending with the savings rate, and fixed vs flexible spending
 - [analytics-period-comparisons](features/analytics-period-comparisons.md) — "vs last period", "vs 3-month average", avg per day, category chips and the anomaly list: same-days windows while a period is in progress
 - [safe-to-spend](features/safe-to-spend.md) — the deterministic "safe to spend today" number and the chat affordability check
 - [financial-wrapped](features/financial-wrapped.md) — the year-in-review card deck and its share image

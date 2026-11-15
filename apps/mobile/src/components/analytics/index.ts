@@ -13,3 +13,5 @@ export { IncomeCategoryBreakdown } from './IncomeCategoryBreakdown';
 export { InflationIndexSection } from './InflationIndexSection';
 export { SavingsDetailSheet } from './SavingsDetailSheet';
 export { MemberBreakdown } from './MemberBreakdown';
+export { CashFlowCard } from './CashFlowCard';
+export { CommitmentsCard } from './CommitmentsCard';

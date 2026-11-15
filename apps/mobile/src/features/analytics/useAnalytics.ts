@@ -13,6 +13,7 @@ import { useBudgetComparison } from './useBudgetComparison';
 import { useDayOfWeekAnalytics } from './useDayOfWeekAnalytics';
 import { usePeriodComparison } from './usePeriodComparison';
 import { useSpendingAnomalies } from './useSpendingAnomalies';
+import { useCashFlowAnalytics } from './useCashFlowAnalytics';
 import { useItemBreakdown } from './useItemBreakdown';
 import { useTagSpending } from './useTagSpending';
 import { useProjectSpending } from './useProjectSpending';
@@ -186,6 +187,7 @@ export function useAnalytics(
   const { dayOfWeekSpending } = useDayOfWeekAnalytics(timeRange, currencyCode, selectedMonth, selectedYear);
   const { periodComparison } = usePeriodComparison(timeRange, currencyCode, selectedMonth, selectedYear);
   const { anomalies, predictions } = useSpendingAnomalies(categorySpending, timeRange, dateRange.startDate);
+  const cashFlowAnalytics = useCashFlowAnalytics(timeRange, currencyCode, selectedMonth, selectedYear);
   const { itemBreakdown } = useItemBreakdown(timeRange, currencyCode, selectedMonth, selectedYear);
   const { tagSpending } = useTagSpending(timeRange, currencyCode, selectedMonth, selectedYear);
   const { projectSpending } = useProjectSpending(timeRange, currencyCode, selectedMonth, selectedYear);
@@ -205,6 +207,7 @@ export function useAnalytics(
     periodComparison,
     anomalies,
     predictions,
+    cashFlowAnalytics,
     tagSpending,
     projectSpending,
   };

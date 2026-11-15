@@ -4375,6 +4375,14 @@ Der ausgewahlte Bereich beeinflusst alle Diagramme und Einblicke darunter.
 
 Solange der Zeitraum läuft, vergleichen beide Angaben dieselben Tage: Am 5. werden deine ersten fünf Tage mit den ersten fünf Tagen des Vorzeitraums (und der letzten drei Monate) verglichen, sodass ein angefangener Monat nie wie eine große Ersparnis aussieht. **Durchschnitt pro Tag** zählt nur die bisherigen Tage. Die Zeile zum 3-Monats-Schnitt erscheint in der Monatsansicht.
 
+## Einnahmen vs. Ausgaben
+
+Zeigt, was du im gewählten Zeitraum **verdient**, **ausgegeben** und **behalten** hast, und welchen Anteil deiner Einnahmen du behalten hast (Sparquote). Hast du mehr ausgegeben als verdient, steht dort **Mehr ausgegeben**. Darunter vergleichen Balken Einnahmen und Ausgaben Monat für Monat: die letzten 6 Monate in der Monatsansicht, alle Monate des Jahres in der Jahresansicht.
+
+## Fix vs. flexibel
+
+Zeigt, welcher Teil deiner Ausgaben **fix** ist — Geld, das in jedem Zeitraum ohnehin abfließt — und listet die größten Fixkosten auf. Eine Ausgabe gilt als fix, wenn sie wiederkehrend ist oder zu einem deiner aktiven Abos im Abo-Manager passt (gleicher Name oder gleiche Kategorie und gleicher Betrag). Alles andere ist flexibel. Damit Miete oder eine andere regelmäßige Zahlung als fix zählt, markiere sie als wiederkehrend oder lege sie als Abo an.
+
 ## KI-Einblicke-Karussell
 
 Ein horizontal scrollbares Karussell mit KI-generierten Einblicken (Pro-Plan erforderlich):

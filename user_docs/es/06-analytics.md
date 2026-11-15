@@ -26,6 +26,14 @@ El rango seleccionado afecta a todos los graficos e informacion que aparecen deb
 
 Mientras el periodo está en curso, ambas comparaciones usan los mismos días: el día 5, tus primeros cinco días se comparan con los primeros cinco días del periodo anterior (y de los últimos tres meses), así un mes a medias nunca parece un gran ahorro. **Promedio por día** cuenta solo los días transcurridos. La línea del promedio de 3 meses aparece en la vista Mes.
 
+## Ingresos vs gastos
+
+Muestra lo que **ingresaste**, **gastaste** y **ahorraste** en el periodo seleccionado, y qué parte de tus ingresos ahorraste (tasa de ahorro). Si gastaste más de lo que ingresaste, la última cifra indica **Gastado de más**. Debajo, unas barras comparan ingresos y gastos mes a mes: los últimos 6 meses en la vista Mes y todos los meses del año en la vista Año.
+
+## Fijos vs variables
+
+Muestra qué parte de tus gastos es **fija** — dinero que sale cada periodo de todos modos — y lista los gastos fijos más grandes. Un gasto cuenta como fijo si es recurrente o si coincide con una de tus suscripciones activas del gestor de suscripciones (mismo nombre, o misma categoría e importe). Todo lo demás es variable. Para que el alquiler u otro pago periódico cuente como fijo, márcalo como recurrente o añádelo como suscripción.
+
 ## Carrusel de informacion IA
 
 Un carrusel horizontal desplazable con informacion generada por IA (requiere plan Pro):

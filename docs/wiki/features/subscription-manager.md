@@ -45,7 +45,7 @@ the renewal date, `source: 'manual'`.
 
 ## Known gaps
 
-- The booked expense is `source: 'manual'`, so nothing distinguishes it from a hand-entered one.
+- The booked expense is `source: 'manual'`, so nothing distinguishes it from a hand-entered one. The Analytics tab's fixed-vs-flexible card has to recognise renewals by matching name or category + amount instead ([analytics-cash-flow](analytics-cash-flow.md)).
 
 ## History
 

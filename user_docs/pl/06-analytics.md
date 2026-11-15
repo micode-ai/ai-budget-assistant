@@ -26,6 +26,14 @@ Wybrany zakres wplywa na wszystkie wykresy i wnioski ponizej.
 
 Dopóki okres trwa, oba porównania dotyczą tych samych dni: 5. dnia miesiąca twoje pierwsze pięć dni porównujemy z pierwszymi pięcioma dniami poprzedniego okresu (i ostatnich trzech miesięcy), więc rozpoczęty miesiąc nigdy nie wygląda jak duża oszczędność. **Średnio dziennie** liczy tylko dni, które już minęły. Wiersz ze średnią z 3 miesięcy pojawia się w widoku Miesiąc.
 
+## Przychody a wydatki
+
+Pokazuje, ile w wybranym okresie **zarobiono**, **wydano** i ile **zostało**, a także jaką część przychodów udało się zatrzymać (stopa oszczędności). Jeśli wydatki przekroczyły przychody, ostatnia wartość ma etykietę **Przekroczono**. Poniżej słupki porównują przychody i wydatki miesiąc po miesiącu: ostatnie 6 miesięcy w widoku Miesiąc i wszystkie miesiące roku w widoku Rok.
+
+## Stałe a zmienne
+
+Pokazuje, jaka część wydatków to koszty **stałe** — pieniądze, które i tak wychodzą w każdym okresie — i wymienia największe z nich. Wydatek liczy się jako stały, gdy jest cykliczny albo pasuje do jednej z aktywnych subskrypcji w menedżerze subskrypcji (ta sama nazwa albo ta sama kategoria i kwota). Wszystko inne jest zmienne. Aby czynsz lub inna regularna płatność liczyła się jako stała, oznacz ją jako cykliczną albo dodaj jako subskrypcję.
+
 ## Karuzela wnioskow AI
 
 Poziomo przewijana karuzela wnioskow generowanych przez AI (wymaga planu Pro):

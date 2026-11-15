@@ -223,6 +223,7 @@ the section you came for — it states what must not break and why. A missing se
 - [real-salary](features/real-salary.md) — personal inflation vs. pay: Eurostat HICP by COICOP
   division plus the personal receipt index, weighted by the account's own spend
 - [analytics-tab-breakdowns](features/analytics-tab-breakdowns.md) — the by-merchant and by-income-category donuts
+- [analytics-cash-flow](features/analytics-cash-flow.md) — income vs spending with the savings rate and monthly bars, and fixed (recurring + tracked subscriptions) vs flexible spending
 - [analytics-period-comparisons](features/analytics-period-comparisons.md) — "vs last period", "vs 3-month average", avg per day, category chips and the anomaly list compare the same days while a period is in progress
 - [spending-by-member](features/spending-by-member.md) — the by-member donut on shared accounts
 - [financial-health-score](features/financial-health-score.md) — the four-component 0–100 score, and why it lies while loading

@@ -4371,6 +4371,14 @@ La periode selectionnee affecte tous les graphiques et aperçus ci-dessous.
 
 Tant que la période est en cours, les deux comparaisons portent sur les mêmes jours : le 5, vos cinq premiers jours sont comparés aux cinq premiers jours de la période précédente (et des trois derniers mois), si bien qu'un mois entamé ne ressemble jamais à une grosse économie. **Moy. par jour** ne compte que les jours écoulés. La ligne de la moyenne sur 3 mois apparaît dans la vue Mois.
 
+## Revenus vs dépenses
+
+Affiche ce que vous avez **gagné**, **dépensé** et **épargné** sur la période choisie, ainsi que la part de vos revenus que vous avez gardée (taux d'épargne). Si vous avez dépensé plus que vous n'avez gagné, le dernier chiffre indique **Dépassement**. En dessous, des barres comparent revenus et dépenses mois par mois : les 6 derniers mois en vue Mois, tous les mois de l'année en vue Année.
+
+## Fixes vs variables
+
+Indique quelle part de vos dépenses est **fixe** — de l'argent qui part chaque période quoi qu'il arrive — et liste les plus grosses dépenses fixes. Une dépense compte comme fixe si elle est récurrente ou si elle correspond à l'un de vos abonnements actifs du gestionnaire d'abonnements (même nom, ou même catégorie et même montant). Tout le reste est variable. Pour qu'un loyer ou un autre paiement régulier compte comme fixe, marquez-le comme récurrent ou ajoutez-le comme abonnement.
+
 ## Carousel d'aperçus IA
 
 Un carousel horizontal defilable d'aperçus generes par l'IA (plan Pro requis) :

@@ -26,6 +26,14 @@ Het geselecteerde bereik beïnvloedt alle grafieken en inzichten hieronder.
 
 Zolang de periode loopt, vergelijken beide regels dezelfde dagen: op de 5e worden je eerste vijf dagen vergeleken met de eerste vijf dagen van de vorige periode (en van de laatste drie maanden), zodat een lopende maand nooit op een grote besparing lijkt. **Gem. per dag** telt alleen de dagen tot nu toe. De regel met het 3-maands gemiddelde verschijnt in de maandweergave.
 
+## Inkomsten vs uitgaven
+
+Toont wat je in de gekozen periode hebt **verdiend**, **uitgegeven** en **overgehouden**, en welk deel van je inkomsten je hebt overgehouden (spaarquote). Heb je meer uitgegeven dan verdiend, dan staat er **Te veel uitgegeven**. Daaronder vergelijken staven inkomsten en uitgaven per maand: de laatste 6 maanden in de maandweergave, alle maanden van het jaar in de jaarweergave.
+
+## Vast vs variabel
+
+Toont welk deel van je uitgaven **vast** is — geld dat elke periode hoe dan ook vertrekt — en somt de grootste vaste lasten op. Een uitgave telt als vast als ze terugkerend is of overeenkomt met een van je actieve abonnementen in de abonnementenbeheerder (zelfde naam, of zelfde categorie en bedrag). Al het andere is variabel. Wil je dat huur of een andere vaste betaling als vast telt, markeer die dan als terugkerend of voeg hem toe als abonnement.
+
 ## AI-inzichtencarrousel
 
 Een horizontaal scrollbare carrousel met door AI gegenereerde inzichten (Pro-abonnement vereist):

@@ -4377,6 +4377,14 @@ The selected range affects all charts and insights below.
 
 While the period is still running, both comparisons use the same days: on the 5th, your first five days are compared with the first five days of the previous period (and of the last three months), so an unfinished month never looks like a big saving. **Avg per Day** counts only the days so far. The "3-month average" line appears in the Month view.
 
+## Income vs Spending
+
+Shows what you **earned**, **spent** and **kept** in the selected period, and the share of your income you kept (the savings rate). If you spent more than you earned, the last figure reads **Overspent**. Below, bars compare income and spending month by month: the last 6 months in the Month view, every month of the year in the Year view.
+
+## Fixed vs Flexible
+
+Shows how much of your spending is **fixed** — money that leaves every period anyway — and lists the largest fixed costs. An expense counts as fixed when it is a recurring expense, or when it matches one of your active subscriptions in the subscription manager (same name, or same category and amount). Everything else is flexible. To have rent or another regular payment counted as fixed, mark it as recurring or add it as a subscription.
+
 ## AI Insights Carousel
 
 A horizontal scrollable carousel of AI-generated insights (Pro plan required):

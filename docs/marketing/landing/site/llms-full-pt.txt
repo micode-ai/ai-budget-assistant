@@ -1605,6 +1605,14 @@ O período selecionado afeta todos os gráficos e análises abaixo.
 
 Enquanto o período decorre, ambas as comparações usam os mesmos dias: no dia 5, os seus primeiros cinco dias são comparados com os primeiros cinco dias do período anterior (e dos últimos três meses), pelo que um mês a meio nunca parece uma grande poupança. A **Média por dia** conta apenas os dias já decorridos. A linha da média de 3 meses aparece na vista Mês.
 
+## Receitas vs despesas
+
+Mostra o que **ganhou**, **gastou** e **poupou** no período selecionado, e que parte das suas receitas conseguiu guardar (taxa de poupança). Se gastou mais do que ganhou, o último valor indica **Gasto a mais**. Por baixo, barras comparam receitas e despesas mês a mês: os últimos 6 meses na vista Mês e todos os meses do ano na vista Ano.
+
+## Fixas vs variáveis
+
+Mostra que parte das suas despesas é **fixa** — dinheiro que sai em cada período de qualquer forma — e lista as maiores despesas fixas. Uma despesa conta como fixa se for recorrente ou se corresponder a uma das suas subscrições ativas no gestor de subscrições (mesmo nome, ou mesma categoria e montante). Tudo o resto é variável. Para que a renda ou outro pagamento regular conte como fixo, marque-o como recorrente ou adicione-o como subscrição.
+
 ## Carrossel de análises com IA
 
 Um carrossel com deslocação horizontal de análises geradas por IA (requer o plano Pro):
