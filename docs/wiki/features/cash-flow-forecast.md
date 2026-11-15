@@ -11,8 +11,9 @@ tier.
 
 ## Entry points
 
-- `apps/api/src/modules/insights/cash-flow-forecast.util.ts`: pure date rules and the series
-  builder, **shared with Safe-to-Spend**.
+- `apps/api/src/common/utils/cash-flow-dates.ts`: the pure date rules, **shared with
+  Safe-to-Spend** and mirrored in shared-utils for the app's offline Safe-to-Spend (ABA-772);
+  `apps/api/src/modules/insights/cash-flow-forecast.util.ts`: the series builder, re-exporting them.
 - `apps/api/src/modules/insights/cash-flow-forecast.service.ts`: `CashFlowForecastService`,
   `cashFlowForecastCacheKey`.
 - `GET /insights/cash-flow-forecast` in `insights.controller.ts`. No tier guard; viewers may read
@@ -55,7 +56,7 @@ this is an estimate. The card is shown only while the current period is open.
 
 ## Invariants
 
-- Safe-to-Spend and the forecast take their date rules from `cash-flow-forecast.util.ts`. A
+- Safe-to-Spend and the forecast take their date rules from `common/utils/cash-flow-dates.ts` (and the app's offline Safe-to-Spend from its shared-utils mirror). A
   second copy would let the hero number and the forecast disagree about when the salary comes.
 - Goal contributions are **not** subtracted. Safe-to-Spend reserves them, but they are not money
   leaving the wallet, so subtracting them would fabricate a shortfall.

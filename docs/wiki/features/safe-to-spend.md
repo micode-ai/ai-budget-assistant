@@ -17,9 +17,9 @@ chat. It is deterministic — no model computes it — and free on every tier.
   `checkAffordability`, `safeToSpendCacheKey`
 - `apps/api/src/modules/insights/safe-to-spend.util.ts` — `computeSafeToSpend`, the pure formula
   (API copy)
-- `apps/api/src/modules/insights/cash-flow-forecast.util.ts` — the date rules (subscription
-  renewals, recurring due dates, monthly income cadence), shared with the
-  [30-day forecast](cash-flow-forecast.md) so the two never disagree on when money moves
+- `apps/api/src/common/utils/cash-flow-dates.ts` — the date rules (subscription renewals, recurring
+  due dates, monthly income cadence), shared with the [30-day forecast](cash-flow-forecast.md) and
+  mirrored in `packages/shared-utils/src/formatting/cash-flow-dates.ts` for the offline path
 - `packages/shared-utils/src/formatting/index.ts` — the mirror copy of `computeSafeToSpend` the app
   uses offline
 - `apps/api/src/modules/insights/insights.controller.ts` — `GET /insights/safe-to-spend`
@@ -69,9 +69,13 @@ response carries `fxApproximate: true`.
 
 The server caches the response in Redis under `sts:{accountId}:{baseCurrency}` for 300 s. The app
 keeps the last response in MMKV (store id `safe-to-spend`) **keyed per account** and paints it
-before the request returns. With no server response at all, `useSafeToSpend` approximates the
-number locally with the shared-utils `computeSafeToSpend` over the stores — without subscriptions,
-which the device does not have.
+before the request returns. With no server response at all, `useSafeToSpend` computes the number
+on the device **by the server's own rules** (ABA-772). `features/insights/localSafeToSpend.ts`
+uses the shared-utils mirror of `common/utils/cash-flow-dates.ts`: expected (not received) income,
+future recurring due dates, subscription renewals from the per-account MMKV cache
+(`readCachedSubscriptions`), and goal pace. The two `cash-flow-dates` copies are pinned by
+`cashFlowDatesParity.test.ts`. Before ABA-772 the offline path added income already received and
+subtracted recurring expenses already paid (both already in the wallet), and had no subscriptions.
 
 ### The affordability check
 

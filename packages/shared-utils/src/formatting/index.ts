@@ -377,3 +377,4 @@ export {
 
 // App locale resolver and Intl mapper (twin of the API's common/utils/app-locale.ts)
 export { resolveAppLocale, resolveAcceptLanguage, toIntlLocale } from './app-locale';
+export * from './cash-flow-dates';

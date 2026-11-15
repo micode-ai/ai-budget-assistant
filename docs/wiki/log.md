@@ -336,6 +336,7 @@ Newest last within each section.
 - 2026-11-15 · [ABA-769](https://github.com/micode-ai/ai-budget-assistant/issues/807) — Health Score debt component now weighs the overdue share of the outstanding amount (base currency) instead of the overdue count; closes the known gap. Pages: `features/financial-health-score.md`.
 - 2026-11-15 · [ABA-770](https://github.com/micode-ai/ai-budget-assistant/issues/808) — `localDayKey` (ABA-767) read server `@db.Date` values (UTC midnight) in local time and moved them a day back west of UTC; exact UTC midnight is now read as date-only. Found while reading `wallet-balance-history.md`'s invariant on date-only movements. Pages: `features/analytics-period-comparisons.md`.
 - 2026-11-15 · [ABA-771](https://github.com/micode-ai/ai-budget-assistant/issues/809) — wallet balance history converts past months at their month-end ECB rate (`HistoricalRateService`, Frankfurter, Redis-cached, fail-soft); today's rate only for the current month and UAH/RUB/BYN. Pages: `features/wallet-balance-history.md`.
+- 2026-11-15 · [ABA-772](https://github.com/micode-ai/ai-budget-assistant/issues/810) — offline Safe-to-Spend double-counted income already received and recurring already paid, and had no subscriptions; now `localSafeToSpend.ts` follows the server's rules via a shared-utils mirror of `common/utils/cash-flow-dates.ts` (parity-tested) and a per-account MMKV subscription cache. Pages: `features/safe-to-spend.md`, `features/cash-flow-forecast.md`.
 
 ## Queries
 

@@ -7,6 +7,8 @@ import { useGoalStore } from '@/stores/goalStore';
 import { useAuthStore } from '@/stores/authStore';
 import { useAccountStore } from '@/stores/accountStore';
 import { useExchangeRateStore, convertAmount } from '@/stores/exchangeRateStore';
+import { useUserSubscriptionStore, readCachedSubscriptions } from '@/stores/userSubscriptionStore';
+import { localSafeToSpendInputs } from './localSafeToSpend';
 import { computeSafeToSpend } from '@budget/shared-utils';
 import { filterConsumption, filterIncomeConsumption } from '@/utils/consumption';
 import type { SafeToSpendResponse } from '@budget/shared-types';
@@ -19,8 +21,9 @@ export interface UseSafeToSpendResult {
 
 /**
  * Primary source: server response cached in insightsStore (MMKV-backed).
- * Offline fallback: locally approximated number from expenseStore / incomeStore /
- * walletStore / goalStore via computeSafeToSpend (subscriptions may be omitted).
+ * Offline fallback: the same number computed on the device from the stores, by
+ * the server's own rules (localSafeToSpend.ts, ABA-772) — subscriptions from the
+ * per-account MMKV cache when the store has not loaded them.
  * Returns the server result when available; falls back to local approximation
  * with fxApproximate=true when the server result is absent or stale.
  *
@@ -41,6 +44,7 @@ export function useSafeToSpend(): UseSafeToSpendResult {
   const { user } = useAuthStore();
   const { rates } = useExchangeRateStore();
   const currentAccountId = useAccountStore((s) => s.currentAccountId);
+  const subscriptions = useUserSubscriptionStore((s) => s.subscriptions);
 
   // Load on mount AND on every account change.
   //
@@ -73,65 +77,33 @@ export function useSafeToSpend(): UseSafeToSpendResult {
     if (!currentAccountId) return null;
 
     const baseCurrency = user?.currencyCode ?? 'USD';
-    const now = new Date();
-
-    // Days remaining in current month (inclusive, min 1)
-    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-    const daysRemaining = Math.max(
-      1,
-      Math.ceil((endOfMonth.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)),
-    );
-    const horizonDate = endOfMonth.toISOString().slice(0, 10);
+    const convert = (amount: number, currency: string) =>
+      convertAmount(amount, currency || baseCurrency, baseCurrency, rates);
 
     // Wallet balance — sum all balances converted to base currency
-    const walletBalance = walletSummary.reduce((sum, ws) => {
-      return sum + convertAmount(ws.currentBalance, ws.currencyCode, baseCurrency, rates);
-    }, 0);
+    const walletBalance = walletSummary.reduce((sum, ws) => sum + convert(ws.currentBalance, ws.currencyCode), 0);
 
-    // Upcoming recurring expenses this month (rough: recurring flag + same month)
-    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-    const recurringThisMonth = expenses.filter((e) => {
-      if (e.isDeleted || !e.isRecurring) return false;
-      const d = new Date(e.date);
-      return d >= monthStart && d <= endOfMonth;
+    // The server's own rules (localSafeToSpend.ts): expected — not received —
+    // income, future recurring due dates, subscription renewals, goal pace.
+    const accountSubs = (subscriptions.some((s) => s.accountId === currentAccountId)
+      ? subscriptions
+      : readCachedSubscriptions(currentAccountId)
+    ).filter((s) => s.accountId === currentAccountId);
+    const inputs = localSafeToSpendInputs({
+      now: new Date(),
+      incomes: incomes.filter((i) => !i.isDeleted),
+      expenses: expenses.filter((e) => !e.isDeleted),
+      subscriptions: accountSubs,
+      goals,
+      convert,
     });
-    const upcomingRecurring = recurringThisMonth.reduce(
-      (sum, e) => sum + convertAmount(e.amount, e.currencyCode, baseCurrency, rates),
-      0,
-    );
-
-    // Income inference: look for regular income this month
-    const monthIncomes = incomes.filter((inc) => {
-      if (inc.isDeleted) return false;
-      const d = new Date(inc.date);
-      return d >= monthStart && d <= endOfMonth;
-    });
-    const expectedIncome = monthIncomes.reduce(
-      (sum, inc) => sum + convertAmount(inc.amount, inc.currencyCode, baseCurrency, rates),
-      0,
-    );
-    const incomeInferred = expectedIncome > 0;
-
-    // Goal contributions: active goals, prorated pace for remaining days
-    const activeGoals = goals.filter((g) => g.status === 'active');
-    const goalContributions = activeGoals.reduce((sum, g) => {
-      const deadline = new Date(g.deadline);
-      if (deadline <= now) return sum; // overdue — skip
-      const remaining = g.targetAmount - g.currentAmount;
-      if (remaining <= 0) return sum; // already met
-      const totalDays = Math.max(
-        1,
-        Math.ceil((deadline.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)),
-      );
-      const dailyNeeded = remaining / totalDays;
-      const contribution = dailyNeeded * daysRemaining;
-      return sum + convertAmount(contribution, g.currencyCode ?? baseCurrency, baseCurrency, rates);
-    }, 0);
+    const { expectedIncome, incomeInferred, horizonDate, daysRemaining, upcomingSubscriptions, upcomingRecurring, goalContributions } =
+      inputs;
 
     const result = computeSafeToSpend({
       walletBalance,
       expectedIncome,
-      upcomingSubscriptions: 0, // subscriptions not available offline
+      upcomingSubscriptions,
       upcomingRecurring,
       goalContributions,
       buffer: 0,
@@ -152,14 +124,14 @@ export function useSafeToSpend(): UseSafeToSpendResult {
       breakdown: {
         walletBalance,
         expectedIncome,
-        upcomingSubscriptions: 0,
+        upcomingSubscriptions,
         upcomingRecurring,
         goalContributions,
         buffer: 0,
       },
       computedAt: new Date().toISOString(),
     };
-  }, [safeToSpend, user, walletSummary, expenses, incomes, goals, rates, currentAccountId]);
+  }, [safeToSpend, user, walletSummary, expenses, incomes, goals, rates, currentAccountId, subscriptions]);
 
   const data = safeToSpend ?? localFallback;
   const hasEnoughData = data !== null;
