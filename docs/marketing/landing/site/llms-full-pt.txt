@@ -2027,6 +2027,8 @@ No topo do ecrã da história dos gastos:
 - **Semana** — história sobre as finanças da semana atual
 - **Mês** — história sobre as finanças do mês atual
 
+Se a sua conta tiver um **Mês financeiro** (por exemplo, a começar no dia do ordenado, dia 10), uma história mensal cobre esse período — *outubro* vai de 10 de outubro a 9 de novembro — e compara-o com o período anterior. As datas exatas aparecem por baixo do nome do mês.
+
 Toque para alternar entre as vistas. O conteúdo da história é atualizado em conformidade.
 
 ## Blocos da história

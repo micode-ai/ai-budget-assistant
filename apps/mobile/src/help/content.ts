@@ -1470,6 +1470,8 @@ At the top of the Spending Story screen:
 - **Week** — story about the current week's finances
 - **Month** — story about the current month's finances
 
+If your account has a **Financial Month** (for example, starting on payday, the 10th), a month story covers that period — *October* is 10 October – 9 November — and compares it with the period before. The exact dates are shown under the month name.
+
 Tap to switch between views. The story content updates accordingly.
 
 ## Story Blocks
@@ -6878,6 +6880,8 @@ iOS, Android, Web
 - **Неделя** — история о финансах текущей недели
 - **Месяц** — история о финансах текущего месяца
 
+Если у аккаунта задан **Финансовый месяц** (например, с дня зарплаты, 10-го), история за месяц охватывает этот период — *октябрь* — это 10 октября – 9 ноября — и сравнивает его с предыдущим периодом. Точные даты показаны под названием месяца.
+
 Нажмите для переключения между видами. Содержание истории обновляется соответственно.
 
 ## Блоки истории
@@ -12279,6 +12283,8 @@ iOS, Android, Web
 - **Тиждень** — історія про фінанси за поточний тиждень
 - **Місяць** — історія про фінанси за поточний місяць
 
+Якщо в акаунті задано **Фінансовий місяць** (наприклад, із дня зарплати, 10-го), історія за місяць охоплює цей період — *жовтень* — це 10 жовтня – 9 листопада — і порівнює його з попереднім періодом. Точні дати показано під назвою місяця.
+
 Натисніть, щоб переключатися між переглядами. Вміст історії оновлюється відповідно.
 
 ## Блоки історії
@@ -17628,6 +17634,8 @@ U gory ekranu Historii wydatkow:
 - **Tydzien** — historia o finansach biezacego tygodnia
 - **Miesiac** — historia o finansach biezacego miesiaca
 
+Jeśli konto ma **Miesiąc finansowy** (na przykład od dnia wypłaty, 10.), historia miesięczna obejmuje ten okres — *październik* to 10 października – 9 listopada — i porównuje go z poprzednim okresem. Dokładne daty widać pod nazwą miesiąca.
+
 Dotknij, aby przelaczac miedzy widokami. Tresc historii aktualizuje sie odpowiednio.
 
 ## Bloki historii
@@ -22973,6 +22981,8 @@ Am oberen Rand des Ausgabengeschichte-Bildschirms:
 - **Woche** — Geschichte uber die Finanzen der aktuellen Woche
 - **Monat** — Geschichte uber die Finanzen des aktuellen Monats
 
+Hat dein Konto einen **Finanzmonat** (zum Beispiel ab dem Zahltag, dem 10.), umfasst eine Monatsgeschichte diesen Zeitraum — *Oktober* ist dann der 10. Oktober – 9. November — und vergleicht ihn mit dem Zeitraum davor. Die genauen Daten stehen unter dem Monatsnamen.
+
 Tippe, um zwischen den Ansichten zu wechseln. Der Inhalt der Geschichte aktualisiert sich entsprechend.
 
 ## Geschichtsbausteine
@@ -28293,6 +28303,8 @@ En la parte superior de la pantalla de Historia de gastos:
 - **Semana** — historia sobre las finanzas de la semana actual
 - **Mes** — historia sobre las finanzas del mes actual
 
+Si tu cuenta tiene un **Mes financiero** (por ejemplo, desde el día de cobro, el 10), una historia mensual cubre ese periodo —*octubre* va del 10 de octubre al 9 de noviembre— y lo compara con el periodo anterior. Las fechas exactas aparecen bajo el nombre del mes.
+
 Toca para alternar entre vistas. El contenido de la historia se actualiza en consecuencia.
 
 ## Bloques de la historia
@@ -33602,6 +33614,8 @@ En haut de l'ecran Histoire des depenses :
 - **Semaine** — histoire sur les finances de la semaine en cours
 - **Mois** — histoire sur les finances du mois en cours
 
+Si votre compte a un **Mois financier** (par exemple à partir du jour de paie, le 10), une histoire mensuelle couvre cette période — *octobre* va du 10 octobre au 9 novembre — et la compare à la période précédente. Les dates exactes s'affichent sous le nom du mois.
+
 Appuyez pour basculer entre les vues. Le contenu de l'histoire se met a jour en consequence.
 
 ## Blocs de l'histoire
@@ -38909,6 +38923,8 @@ iOS, Android, Web
 - **Тыдзень** — гісторыя пра фінансы бягучага тыдня
 - **Месяц** — гісторыя пра фінансы бягучага месяца
 
+Калі ў акаўнта зададзены **Фінансавы месяц** (напрыклад, з дня заробку, 10-га), гісторыя за месяц ахоплівае гэты перыяд — *кастрычнік* — гэта 10 кастрычніка – 9 лістапада — і параўноўвае яго з папярэднім перыядам. Дакладныя даты паказаны пад назвай месяца.
+
 Націсніце для пераключэння паміж відамі. Змест гісторыі абнаўляецца адпаведна.
 
 ## Блокі гісторыі
@@ -44179,6 +44195,8 @@ Bovenaan het scherm Uitgavenverhaal:
 
 - **Week** — verhaal over de financiën van de huidige week
 - **Maand** — verhaal over de financiën van de huidige maand
+
+Heeft je account een **Financiële maand** (bijvoorbeeld vanaf betaaldag, de 10e), dan beslaat een maandverhaal die periode — *oktober* is 10 oktober – 9 november — en vergelijkt het die met de periode ervoor. De precieze data staan onder de maandnaam.
 
 Tik om tussen weergaven te wisselen. De inhoud van het verhaal wordt dienovereenkomstig bijgewerkt.
 
@@ -49592,6 +49610,8 @@ No topo do ecrã da história dos gastos:
 
 - **Semana** — história sobre as finanças da semana atual
 - **Mês** — história sobre as finanças do mês atual
+
+Se a sua conta tiver um **Mês financeiro** (por exemplo, a começar no dia do ordenado, dia 10), uma história mensal cobre esse período — *outubro* vai de 10 de outubro a 9 de novembro — e compara-o com o período anterior. As datas exatas aparecem por baixo do nome do mês.
 
 Toque para alternar entre as vistas. O conteúdo da história é atualizado em conformidade.
 
@@ -55016,6 +55036,8 @@ No topo da tela da história dos gastos:
 
 - **Semana** — história sobre as finanças da semana atual
 - **Mês** — história sobre as finanças do mês atual
+
+Se a sua conta tiver um **Mês financeiro** (por exemplo, começando no dia do pagamento, dia 10), uma história mensal cobre esse período — *outubro* vai de 10 de outubro a 9 de novembro — e compara com o período anterior. As datas exatas aparecem abaixo do nome do mês.
 
 Toque para alternar entre as visualizações. O conteúdo da história é atualizado de acordo.
 

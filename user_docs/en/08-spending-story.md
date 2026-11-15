@@ -20,6 +20,8 @@ At the top of the Spending Story screen:
 - **Week** — story about the current week's finances
 - **Month** — story about the current month's finances
 
+If your account has a **Financial Month** (for example, starting on payday, the 10th), a month story covers that period — *October* is 10 October – 9 November — and compares it with the period before. The exact dates are shown under the month name.
+
 Tap to switch between views. The story content updates accordingly.
 
 ## Story Blocks

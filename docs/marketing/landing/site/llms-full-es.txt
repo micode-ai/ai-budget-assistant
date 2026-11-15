@@ -4798,6 +4798,8 @@ En la parte superior de la pantalla de Historia de gastos:
 - **Semana** — historia sobre las finanzas de la semana actual
 - **Mes** — historia sobre las finanzas del mes actual
 
+Si tu cuenta tiene un **Mes financiero** (por ejemplo, desde el día de cobro, el 10), una historia mensual cubre ese periodo —*octubre* va del 10 de octubre al 9 de noviembre— y lo compara con el periodo anterior. Las fechas exactas aparecen bajo el nombre del mes.
+
 Toca para alternar entre vistas. El contenido de la historia se actualiza en consecuencia.
 
 ## Bloques de la historia

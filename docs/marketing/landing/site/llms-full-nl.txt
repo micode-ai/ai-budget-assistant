@@ -4793,6 +4793,8 @@ Bovenaan het scherm Uitgavenverhaal:
 - **Week** — verhaal over de financiën van de huidige week
 - **Maand** — verhaal over de financiën van de huidige maand
 
+Heeft je account een **Financiële maand** (bijvoorbeeld vanaf betaaldag, de 10e), dan beslaat een maandverhaal die periode — *oktober* is 10 oktober – 9 november — en vergelijkt het die met de periode ervoor. De precieze data staan onder de maandnaam.
+
 Tik om tussen weergaven te wisselen. De inhoud van het verhaal wordt dienovereenkomstig bijgewerkt.
 
 ## Verhaalblokken

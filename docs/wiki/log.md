@@ -345,6 +345,7 @@ Newest last within each section.
 - 2026-11-15 · [ABA-778](https://github.com/micode-ai/ai-budget-assistant/issues/816) — home Income & Expenses totals (and the Health Score savings rate) follow the financial month and place rows by `transactionDay`; recomputed from `useHomeScreenData` on an anchor change — a store-level `accountStore.subscribe` broke 30 suites that mock the account store partially. Pages: `features/budgets.md`.
 - 2026-11-15 · [ABA-779](https://github.com/micode-ai/ai-budget-assistant/issues/817) — home Net Profit trend buckets financial months (`monthBuckets` via `financialMonth`/`shiftFinancialMonth`) and places rows by `transactionDay`, so its current point matches the totals above it. Pages: `features/budgets.md`.
 - 2026-11-15 · [ABA-780](https://github.com/micode-ai/ai-budget-assistant/issues/818) — `telemetry.web.test.ts` checked "no raw width" as a substring of the serialized batch; an epoch-ms `ts` containing `1280` failed CI. Now checked field by field. Lesson for any such test: never assert absence by substring over JSON that carries timestamps. Pages: none (test-only).
+- 2026-11-15 · [ABA-781](https://github.com/micode-ai/ai-budget-assistant/issues/819) — Spending Story month stories follow the financial month (period named by its start month, span in the label, compared with the previous financial month); the controller passes `req.monthAnchorDay`; the Story screen opens on the current financial month. Pages: `features/budgets.md`.
 
 ## Queries
 

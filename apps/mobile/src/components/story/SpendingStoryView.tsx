@@ -1,5 +1,7 @@
 import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { financialMonth, formatFinancialMonth } from '@budget/shared-utils';
+import { useFinancialMonth } from '@/hooks/useFinancialMonth';
+import { useState, useEffect, useCallback } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -43,12 +45,16 @@ export function SpendingStoryView({ initial }: SpendingStoryViewProps) {
   const styles = useStyles(createStyles);
   const intlLocale = getIntlLocale();
 
-  const now = useMemo(() => new Date(), []);
+  // The current FINANCIAL month, named by the month it starts in (ABA-781):
+  // with salary on the 10th, on 5 November the current story is October's.
+  const { anchorDay, current } = useFinancialMonth();
+  const currentMonth = current.start.getMonth() + 1;
+  const currentYear = current.start.getFullYear();
   const [selectedMonth, setSelectedMonth] = useState(
-    initial?.month ? Number(initial.month) : now.getMonth() + 1,
+    initial?.month ? Number(initial.month) : currentMonth,
   );
   const [selectedYear, setSelectedYear] = useState(
-    initial?.year ? Number(initial.year) : now.getFullYear(),
+    initial?.year ? Number(initial.year) : currentYear,
   );
 
   const [period, setPeriod] = useState<'week' | 'month'>('month');
@@ -57,7 +63,15 @@ export function SpendingStoryView({ initial }: SpendingStoryViewProps) {
   const [error, setError] = useState<string | null>(null);
   const { confirmAiUsage } = useAiCostConfirmation();
 
-  const isCurrentMonth = selectedMonth === now.getMonth() + 1 && selectedYear === now.getFullYear();
+  const isCurrentMonth = selectedMonth === currentMonth && selectedYear === currentYear;
+
+  /** "10 Oct – 9 Nov" for an anchored month, else null (no second line). */
+  const getMonthRange = (month: number, year: number): string | null => {
+    if (anchorDay === null) return null;
+    const inside = new Date(year, month - 1, Math.min(anchorDay, new Date(year, month, 0).getDate()), 12);
+    const { start, end } = financialMonth(inside, anchorDay);
+    return formatFinancialMonth(start, end, intlLocale).range;
+  };
 
   const getMonthLabel = (month: number, year: number): string => {
     const date = new Date(year, month - 1, 1);
@@ -150,9 +164,14 @@ export function SpendingStoryView({ initial }: SpendingStoryViewProps) {
           <TouchableOpacity onPress={goToPrevMonth} hitSlop={8} disabled={isLoading}>
             <Ionicons name="chevron-back" size={22} color={theme.colors.primary} />
           </TouchableOpacity>
-          <Text style={styles.monthPickerLabel}>
-            {getMonthLabel(selectedMonth, selectedYear)}
-          </Text>
+          <View style={styles.monthLabelBlock}>
+            <Text style={styles.monthPickerLabel}>
+              {getMonthLabel(selectedMonth, selectedYear)}
+            </Text>
+            {!!getMonthRange(selectedMonth, selectedYear) && (
+              <Text style={styles.monthRange}>{getMonthRange(selectedMonth, selectedYear)}</Text>
+            )}
+          </View>
           <TouchableOpacity onPress={goToNextMonth} hitSlop={8} disabled={isCurrentMonth || isLoading}>
             <Ionicons
               name="chevron-forward"
@@ -274,6 +293,13 @@ const createStyles = (theme: Theme) => ({
   },
   periodTabTextActive: {
     color: theme.colors.textInverse,
+  },
+  monthLabelBlock: {
+    alignItems: 'center' as const,
+  },
+  monthRange: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
   },
   monthPickerRow: {
     flexDirection: 'row' as const,

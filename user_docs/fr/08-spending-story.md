@@ -20,6 +20,8 @@ En haut de l'ecran Histoire des depenses :
 - **Semaine** — histoire sur les finances de la semaine en cours
 - **Mois** — histoire sur les finances du mois en cours
 
+Si votre compte a un **Mois financier** (par exemple à partir du jour de paie, le 10), une histoire mensuelle couvre cette période — *octobre* va du 10 octobre au 9 novembre — et la compare à la période précédente. Les dates exactes s'affichent sous le nom du mois.
+
 Appuyez pour basculer entre les vues. Le contenu de l'histoire se met a jour en consequence.
 
 ## Blocs de l'histoire

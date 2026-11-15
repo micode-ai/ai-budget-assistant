@@ -4782,6 +4782,8 @@ Am oberen Rand des Ausgabengeschichte-Bildschirms:
 - **Woche** — Geschichte uber die Finanzen der aktuellen Woche
 - **Monat** — Geschichte uber die Finanzen des aktuellen Monats
 
+Hat dein Konto einen **Finanzmonat** (zum Beispiel ab dem Zahltag, dem 10.), umfasst eine Monatsgeschichte diesen Zeitraum — *Oktober* ist dann der 10. Oktober – 9. November — und vergleicht ihn mit dem Zeitraum davor. Die genauen Daten stehen unter dem Monatsnamen.
+
 Tippe, um zwischen den Ansichten zu wechseln. Der Inhalt der Geschichte aktualisiert sich entsprechend.
 
 ## Geschichtsbausteine

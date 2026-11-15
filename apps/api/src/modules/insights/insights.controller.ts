@@ -129,6 +129,8 @@ export class InsightsController {
       body.month,
       body.year,
       req.user.currencyCode || 'USD',
+      // Month stories follow the account's financial month (ABA-781).
+      req.monthAnchorDay ?? null,
     );
   }
 

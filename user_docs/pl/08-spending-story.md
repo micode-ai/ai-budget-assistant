@@ -20,6 +20,8 @@ U gory ekranu Historii wydatkow:
 - **Tydzien** — historia o finansach biezacego tygodnia
 - **Miesiac** — historia o finansach biezacego miesiaca
 
+Jeśli konto ma **Miesiąc finansowy** (na przykład od dnia wypłaty, 10.), historia miesięczna obejmuje ten okres — *październik* to 10 października – 9 listopada — i porównuje go z poprzednim okresem. Dokładne daty widać pod nazwą miesiąca.
+
 Dotknij, aby przelaczac miedzy widokami. Tresc historii aktualizuje sie odpowiednio.
 
 ## Bloki historii

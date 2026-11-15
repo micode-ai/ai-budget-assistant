@@ -13,6 +13,7 @@ import { ExchangeRateService } from '../currency-exchange/exchange-rate.service'
 import { toIntlLocale } from '../../common/utils/app-locale';
 import { getRatesSafe, convertAmount } from '../../common/utils/fx';
 import { EXCLUDE_SPLIT_RECEIVABLE } from '../../common/utils/expense-filters';
+import { financialMonth, shiftFinancialMonth } from '../../common/utils/financial-month';
 
 /** Mirrors SpendingStoryResponse in @budget/shared-types (not importable at runtime). */
 export interface SpendingStoryResult {
@@ -76,6 +77,7 @@ export class StoryService {
     month?: number,
     year?: number,
     baseCurrency = 'USD',
+    anchorDay: number | null = null,
   ): Promise<SpendingStoryResult> {
     // Tier 2 (full encryption): amounts are encrypted, stories cannot be generated
     const encryptionTier = await this.getEncryptionTier(accountId);
@@ -97,10 +99,13 @@ export class StoryService {
     }
 
     const now = new Date();
+    // `month`/`year` name the month the period STARTS in. With an anchor day
+    // (salary on the 10th) "October" is 10 Oct – 9 Nov, as on the Analytics
+    // tab and the budgets (ABA-781); without one it is the calendar month.
     const targetDate = (month != null && year != null)
-      ? new Date(year, month - 1, 15) // mid-month to avoid timezone edge cases
+      ? new Date(year, month - 1, anchorDay ? Math.min(anchorDay, new Date(year, month, 0).getDate()) : 15, 12)
       : now;
-    const { periodStart, periodEnd, periodLabel } = this.computePeriod(targetDate, period, language);
+    const { periodStart, periodEnd, periodLabel } = this.computePeriod(targetDate, period, language, anchorDay);
 
     // Check cache unless force regenerate
     if (!forceRegenerate) {
@@ -148,13 +153,30 @@ export class StoryService {
       aiModelPref = user?.aiModel ?? undefined;
     }
 
-    return this.generateStory(accountId, periodStart, periodEnd, periodLabel, language, encryptionTier, responseMode, userId, baseCurrency, aiModelPref);
+    // The comparison period is the previous FINANCIAL month for a month story
+    // (clamped like every anchored step); a week story keeps comparing with the
+    // month before its start, as it always has.
+    const previousPeriodStart =
+      period === 'month'
+        ? financialMonth(shiftFinancialMonth(periodStart, -1, anchorDay), anchorDay).start
+        : undefined;
+
+    return this.generateStory(accountId, periodStart, periodEnd, periodLabel, language, encryptionTier, responseMode, userId, baseCurrency, aiModelPref, previousPeriodStart);
   }
 
-  private computePeriod(now: Date, period: 'week' | 'month', language?: string) {
+  private computePeriod(now: Date, period: 'week' | 'month', language?: string, anchorDay: number | null = null) {
     const locale = toIntlLocale(language || 'en');
 
     if (period === 'month') {
+      if (anchorDay) {
+        // Financial month: named by the month it starts in, with its exact span,
+        // because "October" alone would read as 1–31 October.
+        const { start, end } = financialMonth(now, anchorDay);
+        const monthName = start.toLocaleDateString(locale, { month: 'long' });
+        const dayMonth = (d: Date) => d.toLocaleDateString(locale, { day: 'numeric', month: 'short' });
+        const periodLabel = `${monthName.charAt(0).toUpperCase() + monthName.slice(1)} ${start.getFullYear()} (${dayMonth(start)} – ${dayMonth(end)})`;
+        return { periodStart: start, periodEnd: end, periodLabel };
+      }
       const periodStart = new Date(now.getFullYear(), now.getMonth(), 1);
       const periodEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0);
       const monthName = now.toLocaleDateString(locale, { month: 'long' });
@@ -199,10 +221,11 @@ export class StoryService {
     userId?: string,
     baseCurrency = 'USD',
     aiModelPref?: string,
+    previousStart?: Date,
   ): Promise<SpendingStoryResult> {
     // Gather comprehensive data
-    const previousPeriodStart = new Date(periodStart);
-    previousPeriodStart.setMonth(previousPeriodStart.getMonth() - 1);
+    const previousPeriodStart = previousStart ?? new Date(periodStart);
+    if (!previousStart) previousPeriodStart.setMonth(previousPeriodStart.getMonth() - 1);
 
     const [
       currentExpenses,

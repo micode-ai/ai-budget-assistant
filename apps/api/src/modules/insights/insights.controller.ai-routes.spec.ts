@@ -63,7 +63,7 @@ describe('InsightsController — AI route dispatch', () => {
       storyService: { getSpendingStory: jest.fn().mockResolvedValue({ story: {}, isStale: false }) },
     });
     await ctrl.getSpendingStory(req, { period: undefined as any, forceRegenerate: true, language: 'ru', month: 7, year: 2026 });
-    expect(storyService.getSpendingStory).toHaveBeenCalledWith('acc-1', 'month', true, 'ru', 'user-1', 7, 2026, 'USD');
+    expect(storyService.getSpendingStory).toHaveBeenCalledWith('acc-1', 'month', true, 'ru', 'user-1', 7, 2026, 'USD', null);
   });
 
   // ABA-387: the story is narrated in the caller's display currency, never in the
@@ -74,7 +74,7 @@ describe('InsightsController — AI route dispatch', () => {
     });
     const plReq: any = { accountId: 'acc-1', user: { id: 'user-1', currencyCode: 'PLN' } };
     await ctrl.getSpendingStory(plReq, { period: 'month' });
-    expect(storyService.getSpendingStory).toHaveBeenCalledWith('acc-1', 'month', undefined, undefined, 'user-1', undefined, undefined, 'PLN');
+    expect(storyService.getSpendingStory).toHaveBeenCalledWith('acc-1', 'month', undefined, undefined, 'user-1', undefined, undefined, 'PLN', null);
   });
 
   it('POST /insights/story passes through an explicit period', async () => {
@@ -82,7 +82,16 @@ describe('InsightsController — AI route dispatch', () => {
       storyService: { getSpendingStory: jest.fn().mockResolvedValue({ story: {}, isStale: false }) },
     });
     await ctrl.getSpendingStory(req, { period: 'week', forceRegenerate: false, language: 'en' });
-    expect(storyService.getSpendingStory).toHaveBeenCalledWith('acc-1', 'week', false, 'en', 'user-1', undefined, undefined, 'USD');
+    expect(storyService.getSpendingStory).toHaveBeenCalledWith('acc-1', 'week', false, 'en', 'user-1', undefined, undefined, 'USD', null);
+  });
+
+  it('POST /insights/story forwards the account financial-month anchor (ABA-781)', async () => {
+    const { ctrl, storyService } = buildController({
+      storyService: { getSpendingStory: jest.fn().mockResolvedValue({ story: {}, isStale: false }) },
+    });
+    const anchoredReq: any = { accountId: 'acc-1', monthAnchorDay: 10, user: { id: 'user-1', currencyCode: 'PLN' } };
+    await ctrl.getSpendingStory(anchoredReq, { period: 'month', month: 10, year: 2026 });
+    expect(storyService.getSpendingStory).toHaveBeenCalledWith('acc-1', 'month', undefined, undefined, 'user-1', 10, 2026, 'PLN', 10);
   });
 
   it('POST /insights/fat-finder dispatches to FatFinderService.generateReport', async () => {

@@ -99,6 +99,30 @@ describe('StoryService', () => {
     });
   });
 
+  describe('financial month (ABA-781)', () => {
+    it('looks up and labels the anchored period the month starts in', async () => {
+      deps.prisma.spendingStory.findUnique.mockResolvedValueOnce({
+        id: 's2',
+        accountId: 'acc-1',
+        periodLabel: 'October 2026 (Oct 10 – Nov 9)',
+        periodStart: new Date(2026, 9, 10),
+        periodEnd: new Date(2026, 10, 9, 23, 59, 59, 999),
+        blocks: [],
+        summary: 'Anchored',
+        currencyCode: 'USD',
+        expiresAt: new Date(Date.now() + 3600_000),
+        createdAt: new Date(),
+      });
+
+      const res = await service.getSpendingStory('acc-1', 'month', false, 'en', 'user-1', 10, 2026, 'USD', 10);
+
+      const where = deps.prisma.spendingStory.findUnique.mock.calls[0][0].where.accountId_periodStart_periodEnd;
+      expect(where.periodStart).toEqual(new Date(2026, 9, 10));
+      expect(where.periodEnd).toEqual(new Date(2026, 10, 9, 23, 59, 59, 999));
+      expect(res.story.id).toBe('s2'); // label matched, so the cached row was served
+    });
+  });
+
   describe('generation — happy path', () => {
     it('parses story blocks JSON, persists via upsert, and tracks AI usage', async () => {
       deps.prisma.expense.findMany
