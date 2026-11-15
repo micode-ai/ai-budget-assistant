@@ -24,6 +24,8 @@ O período selecionado afeta todos os gráficos e insights abaixo.
   - **em relação à média de 3 meses** — aparece abaixo da comparação com o período anterior quando você tem pelo menos 1 mês completo de dados anteriores, por exemplo “18% acima da média de 3 meses” (verde = abaixo da média, vermelho = acima da média)
 - **Média por dia** — gasto médio diário
 
+Enquanto o período está em andamento, as duas comparações usam os mesmos dias: no dia 5, seus primeiros cinco dias são comparados com os primeiros cinco dias do período anterior (e dos últimos três meses), então um mês pela metade nunca parece uma grande economia. A **Média por dia** conta só os dias que já passaram. A linha da média de 3 meses aparece na visualização Mês.
+
 ## Carrossel de insights com IA
 
 Um carrossel com rolagem horizontal de insights gerados por IA (requer o plano Pro):

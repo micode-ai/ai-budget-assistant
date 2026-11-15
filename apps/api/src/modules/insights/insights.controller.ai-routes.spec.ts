@@ -41,7 +41,7 @@ describe('InsightsController — AI route dispatch', () => {
       insightsService: { getInsights: jest.fn().mockResolvedValue({ anomalies: [], predictions: [] }) },
     });
     const res = await ctrl.getInsights(req);
-    expect(insightsService.getInsights).toHaveBeenCalledWith('acc-1');
+    expect(insightsService.getInsights).toHaveBeenCalledWith('acc-1', 'USD');
     expect(res).toEqual({ anomalies: [], predictions: [] });
     expect(aiInsightsService.getAIInsights).not.toHaveBeenCalled();
     expect(storyService.getSpendingStory).not.toHaveBeenCalled();

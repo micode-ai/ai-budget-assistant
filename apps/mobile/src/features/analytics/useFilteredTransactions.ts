@@ -49,7 +49,8 @@ export function useFilteredTransactions(
       case 'year': {
         const y = selectedYear ?? now.getFullYear();
         startDate = new Date(y, 0, 1);
-        endDate = new Date(y, 11, 31);
+        // End of the day, not 00:00 — midnight dropped all of 31 December.
+        endDate = new Date(y, 11, 31, 23, 59, 59, 999);
         break;
       }
     }

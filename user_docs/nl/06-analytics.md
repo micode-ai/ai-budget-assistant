@@ -24,6 +24,8 @@ Het geselecteerde bereik beïnvloedt alle grafieken en inzichten hieronder.
   - **vs. 3-maandsgemiddelde** — getoond onder de periodevergelijking zodra je minstens 1 voorgaande volledige maand aan gegevens hebt, bijv. "18% boven 3-maandsgem." (groen = onder het gemiddelde, rood = boven het gemiddelde)
 - **Gem. per dag** — gemiddelde dagelijkse uitgaven
 
+Zolang de periode loopt, vergelijken beide regels dezelfde dagen: op de 5e worden je eerste vijf dagen vergeleken met de eerste vijf dagen van de vorige periode (en van de laatste drie maanden), zodat een lopende maand nooit op een grote besparing lijkt. **Gem. per dag** telt alleen de dagen tot nu toe. De regel met het 3-maands gemiddelde verschijnt in de maandweergave.
+
 ## AI-inzichtencarrousel
 
 Een horizontaal scrollbare carrousel met door AI gegenereerde inzichten (Pro-abonnement vereist):

@@ -2,6 +2,7 @@ import { Test } from '@nestjs/testing';
 import { InsightsService } from './insights.service';
 import { PrismaService } from '../../database/prisma.service';
 import { BudgetsService } from '../budgets/budgets.service';
+import { ExchangeRateService } from '../currency-exchange/exchange-rate.service';
 
 // NOTE: unlike ai-insights/fat-finder/story, InsightsService does NOT depend on
 // (or call) AiInsightsService / FatFinderService / StoryService — those are
@@ -21,7 +22,11 @@ function buildDeps() {
     getProgress: jest.fn(),
     getAccountAnchorDay: jest.fn().mockResolvedValue(null),
   };
-  return { prisma, budgetsService };
+  // 1 USD = 4 PLN = 0.9 EUR
+  const exchangeRateService: any = {
+    getRates: jest.fn().mockResolvedValue({ rates: { USD: 1, PLN: 4, EUR: 0.9 } }),
+  };
+  return { prisma, budgetsService, exchangeRateService };
 }
 
 describe('InsightsService', () => {
@@ -35,6 +40,7 @@ describe('InsightsService', () => {
         InsightsService,
         { provide: PrismaService, useValue: deps.prisma },
         { provide: BudgetsService, useValue: deps.budgetsService },
+        { provide: ExchangeRateService, useValue: deps.exchangeRateService },
       ],
     }).compile();
     service = moduleRef.get(InsightsService);
@@ -55,13 +61,13 @@ describe('InsightsService', () => {
         amount: '260' as any,
         categoryId: 'cat-1',
         category: { name: 'Dining' },
-        date: new Date(now.getFullYear(), now.getMonth(), 5),
+        date: new Date(now.getFullYear(), now.getMonth(), 1),
       };
       const prevExpense = (monthsAgo: number) => ({
         amount: '100' as any,
         categoryId: 'cat-1',
         category: { name: 'Dining' },
-        date: new Date(now.getFullYear(), now.getMonth() - monthsAgo, 5),
+        date: new Date(now.getFullYear(), now.getMonth() - monthsAgo, 1),
       });
 
       deps.prisma.expense.findMany
@@ -96,62 +102,125 @@ describe('InsightsService', () => {
   });
 
   describe('detectSpendingAnomalies', () => {
+    // Fixed clock: 10 June 2026 — ten days into the month.
+    const NOW = new Date(2026, 5, 10, 12, 0, 0);
+    const row = (amount: number, categoryId: string, name: string, date: Date, extra: Record<string, unknown> = {}) => ({
+      amount: String(amount) as any,
+      currencyCode: 'USD',
+      categoryId,
+      category: { id: categoryId, name },
+      categorySplits: [],
+      date,
+      ...extra,
+    });
+
     it('flags a category that spends 30%+ above its 3-month trailing average', async () => {
-      const now = new Date();
       deps.prisma.expense.findMany
+        .mockResolvedValueOnce([row(260, 'cat-1', 'Dining', new Date(2026, 5, 5))])
         .mockResolvedValueOnce([
-          { amount: '260' as any, categoryId: 'cat-1', category: { name: 'Dining' }, date: new Date(now.getFullYear(), now.getMonth(), 5) },
-        ])
-        .mockResolvedValueOnce([
-          { amount: '100' as any, categoryId: 'cat-1', category: { name: 'Dining' }, date: new Date(now.getFullYear(), now.getMonth() - 1, 5) },
-          { amount: '100' as any, categoryId: 'cat-1', category: { name: 'Dining' }, date: new Date(now.getFullYear(), now.getMonth() - 2, 5) },
+          row(100, 'cat-1', 'Dining', new Date(2026, 4, 5)),
+          row(100, 'cat-1', 'Dining', new Date(2026, 3, 5)),
         ]);
 
-      const anomalies = await service.detectSpendingAnomalies('acc-1');
+      const anomalies = await service.detectSpendingAnomalies('acc-1', 'USD', NOW);
       expect(anomalies).toHaveLength(1);
       expect(anomalies[0].percentageChange).toBe(160); // (260-100)/100 * 100
       expect(anomalies[0].categoryName).toBe('Dining');
+      expect(anomalies[0].period).toBe('2026-06');
+    });
+
+    it('compares the same days of earlier months, not whole months', async () => {
+      // 10 days into June: May's spend after the 10th must not inflate "usual".
+      deps.prisma.expense.findMany
+        .mockResolvedValueOnce([row(150, 'cat-1', 'Dining', new Date(2026, 5, 3))])
+        .mockResolvedValueOnce([
+          row(100, 'cat-1', 'Dining', new Date(2026, 4, 4)),
+          row(900, 'cat-1', 'Dining', new Date(2026, 4, 25)),
+        ]);
+
+      const anomalies = await service.detectSpendingAnomalies('acc-1', 'USD', NOW);
+      expect(anomalies).toHaveLength(1);
+      expect(anomalies[0].averageAmount).toBe(100);
+      expect(anomalies[0].percentageChange).toBe(50);
+    });
+
+    it('converts every currency into the base currency before summing', async () => {
+      // 400 PLN = 100 USD this month vs 100 USD before: no change, no anomaly.
+      deps.prisma.expense.findMany
+        .mockResolvedValueOnce([row(400, 'cat-1', 'Dining', new Date(2026, 5, 3), { currencyCode: 'PLN' })])
+        .mockResolvedValueOnce([row(100, 'cat-1', 'Dining', new Date(2026, 4, 3))]);
+
+      const anomalies = await service.detectSpendingAnomalies('acc-1', 'USD', NOW);
+      expect(anomalies).toEqual([]);
+      expect(deps.exchangeRateService.getRates).toHaveBeenCalledWith('USD');
+    });
+
+    it('leaves out an amount with no known rate instead of summing it unconverted', async () => {
+      deps.prisma.expense.findMany
+        .mockResolvedValueOnce([row(5000, 'cat-1', 'Dining', new Date(2026, 5, 3), { currencyCode: 'XYZ' })])
+        .mockResolvedValueOnce([row(100, 'cat-1', 'Dining', new Date(2026, 4, 3))]);
+
+      const anomalies = await service.detectSpendingAnomalies('acc-1', 'USD', NOW);
+      expect(anomalies).toEqual([]);
+    });
+
+    it('attributes a split receipt to its split categories', async () => {
+      deps.prisma.expense.findMany
+        .mockResolvedValueOnce([
+          row(300, 'cat-food', 'Food', new Date(2026, 5, 3), {
+            categorySplits: [
+              { categoryId: 'cat-food', amount: '100', category: { id: 'cat-food', name: 'Food' } },
+              { categoryId: 'cat-alc', amount: '200', category: { id: 'cat-alc', name: 'Alcohol' } },
+            ],
+          }),
+        ])
+        .mockResolvedValueOnce([
+          row(100, 'cat-food', 'Food', new Date(2026, 4, 3)),
+          row(50, 'cat-alc', 'Alcohol', new Date(2026, 4, 3)),
+        ]);
+
+      const anomalies = await service.detectSpendingAnomalies('acc-1', 'USD', NOW);
+      expect(anomalies.map((a) => a.categoryId)).toEqual(['cat-alc']);
+      expect(anomalies[0].currentAmount).toBe(200);
+    });
+
+    it('queries spend only: no planned expenses, no split receivables', async () => {
+      await service.detectSpendingAnomalies('acc-1', 'USD', NOW);
+      for (const call of deps.prisma.expense.findMany.mock.calls) {
+        expect(call[0].where).toMatchObject({ isDeleted: false, isPlanned: false, isSplitReceivable: false });
+      }
     });
 
     it('does not flag a category within normal range (< 30% change)', async () => {
-      const now = new Date();
       deps.prisma.expense.findMany
-        .mockResolvedValueOnce([
-          { amount: '110' as any, categoryId: 'cat-1', category: { name: 'Dining' }, date: new Date(now.getFullYear(), now.getMonth(), 5) },
-        ])
-        .mockResolvedValueOnce([
-          { amount: '100' as any, categoryId: 'cat-1', category: { name: 'Dining' }, date: new Date(now.getFullYear(), now.getMonth() - 1, 5) },
-        ]);
+        .mockResolvedValueOnce([row(110, 'cat-1', 'Dining', new Date(2026, 5, 5))])
+        .mockResolvedValueOnce([row(100, 'cat-1', 'Dining', new Date(2026, 4, 5))]);
 
-      const anomalies = await service.detectSpendingAnomalies('acc-1');
+      const anomalies = await service.detectSpendingAnomalies('acc-1', 'USD', NOW);
       expect(anomalies).toEqual([]);
     });
 
     it('skips a category with no previous-month history (nothing to compare against)', async () => {
-      const now = new Date();
       deps.prisma.expense.findMany
-        .mockResolvedValueOnce([
-          { amount: '500' as any, categoryId: 'cat-new', category: { name: 'New' }, date: new Date(now.getFullYear(), now.getMonth(), 5) },
-        ])
+        .mockResolvedValueOnce([row(500, 'cat-new', 'New', new Date(2026, 5, 5))])
         .mockResolvedValueOnce([]);
 
-      const anomalies = await service.detectSpendingAnomalies('acc-1');
+      const anomalies = await service.detectSpendingAnomalies('acc-1', 'USD', NOW);
       expect(anomalies).toEqual([]);
     });
 
     it('sorts multiple anomalies by percentageChange descending', async () => {
-      const now = new Date();
       deps.prisma.expense.findMany
         .mockResolvedValueOnce([
-          { amount: '200' as any, categoryId: 'cat-a', category: { name: 'A' }, date: new Date(now.getFullYear(), now.getMonth(), 5) },
-          { amount: '500' as any, categoryId: 'cat-b', category: { name: 'B' }, date: new Date(now.getFullYear(), now.getMonth(), 6) },
+          row(200, 'cat-a', 'A', new Date(2026, 5, 5)),
+          row(500, 'cat-b', 'B', new Date(2026, 5, 6)),
         ])
         .mockResolvedValueOnce([
-          { amount: '100' as any, categoryId: 'cat-a', category: { name: 'A' }, date: new Date(now.getFullYear(), now.getMonth() - 1, 5) },
-          { amount: '100' as any, categoryId: 'cat-b', category: { name: 'B' }, date: new Date(now.getFullYear(), now.getMonth() - 1, 6) },
+          row(100, 'cat-a', 'A', new Date(2026, 4, 5)),
+          row(100, 'cat-b', 'B', new Date(2026, 4, 6)),
         ]);
 
-      const anomalies = await service.detectSpendingAnomalies('acc-1');
+      const anomalies = await service.detectSpendingAnomalies('acc-1', 'USD', NOW);
       expect(anomalies.map((a) => a.categoryId)).toEqual(['cat-b', 'cat-a']); // B changed 400%, A changed 100%
     });
   });

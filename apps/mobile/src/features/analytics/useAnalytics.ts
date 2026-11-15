@@ -88,6 +88,12 @@ export interface PeriodComparison {
   currentTotal: number;
   previousTotal: number;
   changePercent: number;
+  /**
+   * The current period is still in progress, so both comparisons (this one and
+   * `AnalyticsSummary.vsAverage`) are against the SAME days of the earlier
+   * periods, and the copy must say "at this point last month", not "last month".
+   */
+  isPartial: boolean;
 }
 
 export interface SpendingAnomalyItem {
@@ -179,7 +185,7 @@ export function useAnalytics(
   const { budgetComparison } = useBudgetComparison(timeRange, currencyCode, selectedMonth, selectedYear);
   const { dayOfWeekSpending } = useDayOfWeekAnalytics(timeRange, currencyCode, selectedMonth, selectedYear);
   const { periodComparison } = usePeriodComparison(timeRange, currencyCode, selectedMonth, selectedYear);
-  const { anomalies, predictions } = useSpendingAnomalies(timeRange, currencyCode, selectedMonth, selectedYear);
+  const { anomalies, predictions } = useSpendingAnomalies(categorySpending, timeRange, dateRange.startDate);
   const { itemBreakdown } = useItemBreakdown(timeRange, currencyCode, selectedMonth, selectedYear);
   const { tagSpending } = useTagSpending(timeRange, currencyCode, selectedMonth, selectedYear);
   const { projectSpending } = useProjectSpending(timeRange, currencyCode, selectedMonth, selectedYear);

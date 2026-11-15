@@ -1,84 +1,70 @@
-import { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useState, useEffect, useMemo } from 'react';
 import { api } from '@/services/api';
-import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
-import { useFilteredTransactions } from './useFilteredTransactions';
-import type { TimeRange, SpendingAnomalyItem, BudgetPredictionItem } from './useAnalytics';
+import { useExpenseStore } from '@/stores/expenseStore';
+import type { TimeRange, CategorySpending, SpendingAnomalyItem, BudgetPredictionItem } from './useAnalytics';
+
+/** A category this far above its usual level is listed as an anomaly. */
+const ANOMALY_THRESHOLD_PCT = 30;
+
+/**
+ * Pure: the anomaly list IS the category donut's "vs 3-month average" chip at
+ * +30% or more — one computation, so the two can never disagree.
+ *
+ * It used to come from `GET /insights`, which always answered for the CURRENT
+ * month whatever period was open, ignored the currency filter, and summed
+ * amounts across currencies. The category tree already has every property the
+ * list needs: the selected period and currency, split attribution, the
+ * display-currency conversion and same-days trailing windows.
+ */
+export function anomaliesFromCategories(
+  categorySpending: CategorySpending[],
+  timeRange: TimeRange,
+  periodStart: Date,
+): SpendingAnomalyItem[] {
+  if (timeRange !== 'month') return [];
+  const period = `${periodStart.getFullYear()}-${String(periodStart.getMonth() + 1).padStart(2, '0')}`;
+  return categorySpending
+    .filter((c) => c.vsAverage != null && c.vsAverage >= ANOMALY_THRESHOLD_PCT)
+    .map((c) => ({
+      categoryId: c.categoryId ?? 'uncategorized',
+      categoryName: c.name,
+      currentAmount: c.amount,
+      averageAmount: c.amount / (1 + (c.vsAverage as number) / 100),
+      percentageChange: Math.round(c.vsAverage as number),
+      period,
+    }))
+    .sort((a, b) => b.percentageChange - a.percentageChange);
+}
 
 export function useSpendingAnomalies(
+  categorySpending: CategorySpending[],
   timeRange: TimeRange,
-  currencyCode?: string,
-  selectedMonth?: number,
-  selectedYear?: number,
+  periodStart: Date,
 ) {
-  const { t } = useTranslation();
-  const { expenses, filteredExpenses, categories, getAmount, toDisplayCurrency, dateRange } =
-    useFilteredTransactions(timeRange, currencyCode, selectedMonth, selectedYear);
-
-  const [anomalies, setAnomalies] = useState<SpendingAnomalyItem[]>([]);
+  const expenses = useExpenseStore((s) => s.expenses);
   const [predictions, setPredictions] = useState<BudgetPredictionItem[]>([]);
 
+  const anomalies = useMemo(
+    () => anomaliesFromCategories(categorySpending, timeRange, periodStart),
+    [categorySpending, timeRange, periodStart],
+  );
+
+  // Budget predictions still come from the server (budget progress lives
+  // there); refreshed when expenses change. Offline they are simply absent.
   useEffect(() => {
-    const fetchInsights = async () => {
-      try {
-        const data = await api.getInsights();
-        setAnomalies(data.anomalies || []);
-        setPredictions(data.predictions || []);
-      } catch {
-        const localAnomalies: SpendingAnomalyItem[] = [];
-        const currentByCategory = new Map<string, { amount: number; name: string }>();
-
-        for (const expense of filteredExpenses) {
-          const catId = expense.categoryId || 'uncategorized';
-          const cat = expense.categoryId ? categories.find((c) => c.id === expense.categoryId) : undefined;
-          const current = currentByCategory.get(catId) || {
-            amount: 0,
-            name: cat ? getCategoryDisplayName(cat, t) : t('common.uncategorized'),
-          };
-          currentByCategory.set(catId, { amount: current.amount + getAmount(expense), name: current.name });
-        }
-
-        const msRange = dateRange.endDate.getTime() - dateRange.startDate.getTime();
-        const prevStart = new Date(dateRange.startDate.getTime() - msRange);
-        const prevEnd = new Date(dateRange.startDate.getTime() - 1);
-
-        const prevExpenses = expenses.filter((e) => {
-          if (e.isDeleted) return false;
-          if (currencyCode && e.currencyCode !== currencyCode) return false;
-          const d = new Date(e.date);
-          return d >= prevStart && d <= prevEnd;
-        });
-
-        const prevByCategory = new Map<string, number>();
-        for (const expense of prevExpenses) {
-          const catId = expense.categoryId || 'uncategorized';
-          prevByCategory.set(catId, (prevByCategory.get(catId) || 0) + toDisplayCurrency(expense.amount, expense.currencyCode));
-        }
-
-        for (const [catId, currentData] of currentByCategory) {
-          const prevAmount = prevByCategory.get(catId);
-          if (!prevAmount || prevAmount <= 0) continue;
-          const pctChange = ((currentData.amount - prevAmount) / prevAmount) * 100;
-          if (pctChange >= 30) {
-            localAnomalies.push({
-              categoryId: catId,
-              categoryName: currentData.name,
-              currentAmount: currentData.amount,
-              averageAmount: prevAmount,
-              percentageChange: Math.round(pctChange),
-              period: dateRange.startDate.toISOString().slice(0, 7),
-            });
-          }
-        }
-
-        setAnomalies(localAnomalies.sort((a, b) => b.percentageChange - a.percentageChange));
-        setPredictions([]);
-      }
+    let cancelled = false;
+    api
+      .getInsights()
+      .then((data) => {
+        if (!cancelled) setPredictions(data.predictions || []);
+      })
+      .catch(() => {
+        if (!cancelled) setPredictions([]);
+      });
+    return () => {
+      cancelled = true;
     };
-
-    fetchInsights();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filteredExpenses, dateRange, currencyCode, expenses, categories]);
+  }, [expenses]);
 
   return { anomalies, predictions };
 }

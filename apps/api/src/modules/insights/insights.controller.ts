@@ -34,7 +34,9 @@ export class InsightsController {
 
   @Get()
   async getInsights(@Req() req: AuthenticatedRequest) {
-    return this.insightsService.getInsights(req.accountId);
+    // Anomaly amounts are converted to the caller's display currency, never
+    // summed across currencies (display-currency-conversion.md).
+    return this.insightsService.getInsights(req.accountId, req.user.currencyCode || 'USD');
   }
 
   /**

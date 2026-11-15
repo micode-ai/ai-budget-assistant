@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { useFilteredTransactions } from './useFilteredTransactions';
+import { comparablePreviousWindow, inWindow } from './periodWindows';
 import type { TimeRange, PeriodComparison } from './useAnalytics';
 
 export function usePeriodComparison(
@@ -14,16 +15,15 @@ export function usePeriodComparison(
   const periodComparison = useMemo((): PeriodComparison => {
     const currentTotal = filteredExpenses.reduce((sum, e) => sum + getAmount(e), 0);
 
-    const msRange = dateRange.endDate.getTime() - dateRange.startDate.getTime();
-    const prevStart = new Date(dateRange.startDate.getTime() - msRange);
-    const prevEnd = new Date(dateRange.startDate.getTime() - 1);
+    // The calendar period before, cut to the same days while this one is in
+    // progress — see periodWindows.ts for why a partial-vs-whole comparison is wrong.
+    const window = comparablePreviousWindow(timeRange, dateRange);
 
     const previousTotal = expenses
       .filter((e) => {
         if (e.isDeleted) return false;
         if (currencyCode && e.currencyCode !== currencyCode) return false;
-        const d = new Date(e.date);
-        return d >= prevStart && d <= prevEnd;
+        return inWindow(new Date(e.date), window);
       })
       .reduce((sum, e) => sum + toDisplayCurrency(e.amount, e.currencyCode), 0);
 
@@ -34,8 +34,8 @@ export function usePeriodComparison(
           ? 100
           : 0;
 
-    return { currentTotal, previousTotal, changePercent };
-  }, [filteredExpenses, expenses, dateRange, currencyCode, getAmount, toDisplayCurrency]);
+    return { currentTotal, previousTotal, changePercent, isPartial: window.partial };
+  }, [filteredExpenses, expenses, dateRange, timeRange, currencyCode, getAmount, toDisplayCurrency]);
 
   return { periodComparison };
 }

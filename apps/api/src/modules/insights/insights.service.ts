@@ -1,6 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { BudgetsService } from '../budgets/budgets.service';
+import { ExchangeRateService } from '../currency-exchange/exchange-rate.service';
+import { EXCLUDE_SPLIT_RECEIVABLE } from '../../common/utils/expense-filters';
+import { attributeToCategories } from '../../common/utils/category-attribution';
+import { convertAmount, getRatesSafe } from '../../common/utils/fx';
 
 @Injectable()
 export class InsightsService {
@@ -9,6 +13,7 @@ export class InsightsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly budgetsService: BudgetsService,
+    private readonly exchangeRateService: ExchangeRateService,
   ) {}
 
   /**
@@ -22,7 +27,7 @@ export class InsightsService {
     return (account?.encryptionTier ?? 0) >= 2;
   }
 
-  async getInsights(accountId: string) {
+  async getInsights(accountId: string, baseCurrency = 'USD') {
     if (await this.isFullEncryption(accountId)) {
       return {
         encryptionRestricted: true,
@@ -32,61 +37,101 @@ export class InsightsService {
     }
 
     const [anomalies, predictions] = await Promise.all([
-      this.detectSpendingAnomalies(accountId),
+      this.detectSpendingAnomalies(accountId, baseCurrency),
       this.getBudgetPredictions(accountId),
     ]);
 
     return { anomalies, predictions };
   }
 
-  async detectSpendingAnomalies(accountId: string) {
-    const now = new Date();
+  /**
+   * Categories spending 30%+ above their usual level this month.
+   *
+   * "Usual" is the average of the previous three months over the SAME number
+   * of days: on the 5th, the current month's first five days are compared with
+   * the first five days of each earlier month — never a partial month against
+   * whole ones, which flagged nothing early in the month and everything late.
+   *
+   * Spend follows the app's own definition: planned expenses and split
+   * receivables are not spend, category splits decide attribution
+   * (`attributeToCategories`), and every amount is converted to the caller's
+   * `baseCurrency` — an amount with no known rate is left out, never summed
+   * unconverted (docs/wiki/features/display-currency-conversion.md).
+   */
+  async detectSpendingAnomalies(accountId: string, baseCurrency = 'USD', now: Date = new Date()) {
+    const TRAILING_MONTHS = 3;
     const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-    const currentMonthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+    const endOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+    const elapsedDays = now.getDate();
 
-    // Get current month spending per category
-    const currentExpenses = await this.prisma.expense.findMany({
-      where: {
-        accountId,
-        isDeleted: false,
-        date: { gte: currentMonthStart, lte: currentMonthEnd },
-      },
-      include: { category: true },
+    // Same-days window of each trailing month, end exclusive and clamped to the
+    // month's own end (the 31st compares with all of February).
+    const windows = Array.from({ length: TRAILING_MONTHS }, (_, idx) => {
+      const i = idx + 1;
+      const start = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const nextMonth = new Date(now.getFullYear(), now.getMonth() - i + 1, 1);
+      const sameDays = new Date(start.getFullYear(), start.getMonth(), 1 + elapsedDays);
+      return { start, end: sameDays < nextMonth ? sameDays : nextMonth };
     });
+
+    const spendWhere = {
+      accountId,
+      isDeleted: false,
+      isPlanned: false,
+      ...EXCLUDE_SPLIT_RECEIVABLE,
+    };
+    const include = {
+      category: true,
+      categorySplits: { where: { isDeleted: false }, include: { category: true } },
+    };
+
+    const [currentExpenses, previousExpenses, rates] = await Promise.all([
+      this.prisma.expense.findMany({
+        where: { ...spendWhere, date: { gte: currentMonthStart, lte: endOfToday } },
+        include,
+      }),
+      this.prisma.expense.findMany({
+        where: { ...spendWhere, date: { gte: windows[TRAILING_MONTHS - 1].start, lt: currentMonthStart } },
+        include,
+      }),
+      getRatesSafe(this.exchangeRateService, baseCurrency),
+    ]);
+
+    const addAttributed = (
+      expense: (typeof currentExpenses)[number],
+      onShare: (categoryId: string, categoryName: string, amount: number) => void,
+    ) => {
+      const currency = (expense as { currencyCode?: string }).currencyCode || baseCurrency;
+      for (const share of attributeToCategories(expense)) {
+        const converted = convertAmount(share.amount, currency, baseCurrency, rates);
+        if (converted === null) continue;
+        onShare(share.categoryId || 'uncategorized', share.categoryName, converted);
+      }
+    };
 
     const currentByCategory = new Map<string, { amount: number; name: string }>();
     for (const expense of currentExpenses) {
-      const categoryId = expense.categoryId || 'uncategorized';
-      const categoryName = expense.category?.name || 'Uncategorized';
-      const current = currentByCategory.get(categoryId) || { amount: 0, name: categoryName };
-      currentByCategory.set(categoryId, {
-        amount: current.amount + Number(expense.amount),
-        name: categoryName,
+      addAttributed(expense, (categoryId, name, amount) => {
+        const current = currentByCategory.get(categoryId) || { amount: 0, name };
+        current.amount += amount;
+        currentByCategory.set(categoryId, current);
       });
     }
 
-    // Get previous 3 months spending per category for averages
-    const threeMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 3, 1);
-    const previousExpenses = await this.prisma.expense.findMany({
-      where: {
-        accountId,
-        isDeleted: false,
-        date: { gte: threeMonthsAgo, lt: currentMonthStart },
-      },
-      include: { category: true },
-    });
-
-    const previousByCategory = new Map<string, { total: number; months: Set<string> }>();
+    // Only the same-days slice of each trailing month counts. A month counts
+    // towards the average when the ACCOUNT spent anything in that slice, so a
+    // category the user skipped one month averages in a zero for it.
+    const previousByCategory = new Map<string, number>();
+    const monthsWithData = new Set<number>();
     for (const expense of previousExpenses) {
-      const categoryId = expense.categoryId || 'uncategorized';
-      const monthKey = `${expense.date.getFullYear()}-${expense.date.getMonth()}`;
-      const current = previousByCategory.get(categoryId) || { total: 0, months: new Set<string>() };
-      current.total += Number(expense.amount);
-      current.months.add(monthKey);
-      previousByCategory.set(categoryId, current);
+      const windowIdx = windows.findIndex((w) => expense.date >= w.start && expense.date < w.end);
+      if (windowIdx === -1) continue;
+      monthsWithData.add(windowIdx);
+      addAttributed(expense, (categoryId, _name, amount) => {
+        previousByCategory.set(categoryId, (previousByCategory.get(categoryId) || 0) + amount);
+      });
     }
 
-    // Detect anomalies: current > average * 1.3
     const anomalies: Array<{
       categoryId: string;
       categoryName: string;
@@ -96,13 +141,14 @@ export class InsightsService {
       period: string;
     }> = [];
 
+    const monthCount = monthsWithData.size;
+    if (monthCount === 0) return anomalies;
+
     for (const [categoryId, currentData] of currentByCategory) {
-      const previousData = previousByCategory.get(categoryId);
-      if (!previousData || previousData.months.size === 0) continue;
+      const previousTotal = previousByCategory.get(categoryId);
+      if (!previousTotal) continue;
 
-      const monthCount = previousData.months.size;
-      const averageAmount = previousData.total / monthCount;
-
+      const averageAmount = Math.round((previousTotal / monthCount) * 100) / 100;
       if (averageAmount <= 0) continue;
 
       const percentageChange = ((currentData.amount - averageAmount) / averageAmount) * 100;
@@ -111,10 +157,10 @@ export class InsightsService {
         anomalies.push({
           categoryId,
           categoryName: currentData.name,
-          currentAmount: currentData.amount,
+          currentAmount: Math.round(currentData.amount * 100) / 100,
           averageAmount,
           percentageChange: Math.round(percentageChange),
-          period: currentMonthStart.toISOString().slice(0, 7),
+          period: `${currentMonthStart.getFullYear()}-${String(currentMonthStart.getMonth() + 1).padStart(2, '0')}`,
         });
       }
     }

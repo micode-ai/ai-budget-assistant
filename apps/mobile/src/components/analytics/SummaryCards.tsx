@@ -51,8 +51,8 @@ export function SummaryCards({ summary, periodComparison, selectedRange, currenc
             ]}>
               {Math.abs(periodComparison.changePercent).toFixed(0)}%{' '}
               {periodComparison.changePercent > 0
-                ? t('analytics.periodUp', { period: t(`analytics.${selectedRange}`) })
-                : t('analytics.periodDown', { period: t(`analytics.${selectedRange}`) })
+                ? t(periodComparison.isPartial ? 'analytics.periodUpToDate' : 'analytics.periodUp', { period: t(`analytics.${selectedRange}`) })
+                : t(periodComparison.isPartial ? 'analytics.periodDownToDate' : 'analytics.periodDown', { period: t(`analytics.${selectedRange}`) })
               }
             </Text>
           </View>
@@ -71,8 +71,8 @@ export function SummaryCards({ summary, periodComparison, selectedRange, currenc
             />
             <Text style={[styles.trendText, { color: summary.vsAverage > 0 ? theme.colors.danger : theme.colors.success }]}>
               {summary.vsAverage > 0
-                ? t('analytics.vsAvgUp', { pct: Math.abs(summary.vsAverage).toFixed(0) })
-                : t('analytics.vsAvgDown', { pct: Math.abs(summary.vsAverage).toFixed(0) })
+                ? t(periodComparison.isPartial ? 'analytics.vsAvgUpToDate' : 'analytics.vsAvgUp', { pct: Math.abs(summary.vsAverage).toFixed(0) })
+                : t(periodComparison.isPartial ? 'analytics.vsAvgDownToDate' : 'analytics.vsAvgDown', { pct: Math.abs(summary.vsAverage).toFixed(0) })
               }
             </Text>
           </View>

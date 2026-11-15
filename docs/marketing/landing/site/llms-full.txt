@@ -4375,6 +4375,8 @@ The selected range affects all charts and insights below.
   - **vs. 3-month average** — shown below the period comparison once you have at least 1 prior full month of data, e.g. "18% above 3-month avg" (green = below average, red = above average)
 - **Avg per Day** — average daily spending
 
+While the period is still running, both comparisons use the same days: on the 5th, your first five days are compared with the first five days of the previous period (and of the last three months), so an unfinished month never looks like a big saving. **Avg per Day** counts only the days so far. The "3-month average" line appears in the Month view.
+
 ## AI Insights Carousel
 
 A horizontal scrollable carousel of AI-generated insights (Pro plan required):

@@ -1036,6 +1036,8 @@ The selected range affects all charts and insights below.
   - **vs. 3-month average** — shown below the period comparison once you have at least 1 prior full month of data, e.g. "18% above 3-month avg" (green = below average, red = above average)
 - **Avg per Day** — average daily spending
 
+While the period is still running, both comparisons use the same days: on the 5th, your first five days are compared with the first five days of the previous period (and of the last three months), so an unfinished month never looks like a big saving. **Avg per Day** counts only the days so far. The "3-month average" line appears in the Month view.
+
 ## AI Insights Carousel
 
 A horizontal scrollable carousel of AI-generated insights (Pro plan required):
@@ -6434,6 +6436,8 @@ iOS, Android, Web
   - **vs. среднее за 3 месяца** — например, «18% выше среднего за 3 месяца» (зелёный = ниже среднего, красный = выше), появляется при наличии хотя бы 1 полного предыдущего месяца
 - **Среднее в день** — среднедневные расходы
 
+Пока период не закончился, оба сравнения идут по тем же дням: 5-го числа ваши первые пять дней сравниваются с первыми пятью днями прошлого периода (и трёх последних месяцев), поэтому незаконченный месяц не выглядит как большая экономия. **Среднее в день** считается только по прошедшим дням. Строка со средним за 3 месяца показывается в режиме «Месяц».
+
 ## Карусель ИИ-инсайтов
 
 Горизонтально прокручиваемая карусель ИИ-генерируемых инсайтов (требуется план Pro):
@@ -11810,6 +11814,8 @@ iOS, Android, Web
   - **vs. середнє за 3 місяці** — напр. "18% вище середнього за 3 місяці" (зелений = нижче, червоний = вище), з'являється за наявності хоча б 1 повного попереднього місяця
 - **Середнє за день** — середні щоденні витрати
 
+Поки період не завершився, обидва порівняння йдуть за тими самими днями: 5-го числа ваші перші п'ять днів порівнюються з першими п'ятьма днями минулого періоду (і трьох останніх місяців), тож незавершений місяць не виглядає як велика економія. **Середнє за день** рахується лише за днями, що минули. Рядок із середнім за 3 місяці показується в режимі «Місяць».
+
 ## Карусель ШІ-інсайтів
 
 Горизонтальна прокручувана карусель ШІ-інсайтів (потрібен тариф Pro):
@@ -17134,6 +17140,8 @@ Wybrany zakres wplywa na wszystkie wykresy i wnioski ponizej.
   - **vs. srednia 3 miesiecy** — np. "18% powyzej sredniej 3 miesiecy" (zielony = ponizej, czerwony = powyzej), pojawia sie po co najmniej 1 pelnym poprzednim miesiacu
 - **Srednio dziennie** — srednie dzienne wydatki
 
+Dopóki okres trwa, oba porównania dotyczą tych samych dni: 5. dnia miesiąca twoje pierwsze pięć dni porównujemy z pierwszymi pięcioma dniami poprzedniego okresu (i ostatnich trzech miesięcy), więc rozpoczęty miesiąc nigdy nie wygląda jak duża oszczędność. **Średnio dziennie** liczy tylko dni, które już minęły. Wiersz ze średnią z 3 miesięcy pojawia się w widoku Miesiąc.
+
 ## Karuzela wnioskow AI
 
 Poziomo przewijana karuzela wnioskow generowanych przez AI (wymaga planu Pro):
@@ -22454,6 +22462,8 @@ Der ausgewahlte Bereich beeinflusst alle Diagramme und Einblicke darunter.
   - **vs. 3-Monats-Schnitt** — z.B. "18% uber 3-Monats-Schnitt" (grun = darunter, rot = daruber), erscheint ab mindestens 1 abgeschlossenem Vormonat
 - **Durchschnitt pro Tag** — durchschnittliche tagliche Ausgaben
 
+Solange der Zeitraum läuft, vergleichen beide Angaben dieselben Tage: Am 5. werden deine ersten fünf Tage mit den ersten fünf Tagen des Vorzeitraums (und der letzten drei Monate) verglichen, sodass ein angefangener Monat nie wie eine große Ersparnis aussieht. **Durchschnitt pro Tag** zählt nur die bisherigen Tage. Die Zeile zum 3-Monats-Schnitt erscheint in der Monatsansicht.
+
 ## KI-Einblicke-Karussell
 
 Ein horizontal scrollbares Karussell mit KI-generierten Einblicken (Pro-Plan erforderlich):
@@ -27749,6 +27759,8 @@ El rango seleccionado afecta a todos los graficos e informacion que aparecen deb
   - **vs. promedio de 3 meses** — p.ej. "18% sobre el promedio de 3 meses" (verde = por debajo, rojo = por encima), aparece tras al menos 1 mes completo anterior
 - **Promedio por dia** — gasto diario promedio
 
+Mientras el periodo está en curso, ambas comparaciones usan los mismos días: el día 5, tus primeros cinco días se comparan con los primeros cinco días del periodo anterior (y de los últimos tres meses), así un mes a medias nunca parece un gran ahorro. **Promedio por día** cuenta solo los días transcurridos. La línea del promedio de 3 meses aparece en la vista Mes.
+
 ## Carrusel de informacion IA
 
 Un carrusel horizontal desplazable con informacion generada por IA (requiere plan Pro):
@@ -33033,6 +33045,8 @@ La periode selectionnee affecte tous les graphiques et aperçus ci-dessous.
   - **vs. moy. 3 mois** — p.ex. "18% au-dessus de la moy. 3 mois" (vert = en dessous, rouge = au-dessus), affiche des qu'il y a au moins 1 mois complet d'historique
 - **Moy. par jour** — moyenne des depenses quotidiennes
 
+Tant que la période est en cours, les deux comparaisons portent sur les mêmes jours : le 5, vos cinq premiers jours sont comparés aux cinq premiers jours de la période précédente (et des trois derniers mois), si bien qu'un mois entamé ne ressemble jamais à une grosse économie. **Moy. par jour** ne compte que les jours écoulés. La ligne de la moyenne sur 3 mois apparaît dans la vue Mois.
+
 ## Carousel d'aperçus IA
 
 Un carousel horizontal defilable d'aperçus generes par l'IA (plan Pro requis) :
@@ -38315,6 +38329,8 @@ iOS, Android, Web
   - **vs. сярэдняе за 3 месяцы** — напр. «18% вышэй сярэдняга за 3 месяцы» (зялёны = ніжэй, чырвоны = вышэй), з'яўляецца пры наяўнасці хаця б 1 поўнага папярэдняга месяца
 - **Сярэдняе за дзень** — сярэднядзённыя выдаткі
 
+Пакуль перыяд не скончыўся, абодва параўнанні ідуць па тых жа днях: 5-га чысла вашы першыя пяць дзён параўноўваюцца з першымі пяццю днямі мінулага перыяду (і трох апошніх месяцаў), таму незавершаны месяц не выглядае як вялікая эканомія. **Сярэдняе за дзень** лічыцца толькі па днях, што прайшлі. Радок з сярэднім за 3 месяцы паказваецца ў рэжыме «Месяц».
+
 ## Карусель ІІ-інсайтаў
 
 Гарызантальна пракручваемая карусель ІІ-генераваных інсайтаў (патрабуецца план Pro):
@@ -43560,6 +43576,8 @@ Het geselecteerde bereik beïnvloedt alle grafieken en inzichten hieronder.
   - **vs. vorige periode** — "meer dan vorige week/maand/jaar" of "minder dan vorige week/maand/jaar" met percentage
   - **vs. 3-maandsgemiddelde** — getoond onder de periodevergelijking zodra je minstens 1 voorgaande volledige maand aan gegevens hebt, bijv. "18% boven 3-maandsgem." (groen = onder het gemiddelde, rood = boven het gemiddelde)
 - **Gem. per dag** — gemiddelde dagelijkse uitgaven
+
+Zolang de periode loopt, vergelijken beide regels dezelfde dagen: op de 5e worden je eerste vijf dagen vergeleken met de eerste vijf dagen van de vorige periode (en van de laatste drie maanden), zodat een lopende maand nooit op een grote besparing lijkt. **Gem. per dag** telt alleen de dagen tot nu toe. De regel met het 3-maands gemiddelde verschijnt in de maandweergave.
 
 ## AI-inzichtencarrousel
 
@@ -48933,6 +48951,8 @@ O período selecionado afeta todos os gráficos e análises abaixo.
   - **face ao período anterior** — «mais do que no período anterior» ou «menos do que no período anterior» (semana/mês/ano), com a percentagem
   - **face à média de 3 meses** — aparece por baixo da comparação com o período anterior quando tiver pelo menos 1 mês completo de dados anteriores, por exemplo «18% acima da média de 3 meses» (verde = abaixo da média, vermelho = acima da média)
 - **Média por dia** — gasto médio diário
+
+Enquanto o período decorre, ambas as comparações usam os mesmos dias: no dia 5, os seus primeiros cinco dias são comparados com os primeiros cinco dias do período anterior (e dos últimos três meses), pelo que um mês a meio nunca parece uma grande poupança. A **Média por dia** conta apenas os dias já decorridos. A linha da média de 3 meses aparece na vista Mês.
 
 ## Carrossel de análises com IA
 
@@ -54332,6 +54352,8 @@ O período selecionado afeta todos os gráficos e insights abaixo.
   - **em relação ao período anterior** — “mais do que no período anterior” ou “menos do que no período anterior” (semana/mês/ano), com a porcentagem
   - **em relação à média de 3 meses** — aparece abaixo da comparação com o período anterior quando você tem pelo menos 1 mês completo de dados anteriores, por exemplo “18% acima da média de 3 meses” (verde = abaixo da média, vermelho = acima da média)
 - **Média por dia** — gasto médio diário
+
+Enquanto o período está em andamento, as duas comparações usam os mesmos dias: no dia 5, seus primeiros cinco dias são comparados com os primeiros cinco dias do período anterior (e dos últimos três meses), então um mês pela metade nunca parece uma grande economia. A **Média por dia** conta só os dias que já passaram. A linha da média de 3 meses aparece na visualização Mês.
 
 ## Carrossel de insights com IA
 

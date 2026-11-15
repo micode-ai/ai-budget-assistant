@@ -1,7 +1,15 @@
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useFilteredTransactions } from './useFilteredTransactions';
 import { categoryLabel } from '@/utils/entityLabel';
+import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
+import { buildParentOf, normalizeCategoryKeys } from './buildParentOf';
+import { rollUpCategoryTotals } from './categoryRollup';
+import { groupExpensesByCategory, computeVsAverage } from './categoryGrouping';
+import { elapsedDays, inWindow, trailingMonthWindows } from './periodWindows';
 import type { TimeRange, AnalyticsSummary } from './useAnalytics';
+
+const TRAILING_MONTHS = 3;
 
 export function useSummaryAnalytics(
   timeRange: TimeRange,
@@ -9,6 +17,7 @@ export function useSummaryAnalytics(
   selectedMonth?: number,
   selectedYear?: number,
 ) {
+  const { t } = useTranslation();
   const { expenses, filteredExpenses, categories, getAmount, toDisplayCurrency, dateRange } =
     useFilteredTransactions(timeRange, currencyCode, selectedMonth, selectedYear);
 
@@ -24,9 +33,11 @@ export function useSummaryAnalytics(
     );
     const transactionCount = filteredExpenses.length;
 
-    const msPerDay = 24 * 60 * 60 * 1000;
-    const daysInRange = Math.ceil((dateRange.endDate.getTime() - dateRange.startDate.getTime()) / msPerDay);
-    const averagePerDay = daysInRange > 0 ? totalSpent / daysInRange : 0;
+    // Divide by the days that have HAPPENED: on the 5th, five days of spending
+    // over the month's 30 read as a fifth of the real daily rate, and the
+    // "keep daily spending under" tip built on it was a fifth too.
+    const days = elapsedDays(dateRange);
+    const averagePerDay = days > 0 ? totalSpent / days : 0;
 
     const dailyTotals = new Map<string, number>();
     filteredExpenses.forEach((e) => {
@@ -43,44 +54,42 @@ export function useSummaryAnalytics(
       }
     });
 
-    // Find top category (inline, avoids cross-hook dependency)
-    const categoryTotals = new Map<string | null, { name: string; amount: number }>();
-    filteredExpenses.forEach((e) => {
-      const key = e.categoryId || null;
-      const cat = key ? categories.find((c) => c.id === key) : undefined;
-      const name = categoryLabel(cat);
-      const existing = categoryTotals.get(key);
-      categoryTotals.set(key, { name, amount: (existing?.amount ?? 0) + getAmount(e) });
-    });
+    // Top category through the SAME splits-aware, parent-rolled grouping as the
+    // category donut beside it — otherwise a split receipt counted whole under
+    // its own category here, and the two named different winners.
+    const nodes = rollUpCategoryTotals(
+      normalizeCategoryKeys(groupExpensesByCategory(filteredExpenses, toDisplayCurrency), categories),
+      [],
+      buildParentOf(categories),
+    );
     let mostExpensiveCategory: string | null = null;
     let topAmount = 0;
-    categoryTotals.forEach(({ name, amount }) => {
-      if (amount > topAmount) { topAmount = amount; mostExpensiveCategory = name || null; }
-    });
-
-    const trailingMonths = 3;
-    const monthlyTotals: number[] = [];
-    for (let i = 1; i <= trailingMonths; i++) {
-      const d = new Date(dateRange.startDate.getFullYear(), dateRange.startDate.getMonth() - i, 1);
-      const monthStart = new Date(d.getFullYear(), d.getMonth(), 1);
-      const monthEnd = new Date(d.getFullYear(), d.getMonth() + 1, 1);
-      const monthTotal = expenses
-        .filter((e) => {
-          if (e.isDeleted) return false;
-          const ed = new Date(e.date);
-          return ed >= monthStart && ed < monthEnd;
-        })
-        .reduce((s, e) => s + toDisplayCurrency(e.amount, e.currencyCode), 0);
-      monthlyTotals.push(monthTotal);
+    for (const node of nodes) {
+      if (node.amount > topAmount) {
+        topAmount = node.amount;
+        const cat = node.categoryId
+          ? categories.find((c) => c.id === node.categoryId) || categories.find((c) => c.name === node.categoryId)
+          : undefined;
+        mostExpensiveCategory = (cat ? getCategoryDisplayName(cat, t) : categoryLabel(cat)) || null;
+      }
     }
 
+    // "vs 3-month average" is a monthly figure: a week or a year against an
+    // average MONTH is meaningless, so it is only computed for the month view
+    // (0 hides the line). Same currency filter and same-days windows as the
+    // current total, so like is compared with like.
     let vsAverage = 0;
-    if (monthlyTotals.some((t) => t > 0)) {
-      const rollingAverage = monthlyTotals.reduce((s, t) => s + t, 0) / monthlyTotals.length;
-      vsAverage =
-        rollingAverage === 0
-          ? totalSpent > 0 ? 100 : 0
-          : Math.round(((totalSpent - rollingAverage) / rollingAverage) * 10000) / 100;
+    if (timeRange === 'month') {
+      const monthlyTotals = trailingMonthWindows(dateRange, TRAILING_MONTHS).map((w) =>
+        expenses
+          .filter((e) => {
+            if (e.isDeleted) return false;
+            if (currencyCode && e.currencyCode !== currencyCode) return false;
+            return inWindow(new Date(e.date), w);
+          })
+          .reduce((s, e) => s + toDisplayCurrency(e.amount, e.currencyCode), 0),
+      );
+      vsAverage = computeVsAverage(totalSpent, monthlyTotals) ?? 0;
     }
 
     return {
@@ -94,7 +103,7 @@ export function useSummaryAnalytics(
       highestSpendingDay,
       mostExpensiveCategory,
     };
-  }, [filteredExpenses, expenses, categories, dateRange, getAmount, toDisplayCurrency]);
+  }, [filteredExpenses, expenses, categories, dateRange, timeRange, currencyCode, getAmount, toDisplayCurrency, t]);
 
   return { summary };
 }

@@ -6,6 +6,7 @@ import { categoryLabel } from '@/utils/entityLabel';
 import { buildParentOf, normalizeCategoryKeys } from './buildParentOf';
 import { rollUpCategoryTotals } from './categoryRollup';
 import { groupExpensesByCategory, computeVsAverage } from './categoryGrouping';
+import { inWindow, trailingMonthWindows } from './periodWindows';
 import type { TimeRange, CategorySpending } from './useAnalytics';
 
 // Re-exported so existing/expected import paths (`from './useCategoryAnalytics'`)
@@ -48,16 +49,13 @@ export function useCategoryAnalytics(
     // share, reporting a fabricated swing instead of comparing like with like.
     const trailingMonthMaps: Map<string | null, number>[] =
       timeRange === 'month'
-        ? Array.from({ length: TRAILING_MONTHS }, (_, idx) => {
-            const i = idx + 1;
-            const d = new Date(dateRange.startDate.getFullYear(), dateRange.startDate.getMonth() - i, 1);
-            const monthStart = new Date(d.getFullYear(), d.getMonth(), 1);
-            const monthEnd = new Date(d.getFullYear(), d.getMonth() + 1, 1);
+        ? // Same days of each trailing month while this one is in progress
+          // (periodWindows.ts) — a half-month against whole months is not a trend.
+          trailingMonthWindows(dateRange, TRAILING_MONTHS).map((window) => {
             const monthExpenses = expenses.filter((e) => {
               if (e.isDeleted) return false;
               if (currencyCode && e.currencyCode !== currencyCode) return false;
-              const ed = new Date(e.date);
-              return ed >= monthStart && ed < monthEnd;
+              return inWindow(new Date(e.date), window);
             });
             return groupExpensesByCategory(monthExpenses, toDisplayCurrency);
           })

@@ -24,6 +24,8 @@ El rango seleccionado afecta a todos los graficos e informacion que aparecen deb
   - **vs. promedio de 3 meses** — p.ej. "18% sobre el promedio de 3 meses" (verde = por debajo, rojo = por encima), aparece tras al menos 1 mes completo anterior
 - **Promedio por dia** — gasto diario promedio
 
+Mientras el periodo está en curso, ambas comparaciones usan los mismos días: el día 5, tus primeros cinco días se comparan con los primeros cinco días del periodo anterior (y de los últimos tres meses), así un mes a medias nunca parece un gran ahorro. **Promedio por día** cuenta solo los días transcurridos. La línea del promedio de 3 meses aparece en la vista Mes.
+
 ## Carrusel de informacion IA
 
 Un carrusel horizontal desplazable con informacion generada por IA (requiere plan Pro):

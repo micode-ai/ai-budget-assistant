@@ -15,6 +15,7 @@ The spending analysis layer: server-side aggregations (`modules/analytics/`, `mo
 - `apps/mobile/src/components/interactive-charts/` — drill-down charts with `ChartRenderer`
 
 ## Feature pages
+- [analytics-period-comparisons](features/analytics-period-comparisons.md) — "vs last period", "vs 3-month average", avg per day, category chips and the anomaly list: same-days windows while a period is in progress
 - [safe-to-spend](features/safe-to-spend.md) — the deterministic "safe to spend today" number and the chat affordability check
 - [financial-wrapped](features/financial-wrapped.md) — the year-in-review card deck and its share image
 - [child-costs](features/child-costs.md) — per-child spending, 800+ benefit coverage, share card and the Pro statement PDF
@@ -25,8 +26,8 @@ The spending analysis layer: server-side aggregations (`modules/analytics/`, `mo
 - **Calendar view** — `useCalendarData.ts` is a shared hook used in both the home widget and the full-screen calendar page; handles multi-currency conversion for per-day totals
 - **Scenario simulator** — `src/features/scenario/useScenarioProjection.ts` is pure client-side; reads expense/income stores and projects savings over 3/6/12 months
 - **Fat Finder** — `app/fat-finder.tsx` renders a report generated **server-side** by `modules/insights/fat-finder.service.ts` (LLM-written, Pro-gated), not computed on the client
-- **Trailing-average deltas** — `useAnalytics` returns `vsAverage` on the summary (signed % vs the trailing 3-month average) and per category; a category's value is `null` when it is new or the view is not a month, and deltas inside ±5% are treated as noise and not shown
-- **Insights** — `insightsStore.ts` polls `GET /insights`; server generates rule-based tips (e.g., "you spent 30% more on dining this month")
+- **Trailing-average deltas** — `useAnalytics` returns `vsAverage` on the summary and per category, month view only, against the SAME days of the trailing three months while the month is in progress; deltas inside ±5% are treated as noise and not shown. The anomaly list is derived from these chips. See [analytics-period-comparisons](features/analytics-period-comparisons.md)
+- **Insights** — `GET /insights` returns rule-based anomalies and budget predictions; the current Analytics tab uses only the predictions and builds its anomaly list locally (ABA-762); the server list stays for older app versions
 
 ## Cross-references
 - Talks to: `api` analytics and insights endpoints for server-computed data

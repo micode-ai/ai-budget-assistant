@@ -4972,6 +4972,8 @@ Wybrany zakres wplywa na wszystkie wykresy i wnioski ponizej.
   - **vs. srednia 3 miesiecy** — np. "18% powyzej sredniej 3 miesiecy" (zielony = ponizej, czerwony = powyzej), pojawia sie po co najmniej 1 pelnym poprzednim miesiacu
 - **Srednio dziennie** — srednie dzienne wydatki
 
+Dopóki okres trwa, oba porównania dotyczą tych samych dni: 5. dnia miesiąca twoje pierwsze pięć dni porównujemy z pierwszymi pięcioma dniami poprzedniego okresu (i ostatnich trzech miesięcy), więc rozpoczęty miesiąc nigdy nie wygląda jak duża oszczędność. **Średnio dziennie** liczy tylko dni, które już minęły. Wiersz ze średnią z 3 miesięcy pojawia się w widoku Miesiąc.
+
 ## Karuzela wnioskow AI
 
 Poziomo przewijana karuzela wnioskow generowanych przez AI (wymaga planu Pro):

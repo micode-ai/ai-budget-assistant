@@ -24,6 +24,8 @@ Der ausgewahlte Bereich beeinflusst alle Diagramme und Einblicke darunter.
   - **vs. 3-Monats-Schnitt** — z.B. "18% uber 3-Monats-Schnitt" (grun = darunter, rot = daruber), erscheint ab mindestens 1 abgeschlossenem Vormonat
 - **Durchschnitt pro Tag** — durchschnittliche tagliche Ausgaben
 
+Solange der Zeitraum läuft, vergleichen beide Angaben dieselben Tage: Am 5. werden deine ersten fünf Tage mit den ersten fünf Tagen des Vorzeitraums (und der letzten drei Monate) verglichen, sodass ein angefangener Monat nie wie eine große Ersparnis aussieht. **Durchschnitt pro Tag** zählt nur die bisherigen Tage. Die Zeile zum 3-Monats-Schnitt erscheint in der Monatsansicht.
+
 ## KI-Einblicke-Karussell
 
 Ein horizontal scrollbares Karussell mit KI-generierten Einblicken (Pro-Plan erforderlich):

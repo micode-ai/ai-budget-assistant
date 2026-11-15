@@ -24,6 +24,8 @@ La periode selectionnee affecte tous les graphiques et aperçus ci-dessous.
   - **vs. moy. 3 mois** — p.ex. "18% au-dessus de la moy. 3 mois" (vert = en dessous, rouge = au-dessus), affiche des qu'il y a au moins 1 mois complet d'historique
 - **Moy. par jour** — moyenne des depenses quotidiennes
 
+Tant que la période est en cours, les deux comparaisons portent sur les mêmes jours : le 5, vos cinq premiers jours sont comparés aux cinq premiers jours de la période précédente (et des trois derniers mois), si bien qu'un mois entamé ne ressemble jamais à une grosse économie. **Moy. par jour** ne compte que les jours écoulés. La ligne de la moyenne sur 3 mois apparaît dans la vue Mois.
+
 ## Carousel d'aperçus IA
 
 Un carousel horizontal defilable d'aperçus generes par l'IA (plan Pro requis) :
