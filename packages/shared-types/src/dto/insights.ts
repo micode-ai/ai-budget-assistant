@@ -254,6 +254,9 @@ export type WrappedCard =
 export interface WrappedResponse {
   year: number;
   month?: number;                 // 1-12 when this is a monthly deck (GET /insights/wrapped?year=&month=)
+  /** Anchored monthly deck only (ABA-782): the financial month's first and last day, YYYY-MM-DD. */
+  periodStart?: string;
+  periodEnd?: string;
   baseCurrency: string;
   generatedAt: string;            // ISO datetime
   hasEnoughData: boolean;         // false → client shows a friendly "not enough yet" state

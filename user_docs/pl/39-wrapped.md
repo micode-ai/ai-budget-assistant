@@ -48,6 +48,8 @@ Podsumowanie roku potrzebuje trochę historii, żeby miało sens jego wyświetla
 
 Jest też krótka talia kart dla jednego miesiąca. **1. dnia każdego miesiąca** dostaniesz powiadomienie — *Podsumowanie miesiąca gotowe* — jeśli w miniony miesiąc jest wystarczająco dużo danych; dotknij go, aby otworzyć karty. Możesz je też otworzyć w każdej chwili z kafelka **Podsumowanie miesiąca** na karcie **Analityka**, obok podsumowania roku.
 
+Jeśli konto ma **Miesiąc finansowy** (na przykład od dnia wypłaty, 10.), podsumowanie miesiąca obejmuje ten okres — *październik* to 10 października – 9 listopada, daty widać w tytule — a powiadomienie przychodzi w pierwszym dniu nowego okresu zamiast 1. dnia miesiąca.
+
 Miesięczna talia ma własne karty (również tylko te, dla których są dane):
 
 - **W porównaniu z poprzednim miesiącem** — o ile procent wydałeś więcej lub mniej niż miesiąc wcześniej.

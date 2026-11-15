@@ -130,3 +130,30 @@ describe('WrappedService.getWrapped', () => {
     expect(res.cards).toEqual([]);
   });
 });
+
+describe('WrappedService.getMonthlyWrapped — financial month (ABA-782)', () => {
+  it('queries the anchored period plus the one before, keys the cache by anchor and returns the span', async () => {
+    const { service, prisma, cacheSet } = makeService({
+      expenses: [exp({ date: new Date(2026, 9, 20) })],
+    });
+
+    const deck = await service.getMonthlyWrapped('acc-1', 'u-1', 'USD', 2026, 10, 10);
+
+    const where = prisma.expense.findMany.mock.calls[0][0].where.date;
+    expect(where.gte).toEqual(new Date(2026, 8, 10)); // previous financial month starts 10 Sep
+    expect(where.lte).toEqual(new Date(2026, 10, 9, 23, 59, 59, 999)); // October's ends 9 Nov
+    expect(deck.periodStart).toBe('2026-10-10');
+    expect(deck.periodEnd).toBe('2026-11-09');
+    expect(cacheSet.mock.calls[0][0]).toBe(wrappedCacheKey('acc-1', 'USD', 2026, 10, 10));
+    expect(wrappedCacheKey('acc-1', 'USD', 2026, 10, 10)).not.toBe(wrappedCacheKey('acc-1', 'USD', 2026, 10));
+  });
+
+  it('is the calendar month, with no span, without an anchor', async () => {
+    const { service, prisma } = makeService({ expenses: [exp({ date: new Date(2026, 9, 20) })] });
+    const deck = await service.getMonthlyWrapped('acc-1', 'u-1', 'USD', 2026, 10);
+    const where = prisma.expense.findMany.mock.calls[0][0].where.date;
+    expect(where.gte).toEqual(new Date(2026, 8, 1));
+    expect(where.lte).toEqual(new Date(2026, 9, 31, 23, 59, 59, 999));
+    expect(deck.periodStart).toBeUndefined();
+  });
+});

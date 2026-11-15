@@ -6,6 +6,7 @@ import { PriceHistoryService } from '../price-history/price-history.service';
 import { StreakService } from '../gamification/streak.service';
 import { getRatesSafe } from '../../common/utils/fx';
 import { EXCLUDE_SPLIT_RECEIVABLE } from '../../common/utils/expense-filters';
+import { financialMonth, shiftFinancialMonth } from '../../common/utils/financial-month';
 import type { WrappedResponse } from '@budget/shared-types';
 import {
   assembleWrapped,
@@ -25,8 +26,18 @@ const CACHE_TTL_SEC = 3600;
  * Redis cache key for a Wrapped result.
  * Per-user base currency is folded in (same reasoning as safeToSpendCacheKey).
  */
-export function wrappedCacheKey(accountId: string, baseCurrency: string, year: number, month?: number): string {
-  const period = month ? `${year}-${String(month).padStart(2, '0')}` : String(year);
+export function wrappedCacheKey(
+  accountId: string,
+  baseCurrency: string,
+  year: number,
+  month?: number,
+  anchorDay: number | null = null,
+): string {
+  // An anchored monthly deck covers a different window than the calendar one
+  // with the same year-month, so the anchor is part of its key (ABA-782).
+  const period = month
+    ? `${year}-${String(month).padStart(2, '0')}${anchorDay ? `@${anchorDay}` : ''}`
+    : String(year);
   return `wrapped:${accountId}:${baseCurrency}:${period}`;
 }
 
@@ -61,19 +72,25 @@ export class WrappedService {
     return result;
   }
 
-  /** Monthly deck (ABA-641): `month` is 1-12. Same cache, same exclusions as the yearly deck. */
+  /**
+   * Monthly deck (ABA-641): `month` is 1-12. Same cache, same exclusions as the yearly deck.
+   * With an anchor day it is the account's FINANCIAL month that STARTS in `month`
+   * (salary on the 10th: "October" = 10 Oct – 9 Nov), compared with the financial
+   * month before (ABA-782); without one, the calendar month.
+   */
   async getMonthlyWrapped(
     accountId: string,
     userId: string,
     baseCurrency: string,
     year: number,
     month: number,
+    anchorDay: number | null = null,
   ): Promise<WrappedResponse> {
-    const key = wrappedCacheKey(accountId, baseCurrency, year, month);
+    const key = wrappedCacheKey(accountId, baseCurrency, year, month, anchorDay);
     const cached = await this.cacheService.get<WrappedResponse>(key);
     if (cached) return cached;
 
-    const result = await this.computeMonthly(accountId, userId, baseCurrency, year, month);
+    const result = await this.computeMonthly(accountId, userId, baseCurrency, year, month, anchorDay);
     await this.cacheService.set(key, result, CACHE_TTL_SEC);
     return result;
   }
@@ -84,6 +101,7 @@ export class WrappedService {
     baseCurrency: string,
     year: number,
     month: number,
+    anchorDay: number | null = null,
   ): Promise<WrappedResponse> {
     const account = await this.prisma.account.findUnique({
       where: { id: accountId },
@@ -94,9 +112,10 @@ export class WrappedService {
     }
 
     // This month + the previous one in one query, for the vs-last-month card.
-    const monthStart = new Date(year, month - 1, 1, 0, 0, 0, 0);
-    const rangeStart = new Date(year, month - 2, 1, 0, 0, 0, 0);
-    const rangeEnd = new Date(year, month, 0, 23, 59, 59, 999);
+    // Financial months when anchored (ABA-782); exactly the calendar months otherwise.
+    const inside = new Date(year, month - 1, anchorDay ? Math.min(anchorDay, new Date(year, month, 0).getDate()) : 15, 12);
+    const { start: monthStart, end: rangeEnd } = financialMonth(inside, anchorDay);
+    const rangeStart = financialMonth(shiftFinancialMonth(monthStart, -1, anchorDay), anchorDay).start;
 
     const [expenses, incomes, rates] = await Promise.all([
       this.prisma.expense.findMany({
@@ -153,7 +172,7 @@ export class WrappedService {
       this.logger.warn(`Monthly wrapped streak lookup failed for ${accountId}: ${err}`);
     }
 
-    return assembleMonthlyWrapped({
+    const deck = assembleMonthlyWrapped({
       year,
       month,
       baseCurrency,
@@ -164,6 +183,10 @@ export class WrappedService {
       streakLongest,
       streakCurrent,
     });
+    // The exact span, so the app can say "10 Oct – 9 Nov" rather than imply 1–31 October.
+    return anchorDay
+      ? { ...deck, periodStart: localDateKey(monthStart), periodEnd: localDateKey(rangeEnd) }
+      : deck;
   }
 
   private emptyResponse(year: number, baseCurrency: string): WrappedResponse {

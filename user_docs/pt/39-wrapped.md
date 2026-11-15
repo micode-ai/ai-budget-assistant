@@ -48,6 +48,8 @@ O Wrapped precisa de algum histórico para valer a pena. Se registou poucos movi
 
 Existe também um baralho curto para um único mês. No **dia 1 de cada mês** recebe uma notificação — *O resumo do seu mês está pronto* — quando o mês que acabou de terminar tem dados suficientes; toque nela para abrir o baralho. Também o pode abrir a qualquer momento a partir do cartão **Resumo do mês** no separador **Análise**, ao lado do Wrapped.
 
+Se a sua conta tiver um **Mês financeiro** (por exemplo, a começar no dia do ordenado, dia 10), o resumo do mês cobre esse período — *outubro* vai de 10 de outubro a 9 de novembro, com as datas no título — e a notificação chega no primeiro dia do novo período em vez do dia 1.
+
 O baralho mensal tem os seus próprios cartões (mais uma vez, só os que têm dados):
 
 - **Comparado com o mês passado** — quanto gastou a mais ou a menos do que no mês anterior, em percentagem.

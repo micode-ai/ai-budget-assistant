@@ -48,6 +48,8 @@ El Resumen del año necesita algo de historial para que merezca la pena mostrarl
 
 También hay un mazo corto para un solo mes. El **día 1 de cada mes** recibes una notificación — *Tu resumen del mes está listo* — cuando el mes que acaba de terminar tiene datos suficientes; tócala para abrir las tarjetas. También puedes abrirlo en cualquier momento desde la tarjeta **Resumen del mes** de la pestaña **Análisis**, junto al resumen del año.
 
+Si tu cuenta tiene un **Mes financiero** (por ejemplo, desde el día de cobro, el 10), el resumen del mes cubre ese periodo —*octubre* va del 10 de octubre al 9 de noviembre, con las fechas en el título— y la notificación llega el día en que empieza el nuevo periodo en lugar del día 1.
+
 El mazo mensual tiene sus propias tarjetas (de nuevo, solo las que tienen datos):
 
 - **Comparado con el mes pasado** — cuánto gastaste de más o de menos que el mes anterior, en porcentaje.

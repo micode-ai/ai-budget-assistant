@@ -4886,6 +4886,8 @@ Wrapped needs a bit of history to be worth showing. If you've only tracked a few
 
 There is also a short deck for a single month. On the **1st of each month** you get a push — *Your month in review is ready* — when the month just ended has enough data; tap it to open the deck. You can also open it any time from the **Month in review** card on the **Analytics** tab, next to Wrapped.
 
+If your account has a **Financial Month** (for example, starting on payday, the 10th), the monthly deck covers that period — *October* is 10 October – 9 November, with the dates shown in the title — and the push arrives on the day the new period starts instead of the 1st.
+
 The monthly deck has its own cards (again, only those with data):
 
 - **Compared with last month** — how much more or less you spent than the month before, in percent.
@@ -10278,6 +10280,8 @@ OCR иногда неверно читает цену, выдумывает ст
 
 Есть и короткая колода для одного месяца. **1-го числа каждого месяца** приходит уведомление — *Итоги месяца готовы*, — если за прошедший месяц достаточно данных; нажмите на него, чтобы открыть карточки. Открыть их можно и в любой момент — карточка **Итоги месяца** на вкладке **Аналитика**, рядом с итогами года.
 
+Если у аккаунта задан **Финансовый месяц** (например, с дня зарплаты, 10-го), итоги месяца охватывают этот период — *октябрь* — это 10 октября – 9 ноября, даты видны в заголовке, — а уведомление приходит в первый день нового периода, а не 1-го числа.
+
 У месячной колоды свои карточки (тоже только те, по которым есть данные):
 
 - **По сравнению с прошлым месяцем** — на сколько процентов больше или меньше вы потратили, чем месяцем раньше.
@@ -15640,6 +15644,8 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 Є й коротка колода для одного місяця. **1-го числа кожного місяця** надходить сповіщення — *Підсумки місяця готові*, — якщо за минулий місяць достатньо даних; натисніть на нього, щоб відкрити картки. Відкрити їх можна й будь-коли — картка **Підсумки місяця** на вкладці **Аналітика**, поруч із підсумками року.
 
+Якщо в акаунті задано **Фінансовий місяць** (наприклад, із дня зарплати, 10-го), підсумки місяця охоплюють цей період — *жовтень* — це 10 жовтня – 9 листопада, дати видно в заголовку, — а сповіщення надходить у перший день нового періоду, а не 1-го числа.
+
 Місячна колода має власні картки (теж лише ті, для яких є дані):
 
 - **Порівняно з минулим місяцем** — на скільки відсотків більше чи менше ви витратили, ніж місяцем раніше.
@@ -20987,6 +20993,8 @@ Podsumowanie roku potrzebuje trochę historii, żeby miało sens jego wyświetla
 
 Jest też krótka talia kart dla jednego miesiąca. **1. dnia każdego miesiąca** dostaniesz powiadomienie — *Podsumowanie miesiąca gotowe* — jeśli w miniony miesiąc jest wystarczająco dużo danych; dotknij go, aby otworzyć karty. Możesz je też otworzyć w każdej chwili z kafelka **Podsumowanie miesiąca** na karcie **Analityka**, obok podsumowania roku.
 
+Jeśli konto ma **Miesiąc finansowy** (na przykład od dnia wypłaty, 10.), podsumowanie miesiąca obejmuje ten okres — *październik* to 10 października – 9 listopada, daty widać w tytule — a powiadomienie przychodzi w pierwszym dniu nowego okresu zamiast 1. dnia miesiąca.
+
 Miesięczna talia ma własne karty (również tylko te, dla których są dane):
 
 - **W porównaniu z poprzednim miesiącem** — o ile procent wydałeś więcej lub mniej niż miesiąc wcześniej.
@@ -26309,6 +26317,8 @@ Der Jahresrückblick braucht etwas Verlauf, damit sich die Anzeige lohnt. Wenn d
 
 Es gibt auch einen kurzen Kartenstapel für einen einzelnen Monat. Am **1. jedes Monats** bekommst du eine Benachrichtigung — *Dein Monatsrückblick ist fertig* —, wenn der vergangene Monat genug Daten hat; tippe darauf, um die Karten zu öffnen. Du kannst ihn auch jederzeit über die Karte **Monatsrückblick** im Tab **Analysen** neben dem Jahresrückblick öffnen.
 
+Hat dein Konto einen **Finanzmonat** (zum Beispiel ab dem Zahltag, dem 10.), umfasst der Monatsrückblick diesen Zeitraum — *Oktober* ist dann der 10. Oktober – 9. November, die Daten stehen im Titel — und die Benachrichtigung kommt am ersten Tag des neuen Zeitraums statt am 1.
+
 Der Monatsstapel hat eigene Karten (auch hier nur solche mit Daten):
 
 - **Im Vergleich zum Vormonat** — wie viel Prozent mehr oder weniger du als im Monat davor ausgegeben hast.
@@ -31620,6 +31630,8 @@ El Resumen del año necesita algo de historial para que merezca la pena mostrarl
 
 También hay un mazo corto para un solo mes. El **día 1 de cada mes** recibes una notificación — *Tu resumen del mes está listo* — cuando el mes que acaba de terminar tiene datos suficientes; tócala para abrir las tarjetas. También puedes abrirlo en cualquier momento desde la tarjeta **Resumen del mes** de la pestaña **Análisis**, junto al resumen del año.
 
+Si tu cuenta tiene un **Mes financiero** (por ejemplo, desde el día de cobro, el 10), el resumen del mes cubre ese periodo —*octubre* va del 10 de octubre al 9 de noviembre, con las fechas en el título— y la notificación llega el día en que empieza el nuevo periodo en lugar del día 1.
+
 El mazo mensual tiene sus propias tarjetas (de nuevo, solo las que tienen datos):
 
 - **Comparado con el mes pasado** — cuánto gastaste de más o de menos que el mes anterior, en porcentaje.
@@ -36929,6 +36941,8 @@ La Rétro a besoin d'un peu d'historique pour valoir la peine d'être affichée.
 
 Il existe aussi un court paquet de cartes pour un seul mois. Le **1er de chaque mois**, vous recevez une notification — *Le bilan de votre mois est prêt* — quand le mois écoulé contient assez de données ; touchez-la pour ouvrir les cartes. Vous pouvez aussi l'ouvrir à tout moment depuis la carte **Bilan du mois** de l'onglet **Analyses**, à côté de la rétro de l'année.
 
+Si votre compte a un **Mois financier** (par exemple à partir du jour de paie, le 10), le bilan du mois couvre cette période — *octobre* va du 10 octobre au 9 novembre, avec les dates dans le titre — et la notification arrive le premier jour de la nouvelle période au lieu du 1er.
+
 Le paquet mensuel a ses propres cartes (là encore, seulement celles qui ont des données) :
 
 - **Par rapport au mois dernier** — combien vous avez dépensé de plus ou de moins que le mois précédent, en pourcentage.
@@ -42201,6 +42215,8 @@ OCR часам няправільна чытае цану, выдумляе ра
 ## Вынікі месяца
 
 Ёсць і кароткая калода для аднаго месяца. **1-га чысла кожнага месяца** прыходзіць апавяшчэнне — *Вынікі месяца гатовыя*, — калі за мінулы месяц дастаткова дадзеных; націсніце на яго, каб адкрыць карткі. Адкрыць іх можна і ў любы момант — банэр **Вынікі месяца** на ўкладцы **Аналітыка**, побач з вынікамі году.
+
+Калі ў акаўнта зададзены **Фінансавы месяц** (напрыклад, з дня заробку, 10-га), вынікі месяца ахопліваюць гэты перыяд — *кастрычнік* — гэта 10 кастрычніка – 9 лістапада, даты бачныя ў загалоўку, — а апавяшчэнне прыходзіць у першы дзень новага перыяду, а не 1-га чысла.
 
 У месячнай калоды свае карткі (таксама толькі тыя, па якіх ёсць дадзеныя):
 
@@ -47600,6 +47616,8 @@ Het Jaaroverzicht heeft wat geschiedenis nodig om de moeite waard te zijn. Als j
 ## Maandoverzicht
 
 Er is ook een korte stapel kaarten voor één maand. Op de **1e van elke maand** krijg je een melding — *Je maandoverzicht staat klaar* — als de afgelopen maand genoeg data heeft; tik erop om de kaarten te openen. Je kunt het ook altijd openen via de kaart **Maandoverzicht** op het tabblad **Analyse**, naast het jaaroverzicht.
+
+Heeft je account een **Financiële maand** (bijvoorbeeld vanaf betaaldag, de 10e), dan beslaat het maandoverzicht die periode — *oktober* is 10 oktober – 9 november, met de data in de titel — en komt de melding op de eerste dag van de nieuwe periode in plaats van op de 1e.
 
 De maandstapel heeft eigen kaarten (ook hier alleen die met data):
 
@@ -53027,6 +53045,8 @@ O Wrapped precisa de algum histórico para valer a pena. Se registou poucos movi
 
 Existe também um baralho curto para um único mês. No **dia 1 de cada mês** recebe uma notificação — *O resumo do seu mês está pronto* — quando o mês que acabou de terminar tem dados suficientes; toque nela para abrir o baralho. Também o pode abrir a qualquer momento a partir do cartão **Resumo do mês** no separador **Análise**, ao lado do Wrapped.
 
+Se a sua conta tiver um **Mês financeiro** (por exemplo, a começar no dia do ordenado, dia 10), o resumo do mês cobre esse período — *outubro* vai de 10 de outubro a 9 de novembro, com as datas no título — e a notificação chega no primeiro dia do novo período em vez do dia 1.
+
 O baralho mensal tem os seus próprios cartões (mais uma vez, só os que têm dados):
 
 - **Comparado com o mês passado** — quanto gastou a mais ou a menos do que no mês anterior, em percentagem.
@@ -58452,6 +58472,8 @@ O Wrapped precisa de um pouco de histórico para valer a pena. Se você registro
 ## Resumo do mês
 
 Também existe uma versão curta para um único mês. No **dia 1º de cada mês** você recebe uma notificação — *O resumo do seu mês está pronto* — quando o mês que acabou de terminar tem dados suficientes; toque nela para abrir os cards. Você também pode abrir a qualquer momento pelo cartão **Resumo do mês** na aba **Análises**, ao lado do Wrapped.
+
+Se a sua conta tiver um **Mês financeiro** (por exemplo, começando no dia do pagamento, dia 10), o resumo do mês cobre esse período — *outubro* vai de 10 de outubro a 9 de novembro, com as datas no título — e a notificação chega no primeiro dia do novo período em vez do dia 1º.
 
 A versão mensal tem cards próprios (de novo, só os que têm dados):
 

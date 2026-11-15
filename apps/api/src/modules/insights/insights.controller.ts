@@ -17,6 +17,7 @@ import { RealSalaryService } from './real-salary/real-salary.service';
 import { RealSalaryBriefPdf } from './real-salary/real-salary-brief.pdf';
 import { validateSalaryProfile } from './real-salary/real-salary.validation';
 import { AuthenticatedRequest } from '../../common/types';
+import { financialMonth } from '../../common/utils/financial-month';
 
 @Controller('insights')
 @UseGuards(JwtAuthGuard, AccountContextGuard)
@@ -82,11 +83,16 @@ export class InsightsController {
     let target = parseInt(year ?? '', 10);
     if (!Number.isFinite(target) || target < 2000 || target > now) target = now;
     // ?month=1..12 → the monthly deck (ABA-641). A month in the future becomes the current one.
+    // With an anchor day the "current" month is the one the current FINANCIAL month
+    // started in — on 5 Nov with salary on the 10th, that is October (ABA-782).
     if (month !== undefined) {
+      const anchorDay = req.monthAnchorDay ?? null;
+      const currentStart = financialMonth(today, anchorDay).start;
+      const currentMonth = currentStart.getMonth() + 1;
       let m = parseInt(month, 10);
-      if (!Number.isFinite(m) || m < 1 || m > 12) m = today.getMonth() + 1;
-      if (target === now && m > today.getMonth() + 1) m = today.getMonth() + 1;
-      return this.wrappedService.getMonthlyWrapped(req.accountId, req.user.id, baseCurrency, target, m);
+      if (!Number.isFinite(m) || m < 1 || m > 12) m = currentMonth;
+      if (target === currentStart.getFullYear() && m > currentMonth) m = currentMonth;
+      return this.wrappedService.getMonthlyWrapped(req.accountId, req.user.id, baseCurrency, target, m, anchorDay);
     }
     return this.wrappedService.getWrapped(req.accountId, req.user.id, baseCurrency, target);
   }

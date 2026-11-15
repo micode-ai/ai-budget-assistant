@@ -48,6 +48,8 @@ O Wrapped precisa de um pouco de histórico para valer a pena. Se você registro
 
 Também existe uma versão curta para um único mês. No **dia 1º de cada mês** você recebe uma notificação — *O resumo do seu mês está pronto* — quando o mês que acabou de terminar tem dados suficientes; toque nela para abrir os cards. Você também pode abrir a qualquer momento pelo cartão **Resumo do mês** na aba **Análises**, ao lado do Wrapped.
 
+Se a sua conta tiver um **Mês financeiro** (por exemplo, começando no dia do pagamento, dia 10), o resumo do mês cobre esse período — *outubro* vai de 10 de outubro a 9 de novembro, com as datas no título — e a notificação chega no primeiro dia do novo período em vez do dia 1º.
+
 A versão mensal tem cards próprios (de novo, só os que têm dados):
 
 - **Comparado com o mês passado** — quanto você gastou a mais ou a menos que no mês anterior, em porcentagem.

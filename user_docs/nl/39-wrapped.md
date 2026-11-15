@@ -48,6 +48,8 @@ Het Jaaroverzicht heeft wat geschiedenis nodig om de moeite waard te zijn. Als j
 
 Er is ook een korte stapel kaarten voor één maand. Op de **1e van elke maand** krijg je een melding — *Je maandoverzicht staat klaar* — als de afgelopen maand genoeg data heeft; tik erop om de kaarten te openen. Je kunt het ook altijd openen via de kaart **Maandoverzicht** op het tabblad **Analyse**, naast het jaaroverzicht.
 
+Heeft je account een **Financiële maand** (bijvoorbeeld vanaf betaaldag, de 10e), dan beslaat het maandoverzicht die periode — *oktober* is 10 oktober – 9 november, met de data in de titel — en komt de melding op de eerste dag van de nieuwe periode in plaats van op de 1e.
+
 De maandstapel heeft eigen kaarten (ook hier alleen die met data):
 
 - **Vergeleken met vorige maand** — hoeveel procent meer of minder je uitgaf dan de maand ervoor.

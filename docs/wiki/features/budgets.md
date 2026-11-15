@@ -129,8 +129,9 @@ over a `budgets` array. The public `useBudgetStore` API is unchanged across its 
   totals with the Health Score savings rate (ABA-778, `computeExpenseTotalsByCurrency` /
   `computeIncomeTotalsByCurrency`, recomputed by `useHomeScreenData` when the anchor moves) and the
   home Net Profit trend (ABA-779, `netProfitSeries.monthBuckets`) and the Spending Story (ABA-781,
-  `StoryService` with `req.monthAnchorDay`) are done. Safe-to-spend, Wrapped, Fat Finder, reports
-  and the AI user-context summary are still calendar-month; the calendar widget is calendar by nature. The constraint is that the server and client halves of one number
+  `StoryService` with `req.monthAnchorDay`) and the monthly Wrapped with its push (ABA-782) are
+  done. Safe-to-spend, Fat Finder, reports and the AI user-context summary are still
+  calendar-month; the yearly Wrapped is a calendar year by design; the calendar widget is calendar by nature. The constraint is that the server and client halves of one number
   migrate together — which is why the Analytics links to Story and Reports still pass a calendar
   month.
 - `GET /budgets/:id/history?periods=N` (max 12) returns `[]` for `custom`-period budgets. Mobile

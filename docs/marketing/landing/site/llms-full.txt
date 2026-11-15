@@ -8086,6 +8086,8 @@ Wrapped needs a bit of history to be worth showing. If you've only tracked a few
 
 There is also a short deck for a single month. On the **1st of each month** you get a push — *Your month in review is ready* — when the month just ended has enough data; tap it to open the deck. You can also open it any time from the **Month in review** card on the **Analytics** tab, next to Wrapped.
 
+If your account has a **Financial Month** (for example, starting on payday, the 10th), the monthly deck covers that period — *October* is 10 October – 9 November, with the dates shown in the title — and the push arrives on the day the new period starts instead of the 1st.
+
 The monthly deck has its own cards (again, only those with data):
 
 - **Compared with last month** — how much more or less you spent than the month before, in percent.

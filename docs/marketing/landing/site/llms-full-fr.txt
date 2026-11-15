@@ -7965,6 +7965,8 @@ La Rétro a besoin d'un peu d'historique pour valoir la peine d'être affichée.
 
 Il existe aussi un court paquet de cartes pour un seul mois. Le **1er de chaque mois**, vous recevez une notification — *Le bilan de votre mois est prêt* — quand le mois écoulé contient assez de données ; touchez-la pour ouvrir les cartes. Vous pouvez aussi l'ouvrir à tout moment depuis la carte **Bilan du mois** de l'onglet **Analyses**, à côté de la rétro de l'année.
 
+Si votre compte a un **Mois financier** (par exemple à partir du jour de paie, le 10), le bilan du mois couvre cette période — *octobre* va du 10 octobre au 9 novembre, avec les dates dans le titre — et la notification arrive le premier jour de la nouvelle période au lieu du 1er.
+
 Le paquet mensuel a ses propres cartes (là encore, seulement celles qui ont des données) :
 
 - **Par rapport au mois dernier** — combien vous avez dépensé de plus ou de moins que le mois précédent, en pourcentage.

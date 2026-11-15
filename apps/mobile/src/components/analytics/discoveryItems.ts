@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
 import type { Ionicons } from '@expo/vector-icons';
 import { previousMonthParams } from '@/features/insights/previousMonth';
+import { readAnchorDay } from '@/hooks/useFinancialMonth';
 
 export interface DiscoveryItem {
   key: string;
@@ -41,12 +42,12 @@ export function discoveryItems(selectedYear: number, onOpenStory: () => void): D
       onPress: () => router.push({ pathname: '/wrapped', params: { year: String(selectedYear) } }),
     },
     {
-      // Monthly Wrapped (ABA-641): always the month just ended — the one the 1st-of-month push opens.
+      // Monthly Wrapped (ABA-641): always the (financial) month just ended — the one the turnover-day push opens (ABA-782).
       key: 'month-wrapped',
       icon: 'calendar-outline',
       titleKey: 'wrapped.monthTitle',
       subtitleKey: 'wrapped.monthIntroSub',
-      onPress: () => router.push({ pathname: '/wrapped', params: previousMonthParams() }),
+      onPress: () => router.push({ pathname: '/wrapped', params: previousMonthParams(new Date(), readAnchorDay()) }),
     },
     {
       key: 'real-salary',

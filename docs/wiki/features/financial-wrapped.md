@@ -22,7 +22,7 @@ just ended — twelve reasons a year to come back and share instead of one.
   `MIN_TRACKED_ROWS`, `CATEGORY_MIX_LIMIT`, `RECEIPT_SOURCES`
 - `apps/api/src/modules/insights/wrapped-monthly.util.ts` — `assembleMonthlyWrapped`, the monthly
   assembler (`MIN_HABIT_VISITS`); it shares `rankCategories` and the thresholds with `wrapped.util.ts`
-- `apps/api/src/modules/insights/monthly-wrapped-notify.cron.ts` — the 1st-of-month push
+- `apps/api/src/modules/insights/monthly-wrapped-notify.cron.ts` — the month-turnover push (daily, ABA-782)
 - `apps/api/src/modules/insights/insights.controller.ts` — `GET /insights/wrapped?year=YYYY[&month=M]`
 - `packages/shared-types/src/dto/insights.ts` — `WrappedResponse`, the `WrappedCard` union
 - Mobile: `apps/mobile/app/wrapped/index.tsx` (the deck), `apps/mobile/src/features/insights/useWrapped.ts`,
@@ -68,6 +68,12 @@ clock are injected — so it is unit-tested directly (`wrapped.util.spec.ts`).
 exclusions as the yearly deck), and `assembleMonthlyWrapped` builds it. The response carries
 `month`, as do its `intro` and `outro` cards — that is how the client knows which titles to use.
 
+**Financial month (ABA-782).** With `monthAnchorDay` (passed by the controller from
+`req.monthAnchorDay`) the deck is the financial month that STARTS in `month` (salary on the 10th:
+"October" = 10 Oct – 9 Nov), compared with the previous financial month, and the response adds
+`periodStart`/`periodEnd` for the title's span. A future month is clamped against the current
+FINANCIAL month. The yearly deck stays a calendar year by design.
+
 - **Its own cards**: `vs_last_month` (change in percent, only when last month had spend),
   `biggest_purchase` (largest single converted expense), `busiest_weekday` (weekday with the most
   spend, JS `getDay` numbering). It reuses `total_tracked`, `top_category`, `category_mix`,
@@ -76,8 +82,11 @@ exclusions as the yearly deck), and `assembleMonthlyWrapped` builds it. The resp
 - **`savings` only when the month had income**, and with `savedVsLastYear: null`: a month with no
   income would read as "you spent more than you earned" by the whole spend. No `biggest_month` and
   no `personal_inflation` — neither means anything inside one month.
-- **The push** (`MonthlyWrappedNotifyCron`, `0 9 1 * *`): users with `notifyMonthlyWrapped`, a push
-  token and a `defaultAccountId`, streamed with `paginateById`. One push per user, for the default
+- **The push** (`MonthlyWrappedNotifyCron`, daily `0 9 * * *` since ABA-782): users with
+  `notifyMonthlyWrapped`, a push token and a `defaultAccountId`, streamed with `paginateById`; each
+  batch loads its default accounts' anchors in one query, and only users whose period turned over
+  that day are notified (`periodEndedYesterday`: the 1st for a calendar account, the anchor day
+  otherwise, the last day for an anchor above the month's length). One push per user, for the default
   account only (a member of several accounts would otherwise get one per account), in that user's own
   currency, and only when the deck `hasEnoughData` — the push must never open an empty screen.
   Computing the deck in the cron also warms the cache for the tap. Deduped through
@@ -85,12 +94,15 @@ exclusions as the yearly deck), and `assembleMonthlyWrapped` builds it. The resp
   with `year`/`month` routes to `/wrapped` in `services/notifications.ts`; opt-out is the
   `monthlyWrapped` notification preference.
 - **Entries**: a **Month in review** card in the Analytics tab's discover strip (and a tile in the
-  desktop `DiscoveryRow`) always opens the month just ended (`previousMonthParams`).
+  desktop `DiscoveryRow`) always opens the month just ended (`previousMonthParams(now, anchorDay)` —
+  pure; the caller passes `readAnchorDay()`, because importing the hook pulled the store graph into
+  its unit test).
 
 ### Caching
 
 Redis `wrapped:{accountId}:{baseCurrency}:{year}`, TTL 3600 s; a monthly deck uses
-`{year}-{MM}` as the period (`wrappedCacheKey(..., month)`).
+`{year}-{MM}` as the period (`wrappedCacheKey(..., month)`), suffixed `@{anchor}` when the account
+has a financial month — the same year-month is a different window then.
 
 ### Mobile
 
@@ -140,3 +152,4 @@ namespace in all eleven locales.
 - ABA-336 — the endpoint, the assembler, the deck and text sharing; the share image followed.
 - ABA-353 — the share image moved onto the shared `ShareImageCard` mechanism.
 - ABA-641 — the monthly deck, its 1st-of-month push and opt-out, and the Analytics entries.
+- ABA-782 — the monthly deck and its push follow the financial month.

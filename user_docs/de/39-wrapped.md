@@ -48,6 +48,8 @@ Der Jahresrückblick braucht etwas Verlauf, damit sich die Anzeige lohnt. Wenn d
 
 Es gibt auch einen kurzen Kartenstapel für einen einzelnen Monat. Am **1. jedes Monats** bekommst du eine Benachrichtigung — *Dein Monatsrückblick ist fertig* —, wenn der vergangene Monat genug Daten hat; tippe darauf, um die Karten zu öffnen. Du kannst ihn auch jederzeit über die Karte **Monatsrückblick** im Tab **Analysen** neben dem Jahresrückblick öffnen.
 
+Hat dein Konto einen **Finanzmonat** (zum Beispiel ab dem Zahltag, dem 10.), umfasst der Monatsrückblick diesen Zeitraum — *Oktober* ist dann der 10. Oktober – 9. November, die Daten stehen im Titel — und die Benachrichtigung kommt am ersten Tag des neuen Zeitraums statt am 1.
+
 Der Monatsstapel hat eigene Karten (auch hier nur solche mit Daten):
 
 - **Im Vergleich zum Vormonat** — wie viel Prozent mehr oder weniger du als im Monat davor ausgegeben hast.

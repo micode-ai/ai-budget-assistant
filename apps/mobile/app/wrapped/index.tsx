@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -30,7 +30,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useStyles, type Theme } from '@/theme';
-import { formatCurrency } from '@budget/shared-utils';
+import { formatCurrency, formatFinancialMonth } from '@budget/shared-utils';
 import { getIntlLocale } from '@/i18n';
 import { useWrapped } from '@/features/insights/useWrapped';
 import { maybeAskForReview } from '@/features/review/maybeAskForReview';
@@ -123,8 +123,19 @@ export default function WrappedScreen() {
     [intlLocale],
   );
 
-  // "September 2026" on a monthly deck, "2026" on the yearly one.
-  const periodLabel = data?.month ? monthLabel(data.month - 1, data.year) : String(data?.year ?? '');
+  // "September 2026" on a monthly deck, "2026" on the yearly one. An anchored
+  // financial month also carries its span (ABA-782): "September 2026 (10 Sep – 9 Oct)".
+  const span = useMemo(() => {
+    if (!data?.periodStart || !data?.periodEnd) return null;
+    const day = (iso: string) => {
+      const [y, m, d] = iso.split('-').map(Number);
+      return new Date(y, m - 1, d);
+    };
+    return formatFinancialMonth(day(data.periodStart), day(data.periodEnd), intlLocale).range;
+  }, [data?.periodStart, data?.periodEnd, intlLocale]);
+  const periodLabel = data?.month
+    ? `${monthLabel(data.month - 1, data.year)}${span ? ` (${span})` : ''}`
+    : String(data?.year ?? '');
   const shareTitle = data?.month
     ? t('wrapped.monthShareTitle', { period: periodLabel })
     : t('wrapped.shareTitle', { year: data?.year });
