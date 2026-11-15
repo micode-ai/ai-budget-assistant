@@ -119,3 +119,55 @@ describe('classifyCommitments with a linked renewal (ABA-776)', () => {
     expect(r.items).toEqual([{ key: 's:s1', label: 'Music', kind: 'subscription', amount: 45 }]);
   });
 });
+
+describe('classifyCommitments with fixed categories (ABA-777)', () => {
+  const fixedCats = { ids: new Set(['cat-rent', 'local-rent']), nameOf: (id: string) => (id.includes('rent') ? 'Housing' : '') };
+
+  it('counts a whole expense in a fixed category as fixed', () => {
+    const r = classifyCommitments(
+      [
+        { amount: 2000, currencyCode: 'PLN', date: '', description: 'Rent', categoryId: 'cat-rent' },
+        { amount: 100, currencyCode: 'PLN', date: '', description: 'Food', categoryId: 'cat-food' },
+      ],
+      [],
+      convert,
+      fixedCats,
+    );
+    expect(r.fixed).toBe(2000);
+    expect(r.flexible).toBe(100);
+    expect(r.items).toEqual([{ key: 'c:cat-rent', label: 'Housing', kind: 'category', amount: 2000 }]);
+  });
+
+  it('with splits, counts only the split parts in a fixed category', () => {
+    const r = classifyCommitments(
+      [
+        {
+          amount: 300,
+          currencyCode: 'PLN',
+          date: '',
+          categoryId: 'cat-food',
+          splits: [
+            { categoryId: 'local-rent', amount: 120 },
+            { categoryId: 'cat-food', amount: 180 },
+            { categoryId: 'cat-rent', amount: 50, isDeleted: true },
+          ],
+        },
+      ],
+      [],
+      convert,
+      fixedCats,
+    );
+    expect(r.fixed).toBe(120);
+    expect(r.flexible).toBe(180);
+  });
+
+  it('a recurring series stays a recurring item even in a fixed category', () => {
+    const r = classifyCommitments(
+      [{ amount: 50, currencyCode: 'PLN', date: '', description: 'Gym', categoryId: 'cat-rent', recurringId: 'g' }],
+      [],
+      convert,
+      fixedCats,
+    );
+    expect(r.items[0].kind).toBe('recurring');
+  });
+});

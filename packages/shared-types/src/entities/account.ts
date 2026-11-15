@@ -14,6 +14,8 @@ export interface Account {
   tripStatus?: TripStatus;
   /** 1..31, or null/undefined for the calendar month. See the financial-month util. */
   monthAnchorDay?: number | null;
+  /** Expense categories this account counts as fixed costs (ABA-777); absent = none. */
+  fixedCategoryIds?: string[];
   createdAt: Date;
   updatedAt: Date;
 }

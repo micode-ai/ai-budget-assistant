@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
 import { useUserSubscriptionStore } from '@/stores/userSubscriptionStore';
 import { useAccountStore } from '@/stores/accountStore';
 import { useFilteredTransactions } from './useFilteredTransactions';
@@ -12,6 +14,8 @@ import {
   type MonthlyCashFlow,
 } from './cashFlow';
 import type { TimeRange } from './useAnalytics';
+
+const EMPTY_IDS: string[] = [];
 
 /** Months shown in the earned-vs-spent chart of the month view. */
 const MONTH_VIEW_HISTORY = 6;
@@ -34,10 +38,13 @@ export function useCashFlowAnalytics(
   selectedMonth?: number,
   selectedYear?: number,
 ): CashFlowAnalytics {
-  const { expenses, incomes, filteredExpenses, filteredIncomes, toDisplayCurrency, dateRange, anchorDay } =
+  const { expenses, incomes, categories, filteredExpenses, filteredIncomes, toDisplayCurrency, dateRange, anchorDay } =
     useFilteredTransactions(timeRange, currencyCode, selectedMonth, selectedYear);
 
   const currentAccountId = useAccountStore((s) => s.currentAccountId);
+  // The account's fixed-cost categories (ABA-777); a stable reference while unchanged.
+  const fixedCategoryIds = useAccountStore((s) => s.currentAccount()?.fixedCategoryIds) ?? EMPTY_IDS;
+  const { t } = useTranslation();
   const subscriptions = useUserSubscriptionStore((s) => s.subscriptions);
   const [loadedFor, setLoadedFor] = useState<string | null>(null);
 
@@ -74,8 +81,13 @@ export function useCashFlowAnalytics(
   const commitments = useMemo(() => {
     if (!currentAccountId || loadedFor !== currentAccountId) return null;
     const accountSubs = subscriptions.filter((s) => s.accountId === currentAccountId);
-    return classifyCommitments(filteredExpenses, accountSubs, toDisplayCurrency);
-  }, [currentAccountId, loadedFor, subscriptions, filteredExpenses, toDisplayCurrency]);
+    const ids = new Set(fixedCategoryIds);
+    const nameOf = (id: string) => {
+      const cat = categories.find((c) => c.id === id);
+      return cat ? getCategoryDisplayName(cat, t) : '';
+    };
+    return classifyCommitments(filteredExpenses, accountSubs, toDisplayCurrency, { ids, nameOf });
+  }, [currentAccountId, loadedFor, subscriptions, filteredExpenses, toDisplayCurrency, fixedCategoryIds, categories, t]);
 
   return { cashFlow, cashFlowMonths, commitments };
 }

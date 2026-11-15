@@ -168,6 +168,46 @@ export class AccountsService {
     });
   }
 
+  /**
+   * Marks or unmarks one expense category as a fixed cost for this account
+   * (ABA-777). Editors may (it is a reading lens, not an account setting);
+   * viewers may not. Only a live EXPENSE category this account can see — its
+   * own or a global system one — is accepted.
+   *
+   * A device addresses a category by its own id until the server's id reaches
+   * it (docs/wiki/features/category-id-resolution.md), so `categoryId` may be
+   * the server PK or the clientId. Both spellings are added together and
+   * removed together, so the app recognises the category whichever id its
+   * expenses carry, and unmarking from either side really unmarks it.
+   */
+  async setCategoryFixed(accountId: string, userId: string, categoryId: string, fixed: boolean) {
+    await this.validateAccess(accountId, userId, 'editor');
+    const category = await this.prisma.category.findFirst({
+      where: {
+        isDeleted: false,
+        type: 'expense',
+        AND: [
+          { OR: [{ accountId }, { accountId: null }] },
+          { OR: [{ id: categoryId }, { clientId: categoryId }] },
+        ],
+      },
+      select: { id: true, clientId: true },
+    });
+    if (!category) throw new NotFoundException('Category not found');
+
+    const account = await this.prisma.account.findUnique({
+      where: { id: accountId },
+      select: { fixedCategoryIds: true },
+    });
+    const spellings = [...new Set([categoryId, category.id, category.clientId].filter((v): v is string => !!v))];
+    const current = account?.fixedCategoryIds ?? [];
+    const fixedCategoryIds = fixed
+      ? [...current, ...spellings.filter((id) => !current.includes(id))]
+      : current.filter((id) => !spellings.includes(id));
+    await this.prisma.account.update({ where: { id: accountId }, data: { fixedCategoryIds } });
+    return { fixedCategoryIds };
+  }
+
   async remove(accountId: string, userId: string) {
     await this.validateAccess(accountId, userId, 'owner');
 

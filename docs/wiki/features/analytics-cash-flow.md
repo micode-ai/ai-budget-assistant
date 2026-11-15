@@ -44,7 +44,14 @@ year view, the 12 months of that year; in the week view, no chart.
    and an amount within 1%. The subscription manager books renewals as ordinary expenses with no
    link back to the subscription, so matching is the only way to recognise them.
 
-Everything else is flexible, including a rent typed in by hand every month. The card's footer
+3. an expense in a category the account marked as fixed (ABA-777), split-aware: with splits only
+   the parts in such a category. The list is `Account.fixedCategoryIds`, set per category through
+   `PUT /accounts/:id/fixed-categories` from the **Count as a fixed cost** switch in the category
+   sheet. It lives on the ACCOUNT because a system category is one global row shared by every
+   account. The server resolves a device id or a server PK and stores and removes all spellings
+   together ([category-id-resolution](category-id-resolution.md)).
+
+Everything else is flexible — a rent typed by hand becomes fixed once its category is marked. The card's footer
 says what "fixed" means, and when it finds nothing fixed it suggests marking an expense as
 recurring or adding subscriptions.
 
@@ -61,9 +68,9 @@ recurring or adding subscriptions.
 ## Known gaps
 
 - Renewals booked before ABA-776 have no `userSubscriptionId` and still rely on the name/amount match.
-- A user cannot mark a category (rent, utilities) as fixed; that needs a schema field and sync.
+- The forecast does not use fixed categories: a category has no due date to schedule.
 - The month view's periods follow the account's financial month (ABA-767); the year view's 12 bars stay calendar months.
 
 ## History
 
-ABA-763: both cards, phone and desktop. ABA-776: renewals linked by `userSubscriptionId`.
+ABA-763: both cards, phone and desktop. ABA-776: renewals linked by `userSubscriptionId`. ABA-777: fixed categories per account.

@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Patch,
+  Put,
   Delete,
   Body,
   Param,
@@ -21,6 +22,7 @@ import {
   RespondToInvitationDto,
   UpdateMemberRoleDto,
   AccountMemberPaymentInfoDto,
+  SetCategoryFixedDto,
 } from './dto';
 import { AuthenticatedRequest } from '../../common/types';
 
@@ -55,6 +57,15 @@ export class AccountsController {
     @Body() dto: UpdateAccountDto,
   ) {
     return this.accountsService.update(id, req.user.id, dto);
+  }
+
+  @Put(':id/fixed-categories')
+  async setCategoryFixed(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Body() dto: SetCategoryFixedDto,
+  ) {
+    return this.accountsService.setCategoryFixed(id, req.user.id, dto.categoryId, dto.fixed);
   }
 
   @Delete(':id')

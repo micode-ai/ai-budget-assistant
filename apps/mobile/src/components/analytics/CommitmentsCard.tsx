@@ -67,7 +67,9 @@ export function CommitmentsCard({ commitments, currency }: Props) {
               {items.slice(0, MAX_ITEMS).map((item) => (
                 <View key={item.key} style={styles.itemRow}>
                   <Ionicons
-                    name={item.kind === 'recurring' ? 'repeat-outline' : 'card-outline'}
+                    name={
+                      item.kind === 'recurring' ? 'repeat-outline' : item.kind === 'category' ? 'pricetag-outline' : 'card-outline'
+                    }
                     size={18}
                     color={theme.colors.textSecondary}
                   />
@@ -76,7 +78,11 @@ export function CommitmentsCard({ commitments, currency }: Props) {
                       {item.label || t('analytics.commitmentsRecurring')}
                     </Text>
                     <Text style={styles.itemKind}>
-                      {item.kind === 'recurring' ? t('analytics.commitmentsRecurring') : t('analytics.commitmentsSubscription')}
+                      {item.kind === 'recurring'
+                        ? t('analytics.commitmentsRecurring')
+                        : item.kind === 'category'
+                          ? t('analytics.commitmentsCategory')
+                          : t('analytics.commitmentsSubscription')}
                     </Text>
                   </View>
                   <Text style={styles.itemAmount}>{formatCurrency(item.amount, currency)}</Text>

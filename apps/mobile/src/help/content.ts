@@ -1048,6 +1048,8 @@ Shows what you **earned**, **spent** and **kept** in the selected period, and th
 
 Shows how much of your spending is **fixed** — money that leaves every period anyway — and lists the largest fixed costs. An expense counts as fixed when it is a recurring expense, or when it matches one of your active subscriptions in the subscription manager (same name, or same category and amount). Everything else is flexible. To have rent or another regular payment counted as fixed, mark it as recurring or add it as a subscription. Charges the subscription manager books automatically on a renewal always count as fixed, even after you rename them or cancel the subscription.
 
+You can also mark a whole expense category as fixed: open **Settings → Categories**, edit the category (for example *Housing*) and turn on **Count as a fixed cost**. This applies to the current account and is shared with its members; on a split receipt only the part in that category counts.
+
 ## Next 30 Days
 
 Shown while you are looking at the current period. It is an estimate of your balance for each of the next 30 days: today's wallet balance, plus income that arrives every month, minus subscription renewals and recurring expenses on their dates, minus a typical day of everyday spending. If the balance would drop below zero, the card says from which day, and the bars below the line show it. **Coming up** lists the next payments and income. Savings-goal contributions are not subtracted, and income that does not come monthly is not counted, so treat the figure as a guide, not a promise. Planned purchases and money you owe with a due date are subtracted on their dates too (overdue ones today); money others owe you is not counted.
@@ -6465,6 +6467,8 @@ iOS, Android, Web
 
 Показывает, какая часть трат **обязательная** — деньги, которые уходят в каждом периоде в любом случае, — и перечисляет самые крупные обязательные расходы. Расход считается обязательным, если он регулярный или совпадает с одной из ваших активных подписок в менеджере подписок (то же название или та же категория и сумма). Всё остальное — свободные расходы. Чтобы аренда или другой регулярный платёж считался обязательным, отметьте его как регулярный или добавьте как подписку. Списания, которые менеджер подписок записывает автоматически при продлении, всегда считаются обязательными — даже если вы их переименуете или отмените подписку.
 
+Можно также отметить целую категорию расходов как обязательную: откройте **Настройки → Категории**, отредактируйте категорию (например, *Жильё*) и включите **Считать обязательной**. Это действует для текущего аккаунта и для всех его участников; в разделённом чеке учитывается только часть в этой категории.
+
 ## Ближайшие 30 дней
 
 Показывается, когда открыт текущий период. Это оценка баланса на каждый из ближайших 30 дней: сегодняшний баланс, плюс доходы, которые приходят каждый месяц, минус продления подписок и регулярные расходы в их даты, минус обычный день повседневных трат. Если баланс уйдёт ниже нуля, карточка покажет, с какого дня, а столбцы под линией это отразят. В блоке **Впереди** — ближайшие платежи и поступления. Взносы в цели не вычитаются, а нерегулярные доходы не учитываются, поэтому считайте цифру ориентиром, а не обещанием. Запланированные покупки и ваши долги со сроком возврата тоже вычитаются в свои даты (просроченные — сегодня); деньги, которые должны вам, не учитываются.
@@ -11860,6 +11864,8 @@ iOS, Android, Web
 
 Показує, яка частина витрат **обов'язкова** — гроші, що йдуть у кожному періоді за будь-яких умов, — і перелічує найбільші обов'язкові витрати. Витрата вважається обов'язковою, якщо вона регулярна або збігається з однією з ваших активних підписок у менеджері підписок (та сама назва або та сама категорія й сума). Усе інше — вільні витрати. Щоб оренда чи інший регулярний платіж вважався обов'язковим, позначте його як регулярний або додайте як підписку. Списання, які менеджер підписок записує автоматично під час продовження, завжди вважаються обов'язковими — навіть якщо ви їх перейменуєте або скасуєте підписку.
 
+Можна також позначити цілу категорію витрат як обов'язкову: відкрийте **Налаштування → Категорії**, відредагуйте категорію (наприклад, *Житло*) і ввімкніть **Вважати обов'язковою**. Це діє для поточного акаунта та для всіх його учасників; у розділеному чеку враховується лише частина в цій категорії.
+
 ## Найближчі 30 днів
 
 Показується, коли відкрито поточний період. Це оцінка балансу на кожен із найближчих 30 днів: сьогоднішній баланс, плюс доходи, що надходять щомісяця, мінус продовження підписок і регулярні витрати в їхні дати, мінус звичайний день повсякденних витрат. Якщо баланс опуститься нижче нуля, картка покаже, з якого дня, а стовпці під лінією це відобразять. У блоці **Попереду** — найближчі платежі й надходження. Внески в цілі не віднімаються, а нерегулярні доходи не враховуються, тож сприймайте цифру як орієнтир, а не обіцянку. Заплановані покупки та ваші борги зі строком повернення теж віднімаються у свої дати (прострочені — сьогодні); гроші, які винні вам, не враховуються.
@@ -17203,6 +17209,8 @@ Pokazuje, ile w wybranym okresie **zarobiono**, **wydano** i ile **zostało**, a
 
 Pokazuje, jaka część wydatków to koszty **stałe** — pieniądze, które i tak wychodzą w każdym okresie — i wymienia największe z nich. Wydatek liczy się jako stały, gdy jest cykliczny albo pasuje do jednej z aktywnych subskrypcji w menedżerze subskrypcji (ta sama nazwa albo ta sama kategoria i kwota). Wszystko inne jest zmienne. Aby czynsz lub inna regularna płatność liczyła się jako stała, oznacz ją jako cykliczną albo dodaj jako subskrypcję. Obciążenia, które menedżer subskrypcji zapisuje automatycznie przy odnowieniu, zawsze liczą się jako stałe — nawet po zmianie nazwy lub anulowaniu subskrypcji.
 
+Możesz też oznaczyć całą kategorię wydatków jako stałą: otwórz **Ustawienia → Kategorie**, edytuj kategorię (np. *Mieszkanie*) i włącz **Licz jako koszt stały**. Dotyczy to bieżącego konta i wszystkich jego członków; przy podzielonym paragonie liczy się tylko część w tej kategorii.
+
 ## Najbliższe 30 dni
 
 Widoczne, gdy oglądasz bieżący okres. To szacunek salda na każdy z najbliższych 30 dni: dzisiejsze saldo, plus przychody wpływające co miesiąc, minus odnowienia subskrypcji i wydatki cykliczne w ich terminach, minus typowy dzień codziennych wydatków. Jeśli saldo miałoby spaść poniżej zera, karta podaje, od którego dnia, a słupki pod linią to pokazują. **Nadchodzące** wymienia najbliższe płatności i wpływy. Wpłaty na cele oszczędnościowe nie są odejmowane, a przychody, które nie przychodzą co miesiąc, nie są liczone – traktuj tę liczbę jako wskazówkę, nie obietnicę. Planowane zakupy i długi z terminem spłaty też są odejmowane w ich dniu (zaległe — dziś); pieniądze, które inni są Ci winni, nie są liczone.
@@ -22542,6 +22550,8 @@ Zeigt, was du im gewählten Zeitraum **verdient**, **ausgegeben** und **behalten
 
 Zeigt, welcher Teil deiner Ausgaben **fix** ist — Geld, das in jedem Zeitraum ohnehin abfließt — und listet die größten Fixkosten auf. Eine Ausgabe gilt als fix, wenn sie wiederkehrend ist oder zu einem deiner aktiven Abos im Abo-Manager passt (gleicher Name oder gleiche Kategorie und gleicher Betrag). Alles andere ist flexibel. Damit Miete oder eine andere regelmäßige Zahlung als fix zählt, markiere sie als wiederkehrend oder lege sie als Abo an. Abbuchungen, die der Abo-Manager bei einer Verlängerung automatisch bucht, zählen immer als fix — auch wenn du sie umbenennst oder das Abo kündigst.
 
+Du kannst auch eine ganze Ausgabenkategorie als fix markieren: Öffne **Einstellungen → Kategorien**, bearbeite die Kategorie (z. B. *Wohnen*) und aktiviere **Als Fixkosten zählen**. Das gilt für das aktuelle Konto und für alle seine Mitglieder; bei einem aufgeteilten Beleg zählt nur der Teil in dieser Kategorie.
+
 ## Die nächsten 30 Tage
 
 Wird angezeigt, solange du den aktuellen Zeitraum ansiehst. Es ist eine Schätzung deines Kontostands für jeden der nächsten 30 Tage: der heutige Kontostand, plus Einnahmen, die jeden Monat kommen, minus Abo-Verlängerungen und wiederkehrende Ausgaben an ihren Terminen, minus ein typischer Tag mit Alltagsausgaben. Würde der Stand unter null fallen, nennt die Karte den Tag, ab dem das passiert, und die Balken unter der Linie zeigen es. **Demnächst** listet die nächsten Zahlungen und Einnahmen. Sparziel-Einzahlungen werden nicht abgezogen und nicht monatliche Einnahmen nicht mitgezählt – nimm die Zahl als Orientierung, nicht als Zusage. Geplante Käufe und Schulden mit Fälligkeitsdatum werden ebenfalls an ihrem Datum abgezogen (überfällige heute); Geld, das andere dir schulden, wird nicht eingerechnet.
@@ -27856,6 +27866,8 @@ Muestra lo que **ingresaste**, **gastaste** y **ahorraste** en el periodo selecc
 
 Muestra qué parte de tus gastos es **fija** — dinero que sale cada periodo de todos modos — y lista los gastos fijos más grandes. Un gasto cuenta como fijo si es recurrente o si coincide con una de tus suscripciones activas del gestor de suscripciones (mismo nombre, o misma categoría e importe). Todo lo demás es variable. Para que el alquiler u otro pago periódico cuente como fijo, márcalo como recurrente o añádelo como suscripción. Los cargos que el gestor de suscripciones registra automáticamente al renovarse siempre cuentan como fijos, aunque les cambies el nombre o canceles la suscripción.
 
+También puedes marcar una categoría de gasto entera como fija: abre **Ajustes → Categorías**, edita la categoría (por ejemplo, *Vivienda*) y activa **Contar como gasto fijo**. Se aplica a la cuenta actual y la comparten sus miembros; en un recibo dividido solo cuenta la parte de esa categoría.
+
 ## Próximos 30 días
 
 Se muestra mientras ves el periodo actual. Es una estimación de tu saldo para cada uno de los próximos 30 días: el saldo de hoy, más los ingresos que llegan cada mes, menos las renovaciones de suscripciones y los gastos recurrentes en sus fechas, menos un día típico de gasto cotidiano. Si el saldo fuera a bajar de cero, la tarjeta indica a partir de qué día, y las barras bajo la línea lo muestran. **Próximamente** enumera los siguientes pagos e ingresos. Las aportaciones a metas de ahorro no se restan y los ingresos que no son mensuales no se cuentan, así que tómalo como una orientación, no como una promesa. Las compras planificadas y las deudas tuyas con fecha de vencimiento también se restan en su fecha (las vencidas, hoy); el dinero que otros te deben no se cuenta.
@@ -33159,6 +33171,8 @@ Affiche ce que vous avez **gagné**, **dépensé** et **épargné** sur la péri
 
 Indique quelle part de vos dépenses est **fixe** — de l'argent qui part chaque période quoi qu'il arrive — et liste les plus grosses dépenses fixes. Une dépense compte comme fixe si elle est récurrente ou si elle correspond à l'un de vos abonnements actifs du gestionnaire d'abonnements (même nom, ou même catégorie et même montant). Tout le reste est variable. Pour qu'un loyer ou un autre paiement régulier compte comme fixe, marquez-le comme récurrent ou ajoutez-le comme abonnement. Les prélèvements que le gestionnaire d'abonnements enregistre automatiquement à chaque renouvellement comptent toujours comme fixes, même si vous les renommez ou résiliez l'abonnement.
 
+Vous pouvez aussi marquer une catégorie de dépenses entière comme fixe : ouvrez **Paramètres → Catégories**, modifiez la catégorie (par exemple *Logement*) et activez **Compter comme dépense fixe**. Cela s'applique au compte actuel et à tous ses membres ; sur un ticket réparti, seule la part de cette catégorie compte.
+
 ## 30 prochains jours
 
 Affiché lorsque vous consultez la période en cours. C'est une estimation de votre solde pour chacun des 30 prochains jours : le solde d'aujourd'hui, plus les revenus qui arrivent chaque mois, moins les renouvellements d'abonnements et les dépenses récurrentes à leur date, moins une journée type de dépenses courantes. Si le solde devait passer sous zéro, la carte indique à partir de quel jour, et les barres sous la ligne le montrent. **À venir** liste les prochains paiements et revenus. Les versements vers les objectifs d'épargne ne sont pas déduits et les revenus non mensuels ne sont pas comptés : c'est un repère, pas une promesse. Les achats prévus et les dettes à rembourser avec une échéance sont aussi déduits à leur date (ceux en retard, aujourd'hui) ; l'argent que d'autres vous doivent n'est pas compté.
@@ -38460,6 +38474,8 @@ iOS, Android, Web
 
 Паказвае, якая частка выдаткаў **абавязковая** — грошы, якія сыходзяць у кожным перыядзе ў любым выпадку, — і пералічвае найбуйнейшыя абавязковыя выдаткі. Выдатак лічыцца абавязковым, калі ён рэгулярны або супадае з адной з вашых актыўных падпісак у менеджары падпісак (тая ж назва або тая ж катэгорыя і сума). Усё астатняе — свабодныя выдаткі. Каб арэнда ці іншы рэгулярны плацеж лічыўся абавязковым, адзначце яго як рэгулярны або дадайце як падпіску. Спісанні, якія менеджар падпісак запісвае аўтаматычна пры падаўжэнні, заўсёды лічацца абавязковымі — нават калі вы іх перайменуеце або скасуеце падпіску.
 
+Можна таксама адзначыць цэлую катэгорыю выдаткаў як абавязковую: адкрыйце **Налады → Катэгорыі**, адрэдагуйце катэгорыю (напрыклад, *Жыллё*) і ўключыце **Лічыць абавязковай**. Гэта дзейнічае для бягучага акаўнта і для ўсіх яго ўдзельнікаў; у падзеленым чэку ўлічваецца толькі частка ў гэтай катэгорыі.
+
 ## Бліжэйшыя 30 дзён
 
 Паказваецца, калі адкрыты бягучы перыяд. Гэта ацэнка балансу на кожны з бліжэйшых 30 дзён: сённяшні баланс, плюс даходы, што прыходзяць штомесяц, мінус падаўжэнні падпісак і рэгулярныя выдаткі ў іх даты, мінус звычайны дзень штодзённых выдаткаў. Калі баланс апусціцца ніжэй за нуль, картка пакажа, з якога дня, а слупкі пад лініяй гэта адлюструюць. У блоку **Наперадзе** — бліжэйшыя плацяжы і паступленні. Унёскі ў мэты не адымаюцца, а нерэгулярныя даходы не ўлічваюцца, таму лічыце лічбу арыенцірам, а не абяцаннем. Запланаваныя пакупкі і вашы даўгі з тэрмінам вяртання таксама адымаюцца ў свае даты (пратэрмінаваныя — сёння); грошы, якія вінны вам, не ўлічваюцца.
@@ -43724,6 +43740,8 @@ Toont wat je in de gekozen periode hebt **verdiend**, **uitgegeven** en **overge
 ## Vast vs variabel
 
 Toont welk deel van je uitgaven **vast** is — geld dat elke periode hoe dan ook vertrekt — en somt de grootste vaste lasten op. Een uitgave telt als vast als ze terugkerend is of overeenkomt met een van je actieve abonnementen in de abonnementenbeheerder (zelfde naam, of zelfde categorie en bedrag). Al het andere is variabel. Wil je dat huur of een andere vaste betaling als vast telt, markeer die dan als terugkerend of voeg hem toe als abonnement. Afschrijvingen die de abonnementenbeheerder bij een verlenging automatisch boekt, tellen altijd als vast — ook als je ze hernoemt of het abonnement opzegt.
+
+Je kunt ook een hele uitgavencategorie als vast markeren: open **Instellingen → Categorieën**, bewerk de categorie (bijvoorbeeld *Wonen*) en zet **Als vaste last tellen** aan. Dit geldt voor het huidige account en al zijn leden; bij een gesplitste bon telt alleen het deel in die categorie.
 
 ## Komende 30 dagen
 
@@ -49116,6 +49134,8 @@ Mostra o que **ganhou**, **gastou** e **poupou** no período selecionado, e que 
 ## Fixas vs variáveis
 
 Mostra que parte das suas despesas é **fixa** — dinheiro que sai em cada período de qualquer forma — e lista as maiores despesas fixas. Uma despesa conta como fixa se for recorrente ou se corresponder a uma das suas subscrições ativas no gestor de subscrições (mesmo nome, ou mesma categoria e montante). Tudo o resto é variável. Para que a renda ou outro pagamento regular conte como fixo, marque-o como recorrente ou adicione-o como subscrição. As cobranças que o gestor de subscrições regista automaticamente em cada renovação contam sempre como fixas, mesmo que lhes mude o nome ou cancele a subscrição.
+
+Também pode marcar uma categoria de despesa inteira como fixa: abra **Definições → Categorias**, edite a categoria (por exemplo, *Habitação*) e ative **Contar como despesa fixa**. Aplica-se à conta atual e é partilhado com os seus membros; num talão dividido só conta a parte dessa categoria.
 
 ## Próximos 30 dias
 
@@ -54534,6 +54554,8 @@ Mostra quanto você **ganhou**, **gastou** e **economizou** no período selecion
 ## Fixas vs variáveis
 
 Mostra quanto dos seus gastos é **fixo** — dinheiro que sai todo período de qualquer jeito — e lista as maiores despesas fixas. Uma despesa conta como fixa quando é recorrente ou quando bate com uma das suas assinaturas ativas no gerenciador de assinaturas (mesmo nome, ou mesma categoria e valor). Todo o resto é variável. Para que o aluguel ou outro pagamento regular conte como fixo, marque-o como recorrente ou cadastre-o como assinatura. As cobranças que o gerenciador de assinaturas lança automaticamente na renovação sempre contam como fixas, mesmo que você mude o nome delas ou cancele a assinatura.
+
+Você também pode marcar uma categoria de despesa inteira como fixa: abra **Configurações → Categorias**, edite a categoria (por exemplo, *Moradia*) e ative **Contar como despesa fixa**. Vale para a conta atual e é compartilhado com os membros dela; num recibo dividido só conta a parte dessa categoria.
 
 ## Próximos 30 dias
 

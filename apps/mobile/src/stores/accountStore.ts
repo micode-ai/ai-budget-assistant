@@ -53,6 +53,8 @@ interface AccountState {
   ensureAccountsLoaded: () => Promise<void>;
   createAccount: (dto: CreateAccountDto) => Promise<Account>;
   updateAccount: (id: string, dto: UpdateAccountDto) => Promise<void>;
+  /** Marks or unmarks an expense category as a fixed cost for the current account (ABA-777). */
+  setCategoryFixed: (categoryId: string, fixed: boolean) => Promise<void>;
   deleteAccount: (id: string) => Promise<void>;
 
   // Trip accounts
@@ -490,6 +492,30 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
         error: error instanceof Error ? error.message : 'Failed to update account',
         isLoading: false,
       });
+      throw error;
+    }
+  },
+
+  setCategoryFixed: async (categoryId, fixed) => {
+    const account = get().currentAccount();
+    if (!account) return;
+    const before = account.fixedCategoryIds ?? [];
+    const next = fixed
+      ? Array.from(new Set([...before, categoryId]))
+      : before.filter((id) => id !== categoryId);
+    const apply = (ids: string[]) =>
+      set({ accounts: get().accounts.map((a) => (a.id === account.id ? { ...a, fixedCategoryIds: ids } : a)) });
+
+    // Optimistic: the toggle reflects at once; rolled back if the server refuses.
+    apply(next);
+    await updateAccountInDb(account.id, { fixedCategoryIds: next }).catch(() => undefined);
+    try {
+      const res = await api.setCategoryFixed(account.id, categoryId, fixed);
+      apply(res.fixedCategoryIds);
+      await updateAccountInDb(account.id, { fixedCategoryIds: res.fixedCategoryIds }).catch(() => undefined);
+    } catch (error) {
+      apply(before);
+      await updateAccountInDb(account.id, { fixedCategoryIds: before }).catch(() => undefined);
       throw error;
     }
   },

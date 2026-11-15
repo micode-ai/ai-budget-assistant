@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
+  Switch,
 } from 'react-native';
 import { showAlert } from '@/utils/alert';
 import { SheetDialog } from '@/components/SheetDialog';
@@ -121,6 +122,11 @@ export function CategoriesSettings() {
   const [isSaving, setIsSaving] = useState(false);
   const [selectedParentId, setSelectedParentId] = useState<string | undefined>(undefined);
   const [parentListOpen, setParentListOpen] = useState(false);
+  // "Count as a fixed cost" (ABA-777) — an account-level list, saved apart
+  // from the category itself; expense categories only.
+  const fixedCategoryIds = useAccountStore((s) => s.currentAccount()?.fixedCategoryIds);
+  const setCategoryFixed = useAccountStore((s) => s.setCategoryFixed);
+  const [isFixed, setIsFixed] = useState(false);
   // A lifted row freezes the page scroll (phone); a plain swipe still scrolls.
   const [dragging, setDragging] = useState(false);
 
@@ -141,6 +147,7 @@ export function CategoriesSettings() {
     setSelectedIcon(undefined);
     setSelectedParentId(undefined);
     setParentListOpen(false);
+    setIsFixed(false);
     setModalVisible(true);
   };
 
@@ -154,6 +161,7 @@ export function CategoriesSettings() {
     setSelectedIcon(category.icon || undefined);
     setSelectedParentId(category.parentId || undefined);
     setParentListOpen(false);
+    setIsFixed((fixedCategoryIds ?? []).includes(category.id));
     setModalVisible(true);
   };
 
@@ -176,6 +184,7 @@ export function CategoriesSettings() {
 
     setIsSaving(true);
     try {
+      const wasFixed = editingCategory ? (fixedCategoryIds ?? []).includes(editingCategory.id) : false;
       if (editingCategory) {
         const parentChanged =
           showParentRow && (selectedParentId ?? null) !== (editingCategory.parentId ?? null);
@@ -191,14 +200,21 @@ export function CategoriesSettings() {
             parentId: selectedParentId ?? null,
           }),
         );
+        if (modalType === 'expense' && isFixed !== wasFixed) {
+          await setCategoryFixed(editingCategory.id, isFixed);
+        }
       } else {
-        await createCategory(
+        const created = await createCategory(
           trimmed,
           modalType,
           selectedIcon,
           selectedColor,
           showParentRow ? selectedParentId : undefined,
         );
+        const createdId = (created as { id?: string } | undefined)?.id;
+        if (modalType === 'expense' && isFixed && createdId) {
+          await setCategoryFixed(createdId, true);
+        }
       }
       closeModal();
     } catch (error: any) {
@@ -430,6 +446,21 @@ export function CategoriesSettings() {
           </View>
         )}
 
+        {modalType === 'expense' && (
+          <View style={styles.fixedRow}>
+            <View style={styles.fixedText}>
+              <Text style={styles.parentLabel}>{t('categories.countAsFixed')}</Text>
+              <Text style={styles.parentHint}>{t('categories.countAsFixedHint')}</Text>
+            </View>
+            <Switch
+              value={isFixed}
+              onValueChange={setIsFixed}
+              accessibilityLabel={t('categories.countAsFixed')}
+              trackColor={{ true: theme.colors.primary, false: theme.colors.border }}
+            />
+          </View>
+        )}
+
         <View style={styles.colorGrid}>
           {PRESET_COLORS.map((color) => (
             <TouchableOpacity
@@ -468,6 +499,15 @@ export function CategoriesSettings() {
 }
 
 const createStyles = (theme: Theme) => ({
+  fixedRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[3],
+    marginBottom: theme.spacing[3],
+  },
+  fixedText: {
+    flex: 1,
+  },
   scrollView: { flex: 1 },
   content: { padding: theme.spacing[4], paddingBottom: theme.spacing[10] },
   sectionHeader: {

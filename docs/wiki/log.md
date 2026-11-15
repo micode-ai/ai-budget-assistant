@@ -341,6 +341,7 @@ Newest last within each section.
 - 2026-11-15 · [ABA-774](https://github.com/micode-ai/ai-budget-assistant/issues/812) — Analytics period membership compared `new Date(e.date)` with local boundaries, so west of UTC a server date-only row on a period's first day fell into the previous one; every boundary comparison now goes through `transactionDay`. Pages: `features/analytics-period-comparisons.md`.
 - 2026-11-15 · [ABA-775](https://github.com/micode-ai/ai-budget-assistant/issues/813) — 30-day forecast now schedules planned purchases and borrowed debts due (minus repayments), overdue ones on today; lent debts deliberately not counted as inflow. Pages: `features/cash-flow-forecast.md`.
 - 2026-11-15 · [ABA-776](https://github.com/micode-ai/ai-budget-assistant/issues/814) — renewal-booked expenses now carry `Expense.userSubscriptionId` (migration, cron, findAll select, mobile SQLite + sync); fixed-vs-flexible and the forecast read it instead of matching name/amount. Pages: `features/subscription-manager.md`, `features/analytics-cash-flow.md`.
+- 2026-11-15 · [ABA-777](https://github.com/micode-ai/ai-budget-assistant/issues/815) — accounts can mark expense categories as fixed (`Account.fixedCategoryIds`, migration, `PUT /accounts/:id/fixed-categories`, category-sheet switch); stored on the account because system categories are global rows; the server keeps every id spelling of a category so marking and unmarking work from a device id or a server PK. Pages: `features/analytics-cash-flow.md`.
 
 ## Queries
 

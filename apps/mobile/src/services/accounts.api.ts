@@ -31,6 +31,17 @@ export const accountsApi = {
     });
   },
 
+  /**
+   * Marks or unmarks one expense category as a fixed cost (ABA-777). The server
+   * resolves a device id or a server id and returns the whole new list.
+   */
+  setCategoryFixed(accountId: string, categoryId: string, fixed: boolean) {
+    return httpClient.request<{ fixedCategoryIds: string[] }>(`/accounts/${accountId}/fixed-categories`, {
+      method: 'PUT',
+      body: JSON.stringify({ categoryId, fixed }),
+    });
+  },
+
   updateAccount(id: string, dto: UpdateAccountDto) {
     return httpClient.request<Account>(`/accounts/${id}`, {
       method: 'PATCH',

@@ -391,6 +391,10 @@ model Account {
   updatedAt            DateTime     @updatedAt @map("updated_at")
   purchaseApprovalRule ApprovalRule @default(MAJORITY) @map("purchase_approval_rule")
   monthAnchorDay       Int?         @map("month_anchor_day")
+  /// Expense categories this account counts as fixed costs (ABA-777). Kept on the account, not
+  /// on Category: a system category is ONE global row (accountId null) shared by every account,
+  /// so a flag there would leak one account's choice into all of them.
+  fixedCategoryIds     String[]     @default([]) @map("fixed_category_ids")
   aiImportConsentAt    DateTime?    @map("ai_import_consent_at")
   tripStartDate        DateTime?    @map("trip_start_date") @db.Date
   tripEndDate          DateTime?    @map("trip_end_date") @db.Date

@@ -9,19 +9,20 @@
  * "Spent" uses exactly the expenses the Total spent card uses (the caller
  * passes the same filtered list), so the two figures can never disagree.
  *
- * Fixed is deliberately conservative — only what the app KNOWS repeats:
+ * Fixed is deliberately conservative — only what the app KNOWS repeats or
+ * what the user SAID is fixed:
  *   0. an expense a subscription renewal booked (`userSubscriptionId`, ABA-776 —
  *      counted even if the subscription was since cancelled: it was paid), or
  *   1. an expense in a recurring series (`recurringId`), or
  *   2. an expense matching an ACTIVE tracked subscription: same name as the
  *      subscription (description or merchant, case-insensitive), or same
- *      category, same currency and an amount within 1% of it. The
- *      subscription manager books renewals as ordinary expenses with nothing
- *      linking them back (docs/wiki/features/subscription-manager.md), so a
- *      match is the only way to recognise them.
- * A rent paid by hand every month is neither, and reads as flexible. Saying
- * "fixed" about something the app only guessed would be worse than
- * under-counting, so nothing else is inferred.
+ *      category, same currency and an amount within 1% of it — for renewals
+ *      booked before ABA-776, which carry no link, or
+ *   3. an expense in a category the account marked as fixed (ABA-777) — with
+ *      splits, only the split parts in such a category.
+ * Nothing else is inferred: saying "fixed" about something the app only guessed
+ * would be worse than under-counting. A hand-entered rent becomes fixed the
+ * moment its category is marked so.
  */
 import { financialMonth, shiftFinancialMonth } from '@budget/shared-utils';
 import type { DateWindow } from './periodWindows';
@@ -38,6 +39,14 @@ export interface CashFlowExpense {
   recurringId?: string | null;
   /** Set by the server when a subscription renewal booked this row (ABA-776). */
   userSubscriptionId?: string | null;
+  /** Category splits of a receipt; when present they decide, as everywhere else. */
+  splits?: { categoryId?: string | null; amount: number; isDeleted?: boolean }[];
+}
+
+/** The account's fixed-cost categories (ABA-777) and how to name one. */
+export interface FixedCategories {
+  ids: ReadonlySet<string>;
+  nameOf: (categoryId: string) => string;
 }
 
 export interface CashFlowIncome {
@@ -117,7 +126,7 @@ export function monthWindowsEndingAt(end: Date, count: number, anchorDay: number
 export interface CommitmentItem {
   key: string;
   label: string;
-  kind: 'recurring' | 'subscription';
+  kind: 'recurring' | 'subscription' | 'category';
   amount: number;
 }
 
@@ -154,10 +163,15 @@ export function classifyCommitments(
   expenses: CashFlowExpense[],
   subscriptions: CommitmentSubscription[],
   convert: Convert,
+  fixedCategories?: FixedCategories,
 ): CommitmentsSummary {
   let fixed = 0;
   let flexible = 0;
   const items = new Map<string, CommitmentItem>();
+  const addItem = (item: Omit<CommitmentItem, 'amount'>, amount: number) => {
+    const existing = items.get(item.key);
+    items.set(item.key, { ...item, label: existing?.label || item.label, amount: (existing?.amount ?? 0) + amount });
+  };
 
   for (const e of expenses) {
     const amount = convert(e.amount, e.currencyCode);
@@ -176,13 +190,33 @@ export function classifyCommitments(
       const sub = matchSubscription(e, subscriptions);
       if (sub) item = { key: `s:${sub.id}`, label: sub.name, kind: 'subscription' };
     }
-    if (!item) {
-      flexible += amount;
+    if (item) {
+      fixed += amount;
+      addItem(item, amount);
       continue;
     }
-    fixed += amount;
-    const existing = items.get(item.key);
-    items.set(item.key, { ...item, label: existing?.label || item.label, amount: (existing?.amount ?? 0) + amount });
+
+    // 3. A category the account marked as fixed (ABA-777). With splits, only
+    //    the split parts in such a category are fixed — the same rule every
+    //    other category total follows.
+    if (fixedCategories && fixedCategories.ids.size > 0) {
+      const liveSplits = (e.splits ?? []).filter((s) => !s.isDeleted);
+      const parts = liveSplits.length > 0 ? liveSplits : [{ categoryId: e.categoryId, amount: e.amount }];
+      let fixedPart = 0;
+      for (const part of parts) {
+        if (!part.categoryId || !fixedCategories.ids.has(part.categoryId)) continue;
+        const partAmount = convert(part.amount, e.currencyCode);
+        fixedPart += partAmount;
+        addItem(
+          { key: `c:${part.categoryId}`, label: fixedCategories.nameOf(part.categoryId), kind: 'category' },
+          partAmount,
+        );
+      }
+      fixed += fixedPart;
+      flexible += amount - fixedPart;
+      continue;
+    }
+    flexible += amount;
   }
 
   const total = fixed + flexible;

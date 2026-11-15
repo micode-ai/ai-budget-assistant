@@ -36,6 +36,8 @@ Shows what you **earned**, **spent** and **kept** in the selected period, and th
 
 Shows how much of your spending is **fixed** — money that leaves every period anyway — and lists the largest fixed costs. An expense counts as fixed when it is a recurring expense, or when it matches one of your active subscriptions in the subscription manager (same name, or same category and amount). Everything else is flexible. To have rent or another regular payment counted as fixed, mark it as recurring or add it as a subscription. Charges the subscription manager books automatically on a renewal always count as fixed, even after you rename them or cancel the subscription.
 
+You can also mark a whole expense category as fixed: open **Settings → Categories**, edit the category (for example *Housing*) and turn on **Count as a fixed cost**. This applies to the current account and is shared with its members; on a split receipt only the part in that category counts.
+
 ## Next 30 Days
 
 Shown while you are looking at the current period. It is an estimate of your balance for each of the next 30 days: today's wallet balance, plus income that arrives every month, minus subscription renewals and recurring expenses on their dates, minus a typical day of everyday spending. If the balance would drop below zero, the card says from which day, and the bars below the line show it. **Coming up** lists the next payments and income. Savings-goal contributions are not subtracted, and income that does not come monthly is not counted, so treat the figure as a guide, not a promise. Planned purchases and money you owe with a due date are subtracted on their dates too (overdue ones today); money others owe you is not counted.

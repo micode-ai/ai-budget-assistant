@@ -14,6 +14,7 @@ interface AccountRow {
   trip_start_date: number | null;
   trip_end_date: number | null;
   month_anchor_day: number | null;
+  fixed_category_ids?: string | null;
   created_at: number;
   updated_at: number;
 }
@@ -26,6 +27,17 @@ interface AccountMemberRow {
   user_name: string | null;
   user_email: string | null;
   joined_at: number;
+}
+
+/** JSON text column → string[]; anything unreadable is treated as an empty list. */
+function parseIdList(raw: string | null | undefined): string[] {
+  if (!raw) return [];
+  try {
+    const v = JSON.parse(raw);
+    return Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string') : [];
+  } catch {
+    return [];
+  }
 }
 
 function rowToAccount(row: AccountRow): Account & { myRole: AccountRole } {
@@ -41,6 +53,7 @@ function rowToAccount(row: AccountRow): Account & { myRole: AccountRole } {
     tripStartDate: row.trip_start_date ? new Date(row.trip_start_date).toISOString() : undefined,
     tripEndDate: row.trip_end_date ? new Date(row.trip_end_date).toISOString() : undefined,
     monthAnchorDay: row.month_anchor_day ?? null,
+    fixedCategoryIds: parseIdList(row.fixed_category_ids),
     createdAt: new Date(row.created_at),
     updatedAt: new Date(row.updated_at),
     myRole: row.my_role as AccountRole,
@@ -92,8 +105,9 @@ export async function insertAccount(
   await executeSql(
     `INSERT OR REPLACE INTO accounts (
       id, name, type, currency_code, owner_id, icon, is_active, my_role,
-      trip_status, trip_start_date, trip_end_date, month_anchor_day, created_at, updated_at, session_user_id
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      trip_status, trip_start_date, trip_end_date, month_anchor_day, created_at, updated_at, session_user_id,
+      fixed_category_ids
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       account.id,
       account.name,
@@ -110,6 +124,7 @@ export async function insertAccount(
       account.createdAt instanceof Date ? account.createdAt.getTime() : account.createdAt,
       account.updatedAt instanceof Date ? account.updatedAt.getTime() : account.updatedAt,
       sessionUserId ?? '',
+      JSON.stringify(account.fixedCategoryIds ?? []),
     ],
   );
 }
@@ -152,6 +167,10 @@ export async function updateAccountInDb(
   if (updates.monthAnchorDay !== undefined) {
     setClauses.push('month_anchor_day = ?');
     params.push(updates.monthAnchorDay ?? null);
+  }
+  if (updates.fixedCategoryIds !== undefined) {
+    setClauses.push('fixed_category_ids = ?');
+    params.push(JSON.stringify(updates.fixedCategoryIds ?? []));
   }
 
   if (setClauses.length === 0) return;

@@ -12,6 +12,7 @@ import {
   Min,
   Max,
   ValidateIf,
+  IsBoolean,
 } from 'class-validator';
 import type { SettleMethod } from '@budget/shared-types';
 
@@ -111,4 +112,13 @@ export class AccountMemberPaymentInfoDto {
   @MaxLength(200)
   @Matches(/^[A-Za-z0-9+ ._-]{1,50}$/)
   paymentHandle: string;
+}
+
+/** PUT /accounts/:id/fixed-categories — marks or unmarks one category (ABA-777). */
+export class SetCategoryFixedDto {
+  @IsString()
+  categoryId: string;
+
+  @IsBoolean()
+  fixed: boolean;
 }
