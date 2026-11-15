@@ -54,7 +54,12 @@ direction column is the only source of direction. Columns are read by lower-case
 
 **Slash-date order is decided per file, from the data**: a first field above 12 means day-first,
 a second above 12 means month-first, and an all-ambiguous file defaults to day-first. A month
-outside 1..12 drops the row rather than producing an invalid ISO date.
+outside 1..12 drops the row rather than producing an invalid ISO date. Monefy and Wallet get this
+from the shared `inferSlashDateOrder` + `parsePolishDate(raw, 'MM/DD/YYYY')` in
+`utils/polish-date.ts` (ABA-760); Money Manager keeps its own resolver because its dates carry a
+time with AM/PM. **`parsePolishDate` never returns a day the calendar lacks** — before ABA-760 a
+US Monefy export produced `2019-13-01`, which became Invalid Date in the content-dedup query and
+Prisma failed the whole preview.
 
 **Categories are created before the transaction.** `preloadCategories` resolves every distinct
 `(suggestedCategoryName, kind)` before the commit `$transaction` opens and creates the missing
@@ -94,9 +99,9 @@ leaves the user nowhere to go, and it leaves nothing in the API log either — t
 ## Known gaps
 
 - **Wallet and the full Money Manager shape are still unverified against real files.** Monefy was
-  checked against a real export in ABA-637, the simple Money Manager shape in ABA-582. Monefy
-  and Wallet still use the shared `parsePolishDate`, which reads a slash date day-first and never
-  validates the month; the per-file order detection lives only in the Money Manager parser.
+  checked against a real export in ABA-637, the simple Money Manager shape in ABA-582.
+- A US-locale export whose days never exceed 12 is ambiguous throughout and reads day-first; only
+  the user could tell, and nothing asks them.
 - Monefy's `account` column is ignored: every row lands in the account being imported into.
 - An amount with no currency symbol falls back to `PLN`: `parsePreview` does not pass the
   user's display currency to a named parser (only the AI path resolves one).
@@ -113,3 +118,6 @@ leaves the user nowhere to go, and it leaves nothing in the API log either — t
 - ABA-583 — Wallet detection accepts both header spellings in circulation.
 - ABA-637 — a real ten-year Monefy export did not import: the commit timed out, repeated purchases
   were dropped as duplicates, and transfers between Monefy accounts imported as spending.
+- [ABA-760](https://github.com/micode-ai/ai-budget-assistant/issues/798) — a US-locale Monefy
+  export failed the preview (month-first dates read day-first into an impossible ISO date);
+  per-file order detection for Monefy and Wallet, calendar validation in `parsePolishDate`.

@@ -1,7 +1,7 @@
 import * as Papa from 'papaparse';
 import type { BankParser, ParserOptions, ParserResult } from './parser.interface';
 import { parsePolishAmount } from '../utils/polish-amount';
-import { parsePolishDate } from '../utils/polish-date';
+import { inferSlashDateOrder, parsePolishDate, type DateFormat } from '../utils/polish-date';
 import { sniffDelimiter } from '../utils/delimiter';
 
 /**
@@ -14,9 +14,10 @@ import { sniffDelimiter } from '../utils/delimiter';
  *
  * Amount is signed — negative is an expense. The decimal separator follows the
  * exporting device's locale, which parsePolishAmount already resolves both ways.
- * Dates are day-first (`dd/MM/yyyy`), matching parsePolishDate's `auto` mode;
- * the target markets are all day-first, so a US-locale export would need its own
- * handling rather than being silently mis-read.
+ * Dates follow the exporting device's locale: day-first (`dd/MM/yyyy`) in the
+ * target markets, month-first (`MM/dd/yyyy`) on a US phone. The order is decided
+ * once per file by inferSlashDateOrder — reading a US export day-first used to
+ * produce "2019-13-01" and fail the whole preview (Sentry 2026-11-15).
  *
  * Unlike a bank statement, this export carries the user's OWN category, so it
  * is passed through as `suggestedCategoryName` rather than guessed from the
@@ -66,9 +67,12 @@ export class MonefyParser implements BankParser {
 
     const detectedHeaders = headerRow.map((h) => String(h).trim());
     const col = this.columnIndexes(detectedHeaders);
+    const dateFormat = inferSlashDateOrder(
+      dataRows.map((cells) => (col.date >= 0 ? String(cells[col.date] ?? '') : '')),
+    );
 
     const rows = dataRows
-      .map((cells, i) => this.toRow(cells, i, col))
+      .map((cells, i) => this.toRow(cells, i, col, dateFormat))
       .filter((r): r is NonNullable<ReturnType<typeof this.toRow>> => r != null);
 
     return { rows, detectedHeaders };
@@ -91,10 +95,15 @@ export class MonefyParser implements BankParser {
     };
   }
 
-  private toRow(cells: string[], idx: number, col: ReturnType<MonefyParser['columnIndexes']>) {
+  private toRow(
+    cells: string[],
+    idx: number,
+    col: ReturnType<MonefyParser['columnIndexes']>,
+    dateFormat: DateFormat,
+  ) {
     const at = (index: number): string => (index >= 0 ? (cells[index] ?? '').trim() : '');
 
-    const date = parsePolishDate(at(col.date));
+    const date = parsePolishDate(at(col.date), dateFormat);
     if (!date) return null;
 
     const amount = parsePolishAmount(at(col.amount), 'polish');

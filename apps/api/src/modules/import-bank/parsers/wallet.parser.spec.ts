@@ -63,6 +63,16 @@ describe('WalletParser', () => {
       expect(rows[0].date).toBe('2024-02-01');
     });
 
+    it('reads a US-locale slash date month-first when the file proves the order', () => {
+      const us = [
+        'account;category;currency;amount;refCurrency;refAmount;type;paymentType;note;date;transfer;payee;labels',
+        'Cash;Food;USD;-5;USD;-5;Expense;Cash;A;01/03/2019;false;;',
+        'Cash;Food;USD;-6;USD;-6;Expense;Cash;B;01/13/2019;false;;',
+      ].join('\n');
+      const { rows } = parser.parse(us);
+      expect(rows.map((r) => r.date)).toEqual(['2019-01-03', '2019-01-13']);
+    });
+
     it('always reports a positive amount', () => {
       const { rows } = parser.parse(fixture);
       expect(rows.every((r) => r.amount > 0)).toBe(true);

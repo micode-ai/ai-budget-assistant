@@ -94,6 +94,19 @@ describe('MonefyParser', () => {
       expect(rows[0].suggestedCategoryName).toBe('Food');
     });
 
+    it('reads a US-locale export month-first instead of failing or swapping day and month', () => {
+      // Sentry 2026-11-15: "01/13/2019" read day-first became "2019-13-01" and broke the preview.
+      const us = [
+        'date,account,category,amount,currency,converted amount,currency,description',
+        '01/03/2019,Cash,Food,-25.50,USD,-25.50,USD,Lidl',
+        '01/13/2019,Cash,Food,-10.00,USD,-10.00,USD,Kiosk',
+      ].join('\n');
+
+      const { rows } = parser.parse(us);
+
+      expect(rows.map((r) => r.date)).toEqual(['2019-01-03', '2019-01-13']);
+    });
+
     it('reads the shape of a real export: NBSP thousands, quoted notes, empty notes', () => {
       const real = [
         'date,account,category,amount,currency,converted amount,currency,description',

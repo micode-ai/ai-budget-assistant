@@ -1,7 +1,7 @@
 import * as Papa from 'papaparse';
 import type { BankParser, ParserOptions, ParserResult } from './parser.interface';
 import { parsePolishAmount } from '../utils/polish-amount';
-import { parsePolishDate } from '../utils/polish-date';
+import { inferSlashDateOrder, parsePolishDate, type DateFormat } from '../utils/polish-date';
 import { sniffDelimiter } from '../utils/delimiter';
 
 /**
@@ -53,24 +53,27 @@ export class WalletParser implements BankParser {
     const detectedHeaders = result.meta.fields ?? [];
     // Read by lower-cased name, so a capitalised or snake_case header still
     // resolves (`Payee`, `Note` …) — the column names are unverified.
-    const rows = result.data
-      .map((r) => {
-        const lowered: Record<string, string> = {};
-        for (const [k, v] of Object.entries(r)) lowered[k.toLowerCase()] = v;
-        return lowered;
-      })
-      .map((r, i) => this.toRow(r, i))
+    const lowered = result.data.map((r) => {
+      const out: Record<string, string> = {};
+      for (const [k, v] of Object.entries(r)) out[k.toLowerCase()] = v;
+      return out;
+    });
+    // A slash date follows the exporting phone's locale; decide its order once
+    // for the whole file (see inferSlashDateOrder).
+    const dateFormat = inferSlashDateOrder(lowered.map((r) => r['date'] ?? ''));
+    const rows = lowered
+      .map((r, i) => this.toRow(r, i, dateFormat))
       .filter((r): r is NonNullable<ReturnType<typeof this.toRow>> => r != null);
 
     return { rows, detectedHeaders };
   }
 
-  private toRow(r: Record<string, string>, idx: number) {
+  private toRow(r: Record<string, string>, idx: number, dateFormat: DateFormat) {
     const get = (key: string): string => (r[key] ?? '').trim();
 
     if (get('transfer').toLowerCase() === 'true') return null;
 
-    const date = parsePolishDate(get('date'));
+    const date = parsePolishDate(get('date'), dateFormat);
     if (!date) return null;
 
     const amount = parsePolishAmount(get('amount'), 'polish');
