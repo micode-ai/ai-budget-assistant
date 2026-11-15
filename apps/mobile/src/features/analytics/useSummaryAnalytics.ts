@@ -7,7 +7,7 @@ import { buildParentOf, normalizeCategoryKeys } from './buildParentOf';
 import { rollUpCategoryTotals } from './categoryRollup';
 import { groupExpensesByCategory, computeVsAverage } from './categoryGrouping';
 import { elapsedDays, inWindow, trailingMonthWindows } from './periodWindows';
-import { localDayKey } from './localDayKey';
+import { localDayKey, transactionDay } from './localDayKey';
 import type { TimeRange, AnalyticsSummary } from './useAnalytics';
 
 const TRAILING_MONTHS = 3;
@@ -86,7 +86,7 @@ export function useSummaryAnalytics(
           .filter((e) => {
             if (e.isDeleted) return false;
             if (currencyCode && e.currencyCode !== currencyCode) return false;
-            return inWindow(new Date(e.date), w);
+            return inWindow(transactionDay(e.date), w);
           })
           .reduce((s, e) => s + toDisplayCurrency(e.amount, e.currencyCode), 0),
       );

@@ -25,3 +25,14 @@ export function localDayKey(value: Date | string): string {
     ? `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`
     : `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 }
+
+/**
+ * The transaction's calendar day as a LOCAL-midnight Date, for comparing with
+ * period boundaries (which are local). `new Date(e.date)` is wrong there for a
+ * server date-only row: west of UTC its UTC midnight is the previous local
+ * evening, so a row on a period's first day fell into the period before (ABA-774).
+ */
+export function transactionDay(value: Date | string): Date {
+  const [y, m, d] = localDayKey(value).split('-').map(Number);
+  return new Date(y, m - 1, d);
+}

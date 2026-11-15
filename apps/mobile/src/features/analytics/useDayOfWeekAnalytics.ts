@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useFilteredTransactions } from './useFilteredTransactions';
 import type { TimeRange, DayOfWeekSpending } from './useAnalytics';
+import { transactionDay } from './localDayKey';
 
 export function useDayOfWeekAnalytics(
   timeRange: TimeRange,
@@ -22,7 +23,7 @@ export function useDayOfWeekAnalytics(
     }));
 
     filteredExpenses.forEach((expense) => {
-      const dayIndex = new Date(expense.date).getDay();
+      const dayIndex = transactionDay(expense.date).getDay();
       days[dayIndex].totalAmount += getAmount(expense);
       days[dayIndex].transactionCount += 1;
     });

@@ -7,6 +7,7 @@ import { financialMonth, getStartOfWeek, getEndOfWeek } from '@budget/shared-uti
 import { useFinancialMonth } from '@/hooks/useFinancialMonth';
 import { filterConsumption, filterIncomeConsumption } from '@/utils/consumption';
 import type { TimeRange } from './useAnalytics';
+import { transactionDay } from './localDayKey';
 
 export function useFilteredTransactions(
   timeRange: TimeRange,
@@ -71,7 +72,7 @@ export function useFilteredTransactions(
       expenses.filter((e) => {
         if (e.isDeleted) return false;
         if (currencyCode && e.currencyCode !== currencyCode) return false;
-        const d = new Date(e.date);
+        const d = transactionDay(e.date);
         return d >= dateRange.startDate && d <= dateRange.endDate;
       }),
     [expenses, dateRange, currencyCode],
@@ -82,7 +83,7 @@ export function useFilteredTransactions(
       incomes.filter((i) => {
         if (i.isDeleted) return false;
         if (currencyCode && i.currencyCode !== currencyCode) return false;
-        const d = new Date(i.date);
+        const d = transactionDay(i.date);
         return d >= dateRange.startDate && d <= dateRange.endDate;
       }),
     [incomes, dateRange, currencyCode],

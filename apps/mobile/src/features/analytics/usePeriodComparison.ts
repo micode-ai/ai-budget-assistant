@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useFilteredTransactions } from './useFilteredTransactions';
 import { comparablePreviousWindow, inWindow } from './periodWindows';
 import type { TimeRange, PeriodComparison } from './useAnalytics';
+import { transactionDay } from './localDayKey';
 
 export function usePeriodComparison(
   timeRange: TimeRange,
@@ -23,7 +24,7 @@ export function usePeriodComparison(
       .filter((e) => {
         if (e.isDeleted) return false;
         if (currencyCode && e.currencyCode !== currencyCode) return false;
-        return inWindow(new Date(e.date), window);
+        return inWindow(transactionDay(e.date), window);
       })
       .reduce((sum, e) => sum + toDisplayCurrency(e.amount, e.currencyCode), 0);
 

@@ -8,6 +8,7 @@ import { rollUpCategoryTotals } from './categoryRollup';
 import { groupExpensesByCategory, computeVsAverage } from './categoryGrouping';
 import { inWindow, trailingMonthWindows } from './periodWindows';
 import type { TimeRange, CategorySpending } from './useAnalytics';
+import { transactionDay } from './localDayKey';
 
 // Re-exported so existing/expected import paths (`from './useCategoryAnalytics'`)
 // keep working — the implementation lives in `./categoryGrouping`, a module
@@ -55,7 +56,7 @@ export function useCategoryAnalytics(
             const monthExpenses = expenses.filter((e) => {
               if (e.isDeleted) return false;
               if (currencyCode && e.currencyCode !== currencyCode) return false;
-              return inWindow(new Date(e.date), window);
+              return inWindow(transactionDay(e.date), window);
             });
             return groupExpensesByCategory(monthExpenses, toDisplayCurrency);
           })

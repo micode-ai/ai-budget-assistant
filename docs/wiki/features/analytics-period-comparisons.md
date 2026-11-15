@@ -48,7 +48,8 @@ on the 10th), the month view follows the anchor:
 **Day keys follow the date's shape.** `localDayKey` keys the daily trend and the highest-spending
 day. A server row is `@db.Date`, i.e. exactly UTC midnight: its day is the UTC date (ABA-770). A row
 just created on the device is a real timestamp: its day is the local date. Using either rule for
-both moved one of the two shapes by a day on one side of UTC. `useDailySpending` iterates every local day
+both moved one of the two shapes by a day on one side of UTC. Period membership uses the same rule: `transactionDay` turns that calendar day into a local-midnight
+Date for every comparison with a period boundary (filter, windows, monthly bars, weekday), ABA-774. `useDailySpending` iterates every local day
 of the range, so an anchored month spanning two calendar months gets all its bars.
 
 **Avg per day** divides by `elapsedDays`: days so far while in progress, the whole period
@@ -84,8 +85,6 @@ render its list. It applies the same rules, adapted to the server:
 
 ## Known gaps
 
-- `useFilteredTransactions` compares `new Date(e.date)` with local period boundaries, so west of
-  UTC a date-only row on a period's first day falls into the previous period.
 - The Story and Reports links from this tab still pass a calendar month; their server side has
   not moved to the financial month yet (see [budgets](budgets.md)).
 - The average divides by three even for an account with only one earlier month of history. This

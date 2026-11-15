@@ -24,6 +24,7 @@
 import { financialMonth, shiftFinancialMonth } from '@budget/shared-utils';
 import type { DateWindow } from './periodWindows';
 import { inWindow } from './periodWindows';
+import { transactionDay } from './localDayKey';
 
 export interface CashFlowExpense {
   amount: number;
@@ -89,10 +90,10 @@ export function monthlyCashFlow(
   return windows.map((w) => ({
     start: w.start,
     earned: incomes
-      .filter((i) => inWindow(new Date(i.date), w))
+      .filter((i) => inWindow(transactionDay(i.date), w))
       .reduce((s, i) => s + convert(i.amount, i.currencyCode), 0),
     spent: expenses
-      .filter((e) => inWindow(new Date(e.date), w))
+      .filter((e) => inWindow(transactionDay(e.date), w))
       .reduce((s, e) => s + convert(e.amount, e.currencyCode), 0),
   }));
 }
