@@ -1,6 +1,7 @@
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
+import { router } from 'expo-router';
 import { formatCurrency } from '@budget/shared-utils';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { getIntlLocale } from '@/i18n';
@@ -133,6 +134,15 @@ export function CashFlowForecastCard({ forecast }: Props) {
           <Text style={styles.axisLabel}>{fmtDay(forecast.days[forecast.days.length - 1].date)}</Text>
         </View>
 
+        {forecast.walletBalanceUnset && (
+          <View style={styles.unsetBox}>
+            <Text style={styles.unsetText}>{t('safeToSpend.walletUnset')}</Text>
+            <TouchableOpacity onPress={() => router.push('/wallet/set-balance')} accessibilityRole="button">
+              <Text style={styles.unsetLink}>{t('safeToSpend.setBalance')}</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
         {forecast.events.length > 0 && (
           <View style={styles.events}>
             <Text style={styles.eventsTitle}>{t('analytics.forecastUpcoming')}</Text>
@@ -244,6 +254,21 @@ const createStyles = (theme: Theme) => ({
   axisLabel: {
     ...theme.textStyles.caption,
     color: theme.colors.textTertiary,
+  },
+  unsetBox: {
+    marginTop: theme.spacing[3],
+    padding: theme.spacing[3],
+    borderRadius: theme.borderRadius.lg,
+    backgroundColor: theme.colors.warningLight,
+    gap: theme.spacing[1],
+  },
+  unsetText: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textPrimary,
+  },
+  unsetLink: {
+    ...theme.textStyles.bodyMedium,
+    color: theme.colors.primary,
   },
   events: {
     marginTop: theme.spacing[3],

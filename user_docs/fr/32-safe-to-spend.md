@@ -15,6 +15,8 @@ Le nombre est calculé à partir de :
 - **Contributions aux objectifs** — le montant journalier nécessaire pour maintenir vos objectifs d'épargne sur la bonne voie.
 - **Revenus attendus** — si l'application détecte un revenu mensuel régulier (même montant, intervalle de ~30 jours, au moins deux fois dans les 90 derniers jours), il est ajouté comme revenu attendu et la prochaine date de paiement est utilisée comme horizon.
 
+Si vous n'avez jamais défini le solde de votre portefeuille (ni solde initial, ni correction), le portefeuille ne connaît que ce que vous avez saisi, compté à partir de zéro. Dépense possible et la prévision **30 prochains jours** le signalent alors et proposent **Définir le solde** : indiquez ce que vous avez réellement et les deux chiffres partiront d'un argent réel.
+
 ### Formule
 
 ```

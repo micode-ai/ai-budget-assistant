@@ -45,6 +45,7 @@ function makeService(overrides: {
 
   const walletService: any = {
     getSummary: jest.fn().mockResolvedValue({ balances: walletBalances }),
+    isBalanceUnset: jest.fn().mockResolvedValue(false),
   };
 
   const exchangeRateService: any = {
@@ -217,6 +218,7 @@ describe('SafeToSpendService — split receivable filter', () => {
     };
     const walletService: any = {
       getSummary: jest.fn().mockResolvedValue({ balances: [] }),
+      isBalanceUnset: jest.fn().mockResolvedValue(false),
     };
     const exchangeRateService: any = {
       getRates: jest.fn().mockRejectedValue(new Error('no rates')),

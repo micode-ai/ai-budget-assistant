@@ -72,8 +72,9 @@ this is an estimate. The card is shown only while the current period is open.
 - Planned purchases (`isPlanned`) and debts due are not scheduled outflows yet.
 - Irregular income (no monthly cadence) is ignored, so a freelancer's forecast is pessimistic.
 - No push when the forecast first dips below zero.
-- The start is the wallet balance: an account that never set opening balances can start far from
-  its real money (Safe-to-Spend shares this).
+- The start is the wallet balance. When it was never set, `walletBalanceUnset` makes the card say
+  so with a **Set balance** link (ABA-773, see [safe-to-spend](safe-to-spend.md)); the figures
+  themselves still count from zero.
 
 ## History
 

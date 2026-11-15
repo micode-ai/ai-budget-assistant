@@ -3172,6 +3172,8 @@ export default {
     daysLeft: 'Verbleibende Tage',
     noIncomeAssumed: 'Kein weiteres Einkommen diesen Monat angenommen',
     approxRate: 'Ungefährer Wechselkurs angewendet',
+    walletUnset: 'Dein Kontostand wurde nie festgelegt, daher wird ab null gerechnet statt ab dem Geld, das du tatsächlich hast.',
+    setBalance: 'Saldo festlegen',
     widgetLabel: 'Sicher ausgeben',
   },
   inflationShield: {

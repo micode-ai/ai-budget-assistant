@@ -3167,6 +3167,8 @@ export default {
     daysLeft: 'Dias restantes',
     noIncomeAssumed: 'Nenhuma receita adicional prevista neste mês',
     approxRate: 'Cotação aproximada aplicada',
+    walletUnset: 'O saldo da sua carteira nunca foi definido, então isto conta a partir de zero, e não do dinheiro que você realmente tem.',
+    setBalance: 'Definir saldo',
     widgetLabel: 'Livre para gastar',
   },
   inflationShield: {

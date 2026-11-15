@@ -21,6 +21,7 @@ function makeService(o: {
   recurring?: unknown[];
   spend?: unknown[];
   rates?: Record<string, number>;
+  balanceUnset?: boolean;
 }) {
   const expenseFindMany = jest
     .fn()
@@ -32,7 +33,10 @@ function makeService(o: {
     userSubscription: { findMany: jest.fn().mockResolvedValue(o.subs ?? []) },
     expense: { findMany: expenseFindMany },
   };
-  const wallet: any = { getSummary: jest.fn().mockResolvedValue({ balances: o.balances ?? [] }) };
+  const wallet: any = {
+    getSummary: jest.fn().mockResolvedValue({ balances: o.balances ?? [] }),
+    isBalanceUnset: jest.fn().mockResolvedValue(o.balanceUnset ?? false),
+  };
   const fx: any = { getRates: jest.fn().mockResolvedValue({ rates: o.rates ?? { PLN: 1, EUR: 0.25 } }) };
   const cache: any = { get: jest.fn().mockResolvedValue(null), set: jest.fn() };
   return { service: new CashFlowForecastService(prisma, wallet, fx, cache), prisma, cache };
@@ -126,6 +130,11 @@ describe('CashFlowForecastService', () => {
     expect(res.spendingHistoryShort).toBe(true);
     expect(res.typicalDailySpend).toBe(0);
     expect(res.endBalance).toBe(100);
+  });
+
+  it('passes through whether the wallet balance was ever set', async () => {
+    const { service } = makeService({ balanceUnset: true });
+    expect((await service.compute('a1', 'PLN', NOW)).walletBalanceUnset).toBe(true);
   });
 
   it('caches per account and currency', async () => {

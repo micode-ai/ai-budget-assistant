@@ -59,6 +59,15 @@ projectedAvailable = walletBalance + expectedIncome − (subscriptions + recurri
 safeToSpendToday   = max(0, (projectedAvailable − buffer) / daysRemaining)
 ```
 
+### A wallet balance that was never set (ABA-773)
+
+The wallet balance is starting balances plus recorded movements. For an account with no non-zero
+starting balance and no correction, it is just the net of what was recorded, counted from zero, and
+it can be far from the real money, even deeply negative. `WalletService.isBalanceUnset` detects
+this, and both this response and the 30-day forecast carry `walletBalanceUnset`. The breakdown sheet
+and the forecast card then say so, with a **Set balance** link (`safeToSpend.walletUnset` /
+`setBalance`). Never present an unset wallet as the user's money without saying so.
+
 ### Currency
 
 The base is the caller's `user.currencyCode`, resolved in the controller. Conversion uses

@@ -15,6 +15,8 @@ export interface SafeToSpendResponse {
   horizonDate: string;            // ISO date, end-of-month or next income date
   incomeInferred: boolean;
   fxApproximate: boolean;         // true if any amount was FX-converted
+  /** No starting balance and no correction ever set: the wallet counts from zero (ABA-773). */
+  walletBalanceUnset?: boolean;
   breakdown: SafeToSpendBreakdown;
   computedAt: string;             // ISO datetime
 }
@@ -45,6 +47,8 @@ export interface CashFlowForecastResponse {
   lowest: { date: string; balance: number };
   endBalance: number;
   fxApproximate: boolean;
+  /** No starting balance and no correction ever set: the start counts from zero (ABA-773). */
+  walletBalanceUnset?: boolean;
   computedAt: string;
 }
 

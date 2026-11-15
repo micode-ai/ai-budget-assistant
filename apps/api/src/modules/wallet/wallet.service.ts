@@ -21,6 +21,21 @@ export class WalletService {
     @Optional() private readonly walletCurrency?: WalletCurrencyService,
   ) {}
 
+  /**
+   * True when the account never told the app what it actually holds: no
+   * currency has a non-zero starting balance and there is not a single balance
+   * correction. The wallet balance is then just the net of every recorded
+   * movement from zero — a figure Safe-to-Spend and the forecast must not
+   * present as the user's real money without saying so (ABA-773).
+   */
+  async isBalanceUnset(accountId: string): Promise<boolean> {
+    const [setRows, adjustments] = await Promise.all([
+      this.prisma.walletBalance.count({ where: { accountId, isDeleted: false, NOT: { initialAmount: 0 } } }),
+      this.prisma.walletAdjustment.count({ where: { accountId, isDeleted: false } }),
+    ]);
+    return setRows === 0 && adjustments === 0;
+  }
+
   async setBalance(accountId: string, userId: string, dto: SetWalletBalanceDto) {
     return this.prisma.walletBalance.upsert({
       where: {

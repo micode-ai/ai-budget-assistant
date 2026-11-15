@@ -77,8 +77,9 @@ export class CashFlowForecastService {
       return v;
     };
 
-    const [wallet, incomes, subs, recurring, recentSpend] = await Promise.all([
+    const [wallet, walletBalanceUnset, incomes, subs, recurring, recentSpend] = await Promise.all([
       this.walletService.getSummary(accountId),
+      this.walletService.isBalanceUnset(accountId),
       this.prisma.income.findMany({
         where: { accountId, isDeleted: false, ...EXCLUDE_SPLIT_RECEIVABLE, date: { gte: since } },
         select: { amount: true, currencyCode: true, description: true, date: true },
@@ -190,6 +191,7 @@ export class CashFlowForecastService {
       lowest: series.lowest,
       endBalance: series.endBalance,
       fxApproximate,
+      walletBalanceUnset,
       computedAt: now.toISOString(),
     };
   }

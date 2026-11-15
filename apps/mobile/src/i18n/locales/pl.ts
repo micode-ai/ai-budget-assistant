@@ -3184,6 +3184,8 @@ export default {
     daysLeft: 'Pozostałe dni',
     noIncomeAssumed: 'Przyjęto brak dodatkowych przychodów w tym miesiącu',
     approxRate: 'Zastosowano przybliżony kurs wymiany',
+    walletUnset: 'Saldo portfela nigdy nie zostało ustawione, więc liczymy od zera, a nie od pieniędzy, które faktycznie masz.',
+    setBalance: 'Ustaw saldo',
     widgetLabel: 'Bezpieczne wydatki',
   },
   inflationShield: {

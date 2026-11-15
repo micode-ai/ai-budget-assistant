@@ -15,6 +15,8 @@ Het getal wordt berekend op basis van:
 - **Bijdragen aan doelen** — het dagelijkse bedrag dat nodig is om je spaardoelen op schema te houden.
 - **Verwacht inkomen** — als de app een regelmatig maandelijks inkomen detecteert (zelfde bedrag, interval van ~30 dagen, minstens twee keer in de afgelopen 90 dagen), wordt dit toegevoegd als verwacht inkomen en wordt de volgende betaaldag als horizon gebruikt.
 
+Heb je het saldo van je portemonnee nooit ingesteld (geen beginsaldo en geen correctie), dan kent de portemonnee alleen wat je hebt vastgelegd, geteld vanaf nul. Veilig uit te geven en de voorspelling **Komende 30 dagen** melden dat dan en bieden **Saldo instellen** — vul in wat je echt hebt en beide cijfers gaan uit van echt geld.
+
 ### Formule
 
 ```

@@ -3179,6 +3179,8 @@ export default {
     daysLeft: 'Days remaining',
     noIncomeAssumed: 'No further income assumed this month',
     approxRate: 'Approximate FX rate applied',
+    walletUnset: 'Your wallet balance was never set, so this counts from zero rather than from the money you actually have.',
+    setBalance: 'Set balance',
     widgetLabel: 'Safe to Spend',
   },
   inflationShield: {

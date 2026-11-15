@@ -3172,6 +3172,8 @@ export default {
     daysLeft: 'Resterende dagen',
     noIncomeAssumed: 'Geen verdere inkomsten deze maand aangenomen',
     approxRate: 'Geschatte wisselkoers toegepast',
+    walletUnset: 'Het saldo van je portemonnee is nooit ingesteld, dus dit rekent vanaf nul in plaats van vanaf het geld dat je echt hebt.',
+    setBalance: 'Saldo instellen',
     widgetLabel: 'Veilig te besteden',
   },
   inflationShield: {

@@ -15,6 +15,8 @@ Die Zahl wird berechnet aus:
 - **Sparziel-Beiträge** — der tägliche Betrag, der nötig ist, um deine Sparziele im Plan zu halten.
 - **Erwartetes Einkommen** — wenn die App ein regelmäßiges monatliches Einkommen erkennt (gleicher Betrag, ~30-Tage-Abstand, mindestens zweimal in den letzten 90 Tagen), wird es als erwartetes Einkommen hinzugefügt und der nächste Zahltag als Horizont verwendet.
 
+Hast du deinen Kontostand nie festgelegt (kein Startsaldo und keine Korrektur), kennt die Geldbörse nur das Erfasste, gezählt ab null. Sicher ausgeben und die Prognose **Die nächsten 30 Tage** weisen dann darauf hin und bieten **Saldo festlegen** an — trage ein, was du tatsächlich hast, und beide Zahlen gehen von echtem Geld aus.
+
 ### Formel
 
 ```

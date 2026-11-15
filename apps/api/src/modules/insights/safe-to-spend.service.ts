@@ -346,7 +346,10 @@ export class SafeToSpendService {
     let fxApproximate = false;
 
     // --- Wallet balances ---
-    const walletSummary = await this.walletService.getSummary(accountId);
+    const [walletSummary, walletBalanceUnset] = await Promise.all([
+      this.walletService.getSummary(accountId),
+      this.walletService.isBalanceUnset(accountId),
+    ]);
     let walletBalance = 0;
     for (const bal of walletSummary.balances) {
       const b = bal.currentBalance;
@@ -428,6 +431,7 @@ export class SafeToSpendService {
       horizonDate: horizonIso,
       incomeInferred,
       fxApproximate,
+      walletBalanceUnset,
       breakdown: {
         walletBalance,
         expectedIncome,

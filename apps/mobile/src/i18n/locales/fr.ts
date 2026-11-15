@@ -3172,6 +3172,8 @@ export default {
     daysLeft: 'Jours restants',
     noIncomeAssumed: 'Aucun revenu supplémentaire supposé ce mois',
     approxRate: 'Taux de change approximatif appliqué',
+    walletUnset: 'Le solde de votre portefeuille n\'a jamais été défini : ce calcul part de zéro et non de l\'argent que vous avez réellement.',
+    setBalance: 'Définir le solde',
     widgetLabel: 'Dépense sûre',
   },
   inflationShield: {

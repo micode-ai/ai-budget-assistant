@@ -1,5 +1,6 @@
 import { View, Text, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { router } from 'expo-router';
 import { formatCurrency } from '@budget/shared-utils';
 import type { SafeToSpendResponse } from '@budget/shared-types';
 import { SheetDialog } from '@/components/SheetDialog';
@@ -100,6 +101,20 @@ export function SafeToSpendSheet({ visible, onClose, data }: SafeToSpendSheetPro
         </Text>
       </View>
 
+      {data.walletBalanceUnset && (
+        <View style={styles.unsetBox}>
+          <Text style={styles.unsetText}>{t('safeToSpend.walletUnset')}</Text>
+          <TouchableOpacity
+            onPress={() => {
+              onClose();
+              router.push('/wallet/set-balance');
+            }}
+            accessibilityRole="button"
+          >
+            <Text style={styles.unsetLink}>{t('safeToSpend.setBalance')}</Text>
+          </TouchableOpacity>
+        </View>
+      )}
       {!data.incomeInferred && (
         <Text style={styles.stsNote}>{t('safeToSpend.noIncomeAssumed')}</Text>
       )}
@@ -196,6 +211,21 @@ const createStyles = (theme: Theme) => ({
     fontWeight: '900' as const,
     flexShrink: 0,
     textAlign: 'right' as const,
+  },
+  unsetBox: {
+    marginTop: theme.spacing[3],
+    padding: theme.spacing[3],
+    borderRadius: theme.borderRadius.lg,
+    backgroundColor: theme.colors.warningLight,
+    gap: theme.spacing[1],
+  },
+  unsetText: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textPrimary,
+  },
+  unsetLink: {
+    ...theme.textStyles.bodyMedium,
+    color: theme.colors.primary,
   },
   stsNote: {
     ...theme.textStyles.caption,

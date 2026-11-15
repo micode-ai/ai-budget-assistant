@@ -3172,6 +3172,8 @@ export default {
     daysLeft: 'Días restantes',
     noIncomeAssumed: 'No se asumen más ingresos este mes',
     approxRate: 'Tasa de cambio aproximada aplicada',
+    walletUnset: 'El saldo de tu billetera nunca se configuró, así que esto cuenta desde cero y no desde el dinero que realmente tienes.',
+    setBalance: 'Establecer saldo',
     widgetLabel: 'Gasto seguro',
   },
   inflationShield: {
