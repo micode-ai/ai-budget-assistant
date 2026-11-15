@@ -404,6 +404,8 @@ export default {
     savingsDetailDepositNote: 'Wat je aan de kassa hebt betaald voor retourverpakkingen — geen terugbetaling; teruggebrachte flessen en blikjes worden niet bijgehouden.',
     byMerchant: 'Per verkoper',
     merchantOther: 'Overig',
+    merchantStats_one: '{{count}} bezoek · gem. {{avg}}',
+    merchantStats_other: '{{count}} bezoeken · gem. {{avg}}',
     byMember: 'Per lid',
     memberUnknown: 'Onbekend',
     byTag: 'Per tag',

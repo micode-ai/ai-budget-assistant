@@ -1103,6 +1103,7 @@ Each insight card has severity: critical (red), warning (yellow), or info (blue)
 - Top merchants where you spent money in the selected period
 - Shows up to 8 individual merchants; the rest are grouped as "Other"
 - Only appears when at least one expense has a merchant value
+- Names that differ only in capital letters or spaces (*Lidl*, *LIDL*) count as one merchant; under each name you see how many purchases you made there and the average purchase
 
 If the same shop appears under several names, open **Settings → Merchants** to tidy them up: tap **Select**, tick the variants, and **Merge** them into one name. The app also suggests likely groups (for example several *Biedronka* entries) that you can merge in a single tap — so they count as one merchant in these charts.
 
@@ -6515,6 +6516,7 @@ iOS, Android, Web
 - Топ магазинов и сервисов, где вы тратили деньги в выбранном периоде
 - Показывает до 8 отдельных магазинов; остальные объединяются в «Другие»
 - Отображается только если у хотя бы одного расхода указан магазин
+- Названия, которые отличаются только регистром или пробелами (*Lidl*, *LIDL*), считаются одним магазином; под каждым названием видно, сколько было покупок и средний чек
 
 Если один и тот же магазин встречается под несколькими названиями, откройте **Настройки → Магазины**, чтобы навести порядок: нажмите **Выбрать**, отметьте варианты и **Объединить** их в одно название. Приложение также предлагает вероятные группы (например, несколько записей *Biedronka*), которые можно объединить одним нажатием — тогда они будут считаться одним продавцом на этих диаграммах.
 
@@ -11905,6 +11907,7 @@ iOS, Android, Web
 - Топ магазинів і сервісів, де ви витрачали гроші у вибраному періоді
 - Показує до 8 окремих магазинів; решта об'єднується в «Інші»
 - Відображається лише якщо хоча б одна витрата має вказаний магазин
+- Назви, що відрізняються лише регістром або пробілами (*Lidl*, *LIDL*), вважаються одним магазином; під кожною назвою видно, скільки було покупок і середній чек
 
 Якщо один і той самий магазин зустрічається під кількома назвами, відкрийте **Налаштування → Магазини**, щоб навести лад: натисніть **Вибрати**, позначте варіанти і **Об'єднати** їх в одну назву. Застосунок також пропонує ймовірні групи (наприклад, кілька записів *Biedronka*), які можна об'єднати одним натисненням — тоді вони рахуватимуться як один продавець на цих діаграмах.
 
@@ -17243,6 +17246,7 @@ Kazda karta wnioskow ma poziom waznosci: krytyczny (czerwony), ostrzezenie (zolt
 - Glowni sprzedawcy, u ktorych wydawales w wybranym okresie
 - Pokazuje do 8 pojedynczych sprzedawcow; reszta jest grupowana jako "Inne"
 - Pojawia sie tylko gdy co najmniej jeden wydatek ma przypisanego sprzedawce
+- Nazwy różniące się tylko wielkością liter lub spacjami (*Lidl*, *LIDL*) liczą się jako jeden sprzedawca; pod każdą nazwą widać liczbę zakupów i średnią kwotę zakupu
 
 Jeśli ten sam sklep pojawia się pod kilkoma nazwami, otwórz **Ustawienia → Sprzedawcy**, aby je uporządkować: kliknij **Wybierz**, zaznacz warianty i **Scal** je w jedną nazwę. Aplikacja sugeruje też prawdopodobne grupy (na przykład kilka wpisów *Biedronka*), które możesz scalić jednym dotknięciem — dzięki temu będą liczone jako jeden sprzedawca na tych wykresach.
 
@@ -22577,6 +22581,7 @@ Jede Einblickkarte hat einen Schweregrad: Kritisch (rot), Warnung (gelb) oder In
 - Top-Händler, bei denen du im ausgewählten Zeitraum Geld ausgegeben hast
 - Zeigt bis zu 8 einzelne Händler; der Rest wird als "Sonstige" zusammengefasst
 - Erscheint nur, wenn mindestens eine Ausgabe einen Händler hat
+- Namen, die sich nur in Groß-/Kleinschreibung oder Leerzeichen unterscheiden (*Lidl*, *LIDL*), zählen als ein Händler; unter jedem Namen siehst du, wie viele Einkäufe du dort gemacht hast und den durchschnittlichen Einkauf
 
 Wenn dasselbe Geschäft unter verschiedenen Namen erscheint, öffne **Einstellungen → Händler**, um sie zu bereinigen: Tippe auf **Auswählen**, markiere die Varianten und **Zusammenführen** zu einem Namen. Die App schlägt auch mögliche Gruppen vor (zum Beispiel mehrere *Biedronka*-Einträge), die du mit einem einzigen Tippen zusammenführen kannst — damit gelten sie in diesen Diagrammen als ein einziger Händler.
 
@@ -27886,6 +27891,7 @@ Cada tarjeta de informacion tiene un nivel de severidad: critico (rojo), adverte
 - Los principales comerciantes donde gastaste en el periodo seleccionado
 - Muestra hasta 8 comerciantes individuales; el resto se agrupa como "Otros"
 - Solo aparece cuando al menos un gasto tiene un comerciante asignado
+- Los nombres que solo se diferencian en mayúsculas o espacios (*Lidl*, *LIDL*) cuentan como un solo comercio; bajo cada nombre verás cuántas compras hiciste allí y la compra media
 
 Si la misma tienda aparece con varios nombres, abre **Ajustes → Comerciantes** para ordenarlos: toca **Seleccionar**, marca las variantes y **Combinar** en un solo nombre. La app también sugiere grupos probables (por ejemplo varias entradas de *Biedronka*) que puedes combinar con un solo toque, de modo que cuenten como un único comerciante en estos gráficos.
 
@@ -33184,6 +33190,7 @@ Chaque carte d'apercu a un niveau de gravite : critique (rouge), avertissement (
 - Principaux marchands ou vous avez depense dans la periode selectionnee
 - Affiche jusqu'a 8 marchands individuels ; le reste est groupe sous "Autres"
 - Apparait uniquement quand au moins une depense a un marchand renseigne
+- Les noms qui ne diffèrent que par les majuscules ou les espaces (*Lidl*, *LIDL*) comptent comme un seul commerçant ; sous chaque nom, vous voyez combien d'achats vous y avez faits et le panier moyen
 
 Si le même magasin apparaît sous plusieurs noms, ouvrez **Paramètres → Marchands** pour les réorganiser : appuyez sur **Sélectionner**, cochez les variantes et **Fusionner** en un seul nom. L'application suggère également des groupes probables (par exemple plusieurs entrées *Biedronka*) que vous pouvez fusionner en un seul appui — afin qu'ils comptent comme un seul marchand dans ces graphiques.
 
@@ -38480,6 +38487,7 @@ iOS, Android, Web
 - Топ крам і сэрвісаў, дзе вы трацілі грошы ў выбраным перыядзе
 - Паказвае да 8 асобных крам; астатнія аб'ядноўваюцца ў «Іншыя»
 - Адлюстроўваецца толькі калі хоць бы адзін выдатак мае ўказаную краму
+- Назвы, якія адрозніваюцца толькі рэгістрам або прабеламі (*Lidl*, *LIDL*), лічацца адной крамай; пад кожнай назвай відаць, колькі было пакупак і сярэдні чэк
 
 Калі адна і тая ж крама сустракаецца пад некалькімі назвамі, адкрыйце **Налады → Крамы**, каб навесці парадак: націсніце **Выбраць**, адзначце варыянты і **Аб'яднаць** іх у адну назву. Прыкладанне таксама прапануе верагодныя групы (напрыклад, некалькі запісаў *Biedronka*), якія можна аб'яднаць адным дотыкам — тады яны будуць лічыцца адным прадаўцом на гэтых дыяграмах.
 
@@ -43740,6 +43748,7 @@ Elke inzichtkaart heeft een ernst: kritiek (rood), waarschuwing (geel) of info (
 - Top-verkopers waar je in de geselecteerde periode geld hebt uitgegeven
 - Toont tot 8 afzonderlijke verkopers; de rest wordt gegroepeerd als "Overig"
 - Verschijnt alleen wanneer minstens één uitgave een verkoperwaarde heeft
+- Namen die alleen in hoofdletters of spaties verschillen (*Lidl*, *LIDL*) tellen als één winkel; onder elke naam zie je hoeveel aankopen je er deed en het gemiddelde aankoopbedrag
 
 Als dezelfde winkel onder meerdere namen voorkomt, open dan **Instellingen → Verkopers** om ze op te ruimen: tik op **Selecteren**, vink de varianten aan en **Samenvoegen** tot één naam. De app stelt ook waarschijnlijke groepen voor (bijvoorbeeld meerdere *Biedronka*-vermeldingen) die je met één tik kunt samenvoegen — zodat ze als één verkoper tellen in deze grafieken.
 
@@ -49127,6 +49136,7 @@ Cada cartão de análise tem um nível de gravidade: crítico (vermelho), aviso 
 - Os principais comerciantes onde gastou dinheiro no período selecionado
 - Mostra até 8 comerciantes individuais; os restantes são agrupados em «Outros»
 - Só aparece quando pelo menos uma despesa tem comerciante preenchido
+- Nomes que só diferem em maiúsculas ou espaços (*Lidl*, *LIDL*) contam como um só comerciante; por baixo de cada nome vê quantas compras fez lá e o valor médio por compra
 
 Se a mesma loja aparecer com vários nomes, abra **Definições → Comerciantes** para os arrumar: toque em **Selecionar**, marque as variantes e use **Juntar** para as unir num só nome. A aplicação também sugere grupos prováveis (por exemplo, várias entradas *Biedronka*) que pode juntar com um só toque — para que contem como um único comerciante nestes gráficos.
 
@@ -54540,6 +54550,7 @@ Cada cartão de insight tem um nível de gravidade: crítico (vermelho), aviso (
 - Os principais estabelecimentos onde você gastou no período selecionado
 - Mostra até 8 estabelecimentos individuais; o restante é agrupado em “Outros”
 - Só aparece quando pelo menos uma despesa tem estabelecimento preenchido
+- Nomes que só mudam em letras maiúsculas ou espaços (*Lidl*, *LIDL*) contam como um só estabelecimento; abaixo de cada nome você vê quantas compras fez ali e o valor médio por compra
 
 Se a mesma loja aparecer com vários nomes, abra **Configurações → Estabelecimentos** para organizá-los: toque em **Selecionar**, marque as variações e use **Mesclar** para uni-las em um só nome. O app também sugere grupos prováveis (por exemplo, várias entradas *Biedronka*) que você pode mesclar com um só toque — assim elas contam como um único estabelecimento nesses gráficos.
 

@@ -1,6 +1,7 @@
 import type React from 'react';
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { formatCurrency } from '@budget/shared-utils';
 import { useStyles, type Theme } from '@/theme';
 import type {
   CategorySpending,
@@ -28,13 +29,20 @@ function categoryToRows(categorySpending: CategorySpending[]): BreakdownRow[] {
   }));
 }
 
-function merchantToRows(merchantSpending: MerchantSpending[]): BreakdownRow[] {
+function merchantToRows(
+  merchantSpending: MerchantSpending[],
+  currency: string,
+  t: (key: string, opts: Record<string, unknown>) => string,
+): BreakdownRow[] {
   return merchantSpending.map((m) => ({
     id: m.merchant,
     name: m.merchant,
     amount: m.amount,
     percentage: m.percentage,
     color: m.color,
+    caption: m.isOther
+      ? undefined
+      : t('analytics.merchantStats', { count: m.visits, avg: formatCurrency(m.averageTicket, currency) }),
   }));
 }
 
@@ -150,7 +158,7 @@ export function BreakdownGrid({
     /** A tile that is not a donut card (the Children list). */
     render?: () => React.ReactNode;
   }[] = [
-    ...(!isWideGrid && hasMerchant ? [{ key: 'merchant', title: t('analytics.byMerchant'), rows: merchantToRows(merchantSpending) }] : []),
+    ...(!isWideGrid && hasMerchant ? [{ key: 'merchant', title: t('analytics.byMerchant'), rows: merchantToRows(merchantSpending, currency, t) }] : []),
     ...(memberSpending.length > 0 ? [{ key: 'member', title: t('analytics.byMember'), rows: memberToRows(memberSpending) }] : []),
     ...(tagSpending.length > 0 ? [{ key: 'tag', title: t('analytics.byTag'), rows: tagToRows(tagSpending) }] : []),
     ...(projectSpending.length > 0 ? [{ key: 'project', title: t('analytics.byProject'), rows: projectToRows(projectSpending) }] : []),
@@ -180,7 +188,7 @@ export function BreakdownGrid({
         </View>
         {showMerchantInRowA && (
           <View style={[styles.breakdownTile, { flexBasis: '33%', flexGrow: 1, flexShrink: 1, minWidth: 0 }]}>
-            <BreakdownCard title={t('analytics.byMerchant')} rows={merchantToRows(merchantSpending)} currency={currency} size="secondary" />
+            <BreakdownCard title={t('analytics.byMerchant')} rows={merchantToRows(merchantSpending, currency, t)} currency={currency} size="secondary" />
           </View>
         )}
       </View>

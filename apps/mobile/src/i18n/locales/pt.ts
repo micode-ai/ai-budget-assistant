@@ -404,6 +404,8 @@ export default {
     savingsDetailDepositNote: 'O que pagou na caixa por embalagens retornáveis — não é um reembolso; garrafas e latas devolvidas não são registadas.',
     byMerchant: 'Por comerciante',
     merchantOther: 'Outros',
+    merchantStats_one: '{{count}} visita · média {{avg}}',
+    merchantStats_other: '{{count}} visitas · média {{avg}}',
     byMember: 'Por membro',
     memberUnknown: 'Desconhecido',
     byTag: 'Por etiqueta',

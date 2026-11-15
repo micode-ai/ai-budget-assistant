@@ -41,7 +41,14 @@ export function MerchantBreakdown({ merchantSpending, currency }: Props) {
         <View key={m.merchant} style={styles.row}>
           <View style={styles.rowInfo}>
             <View style={[styles.dot, { backgroundColor: m.color }]} />
-            <Text style={styles.rowName}>{m.merchant}</Text>
+            <View style={styles.rowText}>
+              <Text style={styles.rowName}>{m.merchant}</Text>
+              {!m.isOther && (
+                <Text style={styles.rowStats}>
+                  {t('analytics.merchantStats', { count: m.visits, avg: formatCurrency(m.averageTicket, currency) })}
+                </Text>
+              )}
+            </View>
           </View>
           <View style={styles.rowValues}>
             <Text style={styles.rowAmount}>{formatCurrency(m.amount, currency)}</Text>
@@ -91,10 +98,18 @@ const createStyles = (theme: Theme) => ({
     borderRadius: theme.borderRadius.sm,
     flexShrink: 0,
   },
+  rowText: {
+    flexShrink: 1,
+  },
   rowName: {
     ...theme.textStyles.bodyLarge,
     color: theme.colors.textPrimary,
     flexShrink: 1,
+  },
+  rowStats: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
+    marginTop: theme.spacing[0.5],
   },
   rowValues: {
     alignItems: 'flex-end' as const,

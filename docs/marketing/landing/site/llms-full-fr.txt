@@ -4436,6 +4436,7 @@ Chaque carte d'apercu a un niveau de gravite : critique (rouge), avertissement (
 - Principaux marchands ou vous avez depense dans la periode selectionnee
 - Affiche jusqu'a 8 marchands individuels ; le reste est groupe sous "Autres"
 - Apparait uniquement quand au moins une depense a un marchand renseigne
+- Les noms qui ne diffèrent que par les majuscules ou les espaces (*Lidl*, *LIDL*) comptent comme un seul commerçant ; sous chaque nom, vous voyez combien d'achats vous y avez faits et le panier moyen
 
 Si le même magasin apparaît sous plusieurs noms, ouvrez **Paramètres → Marchands** pour les réorganiser : appuyez sur **Sélectionner**, cochez les variantes et **Fusionner** en un seul nom. L'application suggère également des groupes probables (par exemple plusieurs entrées *Biedronka*) que vous pouvez fusionner en un seul appui — afin qu'ils comptent comme un seul marchand dans ces graphiques.
 

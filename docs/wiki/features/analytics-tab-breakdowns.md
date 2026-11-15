@@ -9,7 +9,8 @@ in the stores: where the money went by merchant, and where income came from by c
 
 ## Entry points
 
-- `apps/mobile/src/features/analytics/useMerchantAnalytics.ts` → `merchantSpending: MerchantSpending[]`
+- `apps/mobile/src/features/analytics/useMerchantAnalytics.ts` → `merchantSpending: MerchantSpending[]`, grouping
+  in the pure `merchantGrouping.ts` (`groupMerchants`, tested in `__tests__/merchantGrouping.test.ts`)
 - `apps/mobile/src/features/analytics/useIncomeAnalytics.ts` → `incomeByCategory: IncomeCategorySpending[]`,
   `INCOME_CATEGORY_COLORS`
 - Both composed by `useAnalytics` / `useAnalyticsScreenData`, filtered by `useFilteredTransactions`
@@ -21,9 +22,14 @@ in the stores: where the money went by merchant, and where income came from by c
 
 ## Key concepts
 
-**Merchants.** Expenses with a null or blank merchant are excluded; the rest are grouped by trimmed
-merchant, sorted by amount, and cut to the top eight plus an "Other" remainder
-(`analytics.merchantOther`). Percentages are of merchant-tagged spending only, not of all spending.
+**Merchants.** Expenses with a null or blank merchant are excluded. The rest are grouped by
+`trim().toLowerCase()` (the key `MerchantCategoryRule` uses), so `Lidl` and `LIDL` are one slice,
+labelled with the group's most common spelling (first seen wins a tie). The merge is display-only:
+no row is rewritten. Groups are sorted by amount and cut to the top eight plus an "Other" remainder
+(`analytics.merchantOther`). Each named merchant carries `visits` and `averageTicket`, shown as a
+"N visits · avg X" line (`analytics.merchantStats_*`, a plural key). The phone shows it in
+`MerchantBreakdown`; desktop shows it through `BreakdownRow.caption`. Percentages are of
+merchant-tagged spending only, not of all spending.
 
 **Income categories.** Incomes in the same date and currency filter as the expense views, grouped by
 `categoryId`; uncategorized income is labelled `analytics.incomeCategoryOther`. Its palette is the
@@ -36,11 +42,12 @@ only when it has at least one row.
 
 ## Known gaps
 
-- Merchant grouping is case-sensitive (`Lidl` and `LIDL` are two slices); the merge tools on
-  [merchants](merchants.md) are the remedy.
+- Grouping ignores only case and edge spaces: `Lidl` and `Lidl Sp. z o.o.` are still two slices;
+  the merge tools on [merchants](merchants.md) are the remedy.
 - Income-category colours are assigned before the sort, so a slice's colour follows first
   appearance, not rank.
 
 ## History
 
-ABA-174 (merchant breakdown) · ABA-178 (income category breakdown).
+ABA-174 (merchant breakdown) · ABA-178 (income category breakdown) · ABA-765 (case-insensitive
+merchants, visits and average ticket).

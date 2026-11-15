@@ -1671,6 +1671,7 @@ Cada cartão de insight tem um nível de gravidade: crítico (vermelho), aviso (
 - Os principais estabelecimentos onde você gastou no período selecionado
 - Mostra até 8 estabelecimentos individuais; o restante é agrupado em “Outros”
 - Só aparece quando pelo menos uma despesa tem estabelecimento preenchido
+- Nomes que só mudam em letras maiúsculas ou espaços (*Lidl*, *LIDL*) contam como um só estabelecimento; abaixo de cada nome você vê quantas compras fez ali e o valor médio por compra
 
 Se a mesma loja aparecer com vários nomes, abra **Configurações → Estabelecimentos** para organizá-los: toque em **Selecionar**, marque as variações e use **Mesclar** para uni-las em um só nome. O app também sugere grupos prováveis (por exemplo, várias entradas *Biedronka*) que você pode mesclar com um só toque — assim elas contam como um único estabelecimento nesses gráficos.
 

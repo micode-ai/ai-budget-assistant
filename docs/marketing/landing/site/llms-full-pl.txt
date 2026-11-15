@@ -5039,6 +5039,7 @@ Kazda karta wnioskow ma poziom waznosci: krytyczny (czerwony), ostrzezenie (zolt
 - Glowni sprzedawcy, u ktorych wydawales w wybranym okresie
 - Pokazuje do 8 pojedynczych sprzedawcow; reszta jest grupowana jako "Inne"
 - Pojawia sie tylko gdy co najmniej jeden wydatek ma przypisanego sprzedawce
+- Nazwy różniące się tylko wielkością liter lub spacjami (*Lidl*, *LIDL*) liczą się jako jeden sprzedawca; pod każdą nazwą widać liczbę zakupów i średnią kwotę zakupu
 
 Jeśli ten sam sklep pojawia się pod kilkoma nazwami, otwórz **Ustawienia → Sprzedawcy**, aby je uporządkować: kliknij **Wybierz**, zaznacz warianty i **Scal** je w jedną nazwę. Aplikacja sugeruje też prawdopodobne grupy (na przykład kilka wpisów *Biedronka*), które możesz scalić jednym dotknięciem — dzięki temu będą liczone jako jeden sprzedawca na tych wykresach.
 

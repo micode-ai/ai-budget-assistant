@@ -91,6 +91,7 @@ Each insight card has severity: critical (red), warning (yellow), or info (blue)
 - Top merchants where you spent money in the selected period
 - Shows up to 8 individual merchants; the rest are grouped as "Other"
 - Only appears when at least one expense has a merchant value
+- Names that differ only in capital letters or spaces (*Lidl*, *LIDL*) count as one merchant; under each name you see how many purchases you made there and the average purchase
 
 If the same shop appears under several names, open **Settings → Merchants** to tidy them up: tap **Select**, tick the variants, and **Merge** them into one name. The app also suggests likely groups (for example several *Biedronka* entries) that you can merge in a single tap — so they count as one merchant in these charts.
 

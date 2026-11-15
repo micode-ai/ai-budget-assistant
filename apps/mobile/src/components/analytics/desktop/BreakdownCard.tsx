@@ -43,6 +43,8 @@ export interface BreakdownRow {
   budget?: number;
   /** Drillable category row: shows a chevron and fires `onRowPress`. */
   hasChildren?: boolean;
+  /** A muted second line under the name (Merchant's "N visits · avg X"). */
+  caption?: string;
 }
 
 export type BreakdownCardSize = 'primary' | 'secondary';
@@ -208,9 +210,16 @@ export function BreakdownCard({
                   <View style={styles.rowHeader}>
                     <View style={styles.rowInfo}>
                       <View style={[styles.dot, { backgroundColor: resolveColor(row, index) }]} />
-                      <Text style={styles.rowName} numberOfLines={1}>
-                        {row.name}
-                      </Text>
+                      <View style={styles.rowText}>
+                        <Text style={styles.rowName} numberOfLines={1}>
+                          {row.name}
+                        </Text>
+                        {!!row.caption && (
+                          <Text style={styles.rowCaption} numberOfLines={1}>
+                            {row.caption}
+                          </Text>
+                        )}
+                      </View>
                       {drillable && <Text style={styles.chevron}>›</Text>}
                     </View>
                     <View style={styles.rowValues}>
@@ -340,10 +349,18 @@ const createStyles = (theme: Theme) => ({
     borderRadius: theme.borderRadius.sm,
     flexShrink: 0,
   },
+  rowText: {
+    flexShrink: 1,
+    minWidth: 0,
+  },
   rowName: {
     ...theme.textStyles.bodyLarge,
     color: theme.colors.textPrimary,
     flexShrink: 1,
+  },
+  rowCaption: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
   },
   chevron: {
     ...theme.textStyles.bodyLarge,

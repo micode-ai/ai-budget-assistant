@@ -138,6 +138,11 @@ export interface MerchantSpending {
   amount: number;
   percentage: number;
   color: string;
+  /** Expenses at this merchant in the period (case-insensitive group). */
+  visits: number;
+  averageTicket: number;
+  /** The "Other" remainder slice: no per-merchant stats line. */
+  isOther?: boolean;
 }
 
 export interface MemberSpending {

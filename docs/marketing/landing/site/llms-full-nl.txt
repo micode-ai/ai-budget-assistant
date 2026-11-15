@@ -4451,6 +4451,7 @@ Elke inzichtkaart heeft een ernst: kritiek (rood), waarschuwing (geel) of info (
 - Top-verkopers waar je in de geselecteerde periode geld hebt uitgegeven
 - Toont tot 8 afzonderlijke verkopers; de rest wordt gegroepeerd als "Overig"
 - Verschijnt alleen wanneer minstens één uitgave een verkoperwaarde heeft
+- Namen die alleen in hoofdletters of spaties verschillen (*Lidl*, *LIDL*) tellen als één winkel; onder elke naam zie je hoeveel aankopen je er deed en het gemiddelde aankoopbedrag
 
 Als dezelfde winkel onder meerdere namen voorkomt, open dan **Instellingen → Verkopers** om ze op te ruimen: tik op **Selecteren**, vink de varianten aan en **Samenvoegen** tot één naam. De app stelt ook waarschijnlijke groepen voor (bijvoorbeeld meerdere *Biedronka*-vermeldingen) die je met één tik kunt samenvoegen — zodat ze als één verkoper tellen in deze grafieken.
 

@@ -91,6 +91,7 @@ Cada cartão de análise tem um nível de gravidade: crítico (vermelho), aviso 
 - Os principais comerciantes onde gastou dinheiro no período selecionado
 - Mostra até 8 comerciantes individuais; os restantes são agrupados em «Outros»
 - Só aparece quando pelo menos uma despesa tem comerciante preenchido
+- Nomes que só diferem em maiúsculas ou espaços (*Lidl*, *LIDL*) contam como um só comerciante; por baixo de cada nome vê quantas compras fez lá e o valor médio por compra
 
 Se a mesma loja aparecer com vários nomes, abra **Definições → Comerciantes** para os arrumar: toque em **Selecionar**, marque as variantes e use **Juntar** para as unir num só nome. A aplicação também sugere grupos prováveis (por exemplo, várias entradas *Biedronka*) que pode juntar com um só toque — para que contem como um único comerciante nestes gráficos.
 
