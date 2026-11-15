@@ -3582,19 +3582,6 @@ Available actions:
 
 You can customize this strip: go to **Settings → Dashboard Widgets**, open the **Quick actions** section, toggle any action on or off, and drag the handles to reorder them. **Voice Income** and **Scan Invoice** are hidden by default — turn them on there if you track income by voice or invoice scan.
 
-## At the Shop
-
-When you open the app while you're standing in a store you've shopped at before, a card appears near the top of the Dashboard — for example, "You're at Biedronka." It shows:
-
-- **Still on your list** — the unchecked items from your active shopping list (up to five, with a count for anything beyond that).
-- **Safe to spend today** — today's Safe to Spend figure, so you know how much room you have before it affects the rest of the month.
-
-Tap the card to open your shopping list.
-
-The card only appears once the app recognizes the store from your past shopping there, so it won't show up on your very first visit to a new place — and once you leave, it clears the next time you open the app or come back to the Dashboard.
-
-> **Note:** This card needs location access. Turn on **Attach location to new expenses** in **Settings → Data & Reports → Location** — it's on by default unless you turned it off. Without it, the app never checks where you are, and this card never appears.
-
 ## Financial Health Score
 
 The **Financial Health Score** widget shows a single 0–100 score summarizing your overall financial health for the current month:
@@ -4500,7 +4487,7 @@ See what each child costs you, without any guessing.
 - **Totals:** the child screen (and a card on the Analytics tab) shows this month, this year and a category breakdown in your display currency. A total marked with ≈ includes an approximation because an exchange rate was missing; such amounts are left out rather than guessed. Planned expenses and split-bill receivables are not counted.
 - **800+ and coverage:** when an income looks like the 800+ benefit (for example "800+" or "rodzina 800" in the description) the app offers to mark it for a child. Coverage is the benefit received divided by what that child cost in the same period.
 - **Share card:** create a picture of a child's totals. The child's name is hidden by default; you can switch it on.
-- **Statement PDF (Pro, editors):** a "zestawienie" of a child's costs for a period of up to 24 months, with totals, a monthly and category breakdown, the list of expenses and the receipts. Every page carries a footer saying it was prepared in the app from data entered by the user, and the "data as of" time. It is a summary of your own records, not a legal document and not certified. It contains only what has reached the server, so the app syncs first and asks you to wait if something is still pending. It is not available on accounts with end-to-end encryption.
+- **Statement PDF (Pro, editors):** a summary of a child's costs for a period of up to 24 months, with totals, a monthly and category breakdown, the list of expenses and the receipts. Every page carries a footer saying it was prepared in the app from data entered by the user, and the "data as of" time. It is a summary of your own records, not a legal document and not certified. It contains only what has reached the server, so the app syncs first and asks you to wait if something is still pending. It is not available on accounts with end-to-end encryption.
 - **Separated parents:** keep the children on a personal account, so the other parent does not see your other spending. A shared account shows everything to all members.
 
 ## FAQ

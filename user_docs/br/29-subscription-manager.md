@@ -4,7 +4,7 @@
 
 ## O que é o Gerenciador de assinaturas?
 
-O Gerenciador de assinaturas é um controle dedicado aos seus pagamentos recorrentes. Diferente das transações, as assinaturas não são detectadas automaticamente — você as adiciona manualmente ou pelo botão **“Acompanhar esta assinatura”** em uma descoberta do Fat Finder.
+O Gerenciador de assinaturas é um controle dedicado aos seus pagamentos recorrentes. Diferente das transações, as assinaturas não são detectadas automaticamente — você as adiciona manualmente ou pelo botão **“Acompanhar esta assinatura”** em uma descoberta da Auditoria de despesas.
 
 ![Tela Assinaturas com o custo mensal e as renovações](../img/subscriptions.jpg)
 
@@ -24,8 +24,8 @@ Cada assinatura guarda:
 3. Preencha o nome, o valor, o ciclo de cobrança e a data da próxima renovação
 4. Toque em **Salvar**
 
-**Pelo Fat Finder:**
-Se o Fat Finder detectar uma cobrança recorrente, toque em **“Acompanhar esta assinatura”** no card da descoberta. O nome e o valor já vêm preenchidos — é só confirmar a data de renovação.
+**Pela Auditoria de despesas:**
+Se a Auditoria de despesas detectar uma cobrança recorrente, toque em **“Acompanhar esta assinatura”** no card da descoberta. O nome e o valor já vêm preenchidos — é só confirmar a data de renovação.
 
 ## Faixa de custo mensal
 

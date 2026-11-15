@@ -1,15 +1,15 @@
-# Fat Finder (auditoria de despesas)
+# Auditoria de despesas
 
 > Uma auditoria mensal feita pela IA que analisa os seus gastos, identifica desperdícios — subscrições, extravagâncias recorrentes, serviços dispensáveis — e sugere cortes concretos com uma estimativa da poupança.
 
 ## Visão geral
 
-O **Fat Finder** percorre 3 meses do seu histórico de transações, deteta padrões de consumo e gera um relatório que mostra onde poderia poupar. Cada constatação inclui montantes concretos, níveis de gravidade e sugestões práticas.
+A **Auditoria de despesas** percorre 3 meses do seu histórico de transações, deteta padrões de consumo e gera um relatório que mostra onde poderia poupar. Cada constatação inclui montantes concretos, níveis de gravidade e sugestões práticas.
 
 ## Como aceder
 
-- **Cartão no Painel** — mostra os resultados do Fat Finder guardados em cache no ecrã inicial. Toque para abrir o relatório completo e gerar uma análise nova.
-- **Navegação direta** — abra o ecrã do Fat Finder a partir do cartão no Painel
+- **Cartão no Painel** — mostra os resultados da Auditoria de despesas guardados em cache no ecrã inicial. Toque para abrir o relatório completo e gerar uma análise nova.
+- **Navegação direta** — abra o ecrã da Auditoria de despesas a partir do cartão no Painel
 
 ## Requisitos
 
@@ -61,7 +61,7 @@ Todos os montantes da auditoria são apresentados na sua **moeda de apresentaç�
 
 ## Cartão no Painel
 
-O cartão compacto do Fat Finder no ecrã inicial mostra:
+O cartão compacto da Auditoria de despesas no ecrã inicial mostra:
 - A poupança potencial total, em destaque
 - As 3 principais constatações, com pontos de gravidade e montantes de poupança
 - O botão **Ver relatório completo** para ver todos os detalhes
@@ -70,7 +70,7 @@ Se não forem encontradas constatações, verá a mensagem «Está tudo bem!».
 
 ## Perguntas frequentes
 
-- **P: Com que frequência devo consultar o Fat Finder?**
+- **P: Com que frequência devo consultar a Auditoria de despesas?**
   **R:** O relatório abrange o mês atual. Consulte-o uma vez por mês para obter as informações mais relevantes. Toque em **Gerar relatório de novo** para obter uma análise nova.
 
 - **P: Porque vejo constatações diferentes todos os meses?**
@@ -80,7 +80,7 @@ Se não forem encontradas constatações, verá a mensagem «Está tudo bem!».
   **R:** De momento, não é possível descartar constatações individuais. A IA faz sugestões — é o utilizador que decide quais seguir.
 
 - **P: Funciona com contas encriptadas?**
-  **R:** Nas contas com encriptação total (nível 2), o Fat Finder não consegue analisar as descrições das despesas, pelo que pode gerar menos constatações ou constatações menos específicas.
+  **R:** Nas contas com encriptação total (nível 2), a Auditoria de despesas não consegue analisar as descrições das despesas, pelo que pode gerar menos constatações ou constatações menos específicas.
 
 ---
 

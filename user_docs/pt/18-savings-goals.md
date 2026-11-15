@@ -121,4 +121,4 @@ O histórico começa a partir da primeira vez que usa «Adicionar fundos» — a
 
 ---
 
-*Ver também: [Chat de IA](./07-ai-chat.md) | [Orçamentos](./05-budgets.md) | [Fat Finder](./19-fat-finder.md)*
+*Ver também: [Chat de IA](./07-ai-chat.md) | [Orçamentos](./05-budgets.md) | [Auditoria de despesas](./19-fat-finder.md)*

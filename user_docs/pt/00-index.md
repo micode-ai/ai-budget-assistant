@@ -37,7 +37,7 @@
 16. [Exportação e relatórios](./16-export-reports.md) — relatórios em PDF/Excel/CSV, cópias de segurança, resumos por e-mail
 17. [Dívidas e empréstimos](./17-debts-and-loans.md) — acompanhe o dinheiro que emprestou e que pediu emprestado, reembolsos e prazos
 18. [Objetivos de poupança](./18-savings-goals.md) — planos de poupança com IA, com metas de contribuição e pontos de controlo
-19. [Fat Finder](./19-fat-finder.md) — auditoria mensal das despesas para identificar desperdícios e sugerir poupanças
+19. [Auditoria de despesas](./19-fat-finder.md) — auditoria mensal das despesas para identificar desperdícios e sugerir poupanças
 20. [Modo de resposta da IA](./20-ai-response-mode.md) — personalize o estilo de comunicação da IA (Simples, Equilibrado, Especialista)
 
 ## Moedas suportadas

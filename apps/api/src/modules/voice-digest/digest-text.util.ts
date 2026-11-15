@@ -181,7 +181,7 @@ const TEMPLATES: Record<string, LangTemplates> = {
   br: {
     weekOnly: (amt, cur) => `Nesta semana você gastou ${amt} ${cur} em despesas do dia a dia.`,
     weekWithChange: (amt, cur, absPct, dir, usualAmt) =>
-      `Nesta semana você gastou ${amt} ${cur} em despesas do dia a dia, ${absPct}% ${dir} que o normal (normalmente cerca de ${usualAmt} ${cur}).`,
+      `Nesta semana você gastou ${amt} ${cur} em despesas do dia a dia, ${absPct}% ${dir} que o normal (em geral, cerca de ${usualAmt} ${cur}).`,
     dirBelow: 'a menos',
     dirAbove: 'a mais',
     topRise: (category, pct) => `${category} subiu ${pct}%.`,

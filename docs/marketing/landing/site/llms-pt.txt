@@ -23,7 +23,7 @@
 - Grupos de despesas partilhadas (casa, viagem, compras): amigos sem conta entram por um link no navegador, veem quem deve a quem e acertam contas
 - Listas de compras partilhadas
 - Índice de inflação pessoal e Inflation Shield a partir dos preços dos seus próprios talões
-- Financial Wrapped: o resumo do ano em cartões
+- Resumo financeiro do ano, em cartões
 - Controlo de dívidas com lembretes de vencimento
 - Alertas de taxa de câmbio
 - Assistente de chat com IA: faça perguntas sobre finanças e dê comandos em linguagem natural
@@ -34,7 +34,7 @@
 - Gestor de subscrições com lembretes de renovação e simulação de cobrança automática
 - Bots de Telegram, WhatsApp e Slack
 - Arquitetura offline-first; encriptação ponta a ponta opcional
-- Seguro para gastar: quanto pode gastar por dia, a partir do saldo menos os compromissos futuros
+- Disponível para gastar: quanto pode gastar por dia, a partir do saldo menos os compromissos futuros
 - Deteção de anomalias: cobranças duplicadas, aumentos de preço, picos de despesa
 - Divisão do talão por categoria: as linhas de um talão de supermercado são distribuídas por categorias de despesa
 - Categorias em dois níveis: as subcategorias contam para o orçamento da categoria principal

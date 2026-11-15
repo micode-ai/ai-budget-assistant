@@ -16,9 +16,9 @@ Os planos diferem nos limites de utilização e no acesso às funcionalidades de
 | **Contas** | 3 | Até 5 | Ilimitadas |
 | **Membros por conta** | 1 | Até 5 | Ilimitados |
 | **Funcionalidades essenciais** (registo, Chat de IA, voz, talões) | Sim | Sim | Sim |
-| **IA avançada** (História dos gastos, Fat Finder, Análises de IA) | — | Sim | Sim |
+| **IA avançada** (História dos gastos, Auditoria de despesas, Análises de IA) | — | Sim | Sim |
 
-Todos os utilizadores (incluindo os do plano Free) têm: registo de despesas, Chat de IA, Entrada por voz, leitura de talões, deteção de anomalias, relatórios em PDF/Excel, o resumo mensal na aplicação, cópias de segurança encriptadas e todas as moedas. A História dos gastos, o Fat Finder e as Análises de IA exigem Pro ou Business; os resumos automáticos por e-mail também são pagos - o resumo mensal por e-mail requer Pro e o resumo semanal requer Business.
+Todos os utilizadores (incluindo os do plano Free) têm: registo de despesas, Chat de IA, Entrada por voz, leitura de talões, deteção de anomalias, relatórios em PDF/Excel, o resumo mensal na aplicação, cópias de segurança encriptadas e todas as moedas. A História dos gastos, a Auditoria de despesas e as Análises de IA exigem Pro ou Business; os resumos automáticos por e-mail também são pagos - o resumo mensal por e-mail requer Pro e o resumo semanal requer Business.
 
 ## Plano Free
 
@@ -34,7 +34,7 @@ Tudo o que o Free inclui, com limites mais altos:
 - **300 pedidos de IA por mês**
 - **Até 5 contas** — para finanças pessoais, partilhadas e empresariais
 - **Até 5 membros por conta** — colabore com a família ou com a equipa
-- **Funcionalidades de IA avançadas** — História dos gastos, Fat Finder e Análises de IA
+- **Funcionalidades de IA avançadas** — História dos gastos, Auditoria de despesas e Análises de IA
 
 ### Período experimental gratuito de 7 dias
 Experimente o Pro gratuitamente durante 7 dias. Cancele a qualquer momento antes do fim do período experimental para evitar cobranças.
@@ -53,18 +53,18 @@ Acompanhe a utilização da IA em **Definições** > **Gerir plano**:
 - **Utilização este mês** — mostra quantos pedidos de IA já usou (por exemplo, «3 de 50»)
 - **Barra de progresso** — indicador visual da utilização
 - É reposta no início de cada mês
-- **Indicador de utilização de IA** — um contador compacto (por exemplo, «12/50 AI») aparece em todos os ecrãs com IA: Chat de IA, História dos gastos, Fat Finder, Análise (Análises de IA) e Análises de investimentos. Toque nele para ver a sua subscrição.
+- **Indicador de utilização de IA** — um contador compacto (por exemplo, «12/50 AI») aparece em todos os ecrãs com IA: Chat de IA, História dos gastos, Auditoria de despesas, Análise (Análises de IA) e Análises de investimentos. Toque nele para ver a sua subscrição.
 
 ### Confirmação na primeira utilização
 
-Quando usa pela primeira vez uma funcionalidade de IA mais dispendiosa (História dos gastos, Fat Finder, Análises de IA, Análises de investimentos), a aplicação mostra uma caixa de confirmação com o custo e o saldo restante. Pode escolher «Não perguntar novamente» para dispensar futuras confirmações dessa funcionalidade.
+Quando usa pela primeira vez uma funcionalidade de IA mais dispendiosa (História dos gastos, Auditoria de despesas, Análises de IA, Análises de investimentos), a aplicação mostra uma caixa de confirmação com o custo e o saldo restante. Pode escolher «Não perguntar novamente» para dispensar futuras confirmações dessa funcionalidade.
 
 ### Detalhes de utilização
 
 Toque em **Ver detalhes** no ecrã da subscrição para ver uma discriminação detalhada da utilização da IA:
 
 - **Total usado** — total de pedidos de IA consumidos este mês
-- **Por funcionalidade** — quantos pedidos usou cada funcionalidade (Chat de IA, Entrada por voz, Digitalização de talões, História dos gastos, Fat Finder, etc.)
+- **Por funcionalidade** — quantos pedidos usou cada funcionalidade (Chat de IA, Entrada por voz, Digitalização de talões, História dos gastos, Auditoria de despesas, etc.)
 - **Histórico** — registo cronológico de cada pedido de IA, com data, hora e custo
 - **Navegação por mês** — consulte a utilização dos meses anteriores
 
@@ -73,7 +73,7 @@ Toque em **Ver detalhes** no ecrã da subscrição para ver uma discriminação 
 - Usar a **Entrada por voz** para adicionar uma despesa (1 pedido)
 - **Digitalizar um talão** (2 pedidos)
 - Gerar uma **História dos gastos** (3 pedidos)
-- Executar o **Fat Finder** (3 pedidos)
+- Executar a **Auditoria de despesas** (3 pedidos)
 - Obter **Análises de IA** no separador Análise (2 pedidos)
 - **Análises de investimentos** (2,5 pedidos)
 

@@ -33,19 +33,6 @@ Ações disponíveis:
 
 Pode personalizar esta faixa: vá a **Definições → Widgets do painel**, abra a secção **Ações rápidas**, ative ou desative qualquer ação e arraste as pegas para as reordenar. **Receita por voz** e **Digitalizar fatura** estão ocultas por predefinição — ative-as aí se registar receitas por voz ou digitalizando faturas.
 
-## Na loja
-
-Quando abre a aplicação estando numa loja onde já fez compras antes, aparece um cartão perto do topo do Painel — por exemplo, «Está no Continente». O cartão mostra:
-
-- **Ainda na sua lista** — os artigos por assinalar da lista de compras ativa (até cinco, com a contagem dos restantes).
-- **Seguro para gastar hoje** — o valor de hoje do Seguro para gastar, para saber quanta margem tem antes de afetar o resto do mês.
-
-Toque no cartão para abrir a lista de compras.
-
-O cartão só aparece quando a aplicação reconhece a loja a partir das suas compras anteriores nesse local, por isso não aparece na primeira visita a um sítio novo — e, depois de sair, desaparece da próxima vez que abrir a aplicação ou voltar ao Painel.
-
-> **Nota:** Este cartão precisa de acesso à localização. Ative **Anexar localização às novas despesas** em **Definições → Dados e relatórios → Localização** — está ativo por predefinição, a menos que o tenha desativado. Sem isso, a aplicação nunca verifica onde está e este cartão nunca aparece.
-
 ## Pontuação de saúde financeira
 
 O widget **Pontuação de saúde financeira** mostra uma única pontuação de 0 a 100 que resume a saúde financeira global do mês em curso:
@@ -115,17 +102,17 @@ O widget **Património líquido** mostra o seu património total em todas as moe
 
 > **Nota:** O Património líquido só aparece depois de definir os saldos iniciais da carteira. Consulte [Carteira e câmbio](./10-wallet-and-exchange.md) para os configurar.
 
-## Cartão Fat Finder
+## Cartão da Auditoria de despesas
 
-Por baixo da secção de dívidas, o cartão **Fat Finder** mostra um resumo da auditoria mensal das suas despesas:
+Por baixo da secção de dívidas, o cartão **Auditoria de despesas** mostra um resumo da auditoria mensal das suas despesas:
 
 - **Poupança potencial total** — quanto poderia poupar por mês (uma estimativa)
 - **3 principais conclusões** — uma lista rápida com pontos de gravidade e o valor de poupança de cada uma
-- **Ver relatório completo** — toque para abrir o ecrã detalhado do Fat Finder
+- **Ver relatório completo** — toque para abrir o ecrã detalhado da Auditoria de despesas
 
 Este cartão requer uma **subscrição Pro ou Business**. Quem está no plano Free vê uma sugestão de upgrade.
 
-> Consulte [Fat Finder](./19-fat-finder.md) para o guia completo da funcionalidade.
+> Consulte [Auditoria de despesas](./19-fat-finder.md) para o guia completo da funcionalidade.
 
 ## Calendário
 
@@ -172,4 +159,4 @@ Puxe para baixo em qualquer ponto do Painel para atualizar todos os dados e sinc
 
 ---
 
-*Ver também: [Despesas e receitas](./03-expenses-and-income.md) | [Carteira e câmbio](./10-wallet-and-exchange.md) | [Fat Finder](./19-fat-finder.md) | [Análise](./06-analytics.md)*
+*Ver também: [Despesas e receitas](./03-expenses-and-income.md) | [Carteira e câmbio](./10-wallet-and-exchange.md) | [Auditoria de despesas](./19-fat-finder.md) | [Análise](./06-analytics.md)*

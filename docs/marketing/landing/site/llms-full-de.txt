@@ -3581,19 +3581,6 @@ Verfügbare Aktionen:
 
 Du kannst diese Leiste anpassen: Gehe zu **Einstellungen → Dashboard-Widgets**, öffne den Bereich **Schnellaktionen**, aktiviere oder deaktiviere beliebige Aktionen und ziehe die Griffe, um sie neu anzuordnen. **Einnahme per Sprache** und **Rechnung scannen** sind standardmäßig ausgeblendet — aktiviere sie dort, wenn du Einnahmen per Sprache oder Rechnungsscan erfasst.
 
-## Im Geschäft
-
-Wenn du die App öffnest, während du in einem Geschäft stehst, in dem du schon einmal eingekauft hast, erscheint oben auf der Übersicht eine Karte — zum Beispiel „Du bist bei Biedronka." Sie zeigt:
-
-- **Noch auf deiner Liste** — die noch nicht abgehakten Artikel deiner aktiven Einkaufsliste (bis zu fünf, mit einer Zahl für alle weiteren).
-- **Heute sicher ausgebbar** — deine heutige „Sicher ausgeben"-Zahl, damit du weißt, wie viel Spielraum dir noch bleibt, bevor es den Rest des Monats beeinflusst.
-
-Tippe auf die Karte, um deine Einkaufsliste zu öffnen.
-
-Die Karte erscheint erst, wenn die App das Geschäft anhand deiner bisherigen Einkäufe dort erkennt — beim allerersten Besuch eines neuen Ortes wird sie also noch nicht angezeigt. Wenn du das Geschäft verlässt, verschwindet sie, sobald du die App das nächste Mal öffnest oder zur Übersicht zurückkehrst.
-
-> **Hinweis:** Diese Karte benötigt Standortzugriff. Aktiviere **Standort an neue Ausgaben anhängen** unter **Einstellungen → Daten & Berichte → Standort** — standardmäßig ist das eingeschaltet, sofern du es nicht ausgeschaltet hast. Ohne diese Einstellung prüft die App nie, wo du dich befindest, und die Karte erscheint nie.
-
 ## Finanzielle Gesundheit
 
 Das Widget **Finanzielle Gesundheit** zeigt eine einzelne Punktzahl von 0–100, die Ihre finanzielle Gesundheit im aktuellen Monat zusammenfasst:
@@ -4498,7 +4485,7 @@ Sehen Sie, was jedes Kind kostet, ohne Raten.
 - **Summen:** Der Kind-Bildschirm (und eine Karte im Analyse-Tab) zeigt diesen Monat, dieses Jahr und die Kategorien in Ihrer Anzeigewährung. Eine Summe mit ≈ enthält eine Näherung, weil ein Wechselkurs fehlte; solche Beträge werden ausgelassen statt geschätzt. Geplante Ausgaben und Forderungen aus geteilten Rechnungen zählen nicht.
 - **800+ und Deckung:** Sieht eine Einnahme wie das Kindergeld 800+ aus (z. B. „800+“ oder „rodzina 800“ in der Beschreibung), bietet die App an, sie einem Kind zuzuordnen. Die Deckung ist das erhaltene Geld geteilt durch die Kosten des Kindes im selben Zeitraum.
 - **Teilen-Karte:** Ein Bild mit den Summen eines Kindes. Der Name ist standardmäßig ausgeblendet und kann eingeblendet werden.
-- **Aufstellung als PDF (Pro, Bearbeiter):** Eine „zestawienie“ der Kosten eines Kindes für bis zu 24 Monate mit Summen, Monats- und Kategorieübersicht, Ausgabenliste und Belegen. Jede Seite trägt eine Fußzeile, dass sie in der App aus vom Nutzer eingegebenen Daten erstellt wurde, und den Zeitpunkt „Datenstand“. Es ist eine Zusammenfassung Ihrer eigenen Aufzeichnungen, kein Rechtsdokument und nicht beglaubigt. Sie enthält nur, was den Server erreicht hat; die App synchronisiert zuerst und bittet um Geduld, wenn noch etwas aussteht. Nicht verfügbar bei Konten mit Ende-zu-Ende-Verschlüsselung.
+- **Aufstellung als PDF (Pro, Bearbeiter):** Eine Aufstellung der Kosten eines Kindes für bis zu 24 Monate mit Summen, Monats- und Kategorieübersicht, Ausgabenliste und Belegen. Jede Seite trägt eine Fußzeile, dass sie in der App aus vom Nutzer eingegebenen Daten erstellt wurde, und den Zeitpunkt „Datenstand“. Es ist eine Zusammenfassung Ihrer eigenen Aufzeichnungen, kein Rechtsdokument und nicht beglaubigt. Sie enthält nur, was den Server erreicht hat; die App synchronisiert zuerst und bittet um Geduld, wenn noch etwas aussteht. Nicht verfügbar bei Konten mit Ende-zu-Ende-Verschlüsselung.
 - **Getrennte Eltern:** Führen Sie die Kinder in einem persönlichen Konto, damit der andere Elternteil Ihre übrigen Ausgaben nicht sieht. Ein gemeinsames Konto zeigt allen Mitgliedern alles.
 
 ## FAQ

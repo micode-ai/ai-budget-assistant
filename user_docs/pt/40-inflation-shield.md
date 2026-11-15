@@ -21,7 +21,7 @@ O Escudo contra a inflação prevê para onde vão os preços das suas compras h
   - o produto e a velocidade a que está a subir (por exemplo, **+8%/mês**)
   - uma sugestão como **«Compre 4 unidades agora — poupe ~12 zł»**
   - a loja onde costuma comprá-lo
-  - um selo **«Comportável hoje»** quando comprar agora cabe no seu orçamento Seguro para gastar
+  - um selo **«Comportável hoje»** quando comprar agora cabe no seu orçamento Disponível para gastar
 
 ## Como funciona
 

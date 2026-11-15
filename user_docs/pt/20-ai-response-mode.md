@@ -4,7 +4,7 @@
 
 ## Visão geral
 
-A definição **Estilo de resposta da IA** permite controlar o tom e o nível de detalhe de todo o conteúdo gerado pela IA na aplicação. Afeta as respostas do Chat de IA, as Histórias dos gastos, as Análises de IA e os relatórios do Fat Finder.
+A definição **Estilo de resposta da IA** permite controlar o tom e o nível de detalhe de todo o conteúdo gerado pela IA na aplicação. Afeta as respostas do Chat de IA, as Histórias dos gastos, as Análises de IA e os relatórios da Auditoria de despesas.
 
 ## Como alterar
 
@@ -66,7 +66,7 @@ O modo de resposta altera o estilo de comunicação da IA em **todas as funciona
 | **Chat de IA** | Tom, vocabulário e nível de detalhe das respostas |
 | **História dos gastos** | Estilo narrativo e complexidade das conclusões |
 | **Análises de IA** | Forma como são redigidas as descrições dos gráficos e as sugestões |
-| **Fat Finder** | Descrições das constatações e sugestões de ação |
+| **Auditoria de despesas** | Descrições das constatações e sugestões de ação |
 | **Objetivos de poupança** | Linguagem do resumo do plano e dos conselhos |
 
 ## Persistência

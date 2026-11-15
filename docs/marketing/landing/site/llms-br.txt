@@ -23,7 +23,7 @@
 - Grupos de despesas compartilhadas (casa, viagem, mercado): amigos sem conta entram por um link no navegador, veem quem deve a quem e acertam as contas
 - Listas de compras compartilhadas
 - Índice de inflação pessoal e Inflation Shield com base nos preços dos seus próprios recibos
-- Financial Wrapped: a retrospectiva do ano em cards
+- Resumo financeiro do ano: a retrospectiva em cards
 - Controle de dívidas com lembretes de vencimento
 - Alertas de cotação
 - Assistente de chat com IA: faça perguntas sobre finanças e dê comandos em linguagem natural

@@ -811,19 +811,6 @@ Ações disponíveis:
 
 Você pode personalizar essa faixa: vá em **Configurações → Widgets do painel**, abra a seção **Ações rápidas**, ative ou desative qualquer ação e arraste as alças para reordenar. **Receita por voz** e **Escanear fatura** ficam ocultas por padrão — ative-as ali se você registra receitas por voz ou escaneando faturas.
 
-## Na loja
-
-Quando você abre o app estando em uma loja onde já comprou antes, aparece um cartão perto do topo do Painel — por exemplo, “Você está no Carrefour”. Ele mostra:
-
-- **Ainda na sua lista** — os itens não marcados da sua lista de compras ativa (até cinco, com a contagem do restante).
-- **Livre para gastar hoje** — o valor de hoje do Livre para gastar, para você saber quanta folga tem antes de afetar o resto do mês.
-
-Toque no cartão para abrir sua lista de compras.
-
-O cartão só aparece quando o app reconhece a loja pelas suas compras anteriores ali, então ele não aparece na sua primeira visita a um lugar novo — e, depois que você sai, ele some na próxima vez que você abrir o app ou voltar ao Painel.
-
-> **Observação:** Este cartão precisa de acesso à localização. Ative **Anexar localização às novas despesas** em **Configurações → Dados e relatórios → Localização** — a opção vem ativada por padrão, a menos que você a tenha desativado. Sem ela, o app nunca verifica onde você está, e este cartão nunca aparece.
-
 ## Pontuação de saúde financeira
 
 O widget **Pontuação de saúde financeira** mostra uma única pontuação de 0 a 100 que resume a saúde das suas finanças no mês corrente:
@@ -892,17 +879,17 @@ O widget **Patrimônio líquido** mostra seu patrimônio total em todas as moeda
 
 > **Observação:** O Patrimônio líquido só aparece depois que você define os saldos iniciais da carteira. Veja [Carteira e câmbio](./10-wallet-and-exchange.md) para configurá-los.
 
-## Cartão Fat Finder
+## Cartão da Auditoria de despesas
 
-Abaixo da seção de dívidas, o cartão **Fat Finder** mostra um resumo da auditoria mensal das suas despesas:
+Abaixo da seção de dívidas, o cartão **Auditoria de despesas** mostra um resumo da auditoria mensal das suas despesas:
 
 - **Economia potencial total** — quanto você poderia economizar por mês (uma estimativa)
 - **3 principais achados** — uma lista rápida com pontos de gravidade e o valor de economia de cada um
-- **Ver relatório completo** — toque para abrir a tela detalhada do Fat Finder
+- **Ver relatório completo** — toque para abrir a tela detalhada da Auditoria de despesas
 
 Este cartão exige uma **assinatura Pro ou Business**. Quem está no plano Free vê uma sugestão de upgrade.
 
-> Veja [Fat Finder](./19-fat-finder.md) para o guia completo do recurso.
+> Veja [Auditoria de despesas](./19-fat-finder.md) para o guia completo do recurso.
 
 ## Calendário
 
@@ -949,7 +936,7 @@ Puxe para baixo em qualquer ponto do Painel para atualizar todos os dados e sinc
 
 ---
 
-*Veja também: [Despesas e receitas](./03-expenses-and-income.md) | [Carteira e câmbio](./10-wallet-and-exchange.md) | [Fat Finder](./19-fat-finder.md) | [Análises](./06-analytics.md)*
+*Veja também: [Despesas e receitas](./03-expenses-and-income.md) | [Carteira e câmbio](./10-wallet-and-exchange.md) | [Auditoria de despesas](./19-fat-finder.md) | [Análises](./06-analytics.md)*
 
 ## Despesas e receitas
 URL: https://ai-budget.pl/help/br/expenses-and-income/
@@ -1729,7 +1716,7 @@ Veja quanto cada filho custa para você, sem achismo.
 - **Totais:** a tela do filho (e um cartão na aba Análises) mostra este mês, este ano e uma divisão por categoria na sua moeda de exibição. Um total marcado com ≈ inclui uma aproximação porque faltava uma cotação; esses valores são deixados de fora em vez de serem estimados. Despesas planejadas e valores a receber de contas divididas não são contados.
 - **800+ e cobertura:** quando uma receita parece ser o benefício 800+ (por exemplo, “800+” ou “rodzina 800” na descrição), o app oferece marcá-la para um filho. A cobertura é o benefício recebido dividido pelo que esse filho custou no mesmo período.
 - **Cartão para compartilhar:** crie uma imagem com os totais de um filho. O nome do filho fica oculto por padrão; você pode ativá-lo.
-- **Extrato em PDF (Pro, editores):** um “zestawienie” dos custos de um filho em um período de até 24 meses, com totais, divisão mensal e por categoria, a lista de despesas e os recibos. Cada página traz um rodapé dizendo que foi preparada no app a partir de dados inseridos pelo usuário, e o momento a que os dados se referem. É um resumo dos seus próprios registros, não um documento legal nem certificado. Contém apenas o que já chegou ao servidor, então o app sincroniza primeiro e pede que você aguarde se algo ainda estiver pendente. Não está disponível em contas com criptografia de ponta a ponta.
+- **Extrato em PDF (Pro, editores):** um resumo dos custos de um filho em um período de até 24 meses, com totais, divisão mensal e por categoria, a lista de despesas e os recibos. Cada página traz um rodapé dizendo que foi preparada no app a partir de dados inseridos pelo usuário, e o momento a que os dados se referem. É um resumo dos seus próprios registros, não um documento legal nem certificado. Contém apenas o que já chegou ao servidor, então o app sincroniza primeiro e pede que você aguarde se algo ainda estiver pendente. Não está disponível em contas com criptografia de ponta a ponta.
 - **Pais separados:** mantenha os filhos em uma conta pessoal, para que o outro genitor não veja seus demais gastos. Uma conta compartilhada mostra tudo para todos os membros.
 
 ## Perguntas frequentes
@@ -2586,7 +2573,7 @@ Escolha o tema:
 
 ### Estilo de resposta da IA
 
-Controle como a IA se comunica com você em todos os recursos de IA (Chat, Histórias, Insights, Fat Finder, Metas):
+Controle como a IA se comunica com você em todos os recursos de IA (Chat, Histórias, Insights, Auditoria de despesas, Metas):
 
 | Modo | Descrição |
 |---|---|
@@ -2624,7 +2611,7 @@ Controle quais seções aparecem no seu [Painel](./02-dashboard.md). Toque na ch
 | **Dívidas e empréstimos** | Resumo do que devem a você e do que você deve |
 | **Gráfico de lucro líquido** | Gráfico de linhas de 6 meses do lucro líquido (receitas − despesas) |
 | **Patrimônio líquido** | Patrimônio líquido total somando todas as carteiras |
-| **Fat Finder (insights de IA)** | Auditoria mensal dos gastos com oportunidades de economia |
+| **Auditoria de despesas (insights de IA)** | Auditoria mensal dos gastos com oportunidades de economia |
 | **Calendário** | Grade mensal com pontos de receitas e despesas |
 | **Metas** | Sua principal meta de economia ativa, com barra de progresso |
 | **Saldos das carteiras** | Rolagem horizontal com os saldos das carteiras por moeda |
@@ -2742,9 +2729,9 @@ Os planos diferem nos limites de uso e no acesso aos recursos avançados de IA:
 | **Contas** | 3 | Até 5 | Ilimitadas |
 | **Membros por conta** | 1 | Até 5 | Ilimitados |
 | **Recursos essenciais** (registro, Chat de IA, voz, recibos) | Sim | Sim | Sim |
-| **IA avançada** (História dos gastos, Fat Finder, Insights de IA) | — | Sim | Sim |
+| **IA avançada** (História dos gastos, Auditoria de despesas, Insights de IA) | — | Sim | Sim |
 
-Todos os usuários (inclusive os do plano Free) têm: controle de despesas, Chat de IA, Entrada por voz, leitura de recibos, detecção de anomalias, relatórios em PDF/Excel, o resumo mensal no app, backups criptografados e todas as moedas. História dos gastos, Fat Finder e Insights de IA exigem Pro ou Business; os resumos automáticos por e-mail também são pagos - o resumo mensal por e-mail exige o Pro, e o resumo semanal exige o Business.
+Todos os usuários (inclusive os do plano Free) têm: controle de despesas, Chat de IA, Entrada por voz, leitura de recibos, detecção de anomalias, relatórios em PDF/Excel, o resumo mensal no app, backups criptografados e todas as moedas. História dos gastos, Auditoria de despesas e Insights de IA exigem Pro ou Business; os resumos automáticos por e-mail também são pagos - o resumo mensal por e-mail exige o Pro, e o resumo semanal exige o Business.
 
 ## Plano Free
 
@@ -2760,7 +2747,7 @@ Tudo o que o Free tem, com limites maiores:
 - **300 solicitações de IA por mês**
 - **Até 5 contas** — para finanças pessoais, compartilhadas e da empresa
 - **Até 5 membros por conta** — colabore com a família ou com a equipe
-- **Recursos avançados de IA** — História dos gastos, Fat Finder e Insights de IA
+- **Recursos avançados de IA** — História dos gastos, Auditoria de despesas e Insights de IA
 
 ### Período de teste grátis de 7 dias
 Experimente o Pro grátis por 7 dias. Cancele quando quiser antes do fim do período de teste para não ser cobrado.
@@ -2779,18 +2766,18 @@ Acompanhe seu uso de IA em **Configurações** > **Gerenciar plano**:
 - **Uso este mês** — mostra quantas solicitações de IA você já usou (por exemplo, “3 de 50”)
 - **Barra de progresso** — indicador visual do uso
 - É zerado no início de cada mês
-- **Indicador de uso de IA** — um contador compacto (por exemplo, “12/50 AI”) aparece em todas as telas com IA: Chat de IA, História dos gastos, Fat Finder, Análises (Insights de IA) e Insights de investimentos. Toque nele para ver sua assinatura.
+- **Indicador de uso de IA** — um contador compacto (por exemplo, “12/50 AI”) aparece em todas as telas com IA: Chat de IA, História dos gastos, Auditoria de despesas, Análises (Insights de IA) e Insights de investimentos. Toque nele para ver sua assinatura.
 
 ### Confirmação no primeiro uso
 
-Quando você usa pela primeira vez um recurso de IA mais caro (História dos gastos, Fat Finder, Insights de IA, Insights de investimentos), o app mostra uma caixa de confirmação com o custo e o seu saldo restante. Você pode escolher “Não perguntar de novo” para pular as próximas confirmações desse recurso.
+Quando você usa pela primeira vez um recurso de IA mais caro (História dos gastos, Auditoria de despesas, Insights de IA, Insights de investimentos), o app mostra uma caixa de confirmação com o custo e o seu saldo restante. Você pode escolher “Não perguntar de novo” para pular as próximas confirmações desse recurso.
 
 ### Detalhes de uso
 
 Toque em **Ver detalhes** na tela da assinatura para ver um detalhamento do seu uso de IA:
 
 - **Total usado** — total de solicitações de IA consumidas neste mês
-- **Por recurso** — quantas solicitações cada recurso usou (Chat de IA, Entrada por voz, Escaneamento de recibos, História dos gastos, Fat Finder etc.)
+- **Por recurso** — quantas solicitações cada recurso usou (Chat de IA, Entrada por voz, Escaneamento de recibos, História dos gastos, Auditoria de despesas etc.)
 - **Histórico** — registro cronológico de cada solicitação de IA, com data, hora e custo
 - **Navegação por mês** — consulte o uso dos meses anteriores
 
@@ -2799,7 +2786,7 @@ Toque em **Ver detalhes** na tela da assinatura para ver um detalhamento do seu 
 - Usar a **Entrada por voz** para adicionar uma despesa (1 solicitação)
 - **Escanear um recibo** (2 solicitações)
 - Gerar uma **História dos gastos** (3 solicitações)
-- Rodar o **Fat Finder** (3 solicitações)
+- Rodar a **Auditoria de despesas** (3 solicitações)
 - Obter **Insights de IA** na aba Análises (2 solicitações)
 - **Insights de investimentos** (2,5 solicitações)
 
@@ -3667,21 +3654,21 @@ O histórico começa a partir da primeira vez que você usa “Adicionar valor�
 
 ---
 
-*Veja também: [Chat de IA](./07-ai-chat.md) | [Orçamentos](./05-budgets.md) | [Fat Finder](./19-fat-finder.md)*
+*Veja também: [Chat de IA](./07-ai-chat.md) | [Orçamentos](./05-budgets.md) | [Auditoria de despesas](./19-fat-finder.md)*
 
-## Fat Finder (auditoria de despesas)
+## Auditoria de despesas
 URL: https://ai-budget.pl/help/br/fat-finder/
 
 > Uma auditoria mensal feita pela IA que analisa seus gastos, identifica desperdícios — assinaturas, extravagâncias recorrentes, serviços desnecessários — e sugere cortes concretos com uma estimativa de economia.
 
 ## Visão geral
 
-O **Fat Finder** examina 3 meses do seu histórico de transações, detecta padrões de consumo e gera um relatório mostrando onde você poderia economizar. Cada achado traz valores concretos, níveis de gravidade e sugestões práticas.
+A **Auditoria de despesas** examina 3 meses do seu histórico de transações, detecta padrões de consumo e gera um relatório mostrando onde você poderia economizar. Cada achado traz valores concretos, níveis de gravidade e sugestões práticas.
 
 ## Como acessar
 
-- **Cartão no Painel** — mostra os resultados do Fat Finder salvos em cache na tela inicial. Toque para abrir o relatório completo e gerar uma análise nova.
-- **Navegação direta** — abra a tela do Fat Finder pelo cartão no Painel
+- **Cartão no Painel** — mostra os resultados da Auditoria de despesas salvos em cache na tela inicial. Toque para abrir o relatório completo e gerar uma análise nova.
+- **Navegação direta** — abra a tela da Auditoria de despesas pelo cartão no Painel
 
 ## Requisitos
 
@@ -3733,7 +3720,7 @@ Todos os valores da auditoria aparecem na sua **moeda de exibição** — a esco
 
 ## Cartão no Painel
 
-O cartão compacto do Fat Finder na tela inicial mostra:
+O cartão compacto da Auditoria de despesas na tela inicial mostra:
 - A economia potencial total, em destaque
 - Os 3 principais achados, com pontos de gravidade e valores de economia
 - O botão **Ver relatório completo** para ver todos os detalhes
@@ -3742,7 +3729,7 @@ Se nenhum achado for encontrado, você verá a mensagem “Tudo certo!”.
 
 ## Perguntas frequentes
 
-- **P: Com que frequência devo consultar o Fat Finder?**
+- **P: Com que frequência devo consultar a Auditoria de despesas?**
   **R:** O relatório cobre o mês atual. Consulte uma vez por mês para ter as informações mais relevantes. Toque em **Gerar relatório de novo** para receber uma análise nova.
 
 - **P: Por que vejo achados diferentes a cada mês?**
@@ -3752,7 +3739,7 @@ Se nenhum achado for encontrado, você verá a mensagem “Tudo certo!”.
   **R:** No momento, não é possível descartar achados individuais. A IA dá sugestões — você decide quais seguir.
 
 - **P: Funciona com contas criptografadas?**
-  **R:** Em contas com criptografia total (nível 2), o Fat Finder não consegue analisar as descrições das despesas, então pode gerar menos achados ou achados menos específicos.
+  **R:** Em contas com criptografia total (nível 2), a Auditoria de despesas não consegue analisar as descrições das despesas, então pode gerar menos achados ou achados menos específicos.
 
 ---
 
@@ -3765,7 +3752,7 @@ URL: https://ai-budget.pl/help/br/ai-response-mode/
 
 ## Visão geral
 
-A configuração **Estilo de resposta da IA** permite controlar o tom e o nível de detalhe de todo o conteúdo gerado pela IA no app. Ela afeta as respostas do Chat de IA, as Histórias dos gastos, os Insights de IA e os relatórios do Fat Finder.
+A configuração **Estilo de resposta da IA** permite controlar o tom e o nível de detalhe de todo o conteúdo gerado pela IA no app. Ela afeta as respostas do Chat de IA, as Histórias dos gastos, os Insights de IA e os relatórios da Auditoria de despesas.
 
 ## Como alterar
 
@@ -3827,7 +3814,7 @@ O modo de resposta muda o estilo de comunicação da IA em **todos os recursos d
 | **Chat de IA** | Tom, vocabulário e nível de detalhe das respostas |
 | **História dos gastos** | Estilo narrativo e complexidade das conclusões |
 | **Insights de IA** | Como as descrições dos gráficos e as sugestões são redigidas |
-| **Fat Finder** | Descrições dos achados e sugestões de ação |
+| **Auditoria de despesas** | Descrições dos achados e sugestões de ação |
 | **Metas de economia** | Linguagem do resumo do plano e dos conselhos |
 
 ## Persistência
@@ -4211,7 +4198,7 @@ Toque em **Redefinir tudo** na parte de baixo da tela para zerar todos os contro
 
 ---
 
-*Veja também: [Análises](./06-analytics.md) | [Fat Finder](./19-fat-finder.md) | [Metas de economia](./18-savings-goals.md)*
+*Veja também: [Análises](./06-analytics.md) | [Auditoria de despesas](./19-fat-finder.md) | [Metas de economia](./18-savings-goals.md)*
 
 ## Convidar amigos — Programa de indicação
 URL: https://ai-budget.pl/help/br/referral/
@@ -4508,7 +4495,7 @@ URL: https://ai-budget.pl/help/br/subscription-manager/
 
 ## O que é o Gerenciador de assinaturas?
 
-O Gerenciador de assinaturas é um controle dedicado aos seus pagamentos recorrentes. Diferente das transações, as assinaturas não são detectadas automaticamente — você as adiciona manualmente ou pelo botão **“Acompanhar esta assinatura”** em uma descoberta do Fat Finder.
+O Gerenciador de assinaturas é um controle dedicado aos seus pagamentos recorrentes. Diferente das transações, as assinaturas não são detectadas automaticamente — você as adiciona manualmente ou pelo botão **“Acompanhar esta assinatura”** em uma descoberta da Auditoria de despesas.
 
 
 Cada assinatura guarda:
@@ -4527,8 +4514,8 @@ Cada assinatura guarda:
 3. Preencha o nome, o valor, o ciclo de cobrança e a data da próxima renovação
 4. Toque em **Salvar**
 
-**Pelo Fat Finder:**
-Se o Fat Finder detectar uma cobrança recorrente, toque em **“Acompanhar esta assinatura”** no card da descoberta. O nome e o valor já vêm preenchidos — é só confirmar a data de renovação.
+**Pela Auditoria de despesas:**
+Se a Auditoria de despesas detectar uma cobrança recorrente, toque em **“Acompanhar esta assinatura”** no card da descoberta. O nome e o valor já vêm preenchidos — é só confirmar a data de renovação.
 
 ## Faixa de custo mensal
 

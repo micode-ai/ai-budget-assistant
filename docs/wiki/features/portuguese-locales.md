@@ -43,11 +43,11 @@ Brazilian user can keep their books in their own money.
   twice during the build: once in the bot lookup and once in `catalogLocale`.
 - `pt` and `br` copy is never copied from one to the other; the glossary decides terms. A URL is
   a "link" in both; "ligação" means a network connection only.
-- Plan names stay Free / Pro / Business. Brazil sees USD prices; there is no BRL price.
+- Plan names stay Free / Pro / Business. Brazil sees BRL prices once all four `_BRL` Stripe keys
+  exist (ABA-757). Feature names are translated: Fat Finder is "Auditoria de despesas", Financial
+  Wrapped is "Resumo do ano", in the app, help and landing alike.
 
 ## Known gaps
-- No BRL subscription prices, no pt/br blog articles, and no localized screenshots (the landing
-  shows English ones).
 - Report PDF labels have no pt/br. Exact-million counts hit ICU's `many` category and fall back to
   English (as es/fr already do).
 - A Breton-locale external tag `br` resolves to Brazilian Portuguese, on purpose.
@@ -55,3 +55,5 @@ Brazilian user can keep their books in their own money.
 ## History
 - [ABA-755](https://github.com/micode-ai/ai-budget-assistant/issues/793): both locales, BRL, help,
   site. Design: `docs/superpowers/specs/2026-11-14-portuguese-pt-br-locales-design.md`.
+- ABA-757 BRL prices, ABA-758 pt/br blog and localized screenshots.
+- [ABA-761](https://github.com/micode-ai/ai-budget-assistant/issues/799): post-launch review; ship-quality, calques and English feature names fixed.

@@ -1271,7 +1271,7 @@ const translations: Record<string, {
   pt: {
     sharedExpenseTitle: ({ accountName }) => `Nova despesa em «${accountName}»`,
     sharedExpenseBody: ({ creatorName, currencyCode, amount, description }) =>
-      `${creatorName} adicionou ${currencyCode} ${amount} para ${description}`,
+      `${creatorName} adicionou ${currencyCode} ${amount}: ${description}`,
     budgetThresholdTitle: ({ budgetName, threshold }) => `Orçamento «${budgetName}» a ${threshold}%`,
     budgetThresholdBody: ({ currencyCode, spent, total }) =>
       `Utilizou ${currencyCode} ${spent} de ${currencyCode} ${total}.`,
@@ -1383,7 +1383,7 @@ const translations: Record<string, {
   br: {
     sharedExpenseTitle: ({ accountName }) => `Nova despesa em “${accountName}”`,
     sharedExpenseBody: ({ creatorName, currencyCode, amount, description }) =>
-      `${creatorName} adicionou ${currencyCode} ${amount} para ${description}`,
+      `${creatorName} adicionou ${currencyCode} ${amount}: ${description}`,
     budgetThresholdTitle: ({ budgetName, threshold }) => `Orçamento “${budgetName}” em ${threshold}%`,
     budgetThresholdBody: ({ currencyCode, spent, total }) =>
       `${currencyCode} ${spent} de ${currencyCode} ${total} usados.`,

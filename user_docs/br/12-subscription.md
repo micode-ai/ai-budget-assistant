@@ -16,9 +16,9 @@ Os planos diferem nos limites de uso e no acesso aos recursos avançados de IA:
 | **Contas** | 3 | Até 5 | Ilimitadas |
 | **Membros por conta** | 1 | Até 5 | Ilimitados |
 | **Recursos essenciais** (registro, Chat de IA, voz, recibos) | Sim | Sim | Sim |
-| **IA avançada** (História dos gastos, Fat Finder, Insights de IA) | — | Sim | Sim |
+| **IA avançada** (História dos gastos, Auditoria de despesas, Insights de IA) | — | Sim | Sim |
 
-Todos os usuários (inclusive os do plano Free) têm: controle de despesas, Chat de IA, Entrada por voz, leitura de recibos, detecção de anomalias, relatórios em PDF/Excel, o resumo mensal no app, backups criptografados e todas as moedas. História dos gastos, Fat Finder e Insights de IA exigem Pro ou Business; os resumos automáticos por e-mail também são pagos - o resumo mensal por e-mail exige o Pro, e o resumo semanal exige o Business.
+Todos os usuários (inclusive os do plano Free) têm: controle de despesas, Chat de IA, Entrada por voz, leitura de recibos, detecção de anomalias, relatórios em PDF/Excel, o resumo mensal no app, backups criptografados e todas as moedas. História dos gastos, Auditoria de despesas e Insights de IA exigem Pro ou Business; os resumos automáticos por e-mail também são pagos - o resumo mensal por e-mail exige o Pro, e o resumo semanal exige o Business.
 
 ## Plano Free
 
@@ -34,7 +34,7 @@ Tudo o que o Free tem, com limites maiores:
 - **300 solicitações de IA por mês**
 - **Até 5 contas** — para finanças pessoais, compartilhadas e da empresa
 - **Até 5 membros por conta** — colabore com a família ou com a equipe
-- **Recursos avançados de IA** — História dos gastos, Fat Finder e Insights de IA
+- **Recursos avançados de IA** — História dos gastos, Auditoria de despesas e Insights de IA
 
 ### Período de teste grátis de 7 dias
 Experimente o Pro grátis por 7 dias. Cancele quando quiser antes do fim do período de teste para não ser cobrado.
@@ -53,18 +53,18 @@ Acompanhe seu uso de IA em **Configurações** > **Gerenciar plano**:
 - **Uso este mês** — mostra quantas solicitações de IA você já usou (por exemplo, “3 de 50”)
 - **Barra de progresso** — indicador visual do uso
 - É zerado no início de cada mês
-- **Indicador de uso de IA** — um contador compacto (por exemplo, “12/50 AI”) aparece em todas as telas com IA: Chat de IA, História dos gastos, Fat Finder, Análises (Insights de IA) e Insights de investimentos. Toque nele para ver sua assinatura.
+- **Indicador de uso de IA** — um contador compacto (por exemplo, “12/50 AI”) aparece em todas as telas com IA: Chat de IA, História dos gastos, Auditoria de despesas, Análises (Insights de IA) e Insights de investimentos. Toque nele para ver sua assinatura.
 
 ### Confirmação no primeiro uso
 
-Quando você usa pela primeira vez um recurso de IA mais caro (História dos gastos, Fat Finder, Insights de IA, Insights de investimentos), o app mostra uma caixa de confirmação com o custo e o seu saldo restante. Você pode escolher “Não perguntar de novo” para pular as próximas confirmações desse recurso.
+Quando você usa pela primeira vez um recurso de IA mais caro (História dos gastos, Auditoria de despesas, Insights de IA, Insights de investimentos), o app mostra uma caixa de confirmação com o custo e o seu saldo restante. Você pode escolher “Não perguntar de novo” para pular as próximas confirmações desse recurso.
 
 ### Detalhes de uso
 
 Toque em **Ver detalhes** na tela da assinatura para ver um detalhamento do seu uso de IA:
 
 - **Total usado** — total de solicitações de IA consumidas neste mês
-- **Por recurso** — quantas solicitações cada recurso usou (Chat de IA, Entrada por voz, Escaneamento de recibos, História dos gastos, Fat Finder etc.)
+- **Por recurso** — quantas solicitações cada recurso usou (Chat de IA, Entrada por voz, Escaneamento de recibos, História dos gastos, Auditoria de despesas etc.)
 - **Histórico** — registro cronológico de cada solicitação de IA, com data, hora e custo
 - **Navegação por mês** — consulte o uso dos meses anteriores
 
@@ -73,7 +73,7 @@ Toque em **Ver detalhes** na tela da assinatura para ver um detalhamento do seu 
 - Usar a **Entrada por voz** para adicionar uma despesa (1 solicitação)
 - **Escanear um recibo** (2 solicitações)
 - Gerar uma **História dos gastos** (3 solicitações)
-- Rodar o **Fat Finder** (3 solicitações)
+- Rodar a **Auditoria de despesas** (3 solicitações)
 - Obter **Insights de IA** na aba Análises (2 solicitações)
 - **Insights de investimentos** (2,5 solicitações)
 

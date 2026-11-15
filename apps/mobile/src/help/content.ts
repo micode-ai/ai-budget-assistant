@@ -220,19 +220,6 @@ Available actions:
 
 You can customize this strip: go to **Settings → Dashboard Widgets**, open the **Quick actions** section, toggle any action on or off, and drag the handles to reorder them. **Voice Income** and **Scan Invoice** are hidden by default — turn them on there if you track income by voice or invoice scan.
 
-## At the Shop
-
-When you open the app while you're standing in a store you've shopped at before, a card appears near the top of the Dashboard — for example, "You're at Biedronka." It shows:
-
-- **Still on your list** — the unchecked items from your active shopping list (up to five, with a count for anything beyond that).
-- **Safe to spend today** — today's Safe to Spend figure, so you know how much room you have before it affects the rest of the month.
-
-Tap the card to open your shopping list.
-
-The card only appears once the app recognizes the store from your past shopping there, so it won't show up on your very first visit to a new place — and once you leave, it clears the next time you open the app or come back to the Dashboard.
-
-> **Note:** This card needs location access. Turn on **Attach location to new expenses** in **Settings → Data & Reports → Location** — it's on by default unless you turned it off. Without it, the app never checks where you are, and this card never appears.
-
 ## Financial Health Score
 
 The **Financial Health Score** widget shows a single 0–100 score summarizing your overall financial health for the current month:
@@ -1161,7 +1148,7 @@ See what each child costs you, without any guessing.
 - **Totals:** the child screen (and a card on the Analytics tab) shows this month, this year and a category breakdown in your display currency. A total marked with ≈ includes an approximation because an exchange rate was missing; such amounts are left out rather than guessed. Planned expenses and split-bill receivables are not counted.
 - **800+ and coverage:** when an income looks like the 800+ benefit (for example "800+" or "rodzina 800" in the description) the app offers to mark it for a child. Coverage is the benefit received divided by what that child cost in the same period.
 - **Share card:** create a picture of a child's totals. The child's name is hidden by default; you can switch it on.
-- **Statement PDF (Pro, editors):** a "zestawienie" of a child's costs for a period of up to 24 months, with totals, a monthly and category breakdown, the list of expenses and the receipts. Every page carries a footer saying it was prepared in the app from data entered by the user, and the "data as of" time. It is a summary of your own records, not a legal document and not certified. It contains only what has reached the server, so the app syncs first and asks you to wait if something is still pending. It is not available on accounts with end-to-end encryption.
+- **Statement PDF (Pro, editors):** a summary of a child's costs for a period of up to 24 months, with totals, a monthly and category breakdown, the list of expenses and the receipts. Every page carries a footer saying it was prepared in the app from data entered by the user, and the "data as of" time. It is a summary of your own records, not a legal document and not certified. It contains only what has reached the server, so the app syncs first and asks you to wait if something is still pending. It is not available on accounts with end-to-end encryption.
 - **Separated parents:** keep the children on a personal account, so the other parent does not see your other spending. A shared account shows everything to all members.
 
 ## FAQ
@@ -5632,19 +5619,6 @@ iOS, Android, Web
 
 Вы можете настроить эту панель: перейдите в **Настройки → Виджеты главного экрана**, откройте раздел **Быстрые действия**, включите или отключите любые действия и перетащите ручки для изменения порядка. **Доход голосом** и **Сканировать счёт** скрыты по умолчанию — включите их там, если вы записываете доходы голосом или сканируя счета.
 
-## В магазине
-
-Когда вы открываете приложение, стоя в магазине, где уже делали покупки раньше, вверху Главной появляется карточка — например, «Вы в Biedronka». Она показывает:
-
-- **Ещё в вашем списке** — неотмеченные позиции из вашего активного списка покупок (до пяти, со счётчиком остальных).
-- **Безопасно потратить сегодня** — сегодняшнюю цифру Безопасных трат, чтобы вы знали, сколько ещё можно потратить, не влияя на остаток месяца.
-
-Нажмите на карточку, чтобы открыть список покупок.
-
-Карточка появляется только тогда, когда приложение узнаёт магазин по вашим прошлым покупкам там — поэтому при первом посещении нового места она не появится, а когда вы уйдёте из магазина, она исчезнет при следующем открытии приложения или возвращении на Главную.
-
-> **Примечание:** Для этой карточки нужен доступ к геолокации. Включите **Прикреплять локацию к новым расходам** в **Настройки → Данные и отчёты → Локация** — по умолчанию это включено, если вы не отключили. Без этого приложение никогда не проверяет, где вы находитесь, и карточка никогда не появится.
-
 ## Финансовое здоровье
 
 Виджет **Финансовое здоровье** показывает единый показатель от 0 до 100, отражающий общее состояние ваших финансов за текущий месяц:
@@ -6572,7 +6546,7 @@ iOS, Android, Web
 - **Итоги:** экран ребёнка (и карточка во вкладке «Аналитика») показывает этот месяц, этот год и разбивку по категориям в валюте отображения. Итог со знаком ≈ содержит приближение из-за отсутствия курса; такие суммы исключаются, а не угадываются. Запланированные расходы и долги по разделённым счетам не учитываются.
 - **800+ и покрытие:** если доход похож на пособие 800+ (например, «800+» или «rodzina 800» в описании), приложение предложит отметить его для ребёнка. Покрытие — полученное пособие, делённое на расходы на ребёнка за тот же период.
 - **Карточка для отправки:** картинка с итогами ребёнка. Имя скрыто по умолчанию; его можно включить.
-- **Выписка в PDF (Pro, редакторы):** «zestawienie» расходов на ребёнка за период до 24 месяцев: итоги, разбивка по месяцам и категориям, список расходов и чеки. На каждой странице есть сноска, что документ составлен в приложении по данным, введённым пользователем, и время «данные на». Это сводка ваших собственных записей, а не юридический документ и не заверена. В неё попадает только то, что дошло до сервера, поэтому приложение сначала синхронизируется и просит подождать, если что-то ещё не отправлено. Недоступна для аккаунтов со сквозным шифрованием.
+- **Выписка в PDF (Pro, редакторы):** сводка расходов на ребёнка за период до 24 месяцев: итоги, разбивка по месяцам и категориям, список расходов и чеки. На каждой странице есть сноска, что документ составлен в приложении по данным, введённым пользователем, и время «данные на». Это сводка ваших собственных записей, а не юридический документ и не заверена. В неё попадает только то, что дошло до сервера, поэтому приложение сначала синхронизируется и просит подождать, если что-то ещё не отправлено. Недоступна для аккаунтов со сквозным шифрованием.
 - **Разведённые родители:** держите детей на личном счёте, чтобы второй родитель не видел остальные ваши расходы. Общий счёт показывает всё всем участникам.
 
 ## Часто задаваемые вопросы
@@ -11021,19 +10995,6 @@ iOS, Android, Web
 
 Ви можете налаштувати цю панель: перейдіть до **Налаштування → Віджети головного екрану**, відкрийте розділ **Швидкі дії**, увімкніть або вимкніть будь-які дії та перетягніть ручки для зміни порядку. **Дохід голосом** і **Сканувати рахунок** приховані за замовчуванням — увімкніть їх там, якщо ви записуєте доходи голосом або скануючи рахунки.
 
-## У магазині
-
-Коли ви відкриваєте застосунок, стоячи в магазині, де вже робили покупки раніше, вгорі Головної з'являється картка — наприклад, «Ви у Biedronka». Вона показує:
-
-- **Ще у вашому списку** — невідмічені позиції з вашого активного списку покупок (до п'яти, з лічильником решти).
-- **Безпечно витратити сьогодні** — сьогоднішню цифру Безпечних витрат, щоб ви знали, скільки ще можна витратити, перш ніж це вплине на решту місяця.
-
-Натисніть на картку, щоб відкрити список покупок.
-
-Картка з'являється лише тоді, коли застосунок розпізнає магазин за вашими попередніми покупками там — тож під час першого відвідування нового місця вона не з'явиться, а коли ви підете з магазину, вона зникне під час наступного відкриття застосунку або повернення на Головну.
-
-> **Примітка:** Для цієї картки потрібен доступ до геолокації. Увімкніть **Прикріплювати локацію до нових витрат** у **Налаштування → Дані та звіти → Локація** — за замовчуванням це увімкнено, якщо ви не вимкнули. Без цього застосунок ніколи не перевіряє, де ви перебуваєте, і картка ніколи не з'явиться.
-
 ## Фінансове здоров'я
 
 Віджет **Фінансове здоров'я** показує єдиний показник від 0 до 100, що відображає загальний стан ваших фінансів за поточний місяць:
@@ -11961,7 +11922,7 @@ iOS, Android, Web
 - **Підсумки:** екран дитини (і картка у вкладці «Аналітика») показує цей місяць, цей рік і розбивку за категоріями у валюті відображення. Підсумок зі знаком ≈ містить наближення через відсутній курс; такі суми виключаються, а не вгадуються. Заплановані витрати та борги з розділених рахунків не враховуються.
 - **800+ і покриття:** якщо дохід схожий на допомогу 800+ (наприклад, «800+» чи «rodzina 800» в описі), застосунок запропонує позначити його для дитини. Покриття — отримана допомога, поділена на витрати на дитину за той самий період.
 - **Картка для поширення:** зображення з підсумками дитини. Ім'я приховане за замовчуванням; його можна ввімкнути.
-- **Виписка в PDF (Pro, редактори):** «zestawienie» витрат на дитину за період до 24 місяців: підсумки, розбивка за місяцями й категоріями, список витрат і чеки. На кожній сторінці є примітка, що документ складено в застосунку за даними, введеними користувачем, і час «дані станом на». Це зведення ваших власних записів, а не юридичний документ і не засвідчене. До нього потрапляє лише те, що дійшло до сервера, тож застосунок спершу синхронізується й просить зачекати, якщо щось ще не надіслано. Недоступна для акаунтів зі наскрізним шифруванням.
+- **Виписка в PDF (Pro, редактори):** зведення витрат на дитину за період до 24 місяців: підсумки, розбивка за місяцями й категоріями, список витрат і чеки. На кожній сторінці є примітка, що документ складено в застосунку за даними, введеними користувачем, і час «дані станом на». Це зведення ваших власних записів, а не юридичний документ і не засвідчене. До нього потрапляє лише те, що дійшло до сервера, тож застосунок спершу синхронізується й просить зачекати, якщо щось ще не надіслано. Недоступна для акаунтів зі наскрізним шифруванням.
 - **Розлучені батьки:** тримайте дітей на особистому рахунку, щоб другий з батьків не бачив решту ваших витрат. Спільний рахунок показує все всім учасникам.
 
 ## Часті запитання
@@ -16357,19 +16318,6 @@ Dostępne akcje:
 | **Przelewy** | Otwiera formularz przelewu między portfelami |
 
 Możesz dostosować ten pasek: przejdź do **Ustawienia → Widgety pulpitu**, otwórz sekcję **Szybkie akcje**, włącz lub wyłącz dowolne akcje i przeciągnij uchwyty, aby je przestawić. **Przychód głosowo** i **Skanuj fakturę** są domyślnie ukryte — włącz je tam, jeśli rejestrujesz przychody głosowo lub skanując faktury.
-
-## W sklepie
-
-Gdy otwierasz aplikację, stojąc w sklepie, w którym już wcześniej robiłeś zakupy, na górze Pulpitu pojawia się karta — na przykład „Jesteś w Biedronka." Pokazuje ona:
-
-- **Wciąż na Twojej liście** — nieodznaczone pozycje z Twojej aktywnej listy zakupów (do pięciu, z licznikiem pozostałych).
-- **Bezpieczne wydatki na dziś** — dzisiejszą kwotę Bezpiecznych wydatków, dzięki czemu wiesz, ile jeszcze możesz wydać, zanim wpłynie to na resztę miesiąca.
-
-Dotknij karty, aby otworzyć listę zakupów.
-
-Karta pojawia się dopiero, gdy aplikacja rozpozna sklep na podstawie Twoich wcześniejszych zakupów w nim — nie zobaczysz jej więc podczas pierwszej wizyty w nowym miejscu, a gdy wyjdziesz ze sklepu, karta zniknie przy następnym otwarciu aplikacji lub powrocie na Pulpit.
-
-> **Uwaga:** Ta karta wymaga dostępu do lokalizacji. Włącz **Dołączaj lokalizację do nowych wydatków** w **Ustawienia → Dane i raporty → Lokalizacja** — domyślnie jest to włączone, chyba że je wyłączysz. Bez tego aplikacja nigdy nie sprawdza, gdzie jesteś, i karta nigdy się nie pojawi.
 
 ## Kondycja Finansowa
 
@@ -21691,19 +21639,6 @@ Verfügbare Aktionen:
 
 Du kannst diese Leiste anpassen: Gehe zu **Einstellungen → Dashboard-Widgets**, öffne den Bereich **Schnellaktionen**, aktiviere oder deaktiviere beliebige Aktionen und ziehe die Griffe, um sie neu anzuordnen. **Einnahme per Sprache** und **Rechnung scannen** sind standardmäßig ausgeblendet — aktiviere sie dort, wenn du Einnahmen per Sprache oder Rechnungsscan erfasst.
 
-## Im Geschäft
-
-Wenn du die App öffnest, während du in einem Geschäft stehst, in dem du schon einmal eingekauft hast, erscheint oben auf der Übersicht eine Karte — zum Beispiel „Du bist bei Biedronka." Sie zeigt:
-
-- **Noch auf deiner Liste** — die noch nicht abgehakten Artikel deiner aktiven Einkaufsliste (bis zu fünf, mit einer Zahl für alle weiteren).
-- **Heute sicher ausgebbar** — deine heutige „Sicher ausgeben"-Zahl, damit du weißt, wie viel Spielraum dir noch bleibt, bevor es den Rest des Monats beeinflusst.
-
-Tippe auf die Karte, um deine Einkaufsliste zu öffnen.
-
-Die Karte erscheint erst, wenn die App das Geschäft anhand deiner bisherigen Einkäufe dort erkennt — beim allerersten Besuch eines neuen Ortes wird sie also noch nicht angezeigt. Wenn du das Geschäft verlässt, verschwindet sie, sobald du die App das nächste Mal öffnest oder zur Übersicht zurückkehrst.
-
-> **Hinweis:** Diese Karte benötigt Standortzugriff. Aktiviere **Standort an neue Ausgaben anhängen** unter **Einstellungen → Daten & Berichte → Standort** — standardmäßig ist das eingeschaltet, sofern du es nicht ausgeschaltet hast. Ohne diese Einstellung prüft die App nie, wo du dich befindest, und die Karte erscheint nie.
-
 ## Finanzielle Gesundheit
 
 Das Widget **Finanzielle Gesundheit** zeigt eine einzelne Punktzahl von 0–100, die Ihre finanzielle Gesundheit im aktuellen Monat zusammenfasst:
@@ -22631,7 +22566,7 @@ Sehen Sie, was jedes Kind kostet, ohne Raten.
 - **Summen:** Der Kind-Bildschirm (und eine Karte im Analyse-Tab) zeigt diesen Monat, dieses Jahr und die Kategorien in Ihrer Anzeigewährung. Eine Summe mit ≈ enthält eine Näherung, weil ein Wechselkurs fehlte; solche Beträge werden ausgelassen statt geschätzt. Geplante Ausgaben und Forderungen aus geteilten Rechnungen zählen nicht.
 - **800+ und Deckung:** Sieht eine Einnahme wie das Kindergeld 800+ aus (z. B. „800+“ oder „rodzina 800“ in der Beschreibung), bietet die App an, sie einem Kind zuzuordnen. Die Deckung ist das erhaltene Geld geteilt durch die Kosten des Kindes im selben Zeitraum.
 - **Teilen-Karte:** Ein Bild mit den Summen eines Kindes. Der Name ist standardmäßig ausgeblendet und kann eingeblendet werden.
-- **Aufstellung als PDF (Pro, Bearbeiter):** Eine „zestawienie“ der Kosten eines Kindes für bis zu 24 Monate mit Summen, Monats- und Kategorieübersicht, Ausgabenliste und Belegen. Jede Seite trägt eine Fußzeile, dass sie in der App aus vom Nutzer eingegebenen Daten erstellt wurde, und den Zeitpunkt „Datenstand“. Es ist eine Zusammenfassung Ihrer eigenen Aufzeichnungen, kein Rechtsdokument und nicht beglaubigt. Sie enthält nur, was den Server erreicht hat; die App synchronisiert zuerst und bittet um Geduld, wenn noch etwas aussteht. Nicht verfügbar bei Konten mit Ende-zu-Ende-Verschlüsselung.
+- **Aufstellung als PDF (Pro, Bearbeiter):** Eine Aufstellung der Kosten eines Kindes für bis zu 24 Monate mit Summen, Monats- und Kategorieübersicht, Ausgabenliste und Belegen. Jede Seite trägt eine Fußzeile, dass sie in der App aus vom Nutzer eingegebenen Daten erstellt wurde, und den Zeitpunkt „Datenstand“. Es ist eine Zusammenfassung Ihrer eigenen Aufzeichnungen, kein Rechtsdokument und nicht beglaubigt. Sie enthält nur, was den Server erreicht hat; die App synchronisiert zuerst und bittet um Geduld, wenn noch etwas aussteht. Nicht verfügbar bei Konten mit Ende-zu-Ende-Verschlüsselung.
 - **Getrennte Eltern:** Führen Sie die Kinder in einem persönlichen Konto, damit der andere Elternteil Ihre übrigen Ausgaben nicht sieht. Ein gemeinsames Konto zeigt allen Mitgliedern alles.
 
 ## FAQ
@@ -26999,19 +26934,6 @@ Acciones disponibles:
 
 Puedes personalizar esta barra: ve a **Ajustes → Widgets del panel**, abre la sección **Acciones rápidas**, activa o desactiva cualquier acción, y arrastra los controles para reordenarlas. **Ingreso por voz** y **Escanear factura** están ocultos por defecto — actívalos allí si registras ingresos por voz o escaneando facturas.
 
-## En la tienda
-
-Cuando abres la app mientras estás en una tienda en la que ya has comprado antes, aparece una tarjeta cerca de la parte superior del Panel — por ejemplo, "Estás en Biedronka." Muestra:
-
-- **Aún en tu lista** — los artículos sin marcar de tu lista de la compra activa (hasta cinco, con un contador para el resto).
-- **Gasto seguro hoy** — tu cifra de Gasto seguro de hoy, para que sepas cuánto margen te queda antes de que afecte al resto del mes.
-
-Toca la tarjeta para abrir tu lista de la compra.
-
-La tarjeta solo aparece cuando la app reconoce la tienda a partir de tus compras anteriores allí — no aparecerá en tu primera visita a un lugar nuevo, y cuando te vas, desaparece la próxima vez que abres la app o vuelves al Panel.
-
-> **Nota:** Esta tarjeta necesita acceso a la ubicación. Activa **Adjuntar ubicación a nuevos gastos** en **Ajustes → Datos e informes → Ubicación** — está activado de forma predeterminada salvo que lo hayas desactivado. Sin esto, la app nunca comprueba dónde estás, y la tarjeta nunca aparece.
-
 ## Salud Financiera
 
 El widget **Salud Financiera** muestra una puntuación única de 0–100 que resume tu salud financiera general del mes actual:
@@ -27939,7 +27861,7 @@ Vea lo que cuesta cada hijo, sin adivinar.
 - **Totales:** la pantalla del hijo (y una tarjeta en la pestaña Análisis) muestra este mes, este año y el desglose por categorías en su moneda de visualización. Un total con ≈ incluye una aproximación por falta de tipo de cambio; esos importes se excluyen en vez de adivinarse. Los gastos planificados y los cobros pendientes de cuentas divididas no cuentan.
 - **800+ y cobertura:** cuando un ingreso parece la ayuda 800+ (por ejemplo «800+» o «rodzina 800» en la descripción), la app propone marcarlo para un hijo. La cobertura es la ayuda recibida dividida entre lo que costó ese hijo en el mismo periodo.
 - **Tarjeta para compartir:** una imagen con los totales de un hijo. El nombre está oculto por defecto; puede mostrarlo.
-- **Informe PDF (Pro, editores):** una «zestawienie» de los costes de un hijo de hasta 24 meses, con totales, desglose mensual y por categorías, lista de gastos y recibos. Cada página lleva un pie que indica que se elaboró en la app a partir de datos introducidos por el usuario y la hora de «datos a fecha». Es un resumen de sus propios registros, no un documento legal ni certificado. Solo incluye lo que ha llegado al servidor, así que la app sincroniza primero y le pide esperar si algo está pendiente. No está disponible en cuentas con cifrado de extremo a extremo.
+- **Informe PDF (Pro, editores):** un resumen de los costes de un hijo de hasta 24 meses, con totales, desglose mensual y por categorías, lista de gastos y recibos. Cada página lleva un pie que indica que se elaboró en la app a partir de datos introducidos por el usuario y la hora de «datos a fecha». Es un resumen de sus propios registros, no un documento legal ni certificado. Solo incluye lo que ha llegado al servidor, así que la app sincroniza primero y le pide esperar si algo está pendiente. No está disponible en cuentas con cifrado de extremo a extremo.
 - **Padres separados:** mantengan a los hijos en una cuenta personal para que el otro progenitor no vea el resto de sus gastos. Una cuenta compartida lo muestra todo a todos los miembros.
 
 ## Preguntas frecuentes
@@ -32296,19 +32218,6 @@ Actions disponibles :
 
 Vous pouvez personnaliser cette barre : allez dans **Paramètres → Widgets du tableau de bord**, ouvrez la section **Actions rapides**, activez ou désactivez n'importe quelle action, et faites glisser les poignées pour les réordonner. **Revenu par voix** et **Scanner une facture** sont masqués par défaut — activez-les là si vous enregistrez vos revenus par voix ou en scannant des factures.
 
-## Au magasin
-
-Lorsque vous ouvrez l'application alors que vous êtes dans un magasin où vous avez déjà fait des achats, une carte apparaît en haut du Tableau de bord — par exemple, « Vous êtes chez Biedronka. » Elle affiche :
-
-- **Encore sur votre liste** — les articles non cochés de votre liste de courses active (jusqu'à cinq, avec un compteur pour le reste).
-- **Dépense sûre aujourd'hui** — votre chiffre de Dépense sûre du jour, pour savoir combien de marge il vous reste avant que cela n'affecte le reste du mois.
-
-Appuyez sur la carte pour ouvrir votre liste de courses.
-
-La carte n'apparaît que lorsque l'application reconnaît le magasin à partir de vos achats précédents à cet endroit — elle n'apparaîtra donc pas lors de votre toute première visite dans un nouvel endroit, et lorsque vous partez, elle disparaît à la prochaine ouverture de l'application ou lorsque vous revenez au Tableau de bord.
-
-> **Note :** Cette carte nécessite l'accès à la localisation. Activez **Joindre la localisation aux nouvelles dépenses** dans **Paramètres → Données et rapports → Localisation** — elle est activée par défaut, sauf si vous l'avez désactivée. Sans cela, l'application ne vérifie jamais où vous êtes, et cette carte n'apparaît jamais.
-
 ## Santé Financière
 
 Le widget **Santé Financière** affiche un score unique de 0 à 100 résumant votre santé financière globale pour le mois en cours :
@@ -33236,7 +33145,7 @@ Voyez ce que coûte chaque enfant, sans deviner.
 - **Totaux :** l'écran de l'enfant (et une carte dans l'onglet Analyses) affiche ce mois-ci, cette année et la répartition par catégories dans votre devise d'affichage. Un total marqué ≈ contient une approximation faute de taux de change ; ces montants sont exclus plutôt que devinés. Les dépenses planifiées et les créances de notes partagées ne comptent pas.
 - **800+ et couverture :** quand un revenu ressemble à l'allocation 800+ (par ex. « 800+ » ou « rodzina 800 » dans la description), l'app propose de le rattacher à un enfant. La couverture est l'allocation reçue divisée par ce que l'enfant a coûté sur la même période.
 - **Carte à partager :** une image des totaux d'un enfant. Son prénom est masqué par défaut ; vous pouvez l'afficher.
-- **Relevé PDF (Pro, éditeurs) :** une « zestawienie » des coûts d'un enfant sur 24 mois maximum, avec totaux, détail mensuel et par catégorie, liste des dépenses et tickets. Chaque page porte un pied de page indiquant qu'il a été établi dans l'app à partir de données saisies par l'utilisateur, ainsi que l'heure « données au ». C'est un récapitulatif de vos propres enregistrements, pas un document juridique, ni certifié. Il ne contient que ce qui a atteint le serveur ; l'app synchronise d'abord et vous demande d'attendre si quelque chose est en attente. Indisponible sur les comptes à chiffrement de bout en bout.
+- **Relevé PDF (Pro, éditeurs) :** un récapitulatif des coûts d'un enfant sur 24 mois maximum, avec totaux, détail mensuel et par catégorie, liste des dépenses et tickets. Chaque page porte un pied de page indiquant qu'il a été établi dans l'app à partir de données saisies par l'utilisateur, ainsi que l'heure « données au ». C'est un récapitulatif de vos propres enregistrements, pas un document juridique, ni certifié. Il ne contient que ce qui a atteint le serveur ; l'app synchronise d'abord et vous demande d'attendre si quelque chose est en attente. Indisponible sur les comptes à chiffrement de bout en bout.
 - **Parents séparés :** gardez les enfants sur un compte personnel pour que l'autre parent ne voie pas vos autres dépenses. Un compte partagé montre tout à tous les membres.
 
 ## FAQ
@@ -37591,19 +37500,6 @@ iOS, Android, Web
 
 Вы можаце наладзіць гэту панэль: перайдзіце ў **Налады → Віджэты галоўнага экрана**, адкрыйце раздзел **Хуткія дзеянні**, уключыце або выключыце любыя дзеянні і перацягніце ручкі для змены парадку. **Даход голасам** і **Сканаваць рахунак** схаваны па змаўчанні — уключыце іх там, калі вы запісваеце даходы голасам або скануючы рахункі.
 
-## У краме
-
-Калі вы адкрываеце праграму, стоячы ў краме, дзе ўжо рабілі пакупкі раней, уверсе Галоўнай з'яўляецца картка — напрыклад, «Вы ў Biedronka». Яна паказвае:
-
-- **Яшчэ ў вашым спісе** — неадзначаныя пазіцыі з вашага актыўнага спіса пакупак (да пяці, з лічыльнікам астатніх).
-- **Бяспечна патраціць сёння** — сённяшнюю лічбу Бяспечных выдаткаў, каб вы ведалі, колькі яшчэ можна патраціць, перш чым гэта паўплывае на рэшту месяца.
-
-Націсніце на картку, каб адкрыць спіс пакупак.
-
-Картка з'яўляецца толькі тады, калі праграма распазнае краму па вашых папярэдніх пакупках там — таму падчас першага наведвання новага месца яна не з'явіцца, а калі вы пойдзеце з крамы, яна знікне пры наступным адкрыцці праграмы ці вяртанні на Галоўную.
-
-> **Заўвага:** Для гэтай карткі патрэбны доступ да геалакацыі. Уключыце **Прымацоўваць лакацыю да новых выдаткаў** у **Налады → Даныя і справаздачы → Лакацыя** — па змаўчанні гэта ўключана, калі вы не выключылі. Без гэтага праграма ніколі не правярае, дзе вы знаходзіцеся, і картка ніколі не з'явіцца.
-
 ## Фінансавае здароўе
 
 Віджэт **Фінансавае здароўе** паказвае адзіны паказчык ад 0 да 100, які адлюстроўвае агульны стан вашых фінансаў за бягучы месяц:
@@ -38531,7 +38427,7 @@ iOS, Android, Web
 - **Вынікі:** экран дзіцяці (і картка ва ўкладцы «Аналітыка») паказвае гэты месяц, гэты год і разбіўку па катэгорыях у валюце адлюстравання. Вынік са знакам ≈ змяшчае набліжэнне праз адсутны курс; такія сумы выключаюцца, а не здагадваюцца. Запланаваныя выдаткі і даўгі па падзеленых рахунках не ўлічваюцца.
 - **800+ і пакрыццё:** калі даход падобны на дапамогу 800+ (напрыклад, «800+» ці «rodzina 800» у апісанні), праграма прапануе пазначыць яго для дзіцяці. Пакрыццё — атрыманая дапамога, падзеленая на выдаткі на дзіця за той самы перыяд.
 - **Картка для абагульвання:** малюнак з вынікамі дзіцяці. Імя схаванае па змоўчанні; яго можна ўключыць.
-- **Выпіска ў PDF (Pro, рэдактары):** «zestawienie» выдаткаў на дзіця за перыяд да 24 месяцаў: вынікі, разбіўка па месяцах і катэгорыях, спіс выдаткаў і чэкі. На кожнай старонцы ёсць заўвага, што дакумент складзены ў праграме па дадзеных, уведзеных карыстальнікам, і час «дадзеныя на». Гэта зводка вашых уласных запісаў, а не юрыдычны дакумент і не засведчана. У яе трапляе толькі тое, што дайшло да сервера, таму праграма спачатку сінхранізуецца і просіць пачакаць, калі нешта яшчэ не адпраўлена. Недаступная для акаўнтаў са скразным шыфраваннем.
+- **Выпіска ў PDF (Pro, рэдактары):** зводка выдаткаў на дзіця за перыяд да 24 месяцаў: вынікі, разбіўка па месяцах і катэгорыях, спіс выдаткаў і чэкі. На кожнай старонцы ёсць заўвага, што дакумент складзены ў праграме па дадзеных, уведзеных карыстальнікам, і час «дадзеныя на». Гэта зводка вашых уласных запісаў, а не юрыдычны дакумент і не засведчана. У яе трапляе толькі тое, што дайшло да сервера, таму праграма спачатку сінхранізуецца і просіць пачакаць, калі нешта яшчэ не адпраўлена. Недаступная для акаўнтаў са скразным шыфраваннем.
 - **Разведзеныя бацькі:** трымайце дзяцей на асабістым рахунку, каб другі з бацькоў не бачыў астатнія вашы выдаткі. Агульны рахунак паказвае ўсё ўсім удзельнікам.
 
 ## Частыя пытанні
@@ -42850,19 +42746,6 @@ Beschikbare acties:
 
 Je kunt deze balk aanpassen: ga naar **Instellingen → Dashboard-widgets**, open de sectie **Snelle acties**, zet acties aan of uit en sleep de handvatten om ze te herordenen. **Inkomsten via spraak** en **Factuur scannen** zijn standaard verborgen — schakel ze daar in als je inkomsten bijhoudt via spraak of factuurscan.
 
-## In de winkel
-
-Wanneer je de app opent terwijl je in een winkel staat waar je al eerder hebt gewinkeld, verschijnt er een kaart bovenaan het Dashboard — bijvoorbeeld "U bent bij Biedronka." Deze toont:
-
-- **Nog op uw lijst** — de niet-afgevinkte items van je actieve boodschappenlijst (tot vijf, met een teller voor de rest).
-- **Veilig te besteden vandaag** — je Veilig-uitgeven-cijfer van vandaag, zodat je weet hoeveel ruimte je nog hebt voordat het de rest van de maand beïnvloedt.
-
-Tik op de kaart om je boodschappenlijst te openen.
-
-De kaart verschijnt pas zodra de app de winkel herkent aan je eerdere aankopen daar — bij je allereerste bezoek aan een nieuwe plek zie je hem dus nog niet, en zodra je vertrekt, verdwijnt hij de volgende keer dat je de app opent of terugkeert naar het Dashboard.
-
-> **Let op:** Deze kaart heeft locatietoegang nodig. Zet **Locatie toevoegen aan nieuwe uitgaven** aan onder **Instellingen → Gegevens & rapporten → Locatie** — dit staat standaard aan, tenzij je het hebt uitgezet. Zonder deze instelling controleert de app nooit waar je bent, en verschijnt deze kaart nooit.
-
 ## Financiële gezondheidsscore
 
 De widget **Financiële gezondheidsscore** toont één score van 0–100 die je algehele financiële gezondheid voor de huidige maand samenvat:
@@ -43790,7 +43673,7 @@ Zie wat elk kind kost, zonder te gokken.
 - **Totalen:** het kindscherm (en een kaart op het tabblad Analyse) toont deze maand, dit jaar en de verdeling per categorie in uw weergavevaluta. Een totaal met ≈ bevat een benadering omdat een wisselkoers ontbrak; zulke bedragen worden weggelaten in plaats van geraden. Geplande uitgaven en vorderingen uit gedeelde rekeningen tellen niet mee.
 - **800+ en dekking:** lijkt een inkomen op de 800+-uitkering (bijvoorbeeld '800+' of 'rodzina 800' in de omschrijving), dan biedt de app aan het aan een kind te koppelen. Dekking is de ontvangen uitkering gedeeld door wat dat kind in dezelfde periode kostte.
 - **Deelkaart:** een afbeelding met de totalen van een kind. De naam is standaard verborgen; u kunt die tonen.
-- **Overzicht als PDF (Pro, bewerkers):** een 'zestawienie' van de kosten van een kind over maximaal 24 maanden, met totalen, maand- en categorieoverzicht, uitgavenlijst en bonnen. Elke pagina heeft een voettekst dat het in de app is opgesteld op basis van door de gebruiker ingevoerde gegevens, en het tijdstip 'gegevens per'. Het is een samenvatting van uw eigen administratie, geen juridisch document en niet gecertificeerd. Het bevat alleen wat de server heeft bereikt; de app synchroniseert eerst en vraagt u te wachten als er nog iets openstaat. Niet beschikbaar bij accounts met end-to-end-versleuteling.
+- **Overzicht als PDF (Pro, bewerkers):** een overzicht van de kosten van een kind over maximaal 24 maanden, met totalen, maand- en categorieoverzicht, uitgavenlijst en bonnen. Elke pagina heeft een voettekst dat het in de app is opgesteld op basis van door de gebruiker ingevoerde gegevens, en het tijdstip 'gegevens per'. Het is een samenvatting van uw eigen administratie, geen juridisch document en niet gecertificeerd. Het bevat alleen wat de server heeft bereikt; de app synchroniseert eerst en vraagt u te wachten als er nog iets openstaat. Niet beschikbaar bij accounts met end-to-end-versleuteling.
 - **Gescheiden ouders:** houd de kinderen op een persoonlijk account, zodat de andere ouder uw overige uitgaven niet ziet. Een gedeeld account toont alles aan alle leden.
 
 ## Veelgestelde vragen
@@ -48070,7 +47953,7 @@ De volledige API-referentie en een stapsgewijze handleiding (in het Engels, Pool
 16. Exportação e relatórios — relatórios em PDF/Excel/CSV, cópias de segurança, resumos por e-mail
 17. Dívidas e empréstimos — acompanhe o dinheiro que emprestou e que pediu emprestado, reembolsos e prazos
 18. Objetivos de poupança — planos de poupança com IA, com metas de contribuição e pontos de controlo
-19. Fat Finder — auditoria mensal das despesas para identificar desperdícios e sugerir poupanças
+19. Auditoria de despesas — auditoria mensal das despesas para identificar desperdícios e sugerir poupanças
 20. Modo de resposta da IA — personalize o estilo de comunicação da IA (Simples, Equilibrado, Especialista)
 
 ## Moedas suportadas
@@ -48235,19 +48118,6 @@ Ações disponíveis:
 
 Pode personalizar esta faixa: vá a **Definições → Widgets do painel**, abra a secção **Ações rápidas**, ative ou desative qualquer ação e arraste as pegas para as reordenar. **Receita por voz** e **Digitalizar fatura** estão ocultas por predefinição — ative-as aí se registar receitas por voz ou digitalizando faturas.
 
-## Na loja
-
-Quando abre a aplicação estando numa loja onde já fez compras antes, aparece um cartão perto do topo do Painel — por exemplo, «Está no Continente». O cartão mostra:
-
-- **Ainda na sua lista** — os artigos por assinalar da lista de compras ativa (até cinco, com a contagem dos restantes).
-- **Seguro para gastar hoje** — o valor de hoje do Seguro para gastar, para saber quanta margem tem antes de afetar o resto do mês.
-
-Toque no cartão para abrir a lista de compras.
-
-O cartão só aparece quando a aplicação reconhece a loja a partir das suas compras anteriores nesse local, por isso não aparece na primeira visita a um sítio novo — e, depois de sair, desaparece da próxima vez que abrir a aplicação ou voltar ao Painel.
-
-> **Nota:** Este cartão precisa de acesso à localização. Ative **Anexar localização às novas despesas** em **Definições → Dados e relatórios → Localização** — está ativo por predefinição, a menos que o tenha desativado. Sem isso, a aplicação nunca verifica onde está e este cartão nunca aparece.
-
 ## Pontuação de saúde financeira
 
 O widget **Pontuação de saúde financeira** mostra uma única pontuação de 0 a 100 que resume a saúde financeira global do mês em curso:
@@ -48317,17 +48187,17 @@ O widget **Património líquido** mostra o seu património total em todas as moe
 
 > **Nota:** O Património líquido só aparece depois de definir os saldos iniciais da carteira. Consulte Carteira e câmbio para os configurar.
 
-## Cartão Fat Finder
+## Cartão da Auditoria de despesas
 
-Por baixo da secção de dívidas, o cartão **Fat Finder** mostra um resumo da auditoria mensal das suas despesas:
+Por baixo da secção de dívidas, o cartão **Auditoria de despesas** mostra um resumo da auditoria mensal das suas despesas:
 
 - **Poupança potencial total** — quanto poderia poupar por mês (uma estimativa)
 - **3 principais conclusões** — uma lista rápida com pontos de gravidade e o valor de poupança de cada uma
-- **Ver relatório completo** — toque para abrir o ecrã detalhado do Fat Finder
+- **Ver relatório completo** — toque para abrir o ecrã detalhado da Auditoria de despesas
 
 Este cartão requer uma **subscrição Pro ou Business**. Quem está no plano Free vê uma sugestão de upgrade.
 
-> Consulte Fat Finder para o guia completo da funcionalidade.
+> Consulte Auditoria de despesas para o guia completo da funcionalidade.
 
 ## Calendário
 
@@ -48374,7 +48244,7 @@ Puxe para baixo em qualquer ponto do Painel para atualizar todos os dados e sinc
 
 ---
 
-*Ver também: Despesas e receitas | Carteira e câmbio | Fat Finder | Análise*
+*Ver também: Despesas e receitas | Carteira e câmbio | Auditoria de despesas | Análise*
 `,
     },
     {
@@ -49176,7 +49046,7 @@ Veja quanto lhe custa cada filho, sem adivinhar.
 - **Totais:** o ecrã do filho (e um cartão no separador Análise) mostra este mês, este ano e uma repartição por categoria na sua moeda de apresentação. Um total marcado com ≈ inclui uma aproximação porque faltava uma taxa de câmbio; esses montantes são deixados de fora em vez de serem adivinhados. As despesas planeadas e os valores a receber de contas divididas não são contados.
 - **800+ e cobertura:** quando uma receita parece ser o subsídio 800+ (por exemplo, «800+» ou «rodzina 800» na descrição), a aplicação propõe marcá-la para um filho. A cobertura é o subsídio recebido dividido pelo que esse filho custou no mesmo período.
 - **Cartão para partilhar:** crie uma imagem com os totais de um filho. O nome do filho fica oculto por predefinição; pode ativá-lo.
-- **Extrato em PDF (Pro, editores):** um «zestawienie» dos custos de um filho num período de até 24 meses, com totais, repartição mensal e por categoria, a lista de despesas e os talões. Cada página tem um rodapé a indicar que foi preparada na aplicação a partir de dados introduzidos pelo utilizador, e o momento a que os dados se referem. É um resumo dos seus próprios registos, não um documento legal nem certificado. Contém apenas o que já chegou ao servidor, por isso a aplicação sincroniza primeiro e pede-lhe que aguarde se ainda houver algo pendente. Não está disponível em contas com encriptação ponto a ponto.
+- **Extrato em PDF (Pro, editores):** um resumo dos custos de um filho num período de até 24 meses, com totais, repartição mensal e por categoria, a lista de despesas e os talões. Cada página tem um rodapé a indicar que foi preparada na aplicação a partir de dados introduzidos pelo utilizador, e o momento a que os dados se referem. É um resumo dos seus próprios registos, não um documento legal nem certificado. Contém apenas o que já chegou ao servidor, por isso a aplicação sincroniza primeiro e pede-lhe que aguarde se ainda houver algo pendente. Não está disponível em contas com encriptação ponto a ponto.
 - **Pais separados:** mantenha os filhos numa conta pessoal, para que o outro progenitor não veja os seus restantes gastos. Uma conta partilhada mostra tudo a todos os membros.
 
 ## Perguntas frequentes
@@ -50060,7 +49930,7 @@ Escolha o tema:
 
 ### Estilo de resposta da IA
 
-Controle a forma como a IA comunica consigo em todas as funcionalidades de IA (Chat, Histórias, Análises, Fat Finder, Objetivos):
+Controle a forma como a IA comunica consigo em todas as funcionalidades de IA (Chat, Histórias, Análises, Auditoria de despesas, Objetivos):
 
 | Modo | Descrição |
 |---|---|
@@ -50098,7 +49968,7 @@ Controle as secções que aparecem no Painel. Toque no interruptor junto a cada 
 | **Dívidas e empréstimos** | Resumo do que lhe devem e do que deve |
 | **Gráfico de lucro líquido** | Gráfico de linhas de 6 meses do lucro líquido (receitas − despesas) |
 | **Património líquido** | Património líquido total em todas as carteiras |
-| **Fat Finder (análises de IA)** | Auditoria mensal dos gastos com oportunidades de poupança |
+| **Auditoria de despesas (análises de IA)** | Auditoria mensal dos gastos com oportunidades de poupança |
 | **Calendário** | Grelha mensal com pontos de receitas e despesas |
 | **Objetivos** | O principal objetivo de poupança ativo, com barra de progresso |
 | **Saldos das carteiras** | Lista horizontal com os saldos das carteiras por moeda |
@@ -50221,9 +50091,9 @@ Os planos diferem nos limites de utilização e no acesso às funcionalidades de
 | **Contas** | 3 | Até 5 | Ilimitadas |
 | **Membros por conta** | 1 | Até 5 | Ilimitados |
 | **Funcionalidades essenciais** (registo, Chat de IA, voz, talões) | Sim | Sim | Sim |
-| **IA avançada** (História dos gastos, Fat Finder, Análises de IA) | — | Sim | Sim |
+| **IA avançada** (História dos gastos, Auditoria de despesas, Análises de IA) | — | Sim | Sim |
 
-Todos os utilizadores (incluindo os do plano Free) têm: registo de despesas, Chat de IA, Entrada por voz, leitura de talões, deteção de anomalias, relatórios em PDF/Excel, o resumo mensal na aplicação, cópias de segurança encriptadas e todas as moedas. A História dos gastos, o Fat Finder e as Análises de IA exigem Pro ou Business; os resumos automáticos por e-mail também são pagos - o resumo mensal por e-mail requer Pro e o resumo semanal requer Business.
+Todos os utilizadores (incluindo os do plano Free) têm: registo de despesas, Chat de IA, Entrada por voz, leitura de talões, deteção de anomalias, relatórios em PDF/Excel, o resumo mensal na aplicação, cópias de segurança encriptadas e todas as moedas. A História dos gastos, a Auditoria de despesas e as Análises de IA exigem Pro ou Business; os resumos automáticos por e-mail também são pagos - o resumo mensal por e-mail requer Pro e o resumo semanal requer Business.
 
 ## Plano Free
 
@@ -50239,7 +50109,7 @@ Tudo o que o Free inclui, com limites mais altos:
 - **300 pedidos de IA por mês**
 - **Até 5 contas** — para finanças pessoais, partilhadas e empresariais
 - **Até 5 membros por conta** — colabore com a família ou com a equipa
-- **Funcionalidades de IA avançadas** — História dos gastos, Fat Finder e Análises de IA
+- **Funcionalidades de IA avançadas** — História dos gastos, Auditoria de despesas e Análises de IA
 
 ### Período experimental gratuito de 7 dias
 Experimente o Pro gratuitamente durante 7 dias. Cancele a qualquer momento antes do fim do período experimental para evitar cobranças.
@@ -50258,18 +50128,18 @@ Acompanhe a utilização da IA em **Definições** > **Gerir plano**:
 - **Utilização este mês** — mostra quantos pedidos de IA já usou (por exemplo, «3 de 50»)
 - **Barra de progresso** — indicador visual da utilização
 - É reposta no início de cada mês
-- **Indicador de utilização de IA** — um contador compacto (por exemplo, «12/50 AI») aparece em todos os ecrãs com IA: Chat de IA, História dos gastos, Fat Finder, Análise (Análises de IA) e Análises de investimentos. Toque nele para ver a sua subscrição.
+- **Indicador de utilização de IA** — um contador compacto (por exemplo, «12/50 AI») aparece em todos os ecrãs com IA: Chat de IA, História dos gastos, Auditoria de despesas, Análise (Análises de IA) e Análises de investimentos. Toque nele para ver a sua subscrição.
 
 ### Confirmação na primeira utilização
 
-Quando usa pela primeira vez uma funcionalidade de IA mais dispendiosa (História dos gastos, Fat Finder, Análises de IA, Análises de investimentos), a aplicação mostra uma caixa de confirmação com o custo e o saldo restante. Pode escolher «Não perguntar novamente» para dispensar futuras confirmações dessa funcionalidade.
+Quando usa pela primeira vez uma funcionalidade de IA mais dispendiosa (História dos gastos, Auditoria de despesas, Análises de IA, Análises de investimentos), a aplicação mostra uma caixa de confirmação com o custo e o saldo restante. Pode escolher «Não perguntar novamente» para dispensar futuras confirmações dessa funcionalidade.
 
 ### Detalhes de utilização
 
 Toque em **Ver detalhes** no ecrã da subscrição para ver uma discriminação detalhada da utilização da IA:
 
 - **Total usado** — total de pedidos de IA consumidos este mês
-- **Por funcionalidade** — quantos pedidos usou cada funcionalidade (Chat de IA, Entrada por voz, Digitalização de talões, História dos gastos, Fat Finder, etc.)
+- **Por funcionalidade** — quantos pedidos usou cada funcionalidade (Chat de IA, Entrada por voz, Digitalização de talões, História dos gastos, Auditoria de despesas, etc.)
 - **Histórico** — registo cronológico de cada pedido de IA, com data, hora e custo
 - **Navegação por mês** — consulte a utilização dos meses anteriores
 
@@ -50278,7 +50148,7 @@ Toque em **Ver detalhes** no ecrã da subscrição para ver uma discriminação 
 - Usar a **Entrada por voz** para adicionar uma despesa (1 pedido)
 - **Digitalizar um talão** (2 pedidos)
 - Gerar uma **História dos gastos** (3 pedidos)
-- Executar o **Fat Finder** (3 pedidos)
+- Executar a **Auditoria de despesas** (3 pedidos)
 - Obter **Análises de IA** no separador Análise (2 pedidos)
 - **Análises de investimentos** (2,5 pedidos)
 
@@ -51173,25 +51043,25 @@ O histórico começa a partir da primeira vez que usa «Adicionar fundos» — a
 
 ---
 
-*Ver também: Chat de IA | Orçamentos | Fat Finder*
+*Ver também: Chat de IA | Orçamentos | Auditoria de despesas*
 `,
     },
     {
       id: '19-fat-finder',
-      title: `Fat Finder (auditoria de despesas)`,
+      title: `Auditoria de despesas`,
       description: `Uma auditoria mensal feita pela IA que analisa os seus gastos, identifica desperdícios — subscrições, extravagâncias recorrentes, serviços dispensáveis — e sugere cortes concretos com uma estimativa da poupança.`,
-      body: `# Fat Finder (auditoria de despesas)
+      body: `# Auditoria de despesas
 
 > Uma auditoria mensal feita pela IA que analisa os seus gastos, identifica desperdícios — subscrições, extravagâncias recorrentes, serviços dispensáveis — e sugere cortes concretos com uma estimativa da poupança.
 
 ## Visão geral
 
-O **Fat Finder** percorre 3 meses do seu histórico de transações, deteta padrões de consumo e gera um relatório que mostra onde poderia poupar. Cada constatação inclui montantes concretos, níveis de gravidade e sugestões práticas.
+A **Auditoria de despesas** percorre 3 meses do seu histórico de transações, deteta padrões de consumo e gera um relatório que mostra onde poderia poupar. Cada constatação inclui montantes concretos, níveis de gravidade e sugestões práticas.
 
 ## Como aceder
 
-- **Cartão no Painel** — mostra os resultados do Fat Finder guardados em cache no ecrã inicial. Toque para abrir o relatório completo e gerar uma análise nova.
-- **Navegação direta** — abra o ecrã do Fat Finder a partir do cartão no Painel
+- **Cartão no Painel** — mostra os resultados da Auditoria de despesas guardados em cache no ecrã inicial. Toque para abrir o relatório completo e gerar uma análise nova.
+- **Navegação direta** — abra o ecrã da Auditoria de despesas a partir do cartão no Painel
 
 ## Requisitos
 
@@ -51243,7 +51113,7 @@ Todos os montantes da auditoria são apresentados na sua **moeda de apresentaç�
 
 ## Cartão no Painel
 
-O cartão compacto do Fat Finder no ecrã inicial mostra:
+O cartão compacto da Auditoria de despesas no ecrã inicial mostra:
 - A poupança potencial total, em destaque
 - As 3 principais constatações, com pontos de gravidade e montantes de poupança
 - O botão **Ver relatório completo** para ver todos os detalhes
@@ -51252,7 +51122,7 @@ Se não forem encontradas constatações, verá a mensagem «Está tudo bem!».
 
 ## Perguntas frequentes
 
-- **P: Com que frequência devo consultar o Fat Finder?**
+- **P: Com que frequência devo consultar a Auditoria de despesas?**
   **R:** O relatório abrange o mês atual. Consulte-o uma vez por mês para obter as informações mais relevantes. Toque em **Gerar relatório de novo** para obter uma análise nova.
 
 - **P: Porque vejo constatações diferentes todos os meses?**
@@ -51262,7 +51132,7 @@ Se não forem encontradas constatações, verá a mensagem «Está tudo bem!».
   **R:** De momento, não é possível descartar constatações individuais. A IA faz sugestões — é o utilizador que decide quais seguir.
 
 - **P: Funciona com contas encriptadas?**
-  **R:** Nas contas com encriptação total (nível 2), o Fat Finder não consegue analisar as descrições das despesas, pelo que pode gerar menos constatações ou constatações menos específicas.
+  **R:** Nas contas com encriptação total (nível 2), a Auditoria de despesas não consegue analisar as descrições das despesas, pelo que pode gerar menos constatações ou constatações menos específicas.
 
 ---
 
@@ -51279,7 +51149,7 @@ Se não forem encontradas constatações, verá a mensagem «Está tudo bem!».
 
 ## Visão geral
 
-A definição **Estilo de resposta da IA** permite controlar o tom e o nível de detalhe de todo o conteúdo gerado pela IA na aplicação. Afeta as respostas do Chat de IA, as Histórias dos gastos, as Análises de IA e os relatórios do Fat Finder.
+A definição **Estilo de resposta da IA** permite controlar o tom e o nível de detalhe de todo o conteúdo gerado pela IA na aplicação. Afeta as respostas do Chat de IA, as Histórias dos gastos, as Análises de IA e os relatórios da Auditoria de despesas.
 
 ## Como alterar
 
@@ -51341,7 +51211,7 @@ O modo de resposta altera o estilo de comunicação da IA em **todas as funciona
 | **Chat de IA** | Tom, vocabulário e nível de detalhe das respostas |
 | **História dos gastos** | Estilo narrativo e complexidade das conclusões |
 | **Análises de IA** | Forma como são redigidas as descrições dos gráficos e as sugestões |
-| **Fat Finder** | Descrições das constatações e sugestões de ação |
+| **Auditoria de despesas** | Descrições das constatações e sugestões de ação |
 | **Objetivos de poupança** | Linguagem do resumo do plano e dos conselhos |
 
 ## Persistência
@@ -51738,7 +51608,7 @@ Toque em **Repor tudo** no fundo do ecrã para pôr todos os controlos e receita
 
 ---
 
-*Ver também: Análise | Fat Finder | Objetivos de poupança*
+*Ver também: Análise | Auditoria de despesas | Objetivos de poupança*
 `,
     },
     {
@@ -52053,7 +51923,7 @@ Os projetos agrupam despesas por objetivo ou atividade — trabalho para cliente
 
 ## O que é o Gestor de subscrições?
 
-O Gestor de subscrições é um registo dedicado aos seus pagamentos recorrentes. Ao contrário das transações, as subscrições não são detetadas automaticamente — adiciona-as manualmente ou através do botão **«Acompanhar esta subscrição»** numa descoberta do Fat Finder.
+O Gestor de subscrições é um registo dedicado aos seus pagamentos recorrentes. Ao contrário das transações, as subscrições não são detetadas automaticamente — adiciona-as manualmente ou através do botão **«Acompanhar esta subscrição»** numa descoberta da Auditoria de despesas.
 
 ![Ecrã Subscrições com o custo mensal e as renovações]({{IMG:subscriptions.jpg}})
 
@@ -52073,8 +51943,8 @@ Cada subscrição guarda:
 3. Preencha o nome, o valor, o ciclo de faturação e a data da próxima renovação
 4. Toque em **Guardar**
 
-**A partir do Fat Finder:**
-Se o Fat Finder detetar uma cobrança recorrente, toque em **«Acompanhar esta subscrição»** no cartão da descoberta. O nome e o valor ficam pré-preenchidos — basta confirmar a data de renovação.
+**A partir da Auditoria de despesas:**
+Se a Auditoria de despesas detetar uma cobrança recorrente, toque em **«Acompanhar esta subscrição»** no cartão da descoberta. O nome e o valor ficam pré-preenchidos — basta confirmar a data de renovação.
 
 ## Faixa do custo mensal
 
@@ -52279,15 +52149,15 @@ Pode ativar ou desativar as notificações push de anomalias em **Definições �
     },
     {
       id: '32-safe-to-spend',
-      title: `Planear com antecedência — Seguro para gastar, capacidade de compra e captura automática`,
+      title: `Planear com antecedência — Disponível para gastar, capacidade de compra e captura automática`,
       description: `Três ferramentas que trabalham em conjunto para gastar com confiança: um valor diário de orçamento sempre atualizado, a pergunta «posso pagar isto?» no chat e o registo automático de despesas a partir das notificações do banco (só Android).`,
-      body: `# Planear com antecedência — Seguro para gastar, capacidade de compra e captura automática
+      body: `# Planear com antecedência — Disponível para gastar, capacidade de compra e captura automática
 
 > Três ferramentas que trabalham em conjunto para gastar com confiança: um valor diário de orçamento sempre atualizado, a pergunta «posso pagar isto?» no chat e o registo automático de despesas a partir das notificações do banco (só Android).
 
-## Seguro para gastar hoje
+## Disponível para gastar hoje
 
-O destaque do ecrã inicial mostra o valor **Seguro para gastar** — uma estimativa do que pode gastar hoje sem deixar de cobrir todas as obrigações conhecidas até ao fim do mês.
+O destaque do ecrã inicial mostra o valor **Disponível para gastar** — uma estimativa do que pode gastar hoje sem deixar de cobrir todas as obrigações conhecidas até ao fim do mês.
 
 ### O que inclui
 
@@ -52301,7 +52171,7 @@ O valor é calculado a partir de:
 ### Fórmula
 
 \`\`\`
-Seguro para gastar = (Saldo da carteira + Receita esperada − Obrigações) ÷ Dias restantes
+Disponível para gastar = (Saldo da carteira + Receita esperada − Obrigações) ÷ Dias restantes
 \`\`\`
 
 O resultado nunca desce abaixo de zero — nunca verá um número negativo. Se as obrigações previstas ultrapassarem o saldo, o valor mostra 0 com uma nota explicativa.
@@ -52312,11 +52182,11 @@ Toque no valor para abrir um painel com o detalhe de cada componente: saldo da c
 
 ### Widget
 
-O Seguro para gastar está disponível como widget do ecrã inicial. Pode mostrá-lo ou ocultá-lo em **Definições → Widgets**.
+O valor Disponível para gastar também existe como widget do ecrã inicial. Pode mostrá-lo ou ocultá-lo em **Definições → Widgets**.
 
 ## Posso pagar isto? (Oráculo de capacidade de compra)
 
-Faça ao chat de IA uma pergunta como «Posso pagar um voo de 200 €?» ou «Posso comprar um portátil novo por 3500 zł?». O chat usa o mesmo motor do Seguro para gastar para dar uma resposta determinística de sim ou não — a IA apenas narra o veredito, nunca adivinha.
+Faça ao chat de IA uma pergunta como «Posso pagar um voo de 200 €?» ou «Posso comprar um portátil novo por 3500 zł?». O chat usa o mesmo motor do valor Disponível para gastar para dar uma resposta determinística de sim ou não — a IA apenas narra o veredito, nunca adivinha.
 
 Respostas possíveis:
 - **Sim** — o valor cabe no orçamento seguro para gastar de hoje.
@@ -52931,7 +52801,7 @@ O Escudo contra a inflação prevê para onde vão os preços das suas compras h
   - o produto e a velocidade a que está a subir (por exemplo, **+8%/mês**)
   - uma sugestão como **«Compre 4 unidades agora — poupe ~12 zł»**
   - a loja onde costuma comprá-lo
-  - um selo **«Comportável hoje»** quando comprar agora cabe no seu orçamento Seguro para gastar
+  - um selo **«Comportável hoje»** quando comprar agora cabe no seu orçamento Disponível para gastar
 
 ## Como funciona
 
@@ -53482,7 +53352,7 @@ A referência completa da API e um guia passo a passo (em inglês, polaco e russ
 16. Exportação e relatórios — relatórios em PDF/Excel/CSV, backups, resumos por e-mail
 17. Dívidas e empréstimos — acompanhe o dinheiro que você emprestou e que pegou emprestado, pagamentos e vencimentos
 18. Metas de economia — planos de economia com IA, com metas de contribuição e marcos de acompanhamento
-19. Fat Finder — auditoria mensal das despesas para identificar desperdícios e sugerir economias
+19. Auditoria de despesas — auditoria mensal das despesas para identificar desperdícios e sugerir economias
 20. Modo de resposta da IA — personalize o estilo de comunicação da IA (Simples, Equilibrado, Especialista)
 
 ## Moedas compatíveis
@@ -53647,19 +53517,6 @@ Ações disponíveis:
 
 Você pode personalizar essa faixa: vá em **Configurações → Widgets do painel**, abra a seção **Ações rápidas**, ative ou desative qualquer ação e arraste as alças para reordenar. **Receita por voz** e **Escanear fatura** ficam ocultas por padrão — ative-as ali se você registra receitas por voz ou escaneando faturas.
 
-## Na loja
-
-Quando você abre o app estando em uma loja onde já comprou antes, aparece um cartão perto do topo do Painel — por exemplo, “Você está no Carrefour”. Ele mostra:
-
-- **Ainda na sua lista** — os itens não marcados da sua lista de compras ativa (até cinco, com a contagem do restante).
-- **Livre para gastar hoje** — o valor de hoje do Livre para gastar, para você saber quanta folga tem antes de afetar o resto do mês.
-
-Toque no cartão para abrir sua lista de compras.
-
-O cartão só aparece quando o app reconhece a loja pelas suas compras anteriores ali, então ele não aparece na sua primeira visita a um lugar novo — e, depois que você sai, ele some na próxima vez que você abrir o app ou voltar ao Painel.
-
-> **Observação:** Este cartão precisa de acesso à localização. Ative **Anexar localização às novas despesas** em **Configurações → Dados e relatórios → Localização** — a opção vem ativada por padrão, a menos que você a tenha desativado. Sem ela, o app nunca verifica onde você está, e este cartão nunca aparece.
-
 ## Pontuação de saúde financeira
 
 O widget **Pontuação de saúde financeira** mostra uma única pontuação de 0 a 100 que resume a saúde das suas finanças no mês corrente:
@@ -53729,17 +53586,17 @@ O widget **Patrimônio líquido** mostra seu patrimônio total em todas as moeda
 
 > **Observação:** O Patrimônio líquido só aparece depois que você define os saldos iniciais da carteira. Veja Carteira e câmbio para configurá-los.
 
-## Cartão Fat Finder
+## Cartão da Auditoria de despesas
 
-Abaixo da seção de dívidas, o cartão **Fat Finder** mostra um resumo da auditoria mensal das suas despesas:
+Abaixo da seção de dívidas, o cartão **Auditoria de despesas** mostra um resumo da auditoria mensal das suas despesas:
 
 - **Economia potencial total** — quanto você poderia economizar por mês (uma estimativa)
 - **3 principais achados** — uma lista rápida com pontos de gravidade e o valor de economia de cada um
-- **Ver relatório completo** — toque para abrir a tela detalhada do Fat Finder
+- **Ver relatório completo** — toque para abrir a tela detalhada da Auditoria de despesas
 
 Este cartão exige uma **assinatura Pro ou Business**. Quem está no plano Free vê uma sugestão de upgrade.
 
-> Veja Fat Finder para o guia completo do recurso.
+> Veja Auditoria de despesas para o guia completo do recurso.
 
 ## Calendário
 
@@ -53786,7 +53643,7 @@ Puxe para baixo em qualquer ponto do Painel para atualizar todos os dados e sinc
 
 ---
 
-*Veja também: Despesas e receitas | Carteira e câmbio | Fat Finder | Análises*
+*Veja também: Despesas e receitas | Carteira e câmbio | Auditoria de despesas | Análises*
 `,
     },
     {
@@ -54588,7 +54445,7 @@ Veja quanto cada filho custa para você, sem achismo.
 - **Totais:** a tela do filho (e um cartão na aba Análises) mostra este mês, este ano e uma divisão por categoria na sua moeda de exibição. Um total marcado com ≈ inclui uma aproximação porque faltava uma cotação; esses valores são deixados de fora em vez de serem estimados. Despesas planejadas e valores a receber de contas divididas não são contados.
 - **800+ e cobertura:** quando uma receita parece ser o benefício 800+ (por exemplo, “800+” ou “rodzina 800” na descrição), o app oferece marcá-la para um filho. A cobertura é o benefício recebido dividido pelo que esse filho custou no mesmo período.
 - **Cartão para compartilhar:** crie uma imagem com os totais de um filho. O nome do filho fica oculto por padrão; você pode ativá-lo.
-- **Extrato em PDF (Pro, editores):** um “zestawienie” dos custos de um filho em um período de até 24 meses, com totais, divisão mensal e por categoria, a lista de despesas e os recibos. Cada página traz um rodapé dizendo que foi preparada no app a partir de dados inseridos pelo usuário, e o momento a que os dados se referem. É um resumo dos seus próprios registros, não um documento legal nem certificado. Contém apenas o que já chegou ao servidor, então o app sincroniza primeiro e pede que você aguarde se algo ainda estiver pendente. Não está disponível em contas com criptografia de ponta a ponta.
+- **Extrato em PDF (Pro, editores):** um resumo dos custos de um filho em um período de até 24 meses, com totais, divisão mensal e por categoria, a lista de despesas e os recibos. Cada página traz um rodapé dizendo que foi preparada no app a partir de dados inseridos pelo usuário, e o momento a que os dados se referem. É um resumo dos seus próprios registros, não um documento legal nem certificado. Contém apenas o que já chegou ao servidor, então o app sincroniza primeiro e pede que você aguarde se algo ainda estiver pendente. Não está disponível em contas com criptografia de ponta a ponta.
 - **Pais separados:** mantenha os filhos em uma conta pessoal, para que o outro genitor não veja seus demais gastos. Uma conta compartilhada mostra tudo para todos os membros.
 
 ## Perguntas frequentes
@@ -55472,7 +55329,7 @@ Escolha o tema:
 
 ### Estilo de resposta da IA
 
-Controle como a IA se comunica com você em todos os recursos de IA (Chat, Histórias, Insights, Fat Finder, Metas):
+Controle como a IA se comunica com você em todos os recursos de IA (Chat, Histórias, Insights, Auditoria de despesas, Metas):
 
 | Modo | Descrição |
 |---|---|
@@ -55510,7 +55367,7 @@ Controle quais seções aparecem no seu Painel. Toque na chave ao lado de cada w
 | **Dívidas e empréstimos** | Resumo do que devem a você e do que você deve |
 | **Gráfico de lucro líquido** | Gráfico de linhas de 6 meses do lucro líquido (receitas − despesas) |
 | **Patrimônio líquido** | Patrimônio líquido total somando todas as carteiras |
-| **Fat Finder (insights de IA)** | Auditoria mensal dos gastos com oportunidades de economia |
+| **Auditoria de despesas (insights de IA)** | Auditoria mensal dos gastos com oportunidades de economia |
 | **Calendário** | Grade mensal com pontos de receitas e despesas |
 | **Metas** | Sua principal meta de economia ativa, com barra de progresso |
 | **Saldos das carteiras** | Rolagem horizontal com os saldos das carteiras por moeda |
@@ -55633,9 +55490,9 @@ Os planos diferem nos limites de uso e no acesso aos recursos avançados de IA:
 | **Contas** | 3 | Até 5 | Ilimitadas |
 | **Membros por conta** | 1 | Até 5 | Ilimitados |
 | **Recursos essenciais** (registro, Chat de IA, voz, recibos) | Sim | Sim | Sim |
-| **IA avançada** (História dos gastos, Fat Finder, Insights de IA) | — | Sim | Sim |
+| **IA avançada** (História dos gastos, Auditoria de despesas, Insights de IA) | — | Sim | Sim |
 
-Todos os usuários (inclusive os do plano Free) têm: controle de despesas, Chat de IA, Entrada por voz, leitura de recibos, detecção de anomalias, relatórios em PDF/Excel, o resumo mensal no app, backups criptografados e todas as moedas. História dos gastos, Fat Finder e Insights de IA exigem Pro ou Business; os resumos automáticos por e-mail também são pagos - o resumo mensal por e-mail exige o Pro, e o resumo semanal exige o Business.
+Todos os usuários (inclusive os do plano Free) têm: controle de despesas, Chat de IA, Entrada por voz, leitura de recibos, detecção de anomalias, relatórios em PDF/Excel, o resumo mensal no app, backups criptografados e todas as moedas. História dos gastos, Auditoria de despesas e Insights de IA exigem Pro ou Business; os resumos automáticos por e-mail também são pagos - o resumo mensal por e-mail exige o Pro, e o resumo semanal exige o Business.
 
 ## Plano Free
 
@@ -55651,7 +55508,7 @@ Tudo o que o Free tem, com limites maiores:
 - **300 solicitações de IA por mês**
 - **Até 5 contas** — para finanças pessoais, compartilhadas e da empresa
 - **Até 5 membros por conta** — colabore com a família ou com a equipe
-- **Recursos avançados de IA** — História dos gastos, Fat Finder e Insights de IA
+- **Recursos avançados de IA** — História dos gastos, Auditoria de despesas e Insights de IA
 
 ### Período de teste grátis de 7 dias
 Experimente o Pro grátis por 7 dias. Cancele quando quiser antes do fim do período de teste para não ser cobrado.
@@ -55670,18 +55527,18 @@ Acompanhe seu uso de IA em **Configurações** > **Gerenciar plano**:
 - **Uso este mês** — mostra quantas solicitações de IA você já usou (por exemplo, “3 de 50”)
 - **Barra de progresso** — indicador visual do uso
 - É zerado no início de cada mês
-- **Indicador de uso de IA** — um contador compacto (por exemplo, “12/50 AI”) aparece em todas as telas com IA: Chat de IA, História dos gastos, Fat Finder, Análises (Insights de IA) e Insights de investimentos. Toque nele para ver sua assinatura.
+- **Indicador de uso de IA** — um contador compacto (por exemplo, “12/50 AI”) aparece em todas as telas com IA: Chat de IA, História dos gastos, Auditoria de despesas, Análises (Insights de IA) e Insights de investimentos. Toque nele para ver sua assinatura.
 
 ### Confirmação no primeiro uso
 
-Quando você usa pela primeira vez um recurso de IA mais caro (História dos gastos, Fat Finder, Insights de IA, Insights de investimentos), o app mostra uma caixa de confirmação com o custo e o seu saldo restante. Você pode escolher “Não perguntar de novo” para pular as próximas confirmações desse recurso.
+Quando você usa pela primeira vez um recurso de IA mais caro (História dos gastos, Auditoria de despesas, Insights de IA, Insights de investimentos), o app mostra uma caixa de confirmação com o custo e o seu saldo restante. Você pode escolher “Não perguntar de novo” para pular as próximas confirmações desse recurso.
 
 ### Detalhes de uso
 
 Toque em **Ver detalhes** na tela da assinatura para ver um detalhamento do seu uso de IA:
 
 - **Total usado** — total de solicitações de IA consumidas neste mês
-- **Por recurso** — quantas solicitações cada recurso usou (Chat de IA, Entrada por voz, Escaneamento de recibos, História dos gastos, Fat Finder etc.)
+- **Por recurso** — quantas solicitações cada recurso usou (Chat de IA, Entrada por voz, Escaneamento de recibos, História dos gastos, Auditoria de despesas etc.)
 - **Histórico** — registro cronológico de cada solicitação de IA, com data, hora e custo
 - **Navegação por mês** — consulte o uso dos meses anteriores
 
@@ -55690,7 +55547,7 @@ Toque em **Ver detalhes** na tela da assinatura para ver um detalhamento do seu 
 - Usar a **Entrada por voz** para adicionar uma despesa (1 solicitação)
 - **Escanear um recibo** (2 solicitações)
 - Gerar uma **História dos gastos** (3 solicitações)
-- Rodar o **Fat Finder** (3 solicitações)
+- Rodar a **Auditoria de despesas** (3 solicitações)
 - Obter **Insights de IA** na aba Análises (2 solicitações)
 - **Insights de investimentos** (2,5 solicitações)
 
@@ -56585,25 +56442,25 @@ O histórico começa a partir da primeira vez que você usa “Adicionar valor�
 
 ---
 
-*Veja também: Chat de IA | Orçamentos | Fat Finder*
+*Veja também: Chat de IA | Orçamentos | Auditoria de despesas*
 `,
     },
     {
       id: '19-fat-finder',
-      title: `Fat Finder (auditoria de despesas)`,
+      title: `Auditoria de despesas`,
       description: `Uma auditoria mensal feita pela IA que analisa seus gastos, identifica desperdícios — assinaturas, extravagâncias recorrentes, serviços desnecessários — e sugere cortes concretos com uma estimativa de economia.`,
-      body: `# Fat Finder (auditoria de despesas)
+      body: `# Auditoria de despesas
 
 > Uma auditoria mensal feita pela IA que analisa seus gastos, identifica desperdícios — assinaturas, extravagâncias recorrentes, serviços desnecessários — e sugere cortes concretos com uma estimativa de economia.
 
 ## Visão geral
 
-O **Fat Finder** examina 3 meses do seu histórico de transações, detecta padrões de consumo e gera um relatório mostrando onde você poderia economizar. Cada achado traz valores concretos, níveis de gravidade e sugestões práticas.
+A **Auditoria de despesas** examina 3 meses do seu histórico de transações, detecta padrões de consumo e gera um relatório mostrando onde você poderia economizar. Cada achado traz valores concretos, níveis de gravidade e sugestões práticas.
 
 ## Como acessar
 
-- **Cartão no Painel** — mostra os resultados do Fat Finder salvos em cache na tela inicial. Toque para abrir o relatório completo e gerar uma análise nova.
-- **Navegação direta** — abra a tela do Fat Finder pelo cartão no Painel
+- **Cartão no Painel** — mostra os resultados da Auditoria de despesas salvos em cache na tela inicial. Toque para abrir o relatório completo e gerar uma análise nova.
+- **Navegação direta** — abra a tela da Auditoria de despesas pelo cartão no Painel
 
 ## Requisitos
 
@@ -56655,7 +56512,7 @@ Todos os valores da auditoria aparecem na sua **moeda de exibição** — a esco
 
 ## Cartão no Painel
 
-O cartão compacto do Fat Finder na tela inicial mostra:
+O cartão compacto da Auditoria de despesas na tela inicial mostra:
 - A economia potencial total, em destaque
 - Os 3 principais achados, com pontos de gravidade e valores de economia
 - O botão **Ver relatório completo** para ver todos os detalhes
@@ -56664,7 +56521,7 @@ Se nenhum achado for encontrado, você verá a mensagem “Tudo certo!”.
 
 ## Perguntas frequentes
 
-- **P: Com que frequência devo consultar o Fat Finder?**
+- **P: Com que frequência devo consultar a Auditoria de despesas?**
   **R:** O relatório cobre o mês atual. Consulte uma vez por mês para ter as informações mais relevantes. Toque em **Gerar relatório de novo** para receber uma análise nova.
 
 - **P: Por que vejo achados diferentes a cada mês?**
@@ -56674,7 +56531,7 @@ Se nenhum achado for encontrado, você verá a mensagem “Tudo certo!”.
   **R:** No momento, não é possível descartar achados individuais. A IA dá sugestões — você decide quais seguir.
 
 - **P: Funciona com contas criptografadas?**
-  **R:** Em contas com criptografia total (nível 2), o Fat Finder não consegue analisar as descrições das despesas, então pode gerar menos achados ou achados menos específicos.
+  **R:** Em contas com criptografia total (nível 2), a Auditoria de despesas não consegue analisar as descrições das despesas, então pode gerar menos achados ou achados menos específicos.
 
 ---
 
@@ -56691,7 +56548,7 @@ Se nenhum achado for encontrado, você verá a mensagem “Tudo certo!”.
 
 ## Visão geral
 
-A configuração **Estilo de resposta da IA** permite controlar o tom e o nível de detalhe de todo o conteúdo gerado pela IA no app. Ela afeta as respostas do Chat de IA, as Histórias dos gastos, os Insights de IA e os relatórios do Fat Finder.
+A configuração **Estilo de resposta da IA** permite controlar o tom e o nível de detalhe de todo o conteúdo gerado pela IA no app. Ela afeta as respostas do Chat de IA, as Histórias dos gastos, os Insights de IA e os relatórios da Auditoria de despesas.
 
 ## Como alterar
 
@@ -56753,7 +56610,7 @@ O modo de resposta muda o estilo de comunicação da IA em **todos os recursos d
 | **Chat de IA** | Tom, vocabulário e nível de detalhe das respostas |
 | **História dos gastos** | Estilo narrativo e complexidade das conclusões |
 | **Insights de IA** | Como as descrições dos gráficos e as sugestões são redigidas |
-| **Fat Finder** | Descrições dos achados e sugestões de ação |
+| **Auditoria de despesas** | Descrições dos achados e sugestões de ação |
 | **Metas de economia** | Linguagem do resumo do plano e dos conselhos |
 
 ## Persistência
@@ -57150,7 +57007,7 @@ Toque em **Redefinir tudo** na parte de baixo da tela para zerar todos os contro
 
 ---
 
-*Veja também: Análises | Fat Finder | Metas de economia*
+*Veja também: Análises | Auditoria de despesas | Metas de economia*
 `,
     },
     {
@@ -57465,7 +57322,7 @@ Os projetos agrupam despesas por objetivo ou atividade — trabalho para cliente
 
 ## O que é o Gerenciador de assinaturas?
 
-O Gerenciador de assinaturas é um controle dedicado aos seus pagamentos recorrentes. Diferente das transações, as assinaturas não são detectadas automaticamente — você as adiciona manualmente ou pelo botão **“Acompanhar esta assinatura”** em uma descoberta do Fat Finder.
+O Gerenciador de assinaturas é um controle dedicado aos seus pagamentos recorrentes. Diferente das transações, as assinaturas não são detectadas automaticamente — você as adiciona manualmente ou pelo botão **“Acompanhar esta assinatura”** em uma descoberta da Auditoria de despesas.
 
 ![Tela Assinaturas com o custo mensal e as renovações]({{IMG:subscriptions.jpg}})
 
@@ -57485,8 +57342,8 @@ Cada assinatura guarda:
 3. Preencha o nome, o valor, o ciclo de cobrança e a data da próxima renovação
 4. Toque em **Salvar**
 
-**Pelo Fat Finder:**
-Se o Fat Finder detectar uma cobrança recorrente, toque em **“Acompanhar esta assinatura”** no card da descoberta. O nome e o valor já vêm preenchidos — é só confirmar a data de renovação.
+**Pela Auditoria de despesas:**
+Se a Auditoria de despesas detectar uma cobrança recorrente, toque em **“Acompanhar esta assinatura”** no card da descoberta. O nome e o valor já vêm preenchidos — é só confirmar a data de renovação.
 
 ## Faixa de custo mensal
 

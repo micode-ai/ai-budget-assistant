@@ -4,7 +4,7 @@
 
 ## O que é o Gestor de subscrições?
 
-O Gestor de subscrições é um registo dedicado aos seus pagamentos recorrentes. Ao contrário das transações, as subscrições não são detetadas automaticamente — adiciona-as manualmente ou através do botão **«Acompanhar esta subscrição»** numa descoberta do Fat Finder.
+O Gestor de subscrições é um registo dedicado aos seus pagamentos recorrentes. Ao contrário das transações, as subscrições não são detetadas automaticamente — adiciona-as manualmente ou através do botão **«Acompanhar esta subscrição»** numa descoberta da Auditoria de despesas.
 
 ![Ecrã Subscrições com o custo mensal e as renovações](../img/subscriptions.jpg)
 
@@ -24,8 +24,8 @@ Cada subscrição guarda:
 3. Preencha o nome, o valor, o ciclo de faturação e a data da próxima renovação
 4. Toque em **Guardar**
 
-**A partir do Fat Finder:**
-Se o Fat Finder detetar uma cobrança recorrente, toque em **«Acompanhar esta subscrição»** no cartão da descoberta. O nome e o valor ficam pré-preenchidos — basta confirmar a data de renovação.
+**A partir da Auditoria de despesas:**
+Se a Auditoria de despesas detetar uma cobrança recorrente, toque em **«Acompanhar esta subscrição»** no cartão da descoberta. O nome e o valor ficam pré-preenchidos — basta confirmar a data de renovação.
 
 ## Faixa do custo mensal
 

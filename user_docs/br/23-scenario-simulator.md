@@ -105,4 +105,4 @@ Toque em **Redefinir tudo** na parte de baixo da tela para zerar todos os contro
 
 ---
 
-*Veja também: [Análises](./06-analytics.md) | [Fat Finder](./19-fat-finder.md) | [Metas de economia](./18-savings-goals.md)*
+*Veja também: [Análises](./06-analytics.md) | [Auditoria de despesas](./19-fat-finder.md) | [Metas de economia](./18-savings-goals.md)*

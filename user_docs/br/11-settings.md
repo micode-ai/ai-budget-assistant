@@ -87,7 +87,7 @@ Escolha o tema:
 
 ### Estilo de resposta da IA
 
-Controle como a IA se comunica com você em todos os recursos de IA (Chat, Histórias, Insights, Fat Finder, Metas):
+Controle como a IA se comunica com você em todos os recursos de IA (Chat, Histórias, Insights, Auditoria de despesas, Metas):
 
 | Modo | Descrição |
 |---|---|
@@ -125,7 +125,7 @@ Controle quais seções aparecem no seu [Painel](./02-dashboard.md). Toque na ch
 | **Dívidas e empréstimos** | Resumo do que devem a você e do que você deve |
 | **Gráfico de lucro líquido** | Gráfico de linhas de 6 meses do lucro líquido (receitas − despesas) |
 | **Patrimônio líquido** | Patrimônio líquido total somando todas as carteiras |
-| **Fat Finder (insights de IA)** | Auditoria mensal dos gastos com oportunidades de economia |
+| **Auditoria de despesas (insights de IA)** | Auditoria mensal dos gastos com oportunidades de economia |
 | **Calendário** | Grade mensal com pontos de receitas e despesas |
 | **Metas** | Sua principal meta de economia ativa, com barra de progresso |
 | **Saldos das carteiras** | Rolagem horizontal com os saldos das carteiras por moeda |

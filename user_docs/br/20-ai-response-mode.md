@@ -4,7 +4,7 @@
 
 ## Visão geral
 
-A configuração **Estilo de resposta da IA** permite controlar o tom e o nível de detalhe de todo o conteúdo gerado pela IA no app. Ela afeta as respostas do Chat de IA, as Histórias dos gastos, os Insights de IA e os relatórios do Fat Finder.
+A configuração **Estilo de resposta da IA** permite controlar o tom e o nível de detalhe de todo o conteúdo gerado pela IA no app. Ela afeta as respostas do Chat de IA, as Histórias dos gastos, os Insights de IA e os relatórios da Auditoria de despesas.
 
 ## Como alterar
 
@@ -66,7 +66,7 @@ O modo de resposta muda o estilo de comunicação da IA em **todos os recursos d
 | **Chat de IA** | Tom, vocabulário e nível de detalhe das respostas |
 | **História dos gastos** | Estilo narrativo e complexidade das conclusões |
 | **Insights de IA** | Como as descrições dos gráficos e as sugestões são redigidas |
-| **Fat Finder** | Descrições dos achados e sugestões de ação |
+| **Auditoria de despesas** | Descrições dos achados e sugestões de ação |
 | **Metas de economia** | Linguagem do resumo do plano e dos conselhos |
 
 ## Persistência

@@ -105,4 +105,4 @@ Toque em **Repor tudo** no fundo do ecrã para pôr todos os controlos e receita
 
 ---
 
-*Ver também: [Análise](./06-analytics.md) | [Fat Finder](./19-fat-finder.md) | [Objetivos de poupança](./18-savings-goals.md)*
+*Ver também: [Análise](./06-analytics.md) | [Auditoria de despesas](./19-fat-finder.md) | [Objetivos de poupança](./18-savings-goals.md)*

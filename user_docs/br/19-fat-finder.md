@@ -1,15 +1,15 @@
-# Fat Finder (auditoria de despesas)
+# Auditoria de despesas
 
 > Uma auditoria mensal feita pela IA que analisa seus gastos, identifica desperdícios — assinaturas, extravagâncias recorrentes, serviços desnecessários — e sugere cortes concretos com uma estimativa de economia.
 
 ## Visão geral
 
-O **Fat Finder** examina 3 meses do seu histórico de transações, detecta padrões de consumo e gera um relatório mostrando onde você poderia economizar. Cada achado traz valores concretos, níveis de gravidade e sugestões práticas.
+A **Auditoria de despesas** examina 3 meses do seu histórico de transações, detecta padrões de consumo e gera um relatório mostrando onde você poderia economizar. Cada achado traz valores concretos, níveis de gravidade e sugestões práticas.
 
 ## Como acessar
 
-- **Cartão no Painel** — mostra os resultados do Fat Finder salvos em cache na tela inicial. Toque para abrir o relatório completo e gerar uma análise nova.
-- **Navegação direta** — abra a tela do Fat Finder pelo cartão no Painel
+- **Cartão no Painel** — mostra os resultados da Auditoria de despesas salvos em cache na tela inicial. Toque para abrir o relatório completo e gerar uma análise nova.
+- **Navegação direta** — abra a tela da Auditoria de despesas pelo cartão no Painel
 
 ## Requisitos
 
@@ -61,7 +61,7 @@ Todos os valores da auditoria aparecem na sua **moeda de exibição** — a esco
 
 ## Cartão no Painel
 
-O cartão compacto do Fat Finder na tela inicial mostra:
+O cartão compacto da Auditoria de despesas na tela inicial mostra:
 - A economia potencial total, em destaque
 - Os 3 principais achados, com pontos de gravidade e valores de economia
 - O botão **Ver relatório completo** para ver todos os detalhes
@@ -70,7 +70,7 @@ Se nenhum achado for encontrado, você verá a mensagem “Tudo certo!”.
 
 ## Perguntas frequentes
 
-- **P: Com que frequência devo consultar o Fat Finder?**
+- **P: Com que frequência devo consultar a Auditoria de despesas?**
   **R:** O relatório cobre o mês atual. Consulte uma vez por mês para ter as informações mais relevantes. Toque em **Gerar relatório de novo** para receber uma análise nova.
 
 - **P: Por que vejo achados diferentes a cada mês?**
@@ -80,7 +80,7 @@ Se nenhum achado for encontrado, você verá a mensagem “Tudo certo!”.
   **R:** No momento, não é possível descartar achados individuais. A IA dá sugestões — você decide quais seguir.
 
 - **P: Funciona com contas criptografadas?**
-  **R:** Em contas com criptografia total (nível 2), o Fat Finder não consegue analisar as descrições das despesas, então pode gerar menos achados ou achados menos específicos.
+  **R:** Em contas com criptografia total (nível 2), a Auditoria de despesas não consegue analisar as descrições das despesas, então pode gerar menos achados ou achados menos específicos.
 
 ---
 

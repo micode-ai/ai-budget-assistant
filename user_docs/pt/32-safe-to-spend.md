@@ -1,10 +1,10 @@
-# Planear com antecedência — Seguro para gastar, capacidade de compra e captura automática
+# Planear com antecedência — Disponível para gastar, capacidade de compra e captura automática
 
 > Três ferramentas que trabalham em conjunto para gastar com confiança: um valor diário de orçamento sempre atualizado, a pergunta «posso pagar isto?» no chat e o registo automático de despesas a partir das notificações do banco (só Android).
 
-## Seguro para gastar hoje
+## Disponível para gastar hoje
 
-O destaque do ecrã inicial mostra o valor **Seguro para gastar** — uma estimativa do que pode gastar hoje sem deixar de cobrir todas as obrigações conhecidas até ao fim do mês.
+O destaque do ecrã inicial mostra o valor **Disponível para gastar** — uma estimativa do que pode gastar hoje sem deixar de cobrir todas as obrigações conhecidas até ao fim do mês.
 
 ### O que inclui
 
@@ -18,7 +18,7 @@ O valor é calculado a partir de:
 ### Fórmula
 
 ```
-Seguro para gastar = (Saldo da carteira + Receita esperada − Obrigações) ÷ Dias restantes
+Disponível para gastar = (Saldo da carteira + Receita esperada − Obrigações) ÷ Dias restantes
 ```
 
 O resultado nunca desce abaixo de zero — nunca verá um número negativo. Se as obrigações previstas ultrapassarem o saldo, o valor mostra 0 com uma nota explicativa.
@@ -29,11 +29,11 @@ Toque no valor para abrir um painel com o detalhe de cada componente: saldo da c
 
 ### Widget
 
-O Seguro para gastar está disponível como widget do ecrã inicial. Pode mostrá-lo ou ocultá-lo em **Definições → Widgets**.
+O valor Disponível para gastar também existe como widget do ecrã inicial. Pode mostrá-lo ou ocultá-lo em **Definições → Widgets**.
 
 ## Posso pagar isto? (Oráculo de capacidade de compra)
 
-Faça ao chat de IA uma pergunta como «Posso pagar um voo de 200 €?» ou «Posso comprar um portátil novo por 3500 zł?». O chat usa o mesmo motor do Seguro para gastar para dar uma resposta determinística de sim ou não — a IA apenas narra o veredito, nunca adivinha.
+Faça ao chat de IA uma pergunta como «Posso pagar um voo de 200 €?» ou «Posso comprar um portátil novo por 3500 zł?». O chat usa o mesmo motor do valor Disponível para gastar para dar uma resposta determinística de sim ou não — a IA apenas narra o veredito, nunca adivinha.
 
 Respostas possíveis:
 - **Sim** — o valor cabe no orçamento seguro para gastar de hoje.
