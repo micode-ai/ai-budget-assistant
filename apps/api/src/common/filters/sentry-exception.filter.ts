@@ -10,6 +10,7 @@ export class SentryExceptionFilter extends BaseExceptionFilter {
   }
 
   catch(exception: unknown, host: ArgumentsHost) {
+    exception = asClientHttpException(exception);
     const status =
       exception instanceof HttpException
         ? exception.getStatus()
@@ -21,6 +22,25 @@ export class SentryExceptionFilter extends BaseExceptionFilter {
 
     super.catch(exception, host);
   }
+}
+
+/**
+ * Express middleware (body-parser above all) rejects a bad request with an `http-errors` object,
+ * not a Nest `HttpException`: an unsupported `Content-Encoding` is a 415, malformed JSON a 400, an
+ * oversized body a 413. Unconverted, this filter read every one of them as a 500 — answering the
+ * client with a server error and reporting a scanner's brotli POST to Sentry as an incident.
+ * Only a 4xx the library marked `expose` is converted; anything else keeps the 500 path.
+ */
+export function asClientHttpException(exception: unknown): unknown {
+  if (exception instanceof HttpException || !(exception instanceof Error)) return exception;
+  const { status, statusCode, expose } = exception as Error & {
+    status?: unknown;
+    statusCode?: unknown;
+    expose?: unknown;
+  };
+  const code = typeof status === 'number' ? status : statusCode;
+  if (expose !== true || typeof code !== 'number' || code < 400 || code >= 500) return exception;
+  return new HttpException(exception.message, code);
 }
 
 /**

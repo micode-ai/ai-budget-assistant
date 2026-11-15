@@ -64,6 +64,13 @@ workflow watch — and therefore what they *cannot* see: a missing column makes 
 
 ## Invariants
 
+**A request rejected by Express middleware keeps its own 4xx.** body-parser throws an
+`http-errors` object (415 unsupported `Content-Encoding`, 400 malformed JSON, 413 oversized body),
+not an `HttpException`, and `SentryExceptionFilter` once read all of them as 500s — answering the
+client with a server error and reporting a scanner's brotli POST to Sentry as an incident.
+`asClientHttpException` converts an error with a 4xx status **and** `expose: true` before the
+status is computed; anything else still reports as a 500 (ABA-759).
+
 **`AccountContextGuard` is a guard, not middleware**, even though it lives in
 `common/middleware/account-context.middleware.ts` and both this page and `CLAUDE.md` called it
 middleware for months. There is no `AccountContextMiddleware` class anywhere in the repo. It is

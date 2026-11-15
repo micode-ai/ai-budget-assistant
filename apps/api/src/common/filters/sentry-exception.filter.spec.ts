@@ -62,3 +62,48 @@ describe('SentryExceptionFilter admin feed', () => {
     expect(superCatch).toHaveBeenCalledTimes(2);
   });
 });
+
+describe('SentryExceptionFilter client errors raised before Nest routing', () => {
+  let superCatch: jest.SpyInstance;
+  beforeEach(() => {
+    jest.clearAllMocks();
+    superCatch = jest
+      .spyOn(Object.getPrototypeOf(SentryExceptionFilter.prototype), 'catch')
+      .mockImplementation(() => undefined);
+  });
+  afterEach(() => superCatch.mockRestore());
+
+  // Shape of the http-errors object body-parser throws (Sentry 2026-11-14: a scanner POSTed a
+  // brotli body to /webhook and it was reported, and answered, as a 500).
+  function bodyParserError(status: number, message: string, type: string) {
+    return Object.assign(new Error(message), { status, statusCode: status, expose: true, type });
+  }
+
+  it('answers an unsupported content encoding with its own 415 and does not report it', () => {
+    const gw = { emitError: jest.fn() };
+    new SentryExceptionFilter(gw as any).catch(
+      bodyParserError(415, 'unsupported content encoding "br"', 'encoding.unsupported'),
+      host('/webhook'),
+    );
+    expect(Sentry.captureException).not.toHaveBeenCalled();
+    expect(gw.emitError).not.toHaveBeenCalled();
+    const forwarded = superCatch.mock.calls[0][0];
+    expect(forwarded).toBeInstanceOf(HttpException);
+    expect(forwarded.getStatus()).toBe(415);
+  });
+
+  it('answers malformed JSON with 400', () => {
+    new SentryExceptionFilter().catch(
+      bodyParserError(400, 'Unexpected token } in JSON', 'entity.parse.failed'),
+      host(),
+    );
+    expect(Sentry.captureException).not.toHaveBeenCalled();
+    expect(superCatch.mock.calls[0][0].getStatus()).toBe(400);
+  });
+
+  it('still reports an error that carries a 4xx status but is not marked safe to expose', () => {
+    const e = Object.assign(new Error('internal'), { status: 404 });
+    new SentryExceptionFilter().catch(e, host());
+    expect(Sentry.captureException).toHaveBeenCalledTimes(1);
+  });
+});
