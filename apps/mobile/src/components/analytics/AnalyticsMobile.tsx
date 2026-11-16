@@ -15,6 +15,8 @@ import { useAnalyticsScreenData } from '@/features/analytics/useAnalyticsScreenD
 import { useSavingsDetail } from '@/hooks/useSavingsDetail';
 import { useChildrenMonthTotals } from '@/features/children/useChildCosts';
 import { ChildrenAnalyticsCard } from '@/components/children/ChildrenAnalyticsCard';
+import { VehiclesAnalyticsCard } from '@/components/vehicles/VehiclesAnalyticsCard';
+import { useVehicles } from '@/features/vehicles/useVehicles';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -65,6 +67,7 @@ export function AnalyticsMobile() {
 
   const savingsDetail = useSavingsDetail();
   const childTotals = useChildrenMonthTotals({ activeOnly: true });
+  const { vehicles } = useVehicles();
   const handleOpenSavings = (kind: 'discount' | 'deposit') =>
     savingsDetail.open(kind, drillDownParams.startDate, drillDownParams.endDate);
 
@@ -124,6 +127,7 @@ export function AnalyticsMobile() {
         {childTotals.active.length > 0 && (
           <ChildrenAnalyticsCard rows={childTotals.active} currency={childTotals.currency} variant="section" />
         )}
+        {vehicles.length > 0 && <VehiclesAnalyticsCard vehicles={vehicles} variant="section" />}
         {tagSpending.length > 0 && <TagBreakdown tagSpending={tagSpending} currency={currency} />}
         {projectSpending.length > 0 && <ProjectBreakdown projectSpending={projectSpending} currency={currency} />}
         {dayOfWeekSpending.some((d) => d.totalAmount > 0) && <DayOfWeekSection dayOfWeekSpending={dayOfWeekSpending} />}

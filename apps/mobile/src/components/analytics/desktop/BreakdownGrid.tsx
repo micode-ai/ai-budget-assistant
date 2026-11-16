@@ -16,6 +16,8 @@ import { useDrillParent } from '@/features/analytics/useDrillParent';
 import { BreakdownCard, type BreakdownRow } from './BreakdownCard';
 import { ChildrenAnalyticsCard } from '@/components/children/ChildrenAnalyticsCard';
 import type { ChildMonthRow } from '@/features/children/useChildCosts';
+import { VehiclesAnalyticsCard } from '@/components/vehicles/VehiclesAnalyticsCard';
+import type { Vehicle } from '@budget/shared-types';
 
 function categoryToRows(categorySpending: CategorySpending[]): BreakdownRow[] {
   return categorySpending.map((c, index) => ({
@@ -101,6 +103,8 @@ export interface BreakdownGridProps {
   childRows?: ChildMonthRow[];
   /** The children's totals' currency (the display currency, not the Analytics filter). */
   childCurrency?: string;
+  /** The account's vehicles; the "Vehicles" tile (ABA-806) shows only when non-empty. */
+  vehicles?: Vehicle[];
 }
 
 /**
@@ -130,6 +134,7 @@ export function BreakdownGrid({
   incomeByCategory,
   childRows = [],
   childCurrency,
+  vehicles = [],
 }: BreakdownGridProps) {
   const { t } = useTranslation();
   const styles = useStyles(createStyles);
@@ -170,6 +175,9 @@ export function BreakdownGrid({
     // A list, not a donut: no share-of-total column, which would invite comparing children.
     ...(childRows.length > 0 ? [{ key: 'children', title: t('childCosts.analyticsTitle'), rows: [],
       render: () => <ChildrenAnalyticsCard rows={childRows} currency={childCurrency ?? currency} variant="card" />,
+    }] : []),
+    ...(vehicles.length > 0 ? [{ key: 'vehicles', title: t('vehicles.analyticsTitle'), rows: [],
+      render: () => <VehiclesAnalyticsCard vehicles={vehicles} variant="card" />,
     }] : []),
   ];
 

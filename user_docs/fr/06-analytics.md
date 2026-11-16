@@ -173,6 +173,10 @@ Voyez ce que coûte chaque enfant, sans deviner.
 - **Relevé PDF (Pro, éditeurs) :** un récapitulatif des coûts d'un enfant sur 24 mois maximum, avec totaux, détail mensuel et par catégorie, liste des dépenses et tickets. Chaque page porte un pied de page indiquant qu'il a été établi dans l'app à partir de données saisies par l'utilisateur, ainsi que l'heure « données au ». C'est un récapitulatif de vos propres enregistrements, pas un document juridique, ni certifié. Il ne contient que ce qui a atteint le serveur ; l'app synchronise d'abord et vous demande d'attendre si quelque chose est en attente. Indisponible sur les comptes à chiffrement de bout en bout.
 - **Parents séparés :** gardez les enfants sur un compte personnel pour que l'autre parent ne voie pas vos autres dépenses. Un compte partagé montre tout à tous les membres.
 
+## Frais de voiture
+
+Si le compte a un véhicule, la carte **Véhicules** montre ce que chacun a coûté sur les 12 derniers mois, la moyenne mensuelle et les deux plus gros types de frais (par exemple carburant et assurance). Elle ne suit pas le filtre de période ci-dessus. Touchez un véhicule ou **Détails** pour ouvrir Réglages → Véhicules, où vous marquez aussi les frais — voir [Réglages](./11-settings.md).
+
 ## FAQ
 
 - **Q : Pourquoi ne vois-je aucun graphique ?**

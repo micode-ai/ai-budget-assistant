@@ -16,6 +16,7 @@ existing expense. `GET /vehicles/:id/stats` answers "what does the car cost me":
 - Shared types: `packages/shared-types/src/entities/vehicle.ts`
 - Tests: `apps/api/src/modules/vehicles/fuel-stats.util.spec.ts`, `vehicles.service.spec.ts`
 - Mobile: `src/components/vehicles/VehiclesSettings.tsx` (route `app/settings/vehicles.tsx`, registry key `vehicles`),
+  `src/components/vehicles/VehiclesAnalyticsCard.tsx` (Analytics tab, ABA-806),
   `src/components/expenses/detail/FuelSection.tsx`, `src/features/vehicles/` (`useVehicles`, `vehicleDisplay`), `src/services/vehicles.api.ts`
 
 ## Key concepts
@@ -40,6 +41,11 @@ drawn only when the account has a vehicle or the expense already has a fill-up, 
 
 **Bulk** ([ABA-805](https://github.com/micode-ai/ai-budget-assistant/issues/843)): `POST /vehicles/:id/costs/bulk` takes a whole transactions-list selection in one request
 (one-by-one trips the proxy rate limit), as person-made costs, skipping fill-ups.
+
+**On Analytics** ([ABA-806](https://github.com/micode-ai/ai-budget-assistant/issues/844)): `VehiclesAnalyticsCard` lists each vehicle
+with its `ownership` total (last 12 months, never the Analytics period filter), the monthly figure and its two largest kinds, linking to
+Settings → Vehicles. Phone: a section after the children card; desktop: a `BreakdownGrid` secondary tile beside Children. A row still
+loading reads "—", never 0.
 
 **Fuel without litres** ([ABA-804](https://github.com/micode-ai/ai-budget-assistant/issues/842)): `VehicleCost` kind `fuel` is a purchase known only by its amount — it counts in
 `ownership.byKind.fuel` and never in consumption, which needs a `FuelLog`.
@@ -66,3 +72,4 @@ prefill; a trend chart from `series`; community-price comparison; mileage in the
 ## History
 
 The API (Vehicle + FuelLog, the full-tank method) came first; [ABA-796](https://github.com/micode-ai/ai-budget-assistant/issues/834) added the screens and display-currency costs.
+[ABA-806](https://github.com/micode-ai/ai-budget-assistant/issues/844) put the vehicles on the Analytics tab and corrected the settings hint (the expense section is "Car", litres optional).

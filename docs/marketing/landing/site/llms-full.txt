@@ -4528,6 +4528,10 @@ See what each child costs you, without any guessing.
 - **Statement PDF (Pro, editors):** a summary of a child's costs for a period of up to 24 months, with totals, a monthly and category breakdown, the list of expenses and the receipts. Every page carries a footer saying it was prepared in the app from data entered by the user, and the "data as of" time. It is a summary of your own records, not a legal document and not certified. It contains only what has reached the server, so the app syncs first and asks you to wait if something is still pending. It is not available on accounts with end-to-end encryption.
 - **Separated parents:** keep the children on a personal account, so the other parent does not see your other spending. A shared account shows everything to all members.
 
+## Car costs
+
+When the account has a vehicle, the **Vehicles** card shows what each one cost over the last 12 months, the average per month, and the two largest kinds of cost (for example fuel and insurance). It does not follow the period filter above. Tap a vehicle or **Details** to open Settings → Vehicles, where you also mark costs — see [Settings](./11-settings.md).
+
 ## FAQ
 
 - **Q: Why don't I see any charts?**

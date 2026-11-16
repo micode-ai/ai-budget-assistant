@@ -18,6 +18,7 @@ import { CashFlowForecastCard } from '../CashFlowForecastCard';
 import { YearOverYearCard } from '../YearOverYearCard';
 import { SpendingCalendarCard } from '../SpendingCalendarCard';
 import { BreakdownGrid } from './BreakdownGrid';
+import { useVehicles } from '@/features/vehicles/useVehicles';
 import { useChildrenMonthTotals } from '@/features/children/useChildCosts';
 import { TopItemsCard } from './TopItemsCard';
 import { InsightsCluster } from './InsightsCluster';
@@ -119,6 +120,7 @@ export function AnalyticsDesktop() {
     drillDownParams,
   } = useAnalyticsScreenData();
   const childTotals = useChildrenMonthTotals({ activeOnly: true });
+  const { vehicles } = useVehicles();
 
   // Task 7: both dialogs are a single boolean/optional slot, mirroring
   // `ExpensesDesktop`'s `selectedRowId`/`createKind` state — only one of
@@ -220,6 +222,7 @@ export function AnalyticsDesktop() {
                 incomeByCategory={incomeByCategory}
                 childRows={childTotals.active}
                 childCurrency={childTotals.currency}
+            vehicles={vehicles}
               />
 
               {itemBreakdown.length > 0 && <TopItemsCard itemBreakdown={itemBreakdown} currency={currency} />}

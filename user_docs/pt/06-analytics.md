@@ -173,6 +173,10 @@ Veja quanto lhe custa cada filho, sem adivinhar.
 - **Extrato em PDF (Pro, editores):** um resumo dos custos de um filho num período de até 24 meses, com totais, repartição mensal e por categoria, a lista de despesas e os talões. Cada página tem um rodapé a indicar que foi preparada na aplicação a partir de dados introduzidos pelo utilizador, e o momento a que os dados se referem. É um resumo dos seus próprios registos, não um documento legal nem certificado. Contém apenas o que já chegou ao servidor, por isso a aplicação sincroniza primeiro e pede-lhe que aguarde se ainda houver algo pendente. Não está disponível em contas com encriptação ponto a ponto.
 - **Pais separados:** mantenha os filhos numa conta pessoal, para que o outro progenitor não veja os seus restantes gastos. Uma conta partilhada mostra tudo a todos os membros.
 
+## Custos do carro
+
+Se a conta tiver um veículo, o cartão **Veículos** mostra quanto custou cada um nos últimos 12 meses, a média mensal e os dois maiores tipos de custo (por exemplo, combustível e seguro). Não segue o filtro de período acima. Toque num veículo ou em **Detalhes** para abrir Definições → Veículos, onde também marca os custos — veja [Definições](./11-settings.md).
+
 ## Perguntas frequentes
 
 - **P: Porque é que não vejo nenhum gráfico?**

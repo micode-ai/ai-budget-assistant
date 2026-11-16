@@ -173,6 +173,10 @@ Zie wat elk kind kost, zonder te gokken.
 - **Overzicht als PDF (Pro, bewerkers):** een overzicht van de kosten van een kind over maximaal 24 maanden, met totalen, maand- en categorieoverzicht, uitgavenlijst en bonnen. Elke pagina heeft een voettekst dat het in de app is opgesteld op basis van door de gebruiker ingevoerde gegevens, en het tijdstip 'gegevens per'. Het is een samenvatting van uw eigen administratie, geen juridisch document en niet gecertificeerd. Het bevat alleen wat de server heeft bereikt; de app synchroniseert eerst en vraagt u te wachten als er nog iets openstaat. Niet beschikbaar bij accounts met end-to-end-versleuteling.
 - **Gescheiden ouders:** houd de kinderen op een persoonlijk account, zodat de andere ouder uw overige uitgaven niet ziet. Een gedeeld account toont alles aan alle leden.
 
+## Autokosten
+
+Heeft het account een voertuig, dan toont de kaart **Voertuigen** wat elk de laatste 12 maanden kostte, het maandgemiddelde en de twee grootste kostensoorten (bijvoorbeeld brandstof en verzekering). Ze volgt het periodefilter hierboven niet. Tik op een voertuig of **Details** om Instellingen → Voertuigen te openen, waar je ook kosten markeert — zie [Instellingen](./11-settings.md).
+
 ## Veelgestelde vragen
 
 - **V: Waarom zie ik geen grafieken?**

@@ -1189,6 +1189,10 @@ See what each child costs you, without any guessing.
 - **Statement PDF (Pro, editors):** a summary of a child's costs for a period of up to 24 months, with totals, a monthly and category breakdown, the list of expenses and the receipts. Every page carries a footer saying it was prepared in the app from data entered by the user, and the "data as of" time. It is a summary of your own records, not a legal document and not certified. It contains only what has reached the server, so the app syncs first and asks you to wait if something is still pending. It is not available on accounts with end-to-end encryption.
 - **Separated parents:** keep the children on a personal account, so the other parent does not see your other spending. A shared account shows everything to all members.
 
+## Car costs
+
+When the account has a vehicle, the **Vehicles** card shows what each one cost over the last 12 months, the average per month, and the two largest kinds of cost (for example fuel and insurance). It does not follow the period filter above. Tap a vehicle or **Details** to open Settings → Vehicles, where you also mark costs — see Settings.
+
 ## FAQ
 
 - **Q: Why don't I see any charts?**
@@ -6651,6 +6655,10 @@ iOS, Android, Web
 - **Выписка в PDF (Pro, редакторы):** сводка расходов на ребёнка за период до 24 месяцев: итоги, разбивка по месяцам и категориям, список расходов и чеки. На каждой странице есть сноска, что документ составлен в приложении по данным, введённым пользователем, и время «данные на». Это сводка ваших собственных записей, а не юридический документ и не заверена. В неё попадает только то, что дошло до сервера, поэтому приложение сначала синхронизируется и просит подождать, если что-то ещё не отправлено. Недоступна для аккаунтов со сквозным шифрованием.
 - **Разведённые родители:** держите детей на личном счёте, чтобы второй родитель не видел остальные ваши расходы. Общий счёт показывает всё всем участникам.
 
+## Расходы на машину
+
+Если в счёте есть машина, карточка **Машины** показывает, во сколько каждая обошлась за последние 12 месяцев, среднее в месяц и два самых крупных вида расходов (например, топливо и страховка). Фильтр периода выше на неё не влияет. Нажмите на машину или **Подробнее**, чтобы открыть Настройки → Машины, где расходы и отмечаются, — см. Настройки.
+
 ## Часто задаваемые вопросы
 
 - **В: Почему я не вижу графиков?**
@@ -12091,6 +12099,10 @@ iOS, Android, Web
 - **Виписка в PDF (Pro, редактори):** зведення витрат на дитину за період до 24 місяців: підсумки, розбивка за місяцями й категоріями, список витрат і чеки. На кожній сторінці є примітка, що документ складено в застосунку за даними, введеними користувачем, і час «дані станом на». Це зведення ваших власних записів, а не юридичний документ і не засвідчене. До нього потрапляє лише те, що дійшло до сервера, тож застосунок спершу синхронізується й просить зачекати, якщо щось ще не надіслано. Недоступна для акаунтів зі наскрізним шифруванням.
 - **Розлучені батьки:** тримайте дітей на особистому рахунку, щоб другий з батьків не бачив решту ваших витрат. Спільний рахунок показує все всім учасникам.
 
+## Витрати на авто
+
+Якщо в рахунку є автомобіль, картка **Автомобілі** показує, скільки коштував кожен за останні 12 місяців, середнє на місяць і два найбільші види витрат (наприклад, пальне й страховка). Фільтр періоду вище на неї не впливає. Натисніть на авто або **Докладніше**, щоб відкрити Налаштування → Автомобілі, де витрати й позначаються, — див. Налаштування.
+
 ## Часті запитання
 
 - **П:** Чому я не бачу жодних графіків?
@@ -17479,6 +17491,10 @@ Sprawdź, ile kosztuje Cię każde dziecko, bez zgadywania.
 - **Zestawienie PDF (Pro, edytorzy):** „zestawienie” kosztów dziecka za okres do 24 miesięcy: sumy, podział miesięczny i na kategorie, lista wydatków i paragony. Każda strona ma stopkę, że zestawienie sporządzono w aplikacji na podstawie danych wprowadzonych przez użytkownika, oraz czas „stan danych na”. To podsumowanie Twoich własnych zapisów, nie dokument prawny i nie jest poświadczone. Zawiera tylko to, co dotarło na serwer, więc aplikacja najpierw synchronizuje i prosi o chwilę czekania, jeśli coś jeszcze oczekuje. Niedostępne na kontach z szyfrowaniem end-to-end.
 - **Rodzice w separacji:** trzymajcie dzieci na koncie osobistym, aby drugi rodzic nie widział pozostałych Twoich wydatków. Konto wspólne pokazuje wszystko wszystkim członkom.
 
+## Koszty auta
+
+Gdy konto ma pojazd, karta **Pojazdy** pokazuje, ile każdy kosztował w ostatnich 12 miesiącach, średnią miesięczną i dwa największe rodzaje kosztów (np. paliwo i ubezpieczenie). Nie podlega filtrowi okresu powyżej. Stuknij pojazd lub **Szczegóły**, aby otworzyć Ustawienia → Pojazdy, gdzie też oznaczasz koszty — zobacz Ustawienia.
+
 ## FAQ
 
 - **P: Dlaczego nie widze zadnych wykresow?**
@@ -22863,6 +22879,10 @@ Sehen Sie, was jedes Kind kostet, ohne Raten.
 - **Aufstellung als PDF (Pro, Bearbeiter):** Eine Aufstellung der Kosten eines Kindes für bis zu 24 Monate mit Summen, Monats- und Kategorieübersicht, Ausgabenliste und Belegen. Jede Seite trägt eine Fußzeile, dass sie in der App aus vom Nutzer eingegebenen Daten erstellt wurde, und den Zeitpunkt „Datenstand“. Es ist eine Zusammenfassung Ihrer eigenen Aufzeichnungen, kein Rechtsdokument und nicht beglaubigt. Sie enthält nur, was den Server erreicht hat; die App synchronisiert zuerst und bittet um Geduld, wenn noch etwas aussteht. Nicht verfügbar bei Konten mit Ende-zu-Ende-Verschlüsselung.
 - **Getrennte Eltern:** Führen Sie die Kinder in einem persönlichen Konto, damit der andere Elternteil Ihre übrigen Ausgaben nicht sieht. Ein gemeinsames Konto zeigt allen Mitgliedern alles.
 
+## Autokosten
+
+Hat das Konto ein Fahrzeug, zeigt die Karte **Fahrzeuge**, was jedes in den letzten 12 Monaten gekostet hat, den Durchschnitt pro Monat und die zwei größten Kostenarten (etwa Kraftstoff und Versicherung). Sie folgt nicht dem Zeitraumfilter oben. Tippe auf ein Fahrzeug oder **Details**, um Einstellungen → Fahrzeuge zu öffnen, wo du auch Kosten markierst — siehe Einstellungen.
+
 ## FAQ
 
 - **F: Warum sehe ich keine Diagramme?**
@@ -28222,6 +28242,10 @@ Vea lo que cuesta cada hijo, sin adivinar.
 - **Informe PDF (Pro, editores):** un resumen de los costes de un hijo de hasta 24 meses, con totales, desglose mensual y por categorías, lista de gastos y recibos. Cada página lleva un pie que indica que se elaboró en la app a partir de datos introducidos por el usuario y la hora de «datos a fecha». Es un resumen de sus propios registros, no un documento legal ni certificado. Solo incluye lo que ha llegado al servidor, así que la app sincroniza primero y le pide esperar si algo está pendiente. No está disponible en cuentas con cifrado de extremo a extremo.
 - **Padres separados:** mantengan a los hijos en una cuenta personal para que el otro progenitor no vea el resto de sus gastos. Una cuenta compartida lo muestra todo a todos los miembros.
 
+## Gastos del coche
+
+Si la cuenta tiene un vehículo, la tarjeta **Vehículos** muestra lo que costó cada uno en los últimos 12 meses, la media mensual y los dos tipos de gasto más grandes (por ejemplo, combustible y seguro). No sigue el filtro de periodo de arriba. Toca un vehículo o **Detalles** para abrir Ajustes → Vehículos, donde también marcas los gastos; consulta Ajustes.
+
 ## Preguntas frecuentes
 
 - **P: Por que no veo ningun grafico?**
@@ -33570,6 +33594,10 @@ Voyez ce que coûte chaque enfant, sans deviner.
 - **Relevé PDF (Pro, éditeurs) :** un récapitulatif des coûts d'un enfant sur 24 mois maximum, avec totaux, détail mensuel et par catégorie, liste des dépenses et tickets. Chaque page porte un pied de page indiquant qu'il a été établi dans l'app à partir de données saisies par l'utilisateur, ainsi que l'heure « données au ». C'est un récapitulatif de vos propres enregistrements, pas un document juridique, ni certifié. Il ne contient que ce qui a atteint le serveur ; l'app synchronise d'abord et vous demande d'attendre si quelque chose est en attente. Indisponible sur les comptes à chiffrement de bout en bout.
 - **Parents séparés :** gardez les enfants sur un compte personnel pour que l'autre parent ne voie pas vos autres dépenses. Un compte partagé montre tout à tous les membres.
 
+## Frais de voiture
+
+Si le compte a un véhicule, la carte **Véhicules** montre ce que chacun a coûté sur les 12 derniers mois, la moyenne mensuelle et les deux plus gros types de frais (par exemple carburant et assurance). Elle ne suit pas le filtre de période ci-dessus. Touchez un véhicule ou **Détails** pour ouvrir Réglages → Véhicules, où vous marquez aussi les frais — voir Réglages.
+
 ## FAQ
 
 - **Q : Pourquoi ne vois-je aucun graphique ?**
@@ -38916,6 +38944,10 @@ iOS, Android, Web
 - **Выпіска ў PDF (Pro, рэдактары):** зводка выдаткаў на дзіця за перыяд да 24 месяцаў: вынікі, разбіўка па месяцах і катэгорыях, спіс выдаткаў і чэкі. На кожнай старонцы ёсць заўвага, што дакумент складзены ў праграме па дадзеных, уведзеных карыстальнікам, і час «дадзеныя на». Гэта зводка вашых уласных запісаў, а не юрыдычны дакумент і не засведчана. У яе трапляе толькі тое, што дайшло да сервера, таму праграма спачатку сінхранізуецца і просіць пачакаць, калі нешта яшчэ не адпраўлена. Недаступная для акаўнтаў са скразным шыфраваннем.
 - **Разведзеныя бацькі:** трымайце дзяцей на асабістым рахунку, каб другі з бацькоў не бачыў астатнія вашы выдаткі. Агульны рахунак паказвае ўсё ўсім удзельнікам.
 
+## Выдаткі на аўто
+
+Калі ў рахунку ёсць аўтамабіль, картка **Аўтамабілі** паказвае, колькі каштаваў кожны за апошнія 12 месяцаў, сярэдняе ў месяц і два найбуйнейшыя віды выдаткаў (напрыклад, паліва і страхоўка). Фільтр перыяду вышэй на яе не ўплывае. Націсніце на аўто або **Падрабязней**, каб адкрыць Налады → Аўтамабілі, дзе выдаткі і адзначаюцца, — гл. Налады.
+
 ## Частыя пытанні
 
 - **П: Чаму я не бачу графікаў?**
@@ -44225,6 +44257,10 @@ Zie wat elk kind kost, zonder te gokken.
 - **Deelkaart:** een afbeelding met de totalen van een kind. De naam is standaard verborgen; u kunt die tonen.
 - **Overzicht als PDF (Pro, bewerkers):** een overzicht van de kosten van een kind over maximaal 24 maanden, met totalen, maand- en categorieoverzicht, uitgavenlijst en bonnen. Elke pagina heeft een voettekst dat het in de app is opgesteld op basis van door de gebruiker ingevoerde gegevens, en het tijdstip 'gegevens per'. Het is een samenvatting van uw eigen administratie, geen juridisch document en niet gecertificeerd. Het bevat alleen wat de server heeft bereikt; de app synchroniseert eerst en vraagt u te wachten als er nog iets openstaat. Niet beschikbaar bij accounts met end-to-end-versleuteling.
 - **Gescheiden ouders:** houd de kinderen op een persoonlijk account, zodat de andere ouder uw overige uitgaven niet ziet. Een gedeeld account toont alles aan alle leden.
+
+## Autokosten
+
+Heeft het account een voertuig, dan toont de kaart **Voertuigen** wat elk de laatste 12 maanden kostte, het maandgemiddelde en de twee grootste kostensoorten (bijvoorbeeld brandstof en verzekering). Ze volgt het periodefilter hierboven niet. Tik op een voertuig of **Details** om Instellingen → Voertuigen te openen, waar je ook kosten markeert — zie Instellingen.
 
 ## Veelgestelde vragen
 
@@ -49662,6 +49698,10 @@ Veja quanto lhe custa cada filho, sem adivinhar.
 - **Cartão para partilhar:** crie uma imagem com os totais de um filho. O nome do filho fica oculto por predefinição; pode ativá-lo.
 - **Extrato em PDF (Pro, editores):** um resumo dos custos de um filho num período de até 24 meses, com totais, repartição mensal e por categoria, a lista de despesas e os talões. Cada página tem um rodapé a indicar que foi preparada na aplicação a partir de dados introduzidos pelo utilizador, e o momento a que os dados se referem. É um resumo dos seus próprios registos, não um documento legal nem certificado. Contém apenas o que já chegou ao servidor, por isso a aplicação sincroniza primeiro e pede-lhe que aguarde se ainda houver algo pendente. Não está disponível em contas com encriptação ponto a ponto.
 - **Pais separados:** mantenha os filhos numa conta pessoal, para que o outro progenitor não veja os seus restantes gastos. Uma conta partilhada mostra tudo a todos os membros.
+
+## Custos do carro
+
+Se a conta tiver um veículo, o cartão **Veículos** mostra quanto custou cada um nos últimos 12 meses, a média mensal e os dois maiores tipos de custo (por exemplo, combustível e seguro). Não segue o filtro de período acima. Toque num veículo ou em **Detalhes** para abrir Definições → Veículos, onde também marca os custos — veja Definições.
 
 ## Perguntas frequentes
 
@@ -55125,6 +55165,10 @@ Veja quanto cada filho custa para você, sem achismo.
 - **Cartão para compartilhar:** crie uma imagem com os totais de um filho. O nome do filho fica oculto por padrão; você pode ativá-lo.
 - **Extrato em PDF (Pro, editores):** um resumo dos custos de um filho em um período de até 24 meses, com totais, divisão mensal e por categoria, a lista de despesas e os recibos. Cada página traz um rodapé dizendo que foi preparada no app a partir de dados inseridos pelo usuário, e o momento a que os dados se referem. É um resumo dos seus próprios registros, não um documento legal nem certificado. Contém apenas o que já chegou ao servidor, então o app sincroniza primeiro e pede que você aguarde se algo ainda estiver pendente. Não está disponível em contas com criptografia de ponta a ponta.
 - **Pais separados:** mantenha os filhos em uma conta pessoal, para que o outro genitor não veja seus demais gastos. Uma conta compartilhada mostra tudo para todos os membros.
+
+## Custos do carro
+
+Se a conta tiver um veículo, o cartão **Veículos** mostra quanto custou cada um nos últimos 12 meses, a média mensal e os dois maiores tipos de custo (por exemplo, combustível e seguro). Ele não segue o filtro de período acima. Toque em um veículo ou em **Detalhes** para abrir Configurações → Veículos, onde você também marca os custos — veja Configurações.
 
 ## Perguntas frequentes
 

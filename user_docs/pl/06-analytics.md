@@ -173,6 +173,10 @@ Sprawdź, ile kosztuje Cię każde dziecko, bez zgadywania.
 - **Zestawienie PDF (Pro, edytorzy):** „zestawienie” kosztów dziecka za okres do 24 miesięcy: sumy, podział miesięczny i na kategorie, lista wydatków i paragony. Każda strona ma stopkę, że zestawienie sporządzono w aplikacji na podstawie danych wprowadzonych przez użytkownika, oraz czas „stan danych na”. To podsumowanie Twoich własnych zapisów, nie dokument prawny i nie jest poświadczone. Zawiera tylko to, co dotarło na serwer, więc aplikacja najpierw synchronizuje i prosi o chwilę czekania, jeśli coś jeszcze oczekuje. Niedostępne na kontach z szyfrowaniem end-to-end.
 - **Rodzice w separacji:** trzymajcie dzieci na koncie osobistym, aby drugi rodzic nie widział pozostałych Twoich wydatków. Konto wspólne pokazuje wszystko wszystkim członkom.
 
+## Koszty auta
+
+Gdy konto ma pojazd, karta **Pojazdy** pokazuje, ile każdy kosztował w ostatnich 12 miesiącach, średnią miesięczną i dwa największe rodzaje kosztów (np. paliwo i ubezpieczenie). Nie podlega filtrowi okresu powyżej. Stuknij pojazd lub **Szczegóły**, aby otworzyć Ustawienia → Pojazdy, gdzie też oznaczasz koszty — zobacz [Ustawienia](./11-settings.md).
+
 ## FAQ
 
 - **P: Dlaczego nie widze zadnych wykresow?**
