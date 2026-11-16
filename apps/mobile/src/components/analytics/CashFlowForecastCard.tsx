@@ -7,7 +7,7 @@ import { formatCurrency } from '@budget/shared-utils';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { getIntlLocale } from '@/i18n';
 import type { CashFlowForecastResponse } from '@budget/shared-types';
-import { forecastWithOwed, owedTotal } from '@/features/analytics/forecastWithOwed';
+import { forecastWithIrregularIncome, forecastWithOwed, owedTotal } from '@/features/analytics/forecastOptIns';
 
 interface Props {
   forecast: CashFlowForecastResponse;
@@ -40,10 +40,15 @@ function parseDay(iso: string): Date {
  */
 export function CashFlowForecastCard({ forecast: raw }: Props) {
   const { t } = useTranslation();
-  // Money owed to the user is never counted unless they opt in (ABA-786).
+  // Money owed to the user (ABA-786) and irregular income (ABA-787) are never
+  // counted unless the user opts in: neither is money the user can count on.
   const [includeOwed, setIncludeOwed] = useState(false);
+  const [includeIrregular, setIncludeIrregular] = useState(false);
   const owed = owedTotal(raw);
-  const forecast = includeOwed && owed > 0 ? forecastWithOwed(raw) : raw;
+  const irregularDaily = raw.irregularDailyIncome ?? 0;
+  let forecast = raw;
+  if (includeIrregular && irregularDaily > 0) forecast = forecastWithIrregularIncome(forecast);
+  if (includeOwed && owed > 0) forecast = forecastWithOwed(forecast);
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const currency = forecast.baseCurrency;
@@ -143,6 +148,22 @@ export function CashFlowForecastCard({ forecast: raw }: Props) {
           <Text style={styles.axisLabel}>{fmtDay(forecast.days[forecast.days.length - 1].date)}</Text>
         </View>
 
+        {irregularDaily > 0 && (
+          <View style={styles.owedRow}>
+            <View style={styles.owedTextBlock}>
+              <Text style={styles.owedLabel}>
+                {t('analytics.forecastIncludeIrregular', { amount: formatCurrency(irregularDaily, currency) })}
+              </Text>
+              <Text style={styles.owedHint}>{t('analytics.forecastIncludeIrregularHint')}</Text>
+            </View>
+            <Switch
+              value={includeIrregular}
+              onValueChange={setIncludeIrregular}
+              trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
+              accessibilityLabel={t('analytics.forecastIncludeIrregular', { amount: formatCurrency(irregularDaily, currency) })}
+            />
+          </View>
+        )}
         {owed > 0 && (
           <View style={styles.owedRow}>
             <View style={styles.owedTextBlock}>

@@ -393,6 +393,8 @@ export default {
     forecastKind_owed: 'Aan jou verschuldigd',
     forecastIncludeOwed: 'Geld meetellen dat men jou schuldig is (+{{amount}})',
     forecastIncludeOwedHint: 'Alleen als het op tijd wordt terugbetaald.',
+    forecastIncludeIrregular: 'Onregelmatig inkomen meetellen (~{{amount}} per dag)',
+    forecastIncludeIrregularHint: 'Freelance, terugbetalingen en ander niet-maandelijks inkomen, gemiddeld over de afgelopen maanden.',
     forecastNote: 'Een schatting: je saldo plus vaste inkomsten, min geplande betalingen en dagelijkse uitgaven van ongeveer {{amount}} per dag.',
     forecastNoteShortHistory: 'Een schatting: je saldo plus vaste inkomsten, min geplande betalingen. Dagelijkse uitgaven zijn nog niet meegenomen: er is te weinig geschiedenis.',
     forecastNoteFx: 'Bedragen in andere valuta zijn omgerekend tegen de koers van vandaag.',

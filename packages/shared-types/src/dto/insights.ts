@@ -54,6 +54,11 @@ export interface CashFlowForecastResponse {
    * NOT in `days`/`lowest`/`endBalance` — the client adds them only when the user opts in (ABA-786).
    */
   expectedInflows?: CashFlowForecastEvent[];
+  /**
+   * Average daily income outside any monthly series (freelance, refunds), base currency;
+   * 0 when history is short. NOT in `days` — added by the client on opt-in (ABA-787).
+   */
+  irregularDailyIncome?: number;
   computedAt: string;
 }
 

@@ -395,6 +395,8 @@ export default {
     forecastKind_owed: 'Dług wobec Ciebie',
     forecastIncludeOwed: 'Uwzględnij pieniądze, które ktoś Ci winien (+{{amount}})',
     forecastIncludeOwedHint: 'Tylko jeśli zwrot nastąpi na czas.',
+    forecastIncludeIrregular: 'Uwzględnij nieregularne przychody (~{{amount}} dziennie)',
+    forecastIncludeIrregularHint: 'Zlecenia, zwroty i inne przychody, które nie przychodzą co miesiąc, uśrednione z ostatnich miesięcy.',
     forecastNote: 'Szacunek: saldo plus regularne przychody, minus zaplanowane płatności i codzienne wydatki ok. {{amount}} dziennie.',
     forecastNoteShortHistory: 'Szacunek: saldo plus regularne przychody, minus zaplanowane płatności. Codzienne wydatki nie są jeszcze uwzględnione: historia jest za krótka.',
     forecastNoteFx: 'Kwoty w innych walutach są przeliczane po dzisiejszym kursie.',

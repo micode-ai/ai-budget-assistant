@@ -44,8 +44,14 @@ tier.
   lent debts (`Expense.isDebt` with `debtDueDate`, split receivables excluded, minus repayments linked
   by `Income.relatedDebtExpenseId`) go out as `expectedInflows`, kind `owed`, overdue ones on today —
   and NEVER into `days`/`lowest`/`endBalance`. The card offers a **Count money owed to you** switch,
-  off on every visit; `features/analytics/forecastWithOwed.ts` adds them on the device and recomputes
+  off on every visit; `features/analytics/forecastOptIns.ts` adds them on the device and recomputes
   the low and the end. The server series must stay owed-free, or the default view leans on it.
+- **Irregular income** ([ABA-787](https://github.com/micode-ai/ai-budget-assistant/issues/825)):
+  `irregularIncomeRows` keeps the income rows whose group (the `detectMonthlyIncomeSeries` key) did
+  not become a series; their sum over the spending history window, per day, is `irregularDailyIncome`
+  (debts and debt repayments excluded, 0 under 14 days of history). Same opt-in rule: a
+  **Count irregular income** switch, `forecastWithIrregularIncome` adds one day's worth per day after
+  today, never on today, mirroring how the typical day is subtracted.
 
 **Everyday spending**: the average day of the last 90 days. It leaves out rows in a recurring
 series and rows that pay an active subscription (`paysSubscription`, the same name-or-category+amount rule as
@@ -79,7 +85,7 @@ this is an estimate. The card is shown only while the current period is open.
 
 ## Known gaps
 
-- Irregular income (no monthly cadence) is ignored, so a freelancer's forecast is pessimistic.
+- Irregular income is a flat daily average and only on opt-in; a freelancer's default view stays pessimistic.
 - No push when the forecast first dips below zero.
 - The start is the wallet balance. When it was never set, `walletBalanceUnset` makes the card say
   so with a **Set balance** link (ABA-773, see [safe-to-spend](safe-to-spend.md)); the figures
@@ -88,4 +94,4 @@ this is an estimate. The card is shown only while the current period is open.
 ## History
 
 ABA-764: the forecast, and the shared date rules extracted from Safe-to-Spend. ABA-768: the
-already-below-zero headline. ABA-775: planned purchases and borrowed debts due. ABA-786: money owed to the user, on opt-in.
+already-below-zero headline. ABA-775: planned purchases and borrowed debts due. ABA-786: money owed to the user, on opt-in. ABA-787: irregular income, on opt-in.

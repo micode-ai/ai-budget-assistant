@@ -25,15 +25,30 @@ export function forecastWithOwed(forecast: CashFlowForecastResponse): CashFlowFo
     return { date: d.date, balance: r2(d.balance + added), scheduled: r2(d.scheduled + today) };
   });
 
+  const events = [...forecast.events, ...owed].sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0));
+  return withDays({ ...forecast, events }, days);
+}
+
+/**
+ * The forecast with irregular income (`irregularDailyIncome`: freelance, refunds —
+ * income in no monthly series) counted in, for when the user opts in (ABA-787).
+ * Mirrors how the server subtracts the typical day: nothing on today, one day's
+ * worth on every later day.
+ */
+export function forecastWithIrregularIncome(forecast: CashFlowForecastResponse): CashFlowForecastResponse {
+  const daily = forecast.irregularDailyIncome ?? 0;
+  if (daily <= 0) return forecast;
+  const days = forecast.days.map((d, i) => ({ ...d, balance: r2(d.balance + daily * i) }));
+  return withDays(forecast, days);
+}
+
+/** Replace the days and recompute the low (the earliest of equal lows wins, as on the server) and the end. */
+function withDays(forecast: CashFlowForecastResponse, days: CashFlowForecastResponse['days']): CashFlowForecastResponse {
   let lowest = days[0];
   for (const d of days) if (d.balance < lowest.balance) lowest = d;
-
-  const events = [...forecast.events, ...owed].sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0));
-
   return {
     ...forecast,
     days,
-    events,
     lowest: { date: lowest.date, balance: lowest.balance },
     endBalance: days[days.length - 1].balance,
   };

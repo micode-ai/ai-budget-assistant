@@ -1,5 +1,5 @@
 import type { CashFlowForecastResponse } from '@budget/shared-types';
-import { forecastWithOwed, owedTotal } from '../forecastWithOwed';
+import { forecastWithIrregularIncome, forecastWithOwed, owedTotal } from '../forecastOptIns';
 
 const base: CashFlowForecastResponse = {
   baseCurrency: 'PLN',
@@ -51,5 +51,31 @@ describe('forecastWithOwed', () => {
         ],
       }),
     ).toBe(30.3);
+  });
+});
+
+describe('forecastWithIrregularIncome', () => {
+  it('returns the forecast unchanged without irregular income', () => {
+    expect(forecastWithIrregularIncome(base)).toBe(base);
+    const zero = { ...base, irregularDailyIncome: 0 };
+    expect(forecastWithIrregularIncome(zero)).toBe(zero);
+  });
+
+  it('adds one day of irregular income per day after today and recomputes the low and the end', () => {
+    const res = forecastWithIrregularIncome({ ...base, irregularDailyIncome: 40 });
+    expect(res.days.map((d) => d.balance)).toEqual([100, 90, 80, 70]);
+    expect(res.lowest).toEqual({ date: '2026-06-13', balance: 70 });
+    expect(res.endBalance).toBe(70);
+  });
+
+  it('composes with money owed', () => {
+    const res = forecastWithOwed(
+      forecastWithIrregularIncome({
+        ...base,
+        irregularDailyIncome: 40,
+        expectedInflows: [{ date: '2026-06-12', kind: 'owed', label: '', amount: 5 }],
+      }),
+    );
+    expect(res.days.map((d) => d.balance)).toEqual([100, 90, 85, 75]);
   });
 });

@@ -393,6 +393,8 @@ export default {
     forecastKind_owed: 'Owed to you',
     forecastIncludeOwed: 'Count money owed to you (+{{amount}})',
     forecastIncludeOwedHint: 'Only if they pay back on time.',
+    forecastIncludeIrregular: 'Count irregular income (~{{amount}} a day)',
+    forecastIncludeIrregularHint: 'Freelance, refunds and other income that does not come monthly, averaged over recent months.',
     forecastNote: 'An estimate: your balance plus regular income, minus scheduled payments and everyday spending of about {{amount}} a day.',
     forecastNoteShortHistory: 'An estimate: your balance plus regular income, minus scheduled payments. Everyday spending is not included yet: there is too little history.',
     forecastNoteFx: 'Amounts in other currencies are converted at today\'s rate.',

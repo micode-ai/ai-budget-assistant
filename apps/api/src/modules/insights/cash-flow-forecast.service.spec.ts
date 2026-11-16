@@ -3,6 +3,7 @@ import {
   buildForecastSeries,
   detectMonthlyIncomeSeries,
   incomeOccurrences,
+  irregularIncomeRows,
   paysSubscription,
   recurringOccurrences,
   subscriptionOccurrences,
@@ -184,6 +185,45 @@ describe('CashFlowForecastService', () => {
     ]);
     expect(res.events).toEqual([]);
     expect(res.endBalance).toBe(1000);
+  });
+
+  it('treats income outside a monthly series as irregular', () => {
+    const rows = [
+      { amount: '5000', currencyCode: 'PLN', description: 'Salary', date: d(4, 25) },
+      { amount: '5004', currencyCode: 'PLN', description: 'salary ', date: d(5, 25) },
+      { amount: '800', currencyCode: 'PLN', description: 'Freelance', date: d(5, 3) },
+    ];
+    const irregular = irregularIncomeRows(rows, detectMonthlyIncomeSeries(rows));
+    expect(irregular.map((r) => r.description)).toEqual(['Freelance']);
+  });
+
+  it('returns irregular income per day apart, without debts, and keeps it out of the balance', async () => {
+    const spend = Array.from({ length: 30 }, (_, i) => ({
+      amount: '10', currencyCode: 'PLN', date: new Date(2026, 4, 11 + i), description: 'shop', categoryId: null, recurringId: null,
+    }));
+    const { service } = makeService({
+      balances: [{ currencyCode: 'PLN', currentBalance: 1000 }],
+      incomes: [
+        { amount: '5000', currencyCode: 'PLN', description: 'Salary', date: d(4, 25) },
+        { amount: '5000', currencyCode: 'PLN', description: 'Salary', date: d(5, 25) },
+        { amount: '600', currencyCode: 'PLN', description: 'Freelance', date: d(5, 20) },
+        { amount: '300', currencyCode: 'PLN', description: 'Refund', date: d(6, 2) },
+        { amount: '900', currencyCode: 'PLN', description: 'Loan', date: d(6, 3), isDebt: true },
+        { amount: '100', currencyCode: 'PLN', description: 'Paid back', date: d(6, 4), isDebtRepayment: true },
+      ],
+      spend,
+    });
+    const res = await service.compute('a1', 'PLN', NOW);
+    expect(res.irregularDailyIncome).toBe(30); // (600 + 300) over 30 days
+    expect(res.endBalance).toBe(1000 + 5000 - 30 * 10);
+  });
+
+  it('does not estimate irregular income from a short history', async () => {
+    const { service } = makeService({
+      incomes: [{ amount: '600', currencyCode: 'PLN', description: 'Freelance', date: d(6, 5) }],
+      spend: [{ amount: '5', currencyCode: 'PLN', date: d(6, 5), description: 'x', categoryId: null, recurringId: null }],
+    });
+    expect((await service.compute('a1', 'PLN', NOW)).irregularDailyIncome).toBe(0);
   });
 
   it('passes through whether the wallet balance was ever set', async () => {

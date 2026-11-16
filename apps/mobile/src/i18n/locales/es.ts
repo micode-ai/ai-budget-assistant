@@ -393,6 +393,8 @@ export default {
     forecastKind_owed: 'Te deben',
     forecastIncludeOwed: 'Contar el dinero que te deben (+{{amount}})',
     forecastIncludeOwedHint: 'Solo si te lo devuelven a tiempo.',
+    forecastIncludeIrregular: 'Contar ingresos irregulares (~{{amount}} al día)',
+    forecastIncludeIrregularHint: 'Trabajos puntuales, reembolsos y otros ingresos no mensuales, promediados en los últimos meses.',
     forecastNote: 'Una estimación: tu saldo más los ingresos regulares, menos los pagos programados y el gasto diario de unos {{amount}} al día.',
     forecastNoteShortHistory: 'Una estimación: tu saldo más los ingresos regulares, menos los pagos programados. El gasto diario aún no se incluye: hay muy poco historial.',
     forecastNoteFx: 'Los importes en otras monedas se convierten al tipo de cambio de hoy.',

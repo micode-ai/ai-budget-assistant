@@ -9,6 +9,7 @@ import type { CashFlowForecastResponse } from '@budget/shared-types';
 import {
   buildForecastSeries,
   detectMonthlyIncomeSeries,
+  irregularIncomeRows,
   incomeOccurrences,
   isoDay,
   paysSubscription,
@@ -82,7 +83,7 @@ export class CashFlowForecastService {
       this.walletService.isBalanceUnset(accountId),
       this.prisma.income.findMany({
         where: { accountId, isDeleted: false, ...EXCLUDE_SPLIT_RECEIVABLE, date: { gte: since } },
-        select: { amount: true, currencyCode: true, description: true, date: true },
+        select: { amount: true, currencyCode: true, description: true, date: true, isDebt: true, isDebtRepayment: true },
         orderBy: { date: 'asc' },
       }),
       this.prisma.userSubscription.findMany({
@@ -188,7 +189,8 @@ export class CashFlowForecastService {
     }
 
     const events: ForecastEvent[] = [];
-    for (const series of detectMonthlyIncomeSeries(incomes)) {
+    const incomeSeries = detectMonthlyIncomeSeries(incomes);
+    for (const series of incomeSeries) {
       const amount = toBase(series.amount, series.currencyCode);
       if (amount === null) continue;
       for (const date of incomeOccurrences(series, today, until)) {
@@ -273,6 +275,21 @@ export class CashFlowForecastService {
       }
     }
 
+    // Irregular income: the average day of income that belongs to no monthly
+    // series, over the same history window. Borrowed money and debt
+    // repayments are not earnings. Returned apart and never in the series —
+    // the client adds it only when the user opts in (ABA-787).
+    let irregularDailyIncome = 0;
+    if (historyDays >= MIN_HISTORY_DAYS) {
+      let total = 0;
+      for (const inc of irregularIncomeRows(incomes, incomeSeries)) {
+        if (inc.isDebt || inc.isDebtRepayment || startOfDay(new Date(inc.date)) >= today) continue;
+        const v = toBase(Number(inc.amount), inc.currencyCode);
+        if (v !== null) total += v;
+      }
+      irregularDailyIncome = Math.round((total / historyDays) * 100) / 100;
+    }
+
     const series = buildForecastSeries(today, FORECAST_DAYS, startBalance, events, typicalDailySpend);
     events.sort((a, b) => a.date.getTime() - b.date.getTime());
 
@@ -292,6 +309,7 @@ export class CashFlowForecastService {
       endBalance: series.endBalance,
       fxApproximate,
       walletBalanceUnset,
+      irregularDailyIncome,
       expectedInflows: expectedInflows.map((e) => ({
         date: isoDay(e.date),
         kind: e.kind,

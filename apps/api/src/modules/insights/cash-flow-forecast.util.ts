@@ -23,6 +23,20 @@ export {
 } from '../../common/utils/cash-flow-dates';
 export type { BillingCycle, IncomeRow, MonthlyIncomeSeries } from '../../common/utils/cash-flow-dates';
 import { isoDay } from '../../common/utils/cash-flow-dates';
+import type { IncomeRow, MonthlyIncomeSeries } from '../../common/utils/cash-flow-dates';
+
+/**
+ * Income rows that belong to no detected monthly series — freelance payments,
+ * refunds, gifts (ABA-787). Uses the same grouping key as
+ * `detectMonthlyIncomeSeries` (description, amount rounded to 10, currency),
+ * so a row is "regular" exactly when its group became a series.
+ */
+export function irregularIncomeRows<T extends IncomeRow>(incomes: T[], series: MonthlyIncomeSeries[]): T[] {
+  const key = (description: string | null | undefined, amount: number, currency: string) =>
+    `${(description || '').trim().toLowerCase()}|${Math.round(amount / 10) * 10}|${currency}`;
+  const regular = new Set(series.map((s) => key(s.label, s.amount, s.currencyCode)));
+  return incomes.filter((i) => !regular.has(key(i.description, Number(i.amount), i.currencyCode)));
+}
 
 export type ForecastEventKind = 'income' | 'subscription' | 'recurring' | 'planned' | 'debt' | 'owed';
 

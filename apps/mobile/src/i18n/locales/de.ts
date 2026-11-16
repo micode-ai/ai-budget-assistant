@@ -393,6 +393,8 @@ export default {
     forecastKind_owed: 'Dir geschuldet',
     forecastIncludeOwed: 'Geld einrechnen, das man dir schuldet (+{{amount}})',
     forecastIncludeOwedHint: 'Nur wenn pünktlich zurückgezahlt wird.',
+    forecastIncludeIrregular: 'Unregelmäßige Einnahmen einrechnen (~{{amount}} pro Tag)',
+    forecastIncludeIrregularHint: 'Freiberufliches, Erstattungen und andere nicht monatliche Einnahmen, gemittelt über die letzten Monate.',
     forecastNote: 'Eine Schätzung: dein Kontostand plus regelmäßige Einnahmen, minus geplante Zahlungen und Alltagsausgaben von etwa {{amount}} pro Tag.',
     forecastNoteShortHistory: 'Eine Schätzung: dein Kontostand plus regelmäßige Einnahmen, minus geplante Zahlungen. Alltagsausgaben sind noch nicht enthalten: Es gibt zu wenig Verlauf.',
     forecastNoteFx: 'Beträge in anderen Währungen werden zum heutigen Kurs umgerechnet.',

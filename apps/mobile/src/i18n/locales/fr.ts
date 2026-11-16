@@ -393,6 +393,8 @@ export default {
     forecastKind_owed: 'On vous doit',
     forecastIncludeOwed: 'Compter l\'argent qu\'on vous doit (+{{amount}})',
     forecastIncludeOwedHint: 'Seulement s\'il est remboursé à temps.',
+    forecastIncludeIrregular: 'Compter les revenus irréguliers (~{{amount}} par jour)',
+    forecastIncludeIrregularHint: 'Missions, remboursements et autres revenus non mensuels, en moyenne sur les derniers mois.',
     forecastNote: 'Une estimation : votre solde plus vos revenus réguliers, moins les paiements prévus et environ {{amount}} de dépenses courantes par jour.',
     forecastNoteShortHistory: 'Une estimation : votre solde plus vos revenus réguliers, moins les paiements prévus. Les dépenses courantes ne sont pas encore incluses : l\'historique est trop court.',
     forecastNoteFx: 'Les montants en d\'autres devises sont convertis au taux du jour.',
