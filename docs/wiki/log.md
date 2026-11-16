@@ -355,6 +355,7 @@ Newest last within each section.
 - 2026-11-16 · [ABA-789](https://github.com/micode-ai/ai-budget-assistant/issues/827) — Safe-to-Spend's month-end horizon follows the account's financial month, server and offline; features/safe-to-spend.
 - 2026-11-16 · [ABA-790](https://github.com/micode-ai/ai-budget-assistant/issues/828) — Fat Finder's report month and its three-month history follow the account's financial month; analytics-insights.
 - 2026-11-16 · [ABA-791](https://github.com/micode-ai/ai-budget-assistant/issues/829) — the monthly digest e-mail goes out on the account's month turnover day and covers the financial month that ended; features/report-periods.
+- 2026-11-16 · [ABA-792](https://github.com/micode-ai/ai-budget-assistant/issues/830) — the chat model's "spent this month" summary counts the account's financial month and names its start; features/chat-architecture.
 
 ## Queries
 

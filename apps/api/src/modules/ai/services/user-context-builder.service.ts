@@ -3,6 +3,7 @@ import { PrismaService } from '../../../database/prisma.service';
 import { CacheService } from '../../../common/cache/cache.service';
 import { CategoriesService } from '../../categories/categories.service';
 import { DebtsService } from '../../debts/debts.service';
+import { financialMonth } from '../../../common/utils/financial-month';
 
 const UC_TTL_SEC = 60;
 export const ucKey = (accountId: string) => `uc:${accountId}`;
@@ -24,6 +25,11 @@ export interface UserContext {
    * safe side, which leaves the prompt exactly as it was.
    */
   hasAnyTransactions?: boolean;
+  /**
+   * `YYYY-MM-DD` the account's financial month began, when it is anchored (ABA-792);
+   * absent for a calendar month. `totalSpentThisMonth` counts from this day.
+   */
+  monthStart?: string;
 }
 
 interface ExpenseWithCategory {
@@ -56,7 +62,17 @@ export class UserContextBuilder {
       if (cached) return cached;
     }
     const now = new Date();
-    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    // "This month" is the account's financial month (salary on the 10th: since
+    // the 10th), as everywhere else in the app (ABA-792); the calendar month
+    // when the account has no anchor or there is no account.
+    const anchorDay = accountId
+      ? ((await this.prisma.account.findUnique({ where: { id: accountId }, select: { monthAnchorDay: true } }))
+          ?.monthAnchorDay ?? null)
+      : null;
+    const startOfMonth = financialMonth(now, anchorDay).start;
+    const monthStart = anchorDay
+      ? `${startOfMonth.getFullYear()}-${String(startOfMonth.getMonth() + 1).padStart(2, '0')}-${String(startOfMonth.getDate()).padStart(2, '0')}`
+      : undefined;
 
     const expenseWhere = accountId
       ? { accountId, date: { gte: startOfMonth }, isDeleted: false }
@@ -216,6 +232,7 @@ export class UserContextBuilder {
     const context: UserContext = {
       totalSpentThisMonth: totalSpent,
       monthlyBudget,
+      ...(monthStart ? { monthStart } : {}),
       topCategories,
       recentExpenses,
       tags,

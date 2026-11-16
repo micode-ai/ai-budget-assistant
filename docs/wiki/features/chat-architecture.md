@@ -138,6 +138,11 @@ ids, so the model picks one from context, and an ambiguous name is the model's c
 **every** active monthly budget, category-allocated ones included — excluding those once made the
 model tell users with only allocated budgets that they had no budget.
 
+"This month" in the summary is the account's financial month ([ABA-792](https://github.com/micode-ai/ai-budget-assistant/issues/830)): `build` reads
+`Account.monthAnchorDay`, counts from `financialMonth(now, anchor).start`, and sets
+`context.monthStart` so the prompt names the start date. The read tools (`get_expenses`,
+`get_category_breakdown`) still resolve "this month" as a calendar month.
+
 ### Language
 
 `PromptBuilder.detectUserLanguage(message, history, uiLanguage)` resolves the reply language in
