@@ -18,6 +18,7 @@ import { useItemBreakdown } from './useItemBreakdown';
 import { useTagSpending } from './useTagSpending';
 import { useProjectSpending } from './useProjectSpending';
 import { useYearOverYear } from './useYearOverYear';
+import { useSpendingCalendar } from './useSpendingCalendar';
 
 // ─── Types (public API, re-exported for consumers) ───────────────────────────
 
@@ -198,6 +199,7 @@ export function useAnalytics(
   const { tagSpending } = useTagSpending(timeRange, currencyCode, selectedMonth, selectedYear);
   const { projectSpending } = useProjectSpending(timeRange, currencyCode, selectedMonth, selectedYear);
   const yearOverYear = useYearOverYear(timeRange, currencyCode, selectedMonth, selectedYear);
+  const spendingCalendar = useSpendingCalendar(currencyCode);
 
   return {
     isLoading: false,
@@ -218,5 +220,6 @@ export function useAnalytics(
     tagSpending,
     projectSpending,
     yearOverYear,
+    spendingCalendar,
   };
 }

@@ -51,3 +51,13 @@ only when it has at least one row.
 
 ABA-174 (merchant breakdown) · ABA-178 (income category breakdown) · ABA-765 (case-insensitive
 merchants, visits and average ticket).
+
+**When I spend** ([ABA-798](https://github.com/micode-ai/ai-budget-assistant/issues/836)). `spendingCalendar.ts` builds a year of Monday-started weeks shaded by
+quartile of spending days (not by the maximum, so one big purchase does not wash the rest out) and the
+average per day of the financial month over the 12 complete months before the current one — months
+with no spending at all are dropped, and a short month does not count toward days it lacks. Dates only:
+production has no purchase time on any expense (the `time` column is empty, bank imports carry a date),
+so an hour-of-day view would be invented — do not add one without a data source. `SpendingCalendarCard`
+shows only the most recent weeks that fit at 9 px or more, so a phone gets about six months and the
+subtitle says so.
+

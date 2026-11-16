@@ -46,6 +46,10 @@ Affiché lorsque vous consultez la période en cours. C'est une estimation de vo
 
 Dans les vues mois et année, cette carte compare la période à la même période un an plus tôt : le total et les principales catégories, chacune avec ce que vous dépensiez alors et l'évolution. Tant que la période est en cours, elle compare le même nombre de jours : la première semaine de ce mois face à la première semaine du même mois l'an dernier. Dépenser plus s'affiche en rouge, moins en vert ; une catégorie sans dépense l'an dernier est marquée **nouveau**. Si votre compte a un **Mois financier**, « le même mois l'an dernier » est ce mois financier. La carte apparaît dès qu'il y a des dépenses sur la période de l'an dernier.
 
+## Quand je dépense
+
+Une grille de vos derniers jours, une colonne par semaine et une ligne par jour de la semaine, teintée selon vos dépenses du jour — plus c'est foncé, plus vous avez dépensé (chaque teinte est un quart de vos jours de dépense). Sur ordinateur, elle couvre les 12 derniers mois ; sur téléphone, autant de mois qu'il en tient lisiblement. Touchez un jour pour voir sa date et son total ; sinon la carte indique votre plus grosse journée. En dessous, **Moyenne par jour du mois** montre combien vous dépensez en moyenne chaque jour du mois et quels trois jours coûtent le plus. Si votre compte a un **Mois financier**, le jour 1 est son premier jour — le jour de paie. L'app ne connaît pas l'heure des achats : la carte travaille par jours, pas par heures. Elle apparaît dès 14 jours de dépenses.
+
 ## Carousel d'aperçus IA
 
 Un carousel horizontal defilable d'aperçus generes par l'IA (plan Pro requis) :

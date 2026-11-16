@@ -4399,6 +4399,10 @@ Wird angezeigt, solange du den aktuellen Zeitraum ansiehst. Es ist eine Schätzu
 
 In der Monats- und Jahresansicht vergleicht diese Karte den Zeitraum mit demselben Zeitraum ein Jahr zuvor: die Summe und die wichtigsten Kategorien, jeweils mit dem damaligen Betrag und der Veränderung. Solange der Zeitraum läuft, werden dieselben Tage verglichen, die erste Woche dieses Monats also mit der ersten Woche desselben Monats im Vorjahr. Mehr Ausgaben erscheinen rot, weniger grün; eine Kategorie ohne Ausgaben im Vorjahr ist als **neu** markiert. Hat dein Konto einen **Finanzmonat**, ist „derselbe Monat im Vorjahr“ dieser Finanzmonat. Die Karte erscheint, sobald es im Vorjahreszeitraum Ausgaben gibt.
 
+## Wann ich ausgebe
+
+Ein Raster deiner letzten Tage, eine Spalte pro Woche und eine Zeile pro Wochentag, eingefärbt nach den Ausgaben des Tages — je dunkler, desto mehr (jede Stufe ist ein Viertel deiner Ausgabentage). Am Computer umfasst es die letzten 12 Monate, auf dem Telefon so viele Monate, wie gut lesbar hineinpassen. Tippe auf einen Tag für Datum und Summe; sonst nennt die Karte deinen größten Tag. Darunter zeigt **Durchschnitt nach Tag des Monats**, wie viel du im Schnitt an jedem Tag des Monats ausgibst und welche drei Tage am meisten kosten. Hat dein Konto einen **Finanzmonat**, ist Tag 1 sein erster Tag — der Zahltag. Die App kennt keine Uhrzeit der Käufe, daher arbeitet die Karte mit Tagen, nicht mit Stunden. Sie erscheint ab 14 Tagen mit Ausgaben.
+
 ## KI-Einblicke-Karussell
 
 Ein horizontal scrollbares Karussell mit KI-generierten Einblicken (Pro-Plan erforderlich):

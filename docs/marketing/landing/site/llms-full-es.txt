@@ -4415,6 +4415,10 @@ Se muestra mientras ves el periodo actual. Es una estimación de tu saldo para c
 
 En las vistas de mes y año, esta tarjeta compara el periodo con el mismo periodo de hace un año: el total y las principales categorías, cada una con lo que gastaste entonces y la variación. Mientras el periodo sigue en curso compara el mismo número de días, así que la primera semana de este mes se compara con la primera semana del mismo mes del año pasado. Gastar más se ve en rojo y gastar menos en verde; una categoría sin gastos el año pasado se marca como **nuevo**. Si tu cuenta tiene un **Mes financiero**, «el mismo mes del año pasado» es ese mes financiero. La tarjeta aparece cuando hay gastos en el periodo del año pasado.
 
+## Cuándo gasto
+
+Una cuadrícula de tus últimos días, una columna por semana y una fila por día de la semana, coloreada según lo que gastaste ese día: cuanto más oscuro, más (cada tono es un cuarto de tus días con gastos). En el ordenador abarca los últimos 12 meses; en el móvil, tantos meses como quepan a un tamaño legible. Toca un día para ver su fecha y total; si no, la tarjeta indica tu día de más gasto. Debajo, **Media por día del mes** muestra cuánto gastas de media cada día del mes y qué tres días se llevan más. Si tu cuenta tiene un **Mes financiero**, el día 1 es su primer día, el de cobro. La app no conoce la hora de las compras, así que la tarjeta trabaja con días, no con horas. Aparece cuando tienes al menos 14 días con gastos.
+
 ## Carrusel de informacion IA
 
 Un carrusel horizontal desplazable con informacion generada por IA (requiere plan Pro):

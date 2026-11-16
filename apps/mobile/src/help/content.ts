@@ -1062,6 +1062,10 @@ Shown while you are looking at the current period. It is an estimate of your bal
 
 In the month and year views, this card compares the period with the same period a year earlier: the total and the top categories, each with what you spent then and the change. While the period is still running it compares the same number of days, so the first week of this month is set against the first week of the same month last year. More spending reads red, less reads green; a category you did not spend on last year is marked **new**. If your account has a **Financial Month**, "the same month last year" is that financial month. The card appears once there is spending in last year's period.
 
+## When I Spend
+
+A grid of your recent days, one column per week and one row per weekday, shaded by how much you spent that day — the darker, the more (each shade is a quarter of your spending days). On a computer it covers the last 12 months; on a phone, as many recent months as fit at a readable size. Tap a day to see its date and total; otherwise the card names your biggest day. Below it, **Average by day of the month** shows how much you spend on each day of the month on average over the past months, and which three days take the most. If your account has a **Financial Month**, day 1 is its first day — payday. The app has no time of purchase for transactions, so the card works with days, not hours. It appears once you have at least 14 days with spending.
+
 ## AI Insights Carousel
 
 A horizontal scrollable carousel of AI-generated insights (Pro plan required):
@@ -6513,6 +6517,10 @@ iOS, Android, Web
 
 В режимах месяца и года эта карточка сравнивает период с тем же периодом год назад: итог и главные категории — у каждой сумма тогда и изменение. Пока период не закончился, сравниваются одинаковые дни: первая неделя этого месяца — с первой неделей того же месяца год назад. Рост трат показан красным, снижение — зелёным; категория без трат год назад помечена как **новое**. Если у аккаунта задан **Финансовый месяц**, «тот же месяц год назад» — это тот же финансовый месяц. Карточка появляется, когда в прошлогоднем периоде есть траты.
 
+## Когда я трачу
+
+Сетка последних дней — столбец на неделю, строка на день недели, — окрашенная по сумме трат за день: чем темнее, тем больше (каждый оттенок — четверть ваших дней с тратами). На компьютере она охватывает последние 12 месяцев, на телефоне — столько месяцев, сколько помещается в читаемом размере. Нажмите на день, чтобы увидеть дату и сумму; иначе карточка называет самый дорогой день. Ниже **В среднем по дням месяца** показывает, сколько вы в среднем тратите в каждый день месяца и какие три дня обходятся дороже всего. Если у аккаунта задан **Финансовый месяц**, день 1 — его первый день, день зарплаты. Время покупки приложение не знает, поэтому карточка работает с днями, а не с часами. Она появляется, когда набирается хотя бы 14 дней с тратами.
+
 ## Карусель ИИ-инсайтов
 
 Горизонтально прокручиваемая карусель ИИ-генерируемых инсайтов (требуется план Pro):
@@ -11942,6 +11950,10 @@ iOS, Android, Web
 
 У режимах місяця й року ця картка порівнює період із тим самим періодом рік тому: підсумок і головні категорії — у кожної сума тоді та зміна. Поки період не завершився, порівнюються однакові дні: перший тиждень цього місяця — з першим тижнем того самого місяця рік тому. Зростання витрат показано червоним, зменшення — зеленим; категорію без витрат рік тому позначено як **нове**. Якщо в акаунті задано **Фінансовий місяць**, «той самий місяць рік тому» — це той самий фінансовий місяць. Картка зʼявляється, коли в торішньому періоді є витрати.
 
+## Коли я витрачаю
+
+Сітка останніх днів — стовпець на тиждень, рядок на день тижня, — зафарбована за сумою витрат за день: що темніше, то більше (кожен відтінок — чверть ваших днів із витратами). На компʼютері вона охоплює останні 12 місяців, на телефоні — стільки місяців, скільки вміщується в читабельному розмірі. Натисніть на день, щоб побачити дату й суму; інакше картка називає найдорожчий день. Нижче **У середньому за днями місяця** показує, скільки ви в середньому витрачаєте в кожен день місяця і які три дні обходяться найдорожче. Якщо в акаунті задано **Фінансовий місяць**, день 1 — його перший день, день зарплати. Часу покупки застосунок не знає, тож картка працює з днями, а не з годинами. Вона зʼявляється, коли набирається щонайменше 14 днів із витратами.
+
 ## Карусель ШІ-інсайтів
 
 Горизонтальна прокручувана карусель ШІ-інсайтів (потрібен тариф Pro):
@@ -17319,6 +17331,10 @@ Widoczne, gdy oglądasz bieżący okres. To szacunek salda na każdy z najbliżs
 
 W widoku miesiąca i roku ta karta porównuje okres z tym samym okresem rok wcześniej: sumę i najważniejsze kategorie, każdą z ówczesną kwotą i zmianą. Dopóki okres trwa, porównywana jest ta sama liczba dni, więc pierwszy tydzień tego miesiąca zestawiany jest z pierwszym tygodniem tego samego miesiąca rok temu. Większe wydatki są czerwone, mniejsze zielone; kategoria bez wydatków rok temu ma oznaczenie **nowe**. Jeśli konto ma **Miesiąc finansowy**, „ten sam miesiąc rok temu” to ten miesiąc finansowy. Karta pojawia się, gdy w zeszłorocznym okresie są wydatki.
 
+## Kiedy wydaję
+
+Siatka ostatnich dni — kolumna na tydzień i wiersz na dzień tygodnia — zabarwiona według wydatków danego dnia: im ciemniej, tym więcej (każdy odcień to ćwierć Twoich dni z wydatkami). Na komputerze obejmuje ostatnie 12 miesięcy, na telefonie tyle miesięcy, ile mieści się czytelnie. Stuknij dzień, aby zobaczyć datę i sumę; w przeciwnym razie karta podaje Twój największy dzień. Pod spodem **Średnio według dnia miesiąca** pokazuje, ile średnio wydajesz w każdym dniu miesiąca i które trzy dni kosztują najwięcej. Jeśli konto ma **Miesiąc finansowy**, dzień 1 to jego pierwszy dzień — dzień wypłaty. Aplikacja nie zna godziny zakupów, więc karta działa na dniach, nie godzinach. Pojawia się od 14 dni z wydatkami.
+
 ## Karuzela wnioskow AI
 
 Poziomo przewijana karuzela wnioskow generowanych przez AI (wymaga planu Pro):
@@ -22692,6 +22708,10 @@ Wird angezeigt, solange du den aktuellen Zeitraum ansiehst. Es ist eine Schätzu
 
 In der Monats- und Jahresansicht vergleicht diese Karte den Zeitraum mit demselben Zeitraum ein Jahr zuvor: die Summe und die wichtigsten Kategorien, jeweils mit dem damaligen Betrag und der Veränderung. Solange der Zeitraum läuft, werden dieselben Tage verglichen, die erste Woche dieses Monats also mit der ersten Woche desselben Monats im Vorjahr. Mehr Ausgaben erscheinen rot, weniger grün; eine Kategorie ohne Ausgaben im Vorjahr ist als **neu** markiert. Hat dein Konto einen **Finanzmonat**, ist „derselbe Monat im Vorjahr“ dieser Finanzmonat. Die Karte erscheint, sobald es im Vorjahreszeitraum Ausgaben gibt.
 
+## Wann ich ausgebe
+
+Ein Raster deiner letzten Tage, eine Spalte pro Woche und eine Zeile pro Wochentag, eingefärbt nach den Ausgaben des Tages — je dunkler, desto mehr (jede Stufe ist ein Viertel deiner Ausgabentage). Am Computer umfasst es die letzten 12 Monate, auf dem Telefon so viele Monate, wie gut lesbar hineinpassen. Tippe auf einen Tag für Datum und Summe; sonst nennt die Karte deinen größten Tag. Darunter zeigt **Durchschnitt nach Tag des Monats**, wie viel du im Schnitt an jedem Tag des Monats ausgibst und welche drei Tage am meisten kosten. Hat dein Konto einen **Finanzmonat**, ist Tag 1 sein erster Tag — der Zahltag. Die App kennt keine Uhrzeit der Käufe, daher arbeitet die Karte mit Tagen, nicht mit Stunden. Sie erscheint ab 14 Tagen mit Ausgaben.
+
 ## KI-Einblicke-Karussell
 
 Ein horizontal scrollbares Karussell mit KI-generierten Einblicken (Pro-Plan erforderlich):
@@ -28040,6 +28060,10 @@ Se muestra mientras ves el periodo actual. Es una estimación de tu saldo para c
 
 En las vistas de mes y año, esta tarjeta compara el periodo con el mismo periodo de hace un año: el total y las principales categorías, cada una con lo que gastaste entonces y la variación. Mientras el periodo sigue en curso compara el mismo número de días, así que la primera semana de este mes se compara con la primera semana del mismo mes del año pasado. Gastar más se ve en rojo y gastar menos en verde; una categoría sin gastos el año pasado se marca como **nuevo**. Si tu cuenta tiene un **Mes financiero**, «el mismo mes del año pasado» es ese mes financiero. La tarjeta aparece cuando hay gastos en el periodo del año pasado.
 
+## Cuándo gasto
+
+Una cuadrícula de tus últimos días, una columna por semana y una fila por día de la semana, coloreada según lo que gastaste ese día: cuanto más oscuro, más (cada tono es un cuarto de tus días con gastos). En el ordenador abarca los últimos 12 meses; en el móvil, tantos meses como quepan a un tamaño legible. Toca un día para ver su fecha y total; si no, la tarjeta indica tu día de más gasto. Debajo, **Media por día del mes** muestra cuánto gastas de media cada día del mes y qué tres días se llevan más. Si tu cuenta tiene un **Mes financiero**, el día 1 es su primer día, el de cobro. La app no conoce la hora de las compras, así que la tarjeta trabaja con días, no con horas. Aparece cuando tienes al menos 14 días con gastos.
+
 ## Carrusel de informacion IA
 
 Un carrusel horizontal desplazable con informacion generada por IA (requiere plan Pro):
@@ -33377,6 +33401,10 @@ Affiché lorsque vous consultez la période en cours. C'est une estimation de vo
 
 Dans les vues mois et année, cette carte compare la période à la même période un an plus tôt : le total et les principales catégories, chacune avec ce que vous dépensiez alors et l'évolution. Tant que la période est en cours, elle compare le même nombre de jours : la première semaine de ce mois face à la première semaine du même mois l'an dernier. Dépenser plus s'affiche en rouge, moins en vert ; une catégorie sans dépense l'an dernier est marquée **nouveau**. Si votre compte a un **Mois financier**, « le même mois l'an dernier » est ce mois financier. La carte apparaît dès qu'il y a des dépenses sur la période de l'an dernier.
 
+## Quand je dépense
+
+Une grille de vos derniers jours, une colonne par semaine et une ligne par jour de la semaine, teintée selon vos dépenses du jour — plus c'est foncé, plus vous avez dépensé (chaque teinte est un quart de vos jours de dépense). Sur ordinateur, elle couvre les 12 derniers mois ; sur téléphone, autant de mois qu'il en tient lisiblement. Touchez un jour pour voir sa date et son total ; sinon la carte indique votre plus grosse journée. En dessous, **Moyenne par jour du mois** montre combien vous dépensez en moyenne chaque jour du mois et quels trois jours coûtent le plus. Si votre compte a un **Mois financier**, le jour 1 est son premier jour — le jour de paie. L'app ne connaît pas l'heure des achats : la carte travaille par jours, pas par heures. Elle apparaît dès 14 jours de dépenses.
+
 ## Carousel d'aperçus IA
 
 Un carousel horizontal defilable d'aperçus generes par l'IA (plan Pro requis) :
@@ -38712,6 +38740,10 @@ iOS, Android, Web
 
 У рэжымах месяца і года гэтая картка параўноўвае перыяд з тым жа перыядам год таму: вынік і галоўныя катэгорыі — у кожнай сума тады і змяненне. Пакуль перыяд не скончыўся, параўноўваюцца аднолькавыя дні: першы тыдзень гэтага месяца — з першым тыднем таго ж месяца год таму. Рост выдаткаў паказаны чырвоным, зніжэнне — зялёным; катэгорыя без выдаткаў год таму пазначана як **новае**. Калі ў акаўнта зададзены **Фінансавы месяц**, «той жа месяц год таму» — гэта той жа фінансавы месяц. Картка з’яўляецца, калі ў леташнім перыядзе ёсць выдаткі.
 
+## Калі я трачу
+
+Сетка апошніх дзён — слупок на тыдзень, радок на дзень тыдня, — афарбаваная па суме выдаткаў за дзень: чым цямней, тым больш (кожны адценне — чвэрць вашых дзён з выдаткамі). На камп’ютары яна ахоплівае апошнія 12 месяцаў, на тэлефоне — столькі месяцаў, колькі змяшчаецца ў чытэльным памеры. Націсніце на дзень, каб убачыць дату і суму; інакш картка называе самы дарагі дзень. Ніжэй **У сярэднім па днях месяца** паказвае, колькі вы ў сярэднім трацiце ў кожны дзень месяца і якія тры дні абыходзяцца даражэй за ўсё. Калі ў акаўнта зададзены **Фінансавы месяц**, дзень 1 — яго першы дзень, дзень заробку. Часу пакупкі праграма не ведае, таму картка працуе з днямі, а не з гадзінамі. Яна з’яўляецца, калі набіраецца хаця б 14 дзён з выдаткамі.
+
 ## Карусель ІІ-інсайтаў
 
 Гарызантальна пракручваемая карусель ІІ-генераваных інсайтаў (патрабуецца план Pro):
@@ -44010,6 +44042,10 @@ Zichtbaar terwijl je de huidige periode bekijkt. Het is een schatting van je sal
 ## Jaar op jaar
 
 In de maand- en jaarweergave vergelijkt deze kaart de periode met dezelfde periode een jaar eerder: het totaal en de belangrijkste categorieën, elk met wat je toen uitgaf en de verandering. Zolang de periode loopt, worden dezelfde dagen vergeleken: de eerste week van deze maand met de eerste week van dezelfde maand vorig jaar. Meer uitgeven is rood, minder groen; een categorie zonder uitgaven vorig jaar heet **nieuw**. Heeft je account een **Financiële maand**, dan is "dezelfde maand vorig jaar" die financiële maand. De kaart verschijnt zodra er uitgaven zijn in de periode van vorig jaar.
+
+## Wanneer ik uitgeef
+
+Een raster van je recente dagen, een kolom per week en een rij per weekdag, ingekleurd naar wat je die dag uitgaf — hoe donkerder, hoe meer (elke tint is een kwart van je dagen met uitgaven). Op de computer beslaat het de afgelopen 12 maanden, op de telefoon zoveel maanden als leesbaar passen. Tik op een dag voor datum en totaal; anders noemt de kaart je duurste dag. Daaronder laat **Gemiddeld per dag van de maand** zien hoeveel je gemiddeld op elke dag van de maand uitgeeft en welke drie dagen het meest kosten. Heeft je account een **Financiële maand**, dan is dag 1 de eerste dag ervan — betaaldag. De app kent geen tijdstip van aankopen, dus de kaart werkt met dagen, niet met uren. Hij verschijnt zodra je minstens 14 dagen met uitgaven hebt.
 
 ## AI-inzichtencarrousel
 
@@ -49436,6 +49472,10 @@ Aparece quando está a ver o período atual. É uma estimativa do seu saldo para
 ## Ano a ano
 
 Nas vistas de mês e ano, este cartão compara o período com o mesmo período de há um ano: o total e as principais categorias, cada uma com o que gastou nessa altura e a variação. Enquanto o período decorre, compara o mesmo número de dias: a primeira semana deste mês com a primeira semana do mesmo mês do ano passado. Gastar mais aparece a vermelho e menos a verde; uma categoria sem gastos no ano passado é marcada como **novo**. Se a sua conta tiver um **Mês financeiro**, «o mesmo mês do ano passado» é esse mês financeiro. O cartão aparece quando há gastos no período do ano passado.
+
+## Quando gasto
+
+Uma grelha dos seus dias recentes, uma coluna por semana e uma linha por dia da semana, sombreada pelo que gastou nesse dia — quanto mais escuro, mais (cada tom é um quarto dos seus dias com gastos). No computador abrange os últimos 12 meses; no telemóvel, tantos meses quantos couberem num tamanho legível. Toque num dia para ver a data e o total; caso contrário, o cartão indica o dia de maior gasto. Por baixo, **Média por dia do mês** mostra quanto gasta em média em cada dia do mês e que três dias custam mais. Se a sua conta tiver um **Mês financeiro**, o dia 1 é o primeiro dia dele — o do ordenado. A app não sabe a hora das compras, por isso o cartão trabalha com dias, não com horas. Aparece quando tiver pelo menos 14 dias com gastos.
 
 ## Carrossel de análises com IA
 
@@ -54888,6 +54928,10 @@ Aparece quando você está vendo o período atual. É uma estimativa do seu sald
 ## Ano a ano
 
 Nas visões de mês e ano, este cartão compara o período com o mesmo período de um ano atrás: o total e as principais categorias, cada uma com o que você gastou na época e a variação. Enquanto o período está em andamento, compara o mesmo número de dias: a primeira semana deste mês com a primeira semana do mesmo mês no ano passado. Gastar mais aparece em vermelho e menos em verde; uma categoria sem gastos no ano passado é marcada como **novo**. Se a sua conta tiver um **Mês financeiro**, "o mesmo mês do ano passado" é esse mês financeiro. O cartão aparece quando há gastos no período do ano passado.
+
+## Quando eu gasto
+
+Uma grade dos seus dias recentes, uma coluna por semana e uma linha por dia da semana, colorida pelo quanto você gastou naquele dia — quanto mais escuro, mais (cada tom é um quarto dos seus dias com gastos). No computador ela cobre os últimos 12 meses; no celular, quantos meses couberem em tamanho legível. Toque em um dia para ver a data e o total; senão o cartão mostra seu dia de maior gasto. Abaixo, **Média por dia do mês** mostra quanto você gasta em média em cada dia do mês e quais três dias custam mais. Se a sua conta tiver um **Mês financeiro**, o dia 1 é o primeiro dia dele — o do pagamento. O app não sabe o horário das compras, então o cartão trabalha com dias, não com horas. Ele aparece quando você tiver pelo menos 14 dias com gastos.
 
 ## Carrossel de insights com IA
 

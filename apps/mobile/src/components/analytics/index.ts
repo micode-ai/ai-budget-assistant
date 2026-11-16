@@ -17,4 +17,5 @@ export { CashFlowCard } from './CashFlowCard';
 export { CommitmentsCard } from './CommitmentsCard';
 export { CashFlowForecastCard } from './CashFlowForecastCard';
 export { YearOverYearCard } from './YearOverYearCard';
+export { SpendingCalendarCard } from './SpendingCalendarCard';
 export { DiscoveryStrip } from './DiscoveryStrip';

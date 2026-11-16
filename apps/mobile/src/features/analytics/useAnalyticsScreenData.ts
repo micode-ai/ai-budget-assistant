@@ -40,7 +40,7 @@ export function useAnalyticsScreenData() {
     selectedRange !== 'week' ? selectedMonth : undefined,
     selectedYear,
   );
-  const { dailySpending, categorySpending, merchantSpending, memberSpending, incomeByCategory, summary, itemBreakdown, dayOfWeekSpending, periodComparison, anomalies, predictions, cashFlowAnalytics, dateRange, tagSpending, projectSpending, yearOverYear } = analytics;
+  const { dailySpending, categorySpending, merchantSpending, memberSpending, incomeByCategory, summary, itemBreakdown, dayOfWeekSpending, periodComparison, anomalies, predictions, cashFlowAnalytics, dateRange, tagSpending, projectSpending, yearOverYear, spendingCalendar } = analytics;
 
   // Forward-looking, so only meaningful while the CURRENT period is open.
   const cashFlowForecast = useCashFlowForecast(isCurrentPeriod);
@@ -133,6 +133,7 @@ export function useAnalyticsScreenData() {
     cashFlowAnalytics,
     cashFlowForecast,
     yearOverYear,
+    spendingCalendar,
     tagSpending,
     projectSpending,
     aiInsights,

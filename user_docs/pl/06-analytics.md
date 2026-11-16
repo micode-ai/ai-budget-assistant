@@ -46,6 +46,10 @@ Widoczne, gdy oglądasz bieżący okres. To szacunek salda na każdy z najbliżs
 
 W widoku miesiąca i roku ta karta porównuje okres z tym samym okresem rok wcześniej: sumę i najważniejsze kategorie, każdą z ówczesną kwotą i zmianą. Dopóki okres trwa, porównywana jest ta sama liczba dni, więc pierwszy tydzień tego miesiąca zestawiany jest z pierwszym tygodniem tego samego miesiąca rok temu. Większe wydatki są czerwone, mniejsze zielone; kategoria bez wydatków rok temu ma oznaczenie **nowe**. Jeśli konto ma **Miesiąc finansowy**, „ten sam miesiąc rok temu” to ten miesiąc finansowy. Karta pojawia się, gdy w zeszłorocznym okresie są wydatki.
 
+## Kiedy wydaję
+
+Siatka ostatnich dni — kolumna na tydzień i wiersz na dzień tygodnia — zabarwiona według wydatków danego dnia: im ciemniej, tym więcej (każdy odcień to ćwierć Twoich dni z wydatkami). Na komputerze obejmuje ostatnie 12 miesięcy, na telefonie tyle miesięcy, ile mieści się czytelnie. Stuknij dzień, aby zobaczyć datę i sumę; w przeciwnym razie karta podaje Twój największy dzień. Pod spodem **Średnio według dnia miesiąca** pokazuje, ile średnio wydajesz w każdym dniu miesiąca i które trzy dni kosztują najwięcej. Jeśli konto ma **Miesiąc finansowy**, dzień 1 to jego pierwszy dzień — dzień wypłaty. Aplikacja nie zna godziny zakupów, więc karta działa na dniach, nie godzinach. Pojawia się od 14 dni z wydatkami.
+
 ## Karuzela wnioskow AI
 
 Poziomo przewijana karuzela wnioskow generowanych przez AI (wymaga planu Pro):

@@ -16,6 +16,7 @@ import { TrendAndWeekdayRow } from './TrendAndWeekdayRow';
 import { CashFlowRow } from './CashFlowRow';
 import { CashFlowForecastCard } from '../CashFlowForecastCard';
 import { YearOverYearCard } from '../YearOverYearCard';
+import { SpendingCalendarCard } from '../SpendingCalendarCard';
 import { BreakdownGrid } from './BreakdownGrid';
 import { useChildrenMonthTotals } from '@/features/children/useChildCosts';
 import { TopItemsCard } from './TopItemsCard';
@@ -110,6 +111,7 @@ export function AnalyticsDesktop() {
     cashFlowAnalytics,
     cashFlowForecast,
     yearOverYear,
+    spendingCalendar,
     tagSpending,
     projectSpending,
     aiInsights,
@@ -197,6 +199,8 @@ export function AnalyticsDesktop() {
               {cashFlowForecast && <CashFlowForecastCard forecast={cashFlowForecast} />}
 
               {yearOverYear && <YearOverYearCard data={yearOverYear} currency={currency} />}
+
+              {spendingCalendar && <SpendingCalendarCard data={spendingCalendar} currency={currency} />}
 
               <TrendAndWeekdayRow
                 dailySpending={dailySpending}

@@ -46,6 +46,10 @@ Zichtbaar terwijl je de huidige periode bekijkt. Het is een schatting van je sal
 
 In de maand- en jaarweergave vergelijkt deze kaart de periode met dezelfde periode een jaar eerder: het totaal en de belangrijkste categorieën, elk met wat je toen uitgaf en de verandering. Zolang de periode loopt, worden dezelfde dagen vergeleken: de eerste week van deze maand met de eerste week van dezelfde maand vorig jaar. Meer uitgeven is rood, minder groen; een categorie zonder uitgaven vorig jaar heet **nieuw**. Heeft je account een **Financiële maand**, dan is "dezelfde maand vorig jaar" die financiële maand. De kaart verschijnt zodra er uitgaven zijn in de periode van vorig jaar.
 
+## Wanneer ik uitgeef
+
+Een raster van je recente dagen, een kolom per week en een rij per weekdag, ingekleurd naar wat je die dag uitgaf — hoe donkerder, hoe meer (elke tint is een kwart van je dagen met uitgaven). Op de computer beslaat het de afgelopen 12 maanden, op de telefoon zoveel maanden als leesbaar passen. Tik op een dag voor datum en totaal; anders noemt de kaart je duurste dag. Daaronder laat **Gemiddeld per dag van de maand** zien hoeveel je gemiddeld op elke dag van de maand uitgeeft en welke drie dagen het meest kosten. Heeft je account een **Financiële maand**, dan is dag 1 de eerste dag ervan — betaaldag. De app kent geen tijdstip van aankopen, dus de kaart werkt met dagen, niet met uren. Hij verschijnt zodra je minstens 14 dagen met uitgaven hebt.
+
 ## AI-inzichtencarrousel
 
 Een horizontaal scrollbare carrousel met door AI gegenereerde inzichten (Pro-abonnement vereist):

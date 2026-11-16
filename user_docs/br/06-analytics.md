@@ -46,6 +46,10 @@ Aparece quando você está vendo o período atual. É uma estimativa do seu sald
 
 Nas visões de mês e ano, este cartão compara o período com o mesmo período de um ano atrás: o total e as principais categorias, cada uma com o que você gastou na época e a variação. Enquanto o período está em andamento, compara o mesmo número de dias: a primeira semana deste mês com a primeira semana do mesmo mês no ano passado. Gastar mais aparece em vermelho e menos em verde; uma categoria sem gastos no ano passado é marcada como **novo**. Se a sua conta tiver um **Mês financeiro**, "o mesmo mês do ano passado" é esse mês financeiro. O cartão aparece quando há gastos no período do ano passado.
 
+## Quando eu gasto
+
+Uma grade dos seus dias recentes, uma coluna por semana e uma linha por dia da semana, colorida pelo quanto você gastou naquele dia — quanto mais escuro, mais (cada tom é um quarto dos seus dias com gastos). No computador ela cobre os últimos 12 meses; no celular, quantos meses couberem em tamanho legível. Toque em um dia para ver a data e o total; senão o cartão mostra seu dia de maior gasto. Abaixo, **Média por dia do mês** mostra quanto você gasta em média em cada dia do mês e quais três dias custam mais. Se a sua conta tiver um **Mês financeiro**, o dia 1 é o primeiro dia dele — o do pagamento. O app não sabe o horário das compras, então o cartão trabalha com dias, não com horas. Ele aparece quando você tiver pelo menos 14 dias com gastos.
+
 ## Carrossel de insights com IA
 
 Um carrossel com rolagem horizontal de insights gerados por IA (requer o plano Pro):

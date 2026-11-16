@@ -46,6 +46,10 @@ Shown while you are looking at the current period. It is an estimate of your bal
 
 In the month and year views, this card compares the period with the same period a year earlier: the total and the top categories, each with what you spent then and the change. While the period is still running it compares the same number of days, so the first week of this month is set against the first week of the same month last year. More spending reads red, less reads green; a category you did not spend on last year is marked **new**. If your account has a **Financial Month**, "the same month last year" is that financial month. The card appears once there is spending in last year's period.
 
+## When I Spend
+
+A grid of your recent days, one column per week and one row per weekday, shaded by how much you spent that day — the darker, the more (each shade is a quarter of your spending days). On a computer it covers the last 12 months; on a phone, as many recent months as fit at a readable size. Tap a day to see its date and total; otherwise the card names your biggest day. Below it, **Average by day of the month** shows how much you spend on each day of the month on average over the past months, and which three days take the most. If your account has a **Financial Month**, day 1 is its first day — payday. The app has no time of purchase for transactions, so the card works with days, not hours. It appears once you have at least 14 days with spending.
+
 ## AI Insights Carousel
 
 A horizontal scrollable carousel of AI-generated insights (Pro plan required):
