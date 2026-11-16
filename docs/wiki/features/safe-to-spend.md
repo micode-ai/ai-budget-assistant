@@ -76,8 +76,9 @@ is absent. Never present an unset wallet as the user's money without saying so.
 "The end of the month" is `financialMonth(now, Account.monthAnchorDay).end` — the day before the
 next anchor for an anchored account, the calendar month end otherwise. The service reads the anchor
 itself (so `check_affordability` follows it too); the offline `localSafeToSpendInputs` takes it as
-`anchorDay` from `useFinancialMonth`. The 5-minute server cache is not keyed on the anchor, so a
-changed anchor shows up when it expires.
+`anchorDay` from `useFinancialMonth`. The 5-minute server cache is not keyed on the anchor;
+`AccountsService.update` drops `sts:{account}:*` (and the chat's `uc:{account}`) whenever it sets
+`monthAnchorDay` ([ABA-793](https://github.com/micode-ai/ai-budget-assistant/issues/831)).
 
 ### Currency
 
@@ -155,3 +156,4 @@ hero row — `renderHomeWidget` returns `null` for it, so it is never a card of 
   deploy guard).
 - [ABA-785](https://github.com/micode-ai/ai-budget-assistant/issues/823) — the unset-balance marker on the hero figure.
 - [ABA-789](https://github.com/micode-ai/ai-budget-assistant/issues/827) — the horizon follows the account's financial month.
+- [ABA-793](https://github.com/micode-ai/ai-budget-assistant/issues/831) — changing the anchor drops the cached figure.

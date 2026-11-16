@@ -5,8 +5,11 @@ import {
   ForbiddenException,
   ConflictException,
   BadRequestException,
+  Optional,
 } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
+import { CacheService } from '../../common/cache/cache.service';
+import { logFireAndForget } from '../../common/utils/fire-and-forget';
 import { dropAccountFromGrants } from '../oauth/oauth-grant-accounts.util';
 import { catalogKeyForName } from '../../common/utils/category-catalog';
 import { getDefaultCategories } from './default-categories';
@@ -26,6 +29,7 @@ export class AccountsService {
     private readonly prisma: PrismaService,
     private readonly mailService: MailService,
     private readonly notificationsService: NotificationsService,
+    @Optional() private readonly cache?: CacheService,
   ) {}
 
   async create(userId: string, dto: CreateAccountDto) {
@@ -157,7 +161,7 @@ export class AccountsService {
   async update(accountId: string, userId: string, dto: UpdateAccountDto) {
     await this.validateAccess(accountId, userId, 'owner');
 
-    return this.prisma.account.update({
+    const updated = await this.prisma.account.update({
       where: { id: accountId },
       data: {
         name: dto.name,
@@ -166,6 +170,17 @@ export class AccountsService {
         monthAnchorDay: dto.monthAnchorDay,
       },
     });
+    if (dto.monthAnchorDay !== undefined && this.cache) {
+      // Cached figures computed against the old month boundary: Safe-to-Spend
+      // (`sts:{account}:{currency}`, safe-to-spend.service.ts) and the chat
+      // summary (`uc:{account}`, user-context-builder.service.ts). Without this
+      // a new anchor shows up only when they expire (ABA-793).
+      void Promise.all([
+        this.cache.delByPrefix(`sts:${accountId}:`),
+        this.cache.del(`uc:${accountId}`),
+      ]).catch(logFireAndForget(this.logger, 'AccountsService.update#bustMonthCaches'));
+    }
+    return updated;
   }
 
   /**
