@@ -8,6 +8,67 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.42.0 - 2026-11-16
+
+**Analytics**
+
+- Income against spending with the savings rate, and fixed against flexible spending; an account
+  can mark which expense categories are fixed costs (ABA-763, ABA-777).
+- A 30-day balance forecast, with subscriptions, recurring expenses, planned purchases and
+  borrowed debts due; money owed to you and irregular income can be counted on request (ABA-764,
+  ABA-775, ABA-786, ABA-787).
+- Each category compared with the same period last year (ABA-797), a spending calendar of the
+  year's days with an average by day of the month (ABA-798), and net worth across all your
+  accounts with its last 12 months (ABA-799).
+- A period still in progress is compared with the same days of earlier periods, and the anomaly
+  list is corrected (ABA-762). Merchants are grouped regardless of letter case and show visits and
+  the average ticket (ABA-765). On the phone the discover banners are one horizontal strip (ABA-766).
+
+**Financial month**
+
+- An account whose month starts on a payday is followed everywhere: the Analytics tab, home
+  totals and the Net Profit trend, the Spending Story, the monthly Wrapped and its push, report
+  periods, Safe-to-Spend, Fat Finder, the monthly digest e-mail and the AI chat (ABA-767, ABA-778,
+  ABA-779, ABA-781, ABA-782, ABA-783, ABA-789, ABA-790, ABA-791, ABA-792, ABA-795). Cached month
+  figures are dropped when the start day changes (ABA-793).
+
+**Safe-to-Spend**
+
+- Says so when it starts from a wallet balance that was never set, and marks the figure, offline
+  too (ABA-773, ABA-785, ABA-794). Offline it is computed by the server's own rules (ABA-772).
+  A balance already below zero is said as such instead of predicting a shortfall for today
+  (ABA-768).
+
+**Children and cars**
+
+- Children and vehicles belong to an account, as each screen now says; an unused child can be
+  deleted, and either can be moved to another account (ABA-800, ABA-801). A child can have
+  categories whose expenses all go to them (ABA-802).
+- What a car costs: fill-ups with consumption, and also fuel without litres, service, insurance,
+  parking, tax and other costs, by hand or by category, with a 12-month ownership total (ABA-796,
+  ABA-803, ABA-804). Many expenses can be assigned to a vehicle at once from Transactions
+  (ABA-805), and the vehicles appear on the Analytics tab (ABA-806).
+
+**Subscriptions**
+
+- Expenses booked by a subscription renewal, past ones included, are linked to their
+  subscription (ABA-776, ABA-788).
+
+**Fixes**
+
+- Monefy and Wallet exports from the US locale read dates month-first instead of failing the
+  preview (ABA-760). Date-only transactions land on their own calendar day in Analytics, west of
+  UTC too (ABA-770, ABA-774). Past months of the wallet balance history use each month's closing
+  rate (ABA-771). The Financial Health Score weighs debts by the overdue amount (ABA-769).
+  Portuguese translations polished (ABA-761).
+
+**Behind the scenes**
+
+- Malformed request bodies get their own 4xx instead of a reported 500 (ABA-759); a flaky web
+  telemetry test fixed (ABA-780).
+
+---
+
 ## 1.41.0 - 2026-11-15
 
 **Languages and currency**
