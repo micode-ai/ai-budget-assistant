@@ -364,6 +364,7 @@ Newest last within each section.
 - 2026-11-16 · [ABA-798](https://github.com/micode-ai/ai-budget-assistant/issues/836) — a year-of-days heatmap and average by day of the (financial) month on the Analytics tab; no purchase times exist in production, so no hour view; features/analytics-tab-breakdowns.
 - 2026-11-16 · [ABA-799](https://github.com/micode-ai/ai-budget-assistant/issues/837) — net worth across all accounts with 12 rebuilt month-ends (no snapshot table); features/net-worth.
 - 2026-11-16 · [ABA-800](https://github.com/micode-ai/ai-budget-assistant/issues/838) — a child create on an encrypted account failed silently when encryption was locked; now explained up front, unused children can be deleted, and Children/Vehicles name their account; features/child-costs, features/vehicle-fuel-log.
+- 2026-11-16 · [ABA-801](https://github.com/micode-ai/ai-budget-assistant/issues/839) — move an unattributed child or a vehicle without fill-ups to another account (name re-encrypted for the target); local children upsert now follows account_id; features/child-costs, features/vehicle-fuel-log.
 
 ## Queries
 

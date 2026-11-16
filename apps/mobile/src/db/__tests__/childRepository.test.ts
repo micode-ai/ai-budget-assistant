@@ -107,6 +107,7 @@ describe('children', () => {
     const { sql, params } = calls[0];
     expect(sql).toMatch(/^INSERT INTO children/);
     expect(sql).toContain('ON CONFLICT(id) DO UPDATE');
+    expect(sql).toContain('account_id = excluded.account_id'); // a moved child follows its account (ABA-801)
     const placeholders = (sql.match(/VALUES \(([^)]*)\)/)![1].match(/\?/g) || []).length;
     expect(placeholders).toBe(params.length);
     // A local write with no server id must not erase one learned earlier.

@@ -90,6 +90,12 @@ the web and an indefinitely queued change on a phone; when the tier cannot be re
 skipped and the phone queues as before. The screen names the account: children are per account, and a
 list that changes with the account switcher read as lost data.
 
+**Moving to another account** ([ABA-801](https://github.com/micode-ai/ai-budget-assistant/issues/839)). `POST /children/:id/move` takes a child with nothing attributed to an
+account the caller can edit. The name travels in the target's form — plaintext for an open account,
+ciphertext under the TARGET's key (`maybeEncrypt(..., targetAccountId)`) for an encrypted one; the server
+stores `enc:<clientId>` there and never sees plaintext. Product rules are dropped (account-scoped). The local
+`children` upsert follows `account_id`, or a moved child would come back into the source account on a phone.
+
 ## Invariants
 
 - **No model call.** Attribution, suggestions and 800+ detection are rules. Nothing in this feature

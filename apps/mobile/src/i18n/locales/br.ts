@@ -2719,6 +2719,17 @@ export default {
     add: 'Adicionar',
     dayNames: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
   },
+  moveToAccount: {
+    title: "Mover para outra conta",
+    move: "Mover",
+    confirmTitle: "Mover {{name}} para \"{{account}}\"?",
+    confirmMessage: "Some desta conta e aparece na outra.",
+    doneTitle: "Movido",
+    done: "{{name}} agora está em \"{{account}}\". Troque para essa conta para ver.",
+    childInUse: "Este filho já tem custos atribuídos nesta conta, então não pode ser movido — os custos ficam aqui. Arquive-o aqui e adicione na outra conta.",
+    nameTaken: "\"{{account}}\" já tem um filho com esse nome.",
+    vehicleInUse: "Este veículo tem abastecimentos nesta conta, então não pode ser movido — eles ficam aqui. Adicione um veículo novo na outra conta.",
+  },
   netWorth: {
     title: "Patrimônio líquido",
     subtitle: "Tudo o que você tem nas suas contas, menos o que você deve",

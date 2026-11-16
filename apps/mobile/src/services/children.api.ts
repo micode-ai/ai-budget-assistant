@@ -42,6 +42,20 @@ export const childrenApi = {
     });
   },
 
+  /**
+   * Moves a child to another account (ABA-801): `name` for an open target,
+   * `encryptedPayload` under the target's key for an encrypted one.
+   */
+  moveChild(
+    id: string,
+    data: { targetAccountId: string; name?: string; encryptedPayload?: string; encryptionKeyVersion?: number },
+  ): Promise<ChildDto> {
+    return httpClient.request<ChildDto>(`/children/${encodeURIComponent(id)}/move`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  },
+
   /** Only a child with nothing attributed; a 409 `CHILD_IN_USE` otherwise (ABA-800). */
   deleteChild(id: string): Promise<{ success: boolean }> {
     return httpClient.request<{ success: boolean }>(`/children/${encodeURIComponent(id)}`, { method: 'DELETE' });

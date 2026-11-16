@@ -1,4 +1,4 @@
-import { IsBoolean, IsIn, IsInt, IsNumber, IsOptional, IsString, MaxLength, Min } from 'class-validator';
+import { IsBoolean, IsIn, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, Min } from 'class-validator';
 
 export const FUEL_TYPES = ['petrol', 'diesel', 'lpg', 'electric', 'hybrid', 'other'] as const;
 
@@ -35,4 +35,11 @@ export class UpsertFuelLogDto {
   @IsOptional()
   @IsBoolean()
   isFullTank?: boolean;
+}
+
+/** Move a vehicle to another account the caller can edit (ABA-801). */
+export class MoveVehicleDto {
+  @IsString()
+  @IsNotEmpty()
+  targetAccountId: string;
 }

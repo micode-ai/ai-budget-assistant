@@ -167,7 +167,7 @@ Visualiza y gestiona todas tus categorias de gastos e ingresos en un solo lugar.
 
 ## Vehículos
 
-Accede desde **Ajustes → Datos de referencia → Vehículos**. Los vehículos pertenecen a la cuenta en la que estás: la pantalla la indica y cada cuenta tiene su propia lista.
+Accede desde **Ajustes → Datos de referencia → Vehículos**. Los vehículos pertenecen a la cuenta en la que estás: la pantalla la indica y cada cuenta tiene su propia lista. ¿Lo creaste en la cuenta equivocada? Ábrelo y toca **Mover a otra cuenta**: es posible mientras no tenga repostajes.
 
 Mira lo que te cuesta el coche en combustible. Añade un vehículo con su nombre y tipo de combustible (gasolina, diésel, GLP, eléctrico, híbrido u otro). Cada vehículo muestra el consumo por 100 km, el coste de combustible por 100 km y por km en tu moneda de visualización, el número de repostajes y la distancia recorrida. Toca **Mostrar repostajes** para ver la lista.
 

@@ -180,7 +180,7 @@ View and manage all your expense and income categories in one place.
 
 ## Vehicles
 
-Access via **Settings → Reference data → Vehicles**. Vehicles belong to the account you are in — the screen names it, and each account has its own list.
+Access via **Settings → Reference data → Vehicles**. Vehicles belong to the account you are in — the screen names it, and each account has its own list. Created one in the wrong account? Open it and tap **Move to another account** — possible while it has no fill-ups.
 
 See what your car costs in fuel. Add a vehicle with its name and fuel type (petrol, diesel, LPG, electric, hybrid or other). Each vehicle shows its consumption per 100 km, the fuel cost per 100 km and per km in your display currency, the number of fill-ups and the distance covered. Tap **Show fill-ups** for the list.
 

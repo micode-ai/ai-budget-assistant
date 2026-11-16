@@ -2723,6 +2723,17 @@ export default {
     add: 'Agregar',
     dayNames: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
   },
+  moveToAccount: {
+    title: "Mover a otra cuenta",
+    move: "Mover",
+    confirmTitle: "¿Mover {{name}} a «{{account}}»?",
+    confirmMessage: "Desaparece de esta cuenta y aparece en la otra.",
+    doneTitle: "Movido",
+    done: "{{name}} está ahora en «{{account}}». Cambia a esa cuenta para verlo.",
+    childInUse: "Este hijo ya tiene gastos asignados en esta cuenta, así que no se puede mover: los gastos se quedan aquí. Archívalo aquí y añádelo en la otra cuenta.",
+    nameTaken: "«{{account}}» ya tiene un hijo con este nombre.",
+    vehicleInUse: "Este vehículo tiene repostajes en esta cuenta, así que no se puede mover: se quedan aquí. Añade un vehículo nuevo en la otra cuenta.",
+  },
   netWorth: {
     title: "Patrimonio",
     subtitle: "Todo lo que tienes en tus cuentas, menos lo que debes",

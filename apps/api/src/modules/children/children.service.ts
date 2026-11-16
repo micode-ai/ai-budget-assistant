@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   Injectable,
   Logger,
   NotFoundException,
@@ -11,7 +12,7 @@ import { PrismaService } from '../../database/prisma.service';
 import { logFireAndForget } from '../../common/utils/fire-and-forget';
 import { touchExpenses } from '../expenses/expense-touch.util';
 import { ChildProductRulesService } from './child-product-rules.service';
-import { CreateChildDto, SetExpenseChildrenDto, UpdateChildDto } from './dto';
+import { CreateChildDto, MoveChildDto, SetExpenseChildrenDto, UpdateChildDto } from './dto';
 
 /** Child as returned to clients; the ciphertext rides along so an E2EE device can decrypt the name. */
 export type ChildResponse = Child & {
@@ -134,14 +135,71 @@ export class ChildrenService {
    * report never loses rows — the caller gets a 409 `CHILD_IN_USE` and offers
    * Archive. Soft delete: a later create of the same name revives the row.
    */
+  /** Costs attributed to a child: whole-expense links, receipt lines and benefit incomes, live only. */
+  private async attributionCount(childId: string): Promise<number> {
+    const [links, items, incomes] = await Promise.all([
+      this.prisma.expenseChild.count({ where: { childId, expense: { isDeleted: false } } }),
+      this.prisma.expenseItem.count({ where: { childId, isDeleted: false, expense: { isDeleted: false } } }),
+      this.prisma.income.count({ where: { childBenefitChildId: childId, isDeleted: false } }),
+    ]);
+    return links + items + incomes;
+  }
+
+  /**
+   * Moves a child created in the wrong account to another one the caller can
+   * edit (ABA-801). Only a child with nothing attributed: its costs live in
+   * the source account and would point across accounts otherwise. The name
+   * must arrive in the form the TARGET stores — plaintext for an open account,
+   * ciphertext under the target's key for an encrypted one (the server can
+   * neither encrypt nor decrypt it). Product rules are account-scoped
+   * suggestions and are dropped.
+   */
+  async move(accountId: string, userId: string, id: string, dto: MoveChildDto): Promise<ChildResponse> {
+    if (dto.targetAccountId === accountId) throw new BadRequestException('Already in this account');
+    const child = await this.findOne(accountId, id);
+    const membership = await this.prisma.accountMember.findUnique({
+      where: { accountId_userId: { accountId: dto.targetAccountId, userId } },
+      select: { role: true, account: { select: { encryptionTier: true } } },
+    });
+    if (!membership || membership.role === 'viewer') {
+      throw new ForbiddenException('You cannot edit the target account');
+    }
+    if ((await this.attributionCount(child.id)) > 0) {
+      throw new ConflictException({ code: 'CHILD_IN_USE', message: 'This child has costs attributed; it cannot move' });
+    }
+    const encrypted = (membership.account.encryptionTier ?? 0) >= 1;
+    const name = dto.name?.trim();
+    if (encrypted && !dto.encryptedPayload) {
+      throw new BadRequestException({ code: 'ENCRYPTION_REQUIRED', message: 'The target account is encrypted' });
+    }
+    if (!encrypted && !name) throw new BadRequestException('Child name is required');
+    const clientKey = child.clientId ?? child.id;
+    try {
+      const moved = await this.prisma.$transaction(async (tx) => {
+        await tx.productChildRule.deleteMany({ where: { childId: child.id } });
+        return tx.child.update({
+          where: { id: child.id },
+          data: {
+            accountId: dto.targetAccountId,
+            name: encrypted ? `enc:${clientKey}` : name!,
+            encryptedPayload: encrypted ? dto.encryptedPayload : null,
+            encryptionKeyVersion: encrypted ? (dto.encryptionKeyVersion ?? null) : null,
+            syncVersion: { increment: 1 },
+          },
+        });
+      });
+      return this.toChild(moved);
+    } catch (e) {
+      if (isUniqueViolation(e)) {
+        throw new ConflictException({ code: 'NAME_TAKEN', message: 'The target account already has a child with this name' });
+      }
+      throw e;
+    }
+  }
+
   async remove(accountId: string, id: string): Promise<{ success: true }> {
     const child = await this.findOne(accountId, id);
-    const [links, items, incomes] = await Promise.all([
-      this.prisma.expenseChild.count({ where: { childId: child.id, expense: { isDeleted: false } } }),
-      this.prisma.expenseItem.count({ where: { childId: child.id, isDeleted: false, expense: { isDeleted: false } } }),
-      this.prisma.income.count({ where: { childBenefitChildId: child.id, isDeleted: false } }),
-    ]);
-    if (links + items + incomes > 0) {
+    if ((await this.attributionCount(child.id)) > 0) {
       throw new ConflictException({ code: 'CHILD_IN_USE', message: 'This child has costs attributed; archive it instead' });
     }
     await this.prisma.child.update({

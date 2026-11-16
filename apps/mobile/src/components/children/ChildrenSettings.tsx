@@ -6,6 +6,7 @@ import type { Child } from '@budget/shared-types';
 import { showAlert } from '@/utils/alert';
 import { SheetDialog } from '@/components/SheetDialog';
 import { SettingsScreenScroll } from '@/components/settings/SettingsScreenScroll';
+import { MoveToAccountPicker } from '@/components/settings/MoveToAccountPicker';
 import { useAccountStore } from '@/stores/accountStore';
 import { CHILD_NAME_MAX, ChildWriteError, useChildStore } from '@/stores/childStore';
 import { useAccountChildren } from '@/hooks/useAccountChildren';
@@ -49,6 +50,7 @@ export function ChildrenSettings() {
   const setChildColor = useChildStore((s) => s.setChildColor);
   const setArchived = useChildStore((s) => s.setArchived);
   const deleteChild = useChildStore((s) => s.deleteChild);
+  const moveChild = useChildStore((s) => s.moveChild);
   // Children belong to an account; say which one, or a list per account reads as a lost child (ABA-800).
   const accountName = useAccountStore((s) => s.currentAccount()?.name ?? '');
 
@@ -86,6 +88,25 @@ export function ChildrenSettings() {
       return;
     }
     showAlert(t('common.error'), t('children.saveFailed'));
+  };
+
+  const handleMove = async (child: Child, targetId: string, targetName: string) => {
+    try {
+      await moveChild(child.id, targetId);
+      closeModal();
+      showAlert(t('moveToAccount.doneTitle'), t('moveToAccount.done', { name: child.name, account: targetName }));
+    } catch (e) {
+      if (e instanceof ChildWriteError && e.code === 'CHILD_IN_USE') {
+        showAlert(t('children.deleteInUseTitle'), t('moveToAccount.childInUse'));
+        return;
+      }
+      if (e instanceof ChildWriteError && e.code === 'NAME_TAKEN') {
+        showAlert(t('common.error'), t('moveToAccount.nameTaken', { account: targetName }));
+        return;
+      }
+      console.warn('[children] move failed:', e instanceof Error ? e.message : String(e));
+      showWriteError(e);
+    }
   };
 
   const handleDelete = (child: Child) => {
@@ -306,6 +327,12 @@ export function ChildrenSettings() {
             <Text style={styles.saveText}>{editing ? t('common.save') : t('children.addChild')}</Text>
           </TouchableOpacity>
         </View>
+        {editing && (
+          <MoveToAccountPicker
+            itemName={editing.name || t('children.unnamed')}
+            onMove={(id, name) => handleMove(editing, id, name)}
+          />
+        )}
         {editing && (
           <TouchableOpacity style={styles.deleteRow} onPress={() => handleDelete(editing)} accessibilityRole="button">
             <Ionicons name="trash-outline" size={18} color={theme.colors.danger} />

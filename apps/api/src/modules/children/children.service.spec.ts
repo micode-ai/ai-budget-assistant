@@ -336,3 +336,60 @@ describe('ChildrenService.remove (ABA-800)', () => {
     expect(prisma.child.findFirst.mock.calls[0][0].where.accountId).toBe('acc-2');
   });
 });
+
+describe('ChildrenService.move (ABA-801)', () => {
+  function setup(o: { role?: string | null; tier?: number; attributed?: number; uniqueClash?: boolean } = {}) {
+    const { service, prisma } = makeService();
+    prisma.child.findFirst.mockResolvedValue(childRow({ clientId: 'local-1' }));
+    prisma.accountMember = {
+      findUnique: jest.fn().mockResolvedValue(
+        o.role === null ? null : { role: o.role ?? 'editor', account: { encryptionTier: o.tier ?? 0 } },
+      ),
+    };
+    prisma.expenseChild.count = jest.fn().mockResolvedValue(o.attributed ?? 0);
+    prisma.expenseItem.count = jest.fn().mockResolvedValue(0);
+    prisma.income = { count: jest.fn().mockResolvedValue(0) };
+    prisma.productChildRule.deleteMany = jest.fn().mockResolvedValue({ count: 0 });
+    prisma.child.update = o.uniqueClash
+      ? jest.fn().mockRejectedValue(Object.assign(new Error('dup'), { code: 'P2002' }))
+      : jest.fn().mockImplementation(({ data }: any) => Promise.resolve(childRow({ ...data })));
+    return { service, prisma };
+  }
+
+  it('moves an unattributed child into an open account with its plaintext name', async () => {
+    const { service, prisma } = setup();
+    const res = await service.move('acc-1', 'u-1', 'child-1', { targetAccountId: 'acc-2', name: 'Ala' });
+    expect(res.accountId).toBe('acc-2');
+    const data = prisma.child.update.mock.calls[0][0].data;
+    expect(data).toMatchObject({ accountId: 'acc-2', name: 'Ala', encryptedPayload: null });
+    expect(prisma.productChildRule.deleteMany).toHaveBeenCalledWith({ where: { childId: 'child-1' } });
+  });
+
+  it('stores only the ciphertext and a placeholder in an encrypted target', async () => {
+    const { service, prisma } = setup({ tier: 1 });
+    await service.move('acc-1', 'u-1', 'child-1', { targetAccountId: 'acc-2', encryptedPayload: 'cipher', encryptionKeyVersion: 2 });
+    expect(prisma.child.update.mock.calls[0][0].data).toMatchObject({
+      name: 'enc:local-1',
+      encryptedPayload: 'cipher',
+      encryptionKeyVersion: 2,
+    });
+  });
+
+  it('refuses an encrypted target without ciphertext', async () => {
+    const { service } = setup({ tier: 1 });
+    await expect(service.move('acc-1', 'u-1', 'child-1', { targetAccountId: 'acc-2', name: 'Ala' })).rejects.toMatchObject({
+      response: { code: 'ENCRYPTION_REQUIRED' },
+    });
+  });
+
+  it('refuses a target the caller cannot edit, an attributed child, and a taken name', async () => {
+    await expect(setup({ role: 'viewer' }).service.move('acc-1', 'u-1', 'child-1', { targetAccountId: 'acc-2', name: 'Ala' }))
+      .rejects.toThrow('You cannot edit the target account');
+    await expect(setup({ role: null }).service.move('acc-1', 'u-1', 'child-1', { targetAccountId: 'acc-2', name: 'Ala' }))
+      .rejects.toThrow('You cannot edit the target account');
+    await expect(setup({ attributed: 2 }).service.move('acc-1', 'u-1', 'child-1', { targetAccountId: 'acc-2', name: 'Ala' }))
+      .rejects.toMatchObject({ response: { code: 'CHILD_IN_USE' } });
+    await expect(setup({ uniqueClash: true }).service.move('acc-1', 'u-1', 'child-1', { targetAccountId: 'acc-2', name: 'Ala' }))
+      .rejects.toMatchObject({ response: { code: 'NAME_TAKEN' } });
+  });
+});

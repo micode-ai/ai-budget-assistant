@@ -67,6 +67,7 @@ jest.mock('../../services/api', () => ({
     pushChanges: jest.fn(),
     getAccountEncryptionStatus: jest.fn(),
     deleteChild: jest.fn(),
+    moveChild: jest.fn(),
   },
 }));
 
@@ -751,5 +752,51 @@ describe('childStore — delete and the encryption lock (ABA-800)', () => {
       expect.objectContaining({ entityType: 'child', entityId: 'c2', operation: 'delete' }),
     );
     expect(mockRepo.softDeleteChildLocally).toHaveBeenCalledWith('c2');
+  });
+});
+
+describe('childStore — move to another account (ABA-801)', () => {
+  const canEncrypt = encryptionHelper.canEncryptFor as unknown as jest.Mock;
+  const ala = { id: 'c1', accountId: 'acc-1', name: 'Ala', archivedAt: null } as Child;
+
+  afterEach(() => canEncrypt.mockReturnValue(true));
+
+  it('sends the plaintext name to an open account and drops the child here', async () => {
+    useChildStore.setState({ children: [ala] });
+    mockApi.getAccountEncryptionStatus.mockResolvedValue({ encryptionTier: 0 });
+    mockRepo.getChildServerIds.mockResolvedValue(new Map([['c1', 'srv-1']]));
+    mockApi.moveChild.mockResolvedValue({});
+    await useChildStore.getState().moveChild('c1', 'acc-2');
+    expect(mockApi.moveChild).toHaveBeenCalledWith('srv-1', { targetAccountId: 'acc-2', name: 'Ala' });
+    expect(mockRepo.softDeleteChildLocally).toHaveBeenCalledWith('c1');
+    expect(useChildStore.getState().children).toEqual([]);
+  });
+
+  it('encrypts under the TARGET key for an encrypted account', async () => {
+    useChildStore.setState({ children: [ala] });
+    mockApi.getAccountEncryptionStatus.mockResolvedValue({ encryptionTier: 1 });
+    mockMaybeEncrypt.mockResolvedValue({ payload: {}, encryptedPayload: 'cipher', encryptionKeyVersion: 3 });
+    mockApi.moveChild.mockResolvedValue({});
+    await useChildStore.getState().moveChild('c1', 'acc-2');
+    expect(mockMaybeEncrypt).toHaveBeenCalledWith('child', { name: 'Ala' }, 'acc-2');
+    expect(mockApi.moveChild.mock.calls[0][1]).toEqual({ targetAccountId: 'acc-2', encryptedPayload: 'cipher', encryptionKeyVersion: 3 });
+  });
+
+  it('refuses an encrypted target while encryption is locked, sending nothing', async () => {
+    useChildStore.setState({ children: [ala] });
+    mockApi.getAccountEncryptionStatus.mockResolvedValue({ encryptionTier: 1 });
+    canEncrypt.mockReturnValue(false);
+    await expect(useChildStore.getState().moveChild('c1', 'acc-2')).rejects.toMatchObject({ code: 'ENCRYPTION_LOCKED' });
+    expect(mockApi.moveChild).not.toHaveBeenCalled();
+  });
+
+  it('explains a taken name and an attributed child, keeping the child', async () => {
+    useChildStore.setState({ children: [ala] });
+    mockApi.getAccountEncryptionStatus.mockResolvedValue({ encryptionTier: 0 });
+    mockApi.moveChild.mockRejectedValueOnce(Object.assign(new Error('x'), { status: 409, code: 'NAME_TAKEN' }));
+    await expect(useChildStore.getState().moveChild('c1', 'acc-2')).rejects.toMatchObject({ code: 'NAME_TAKEN' });
+    mockApi.moveChild.mockRejectedValueOnce(Object.assign(new Error('x'), { status: 409, code: 'CHILD_IN_USE' }));
+    await expect(useChildStore.getState().moveChild('c1', 'acc-2')).rejects.toMatchObject({ code: 'CHILD_IN_USE' });
+    expect(useChildStore.getState().children).toHaveLength(1);
   });
 });

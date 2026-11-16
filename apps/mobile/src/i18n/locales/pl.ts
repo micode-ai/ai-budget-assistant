@@ -2735,6 +2735,17 @@ export default {
     add: 'Dodaj',
     dayNames: ['Nd', 'Pon', 'Wt', 'Śr', 'Czw', 'Pt', 'Sob'],
   },
+  moveToAccount: {
+    title: "Przenieś do innego konta",
+    move: "Przenieś",
+    confirmTitle: "Przenieść {{name}} do „{{account}}”?",
+    confirmMessage: "Zniknie z tego konta i pojawi się w drugim.",
+    doneTitle: "Przeniesiono",
+    done: "{{name}} jest teraz w „{{account}}”. Przełącz się na to konto, aby to zobaczyć.",
+    childInUse: "Do tego dziecka przypisano już koszty na tym koncie, więc nie można go przenieść — koszty zostają tutaj. Zarchiwizuj je tutaj i dodaj na drugim koncie.",
+    nameTaken: "„{{account}}” ma już dziecko o tym imieniu.",
+    vehicleInUse: "Ten pojazd ma tankowania na tym koncie, więc nie można go przenieść — zostają tutaj. Dodaj zamiast tego nowy pojazd na drugim koncie.",
+  },
   netWorth: {
     title: "Majątek netto",
     subtitle: "Wszystko, co masz na kontach, minus to, co jesteś winien",

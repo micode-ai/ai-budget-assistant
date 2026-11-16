@@ -50,3 +50,31 @@ describe('VehiclesService (ABA-796)', () => {
     expect(where.vehicle).toEqual({ isDeleted: false });
   });
 });
+
+describe('VehiclesService.move (ABA-801)', () => {
+  function setup(role: string | null, fillUps: number) {
+    const prisma: any = {
+      vehicle: { findFirst: jest.fn().mockResolvedValue({ id: 'v1', accountId: 'a1' }), update: jest.fn() },
+      accountMember: { findUnique: jest.fn().mockResolvedValue(role ? { role } : null) },
+      fuelLog: { count: jest.fn().mockResolvedValue(fillUps), deleteMany: jest.fn() },
+    };
+    prisma.vehicle.update.mockImplementation(({ data }: any) => Promise.resolve({ id: 'v1', ...data }));
+    prisma.$transaction = jest.fn(async (cb: any) => cb(prisma));
+    return { service: new VehiclesService(prisma, {} as any), prisma };
+  }
+
+  it('moves a vehicle without fill-ups to an account the caller can edit', async () => {
+    const { service, prisma } = setup('owner', 0);
+    await expect(service.move('a1', 'u1', 'v1', { targetAccountId: 'a2' })).resolves.toMatchObject({ accountId: 'a2' });
+    expect(prisma.fuelLog.deleteMany).toHaveBeenCalledWith({ where: { vehicleId: 'v1' } });
+  });
+
+  it('refuses a vehicle with fill-ups and a target the caller cannot edit', async () => {
+    await expect(setup('owner', 3).service.move('a1', 'u1', 'v1', { targetAccountId: 'a2' })).rejects.toMatchObject({
+      response: { code: 'VEHICLE_IN_USE' },
+    });
+    await expect(setup('viewer', 0).service.move('a1', 'u1', 'v1', { targetAccountId: 'a2' })).rejects.toThrow(
+      'You cannot edit the target account',
+    );
+  });
+});

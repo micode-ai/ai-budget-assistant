@@ -29,6 +29,14 @@ export const vehiclesApi = {
     });
   },
 
+  /** To another account the caller can edit; only a vehicle with no fill-ups (ABA-801). */
+  moveVehicle(id: string, targetAccountId: string): Promise<Vehicle> {
+    return httpClient.request<Vehicle>(`/vehicles/${encodeURIComponent(id)}/move`, {
+      method: 'POST',
+      body: JSON.stringify({ targetAccountId }),
+    });
+  },
+
   deleteVehicle(id: string): Promise<{ success: boolean }> {
     return httpClient.request(`/vehicles/${encodeURIComponent(id)}`, { method: 'DELETE' });
   },

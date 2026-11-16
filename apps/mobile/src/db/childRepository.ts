@@ -95,6 +95,8 @@ export async function upsertChild(child: LocalChildRecord): Promise<void> {
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(id) DO UPDATE SET
       server_id = COALESCE(excluded.server_id, children.server_id),
+      -- A child moved to another account (ABA-801) arrives in that account's pull with the same id.
+      account_id = excluded.account_id,
       name = excluded.name,
       color = excluded.color,
       archived_at = excluded.archived_at,

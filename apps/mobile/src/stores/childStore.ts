@@ -7,7 +7,7 @@ import { clearExpenseItemChildren, setExpenseItemChild } from '@/db/expenseItemR
 import { withTransaction } from '@/db/client';
 import { api } from '@/services/api';
 import type { ChildDto } from '@/services/children.api';
-import { canEncryptFor, maybeDecrypt } from '@/services/encryptionHelper';
+import { canEncryptFor, maybeDecrypt, maybeEncrypt } from '@/services/encryptionHelper';
 import { useAccountStore } from './accountStore';
 import {
   buildChildSyncChange,
@@ -57,6 +57,8 @@ interface ChildState {
   setArchived: (id: string, archived: boolean) => Promise<void>;
   /** Deletes a child with nothing attributed; rejects with `code: 'CHILD_IN_USE'` otherwise (ABA-800). */
   deleteChild: (id: string) => Promise<void>;
+  /** Moves an unattributed child to another account; rejects with a `ChildWriteError` code (ABA-801). */
+  moveChild: (id: string, targetAccountId: string) => Promise<void>;
   syncFromServer: () => Promise<void>;
   setExpenseChildren: (expenseId: string, childIds: string[], shares?: number[]) => Promise<void>;
   setItemChild: (expenseId: string, itemId: string, childId: string | null) => Promise<void>;
@@ -181,7 +183,7 @@ function toLocalChild(
 /** An error the screen can explain: `code` is `ENCRYPTION_LOCKED` or `CHILD_IN_USE`. */
 export class ChildWriteError extends Error {
   constructor(
-    public readonly code: 'ENCRYPTION_LOCKED' | 'CHILD_IN_USE',
+    public readonly code: 'ENCRYPTION_LOCKED' | 'CHILD_IN_USE' | 'NAME_TAKEN',
     message: string,
   ) {
     super(message);
@@ -483,6 +485,47 @@ export const useChildStore = create<ChildState>((set, get) => {
           throw e;
         }
       }
+      if (Platform.OS !== 'web') await childRepo.softDeleteChildLocally(id);
+      if (currentAccountId() !== accountId) return;
+      set({ children: get().children.filter((c) => c.id !== id) });
+    },
+
+    moveChild: async (id: string, targetAccountId: string) => {
+      const accountId = currentAccountId();
+      if (!accountId) throw new Error('No account');
+      const existing = get().children.find((c) => c.id === id);
+      if (!existing) throw new Error('Child not found');
+      // The server can neither encrypt nor decrypt a name, so it travels in the
+      // form the TARGET stores: ciphertext under the target's key, or plaintext.
+      const targetTier = await readEncryptionTier(targetAccountId);
+      let body: { targetAccountId: string; name?: string; encryptedPayload?: string; encryptionKeyVersion?: number };
+      if (targetTier >= 1) {
+        if (!canEncryptFor(targetAccountId)) {
+          throw new ChildWriteError('ENCRYPTION_LOCKED', 'Unlock encryption to move a child into an encrypted account');
+        }
+        const enc = await maybeEncrypt('child', { name: existing.name }, targetAccountId);
+        if (!enc.encryptedPayload) {
+          throw new ChildWriteError('ENCRYPTION_LOCKED', 'Unlock encryption to move a child into an encrypted account');
+        }
+        body = { targetAccountId, encryptedPayload: enc.encryptedPayload, encryptionKeyVersion: enc.encryptionKeyVersion };
+      } else {
+        body = { targetAccountId, name: existing.name };
+      }
+      const ref = Platform.OS === 'web' ? id : await serverChildRef(accountId, id);
+      try {
+        await api.moveChild(ref ?? id, body);
+      } catch (e) {
+        const status = (e as { status?: number }).status;
+        const code = (e as { code?: string }).code;
+        if (code === 'NAME_TAKEN') {
+          throw new ChildWriteError('NAME_TAKEN', 'The target account already has a child with this name');
+        }
+        if (status === 409 || code === 'CHILD_IN_USE') {
+          throw new ChildWriteError('CHILD_IN_USE', 'This child has costs attributed; it cannot move');
+        }
+        throw e;
+      }
+      // It belongs to the target now; that account's pull brings it back on a switch.
       if (Platform.OS !== 'web') await childRepo.softDeleteChildLocally(id);
       if (currentAccountId() !== accountId) return;
       set({ children: get().children.filter((c) => c.id !== id) });

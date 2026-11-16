@@ -2723,6 +2723,17 @@ export default {
     add: 'Hinzufügen',
     dayNames: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'],
   },
+  moveToAccount: {
+    title: "In ein anderes Konto verschieben",
+    move: "Verschieben",
+    confirmTitle: "{{name}} nach „{{account}}“ verschieben?",
+    confirmMessage: "Es verschwindet aus diesem Konto und erscheint im anderen.",
+    doneTitle: "Verschoben",
+    done: "{{name}} ist jetzt in „{{account}}“. Wechsle zu diesem Konto, um es zu sehen.",
+    childInUse: "Diesem Kind sind in diesem Konto bereits Kosten zugeordnet, daher kann es nicht verschoben werden — die Kosten bleiben hier. Archiviere es hier und lege es im anderen Konto neu an.",
+    nameTaken: "„{{account}}“ hat bereits ein Kind mit diesem Namen.",
+    vehicleInUse: "Dieses Fahrzeug hat in diesem Konto Tankvorgänge, daher kann es nicht verschoben werden — sie bleiben hier. Lege stattdessen im anderen Konto ein neues Fahrzeug an.",
+  },
   netWorth: {
     title: "Vermögen",
     subtitle: "Alles, was du über deine Konten hast, abzüglich deiner Schulden",

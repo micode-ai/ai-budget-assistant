@@ -115,3 +115,25 @@ export class ChildStatementDto implements Partial<ChildStatementRequest> {
   @IsIn([...SUPPORTED_RATE_CURRENCIES])
   currencyCode?: string;
 }
+
+/** Move a child to another account the caller can edit (ABA-801). The client sends what the TARGET needs. */
+export class MoveChildDto {
+  @IsString()
+  @IsNotEmpty()
+  targetAccountId: string;
+
+  /** Plaintext name — required when the target is not encrypted. */
+  @IsOptional()
+  @IsString()
+  @MaxLength(40)
+  name?: string;
+
+  /** Ciphertext under the TARGET's key — required when the target is encrypted. */
+  @IsOptional()
+  @IsString()
+  encryptedPayload?: string;
+
+  @IsOptional()
+  @IsNumber()
+  encryptionKeyVersion?: number;
+}

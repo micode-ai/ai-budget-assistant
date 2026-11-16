@@ -12,6 +12,15 @@ const cache = new Map<string, Vehicle[]>();
 const listeners = new Set<() => void>();
 const notify = () => listeners.forEach((l) => l());
 
+/**
+ * Drop another account's cached list (a vehicle moved into it, ABA-801). It is
+ * refetched when that account is current — a fetch now would carry the
+ * CURRENT account's header and cache the wrong list under its key.
+ */
+export function forgetVehicles(accountId: string): void {
+  cache.delete(accountId);
+}
+
 /** Refetch an account's list after a write and tell every mounted user. */
 export async function reloadVehicles(accountId: string): Promise<void> {
   cache.set(accountId, await api.getVehicles());

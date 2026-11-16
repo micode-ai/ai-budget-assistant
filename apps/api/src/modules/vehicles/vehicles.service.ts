@@ -1,6 +1,6 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
-import { CreateVehicleDto, UpdateVehicleDto, UpsertFuelLogDto } from './dto';
+import { CreateVehicleDto, MoveVehicleDto, UpdateVehicleDto, UpsertFuelLogDto } from './dto';
 import { computeFuelStats, VehicleStats } from './fuel-stats.util';
 import { ExchangeRateService } from '../currency-exchange/exchange-rate.service';
 import { convertAmount, getRatesSafe } from '../../common/utils/fx';
@@ -44,6 +44,31 @@ export class VehiclesService {
         ...(dto.name !== undefined && { name: dto.name.trim() }),
         ...(dto.fuelType !== undefined && { fuelType: dto.fuelType }),
       },
+    });
+  }
+
+  /**
+   * Moves a vehicle created in the wrong account to another one the caller can
+   * edit (ABA-801). Only a vehicle with no fill-ups: each fill-up hangs on an
+   * expense that stays in the source account, and stats read fill-ups through
+   * the expense's account. Vehicles hold no encrypted fields.
+   */
+  async move(accountId: string, userId: string, id: string, dto: MoveVehicleDto) {
+    if (dto.targetAccountId === accountId) throw new BadRequestException('Already in this account');
+    await this.findOne(accountId, id);
+    const membership = await this.prisma.accountMember.findUnique({
+      where: { accountId_userId: { accountId: dto.targetAccountId, userId } },
+      select: { role: true },
+    });
+    if (!membership || membership.role === 'viewer') throw new ForbiddenException('You cannot edit the target account');
+    const fillUps = await this.prisma.fuelLog.count({ where: { vehicleId: id, expense: { isDeleted: false } } });
+    if (fillUps > 0) {
+      throw new ConflictException({ code: 'VEHICLE_IN_USE', message: 'This vehicle has fill-ups; it cannot move' });
+    }
+    return this.prisma.$transaction(async (tx) => {
+      // Logs on deleted expenses would point across accounts after the move.
+      await tx.fuelLog.deleteMany({ where: { vehicleId: id } });
+      return tx.vehicle.update({ where: { id }, data: { accountId: dto.targetAccountId } });
     });
   }
 

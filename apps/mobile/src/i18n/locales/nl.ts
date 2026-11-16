@@ -2723,6 +2723,17 @@ export default {
     add: 'Toevoegen',
     dayNames: ['zo', 'ma', 'di', 'wo', 'do', 'vr', 'za'],
   },
+  moveToAccount: {
+    title: "Naar een ander account verplaatsen",
+    move: "Verplaatsen",
+    confirmTitle: "{{name}} naar \"{{account}}\" verplaatsen?",
+    confirmMessage: "Het verdwijnt uit dit account en verschijnt in het andere.",
+    doneTitle: "Verplaatst",
+    done: "{{name}} staat nu in \"{{account}}\". Schakel naar dat account om het te zien.",
+    childInUse: "Aan dit kind zijn in dit account al kosten toegewezen, dus het kan niet worden verplaatst — de kosten blijven hier. Archiveer het hier en voeg het in het andere account toe.",
+    nameTaken: "\"{{account}}\" heeft al een kind met deze naam.",
+    vehicleInUse: "Dit voertuig heeft tankbeurten in dit account, dus het kan niet worden verplaatst — die blijven hier. Voeg in het andere account een nieuw voertuig toe.",
+  },
   netWorth: {
     title: "Vermogen",
     subtitle: "Alles wat je op je accounts hebt, min wat je schuldig bent",

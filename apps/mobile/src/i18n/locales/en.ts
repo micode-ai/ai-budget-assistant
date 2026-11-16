@@ -2730,6 +2730,17 @@ export default {
     add: 'Add',
     dayNames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
   },
+  moveToAccount: {
+    title: "Move to another account",
+    move: "Move",
+    confirmTitle: "Move {{name}} to “{{account}}”?",
+    confirmMessage: "It disappears from this account and appears in the other one.",
+    doneTitle: "Moved",
+    done: "{{name}} is now in “{{account}}”. Switch to that account to see it.",
+    childInUse: "Costs are already attributed to this child in this account, so it cannot move — the costs stay here. Archive it here and add it in the other account instead.",
+    nameTaken: "“{{account}}” already has a child with this name.",
+    vehicleInUse: "This vehicle has fill-ups in this account, so it cannot move — they stay here. Add a new vehicle in the other account instead.",
+  },
   netWorth: {
     title: "Net worth",
     subtitle: "Everything you have across your accounts, minus what you owe",

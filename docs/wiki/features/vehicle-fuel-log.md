@@ -30,6 +30,9 @@ and sets `fxApproximate` — never summed unconverted. `GET /vehicles/fuel-logs/
 rather than 404, because the expense screen asks it for every expense with a vehicle on the account.
 
 **Per account, and the screen says so** ([ABA-800](https://github.com/micode-ai/ai-budget-assistant/issues/838)): Settings → Vehicles names the current account.
+`POST /vehicles/:id/move` ([ABA-801](https://github.com/micode-ai/ai-budget-assistant/issues/839)) moves a vehicle with no fill-ups on live expenses to an account the caller
+can edit — fill-ups hang on expenses that stay in the source account. The app drops the target's cached list
+(`forgetVehicles`) instead of refetching it under the current account's header.
 
 **The app is online-only here.** `useVehicles` caches the list per account in module scope (keyed by account id, so
 a switch never reads another account's list) and `reloadVehicles` refetches after a write. The Fill-up section is

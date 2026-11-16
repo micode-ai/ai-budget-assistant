@@ -26,6 +26,7 @@ import {
   ChildStatementDto,
   ChildSuggestionsDto,
   CreateChildDto,
+  MoveChildDto,
   SetExpenseChildrenDto,
   SetItemChildDto,
   UpdateChildDto,
@@ -87,6 +88,13 @@ export class ChildrenController {
     res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
     res.setHeader('Content-Length', String(pdf.length));
     res.send(pdf);
+  }
+
+  /** To another account the caller can edit; only a child with nothing attributed (ABA-801). */
+  @Post(':id/move')
+  @UseGuards(new ViewerBlockGuard())
+  move(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() dto: MoveChildDto) {
+    return this.childrenService.move(req.accountId, req.user.id, id, dto);
   }
 
   /** Only a child with nothing attributed; otherwise 409 `CHILD_IN_USE` (ABA-800). */

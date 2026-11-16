@@ -167,7 +167,7 @@ Visualisez et gerez toutes vos categories de depenses et de revenus en un seul e
 
 ## Véhicules
 
-Accès via **Paramètres → Données de référence → Véhicules**. Les véhicules appartiennent au compte dans lequel vous êtes — l'écran l'indique, et chaque compte a sa propre liste.
+Accès via **Paramètres → Données de référence → Véhicules**. Les véhicules appartiennent au compte dans lequel vous êtes — l'écran l'indique, et chaque compte a sa propre liste. Créé dans le mauvais compte ? Ouvrez-le et touchez **Déplacer vers un autre compte** — possible tant qu'il n'a aucun plein.
 
 Voyez ce que votre voiture coûte en carburant. Ajoutez un véhicule avec son nom et son carburant (essence, diesel, GPL, électrique, hybride ou autre). Chaque véhicule affiche la consommation aux 100 km, le coût du carburant aux 100 km et au km dans votre devise d'affichage, le nombre de pleins et la distance parcourue. Touchez **Afficher les pleins** pour la liste.
 

@@ -8,8 +8,9 @@ import { api } from '@/services/api';
 import { showAlert } from '@/utils/alert';
 import { SheetDialog } from '@/components/SheetDialog';
 import { SettingsScreenScroll } from '@/components/settings/SettingsScreenScroll';
+import { MoveToAccountPicker } from '@/components/settings/MoveToAccountPicker';
 import { useAccountStore } from '@/stores/accountStore';
-import { useVehicles, reloadVehicles } from '@/features/vehicles/useVehicles';
+import { useVehicles, reloadVehicles, forgetVehicles } from '@/features/vehicles/useVehicles';
 import { formatConsumption, formatKm, fuelUnitKey, hasConsumption, parseDay } from '@/features/vehicles/vehicleDisplay';
 import { getIntlLocale } from '@/i18n';
 import { useTheme, useStyles, type Theme } from '@/theme';
@@ -96,6 +97,25 @@ export function VehiclesSettings() {
         },
       },
     ]);
+  };
+
+  const move = async (v: Vehicle, targetId: string, targetName: string) => {
+    try {
+      await api.moveVehicle(v.id, targetId);
+      if (accountId) await reloadVehicles(accountId);
+      // The target's cached list (if any) is stale now.
+      forgetVehicles(targetId);
+      close();
+      showAlert(t('moveToAccount.doneTitle'), t('moveToAccount.done', { name: v.name, account: targetName }));
+    } catch (e) {
+      const code = (e as { code?: string }).code;
+      const status = (e as { status?: number }).status;
+      console.warn('[vehicles] move failed:', e instanceof Error ? e.message : String(e));
+      showAlert(
+        t('common.error'),
+        code === 'VEHICLE_IN_USE' || status === 409 ? t('moveToAccount.vehicleInUse') : t('vehicles.saveFailed'),
+      );
+    }
   };
 
   let body: React.ReactNode;
@@ -186,6 +206,9 @@ export function VehiclesSettings() {
             <Text style={styles.saveText}>{editing ? t('common.save') : t('vehicles.add')}</Text>
           </TouchableOpacity>
         </View>
+        {editing && (
+          <MoveToAccountPicker itemName={editing.name} onMove={(id, name) => move(editing, id, name)} />
+        )}
         {editing && (
           <TouchableOpacity style={styles.deleteRow} onPress={() => remove(editing)} accessibilityRole="button">
             <Ionicons name="trash-outline" size={18} color={theme.colors.danger} />

@@ -167,7 +167,7 @@ Zeige und verwalte alle deine Ausgaben- und Einnahmenkategorien an einem Ort.
 
 ## Fahrzeuge
 
-Aufruf über **Einstellungen → Stammdaten → Fahrzeuge**. Fahrzeuge gehören zu dem Konto, in dem du gerade bist — der Bildschirm nennt es, und jedes Konto hat seine eigene Liste.
+Aufruf über **Einstellungen → Stammdaten → Fahrzeuge**. Fahrzeuge gehören zu dem Konto, in dem du gerade bist — der Bildschirm nennt es, und jedes Konto hat seine eigene Liste. Im falschen Konto angelegt? Öffne es und tippe auf **In ein anderes Konto verschieben** — möglich, solange es keine Tankvorgänge hat.
 
 Sieh, was dein Auto an Kraftstoff kostet. Lege ein Fahrzeug mit Namen und Kraftstoffart an (Benzin, Diesel, Autogas, Elektro, Hybrid oder Sonstiges). Jedes Fahrzeug zeigt den Verbrauch pro 100 km, die Kraftstoffkosten pro 100 km und pro km in deiner Anzeigewährung, die Zahl der Tankvorgänge und die gefahrene Strecke. Tippe auf **Tankvorgänge zeigen** für die Liste.
 

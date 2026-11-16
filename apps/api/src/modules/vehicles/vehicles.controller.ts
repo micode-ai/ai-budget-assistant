@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Req, UseGuards } from '@nestjs/common';
 import { VehiclesService } from './vehicles.service';
-import { CreateVehicleDto, UpdateVehicleDto, UpsertFuelLogDto } from './dto';
+import { CreateVehicleDto, MoveVehicleDto, UpdateVehicleDto, UpsertFuelLogDto } from './dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
 import { ViewerBlockGuard } from '../accounts/guards/account-role.guard';
@@ -38,6 +38,13 @@ export class VehiclesController {
   @UseGuards(new ViewerBlockGuard())
   update(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() dto: UpdateVehicleDto) {
     return this.vehicles.update(req.accountId, id, dto);
+  }
+
+  /** To another account the caller can edit; only a vehicle with no fill-ups (ABA-801). */
+  @Post(':id/move')
+  @UseGuards(new ViewerBlockGuard())
+  move(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() dto: MoveVehicleDto) {
+    return this.vehicles.move(req.accountId, req.user.id, id, dto);
   }
 
   @Delete(':id')
