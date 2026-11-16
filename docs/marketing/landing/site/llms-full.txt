@@ -7525,6 +7525,8 @@ The number is calculated from:
 - **Goal contributions** — the daily amount needed to keep your savings goals on track.
 - **Expected income** — if the app detects a regular monthly income (same amount, ~30-day gap, at least twice in the last 90 days), it adds that as expected income and uses the next payday as the horizon instead of month end.
 
+If your account has a **Financial Month** (for example, starting on payday, the 10th), "the end of the month" means the end of that period — the 9th — not the calendar month end.
+
 If you have never set your wallet balance (no starting balance and no balance correction), the wallet only knows what you recorded, counted from zero. Safe to Spend and the **Next 30 days** forecast then say so and offer **Set balance** — enter what you actually hold and both figures start from real money. The home screen marks the figure itself with **From zero · balance not set**, so you see it without opening the breakdown.
 
 ### Formula

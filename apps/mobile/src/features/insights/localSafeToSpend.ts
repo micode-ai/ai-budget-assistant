@@ -19,6 +19,7 @@
  */
 import {
   detectMonthlyIncomeSeries,
+  financialMonth,
   isoDay,
   recurringOccurrences,
   subscriptionOccurrences,
@@ -78,10 +79,13 @@ export function localSafeToSpendInputs(params: {
   subscriptions: LocalStsSubscription[];
   goals: LocalStsGoal[];
   convert: Convert;
+  /** The account's financial-month anchor; null = calendar month (ABA-789). */
+  anchorDay?: number | null;
 }): LocalStsInputs {
   const { now, convert } = params;
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+  // End of the account's (financial) month — same horizon as the server (ABA-789).
+  const endOfMonth = financialMonth(now, params.anchorDay ?? null).end;
 
   // Income: the largest monthly series whose next payment is still ahead this month.
   const since = new Date(today.getFullYear(), today.getMonth(), today.getDate() - INCOME_LOOKBACK_DAYS);

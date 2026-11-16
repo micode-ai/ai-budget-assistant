@@ -27,6 +27,12 @@ describe('localSafeToSpendInputs', () => {
     expect(r.horizonDate).toBe('2026-06-30');
   });
 
+  it('ends the horizon with the financial month when the account has an anchor day (ABA-789)', () => {
+    const r = localSafeToSpendInputs({ ...base, anchorDay: 15 });
+    expect(r.horizonDate).toBe('2026-06-14'); // the month that started on 15 May ends on 14 June
+    expect(r.daysRemaining).toBe(5); // 10..14 June
+  });
+
   it('subtracts only FUTURE recurring due dates, from the newest instance', () => {
     const r = localSafeToSpendInputs({
       ...base,

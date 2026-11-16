@@ -71,6 +71,14 @@ hero figure itself carries the marker too (`safeToSpend.balanceUnsetShort`, in `
 phone and `NetProfitWidget` on desktop). The offline fallback never sets the flag, so offline the marker
 is absent. Never present an unset wallet as the user's money without saying so.
 
+### The month is the account's financial month ([ABA-789](https://github.com/micode-ai/ai-budget-assistant/issues/827))
+
+"The end of the month" is `financialMonth(now, Account.monthAnchorDay).end` — the day before the
+next anchor for an anchored account, the calendar month end otherwise. The service reads the anchor
+itself (so `check_affordability` follows it too); the offline `localSafeToSpendInputs` takes it as
+`anchorDay` from `useFinancialMonth`. The 5-minute server cache is not keyed on the anchor, so a
+changed anchor shows up when it expires.
+
 ### Currency
 
 The base is the caller's `user.currencyCode`, resolved in the controller. Conversion uses
@@ -146,3 +154,4 @@ hero row — `renderHomeWidget` returns `null` for it, so it is never a card of 
   took production down (see `CLAUDE.md`, Production: the `check-no-shared-utils-runtime-import.sh`
   deploy guard).
 - [ABA-785](https://github.com/micode-ai/ai-budget-assistant/issues/823) — the unset-balance marker on the hero figure.
+- [ABA-789](https://github.com/micode-ai/ai-budget-assistant/issues/827) — the horizon follows the account's financial month.

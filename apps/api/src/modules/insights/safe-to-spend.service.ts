@@ -6,6 +6,7 @@ import { CacheService } from '../../common/cache/cache.service';
 import { EXCLUDE_SPLIT_RECEIVABLE } from '../../common/utils/expense-filters';
 import { getRatesSafe, convertAmount } from '../../common/utils/fx';
 import { computeSafeToSpend } from './safe-to-spend.util';
+import { financialMonth } from '../../common/utils/financial-month';
 import {
   detectMonthlyIncomeSeries,
   recurringOccurrences,
@@ -44,10 +45,12 @@ export class SafeToSpendService {
   ) {}
 
   /**
-   * Returns the ISO date string for the last day of the current month (today's month).
+   * The last moment of the account's current (financial) month — the 9th at
+   * 23:59:59.999 for a month anchored on the 10th, the calendar month end
+   * without an anchor (ABA-789).
    */
-  private endOfMonth(now: Date): Date {
-    return new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+  private endOfMonth(now: Date, anchorDay: number | null): Date {
+    return financialMonth(now, anchorDay).end;
   }
 
   /**
@@ -372,8 +375,12 @@ export class SafeToSpendService {
     }
     walletBalance = Math.round(walletBalance * 100) / 100;
 
-    // --- Horizon: default = end of current month ---
-    const endOfCurrentMonth = this.endOfMonth(now);
+    // --- Horizon: default = end of the account's (financial) month ---
+    const account = await this.prisma.account.findUnique({
+      where: { id: accountId },
+      select: { monthAnchorDay: true },
+    });
+    const endOfCurrentMonth = this.endOfMonth(now, account?.monthAnchorDay ?? null);
 
     // --- Income inference ---
     const incomeInference = await this.inferMonthlyIncome(accountId, baseCurrency, rates, endOfCurrentMonth, now);

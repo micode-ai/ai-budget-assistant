@@ -15,6 +15,8 @@ O valor é calculado a partir de:
 - **Contribuições para objetivos** — o valor diário necessário para manter os seus objetivos de poupança no bom caminho.
 - **Receita esperada** — se a aplicação detetar uma receita mensal regular (mesmo valor, intervalo de ~30 dias, pelo menos duas vezes nos últimos 90 dias), soma-a como receita esperada e usa o próximo dia de pagamento como horizonte, em vez do fim do mês.
 
+Se a sua conta tiver um **Mês financeiro** (por exemplo, a começar no dia do ordenado, dia 10), «fim do mês» significa o fim desse período — dia 9 — e não o fim do mês civil.
+
 Se nunca definiu o saldo da carteira (sem saldo inicial nem correção), a carteira só conhece o que registou, contado a partir de zero. O Disponível para gastar e a previsão **Próximos 30 dias** avisam disso e oferecem **Definir saldo** — indique o que tem realmente e os dois valores passam a partir de dinheiro real. No ecrã inicial, o próprio valor tem a indicação **A partir de zero · saldo não definido**, para que o veja sem abrir o detalhe.
 
 ### Fórmula

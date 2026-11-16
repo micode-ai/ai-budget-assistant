@@ -7428,6 +7428,8 @@ El número se calcula a partir de:
 - **Aportaciones a objetivos** — el importe diario necesario para mantener tus objetivos de ahorro en marcha.
 - **Ingresos esperados** — si la app detecta un ingreso mensual regular (mismo importe, intervalo de ~30 días, al menos dos veces en los últimos 90 días), lo añade como ingreso esperado y usa la próxima fecha de cobro como horizonte.
 
+Si tu cuenta tiene un **Mes financiero** (por ejemplo, desde el día de cobro, el 10), «fin de mes» significa el final de ese periodo —el día 9—, no el final del mes natural.
+
 Si nunca configuraste el saldo de tu billetera (sin saldo inicial ni corrección), la billetera solo conoce lo que registraste, contado desde cero. Disponible para gastar y el pronóstico **Próximos 30 días** lo indican y ofrecen **Establecer saldo**: introduce lo que realmente tienes y ambas cifras partirán de dinero real. En la pantalla de inicio, la propia cifra lleva la marca **Desde cero · saldo sin establecer**, para que lo veas sin abrir el desglose.
 
 ### Fórmula

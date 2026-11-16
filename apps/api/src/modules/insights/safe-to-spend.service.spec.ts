@@ -1,3 +1,4 @@
+import { financialMonth } from '../../common/utils/financial-month';
 import { SafeToSpendService, safeToSpendCacheKey } from './safe-to-spend.service';
 
 // ---------------------------------------------------------------------------
@@ -16,6 +17,7 @@ function makeService(overrides: {
   recurringExpenses?: Array<{ recurringId: string; recurringPeriod: string; date: Date; amount: number; currencyCode: string }>;
   goals?: Array<{ id: string; name: string; targetAmount: number; currentAmount: number; currencyCode: string; deadline: Date; status: string }>;
   rates?: Record<string, number> | null;
+  monthAnchorDay?: number | null;
 }): SafeToSpendService {
   const {
     walletBalances = [],
@@ -24,9 +26,11 @@ function makeService(overrides: {
     recurringExpenses = [],
     goals = [],
     rates = null,
+    monthAnchorDay = null,
   } = overrides;
 
   const prisma: any = {
+    account: { findUnique: jest.fn().mockResolvedValue({ monthAnchorDay }) },
     income: { findMany: jest.fn().mockResolvedValue(incomes) },
     userSubscription: { findMany: jest.fn().mockResolvedValue(subscriptions) },
     expense: {
@@ -142,6 +146,17 @@ describe('SafeToSpendService.compute', () => {
     expect(result.breakdown.walletBalance).toBe(0);
   });
 
+  it("ends the horizon with the account's financial month when it has an anchor day (ABA-789)", async () => {
+    const today = new Date();
+    const anchor = (today.getDate() % 28) + 1; // never today's day, so the month end is not today
+    const end = financialMonth(today, anchor).end;
+    const service = makeService({ walletBalances: [{ currencyCode: 'PLN', currentBalance: 1000 }], monthAnchorDay: anchor });
+    const result = await service.compute('acc-1', 'user-1', 'PLN');
+    expect(result.horizonDate).toBe(
+      `${end.getFullYear()}-${String(end.getMonth() + 1).padStart(2, '0')}-${String(end.getDate()).padStart(2, '0')}`,
+    );
+  });
+
   it('no-income case: horizon = end of month, incomeInferred = false', async () => {
     const today = new Date();
     const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
@@ -211,6 +226,7 @@ describe('SafeToSpendService — split receivable filter', () => {
     // Built inline (not via makeService) because makeService doesn't expose
     // the prisma mock needed to assert on the call's `where` clause.
     const prisma: any = {
+      account: { findUnique: jest.fn().mockResolvedValue({ monthAnchorDay: null }) },
       income: { findMany: jest.fn().mockResolvedValue([]) },
       userSubscription: { findMany: jest.fn().mockResolvedValue([]) },
       expense: { findMany: jest.fn().mockResolvedValue([]) },

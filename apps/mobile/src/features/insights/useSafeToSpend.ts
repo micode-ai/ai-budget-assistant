@@ -9,6 +9,7 @@ import { useAccountStore } from '@/stores/accountStore';
 import { useExchangeRateStore, convertAmount } from '@/stores/exchangeRateStore';
 import { useUserSubscriptionStore, readCachedSubscriptions } from '@/stores/userSubscriptionStore';
 import { localSafeToSpendInputs } from './localSafeToSpend';
+import { useFinancialMonth } from '@/hooks/useFinancialMonth';
 import { computeSafeToSpend } from '@budget/shared-utils';
 import { filterConsumption, filterIncomeConsumption } from '@/utils/consumption';
 import type { SafeToSpendResponse } from '@budget/shared-types';
@@ -66,6 +67,8 @@ export function useSafeToSpend(): UseSafeToSpendResult {
   }, [loadSafeToSpend, currentAccountId]);
 
   // Offline fallback: approximate the formula locally when server data is absent
+  // Offline horizon ends with the account's financial month, as on the server (ABA-789).
+  const { anchorDay } = useFinancialMonth();
   const localFallback = useMemo<SafeToSpendResponse | null>(() => {
     if (safeToSpend) return null; // server data available — skip local computation
 
@@ -96,6 +99,7 @@ export function useSafeToSpend(): UseSafeToSpendResult {
       subscriptions: accountSubs,
       goals,
       convert,
+      anchorDay,
     });
     const { expectedIncome, incomeInferred, horizonDate, daysRemaining, upcomingSubscriptions, upcomingRecurring, goalContributions } =
       inputs;
@@ -131,7 +135,7 @@ export function useSafeToSpend(): UseSafeToSpendResult {
       },
       computedAt: new Date().toISOString(),
     };
-  }, [safeToSpend, user, walletSummary, expenses, incomes, goals, rates, currentAccountId, subscriptions]);
+  }, [safeToSpend, user, walletSummary, expenses, incomes, goals, rates, currentAccountId, subscriptions, anchorDay]);
 
   const data = safeToSpend ?? localFallback;
   const hasEnoughData = data !== null;

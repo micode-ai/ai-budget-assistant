@@ -4297,6 +4297,8 @@ The number is calculated from:
 - **Goal contributions** — the daily amount needed to keep your savings goals on track.
 - **Expected income** — if the app detects a regular monthly income (same amount, ~30-day gap, at least twice in the last 90 days), it adds that as expected income and uses the next payday as the horizon instead of month end.
 
+If your account has a **Financial Month** (for example, starting on payday, the 10th), "the end of the month" means the end of that period — the 9th — not the calendar month end.
+
 If you have never set your wallet balance (no starting balance and no balance correction), the wallet only knows what you recorded, counted from zero. Safe to Spend and the **Next 30 days** forecast then say so and offer **Set balance** — enter what you actually hold and both figures start from real money. The home screen marks the figure itself with **From zero · balance not set**, so you see it without opening the breakdown.
 
 ### Formula
@@ -9695,6 +9697,8 @@ OCR иногда неверно читает цену, выдумывает ст
 - **Взносы на цели** — ежедневная сумма, необходимая для того, чтобы ваши цели накопления шли по плану.
 - **Ожидаемый доход** — если приложение обнаруживает регулярный ежемесячный доход (одинаковая сумма, интервал ~30 дней, не менее двух раз за последние 90 дней), он добавляется как ожидаемый доход, а следующая дата зарплаты используется как горизонт.
 
+Если у аккаунта задан **Финансовый месяц** (например, с дня зарплаты, 10-го), «конец месяца» — это конец такого периода, 9-е число, а не конец календарного месяца.
+
 Если баланс кошелька ни разу не задавался (нет начального баланса и ни одной корректировки), кошелёк знает только записанные операции, посчитанные от нуля. Тогда «Безопасные траты» и прогноз **Ближайшие 30 дней** об этом предупреждают и предлагают **Задать баланс** — укажите, сколько у вас есть на самом деле, и обе цифры будут считаться от реальных денег. На главном экране сама цифра помечена **От нуля · баланс не задан** — это видно, не открывая разбивку.
 
 ### Формула
@@ -15061,6 +15065,8 @@ OCR іноді неправильно читає ціну, вигадує ряд
 - **Внески на цілі** — щоденна сума, необхідна для того, щоб ваші цілі накопичення йшли за планом.
 - **Очікуваний дохід** — якщо застосунок виявляє регулярний місячний дохід (однакова сума, інтервал ~30 днів, принаймні двічі за останні 90 днів), він додається як очікуваний дохід, а наступна дата виплати використовується як горизонт.
 
+Якщо в акаунті задано **Фінансовий місяць** (наприклад, із дня зарплати, 10-го), «кінець місяця» — це кінець такого періоду, 9-те число, а не кінець календарного місяця.
+
 Якщо баланс гаманця жодного разу не задавався (немає початкового балансу й жодного коригування), гаманець знає лише записані операції, пораховані від нуля. Тоді «Безпечні витрати» та прогноз **Найближчі 30 днів** про це попереджають і пропонують **Задати баланс** — вкажіть, скільки у вас є насправді, і обидві цифри рахуватимуться від реальних грошей. На головному екрані сама цифра позначена **Від нуля · баланс не задано** — це видно, не відкриваючи розбивку.
 
 ### Формула
@@ -20412,6 +20418,8 @@ Liczba jest obliczana na podstawie:
 - **Wpłaty na cele** — dzienna kwota niezbędna do utrzymania Twoich celów oszczędnościowych na dobrej ścieżce.
 - **Oczekiwany przychód** — jeśli aplikacja wykryje regularny miesięczny przychód (ta sama kwota, przerwa ~30 dni, co najmniej dwa razy w ciągu ostatnich 90 dni), zostaje on dodany jako oczekiwany przychód, a najbliższy termin wypłaty używany jako horyzont.
 
+Jeśli konto ma **Miesiąc finansowy** (na przykład od dnia wypłaty, 10.), „koniec miesiąca” oznacza koniec tego okresu — 9. dzień — a nie koniec miesiąca kalendarzowego.
+
 Jeśli saldo portfela nigdy nie zostało ustawione (brak salda początkowego i korekty), portfel zna tylko to, co zapisano, licząc od zera. Bezpieczne wydatki i prognoza **Najbliższe 30 dni** informują wtedy o tym i proponują **Ustaw saldo** — wpisz, ile faktycznie masz, a obie liczby będą liczone od prawdziwych pieniędzy. Na ekranie głównym sama kwota ma dopisek **Od zera · saldo nieustawione**, więc widać to bez otwierania szczegółów.
 
 ### Formuła
@@ -25738,6 +25746,8 @@ Die Zahl wird berechnet aus:
 - **Sparziel-Beiträge** — der tägliche Betrag, der nötig ist, um deine Sparziele im Plan zu halten.
 - **Erwartetes Einkommen** — wenn die App ein regelmäßiges monatliches Einkommen erkennt (gleicher Betrag, ~30-Tage-Abstand, mindestens zweimal in den letzten 90 Tagen), wird es als erwartetes Einkommen hinzugefügt und der nächste Zahltag als Horizont verwendet.
 
+Hat dein Konto einen **Finanzmonat** (zum Beispiel ab dem Zahltag, dem 10.), bedeutet „Monatsende“ das Ende dieses Zeitraums — den 9. — und nicht das Ende des Kalendermonats.
+
 Hast du deinen Kontostand nie festgelegt (kein Startsaldo und keine Korrektur), kennt die Geldbörse nur das Erfasste, gezählt ab null. Sicher ausgeben und die Prognose **Die nächsten 30 Tage** weisen dann darauf hin und bieten **Saldo festlegen** an — trage ein, was du tatsächlich hast, und beide Zahlen gehen von echtem Geld aus. Auf dem Startbildschirm steht direkt unter dem Betrag **Ab null · Saldo nicht festgelegt**, damit du es siehst, ohne die Aufschlüsselung zu öffnen.
 
 ### Formel
@@ -31053,6 +31063,8 @@ El número se calcula a partir de:
 - **Aportaciones a objetivos** — el importe diario necesario para mantener tus objetivos de ahorro en marcha.
 - **Ingresos esperados** — si la app detecta un ingreso mensual regular (mismo importe, intervalo de ~30 días, al menos dos veces en los últimos 90 días), lo añade como ingreso esperado y usa la próxima fecha de cobro como horizonte.
 
+Si tu cuenta tiene un **Mes financiero** (por ejemplo, desde el día de cobro, el 10), «fin de mes» significa el final de ese periodo —el día 9—, no el final del mes natural.
+
 Si nunca configuraste el saldo de tu billetera (sin saldo inicial ni corrección), la billetera solo conoce lo que registraste, contado desde cero. Disponible para gastar y el pronóstico **Próximos 30 días** lo indican y ofrecen **Establecer saldo**: introduce lo que realmente tienes y ambas cifras partirán de dinero real. En la pantalla de inicio, la propia cifra lleva la marca **Desde cero · saldo sin establecer**, para que lo veas sin abrir el desglose.
 
 ### Fórmula
@@ -36366,6 +36378,8 @@ Le nombre est calculé à partir de :
 - **Contributions aux objectifs** — le montant journalier nécessaire pour maintenir vos objectifs d'épargne sur la bonne voie.
 - **Revenus attendus** — si l'application détecte un revenu mensuel régulier (même montant, intervalle de ~30 jours, au moins deux fois dans les 90 derniers jours), il est ajouté comme revenu attendu et la prochaine date de paiement est utilisée comme horizon.
 
+Si votre compte a un **Mois financier** (par exemple à partir du jour de paie, le 10), « fin du mois » signifie la fin de cette période — le 9 — et non la fin du mois civil.
+
 Si vous n'avez jamais défini le solde de votre portefeuille (ni solde initial, ni correction), le portefeuille ne connaît que ce que vous avez saisi, compté à partir de zéro. Dépense possible et la prévision **30 prochains jours** le signalent alors et proposent **Définir le solde** : indiquez ce que vous avez réellement et les deux chiffres partiront d'un argent réel. Sur l'écran d'accueil, le montant lui-même porte la mention **Depuis zéro · solde non défini**, pour que vous le voyiez sans ouvrir le détail.
 
 ### Formule
@@ -41642,6 +41656,8 @@ OCR часам няправільна чытае цану, выдумляе ра
 - **Бліжэйшыя рэгулярныя выдаткі** — выдаткі з тыднёвым, штомесячным або гадавым паўторам, запланаваныя да канца месяца.
 - **Узносы на мэты** — штодзённая сума, неабходная для таго, каб вашы мэты зберажэнняў ішлі па плане.
 - **Чаканы даход** — калі праграма выяўляе рэгулярны штомесачны даход (аднолькавая сума, інтэрвал ~30 дзён, не менш за двойчы за апошнія 90 дзён), ён дадаецца як чаканы даход, а наступная дата выплаты выкарыстоўваецца як гарызонт.
+
+Калі ў акаўнта зададзены **Фінансавы месяц** (напрыклад, з дня заробку, 10-га), «канец месяца» — гэта канец такога перыяду, 9-га чысла, а не канец каляндарнага месяца.
 
 Калі баланс кашалька ні разу не задаваўся (няма пачатковага балансу і ніводнай карэкціроўкі), кашалёк ведае толькі запісаныя аперацыі, палічаныя ад нуля. Тады «Бяспечныя выдаткі» і прагноз **Бліжэйшыя 30 дзён** пра гэта папярэджваюць і прапануюць **Задаць баланс** — укажыце, колькі ў вас ёсць насамрэч, і абедзве лічбы будуць лічыцца ад сапраўдных грошай. На галоўным экране сама лічба пазначана **Ад нуля · баланс не зададзены** — гэта відаць, не адкрываючы разбіўку.
 
@@ -47045,6 +47061,8 @@ Het getal wordt berekend op basis van:
 - **Aankomende terugkerende uitgaven** — uitgaven met een wekelijks, maandelijks of jaarlijks herhaalpatroon die voor het einde van de maand vervallen.
 - **Bijdragen aan doelen** — het dagelijkse bedrag dat nodig is om je spaardoelen op schema te houden.
 - **Verwacht inkomen** — als de app een regelmatig maandelijks inkomen detecteert (zelfde bedrag, interval van ~30 dagen, minstens twee keer in de afgelopen 90 dagen), wordt dit toegevoegd als verwacht inkomen en wordt de volgende betaaldag als horizon gebruikt.
+
+Heeft je account een **Financiële maand** (bijvoorbeeld vanaf betaaldag, de 10e), dan betekent „einde van de maand” het einde van die periode — de 9e — en niet het einde van de kalendermaand.
 
 Heb je het saldo van je portemonnee nooit ingesteld (geen beginsaldo en geen correctie), dan kent de portemonnee alleen wat je hebt vastgelegd, geteld vanaf nul. Veilig uit te geven en de voorspelling **Komende 30 dagen** melden dat dan en bieden **Saldo instellen** — vul in wat je echt hebt en beide cijfers gaan uit van echt geld. Op het startscherm staat direct onder het bedrag **Vanaf nul · saldo niet ingesteld**, zodat je het ziet zonder de uitsplitsing te openen.
 
@@ -52473,6 +52491,8 @@ O valor é calculado a partir de:
 - **Despesas recorrentes previstas** — despesas com repetição semanal, mensal ou anual que vencem antes do fim do mês.
 - **Contribuições para objetivos** — o valor diário necessário para manter os seus objetivos de poupança no bom caminho.
 - **Receita esperada** — se a aplicação detetar uma receita mensal regular (mesmo valor, intervalo de ~30 dias, pelo menos duas vezes nos últimos 90 dias), soma-a como receita esperada e usa o próximo dia de pagamento como horizonte, em vez do fim do mês.
+
+Se a sua conta tiver um **Mês financeiro** (por exemplo, a começar no dia do ordenado, dia 10), «fim do mês» significa o fim desse período — dia 9 — e não o fim do mês civil.
 
 Se nunca definiu o saldo da carteira (sem saldo inicial nem correção), a carteira só conhece o que registou, contado a partir de zero. O Disponível para gastar e a previsão **Próximos 30 dias** avisam disso e oferecem **Definir saldo** — indique o que tem realmente e os dois valores passam a partir de dinheiro real. No ecrã inicial, o próprio valor tem a indicação **A partir de zero · saldo não definido**, para que o veja sem abrir o detalhe.
 
@@ -57903,6 +57923,8 @@ O valor é calculado a partir de:
 - **Próximas despesas recorrentes** — despesas com repetição semanal, mensal ou anual que vencem antes do fim do mês.
 - **Contribuições para metas** — o valor diário necessário para manter suas metas de economia em dia.
 - **Receita esperada** — se o app detectar uma receita mensal regular (mesmo valor, intervalo de ~30 dias, pelo menos duas vezes nos últimos 90 dias), ele a soma como receita esperada e usa o próximo dia de pagamento como horizonte, em vez do fim do mês.
+
+Se a sua conta tiver um **Mês financeiro** (por exemplo, começando no dia do pagamento, dia 10), "fim do mês" significa o fim desse período — dia 9 — e não o fim do mês do calendário.
 
 Se você nunca definiu o saldo da carteira (sem saldo inicial nem correção), a carteira só conhece o que você registrou, contado a partir de zero. O Disponível para gastar e a previsão **Próximos 30 dias** avisam isso e oferecem **Definir saldo** — informe quanto você realmente tem e os dois valores passam a partir de dinheiro real. Na tela inicial, o próprio valor traz a indicação **A partir de zero · saldo não definido**, para você ver sem abrir o detalhamento.
 

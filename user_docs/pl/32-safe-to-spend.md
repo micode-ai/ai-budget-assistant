@@ -15,6 +15,8 @@ Liczba jest obliczana na podstawie:
 - **Wpłaty na cele** — dzienna kwota niezbędna do utrzymania Twoich celów oszczędnościowych na dobrej ścieżce.
 - **Oczekiwany przychód** — jeśli aplikacja wykryje regularny miesięczny przychód (ta sama kwota, przerwa ~30 dni, co najmniej dwa razy w ciągu ostatnich 90 dni), zostaje on dodany jako oczekiwany przychód, a najbliższy termin wypłaty używany jako horyzont.
 
+Jeśli konto ma **Miesiąc finansowy** (na przykład od dnia wypłaty, 10.), „koniec miesiąca” oznacza koniec tego okresu — 9. dzień — a nie koniec miesiąca kalendarzowego.
+
 Jeśli saldo portfela nigdy nie zostało ustawione (brak salda początkowego i korekty), portfel zna tylko to, co zapisano, licząc od zera. Bezpieczne wydatki i prognoza **Najbliższe 30 dni** informują wtedy o tym i proponują **Ustaw saldo** — wpisz, ile faktycznie masz, a obie liczby będą liczone od prawdziwych pieniędzy. Na ekranie głównym sama kwota ma dopisek **Od zera · saldo nieustawione**, więc widać to bez otwierania szczegółów.
 
 ### Formuła
