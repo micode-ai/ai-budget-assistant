@@ -10,11 +10,6 @@ import {
 } from '@nestjs/common';
 import { EncryptionService } from './encryption.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
-import {
-  AccountRoleGuard,
-  RequireRole,
-} from '../accounts/guards/account-role.guard';
 import {
   SetupEncryptionDto,
   EnableAccountEncryptionDto,
@@ -51,15 +46,18 @@ export class EncryptionController {
   }
 
   // ---- Account Encryption ----
+  // Every route below acts on the account in the PATH, so it checks the caller's
+  // membership (and the owner role where needed) of THAT account — not the
+  // X-Account-Id header the account guards read, which can name a different
+  // account (ABA-807).
 
   @Post('account/:accountId/enable')
-  @UseGuards(AccountContextGuard, AccountRoleGuard)
-  @RequireRole('owner')
   async enableAccountEncryption(
     @Req() req: AuthenticatedRequest,
     @Param('accountId') accountId: string,
     @Body() dto: EnableAccountEncryptionDto,
   ) {
+    await this.encryptionService.assertAccountAccess(accountId, req.user.id, 'owner');
     return this.encryptionService.enableAccountEncryption(
       accountId,
       req.user.id,
@@ -68,60 +66,60 @@ export class EncryptionController {
   }
 
   @Get('account/:accountId/key')
-  @UseGuards(AccountContextGuard)
   async getAccountKey(
     @Req() req: AuthenticatedRequest,
     @Param('accountId') accountId: string,
   ) {
+    await this.encryptionService.assertAccountAccess(accountId, req.user.id);
     return this.encryptionService.getAccountKey(accountId, req.user.id);
   }
 
   @Get('account/:accountId/status')
-  @UseGuards(AccountContextGuard)
   async getAccountEncryptionStatus(
+    @Req() req: AuthenticatedRequest,
     @Param('accountId') accountId: string,
   ) {
+    await this.encryptionService.assertAccountAccess(accountId, req.user.id);
     return this.encryptionService.getAccountEncryptionStatus(accountId);
   }
 
   @Post('account/:accountId/grant-key')
-  @UseGuards(AccountContextGuard, AccountRoleGuard)
-  @RequireRole('owner')
   async grantKey(
     @Req() req: AuthenticatedRequest,
     @Param('accountId') accountId: string,
     @Body() dto: GrantKeyDto,
   ) {
+    await this.encryptionService.assertAccountAccess(accountId, req.user.id, 'owner');
     return this.encryptionService.grantKey(accountId, req.user.id, dto);
   }
 
   @Get('account/:accountId/pending-grants')
-  @UseGuards(AccountContextGuard, AccountRoleGuard)
-  @RequireRole('owner')
   async getPendingGrants(
+    @Req() req: AuthenticatedRequest,
     @Param('accountId') accountId: string,
   ) {
+    await this.encryptionService.assertAccountAccess(accountId, req.user.id, 'owner');
     return this.encryptionService.getPendingGrants(accountId);
   }
 
   @Post('account/:accountId/rotate-key')
-  @UseGuards(AccountContextGuard, AccountRoleGuard)
-  @RequireRole('owner')
   async rotateAccountKey(
     @Req() req: AuthenticatedRequest,
     @Param('accountId') accountId: string,
     @Body() dto: RotateAccountKeyDto,
   ) {
+    await this.encryptionService.assertAccountAccess(accountId, req.user.id, 'owner');
     return this.encryptionService.rotateAccountKey(accountId, req.user.id, dto);
   }
 
   // ---- Member Public Keys ----
 
   @Get('members/:accountId/public-keys')
-  @UseGuards(AccountContextGuard)
   async getMemberPublicKeys(
+    @Req() req: AuthenticatedRequest,
     @Param('accountId') accountId: string,
   ) {
+    await this.encryptionService.assertAccountAccess(accountId, req.user.id);
     return this.encryptionService.getMemberPublicKeys(accountId);
   }
 

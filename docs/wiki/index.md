@@ -35,6 +35,9 @@ the section you came for — it states what must not break and why. A missing se
 
 ## Feature pages
 
+### Access control
+- [api-authorization](features/api-authorization.md) — what the account guards check and how a route slips past them: path account ids, inline bodies, the per-route viewer block
+
 ### Splitting a bill with people who do not have the app
 - [receipt-split](features/receipt-split.md) — guest links, the `s/` unauthenticated surface,
   split-receivable accounting, payment-method resolution

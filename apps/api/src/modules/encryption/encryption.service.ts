@@ -4,6 +4,7 @@ import {
   NotFoundException,
   ConflictException,
   BadRequestException,
+  ForbiddenException,
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
@@ -33,6 +34,25 @@ export class EncryptionService {
     private readonly prisma: PrismaService,
     private readonly cache: CacheService,
   ) {}
+
+  /**
+   * The caller's membership of the account named in the URL (ABA-807). The
+   * encryption routes act on `:accountId`, not on the `X-Account-Id` header the
+   * account guards check — so without this, an owner of ANY account could
+   * enable encryption on, rotate the keys of, or list the members of another
+   * account by putting its id in the path. A non-member and a missing account
+   * read the same (403), so the check does not confirm an account exists.
+   */
+  async assertAccountAccess(accountId: string, userId: string, requiredRole?: 'owner'): Promise<void> {
+    const member = await this.prisma.accountMember.findUnique({
+      where: { accountId_userId: { accountId, userId } },
+      select: { role: true },
+    });
+    if (!member) throw new ForbiddenException('Not a member of this account');
+    if (requiredRole === 'owner' && member.role !== 'owner') {
+      throw new ForbiddenException('Only the account owner can do this');
+    }
+  }
 
   private async checkRecoveryRateLimit(email: string): Promise<void> {
     const tooManyAttempts = () =>

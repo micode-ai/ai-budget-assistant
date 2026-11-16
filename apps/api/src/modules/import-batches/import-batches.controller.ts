@@ -4,6 +4,7 @@ import { ImportReportService } from './import-report.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
 import type { AuthenticatedRequest } from '../../common/types';
+import { ViewerBlockGuard } from '../accounts/guards/account-role.guard';
 
 @Controller('import/batches')
 @UseGuards(JwtAuthGuard, AccountContextGuard)
@@ -25,6 +26,8 @@ export class ImportBatchesController {
   }
 
   @Delete(':id')
+  // Rolling back soft-deletes every row of the batch, so a viewer may not (ABA-807).
+  @UseGuards(new ViewerBlockGuard())
   @HttpCode(200)
   rollback(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     return this.service.rollback(req.accountId, id);

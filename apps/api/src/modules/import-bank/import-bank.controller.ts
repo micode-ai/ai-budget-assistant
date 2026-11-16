@@ -70,6 +70,8 @@ export class ImportBankController {
   }
 
   @Post('commit')
+  // Viewers may preview but not write (ABA-807).
+  @UseGuards(new ViewerBlockGuard())
   commit(@Req() req: AuthenticatedRequest, @Body() dto: BankImportCommitBodyDto) {
     return this.service.commit(req.accountId, req.user.id, dto);
   }
@@ -80,11 +82,13 @@ export class ImportBankController {
   }
 
   @Post('mappings')
+  @UseGuards(new ViewerBlockGuard())
   createMapping(@Req() req: AuthenticatedRequest, @Body() dto: CreateMappingBodyDto) {
     return this.mapping.create(req.accountId, dto);
   }
 
   @Delete('mappings/:id')
+  @UseGuards(new ViewerBlockGuard())
   @HttpCode(204)
   deleteMapping(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     return this.mapping.delete(req.accountId, id);

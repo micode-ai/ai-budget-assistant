@@ -25,6 +25,21 @@ const PAYMENT_METHODS: SettleMethod[] = ['blik', 'revolut', 'paypal', 'cash', 'o
 // drift apart. `+` and space are deliberate: BLIK handles are phone numbers.
 const PAYMENT_HANDLE_REGEX = /^[A-Za-z0-9+ ._-]{1,50}$/;
 
+/** The profile fields `PATCH /users/me` accepts; every other key in the body is dropped. */
+const PROFILE_FIELDS = [
+  'name', 'currencyCode', 'timezone', 'language', 'contributeCommunityPrices', 'themeMode',
+  'accentColor', 'paymentMethod', 'paymentHandle', 'inflationCountry',
+] as const;
+type ProfileField = (typeof PROFILE_FIELDS)[number];
+
+export function pickProfileFields<T extends Partial<Record<ProfileField, unknown>>>(body: T): Pick<T, ProfileField> {
+  const out: Partial<T> = {};
+  for (const key of PROFILE_FIELDS) {
+    if (body && Object.prototype.hasOwnProperty.call(body, key)) out[key] = body[key];
+  }
+  return out as Pick<T, ProfileField>;
+}
+
 @Controller('users')
 @UseGuards(JwtAuthGuard)
 export class UsersController {
@@ -117,7 +132,11 @@ export class UsersController {
     }
     // Gazetka match consent notice: the client can only say "seen now" — the server picks the time.
     // Opting in to community prices also counts as seeing it, because that copy mentions leaflets.
-    const { leafletConsentNoticeAt, ...profile } = body;
+    // Only these fields may be set here (ABA-807). The body is an inline type, which the
+    // global ValidationPipe cannot whitelist, so spreading it once let a caller write ANY
+    // User column — isVerified, email, isActive, defaultAccountId — into prisma.user.update.
+    const { leafletConsentNoticeAt } = body;
+    const profile = pickProfileFields(body);
     if (leafletConsentNoticeAt !== undefined && leafletConsentNoticeAt !== 'now') {
       throw new BadRequestException("Invalid leafletConsentNoticeAt (only 'now' is accepted)");
     }

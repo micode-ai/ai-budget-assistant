@@ -370,6 +370,7 @@ Newest last within each section.
 - 2026-11-16 · [ABA-804](https://github.com/micode-ai/ai-budget-assistant/issues/842) — fuel purchases count as a car cost without litres/odometer (VehicleCost kind fuel), consumption still from fill-ups; features/vehicle-fuel-log.
 - 2026-11-16 · [ABA-805](https://github.com/micode-ai/ai-budget-assistant/issues/843) — bulk 'Assign to vehicle' from the transactions list in one request; features/vehicle-fuel-log.
 - 2026-11-16 · [ABA-806](https://github.com/micode-ai/ai-budget-assistant/issues/844) — vehicles card on Analytics (12-month ownership per vehicle, phone section + desktop BreakdownGrid tile); settings hint corrected · features/vehicle-fuel-log.md
+- 2026-11-16 · [ABA-807](https://github.com/micode-ai/ai-budget-assistant/issues/845) — security review: the guards check the header account, not a path id (encryption routes acted on any account); inline bodies skip ValidationPipe (`PATCH /users/me` mass assignment); viewer block on import writes · features/api-authorization.md (new)
 
 ## Queries
 

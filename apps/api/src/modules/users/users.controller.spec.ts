@@ -587,3 +587,20 @@ describe('PATCH /users/me/voice-digest — DTO validation (real ValidationPipe)'
     expect(voiceDigestService.updateSettings).toHaveBeenCalledWith('user-1', {});
   });
 });
+
+describe('UsersController.updateProfile field whitelist (ABA-807)', () => {
+  it('drops every key that is not a profile field before it reaches prisma.user.update', async () => {
+    const update = jest.fn().mockResolvedValue({ id: 'u1', email: 'a@b.c', name: 'B' });
+    const { controller } = makeController(update);
+    await controller.updateProfile(req, {
+      name: 'B',
+      isVerified: true,
+      email: 'victim@example.com',
+      isActive: true,
+      defaultAccountId: 'victim-account',
+      passwordHash: 'x',
+      googleId: 'g',
+    } as any);
+    expect(update).toHaveBeenCalledWith('u1', { name: 'B' });
+  });
+});

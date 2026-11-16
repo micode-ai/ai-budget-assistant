@@ -127,3 +127,28 @@ describe('EncryptionService.enableAccountEncryption — inbound e-receipt hook',
     expect(tx.inboundReceipt.deleteMany).not.toHaveBeenCalled();
   });
 });
+
+describe('EncryptionService.assertAccountAccess — the account in the path (ABA-807)', () => {
+  const make = (member: { role: string } | null) => {
+    const prisma: any = { accountMember: { findUnique: jest.fn().mockResolvedValue(member) } };
+    return { prisma, service: new EncryptionService(prisma, { incrementWindow: jest.fn() } as any) };
+  };
+
+  it('refuses a caller who is not a member of the path account', async () => {
+    const { service, prisma } = make(null);
+    await expect(service.assertAccountAccess('victim-acc', 'attacker')).rejects.toThrow('Not a member');
+    expect(prisma.accountMember.findUnique).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { accountId_userId: { accountId: 'victim-acc', userId: 'attacker' } } }),
+    );
+  });
+
+  it('refuses an editor where the owner role is required', async () => {
+    const { service } = make({ role: 'editor' });
+    await expect(service.assertAccountAccess('acc', 'u', 'owner')).rejects.toThrow('owner');
+  });
+
+  it('lets any member read and the owner write', async () => {
+    await expect(make({ role: 'viewer' }).service.assertAccountAccess('acc', 'u')).resolves.toBeUndefined();
+    await expect(make({ role: 'owner' }).service.assertAccountAccess('acc', 'u', 'owner')).resolves.toBeUndefined();
+  });
+});
