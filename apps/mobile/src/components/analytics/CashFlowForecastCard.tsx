@@ -1,4 +1,5 @@
-import { View, Text, TouchableOpacity } from 'react-native';
+import { useState } from 'react';
+import { View, Text, TouchableOpacity, Switch } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { router } from 'expo-router';
@@ -6,6 +7,7 @@ import { formatCurrency } from '@budget/shared-utils';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { getIntlLocale } from '@/i18n';
 import type { CashFlowForecastResponse } from '@budget/shared-types';
+import { forecastWithOwed, owedTotal } from '@/features/analytics/forecastWithOwed';
 
 interface Props {
   forecast: CashFlowForecastResponse;
@@ -20,6 +22,7 @@ const EVENT_ICON = {
   recurring: 'repeat-outline',
   planned: 'cart-outline',
   debt: 'people-outline',
+  owed: 'return-down-back-outline',
 } as const;
 
 /** `YYYY-MM-DD` as a LOCAL date — never `new Date(string)`, which reads it as UTC. */
@@ -35,8 +38,12 @@ function parseDay(iso: string): Date {
  * at a glance. Shared by phone and desktop; see
  * docs/wiki/features/cash-flow-forecast.md.
  */
-export function CashFlowForecastCard({ forecast }: Props) {
+export function CashFlowForecastCard({ forecast: raw }: Props) {
   const { t } = useTranslation();
+  // Money owed to the user is never counted unless they opt in (ABA-786).
+  const [includeOwed, setIncludeOwed] = useState(false);
+  const owed = owedTotal(raw);
+  const forecast = includeOwed && owed > 0 ? forecastWithOwed(raw) : raw;
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const currency = forecast.baseCurrency;
@@ -135,6 +142,23 @@ export function CashFlowForecastCard({ forecast }: Props) {
           <Text style={styles.axisLabel}>{fmtDay(forecast.days[Math.floor(forecast.days.length / 2)].date)}</Text>
           <Text style={styles.axisLabel}>{fmtDay(forecast.days[forecast.days.length - 1].date)}</Text>
         </View>
+
+        {owed > 0 && (
+          <View style={styles.owedRow}>
+            <View style={styles.owedTextBlock}>
+              <Text style={styles.owedLabel}>
+                {t('analytics.forecastIncludeOwed', { amount: formatCurrency(owed, currency) })}
+              </Text>
+              <Text style={styles.owedHint}>{t('analytics.forecastIncludeOwedHint')}</Text>
+            </View>
+            <Switch
+              value={includeOwed}
+              onValueChange={setIncludeOwed}
+              trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
+              accessibilityLabel={t('analytics.forecastIncludeOwed', { amount: formatCurrency(owed, currency) })}
+            />
+          </View>
+        )}
 
         {forecast.walletBalanceUnset && (
           <View style={styles.unsetBox}>
@@ -254,6 +278,24 @@ const createStyles = (theme: Theme) => ({
     marginTop: theme.spacing[1],
   },
   axisLabel: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
+  },
+  owedRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[3],
+    marginTop: theme.spacing[3],
+  },
+  owedTextBlock: {
+    flex: 1,
+    minWidth: 0,
+  },
+  owedLabel: {
+    ...theme.textStyles.body,
+    color: theme.colors.textPrimary,
+  },
+  owedHint: {
     ...theme.textStyles.caption,
     color: theme.colors.textTertiary,
   },

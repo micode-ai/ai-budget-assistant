@@ -40,6 +40,12 @@ tier.
   **borrowed debts due** (`Income.isDebt` with `debtDueDate`, minus repayments linked by
   `relatedDebtIncomeId`) — both as outflows; anything already overdue is placed on today (ABA-775).
   Lent debts (money others owe the user) are deliberately NOT assumed to come back.
+- **Money owed to the user** ([ABA-786](https://github.com/micode-ai/ai-budget-assistant/issues/824)):
+  lent debts (`Expense.isDebt` with `debtDueDate`, split receivables excluded, minus repayments linked
+  by `Income.relatedDebtExpenseId`) go out as `expectedInflows`, kind `owed`, overdue ones on today —
+  and NEVER into `days`/`lowest`/`endBalance`. The card offers a **Count money owed to you** switch,
+  off on every visit; `features/analytics/forecastWithOwed.ts` adds them on the device and recomputes
+  the low and the end. The server series must stay owed-free, or the default view leans on it.
 
 **Everyday spending**: the average day of the last 90 days. It leaves out rows in a recurring
 series and rows that pay an active subscription (`paysSubscription`, the same name-or-category+amount rule as
@@ -82,4 +88,4 @@ this is an estimate. The card is shown only while the current period is open.
 ## History
 
 ABA-764: the forecast, and the shared date rules extracted from Safe-to-Spend. ABA-768: the
-already-below-zero headline. ABA-775: planned purchases and borrowed debts due.
+already-below-zero headline. ABA-775: planned purchases and borrowed debts due. ABA-786: money owed to the user, on opt-in.

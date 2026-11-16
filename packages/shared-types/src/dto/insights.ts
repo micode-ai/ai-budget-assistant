@@ -30,7 +30,7 @@ export interface CashFlowForecastDay {
 
 export interface CashFlowForecastEvent {
   date: string;                   // YYYY-MM-DD
-  kind: 'income' | 'subscription' | 'recurring' | 'planned' | 'debt';
+  kind: 'income' | 'subscription' | 'recurring' | 'planned' | 'debt' | 'owed';
   label: string;                  // subscription name, recurring expense or income description
   amount: number;                 // signed, base currency
 }
@@ -49,6 +49,11 @@ export interface CashFlowForecastResponse {
   fxApproximate: boolean;
   /** No starting balance and no correction ever set: the start counts from zero (ABA-773). */
   walletBalanceUnset?: boolean;
+  /**
+   * Money others owe the user (lent debts, remaining amount) due within the horizon, kind `owed`.
+   * NOT in `days`/`lowest`/`endBalance` — the client adds them only when the user opts in (ABA-786).
+   */
+  expectedInflows?: CashFlowForecastEvent[];
   computedAt: string;
 }
 

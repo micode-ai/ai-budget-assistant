@@ -25,10 +25,13 @@ function makeService(o: {
   planned?: unknown[];
   borrowed?: unknown[];
   repayments?: unknown[];
+  lent?: unknown[];
+  lentRepayments?: unknown[];
 }) {
   // Answer by query shape, not call order — the service runs several in parallel.
   const expenseFindMany = jest.fn(async ({ where }: any) => {
     if (where.isPlanned === true) return o.planned ?? [];
+    if (where.isDebt) return o.lent ?? [];
     if (where.isDebtRepayment) return o.repayments ?? [];
     if (where.isRecurring) return o.recurring ?? [];
     return o.spend ?? [];
@@ -36,7 +39,9 @@ function makeService(o: {
   const prisma: any = {
     account: { findUnique: jest.fn().mockResolvedValue({ encryptionTier: o.encryptionTier ?? 0 }) },
     income: {
-      findMany: jest.fn(async ({ where }: any) => (where.isDebt ? o.borrowed ?? [] : o.incomes ?? [])),
+      findMany: jest.fn(async ({ where }: any) =>
+        where.isDebt ? o.borrowed ?? [] : where.isDebtRepayment ? o.lentRepayments ?? [] : o.incomes ?? [],
+      ),
     },
     userSubscription: { findMany: jest.fn().mockResolvedValue(o.subs ?? []) },
     expense: { findMany: expenseFindMany },
@@ -157,6 +162,28 @@ describe('CashFlowForecastService', () => {
       ['2026-06-25', 'debt', 'Friend', -250],
     ]);
     expect(res.endBalance).toBe(1000 - 50 - 300 - 250);
+  });
+
+  it('returns money owed to the user apart, minus repayments, and keeps it out of the balance', async () => {
+    const { service } = makeService({
+      balances: [{ currencyCode: 'PLN', currentBalance: 1000 }],
+      lent: [
+        { id: 'l1', amount: '500', currencyCode: 'PLN', debtDueDate: d(6, 15), debtContactName: 'Anna' },
+        { id: 'l2', amount: '200', currencyCode: 'PLN', debtDueDate: d(6, 1), debtContactName: 'Late' },
+        { id: 'l3', amount: '100', currencyCode: 'PLN', debtDueDate: d(6, 12), debtContactName: 'Paid' },
+      ],
+      lentRepayments: [
+        { relatedDebtExpenseId: 'l1', amount: '120' },
+        { relatedDebtExpenseId: 'l3', amount: '100' },
+      ],
+    });
+    const res = await service.compute('a1', 'PLN', NOW);
+    expect(res.expectedInflows?.map((e) => [e.date, e.kind, e.label, e.amount])).toEqual([
+      ['2026-06-10', 'owed', 'Late', 200],
+      ['2026-06-15', 'owed', 'Anna', 380],
+    ]);
+    expect(res.events).toEqual([]);
+    expect(res.endBalance).toBe(1000);
   });
 
   it('passes through whether the wallet balance was ever set', async () => {

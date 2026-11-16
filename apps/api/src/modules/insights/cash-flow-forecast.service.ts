@@ -124,9 +124,10 @@ export class CashFlowForecastService {
 
     // Planned purchases (approved purchase requests) and borrowed debts due
     // are money the user has committed to pay. Money OTHERS owe the user (lent
-    // debts) is deliberately not assumed to come back — a forecast should not
-    // lean on someone else's punctuality (ABA-775).
-    const [planned, borrowedDue] = await Promise.all([
+    // debts) is never assumed to come back — a forecast should not lean on
+    // someone else's punctuality (ABA-775). It is returned apart, as
+    // `expectedInflows`, and the client adds it only on the user's opt-in (ABA-786).
+    const [planned, borrowedDue, lentDue] = await Promise.all([
       this.prisma.expense.findMany({
         where: { accountId, isDeleted: false, isPlanned: true, ...EXCLUDE_SPLIT_RECEIVABLE, date: { lte: until } },
         select: { amount: true, currencyCode: true, date: true, description: true, merchant: true },
@@ -135,7 +136,33 @@ export class CashFlowForecastService {
         where: { accountId, isDeleted: false, isDebt: true, debtDueDate: { not: null, lte: until } },
         select: { id: true, amount: true, currencyCode: true, debtDueDate: true, debtContactName: true },
       }),
+      this.prisma.expense.findMany({
+        where: {
+          accountId,
+          isDeleted: false,
+          isDebt: true,
+          ...EXCLUDE_SPLIT_RECEIVABLE,
+          debtDueDate: { not: null, lte: until },
+        },
+        select: { id: true, amount: true, currencyCode: true, debtDueDate: true, debtContactName: true },
+      }),
     ]);
+    const lentRepaid = new Map<string, number>();
+    if (lentDue.length > 0) {
+      const repayments = await this.prisma.income.findMany({
+        where: {
+          accountId,
+          isDeleted: false,
+          isDebtRepayment: true,
+          relatedDebtExpenseId: { in: lentDue.map((d) => d.id) },
+        },
+        select: { relatedDebtExpenseId: true, amount: true },
+      });
+      for (const r of repayments) {
+        if (!r.relatedDebtExpenseId) continue;
+        lentRepaid.set(r.relatedDebtExpenseId, (lentRepaid.get(r.relatedDebtExpenseId) ?? 0) + Number(r.amount));
+      }
+    }
     const repaid = new Map<string, number>();
     if (borrowedDue.length > 0) {
       const repayments = await this.prisma.expense.findMany({
@@ -211,6 +238,22 @@ export class CashFlowForecastService {
       });
     }
 
+    // Lent debts: kept OUT of `events`, so the series below never counts them.
+    const expectedInflows: ForecastEvent[] = [];
+    for (const debt of lentDue) {
+      const remaining = Number(debt.amount) - (lentRepaid.get(debt.id) ?? 0);
+      if (remaining <= 0 || !debt.debtDueDate) continue;
+      const amount = toBase(remaining, debt.currencyCode);
+      if (amount === null) continue;
+      expectedInflows.push({
+        date: onOrAfterToday(new Date(debt.debtDueDate)),
+        kind: 'owed',
+        label: debt.debtContactName ?? '',
+        amount,
+      });
+    }
+    expectedInflows.sort((a, b) => a.date.getTime() - b.date.getTime());
+
     // Typical everyday spending: the average day over the history window,
     // leaving out what is already scheduled above (recurring series and
     // subscription charges), or it would be subtracted twice.
@@ -249,6 +292,12 @@ export class CashFlowForecastService {
       endBalance: series.endBalance,
       fxApproximate,
       walletBalanceUnset,
+      expectedInflows: expectedInflows.map((e) => ({
+        date: isoDay(e.date),
+        kind: e.kind,
+        label: e.label,
+        amount: Math.round(e.amount * 100) / 100,
+      })),
       computedAt: now.toISOString(),
     };
   }
