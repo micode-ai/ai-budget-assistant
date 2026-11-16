@@ -26,16 +26,16 @@ describe('scrubSentryEvent', () => {
     }
   });
 
-  it('leaves the app routes body alone (the existing behaviour) but still drops a secret-bearing query', () => {
+  it('drops the body on app routes too (ABA-809) and still drops a secret-bearing query', () => {
     const out: any = scrubSentryEvent({
       request: {
         url: 'https://api.ai-budget.pl/api/v1/expenses?code=abc&x=1',
         query_string: 'code=abc&x=1',
         data: { amount: 1 },
-        headers: { 'user-agent': 'k' },
+        headers: { 'user-agent': 'k', authorization: 'Bearer t', cookie: 'c' },
       },
     } as any);
-    expect(out.request.data).toEqual({ amount: 1 });
+    expect(out.request.data).toBeUndefined();
     expect(out.request.url).toBe('https://api.ai-budget.pl/api/v1/expenses');
     expect(out.request.query_string).toBeUndefined();
     expect(out.request.headers).toEqual({ 'user-agent': 'k' });

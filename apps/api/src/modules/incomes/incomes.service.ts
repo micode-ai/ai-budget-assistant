@@ -158,7 +158,7 @@ export class IncomesService {
       // Create tag associations if provided (skip silently if tags don't exist on server yet)
       if (dto.tagIds && dto.tagIds.length > 0) {
         const existingTags = await tx.tag.findMany({
-          where: { id: { in: dto.tagIds } },
+          where: { accountId, id: { in: dto.tagIds } }, // never another account's tag (ABA-809)
           select: { id: true },
         });
         const validTagIds = existingTags.map((t: { id: string }) => t.id);
@@ -180,16 +180,12 @@ export class IncomesService {
 
       // Create project association if provided (try by id first, then by clientId)
       if (dto.projectId) {
-        let project = await tx.project.findUnique({
-          where: { id: dto.projectId },
+        // By server id OR clientId, inside this account only — a bare findUnique once linked
+        // another account's project to this row (ABA-809).
+        const project = await tx.project.findFirst({
+          where: { accountId, isDeleted: false, OR: [{ id: dto.projectId }, { clientId: dto.projectId }] },
           select: { id: true },
         });
-        if (!project) {
-          project = await tx.project.findFirst({
-            where: { accountId, clientId: dto.projectId, isDeleted: false },
-            select: { id: true },
-          });
-        }
         if (project) {
           await tx.projectIncome.upsert({
             where: { projectId_incomeId: { projectId: project.id, incomeId: income.id } },
@@ -352,7 +348,7 @@ export class IncomesService {
 
         if (dto.tagIds.length > 0) {
           const existingTags = await tx.tag.findMany({
-            where: { id: { in: dto.tagIds } },
+            where: { accountId, id: { in: dto.tagIds } }, // never another account's tag (ABA-809)
             select: { id: true },
           });
           const validTagIds = existingTags.map((t: { id: string }) => t.id);
@@ -386,14 +382,15 @@ export class IncomesService {
           data: { isDeleted: true },
         });
         if (dto.projectId) {
-          const projectExists = await tx.project.findUnique({
-            where: { id: dto.projectId },
+          // Scoped to the account, by server id or clientId; the resolved PK is what gets linked (ABA-809).
+          const project = await tx.project.findFirst({
+            where: { accountId, isDeleted: false, OR: [{ id: dto.projectId }, { clientId: dto.projectId }] },
             select: { id: true },
           });
-          if (projectExists) {
+          if (project) {
             await tx.projectIncome.upsert({
-              where: { projectId_incomeId: { projectId: dto.projectId, incomeId: income.id } },
-              create: { projectId: dto.projectId, incomeId: income.id },
+              where: { projectId_incomeId: { projectId: project.id, incomeId: income.id } },
+              create: { projectId: project.id, incomeId: income.id },
               update: { isDeleted: false },
             });
           }

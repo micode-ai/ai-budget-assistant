@@ -30,7 +30,8 @@ export class WhatsAppBotController {
     @Query('hub.challenge') challenge: string,
     @Res() res: Response,
   ): Promise<void> {
-    if (mode === 'subscribe' && token === this.verifyToken) {
+    // An unset verify token must not match an empty `hub.verify_token` (ABA-809).
+    if (this.verifyToken && mode === 'subscribe' && token === this.verifyToken) {
       res.status(200).send(challenge);
       return;
     }

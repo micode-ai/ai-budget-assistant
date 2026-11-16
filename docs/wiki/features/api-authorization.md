@@ -31,6 +31,13 @@ those guards, each found in a real defect.
 - Never spread an inline-typed body into a Prisma `data`. Pick the allowed fields explicitly, or use a DTO class.
   The `PATCH /users/me` spread once let any user set `isVerified`, `email`, `isActive` and `defaultAccountId` on
   themselves (ABA-807).
+- A reference the client sends — a tag, project or category id — is resolved INSIDE the account before it is
+  written, and the resolved primary key is what gets linked. A bare `findUnique({ id })` once let an expense or
+  income carry another account's tag or project, and a split or subscription another account's category, with
+  its name returned in the response ([ABA-809](https://github.com/micode-ai/ai-budget-assistant/issues/847)). Categories go through `resolveExpenseCategoryId`.
+- An unauthenticated route never gets the 50 MB body limit: sign-in and the webhooks are capped at 1 MB by
+  `common/http/small-body-limit.ts`, mounted before the global parser ([ABA-809](https://github.com/micode-ai/ai-budget-assistant/issues/847)).
+- A webhook signature check with an EMPTY secret accepts nothing — an HMAC keyed by `''` is computable by anyone.
 - `user.defaultAccountId` is only trustworthy because nothing but account creation and sign-up writes it. A cron
   that reads data through it does no membership check of its own (the leaflet promo push, the monthly Wrapped).
 - Every import write route — bank and Wise commit, saved mappings, batch rollback — blocks viewers. A viewer may
@@ -39,13 +46,13 @@ those guards, each found in a real defect.
   exists.
 
 ## Known gaps
-Open findings from the 2026-11-16 security review, tracked as follow-ups to ABA-807:
-- Expense and income writes accept a `tagIds`/`projectId`, and splits and user subscriptions a `categoryId`, from
-  another account. A foreign UUID is required.
-- Tokens are not revoked on password reset or e-mail change.
+Open findings from the 2026-11-16 security review:
+- Dependency upgrades (Next.js, NestJS 11, nodemailer, the MCP SDK) and container hardening (non-root, pinned images).
+- Register's 409 and login's Google-only message reveal that an address is registered.
 
 ## History
 - ABA-155 added `ViewerBlockGuard`.
+- [ABA-809](https://github.com/micode-ai/ai-budget-assistant/issues/847) closed the review's medium findings: token revocation, foreign tag/project/category references, webhooks with an unset secret, the pre-authentication body limit, Sentry bodies.
 - [ABA-808](https://github.com/micode-ai/ai-budget-assistant/issues/846) closed three of the review's findings: brute-forceable bot link codes, the Google auto-link pre-hijack, and the missing login limit and in-memory auth limits — see [auth](../auth.md).
 - [ABA-807](https://github.com/micode-ai/ai-budget-assistant/issues/845) fixed three defects:
   - the encryption routes acted on the path account while checking the header one;

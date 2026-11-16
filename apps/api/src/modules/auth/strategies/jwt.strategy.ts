@@ -4,10 +4,13 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
 import { UsersService } from '../../users/users.service';
 import { LastActiveService } from '../../users/last-active.service';
+import { tokenVersionMatches } from '../token-version.util';
 
 interface JwtPayload {
   sub: string;
   email: string;
+  /** The user's tokenVersion when issued; absent on tokens from before ABA-809. */
+  tv?: number;
 }
 
 @Injectable()
@@ -27,7 +30,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   async validate(payload: JwtPayload) {
     const user = await this.usersService.findById(payload.sub);
 
-    if (!user || !user.isActive) {
+    // A password reset or an e-mail change bumps tokenVersion and so ends every older session (ABA-809).
+    if (!user || !user.isActive || !tokenVersionMatches(payload, user)) {
       throw new UnauthorizedException();
     }
 

@@ -836,11 +836,25 @@ describe('child-row edits touch the parent expense updatedAt', () => {
       expenseCategorySplit: { updateMany: jest.fn().mockResolvedValue({}), createMany: jest.fn().mockResolvedValue({}) },
     };
     prisma.$transaction = jest.fn(async (cb: any) => cb(tx));
+    jest.spyOn(service as any, 'resolveCategoryId').mockResolvedValue('cat-pk-1');
     await service.setSplits('acc-1', 'server-pk-1', [{ categoryId: 'c1', amount: 10, percentage: 100 }]);
     expect(tx.expense.updateMany).toHaveBeenCalledWith({
       where: { id: 'server-pk-1', accountId: 'acc-1' },
       data: { updatedAt: expect.any(Date) },
     });
+    // The RESOLVED category of this account is written, never the raw id (ABA-809).
+    expect(tx.expenseCategorySplit.createMany.mock.calls[0][0].data[0].categoryId).toBe('cat-pk-1');
+  });
+
+  it('setSplits refuses a category that is not in this account (ABA-809)', async () => {
+    const { service, prisma } = withTouch();
+    prisma.$transaction = jest.fn();
+    const resolve = jest.spyOn(service as any, 'resolveCategoryId').mockResolvedValue(null);
+    await expect(
+      service.setSplits('acc-1', 'server-pk-1', [{ categoryId: 'foreign-cat', amount: 10, percentage: 100 }]),
+    ).rejects.toThrow('Unknown category');
+    expect(resolve).toHaveBeenCalledWith('foreign-cat', 'acc-1');
+    expect(prisma.$transaction).not.toHaveBeenCalled();
   });
 
   it('removeSplits bumps the expense', async () => {

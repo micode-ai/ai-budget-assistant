@@ -193,6 +193,8 @@ model User {
   paymentHandle              String?       @map("payment_handle")
   isActive                   Boolean       @default(true) @map("is_active")
   isVerified                 Boolean       @default(false) @map("is_verified")
+  /// Bumped to revoke every issued JWT (password reset, e-mail change) — ABA-809.
+  tokenVersion               Int           @default(0) @map("token_version")
   emailVerificationCode      String?       @map("email_verification_code")
   emailVerificationExpiresAt DateTime?     @map("email_verification_expires_at")
   defaultAccountId           String?       @map("default_account_id")

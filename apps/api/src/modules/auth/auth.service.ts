@@ -14,6 +14,7 @@ import { ReferralsService } from '../referrals/referrals.service';
 import { RegisterDto, LoginDto, ChangeEmailRequestDto, ChangeEmailConfirmDto, GoogleAuthDto } from './dto';
 import { GoogleTokenVerifier } from './google-token-verifier';
 import { CacheService } from '../../common/cache/cache.service';
+import { tokenVersionMatches } from './token-version.util';
 
 
 const AUTH_RATE_WINDOW_MS = 15 * 60 * 1000;
@@ -130,7 +131,7 @@ export class AuthService {
     );
 
     // Generate tokens
-    const tokens = await this.generateTokens(user.id, user.email);
+    const tokens = await this.generateTokens(user.id, user.email, user.tokenVersion);
 
     // Load all accounts
     const accounts = await this.accountsService.findAllForUser(user.id);
@@ -207,7 +208,7 @@ export class AuthService {
     this.usersService.updateLastSync(user.id).catch(() => null);
 
     // Generate tokens
-    const tokens = await this.generateTokens(user.id, user.email);
+    const tokens = await this.generateTokens(user.id, user.email, user.tokenVersion);
 
     // Load all accounts
     const accounts = await this.accountsService.findAllForUser(user.id);
@@ -314,7 +315,7 @@ export class AuthService {
    * different user blocks for the same account.
    */
   async buildAuthResponse(user: User, overrideDefaultAccountId?: string) {
-    const tokens = await this.generateTokens(user.id, user.email);
+    const tokens = await this.generateTokens(user.id, user.email, user.tokenVersion);
     const accounts = await this.accountsService.findAllForUser(user.id);
 
     return {
@@ -343,14 +344,14 @@ export class AuthService {
       });
 
       const user = await this.usersService.findById(payload.sub);
-      if (!user || !user.isActive) {
+      if (!user || !user.isActive || !tokenVersionMatches(payload, user)) {
         throw new UnauthorizedException('Invalid refresh token');
       }
 
       // Update last active timestamp on token refresh (biometric login)
       this.usersService.updateLastSync(user.id).catch(() => null);
 
-      const tokens = await this.generateTokens(user.id, user.email);
+      const tokens = await this.generateTokens(user.id, user.email, user.tokenVersion);
 
       // Sliding session (client "do aplikacji ciągle trzeba się logować"):
       // return a FRESH refresh token with the new access token. The mobile/web
@@ -470,7 +471,7 @@ export class AuthService {
     });
 
     // Generate tokens so the user can proceed without re-login
-    const tokens = await this.generateTokens(user.id, user.email);
+    const tokens = await this.generateTokens(user.id, user.email, user.tokenVersion);
     const accounts = await this.accountsService.findAllForUser(user.id);
 
     return {
@@ -608,14 +609,15 @@ export class AuthService {
     }
 
     const newEmail = user.emailChangePending;
-    await this.usersService.updateEmailChange(user.id, {
+    const updated = await this.usersService.updateEmailChange(user.id, {
       email: newEmail,
       emailChangePending: null,
       emailChangeCode: null,
       emailChangeExpiresAt: null,
     });
 
-    const tokens = await this.generateTokens(user.id, newEmail);
+    // The change bumped tokenVersion: this device gets fresh tokens, every other session ends.
+    const tokens = await this.generateTokens(user.id, newEmail, updated.tokenVersion);
     return {
       message: 'Email changed successfully',
       accessToken: tokens.accessToken,
@@ -623,17 +625,23 @@ export class AuthService {
     };
   }
 
-  private async generateTokens(userId: string, email: string) {
+  /**
+   * `tv` is the user's `tokenVersion` (ABA-809). JwtStrategy and refreshToken reject a
+   * token whose `tv` differs from the row's, so bumping the column revokes every token
+   * issued before. A token from before ABA-809 has no `tv` and reads as 0 — the column's
+   * default — so existing sessions survive the deploy.
+   */
+  private async generateTokens(userId: string, email: string, tokenVersion = 0) {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
-        { sub: userId, email },
+        { sub: userId, email, tv: tokenVersion },
         {
           secret: this.configService.get<string>('JWT_SECRET'),
           expiresIn: this.configService.get<string>('JWT_EXPIRES_IN', '7d'),
         },
       ),
       this.jwtService.signAsync(
-        { sub: userId, email },
+        { sub: userId, email, tv: tokenVersion },
         {
           secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
           expiresIn: '30d',

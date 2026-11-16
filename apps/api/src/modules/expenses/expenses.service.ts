@@ -393,7 +393,7 @@ export class ExpensesService {
       if (dto.tagIds && dto.tagIds.length > 0) {
         // Filter to only tags that exist on the server
         const existingTags = await tx.tag.findMany({
-          where: { id: { in: dto.tagIds } },
+          where: { accountId, id: { in: dto.tagIds } }, // never another account's tag (ABA-809)
           select: { id: true },
         });
         const validTagIds = existingTags.map((t: { id: string }) => t.id);
@@ -415,16 +415,12 @@ export class ExpensesService {
 
       // Create project association if provided (try by id first, then by clientId)
       if (dto.projectId) {
-        let project = await tx.project.findUnique({
-          where: { id: dto.projectId },
+        // By server id OR clientId, inside this account only — a bare findUnique once linked
+        // another account's project to this row (ABA-809).
+        const project = await tx.project.findFirst({
+          where: { accountId, isDeleted: false, OR: [{ id: dto.projectId }, { clientId: dto.projectId }] },
           select: { id: true },
         });
-        if (!project) {
-          project = await tx.project.findFirst({
-            where: { accountId, clientId: dto.projectId, isDeleted: false },
-            select: { id: true },
-          });
-        }
         if (project) {
           await tx.projectExpense.upsert({
             where: { projectId_expenseId: { projectId: project.id, expenseId: expense.id } },
@@ -742,7 +738,7 @@ export class ExpensesService {
         // Create new expense tags (skip tags that don't exist on server yet)
         if (dto.tagIds.length > 0) {
           const existingTags = await tx.tag.findMany({
-            where: { id: { in: dto.tagIds } },
+            where: { accountId, id: { in: dto.tagIds } }, // never another account's tag (ABA-809)
             select: { id: true },
           });
           const validTagIds = existingTags.map((t: { id: string }) => t.id);
@@ -1175,6 +1171,16 @@ export class ExpensesService {
     });
     if (!expense) throw new NotFoundException('Expense not found');
 
+    // Every split's category resolved inside THIS account (server id, clientId or name). The
+    // raw id was written as-is once, so another account's category could be attached and its
+    // name returned through the include below (ABA-809).
+    const resolvedCategoryIds: string[] = [];
+    for (const split of splits) {
+      const resolved = await this.resolveCategoryId(split.categoryId, accountId);
+      if (!resolved) throw new BadRequestException(`Unknown category: ${split.categoryId}`);
+      resolvedCategoryIds.push(resolved);
+    }
+
     return this.prisma.$transaction(async (tx: PrismaClient) => {
       // Soft-delete existing splits
       await tx.expenseCategorySplit.updateMany({
@@ -1184,9 +1190,9 @@ export class ExpensesService {
 
       // Create new splits
       await tx.expenseCategorySplit.createMany({
-        data: splits.map(split => ({
+        data: splits.map((split, i) => ({
           expenseId,
-          categoryId: split.categoryId,
+          categoryId: resolvedCategoryIds[i],
           amount: split.amount,
           percentage: split.percentage,
           notes: split.notes,

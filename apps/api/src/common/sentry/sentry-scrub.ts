@@ -1,29 +1,26 @@
 import type { Event } from '@sentry/node';
 
 /**
- * Sentry `beforeSend` / `beforeSendTransaction` scrubber (public API M1).
+ * Sentry `beforeSend` / `beforeSendTransaction` scrubber.
  *
- * The OAuth server and `/public/v1` carry credentials in places Sentry captures by default: the
- * token request body (`refresh_token`, `client_secret`, `code_verifier`), the `Authorization`
- * header (Bearer access token, Basic client secret) and, on a redirect, `?code=` in the URL. For
- * those routes the body, cookies and auth/cookie headers are dropped; on every route a query
- * string carrying a credential-like parameter is removed. Imported by `instrument.ts`, so this
- * file must stay dependency-free (it loads before anything else).
+ * Request bodies, cookies and auth/cookie headers are dropped on EVERY route (ABA-809). They
+ * used to be dropped only for `/oauth` and `/public`, so an error elsewhere could ship a login
+ * password, an expense, a receipt's text or a chat prompt to a third party; the stack trace and
+ * the URL are what a report needs. On every route a query string carrying a credential-like
+ * parameter is removed too. Imported by `instrument.ts`, so this file must stay
+ * dependency-free (it loads before anything else).
  */
-const SENSITIVE_PATH = /^(?:\/api\/v1)?\/(?:oauth|public)\//i;
 const SENSITIVE_HEADERS = new Set(['authorization', 'proxy-authorization', 'cookie', 'set-cookie']);
 const SENSITIVE_PARAM = /(?:^|[?&])(?:code|token|access_token|refresh_token|id_token|client_secret|code_verifier)=/i;
 
 export function scrubSentryEvent<T extends Event>(event: T): T {
   const req = event.request;
   if (req) {
-    if (SENSITIVE_PATH.test(pathOf(req.url))) {
-      delete req.data;
-      delete req.cookies;
-      if (req.headers) {
-        for (const name of Object.keys(req.headers)) {
-          if (SENSITIVE_HEADERS.has(name.toLowerCase())) delete req.headers[name];
-        }
+    delete req.data;
+    delete req.cookies;
+    if (req.headers) {
+      for (const name of Object.keys(req.headers)) {
+        if (SENSITIVE_HEADERS.has(name.toLowerCase())) delete req.headers[name];
       }
     }
     if (typeof req.url === 'string' && hasSensitiveQuery(req.url)) req.url = req.url.split('?')[0];
@@ -34,15 +31,6 @@ export function scrubSentryEvent<T extends Event>(event: T): T {
     if (typeof url === 'string' && hasSensitiveQuery(url)) crumb.data!.url = url.split('?')[0];
   }
   return event;
-}
-
-function pathOf(url: string | undefined): string {
-  if (!url) return '';
-  try {
-    return new URL(url, 'http://local').pathname;
-  } catch {
-    return url.split('?')[0];
-  }
 }
 
 function hasSensitiveQuery(text: string): boolean {

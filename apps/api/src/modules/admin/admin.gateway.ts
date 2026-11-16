@@ -14,6 +14,9 @@ import { ConfigService } from '@nestjs/config';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { AdminService } from './admin.service';
 import { AdminAnalyticsService } from './admin-analytics.service';
+import { PrismaService } from '../../database/prisma.service';
+import { parseAdminEmails } from './admin-emails.util';
+import { tokenVersionMatches } from '../auth/token-version.util';
 
 const ADMIN_ROOM = 'admin';
 
@@ -36,6 +39,7 @@ export class AdminGateway implements OnGatewayConnection, OnGatewayDisconnect {
     private readonly adminAnalyticsService: AdminAnalyticsService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly prisma: PrismaService,
   ) {}
 
   async handleConnection(client: Socket) {
@@ -53,19 +57,22 @@ export class AdminGateway implements OnGatewayConnection, OnGatewayDisconnect {
         secret: this.configService.get<string>('JWT_SECRET'),
       });
 
-      const adminEmails = (this.configService.get<string>('ADMIN_EMAILS') || '')
-        .split(',')
-        .map((e) => e.trim())
-        .filter(Boolean);
-
-      if (!adminEmails.includes(payload.email)) {
-        this.logger.warn(`Unauthorized WebSocket connection attempt from: ${payload.email}`);
+      // The user as it is NOW, not as the token remembers it (ABA-809): a deactivated user,
+      // a revoked token or an address no longer on the list must not reach the admin room.
+      // Compared lower-case, as AdminGuard does.
+      const user = await this.prisma.user.findUnique({
+        where: { id: payload.sub },
+        select: { email: true, isActive: true, tokenVersion: true },
+      });
+      const adminEmails = parseAdminEmails(this.configService.get<string>('ADMIN_EMAILS'));
+      if (!user || !user.isActive || !tokenVersionMatches(payload, user) || !adminEmails.includes(user.email.toLowerCase())) {
+        this.logger.warn(`Unauthorized WebSocket connection attempt (${client.id})`);
         client.disconnect();
         return;
       }
 
       await client.join(ADMIN_ROOM);
-      this.logger.log(`Admin connected: ${payload.email} (${client.id})`);
+      this.logger.log(`Admin connected (${client.id})`);
     } catch {
       client.disconnect();
     }

@@ -372,6 +372,7 @@ Newest last within each section.
 - 2026-11-16 · [ABA-806](https://github.com/micode-ai/ai-budget-assistant/issues/844) — vehicles card on Analytics (12-month ownership per vehicle, phone section + desktop BreakdownGrid tile); settings hint corrected · features/vehicle-fuel-log.md
 - 2026-11-16 · [ABA-807](https://github.com/micode-ai/ai-budget-assistant/issues/845) — security review: the guards check the header account, not a path id (encryption routes acted on any account); inline bodies skip ValidationPipe (`PATCH /users/me` mass assignment); viewer block on import writes · features/api-authorization.md (new)
 - 2026-11-16 · [ABA-808](https://github.com/micode-ai/ai-budget-assistant/issues/846) — bot link codes 8 chars + Redis attempt limits (fail closed) + atomic claim; Google auto-link of a never-verified account drops its password; auth limits in Redis, login per e-mail/IP (fail open) · auth.md, telegram-bot.md, features/api-authorization.md
+- 2026-11-16 · [ABA-809](https://github.com/micode-ai/ai-budget-assistant/issues/847) — `User.tokenVersion` in every JWT (password reset / e-mail change revoke sessions; old tokens read as 0); foreign tag/project/category refs resolved inside the account; empty webhook secret accepts nothing; 1 MB body limit before auth; Sentry drops bodies everywhere · auth.md, features/api-authorization.md
 
 ## Queries
 

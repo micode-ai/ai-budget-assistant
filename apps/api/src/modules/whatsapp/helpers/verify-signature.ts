@@ -9,6 +9,9 @@ export function verifySignature(
   signatureHeader: string | undefined,
   appSecret: string,
 ): boolean {
+  // An HMAC keyed by '' is computable by anyone: with no secret configured, nothing
+  // can be verified, so nothing is accepted (ABA-809).
+  if (!appSecret) return false;
   if (!signatureHeader || !signatureHeader.startsWith('sha256=')) {
     return false;
   }

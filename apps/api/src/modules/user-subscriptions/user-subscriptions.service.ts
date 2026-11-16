@@ -5,6 +5,7 @@ import { CreateUserSubscriptionDto, UpdateUserSubscriptionDto } from './dto';
 
 type UserSubscriptionRow = Prisma.UserSubscriptionGetPayload<object>;
 
+import { resolveExpenseCategoryId } from '../expenses/expense-category-resolver.util';
 @Injectable()
 export class UserSubscriptionsService {
   constructor(private readonly prisma: PrismaService) {}
@@ -60,6 +61,15 @@ export class UserSubscriptionsService {
     return subs.map((s) => this.mapSubscription(s));
   }
 
+  /**
+   * The category inside THIS account, or null (ABA-809). The renewal cron copies it onto
+   * every expense it books, so a raw id once let another account's category ride along.
+   */
+  private async resolveCategory(accountId: string, categoryId: string | null | undefined): Promise<string | null> {
+    if (!categoryId) return null;
+    return resolveExpenseCategoryId(this.prisma, categoryId, accountId, 'expense');
+  }
+
   async create(accountId: string, dto: CreateUserSubscriptionDto) {
     const sub = await this.prisma.userSubscription.create({
       data: {
@@ -69,7 +79,7 @@ export class UserSubscriptionsService {
         currencyCode: dto.currencyCode,
         billingCycle: dto.billingCycle,
         nextRenewalDate: new Date(dto.nextRenewalDate),
-        categoryId: dto.categoryId ?? null,
+        categoryId: await this.resolveCategory(accountId, dto.categoryId),
         notes: dto.notes ?? null,
         detectedFrom: dto.detectedFrom ?? null,
       },
@@ -87,7 +97,7 @@ export class UserSubscriptionsService {
     if (dto.currencyCode !== undefined) data.currencyCode = dto.currencyCode;
     if (dto.billingCycle !== undefined) data.billingCycle = dto.billingCycle;
     if (dto.nextRenewalDate !== undefined) data.nextRenewalDate = new Date(dto.nextRenewalDate);
-    if ('categoryId' in dto) data.categoryId = dto.categoryId ?? null;
+    if ('categoryId' in dto) data.categoryId = await this.resolveCategory(accountId, dto.categoryId);
     if ('notes' in dto) data.notes = dto.notes ?? null;
     if (dto.isActive !== undefined) data.isActive = dto.isActive;
 

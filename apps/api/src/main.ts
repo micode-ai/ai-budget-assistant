@@ -12,6 +12,7 @@ import { isMcpEnabled } from './modules/oauth/mcp.config';
 import { setupPublicDocs } from './modules/public-api/docs/openapi';
 import { DCR_REGISTER_PATH, registerBodyLimit } from './modules/oauth/register-body-limit';
 import { MCP_PATH, mcpBodyLimit } from './modules/mcp/mcp-body-limit';
+import { SMALL_BODY_PATHS, smallBodyLimit } from './common/http/small-body-limit';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bodyParser: false });
@@ -36,6 +37,10 @@ async function bootstrap() {
   // The MCP endpoint (POST /mcp) is reachable before authentication: its JSON body is capped at
   // 128 KB by its own parser, mounted for the same reason and in the same way (see mcp-body-limit.ts).
   app.use(MCP_PATH, mcpBodyLimit(mcpOn));
+
+  // Pre-authentication routes (sign-in, inbound webhooks) get a 1 MB limit, mounted before the
+  // app-wide 50 MB parser so an anonymous request cannot make the API buffer 50 MB (ABA-809).
+  for (const path of SMALL_BODY_PATHS) app.use(path, smallBodyLimit());
 
   // Increase body size limit for base64 audio/image uploads
   // verify callback preserves rawBody for Stripe webhook signature verification

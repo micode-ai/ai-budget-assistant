@@ -15,6 +15,9 @@ export function verifySlackSignature(
   signatureHeader: string | undefined,
   signingSecret: string,
 ): boolean {
+  // An HMAC keyed by '' is computable by anyone: with no secret configured, nothing
+  // can be verified, so nothing is accepted (ABA-809).
+  if (!signingSecret) return false;
   if (!timestamp || !signatureHeader || !signatureHeader.startsWith('v0=')) {
     return false;
   }

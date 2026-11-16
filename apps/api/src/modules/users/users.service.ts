@@ -110,7 +110,8 @@ export class UsersService {
   }) {
     return this.prisma.user.update({
       where: { id },
-      data,
+      // A new password revokes every session issued under the old one (ABA-809).
+      data: data.passwordHash ? { ...data, tokenVersion: { increment: 1 } } : data,
     });
   }
 
@@ -281,7 +282,8 @@ export class UsersService {
   }) {
     return this.prisma.user.update({
       where: { id },
-      data,
+      // Moving the account to a new address revokes every session issued before (ABA-809).
+      data: data.email ? { ...data, tokenVersion: { increment: 1 } } : data,
     });
   }
 
