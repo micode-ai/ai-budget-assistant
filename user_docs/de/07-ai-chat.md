@@ -57,6 +57,8 @@ Tippe auf eine beliebige Schaltflache, um diese Frage sofort zu senden.
 - "Wie ist mein Budget-Status?"
 - "Zeige Kategorie-Aufschlüsselung für diesen Monat"
 
+Hat dein Konto einen **Finanzmonat** (zum Beispiel ab dem Zahltag, dem 10.), meinen „diesen Monat“ und „letzten Monat“ im Chat diese Zeiträume — dieser Monat läuft ab dem 10. — und ein genannter Monat wie *Oktober* ist der 10. Oktober – 9. November.
+
 ## Nach einem bestimmten Produkt fragen
 
 Du kannst fragen, wie viel du für ein bestimmtes Produkt, eine Marke oder ein Geschäft ausgegeben hast:

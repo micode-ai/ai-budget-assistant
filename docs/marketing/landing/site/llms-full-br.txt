@@ -1813,6 +1813,8 @@ Toque em um botão para enviar essa pergunta na hora.
 - “Qual é a situação do meu orçamento?”
 - “Mostre a divisão por categorias deste mês”
 
+Se a sua conta tiver um **Mês financeiro** (por exemplo, começando no dia do pagamento, dia 10), "este mês" e "mês passado" no chat se referem a esses períodos — este mês conta a partir do dia 10 — e um mês que você citar, como *outubro*, vai de 10 de outubro a 9 de novembro.
+
 ## Perguntando sobre um produto específico
 
 Você pode perguntar quanto gastou com um produto, marca ou loja específicos:

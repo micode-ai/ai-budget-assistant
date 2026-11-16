@@ -1250,6 +1250,8 @@ Tap any button to instantly send that question.
 - "What's my budget status?"
 - "Show category breakdown for this month"
 
+If your account has a **Financial Month** (for example, starting on payday, the 10th), "this month" and "last month" in the chat mean those periods — this month runs from the 10th — and a month you name, such as *October*, is 10 October – 9 November.
+
 ## Asking About a Specific Product
 
 You can ask how much you've spent on a particular product, brand, or shop:
@@ -6685,6 +6687,8 @@ iOS, Android, Web
 - «Какой статус моих бюджетов?»
 - «Покажи разбивку по категориям за этот месяц»
 
+Если у аккаунта задан **Финансовый месяц** (например, с дня зарплаты, 10-го), «этот месяц» и «прошлый месяц» в чате означают такие периоды — этот месяц идёт с 10-го, — а названный месяц, например *октябрь*, — это 10 октября – 9 ноября.
+
 ## Вопрос о конкретном продукте
 
 Можно спросить, сколько вы потратили на конкретный продукт, бренд или магазин:
@@ -12098,6 +12102,8 @@ iOS, Android, Web
 - "Який статус моїх бюджетів?"
 - "Покажи розбивку за категоріями за цей місяць"
 
+Якщо в акаунті задано **Фінансовий місяць** (наприклад, із дня зарплати, 10-го), «цей місяць» і «минулий місяць» у чаті означають такі періоди — цей місяць іде з 10-го, — а названий місяць, наприклад *жовтень*, — це 10 жовтня – 9 листопада.
+
 ## Запитання про конкретний продукт
 
 Можна запитати, скільки ви витратили на конкретний продукт, бренд чи магазин:
@@ -17459,6 +17465,8 @@ Dotknij dowolny przycisk, aby natychmiast wyslac to pytanie.
 - "Jaki jest status mojego budzetu?"
 - "Pokaz podzial wedlug kategorii za ten miesiac"
 
+Jeśli konto ma **Miesiąc finansowy** (na przykład od dnia wypłaty, 10.), „ten miesiąc” i „poprzedni miesiąc” w czacie oznaczają te okresy — ten miesiąc liczy się od 10. — a nazwany miesiąc, np. *październik*, to 10 października – 9 listopada.
+
 ## Pytanie o konkretny produkt
 
 Możesz zapytać, ile wydałeś na konkretny produkt, markę lub sklep:
@@ -22816,6 +22824,8 @@ Tippe auf eine beliebige Schaltflache, um diese Frage sofort zu senden.
 - "Wie ist mein Budget-Status?"
 - "Zeige Kategorie-Aufschlüsselung für diesen Monat"
 
+Hat dein Konto einen **Finanzmonat** (zum Beispiel ab dem Zahltag, dem 10.), meinen „diesen Monat“ und „letzten Monat“ im Chat diese Zeiträume — dieser Monat läuft ab dem 10. — und ein genannter Monat wie *Oktober* ist der 10. Oktober – 9. November.
+
 ## Nach einem bestimmten Produkt fragen
 
 Du kannst fragen, wie viel du für ein bestimmtes Produkt, eine Marke oder ein Geschäft ausgegeben hast:
@@ -28148,6 +28158,8 @@ Toca cualquier boton para enviar esa pregunta al instante.
 - "Cual es el estado de mi presupuesto?"
 - "Mostrar desglose por categorias de este mes"
 
+Si tu cuenta tiene un **Mes financiero** (por ejemplo, desde el día de cobro, el 10), «este mes» y «el mes pasado» en el chat significan esos periodos —este mes va desde el día 10— y un mes que nombres, como *octubre*, va del 10 de octubre al 9 de noviembre.
+
 ## Preguntar por un producto específico
 
 Puedes preguntar cuánto has gastado en un producto, marca o tienda concretos:
@@ -33469,6 +33481,8 @@ Appuyez sur n'importe quel bouton pour envoyer instantanement cette question.
 - "Quel est le statut de mon budget ?"
 - "Montrer la repartition par categories pour ce mois"
 
+Si votre compte a un **Mois financier** (par exemple à partir du jour de paie, le 10), « ce mois-ci » et « le mois dernier » dans le chat désignent ces périodes — ce mois-ci commence le 10 — et un mois nommé, comme *octobre*, va du 10 octobre au 9 novembre.
+
 ## Poser une question sur un produit précis
 
 Vous pouvez demander combien vous avez dépensé pour un produit, une marque ou un magasin précis :
@@ -38788,6 +38802,8 @@ iOS, Android, Web
 - «Які статус маіх бюджэтаў?»
 - «Пакажы разбіўку па катэгорыях за гэты месяц»
 
+Калі ў акаўнта зададзены **Фінансавы месяц** (напрыклад, з дня заробку, 10-га), «гэты месяц» і «мінулы месяц» у чаце азначаюць такія перыяды — гэты месяц ідзе з 10-га, — а названы месяц, напрыклад *кастрычнік*, — гэта 10 кастрычніка – 9 лістапада.
+
 ## Пытанне пра канкрэтны прадукт
 
 Можна спытаць, колькі вы выдаткавалі на канкрэтны прадукт, брэнд ці краму:
@@ -44070,6 +44086,8 @@ Tik op een knop om die vraag direct te verzenden.
 - "Toon mijn uitgaven van vorige week"
 - "Wat is mijn budgetstatus?"
 - "Toon categorie-uitsplitsing voor deze maand"
+
+Heeft je account een **Financiële maand** (bijvoorbeeld vanaf betaaldag, de 10e), dan betekenen „deze maand” en „vorige maand” in de chat die periodes — deze maand loopt vanaf de 10e — en een genoemde maand, zoals *oktober*, is 10 oktober – 9 november.
 
 ## Vragen naar een specifiek product
 
@@ -49480,6 +49498,8 @@ Toque num botão para enviar essa pergunta de imediato.
 - «Mostra as minhas despesas da semana passada»
 - «Qual é o estado do meu orçamento?»
 - «Mostra a distribuição por categorias deste mês»
+
+Se a sua conta tiver um **Mês financeiro** (por exemplo, a começar no dia do ordenado, dia 10), «este mês» e «o mês passado» no chat referem-se a esses períodos — este mês conta a partir do dia 10 — e um mês que indicar, como *outubro*, vai de 10 de outubro a 9 de novembro.
 
 ## Perguntar sobre um produto específico
 
@@ -54916,6 +54936,8 @@ Toque em um botão para enviar essa pergunta na hora.
 - “Mostre minhas despesas da semana passada”
 - “Qual é a situação do meu orçamento?”
 - “Mostre a divisão por categorias deste mês”
+
+Se a sua conta tiver um **Mês financeiro** (por exemplo, começando no dia do pagamento, dia 10), "este mês" e "mês passado" no chat se referem a esses períodos — este mês conta a partir do dia 10 — e um mês que você citar, como *outubro*, vai de 10 de outubro a 9 de novembro.
 
 ## Perguntando sobre um produto específico
 

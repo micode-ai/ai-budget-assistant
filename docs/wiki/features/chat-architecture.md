@@ -140,8 +140,10 @@ model tell users with only allocated budgets that they had no budget.
 
 "This month" in the summary is the account's financial month ([ABA-792](https://github.com/micode-ai/ai-budget-assistant/issues/830)): `build` reads
 `Account.monthAnchorDay`, counts from `financialMonth(now, anchor).start`, and sets
-`context.monthStart` so the prompt names the start date. The read tools (`get_expenses`,
-`get_category_breakdown`) still resolve "this month" as a calendar month.
+`context.monthStart` so the prompt names the start date. The tools follow it too ([ABA-795](https://github.com/micode-ai/ai-budget-assistant/issues/833)): the prompt
+gives the exact "this month" and "last month" dates (`previousMonthStart`/`previousMonthEnd`) for an
+anchored account, and `withFinancialMonthDefault` starts an undated `get_expenses` (no keyword, no
+category) at `monthStart` before the call, so the tool cache keys on the filled-in date.
 
 ### Language
 

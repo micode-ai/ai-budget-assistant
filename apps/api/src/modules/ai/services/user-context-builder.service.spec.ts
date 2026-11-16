@@ -1,5 +1,5 @@
 import { UserContextBuilder } from './user-context-builder.service';
-import { financialMonth } from '../../../common/utils/financial-month';
+import { financialMonth, shiftFinancialMonth } from '../../../common/utils/financial-month';
 
 function makeBuilder(monthAnchorDay: number | null) {
   const prisma: any = {
@@ -35,5 +35,21 @@ describe('UserContextBuilder — this month (ABA-792)', () => {
     expect(ctx.monthStart).toBe(
       `${start.getFullYear()}-${String(start.getMonth() + 1).padStart(2, '0')}-${String(start.getDate()).padStart(2, '0')}`,
     );
+  });
+
+  it('gives the previous financial month for "last month" when anchored (ABA-795)', async () => {
+    const { builder } = makeBuilder(10);
+    const ctx = await builder.build('u1', 'a1');
+    const prev = financialMonth(shiftFinancialMonth(financialMonth(new Date(), 10).start, -1, 10), 10);
+    const iso = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    expect(ctx.previousMonthStart).toBe(iso(prev.start));
+    expect(ctx.previousMonthEnd).toBe(iso(prev.end));
+    expect(Number(ctx.previousMonthStart!.slice(8))).toBe(10);
+  });
+
+  it('gives no previous-month dates for a calendar account', async () => {
+    const { builder } = makeBuilder(null);
+    const ctx = await builder.build('u1', 'a1');
+    expect(ctx.previousMonthStart).toBeUndefined();
   });
 });

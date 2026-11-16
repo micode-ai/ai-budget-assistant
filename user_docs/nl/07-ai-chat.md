@@ -57,6 +57,8 @@ Tik op een knop om die vraag direct te verzenden.
 - "Wat is mijn budgetstatus?"
 - "Toon categorie-uitsplitsing voor deze maand"
 
+Heeft je account een **Financiële maand** (bijvoorbeeld vanaf betaaldag, de 10e), dan betekenen „deze maand” en „vorige maand” in de chat die periodes — deze maand loopt vanaf de 10e — en een genoemde maand, zoals *oktober*, is 10 oktober – 9 november.
+
 ## Vragen naar een specifiek product
 
 Je kunt vragen hoeveel je aan een bepaald product, merk of winkel hebt uitgegeven:

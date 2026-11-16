@@ -3,7 +3,7 @@ import { PrismaService } from '../../../database/prisma.service';
 import { CacheService } from '../../../common/cache/cache.service';
 import { CategoriesService } from '../../categories/categories.service';
 import { DebtsService } from '../../debts/debts.service';
-import { financialMonth } from '../../../common/utils/financial-month';
+import { financialMonth, shiftFinancialMonth } from '../../../common/utils/financial-month';
 
 const UC_TTL_SEC = 60;
 export const ucKey = (accountId: string) => `uc:${accountId}`;
@@ -30,6 +30,9 @@ export interface UserContext {
    * absent for a calendar month. `totalSpentThisMonth` counts from this day.
    */
   monthStart?: string;
+  /** The previous financial month, `YYYY-MM-DD`, only when anchored (ABA-795) — "last month" for the tools. */
+  previousMonthStart?: string;
+  previousMonthEnd?: string;
 }
 
 interface ExpenseWithCategory {
@@ -70,9 +73,9 @@ export class UserContextBuilder {
           ?.monthAnchorDay ?? null)
       : null;
     const startOfMonth = financialMonth(now, anchorDay).start;
-    const monthStart = anchorDay
-      ? `${startOfMonth.getFullYear()}-${String(startOfMonth.getMonth() + 1).padStart(2, '0')}-${String(startOfMonth.getDate()).padStart(2, '0')}`
-      : undefined;
+    const iso = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const monthStart = anchorDay ? iso(startOfMonth) : undefined;
+    const previousMonth = anchorDay ? financialMonth(shiftFinancialMonth(startOfMonth, -1, anchorDay), anchorDay) : null;
 
     const expenseWhere = accountId
       ? { accountId, date: { gte: startOfMonth }, isDeleted: false }
@@ -233,6 +236,7 @@ export class UserContextBuilder {
       totalSpentThisMonth: totalSpent,
       monthlyBudget,
       ...(monthStart ? { monthStart } : {}),
+      ...(previousMonth ? { previousMonthStart: iso(previousMonth.start), previousMonthEnd: iso(previousMonth.end) } : {}),
       topCategories,
       recentExpenses,
       tags,

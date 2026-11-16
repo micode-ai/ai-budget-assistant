@@ -358,6 +358,7 @@ Newest last within each section.
 - 2026-11-16 · [ABA-792](https://github.com/micode-ai/ai-budget-assistant/issues/830) — the chat model's "spent this month" summary counts the account's financial month and names its start; features/chat-architecture.
 - 2026-11-16 · [ABA-793](https://github.com/micode-ai/ai-budget-assistant/issues/831) — changing an account's month anchor drops the cached Safe-to-Spend and chat summary; features/safe-to-spend.
 - 2026-11-16 · [ABA-794](https://github.com/micode-ai/ai-budget-assistant/issues/832) — the offline Safe-to-Spend fallback sets `walletBalanceUnset` from device data, so the marker survives offline; features/safe-to-spend.
+- 2026-11-16 · [ABA-795](https://github.com/micode-ai/ai-budget-assistant/issues/833) — chat tools read "this month"/"last month" as financial months (prompt dates + undated get_expenses default); features/chat-architecture.
 
 ## Queries
 

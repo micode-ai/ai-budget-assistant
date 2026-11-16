@@ -57,6 +57,8 @@ Tap any button to instantly send that question.
 - "What's my budget status?"
 - "Show category breakdown for this month"
 
+If your account has a **Financial Month** (for example, starting on payday, the 10th), "this month" and "last month" in the chat mean those periods — this month runs from the 10th — and a month you name, such as *October*, is 10 October – 9 November.
+
 ## Asking About a Specific Product
 
 You can ask how much you've spent on a particular product, brand, or shop:

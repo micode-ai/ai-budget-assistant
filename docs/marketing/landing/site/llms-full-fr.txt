@@ -4578,6 +4578,8 @@ Appuyez sur n'importe quel bouton pour envoyer instantanement cette question.
 - "Quel est le statut de mon budget ?"
 - "Montrer la repartition par categories pour ce mois"
 
+Si votre compte a un **Mois financier** (par exemple à partir du jour de paie, le 10), « ce mois-ci » et « le mois dernier » dans le chat désignent ces périodes — ce mois-ci commence le 10 — et un mois nommé, comme *octobre*, va du 10 octobre au 9 novembre.
+
 ## Poser une question sur un produit précis
 
 Vous pouvez demander combien vous avez dépensé pour un produit, une marque ou un magasin précis :

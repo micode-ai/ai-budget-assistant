@@ -21,6 +21,7 @@ import {
 } from '../utils/semantic-filter';
 import { logCacheUsage } from '../utils/log-cache-usage';
 import type { ChatActionType } from '@budget/shared-types';
+import { withFinancialMonthDefault } from '../utils/financial-month-args';
 
 interface ChatMessageRecord {
   role: string;
@@ -257,7 +258,8 @@ export class ChatService {
         const r = await this.chatActionLifecycle.handleWriteActionRequest(conversation, functionName, functionArgs, systemPrompt, history, message, aiModel, accountId, userId, user?.language);
         return { ...r, aiResponded: true, userMessageId: userMsg.id, userMessageCreatedAt: userMsg.createdAt.toISOString() };
       }
-      const r = await this.handleReadAction(conversation, functionName, functionArgs, toolCall, systemPrompt, history, message, accountId, userId, user?.currencyCode);
+      const readArgs = withFinancialMonthDefault(functionName, functionArgs, context.monthStart);
+      const r = await this.handleReadAction(conversation, functionName, readArgs, toolCall, systemPrompt, history, message, accountId, userId, user?.currencyCode);
       return { ...r, aiResponded: true, userMessageId: userMsg.id, userMessageCreatedAt: userMsg.createdAt.toISOString() };
     }
 

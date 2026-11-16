@@ -57,6 +57,8 @@ Toca cualquier boton para enviar esa pregunta al instante.
 - "Cual es el estado de mi presupuesto?"
 - "Mostrar desglose por categorias de este mes"
 
+Si tu cuenta tiene un **Mes financiero** (por ejemplo, desde el día de cobro, el 10), «este mes» y «el mes pasado» en el chat significan esos periodos —este mes va desde el día 10— y un mes que nombres, como *octubre*, va del 10 de octubre al 9 de noviembre.
+
 ## Preguntar por un producto específico
 
 Puedes preguntar cuánto has gastado en un producto, marca o tienda concretos:

@@ -253,7 +253,8 @@ Today's date: ${today}${accountName ? `\nCurrently viewing account: [account]` :
 Available categories: ${categoriesListText}
 
 Current user's financial context (summary only — use tools for accurate data):
-- Total spent this month${context.monthStart ? ` (the account's financial month, since ${context.monthStart})` : ''}: ${context.totalSpentThisMonth.toFixed(2)}
+- Total spent this month${context.monthStart ? ` (the account's financial month, since ${context.monthStart})` : ''}: ${context.totalSpentThisMonth.toFixed(2)}${context.monthStart && context.previousMonthStart && context.previousMonthEnd ? `
+- This account uses a financial month: when the user says "this month" use startDate ${context.monthStart} (to today), and for "last month" use ${context.previousMonthStart} to ${context.previousMonthEnd}, in every tool that takes dates. A month named by the user ("October") is the period that starts on day ${Number(context.monthStart.slice(8))} of it and ends the day before the same day of the next month.` : ''}
 - Monthly budget (rough overall total of monthly budgets only): ${context.monthlyBudget > 0 ? context.monthlyBudget.toFixed(2) : 'Not set'}
   NOTE: this line does NOT include weekly/yearly/custom budgets and has no spent/remaining figures. For ANY budget question ("how much is left in my budget", "am I on track", budget status) you MUST call get_budget_status and answer from it — NEVER conclude the user has no budget from this summary line.
 

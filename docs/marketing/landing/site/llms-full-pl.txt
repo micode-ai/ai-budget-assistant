@@ -5181,6 +5181,8 @@ Dotknij dowolny przycisk, aby natychmiast wyslac to pytanie.
 - "Jaki jest status mojego budzetu?"
 - "Pokaz podzial wedlug kategorii za ten miesiac"
 
+Jeśli konto ma **Miesiąc finansowy** (na przykład od dnia wypłaty, 10.), „ten miesiąc” i „poprzedni miesiąc” w czacie oznaczają te okresy — ten miesiąc liczy się od 10. — a nazwany miesiąc, np. *październik*, to 10 października – 9 listopada.
+
 ## Pytanie o konkretny produkt
 
 Możesz zapytać, ile wydałeś na konkretny produkt, markę lub sklep:
