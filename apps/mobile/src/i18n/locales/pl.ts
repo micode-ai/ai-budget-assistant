@@ -2766,6 +2766,11 @@ export default {
     loadFailed: "Nie udało się wczytać majątku.",
   },
   vehicles: {
+    bulkAssign: "Przypisz do pojazdu",
+    bulkAssignShort: "Do auta",
+    bulkAssignNote: "Wybierz pojazd i rodzaj kosztu. Tankowania z litrami pozostają bez zmian.",
+    bulkAssignConfirm: "Przypisz {{count}}",
+    bulkAssigned: "Przypisano {{assigned}}, pominięto {{skipped}}",
     fuelOptionalHint: "Brak litrów lub przebiegu? Zostaw oba pola puste — to koszt paliwa, tylko bez liczenia spalania.",
     carSection: "Samochód",
     markAsCarCost: "Oznacz jako koszt auta",

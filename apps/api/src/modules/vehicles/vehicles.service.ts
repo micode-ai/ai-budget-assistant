@@ -1,6 +1,7 @@
 import { BadRequestException, ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import {
+  BulkVehicleCostDto,
   CreateVehicleDto,
   MoveVehicleDto,
   SetVehicleCategoryRulesDto,
@@ -161,6 +162,38 @@ export class VehiclesService {
       create: { accountId, vehicleId, expenseId: expense.id, kind: dto.kind, source: null },
       update: { vehicleId, kind: dto.kind, source: null },
     });
+  }
+
+  /**
+   * Marks many expenses as one kind of cost of this vehicle in one request
+   * (ABA-805) — the transactions list's bulk action; one request instead of
+   * one per row keeps a large selection under the proxy's rate limit. Like
+   * `setCost` it is a person's decision (`source: null`), but a fill-up (with
+   * litres and odometer) is never overwritten by a bulk action: it is skipped
+   * and counted. Ids may be PKs or clientIds; unknown ones are counted too.
+   */
+  async setCostsBulk(accountId: string, vehicleId: string, dto: BulkVehicleCostDto) {
+    await this.findOne(accountId, vehicleId);
+    const ids = [...new Set(dto.expenseIds)];
+    const expenses = await this.prisma.expense.findMany({
+      where: { accountId, isDeleted: false, OR: [{ id: { in: ids } }, { clientId: { in: ids } }] },
+      select: { id: true, fuelLog: { select: { id: true } } },
+    });
+    let assigned = 0;
+    let skipped = 0;
+    for (const e of expenses) {
+      if (e.fuelLog) {
+        skipped++;
+        continue;
+      }
+      await this.prisma.vehicleCost.upsert({
+        where: { expenseId: e.id },
+        create: { accountId, vehicleId, expenseId: e.id, kind: dto.kind, source: null },
+        update: { vehicleId, kind: dto.kind, source: null },
+      });
+      assigned++;
+    }
+    return { assigned, skipped, notFound: Math.max(0, ids.length - expenses.length) };
   }
 
   /**

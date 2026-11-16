@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { showAlert } from '@/utils/alert';
 import { useTranslation } from 'react-i18next';
-import type { Expense } from '@budget/shared-types';
+import type { Expense, VehicleCostKind } from '@budget/shared-types';
+import { api } from '@/services/api';
 import type { AttributionMode } from '@budget/shared-utils';
 import { useAccountStore } from '@/stores/accountStore';
 import { useChildStore } from '@/stores/childStore';
@@ -21,6 +22,7 @@ export function useExpenseMultiSelect(
   const [showBulkCategoryPicker, setShowBulkCategoryPicker] = useState(false);
   const [showBulkTagPicker, setShowBulkTagPicker] = useState(false);
   const [showBulkChildPicker, setShowBulkChildPicker] = useState(false);
+  const [showBulkVehiclePicker, setShowBulkVehiclePicker] = useState(false);
   const [isBulkProcessing, setIsBulkProcessing] = useState(false);
 
   const enterMultiSelect = (firstId: string) => {
@@ -29,6 +31,7 @@ export function useExpenseMultiSelect(
     setShowBulkCategoryPicker(false);
     setShowBulkTagPicker(false);
     setShowBulkChildPicker(false);
+    setShowBulkVehiclePicker(false);
   };
 
   const exitMultiSelect = () => {
@@ -37,6 +40,7 @@ export function useExpenseMultiSelect(
     setShowBulkCategoryPicker(false);
     setShowBulkTagPicker(false);
     setShowBulkChildPicker(false);
+    setShowBulkVehiclePicker(false);
   };
 
   const toggleSelection = (id: string) => {
@@ -144,6 +148,30 @@ ${t('children.bulkAssignFailed', { count: failed })}` : summary);
     }
   };
 
+  /**
+   * Car costs (ABA-805): every selected expense as one kind of cost of a
+   * vehicle, in ONE request — a selection of dozens would trip the proxy's
+   * rate limit one by one. The server PK is sent when known, else the device id
+   * (the server resolves either). Fill-ups with litres are skipped there.
+   */
+  const handleBulkAssignVehicle = async (vehicleId: string, kind: VehicleCostKind) => {
+    if (selectedIds.size === 0) return;
+    setShowBulkVehiclePicker(false);
+    setIsBulkProcessing(true);
+    try {
+      const chosen = useExpenseStore.getState().expenses.filter((e) => selectedIds.has(e.id));
+      const ids = chosen.map((e) => e.serverId ?? e.id);
+      const res = await api.setVehicleCostsBulk(vehicleId, ids, kind);
+      showAlert('', t('vehicles.bulkAssigned', { assigned: res.assigned, skipped: res.skipped + res.notFound }));
+      exitMultiSelect();
+    } catch (e) {
+      console.warn('[vehicles] bulk assign failed:', e instanceof Error ? e.message : String(e));
+      showAlert(t('common.error'), t('vehicles.saveFailed'));
+    } finally {
+      setIsBulkProcessing(false);
+    }
+  };
+
   const handleBulkDelete = () => {
     if (selectedIds.size === 0) return;
     showAlert(
@@ -178,6 +206,8 @@ ${t('children.bulkAssignFailed', { count: failed })}` : summary);
     setShowBulkTagPicker,
     showBulkChildPicker,
     setShowBulkChildPicker,
+    showBulkVehiclePicker,
+    setShowBulkVehiclePicker,
     isBulkProcessing,
     enterMultiSelect,
     exitMultiSelect,
@@ -187,6 +217,7 @@ ${t('children.bulkAssignFailed', { count: failed })}` : summary);
     handleBulkSetCategory,
     handleBulkAddTags,
     handleBulkAssignChildren,
+    handleBulkAssignVehicle,
     handleBulkDelete,
   };
 }

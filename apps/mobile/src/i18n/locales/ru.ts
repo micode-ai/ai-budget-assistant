@@ -2766,6 +2766,11 @@ export default {
     loadFailed: "Не удалось загрузить капитал.",
   },
   vehicles: {
+    bulkAssign: "Отнести к машине",
+    bulkAssignShort: "На машину",
+    bulkAssignNote: "Выберите машину и вид расхода. Заправки с литрами останутся как есть.",
+    bulkAssignConfirm: "Отнести {{count}}",
+    bulkAssigned: "Отнесено {{assigned}}, пропущено {{skipped}}",
     fuelOptionalHint: "Нет литров или пробега? Оставьте оба поля пустыми — это засчитается как расход на топливо, только без расчёта расхода на 100 км.",
     carSection: "Машина",
     markAsCarCost: "Отметить как расход на машину",

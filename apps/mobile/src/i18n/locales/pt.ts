@@ -2750,6 +2750,11 @@ export default {
     loadFailed: "Não foi possível carregar o seu património.",
   },
   vehicles: {
+    bulkAssign: "Atribuir ao veículo",
+    bulkAssignShort: "Ao carro",
+    bulkAssignNote: "Escolha o veículo e o tipo de custo. Os abastecimentos com litros ficam como estão.",
+    bulkAssignConfirm: "Atribuir {{count}}",
+    bulkAssigned: "Atribuídas {{assigned}}, ignoradas {{skipped}}",
     fuelOptionalHint: "Sem litros nem conta-quilómetros? Deixe ambos vazios — conta como custo de combustível, só não no consumo.",
     carSection: "Carro",
     markAsCarCost: "Marcar como custo do carro",

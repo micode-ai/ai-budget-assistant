@@ -69,3 +69,14 @@ export class SetVehicleCategoryRulesDto {
   @Type(() => VehicleCategoryRuleDto)
   rules: VehicleCategoryRuleDto[];
 }
+
+/** Many expenses as one kind of cost of a vehicle, from the transactions list (ABA-805). */
+export class BulkVehicleCostDto {
+  @IsArray()
+  @ArrayMaxSize(500)
+  @IsString({ each: true })
+  expenseIds: string[];
+
+  @IsIn(VEHICLE_COST_KINDS)
+  kind: string;
+}

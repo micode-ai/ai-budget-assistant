@@ -22,6 +22,7 @@ import { TransactionTable } from './TransactionTable';
 import { FacetRail, FacetRailTrigger, type KindFacet, type PeriodFacet } from './FacetRail';
 import { RowContextMenu } from './RowContextMenu';
 import { ExpensesDesktopDialogs } from './ExpensesDesktopDialogs';
+import { useVehicles } from '@/features/vehicles/useVehicles';
 
 /** The Map toggle only ever applied to the expenses stream (income carries no
  *  location) — mirrors the exact conditional `ExpensesMobile` uses, so a
@@ -82,6 +83,8 @@ function matchesDynamicFacet(row: LedgerRow, chosen: string[], key: 'categoryId'
  */
 export function ExpensesDesktop() {
   const { t } = useTranslation();
+  // Car costs (ABA-805): the bulk action shows only on an account with a vehicle.
+  const { vehicles } = useVehicles();
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const { width } = useWindowDimensions();
@@ -547,6 +550,21 @@ export function ExpensesDesktop() {
                     <Ionicons name="bookmark-outline" size={16} color={theme.colors.accent} />
                     <Text style={styles.bulkBarButtonText}>{t('expenses.bulkAddTag')}</Text>
                   </Pressable>
+                  {vehicles.length > 0 && (
+                    <Pressable
+                      style={styles.bulkBarButton}
+                      onPress={() => {
+                        multiSelect.setShowBulkCategoryPicker(false);
+                        multiSelect.setShowBulkTagPicker(false);
+                        multiSelect.setShowBulkChildPicker(false);
+                        multiSelect.setShowBulkVehiclePicker(true);
+                      }}
+                      accessibilityRole="button"
+                    >
+                      <Ionicons name="car-outline" size={16} color={theme.colors.primary} />
+                      <Text style={styles.bulkBarButtonText}>{t('vehicles.bulkAssign')}</Text>
+                    </Pressable>
+                  )}
                   {activeChildren.length > 0 && (
                     <Pressable
                       style={styles.bulkBarButton}
@@ -694,6 +712,11 @@ export function ExpensesDesktop() {
         onCloseBulkChildPicker={() => multiSelect.setShowBulkChildPicker(false)}
         activeChildren={activeChildren}
         onBulkAssignChildren={(ids) => void multiSelect.handleBulkAssignChildren(ids)}
+        showBulkVehiclePicker={multiSelect.showBulkVehiclePicker}
+        onCloseBulkVehiclePicker={() => multiSelect.setShowBulkVehiclePicker(false)}
+        vehicles={vehicles}
+        selectedCount={multiSelect.selectedIds.size}
+        onBulkAssignVehicle={(vehicleId, kind) => void multiSelect.handleBulkAssignVehicle(vehicleId, kind)}
       />
     </View>
   );

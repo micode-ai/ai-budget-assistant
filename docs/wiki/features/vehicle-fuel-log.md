@@ -38,6 +38,9 @@ can edit — fill-ups hang on expenses that stay in the source account. The app 
 a switch never reads another account's list) and `reloadVehicles` refetches after a write. The Fill-up section is
 drawn only when the account has a vehicle or the expense already has a fill-up, and sends `serverId ?? id`.
 
+**Bulk** ([ABA-805](https://github.com/micode-ai/ai-budget-assistant/issues/843)): `POST /vehicles/:id/costs/bulk` takes a whole transactions-list selection in one request
+(one-by-one trips the proxy rate limit), as person-made costs, skipping fill-ups.
+
 **Fuel without litres** ([ABA-804](https://github.com/micode-ai/ai-budget-assistant/issues/842)): `VehicleCost` kind `fuel` is a purchase known only by its amount — it counts in
 `ownership.byKind.fuel` and never in consumption, which needs a `FuelLog`.
 

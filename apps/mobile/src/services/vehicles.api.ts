@@ -64,6 +64,18 @@ export const vehiclesApi = {
     });
   },
 
+  /** Many expenses as one kind of cost, in one request (ABA-805). */
+  setVehicleCostsBulk(
+    vehicleId: string,
+    expenseIds: string[],
+    kind: VehicleCostKind,
+  ): Promise<{ assigned: number; skipped: number; notFound: number }> {
+    return httpClient.request(`/vehicles/${encodeURIComponent(vehicleId)}/costs/bulk`, {
+      method: 'POST',
+      body: JSON.stringify({ expenseIds, kind }),
+    });
+  },
+
   removeVehicleCost(expenseId: string): Promise<{ success: boolean }> {
     return httpClient.request(`/vehicles/costs/${encodeURIComponent(expenseId)}`, { method: 'DELETE' });
   },

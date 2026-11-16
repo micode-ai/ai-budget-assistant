@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Req, UseGuards } from '@nestjs/common';
 import { VehiclesService } from './vehicles.service';
 import {
+  BulkVehicleCostDto,
   CreateVehicleDto,
   MoveVehicleDto,
   SetVehicleCategoryRulesDto,
@@ -76,6 +77,13 @@ export class VehiclesController {
   @Get(':id/costs')
   costs(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     return this.vehicles.listCosts(req.accountId, id);
+  }
+
+  /** Many expenses at once (ABA-805); a POST, so no `:expenseId` route can capture `bulk`. */
+  @Post(':id/costs/bulk')
+  @UseGuards(new ViewerBlockGuard())
+  setCostsBulk(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() dto: BulkVehicleCostDto) {
+    return this.vehicles.setCostsBulk(req.accountId, id, dto);
   }
 
   @Put(':id/costs/:expenseId')

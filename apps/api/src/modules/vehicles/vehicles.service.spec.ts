@@ -106,3 +106,28 @@ describe('VehiclesService ownership (ABA-803)', () => {
     expect(stats.ownership.costPerKm).toBe(2.1);
   });
 });
+
+describe('VehiclesService.setCostsBulk (ABA-805)', () => {
+  it('marks every found expense as a person-made cost, skipping fill-ups and counting unknown ids', async () => {
+    const prisma: any = {
+      vehicle: { findFirst: jest.fn().mockResolvedValue({ id: 'v1', accountId: 'a1' }) },
+      expense: {
+        findMany: jest.fn().mockResolvedValue([
+          { id: 'e1', fuelLog: null },
+          { id: 'e2', fuelLog: { id: 'f2' } },
+          { id: 'e3', fuelLog: null },
+        ]),
+      },
+      vehicleCost: { upsert: jest.fn().mockResolvedValue({}) },
+    };
+    const service = new VehiclesService(prisma, {} as any);
+    const res = await service.setCostsBulk('a1', 'v1', { expenseIds: ['e1', 'local-2', 'e3', 'gone', 'e1'], kind: 'fuel' });
+    expect(res).toEqual({ assigned: 2, skipped: 1, notFound: 1 });
+    expect(prisma.expense.findMany.mock.calls[0][0].where).toMatchObject({ accountId: 'a1', isDeleted: false });
+    expect(prisma.vehicleCost.upsert.mock.calls[0][0]).toMatchObject({
+      where: { expenseId: 'e1' },
+      create: { accountId: 'a1', vehicleId: 'v1', expenseId: 'e1', kind: 'fuel', source: null },
+      update: { vehicleId: 'v1', kind: 'fuel', source: null },
+    });
+  });
+});

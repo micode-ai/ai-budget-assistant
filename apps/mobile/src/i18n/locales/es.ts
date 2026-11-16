@@ -2754,6 +2754,11 @@ export default {
     loadFailed: "No se pudo cargar tu patrimonio.",
   },
   vehicles: {
+    bulkAssign: "Asignar a vehículo",
+    bulkAssignShort: "Al coche",
+    bulkAssignNote: "Elige el vehículo y el tipo de gasto. Los repostajes con litros no cambian.",
+    bulkAssignConfirm: "Asignar {{count}}",
+    bulkAssigned: "Asignados {{assigned}}, omitidos {{skipped}}",
     fuelOptionalHint: "¿Sin litros ni cuentakilómetros? Deja ambos vacíos: cuenta como gasto de combustible, solo que no en el consumo.",
     carSection: "Coche",
     markAsCarCost: "Marcar como gasto del coche",

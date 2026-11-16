@@ -2761,6 +2761,11 @@ export default {
     loadFailed: "Could not load your net worth.",
   },
   vehicles: {
+    bulkAssign: "Assign to vehicle",
+    bulkAssignShort: "For car",
+    bulkAssignNote: "Pick the vehicle and the kind of cost. Fill-ups with litres stay as they are.",
+    bulkAssignConfirm: "Assign {{count}}",
+    bulkAssigned: "Assigned {{assigned}}, skipped {{skipped}}",
     fuelOptionalHint: "No litres or odometer? Leave both empty — it counts as a fuel cost, just not in consumption.",
     carSection: "Car",
     markAsCarCost: "Mark as a car cost",

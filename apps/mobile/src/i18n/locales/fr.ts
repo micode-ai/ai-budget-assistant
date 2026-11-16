@@ -2754,6 +2754,11 @@ export default {
     loadFailed: "Impossible de charger votre patrimoine.",
   },
   vehicles: {
+    bulkAssign: "Attribuer au véhicule",
+    bulkAssignShort: "Voiture",
+    bulkAssignNote: "Choisissez le véhicule et le type de frais. Les pleins avec des litres ne changent pas.",
+    bulkAssignConfirm: "Attribuer {{count}}",
+    bulkAssigned: "Attribués : {{assigned}}, ignorés : {{skipped}}",
     fuelOptionalHint: "Pas de litres ni de compteur ? Laissez les deux vides — c'est compté comme frais de carburant, mais pas dans la consommation.",
     carSection: "Voiture",
     markAsCarCost: "Marquer comme frais de voiture",

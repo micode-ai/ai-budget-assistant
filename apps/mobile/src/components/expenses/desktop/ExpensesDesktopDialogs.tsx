@@ -5,6 +5,8 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import type { Category, Child, Tag } from '@budget/shared-types';
 import { BulkTagPickerSheet } from '@/components/BulkTagPickerSheet';
 import { BulkChildPickerSheet } from '@/components/children/BulkChildPickerSheet';
+import { BulkVehiclePickerSheet } from '@/components/vehicles/BulkVehiclePickerSheet';
+import type { Vehicle, VehicleCostKind } from '@budget/shared-types';
 import type { LedgerRow } from '@/features/expenses/desktopTable';
 import { ExpenseDialog } from './ExpenseDialog';
 import { CreateDialog } from './CreateDialog';
@@ -67,6 +69,12 @@ interface Props {
    *  the phone's bottom sheet uses, in the bulk pickers' centred panel. */
   showBulkChildPicker: boolean;
   onCloseBulkChildPicker: () => void;
+  /** Bulk "Assign to vehicle" (ABA-805) — hosts the same `BulkVehiclePickerSheet` the phone does. */
+  showBulkVehiclePicker: boolean;
+  onCloseBulkVehiclePicker: () => void;
+  vehicles: Vehicle[];
+  selectedCount: number;
+  onBulkAssignVehicle: (vehicleId: string, kind: VehicleCostKind) => void;
   activeChildren: Child[];
   onBulkAssignChildren: (childIds: string[]) => void;
 }
@@ -121,6 +129,11 @@ export function ExpensesDesktopDialogs({
   onBulkAddTags,
   showBulkChildPicker,
   onCloseBulkChildPicker,
+  showBulkVehiclePicker,
+  onCloseBulkVehiclePicker,
+  vehicles,
+  selectedCount,
+  onBulkAssignVehicle,
   activeChildren,
   onBulkAssignChildren,
 }: Props) {
@@ -254,6 +267,38 @@ export function ExpensesDesktopDialogs({
                 children={activeChildren}
                 onConfirm={onBulkAssignChildren}
                 onClose={onCloseBulkChildPicker}
+              />
+            </View>
+          </div>
+        </Modal>
+      )}
+
+      {showBulkVehiclePicker && (
+        <Modal visible transparent animationType="fade" onRequestClose={onCloseBulkVehiclePicker}>
+          <div
+            role="presentation"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) onCloseBulkVehiclePicker();
+            }}
+            style={{
+              position: 'fixed',
+              top: 0,
+              right: 0,
+              bottom: 0,
+              left: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: theme.colors.overlay,
+              padding: 24,
+            }}
+          >
+            <View style={styles.pickerPanel}>
+              <BulkVehiclePickerSheet
+                vehicles={vehicles}
+                count={selectedCount}
+                onConfirm={onBulkAssignVehicle}
+                onClose={onCloseBulkVehiclePicker}
               />
             </View>
           </div>

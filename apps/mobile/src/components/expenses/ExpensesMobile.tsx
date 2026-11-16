@@ -23,6 +23,8 @@ import { IncomeListItem } from '@/components/expenses/IncomeListItem';
 import { ExpenseFilterBar } from '@/components/expenses/ExpenseFilterBar';
 import { BulkTagPickerSheet } from '@/components/BulkTagPickerSheet';
 import { BulkChildPickerSheet } from '@/components/children/BulkChildPickerSheet';
+import { BulkVehiclePickerSheet } from '@/components/vehicles/BulkVehiclePickerSheet';
+import { useVehicles } from '@/features/vehicles/useVehicles';
 import { ExpenseMapView } from '@/components/map/ExpenseMapView';
 import { UncategorizedBanner } from '@/components/categorize/UncategorizedBanner';
 import { InboundReceiptsBanner } from '@/components/inboundMail/InboundReceiptsBanner';
@@ -31,6 +33,8 @@ import { categoryLabel } from '@/utils/entityLabel';
 
 export function ExpensesMobile() {
   const { t } = useTranslation();
+  // Car costs (ABA-805): the bulk action shows only on an account with a vehicle.
+  const { vehicles } = useVehicles();
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const insets = useSafeAreaInsets();
@@ -451,6 +455,33 @@ export function ExpensesMobile() {
                 </Text>
               </TouchableOpacity>
 
+              {canEdit && vehicles.length > 0 && (
+                <TouchableOpacity
+                  style={styles.bulkActionButton}
+                  onPress={() => {
+                    multiSelect.setShowBulkCategoryPicker(false);
+                    multiSelect.setShowBulkTagPicker(false);
+                    multiSelect.setShowBulkChildPicker(false);
+                    multiSelect.setShowBulkVehiclePicker(true);
+                  }}
+                  disabled={multiSelect.selectedIds.size === 0}
+                >
+                  <Ionicons
+                    name="car-outline"
+                    size={20}
+                    color={multiSelect.selectedIds.size > 0 ? theme.colors.primary : theme.colors.textDisabled}
+                  />
+                  <Text
+                    style={[
+                      styles.bulkActionText,
+                      multiSelect.selectedIds.size === 0 && styles.bulkActionTextDisabled,
+                    ]}
+                  >
+                    {t('vehicles.bulkAssignShort')}
+                  </Text>
+                </TouchableOpacity>
+              )}
+
               {canEdit && activeChildren.length > 0 && (
                 <TouchableOpacity
                   style={styles.bulkActionButton}
@@ -599,6 +630,35 @@ export function ExpensesMobile() {
               children={activeChildren}
               onConfirm={(ids) => void multiSelect.handleBulkAssignChildren(ids)}
               onClose={() => multiSelect.setShowBulkChildPicker(false)}
+            />
+          </TouchableOpacity>
+        </TouchableOpacity>
+      </Modal>
+
+      {/* Bulk "Assign to vehicle" modal (ABA-805). Bottom-anchored, so it clears the nav bar. */}
+      <Modal
+        visible={multiSelect.showBulkVehiclePicker}
+        transparent
+        animationType="slide"
+        onRequestClose={() => multiSelect.setShowBulkVehiclePicker(false)}
+      >
+        <TouchableOpacity
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => multiSelect.setShowBulkVehiclePicker(false)}
+        >
+          <TouchableOpacity
+            activeOpacity={1}
+            style={[
+              styles.modalSheet,
+              { backgroundColor: theme.colors.surface, paddingBottom: sheetPaddingBottom },
+            ]}
+          >
+            <BulkVehiclePickerSheet
+              vehicles={vehicles}
+              count={multiSelect.selectedIds.size}
+              onConfirm={(vehicleId, kind) => void multiSelect.handleBulkAssignVehicle(vehicleId, kind)}
+              onClose={() => multiSelect.setShowBulkVehiclePicker(false)}
             />
           </TouchableOpacity>
         </TouchableOpacity>

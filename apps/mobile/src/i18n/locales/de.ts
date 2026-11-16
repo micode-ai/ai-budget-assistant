@@ -2754,6 +2754,11 @@ export default {
     loadFailed: "Vermögen konnte nicht geladen werden.",
   },
   vehicles: {
+    bulkAssign: "Fahrzeug zuordnen",
+    bulkAssignShort: "Fürs Auto",
+    bulkAssignNote: "Wähle das Fahrzeug und die Kostenart. Tankvorgänge mit Litern bleiben, wie sie sind.",
+    bulkAssignConfirm: "{{count}} zuordnen",
+    bulkAssigned: "Zugeordnet: {{assigned}}, übersprungen: {{skipped}}",
     fuelOptionalHint: "Keine Liter oder kein Kilometerstand? Lass beides leer — es zählt als Kraftstoffkosten, nur nicht beim Verbrauch.",
     carSection: "Auto",
     markAsCarCost: "Als Autokosten markieren",

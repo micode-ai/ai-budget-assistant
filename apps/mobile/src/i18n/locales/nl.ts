@@ -2754,6 +2754,11 @@ export default {
     loadFailed: "Je vermogen kon niet worden geladen.",
   },
   vehicles: {
+    bulkAssign: "Aan voertuig toewijzen",
+    bulkAssignShort: "Voor auto",
+    bulkAssignNote: "Kies het voertuig en de kostensoort. Tankbeurten met liters blijven zoals ze zijn.",
+    bulkAssignConfirm: "{{count}} toewijzen",
+    bulkAssigned: "Toegewezen {{assigned}}, overgeslagen {{skipped}}",
     fuelOptionalHint: "Geen liters of kilometerstand? Laat beide leeg — het telt als brandstofkosten, alleen niet in het verbruik.",
     carSection: "Auto",
     markAsCarCost: "Markeren als autokosten",

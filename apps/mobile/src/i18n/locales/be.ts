@@ -2734,6 +2734,11 @@ export default {
     loadFailed: "Не ўдалося загрузіць капітал.",
   },
   vehicles: {
+    bulkAssign: "Аднесці да аўто",
+    bulkAssignShort: "На аўто",
+    bulkAssignNote: "Выберыце аўто і від выдатку. Запраўкі з літрамі застануцца як ёсць.",
+    bulkAssignConfirm: "Аднесці {{count}}",
+    bulkAssigned: "Аднесена {{assigned}}, прапушчана {{skipped}}",
     fuelOptionalHint: "Няма літраў ці прабегу? Пакіньце абодва палі пустымі — гэта залічыцца як выдатак на паліва, толькі без разліку расходу на 100 км.",
     carSection: "Аўтамабіль",
     markAsCarCost: "Адзначыць як выдатак на аўто",
