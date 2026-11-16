@@ -48,7 +48,7 @@
     "google-auth-library": "^10.7.0",
     "iconv-lite": "^0.4.24",
     "ioredis": "^5.3.0",
-    "nodemailer": "^10.6.0",
+    "nodemailer": "^8.0.1",
     "openai": "^4.24.0",
     "papaparse": "^5.5.3",
     "passport": "^0.7.0",

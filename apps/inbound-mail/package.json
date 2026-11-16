@@ -4,9 +4,7 @@
   "private": true,
   "description": "Receive-only SMTP container for forwarded e-receipts (ABA-644). No outbound path, no relay.",
   "main": "dist/main.js",
-  "engines": {
-    "node": ">=22"
-  },
+  "engines": { "node": ">=22" },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "start": "node dist/main.js",
@@ -17,13 +15,11 @@
   },
   "dependencies": {
     "html-to-text": "10.0.1",
-    "mailauth": "8.1.0",
+    "mailauth": "8.0.4",
     "mailparser": "3.14.1",
     "smtp-server": "3.21.3"
   },
-  "overrides": {
-    "joi": "18.3.1"
-  },
+  "overrides": { "joi": "18.3.1" },
   "devDependencies": {
     "@types/html-to-text": "9.0.4",
     "@types/jest": "29.5.14",
@@ -38,16 +34,10 @@
     "typescript": "5.9.3"
   },
   "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ],
+    "moduleFileExtensions": ["js", "json", "ts"],
     "rootDir": "src",
     "testRegex": ".*[.]spec[.]ts$",
-    "transform": {
-      "^.+[.]ts$": "ts-jest"
-    },
+    "transform": { "^.+[.]ts$": "ts-jest" },
     "testEnvironment": "node"
   }
 }
