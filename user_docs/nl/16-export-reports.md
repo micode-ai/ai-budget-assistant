@@ -84,6 +84,8 @@ Geautomatiseerde e-mailoverzichten die in je inbox worden bezorgd:
 | **Wekelijks e-mailoverzicht** | Wekelijks uitgavenoverzicht met topcategorieën | Business |
 | **Maandelijkse e-maildigest** | Maandelijks overzicht met maand-op-maandvergelijking | Pro & Business |
 
+Het maandoverzicht komt op de 1e over de zojuist afgelopen kalendermaand. Heeft het account een **Financiële maand** (bijvoorbeeld vanaf betaaldag, de 10e), dan komt het op die dag en beslaat het de zojuist afgelopen periode — 10 oktober – 9 november — vergeleken met de vorige.
+
 Configureer deze in **Instellingen** > **Rapporten & E-mail**:
 
 - Wekelijkse/maandelijkse e-mails aan/uit zetten

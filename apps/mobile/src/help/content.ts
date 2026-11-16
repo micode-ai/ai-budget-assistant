@@ -2839,6 +2839,8 @@ Automated email summaries delivered to your inbox:
 | **Weekly Email Summary** | Weekly spending overview with top categories | Business |
 | **Monthly Digest Email** | Monthly summary with month-over-month comparison | Pro & Business |
 
+The monthly digest arrives on the 1st for the calendar month just ended. If the account has a **Financial Month** (for example, starting on payday, the 10th), it arrives on that day instead and covers the period just ended — 10 October – 9 November — compared with the one before.
+
 Configure these in **Settings** > **Reports & Email**:
 
 - Toggle weekly/monthly emails on/off
@@ -8259,6 +8261,8 @@ AI Budget Assistant предлагает три уровня подписки. �
 | **Еженедельная email-сводка** | Еженедельный обзор расходов с топ категориями | Business |
 | **Ежемесячный дайджест на email** | Ежемесячная сводка со сравнением месяц к месяцу | Pro и Business |
 
+Ежемесячный дайджест приходит 1-го числа за только что закончившийся календарный месяц. Если у аккаунта задан **Финансовый месяц** (например, с дня зарплаты, 10-го), он приходит в этот день и охватывает только что закончившийся период — 10 октября – 9 ноября — в сравнении с предыдущим.
+
 Настройте их в **Настройки** > **Отчёты и email**:
 
 - Включите/выключите еженедельные и ежемесячные email-отчёты
@@ -13663,6 +13667,8 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 | **Щотижнева email-зведення** | Щотижневий огляд витрат з топ категоріями | Business |
 | **Щомісячний email-дайджест** | Щомісячний підсумок з порівнянням місяць до місяця | Pro та Business |
 
+Щомісячний дайджест надходить 1-го числа за щойно завершений календарний місяць. Якщо в акаунті задано **Фінансовий місяць** (наприклад, із дня зарплати, 10-го), він надходить у цей день і охоплює щойно завершений період — 10 жовтня – 9 листопада — порівняно з попереднім.
+
 Налаштуйте їх у **Налаштування** > **Звіти та email**:
 
 - Увімкнути/вимкнути щотижневі/щомісячні email
@@ -19017,6 +19023,8 @@ Automatyczne podsumowania e-mail dostarczane do Twojej skrzynki odbiorczej:
 | **Tygodniowe podsumowanie e-mail** | Tygodniowy przeglad wydatkow z glownymi kategoriami | Business |
 | **Miesieczny raport e-mail** | Miesieczne podsumowanie z porownaniem miesiac do miesiaca | Pro i Business |
 
+Miesięczne podsumowanie przychodzi 1. dnia za właśnie zakończony miesiąc kalendarzowy. Jeśli konto ma **Miesiąc finansowy** (na przykład od dnia wypłaty, 10.), przychodzi w tym dniu i obejmuje właśnie zakończony okres — 10 października – 9 listopada — w porównaniu z poprzednim.
+
 Skonfiguruj te opcje w **Ustawienia** > **Raporty i e-mail**:
 
 - Przelacz tygodniowe/miesieczne e-maile wlacz/wylacz
@@ -24369,6 +24377,8 @@ Automatisierte E-Mail-Zusammenfassungen, die in deinen Posteingang geliefert wer
 | **Wöchentliche E-Mail-Zusammenfassung** | Wöchentliche Ausgabenübersicht mit Top-Kategorien | Business |
 | **Monatliche E-Mail-Zusammenfassung** | Monatliche Zusammenfassung mit Monat-zu-Monat-Vergleich | Pro & Business |
 
+Der Monatsrückblick kommt am 1. für den gerade beendeten Kalendermonat. Hat das Konto einen **Finanzmonat** (zum Beispiel ab dem Zahltag, dem 10.), kommt er stattdessen an diesem Tag und umfasst den gerade beendeten Zeitraum — 10. Oktober – 9. November — im Vergleich zum vorherigen.
+
 Konfiguriere diese in **Einstellungen** > **Berichte & E-Mail**:
 
 - Schalte wöchentliche/monatliche E-Mails ein/aus
@@ -29699,6 +29709,8 @@ Resumenes automaticos por email entregados en tu bandeja de entrada:
 | **Resumen semanal por email** | Vision general del gasto semanal con principales categorias | Business |
 | **Resumen mensual por email** | Resumen mensual con comparacion mes a mes | Pro y Business |
 
+El resumen mensual llega el día 1 con el mes natural que acaba de terminar. Si la cuenta tiene un **Mes financiero** (por ejemplo, desde el día de cobro, el 10), llega ese día y cubre el periodo que acaba de terminar —del 10 de octubre al 9 de noviembre—, comparado con el anterior.
+
 Configuralos en **Ajustes** > **Informes y email**:
 
 - Activa/desactiva los emails semanales/mensuales
@@ -35015,6 +35027,8 @@ Resumes automatises par email livres dans votre boite de reception :
 |---|---|---|
 | **Resume hebdomadaire par email** | Apercu hebdomadaire des depenses avec principales categories | Business |
 | **Resume mensuel par email** | Synthese mensuelle avec comparaison mois par mois | Pro et Business |
+
+Le bilan mensuel arrive le 1er pour le mois civil qui vient de se terminer. Si le compte a un **Mois financier** (par exemple à partir du jour de paie, le 10), il arrive ce jour-là et couvre la période qui vient de se terminer — du 10 octobre au 9 novembre — comparée à la précédente.
 
 Configurez-les dans **Parametres** > **Rapports et email** :
 
@@ -40338,6 +40352,8 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 | **Штотыднёвая email-зводка** | Тыднёвы агляд выдаткаў з топ катэгорыямі | Business |
 | **Штомесячны email-дайджэст** | Месячная зводка з параўнаннем месяц да месяца | Pro і Business |
 
+Штомесячны дайджэст прыходзіць 1-га чысла за толькі што скончаны каляндарны месяц. Калі ў акаўнта зададзены **Фінансавы месяц** (напрыклад, з дня заробку, 10-га), ён прыходзіць у гэты дзень і ахоплівае толькі што скончаны перыяд — 10 кастрычніка – 9 лістапада — у параўнанні з папярэднім.
+
 Наладзіць іх можна ў **Налады** > **Справаздачы і email**:
 
 - Уключыць/выключыць штотыднёвыя/штомесячныя email
@@ -45624,6 +45640,8 @@ Geautomatiseerde e-mailoverzichten die in je inbox worden bezorgd:
 |---|---|---|
 | **Wekelijks e-mailoverzicht** | Wekelijks uitgavenoverzicht met topcategorieën | Business |
 | **Maandelijkse e-maildigest** | Maandelijks overzicht met maand-op-maandvergelijking | Pro & Business |
+
+Het maandoverzicht komt op de 1e over de zojuist afgelopen kalendermaand. Heeft het account een **Financiële maand** (bijvoorbeeld vanaf betaaldag, de 10e), dan komt het op die dag en beslaat het de zojuist afgelopen periode — 10 oktober – 9 november — vergeleken met de vorige.
 
 Configureer deze in **Instellingen** > **Rapporten & E-mail**:
 
@@ -51051,6 +51069,8 @@ Resumos automáticos entregues na sua caixa de correio:
 |---|---|---|
 | **Resumo semanal por e-mail** | Visão geral semanal dos gastos com as principais categorias | Business |
 | **Resumo mensal** por e-mail | Resumo mensal com comparação com o mês anterior | Pro e Business |
+
+O resumo mensal chega no dia 1 com o mês civil que acabou de terminar. Se a conta tiver um **Mês financeiro** (por exemplo, a começar no dia do ordenado, dia 10), chega nesse dia e cobre o período que acabou de terminar — de 10 de outubro a 9 de novembro — comparado com o anterior.
 
 Configure-os em **Definições** > **Relatórios e e-mail**:
 
@@ -56485,6 +56505,8 @@ Resumos automáticos entregues na sua caixa de entrada:
 |---|---|---|
 | **Resumo semanal por e-mail** | Visão geral semanal dos gastos com as principais categorias | Business |
 | **Resumo mensal** por e-mail | Resumo mensal com comparação com o mês anterior | Pro e Business |
+
+O resumo mensal chega no dia 1º com o mês do calendário que acabou de terminar. Se a conta tiver um **Mês financeiro** (por exemplo, começando no dia do pagamento, dia 10), ele chega nesse dia e cobre o período que acabou de terminar — de 10 de outubro a 9 de novembro — comparado com o anterior.
 
 Configure-os em **Configurações** > **Relatórios e e-mail**:
 

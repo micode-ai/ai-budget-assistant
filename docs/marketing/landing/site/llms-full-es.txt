@@ -6114,6 +6114,8 @@ Resumenes automaticos por email entregados en tu bandeja de entrada:
 | **Resumen semanal por email** | Vision general del gasto semanal con principales categorias | Business |
 | **Resumen mensual por email** | Resumen mensual con comparacion mes a mes | Pro y Business |
 
+El resumen mensual llega el día 1 con el mes natural que acaba de terminar. Si la cuenta tiene un **Mes financiero** (por ejemplo, desde el día de cobro, el 10), llega ese día y cubre el periodo que acaba de terminar —del 10 de octubre al 9 de noviembre—, comparado con el anterior.
+
 Configuralos en **Ajustes** > **Informes y email**:
 
 - Activa/desactiva los emails semanales/mensuales

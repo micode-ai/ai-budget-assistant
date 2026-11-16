@@ -3357,6 +3357,8 @@ Resumos automáticos entregues na sua caixa de entrada:
 | **Resumo semanal por e-mail** | Visão geral semanal dos gastos com as principais categorias | Business |
 | **Resumo mensal** por e-mail | Resumo mensal com comparação com o mês anterior | Pro e Business |
 
+O resumo mensal chega no dia 1º com o mês do calendário que acabou de terminar. Se a conta tiver um **Mês financeiro** (por exemplo, começando no dia do pagamento, dia 10), ele chega nesse dia e cobre o período que acabou de terminar — de 10 de outubro a 9 de novembro — comparado com o anterior.
+
 Configure-os em **Configurações** > **Relatórios e e-mail**:
 
 - Ativar/desativar os e-mails semanais e mensais

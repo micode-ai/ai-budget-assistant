@@ -6700,6 +6700,8 @@ Automatyczne podsumowania e-mail dostarczane do Twojej skrzynki odbiorczej:
 | **Tygodniowe podsumowanie e-mail** | Tygodniowy przeglad wydatkow z glownymi kategoriami | Business |
 | **Miesieczny raport e-mail** | Miesieczne podsumowanie z porownaniem miesiac do miesiaca | Pro i Business |
 
+Miesięczne podsumowanie przychodzi 1. dnia za właśnie zakończony miesiąc kalendarzowy. Jeśli konto ma **Miesiąc finansowy** (na przykład od dnia wypłaty, 10.), przychodzi w tym dniu i obejmuje właśnie zakończony okres — 10 października – 9 listopada — w porównaniu z poprzednim.
+
 Skonfiguruj te opcje w **Ustawienia** > **Raporty i e-mail**:
 
 - Przelacz tygodniowe/miesieczne e-maile wlacz/wylacz

@@ -193,7 +193,7 @@ describe('expense totals exclude split receivables (ABA-660, the gap ABA-659 rec
       const mail = { sendWeeklyReport: jest.fn(async () => undefined), sendMonthlyDigest: jest.fn(async () => undefined) };
       const svc = new ReportSchedulerService(p, mail as any, rates as any);
       await svc.processWeeklyEmailsForUser('u1');
-      await svc.processMonthlyDigests();
+      await svc.processMonthlyDigests(new Date(2026, 9, 1, 9)); // a turnover day (ABA-791)
       return { weekly: mail.sendWeeklyReport.mock.calls, monthly: mail.sendMonthlyDigest.mock.calls };
     };
     const { a, b, wheres } = await twice(base, extra, [inc({ date: day('2026-10-12') })], run);

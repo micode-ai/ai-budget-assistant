@@ -4,6 +4,7 @@ import { PrismaService } from '../../database/prisma.service';
 import { MailService } from '../mail/mail.service';
 import { ExchangeRateService } from '../currency-exchange/exchange-rate.service';
 import { EXCLUDE_SPLIT_RECEIVABLE } from '../../common/utils/expense-filters';
+import { digestPeriodsEndingYesterday } from './monthly-digest-period.util';
 
 @Injectable()
 export class ReportSchedulerService {
@@ -67,7 +68,7 @@ export class ReportSchedulerService {
         subscription: true,
         accountMembers: {
           include: {
-            account: { select: { id: true, name: true, currencyCode: true, encryptionTier: true } },
+            account: { select: { id: true, name: true, currencyCode: true, encryptionTier: true, monthAnchorDay: true } },
           },
         },
       },
@@ -89,7 +90,7 @@ export class ReportSchedulerService {
         subscription: true,
         accountMembers: {
           include: {
-            account: { select: { id: true, name: true, currencyCode: true, encryptionTier: true } },
+            account: { select: { id: true, name: true, currencyCode: true, encryptionTier: true, monthAnchorDay: true } },
           },
         },
       },
@@ -202,9 +203,10 @@ export class ReportSchedulerService {
     }
   }
 
-  // Runs on the 1st of every month at 09:00 UTC
-  @Cron('0 9 1 * *')
-  async processMonthlyDigests() {
+  // Runs daily at 09:00 UTC; an account's digest goes out on the day its month
+  // turns over — the 1st, or the anchor day of a financial month (ABA-791).
+  @Cron('0 9 * * *')
+  async processMonthlyDigests(now: Date = new Date()) {
     const users = await this.prisma.user.findMany({
       where: {
         monthlyDigestEnabled: true,
@@ -214,7 +216,7 @@ export class ReportSchedulerService {
         subscription: true,
         accountMembers: {
           include: {
-            account: { select: { id: true, name: true, currencyCode: true, encryptionTier: true } },
+            account: { select: { id: true, name: true, currencyCode: true, encryptionTier: true, monthAnchorDay: true } },
           },
         },
       },
@@ -231,13 +233,14 @@ export class ReportSchedulerService {
       for (const membership of user.accountMembers) {
         const account = membership.account;
         if (account.encryptionTier >= 2) continue;
+        const periods = digestPeriodsEndingYesterday(now, account.monthAnchorDay ?? null);
+        if (!periods) continue;
 
         try {
-          const now = new Date();
-          const prevMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-          const prevMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
-          const twoMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 2, 1);
-          const twoMonthsAgoEnd = new Date(now.getFullYear(), now.getMonth() - 1, 0);
+          const prevMonth = periods.start;
+          const prevMonthEnd = periods.end;
+          const twoMonthsAgo = periods.prevStart;
+          const twoMonthsAgoEnd = periods.prevEnd;
 
           // Fetch exchange rates for currency conversion
           let rates: Record<string, number> = {};
@@ -313,7 +316,7 @@ export class ReportSchedulerService {
             percentage: totalExpenses > 0 ? (amount / totalExpenses) * 100 : 0,
           }));
 
-          const monthLabel = prevMonth.toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
+          const monthLabel = periods.label;
 
           await this.mailService.sendMonthlyDigest({
             to: user.email,

@@ -6128,6 +6128,8 @@ Automated email summaries delivered to your inbox:
 | **Weekly Email Summary** | Weekly spending overview with top categories | Business |
 | **Monthly Digest Email** | Monthly summary with month-over-month comparison | Pro & Business |
 
+The monthly digest arrives on the 1st for the calendar month just ended. If the account has a **Financial Month** (for example, starting on payday, the 10th), it arrives on that day instead and covers the period just ended — 10 October – 9 November — compared with the one before.
+
 Configure these in **Settings** > **Reports & Email**:
 
 - Toggle weekly/monthly emails on/off

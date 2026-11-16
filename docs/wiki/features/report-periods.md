@@ -25,8 +25,10 @@ modes: the presets, `specificMonth` (a 24-month picker) and `custom` (an arbitra
 `anchorDay` (the screen passes `useFinancialMonth().anchorDay`): "this month" starts on the
 current financial month's first day, `specificMonth` is the financial month that STARTS in the
 picked month, the picker lists financial months starting with the current one, and Analytics'
-current financial month maps to the `month` preset. Week, quarter and year stay calendar by design;
-the server's monthly digest is still a calendar month.
+current financial month maps to the `month` preset. Week, quarter and year stay calendar by design.
+The server's monthly digest e-mail follows the financial month too ([ABA-791](https://github.com/micode-ai/ai-budget-assistant/issues/829)): its cron runs daily at
+09:00 UTC and `digestPeriodsEndingYesterday` sends an account's digest only on the day its month turns
+over (the 1st, or the anchor day), for the period that ended yesterday against the one before.
 
 **Report generation in all three formats is FREE**, as is backup export/restore. The only paid part
 is scheduled e-mail delivery: the weekly summary is `business`, the monthly digest e-mail `pro`+.

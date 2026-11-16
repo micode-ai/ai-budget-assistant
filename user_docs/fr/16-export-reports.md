@@ -84,6 +84,8 @@ Resumes automatises par email livres dans votre boite de reception :
 | **Resume hebdomadaire par email** | Apercu hebdomadaire des depenses avec principales categories | Business |
 | **Resume mensuel par email** | Synthese mensuelle avec comparaison mois par mois | Pro et Business |
 
+Le bilan mensuel arrive le 1er pour le mois civil qui vient de se terminer. Si le compte a un **Mois financier** (par exemple à partir du jour de paie, le 10), il arrive ce jour-là et couvre la période qui vient de se terminer — du 10 octobre au 9 novembre — comparée à la précédente.
+
 Configurez-les dans **Parametres** > **Rapports et email** :
 
 - Activer/desactiver les emails hebdomadaires/mensuels

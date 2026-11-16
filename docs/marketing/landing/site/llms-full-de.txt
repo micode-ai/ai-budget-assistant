@@ -6098,6 +6098,8 @@ Automatisierte E-Mail-Zusammenfassungen, die in deinen Posteingang geliefert wer
 | **Wöchentliche E-Mail-Zusammenfassung** | Wöchentliche Ausgabenübersicht mit Top-Kategorien | Business |
 | **Monatliche E-Mail-Zusammenfassung** | Monatliche Zusammenfassung mit Monat-zu-Monat-Vergleich | Pro & Business |
 
+Der Monatsrückblick kommt am 1. für den gerade beendeten Kalendermonat. Hat das Konto einen **Finanzmonat** (zum Beispiel ab dem Zahltag, dem 10.), kommt er stattdessen an diesem Tag und umfasst den gerade beendeten Zeitraum — 10. Oktober – 9. November — im Vergleich zum vorherigen.
+
 Konfiguriere diese in **Einstellungen** > **Berichte & E-Mail**:
 
 - Schalte wöchentliche/monatliche E-Mails ein/aus
