@@ -38,6 +38,13 @@ can edit — fill-ups hang on expenses that stay in the source account. The app 
 a switch never reads another account's list) and `reloadVehicles` refetches after a write. The Fill-up section is
 drawn only when the account has a vehicle or the expense already has a fill-up, and sends `serverId ?? id`.
 
+**Other car costs** ([ABA-803](https://github.com/micode-ai/ai-budget-assistant/issues/841)). `VehicleCost` ties one expense to one vehicle with a `kind` (service, insurance,
+parking, tax, other); fuel stays in `FuelLog`, and one expense is one or the other (each write deletes the
+other row). `Vehicle.categoryRules` claims categories per kind; `applyVehicleCategoryRules` materialises them
+with `source = 'category'` and never touches a person's decision (`source = null`, including the `none`
+tombstone a removal leaves) or a fill-up. Stats carry `ownership`: the last 12 months by kind, monthly
+average, km from the fill-ups in the window and all costs per km.
+
 ## Invariants
 
 - Every query filters by `accountId`; the expense id is accepted as PK or `clientId` and the RESOLVED PK is written.
@@ -47,7 +54,7 @@ drawn only when the account has a vehicle or the expense already has a fill-up, 
 
 ## Known gaps
 
-Non-fuel car costs (service, insurance) — needs a link from any expense to a vehicle; SQLite mirror; OCR litres
+SQLite mirror; OCR litres
 prefill; a trend chart from `series`; community-price comparison; mileage in the tax export.
 
 ## History

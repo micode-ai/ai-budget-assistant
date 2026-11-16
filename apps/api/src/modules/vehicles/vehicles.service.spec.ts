@@ -1,12 +1,13 @@
 import { VehiclesService } from './vehicles.service';
 
-function make(logs: unknown[], rates: Record<string, number> | null = { PLN: 1, EUR: 0.25 }) {
+function make(logs: unknown[], rates: Record<string, number> | null = { PLN: 1, EUR: 0.25 }, costs: unknown[] = []) {
   const prisma: any = {
     vehicle: { findFirst: jest.fn().mockResolvedValue({ id: 'v1', accountId: 'a1' }) },
     fuelLog: {
       findMany: jest.fn().mockResolvedValue(logs),
       findFirst: jest.fn().mockResolvedValue(null),
     },
+    vehicleCost: { findMany: jest.fn().mockResolvedValue(costs), findFirst: jest.fn().mockResolvedValue(null) },
   };
   const fx: any = { getRates: jest.fn().mockResolvedValue({ rates }) };
   return { service: new VehiclesService(prisma, fx), prisma, fx };
@@ -44,7 +45,7 @@ describe('VehiclesService (ABA-796)', () => {
 
   it('answers "no fill-up" for an expense without one, by PK or clientId', async () => {
     const { service, prisma } = make([]);
-    expect(await service.findFuelLogForExpense('a1', 'local-1')).toEqual({ fuelLog: null });
+    expect(await service.findFuelLogForExpense('a1', 'local-1')).toEqual({ fuelLog: null, cost: null });
     const where = prisma.fuelLog.findFirst.mock.calls[0][0].where;
     expect(where.expense.OR).toEqual([{ id: 'local-1' }, { clientId: 'local-1' }]);
     expect(where.vehicle).toEqual({ isDeleted: false });
@@ -57,6 +58,7 @@ describe('VehiclesService.move (ABA-801)', () => {
       vehicle: { findFirst: jest.fn().mockResolvedValue({ id: 'v1', accountId: 'a1' }), update: jest.fn() },
       accountMember: { findUnique: jest.fn().mockResolvedValue(role ? { role } : null) },
       fuelLog: { count: jest.fn().mockResolvedValue(fillUps), deleteMany: jest.fn() },
+      vehicleCost: { count: jest.fn().mockResolvedValue(0), deleteMany: jest.fn() },
     };
     prisma.vehicle.update.mockImplementation(({ data }: any) => Promise.resolve({ id: 'v1', ...data }));
     prisma.$transaction = jest.fn(async (cb: any) => cb(prisma));
@@ -67,6 +69,7 @@ describe('VehiclesService.move (ABA-801)', () => {
     const { service, prisma } = setup('owner', 0);
     await expect(service.move('a1', 'u1', 'v1', { targetAccountId: 'a2' })).resolves.toMatchObject({ accountId: 'a2' });
     expect(prisma.fuelLog.deleteMany).toHaveBeenCalledWith({ where: { vehicleId: 'v1' } });
+    expect(prisma.vehicle.update.mock.calls[0][0].data).toEqual({ accountId: 'a2', categoryRules: [] });
   });
 
   it('refuses a vehicle with fill-ups and a target the caller cannot edit', async () => {
@@ -76,5 +79,30 @@ describe('VehiclesService.move (ABA-801)', () => {
     await expect(setup('viewer', 0).service.move('a1', 'u1', 'v1', { targetAccountId: 'a2' })).rejects.toThrow(
       'You cannot edit the target account',
     );
+  });
+});
+
+describe('VehiclesService ownership (ABA-803)', () => {
+  it('adds every cost of the last 12 months by kind, with the cost per km over the distance driven', async () => {
+    const recent = (m: number, d: number) => {
+      const x = new Date();
+      x.setMonth(x.getMonth() - m, d);
+      return x;
+    };
+    const logs = [
+      { odometerKm: 10000, liters: 40, isFullTank: true, expense: { amount: 200, currencyCode: 'PLN', date: recent(6, 1) } },
+      { odometerKm: 11000, liters: 60, isFullTank: true, expense: { amount: 300, currencyCode: 'PLN', date: recent(1, 1) } },
+    ];
+    const costs = [
+      { kind: 'insurance', expense: { amount: 1200, currencyCode: 'PLN' } },
+      { kind: 'service', expense: { amount: 100, currencyCode: 'EUR' } }, // 400 PLN at 0.25
+    ];
+    const { service } = make(logs, { PLN: 1, EUR: 0.25 }, costs);
+    const stats: any = await service.getStats('a1', 'v1', 'PLN');
+    expect(stats.ownership.byKind).toMatchObject({ fuel: 500, insurance: 1200, service: 400, parking: 0 });
+    expect(stats.ownership.total).toBe(2100);
+    expect(stats.ownership.perMonth).toBe(175);
+    expect(stats.ownership.kmLast12Months).toBe(1000);
+    expect(stats.ownership.costPerKm).toBe(2.1);
   });
 });

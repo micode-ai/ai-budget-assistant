@@ -5450,7 +5450,7 @@ Voyez ce que votre voiture coûte en carburant. Ajoutez un véhicule avec son no
 
 Pour saisir un plein, ouvrez une dépense de carburant : si le compte a un véhicule, la dépense affiche une section **Plein**. Touchez **Marquer comme plein** et indiquez la quantité (litres, ou kWh pour une voiture électrique), le compteur et si le réservoir a été rempli à ras bord. La consommation se mesure entre deux pleins complets : les chiffres apparaissent après deux pleins complets ; un plein partiel est compté dans le suivant.
 
-Les véhicules nécessitent une connexion internet. Supprimer un véhicule conserve les dépenses ; seuls le véhicule et ses statistiques disparaissent. L'entretien, l'assurance et les autres frais ne sont pas encore comptés — seulement le carburant.
+Les autres frais de voiture comptent aussi. Sur n'importe quelle dépense, la section **Voiture** permet de choisir le véhicule et le type : carburant, entretien, assurance, stationnement, taxes et frais ou autre (litres et compteur ne sont demandés que pour le carburant). Dans la fiche du véhicule, **Catégories de ce véhicule** l'automatise : choisissez un type, touchez les catégories (par exemple « Assurance auto » comme assurance), et leurs dépenses comptent pour la voiture — les anciennes dès l'enregistrement, les nouvelles à leur arrivée. La carte affiche alors les 12 derniers mois : le total, la moyenne mensuelle, chaque type et tous les frais par km. Les véhicules nécessitent une connexion internet. Supprimer un véhicule conserve les dépenses ; seuls le véhicule et ses statistiques disparaissent.
 
 ## Donnees et rapports
 

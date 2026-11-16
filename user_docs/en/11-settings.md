@@ -186,7 +186,7 @@ See what your car costs in fuel. Add a vehicle with its name and fuel type (petr
 
 To log a fill-up, open a fuel expense: when the account has a vehicle, the expense shows a **Fill-up** section. Tap **Mark as a fill-up** and enter the amount (litres, or kWh for an electric car), the odometer reading and whether you filled the tank to the top. Consumption is measured between full tanks, so the figures appear after two full-tank fill-ups; a partial fill-up is counted into the next full one.
 
-Vehicles need an internet connection. Deleting a vehicle keeps the expenses; only the vehicle and its statistics go. Service, insurance and other car costs are not counted yet — only fuel.
+Other car costs count too. On any expense, the **Car** section lets you pick the vehicle and the kind: fuel, service, insurance, parking, taxes & fees or other (litres and odometer are asked only for fuel). In the vehicle's sheet, **Categories of this vehicle** makes it automatic: pick a kind, tap the categories (for example "Car insurance" as insurance), and their expenses count for the car — past ones as soon as you save, new ones as they arrive. The card then shows the last 12 months: the total, the monthly average, each kind, and all costs per km. Vehicles need an internet connection. Deleting a vehicle keeps the expenses; only the vehicle and its statistics go.
 
 ## Data & Reports
 

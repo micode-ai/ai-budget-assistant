@@ -366,6 +366,7 @@ Newest last within each section.
 - 2026-11-16 · [ABA-800](https://github.com/micode-ai/ai-budget-assistant/issues/838) — a child create on an encrypted account failed silently when encryption was locked; now explained up front, unused children can be deleted, and Children/Vehicles name their account; features/child-costs, features/vehicle-fuel-log.
 - 2026-11-16 · [ABA-801](https://github.com/micode-ai/ai-budget-assistant/issues/839) — move an unattributed child or a vehicle without fill-ups to another account (name re-encrypted for the target); local children upsert now follows account_id; features/child-costs, features/vehicle-fuel-log.
 - 2026-11-16 · [ABA-802](https://github.com/micode-ai/ai-budget-assistant/issues/840) — a child's categories attribute their expenses automatically (materialised links with `source`, manual writes marked null); features/child-costs.
+- 2026-11-16 · [ABA-803](https://github.com/micode-ai/ai-budget-assistant/issues/841) — service/insurance/parking/tax costs per vehicle (VehicleCost + category rules) and a 12-month cost of ownership; features/vehicle-fuel-log.
 
 ## Queries
 

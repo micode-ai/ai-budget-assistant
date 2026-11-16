@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, ActivityIndicator, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '@budget/shared-utils';
-import type { FuelLogWithExpense, FuelType, Vehicle, VehicleStats } from '@budget/shared-types';
+import type { FuelLogWithExpense, FuelType, Vehicle, VehicleCostKind, VehicleStats } from '@budget/shared-types';
+import { useCategoryStore } from '@/stores/categoryStore';
+import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
 import { api } from '@/services/api';
 import { showAlert } from '@/utils/alert';
 import { SheetDialog } from '@/components/SheetDialog';
@@ -18,6 +20,9 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 const SHEET_TITLE_ID = 'vehicle-sheet-title';
 const NAME_MAX = 60;
 const FUEL_TYPES: FuelType[] = ['petrol', 'diesel', 'lpg', 'electric', 'hybrid', 'other'];
+const COST_KINDS: VehicleCostKind[] = ['service', 'insurance', 'parking', 'tax', 'other'];
+/** The order the cost-of-ownership breakdown lists its parts in. */
+const OWNERSHIP_KINDS = ['fuel', ...COST_KINDS];
 
 /**
  * Settings → Vehicles (ABA-796): what the car costs in fuel. One card per
@@ -44,6 +49,24 @@ export function VehiclesSettings() {
   const [name, setName] = useState('');
   const [fuelType, setFuelType] = useState<FuelType>('petrol');
   const [isSaving, setIsSaving] = useState(false);
+  // Category rules (ABA-803): category id (the app's spelling) -> kind; loaded when the sheet opens.
+  const allCategories = useCategoryStore((st) => st.categories);
+  const expenseCategories = allCategories
+    .filter((c) => c.type === 'expense' && !(c as { isDeleted?: boolean }).isDeleted)
+    .map((c) => ({ id: c.id, label: getCategoryDisplayName(c, t) }))
+    .sort((a, b) => a.label.localeCompare(b.label));
+  const [rulesState, setRulesState] = useState<'idle' | 'loading' | 'ready' | 'failed'>('idle');
+  const [initialRules, setInitialRules] = useState<Record<string, VehicleCostKind>>({});
+  const [rules, setRules] = useState<Record<string, VehicleCostKind>>({});
+  const [ruleKind, setRuleKind] = useState<VehicleCostKind>('service');
+
+  const toggleRule = (categoryId: string) =>
+    setRules((prev) => {
+      const next = { ...prev };
+      if (next[categoryId] === ruleKind) delete next[categoryId];
+      else next[categoryId] = ruleKind;
+      return next;
+    });
 
   const openCreate = () => {
     setEditing(null);
@@ -56,6 +79,23 @@ export function VehiclesSettings() {
     setName(v.name);
     setFuelType(v.fuelType);
     setSheetVisible(true);
+    setRulesState('loading');
+    api
+      .getVehicleCategoryRules(v.id)
+      .then(({ rules: serverRules }) => {
+        const mapped: Record<string, VehicleCostKind> = {};
+        for (const r of serverRules) {
+          const local = expenseCategories.find((c) => (r.ids ?? [r.categoryId]).includes(c.id));
+          if (local) mapped[local.id] = r.kind;
+        }
+        setInitialRules(mapped);
+        setRules(mapped);
+        setRulesState('ready');
+      })
+      .catch((err) => {
+        console.warn('[vehicles] category rules unavailable', err);
+        setRulesState('failed');
+      });
   };
   const close = () => {
     setSheetVisible(false);
@@ -67,8 +107,22 @@ export function VehiclesSettings() {
     if (!trimmed || !accountId) return;
     setIsSaving(true);
     try {
-      if (editing) await api.updateVehicle(editing.id, { name: trimmed, fuelType });
-      else await api.createVehicle({ name: trimmed, fuelType });
+      if (editing) {
+        await api.updateVehicle(editing.id, { name: trimmed, fuelType });
+        const keys = new Set([...Object.keys(rules), ...Object.keys(initialRules)]);
+        const changed = rulesState === 'ready' && [...keys].some((k) => rules[k] !== initialRules[k]);
+        if (changed) {
+          const res = await api.setVehicleCategoryRules(
+            editing.id,
+            Object.entries(rules).map(([categoryId, kind]) => ({ categoryId, kind })),
+          );
+          if (res.attributed > 0 || res.released > 0) {
+            showAlert(t('vehicles.rulesSavedTitle'), t('vehicles.rulesSaved', { attributed: res.attributed, released: res.released }));
+          }
+        }
+      } else {
+        await api.createVehicle({ name: trimmed, fuelType });
+      }
       await reloadVehicles(accountId);
       close();
     } catch (e) {
@@ -194,6 +248,49 @@ export function VehiclesSettings() {
             </TouchableOpacity>
           ))}
         </View>
+        {editing && (
+          <View style={styles.rulesBlock}>
+            <Text style={styles.fieldLabel}>{t('vehicles.rulesTitle')}</Text>
+            <Text style={styles.rulesHint}>{t('vehicles.rulesHint')}</Text>
+            {rulesState === 'loading' && <ActivityIndicator color={theme.colors.primary} />}
+            {rulesState === 'failed' && <Text style={styles.rulesHint}>{t('vehicles.rulesFailed')}</Text>}
+            {rulesState === 'ready' && (
+              <>
+                <View style={styles.chips}>
+                  {COST_KINDS.map((k) => (
+                    <TouchableOpacity
+                      key={k}
+                      style={[styles.chip, ruleKind === k && styles.chipSelected]}
+                      onPress={() => setRuleKind(k)}
+                      accessibilityRole="radio"
+                      accessibilityState={{ selected: ruleKind === k }}
+                    >
+                      <Text style={[styles.chipText, ruleKind === k && styles.chipTextSelected]}>{t('vehicles.kind_' + k)}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+                <ScrollView style={styles.rulesScroll} contentContainerStyle={styles.chipsTight} nestedScrollEnabled>
+                  {expenseCategories.map((c) => {
+                    const k = rules[c.id];
+                    return (
+                      <TouchableOpacity
+                        key={c.id}
+                        style={[styles.chip, k ? styles.chipSelected : null]}
+                        onPress={canEdit ? () => toggleRule(c.id) : undefined}
+                        accessibilityRole="checkbox"
+                        accessibilityState={{ checked: !!k }}
+                      >
+                        <Text style={[styles.chipText, k ? styles.chipTextSelected : null]}>
+                          {k ? c.label + ' · ' + t('vehicles.kind_' + k) : c.label}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </ScrollView>
+              </>
+            )}
+          </View>
+        )}
         <View style={styles.actions}>
           <TouchableOpacity style={styles.cancelButton} onPress={close}>
             <Text style={styles.cancelText}>{t('common.cancel')}</Text>
@@ -316,6 +413,29 @@ function VehicleCard({ vehicle, canEdit, onEdit }: { vehicle: Vehicle; canEdit: 
       {statsBody}
       {metaParts.length > 0 && <Text style={styles.meta}>{metaParts.join(' · ')}</Text>}
 
+      {stats?.ownership && stats.ownership.total > 0 && (
+        <View style={styles.ownership}>
+          <Text style={styles.ownershipTitle}>
+            {t('vehicles.ownershipTitle', {
+              total: money(stats.ownership.total),
+              perMonth: money(stats.ownership.perMonth),
+            })}
+          </Text>
+          {OWNERSHIP_KINDS.filter((k) => (stats.ownership!.byKind[k] ?? 0) > 0).map((k) => (
+            <View key={k} style={styles.ownershipRow}>
+              <Text style={styles.ownershipLabel}>{t('vehicles.kind_' + k)}</Text>
+              <Text style={styles.ownershipValue}>{money(stats.ownership!.byKind[k])}</Text>
+            </View>
+          ))}
+          {stats.ownership.costPerKm !== null && (
+            <View style={styles.ownershipRow}>
+              <Text style={styles.ownershipLabel}>{t('vehicles.allCostPerKm')}</Text>
+              <Text style={styles.ownershipValue}>{money(stats.ownership.costPerKm)}</Text>
+            </View>
+          )}
+        </View>
+      )}
+
       {stats && stats.fillUps > 0 && (
         <TouchableOpacity
           onPress={toggleLogs}
@@ -425,6 +545,20 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.textPrimary,
     marginBottom: theme.spacing[4],
   },
+  rulesBlock: { marginBottom: theme.spacing[4] },
+  rulesHint: { ...theme.textStyles.caption, color: theme.colors.textTertiary, marginBottom: theme.spacing[2] },
+  rulesScroll: { maxHeight: 160 },
+  chipsTight: { flexDirection: 'row' as const, flexWrap: 'wrap' as const, gap: theme.spacing[2] },
+  ownership: {
+    marginTop: theme.spacing[3],
+    paddingTop: theme.spacing[2],
+    borderTopWidth: 1,
+    borderTopColor: theme.colors.divider,
+  },
+  ownershipTitle: { ...theme.textStyles.bodySmMedium, color: theme.colors.textPrimary, marginBottom: theme.spacing[1] },
+  ownershipRow: { flexDirection: 'row' as const, justifyContent: 'space-between' as const, paddingVertical: 2 },
+  ownershipLabel: { ...theme.textStyles.bodySm, color: theme.colors.textSecondary },
+  ownershipValue: { ...theme.textStyles.bodySm, color: theme.colors.textPrimary, fontVariant: ['tabular-nums' as const] },
   fieldLabel: { ...theme.textStyles.caption, color: theme.colors.textSecondary, marginBottom: theme.spacing[2] },
   chips: {
     flexDirection: 'row' as const,

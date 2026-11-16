@@ -173,7 +173,7 @@ Zobacz, ile kosztuje Cię paliwo do auta. Dodaj pojazd z nazwą i rodzajem paliw
 
 Aby zapisać tankowanie, otwórz wydatek na paliwo: jeśli konto ma pojazd, wydatek ma sekcję **Tankowanie**. Stuknij **Oznacz jako tankowanie** i podaj ilość (litry, a w aucie elektrycznym kWh), stan licznika i czy zatankowano do pełna. Spalanie liczone jest między pełnymi bakami, więc wyniki pojawią się po dwóch tankowaniach do pełna; niepełne tankowanie wlicza się do następnego pełnego.
 
-Pojazdy wymagają połączenia z internetem. Usunięcie pojazdu zachowuje wydatki; znikają tylko pojazd i jego statystyki. Serwis, ubezpieczenie i inne koszty auta nie są jeszcze liczone — tylko paliwo.
+Liczą się też inne koszty auta. Przy dowolnym wydatku sekcja **Samochód** pozwala wybrać pojazd i rodzaj: paliwo, serwis, ubezpieczenie, parkowanie, podatki i opłaty albo inne (litry i przebieg są potrzebne tylko przy paliwie). W oknie pojazdu **Kategorie tego pojazdu** robią to automatycznie: wybierz rodzaj, stuknij kategorie (np. „Ubezpieczenie auta” jako ubezpieczenie), a ich wydatki liczą się dla auta — wcześniejsze po zapisaniu, nowe na bieżąco. Karta pokazuje wtedy ostatnie 12 miesięcy: sumę, średnią miesięczną, każdy rodzaj i wszystkie koszty za kilometr. Pojazdy wymagają połączenia z internetem. Usunięcie pojazdu zachowuje wydatki; znikają tylko pojazd i jego statystyki.
 
 ## Dane i raporty
 

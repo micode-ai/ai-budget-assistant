@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, TextInput, Switch } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
-import type { Expense, FuelLog } from '@budget/shared-types';
+import type { Expense, FuelLog, VehicleCostKind, VehicleCostLink } from '@budget/shared-types';
 import { api } from '@/services/api';
 import { showAlert } from '@/utils/alert';
 import { SheetDialog } from '@/components/SheetDialog';
@@ -17,6 +17,9 @@ interface Props {
 }
 
 const SHEET_TITLE_ID = 'fuel-sheet-title';
+/** `fuel` is a fill-up (litres, odometer); the rest are other car costs (ABA-803). */
+type Kind = 'fuel' | VehicleCostKind;
+const KINDS: Kind[] = ['fuel', 'service', 'insurance', 'parking', 'tax', 'other'];
 
 /**
  * The expense screen's Fill-up section (ABA-796): litres, odometer and the
@@ -36,6 +39,8 @@ export function FuelSection({ expense, canEdit }: Props) {
   const expenseId = expense.serverId ?? expense.id;
 
   const [fuelLog, setFuelLog] = useState<FuelLog | null>(null);
+  const [cost, setCost] = useState<VehicleCostLink | null>(null);
+  const [kind, setKind] = useState<Kind>('fuel');
   const [sheetVisible, setSheetVisible] = useState(false);
   const [vehicleId, setVehicleId] = useState<string | null>(null);
   const [liters, setLiters] = useState('');
@@ -46,10 +51,13 @@ export function FuelSection({ expense, canEdit }: Props) {
   useEffect(() => {
     let cancelled = false;
     setFuelLog(null);
+    setCost(null);
     api
       .getExpenseFuelLog(expenseId)
       .then((r) => {
-        if (!cancelled) setFuelLog(r.fuelLog);
+        if (cancelled) return;
+        setFuelLog(r.fuelLog);
+        setCost(r.cost ?? null);
       })
       .catch((err) => {
         // Offline, or an expense the server has not seen yet: no fill-up to show.
@@ -60,17 +68,20 @@ export function FuelSection({ expense, canEdit }: Props) {
     };
   }, [expenseId]);
 
-  if (vehicles.length === 0 && !fuelLog) return null;
-  if (!fuelLog && !canEdit) return null;
+  if (vehicles.length === 0 && !fuelLog && !cost) return null;
+  if (!fuelLog && !cost && !canEdit) return null;
 
-  const vehicle = fuelLog ? vehicles.find((v) => v.id === fuelLog.vehicleId) : undefined;
+  const linkedVehicleId = fuelLog?.vehicleId ?? cost?.vehicleId;
+  const vehicle = linkedVehicleId ? vehicles.find((v) => v.id === linkedVehicleId) : undefined;
   const unit = t(fuelUnitKey(vehicle?.fuelType ?? 'petrol'));
   const parsedLiters = parseLiters(liters);
   const parsedOdometer = parseOdometer(odometer);
-  const canSave = !!vehicleId && parsedLiters !== null && parsedOdometer !== null && !isSaving;
+  const canSave =
+    !!vehicleId && !isSaving && (kind !== 'fuel' || (parsedLiters !== null && parsedOdometer !== null));
 
   const open = () => {
-    setVehicleId(fuelLog?.vehicleId ?? vehicles[0]?.id ?? null);
+    setKind(cost ? cost.kind : 'fuel');
+    setVehicleId(linkedVehicleId ?? vehicles[0]?.id ?? null);
     setLiters(fuelLog ? String(Number(fuelLog.liters)) : '');
     setOdometer(fuelLog ? String(fuelLog.odometerKm) : '');
     setFullTank(fuelLog?.isFullTank ?? true);
@@ -81,12 +92,19 @@ export function FuelSection({ expense, canEdit }: Props) {
     if (!canSave || !vehicleId) return;
     setIsSaving(true);
     try {
-      const saved = await api.upsertFuelLog(vehicleId, expenseId, {
-        liters: parsedLiters!,
-        odometerKm: parsedOdometer!,
-        isFullTank: fullTank,
-      });
-      setFuelLog(saved);
+      if (kind === 'fuel') {
+        const saved = await api.upsertFuelLog(vehicleId, expenseId, {
+          liters: parsedLiters!,
+          odometerKm: parsedOdometer!,
+          isFullTank: fullTank,
+        });
+        setFuelLog(saved);
+        setCost(null);
+      } else {
+        await api.setVehicleCost(vehicleId, expenseId, kind);
+        setCost({ vehicleId, kind, source: null });
+        setFuelLog(null);
+      }
       setSheetVisible(false);
     } catch (e) {
       const status = (e as { status?: number }).status;
@@ -99,8 +117,10 @@ export function FuelSection({ expense, canEdit }: Props) {
 
   const remove = async () => {
     try {
-      await api.removeFuelLog(expenseId);
+      if (fuelLog) await api.removeFuelLog(expenseId);
+      else await api.removeVehicleCost(expenseId);
       setFuelLog(null);
+      setCost(null);
       setSheetVisible(false);
     } catch (e) {
       console.warn('[fuel] remove failed:', e instanceof Error ? e.message : String(e));
@@ -108,7 +128,9 @@ export function FuelSection({ expense, canEdit }: Props) {
     }
   };
 
-  const summary = fuelLog
+  const summary = cost
+    ? [vehicle?.name, t(`vehicles.kind_${cost.kind}`)].filter(Boolean).join(' · ')
+    : fuelLog
     ? [
         vehicle?.name,
         `${Number(fuelLog.liters).toLocaleString(locale)} ${unit}`,
@@ -123,7 +145,7 @@ export function FuelSection({ expense, canEdit }: Props) {
     <View style={styles.card}>
       <View style={styles.headerRow}>
         <Ionicons name="speedometer-outline" size={18} color={theme.colors.textSecondary} />
-        <Text style={styles.title}>{t('vehicles.fillUp')}</Text>
+        <Text style={styles.title}>{t('vehicles.carSection')}</Text>
       </View>
       {summary ? (
         <TouchableOpacity activeOpacity={canEdit ? 0.7 : 1} onPress={canEdit ? open : undefined}>
@@ -131,7 +153,7 @@ export function FuelSection({ expense, canEdit }: Props) {
         </TouchableOpacity>
       ) : (
         <TouchableOpacity onPress={open} accessibilityRole="button">
-          <Text style={styles.link}>{t('vehicles.markAsFillUp')}</Text>
+          <Text style={styles.link}>{t('vehicles.markAsCarCost')}</Text>
         </TouchableOpacity>
       )}
 
@@ -144,8 +166,21 @@ export function FuelSection({ expense, canEdit }: Props) {
         insetFloor={theme.spacing[6]}
       >
         <Text nativeID={SHEET_TITLE_ID} style={styles.modalTitle}>
-          {t('vehicles.fillUp')}
+          {t('vehicles.carSection')}
         </Text>
+        <View style={styles.chips}>
+          {KINDS.map((k) => (
+            <TouchableOpacity
+              key={k}
+              style={[styles.chip, kind === k && styles.chipSelected]}
+              onPress={() => setKind(k)}
+              accessibilityRole="radio"
+              accessibilityState={{ selected: kind === k }}
+            >
+              <Text style={[styles.chipText, kind === k && styles.chipTextSelected]}>{t(`vehicles.kind_${k}`)}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
         {vehicles.length > 1 && (
           <View style={styles.chips}>
             {vehicles.map((v) => (
@@ -161,6 +196,8 @@ export function FuelSection({ expense, canEdit }: Props) {
             ))}
           </View>
         )}
+        {kind === 'fuel' && (
+          <>
         <Text style={styles.fieldLabel}>
           {t('vehicles.amountLabel', {
             unit: t(fuelUnitKey(vehicles.find((v) => v.id === vehicleId)?.fuelType ?? 'petrol')),
@@ -195,6 +232,8 @@ export function FuelSection({ expense, canEdit }: Props) {
             accessibilityLabel={t('vehicles.fullTank')}
           />
         </View>
+          </>
+        )}
         <View style={styles.actions}>
           <TouchableOpacity style={styles.cancelButton} onPress={() => setSheetVisible(false)}>
             <Text style={styles.cancelText}>{t('common.cancel')}</Text>
@@ -207,10 +246,10 @@ export function FuelSection({ expense, canEdit }: Props) {
             <Text style={styles.saveText}>{t('common.save')}</Text>
           </TouchableOpacity>
         </View>
-        {fuelLog && (
+        {(fuelLog || cost) && (
           <TouchableOpacity style={styles.deleteRow} onPress={remove} accessibilityRole="button">
             <Ionicons name="trash-outline" size={18} color={theme.colors.danger} />
-            <Text style={styles.deleteText}>{t('vehicles.removeFillUp')}</Text>
+            <Text style={styles.deleteText}>{t('vehicles.removeCarCost')}</Text>
           </TouchableOpacity>
         )}
       </SheetDialog>

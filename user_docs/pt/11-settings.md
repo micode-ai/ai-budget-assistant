@@ -186,7 +186,7 @@ Veja quanto o carro lhe custa em combustível. Adicione um veículo com nome e t
 
 Para registar um abastecimento, abra uma despesa de combustível: se a conta tiver um veículo, a despesa mostra uma secção **Abastecimento**. Toque em **Marcar como abastecimento** e indique a quantidade (litros, ou kWh num carro elétrico), o conta-quilómetros e se encheu o depósito. O consumo é medido entre depósitos cheios, por isso os valores aparecem após dois abastecimentos de depósito cheio; um abastecimento parcial conta para o seguinte completo.
 
-Os veículos precisam de ligação à internet. Eliminar um veículo mantém as despesas; só desaparecem o veículo e as estatísticas. Manutenção, seguro e outros custos do carro ainda não são contados — só o combustível.
+Os outros custos do carro também contam. Em qualquer despesa, a secção **Carro** permite escolher o veículo e o tipo: combustível, manutenção, seguro, estacionamento, impostos e taxas ou outro (litros e conta-quilómetros só são pedidos para o combustível). Na ficha do veículo, **Categorias deste veículo** torna isto automático: escolha um tipo, toque nas categorias (por exemplo «Seguro automóvel» como seguro) e as despesas delas contam para o carro — as anteriores assim que guarda, as novas à medida que chegam. O cartão mostra então os últimos 12 meses: o total, a média mensal, cada tipo e todos os custos por km. Os veículos precisam de ligação à internet. Eliminar um veículo mantém as despesas; só desaparecem o veículo e as estatísticas.
 
 ## Dados e relatórios
 

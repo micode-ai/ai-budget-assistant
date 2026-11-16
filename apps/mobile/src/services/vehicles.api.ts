@@ -5,6 +5,9 @@ import type {
   FuelType,
   UpsertFuelLogRequest,
   Vehicle,
+  VehicleCategoryRule,
+  VehicleCostKind,
+  VehicleCostLink,
   VehicleStats,
 } from '@budget/shared-types';
 
@@ -49,8 +52,34 @@ export const vehiclesApi = {
     return httpClient.request<FuelLogWithExpense[]>(`/vehicles/${encodeURIComponent(id)}/fuel-logs`);
   },
 
-  getExpenseFuelLog(expenseId: string): Promise<{ fuelLog: FuelLog | null }> {
-    return httpClient.request<{ fuelLog: FuelLog | null }>(`/vehicles/fuel-logs/${encodeURIComponent(expenseId)}`);
+  /** The fill-up or the other car cost on one expense (ABA-803), either may be null. */
+  getExpenseFuelLog(expenseId: string): Promise<{ fuelLog: FuelLog | null; cost?: VehicleCostLink | null }> {
+    return httpClient.request(`/vehicles/fuel-logs/${encodeURIComponent(expenseId)}`);
+  },
+
+  setVehicleCost(vehicleId: string, expenseId: string, kind: VehicleCostKind): Promise<unknown> {
+    return httpClient.request(`/vehicles/${encodeURIComponent(vehicleId)}/costs/${encodeURIComponent(expenseId)}`, {
+      method: 'PUT',
+      body: JSON.stringify({ kind }),
+    });
+  },
+
+  removeVehicleCost(expenseId: string): Promise<{ success: boolean }> {
+    return httpClient.request(`/vehicles/costs/${encodeURIComponent(expenseId)}`, { method: 'DELETE' });
+  },
+
+  getVehicleCategoryRules(vehicleId: string): Promise<{ rules: VehicleCategoryRule[] }> {
+    return httpClient.request(`/vehicles/${encodeURIComponent(vehicleId)}/category-rules`);
+  },
+
+  setVehicleCategoryRules(
+    vehicleId: string,
+    rules: VehicleCategoryRule[],
+  ): Promise<{ rules: VehicleCategoryRule[]; attributed: number; released: number }> {
+    return httpClient.request(`/vehicles/${encodeURIComponent(vehicleId)}/category-rules`, {
+      method: 'PUT',
+      body: JSON.stringify({ rules }),
+    });
   },
 
   upsertFuelLog(vehicleId: string, expenseId: string, data: UpsertFuelLogRequest): Promise<FuelLog> {

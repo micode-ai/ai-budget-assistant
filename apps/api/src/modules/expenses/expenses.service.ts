@@ -27,6 +27,7 @@ import {
   type StoredReceiptPart,
 } from './receipt-parts.util';
 import { applyChildCategoryRules } from '../children/child-category-rules.util';
+import { applyVehicleCategoryRules } from '../vehicles/vehicle-cost-rules.util';
 
 /**
  * CRUD orchestrator for expenses. `bulkUpdate` lives in ExpenseBulkService,
@@ -521,6 +522,9 @@ export class ExpensesService {
       void applyChildCategoryRules(this.prisma, accountId).catch(
         logFireAndForget(this.logger, 'ExpensesService.applyChildCategoryRules#create'),
       );
+      void applyVehicleCategoryRules(this.prisma, accountId).catch(
+        logFireAndForget(this.logger, 'ExpensesService.applyVehicleCategoryRules#create'),
+      );
     }
 
     return result;
@@ -844,6 +848,9 @@ export class ExpensesService {
       if (dto.categoryId !== undefined) {
         void applyChildCategoryRules(this.prisma, accountId).catch(
           logFireAndForget(this.logger, 'ExpensesService.applyChildCategoryRules#update'),
+        );
+        void applyVehicleCategoryRules(this.prisma, accountId).catch(
+          logFireAndForget(this.logger, 'ExpensesService.applyVehicleCategoryRules#update'),
         );
       }
       return updated ? this.toExpenseResponse(updated) : updated;

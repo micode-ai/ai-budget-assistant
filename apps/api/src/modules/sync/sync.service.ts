@@ -11,6 +11,7 @@ import { SYNC_ENTITY_HANDLERS } from './handlers';
 import { touchExpenses } from '../expenses/expense-touch.util';
 import { touchIncomes } from '../incomes/income-touch.util';
 import { applyChildCategoryRules } from '../children/child-category-rules.util';
+import { applyVehicleCategoryRules } from '../vehicles/vehicle-cost-rules.util';
 
 export type { SyncResult, ExpenseRecord, BudgetRecord, CategoryRecord } from './sync-types';
 
@@ -86,6 +87,9 @@ export class SyncService {
     if (changes.some((c) => c.entityType === 'expense')) {
       void applyChildCategoryRules(this.prisma, accountId).catch(
         logFireAndForget(this.logger, 'SyncService.applyChildCategoryRules'),
+      );
+      void applyVehicleCategoryRules(this.prisma, accountId).catch(
+        logFireAndForget(this.logger, 'SyncService.applyVehicleCategoryRules'),
       );
     }
 

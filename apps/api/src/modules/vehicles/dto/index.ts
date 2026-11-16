@@ -1,4 +1,6 @@
-import { IsBoolean, IsIn, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, Min } from 'class-validator';
+import { ArrayMaxSize, IsArray, IsBoolean, IsIn, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, Min, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
+import { VEHICLE_COST_KINDS } from '../vehicle-cost-rules.util';
 
 export const FUEL_TYPES = ['petrol', 'diesel', 'lpg', 'electric', 'hybrid', 'other'] as const;
 
@@ -42,4 +44,28 @@ export class MoveVehicleDto {
   @IsString()
   @IsNotEmpty()
   targetAccountId: string;
+}
+
+/** A non-fuel cost on one expense (ABA-803). */
+export class SetVehicleCostDto {
+  @IsIn(VEHICLE_COST_KINDS)
+  kind: string;
+}
+
+export class VehicleCategoryRuleDto {
+  @IsString()
+  @IsNotEmpty()
+  categoryId: string;
+
+  @IsIn(VEHICLE_COST_KINDS)
+  kind: string;
+}
+
+/** The vehicle's category rules: categories (PK or clientId) whose expenses are its costs (ABA-803). */
+export class SetVehicleCategoryRulesDto {
+  @IsArray()
+  @ArrayMaxSize(30)
+  @ValidateNested({ each: true })
+  @Type(() => VehicleCategoryRuleDto)
+  rules: VehicleCategoryRuleDto[];
 }

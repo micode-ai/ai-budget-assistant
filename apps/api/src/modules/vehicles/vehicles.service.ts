@@ -1,6 +1,14 @@
 import { BadRequestException, ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
-import { CreateVehicleDto, MoveVehicleDto, UpdateVehicleDto, UpsertFuelLogDto } from './dto';
+import {
+  CreateVehicleDto,
+  MoveVehicleDto,
+  SetVehicleCategoryRulesDto,
+  SetVehicleCostDto,
+  UpdateVehicleDto,
+  UpsertFuelLogDto,
+} from './dto';
+import { applyVehicleCategoryRules, parseCategoryRules, type VehicleCostKind } from './vehicle-cost-rules.util';
 import { computeFuelStats, VehicleStats } from './fuel-stats.util';
 import { ExchangeRateService } from '../currency-exchange/exchange-rate.service';
 import { convertAmount, getRatesSafe } from '../../common/utils/fx';
@@ -15,6 +23,18 @@ const FUEL_LOG_EXPENSE_SELECT = {
   merchant: true,
   description: true,
 } as const;
+
+/** Last 12 months of a vehicle's costs, fuel included (ABA-803). */
+export interface Ownership {
+  months: number;
+  total: number;
+  perMonth: number;
+  byKind: Record<string, number>;
+  /** Distance between the lowest and highest odometer reading in the window; 0 under two fill-ups. */
+  kmLast12Months: number;
+  /** Every cost per km over the window; null without a distance. */
+  costPerKm: number | null;
+}
 
 @Injectable()
 export class VehiclesService {
@@ -61,14 +81,19 @@ export class VehiclesService {
       select: { role: true },
     });
     if (!membership || membership.role === 'viewer') throw new ForbiddenException('You cannot edit the target account');
-    const fillUps = await this.prisma.fuelLog.count({ where: { vehicleId: id, expense: { isDeleted: false } } });
-    if (fillUps > 0) {
+    const [fillUps, costs] = await Promise.all([
+      this.prisma.fuelLog.count({ where: { vehicleId: id, expense: { isDeleted: false } } }),
+      this.prisma.vehicleCost.count({ where: { vehicleId: id, kind: { not: 'none' }, expense: { isDeleted: false } } }),
+    ]);
+    if (fillUps + costs > 0) {
       throw new ConflictException({ code: 'VEHICLE_IN_USE', message: 'This vehicle has fill-ups; it cannot move' });
     }
     return this.prisma.$transaction(async (tx) => {
       // Logs on deleted expenses would point across accounts after the move.
       await tx.fuelLog.deleteMany({ where: { vehicleId: id } });
-      return tx.vehicle.update({ where: { id }, data: { accountId: dto.targetAccountId } });
+      await tx.vehicleCost.deleteMany({ where: { vehicleId: id } });
+      // Category ids are per account; the rules do not travel.
+      return tx.vehicle.update({ where: { id }, data: { accountId: dto.targetAccountId, categoryRules: [] } });
     });
   }
 
@@ -105,7 +130,108 @@ export class VehiclesService {
         vehicle: { isDeleted: false },
       },
     });
-    return { fuelLog };
+    const costRow = await this.prisma.vehicleCost.findFirst({
+      where: {
+        accountId,
+        kind: { not: 'none' },
+        expense: { accountId, isDeleted: false, OR: [{ id: expenseIdOrClientId }, { clientId: expenseIdOrClientId }] },
+        vehicle: { isDeleted: false },
+      },
+      select: { vehicleId: true, kind: true, source: true },
+    });
+    return { fuelLog, cost: costRow };
+  }
+
+  private async resolveExpense(accountId: string, expenseIdOrClientId: string) {
+    const expense = await this.prisma.expense.findFirst({
+      where: { accountId, isDeleted: false, OR: [{ id: expenseIdOrClientId }, { clientId: expenseIdOrClientId }] },
+      select: { id: true },
+    });
+    if (!expense) throw new NotFoundException('Expense not found');
+    return expense;
+  }
+
+  /** Marks an expense as a non-fuel cost of this vehicle, by a person (ABA-803). Replaces a fill-up. */
+  async setCost(accountId: string, vehicleId: string, expenseIdOrClientId: string, dto: SetVehicleCostDto) {
+    await this.findOne(accountId, vehicleId);
+    const expense = await this.resolveExpense(accountId, expenseIdOrClientId);
+    await this.prisma.fuelLog.deleteMany({ where: { expenseId: expense.id } });
+    return this.prisma.vehicleCost.upsert({
+      where: { expenseId: expense.id },
+      create: { accountId, vehicleId, expenseId: expense.id, kind: dto.kind, source: null },
+      update: { vehicleId, kind: dto.kind, source: null },
+    });
+  }
+
+  /**
+   * Removes the car cost from an expense. Kept as a `none` row by a person, so
+   * a category rule does not put it back (ABA-803).
+   */
+  async removeCost(accountId: string, expenseIdOrClientId: string) {
+    const expense = await this.resolveExpense(accountId, expenseIdOrClientId);
+    const existing = await this.prisma.vehicleCost.findUnique({ where: { expenseId: expense.id } });
+    if (!existing) throw new NotFoundException('Vehicle cost not found');
+    await this.prisma.vehicleCost.update({ where: { id: existing.id }, data: { kind: 'none', source: null } });
+    return { success: true };
+  }
+
+  /** The vehicle's non-fuel costs with their expenses, newest first. */
+  async listCosts(accountId: string, vehicleId: string) {
+    await this.findOne(accountId, vehicleId);
+    return this.prisma.vehicleCost.findMany({
+      where: { accountId, vehicleId, kind: { not: 'none' }, expense: { accountId, isDeleted: false } },
+      include: { expense: { select: FUEL_LOG_EXPENSE_SELECT } },
+      orderBy: { expense: { date: 'desc' } },
+    });
+  }
+
+  async getCategoryRules(accountId: string, vehicleId: string) {
+    const v = await this.findOne(accountId, vehicleId);
+    return { rules: await this.withIds(parseCategoryRules(v.categoryRules)) };
+  }
+
+  /**
+   * Replaces the vehicle's category rules and applies them at once (ABA-803).
+   * Category ids may be PKs or a device's clientId; only live expense
+   * categories the account can see are accepted.
+   */
+  async setCategoryRules(accountId: string, vehicleId: string, dto: SetVehicleCategoryRulesDto) {
+    await this.findOne(accountId, vehicleId);
+    const rules: { categoryId: string; kind: VehicleCostKind }[] = [];
+    for (const r of dto.rules) {
+      const cat = await this.prisma.category.findFirst({
+        where: {
+          OR: [{ id: r.categoryId }, { clientId: r.categoryId }],
+          AND: [{ OR: [{ accountId }, { accountId: null }] }],
+          isDeleted: false,
+          type: 'expense',
+        },
+        select: { id: true },
+      });
+      if (!cat) throw new BadRequestException('Unknown expense category');
+      if (!rules.some((x) => x.categoryId === cat.id)) rules.push({ categoryId: cat.id, kind: r.kind as VehicleCostKind });
+    }
+    await this.prisma.vehicle.update({ where: { id: vehicleId }, data: { categoryRules: rules } });
+    const result = await applyVehicleCategoryRules(this.prisma, accountId);
+    return { rules: await this.withIds(rules), ...result };
+  }
+
+  /**
+   * Each rule with every spelling of its category — PK and the device's
+   * clientId — so a phone that knows a category by its local id matches it
+   * (category-id-resolution).
+   */
+  private async withIds(rules: { categoryId: string; kind: VehicleCostKind }[]) {
+    if (rules.length === 0) return [];
+    const rows = await this.prisma.category.findMany({
+      where: { id: { in: rules.map((r) => r.categoryId) } },
+      select: { id: true, clientId: true },
+    });
+    const clientOf = new Map(rows.map((r) => [r.id, r.clientId]));
+    return rules.map((r) => {
+      const clientId = clientOf.get(r.categoryId);
+      return { ...r, ids: [r.categoryId, ...(clientId ? [clientId] : [])] };
+    });
   }
 
   async upsertFuelLog(
@@ -130,6 +256,8 @@ export class VehiclesService {
       odometerKm: dto.odometerKm,
       isFullTank: dto.isFullTank ?? true,
     };
+    // One expense is either a fill-up or another car cost (ABA-803).
+    await this.prisma.vehicleCost.deleteMany({ where: { expenseId: expense.id } });
     return this.prisma.fuelLog.upsert({
       where: { expenseId: expense.id },
       create: { accountId, expenseId: expense.id, ...data },
@@ -159,13 +287,22 @@ export class VehiclesService {
     accountId: string,
     vehicleId: string,
     baseCurrency = 'USD',
-  ): Promise<VehicleStats & { currencyCode: string; fxApproximate: boolean }> {
+  ): Promise<VehicleStats & { currencyCode: string; fxApproximate: boolean; ownership: Ownership }> {
     await this.findOne(accountId, vehicleId);
-    const logs = await this.prisma.fuelLog.findMany({
-      where: { accountId, vehicleId, expense: { accountId, isDeleted: false } },
-      include: { expense: { select: { amount: true, currencyCode: true, date: true } } },
-    });
-    const needsFx = logs.some((l) => l.expense.currencyCode !== baseCurrency);
+    const since = new Date();
+    since.setFullYear(since.getFullYear() - 1);
+    const [logs, costs] = await Promise.all([
+      this.prisma.fuelLog.findMany({
+        where: { accountId, vehicleId, expense: { accountId, isDeleted: false } },
+        include: { expense: { select: { amount: true, currencyCode: true, date: true } } },
+      }),
+      this.prisma.vehicleCost.findMany({
+        where: { accountId, vehicleId, kind: { not: 'none' }, expense: { accountId, isDeleted: false, date: { gte: since } } },
+        include: { expense: { select: { amount: true, currencyCode: true } } },
+      }),
+    ]);
+    const needsFx =
+      logs.some((l) => l.expense.currencyCode !== baseCurrency) || costs.some((c) => c.expense.currencyCode !== baseCurrency);
     const rates = needsFx ? await getRatesSafe(this.exchangeRateService, baseCurrency) : null;
     let fxApproximate = false;
     const stats = computeFuelStats(
@@ -181,6 +318,30 @@ export class VehiclesService {
         };
       }),
     );
-    return { ...stats, currencyCode: baseCurrency, fxApproximate };
+
+    // Cost of ownership over the last 12 months (ABA-803): fuel plus every other cost, by kind.
+    const toBase = (amount: unknown, currency: string) => {
+      const v = convertAmount(Number(amount), currency, baseCurrency, rates);
+      if (v === null) fxApproximate = true;
+      return v ?? 0;
+    };
+    const byKind: Record<string, number> = { fuel: 0, service: 0, insurance: 0, parking: 0, tax: 0, other: 0 };
+    const recentLogs = logs.filter((l) => new Date(l.expense.date) >= since);
+    for (const l of recentLogs) byKind.fuel += toBase(l.expense.amount, l.expense.currencyCode);
+    for (const c of costs) byKind[c.kind] = (byKind[c.kind] ?? 0) + toBase(c.expense.amount, c.expense.currencyCode);
+    const total = Object.values(byKind).reduce((a, b) => a + b, 0);
+    const odo = recentLogs.map((l) => l.odometerKm);
+    const km = odo.length >= 2 ? Math.max(...odo) - Math.min(...odo) : 0;
+    const r2 = (n: number) => Math.round(n * 100) / 100;
+    const ownership: Ownership = {
+      months: 12,
+      total: r2(total),
+      perMonth: r2(total / 12),
+      byKind: Object.fromEntries(Object.entries(byKind).map(([k, v]) => [k, r2(v)])),
+      kmLast12Months: km,
+      costPerKm: km > 0 ? Math.round((total / km) * 1000) / 1000 : null,
+    };
+
+    return { ...stats, currencyCode: baseCurrency, fxApproximate, ownership };
   }
 }

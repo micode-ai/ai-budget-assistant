@@ -30,6 +30,35 @@ export interface VehicleStats {
   currencyCode?: string;
   /** A fill-up had no known exchange rate and was left out of the cost. */
   fxApproximate?: boolean;
+  /** Last 12 months of every cost, fuel included (ABA-803). */
+  ownership?: VehicleOwnership;
+}
+
+/** Non-fuel car costs (ABA-803); fuel is a FuelLog. */
+export type VehicleCostKind = 'service' | 'insurance' | 'parking' | 'tax' | 'other';
+
+export interface VehicleOwnership {
+  months: number;
+  total: number;
+  perMonth: number;
+  /** `fuel` plus each VehicleCostKind, in the display currency. */
+  byKind: Record<string, number>;
+  kmLast12Months: number;
+  costPerKm: number | null;
+}
+
+export interface VehicleCostLink {
+  vehicleId: string;
+  kind: VehicleCostKind;
+  /** null = set by a person; 'category' = by the vehicle's category rule. */
+  source: string | null;
+}
+
+export interface VehicleCategoryRule {
+  categoryId: string;
+  kind: VehicleCostKind;
+  /** In responses: every spelling of the category (server PK and the device's clientId). */
+  ids?: string[];
 }
 
 /** A fill-up as `GET /vehicles/:id/fuel-logs` returns it: the log plus its expense (ABA-796). */

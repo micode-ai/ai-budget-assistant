@@ -423,6 +423,7 @@ model Account {
   productChildRules              ProductChildRule[]
   vehicles                       Vehicle[]
   fuelLogs                       FuelLog[]
+  vehicleCosts                   VehicleCost[]
   projects                       Project[]
   achievements                   UserAchievement[]
   streaks                        UserStreak[]
@@ -650,6 +651,7 @@ model Expense {
   expenseTags          ExpenseTag[]
   expenseChildren      ExpenseChild[]
   fuelLog              FuelLog?
+  vehicleCost          VehicleCost?
   categorySplits       ExpenseCategorySplit[]
   projectExpenses      ProjectExpense[]
   purchaseRequest      PurchaseRequest?          @relation("PlannedPurchase")
@@ -3129,12 +3131,16 @@ model Vehicle {
   userId    String   @map("user_id")
   name      String
   fuelType  String   @default("petrol") @map("fuel_type")
+  /// Expense categories whose expenses are this vehicle's costs, each with a kind:
+  /// `[{ categoryId, kind }]` (ABA-803).
+  categoryRules Json   @default("[]") @map("category_rules")
   isDeleted Boolean  @default(false) @map("is_deleted")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  account  Account   @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  account  Account       @relation(fields: [accountId], references: [id], onDelete: Cascade)
   fuelLogs FuelLog[]
+  costs    VehicleCost[]
 
   @@index([accountId])
   @@map("vehicles")
@@ -3156,6 +3162,28 @@ model FuelLog {
 
   @@index([vehicleId])
   @@map("fuel_logs")
+}
+
+/// A non-fuel cost of a vehicle (ABA-803): service, insurance, parking, tax or other — one expense, one
+/// vehicle. Fuel stays in FuelLog (it carries litres and odometer). `source` null = set by a person,
+/// 'category' = by the vehicle's category rule, which may undo it.
+model VehicleCost {
+  id        String   @id @default(uuid())
+  accountId String   @map("account_id")
+  vehicleId String   @map("vehicle_id")
+  expenseId String   @unique @map("expense_id")
+  kind      String
+  source    String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  expense Expense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId])
+  @@index([accountId])
+  @@map("vehicle_costs")
 }
 
 /// Gazetka match: a promo leaflet shared by a user (kind personal, account-scoped) or uploaded by an admin
