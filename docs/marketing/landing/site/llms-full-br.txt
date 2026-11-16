@@ -1626,6 +1626,10 @@ Você também pode marcar uma categoria de despesa inteira como fixa: abra **Con
 
 Aparece quando você está vendo o período atual. É uma estimativa do seu saldo para cada um dos próximos 30 dias: o saldo de hoje, mais as receitas que entram todo mês, menos as renovações de assinaturas e as despesas recorrentes nas datas delas, menos um dia típico de gastos do dia a dia. Se o saldo for ficar abaixo de zero, o cartão mostra a partir de que dia, e as barras abaixo da linha indicam isso. **Próximos lançamentos** lista os próximos pagamentos e receitas. Aportes em metas de economia não são descontados e receitas que não são mensais não entram, então use o valor como referência, não como promessa. Compras planejadas e dívidas suas com vencimento também são descontadas na data (as atrasadas, hoje); o dinheiro que outras pessoas te devem não entra. Para ver a previsão com esse dinheiro, ative **Contar o dinheiro que devem a você** no cartão: o que ainda falta receber é somado em cada data de vencimento (o que está atrasado, hoje). Da mesma forma, **Contar renda irregular** soma o dia médio da renda que não vem todo mês (freelas, reembolsos) dos últimos meses; só aparece se você tiver esse tipo de renda.
 
+## Ano a ano
+
+Nas visões de mês e ano, este cartão compara o período com o mesmo período de um ano atrás: o total e as principais categorias, cada uma com o que você gastou na época e a variação. Enquanto o período está em andamento, compara o mesmo número de dias: a primeira semana deste mês com a primeira semana do mesmo mês no ano passado. Gastar mais aparece em vermelho e menos em verde; uma categoria sem gastos no ano passado é marcada como **novo**. Se a sua conta tiver um **Mês financeiro**, "o mesmo mês do ano passado" é esse mês financeiro. O cartão aparece quando há gastos no período do ano passado.
+
 ## Carrossel de insights com IA
 
 Um carrossel com rolagem horizontal de insights gerados por IA (requer o plano Pro):

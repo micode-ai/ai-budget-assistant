@@ -42,6 +42,10 @@ Vous pouvez aussi marquer une catégorie de dépenses entière comme fixe : ouvr
 
 Affiché lorsque vous consultez la période en cours. C'est une estimation de votre solde pour chacun des 30 prochains jours : le solde d'aujourd'hui, plus les revenus qui arrivent chaque mois, moins les renouvellements d'abonnements et les dépenses récurrentes à leur date, moins une journée type de dépenses courantes. Si le solde devait passer sous zéro, la carte indique à partir de quel jour, et les barres sous la ligne le montrent. **À venir** liste les prochains paiements et revenus. Les versements vers les objectifs d'épargne ne sont pas déduits et les revenus non mensuels ne sont pas comptés : c'est un repère, pas une promesse. Les achats prévus et les dettes à rembourser avec une échéance sont aussi déduits à leur date (ceux en retard, aujourd'hui) ; l'argent que d'autres vous doivent n'est pas compté. Pour voir la prévision avec cet argent, activez **Compter l'argent qu'on vous doit** sur la carte : ce qui reste dû est alors ajouté à chaque échéance (les retards, aujourd'hui). De même, **Compter les revenus irréguliers** ajoute la journée moyenne des revenus non mensuels (missions, remboursements) des derniers mois ; l'option n'apparaît que s'il existe de tels revenus.
 
+## Sur un an
+
+Dans les vues mois et année, cette carte compare la période à la même période un an plus tôt : le total et les principales catégories, chacune avec ce que vous dépensiez alors et l'évolution. Tant que la période est en cours, elle compare le même nombre de jours : la première semaine de ce mois face à la première semaine du même mois l'an dernier. Dépenser plus s'affiche en rouge, moins en vert ; une catégorie sans dépense l'an dernier est marquée **nouveau**. Si votre compte a un **Mois financier**, « le même mois l'an dernier » est ce mois financier. La carte apparaît dès qu'il y a des dépenses sur la période de l'an dernier.
+
 ## Carousel d'aperçus IA
 
 Un carousel horizontal defilable d'aperçus generes par l'IA (plan Pro requis) :

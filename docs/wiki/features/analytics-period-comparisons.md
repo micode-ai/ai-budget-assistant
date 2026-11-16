@@ -74,6 +74,13 @@ render its list. It applies the same rules, adapted to the server:
 - it compares the same days of the last three months, averaged over the months in which the
   account spent anything.
 
+**Year over year** ([ABA-797](https://github.com/micode-ai/ai-budget-assistant/issues/835)). `sameWindowLastYear` is the same period a year back — the financial month
+twelve `shiftFinancialMonth` steps back, or the previous calendar year — under the same same-days rule;
+the week view has none. `useYearOverYear` groups both windows with the donut's split-aware rule and
+`buildYearOverYearRows` keeps categories spent on only last year (current 0, so "stopped" shows). The
+`YearOverYearCard` (phone and desktop) is hidden when last year's window holds no spending: a "+100%"
+against an account that did not exist yet is noise.
+
 ## Invariants
 
 - Never compare a partial period with whole ones. The result always reads as a large saving early

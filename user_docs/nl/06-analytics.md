@@ -42,6 +42,10 @@ Je kunt ook een hele uitgavencategorie als vast markeren: open **Instellingen �
 
 Zichtbaar terwijl je de huidige periode bekijkt. Het is een schatting van je saldo voor elk van de komende 30 dagen: het saldo van vandaag, plus inkomsten die elke maand binnenkomen, min abonnementsverlengingen en terugkerende uitgaven op hun datum, min een gemiddelde dag aan dagelijkse uitgaven. Zou het saldo onder nul zakken, dan noemt de kaart vanaf welke dag, en de staven onder de lijn laten het zien. **Binnenkort** toont de volgende betalingen en inkomsten. Inleg voor spaardoelen wordt niet afgetrokken en inkomsten die niet maandelijks komen tellen niet mee – zie het als richtlijn, niet als belofte. Geplande aankopen en schulden met een vervaldatum worden ook op hun datum afgetrokken (achterstallige vandaag); geld dat anderen jou schuldig zijn telt niet mee. Wil je de prognose met dat geld zien, zet dan **Geld meetellen dat men jou schuldig is** aan op de kaart: wat nog openstaat, telt dan mee op elke vervaldatum (achterstallige vandaag). Zo telt **Onregelmatig inkomen meetellen** de gemiddelde dag aan niet-maandelijks inkomen (freelance, terugbetalingen) van de afgelopen maanden mee; de schakelaar verschijnt alleen als er zulk inkomen is.
 
+## Jaar op jaar
+
+In de maand- en jaarweergave vergelijkt deze kaart de periode met dezelfde periode een jaar eerder: het totaal en de belangrijkste categorieën, elk met wat je toen uitgaf en de verandering. Zolang de periode loopt, worden dezelfde dagen vergeleken: de eerste week van deze maand met de eerste week van dezelfde maand vorig jaar. Meer uitgeven is rood, minder groen; een categorie zonder uitgaven vorig jaar heet **nieuw**. Heeft je account een **Financiële maand**, dan is "dezelfde maand vorig jaar" die financiële maand. De kaart verschijnt zodra er uitgaven zijn in de periode van vorig jaar.
+
 ## AI-inzichtencarrousel
 
 Een horizontaal scrollbare carrousel met door AI gegenereerde inzichten (Pro-abonnement vereist):

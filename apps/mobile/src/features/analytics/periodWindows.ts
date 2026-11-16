@@ -129,3 +129,34 @@ export function trailingMonthWindows(
 export function inWindow(date: Date, w: DateWindow): boolean {
   return date >= w.start && date < w.end;
 }
+
+/**
+ * The same period one year earlier (ABA-797): the financial month twelve steps
+ * back, or the previous calendar year — cut to the same number of days while
+ * the current period is in progress, like every comparison here. A week has
+ * no meaningful "same week last year", so it gets null.
+ */
+export function sameWindowLastYear(
+  timeRange: TimeRange,
+  range: DateRange,
+  now: Date = new Date(),
+  anchorDay: number | null = null,
+): (DateWindow & { partial: boolean }) | null {
+  const s = range.startDate;
+  let start: Date;
+  let nextStart: Date;
+  switch (timeRange) {
+    case 'week':
+      return null;
+    case 'month':
+      start = monthStart(s, -12, anchorDay);
+      nextStart = monthStart(s, -11, anchorDay);
+      break;
+    case 'year':
+      start = new Date(s.getFullYear() - 1, 0, 1);
+      nextStart = new Date(s.getFullYear(), 0, 1);
+      break;
+  }
+  const partial = isInProgress(range, now);
+  return { ...sameDays(start, nextStart, partial ? elapsedDays(range, now) : null), partial };
+}

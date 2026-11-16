@@ -8,7 +8,7 @@ import {
   AnalyticsHeader, SummaryCards, SpendingTrendChart, CategoryBreakdown,
   IncomeCategoryBreakdown, MerchantBreakdown, MemberBreakdown, TagBreakdown, ProjectBreakdown,
   DayOfWeekSection, QuickInsights, TopReceiptItems, AiInsightsSection,
-  InflationIndexSection, SavingsDetailSheet, CashFlowCard, CommitmentsCard, CashFlowForecastCard,
+  InflationIndexSection, SavingsDetailSheet, CashFlowCard, CommitmentsCard, CashFlowForecastCard, YearOverYearCard,
   DiscoveryStrip,
 } from '@/components/analytics';
 import { useAnalyticsScreenData } from '@/features/analytics/useAnalyticsScreenData';
@@ -53,6 +53,7 @@ export function AnalyticsMobile() {
     predictions,
     cashFlowAnalytics,
     cashFlowForecast,
+    yearOverYear,
     tagSpending,
     projectSpending,
     aiInsights,
@@ -108,6 +109,7 @@ export function AnalyticsMobile() {
           <CommitmentsCard commitments={cashFlowAnalytics.commitments} currency={currency} />
         )}
         {cashFlowForecast && <CashFlowForecastCard forecast={cashFlowForecast} />}
+        {yearOverYear && <YearOverYearCard data={yearOverYear} currency={currency} />}
 
 
         <AiInsightsSection aiInsights={aiInsights} proGated={aiInsightsProGated} />

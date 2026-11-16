@@ -4411,6 +4411,10 @@ También puedes marcar una categoría de gasto entera como fija: abre **Ajustes 
 
 Se muestra mientras ves el periodo actual. Es una estimación de tu saldo para cada uno de los próximos 30 días: el saldo de hoy, más los ingresos que llegan cada mes, menos las renovaciones de suscripciones y los gastos recurrentes en sus fechas, menos un día típico de gasto cotidiano. Si el saldo fuera a bajar de cero, la tarjeta indica a partir de qué día, y las barras bajo la línea lo muestran. **Próximamente** enumera los siguientes pagos e ingresos. Las aportaciones a metas de ahorro no se restan y los ingresos que no son mensuales no se cuentan, así que tómalo como una orientación, no como una promesa. Las compras planificadas y las deudas tuyas con fecha de vencimiento también se restan en su fecha (las vencidas, hoy); el dinero que otros te deben no se cuenta. Para ver la previsión con ese dinero, activa **Contar el dinero que te deben** en la tarjeta: lo que aún te deben se suma en cada fecha de vencimiento (lo vencido, hoy). Del mismo modo, **Contar ingresos irregulares** suma el día medio de los ingresos no mensuales (trabajos puntuales, reembolsos) de los últimos meses; solo aparece si tienes ingresos de ese tipo.
 
+## Interanual
+
+En las vistas de mes y año, esta tarjeta compara el periodo con el mismo periodo de hace un año: el total y las principales categorías, cada una con lo que gastaste entonces y la variación. Mientras el periodo sigue en curso compara el mismo número de días, así que la primera semana de este mes se compara con la primera semana del mismo mes del año pasado. Gastar más se ve en rojo y gastar menos en verde; una categoría sin gastos el año pasado se marca como **nuevo**. Si tu cuenta tiene un **Mes financiero**, «el mismo mes del año pasado» es ese mes financiero. La tarjeta aparece cuando hay gastos en el periodo del año pasado.
+
 ## Carrusel de informacion IA
 
 Un carrusel horizontal desplazable con informacion generada por IA (requiere plan Pro):

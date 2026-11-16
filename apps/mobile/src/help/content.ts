@@ -1058,6 +1058,10 @@ You can also mark a whole expense category as fixed: open **Settings → Categor
 
 Shown while you are looking at the current period. It is an estimate of your balance for each of the next 30 days: today's wallet balance, plus income that arrives every month, minus subscription renewals and recurring expenses on their dates, minus a typical day of everyday spending. If the balance would drop below zero, the card says from which day, and the bars below the line show it. **Coming up** lists the next payments and income. Savings-goal contributions are not subtracted, and income that does not come monthly is not counted, so treat the figure as a guide, not a promise. Planned purchases and money you owe with a due date are subtracted on their dates too (overdue ones today); money others owe you is not counted. To see the forecast with it, turn on **Count money owed to you** on the card: what is still owed is then added on each due date (overdue ones today). Likewise, **Count irregular income** adds the average day of income that does not come monthly (freelance work, refunds) over recent months; it appears only when there is such income.
 
+## Year over Year
+
+In the month and year views, this card compares the period with the same period a year earlier: the total and the top categories, each with what you spent then and the change. While the period is still running it compares the same number of days, so the first week of this month is set against the first week of the same month last year. More spending reads red, less reads green; a category you did not spend on last year is marked **new**. If your account has a **Financial Month**, "the same month last year" is that financial month. The card appears once there is spending in last year's period.
+
 ## AI Insights Carousel
 
 A horizontal scrollable carousel of AI-generated insights (Pro plan required):
@@ -6505,6 +6509,10 @@ iOS, Android, Web
 
 Показывается, когда открыт текущий период. Это оценка баланса на каждый из ближайших 30 дней: сегодняшний баланс, плюс доходы, которые приходят каждый месяц, минус продления подписок и регулярные расходы в их даты, минус обычный день повседневных трат. Если баланс уйдёт ниже нуля, карточка покажет, с какого дня, а столбцы под линией это отразят. В блоке **Впереди** — ближайшие платежи и поступления. Взносы в цели не вычитаются, а нерегулярные доходы не учитываются, поэтому считайте цифру ориентиром, а не обещанием. Запланированные покупки и ваши долги со сроком возврата тоже вычитаются в свои даты (просроченные — сегодня); деньги, которые должны вам, не учитываются. Чтобы увидеть прогноз с ними, включите на карточке **Учитывать деньги, которые вам должны**: оставшаяся сумма добавится в дату возврата (просроченные — сегодня). Так же переключатель **Учитывать нерегулярный доход** добавляет средний день дохода не каждый месяц (подработки, возвраты) за последние месяцы; он появляется, только если такой доход есть.
 
+## Год к году
+
+В режимах месяца и года эта карточка сравнивает период с тем же периодом год назад: итог и главные категории — у каждой сумма тогда и изменение. Пока период не закончился, сравниваются одинаковые дни: первая неделя этого месяца — с первой неделей того же месяца год назад. Рост трат показан красным, снижение — зелёным; категория без трат год назад помечена как **новое**. Если у аккаунта задан **Финансовый месяц**, «тот же месяц год назад» — это тот же финансовый месяц. Карточка появляется, когда в прошлогоднем периоде есть траты.
+
 ## Карусель ИИ-инсайтов
 
 Горизонтально прокручиваемая карусель ИИ-генерируемых инсайтов (требуется план Pro):
@@ -11930,6 +11938,10 @@ iOS, Android, Web
 
 Показується, коли відкрито поточний період. Це оцінка балансу на кожен із найближчих 30 днів: сьогоднішній баланс, плюс доходи, що надходять щомісяця, мінус продовження підписок і регулярні витрати в їхні дати, мінус звичайний день повсякденних витрат. Якщо баланс опуститься нижче нуля, картка покаже, з якого дня, а стовпці під лінією це відобразять. У блоці **Попереду** — найближчі платежі й надходження. Внески в цілі не віднімаються, а нерегулярні доходи не враховуються, тож сприймайте цифру як орієнтир, а не обіцянку. Заплановані покупки та ваші борги зі строком повернення теж віднімаються у свої дати (прострочені — сьогодні); гроші, які винні вам, не враховуються. Щоб побачити прогноз із ними, увімкніть на картці **Враховувати гроші, які вам винні**: залишок додасться в дату повернення (прострочені — сьогодні). Так само перемикач **Враховувати нерегулярний дохід** додає середній день доходу не щомісяця (підробітки, повернення) за останні місяці; він з’являється, лише якщо такий дохід є.
 
+## Рік до року
+
+У режимах місяця й року ця картка порівнює період із тим самим періодом рік тому: підсумок і головні категорії — у кожної сума тоді та зміна. Поки період не завершився, порівнюються однакові дні: перший тиждень цього місяця — з першим тижнем того самого місяця рік тому. Зростання витрат показано червоним, зменшення — зеленим; категорію без витрат рік тому позначено як **нове**. Якщо в акаунті задано **Фінансовий місяць**, «той самий місяць рік тому» — це той самий фінансовий місяць. Картка зʼявляється, коли в торішньому періоді є витрати.
+
 ## Карусель ШІ-інсайтів
 
 Горизонтальна прокручувана карусель ШІ-інсайтів (потрібен тариф Pro):
@@ -17303,6 +17315,10 @@ Możesz też oznaczyć całą kategorię wydatków jako stałą: otwórz **Ustaw
 
 Widoczne, gdy oglądasz bieżący okres. To szacunek salda na każdy z najbliższych 30 dni: dzisiejsze saldo, plus przychody wpływające co miesiąc, minus odnowienia subskrypcji i wydatki cykliczne w ich terminach, minus typowy dzień codziennych wydatków. Jeśli saldo miałoby spaść poniżej zera, karta podaje, od którego dnia, a słupki pod linią to pokazują. **Nadchodzące** wymienia najbliższe płatności i wpływy. Wpłaty na cele oszczędnościowe nie są odejmowane, a przychody, które nie przychodzą co miesiąc, nie są liczone – traktuj tę liczbę jako wskazówkę, nie obietnicę. Planowane zakupy i długi z terminem spłaty też są odejmowane w ich dniu (zaległe — dziś); pieniądze, które inni są Ci winni, nie są liczone. Aby zobaczyć prognozę z tymi pieniędzmi, włącz na karcie **Uwzględnij pieniądze, które ktoś Ci winien**: pozostała kwota zostanie dodana w dniu terminu zwrotu (zaległe — dziś). Podobnie **Uwzględnij nieregularne przychody** dodaje średni dzień przychodów, które nie przychodzą co miesiąc (zlecenia, zwroty), z ostatnich miesięcy; przełącznik pojawia się tylko, gdy takie przychody są.
 
+## Rok do roku
+
+W widoku miesiąca i roku ta karta porównuje okres z tym samym okresem rok wcześniej: sumę i najważniejsze kategorie, każdą z ówczesną kwotą i zmianą. Dopóki okres trwa, porównywana jest ta sama liczba dni, więc pierwszy tydzień tego miesiąca zestawiany jest z pierwszym tygodniem tego samego miesiąca rok temu. Większe wydatki są czerwone, mniejsze zielone; kategoria bez wydatków rok temu ma oznaczenie **nowe**. Jeśli konto ma **Miesiąc finansowy**, „ten sam miesiąc rok temu” to ten miesiąc finansowy. Karta pojawia się, gdy w zeszłorocznym okresie są wydatki.
+
 ## Karuzela wnioskow AI
 
 Poziomo przewijana karuzela wnioskow generowanych przez AI (wymaga planu Pro):
@@ -22672,6 +22688,10 @@ Du kannst auch eine ganze Ausgabenkategorie als fix markieren: Öffne **Einstell
 
 Wird angezeigt, solange du den aktuellen Zeitraum ansiehst. Es ist eine Schätzung deines Kontostands für jeden der nächsten 30 Tage: der heutige Kontostand, plus Einnahmen, die jeden Monat kommen, minus Abo-Verlängerungen und wiederkehrende Ausgaben an ihren Terminen, minus ein typischer Tag mit Alltagsausgaben. Würde der Stand unter null fallen, nennt die Karte den Tag, ab dem das passiert, und die Balken unter der Linie zeigen es. **Demnächst** listet die nächsten Zahlungen und Einnahmen. Sparziel-Einzahlungen werden nicht abgezogen und nicht monatliche Einnahmen nicht mitgezählt – nimm die Zahl als Orientierung, nicht als Zusage. Geplante Käufe und Schulden mit Fälligkeitsdatum werden ebenfalls an ihrem Datum abgezogen (überfällige heute); Geld, das andere dir schulden, wird nicht eingerechnet. Um die Prognose damit zu sehen, schalte auf der Karte **Geld einrechnen, das man dir schuldet** ein: Der noch offene Betrag wird dann am jeweiligen Fälligkeitstag addiert (überfällige heute). Ebenso rechnet **Unregelmäßige Einnahmen einrechnen** den durchschnittlichen Tag nicht monatlicher Einnahmen (Freiberufliches, Erstattungen) der letzten Monate ein; der Schalter erscheint nur, wenn es solche Einnahmen gibt.
 
+## Im Jahresvergleich
+
+In der Monats- und Jahresansicht vergleicht diese Karte den Zeitraum mit demselben Zeitraum ein Jahr zuvor: die Summe und die wichtigsten Kategorien, jeweils mit dem damaligen Betrag und der Veränderung. Solange der Zeitraum läuft, werden dieselben Tage verglichen, die erste Woche dieses Monats also mit der ersten Woche desselben Monats im Vorjahr. Mehr Ausgaben erscheinen rot, weniger grün; eine Kategorie ohne Ausgaben im Vorjahr ist als **neu** markiert. Hat dein Konto einen **Finanzmonat**, ist „derselbe Monat im Vorjahr“ dieser Finanzmonat. Die Karte erscheint, sobald es im Vorjahreszeitraum Ausgaben gibt.
+
 ## KI-Einblicke-Karussell
 
 Ein horizontal scrollbares Karussell mit KI-generierten Einblicken (Pro-Plan erforderlich):
@@ -28016,6 +28036,10 @@ También puedes marcar una categoría de gasto entera como fija: abre **Ajustes 
 
 Se muestra mientras ves el periodo actual. Es una estimación de tu saldo para cada uno de los próximos 30 días: el saldo de hoy, más los ingresos que llegan cada mes, menos las renovaciones de suscripciones y los gastos recurrentes en sus fechas, menos un día típico de gasto cotidiano. Si el saldo fuera a bajar de cero, la tarjeta indica a partir de qué día, y las barras bajo la línea lo muestran. **Próximamente** enumera los siguientes pagos e ingresos. Las aportaciones a metas de ahorro no se restan y los ingresos que no son mensuales no se cuentan, así que tómalo como una orientación, no como una promesa. Las compras planificadas y las deudas tuyas con fecha de vencimiento también se restan en su fecha (las vencidas, hoy); el dinero que otros te deben no se cuenta. Para ver la previsión con ese dinero, activa **Contar el dinero que te deben** en la tarjeta: lo que aún te deben se suma en cada fecha de vencimiento (lo vencido, hoy). Del mismo modo, **Contar ingresos irregulares** suma el día medio de los ingresos no mensuales (trabajos puntuales, reembolsos) de los últimos meses; solo aparece si tienes ingresos de ese tipo.
 
+## Interanual
+
+En las vistas de mes y año, esta tarjeta compara el periodo con el mismo periodo de hace un año: el total y las principales categorías, cada una con lo que gastaste entonces y la variación. Mientras el periodo sigue en curso compara el mismo número de días, así que la primera semana de este mes se compara con la primera semana del mismo mes del año pasado. Gastar más se ve en rojo y gastar menos en verde; una categoría sin gastos el año pasado se marca como **nuevo**. Si tu cuenta tiene un **Mes financiero**, «el mismo mes del año pasado» es ese mes financiero. La tarjeta aparece cuando hay gastos en el periodo del año pasado.
+
 ## Carrusel de informacion IA
 
 Un carrusel horizontal desplazable con informacion generada por IA (requiere plan Pro):
@@ -33349,6 +33373,10 @@ Vous pouvez aussi marquer une catégorie de dépenses entière comme fixe : ouvr
 
 Affiché lorsque vous consultez la période en cours. C'est une estimation de votre solde pour chacun des 30 prochains jours : le solde d'aujourd'hui, plus les revenus qui arrivent chaque mois, moins les renouvellements d'abonnements et les dépenses récurrentes à leur date, moins une journée type de dépenses courantes. Si le solde devait passer sous zéro, la carte indique à partir de quel jour, et les barres sous la ligne le montrent. **À venir** liste les prochains paiements et revenus. Les versements vers les objectifs d'épargne ne sont pas déduits et les revenus non mensuels ne sont pas comptés : c'est un repère, pas une promesse. Les achats prévus et les dettes à rembourser avec une échéance sont aussi déduits à leur date (ceux en retard, aujourd'hui) ; l'argent que d'autres vous doivent n'est pas compté. Pour voir la prévision avec cet argent, activez **Compter l'argent qu'on vous doit** sur la carte : ce qui reste dû est alors ajouté à chaque échéance (les retards, aujourd'hui). De même, **Compter les revenus irréguliers** ajoute la journée moyenne des revenus non mensuels (missions, remboursements) des derniers mois ; l'option n'apparaît que s'il existe de tels revenus.
 
+## Sur un an
+
+Dans les vues mois et année, cette carte compare la période à la même période un an plus tôt : le total et les principales catégories, chacune avec ce que vous dépensiez alors et l'évolution. Tant que la période est en cours, elle compare le même nombre de jours : la première semaine de ce mois face à la première semaine du même mois l'an dernier. Dépenser plus s'affiche en rouge, moins en vert ; une catégorie sans dépense l'an dernier est marquée **nouveau**. Si votre compte a un **Mois financier**, « le même mois l'an dernier » est ce mois financier. La carte apparaît dès qu'il y a des dépenses sur la période de l'an dernier.
+
 ## Carousel d'aperçus IA
 
 Un carousel horizontal defilable d'aperçus generes par l'IA (plan Pro requis) :
@@ -38680,6 +38708,10 @@ iOS, Android, Web
 
 Паказваецца, калі адкрыты бягучы перыяд. Гэта ацэнка балансу на кожны з бліжэйшых 30 дзён: сённяшні баланс, плюс даходы, што прыходзяць штомесяц, мінус падаўжэнні падпісак і рэгулярныя выдаткі ў іх даты, мінус звычайны дзень штодзённых выдаткаў. Калі баланс апусціцца ніжэй за нуль, картка пакажа, з якога дня, а слупкі пад лініяй гэта адлюструюць. У блоку **Наперадзе** — бліжэйшыя плацяжы і паступленні. Унёскі ў мэты не адымаюцца, а нерэгулярныя даходы не ўлічваюцца, таму лічыце лічбу арыенцірам, а не абяцаннем. Запланаваныя пакупкі і вашы даўгі з тэрмінам вяртання таксама адымаюцца ў свае даты (пратэрмінаваныя — сёння); грошы, якія вінны вам, не ўлічваюцца. Каб убачыць прагноз з імі, уключыце на картцы **Улічваць грошы, якія вам вінны**: рэшта дадасца ў дату вяртання (пратэрмінаваныя — сёння). Гэтак жа пераключальнік **Улічваць нерэгулярны даход** дадае сярэдні дзень даходу не кожны месяц (падпрацоўкі, вяртанні) за апошнія месяцы; ён з’яўляецца, толькі калі такі даход ёсць.
 
+## Год да года
+
+У рэжымах месяца і года гэтая картка параўноўвае перыяд з тым жа перыядам год таму: вынік і галоўныя катэгорыі — у кожнай сума тады і змяненне. Пакуль перыяд не скончыўся, параўноўваюцца аднолькавыя дні: першы тыдзень гэтага месяца — з першым тыднем таго ж месяца год таму. Рост выдаткаў паказаны чырвоным, зніжэнне — зялёным; катэгорыя без выдаткаў год таму пазначана як **новае**. Калі ў акаўнта зададзены **Фінансавы месяц**, «той жа месяц год таму» — гэта той жа фінансавы месяц. Картка з’яўляецца, калі ў леташнім перыядзе ёсць выдаткі.
+
 ## Карусель ІІ-інсайтаў
 
 Гарызантальна пракручваемая карусель ІІ-генераваных інсайтаў (патрабуецца план Pro):
@@ -43974,6 +44006,10 @@ Je kunt ook een hele uitgavencategorie als vast markeren: open **Instellingen �
 ## Komende 30 dagen
 
 Zichtbaar terwijl je de huidige periode bekijkt. Het is een schatting van je saldo voor elk van de komende 30 dagen: het saldo van vandaag, plus inkomsten die elke maand binnenkomen, min abonnementsverlengingen en terugkerende uitgaven op hun datum, min een gemiddelde dag aan dagelijkse uitgaven. Zou het saldo onder nul zakken, dan noemt de kaart vanaf welke dag, en de staven onder de lijn laten het zien. **Binnenkort** toont de volgende betalingen en inkomsten. Inleg voor spaardoelen wordt niet afgetrokken en inkomsten die niet maandelijks komen tellen niet mee – zie het als richtlijn, niet als belofte. Geplande aankopen en schulden met een vervaldatum worden ook op hun datum afgetrokken (achterstallige vandaag); geld dat anderen jou schuldig zijn telt niet mee. Wil je de prognose met dat geld zien, zet dan **Geld meetellen dat men jou schuldig is** aan op de kaart: wat nog openstaat, telt dan mee op elke vervaldatum (achterstallige vandaag). Zo telt **Onregelmatig inkomen meetellen** de gemiddelde dag aan niet-maandelijks inkomen (freelance, terugbetalingen) van de afgelopen maanden mee; de schakelaar verschijnt alleen als er zulk inkomen is.
+
+## Jaar op jaar
+
+In de maand- en jaarweergave vergelijkt deze kaart de periode met dezelfde periode een jaar eerder: het totaal en de belangrijkste categorieën, elk met wat je toen uitgaf en de verandering. Zolang de periode loopt, worden dezelfde dagen vergeleken: de eerste week van deze maand met de eerste week van dezelfde maand vorig jaar. Meer uitgeven is rood, minder groen; een categorie zonder uitgaven vorig jaar heet **nieuw**. Heeft je account een **Financiële maand**, dan is "dezelfde maand vorig jaar" die financiële maand. De kaart verschijnt zodra er uitgaven zijn in de periode van vorig jaar.
 
 ## AI-inzichtencarrousel
 
@@ -49396,6 +49432,10 @@ Também pode marcar uma categoria de despesa inteira como fixa: abra **Definiç�
 ## Próximos 30 dias
 
 Aparece quando está a ver o período atual. É uma estimativa do seu saldo para cada um dos próximos 30 dias: o saldo de hoje, mais as receitas que chegam todos os meses, menos as renovações de subscrições e as despesas recorrentes nas respetivas datas, menos um dia típico de gastos do dia a dia. Se o saldo for ficar abaixo de zero, o cartão indica a partir de que dia, e as barras abaixo da linha mostram-no. **A seguir** lista os próximos pagamentos e receitas. As contribuições para objetivos de poupança não são descontadas e as receitas que não são mensais não contam, por isso encare o valor como uma orientação, não uma promessa. As compras planeadas e as dívidas com data de pagamento também são descontadas na respetiva data (as em atraso, hoje); o dinheiro que lhe devem não é contado. Para ver a previsão com esse dinheiro, ative **Contar o dinheiro que lhe devem** no cartão: o que ainda está em dívida é somado em cada data de vencimento (o que está atrasado, hoje). Da mesma forma, **Contar rendimentos irregulares** soma o dia médio dos rendimentos não mensais (trabalhos pontuais, reembolsos) dos últimos meses; só aparece se tiver rendimentos desse tipo.
+
+## Ano a ano
+
+Nas vistas de mês e ano, este cartão compara o período com o mesmo período de há um ano: o total e as principais categorias, cada uma com o que gastou nessa altura e a variação. Enquanto o período decorre, compara o mesmo número de dias: a primeira semana deste mês com a primeira semana do mesmo mês do ano passado. Gastar mais aparece a vermelho e menos a verde; uma categoria sem gastos no ano passado é marcada como **novo**. Se a sua conta tiver um **Mês financeiro**, «o mesmo mês do ano passado» é esse mês financeiro. O cartão aparece quando há gastos no período do ano passado.
 
 ## Carrossel de análises com IA
 
@@ -54844,6 +54884,10 @@ Você também pode marcar uma categoria de despesa inteira como fixa: abra **Con
 ## Próximos 30 dias
 
 Aparece quando você está vendo o período atual. É uma estimativa do seu saldo para cada um dos próximos 30 dias: o saldo de hoje, mais as receitas que entram todo mês, menos as renovações de assinaturas e as despesas recorrentes nas datas delas, menos um dia típico de gastos do dia a dia. Se o saldo for ficar abaixo de zero, o cartão mostra a partir de que dia, e as barras abaixo da linha indicam isso. **Próximos lançamentos** lista os próximos pagamentos e receitas. Aportes em metas de economia não são descontados e receitas que não são mensais não entram, então use o valor como referência, não como promessa. Compras planejadas e dívidas suas com vencimento também são descontadas na data (as atrasadas, hoje); o dinheiro que outras pessoas te devem não entra. Para ver a previsão com esse dinheiro, ative **Contar o dinheiro que devem a você** no cartão: o que ainda falta receber é somado em cada data de vencimento (o que está atrasado, hoje). Da mesma forma, **Contar renda irregular** soma o dia médio da renda que não vem todo mês (freelas, reembolsos) dos últimos meses; só aparece se você tiver esse tipo de renda.
+
+## Ano a ano
+
+Nas visões de mês e ano, este cartão compara o período com o mesmo período de um ano atrás: o total e as principais categorias, cada uma com o que você gastou na época e a variação. Enquanto o período está em andamento, compara o mesmo número de dias: a primeira semana deste mês com a primeira semana do mesmo mês no ano passado. Gastar mais aparece em vermelho e menos em verde; uma categoria sem gastos no ano passado é marcada como **novo**. Se a sua conta tiver um **Mês financeiro**, "o mesmo mês do ano passado" é esse mês financeiro. O cartão aparece quando há gastos no período do ano passado.
 
 ## Carrossel de insights com IA
 

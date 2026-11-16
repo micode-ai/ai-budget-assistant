@@ -4994,6 +4994,10 @@ Możesz też oznaczyć całą kategorię wydatków jako stałą: otwórz **Ustaw
 
 Widoczne, gdy oglądasz bieżący okres. To szacunek salda na każdy z najbliższych 30 dni: dzisiejsze saldo, plus przychody wpływające co miesiąc, minus odnowienia subskrypcji i wydatki cykliczne w ich terminach, minus typowy dzień codziennych wydatków. Jeśli saldo miałoby spaść poniżej zera, karta podaje, od którego dnia, a słupki pod linią to pokazują. **Nadchodzące** wymienia najbliższe płatności i wpływy. Wpłaty na cele oszczędnościowe nie są odejmowane, a przychody, które nie przychodzą co miesiąc, nie są liczone – traktuj tę liczbę jako wskazówkę, nie obietnicę. Planowane zakupy i długi z terminem spłaty też są odejmowane w ich dniu (zaległe — dziś); pieniądze, które inni są Ci winni, nie są liczone. Aby zobaczyć prognozę z tymi pieniędzmi, włącz na karcie **Uwzględnij pieniądze, które ktoś Ci winien**: pozostała kwota zostanie dodana w dniu terminu zwrotu (zaległe — dziś). Podobnie **Uwzględnij nieregularne przychody** dodaje średni dzień przychodów, które nie przychodzą co miesiąc (zlecenia, zwroty), z ostatnich miesięcy; przełącznik pojawia się tylko, gdy takie przychody są.
 
+## Rok do roku
+
+W widoku miesiąca i roku ta karta porównuje okres z tym samym okresem rok wcześniej: sumę i najważniejsze kategorie, każdą z ówczesną kwotą i zmianą. Dopóki okres trwa, porównywana jest ta sama liczba dni, więc pierwszy tydzień tego miesiąca zestawiany jest z pierwszym tygodniem tego samego miesiąca rok temu. Większe wydatki są czerwone, mniejsze zielone; kategoria bez wydatków rok temu ma oznaczenie **nowe**. Jeśli konto ma **Miesiąc finansowy**, „ten sam miesiąc rok temu” to ten miesiąc finansowy. Karta pojawia się, gdy w zeszłorocznym okresie są wydatki.
+
 ## Karuzela wnioskow AI
 
 Poziomo przewijana karuzela wnioskow generowanych przez AI (wymaga planu Pro):
