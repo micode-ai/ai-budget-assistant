@@ -8,7 +8,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { useAccountStore } from '@/stores/accountStore';
 import { useExchangeRateStore, convertAmount } from '@/stores/exchangeRateStore';
 import { useUserSubscriptionStore, readCachedSubscriptions } from '@/stores/userSubscriptionStore';
-import { localSafeToSpendInputs } from './localSafeToSpend';
+import { isWalletBalanceUnsetLocal, localSafeToSpendInputs } from './localSafeToSpend';
 import { useFinancialMonth } from '@/hooks/useFinancialMonth';
 import { computeSafeToSpend } from '@budget/shared-utils';
 import { filterConsumption, filterIncomeConsumption } from '@/utils/consumption';
@@ -40,7 +40,7 @@ export function useSafeToSpend(): UseSafeToSpendResult {
   const { incomes: rawIncomes } = useIncomeStore();
   // Split-receivable incomes are kept out of income totals too (task H1).
   const incomes = useMemo(() => filterIncomeConsumption(rawIncomes), [rawIncomes]);
-  const { walletSummary } = useWalletStore();
+  const { walletSummary, walletBalances, adjustmentTotals } = useWalletStore();
   const { goals } = useGoalStore();
   const { user } = useAuthStore();
   const { rates } = useExchangeRateStore();
@@ -125,6 +125,8 @@ export function useSafeToSpend(): UseSafeToSpendResult {
       horizonDate,
       incomeInferred,
       fxApproximate: true,
+      // The marker must not vanish just because the figure is offline (ABA-794).
+      walletBalanceUnset: isWalletBalanceUnsetLocal(walletBalances, adjustmentTotals),
       breakdown: {
         walletBalance,
         expectedIncome,
@@ -135,7 +137,7 @@ export function useSafeToSpend(): UseSafeToSpendResult {
       },
       computedAt: new Date().toISOString(),
     };
-  }, [safeToSpend, user, walletSummary, expenses, incomes, goals, rates, currentAccountId, subscriptions, anchorDay]);
+  }, [safeToSpend, user, walletSummary, expenses, incomes, goals, rates, currentAccountId, subscriptions, anchorDay, walletBalances, adjustmentTotals]);
 
   const data = safeToSpend ?? localFallback;
   const hasEnoughData = data !== null;

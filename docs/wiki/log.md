@@ -357,6 +357,7 @@ Newest last within each section.
 - 2026-11-16 · [ABA-791](https://github.com/micode-ai/ai-budget-assistant/issues/829) — the monthly digest e-mail goes out on the account's month turnover day and covers the financial month that ended; features/report-periods.
 - 2026-11-16 · [ABA-792](https://github.com/micode-ai/ai-budget-assistant/issues/830) — the chat model's "spent this month" summary counts the account's financial month and names its start; features/chat-architecture.
 - 2026-11-16 · [ABA-793](https://github.com/micode-ai/ai-budget-assistant/issues/831) — changing an account's month anchor drops the cached Safe-to-Spend and chat summary; features/safe-to-spend.
+- 2026-11-16 · [ABA-794](https://github.com/micode-ai/ai-budget-assistant/issues/832) — the offline Safe-to-Spend fallback sets `walletBalanceUnset` from device data, so the marker survives offline; features/safe-to-spend.
 
 ## Queries
 

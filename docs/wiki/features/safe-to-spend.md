@@ -68,8 +68,9 @@ this, and both this response and the 30-day forecast carry `walletBalanceUnset`.
 and the forecast card then say so, with a **Set balance** link (`safeToSpend.walletUnset` /
 `setBalance`). Since [ABA-785](https://github.com/micode-ai/ai-budget-assistant/issues/823) the home
 hero figure itself carries the marker too (`safeToSpend.balanceUnsetShort`, in `HomeHeroHeader` on the
-phone and `NetProfitWidget` on desktop). The offline fallback never sets the flag, so offline the marker
-is absent. Never present an unset wallet as the user's money without saying so.
+phone and `NetProfitWidget` on desktop). Offline, `isWalletBalanceUnsetLocal` sets the flag from the
+wallet balances and correction totals on the device ([ABA-794](https://github.com/micode-ai/ai-budget-assistant/issues/832)); corrections netting to exactly zero read
+as unset there. Never present an unset wallet as the user's money without saying so.
 
 ### The month is the account's financial month ([ABA-789](https://github.com/micode-ai/ai-budget-assistant/issues/827))
 
@@ -157,3 +158,4 @@ hero row — `renderHomeWidget` returns `null` for it, so it is never a card of 
 - [ABA-785](https://github.com/micode-ai/ai-budget-assistant/issues/823) — the unset-balance marker on the hero figure.
 - [ABA-789](https://github.com/micode-ai/ai-budget-assistant/issues/827) — the horizon follows the account's financial month.
 - [ABA-793](https://github.com/micode-ai/ai-budget-assistant/issues/831) — changing the anchor drops the cached figure.
+- [ABA-794](https://github.com/micode-ai/ai-budget-assistant/issues/832) — the unset-balance marker offline.

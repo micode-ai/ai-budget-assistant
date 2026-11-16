@@ -1,4 +1,4 @@
-import { localSafeToSpendInputs } from '../localSafeToSpend';
+import { isWalletBalanceUnsetLocal, localSafeToSpendInputs } from '../localSafeToSpend';
 
 // 10 June 2026, midday. 1 EUR = 4 PLN; base PLN.
 const NOW = new Date(2026, 5, 10, 12);
@@ -64,5 +64,21 @@ describe('localSafeToSpendInputs', () => {
     });
     // 3000 over 89 days ≈ 33.71/day × 21 days (10..30 June)
     expect(r.goalContributions).toBeCloseTo((3000 / 89) * 21, 0);
+  });
+});
+
+describe('isWalletBalanceUnsetLocal (ABA-794)', () => {
+  it('is unset with no starting balance and no correction', () => {
+    expect(isWalletBalanceUnsetLocal([], {})).toBe(true);
+    expect(isWalletBalanceUnsetLocal([{ initialAmount: 0 }], { PLN: 0 })).toBe(true);
+  });
+
+  it('is set by a non-zero starting balance that is not deleted', () => {
+    expect(isWalletBalanceUnsetLocal([{ initialAmount: 1200 }], {})).toBe(false);
+    expect(isWalletBalanceUnsetLocal([{ initialAmount: 1200, isDeleted: true }], {})).toBe(true);
+  });
+
+  it('is set by a balance correction', () => {
+    expect(isWalletBalanceUnsetLocal([{ initialAmount: 0 }], { EUR: -35.5 })).toBe(false);
   });
 });

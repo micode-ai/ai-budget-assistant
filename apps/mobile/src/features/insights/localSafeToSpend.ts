@@ -150,3 +150,19 @@ export function localSafeToSpendInputs(params: {
     goalContributions: Math.round(goalContributions * 100) / 100,
   };
 }
+
+/**
+ * The device's reading of `WalletService.isBalanceUnset` (ABA-794): no live
+ * wallet balance with a non-zero starting amount and no balance correction.
+ * Corrections are only known as per-currency totals here, so a set of
+ * corrections that nets to exactly zero reads as "none" — the marker then
+ * errs toward warning.
+ */
+export function isWalletBalanceUnsetLocal(
+  balances: Array<{ initialAmount: number; isDeleted?: boolean }>,
+  adjustmentTotals: Record<string, number>,
+): boolean {
+  const anyStart = balances.some((b) => !b.isDeleted && Number(b.initialAmount) !== 0);
+  const anyCorrection = Object.values(adjustmentTotals).some((v) => Number(v) !== 0);
+  return !anyStart && !anyCorrection;
+}
