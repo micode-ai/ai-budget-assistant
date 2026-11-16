@@ -260,6 +260,14 @@ export function NetProfitWidget({
     </View>
   );
 
+  // ABA-784: the figure counts from a zero balance — say so beside it, not only in the sheet.
+  const stsUnsetNote = showSafeToSpendRow && safeToSpend!.data!.walletBalanceUnset ? (
+    <View style={styles.stsUnsetRow}>
+      <Ionicons name="alert-circle-outline" size={12} color={theme.colors.warning} />
+      <Text style={styles.stsUnsetText}>{t('safeToSpend.balanceUnsetShort')}</Text>
+    </View>
+  ) : null;
+
   return (
     <View style={[styles.card, compact && styles.cardCompact]}>
       {compact ? (
@@ -274,6 +282,7 @@ export function NetProfitWidget({
                   </Text>
                   <Ionicons name="chevron-forward" size={16} color={theme.colors.textTertiary} />
                 </View>
+                {stsUnsetNote}
               </TouchableOpacity>
               <View style={styles.heroSecondaryBlock}>
                 <Text style={styles.heroSecondaryLabel}>
@@ -300,7 +309,10 @@ export function NetProfitWidget({
           {header}
           {showSafeToSpendRow && (
             <TouchableOpacity style={styles.stsEyebrowRow} onPress={safeToSpend!.onPress} activeOpacity={0.7}>
-              <Text style={styles.stsEyebrowLabel}>{t('safeToSpend.title')}</Text>
+              <View>
+                <Text style={styles.stsEyebrowLabel}>{t('safeToSpend.title')}</Text>
+                {stsUnsetNote}
+              </View>
               <View style={styles.stsEyebrowValueRow}>
                 <Text style={styles.stsEyebrowAmount}>
                   {formatCurrency(safeToSpend!.data!.safeToSpendToday, safeToSpend!.data!.baseCurrency)}
@@ -404,6 +416,16 @@ const createStyles = (theme: Theme) => ({
     paddingVertical: theme.spacing[2],
     paddingHorizontal: theme.spacing[3],
     marginBottom: theme.spacing[3],
+  },
+  stsUnsetRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: 4,
+    marginTop: 2,
+  },
+  stsUnsetText: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textSecondary,
   },
   stsEyebrowLabel: {
     ...theme.textStyles.caption,

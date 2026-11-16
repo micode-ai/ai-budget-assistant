@@ -3179,6 +3179,7 @@ export default {
     approxRate: 'Geschatte wisselkoers toegepast',
     walletUnset: 'Het saldo van je portemonnee is nooit ingesteld, dus dit rekent vanaf nul in plaats van vanaf het geld dat je echt hebt.',
     setBalance: 'Saldo instellen',
+    balanceUnsetShort: 'Vanaf nul · saldo niet ingesteld',
     widgetLabel: 'Veilig te besteden',
   },
   inflationShield: {

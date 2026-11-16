@@ -66,7 +66,10 @@ starting balance and no correction, it is just the net of what was recorded, cou
 it can be far from the real money, even deeply negative. `WalletService.isBalanceUnset` detects
 this, and both this response and the 30-day forecast carry `walletBalanceUnset`. The breakdown sheet
 and the forecast card then say so, with a **Set balance** link (`safeToSpend.walletUnset` /
-`setBalance`). Never present an unset wallet as the user's money without saying so.
+`setBalance`). Since [ABA-785](https://github.com/micode-ai/ai-budget-assistant/issues/823) the home
+hero figure itself carries the marker too (`safeToSpend.balanceUnsetShort`, in `HomeHeroHeader` on the
+phone and `NetProfitWidget` on desktop). The offline fallback never sets the flag, so offline the marker
+is absent. Never present an unset wallet as the user's money without saying so.
 
 ### Currency
 
@@ -142,3 +145,4 @@ hero row — `renderHomeWidget` returns `null` for it, so it is never a card of 
 - The API copy of the formula exists because importing it from `@budget/shared-utils` at runtime
   took production down (see `CLAUDE.md`, Production: the `check-no-shared-utils-runtime-import.sh`
   deploy guard).
+- [ABA-785](https://github.com/micode-ai/ai-budget-assistant/issues/823) — the unset-balance marker on the hero figure.

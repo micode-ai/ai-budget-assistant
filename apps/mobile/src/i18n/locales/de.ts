@@ -3179,6 +3179,7 @@ export default {
     approxRate: 'Ungefährer Wechselkurs angewendet',
     walletUnset: 'Dein Kontostand wurde nie festgelegt, daher wird ab null gerechnet statt ab dem Geld, das du tatsächlich hast.',
     setBalance: 'Saldo festlegen',
+    balanceUnsetShort: 'Ab null · Saldo nicht festgelegt',
     widgetLabel: 'Sicher ausgeben',
   },
   inflationShield: {

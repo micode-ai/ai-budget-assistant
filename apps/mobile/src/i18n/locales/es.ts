@@ -3179,6 +3179,7 @@ export default {
     approxRate: 'Tasa de cambio aproximada aplicada',
     walletUnset: 'El saldo de tu billetera nunca se configuró, así que esto cuenta desde cero y no desde el dinero que realmente tienes.',
     setBalance: 'Establecer saldo',
+    balanceUnsetShort: 'Desde cero · saldo sin establecer',
     widgetLabel: 'Gasto seguro',
   },
   inflationShield: {

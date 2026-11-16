@@ -3174,6 +3174,7 @@ export default {
     approxRate: 'Aplicada taxa de câmbio aproximada',
     walletUnset: 'O saldo da sua carteira nunca foi definido, por isso isto conta a partir de zero e não do dinheiro que realmente tem.',
     setBalance: 'Definir saldo',
+    balanceUnsetShort: 'A partir de zero · saldo não definido',
     widgetLabel: 'Disponível para gastar',
   },
   inflationShield: {

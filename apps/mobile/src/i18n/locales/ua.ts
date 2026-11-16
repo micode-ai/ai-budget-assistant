@@ -3191,6 +3191,7 @@ export default {
     approxRate: 'Застосовано приблизний курс обміну',
     walletUnset: 'Баланс гаманця не задано, тому розрахунок іде від нуля, а не від грошей, які у вас насправді є.',
     setBalance: 'Задати баланс',
+    balanceUnsetShort: 'Від нуля · баланс не задано',
     widgetLabel: 'Безпечна трата',
   },
   inflationShield: {

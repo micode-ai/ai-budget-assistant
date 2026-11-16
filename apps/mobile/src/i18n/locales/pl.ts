@@ -3191,6 +3191,7 @@ export default {
     approxRate: 'Zastosowano przybliżony kurs wymiany',
     walletUnset: 'Saldo portfela nigdy nie zostało ustawione, więc liczymy od zera, a nie od pieniędzy, które faktycznie masz.',
     setBalance: 'Ustaw saldo',
+    balanceUnsetShort: 'Od zera · saldo nieustawione',
     widgetLabel: 'Bezpieczne wydatki',
   },
   inflationShield: {

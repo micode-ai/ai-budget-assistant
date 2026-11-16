@@ -3159,6 +3159,7 @@ export default {
     approxRate: 'Ужыты прыблізны курс абмену',
     walletUnset: 'Баланс кашалька не зададзены, таму разлік ідзе ад нуля, а не ад грошай, якія ў вас насамрэч ёсць.',
     setBalance: 'Задаць баланс',
+    balanceUnsetShort: 'Ад нуля · баланс не зададзены',
     widgetLabel: 'Бяспечныя выдаткі',
   },
   inflationShield: {

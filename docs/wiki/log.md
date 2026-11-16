@@ -348,6 +348,7 @@ Newest last within each section.
 - 2026-11-15 · [ABA-781](https://github.com/micode-ai/ai-budget-assistant/issues/819) — Spending Story month stories follow the financial month (period named by its start month, span in the label, compared with the previous financial month); the controller passes `req.monthAnchorDay`; the Story screen opens on the current financial month. Pages: `features/budgets.md`.
 - 2026-11-15 · [ABA-782](https://github.com/micode-ai/ai-budget-assistant/issues/820) — monthly Wrapped follows the financial month (anchored window, `periodStart`/`periodEnd`, anchor in the cache key) and its push now runs daily, firing on each account's turnover day (`periodEndedYesterday`); `previousMonthParams` kept pure — importing the hook pulled the store graph into its test. Pages: `features/financial-wrapped.md`, `features/budgets.md`.
 - 2026-11-15 · [ABA-783](https://github.com/micode-ai/ai-budget-assistant/issues/821) — report month presets (this month, specific month, the picker, the Analytics mapping) follow the financial month; client-only since reports take explicit dates. Also fixed the Ukrainian "specific month" chip typo found while matching help to UI labels. Pages: `features/report-periods.md`, `features/budgets.md`.
+- 2026-11-16 · [ABA-785](https://github.com/micode-ai/ai-budget-assistant/issues/823) — the Safe-to-Spend hero figure is marked when the wallet balance was never set, not only the breakdown sheet; features/safe-to-spend.
 
 ## Queries
 

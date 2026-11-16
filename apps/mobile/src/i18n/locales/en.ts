@@ -3186,6 +3186,7 @@ export default {
     approxRate: 'Approximate FX rate applied',
     walletUnset: 'Your wallet balance was never set, so this counts from zero rather than from the money you actually have.',
     setBalance: 'Set balance',
+    balanceUnsetShort: 'From zero · balance not set',
     widgetLabel: 'Safe to Spend',
   },
   inflationShield: {

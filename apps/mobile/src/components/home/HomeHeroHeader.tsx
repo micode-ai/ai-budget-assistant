@@ -64,6 +64,13 @@ export function HomeHeroHeader({
             <Text style={styles.heroStsAmount}>
               {formatCurrency(safeToSpendData.safeToSpendToday, safeToSpendData.baseCurrency)}
             </Text>
+            {/* ABA-784: the figure counts from a zero balance — say so where it is read, not only in the sheet. */}
+            {safeToSpendData.walletBalanceUnset && (
+              <View style={styles.heroStsUnsetRow}>
+                <Ionicons name="alert-circle-outline" size={12} color="rgba(255,255,255,0.85)" />
+                <Text style={styles.heroStsUnset}>{t('safeToSpend.balanceUnsetShort')}</Text>
+              </View>
+            )}
           </View>
           <Ionicons name="chevron-forward" size={16} color="rgba(255,255,255,0.7)" />
         </TouchableOpacity>
@@ -142,6 +149,16 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.caption,
     color: 'rgba(255,255,255,0.75)',
     marginBottom: 2,
+  },
+  heroStsUnsetRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: 4,
+    marginTop: 2,
+  },
+  heroStsUnset: {
+    ...theme.textStyles.caption,
+    color: 'rgba(255,255,255,0.85)',
   },
   heroStsAmount: {
     fontSize: 22,
