@@ -50,6 +50,10 @@ En las vistas de mes y año, esta tarjeta compara el periodo con el mismo period
 
 Una cuadrícula de tus últimos días, una columna por semana y una fila por día de la semana, coloreada según lo que gastaste ese día: cuanto más oscuro, más (cada tono es un cuarto de tus días con gastos). En el ordenador abarca los últimos 12 meses; en el móvil, tantos meses como quepan a un tamaño legible. Toca un día para ver su fecha y total; si no, la tarjeta indica tu día de más gasto. Debajo, **Media por día del mes** muestra cuánto gastas de media cada día del mes y qué tres días se llevan más. Si tu cuenta tiene un **Mes financiero**, el día 1 es su primer día, el de cobro. La app no conoce la hora de las compras, así que la tarjeta trabaja con días, no con horas. Aparece cuando tienes al menos 14 días con gastos.
 
+## Patrimonio
+
+Ábrelo desde la entrada **Patrimonio** en la pestaña Análisis o tocando la tarjeta **Net Capital** de la pantalla de inicio. Suma todo lo que tienes en todas tus cuentas —el dinero de cada cartera, el valor de mercado de tus inversiones y lo que otros te deben— menos tus propias deudas, en tu moneda de visualización. Ves la variación frente al mes pasado y frente a hace un año, las cuatro partes y los últimos 12 meses en barras: cada mes pasado se reconstruye a partir de tus registros y de los tipos de cambio de ese mes, así que el historial está desde el primer día. Una barra más clara indica que algunas inversiones se valoraron a su precio de compra porque no había precio de mercado para esa fecha. En **Cuentas** puedes desactivar una cuenta, por ejemplo una compartida que otro miembro también cuenta en su patrimonio; la elección se guarda en este dispositivo. Una cuenta cifrada por completo no se puede leer y no se cuenta.
+
 ## Carrusel de informacion IA
 
 Un carrusel horizontal desplazable con informacion generada por IA (requiere plan Pro):

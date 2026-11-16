@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
+import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
@@ -46,7 +47,8 @@ export function NetCapitalWidget() {
   const amountColor = isPositive ? theme.colors.success : theme.colors.danger;
 
   return (
-    <View style={styles.card}>
+    // Opens the all-accounts net worth (ABA-799); this card stays the current account's wallet.
+    <TouchableOpacity style={styles.card} activeOpacity={0.7} onPress={() => router.push('/net-worth')}>
       {header}
       <Text style={styles.subtitle}>{t('dashboard.netCapitalSubtitle')}</Text>
       <Text style={[styles.mainAmount, { color: amountColor }]}>
@@ -68,7 +70,7 @@ export function NetCapitalWidget() {
           </View>
         ))}
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 

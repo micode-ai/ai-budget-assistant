@@ -1,4 +1,4 @@
-import type { DrillDownRequest, DrillDownResponse, AIInsightsResponse, StoryDashboardResponse, SafeToSpendResponse, CashFlowForecastResponse, WrappedResponse, InflationShieldResponse, SavingsKind, SavingsSummaryResponse } from '@budget/shared-types';
+import type { DrillDownRequest, DrillDownResponse, AIInsightsResponse, StoryDashboardResponse, SafeToSpendResponse, CashFlowForecastResponse, WrappedResponse, InflationShieldResponse, SavingsKind, SavingsSummaryResponse, NetWorthResponse } from '@budget/shared-types';
 import { httpClient } from './http-client';
 
 export const analyticsApi = {
@@ -90,6 +90,12 @@ export const analyticsApi = {
 
   getSafeToSpend() {
     return httpClient.request<SafeToSpendResponse>('/insights/safe-to-spend');
+  },
+
+  /** Net worth across every account the user belongs to (ABA-799); `exclude` = account ids switched off. */
+  getNetWorth(exclude: string[] = []) {
+    const q = exclude.length ? `?exclude=${encodeURIComponent(exclude.join(','))}` : '';
+    return httpClient.request<NetWorthResponse>(`/net-worth${q}`);
   },
 
   getCashFlowForecast() {

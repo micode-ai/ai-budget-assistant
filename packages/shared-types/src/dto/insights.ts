@@ -273,3 +273,39 @@ export interface WrappedResponse {
   fxApproximate: boolean;         // true if any card required FX conversion
   cards: WrappedCard[];           // ordered; only cards that have data are included
 }
+
+// ── Net worth (ABA-799) ──────────────────────────────────────
+/** All amounts in the display currency. `net = cash + investments + owedToMe − debts`. */
+export interface NetWorthParts {
+  cash: number;
+  investments: number;
+  owedToMe: number;
+  debts: number;
+  net: number;
+}
+
+export interface NetWorthMonth extends NetWorthParts {
+  month: string; // YYYY-MM; the last entry is the current month, as of now
+  /** A holding had no price for that month-end and was valued at average cost. */
+  approximate: boolean;
+}
+
+export interface NetWorthAccount {
+  id: string;
+  name: string;
+  type: string;
+  included: boolean;
+  /** Fully encrypted (tier ≥ 2): no figures can be read. */
+  encrypted: boolean;
+  /** The account's own net worth today; null when excluded or encrypted. */
+  net: number | null;
+}
+
+export interface NetWorthResponse {
+  currencyCode: string;
+  current: NetWorthParts;
+  history: NetWorthMonth[]; // 12 entries, oldest first
+  accounts: NetWorthAccount[];
+  fxApproximate: boolean;
+  computedAt: string;
+}

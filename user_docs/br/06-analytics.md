@@ -50,6 +50,10 @@ Nas visões de mês e ano, este cartão compara o período com o mesmo período 
 
 Uma grade dos seus dias recentes, uma coluna por semana e uma linha por dia da semana, colorida pelo quanto você gastou naquele dia — quanto mais escuro, mais (cada tom é um quarto dos seus dias com gastos). No computador ela cobre os últimos 12 meses; no celular, quantos meses couberem em tamanho legível. Toque em um dia para ver a data e o total; senão o cartão mostra seu dia de maior gasto. Abaixo, **Média por dia do mês** mostra quanto você gasta em média em cada dia do mês e quais três dias custam mais. Se a sua conta tiver um **Mês financeiro**, o dia 1 é o primeiro dia dele — o do pagamento. O app não sabe o horário das compras, então o cartão trabalha com dias, não com horas. Ele aparece quando você tiver pelo menos 14 dias com gastos.
 
+## Patrimônio líquido
+
+Abra pela entrada **Patrimônio líquido** na aba Análises ou tocando no cartão **Net Capital** da tela inicial. Ele soma tudo o que você tem em todas as suas contas — o dinheiro de cada carteira, o valor de mercado dos seus investimentos e o dinheiro que devem a você — menos as suas próprias dívidas, na sua moeda de exibição. Você vê a variação em relação ao mês passado e a um ano atrás, as quatro partes e os últimos 12 meses em barras: cada mês passado é reconstruído com base nos seus registros e nas taxas de câmbio daquele mês, então o histórico já existe desde o primeiro dia. Uma barra mais clara indica que alguns investimentos foram avaliados pelo preço de compra porque não havia preço de mercado naquela data. Em **Contas** você pode desativar uma conta — por exemplo uma conta compartilhada que outro membro também conta no patrimônio dele; a escolha fica salva neste dispositivo. Uma conta totalmente criptografada não pode ser lida e não é contada.
+
 ## Carrossel de insights com IA
 
 Um carrossel com rolagem horizontal de insights gerados por IA (requer o plano Pro):

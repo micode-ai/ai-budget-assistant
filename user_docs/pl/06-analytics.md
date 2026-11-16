@@ -50,6 +50,10 @@ W widoku miesiąca i roku ta karta porównuje okres z tym samym okresem rok wcze
 
 Siatka ostatnich dni — kolumna na tydzień i wiersz na dzień tygodnia — zabarwiona według wydatków danego dnia: im ciemniej, tym więcej (każdy odcień to ćwierć Twoich dni z wydatkami). Na komputerze obejmuje ostatnie 12 miesięcy, na telefonie tyle miesięcy, ile mieści się czytelnie. Stuknij dzień, aby zobaczyć datę i sumę; w przeciwnym razie karta podaje Twój największy dzień. Pod spodem **Średnio według dnia miesiąca** pokazuje, ile średnio wydajesz w każdym dniu miesiąca i które trzy dni kosztują najwięcej. Jeśli konto ma **Miesiąc finansowy**, dzień 1 to jego pierwszy dzień — dzień wypłaty. Aplikacja nie zna godziny zakupów, więc karta działa na dniach, nie godzinach. Pojawia się od 14 dni z wydatkami.
 
+## Majątek netto
+
+Otwórz go z pozycji **Majątek netto** na karcie Analityka albo stukając kartę **Net Capital** na ekranie głównym. Sumuje wszystko, co masz na wszystkich kontach — pieniądze w każdym portfelu, wartość rynkową inwestycji i pieniądze, które ktoś jest Ci winien — minus Twoje własne długi, w walucie wyświetlania. Widzisz zmianę od poprzedniego miesiąca i od roku, cztery składniki i ostatnie 12 miesięcy na słupkach: każdy miniony miesiąc jest odtwarzany z Twoich zapisów i kursów walut z tego miesiąca, więc historia jest od pierwszego dnia. Jaśniejszy słupek oznacza, że część inwestycji wyceniono po cenie zakupu, bo dla tej daty nie było ceny rynkowej. W sekcji **Konta** możesz wyłączyć konto — np. wspólne konto, które inny członek też wlicza do swojego majątku; wybór zostaje na tym urządzeniu. W pełni zaszyfrowanego konta nie da się odczytać i nie jest liczone.
+
 ## Karuzela wnioskow AI
 
 Poziomo przewijana karuzela wnioskow generowanych przez AI (wymaga planu Pro):

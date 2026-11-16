@@ -50,6 +50,10 @@ In the month and year views, this card compares the period with the same period 
 
 A grid of your recent days, one column per week and one row per weekday, shaded by how much you spent that day — the darker, the more (each shade is a quarter of your spending days). On a computer it covers the last 12 months; on a phone, as many recent months as fit at a readable size. Tap a day to see its date and total; otherwise the card names your biggest day. Below it, **Average by day of the month** shows how much you spend on each day of the month on average over the past months, and which three days take the most. If your account has a **Financial Month**, day 1 is its first day — payday. The app has no time of purchase for transactions, so the card works with days, not hours. It appears once you have at least 14 days with spending.
 
+## Net Worth
+
+Open it from the **Net worth** entry on the Analytics tab, or by tapping the **Net Capital** card on the home screen. It adds up everything you have across all your accounts — the money in every wallet, the market value of your investments and the money others owe you — minus your own debts, in your display currency. You see the change since last month and since a year ago, the four parts, and the last 12 months as bars: each past month is rebuilt from your records and that month's exchange rates, so the history is there from the first day. A paler bar means some investments were valued at their purchase price because there was no market price for that date. Under **Accounts** you can switch an account off — for example a shared account that another member also counts in their own net worth; the choice is kept on this device. A fully encrypted account cannot be read and is not counted.
+
 ## AI Insights Carousel
 
 A horizontal scrollable carousel of AI-generated insights (Pro plan required):

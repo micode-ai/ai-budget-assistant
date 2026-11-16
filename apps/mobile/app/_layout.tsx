@@ -999,6 +999,13 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="net-worth"
+          options={{
+            headerShown: true,
+            title: t('netWorth.title'),
+          }}
+        />
+        <Stack.Screen
           name="scenario-simulator"
           options={{
             headerShown: true,

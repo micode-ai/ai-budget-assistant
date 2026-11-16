@@ -50,6 +50,14 @@ export function discoveryItems(selectedYear: number, onOpenStory: () => void): D
       onPress: () => router.push({ pathname: '/wrapped', params: previousMonthParams(new Date(), readAnchorDay()) }),
     },
     {
+      // All accounts together (ABA-799).
+      key: 'net-worth',
+      icon: 'stats-chart-outline',
+      titleKey: 'netWorth.title',
+      subtitleKey: 'netWorth.entrySub',
+      onPress: () => router.push('/net-worth'),
+    },
+    {
       key: 'real-salary',
       icon: 'trending-up-outline',
       titleKey: 'realSalary.entryTitle',

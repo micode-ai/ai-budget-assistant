@@ -6,6 +6,8 @@ import { AiInsightsService } from './ai-insights.service';
 import { StoryService } from './story.service';
 import { FatFinderService } from './fat-finder.service';
 import { CashFlowForecastService } from './cash-flow-forecast.service';
+import { NetWorthService } from './net-worth.service';
+import { NetWorthController } from './net-worth.controller';
 import { SafeToSpendService } from './safe-to-spend.service';
 import { WrappedService } from './wrapped.service';
 import { InflationShieldService } from './inflation-shield.service';
@@ -36,13 +38,14 @@ import { InflationShieldTrackingModule } from './inflation-shield-tracking.modul
     GamificationModule,
     InflationShieldTrackingModule,
   ],
-  controllers: [InsightsController],
+  controllers: [InsightsController, NetWorthController],
   providers: [
     InsightsService,
     AiInsightsService,
     StoryService,
     FatFinderService,
     SafeToSpendService,
+    NetWorthService,
     CashFlowForecastService,
     WrappedService,
     InflationShieldService,

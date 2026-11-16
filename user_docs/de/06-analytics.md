@@ -50,6 +50,10 @@ In der Monats- und Jahresansicht vergleicht diese Karte den Zeitraum mit demselb
 
 Ein Raster deiner letzten Tage, eine Spalte pro Woche und eine Zeile pro Wochentag, eingefärbt nach den Ausgaben des Tages — je dunkler, desto mehr (jede Stufe ist ein Viertel deiner Ausgabentage). Am Computer umfasst es die letzten 12 Monate, auf dem Telefon so viele Monate, wie gut lesbar hineinpassen. Tippe auf einen Tag für Datum und Summe; sonst nennt die Karte deinen größten Tag. Darunter zeigt **Durchschnitt nach Tag des Monats**, wie viel du im Schnitt an jedem Tag des Monats ausgibst und welche drei Tage am meisten kosten. Hat dein Konto einen **Finanzmonat**, ist Tag 1 sein erster Tag — der Zahltag. Die App kennt keine Uhrzeit der Käufe, daher arbeitet die Karte mit Tagen, nicht mit Stunden. Sie erscheint ab 14 Tagen mit Ausgaben.
 
+## Vermögen
+
+Öffne es über den Eintrag **Vermögen** im Tab Analysen oder mit einem Tipp auf die Karte **Net Capital** auf dem Startbildschirm. Es addiert alles, was du über alle Konten hast — das Geld in jeder Geldbörse, den Marktwert deiner Investitionen und das Geld, das dir andere schulden — abzüglich deiner eigenen Schulden, in deiner Anzeigewährung. Du siehst die Veränderung zum Vormonat und zum Vorjahr, die vier Bestandteile und die letzten 12 Monate als Balken: Jeder vergangene Monat wird aus deinen Daten und den Wechselkursen dieses Monats rekonstruiert, die Historie ist also vom ersten Tag an da. Ein hellerer Balken bedeutet, dass einige Investitionen zum Kaufpreis bewertet wurden, weil es für dieses Datum keinen Marktpreis gab. Unter **Konten** kannst du ein Konto ausschalten — etwa ein gemeinsames Konto, das ein anderes Mitglied auch in sein Vermögen einrechnet; die Auswahl bleibt auf diesem Gerät. Ein vollständig verschlüsseltes Konto kann nicht gelesen werden und zählt nicht mit.
+
 ## KI-Einblicke-Karussell
 
 Ein horizontal scrollbares Karussell mit KI-generierten Einblicken (Pro-Plan erforderlich):

@@ -362,6 +362,7 @@ Newest last within each section.
 - 2026-11-16 · [ABA-796](https://github.com/micode-ai/ai-budget-assistant/issues/834) — vehicles get screens (Settings → Vehicles, expense Fill-up section) and fuel costs in the display currency; features/vehicle-fuel-log.
 - 2026-11-16 · [ABA-797](https://github.com/micode-ai/ai-budget-assistant/issues/835) — a year-over-year card per category on the Analytics tab, same-days and financial-month aware; features/analytics-period-comparisons.
 - 2026-11-16 · [ABA-798](https://github.com/micode-ai/ai-budget-assistant/issues/836) — a year-of-days heatmap and average by day of the (financial) month on the Analytics tab; no purchase times exist in production, so no hour view; features/analytics-tab-breakdowns.
+- 2026-11-16 · [ABA-799](https://github.com/micode-ai/ai-budget-assistant/issues/837) — net worth across all accounts with 12 rebuilt month-ends (no snapshot table); features/net-worth.
 
 ## Queries
 
