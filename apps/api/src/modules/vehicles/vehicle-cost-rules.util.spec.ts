@@ -16,7 +16,7 @@ function make(o: { vehicles?: unknown[]; ruleRows?: unknown[]; expenses?: unknow
 
 describe('vehicle cost rules (ABA-803)', () => {
   it('reads only well-formed rules', () => {
-    expect(parseCategoryRules([{ categoryId: 'c', kind: 'insurance' }, { categoryId: 'x', kind: 'fuel' }, 'junk'])).toEqual([
+    expect(parseCategoryRules([{ categoryId: 'c', kind: 'insurance' }, { categoryId: 'x', kind: 'diesel' }, 'junk'])).toEqual([
       { categoryId: 'c', kind: 'insurance' },
     ]);
     expect(parseCategoryRules(null)).toEqual([]);

@@ -2754,6 +2754,7 @@ export default {
     loadFailed: "Impossible de charger votre patrimoine.",
   },
   vehicles: {
+    fuelOptionalHint: "Pas de litres ni de compteur ? Laissez les deux vides — c'est compté comme frais de carburant, mais pas dans la consommation.",
     carSection: "Voiture",
     markAsCarCost: "Marquer comme frais de voiture",
     removeCarCost: "Pas un frais de voiture",

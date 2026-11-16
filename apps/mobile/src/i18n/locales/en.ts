@@ -2761,6 +2761,7 @@ export default {
     loadFailed: "Could not load your net worth.",
   },
   vehicles: {
+    fuelOptionalHint: "No litres or odometer? Leave both empty — it counts as a fuel cost, just not in consumption.",
     carSection: "Car",
     markAsCarCost: "Mark as a car cost",
     removeCarCost: "Not a car cost",

@@ -20,9 +20,9 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 const SHEET_TITLE_ID = 'vehicle-sheet-title';
 const NAME_MAX = 60;
 const FUEL_TYPES: FuelType[] = ['petrol', 'diesel', 'lpg', 'electric', 'hybrid', 'other'];
-const COST_KINDS: VehicleCostKind[] = ['service', 'insurance', 'parking', 'tax', 'other'];
+const COST_KINDS: VehicleCostKind[] = ['fuel', 'service', 'insurance', 'parking', 'tax', 'other'];
 /** The order the cost-of-ownership breakdown lists its parts in. */
-const OWNERSHIP_KINDS = ['fuel', ...COST_KINDS];
+const OWNERSHIP_KINDS: string[] = COST_KINDS;
 
 /**
  * Settings → Vehicles (ABA-796): what the car costs in fuel. One card per

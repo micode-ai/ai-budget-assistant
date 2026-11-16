@@ -2,8 +2,12 @@ import type { Prisma, PrismaClient } from '@prisma/client';
 
 type Db = PrismaClient | Prisma.TransactionClient;
 
-/** Non-fuel cost kinds (ABA-803). Fuel lives in FuelLog; `none` is a person's "not a car cost". */
-export const VEHICLE_COST_KINDS = ['service', 'insurance', 'parking', 'tax', 'other'] as const;
+/**
+ * Cost kinds (ABA-803). A fill-up with litres and odometer lives in FuelLog; `fuel` here is a fuel
+ * purchase known only by its amount (ABA-804) — it counts in the cost of ownership, never in
+ * consumption. `none` is a person's "not a car cost".
+ */
+export const VEHICLE_COST_KINDS = ['fuel', 'service', 'insurance', 'parking', 'tax', 'other'] as const;
 export type VehicleCostKind = (typeof VEHICLE_COST_KINDS)[number];
 
 export interface VehicleCategoryRule {

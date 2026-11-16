@@ -2754,6 +2754,7 @@ export default {
     loadFailed: "Je vermogen kon niet worden geladen.",
   },
   vehicles: {
+    fuelOptionalHint: "Geen liters of kilometerstand? Laat beide leeg — het telt als brandstofkosten, alleen niet in het verbruik.",
     carSection: "Auto",
     markAsCarCost: "Markeren als autokosten",
     removeCarCost: "Geen autokosten",

@@ -2754,6 +2754,7 @@ export default {
     loadFailed: "Vermögen konnte nicht geladen werden.",
   },
   vehicles: {
+    fuelOptionalHint: "Keine Liter oder kein Kilometerstand? Lass beides leer — es zählt als Kraftstoffkosten, nur nicht beim Verbrauch.",
     carSection: "Auto",
     markAsCarCost: "Als Autokosten markieren",
     removeCarCost: "Keine Autokosten",

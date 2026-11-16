@@ -34,8 +34,8 @@ export interface VehicleStats {
   ownership?: VehicleOwnership;
 }
 
-/** Non-fuel car costs (ABA-803); fuel is a FuelLog. */
-export type VehicleCostKind = 'service' | 'insurance' | 'parking' | 'tax' | 'other';
+/** Car cost kinds (ABA-803). `fuel` without litres/odometer (ABA-804); a full fill-up is a FuelLog. */
+export type VehicleCostKind = 'fuel' | 'service' | 'insurance' | 'parking' | 'tax' | 'other';
 
 export interface VehicleOwnership {
   months: number;

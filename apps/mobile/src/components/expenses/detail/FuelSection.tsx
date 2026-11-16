@@ -76,8 +76,11 @@ export function FuelSection({ expense, canEdit }: Props) {
   const unit = t(fuelUnitKey(vehicle?.fuelType ?? 'petrol'));
   const parsedLiters = parseLiters(liters);
   const parsedOdometer = parseOdometer(odometer);
-  const canSave =
-    !!vehicleId && !isSaving && (kind !== 'fuel' || (parsedLiters !== null && parsedOdometer !== null));
+  // Fuel with litres AND odometer is a fill-up (consumption); with neither it is just a fuel cost
+  // (ABA-804) — half-filled is neither, so it cannot be saved.
+  const fuelBlank = !liters.trim() && !odometer.trim();
+  const fuelComplete = parsedLiters !== null && parsedOdometer !== null;
+  const canSave = !!vehicleId && !isSaving && (kind !== 'fuel' || fuelBlank || fuelComplete);
 
   const open = () => {
     setKind(cost ? cost.kind : 'fuel');
@@ -92,7 +95,7 @@ export function FuelSection({ expense, canEdit }: Props) {
     if (!canSave || !vehicleId) return;
     setIsSaving(true);
     try {
-      if (kind === 'fuel') {
+      if (kind === 'fuel' && fuelComplete) {
         const saved = await api.upsertFuelLog(vehicleId, expenseId, {
           liters: parsedLiters!,
           odometerKm: parsedOdometer!,
@@ -211,6 +214,7 @@ export function FuelSection({ expense, canEdit }: Props) {
           placeholder="40,5"
           placeholderTextColor={theme.colors.textTertiary}
         />
+        <Text style={styles.optionalHint}>{t('vehicles.fuelOptionalHint')}</Text>
         <Text style={styles.fieldLabel}>{t('vehicles.odometer')}</Text>
         <TextInput
           style={styles.input}
@@ -300,6 +304,7 @@ const createStyles = (theme: Theme) => ({
   chipSelected: { backgroundColor: theme.colors.primary, borderColor: theme.colors.primary },
   chipText: { ...theme.textStyles.bodySm, color: theme.colors.textPrimary },
   chipTextSelected: { color: theme.colors.textInverse },
+  optionalHint: { ...theme.textStyles.caption, color: theme.colors.textTertiary, marginTop: -theme.spacing[2], marginBottom: theme.spacing[3] },
   switchRow: {
     flexDirection: 'row' as const,
     alignItems: 'center' as const,

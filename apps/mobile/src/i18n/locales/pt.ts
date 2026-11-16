@@ -2750,6 +2750,7 @@ export default {
     loadFailed: "Não foi possível carregar o seu património.",
   },
   vehicles: {
+    fuelOptionalHint: "Sem litros nem conta-quilómetros? Deixe ambos vazios — conta como custo de combustível, só não no consumo.",
     carSection: "Carro",
     markAsCarCost: "Marcar como custo do carro",
     removeCarCost: "Não é custo do carro",

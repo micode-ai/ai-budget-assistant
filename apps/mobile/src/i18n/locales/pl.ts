@@ -2766,6 +2766,7 @@ export default {
     loadFailed: "Nie udało się wczytać majątku.",
   },
   vehicles: {
+    fuelOptionalHint: "Brak litrów lub przebiegu? Zostaw oba pola puste — to koszt paliwa, tylko bez liczenia spalania.",
     carSection: "Samochód",
     markAsCarCost: "Oznacz jako koszt auta",
     removeCarCost: "To nie koszt auta",
