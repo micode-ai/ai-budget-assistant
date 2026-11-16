@@ -2796,6 +2796,11 @@ export default {
     notSyncedYet: "Diese Ausgabe ist noch nicht auf dem Server. Versuche es nach der Synchronisierung erneut.",
   },
   children: {
+    categoriesTitle: "Kategorien dieses Kindes",
+    categoriesHint: "Ausgaben in diesen Kategorien werden diesem Kind automatisch zugeordnet — auch frühere. Von Hand zugeordnete bleiben, wie sie sind.",
+    categoriesFailed: "Kategorien konnten nicht geladen werden. Prüfe die Verbindung.",
+    categoriesSavedTitle: "Kategorien gespeichert",
+    categoriesSaved: "Diesem Kind zugeordnet: {{attributed}}. Freigegeben: {{released}}.",
     accountNote: "Kinder des Kontos „{{account}}“. Jedes Konto hat seine eigene Liste.",
     delete: "Kind löschen",
     deleteTitle: "{{name}} löschen?",

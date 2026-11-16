@@ -1572,6 +1572,8 @@ model Child {
   name                 String
   color                String?
   archivedAt           DateTime? @map("archived_at")
+  /// Expense categories (server PKs) whose expenses belong to this child (ABA-802).
+  categoryIds          String[]  @default([]) @map("category_ids")
   isDeleted            Boolean   @default(false) @map("is_deleted")
   syncVersion          Int       @default(0) @map("sync_version")
   encryptedPayload     String?   @map("encrypted_payload")
@@ -1597,6 +1599,8 @@ model ExpenseChild {
   expenseId   String   @map("expense_id")
   childId     String   @map("child_id")
   share       Decimal  @default(1) @db.Decimal(5, 4)
+  /// null = set by a person; 'category' = by the child's category rule (ABA-802), which may undo it.
+  source      String?
   isDeleted   Boolean  @default(false) @map("is_deleted")
   syncVersion Int      @default(0) @map("sync_version")
   createdAt   DateTime @default(now()) @map("created_at")

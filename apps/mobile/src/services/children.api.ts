@@ -56,6 +56,22 @@ export const childrenApi = {
     });
   },
 
+  /** The child's expense categories (ABA-802); `matchIds` holds every id spelling to compare with. */
+  getChildCategories(id: string): Promise<{ categoryIds: string[]; matchIds: string[] }> {
+    return httpClient.request(`/children/${encodeURIComponent(id)}/categories`);
+  },
+
+  /** Replaces them; the server attributes matching expenses at once and says how many. */
+  setChildCategories(
+    id: string,
+    categoryIds: string[],
+  ): Promise<{ categoryIds: string[]; matchIds: string[]; attributed: number; released: number }> {
+    return httpClient.request(`/children/${encodeURIComponent(id)}/categories`, {
+      method: 'PUT',
+      body: JSON.stringify({ categoryIds }),
+    });
+  },
+
   /** Only a child with nothing attributed; a 409 `CHILD_IN_USE` otherwise (ABA-800). */
   deleteChild(id: string): Promise<{ success: boolean }> {
     return httpClient.request<{ success: boolean }>(`/children/${encodeURIComponent(id)}`, { method: 'DELETE' });

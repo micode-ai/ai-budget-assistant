@@ -2792,6 +2792,11 @@ export default {
     notSyncedYet: "Esta despesa ainda não chegou ao servidor. Tente de novo depois da sincronização.",
   },
   children: {
+    categoriesTitle: "Categorias deste filho",
+    categoriesHint: "As despesas destas categorias vão para este filho automaticamente — inclusive as anteriores. As atribuídas à mão continuam como estão.",
+    categoriesFailed: "Não foi possível carregar as categorias. Verifique a conexão.",
+    categoriesSavedTitle: "Categorias salvas",
+    categoriesSaved: "Atribuídas a este filho: {{attributed}}. Liberadas: {{released}}.",
     accountNote: "Filhos da conta \"{{account}}\". Cada conta tem a sua própria lista.",
     delete: "Excluir filho",
     deleteTitle: "Excluir {{name}}?",

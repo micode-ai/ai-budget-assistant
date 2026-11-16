@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, ActivityIndicator, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import type { Child } from '@budget/shared-types';
@@ -10,6 +10,10 @@ import { MoveToAccountPicker } from '@/components/settings/MoveToAccountPicker';
 import { useAccountStore } from '@/stores/accountStore';
 import { CHILD_NAME_MAX, ChildWriteError, useChildStore } from '@/stores/childStore';
 import { useAccountChildren } from '@/hooks/useAccountChildren';
+import { useCategoryStore } from '@/stores/categoryStore';
+import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
+import { hydrateTransactions } from '@/stores/hydrateTransactions';
+import { api } from '@/services/api';
 import { useTheme, useStyles, type Theme } from '@/theme';
 
 /** Stable accessible-name id for the sheet's title (only one instance is ever mounted). */
@@ -60,6 +64,15 @@ export function ChildrenSettings() {
   const [selectedColor, setSelectedColor] = useState(PRESET_COLORS[0]);
   const [isSaving, setIsSaving] = useState(false);
   const [showArchived, setShowArchived] = useState(false);
+  // The child's expense categories (ABA-802): loaded when the sheet opens, online only.
+  const allCategories = useCategoryStore((s) => s.categories);
+  const expenseCategories = allCategories
+    .filter((c) => c.type === 'expense' && !(c as { isDeleted?: boolean }).isDeleted)
+    .map((c) => ({ id: c.id, label: getCategoryDisplayName(c, t) }))
+    .sort((a, b) => a.label.localeCompare(b.label));
+  const [catState, setCatState] = useState<'idle' | 'loading' | 'ready' | 'failed'>('idle');
+  const [initialCats, setInitialCats] = useState<string[]>([]);
+  const [selectedCats, setSelectedCats] = useState<string[]>([]);
 
   const openCreate = () => {
     setEditing(null);
@@ -73,7 +86,24 @@ export function ChildrenSettings() {
     setName(child.name);
     setSelectedColor(child.color || PRESET_COLORS[0]);
     setModalVisible(true);
+    setCatState('loading');
+    api
+      .getChildCategories(child.id)
+      .then(({ matchIds }) => {
+        // Select the app's own spelling of each category (device id or server PK).
+        const chosen = expenseCategories.filter((c) => matchIds.includes(c.id)).map((c) => c.id);
+        setInitialCats(chosen);
+        setSelectedCats(chosen);
+        setCatState('ready');
+      })
+      .catch((err) => {
+        console.warn('[children] categories unavailable', err);
+        setCatState('failed');
+      });
   };
+
+  const toggleCat = (id: string) =>
+    setSelectedCats((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
 
   const closeModal = () => {
     setModalVisible(false);
@@ -146,6 +176,20 @@ export function ChildrenSettings() {
       if (editing) {
         if (trimmed !== editing.name) await renameChild(editing.id, trimmed);
         if (selectedColor !== editing.color) await setChildColor(editing.id, selectedColor);
+        const catsChanged =
+          catState === 'ready' &&
+          (selectedCats.length !== initialCats.length || selectedCats.some((c) => !initialCats.includes(c)));
+        if (catsChanged) {
+          const res = await api.setChildCategories(editing.id, selectedCats);
+          // The links were written on the server; bring them to this device.
+          void hydrateTransactions({ force: true });
+          if (res.attributed > 0 || res.released > 0) {
+            showAlert(
+              t('children.categoriesSavedTitle'),
+              t('children.categoriesSaved', { attributed: res.attributed, released: res.released }),
+            );
+          }
+        }
       } else {
         await createChild(trimmed, selectedColor);
       }
@@ -301,6 +345,33 @@ export function ChildrenSettings() {
           maxLength={CHILD_NAME_MAX}
         />
 
+        {editing && (
+          <View style={styles.catBlock}>
+            <Text style={styles.catTitle}>{t('children.categoriesTitle')}</Text>
+            <Text style={styles.catHint}>{t('children.categoriesHint')}</Text>
+            {catState === 'loading' && <ActivityIndicator color={theme.colors.primary} />}
+            {catState === 'failed' && <Text style={styles.catHint}>{t('children.categoriesFailed')}</Text>}
+            {catState === 'ready' && (
+              <ScrollView style={styles.catScroll} contentContainerStyle={styles.catChips} nestedScrollEnabled>
+                {expenseCategories.map((c) => {
+                  const on = selectedCats.includes(c.id);
+                  return (
+                    <TouchableOpacity
+                      key={c.id}
+                      style={[styles.catChip, on && styles.catChipOn]}
+                      onPress={canEdit ? () => toggleCat(c.id) : undefined}
+                      accessibilityRole="checkbox"
+                      accessibilityState={{ checked: on }}
+                    >
+                      <Text style={[styles.catChipText, on && styles.catChipTextOn]}>{c.label}</Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </ScrollView>
+            )}
+          </View>
+        )}
+
         <View style={styles.colorGrid}>
           {PRESET_COLORS.map((color) => (
             <TouchableOpacity
@@ -383,6 +454,21 @@ const createStyles = (theme: Theme) => ({
   },
   stateBox: { alignItems: 'center' as const, paddingVertical: theme.spacing[2], gap: theme.spacing[2] },
   retry: { ...theme.textStyles.bodyMedium, color: theme.colors.primary },
+  catBlock: { marginBottom: theme.spacing[4], gap: theme.spacing[1] },
+  catTitle: { ...theme.textStyles.bodyMedium, color: theme.colors.textPrimary },
+  catHint: { ...theme.textStyles.caption, color: theme.colors.textTertiary },
+  catScroll: { maxHeight: 180, marginTop: theme.spacing[1] },
+  catChips: { flexDirection: 'row' as const, flexWrap: 'wrap' as const, gap: theme.spacing[2] },
+  catChip: {
+    paddingVertical: theme.spacing[1.5],
+    paddingHorizontal: theme.spacing[3],
+    borderRadius: theme.borderRadius.full,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+  },
+  catChipOn: { backgroundColor: theme.colors.primary, borderColor: theme.colors.primary },
+  catChipText: { ...theme.textStyles.bodySm, color: theme.colors.textPrimary },
+  catChipTextOn: { color: theme.colors.textInverse },
   accountNote: {
     ...theme.textStyles.bodySm,
     color: theme.colors.textSecondary,

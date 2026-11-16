@@ -2796,6 +2796,11 @@ export default {
     notSyncedYet: "Deze uitgave staat nog niet op de server. Probeer het opnieuw na de synchronisatie.",
   },
   children: {
+    categoriesTitle: "Categorieën van dit kind",
+    categoriesHint: "Uitgaven in deze categorieën gaan automatisch naar dit kind — ook eerdere. Met de hand toegewezen uitgaven blijven zoals ze zijn.",
+    categoriesFailed: "De categorieën konden niet worden geladen. Controleer de verbinding.",
+    categoriesSavedTitle: "Categorieën opgeslagen",
+    categoriesSaved: "Aan dit kind toegewezen: {{attributed}}. Vrijgegeven: {{released}}.",
     accountNote: "Kinderen van het account \"{{account}}\". Elk account heeft een eigen lijst.",
     delete: "Kind verwijderen",
     deleteTitle: "{{name}} verwijderen?",

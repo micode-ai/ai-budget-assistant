@@ -137,3 +137,11 @@ export class MoveChildDto {
   @IsNumber()
   encryptionKeyVersion?: number;
 }
+
+/** A child's expense categories (ABA-802): category ids (server PK or the device's clientId). */
+export class SetChildCategoriesDto {
+  @IsArray()
+  @ArrayMaxSize(50)
+  @IsString({ each: true })
+  categoryIds: string[];
+}

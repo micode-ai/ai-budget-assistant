@@ -96,6 +96,14 @@ ciphertext under the TARGET's key (`maybeEncrypt(..., targetAccountId)`) for an 
 stores `enc:<clientId>` there and never sees plaintext. Product rules are dropped (account-scoped). The local
 `children` upsert follows `account_id`, or a moved child would come back into the source account on a phone.
 
+**Category rule** ([ABA-802](https://github.com/micode-ai/ai-budget-assistant/issues/840)). `Child.categoryIds` claims expense categories; `applyChildCategoryRules` turns
+that into `ExpenseChild` rows with `source = 'category'` so every consumer (totals, statement, coverage,
+device sync) reads them unchanged. It never touches an expense a person decided about — a `source = null`
+row, live OR soft-deleted, or a line with a child — and every manual write path (`setExpenseChildren`,
+`setItemChild`, the `expense_child` sync handler) must write `source: null`, or the rule would undo a
+person's removal. Applied after expense create/update/bulk and sync pushes, plus a daily cron for imports
+and crons. Split receipts are skipped on purpose.
+
 ## Invariants
 
 - **No model call.** Attribution, suggestions and 800+ detection are rules. Nothing in this feature

@@ -12,7 +12,8 @@ import { PrismaService } from '../../database/prisma.service';
 import { logFireAndForget } from '../../common/utils/fire-and-forget';
 import { touchExpenses } from '../expenses/expense-touch.util';
 import { ChildProductRulesService } from './child-product-rules.service';
-import { CreateChildDto, MoveChildDto, SetExpenseChildrenDto, UpdateChildDto } from './dto';
+import { CreateChildDto, MoveChildDto, SetChildCategoriesDto, SetExpenseChildrenDto, UpdateChildDto } from './dto';
+import { applyChildCategoryRules, type ApplyResult } from './child-category-rules.util';
 
 /** Child as returned to clients; the ciphertext rides along so an E2EE device can decrypt the name. */
 export type ChildResponse = Child & {
@@ -135,6 +136,59 @@ export class ChildrenService {
    * report never loses rows — the caller gets a 409 `CHILD_IN_USE` and offers
    * Archive. Soft delete: a later create of the same name revives the row.
    */
+  /** The child's expense categories (server PKs) — ABA-802. */
+  async getCategories(accountId: string, id: string): Promise<{ categoryIds: string[]; matchIds: string[] }> {
+    const child = await this.findOne(accountId, id);
+    const categoryIds = child.categoryIds ?? [];
+    return { categoryIds, matchIds: await this.categoryMatchIds(categoryIds) };
+  }
+
+  /**
+   * Every spelling the app may hold for these categories — server PK and the
+   * device's clientId — so a phone that still knows a category by its local id
+   * shows it selected (category-id-resolution).
+   */
+  private async categoryMatchIds(pks: string[]): Promise<string[]> {
+    if (pks.length === 0) return [];
+    const rows = await this.prisma.category.findMany({ where: { id: { in: pks } }, select: { id: true, clientId: true } });
+    return [...new Set(rows.flatMap((r) => [r.id, ...(r.clientId ? [r.clientId] : [])]))];
+  }
+
+  /**
+   * Replaces the child's expense categories and applies the rule at once
+   * (ABA-802): existing expenses in those categories are attributed, and rule
+   * links of categories taken away are released. Each id may be the server PK
+   * or a device's clientId; only a live EXPENSE category this account can see
+   * (its own or a global system one) is accepted. Returns what changed.
+   */
+  async setCategories(
+    accountId: string,
+    id: string,
+    dto: SetChildCategoriesDto,
+  ): Promise<{ categoryIds: string[]; matchIds: string[] } & ApplyResult> {
+    const child = await this.findOne(accountId, id);
+    const resolved: string[] = [];
+    for (const raw of dto.categoryIds) {
+      const cat = await this.prisma.category.findFirst({
+        where: {
+          OR: [{ id: raw }, { clientId: raw }],
+          AND: [{ OR: [{ accountId }, { accountId: null }] }],
+          isDeleted: false,
+          type: 'expense',
+        },
+        select: { id: true },
+      });
+      if (!cat) throw new BadRequestException('Unknown expense category');
+      if (!resolved.includes(cat.id)) resolved.push(cat.id);
+    }
+    await this.prisma.child.update({
+      where: { id: child.id },
+      data: { categoryIds: resolved, syncVersion: { increment: 1 } },
+    });
+    const result = await applyChildCategoryRules(this.prisma, accountId);
+    return { categoryIds: resolved, matchIds: await this.categoryMatchIds(resolved), ...result };
+  }
+
   /** Costs attributed to a child: whole-expense links, receipt lines and benefit incomes, live only. */
   private async attributionCount(childId: string): Promise<number> {
     const [links, items, incomes] = await Promise.all([
@@ -274,15 +328,17 @@ export class ChildrenService {
     const shares = this.validateShares(childPks.length, dto.shares);
 
     await this.prisma.$transaction(async (tx: PrismaClient) => {
+      // `source: null` = a person decided; a category rule never overrides it (ABA-802),
+      // and that includes a removal (the soft-deleted row keeps saying so).
       await tx.expenseChild.updateMany({
         where: { expenseId: expensePk, isDeleted: false, childId: { notIn: childPks } },
-        data: { isDeleted: true, syncVersion: { increment: 1 } },
+        data: { isDeleted: true, source: null, syncVersion: { increment: 1 } },
       });
       for (let i = 0; i < childPks.length; i++) {
         await tx.expenseChild.upsert({
           where: { expenseId_childId: { expenseId: expensePk, childId: childPks[i] } },
-          create: { expenseId: expensePk, childId: childPks[i], share: shares[i] },
-          update: { share: shares[i], isDeleted: false, syncVersion: { increment: 1 } },
+          create: { expenseId: expensePk, childId: childPks[i], share: shares[i], source: null },
+          update: { share: shares[i], isDeleted: false, source: null, syncVersion: { increment: 1 } },
         });
       }
       if (childPks.length > 0) {
@@ -329,7 +385,7 @@ export class ChildrenService {
       if (childPk) {
         await tx.expenseChild.updateMany({
           where: { expenseId: expensePk, isDeleted: false },
-          data: { isDeleted: true, syncVersion: { increment: 1 } },
+          data: { isDeleted: true, source: null, syncVersion: { increment: 1 } },
         });
       }
       await touchExpenses(tx, accountId, { id: expensePk });

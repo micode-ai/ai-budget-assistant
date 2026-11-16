@@ -2796,6 +2796,11 @@ export default {
     notSyncedYet: "Cette dépense n'est pas encore sur le serveur. Réessayez après la synchronisation.",
   },
   children: {
+    categoriesTitle: "Catégories de cet enfant",
+    categoriesHint: "Les dépenses de ces catégories sont attribuées automatiquement à cet enfant, y compris les anciennes. Celles attribuées à la main ne changent pas.",
+    categoriesFailed: "Impossible de charger les catégories. Vérifiez la connexion.",
+    categoriesSavedTitle: "Catégories enregistrées",
+    categoriesSaved: "Attribuées à cet enfant : {{attributed}}. Libérées : {{released}}.",
     accountNote: "Enfants du compte « {{account}} ». Chaque compte a sa propre liste.",
     delete: "Supprimer l'enfant",
     deleteTitle: "Supprimer {{name}} ?",

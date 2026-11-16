@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ChildrenController, ExpenseChildrenController } from './children.controller';
 import { ChildrenService } from './children.service';
+import { ChildCategoryRulesCron } from './child-category-rules.cron';
 import { ChildProductRulesService } from './child-product-rules.service';
 import { ChildStatementService } from './child-statement.service';
 import { SubscriptionsModule } from '../subscriptions/subscriptions.module';
@@ -15,7 +16,7 @@ import { CurrencyExchangeModule } from '../currency-exchange/currency-exchange.m
 @Module({
   imports: [SubscriptionsModule, CurrencyExchangeModule],
   controllers: [ChildrenController, ExpenseChildrenController],
-  providers: [ChildrenService, ChildProductRulesService, ChildStatementService],
+  providers: [ChildCategoryRulesCron, ChildrenService, ChildProductRulesService, ChildStatementService],
   exports: [ChildrenService, ChildProductRulesService],
 })
 export class ChildrenModule {}

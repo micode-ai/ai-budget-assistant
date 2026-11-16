@@ -2803,6 +2803,11 @@ export default {
     notSyncedYet: "This expense has not reached the server yet. Try again once it has synced.",
   },
   children: {
+    categoriesTitle: "Categories of this child",
+    categoriesHint: "Expenses in these categories go to this child automatically — past ones too. Ones you attributed by hand stay as they are.",
+    categoriesFailed: "Could not load the categories. Check your connection.",
+    categoriesSavedTitle: "Categories saved",
+    categoriesSaved: "Attributed to this child: {{attributed}}. Released: {{released}}.",
     accountNote: "Children of the “{{account}}” account. Each account has its own list.",
     delete: "Delete child",
     deleteTitle: "Delete {{name}}?",

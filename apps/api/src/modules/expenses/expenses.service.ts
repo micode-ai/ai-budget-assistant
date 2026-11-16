@@ -26,6 +26,7 @@ import {
   RECEIPT_PARTS_MAX_TOTAL,
   type StoredReceiptPart,
 } from './receipt-parts.util';
+import { applyChildCategoryRules } from '../children/child-category-rules.util';
 
 /**
  * CRUD orchestrator for expenses. `bulkUpdate` lives in ExpenseBulkService,
@@ -516,6 +517,10 @@ export class ExpensesService {
           scanAttestation: dto.scanAttestation,
         })
         .catch(logFireAndForget(this.logger, 'ExpensesService.onExpenseCreated'));
+      // A child's category rule attributes the new expense (ABA-802).
+      void applyChildCategoryRules(this.prisma, accountId).catch(
+        logFireAndForget(this.logger, 'ExpensesService.applyChildCategoryRules#create'),
+      );
     }
 
     return result;
@@ -834,6 +839,12 @@ export class ExpensesService {
         this.merchantRules
           .upsertRule(accountId, merchantNormalized, resolvedCategoryId)
           .catch(logFireAndForget(this.logger, 'ExpensesService.upsertMerchantRule'));
+      }
+      // A category change can bring the expense into, or out of, a child's category rule (ABA-802).
+      if (dto.categoryId !== undefined) {
+        void applyChildCategoryRules(this.prisma, accountId).catch(
+          logFireAndForget(this.logger, 'ExpensesService.applyChildCategoryRules#update'),
+        );
       }
       return updated ? this.toExpenseResponse(updated) : updated;
     });

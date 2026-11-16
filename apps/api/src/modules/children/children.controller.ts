@@ -27,6 +27,7 @@ import {
   ChildSuggestionsDto,
   CreateChildDto,
   MoveChildDto,
+  SetChildCategoriesDto,
   SetExpenseChildrenDto,
   SetItemChildDto,
   UpdateChildDto,
@@ -88,6 +89,19 @@ export class ChildrenController {
     res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
     res.setHeader('Content-Length', String(pdf.length));
     res.send(pdf);
+  }
+
+  /** The child's expense categories (ABA-802). */
+  @Get(':id/categories')
+  getCategories(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+    return this.childrenService.getCategories(req.accountId, id);
+  }
+
+  /** Replaces them and attributes the matching expenses at once (ABA-802). */
+  @Put(':id/categories')
+  @UseGuards(new ViewerBlockGuard())
+  setCategories(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() dto: SetChildCategoriesDto) {
+    return this.childrenService.setCategories(req.accountId, id, dto);
   }
 
   /** To another account the caller can edit; only a child with nothing attributed (ABA-801). */

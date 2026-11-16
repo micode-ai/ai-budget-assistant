@@ -6,6 +6,7 @@ import { invalidateExpenseChatCache } from './expense-cache.util';
 import { resolveExpenseCategoryId } from './expense-category-resolver.util';
 import { MerchantRulesService } from '../merchant-rules/merchant-rules.service';
 import { logFireAndForget } from '../../common/utils/fire-and-forget';
+import { applyChildCategoryRules } from '../children/child-category-rules.util';
 
 /**
  * Bulk expense mutations (multi-select category/tag/delete from the mobile
@@ -122,6 +123,10 @@ export class ExpenseBulkService {
       }
     }
 
+    // Recategorising or deleting in bulk moves expenses in or out of a child's category rule (ABA-802).
+    void applyChildCategoryRules(this.prisma, accountId).catch(
+      logFireAndForget(this.logger, 'ExpenseBulkService.applyChildCategoryRules'),
+    );
     return { updated: ownedIds.length };
   }
 }

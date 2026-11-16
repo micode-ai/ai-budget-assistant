@@ -167,7 +167,7 @@ describe('ChildrenService.setExpenseChildren', () => {
     // Links not in the new set are soft-deleted (resolved PKs, resolved expense PK).
     expect(prisma.expenseChild.updateMany).toHaveBeenCalledWith({
       where: { expenseId: 'exp-pk', isDeleted: false, childId: { notIn: ['child-a', 'child-b', 'child-c'] } },
-      data: { isDeleted: true, syncVersion: { increment: 1 } },
+      data: { isDeleted: true, source: null, syncVersion: { increment: 1 } },
     });
 
     // Present ones are upserted on the resolved pair with equal shares summing to 1.
@@ -241,7 +241,7 @@ describe('ChildrenService.setItemChild', () => {
     // Lines win: every whole-expense link is soft-deleted.
     expect(prisma.expenseChild.updateMany).toHaveBeenCalledWith({
       where: { expenseId: 'exp-pk', isDeleted: false },
-      data: { isDeleted: true, syncVersion: { increment: 1 } },
+      data: { isDeleted: true, source: null, syncVersion: { increment: 1 } },
     });
     // Rule keyed by normalizeProductName(canonicalName ?? description).
     expect(prisma.productChildRule.upsert).toHaveBeenCalledWith({
@@ -391,5 +391,27 @@ describe('ChildrenService.move (ABA-801)', () => {
       .rejects.toMatchObject({ response: { code: 'CHILD_IN_USE' } });
     await expect(setup({ uniqueClash: true }).service.move('acc-1', 'u-1', 'child-1', { targetAccountId: 'acc-2', name: 'Ala' }))
       .rejects.toMatchObject({ response: { code: 'NAME_TAKEN' } });
+  });
+});
+
+describe('ChildrenService.setCategories (ABA-802)', () => {
+  it('resolves device or server category ids to live expense categories of the account and applies the rule', async () => {
+    const { service, prisma } = makeService();
+    prisma.child.findFirst.mockResolvedValue(childRow());
+    prisma.category = {
+      findFirst: jest.fn(async ({ where }: any) => (where.OR[0].id === 'bad' ? null : { id: `pk-${where.OR[0].id}` })),
+      findMany: jest.fn(async () => [{ id: 'pk-c1', clientId: 'c1' }, { id: 'pk-c2', clientId: null }]),
+    };
+    prisma.child.update.mockResolvedValue(childRow());
+    prisma.child.findMany.mockResolvedValue([]); // the apply step: no rules → no-op
+    prisma.expenseChild.findMany.mockResolvedValue([]);
+
+    const res = await service.setCategories('acc-1', 'child-1', { categoryIds: ['c1', 'c1', 'c2'] });
+    expect(res).toMatchObject({ categoryIds: ['pk-c1', 'pk-c2'], matchIds: ['pk-c1', 'c1', 'pk-c2'], attributed: 0, released: 0 });
+    const where = prisma.category.findFirst.mock.calls[0][0].where;
+    expect(where).toMatchObject({ isDeleted: false, type: 'expense', AND: [{ OR: [{ accountId: 'acc-1' }, { accountId: null }] }] });
+    expect(prisma.child.update.mock.calls[0][0].data.categoryIds).toEqual(['pk-c1', 'pk-c2']);
+
+    await expect(service.setCategories('acc-1', 'child-1', { categoryIds: ['bad'] })).rejects.toThrow('Unknown expense category');
   });
 });

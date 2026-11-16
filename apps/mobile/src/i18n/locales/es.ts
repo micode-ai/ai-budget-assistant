@@ -2796,6 +2796,11 @@ export default {
     notSyncedYet: "Este gasto aún no ha llegado al servidor. Inténtalo de nuevo cuando se haya sincronizado.",
   },
   children: {
+    categoriesTitle: "Categorías de este hijo",
+    categoriesHint: "Los gastos de estas categorías se asignan a este hijo automáticamente, también los anteriores. Los que asignaste a mano no cambian.",
+    categoriesFailed: "No se pudieron cargar las categorías. Revisa la conexión.",
+    categoriesSavedTitle: "Categorías guardadas",
+    categoriesSaved: "Asignados a este hijo: {{attributed}}. Liberados: {{released}}.",
     accountNote: "Hijos de la cuenta «{{account}}». Cada cuenta tiene su propia lista.",
     delete: "Eliminar hijo",
     deleteTitle: "¿Eliminar a {{name}}?",

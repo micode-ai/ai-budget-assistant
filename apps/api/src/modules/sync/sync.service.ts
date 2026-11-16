@@ -10,6 +10,7 @@ import { SyncHandlerContext, SyncResult, ExpenseRecord, BudgetRecord, CategoryRe
 import { SYNC_ENTITY_HANDLERS } from './handlers';
 import { touchExpenses } from '../expenses/expense-touch.util';
 import { touchIncomes } from '../incomes/income-touch.util';
+import { applyChildCategoryRules } from '../children/child-category-rules.util';
 
 export type { SyncResult, ExpenseRecord, BudgetRecord, CategoryRecord } from './sync-types';
 
@@ -79,6 +80,13 @@ export class SyncService {
       void this.anomalyService
         .checkCategorySpikes(accountId, userId, Array.from(splitExpenseIds))
         .catch(logFireAndForget(this.logger, 'SyncService.checkCategorySpikes'));
+    }
+
+    // Expenses pushed from a device fall under a child's category rule too (ABA-802).
+    if (changes.some((c) => c.entityType === 'expense')) {
+      void applyChildCategoryRules(this.prisma, accountId).catch(
+        logFireAndForget(this.logger, 'SyncService.applyChildCategoryRules'),
+      );
     }
 
     // Update user's last sync timestamp

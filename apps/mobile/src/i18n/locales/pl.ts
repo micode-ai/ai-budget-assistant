@@ -2808,6 +2808,11 @@ export default {
     notSyncedYet: "Ten wydatek nie dotarł jeszcze na serwer. Spróbuj ponownie po synchronizacji.",
   },
   children: {
+    categoriesTitle: "Kategorie tego dziecka",
+    categoriesHint: "Wydatki z tych kategorii trafiają do tego dziecka automatycznie — także wcześniejsze. Przypisane ręcznie pozostają bez zmian.",
+    categoriesFailed: "Nie udało się wczytać kategorii. Sprawdź połączenie.",
+    categoriesSavedTitle: "Kategorie zapisane",
+    categoriesSaved: "Przypisano do dziecka: {{attributed}}. Zwolniono: {{released}}.",
     accountNote: "Dzieci konta „{{account}}”. Każde konto ma własną listę.",
     delete: "Usuń dziecko",
     deleteTitle: "Usunąć {{name}}?",

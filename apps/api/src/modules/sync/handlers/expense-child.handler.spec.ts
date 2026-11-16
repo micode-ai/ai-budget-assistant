@@ -56,8 +56,8 @@ describe('processExpenseChildChange', () => {
     });
     expect(prisma.expenseChild.upsert).toHaveBeenCalledWith({
       where: { expenseId_childId: { expenseId: 'exp-pk', childId: 'child-pk' } },
-      create: { expenseId: 'exp-pk', childId: 'child-pk', share: 0.5 },
-      update: { share: 0.5, isDeleted: false, syncVersion: { increment: 1 } },
+      create: { expenseId: 'exp-pk', childId: 'child-pk', share: 0.5, source: null },
+      update: { share: 0.5, isDeleted: false, source: null, syncVersion: { increment: 1 } },
     });
     // Parent bumped so change feeds re-deliver it.
     expect(prisma.expense.updateMany).toHaveBeenCalledWith({ where: { id: 'exp-pk', accountId: 'acc-1' }, data: { updatedAt: expect.any(Date) } });
@@ -80,7 +80,7 @@ describe('processExpenseChildChange', () => {
     expect(r).toMatchObject({ status: 'success' });
     expect(prisma.expenseChild.updateMany).toHaveBeenCalledWith({
       where: { expenseId: 'exp-pk', childId: 'child-pk', isDeleted: false },
-      data: { isDeleted: true, syncVersion: { increment: 1 } },
+      data: { isDeleted: true, source: null, syncVersion: { increment: 1 } },
     });
   });
 

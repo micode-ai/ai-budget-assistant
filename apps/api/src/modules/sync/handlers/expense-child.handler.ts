@@ -42,7 +42,8 @@ export async function processExpenseChildChange(
     if (expense && child) {
       await ctx.prisma.expenseChild.updateMany({
         where: { expenseId: expense.id, childId: child.id, isDeleted: false },
-        data: { isDeleted: true, syncVersion: { increment: 1 } },
+        // A person's removal: a category rule must not bring it back (ABA-802).
+        data: { isDeleted: true, source: null, syncVersion: { increment: 1 } },
       });
       await touchExpenses(ctx.prisma, accountId, { id: expense.id });
     }
@@ -62,8 +63,8 @@ export async function processExpenseChildChange(
 
   const link = await ctx.prisma.expenseChild.upsert({
     where: { expenseId_childId: { expenseId: expense.id, childId: child.id } },
-    create: { expenseId: expense.id, childId: child.id, share },
-    update: { share, isDeleted: false, syncVersion: { increment: 1 } },
+    create: { expenseId: expense.id, childId: child.id, share, source: null },
+    update: { share, isDeleted: false, source: null, syncVersion: { increment: 1 } },
   });
   await touchExpenses(ctx.prisma, accountId, { id: expense.id });
   return { entityId, status: 'success', serverId: link.id, serverVersion: link.syncVersion };
