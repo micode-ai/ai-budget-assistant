@@ -35,6 +35,12 @@ jobs:
       - name: Guard — no runtime @budget/shared-utils import in apps/api
         run: bash scripts/check-no-shared-utils-runtime-import.sh
 
+      # Dockerfile.api copies only the ROOT node_modules into the runner image, so a
+      # runtime package npm nested under apps/api/node_modules is missing in prod and
+      # the API crash-loops on "Cannot find module" (ABA-810: nodemailer, 2026-11-16).
+      - name: Guard — every apps/api runtime dependency is hoisted to the root
+        run: node scripts/check-api-deps-hoisted.js
+
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.2.0
         with:

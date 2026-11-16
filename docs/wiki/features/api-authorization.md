@@ -47,7 +47,8 @@ those guards, each found in a real defect.
 
 ## Known gaps
 Open findings from the 2026-11-16 security review:
-- Dependency upgrades (Next.js, NestJS 11, nodemailer, the MCP SDK) and container hardening (non-root, pinned images).
+- Dependency majors still open after [ABA-810](https://github.com/micode-ai/ai-budget-assistant/issues/848): NestJS 11/12 (with multer, body-parser, swagger), bcrypt 6, the next Expo SDK (expo-router, React Navigation), drizzle-orm, zod. Run audits with `--legacy-peer-deps`, as the Dockerfiles install; `apps/inbound-mail` has its own lock (`npm ci` in its image), audited by `inbound-mail-audit.yml`.
+- Container hardening (non-root, pinned images).
 - Register's 409 and login's Google-only message reveal that an address is registered.
 
 ## History
