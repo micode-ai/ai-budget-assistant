@@ -23,6 +23,11 @@ export class VehiclesController {
   }
 
   // Declared before the `:id` routes so `fuel-logs` is not captured as an id.
+  @Get('fuel-logs/:expenseId')
+  fuelLogForExpense(@Req() req: AuthenticatedRequest, @Param('expenseId') expenseId: string) {
+    return this.vehicles.findFuelLogForExpense(req.accountId, expenseId);
+  }
+
   @Delete('fuel-logs/:expenseId')
   @UseGuards(new ViewerBlockGuard())
   removeFuelLog(@Req() req: AuthenticatedRequest, @Param('expenseId') expenseId: string) {
@@ -43,7 +48,8 @@ export class VehiclesController {
 
   @Get(':id/stats')
   stats(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
-    return this.vehicles.getStats(req.accountId, id);
+    // Display currency from the user, never from a row (display-currency-conversion).
+    return this.vehicles.getStats(req.accountId, id, req.user.currencyCode || 'USD');
   }
 
   @Get(':id/fuel-logs')

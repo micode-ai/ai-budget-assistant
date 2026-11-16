@@ -17,6 +17,7 @@ import {
 import { ExpenseItemsSection } from '@/components/expenses/detail/ExpenseItemsSection';
 import { ReceiptSection } from '@/components/expenses/detail/ReceiptSection';
 import { LocationSection } from '@/components/expenses/detail/LocationSection';
+import { FuelSection } from '@/components/expenses/detail/FuelSection';
 import type { LedgerRow } from '@/features/expenses/desktopTable';
 
 /** Only one instance of this dialog is ever mounted at a time (`ExpensesDesktop`
@@ -302,6 +303,7 @@ export function ExpenseDialog({
                   onReceiptLoaded={setHasReceipt}
                 />
                 <LocationSection expense={row.expense} canEdit={canEdit} />
+                <FuelSection expense={row.expense} canEdit={canEdit} />
               </>
             )}
           </ScrollView>

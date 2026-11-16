@@ -2,10 +2,26 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { CreateVehicleDto, UpdateVehicleDto, UpsertFuelLogDto } from './dto';
 import { computeFuelStats, VehicleStats } from './fuel-stats.util';
+import { ExchangeRateService } from '../currency-exchange/exchange-rate.service';
+import { convertAmount, getRatesSafe } from '../../common/utils/fx';
+
+/** What the app shows for a fill-up: the log plus the expense it hangs on. */
+const FUEL_LOG_EXPENSE_SELECT = {
+  id: true,
+  clientId: true,
+  amount: true,
+  currencyCode: true,
+  date: true,
+  merchant: true,
+  description: true,
+} as const;
 
 @Injectable()
 export class VehiclesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly exchangeRateService: ExchangeRateService,
+  ) {}
 
   findAll(accountId: string) {
     return this.prisma.vehicle.findMany({
@@ -47,8 +63,24 @@ export class VehiclesService {
     await this.findOne(accountId, vehicleId);
     return this.prisma.fuelLog.findMany({
       where: { accountId, vehicleId, expense: { accountId, isDeleted: false } },
+      include: { expense: { select: FUEL_LOG_EXPENSE_SELECT } },
       orderBy: { odometerKm: 'desc' },
     });
+  }
+
+  /**
+   * The fill-up recorded on one expense (PK or clientId), or null — the
+   * expense screen asks this for every expense, so "none" is an answer, not a 404.
+   */
+  async findFuelLogForExpense(accountId: string, expenseIdOrClientId: string) {
+    const fuelLog = await this.prisma.fuelLog.findFirst({
+      where: {
+        accountId,
+        expense: { accountId, isDeleted: false, OR: [{ id: expenseIdOrClientId }, { clientId: expenseIdOrClientId }] },
+        vehicle: { isDeleted: false },
+      },
+    });
+    return { fuelLog };
   }
 
   async upsertFuelLog(
@@ -93,20 +125,37 @@ export class VehiclesService {
     return { success: true };
   }
 
-  async getStats(accountId: string, vehicleId: string): Promise<VehicleStats> {
+  /**
+   * Fuel stats in the caller's display currency (ABA-796). A fill-up with no
+   * known rate keeps its litres and distance but contributes no cost, and the
+   * result says `fxApproximate` — never summed unconverted.
+   */
+  async getStats(
+    accountId: string,
+    vehicleId: string,
+    baseCurrency = 'USD',
+  ): Promise<VehicleStats & { currencyCode: string; fxApproximate: boolean }> {
     await this.findOne(accountId, vehicleId);
     const logs = await this.prisma.fuelLog.findMany({
       where: { accountId, vehicleId, expense: { accountId, isDeleted: false } },
-      include: { expense: { select: { amount: true, date: true } } },
+      include: { expense: { select: { amount: true, currencyCode: true, date: true } } },
     });
-    return computeFuelStats(
-      logs.map((l) => ({
-        date: l.expense.date,
-        odometerKm: l.odometerKm,
-        liters: Number(l.liters),
-        amount: Number(l.expense.amount),
-        isFullTank: l.isFullTank,
-      })),
+    const needsFx = logs.some((l) => l.expense.currencyCode !== baseCurrency);
+    const rates = needsFx ? await getRatesSafe(this.exchangeRateService, baseCurrency) : null;
+    let fxApproximate = false;
+    const stats = computeFuelStats(
+      logs.map((l) => {
+        const converted = convertAmount(Number(l.expense.amount), l.expense.currencyCode, baseCurrency, rates);
+        if (converted === null) fxApproximate = true;
+        return {
+          date: l.expense.date,
+          odometerKm: l.odometerKm,
+          liters: Number(l.liters),
+          amount: converted ?? 0,
+          isFullTank: l.isFullTank,
+        };
+      }),
     );
+    return { ...stats, currencyCode: baseCurrency, fxApproximate };
   }
 }

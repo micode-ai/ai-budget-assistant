@@ -2150,6 +2150,16 @@ View and manage all your expense and income categories in one place.
 
 > **Note:** Deleting a category is permanent and cannot be undone.
 
+## Vehicles
+
+Access via **Settings → Reference data → Vehicles**.
+
+See what your car costs in fuel. Add a vehicle with its name and fuel type (petrol, diesel, LPG, electric, hybrid or other). Each vehicle shows its consumption per 100 km, the fuel cost per 100 km and per km in your display currency, the number of fill-ups and the distance covered. Tap **Show fill-ups** for the list.
+
+To log a fill-up, open a fuel expense: when the account has a vehicle, the expense shows a **Fill-up** section. Tap **Mark as a fill-up** and enter the amount (litres, or kWh for an electric car), the odometer reading and whether you filled the tank to the top. Consumption is measured between full tanks, so the figures appear after two full-tank fill-ups; a partial fill-up is counted into the next full one.
+
+Vehicles need an internet connection. Deleting a vehicle keeps the expenses; only the vehicle and its statistics go. Service, insurance and other car costs are not counted yet — only fuel.
+
 ## Data & Reports
 
 ### Data & Sync
@@ -7574,6 +7584,16 @@ Email обновляется мгновенно, выдаются новые т�
 
 > **Примечание:** Удаление категории необратимо.
 
+## Машины
+
+Открыть: **Настройки → Справочники → Машины**.
+
+Смотрите, сколько машина стоит в топливе. Добавьте машину с названием и видом топлива (бензин, дизель, газ, электро, гибрид или другое). Для каждой машины видны расход на 100 км, стоимость топлива на 100 км и за километр в вашей валюте отображения, число заправок и пройденное расстояние. Нажмите **Показать заправки**, чтобы увидеть список.
+
+Чтобы записать заправку, откройте трату на топливо: если у аккаунта есть машина, в трате появится блок **Заправка**. Нажмите **Отметить как заправку** и укажите количество (литры, для электромобиля — кВт·ч), показания одометра и залит ли бак до полного. Расход считается между полными баками, поэтому цифры появятся после двух заправок до полного; неполная заправка учитывается в следующей полной.
+
+Для машин нужен интернет. При удалении машины траты остаются; удаляются только машина и её статистика. Сервис, страховка и другие расходы на машину пока не учитываются — только топливо.
+
 ## Данные и отчёты
 
 ### Данные и синхронизация
@@ -12984,6 +13004,16 @@ iOS, Android, Web
 
 > **Примітка:** Видалення категорії є незворотним.
 
+## Автомобілі
+
+Відкрити: **Налаштування → Довідники → Автомобілі**.
+
+Дивіться, скільки авто коштує в пальному. Додайте авто з назвою та видом пального (бензин, дизель, газ, електро, гібрид або інше). Для кожного авто видно витрату на 100 км, вартість пального на 100 км і за кілометр у вашій валюті відображення, кількість заправок і пройдену відстань. Натисніть **Показати заправки**, щоб побачити список.
+
+Щоб записати заправку, відкрийте витрату на пальне: якщо в акаунті є авто, у витраті зʼявиться блок **Заправка**. Натисніть **Позначити як заправку** і вкажіть кількість (літри, для електромобіля — кВт·год), показання одометра та чи залито бак до повного. Витрата рахується між повними баками, тому цифри зʼявляться після двох заправок до повного; неповна заправка враховується в наступній повній.
+
+Для авто потрібен інтернет. Під час видалення авто витрати залишаються; видаляються лише авто та його статистика. Сервіс, страховка й інші витрати на авто поки не враховуються — лише пальне.
+
 ## Дані та звіти
 
 ### Дані та синхронізація
@@ -18341,6 +18371,16 @@ Przegladaj wszystkie swoje kategorie wydatkow i przychodow oraz zarzadzaj nimi w
 
 > **Uwaga:** Usuniecie kategorii jest trwale i nie mozna go cofnac.
 
+## Pojazdy
+
+Dostęp: **Ustawienia → Słowniki → Pojazdy**.
+
+Zobacz, ile kosztuje Cię paliwo do auta. Dodaj pojazd z nazwą i rodzajem paliwa (benzyna, diesel, LPG, elektryczny, hybryda lub inne). Każdy pojazd pokazuje spalanie na 100 km, koszt paliwa na 100 km i za kilometr w Twojej walucie wyświetlania, liczbę tankowań i przejechany dystans. Stuknij **Pokaż tankowania**, aby zobaczyć listę.
+
+Aby zapisać tankowanie, otwórz wydatek na paliwo: jeśli konto ma pojazd, wydatek ma sekcję **Tankowanie**. Stuknij **Oznacz jako tankowanie** i podaj ilość (litry, a w aucie elektrycznym kWh), stan licznika i czy zatankowano do pełna. Spalanie liczone jest między pełnymi bakami, więc wyniki pojawią się po dwóch tankowaniach do pełna; niepełne tankowanie wlicza się do następnego pełnego.
+
+Pojazdy wymagają połączenia z internetem. Usunięcie pojazdu zachowuje wydatki; znikają tylko pojazd i jego statystyki. Serwis, ubezpieczenie i inne koszty auta nie są jeszcze liczone — tylko paliwo.
+
 ## Dane i raporty
 
 ### Dane i synchronizacja
@@ -23697,6 +23737,16 @@ Zeige und verwalte alle deine Ausgaben- und Einnahmenkategorien an einem Ort.
 
 > **Hinweis:** Das Loschen einer Kategorie ist dauerhaft und kann nicht ruckgangig gemacht werden.
 
+## Fahrzeuge
+
+Aufruf über **Einstellungen → Stammdaten → Fahrzeuge**.
+
+Sieh, was dein Auto an Kraftstoff kostet. Lege ein Fahrzeug mit Namen und Kraftstoffart an (Benzin, Diesel, Autogas, Elektro, Hybrid oder Sonstiges). Jedes Fahrzeug zeigt den Verbrauch pro 100 km, die Kraftstoffkosten pro 100 km und pro km in deiner Anzeigewährung, die Zahl der Tankvorgänge und die gefahrene Strecke. Tippe auf **Tankvorgänge zeigen** für die Liste.
+
+Um einen Tankvorgang zu erfassen, öffne eine Kraftstoff-Ausgabe: Hat das Konto ein Fahrzeug, zeigt die Ausgabe einen Abschnitt **Tanken**. Tippe auf **Als Tankvorgang markieren** und gib die Menge (Liter, bei einem Elektroauto kWh), den Kilometerstand und an, ob du voll getankt hast. Der Verbrauch wird zwischen vollen Tanks gemessen, die Werte erscheinen also nach zwei Volltankungen; ein Teiltanken zählt zum nächsten vollen.
+
+Fahrzeuge brauchen eine Internetverbindung. Beim Löschen eines Fahrzeugs bleiben die Ausgaben erhalten; nur das Fahrzeug und seine Statistik verschwinden. Werkstatt, Versicherung und andere Autokosten werden noch nicht gezählt — nur Kraftstoff.
+
 ## Daten & Berichte
 
 ### Daten & Synchronisierung
@@ -29032,6 +29082,16 @@ Visualiza y gestiona todas tus categorias de gastos e ingresos en un solo lugar.
 
 > **Nota:** Eliminar una categoria es permanente y no se puede deshacer.
 
+## Vehículos
+
+Accede desde **Ajustes → Datos de referencia → Vehículos**.
+
+Mira lo que te cuesta el coche en combustible. Añade un vehículo con su nombre y tipo de combustible (gasolina, diésel, GLP, eléctrico, híbrido u otro). Cada vehículo muestra el consumo por 100 km, el coste de combustible por 100 km y por km en tu moneda de visualización, el número de repostajes y la distancia recorrida. Toca **Mostrar repostajes** para ver la lista.
+
+Para registrar un repostaje, abre un gasto de combustible: si la cuenta tiene un vehículo, el gasto muestra una sección **Repostaje**. Toca **Marcar como repostaje** e indica la cantidad (litros, o kWh en un coche eléctrico), la lectura del cuentakilómetros y si llenaste el depósito. El consumo se mide entre depósitos llenos, así que las cifras aparecen tras dos repostajes con el depósito lleno; un repostaje parcial se suma al siguiente lleno.
+
+Los vehículos necesitan conexión a internet. Al eliminar un vehículo se conservan los gastos; solo desaparecen el vehículo y sus estadísticas. El taller, el seguro y otros gastos del coche aún no se cuentan: solo el combustible.
+
 ## Datos e informes
 
 ### Datos y sincronizacion
@@ -34352,6 +34412,16 @@ Visualisez et gerez toutes vos categories de depenses et de revenus en un seul e
 - **Les catégories standard suivent la langue de l'application** — une catégorie créée par l'application (comme Courses ou Consigne) s'affiche dans la langue que vous utilisez actuellement : changer de langue modifie donc son nom à l'écran sans créer de doublon. Si vous renommez vous-même une catégorie standard, votre nom est conservé dans toutes les langues. Les catégories que vous avez créées affichent toujours exactement ce que vous avez saisi.
 
 > **Note :** La suppression d'une categorie est definitive et ne peut pas etre annulee.
+
+## Véhicules
+
+Accès via **Paramètres → Données de référence → Véhicules**.
+
+Voyez ce que votre voiture coûte en carburant. Ajoutez un véhicule avec son nom et son carburant (essence, diesel, GPL, électrique, hybride ou autre). Chaque véhicule affiche la consommation aux 100 km, le coût du carburant aux 100 km et au km dans votre devise d'affichage, le nombre de pleins et la distance parcourue. Touchez **Afficher les pleins** pour la liste.
+
+Pour saisir un plein, ouvrez une dépense de carburant : si le compte a un véhicule, la dépense affiche une section **Plein**. Touchez **Marquer comme plein** et indiquez la quantité (litres, ou kWh pour une voiture électrique), le compteur et si le réservoir a été rempli à ras bord. La consommation se mesure entre deux pleins complets : les chiffres apparaissent après deux pleins complets ; un plein partiel est compté dans le suivant.
+
+Les véhicules nécessitent une connexion internet. Supprimer un véhicule conserve les dépenses ; seuls le véhicule et ses statistiques disparaissent. L'entretien, l'assurance et les autres frais ne sont pas encore comptés — seulement le carburant.
 
 ## Donnees et rapports
 
@@ -39676,6 +39746,16 @@ iOS, Android, Web
 
 > **Заўвага:** Выдаленне катэгорыі з'яўляецца незваротным.
 
+## Аўтамабілі
+
+Адкрыць: **Налады → Даведнікі → Аўтамабілі**.
+
+Глядзіце, колькі аўто каштуе ў паліве. Дадайце аўто з назвай і відам паліва (бензін, дызель, газ, электра, гібрыд або іншае). Для кожнага аўто відаць расход на 100 км, кошт паліва на 100 км і за кіламетр у вашай валюце адлюстравання, колькасць запраўак і пройдзеная адлегласць. Націсніце **Паказаць запраўкі**, каб убачыць спіс.
+
+Каб запісаць запраўку, адкрыйце выдатак на паліва: калі ў акаўнта ёсць аўто, у выдатку з’явіцца блок **Запраўка**. Націсніце **Адзначыць як запраўку** і пазначце колькасць (літры, для электрамабіля — кВт·г), паказанні адометра і ці заліты бак да поўнага. Расход лічыцца паміж поўнымі бакамі, таму лічбы з’явяцца пасля дзвюх запраўак да поўнага; няпоўная запраўка ўлічваецца ў наступнай поўнай.
+
+Для аўто патрэбны інтэрнэт. Пры выдаленні аўто выдаткі застаюцца; выдаляюцца толькі аўто і яго статыстыка. Сэрвіс, страхоўка і іншыя выдаткі на аўто пакуль не ўлічваюцца — толькі паліва.
+
 ## Даныя і справаздачы
 
 ### Даныя і сінхранізацыя
@@ -44971,6 +45051,16 @@ Bekijk en beheer al je uitgaven- en inkomstencategorieën op één plek.
 - **Standaardcategorieën volgen de taal van de app** — een categorie die de app voor je heeft gemaakt (zoals Boodschappen of Statiegeld) wordt getoond in de taal die je nu gebruikt, dus een taalwissel verandert de naam op het scherm zonder een duplicaat te maken. Geef je zelf een standaardcategorie een andere naam, dan blijft jouw naam in elke taal behouden. Categorieën die je zelf hebt gemaakt tonen altijd precies wat je hebt getypt.
 
 > **Opmerking:** Het verwijderen van een categorie is permanent en kan niet ongedaan worden gemaakt.
+
+## Voertuigen
+
+Ga naar **Instellingen → Referentiegegevens → Voertuigen**.
+
+Zie wat je auto aan brandstof kost. Voeg een voertuig toe met een naam en brandstofsoort (benzine, diesel, LPG, elektrisch, hybride of overig). Elk voertuig toont het verbruik per 100 km, de brandstofkosten per 100 km en per km in je weergavevaluta, het aantal tankbeurten en de afgelegde afstand. Tik op **Tankbeurten tonen** voor de lijst.
+
+Open een brandstofuitgave om een tankbeurt vast te leggen: heeft het account een voertuig, dan toont de uitgave een onderdeel **Tankbeurt**. Tik op **Markeren als tankbeurt** en vul de hoeveelheid in (liters, of kWh bij een elektrische auto), de kilometerstand en of je de tank vol hebt gegooid. Het verbruik wordt gemeten tussen volle tanks, dus de cijfers verschijnen na twee tankbeurten met een volle tank; een gedeeltelijke tankbeurt telt mee bij de volgende volle.
+
+Voertuigen hebben een internetverbinding nodig. Een voertuig verwijderen laat de uitgaven staan; alleen het voertuig en zijn statistieken verdwijnen. Onderhoud, verzekering en andere autokosten worden nog niet meegeteld — alleen brandstof.
 
 ## Gegevens & Rapporten
 
@@ -50398,6 +50488,16 @@ Veja e faça a gestão de todas as categorias de despesas e de receitas num só 
 - **As categorias padrão seguem o idioma da aplicação** — uma categoria criada pela aplicação (como Supermercado ou Depósito de embalagens) é mostrada no idioma que estiver a usar, por isso mudar o idioma da aplicação altera o nome no ecrã sem criar um duplicado. Se mudar o nome de uma categoria padrão, o seu nome mantém-se em todos os idiomas. As categorias que criou mostram sempre exatamente o que escreveu.
 
 > **Nota:** Eliminar uma categoria é definitivo e não pode ser anulado.
+
+## Veículos
+
+Aceda em **Definições → Dados de referência → Veículos**.
+
+Veja quanto o carro lhe custa em combustível. Adicione um veículo com nome e tipo de combustível (gasolina, gasóleo, GPL, elétrico, híbrido ou outro). Cada veículo mostra o consumo aos 100 km, o custo do combustível aos 100 km e por km na sua moeda de apresentação, o número de abastecimentos e a distância percorrida. Toque em **Mostrar abastecimentos** para ver a lista.
+
+Para registar um abastecimento, abra uma despesa de combustível: se a conta tiver um veículo, a despesa mostra uma secção **Abastecimento**. Toque em **Marcar como abastecimento** e indique a quantidade (litros, ou kWh num carro elétrico), o conta-quilómetros e se encheu o depósito. O consumo é medido entre depósitos cheios, por isso os valores aparecem após dois abastecimentos de depósito cheio; um abastecimento parcial conta para o seguinte completo.
+
+Os veículos precisam de ligação à internet. Eliminar um veículo mantém as despesas; só desaparecem o veículo e as estatísticas. Manutenção, seguro e outros custos do carro ainda não são contados — só o combustível.
 
 ## Dados e relatórios
 
@@ -55836,6 +55936,16 @@ Veja e gerencie todas as suas categorias de despesas e de receitas em um só lug
 - **As categorias padrão seguem o idioma do app** — uma categoria criada pelo app (como Mercado ou Vasilhame) aparece no idioma que você está usando, então trocar o idioma do app muda o nome na tela sem criar uma duplicata. Se você renomear uma categoria padrão, o seu nome é mantido em todos os idiomas. As categorias que você mesmo criou mostram sempre exatamente o que você digitou.
 
 > **Observação:** Excluir uma categoria é definitivo e não pode ser desfeito.
+
+## Veículos
+
+Acesse em **Configurações → Dados de referência → Veículos**.
+
+Veja quanto o carro custa em combustível. Adicione um veículo com nome e tipo de combustível (gasolina, diesel, GNV/GLP, elétrico, híbrido ou outro). Cada veículo mostra o consumo a cada 100 km, o custo do combustível a cada 100 km e por km na sua moeda de exibição, o número de abastecimentos e a distância percorrida. Toque em **Mostrar abastecimentos** para ver a lista.
+
+Para registrar um abastecimento, abra uma despesa de combustível: se a conta tiver um veículo, a despesa mostra uma seção **Abastecimento**. Toque em **Marcar como abastecimento** e informe a quantidade (litros, ou kWh em um carro elétrico), o hodômetro e se você encheu o tanque. O consumo é medido entre tanques cheios, então os números aparecem depois de dois abastecimentos de tanque cheio; um abastecimento parcial entra no próximo completo.
+
+Os veículos precisam de conexão com a internet. Excluir um veículo mantém as despesas; só o veículo e as estatísticas são excluídos. Manutenção, seguro e outros custos do carro ainda não são contados — só o combustível.
 
 ## Dados e relatórios
 

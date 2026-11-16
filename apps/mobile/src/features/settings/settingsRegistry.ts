@@ -80,6 +80,7 @@ export const SETTINGS_PANE_KEYS = [
   'tags',
   'projects',
   'children',
+  'vehicles',
   'developers',
   'connectedApps',
 ] as const;
@@ -220,6 +221,8 @@ export const SETTINGS_ENTRIES: readonly SettingsEntry[] = [
   // short rows like tags/projects, so `'form'`. Its label key is new — the
   // first this registry minted — and exists in all nine locales.
   { kind: 'pane', key: 'children', labelKey: 'children.title', route: '/settings/children', width: 'form' },
+  // Vehicles and what they cost in fuel (ABA-796): cards with three figures each, `'form'` like children.
+  { kind: 'pane', key: 'vehicles', labelKey: 'vehicles.title', route: '/settings/vehicles', width: 'form' },
   // Public API: the OAuth apps you registered as a developer. Last before `about`, since
   // almost nobody needs it.
   { kind: 'pane', key: 'developers', labelKey: 'developerApps.title', route: '/settings/developers', width: 'form', requiresFeature: 'publicApi' },

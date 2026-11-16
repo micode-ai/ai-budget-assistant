@@ -20,6 +20,7 @@ import {
 import { ExpenseItemsSection } from '@/components/expenses/detail/ExpenseItemsSection';
 import { ReceiptSection } from '@/components/expenses/detail/ReceiptSection';
 import { LocationSection } from '@/components/expenses/detail/LocationSection';
+import { FuelSection } from '@/components/expenses/detail/FuelSection';
 import { canMoveExpenseRow, isMirrorOwnedRow } from '@/features/groups/groupBudgetMirror';
 
 export default function ExpenseDetailScreen() {
@@ -316,6 +317,9 @@ export default function ExpenseDetailScreen() {
 
         {/* Location (map card / add-location affordance) */}
         <LocationSection expense={expense} canEdit={canEdit} />
+
+        {/* Fill-up (only with a vehicle on the account, ABA-796) */}
+        <FuelSection expense={expense} canEdit={canEdit} />
 
         {/* Actions */}
         <View style={styles.actionsContainer}>

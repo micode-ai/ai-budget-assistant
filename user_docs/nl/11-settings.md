@@ -178,6 +178,16 @@ Bekijk en beheer al je uitgaven- en inkomstencategorieën op één plek.
 
 > **Opmerking:** Het verwijderen van een categorie is permanent en kan niet ongedaan worden gemaakt.
 
+## Voertuigen
+
+Ga naar **Instellingen → Referentiegegevens → Voertuigen**.
+
+Zie wat je auto aan brandstof kost. Voeg een voertuig toe met een naam en brandstofsoort (benzine, diesel, LPG, elektrisch, hybride of overig). Elk voertuig toont het verbruik per 100 km, de brandstofkosten per 100 km en per km in je weergavevaluta, het aantal tankbeurten en de afgelegde afstand. Tik op **Tankbeurten tonen** voor de lijst.
+
+Open een brandstofuitgave om een tankbeurt vast te leggen: heeft het account een voertuig, dan toont de uitgave een onderdeel **Tankbeurt**. Tik op **Markeren als tankbeurt** en vul de hoeveelheid in (liters, of kWh bij een elektrische auto), de kilometerstand en of je de tank vol hebt gegooid. Het verbruik wordt gemeten tussen volle tanks, dus de cijfers verschijnen na twee tankbeurten met een volle tank; een gedeeltelijke tankbeurt telt mee bij de volgende volle.
+
+Voertuigen hebben een internetverbinding nodig. Een voertuig verwijderen laat de uitgaven staan; alleen het voertuig en zijn statistieken verdwijnen. Onderhoud, verzekering en andere autokosten worden nog niet meegeteld — alleen brandstof.
+
 ## Gegevens & Rapporten
 
 ### Gegevens & Synchronisatie

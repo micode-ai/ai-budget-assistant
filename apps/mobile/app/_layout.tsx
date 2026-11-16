@@ -582,6 +582,13 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="settings/vehicles"
+          options={{
+            headerShown: settingsHeaderShown('settings/vehicles'),
+            title: t('vehicles.title'),
+          }}
+        />
+        <Stack.Screen
           name="settings/reference"
           options={{
             headerShown: true,

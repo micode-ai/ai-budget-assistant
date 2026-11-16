@@ -5432,6 +5432,16 @@ Zeige und verwalte alle deine Ausgaben- und Einnahmenkategorien an einem Ort.
 
 > **Hinweis:** Das Loschen einer Kategorie ist dauerhaft und kann nicht ruckgangig gemacht werden.
 
+## Fahrzeuge
+
+Aufruf über **Einstellungen → Stammdaten → Fahrzeuge**.
+
+Sieh, was dein Auto an Kraftstoff kostet. Lege ein Fahrzeug mit Namen und Kraftstoffart an (Benzin, Diesel, Autogas, Elektro, Hybrid oder Sonstiges). Jedes Fahrzeug zeigt den Verbrauch pro 100 km, die Kraftstoffkosten pro 100 km und pro km in deiner Anzeigewährung, die Zahl der Tankvorgänge und die gefahrene Strecke. Tippe auf **Tankvorgänge zeigen** für die Liste.
+
+Um einen Tankvorgang zu erfassen, öffne eine Kraftstoff-Ausgabe: Hat das Konto ein Fahrzeug, zeigt die Ausgabe einen Abschnitt **Tanken**. Tippe auf **Als Tankvorgang markieren** und gib die Menge (Liter, bei einem Elektroauto kWh), den Kilometerstand und an, ob du voll getankt hast. Der Verbrauch wird zwischen vollen Tanks gemessen, die Werte erscheinen also nach zwei Volltankungen; ein Teiltanken zählt zum nächsten vollen.
+
+Fahrzeuge brauchen eine Internetverbindung. Beim Löschen eines Fahrzeugs bleiben die Ausgaben erhalten; nur das Fahrzeug und seine Statistik verschwinden. Werkstatt, Versicherung und andere Autokosten werden noch nicht gezählt — nur Kraftstoff.
+
 ## Daten & Berichte
 
 ### Daten & Synchronisierung

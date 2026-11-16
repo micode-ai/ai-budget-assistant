@@ -2689,6 +2689,16 @@ Veja e faça a gestão de todas as categorias de despesas e de receitas num só 
 
 > **Nota:** Eliminar uma categoria é definitivo e não pode ser anulado.
 
+## Veículos
+
+Aceda em **Definições → Dados de referência → Veículos**.
+
+Veja quanto o carro lhe custa em combustível. Adicione um veículo com nome e tipo de combustível (gasolina, gasóleo, GPL, elétrico, híbrido ou outro). Cada veículo mostra o consumo aos 100 km, o custo do combustível aos 100 km e por km na sua moeda de apresentação, o número de abastecimentos e a distância percorrida. Toque em **Mostrar abastecimentos** para ver a lista.
+
+Para registar um abastecimento, abra uma despesa de combustível: se a conta tiver um veículo, a despesa mostra uma secção **Abastecimento**. Toque em **Marcar como abastecimento** e indique a quantidade (litros, ou kWh num carro elétrico), o conta-quilómetros e se encheu o depósito. O consumo é medido entre depósitos cheios, por isso os valores aparecem após dois abastecimentos de depósito cheio; um abastecimento parcial conta para o seguinte completo.
+
+Os veículos precisam de ligação à internet. Eliminar um veículo mantém as despesas; só desaparecem o veículo e as estatísticas. Manutenção, seguro e outros custos do carro ainda não são contados — só o combustível.
+
 ## Dados e relatórios
 
 ### Dados e sincronização

@@ -165,6 +165,16 @@ Visualisez et gerez toutes vos categories de depenses et de revenus en un seul e
 
 > **Note :** La suppression d'une categorie est definitive et ne peut pas etre annulee.
 
+## Véhicules
+
+Accès via **Paramètres → Données de référence → Véhicules**.
+
+Voyez ce que votre voiture coûte en carburant. Ajoutez un véhicule avec son nom et son carburant (essence, diesel, GPL, électrique, hybride ou autre). Chaque véhicule affiche la consommation aux 100 km, le coût du carburant aux 100 km et au km dans votre devise d'affichage, le nombre de pleins et la distance parcourue. Touchez **Afficher les pleins** pour la liste.
+
+Pour saisir un plein, ouvrez une dépense de carburant : si le compte a un véhicule, la dépense affiche une section **Plein**. Touchez **Marquer comme plein** et indiquez la quantité (litres, ou kWh pour une voiture électrique), le compteur et si le réservoir a été rempli à ras bord. La consommation se mesure entre deux pleins complets : les chiffres apparaissent après deux pleins complets ; un plein partiel est compté dans le suivant.
+
+Les véhicules nécessitent une connexion internet. Supprimer un véhicule conserve les dépenses ; seuls le véhicule et ses statistiques disparaissent. L'entretien, l'assurance et les autres frais ne sont pas encore comptés — seulement le carburant.
+
 ## Donnees et rapports
 
 ### Donnees et synchronisation

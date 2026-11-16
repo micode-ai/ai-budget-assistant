@@ -178,6 +178,16 @@ View and manage all your expense and income categories in one place.
 
 > **Note:** Deleting a category is permanent and cannot be undone.
 
+## Vehicles
+
+Access via **Settings → Reference data → Vehicles**.
+
+See what your car costs in fuel. Add a vehicle with its name and fuel type (petrol, diesel, LPG, electric, hybrid or other). Each vehicle shows its consumption per 100 km, the fuel cost per 100 km and per km in your display currency, the number of fill-ups and the distance covered. Tap **Show fill-ups** for the list.
+
+To log a fill-up, open a fuel expense: when the account has a vehicle, the expense shows a **Fill-up** section. Tap **Mark as a fill-up** and enter the amount (litres, or kWh for an electric car), the odometer reading and whether you filled the tank to the top. Consumption is measured between full tanks, so the figures appear after two full-tank fill-ups; a partial fill-up is counted into the next full one.
+
+Vehicles need an internet connection. Deleting a vehicle keeps the expenses; only the vehicle and its statistics go. Service, insurance and other car costs are not counted yet — only fuel.
+
 ## Data & Reports
 
 ### Data & Sync

@@ -58,6 +58,12 @@ export default function ReferenceDataScreen() {
       description: t('children.settingsDesc'),
       route: '/settings/children',
     },
+    {
+      icon: 'car-outline',
+      label: t('vehicles.title'),
+      description: t('vehicles.settingsDesc'),
+      route: '/settings/vehicles',
+    },
   ];
 
   return (

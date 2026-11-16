@@ -30,6 +30,7 @@ import { groupsApi } from './groups.api';
 import { inboundMailApi } from './inboundMail.api';
 import { developerAppsApi } from './developerApps.api';
 import { childrenApi } from './children.api';
+import { vehiclesApi } from './vehicles.api';
 
 export const api = {
   setAccountIdGetter: (getter: () => string | null) => httpClient.setAccountIdGetter(getter),
@@ -65,6 +66,7 @@ export const api = {
   ...inboundMailApi,
   ...developerAppsApi,
   ...childrenApi,
+  ...vehiclesApi,
 };
 
 /**
