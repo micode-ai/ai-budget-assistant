@@ -353,6 +353,7 @@ Newest last within each section.
 - 2026-11-16 · [ABA-787](https://github.com/micode-ai/ai-budget-assistant/issues/825) — the forecast returns irregular income per day apart (`irregularDailyIncome`), added on the device only on opt-in; features/cash-flow-forecast.
 - 2026-11-16 · [ABA-788](https://github.com/micode-ai/ai-budget-assistant/issues/826) — a one-time data migration links pre-ABA-776 renewals to their subscription (unique name+amount+currency match, updated_at bumped for device pulls); features/subscription-manager, features/analytics-cash-flow.
 - 2026-11-16 · [ABA-789](https://github.com/micode-ai/ai-budget-assistant/issues/827) — Safe-to-Spend's month-end horizon follows the account's financial month, server and offline; features/safe-to-spend.
+- 2026-11-16 · [ABA-790](https://github.com/micode-ai/ai-budget-assistant/issues/828) — Fat Finder's report month and its three-month history follow the account's financial month; analytics-insights.
 
 ## Queries
 

@@ -85,6 +85,25 @@ describe('FatFinderService', () => {
     });
   });
 
+  describe('financial month (ABA-790)', () => {
+    it('reads the calendar month and the three before it without an anchor day', async () => {
+      deps.prisma.expense.findMany.mockResolvedValueOnce([]);
+      const res = await service.generateReport('acc-1', 'en', true, undefined, 7, 2026);
+      const where = deps.prisma.expense.findMany.mock.calls[0][0].where;
+      expect(where.date).toEqual({ gte: new Date(2026, 3, 1), lte: new Date(2026, 6, 31) });
+      expect(res.report.periodStart).toBe(new Date(2026, 6, 1).toISOString());
+    });
+
+    it('reads the anchored month named by its start, and the three anchored months before it', async () => {
+      deps.prisma.expense.findMany.mockResolvedValueOnce([]);
+      const res = await service.generateReport('acc-1', 'en', true, undefined, 7, 2026, 'USD', 10);
+      const where = deps.prisma.expense.findMany.mock.calls[0][0].where;
+      expect(where.date).toEqual({ gte: new Date(2026, 3, 10), lte: new Date(2026, 7, 9) });
+      expect(res.report.periodStart).toBe(new Date(2026, 6, 10).toISOString());
+      expect(res.report.periodEnd).toBe(new Date(2026, 7, 9).toISOString());
+    });
+  });
+
   describe('cache hit', () => {
     it('returns the cached report without calling OpenAI', async () => {
       const cached = {

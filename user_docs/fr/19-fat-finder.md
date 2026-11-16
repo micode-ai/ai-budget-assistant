@@ -6,6 +6,8 @@
 
 Le **Fat Finder** passe en revue 3 mois de votre historique de transactions, detecte les tendances de depenses et genere un rapport mettant en evidence les postes ou vous pourriez economiser. Chaque constat inclut des montants precis, des niveaux de gravite et des suggestions concretes.
 
+Si votre compte a un **Mois financier** (par exemple à partir du jour de paie, le 10), le rapport couvre cette période — *octobre* va du 10 octobre au 9 novembre, avec les dates sous le nom du mois — et les trois mois précédents sont aussi des mois financiers.
+
 ## Comment y acceder
 
 - **Carte du tableau de bord** — affiche les résultats Fat Finder mis en cache. Appuyez pour ouvrir le rapport complet et lancer une nouvelle analyse.

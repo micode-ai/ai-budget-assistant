@@ -11,6 +11,8 @@ import { getIntlLocale } from '@/i18n';
 import type { Currency } from '@budget/shared-types';
 import { useAccountStore } from '@/stores/accountStore';
 import { MonthPicker } from '@/components/fat-finder/MonthPicker';
+import { useFinancialMonth } from '@/hooks/useFinancialMonth';
+import { financialMonth, formatFinancialMonth } from '@budget/shared-utils';
 import { FatFinderHeader } from '@/components/fat-finder/FatFinderHeader';
 import { FatFinderFooter } from '@/components/fat-finder/FatFinderFooter';
 import { FindingCard } from '@/components/fat-finder/FindingCard';
@@ -35,12 +37,20 @@ export default function FatFinderScreen() {
 
   const { confirmAiUsage } = useAiCostConfirmation();
 
+  // The current FINANCIAL month, named by the month it starts in (ABA-790):
+  // with salary on the 10th, on 5 November the current report is October's.
+  const { anchorDay, current } = useFinancialMonth();
+  const currentMonth = current.start.getMonth() + 1;
+  const currentYear = current.start.getFullYear();
+
   useEffect(() => {
     const init = async () => {
       if (!fatFinderReport && !fatFinderLoading) {
         const confirmed = await confirmAiUsage('fat_finder', 3);
         if (confirmed) {
-          loadFatFinder(i18n.language, false, fatFinderMonth, fatFinderYear);
+          // The store defaults to the calendar month; never open on a period that has not started.
+          const ahead = fatFinderYear * 12 + fatFinderMonth > currentYear * 12 + currentMonth;
+          loadFatFinder(i18n.language, false, ahead ? currentMonth : fatFinderMonth, ahead ? currentYear : fatFinderYear);
         }
       }
     };
@@ -48,9 +58,15 @@ export default function FatFinderScreen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const now = new Date();
-  const isCurrentMonth = fatFinderMonth === now.getMonth() + 1 && fatFinderYear === now.getFullYear();
+  const isCurrentMonth = fatFinderYear * 12 + fatFinderMonth >= currentYear * 12 + currentMonth;
   const intlLocale = getIntlLocale();
+  // "10 Oct – 9 Nov" under an anchored month, else nothing.
+  const range = (() => {
+    if (anchorDay === null) return null;
+    const inside = new Date(fatFinderYear, fatFinderMonth - 1, Math.min(anchorDay, new Date(fatFinderYear, fatFinderMonth, 0).getDate()), 12);
+    const { start, end } = financialMonth(inside, anchorDay);
+    return formatFinancialMonth(start, end, intlLocale).range;
+  })();
 
   const goToPrevMonth = useCallback(() => {
     let newMonth = fatFinderMonth - 1;
@@ -85,6 +101,7 @@ export default function FatFinderScreen() {
     month: fatFinderMonth,
     year: fatFinderYear,
     isCurrentMonth,
+    range,
     loading: fatFinderLoading,
     intlLocale,
     onPrev: goToPrevMonth,

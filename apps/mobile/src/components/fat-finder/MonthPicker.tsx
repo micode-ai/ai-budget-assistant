@@ -8,6 +8,8 @@ interface MonthPickerProps {
   month: number;
   year: number;
   isCurrentMonth: boolean;
+  /** The anchored financial month's span ("10 Oct – 9 Nov"), or null for a calendar month. */
+  range?: string | null;
   loading: boolean;
   intlLocale: string;
   onPrev: () => void;
@@ -18,6 +20,7 @@ export function MonthPicker({
   month,
   year,
   isCurrentMonth,
+  range,
   loading,
   intlLocale,
   onPrev,
@@ -31,7 +34,10 @@ export function MonthPicker({
       <TouchableOpacity onPress={onPrev} hitSlop={8} disabled={loading}>
         <Ionicons name="chevron-back" size={22} color={theme.colors.primary} />
       </TouchableOpacity>
-      <Text style={styles.monthPickerLabel}>{getMonthLabel(month, year, intlLocale)}</Text>
+      <View>
+        <Text style={styles.monthPickerLabel}>{getMonthLabel(month, year, intlLocale)}</Text>
+        {range ? <Text style={styles.monthPickerRange}>{range}</Text> : null}
+      </View>
       <TouchableOpacity onPress={onNext} hitSlop={8} disabled={isCurrentMonth || loading}>
         <Ionicons
           name="chevron-forward"
@@ -56,6 +62,11 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.bodyLargeSemiBold,
     color: theme.colors.textPrimary,
     minWidth: 160,
+    textAlign: 'center' as const,
+  },
+  monthPickerRange: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
     textAlign: 'center' as const,
   },
 });

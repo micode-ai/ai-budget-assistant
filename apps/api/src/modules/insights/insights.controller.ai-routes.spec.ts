@@ -99,7 +99,7 @@ describe('InsightsController — AI route dispatch', () => {
       fatFinderService: { generateReport: jest.fn().mockResolvedValue({ report: {}, isStale: false }) },
     });
     await ctrl.getFatFinderReport(req, { forceRegenerate: true, language: 'de', month: 3, year: 2025 });
-    expect(fatFinderService.generateReport).toHaveBeenCalledWith('acc-1', 'de', true, 'user-1', 3, 2025, 'USD');
+    expect(fatFinderService.generateReport).toHaveBeenCalledWith('acc-1', 'de', true, 'user-1', 3, 2025, 'USD', null);
   });
 
   // ABA-386: the audit must be labelled in the caller's display currency, never in the
@@ -108,9 +108,9 @@ describe('InsightsController — AI route dispatch', () => {
     const { ctrl, fatFinderService } = buildController({
       fatFinderService: { generateReport: jest.fn().mockResolvedValue({ report: {}, isStale: false }) },
     });
-    const plReq: any = { accountId: 'acc-1', user: { id: 'user-1', currencyCode: 'PLN' } };
+    const plReq: any = { accountId: 'acc-1', user: { id: 'user-1', currencyCode: 'PLN' }, monthAnchorDay: 10 };
     await ctrl.getFatFinderReport(plReq, {});
-    expect(fatFinderService.generateReport).toHaveBeenCalledWith('acc-1', undefined, undefined, 'user-1', undefined, undefined, 'PLN');
+    expect(fatFinderService.generateReport).toHaveBeenCalledWith('acc-1', undefined, undefined, 'user-1', undefined, undefined, 'PLN', 10);
   });
 
   it('routes are independent — calling one AI route never touches the others', async () => {

@@ -6434,6 +6434,8 @@ URL: https://ai-budget.pl/help/de/fat-finder/
 
 Der **Fat Finder** durchsucht 3 Monate deiner Transaktionshistorie, erkennt Ausgabemuster und erstellt einen Bericht, der aufzeigt, wo du Geld sparen konntest. Jeder Befund enthalt konkrete Betrage, Schweregrade und umsetzbare Vorschlage.
 
+Hat dein Konto einen **Finanzmonat** (zum Beispiel ab dem Zahltag, dem 10.), umfasst der Bericht diesen Zeitraum — *Oktober* ist dann der 10. Oktober – 9. November, die Daten stehen unter dem Monatsnamen — und auch die drei Monate davor sind Finanzmonate.
+
 ## Zugriff
 
 - **Dashboard-Karte** — zeigt zwischengespeicherte Fat Finder-Ergebnisse. Tippen Sie, um den vollständigen Bericht zu öffnen und eine neue Analyse zu starten.

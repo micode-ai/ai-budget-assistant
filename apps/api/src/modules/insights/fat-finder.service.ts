@@ -9,6 +9,7 @@ import { logCacheUsage } from '../ai/utils/log-cache-usage';
 import { FAT_FINDER_FINDING_TYPES, normalizeFatFinderFindings } from './fat-finder.util';
 import { ExchangeRateService } from '../currency-exchange/exchange-rate.service';
 import { getRatesSafe, convertAmount } from '../../common/utils/fx';
+import { financialMonth, shiftFinancialMonth } from '../../common/utils/financial-month';
 
 /** Mirrors FatFinderResponse in @budget/shared-types (which the API cannot import at runtime). */
 export interface FatFinderReportResult {
@@ -79,6 +80,7 @@ export class FatFinderService {
     month?: number,
     year?: number,
     baseCurrency = 'USD',
+    anchorDay: number | null = null,
   ): Promise<FatFinderReportResult> {
     const encryptionTier = await this.getEncryptionTier(accountId);
     if (encryptionTier >= 2) {
@@ -99,10 +101,18 @@ export class FatFinderService {
     }
 
     const now = new Date();
-    const targetYear = year ?? now.getFullYear();
-    const targetMonth = month != null ? month - 1 : now.getMonth(); // month param is 1-based
-    const currentMonthStart = new Date(targetYear, targetMonth, 1);
-    const currentMonthEnd = new Date(targetYear, targetMonth + 1, 0);
+    // `month`/`year` (1-based) name the month the period STARTS in. With an
+    // anchor day (salary on the 10th) "October" is 10 Oct – 9 Nov, as on the
+    // Analytics tab, the budgets and the Spending Story (ABA-790); without one
+    // it is the calendar month. No month = the period containing today.
+    const targetDate = month != null
+      ? new Date(year ?? now.getFullYear(), month - 1, anchorDay ? Math.min(anchorDay, new Date(year ?? now.getFullYear(), month, 0).getDate()) : 15, 12)
+      : now;
+    const window = financialMonth(targetDate, anchorDay);
+    const currentMonthStart = window.start;
+    // Midnight of the last day: `periodEnd` is a @db.Date cache key and the
+    // expense dates it bounds are date-only.
+    const currentMonthEnd = new Date(window.end.getFullYear(), window.end.getMonth(), window.end.getDate());
 
     // Check cache (30-day expiry)
     if (!forceRegenerate) {
@@ -136,7 +146,7 @@ export class FatFinderService {
     }
 
     // Gather 3 months of expenses
-    const threeMonthsAgo = new Date(targetYear, targetMonth - 3, 1);
+    const threeMonthsAgo = financialMonth(shiftFinancialMonth(currentMonthStart, -3, anchorDay), anchorDay).start;
 
     const expenses = await this.prisma.expense.findMany({
       where: { accountId, isDeleted: false, date: { gte: threeMonthsAgo, lte: currentMonthEnd } },

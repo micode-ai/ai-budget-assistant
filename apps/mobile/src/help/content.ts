@@ -3187,6 +3187,8 @@ History starts from when you first use "Add Funds" — earlier manual edits to t
 
 The **Fat Finder** scans 3 months of your transaction history, detects spending patterns, and generates a report highlighting where you could save money. Each finding includes specific amounts, severity levels, and actionable suggestions.
 
+If your account has a **Financial Month** (for example, starting on payday, the 10th), the report covers that period — *October* is 10 October – 9 November, with the dates shown under the month name — and the three months before it are financial months too.
+
 ## How to Access
 
 - **Dashboard card** — shows cached Fat Finder results on the home screen. Tap to open the full report and generate fresh analysis.
@@ -8605,6 +8607,8 @@ AI Budget Assistant предлагает три уровня подписки. �
 
 **Поиск лишних трат** сканирует историю транзакций за 3 месяца, выявляет закономерности в расходах и формирует отчёт, указывающий, где можно сэкономить. Каждая находка включает конкретные суммы, уровень значимости и практические рекомендации.
 
+Если у аккаунта задан **Финансовый месяц** (например, с дня зарплаты, 10-го), отчёт охватывает этот период — *октябрь* — это 10 октября – 9 ноября, даты видны под названием месяца, — и три предыдущих месяца тоже финансовые.
+
 ## Как открыть
 
 - **Карточка на главной** — показывает кэшированные результаты Fat Finder. Нажмите, чтобы открыть полный отчёт и запустить свежий анализ.
@@ -14007,6 +14011,8 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 
 **Пошук зайвих витрат** сканує історію транзакцій за 3 місяці, виявляє закономірності у витратах і формує звіт, що вказує, де можна заощадити. Кожна знахідка включає конкретні суми, рівень серйозності та практичні рекомендації.
 
+Якщо в акаунті задано **Фінансовий місяць** (наприклад, із дня зарплати, 10-го), звіт охоплює цей період — *жовтень* — це 10 жовтня – 9 листопада, дати видно під назвою місяця, — і три попередні місяці теж фінансові.
+
 ## Як відкрити
 
 - **Картка на головній** — показує кешовані результати Fat Finder. Натисніть, щоб відкрити повний звіт і запустити свіжий аналіз.
@@ -19359,6 +19365,8 @@ Historia zaczyna się od pierwszego użycia „Dodaj kwotę". Wcześniejsze ręc
 
 **Tropiciel wydatkow** skanuje 3 miesiace historii transakcji, wykrywa wzorce wydatkow i generuje raport wskazujacy, gdzie mozesz zaoszczedzic. Kazde odkrycie zawiera konkretne kwoty, poziom waznosci i praktyczne sugestie.
 
+Jeśli konto ma **Miesiąc finansowy** (na przykład od dnia wypłaty, 10.), raport obejmuje ten okres — *październik* to 10 października – 9 listopada, daty widać pod nazwą miesiąca — a trzy poprzednie miesiące to także miesiące finansowe.
+
 ## Jak uzyskac dostep
 
 - **Karta na pulpicie** — pokazuje zapisane wyniki Fat Finder. Dotknij, aby otworzyć pełny raport i uruchomić nową analizę.
@@ -24710,6 +24718,8 @@ Der Verlauf beginnt ab der ersten Nutzung von „Betrag hinzufügen". Ältere ma
 
 Der **Fat Finder** durchsucht 3 Monate deiner Transaktionshistorie, erkennt Ausgabemuster und erstellt einen Bericht, der aufzeigt, wo du Geld sparen konntest. Jeder Befund enthalt konkrete Betrage, Schweregrade und umsetzbare Vorschlage.
 
+Hat dein Konto einen **Finanzmonat** (zum Beispiel ab dem Zahltag, dem 10.), umfasst der Bericht diesen Zeitraum — *Oktober* ist dann der 10. Oktober – 9. November, die Daten stehen unter dem Monatsnamen — und auch die drei Monate davor sind Finanzmonate.
+
 ## Zugriff
 
 - **Dashboard-Karte** — zeigt zwischengespeicherte Fat Finder-Ergebnisse. Tippen Sie, um den vollständigen Bericht zu öffnen und eine neue Analyse zu starten.
@@ -30038,6 +30048,8 @@ El historial comienza desde la primera vez que usas «Agregar fondos». Las edic
 
 El **Fat Finder** analiza 3 meses de tu historial de transacciones, detecta patrones de gasto y genera un informe que destaca donde podrias ahorrar dinero. Cada hallazgo incluye montos especificos, niveles de severidad y sugerencias aplicables.
 
+Si tu cuenta tiene un **Mes financiero** (por ejemplo, desde el día de cobro, el 10), el informe cubre ese periodo —*octubre* va del 10 de octubre al 9 de noviembre, con las fechas bajo el nombre del mes— y los tres meses anteriores también son meses financieros.
+
 ## Como acceder
 
 - **Tarjeta del panel** — muestra los resultados guardados de Fat Finder. Toca para abrir el informe completo y generar un análisis nuevo.
@@ -35352,6 +35364,8 @@ L'historique commence à partir de la première utilisation de « Ajouter des fo
 ## Apercu
 
 Le **Fat Finder** passe en revue 3 mois de votre historique de transactions, detecte les tendances de depenses et genere un rapport mettant en evidence les postes ou vous pourriez economiser. Chaque constat inclut des montants precis, des niveaux de gravite et des suggestions concretes.
+
+Si votre compte a un **Mois financier** (par exemple à partir du jour de paie, le 10), le rapport couvre cette période — *octobre* va du 10 octobre au 9 novembre, avec les dates sous le nom du mois — et les trois mois précédents sont aussi des mois financiers.
 
 ## Comment y acceder
 
@@ -40672,6 +40686,8 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 
 **Пошук лішніх выдаткаў** скануе гісторыю транзакцый за 3 месяцы, выяўляе заканамернасці ў выдатках і фарміруе справаздачу, якая паказвае, дзе можна зэканоміць. Кожная знаходка ўключае канкрэтныя сумы, ўзровень сур'ёзнасці і практычныя рэкамендацыі.
 
+Калі ў акаўнта зададзены **Фінансавы месяц** (напрыклад, з дня заробку, 10-га), справаздача ахоплівае гэты перыяд — *кастрычнік* — гэта 10 кастрычніка – 9 лістапада, даты бачныя пад назвай месяца, — і тры папярэднія месяцы таксама фінансавыя.
+
 ## Як адкрыць
 
 - **Картка на галоўнай** — паказвае кэшаваныя вынікі Fat Finder. Націсніце, каб адкрыць поўны справаздачу і запусціць свежы аналіз.
@@ -45956,6 +45972,8 @@ De geschiedenis begint vanaf de eerste keer dat je "Bedrag toevoegen" gebruikt. 
 ## Overzicht
 
 De **Fat Finder** scant 3 maanden van je transactiegeschiedenis, detecteert uitgavenpatronen en genereert een rapport dat aangeeft waar je geld zou kunnen besparen. Elke bevinding bevat specifieke bedragen, ernstniveaus en praktische suggesties.
+
+Heeft je account een **Financiële maand** (bijvoorbeeld vanaf betaaldag, de 10e), dan beslaat het rapport die periode — *oktober* is 10 oktober – 9 november, met de data onder de maandnaam — en ook de drie maanden ervoor zijn financiële maanden.
 
 ## Hoe te openen
 
@@ -51381,6 +51399,8 @@ O histórico começa a partir da primeira vez que usa «Adicionar fundos» — a
 ## Visão geral
 
 A **Auditoria de despesas** percorre 3 meses do seu histórico de transações, deteta padrões de consumo e gera um relatório que mostra onde poderia poupar. Cada constatação inclui montantes concretos, níveis de gravidade e sugestões práticas.
+
+Se a sua conta tiver um **Mês financeiro** (por exemplo, a começar no dia do ordenado, dia 10), o relatório cobre esse período — *outubro* vai de 10 de outubro a 9 de novembro, com as datas por baixo do nome do mês — e os três meses anteriores também são meses financeiros.
 
 ## Como aceder
 
@@ -56813,6 +56833,8 @@ O histórico começa a partir da primeira vez que você usa “Adicionar valor�
 ## Visão geral
 
 A **Auditoria de despesas** examina 3 meses do seu histórico de transações, detecta padrões de consumo e gera um relatório mostrando onde você poderia economizar. Cada achado traz valores concretos, níveis de gravidade e sugestões práticas.
+
+Se a sua conta tiver um **Mês financeiro** (por exemplo, começando no dia do pagamento, dia 10), o relatório cobre esse período — *outubro* vai de 10 de outubro a 9 de novembro, com as datas abaixo do nome do mês — e os três meses anteriores também são meses financeiros.
 
 ## Como acessar
 

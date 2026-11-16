@@ -157,6 +157,7 @@ export class InsightsController {
       body.month,
       body.year,
       req.user.currencyCode || 'USD',
+      req.monthAnchorDay ?? null,
     );
   }
 

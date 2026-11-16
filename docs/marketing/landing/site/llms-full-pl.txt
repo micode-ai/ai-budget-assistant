@@ -7035,6 +7035,8 @@ URL: https://ai-budget.pl/help/pl/fat-finder/
 
 **Tropiciel wydatkow** skanuje 3 miesiace historii transakcji, wykrywa wzorce wydatkow i generuje raport wskazujacy, gdzie mozesz zaoszczedzic. Kazde odkrycie zawiera konkretne kwoty, poziom waznosci i praktyczne sugestie.
 
+Jeśli konto ma **Miesiąc finansowy** (na przykład od dnia wypłaty, 10.), raport obejmuje ten okres — *październik* to 10 października – 9 listopada, daty widać pod nazwą miesiąca — a trzy poprzednie miesiące to także miesiące finansowe.
+
 ## Jak uzyskac dostep
 
 - **Karta na pulpicie** — pokazuje zapisane wyniki Fat Finder. Dotknij, aby otworzyć pełny raport i uruchomić nową analizę.

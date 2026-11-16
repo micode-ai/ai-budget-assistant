@@ -6,6 +6,8 @@
 
 A **Auditoria de despesas** percorre 3 meses do seu histórico de transações, deteta padrões de consumo e gera um relatório que mostra onde poderia poupar. Cada constatação inclui montantes concretos, níveis de gravidade e sugestões práticas.
 
+Se a sua conta tiver um **Mês financeiro** (por exemplo, a começar no dia do ordenado, dia 10), o relatório cobre esse período — *outubro* vai de 10 de outubro a 9 de novembro, com as datas por baixo do nome do mês — e os três meses anteriores também são meses financeiros.
+
 ## Como aceder
 
 - **Cartão no Painel** — mostra os resultados da Auditoria de despesas guardados em cache no ecrã inicial. Toque para abrir o relatório completo e gerar uma análise nova.

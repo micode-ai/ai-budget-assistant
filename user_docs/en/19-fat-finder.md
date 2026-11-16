@@ -6,6 +6,8 @@
 
 The **Fat Finder** scans 3 months of your transaction history, detects spending patterns, and generates a report highlighting where you could save money. Each finding includes specific amounts, severity levels, and actionable suggestions.
 
+If your account has a **Financial Month** (for example, starting on payday, the 10th), the report covers that period — *October* is 10 October – 9 November, with the dates shown under the month name — and the three months before it are financial months too.
+
 ## How to Access
 
 - **Dashboard card** — shows cached Fat Finder results on the home screen. Tap to open the full report and generate fresh analysis.

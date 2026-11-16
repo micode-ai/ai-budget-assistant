@@ -6,6 +6,8 @@
 
 De **Fat Finder** scant 3 maanden van je transactiegeschiedenis, detecteert uitgavenpatronen en genereert een rapport dat aangeeft waar je geld zou kunnen besparen. Elke bevinding bevat specifieke bedragen, ernstniveaus en praktische suggesties.
 
+Heeft je account een **Financiële maand** (bijvoorbeeld vanaf betaaldag, de 10e), dan beslaat het rapport die periode — *oktober* is 10 oktober – 9 november, met de data onder de maandnaam — en ook de drie maanden ervoor zijn financiële maanden.
+
 ## Hoe te openen
 
 - **Dashboardkaart** — toont gecachede Fat Finder-resultaten op het startscherm. Tik om het volledige rapport te openen en een nieuwe analyse te genereren.
