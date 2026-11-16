@@ -67,7 +67,7 @@ recurring or adding subscriptions.
 
 ## Known gaps
 
-- Renewals booked before ABA-776 have no `userSubscriptionId` and still rely on the name/amount match.
+- Renewals booked before ABA-776 were back-linked by [ABA-788](https://github.com/micode-ai/ai-budget-assistant/issues/826) where the match was unique; one whose subscription was renamed or repriced since still relies on the name/amount match.
 - The forecast does not use fixed categories: a category has no due date to schedule.
 - The month view's periods follow the account's financial month (ABA-767); the year view's 12 bars stay calendar months.
 

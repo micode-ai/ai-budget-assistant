@@ -351,6 +351,7 @@ Newest last within each section.
 - 2026-11-16 · [ABA-785](https://github.com/micode-ai/ai-budget-assistant/issues/823) — the Safe-to-Spend hero figure is marked when the wallet balance was never set, not only the breakdown sheet; features/safe-to-spend.
 - 2026-11-16 · [ABA-786](https://github.com/micode-ai/ai-budget-assistant/issues/824) — the forecast returns money owed to the user apart (`expectedInflows`) and the card adds it only on opt-in; features/cash-flow-forecast.
 - 2026-11-16 · [ABA-787](https://github.com/micode-ai/ai-budget-assistant/issues/825) — the forecast returns irregular income per day apart (`irregularDailyIncome`), added on the device only on opt-in; features/cash-flow-forecast.
+- 2026-11-16 · [ABA-788](https://github.com/micode-ai/ai-budget-assistant/issues/826) — a one-time data migration links pre-ABA-776 renewals to their subscription (unique name+amount+currency match, updated_at bumped for device pulls); features/subscription-manager, features/analytics-cash-flow.
 
 ## Queries
 

@@ -47,8 +47,10 @@ the renewal date, `source: 'manual'`.
 
 - The booked expense is still `source: 'manual'`, but since ABA-776 it carries `userSubscriptionId`
   (set only by the renewal cron, no FK), which the fixed-vs-flexible card and the forecast read
-  directly ([analytics-cash-flow](analytics-cash-flow.md)). Renewals booked before ABA-776 have no
-  link and are still recognised by name or category + amount.
+  directly ([analytics-cash-flow](analytics-cash-flow.md)). Renewals booked before ABA-776 were
+  linked once by a data migration ([ABA-788](https://github.com/micode-ai/ai-budget-assistant/issues/826)) where exactly one subscription of the account matched name,
+  amount and currency and predated the row; one whose subscription was renamed or repriced since
+  stays unlinked and is still recognised by name or category + amount.
 
 ## History
 
