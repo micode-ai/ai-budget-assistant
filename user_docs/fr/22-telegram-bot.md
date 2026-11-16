@@ -10,7 +10,7 @@ Le **Bot Telegram** vous permet d'interagir avec votre Assistant Budget IA direc
 
 1. Ouvrez l'application et allez dans **Parametres**
 2. Appuyez sur **Bot Telegram** dans la section Integrations
-3. Appuyez sur **Generer un code** — un code a 6 caracteres apparait (valide pendant 10 minutes)
+3. Appuyez sur **Generer un code** — un code a 8 caracteres apparait (valide pendant 10 minutes)
 4. Ouvrez Telegram et trouvez le bot
 5. Envoyez `/link CODE` (par exemple, `/link A3F2B1`)
 6. Vous verrez une confirmation : "Compte associe avec succes !"

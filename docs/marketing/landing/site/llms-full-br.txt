@@ -4043,7 +4043,7 @@ Para conectar: **Configurações → Bots de chat**.
 ## Vincular sua conta
 
 ### Telegram
-1. Toque em **Conectar o Telegram** — aparece um código de 6 caracteres (válido por 10 minutos)
+1. Toque em **Conectar o Telegram** — aparece um código de 8 caracteres (válido por 10 minutos)
 2. Abra o Telegram e encontre o bot
 3. Envie `/link SEU_CODIGO` (por exemplo, `/link A3F2B1`)
 4. Você verá “Conta vinculada com sucesso!”
@@ -4055,7 +4055,7 @@ Para conectar: **Configurações → Bots de chat**.
 4. Você verá “Conta vinculada com sucesso!”
 
 ### Slack
-1. Toque em **Conectar o Slack** — aparece um código de 6 caracteres (válido por 10 minutos)
+1. Toque em **Conectar o Slack** — aparece um código de 8 caracteres (válido por 10 minutos)
 2. Abra o Slack, encontre o app **AI Budget Assistant** e abra uma mensagem direta com ele
 3. Envie `link SEU_CODIGO` (por exemplo, `link A3F2B1`)
 4. Você verá “Conta vinculada com sucesso!”

@@ -114,6 +114,32 @@ export class UsersService {
     });
   }
 
+  /**
+   * Google sign-in claiming an account that was registered but never verified (ABA-808).
+   * Anyone can register any address with a password of their choosing; until now the
+   * auto-link marked such an account verified and LEFT that password working, so whoever
+   * had pre-registered the owner's e-mail could sign in after the owner did. Google has
+   * just proven the owner controls the address, so the unproven password and every
+   * pending code are dropped; the owner can set a password later through reset.
+   */
+  async claimUnverifiedForGoogle(id: string, googleId: string) {
+    return this.prisma.user.update({
+      where: { id },
+      data: {
+        googleId,
+        isVerified: true,
+        passwordHash: null,
+        emailVerificationCode: null,
+        emailVerificationExpiresAt: null,
+        passwordResetCode: null,
+        passwordResetExpiresAt: null,
+        emailChangePending: null,
+        emailChangeCode: null,
+        emailChangeExpiresAt: null,
+      },
+    });
+  }
+
   async updateEmailVerification(id: string, data: {
     isVerified?: boolean;
     emailVerificationCode: string | null;

@@ -1,12 +1,23 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { randomBytes } from 'crypto';
 import { PrismaService } from '../../database/prisma.service';
+
+import { CacheService } from '../../common/cache/cache.service';
+import {
+  generateLinkCode,
+  normalizeLinkCode,
+  linkAttemptAllowed,
+  LINK_INVALID_CODE,
+  LINK_TOO_MANY_ATTEMPTS,
+} from '../../common/utils/bot-link-code';
 
 @Injectable()
 export class SlackLinkService {
   private readonly logger = new Logger(SlackLinkService.name);
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly cache: CacheService,
+  ) {}
 
   async generateCode(userId: string, accountId: string): Promise<{ code: string; expiresAt: Date }> {
     // Invalidate any existing unused codes for this user
@@ -15,7 +26,7 @@ export class SlackLinkService {
       data: { usedAt: new Date() },
     });
 
-    const code = randomBytes(3).toString('hex').toUpperCase().slice(0, 6);
+    const code = generateLinkCode();
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
     await this.prisma.slackLinkCode.create({ data: { userId, accountId, code, expiresAt } });
@@ -29,23 +40,31 @@ export class SlackLinkService {
     slackTeamId: string,
     profileName?: string,
   ): Promise<{ success: boolean; error?: string }> {
+    // Codes are matched across every user, so each attempt is counted before the lookup (ABA-808).
+    if (!(await linkAttemptAllowed(this.cache, 'slack', slackUserId))) {
+      return { success: false, error: LINK_TOO_MANY_ATTEMPTS };
+    }
     const linkCode = await this.prisma.slackLinkCode.findFirst({
       where: {
-        code: code.toUpperCase(),
+        code: normalizeLinkCode(code),
         usedAt: null,
         expiresAt: { gt: new Date() },
       },
     });
 
     if (!linkCode) {
-      return { success: false, error: 'Invalid or expired code. Please generate a new one in the app.' };
+      return { success: false, error: LINK_INVALID_CODE };
     }
 
     // Mark code as used
-    await this.prisma.slackLinkCode.update({
-      where: { id: linkCode.id },
+    // Claim it only if still unused: two redemptions racing on one code must not both link.
+    const claimed = await this.prisma.slackLinkCode.updateMany({
+      where: { id: linkCode.id, usedAt: null },
       data: { usedAt: new Date() },
     });
+    if (claimed.count === 0) {
+      return { success: false, error: LINK_INVALID_CODE };
+    }
 
     // Upsert slack link (one per slackUserId, one per app user)
     await this.prisma.slackLink.upsert({

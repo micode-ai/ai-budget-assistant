@@ -6765,7 +6765,7 @@ Zum Verbinden: **Einstellungen → Chat-Bots**.
 ## Konto verknüpfen
 
 ### Telegram
-1. Tippe **Telegram verbinden** — ein 6-stelliger Code erscheint (10 Minuten gültig)
+1. Tippe **Telegram verbinden** — ein 8-stelliger Code erscheint (10 Minuten gültig)
 2. Öffne Telegram und suche den Bot
 3. Sende `/link DEIN_CODE` (z.B. `/link A3F2B1`)
 4. Du siehst „Konto erfolgreich verknüpft!"
@@ -6777,7 +6777,7 @@ Zum Verbinden: **Einstellungen → Chat-Bots**.
 4. Du siehst „Konto erfolgreich verknüpft!"
 
 ### Slack
-1. Tippe **Slack verbinden** — ein 6-stelliger Code erscheint (10 Minuten gültig)
+1. Tippe **Slack verbinden** — ein 8-stelliger Code erscheint (10 Minuten gültig)
 2. Öffne Slack, suche die App **AI Budget Assistant** und öffne eine Direktnachricht
 3. Sende `link DEIN_CODE` (z.B. `link A3F2B1`)
 4. Du siehst „Konto erfolgreich verknüpft!"

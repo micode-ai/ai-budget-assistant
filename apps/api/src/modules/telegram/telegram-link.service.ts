@@ -1,7 +1,15 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { randomBytes } from 'crypto';
 import { PrismaService } from '../../database/prisma.service';
+
+import { CacheService } from '../../common/cache/cache.service';
+import {
+  generateLinkCode,
+  normalizeLinkCode,
+  linkAttemptAllowed,
+  LINK_INVALID_CODE,
+  LINK_TOO_MANY_ATTEMPTS,
+} from '../../common/utils/bot-link-code';
 
 @Injectable()
 export class TelegramLinkService {
@@ -10,6 +18,7 @@ export class TelegramLinkService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly config: ConfigService,
+    private readonly cache: CacheService,
   ) {}
 
   async generateCode(userId: string, accountId: string): Promise<{ code: string; expiresAt: Date; botUsername: string }> {
@@ -19,7 +28,7 @@ export class TelegramLinkService {
       data: { usedAt: new Date() },
     });
 
-    const code = randomBytes(3).toString('hex').toUpperCase().slice(0, 6);
+    const code = generateLinkCode();
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
     await this.prisma.telegramLinkCode.create({
@@ -37,23 +46,31 @@ export class TelegramLinkService {
     telegramUserId: string,
     telegramUsername?: string,
   ): Promise<{ success: boolean; error?: string }> {
+    // Codes are matched across every user, so each attempt is counted before the lookup (ABA-808).
+    if (!(await linkAttemptAllowed(this.cache, 'telegram', telegramUserId))) {
+      return { success: false, error: LINK_TOO_MANY_ATTEMPTS };
+    }
     const linkCode = await this.prisma.telegramLinkCode.findFirst({
       where: {
-        code: code.toUpperCase(),
+        code: normalizeLinkCode(code),
         usedAt: null,
         expiresAt: { gt: new Date() },
       },
     });
 
     if (!linkCode) {
-      return { success: false, error: 'Invalid or expired code. Please generate a new one in the app.' };
+      return { success: false, error: LINK_INVALID_CODE };
     }
 
     // Mark code as used
-    await this.prisma.telegramLinkCode.update({
-      where: { id: linkCode.id },
+    // Claim it only if still unused: two redemptions racing on one code must not both link.
+    const claimed = await this.prisma.telegramLinkCode.updateMany({
+      where: { id: linkCode.id, usedAt: null },
       data: { usedAt: new Date() },
     });
+    if (claimed.count === 0) {
+      return { success: false, error: LINK_INVALID_CODE };
+    }
 
     // Upsert telegram link (one per telegram user, one per app user)
     await this.prisma.telegramLink.upsert({

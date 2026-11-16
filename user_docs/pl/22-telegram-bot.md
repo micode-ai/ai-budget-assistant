@@ -10,7 +10,7 @@
 
 1. Otworz aplikacje i przejdz do **Ustawienia**
 2. Dotknij **Bot Telegram** w sekcji Integracje
-3. Dotknij **Wygeneruj kod** — pojawi sie 6-znakowy kod (wazny przez 10 minut)
+3. Dotknij **Wygeneruj kod** — pojawi sie 8-znakowy kod (wazny przez 10 minut)
 4. Otworz Telegram i znajdz bota
 5. Wyslij `/link KOD` (np. `/link A3F2B1`)
 6. Zobaczysz potwierdzenie: "Konto polaczone pomyslnie!"

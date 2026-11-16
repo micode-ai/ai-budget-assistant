@@ -12,7 +12,7 @@ De bot werkt op dezelfde manier als de [Telegram-bot](./22-telegram-bot.md): dez
 
 1. Open de app en ga naar **Instellingen**
 2. Tik op **WhatsApp-bot** onder de sectie Integraties
-3. Tik op **WhatsApp verbinden** — er verschijnen een code van 6 tekens en een QR-code (10 minuten geldig)
+3. Tik op **WhatsApp verbinden** — er verschijnen een code van 8 tekens en een QR-code (10 minuten geldig)
 4. Doe één van het volgende:
    - Tik op **WhatsApp openen** — WhatsApp opent met het bericht `link JOUW_CODE` al ingevuld. Tik gewoon op verzenden.
    - Of scan de QR-code met de camera van een andere telefoon om WhatsApp op dat apparaat te openen.

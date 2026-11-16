@@ -10,7 +10,7 @@ Der **Telegram-Bot** ermoglicht die Interaktion mit deinem KI-Budgetassistenten 
 
 1. Offne die App und gehe zu **Einstellungen**
 2. Tippe auf **Telegram-Bot** im Bereich Integrationen
-3. Tippe auf **Code generieren** — ein 6-stelliger Code erscheint (gultig fur 10 Minuten)
+3. Tippe auf **Code generieren** — ein 8-stelliger Code erscheint (gultig fur 10 Minuten)
 4. Offne Telegram und finde den Bot
 5. Sende `/link CODE` (z. B. `/link A3F2B1`)
 6. Du siehst eine Bestatigung: "Konto erfolgreich verknupft!"

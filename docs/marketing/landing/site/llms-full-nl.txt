@@ -6804,7 +6804,7 @@ Om te verbinden: **Instellingen → Chatbots**.
 ## Je account koppelen
 
 ### Telegram
-1. Tik op **Telegram verbinden** — er verschijnt een code van 6 tekens (10 minuten geldig)
+1. Tik op **Telegram verbinden** — er verschijnt een code van 8 tekens (10 minuten geldig)
 2. Open Telegram en zoek de bot
 3. Stuur `/link JOUW_CODE` (bijv. `/link A3F2B1`)
 4. Je ziet "Account succesvol gekoppeld!"
@@ -6816,7 +6816,7 @@ Om te verbinden: **Instellingen → Chatbots**.
 4. Je ziet "Account succesvol gekoppeld!"
 
 ### Slack
-1. Tik op **Slack verbinden** — er verschijnt een code van 6 tekens (10 minuten geldig)
+1. Tik op **Slack verbinden** — er verschijnt een code van 8 tekens (10 minuten geldig)
 2. Open Slack, zoek de **AI Budget Assistant**-app en open er een direct bericht mee
 3. Stuur `link JOUW_CODE` (bijv. `link A3F2B1`)
 4. Je ziet "Account succesvol gekoppeld!"

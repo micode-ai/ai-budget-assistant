@@ -3,9 +3,22 @@ import { AuthService } from './auth.service';
 import * as bcrypt from 'bcrypt';
 import { promises as dnsPromises } from 'dns';
 
-// Critical auth paths: password reset code flow and in-memory rate limiting.
-// The rate-limit Map lives on the AuthService instance, so a fresh service is
-// created for each describe block that needs a clean counter.
+// Critical auth paths: password reset code flow and rate limiting.
+// The limits live in Redis (ABA-808); each service gets its own in-memory fake
+// of `incrementWindow`, so a fresh service starts with clean counters.
+
+/** An in-memory stand-in for CacheService.incrementWindow (fixed window ignored). */
+export function makeFakeCache() {
+  const counts = new Map<string, number>();
+  return {
+    counts,
+    incrementWindow: jest.fn(async (key: string) => {
+      const n = (counts.get(key) ?? 0) + 1;
+      counts.set(key, n);
+      return n;
+    }),
+  };
+}
 
 function makeService() {
   const usersService: any = {
@@ -17,6 +30,7 @@ function makeService() {
     updateEmailChange: jest.fn().mockResolvedValue(undefined),
     updateLastSync: jest.fn().mockResolvedValue(undefined),
     update: jest.fn(),
+    claimUnverifiedForGoogle: jest.fn(),
     create: jest.fn(),
   };
   const accountsService: any = {
@@ -48,6 +62,8 @@ function makeService() {
     verify: jest.fn(),
   };
 
+  const cache = makeFakeCache();
+
   const service = new AuthService(
     usersService,
     accountsService,
@@ -58,9 +74,10 @@ function makeService() {
     adminGateway,
     referralsService,
     googleVerifier,
+    cache as any,
   );
 
-  return { service, usersService, accountsService, mailService, jwtService, googleVerifier };
+  return { service, usersService, accountsService, mailService, jwtService, googleVerifier, cache };
 }
 
 describe('AuthService — forgotPassword', () => {
@@ -343,20 +360,20 @@ describe('AuthService — googleLogin', () => {
     expect(result.user.defaultAccountId).toBe('acc-3');
   });
 
-  it('marks an auto-linked unverified user as verified', async () => {
+  it('claims an auto-linked unverified user as verified, dropping its unproven password (ABA-808)', async () => {
     const { service, usersService, googleVerifier } = makeService();
     googleVerifier.verify.mockResolvedValue(goodPayload);
     usersService.findByGoogleId.mockResolvedValue(null);
     usersService.findByEmail.mockResolvedValue({
       id: 'u4', email: 'user@example.com', name: 'Existing', isActive: true, isVerified: false, currencyCode: 'USD',
     });
-    usersService.update.mockResolvedValue({
+    usersService.claimUnverifiedForGoogle.mockResolvedValue({
       id: 'u4', email: 'user@example.com', name: 'Existing', isActive: true, isVerified: true, currencyCode: 'USD', defaultAccountId: 'acc-4',
     });
 
     await service.googleLogin({ idToken: 'tok' });
 
-    expect(usersService.update).toHaveBeenCalledWith('u4', expect.objectContaining({ googleId: 'google-123', isVerified: true }));
+    expect(usersService.claimUnverifiedForGoogle).toHaveBeenCalledWith('u4', 'google-123');
   });
 
   it('rejects a deactivated account on auto-link and does not link it', async () => {
@@ -569,3 +586,67 @@ describe('AuthService — refreshToken (sliding session)', () => {
   });
 });
 
+
+
+describe('AuthService — Google auto-link of an unverified account (ABA-808)', () => {
+  const googlePayload = { email: 'owner@example.com', email_verified: true, sub: 'g-1', name: 'Owner' };
+
+  it('drops the password someone set before the owner proved the address', async () => {
+    const { service, usersService, googleVerifier } = makeService();
+    googleVerifier.verify.mockResolvedValue(googlePayload);
+    usersService.findByGoogleId.mockResolvedValue(null);
+    usersService.findByEmail.mockResolvedValue({ id: 'u9', email: 'owner@example.com', isActive: true, isVerified: false, passwordHash: 'attacker' });
+    usersService.claimUnverifiedForGoogle.mockResolvedValue({
+      id: 'u9', email: 'owner@example.com', name: 'Owner', isActive: true, isVerified: true, currencyCode: 'USD', defaultAccountId: 'acc-9',
+    });
+    await service.googleLogin({ idToken: 'tok' });
+    expect(usersService.claimUnverifiedForGoogle).toHaveBeenCalledWith('u9', 'g-1');
+    expect(usersService.update).not.toHaveBeenCalled();
+  });
+
+  it('keeps the password of an account that was already verified', async () => {
+    const { service, usersService, googleVerifier } = makeService();
+    googleVerifier.verify.mockResolvedValue(googlePayload);
+    usersService.findByGoogleId.mockResolvedValue(null);
+    usersService.findByEmail.mockResolvedValue({ id: 'u8', email: 'owner@example.com', isActive: true, isVerified: true, passwordHash: 'own' });
+    usersService.update.mockResolvedValue({
+      id: 'u8', email: 'owner@example.com', name: 'Owner', isActive: true, isVerified: true, currencyCode: 'USD', defaultAccountId: 'acc-8',
+    });
+    await service.googleLogin({ idToken: 'tok' });
+    expect(usersService.update).toHaveBeenCalledWith('u8', { googleId: 'g-1' });
+    expect(usersService.claimUnverifiedForGoogle).not.toHaveBeenCalled();
+  });
+});
+
+describe('AuthService — login rate limit (ABA-808)', () => {
+  it('refuses the attempt past the per-e-mail limit, before any password check', async () => {
+    const { service, usersService } = makeService();
+    usersService.findByEmail.mockResolvedValue(null);
+    for (let i = 0; i < 10; i++) {
+      await expect(service.login({ email: 'Victim@Example.com', password: 'x' } as any, `10.0.0.${i}`)).rejects.toThrow(UnauthorizedException);
+    }
+    const err = await service.login({ email: 'victim@example.com', password: 'x' } as any, '10.0.1.1').catch((e) => e);
+    expect(err).toBeInstanceOf(HttpException);
+    expect((err as HttpException).getStatus()).toBe(429);
+    expect(usersService.findByEmail).toHaveBeenCalledTimes(10);
+  });
+
+  it('refuses one IP trying many addresses', async () => {
+    const { service, usersService } = makeService();
+    usersService.findByEmail.mockResolvedValue(null);
+    for (let i = 0; i < 50; i++) {
+      await service.login({ email: `u${i}@example.com`, password: 'x' } as any, '203.0.113.7').catch(() => undefined);
+    }
+    const err = await service.login({ email: 'next@example.com', password: 'x' } as any, '203.0.113.7').catch((e) => e);
+    expect((err as HttpException).getStatus()).toBe(429);
+  });
+
+  it('lets login through when Redis is down (fail open), but not a code check (fail closed)', async () => {
+    const { service, usersService, cache } = makeService();
+    cache.incrementWindow.mockRejectedValue(new Error('redis down'));
+    usersService.findByEmail.mockResolvedValue(null);
+    await expect(service.login({ email: 'a@b.c', password: 'x' } as any, '1.2.3.4')).rejects.toThrow(UnauthorizedException);
+    const err = await service.verifyEmail('a@b.c', '123456').catch((e) => e);
+    expect((err as HttpException).getStatus()).toBe(429);
+  });
+});

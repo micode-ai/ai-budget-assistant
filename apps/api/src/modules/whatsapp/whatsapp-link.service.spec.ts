@@ -2,6 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import { WhatsAppLinkService } from './whatsapp-link.service';
 import { PrismaService } from '../../database/prisma.service';
+import { CacheService } from '../../common/cache/cache.service';
+import { LINK_CODE_ALPHABET } from '../../common/utils/bot-link-code';
 
 type LinkRow = {
   id: string;
@@ -25,7 +27,7 @@ type CodeRow = {
 function makePrismaMock() {
   return {
     whatsAppLinkCode: {
-      updateMany: jest.fn().mockResolvedValue({ count: 0 }),
+      updateMany: jest.fn().mockResolvedValue({ count: 1 }),
       create: jest.fn().mockResolvedValue(undefined),
       findFirst: jest.fn(),
       update: jest.fn(),
@@ -56,6 +58,7 @@ describe('WhatsAppLinkService', () => {
         WhatsAppLinkService,
         { provide: PrismaService, useValue: prisma },
         { provide: ConfigService, useValue: config },
+        { provide: CacheService, useValue: { incrementWindow: jest.fn().mockResolvedValue(1) } },
       ],
     }).compile();
 
@@ -71,9 +74,9 @@ describe('WhatsAppLinkService', () => {
       });
     });
 
-    it('returns a 6-char uppercase hex code, ~10min expiry, and the WA phone number from config', async () => {
+    it('returns an 8-char code from the unambiguous alphabet (ABA-808), ~10min expiry, and the WA phone number from config', async () => {
       const result = await service.generateCode('user-1', 'acct-1');
-      expect(result.code).toMatch(/^[A-F0-9]{6}$/);
+      expect(result.code).toMatch(new RegExp(`^[${LINK_CODE_ALPHABET}]{8}$`));
       const tenMinFromNow = Date.now() + 10 * 60 * 1000;
       expect(result.expiresAt.getTime()).toBeGreaterThan(tenMinFromNow - 1000);
       expect(result.expiresAt.getTime()).toBeLessThan(tenMinFromNow + 1000);
@@ -101,8 +104,8 @@ describe('WhatsAppLinkService', () => {
       expect(prisma.whatsAppLinkCode.findFirst).toHaveBeenCalledWith({
         where: { code: 'ABC123', usedAt: null, expiresAt: { gt: expect.any(Date) } },
       });
-      expect(prisma.whatsAppLinkCode.update).toHaveBeenCalledWith({
-        where: { id: 'code-1' },
+      expect(prisma.whatsAppLinkCode.updateMany).toHaveBeenCalledWith({
+        where: { id: 'code-1', usedAt: null },
         data: { usedAt: expect.any(Date) },
       });
       expect(prisma.whatsAppLink.upsert).toHaveBeenCalledWith({

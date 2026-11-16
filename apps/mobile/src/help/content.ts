@@ -3551,7 +3551,7 @@ To connect: **Settings → Chat Bots**.
 ## Linking Your Account
 
 ### Telegram
-1. Tap **Connect Telegram** — a 6-character code appears (valid 10 minutes)
+1. Tap **Connect Telegram** — a 8-character code appears (valid 10 minutes)
 2. Open Telegram and find the bot
 3. Send \`/link YOUR_CODE\` (e.g. \`/link A3F2B1\`)
 4. You'll see "Account linked successfully!"
@@ -3563,7 +3563,7 @@ To connect: **Settings → Chat Bots**.
 4. You'll see "Account linked successfully!"
 
 ### Slack
-1. Tap **Connect Slack** — a 6-character code appears (valid 10 minutes)
+1. Tap **Connect Slack** — a 8-character code appears (valid 10 minutes)
 2. Open Slack, find the **AI Budget Assistant** app and open a direct message with it
 3. Send \`link YOUR_CODE\` (e.g. \`link A3F2B1\`)
 4. You'll see "Account linked successfully!"
@@ -9004,7 +9004,7 @@ AI Budget Assistant предлагает три уровня подписки. �
 ## Привязка аккаунта
 
 ### Telegram
-1. Нажмите **Подключить Telegram** — появится 6-значный код (действует 10 минут)
+1. Нажмите **Подключить Telegram** — появится 8-символьный код (действует 10 минут)
 2. Откройте Telegram и найдите бота
 3. Отправьте \`/link ВАШ_КОД\` (например, \`/link A3F2B1\`)
 4. Вы увидите «Аккаунт успешно привязан!»
@@ -9016,7 +9016,7 @@ AI Budget Assistant предлагает три уровня подписки. �
 4. Вы увидите «Аккаунт успешно привязан!»
 
 ### Slack
-1. Нажмите **Подключить Slack** — появится 6-значный код (действует 10 минут)
+1. Нажмите **Подключить Slack** — появится 8-символьный код (действует 10 минут)
 2. Откройте Slack, найдите приложение **AI Budget Assistant** и откройте личный чат с ним
 3. Отправьте \`link ВАШ_КОД\` (например, \`link A3F2B1\`)
 4. Вы увидите «Аккаунт успешно привязан!»
@@ -14420,7 +14420,7 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 ## Прив'язка акаунту
 
 ### Telegram
-1. Натисніть **Підключити Telegram** — з'явиться 6-символьний код (дійсний 10 хвилин)
+1. Натисніть **Підключити Telegram** — з'явиться 8-символьний код (дійсний 10 хвилин)
 2. Відкрийте Telegram і знайдіть бота
 3. Надішліть \`/link ВАШ_КОД\` (наприклад, \`/link A3F2B1\`)
 4. Ви побачите «Акаунт успішно прив'язано!»
@@ -14432,7 +14432,7 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 4. Ви побачите «Акаунт успішно прив'язано!»
 
 ### Slack
-1. Натисніть **Підключити Slack** — з'явиться 6-символьний код (дійсний 10 хвилин)
+1. Натисніть **Підключити Slack** — з'явиться 8-символьний код (дійсний 10 хвилин)
 2. Відкрийте Slack, знайдіть застосунок **AI Budget Assistant** та відкрийте особисте повідомлення з ним
 3. Надішліть \`link ВАШ_КОД\` (наприклад, \`link A3F2B1\`)
 4. Ви побачите «Акаунт успішно прив'язано!»
@@ -19807,7 +19807,7 @@ Aby połączyć: **Ustawienia → Czat-boty**.
 ## Łączenie konta
 
 ### Telegram
-1. Dotknij **Połącz Telegrama** — pojawi się 6-znakowy kod (ważny 10 minut)
+1. Dotknij **Połącz Telegrama** — pojawi się 8-znakowy kod (ważny 10 minut)
 2. Otwórz Telegrama i znajdź bota
 3. Wyślij \`/link TWÓJ_KOD\` (np. \`/link A3F2B1\`)
 4. Zobaczysz „Konto połączone pomyślnie!"
@@ -19819,7 +19819,7 @@ Aby połączyć: **Ustawienia → Czat-boty**.
 4. Zobaczysz „Konto połączone pomyślnie!"
 
 ### Slack
-1. Dotknij **Połącz Slacka** — pojawi się 6-znakowy kod (ważny 10 minut)
+1. Dotknij **Połącz Slacka** — pojawi się 8-znakowy kod (ważny 10 minut)
 2. Otwórz Slacka, znajdź aplikację **AI Budget Assistant** i otwórz z nią wiadomość bezpośrednią
 3. Wyślij \`link TWÓJ_KOD\` (np. \`link A3F2B1\`)
 4. Zobaczysz „Konto połączone pomyślnie!"
@@ -25193,7 +25193,7 @@ Zum Verbinden: **Einstellungen → Chat-Bots**.
 ## Konto verknüpfen
 
 ### Telegram
-1. Tippe **Telegram verbinden** — ein 6-stelliger Code erscheint (10 Minuten gültig)
+1. Tippe **Telegram verbinden** — ein 8-stelliger Code erscheint (10 Minuten gültig)
 2. Öffne Telegram und suche den Bot
 3. Sende \`/link DEIN_CODE\` (z.B. \`/link A3F2B1\`)
 4. Du siehst „Konto erfolgreich verknüpft!"
@@ -25205,7 +25205,7 @@ Zum Verbinden: **Einstellungen → Chat-Bots**.
 4. Du siehst „Konto erfolgreich verknüpft!"
 
 ### Slack
-1. Tippe **Slack verbinden** — ein 6-stelliger Code erscheint (10 Minuten gültig)
+1. Tippe **Slack verbinden** — ein 8-stelliger Code erscheint (10 Minuten gültig)
 2. Öffne Slack, suche die App **AI Budget Assistant** und öffne eine Direktnachricht
 3. Sende \`link DEIN_CODE\` (z.B. \`link A3F2B1\`)
 4. Du siehst „Konto erfolgreich verknüpft!"
@@ -30556,7 +30556,7 @@ Para conectar: **Ajustes → Chatbots**.
 ## Vincular tu cuenta
 
 ### Telegram
-1. Toca **Conectar Telegram** — aparece un código de 6 caracteres (válido 10 minutos)
+1. Toca **Conectar Telegram** — aparece un código de 8 caracteres (válido 10 minutos)
 2. Abre Telegram y busca el bot
 3. Envía \`/link TU_CÓDIGO\` (ej. \`/link A3F2B1\`)
 4. Verás «¡Cuenta vinculada con éxito!»
@@ -30568,7 +30568,7 @@ Para conectar: **Ajustes → Chatbots**.
 4. Verás «¡Cuenta vinculada con éxito!»
 
 ### Slack
-1. Toca **Conectar Slack** — aparece un código de 6 caracteres (válido 10 minutos)
+1. Toca **Conectar Slack** — aparece un código de 8 caracteres (válido 10 minutos)
 2. Abre Slack, encuentra la app **AI Budget Assistant** y abre un mensaje directo con ella
 3. Envía \`link TU_CÓDIGO\` (ej. \`link A3F2B1\`)
 4. Verás «¡Cuenta vinculada con éxito!»
@@ -35906,7 +35906,7 @@ Pour connecter : **Paramètres → Chatbots**.
 ## Lier votre compte
 
 ### Telegram
-1. Appuyez sur **Connecter Telegram** — un code à 6 caractères apparaît (valide 10 minutes)
+1. Appuyez sur **Connecter Telegram** — un code à 8 caractères apparaît (valide 10 minutes)
 2. Ouvrez Telegram et trouvez le bot
 3. Envoyez \`/link VOTRE_CODE\` (ex. \`/link A3F2B1\`)
 4. Vous verrez « Compte lié avec succès ! »
@@ -35918,7 +35918,7 @@ Pour connecter : **Paramètres → Chatbots**.
 4. Vous verrez « Compte lié avec succès ! »
 
 ### Slack
-1. Appuyez sur **Connecter Slack** — un code à 6 caractères apparaît (valide 10 minutes)
+1. Appuyez sur **Connecter Slack** — un code à 8 caractères apparaît (valide 10 minutes)
 2. Ouvrez Slack, trouvez l'application **AI Budget Assistant** et ouvrez un message direct avec elle
 3. Envoyez \`link VOTRE_CODE\` (ex. \`link A3F2B1\`)
 4. Vous verrez « Compte lié avec succès ! »
@@ -41260,7 +41260,7 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 ## Прывязка акаўнта
 
 ### Telegram
-1. Націсніце **Падключыць Telegram** — з'явіцца 6-значны код (дзейны 10 хвілін)
+1. Націсніце **Падключыць Telegram** — з'явіцца 8-сімвальны код (дзейны 10 хвілін)
 2. Адкрыйце Telegram і знайдзіце бота
 3. Адпраўце \`/link ВАШ_КОД\` (напрыклад, \`/link A3F2B1\`)
 4. Вы ўбачыце «Акаўнт паспяхова прывязаны!»
@@ -41272,7 +41272,7 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 4. Вы ўбачыце «Акаўнт паспяхова прывязаны!»
 
 ### Slack
-1. Націсніце **Падключыць Slack** — з'явіцца 6-значны код (дзейны 10 хвілін)
+1. Націсніце **Падключыць Slack** — з'явіцца 8-сімвальны код (дзейны 10 хвілін)
 2. Адкрыйце Slack, знайдзіце праграму **AI Budget Assistant** і адкрыйце асабісты чат з ёй
 3. Адпраўце \`link ВАШ_КОД\` (напрыклад, \`link A3F2B1\`)
 4. Вы ўбачыце «Акаўнт паспяхова прывязаны!»
@@ -46601,7 +46601,7 @@ Om te verbinden: **Instellingen → Chatbots**.
 ## Je account koppelen
 
 ### Telegram
-1. Tik op **Telegram verbinden** — er verschijnt een code van 6 tekens (10 minuten geldig)
+1. Tik op **Telegram verbinden** — er verschijnt een code van 8 tekens (10 minuten geldig)
 2. Open Telegram en zoek de bot
 3. Stuur \`/link JOUW_CODE\` (bijv. \`/link A3F2B1\`)
 4. Je ziet "Account succesvol gekoppeld!"
@@ -46613,7 +46613,7 @@ Om te verbinden: **Instellingen → Chatbots**.
 4. Je ziet "Account succesvol gekoppeld!"
 
 ### Slack
-1. Tik op **Slack verbinden** — er verschijnt een code van 6 tekens (10 minuten geldig)
+1. Tik op **Slack verbinden** — er verschijnt een code van 8 tekens (10 minuten geldig)
 2. Open Slack, zoek de **AI Budget Assistant**-app en open er een direct bericht mee
 3. Stuur \`link JOUW_CODE\` (bijv. \`link A3F2B1\`)
 4. Je ziet "Account succesvol gekoppeld!"
@@ -52061,7 +52061,7 @@ Para ligar: **Definições → Bots de chat**.
 ## Associar a sua conta
 
 ### Telegram
-1. Toque em **Ligar o Telegram** — aparece um código de 6 caracteres (válido durante 10 minutos)
+1. Toque em **Ligar o Telegram** — aparece um código de 8 caracteres (válido durante 10 minutos)
 2. Abra o Telegram e procure o bot
 3. Envie \`/link SEU_CODIGO\` (por exemplo, \`/link A3F2B1\`)
 4. Verá «Conta associada com sucesso!»
@@ -52073,7 +52073,7 @@ Para ligar: **Definições → Bots de chat**.
 4. Verá «Conta associada com sucesso!»
 
 ### Slack
-1. Toque em **Ligar o Slack** — aparece um código de 6 caracteres (válido durante 10 minutos)
+1. Toque em **Ligar o Slack** — aparece um código de 8 caracteres (válido durante 10 minutos)
 2. Abra o Slack, procure a aplicação **AI Budget Assistant** e abra uma mensagem direta com ela
 3. Envie \`link SEU_CODIGO\` (por exemplo, \`link A3F2B1\`)
 4. Verá «Conta associada com sucesso!»
@@ -57528,7 +57528,7 @@ Para conectar: **Configurações → Bots de chat**.
 ## Vincular sua conta
 
 ### Telegram
-1. Toque em **Conectar o Telegram** — aparece um código de 6 caracteres (válido por 10 minutos)
+1. Toque em **Conectar o Telegram** — aparece um código de 8 caracteres (válido por 10 minutos)
 2. Abra o Telegram e encontre o bot
 3. Envie \`/link SEU_CODIGO\` (por exemplo, \`/link A3F2B1\`)
 4. Você verá “Conta vinculada com sucesso!”
@@ -57540,7 +57540,7 @@ Para conectar: **Configurações → Bots de chat**.
 4. Você verá “Conta vinculada com sucesso!”
 
 ### Slack
-1. Toque em **Conectar o Slack** — aparece um código de 6 caracteres (válido por 10 minutos)
+1. Toque em **Conectar o Slack** — aparece um código de 8 caracteres (válido por 10 minutos)
 2. Abra o Slack, encontre o app **AI Budget Assistant** e abra uma mensagem direta com ele
 3. Envie \`link SEU_CODIGO\` (por exemplo, \`link A3F2B1\`)
 4. Você verá “Conta vinculada com sucesso!”

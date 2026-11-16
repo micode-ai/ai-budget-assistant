@@ -11,7 +11,7 @@ Para ligar: **Definições → Bots de chat**.
 ## Associar a sua conta
 
 ### Telegram
-1. Toque em **Ligar o Telegram** — aparece um código de 6 caracteres (válido durante 10 minutos)
+1. Toque em **Ligar o Telegram** — aparece um código de 8 caracteres (válido durante 10 minutos)
 2. Abra o Telegram e procure o bot
 3. Envie `/link SEU_CODIGO` (por exemplo, `/link A3F2B1`)
 4. Verá «Conta associada com sucesso!»
@@ -23,7 +23,7 @@ Para ligar: **Definições → Bots de chat**.
 4. Verá «Conta associada com sucesso!»
 
 ### Slack
-1. Toque em **Ligar o Slack** — aparece um código de 6 caracteres (válido durante 10 minutos)
+1. Toque em **Ligar o Slack** — aparece um código de 8 caracteres (válido durante 10 minutos)
 2. Abra o Slack, procure a aplicação **AI Budget Assistant** e abra uma mensagem direta com ela
 3. Envie `link SEU_CODIGO` (por exemplo, `link A3F2B1`)
 4. Verá «Conta associada com sucesso!»

@@ -10,7 +10,7 @@ Met de **Telegram-bot** kun je je AI Budget Assistant gebruiken vanuit Telegram.
 
 1. Open de app en ga naar **Instellingen**
 2. Tik op **Telegram-bot** onder de sectie Integraties
-3. Tik op **Koppelcode genereren** — er verschijnt een code van 6 tekens (10 minuten geldig)
+3. Tik op **Koppelcode genereren** — er verschijnt een code van 8 tekens (10 minuten geldig)
 4. Open Telegram en zoek de bot
 5. Stuur `/link CODE` (bijv. `/link A3F2B1`)
 6. Je ziet een bevestiging: "Account succesvol gekoppeld!"

@@ -40,15 +40,13 @@ those guards, each found in a real defect.
 
 ## Known gaps
 Open findings from the 2026-11-16 security review, tracked as follow-ups to ABA-807:
-- Bot link codes are 24-bit, looked up globally and not rate-limited.
-- A Google auto-link of an unverified account keeps the attacker-set password.
-- `POST /auth/login` has no server-side rate limit, and the other auth limits live in in-memory Maps.
 - Expense and income writes accept a `tagIds`/`projectId`, and splits and user subscriptions a `categoryId`, from
   another account. A foreign UUID is required.
 - Tokens are not revoked on password reset or e-mail change.
 
 ## History
 - ABA-155 added `ViewerBlockGuard`.
+- [ABA-808](https://github.com/micode-ai/ai-budget-assistant/issues/846) closed three of the review's findings: brute-forceable bot link codes, the Google auto-link pre-hijack, and the missing login limit and in-memory auth limits — see [auth](../auth.md).
 - [ABA-807](https://github.com/micode-ai/ai-budget-assistant/issues/845) fixed three defects:
   - the encryption routes acted on the path account while checking the header one;
   - `PATCH /users/me` mass assignment;

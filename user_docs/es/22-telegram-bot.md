@@ -10,7 +10,7 @@ El **Bot de Telegram** te permite interactuar con tu Asistente de presupuesto IA
 
 1. Abre la aplicacion y ve a **Configuracion**
 2. Toca **Bot de Telegram** en la seccion Integraciones
-3. Toca **Generar codigo** — aparece un codigo de 6 caracteres (valido por 10 minutos)
+3. Toca **Generar codigo** — aparece un codigo de 8 caracteres (valido por 10 minutos)
 4. Abre Telegram y busca el bot
 5. Envia `/link CODIGO` (por ejemplo, `/link A3F2B1`)
 6. Veras una confirmacion: "Cuenta vinculada exitosamente!"

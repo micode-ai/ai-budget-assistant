@@ -12,7 +12,7 @@ El bot funciona igual que el [Bot de Telegram](./22-telegram-bot.md): misma IA, 
 
 1. Abre la app y ve a **Configuración**
 2. Toca **WhatsApp Bot** en Integraciones
-3. Toca **Conectar WhatsApp** — aparece un código de 6 caracteres y un código QR (válido 10 minutos)
+3. Toca **Conectar WhatsApp** — aparece un código de 8 caracteres y un código QR (válido 10 minutos)
 4. Luego:
    - Toca **Abrir WhatsApp** — WhatsApp se abre con el mensaje `link TU_CÓDIGO` ya escrito.
    - O escanea el QR con otro teléfono.

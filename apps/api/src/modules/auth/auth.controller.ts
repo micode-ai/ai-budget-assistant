@@ -14,8 +14,9 @@ export class AuthController {
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  async login(@Body() dto: LoginDto) {
-    return this.authService.login(dto);
+  async login(@Req() req: { ip?: string }, @Body() dto: LoginDto) {
+    // req.ip is the client address: main.ts sets `trust proxy` to the one nginx hop.
+    return this.authService.login(dto, req.ip);
   }
 
   @Post('refresh')

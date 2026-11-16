@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException, ConflictException, BadRequestException, HttpException, HttpStatus, Inject, forwardRef } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException, ConflictException, BadRequestException, HttpException, HttpStatus, Inject, forwardRef } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
@@ -13,9 +13,17 @@ import { AdminGateway } from '../admin/admin.gateway';
 import { ReferralsService } from '../referrals/referrals.service';
 import { RegisterDto, LoginDto, ChangeEmailRequestDto, ChangeEmailConfirmDto, GoogleAuthDto } from './dto';
 import { GoogleTokenVerifier } from './google-token-verifier';
+import { CacheService } from '../../common/cache/cache.service';
 
+
+const AUTH_RATE_WINDOW_MS = 15 * 60 * 1000;
+/** Login attempts per e-mail and per client IP in the window (ABA-808). */
+export const LOGIN_ATTEMPTS_PER_EMAIL = 10;
+export const LOGIN_ATTEMPTS_PER_IP = 50;
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     private readonly usersService: UsersService,
     private readonly accountsService: AccountsService,
@@ -27,23 +35,30 @@ export class AuthService {
     private readonly adminGateway: AdminGateway,
     private readonly referralsService: ReferralsService,
     private readonly googleVerifier: GoogleTokenVerifier,
+    private readonly cache: CacheService,
   ) {}
 
-  private resetRequestAttempts = new Map<string, number[]>();
-  private resetVerifyAttempts = new Map<string, number[]>();
-  private emailChangeRequestAttempts = new Map<string, number[]>();
-  private emailChangeVerifyAttempts = new Map<string, number[]>();
-  private verifyEmailAttempts = new Map<string, number[]>();
-
-  private checkRateLimit(map: Map<string, number[]>, key: string, maxAttempts: number): void {
-    const now = Date.now();
-    const windowMs = 15 * 60 * 1000; // 15 minutes
-    const attempts = (map.get(key) || []).filter((t) => now - t < windowMs);
-    if (attempts.length >= maxAttempts) {
+  /**
+   * Auth rate limits (ABA-808), counted in Redis so they survive a deploy and are shared
+   * by every API process — they used to be per-instance Maps, reset on each restart.
+   * `failOpen` is only for login: there bcrypt still slows guessing and a Redis outage
+   * must not lock every user out. Code checks (verify, reset, e-mail change) fail
+   * CLOSED, because an uncounted attempt against a 6-digit code is the attack itself.
+   */
+  private async checkRateLimit(bucket: string, key: string, maxAttempts: number, failOpen = false): Promise<void> {
+    let attempts: number;
+    try {
+      attempts = await this.cache.incrementWindow(`auth:rl:${bucket}:${key.toLowerCase()}`, AUTH_RATE_WINDOW_MS);
+    } catch (err) {
+      if (failOpen) {
+        this.logger.warn(`auth rate limit ${bucket} unavailable, allowing: ${(err as Error).message}`);
+        return;
+      }
       throw new HttpException('Too many attempts. Please try again later.', HttpStatus.TOO_MANY_REQUESTS);
     }
-    attempts.push(now);
-    map.set(key, attempts);
+    if (attempts > maxAttempts) {
+      throw new HttpException('Too many attempts. Please try again later.', HttpStatus.TOO_MANY_REQUESTS);
+    }
   }
 
   async register(dto: RegisterDto) {
@@ -139,7 +154,11 @@ export class AuthService {
     };
   }
 
-  async login(dto: LoginDto) {
+  async login(dto: LoginDto, ip?: string) {
+    // Online password guessing (ABA-808): per address and per client IP, counted in Redis.
+    await this.checkRateLimit('login-email', dto.email, LOGIN_ATTEMPTS_PER_EMAIL, true);
+    if (ip) await this.checkRateLimit('login-ip', ip, LOGIN_ATTEMPTS_PER_IP, true);
+
     // Find user
     const user = await this.usersService.findByEmail(dto.email);
     if (!user) {
@@ -233,10 +252,10 @@ export class AuthService {
         if (!byEmail.isActive) {
           throw new UnauthorizedException('Account is deactivated');
         }
-        user = await this.usersService.update(byEmail.id, {
-          googleId,
-          ...(byEmail.isVerified ? {} : { isVerified: true }),
-        });
+        user = byEmail.isVerified
+          ? await this.usersService.update(byEmail.id, { googleId })
+          // Never verified: its password was never proven to belong to this e-mail's owner (ABA-808).
+          : await this.usersService.claimUnverifiedForGoogle(byEmail.id, googleId);
       }
     }
 
@@ -352,7 +371,7 @@ export class AuthService {
 
   async forgotPassword(email: string) {
     // Rate limit before user lookup to prevent enumeration via timing
-    this.checkRateLimit(this.resetRequestAttempts, email, 3);
+    await this.checkRateLimit('reset-request', email, 3);
 
     const user = await this.usersService.findByEmail(email);
 
@@ -404,7 +423,7 @@ export class AuthService {
       throw new BadRequestException('Invalid or expired code');
     }
 
-    this.checkRateLimit(this.resetVerifyAttempts, email, 5);
+    await this.checkRateLimit('reset-verify', email, 5);
 
     // Verify code
     const isCodeValid = await bcrypt.compare(code, user.passwordResetCode);
@@ -424,7 +443,7 @@ export class AuthService {
   }
 
   async verifyEmail(email: string, code: string) {
-    this.checkRateLimit(this.verifyEmailAttempts, email, 10);
+    await this.checkRateLimit('verify-email', email, 10);
 
     const user = await this.usersService.findByEmail(email);
 
@@ -483,7 +502,7 @@ export class AuthService {
     }
 
     // Rate limit
-    this.checkRateLimit(this.resetRequestAttempts, `verify_${email}`, 3);
+    await this.checkRateLimit('resend-verification', email, 3);
 
     // Generate new code
     const code = randomInt(100000, 999999).toString();
@@ -516,7 +535,7 @@ export class AuthService {
   }
 
   async changeEmailRequest(userId: string, dto: ChangeEmailRequestDto) {
-    this.checkRateLimit(this.emailChangeRequestAttempts, userId, 3);
+    await this.checkRateLimit('email-change-request', userId, 3);
 
     const user = await this.usersService.findById(userId);
     if (!user || !user.isActive) {
@@ -572,7 +591,7 @@ export class AuthService {
   }
 
   async changeEmailConfirm(userId: string, dto: ChangeEmailConfirmDto) {
-    this.checkRateLimit(this.emailChangeVerifyAttempts, userId, 5);
+    await this.checkRateLimit('email-change-verify', userId, 5);
 
     const user = await this.usersService.findById(userId);
     if (!user || !user.isActive || !user.emailChangePending || !user.emailChangeCode || !user.emailChangeExpiresAt) {

@@ -1,7 +1,15 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { randomBytes } from 'crypto';
 import { PrismaService } from '../../database/prisma.service';
+
+import { CacheService } from '../../common/cache/cache.service';
+import {
+  generateLinkCode,
+  normalizeLinkCode,
+  linkAttemptAllowed,
+  LINK_INVALID_CODE,
+  LINK_TOO_MANY_ATTEMPTS,
+} from '../../common/utils/bot-link-code';
 
 @Injectable()
 export class WhatsAppLinkService {
@@ -10,6 +18,7 @@ export class WhatsAppLinkService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly config: ConfigService,
+    private readonly cache: CacheService,
   ) {}
 
   async generateCode(
@@ -22,7 +31,7 @@ export class WhatsAppLinkService {
       data: { usedAt: new Date() },
     });
 
-    const code = randomBytes(3).toString('hex').toUpperCase().slice(0, 6);
+    const code = generateLinkCode();
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
     await this.prisma.whatsAppLinkCode.create({
@@ -39,23 +48,31 @@ export class WhatsAppLinkService {
     waPhoneNumber: string,
     waProfileName?: string,
   ): Promise<{ success: boolean; error?: string }> {
+    // Codes are matched across every user, so each attempt is counted before the lookup (ABA-808).
+    if (!(await linkAttemptAllowed(this.cache, 'whatsapp', waPhoneNumber))) {
+      return { success: false, error: LINK_TOO_MANY_ATTEMPTS };
+    }
     const linkCode = await this.prisma.whatsAppLinkCode.findFirst({
       where: {
-        code: code.toUpperCase(),
+        code: normalizeLinkCode(code),
         usedAt: null,
         expiresAt: { gt: new Date() },
       },
     });
 
     if (!linkCode) {
-      return { success: false, error: 'Invalid or expired code. Please generate a new one in the app.' };
+      return { success: false, error: LINK_INVALID_CODE };
     }
 
     // Mark code as used
-    await this.prisma.whatsAppLinkCode.update({
-      where: { id: linkCode.id },
+    // Claim it only if still unused: two redemptions racing on one code must not both link.
+    const claimed = await this.prisma.whatsAppLinkCode.updateMany({
+      where: { id: linkCode.id, usedAt: null },
       data: { usedAt: new Date() },
     });
+    if (claimed.count === 0) {
+      return { success: false, error: LINK_INVALID_CODE };
+    }
 
     // Upsert whatsapp link (one per phone number, one per app user)
     await this.prisma.whatsAppLink.upsert({

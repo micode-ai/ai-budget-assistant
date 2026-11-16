@@ -11,7 +11,7 @@ Aby połączyć: **Ustawienia → Czat-boty**.
 ## Łączenie konta
 
 ### Telegram
-1. Dotknij **Połącz Telegrama** — pojawi się 6-znakowy kod (ważny 10 minut)
+1. Dotknij **Połącz Telegrama** — pojawi się 8-znakowy kod (ważny 10 minut)
 2. Otwórz Telegrama i znajdź bota
 3. Wyślij `/link TWÓJ_KOD` (np. `/link A3F2B1`)
 4. Zobaczysz „Konto połączone pomyślnie!"
@@ -23,7 +23,7 @@ Aby połączyć: **Ustawienia → Czat-boty**.
 4. Zobaczysz „Konto połączone pomyślnie!"
 
 ### Slack
-1. Dotknij **Połącz Slacka** — pojawi się 6-znakowy kod (ważny 10 minut)
+1. Dotknij **Połącz Slacka** — pojawi się 8-znakowy kod (ważny 10 minut)
 2. Otwórz Slacka, znajdź aplikację **AI Budget Assistant** i otwórz z nią wiadomość bezpośrednią
 3. Wyślij `link TWÓJ_KOD` (np. `link A3F2B1`)
 4. Zobaczysz „Konto połączone pomyślnie!"

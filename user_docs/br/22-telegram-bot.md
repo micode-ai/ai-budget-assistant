@@ -10,7 +10,7 @@ O **Bot do Telegram** permite interagir com o AI Budget Assistant pelo Telegram.
 
 1. Abra o app e vá em **Configurações**
 2. Toque em **Bot do Telegram** na seção de integrações
-3. Toque em **Conectar o Telegram** — aparece um código de 6 caracteres (válido por 10 minutos)
+3. Toque em **Conectar o Telegram** — aparece um código de 8 caracteres (válido por 10 minutos)
 4. Abra o Telegram e encontre o bot
 5. Envie `/link CÓDIGO` (por exemplo, `/link A3F2B1`)
 6. Você verá uma confirmação: “Conta vinculada com sucesso!”

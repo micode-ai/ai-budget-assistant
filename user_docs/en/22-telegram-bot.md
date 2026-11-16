@@ -10,7 +10,7 @@ The **Telegram Bot** lets you interact with your AI Budget Assistant from Telegr
 
 1. Open the app and go to **Settings**
 2. Tap **Telegram Bot** under the Integrations section
-3. Tap **Generate Link Code** — a 6-character code appears (valid for 10 minutes)
+3. Tap **Generate Link Code** — a 8-character code appears (valid for 10 minutes)
 4. Open Telegram and find the bot
 5. Send `/link CODE` (e.g., `/link A3F2B1`)
 6. You'll see a confirmation: "Account linked successfully!"
