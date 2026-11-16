@@ -127,6 +127,30 @@ export class ChildrenService {
     return this.toChild(row);
   }
 
+  /**
+   * Deletes a child that nothing is attributed to (ABA-800): no live expense
+   * linked to it, no live receipt line assigned to it, no income marked as its
+   * benefit. One that has any keeps the archive-only rule, so a statement or a
+   * report never loses rows — the caller gets a 409 `CHILD_IN_USE` and offers
+   * Archive. Soft delete: a later create of the same name revives the row.
+   */
+  async remove(accountId: string, id: string): Promise<{ success: true }> {
+    const child = await this.findOne(accountId, id);
+    const [links, items, incomes] = await Promise.all([
+      this.prisma.expenseChild.count({ where: { childId: child.id, expense: { isDeleted: false } } }),
+      this.prisma.expenseItem.count({ where: { childId: child.id, isDeleted: false, expense: { isDeleted: false } } }),
+      this.prisma.income.count({ where: { childBenefitChildId: child.id, isDeleted: false } }),
+    ]);
+    if (links + items + incomes > 0) {
+      throw new ConflictException({ code: 'CHILD_IN_USE', message: 'This child has costs attributed; archive it instead' });
+    }
+    await this.prisma.child.update({
+      where: { id: child.id },
+      data: { isDeleted: true, syncVersion: { increment: 1 } },
+    });
+    return { success: true };
+  }
+
   async update(accountId: string, userId: string, id: string, dto: UpdateChildDto): Promise<ChildResponse> {
     void userId;
     const existing = await this.findOne(accountId, id);

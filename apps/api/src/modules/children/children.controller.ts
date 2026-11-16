@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   Param,
@@ -86,6 +87,13 @@ export class ChildrenController {
     res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
     res.setHeader('Content-Length', String(pdf.length));
     res.send(pdf);
+  }
+
+  /** Only a child with nothing attributed; otherwise 409 `CHILD_IN_USE` (ABA-800). */
+  @Delete(':id')
+  @UseGuards(new ViewerBlockGuard())
+  remove(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+    return this.childrenService.remove(req.accountId, id);
   }
 
   @Patch(':id')

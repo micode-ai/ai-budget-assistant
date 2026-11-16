@@ -1744,6 +1744,7 @@ Toque em **Exportar relatório** para abrir o ecrã [Exportação e relatórios]
 Veja quanto lhe custa cada filho, sem adivinhar.
 
 - **Adicionar filhos:** Definições > Dados de referência > Filhos. Só são guardados um nome e uma cor. Arquive um filho em vez de o eliminar; as despesas dele continuam atribuídas.
+- **Por conta, eliminar ou arquivar:** os filhos pertencem à conta em que está (o ecrã indica-a) — cada conta, incluindo uma partilhada, tem a sua própria lista. Um filho sem custos atribuídos pode ser eliminado (abra-o e toque em **Eliminar filho**); um com custos só pode ser arquivado, para que os custos o mantenham. Numa conta encriptada o nome é guardado encriptado: desbloqueie primeiro a encriptação em **Definições → Segurança**, ou a app avisa em vez de guardar.
 - **Atribuir uma despesa inteira:** numa despesa nova ou existente, escolha um ou mais filhos. Com vários filhos, o montante é dividido em partes iguais, a menos que edite as partes. Uma despesa usa a atribuição da despesa inteira ou a atribuição por linha do talão, não as duas; a aplicação pergunta antes de mudar.
 - **Atribuir linhas do talão:** depois de digitalizar um talão, atribua linhas individuais (fraldas, material escolar) a um filho. A aplicação memoriza a sua escolha e sugere-a da próxima vez. Uma sugestão nunca é aplicada sem a sua confirmação. «Extrair artigos» mantém a atribuição dos produtos que continuam no talão e indica quantos não conseguiu transferir.
 - **Em massa:** selecione várias despesas e escolha Atribuir a filho. As despesas com atribuição por linha são ignoradas e a contagem é mostrada.
@@ -2703,7 +2704,7 @@ Veja e faça a gestão de todas as categorias de despesas e de receitas num só 
 
 ## Veículos
 
-Aceda em **Definições → Dados de referência → Veículos**.
+Aceda em **Definições → Dados de referência → Veículos**. Os veículos pertencem à conta em que está — o ecrã indica-a, e cada conta tem a sua própria lista.
 
 Veja quanto o carro lhe custa em combustível. Adicione um veículo com nome e tipo de combustível (gasolina, gasóleo, GPL, elétrico, híbrido ou outro). Cada veículo mostra o consumo aos 100 km, o custo do combustível aos 100 km e por km na sua moeda de apresentação, o número de abastecimentos e a distância percorrida. Toque em **Mostrar abastecimentos** para ver a lista.
 

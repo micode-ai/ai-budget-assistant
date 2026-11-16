@@ -7,7 +7,7 @@ import { showAlert } from '@/utils/alert';
 import { SheetDialog } from '@/components/SheetDialog';
 import { SettingsScreenScroll } from '@/components/settings/SettingsScreenScroll';
 import { useAccountStore } from '@/stores/accountStore';
-import { CHILD_NAME_MAX, useChildStore } from '@/stores/childStore';
+import { CHILD_NAME_MAX, ChildWriteError, useChildStore } from '@/stores/childStore';
 import { useAccountChildren } from '@/hooks/useAccountChildren';
 import { useTheme, useStyles, type Theme } from '@/theme';
 
@@ -48,6 +48,9 @@ export function ChildrenSettings() {
   const renameChild = useChildStore((s) => s.renameChild);
   const setChildColor = useChildStore((s) => s.setChildColor);
   const setArchived = useChildStore((s) => s.setArchived);
+  const deleteChild = useChildStore((s) => s.deleteChild);
+  // Children belong to an account; say which one, or a list per account reads as a lost child (ABA-800).
+  const accountName = useAccountStore((s) => s.currentAccount()?.name ?? '');
 
   const [modalVisible, setModalVisible] = useState(false);
   const [editing, setEditing] = useState<Child | null>(null);
@@ -76,6 +79,44 @@ export function ChildrenSettings() {
     setName('');
   };
 
+  /** The reason in words when there is one, else the generic message. */
+  const showWriteError = (e: unknown) => {
+    if (e instanceof ChildWriteError && e.code === 'ENCRYPTION_LOCKED') {
+      showAlert(t('children.encryptionLockedTitle'), t('children.encryptionLocked'));
+      return;
+    }
+    showAlert(t('common.error'), t('children.saveFailed'));
+  };
+
+  const handleDelete = (child: Child) => {
+    const run = async () => {
+      try {
+        await deleteChild(child.id);
+        closeModal();
+      } catch (e) {
+        if (e instanceof ChildWriteError && e.code === 'CHILD_IN_USE') {
+          showAlert(t('children.deleteInUseTitle'), t('children.deleteInUse'), [
+            { text: t('common.cancel'), style: 'cancel' },
+            {
+              text: t('children.archive'),
+              onPress: () => {
+                closeModal();
+                void setArchived(child.id, true).catch(showWriteError);
+              },
+            },
+          ]);
+          return;
+        }
+        console.warn('[children] delete failed:', e instanceof Error ? e.message : String(e));
+        showWriteError(e);
+      }
+    };
+    showAlert(t('children.deleteTitle', { name: child.name || t('children.unnamed') }), t('children.deleteMessage'), [
+      { text: t('common.cancel'), style: 'cancel' },
+      { text: t('common.delete'), style: 'destructive', onPress: () => void run() },
+    ]);
+  };
+
   const handleSave = async () => {
     const trimmed = name.trim();
     if (!trimmed) return;
@@ -90,7 +131,7 @@ export function ChildrenSettings() {
       closeModal();
     } catch (e) {
       console.warn('[children] save failed:', e instanceof Error ? e.message : String(e));
-      showAlert(t('common.error'), t('children.saveFailed'));
+      showWriteError(e);
     } finally {
       setIsSaving(false);
     }
@@ -102,7 +143,7 @@ export function ChildrenSettings() {
         await setArchived(child.id, archived);
       } catch (e) {
         console.warn('[children] archive failed:', e instanceof Error ? e.message : String(e));
-        showAlert(t('common.error'), t('children.saveFailed'));
+        showWriteError(e);
       }
     };
     if (!archived) {
@@ -186,6 +227,7 @@ export function ChildrenSettings() {
           )}
         </View>
 
+        {!!accountName && <Text style={styles.accountNote}>{t('children.accountNote', { account: accountName })}</Text>}
         <View style={styles.card}>{body}</View>
         <Text style={styles.hint}>{t('children.hint')}</Text>
 
@@ -264,6 +306,12 @@ export function ChildrenSettings() {
             <Text style={styles.saveText}>{editing ? t('common.save') : t('children.addChild')}</Text>
           </TouchableOpacity>
         </View>
+        {editing && (
+          <TouchableOpacity style={styles.deleteRow} onPress={() => handleDelete(editing)} accessibilityRole="button">
+            <Ionicons name="trash-outline" size={18} color={theme.colors.danger} />
+            <Text style={styles.deleteText}>{t('children.delete')}</Text>
+          </TouchableOpacity>
+        )}
       </SheetDialog>
     </>
   );
@@ -308,6 +356,21 @@ const createStyles = (theme: Theme) => ({
   },
   stateBox: { alignItems: 'center' as const, paddingVertical: theme.spacing[2], gap: theme.spacing[2] },
   retry: { ...theme.textStyles.bodyMedium, color: theme.colors.primary },
+  accountNote: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textSecondary,
+    marginBottom: theme.spacing[2],
+    paddingHorizontal: theme.spacing[1],
+  },
+  deleteRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    gap: theme.spacing[2],
+    marginTop: theme.spacing[4],
+    paddingVertical: theme.spacing[2],
+  },
+  deleteText: { ...theme.textStyles.bodyMedium, color: theme.colors.danger },
   hint: {
     ...theme.textStyles.bodySm,
     color: theme.colors.textTertiary,

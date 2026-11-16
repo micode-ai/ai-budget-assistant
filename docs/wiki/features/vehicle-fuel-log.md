@@ -29,6 +29,8 @@ converts each fill-up's expense amount with `common/utils/fx.ts`, and a fill-up 
 and sets `fxApproximate` — never summed unconverted. `GET /vehicles/fuel-logs/:expenseId` answers `{ fuelLog: null }`
 rather than 404, because the expense screen asks it for every expense with a vehicle on the account.
 
+**Per account, and the screen says so** ([ABA-800](https://github.com/micode-ai/ai-budget-assistant/issues/838)): Settings → Vehicles names the current account.
+
 **The app is online-only here.** `useVehicles` caches the list per account in module scope (keyed by account id, so
 a switch never reads another account's list) and `reloadVehicles` refetches after a write. The Fill-up section is
 drawn only when the account has a vehicle or the expense already has a fill-up, and sends `serverId ?? id`.

@@ -16,6 +16,16 @@ function getEncryptionStore() {
 const tierCache = new Map<string, { tier: EncryptionTier; ts: number }>();
 const TIER_CACHE_TTL = 60_000; // 1 minute
 
+/**
+ * Whether this session can encrypt for the account right now: the master key
+ * is unlocked and the account's key is loaded. A write that MUST be encrypted
+ * (a child's name, ABA-800) checks this first instead of failing later.
+ */
+export function canEncryptFor(accountId: string): boolean {
+  const state = getEncryptionStore().getState();
+  return !!state.isUnlocked && !!state.getAccountKey(accountId);
+}
+
 export async function getAccountEncryptionTier(accountId: string): Promise<EncryptionTier> {
   const cached = tierCache.get(accountId);
   if (cached && Date.now() - cached.ts < TIER_CACHE_TTL) {

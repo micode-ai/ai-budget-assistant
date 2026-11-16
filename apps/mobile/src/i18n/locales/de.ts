@@ -2743,6 +2743,7 @@ export default {
     loadFailed: "Vermögen konnte nicht geladen werden.",
   },
   vehicles: {
+    accountNote: "Fahrzeuge des Kontos „{{account}}“. Jedes Konto hat seine eigene Liste.",
     title: "Fahrzeuge",
     settingsDesc: "Was dein Auto an Kraftstoff kostet",
     add: "Fahrzeug hinzufügen",
@@ -2784,6 +2785,14 @@ export default {
     notSyncedYet: "Diese Ausgabe ist noch nicht auf dem Server. Versuche es nach der Synchronisierung erneut.",
   },
   children: {
+    accountNote: "Kinder des Kontos „{{account}}“. Jedes Konto hat seine eigene Liste.",
+    delete: "Kind löschen",
+    deleteTitle: "{{name}} löschen?",
+    deleteMessage: "Nur möglich, solange diesem Kind keine Kosten zugeordnet sind.",
+    deleteInUseTitle: "Kosten zugeordnet",
+    deleteInUse: "Diesem Kind sind bereits Kosten zugeordnet, daher kann es nur archiviert werden — die Kosten und Aufstellungen behalten es.",
+    encryptionLockedTitle: "Verschlüsselung gesperrt",
+    encryptionLocked: "Dieses Konto ist verschlüsselt, der Name eines Kindes wird verschlüsselt gespeichert. Entsperre die Verschlüsselung unter Einstellungen → Sicherheit und versuche es erneut.",
     title: "Kinder",
     settingsDesc: "Für wen eine Ausgabe ist",
     forLabel: "Für",

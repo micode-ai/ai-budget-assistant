@@ -180,7 +180,7 @@ Bekijk en beheer al je uitgaven- en inkomstencategorieën op één plek.
 
 ## Voertuigen
 
-Ga naar **Instellingen → Referentiegegevens → Voertuigen**.
+Ga naar **Instellingen → Referentiegegevens → Voertuigen**. Voertuigen horen bij het account waarin je bent — het scherm noemt het, en elk account heeft een eigen lijst.
 
 Zie wat je auto aan brandstof kost. Voeg een voertuig toe met een naam en brandstofsoort (benzine, diesel, LPG, elektrisch, hybride of overig). Elk voertuig toont het verbruik per 100 km, de brandstofkosten per 100 km en per km in je weergavevaluta, het aantal tankbeurten en de afgelegde afstand. Tik op **Tankbeurten tonen** voor de lijst.
 

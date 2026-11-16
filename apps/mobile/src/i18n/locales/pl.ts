@@ -2755,6 +2755,7 @@ export default {
     loadFailed: "Nie udało się wczytać majątku.",
   },
   vehicles: {
+    accountNote: "Pojazdy konta „{{account}}”. Każde konto ma własną listę.",
     title: "Pojazdy",
     settingsDesc: "Ile kosztuje Cię paliwo do auta",
     add: "Dodaj pojazd",
@@ -2796,6 +2797,14 @@ export default {
     notSyncedYet: "Ten wydatek nie dotarł jeszcze na serwer. Spróbuj ponownie po synchronizacji.",
   },
   children: {
+    accountNote: "Dzieci konta „{{account}}”. Każde konto ma własną listę.",
+    delete: "Usuń dziecko",
+    deleteTitle: "Usunąć {{name}}?",
+    deleteMessage: "Możliwe tylko, dopóki do tego dziecka nie przypisano żadnych kosztów.",
+    deleteInUseTitle: "Przypisano koszty",
+    deleteInUse: "Do tego dziecka przypisano już koszty, więc można je tylko zarchiwizować — koszty i zestawienia je zachowują.",
+    encryptionLockedTitle: "Szyfrowanie zablokowane",
+    encryptionLocked: "To konto jest szyfrowane, więc imię dziecka zapisuje się w postaci zaszyfrowanej. Odblokuj szyfrowanie w Ustawienia → Bezpieczeństwo i spróbuj ponownie.",
     title: "Dzieci",
     settingsDesc: "Dla kogo jest wydatek",
     forLabel: "Dla",

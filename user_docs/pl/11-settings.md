@@ -167,7 +167,7 @@ Przegladaj wszystkie swoje kategorie wydatkow i przychodow oraz zarzadzaj nimi w
 
 ## Pojazdy
 
-Dostęp: **Ustawienia → Słowniki → Pojazdy**.
+Dostęp: **Ustawienia → Słowniki → Pojazdy**. Pojazdy należą do konta, w którym jesteś — ekran je podaje, a każde konto ma własną listę.
 
 Zobacz, ile kosztuje Cię paliwo do auta. Dodaj pojazd z nazwą i rodzajem paliwa (benzyna, diesel, LPG, elektryczny, hybryda lub inne). Każdy pojazd pokazuje spalanie na 100 km, koszt paliwa na 100 km i za kilometr w Twojej walucie wyświetlania, liczbę tankowań i przejechany dystans. Stuknij **Pokaż tankowania**, aby zobaczyć listę.
 

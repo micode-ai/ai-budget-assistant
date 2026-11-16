@@ -4525,6 +4525,7 @@ Tik op **Rapport exporteren** om het scherm [Export & Rapporten](./16-export-rep
 Zie wat elk kind kost, zonder te gokken.
 
 - **Kinderen toevoegen:** Instellingen > Referentiegegevens > Kinderen. Alleen naam en kleur worden opgeslagen. Archiveer een kind in plaats van te verwijderen; de uitgaven blijven toegewezen.
+- **Per account, verwijderen of archiveren:** kinderen horen bij het account waarin je bent (het scherm noemt het) — elk account, ook een gedeeld account, heeft een eigen lijst. Een kind zonder toegewezen kosten kun je verwijderen (open het en tik op **Kind verwijderen**); een kind met kosten kan alleen worden gearchiveerd, zodat de kosten het behouden. In een versleuteld account wordt de naam versleuteld opgeslagen: ontgrendel eerst de versleuteling in **Instellingen → Beveiliging**, anders meldt de app dat in plaats van op te slaan.
 - **Een hele uitgave toewijzen:** kies bij een nieuwe of bestaande uitgave een of meer kinderen. Bij meerdere kinderen wordt het bedrag gelijk verdeeld tenzij u de aandelen aanpast. Een uitgave gebruikt toewijzing als geheel of per bonregel, niet beide; de app vraagt het voor het wisselen.
 - **Bonregels toewijzen:** wijs na het scannen van een bon afzonderlijke regels (luiers, schoolspullen) aan een kind toe. De app onthoudt uw keuze en stelt die de volgende keer voor. Een suggestie wordt nooit zonder u toegepast. 'Artikelen uitlezen' behoudt de toewijzing van producten die nog op de bon staan en meldt hoeveel er niet konden worden overgenomen.
 - **In bulk:** selecteer meerdere uitgaven en kies Aan kind toewijzen. Uitgaven met regeltoewijzing worden overgeslagen en het aantal wordt getoond.
@@ -5469,7 +5470,7 @@ Bekijk en beheer al je uitgaven- en inkomstencategorieën op één plek.
 
 ## Voertuigen
 
-Ga naar **Instellingen → Referentiegegevens → Voertuigen**.
+Ga naar **Instellingen → Referentiegegevens → Voertuigen**. Voertuigen horen bij het account waarin je bent — het scherm noemt het, en elk account heeft een eigen lijst.
 
 Zie wat je auto aan brandstof kost. Voeg een voertuig toe met een naam en brandstofsoort (benzine, diesel, LPG, elektrisch, hybride of overig). Elk voertuig toont het verbruik per 100 km, de brandstofkosten per 100 km en per km in je weergavevaluta, het aantal tankbeurten en de afgelegde afstand. Tik op **Tankbeurten tonen** voor de lijst.
 

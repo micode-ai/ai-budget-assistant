@@ -1177,6 +1177,7 @@ Tap **Export Report** to open the Export & Reports screen where you can generate
 See what each child costs you, without any guessing.
 
 - **Add children:** Settings > Reference data > Children. Only a name and a colour are stored. Archive a child instead of deleting; their expenses stay attributed.
+- **Per account, delete or archive:** children belong to the account you are in (the screen names it) — each account, including a shared one, has its own list. A child with no costs attributed yet can be deleted (open it and tap **Delete child**); one with costs can only be archived, so the costs keep it. On an encrypted account a child’s name is stored encrypted: unlock encryption in **Settings → Security** first, or the app says so instead of saving.
 - **Attribute a whole expense:** on a new or existing expense choose one or more children. With several children the amount is split equally unless you edit the shares. An expense uses whole-expense attribution or receipt-line attribution, not both; the app asks before switching.
 - **Attribute receipt lines:** after scanning a receipt, assign individual lines (diapers, school supplies) to a child. The app remembers your choice and suggests it next time. A suggestion is never applied without you. "Extract items" keeps the attribution of products that are still on the receipt and tells you how many it could not carry over.
 - **Bulk:** select several expenses and choose Assign to child. Expenses with line attribution are skipped and the count is shown.
@@ -2164,7 +2165,7 @@ View and manage all your expense and income categories in one place.
 
 ## Vehicles
 
-Access via **Settings → Reference data → Vehicles**.
+Access via **Settings → Reference data → Vehicles**. Vehicles belong to the account you are in — the screen names it, and each account has its own list.
 
 See what your car costs in fuel. Add a vehicle with its name and fuel type (petrol, diesel, LPG, electric, hybrid or other). Each vehicle shows its consumption per 100 km, the fuel cost per 100 km and per km in your display currency, the number of fill-ups and the distance covered. Tap **Show fill-ups** for the list.
 
@@ -6636,6 +6637,7 @@ iOS, Android, Web
 Посмотрите, сколько стоит каждый ребёнок, без догадок.
 
 - **Добавление детей:** Настройки > Справочники > Дети. Хранятся только имя и цвет. Вместо удаления архивируйте ребёнка; его расходы остаются привязанными.
+- **Внутри аккаунта, удаление или архив:** дети принадлежат аккаунту, в котором вы находитесь (экран его называет), — у каждого аккаунта, в том числе общего, свой список. Ребёнка, на которого ещё не отнесено ни одной траты, можно удалить (откройте его и нажмите **Удалить ребёнка**); с тратами — только заархивировать, чтобы траты его сохранили. В зашифрованном аккаунте имя хранится зашифрованным: сначала разблокируйте шифрование в **Настройки → Безопасность**, иначе приложение скажет об этом вместо сохранения.
 - **Весь расход:** у нового или существующего расхода выберите одного или нескольких детей. При нескольких сумма делится поровну, пока вы не измените доли. Расход использует привязку целиком или по позициям чека, но не обе сразу; приложение спросит перед сменой.
 - **Позиции чека:** после сканирования чека отнесите отдельные позиции (подгузники, школьные принадлежности) к ребёнку. Приложение запомнит выбор и предложит его в следующий раз. Предложение никогда не применяется без вас. «Извлечь позиции» сохраняет привязку товаров, которые остались в чеке, и сообщает, сколько не удалось перенести.
 - **Массово:** выберите несколько расходов и нажмите «Отнести к ребёнку». Расходы с привязкой по позициям пропускаются, количество показывается.
@@ -7610,7 +7612,7 @@ Email обновляется мгновенно, выдаются новые т�
 
 ## Машины
 
-Открыть: **Настройки → Справочники → Машины**.
+Открыть: **Настройки → Справочники → Машины**. Машины принадлежат аккаунту, в котором вы находитесь, — экран его называет, и у каждого аккаунта свой список.
 
 Смотрите, сколько машина стоит в топливе. Добавьте машину с названием и видом топлива (бензин, дизель, газ, электро, гибрид или другое). Для каждой машины видны расход на 100 км, стоимость топлива на 100 км и за километр в вашей валюте отображения, число заправок и пройденное расстояние. Нажмите **Показать заправки**, чтобы увидеть список.
 
@@ -12073,6 +12075,7 @@ iOS, Android, Web
 Подивіться, скільки коштує кожна дитина, без здогадок.
 
 - **Додавання дітей:** Налаштування > Довідники > Діти. Зберігаються лише ім'я та колір. Замість видалення архівуйте дитину; її витрати залишаються прив'язаними.
+- **Усередині акаунта, видалення або архів:** діти належать акаунту, у якому ви перебуваєте (екран його називає), — у кожного акаунта, зокрема спільного, свій список. Дитину, на яку ще не віднесено жодної витрати, можна видалити (відкрийте її й натисніть **Видалити дитину**); з витратами — лише заархівувати, щоб витрати її зберегли. У зашифрованому акаунті імʼя зберігається зашифрованим: спершу розблокуйте шифрування в **Налаштування → Безпека**, інакше застосунок скаже про це замість збереження.
 - **Уся витрата:** у нової чи наявної витрати оберіть одну або кількох дітей. Якщо їх кілька, сума ділиться порівну, доки ви не змінете частки. Витрата має прив'язку цілком або за позиціями чека, але не обидві одразу; застосунок запитає перед зміною.
 - **Позиції чека:** після сканування чека віднесіть окремі позиції (підгузки, шкільне приладдя) до дитини. Застосунок запам'ятає вибір і запропонує його наступного разу. Пропозиція ніколи не застосовується без вас. «Видобути позиції» зберігає прив'язку товарів, що лишилися в чеку, і повідомляє, скільки не вдалося перенести.
 - **Масово:** виберіть кілька витрат і натисніть «Віднести до дитини». Витрати з прив'язкою за позиціями пропускаються, кількість показується.
@@ -13042,7 +13045,7 @@ iOS, Android, Web
 
 ## Автомобілі
 
-Відкрити: **Налаштування → Довідники → Автомобілі**.
+Відкрити: **Налаштування → Довідники → Автомобілі**. Автомобілі належать акаунту, у якому ви перебуваєте, — екран його називає, і в кожного акаунта свій список.
 
 Дивіться, скільки авто коштує в пальному. Додайте авто з назвою та видом пального (бензин, дизель, газ, електро, гібрид або інше). Для кожного авто видно витрату на 100 км, вартість пального на 100 км і за кілометр у вашій валюті відображення, кількість заправок і пройдену відстань. Натисніть **Показати заправки**, щоб побачити список.
 
@@ -17458,6 +17461,7 @@ Dotknij **Eksportuj raport**, aby otworzyc ekran Eksport i raporty, gdzie mozesz
 Sprawdź, ile kosztuje Cię każde dziecko, bez zgadywania.
 
 - **Dodawanie dzieci:** Ustawienia > Dane referencyjne > Dzieci. Zapisujemy tylko imię i kolor. Zamiast usuwać, zarchiwizuj dziecko; jego wydatki pozostają przypisane.
+- **Na koncie, usuwanie lub archiwizacja:** dzieci należą do konta, w którym jesteś (ekran je podaje) — każde konto, także wspólne, ma własną listę. Dziecko bez przypisanych kosztów można usunąć (otwórz je i stuknij **Usuń dziecko**); dziecko z kosztami można tylko zarchiwizować, aby koszty je zachowały. Na koncie szyfrowanym imię zapisuje się zaszyfrowane: najpierw odblokuj szyfrowanie w **Ustawienia → Bezpieczeństwo**, inaczej aplikacja o tym powie zamiast zapisać.
 - **Cały wydatek:** przy nowym lub istniejącym wydatku wybierz jedno lub kilkoro dzieci. Przy kilkorgu kwota dzieli się po równo, chyba że zmienisz udziały. Wydatek ma przypisanie całości albo pozycji paragonu, nie oba naraz; aplikacja zapyta przed zmianą.
 - **Pozycje paragonu:** po zeskanowaniu paragonu przypisz pojedyncze pozycje (pieluchy, przybory szkolne) do dziecka. Aplikacja zapamięta wybór i zaproponuje go następnym razem. Propozycja nigdy nie jest stosowana bez Ciebie. „Wyodrębnij pozycje” zachowuje przypisanie produktów, które nadal są na paragonie, i informuje, ilu nie udało się przenieść.
 - **Zbiorczo:** zaznacz kilka wydatków i wybierz Przypisz do dziecka. Wydatki z przypisaniem pozycji są pomijane, a liczba pominiętych jest pokazana.
@@ -18421,7 +18425,7 @@ Przegladaj wszystkie swoje kategorie wydatkow i przychodow oraz zarzadzaj nimi w
 
 ## Pojazdy
 
-Dostęp: **Ustawienia → Słowniki → Pojazdy**.
+Dostęp: **Ustawienia → Słowniki → Pojazdy**. Pojazdy należą do konta, w którym jesteś — ekran je podaje, a każde konto ma własną listę.
 
 Zobacz, ile kosztuje Cię paliwo do auta. Dodaj pojazd z nazwą i rodzajem paliwa (benzyna, diesel, LPG, elektryczny, hybryda lub inne). Każdy pojazd pokazuje spalanie na 100 km, koszt paliwa na 100 km i za kilometr w Twojej walucie wyświetlania, liczbę tankowań i przejechany dystans. Stuknij **Pokaż tankowania**, aby zobaczyć listę.
 
@@ -22839,6 +22843,7 @@ Tippe auf **Bericht exportieren**, um zum Export & Berichte-Bildschirm zu gelang
 Sehen Sie, was jedes Kind kostet, ohne Raten.
 
 - **Kinder hinzufügen:** Einstellungen > Stammdaten > Kinder. Gespeichert werden nur Name und Farbe. Archivieren Sie ein Kind statt es zu löschen; die Ausgaben bleiben zugeordnet.
+- **Pro Konto, löschen oder archivieren:** Kinder gehören zu dem Konto, in dem du gerade bist (der Bildschirm nennt es) — jedes Konto, auch ein gemeinsames, hat seine eigene Liste. Ein Kind ohne zugeordnete Kosten kannst du löschen (öffnen und **Kind löschen** tippen); eines mit Kosten lässt sich nur archivieren, damit die Kosten erhalten bleiben. In einem verschlüsselten Konto wird der Name verschlüsselt gespeichert: Entsperre zuerst die Verschlüsselung unter **Einstellungen → Sicherheit**, sonst weist die App darauf hin, statt zu speichern.
 - **Ganze Ausgabe zuordnen:** Wählen Sie bei einer neuen oder bestehenden Ausgabe ein oder mehrere Kinder. Bei mehreren wird der Betrag gleichmäßig geteilt, außer Sie ändern die Anteile. Eine Ausgabe nutzt entweder die Zuordnung als Ganzes oder die Zuordnung einzelner Belegpositionen, nicht beides; die App fragt vor dem Wechsel.
 - **Belegpositionen zuordnen:** Ordnen Sie nach dem Scannen einzelne Positionen (Windeln, Schulbedarf) einem Kind zu. Die App merkt sich Ihre Wahl und schlägt sie beim nächsten Mal vor. Ein Vorschlag wird nie ohne Sie angewendet. „Positionen extrahieren“ behält die Zuordnung der Produkte, die noch auf dem Beleg stehen, und nennt die Zahl der nicht übernommenen.
 - **Sammelaktion:** Mehrere Ausgaben markieren und „Kind zuordnen“ wählen. Ausgaben mit Positionszuordnung werden übersprungen, die Anzahl wird angezeigt.
@@ -23799,7 +23804,7 @@ Zeige und verwalte alle deine Ausgaben- und Einnahmenkategorien an einem Ort.
 
 ## Fahrzeuge
 
-Aufruf über **Einstellungen → Stammdaten → Fahrzeuge**.
+Aufruf über **Einstellungen → Stammdaten → Fahrzeuge**. Fahrzeuge gehören zu dem Konto, in dem du gerade bist — der Bildschirm nennt es, und jedes Konto hat seine eigene Liste.
 
 Sieh, was dein Auto an Kraftstoff kostet. Lege ein Fahrzeug mit Namen und Kraftstoffart an (Benzin, Diesel, Autogas, Elektro, Hybrid oder Sonstiges). Jedes Fahrzeug zeigt den Verbrauch pro 100 km, die Kraftstoffkosten pro 100 km und pro km in deiner Anzeigewährung, die Zahl der Tankvorgänge und die gefahrene Strecke. Tippe auf **Tankvorgänge zeigen** für die Liste.
 
@@ -28195,6 +28200,7 @@ Toca **Exportar informe** para acceder a la pantalla de Exportacion e informes, 
 Vea lo que cuesta cada hijo, sin adivinar.
 
 - **Añadir hijos:** Ajustes > Datos de referencia > Hijos. Solo se guardan el nombre y el color. Archive a un hijo en lugar de borrarlo; sus gastos siguen atribuidos.
+- **Por cuenta, eliminar o archivar:** los hijos pertenecen a la cuenta en la que estás (la pantalla la indica): cada cuenta, también una compartida, tiene su propia lista. Un hijo sin gastos asignados se puede eliminar (ábrelo y toca **Eliminar hijo**); uno con gastos solo se puede archivar, para que los gastos lo conserven. En una cuenta cifrada el nombre se guarda cifrado: desbloquea antes el cifrado en **Ajustes → Seguridad** o la app te lo indicará en lugar de guardar.
 - **Atribuir un gasto entero:** en un gasto nuevo o existente elija uno o varios hijos. Con varios, el importe se reparte a partes iguales salvo que edite las partes. Un gasto usa la atribución completa o la de líneas del recibo, no ambas; la app pregunta antes de cambiar.
 - **Atribuir líneas del recibo:** tras escanear un recibo, asigne líneas concretas (pañales, material escolar) a un hijo. La app recuerda su elección y la sugiere la próxima vez. Una sugerencia nunca se aplica sin usted. «Extraer artículos» conserva la atribución de los productos que siguen en el recibo e indica cuántos no pudo conservar.
 - **En bloque:** seleccione varios gastos y elija Asignar a un hijo. Los gastos con atribución por líneas se omiten y se muestra el número.
@@ -29156,7 +29162,7 @@ Visualiza y gestiona todas tus categorias de gastos e ingresos en un solo lugar.
 
 ## Vehículos
 
-Accede desde **Ajustes → Datos de referencia → Vehículos**.
+Accede desde **Ajustes → Datos de referencia → Vehículos**. Los vehículos pertenecen a la cuenta en la que estás: la pantalla la indica y cada cuenta tiene su propia lista.
 
 Mira lo que te cuesta el coche en combustible. Añade un vehículo con su nombre y tipo de combustible (gasolina, diésel, GLP, eléctrico, híbrido u otro). Cada vehículo muestra el consumo por 100 km, el coste de combustible por 100 km y por km en tu moneda de visualización, el número de repostajes y la distancia recorrida. Toca **Mostrar repostajes** para ver la lista.
 
@@ -33540,6 +33546,7 @@ Appuyez sur **Exporter le rapport** pour acceder a l'ecran Export et rapports. V
 Voyez ce que coûte chaque enfant, sans deviner.
 
 - **Ajouter des enfants :** Réglages > Données de référence > Enfants. Seuls le prénom et la couleur sont enregistrés. Archivez un enfant plutôt que de le supprimer ; ses dépenses restent attribuées.
+- **Par compte, supprimer ou archiver :** les enfants appartiennent au compte dans lequel vous êtes (l'écran l'indique) — chaque compte, y compris un compte partagé, a sa propre liste. Un enfant sans dépense attribuée peut être supprimé (ouvrez-le et touchez **Supprimer l'enfant**) ; un enfant avec des dépenses ne peut qu'être archivé, pour que les dépenses le conservent. Sur un compte chiffré, le nom est enregistré chiffré : déverrouillez d'abord le chiffrement dans **Paramètres → Sécurité**, sinon l'app vous le signale au lieu d'enregistrer.
 - **Attribuer une dépense entière :** sur une dépense nouvelle ou existante, choisissez un ou plusieurs enfants. Avec plusieurs, le montant est partagé à parts égales sauf si vous modifiez les parts. Une dépense utilise l'attribution entière ou celle par lignes du ticket, pas les deux ; l'app demande avant de changer.
 - **Attribuer des lignes de ticket :** après avoir scanné un ticket, affectez des lignes (couches, fournitures scolaires) à un enfant. L'app retient votre choix et le propose la fois suivante. Une suggestion n'est jamais appliquée sans vous. « Extraire les articles » conserve l'attribution des produits encore présents sur le ticket et indique combien n'ont pu être reportés.
 - **En masse :** sélectionnez plusieurs dépenses et choisissez Attribuer à un enfant. Les dépenses avec attribution par lignes sont ignorées et leur nombre est affiché.
@@ -34499,7 +34506,7 @@ Visualisez et gerez toutes vos categories de depenses et de revenus en un seul e
 
 ## Véhicules
 
-Accès via **Paramètres → Données de référence → Véhicules**.
+Accès via **Paramètres → Données de référence → Véhicules**. Les véhicules appartiennent au compte dans lequel vous êtes — l'écran l'indique, et chaque compte a sa propre liste.
 
 Voyez ce que votre voiture coûte en carburant. Ajoutez un véhicule avec son nom et son carburant (essence, diesel, GPL, électrique, hybride ou autre). Chaque véhicule affiche la consommation aux 100 km, le coût du carburant aux 100 km et au km dans votre devise d'affichage, le nombre de pleins et la distance parcourue. Touchez **Afficher les pleins** pour la liste.
 
@@ -38883,6 +38890,7 @@ iOS, Android, Web
 Паглядзіце, колькі каштуе кожнае дзіця, без здагадак.
 
 - **Даданне дзяцей:** Налады > Даведнікі > Дзеці. Захоўваюцца толькі імя і колер. Замест выдалення архівуйце дзіця; яго выдаткі застаюцца прывязанымі.
+- **Унутры акаўнта, выдаленне або архіў:** дзеці належаць акаўнту, у якім вы знаходзіцеся (экран яго называе), — у кожнага акаўнта, у тым ліку агульнага, свой спіс. Дзіця, на якое яшчэ не аднесена ніводнага выдатку, можна выдаліць (адкрыйце яго і націсніце **Выдаліць дзіця**); з выдаткамі — толькі заархіваваць, каб выдаткі яго захавалі. У зашыфраваным акаўнце імя захоўваецца зашыфраваным: спачатку разблакіруйце шыфраванне ў **Налады → Бяспека**, інакш праграма скажа пра гэта замест захавання.
 - **Увесь выдатак:** у новага ці існуючага выдатку абярыце аднаго ці некалькіх дзяцей. Калі іх некалькі, сума дзеліцца ўроўну, пакуль вы не зменіце долі. Выдатак мае прывязку цалкам або па пазіцыях чэка, але не абедзве адначасова; праграма спытае перад зменай.
 - **Пазіцыі чэка:** пасля сканавання чэка аднясіце асобныя пазіцыі (падгузнікі, школьныя рэчы) да дзіцяці. Праграма запомніць выбар і прапануе яго наступны раз. Прапанова ніколі не ўжываецца без вас. «Вылучыць пазіцыі» захоўвае прывязку тавараў, што засталіся ў чэку, і паведамляе, колькі не атрымалася перанесці.
 - **Масава:** абярыце некалькі выдаткаў і націсніце «Аднесці да дзіцяці». Выдаткі з прывязкай па пазіцыях прапускаюцца, колькасць паказваецца.
@@ -39844,7 +39852,7 @@ iOS, Android, Web
 
 ## Аўтамабілі
 
-Адкрыць: **Налады → Даведнікі → Аўтамабілі**.
+Адкрыць: **Налады → Даведнікі → Аўтамабілі**. Аўтамабілі належаць акаўнту, у якім вы знаходзіцеся, — экран яго называе, і ў кожнага акаўнта свой спіс.
 
 Глядзіце, колькі аўто каштуе ў паліве. Дадайце аўто з назвай і відам паліва (бензін, дызель, газ, электра, гібрыд або іншае). Для кожнага аўто відаць расход на 100 км, кошт паліва на 100 км і за кіламетр у вашай валюце адлюстравання, колькасць запраўак і пройдзеная адлегласць. Націсніце **Паказаць запраўкі**, каб убачыць спіс.
 
@@ -44190,6 +44198,7 @@ Tik op **Rapport exporteren** om het scherm Export & Rapporten te openen, waar j
 Zie wat elk kind kost, zonder te gokken.
 
 - **Kinderen toevoegen:** Instellingen > Referentiegegevens > Kinderen. Alleen naam en kleur worden opgeslagen. Archiveer een kind in plaats van te verwijderen; de uitgaven blijven toegewezen.
+- **Per account, verwijderen of archiveren:** kinderen horen bij het account waarin je bent (het scherm noemt het) — elk account, ook een gedeeld account, heeft een eigen lijst. Een kind zonder toegewezen kosten kun je verwijderen (open het en tik op **Kind verwijderen**); een kind met kosten kan alleen worden gearchiveerd, zodat de kosten het behouden. In een versleuteld account wordt de naam versleuteld opgeslagen: ontgrendel eerst de versleuteling in **Instellingen → Beveiliging**, anders meldt de app dat in plaats van op te slaan.
 - **Een hele uitgave toewijzen:** kies bij een nieuwe of bestaande uitgave een of meer kinderen. Bij meerdere kinderen wordt het bedrag gelijk verdeeld tenzij u de aandelen aanpast. Een uitgave gebruikt toewijzing als geheel of per bonregel, niet beide; de app vraagt het voor het wisselen.
 - **Bonregels toewijzen:** wijs na het scannen van een bon afzonderlijke regels (luiers, schoolspullen) aan een kind toe. De app onthoudt uw keuze en stelt die de volgende keer voor. Een suggestie wordt nooit zonder u toegepast. 'Artikelen uitlezen' behoudt de toewijzing van producten die nog op de bon staan en meldt hoeveel er niet konden worden overgenomen.
 - **In bulk:** selecteer meerdere uitgaven en kies Aan kind toewijzen. Uitgaven met regeltoewijzing worden overgeslagen en het aantal wordt getoond.
@@ -45162,7 +45171,7 @@ Bekijk en beheer al je uitgaven- en inkomstencategorieën op één plek.
 
 ## Voertuigen
 
-Ga naar **Instellingen → Referentiegegevens → Voertuigen**.
+Ga naar **Instellingen → Referentiegegevens → Voertuigen**. Voertuigen horen bij het account waarin je bent — het scherm noemt het, en elk account heeft een eigen lijst.
 
 Zie wat je auto aan brandstof kost. Voeg een voertuig toe met een naam en brandstofsoort (benzine, diesel, LPG, elektrisch, hybride of overig). Elk voertuig toont het verbruik per 100 km, de brandstofkosten per 100 km en per km in je weergavevaluta, het aantal tankbeurten en de afgelegde afstand. Tik op **Tankbeurten tonen** voor de lijst.
 
@@ -49624,6 +49633,7 @@ Toque em **Exportar relatório** para abrir o ecrã Exportação e relatórios, 
 Veja quanto lhe custa cada filho, sem adivinhar.
 
 - **Adicionar filhos:** Definições > Dados de referência > Filhos. Só são guardados um nome e uma cor. Arquive um filho em vez de o eliminar; as despesas dele continuam atribuídas.
+- **Por conta, eliminar ou arquivar:** os filhos pertencem à conta em que está (o ecrã indica-a) — cada conta, incluindo uma partilhada, tem a sua própria lista. Um filho sem custos atribuídos pode ser eliminado (abra-o e toque em **Eliminar filho**); um com custos só pode ser arquivado, para que os custos o mantenham. Numa conta encriptada o nome é guardado encriptado: desbloqueie primeiro a encriptação em **Definições → Segurança**, ou a app avisa em vez de guardar.
 - **Atribuir uma despesa inteira:** numa despesa nova ou existente, escolha um ou mais filhos. Com vários filhos, o montante é dividido em partes iguais, a menos que edite as partes. Uma despesa usa a atribuição da despesa inteira ou a atribuição por linha do talão, não as duas; a aplicação pergunta antes de mudar.
 - **Atribuir linhas do talão:** depois de digitalizar um talão, atribua linhas individuais (fraldas, material escolar) a um filho. A aplicação memoriza a sua escolha e sugere-a da próxima vez. Uma sugestão nunca é aplicada sem a sua confirmação. «Extrair artigos» mantém a atribuição dos produtos que continuam no talão e indica quantos não conseguiu transferir.
 - **Em massa:** selecione várias despesas e escolha Atribuir a filho. As despesas com atribuição por linha são ignoradas e a contagem é mostrada.
@@ -50611,7 +50621,7 @@ Veja e faça a gestão de todas as categorias de despesas e de receitas num só 
 
 ## Veículos
 
-Aceda em **Definições → Dados de referência → Veículos**.
+Aceda em **Definições → Dados de referência → Veículos**. Os veículos pertencem à conta em que está — o ecrã indica-a, e cada conta tem a sua própria lista.
 
 Veja quanto o carro lhe custa em combustível. Adicione um veículo com nome e tipo de combustível (gasolina, gasóleo, GPL, elétrico, híbrido ou outro). Cada veículo mostra o consumo aos 100 km, o custo do combustível aos 100 km e por km na sua moeda de apresentação, o número de abastecimentos e a distância percorrida. Toque em **Mostrar abastecimentos** para ver a lista.
 
@@ -55084,6 +55094,7 @@ Toque em **Exportar relatório** para abrir a tela Exportação e relatórios, o
 Veja quanto cada filho custa para você, sem achismo.
 
 - **Adicionar filhos:** Configurações > Dados de referência > Filhos. Só um nome e uma cor são guardados. Arquive um filho em vez de excluí-lo; as despesas dele continuam atribuídas.
+- **Por conta, excluir ou arquivar:** os filhos pertencem à conta em que você está (a tela mostra qual) — cada conta, inclusive uma compartilhada, tem a sua própria lista. Um filho sem custos atribuídos pode ser excluído (abra e toque em **Excluir filho**); um com custos só pode ser arquivado, para que os custos o mantenham. Em uma conta criptografada o nome é salvo criptografado: desbloqueie antes a criptografia em **Configurações → Segurança**, ou o app avisa em vez de salvar.
 - **Atribuir uma despesa inteira:** em uma despesa nova ou existente, escolha um ou mais filhos. Com vários filhos, o valor é dividido em partes iguais, a menos que você edite as partes. Uma despesa usa atribuição da despesa inteira ou atribuição por linha do recibo, não as duas; o app pergunta antes de trocar.
 - **Atribuir linhas do recibo:** depois de escanear um recibo, atribua linhas individuais (fraldas, material escolar) a um filho. O app memoriza sua escolha e a sugere na próxima vez. Uma sugestão nunca é aplicada sem a sua confirmação. “Extrair itens” mantém a atribuição dos produtos que continuam no recibo e informa quantos não conseguiu transferir.
 - **Em massa:** selecione várias despesas e escolha Atribuir a filho. Despesas com atribuição por linha são ignoradas e a contagem é mostrada.
@@ -56071,7 +56082,7 @@ Veja e gerencie todas as suas categorias de despesas e de receitas em um só lug
 
 ## Veículos
 
-Acesse em **Configurações → Dados de referência → Veículos**.
+Acesse em **Configurações → Dados de referência → Veículos**. Os veículos pertencem à conta em que você está — a tela mostra qual, e cada conta tem a sua própria lista.
 
 Veja quanto o carro custa em combustível. Adicione um veículo com nome e tipo de combustível (gasolina, diesel, GNV/GLP, elétrico, híbrido ou outro). Cada veículo mostra o consumo a cada 100 km, o custo do combustível a cada 100 km e por km na sua moeda de exibição, o número de abastecimentos e a distância percorrida. Toque em **Mostrar abastecimentos** para ver a lista.
 

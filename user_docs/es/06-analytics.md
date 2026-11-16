@@ -161,6 +161,7 @@ Toca **Exportar informe** para acceder a la pantalla de Exportacion e informes, 
 Vea lo que cuesta cada hijo, sin adivinar.
 
 - **Añadir hijos:** Ajustes > Datos de referencia > Hijos. Solo se guardan el nombre y el color. Archive a un hijo en lugar de borrarlo; sus gastos siguen atribuidos.
+- **Por cuenta, eliminar o archivar:** los hijos pertenecen a la cuenta en la que estás (la pantalla la indica): cada cuenta, también una compartida, tiene su propia lista. Un hijo sin gastos asignados se puede eliminar (ábrelo y toca **Eliminar hijo**); uno con gastos solo se puede archivar, para que los gastos lo conserven. En una cuenta cifrada el nombre se guarda cifrado: desbloquea antes el cifrado en **Ajustes → Seguridad** o la app te lo indicará en lugar de guardar.
 - **Atribuir un gasto entero:** en un gasto nuevo o existente elija uno o varios hijos. Con varios, el importe se reparte a partes iguales salvo que edite las partes. Un gasto usa la atribución completa o la de líneas del recibo, no ambas; la app pregunta antes de cambiar.
 - **Atribuir líneas del recibo:** tras escanear un recibo, asigne líneas concretas (pañales, material escolar) a un hijo. La app recuerda su elección y la sugiere la próxima vez. Una sugerencia nunca se aplica sin usted. «Extraer artículos» conserva la atribución de los productos que siguen en el recibo e indica cuántos no pudo conservar.
 - **En bloque:** seleccione varios gastos y elija Asignar a un hijo. Los gastos con atribución por líneas se omiten y se muestra el número.

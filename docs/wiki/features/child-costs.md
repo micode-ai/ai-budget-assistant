@@ -81,6 +81,15 @@ parts ([long-receipt](long-receipt.md)) appears in the appendix as all its parts
 same caps. Every page carries the localised
 footer and the "data as of" stamp.
 
+**Delete, archive and the encryption lock** ([ABA-800](https://github.com/micode-ai/ai-budget-assistant/issues/838)). `DELETE /children/:id` soft-deletes a child only
+when nothing is attributed (live `ExpenseChild` on a live expense, live line `childId`, live benefit
+income); otherwise 409 `CHILD_IN_USE` and the screen offers Archive. On an encrypted account every child
+write needs `canEncryptFor(accountId)` — checked up front by `assertCanWriteChild`, which raises
+`ENCRYPTION_LOCKED` (shown as "unlock in Settings → Security") instead of the old generic save error on
+the web and an indefinitely queued change on a phone; when the tier cannot be read (offline) the check is
+skipped and the phone queues as before. The screen names the account: children are per account, and a
+list that changes with the account switcher read as lost data.
+
 ## Invariants
 
 - **No model call.** Attribution, suggestions and 800+ detection are rules. Nothing in this feature

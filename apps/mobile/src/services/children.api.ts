@@ -42,6 +42,11 @@ export const childrenApi = {
     });
   },
 
+  /** Only a child with nothing attributed; a 409 `CHILD_IN_USE` otherwise (ABA-800). */
+  deleteChild(id: string): Promise<{ success: boolean }> {
+    return httpClient.request<{ success: boolean }>(`/children/${encodeURIComponent(id)}`, { method: 'DELETE' });
+  },
+
   getChildSuggestions(names: string[]): Promise<ChildSuggestionsResponse> {
     return httpClient.request<ChildSuggestionsResponse>('/children/suggestions', {
       method: 'POST',

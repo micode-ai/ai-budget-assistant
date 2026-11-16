@@ -296,3 +296,43 @@ describe('ChildrenService.suggestions', () => {
     expect(res).toEqual({ pieluchypampers4: 'child-a' });
   });
 });
+
+describe('ChildrenService.remove (ABA-800)', () => {
+  function withCounts(links: number, items: number, incomes: number) {
+    const { service, prisma } = makeService();
+    prisma.child.findFirst.mockResolvedValue(childRow());
+    prisma.child.update.mockResolvedValue(childRow({ isDeleted: true }));
+    prisma.expenseChild.count = jest.fn().mockResolvedValue(links);
+    prisma.expenseItem.count = jest.fn().mockResolvedValue(items);
+    prisma.income = { count: jest.fn().mockResolvedValue(incomes) };
+    return { service, prisma };
+  }
+
+  it('soft-deletes a child nothing is attributed to', async () => {
+    const { service, prisma } = withCounts(0, 0, 0);
+    await expect(service.remove('acc-1', 'child-1')).resolves.toEqual({ success: true });
+    expect(prisma.child.update).toHaveBeenCalledWith({
+      where: { id: 'child-1' },
+      data: { isDeleted: true, syncVersion: { increment: 1 } },
+    });
+  });
+
+  it.each([
+    [1, 0, 0],
+    [0, 2, 0],
+    [0, 0, 1],
+  ])('refuses with CHILD_IN_USE when anything is attributed (links %i, lines %i, benefit incomes %i)', async (a, b, c) => {
+    const { service, prisma } = withCounts(a, b, c);
+    await expect(service.remove('acc-1', 'child-1')).rejects.toMatchObject({
+      response: { code: 'CHILD_IN_USE' },
+    });
+    expect(prisma.child.update).not.toHaveBeenCalled();
+  });
+
+  it('only looks inside the caller account', async () => {
+    const { service, prisma } = withCounts(0, 0, 0);
+    prisma.child.findFirst.mockResolvedValue(null);
+    await expect(service.remove('acc-2', 'child-1')).rejects.toBeInstanceOf(NotFoundException);
+    expect(prisma.child.findFirst.mock.calls[0][0].where.accountId).toBe('acc-2');
+  });
+});

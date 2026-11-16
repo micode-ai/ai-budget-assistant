@@ -2750,6 +2750,7 @@ export default {
     loadFailed: "Could not load your net worth.",
   },
   vehicles: {
+    accountNote: "Vehicles of the “{{account}}” account. Each account has its own list.",
     title: "Vehicles",
     settingsDesc: "What your car costs in fuel",
     add: "Add vehicle",
@@ -2791,6 +2792,14 @@ export default {
     notSyncedYet: "This expense has not reached the server yet. Try again once it has synced.",
   },
   children: {
+    accountNote: "Children of the “{{account}}” account. Each account has its own list.",
+    delete: "Delete child",
+    deleteTitle: "Delete {{name}}?",
+    deleteMessage: "Only possible while no costs are attributed to this child.",
+    deleteInUseTitle: "Costs are attributed",
+    deleteInUse: "This child already has costs attributed, so it can only be archived — the costs and statements keep it.",
+    encryptionLockedTitle: "Encryption is locked",
+    encryptionLocked: "This account is encrypted, so a child’s name is saved encrypted. Unlock encryption in Settings → Security, then try again.",
     title: "Children",
     settingsDesc: "Who an expense is for",
     forLabel: "For",

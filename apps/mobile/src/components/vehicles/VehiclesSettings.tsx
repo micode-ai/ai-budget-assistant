@@ -34,6 +34,8 @@ export function VehiclesSettings() {
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const canEdit = useAccountStore((s) => s.canEdit());
+  // Vehicles belong to an account; say which one (ABA-800).
+  const accountName = useAccountStore((s) => s.currentAccount()?.name ?? '');
   const { accountId, vehicles, isLoaded, isLoading, loadFailed, reload } = useVehicles({ refresh: true });
 
   const [sheetVisible, setSheetVisible] = useState(false);
@@ -133,6 +135,7 @@ export function VehiclesSettings() {
             </TouchableOpacity>
           )}
         </View>
+        {!!accountName && <Text style={styles.accountNote}>{t('vehicles.accountNote', { account: accountName })}</Text>}
         {body}
         <Text style={styles.hint}>{t('vehicles.hint')}</Text>
       </SettingsScreenScroll>
@@ -378,6 +381,12 @@ const createStyles = (theme: Theme) => ({
   },
   stateBox: { alignItems: 'center' as const, gap: theme.spacing[2] },
   link: { ...theme.textStyles.bodyMedium, color: theme.colors.primary },
+  accountNote: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textSecondary,
+    marginBottom: theme.spacing[2],
+    paddingHorizontal: theme.spacing[1],
+  },
   hint: {
     ...theme.textStyles.bodySm,
     color: theme.colors.textTertiary,

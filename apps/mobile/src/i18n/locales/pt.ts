@@ -2739,6 +2739,7 @@ export default {
     loadFailed: "Não foi possível carregar o seu património.",
   },
   vehicles: {
+    accountNote: "Veículos da conta «{{account}}». Cada conta tem a sua própria lista.",
     title: "Veículos",
     settingsDesc: "Quanto o carro lhe custa em combustível",
     add: "Adicionar veículo",
@@ -2780,6 +2781,14 @@ export default {
     notSyncedYet: "Esta despesa ainda não chegou ao servidor. Tente novamente depois da sincronização.",
   },
   children: {
+    accountNote: "Filhos da conta «{{account}}». Cada conta tem a sua própria lista.",
+    delete: "Eliminar filho",
+    deleteTitle: "Eliminar {{name}}?",
+    deleteMessage: "Só é possível enquanto não houver custos atribuídos a este filho.",
+    deleteInUseTitle: "Há custos atribuídos",
+    deleteInUse: "Este filho já tem custos atribuídos, por isso só pode ser arquivado — os custos e os relatórios mantêm-no.",
+    encryptionLockedTitle: "Encriptação bloqueada",
+    encryptionLocked: "Esta conta é encriptada, por isso o nome de um filho é guardado encriptado. Desbloqueie a encriptação em Definições → Segurança e tente novamente.",
     title: "Filhos",
     settingsDesc: "Para quem é uma despesa",
     forLabel: "Para",

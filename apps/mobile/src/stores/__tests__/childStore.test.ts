@@ -66,10 +66,12 @@ jest.mock('../../services/api', () => ({
     setItemChild: jest.fn(),
     pushChanges: jest.fn(),
     getAccountEncryptionStatus: jest.fn(),
+    deleteChild: jest.fn(),
   },
 }));
 
 jest.mock('../../services/encryptionHelper', () => ({
+  canEncryptFor: jest.fn(() => true),
   maybeEncrypt: jest.fn(),
   maybeDecrypt: jest.fn(async (_t: string, data: Record<string, unknown>) => data),
 }));
@@ -701,5 +703,53 @@ describe('final fix — undeliverable line changes (R12)', () => {
     ]);
 
     await expect(countStatementQueue('acc-1')).resolves.toEqual({ pending: 3, undeliverableLines: 1 });
+  });
+});
+
+describe('childStore — delete and the encryption lock (ABA-800)', () => {
+  const canEncrypt = encryptionHelper.canEncryptFor as unknown as jest.Mock;
+
+  afterEach(() => canEncrypt.mockReturnValue(true));
+
+  it('refuses a child write on an encrypted account while encryption is locked, before writing anything', async () => {
+    mockApi.getAccountEncryptionStatus.mockResolvedValue({ encryptionTier: 1 });
+    canEncrypt.mockReturnValue(false);
+    await expect(useChildStore.getState().createChild('Ala')).rejects.toMatchObject({ code: 'ENCRYPTION_LOCKED' });
+    expect(mockRepo.upsertChild).not.toHaveBeenCalled();
+    expect(mockRepo.enqueueChildChange).not.toHaveBeenCalled();
+  });
+
+  it('still writes locally when the tier cannot be read (offline)', async () => {
+    mockApi.getAccountEncryptionStatus.mockRejectedValue(new Error('offline'));
+    await useChildStore.getState().createChild('Ala');
+    expect(mockRepo.upsertChild).toHaveBeenCalled();
+  });
+
+  it('deletes through the server and drops the child locally', async () => {
+    useChildStore.setState({ children: [{ id: 'c1', accountId: 'acc-1', name: 'Ala', archivedAt: null } as Child] });
+    mockRepo.getChildServerIds.mockResolvedValue(new Map([['c1', 'srv-1']]));
+    mockApi.deleteChild.mockResolvedValue({ success: true });
+    await useChildStore.getState().deleteChild('c1');
+    expect(mockApi.deleteChild).toHaveBeenCalledWith('srv-1');
+    expect(mockRepo.softDeleteChildLocally).toHaveBeenCalledWith('c1');
+    expect(useChildStore.getState().children).toEqual([]);
+  });
+
+  it('turns a 409 into CHILD_IN_USE and keeps the child', async () => {
+    useChildStore.setState({ children: [{ id: 'c1', accountId: 'acc-1', name: 'Ala', archivedAt: null } as Child] });
+    mockApi.deleteChild.mockRejectedValue(Object.assign(new Error('in use'), { status: 409 }));
+    await expect(useChildStore.getState().deleteChild('c1')).rejects.toMatchObject({ code: 'CHILD_IN_USE' });
+    expect(mockRepo.softDeleteChildLocally).not.toHaveBeenCalled();
+    expect(useChildStore.getState().children).toHaveLength(1);
+  });
+
+  it('queues the delete behind the create for a child the server has not received yet', async () => {
+    useChildStore.setState({ children: [{ id: 'c2', accountId: 'acc-1', name: 'Ola', archivedAt: null } as Child] });
+    mockApi.deleteChild.mockRejectedValue(Object.assign(new Error('nf'), { status: 404 }));
+    await useChildStore.getState().deleteChild('c2');
+    expect(mockRepo.enqueueChildChange).toHaveBeenCalledWith(
+      expect.objectContaining({ entityType: 'child', entityId: 'c2', operation: 'delete' }),
+    );
+    expect(mockRepo.softDeleteChildLocally).toHaveBeenCalledWith('c2');
   });
 });

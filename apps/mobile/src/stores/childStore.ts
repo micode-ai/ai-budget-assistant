@@ -7,7 +7,7 @@ import { clearExpenseItemChildren, setExpenseItemChild } from '@/db/expenseItemR
 import { withTransaction } from '@/db/client';
 import { api } from '@/services/api';
 import type { ChildDto } from '@/services/children.api';
-import { maybeDecrypt } from '@/services/encryptionHelper';
+import { canEncryptFor, maybeDecrypt } from '@/services/encryptionHelper';
 import { useAccountStore } from './accountStore';
 import {
   buildChildSyncChange,
@@ -55,6 +55,8 @@ interface ChildState {
   renameChild: (id: string, name: string) => Promise<void>;
   setChildColor: (id: string, color: string) => Promise<void>;
   setArchived: (id: string, archived: boolean) => Promise<void>;
+  /** Deletes a child with nothing attributed; rejects with `code: 'CHILD_IN_USE'` otherwise (ABA-800). */
+  deleteChild: (id: string) => Promise<void>;
   syncFromServer: () => Promise<void>;
   setExpenseChildren: (expenseId: string, childIds: string[], shares?: number[]) => Promise<void>;
   setItemChild: (expenseId: string, itemId: string, childId: string | null) => Promise<void>;
@@ -176,6 +178,36 @@ function toLocalChild(
  * `/sync/push` with a ciphertext on an encrypted one (`POST /children` takes a
  * plaintext name only). Fail closed: an unreadable tier or a locked key throws.
  */
+/** An error the screen can explain: `code` is `ENCRYPTION_LOCKED` or `CHILD_IN_USE`. */
+export class ChildWriteError extends Error {
+  constructor(
+    public readonly code: 'ENCRYPTION_LOCKED' | 'CHILD_IN_USE',
+    message: string,
+  ) {
+    super(message);
+  }
+}
+
+/**
+ * On an encrypted account a child's name can only travel encrypted, so a write
+ * needs the key unlocked in this session. Checked BEFORE anything is written:
+ * on the web the write used to fail with a generic error, and on a phone it sat
+ * in the queue forever (ABA-800).
+ */
+async function assertCanWriteChild(accountId: string): Promise<void> {
+  let tier: number;
+  try {
+    tier = await readEncryptionTier(accountId);
+  } catch {
+    // Offline (or no answer): a phone still writes locally and the queue drain
+    // keeps the change until it can be encrypted — exactly as before this check.
+    return;
+  }
+  if (tier >= 1 && !canEncryptFor(accountId)) {
+    throw new ChildWriteError('ENCRYPTION_LOCKED', 'Unlock encryption to change children on this account');
+  }
+}
+
 async function writeChildOnWeb(
   accountId: string,
   operation: 'create' | 'update',
@@ -349,6 +381,7 @@ export const useChildStore = create<ChildState>((set, get) => {
     if (!accountId) throw new Error('No account');
     const existing = get().children.find((c) => c.id === id);
     if (!existing) throw new Error('Child not found');
+    await assertCanWriteChild(accountId);
     const updated = next(existing);
     if (Platform.OS === 'web') {
       await writeChildOnWeb(accountId, 'update', updated, rest);
@@ -389,6 +422,7 @@ export const useChildStore = create<ChildState>((set, get) => {
       const accountId = currentAccountId();
       if (!accountId) throw new Error('No account');
       const trimmed = validateName(name);
+      await assertCanWriteChild(accountId);
       const id = randomUUID();
       let child: Child = { id, accountId, clientId: id, name: trimmed, color, archivedAt: null };
 
@@ -420,6 +454,38 @@ export const useChildStore = create<ChildState>((set, get) => {
         (c) => ({ ...c, archivedAt: archived ? (c.archivedAt ?? new Date().toISOString()) : null }),
         { archived },
       );
+    },
+
+    deleteChild: async (id: string) => {
+      const accountId = currentAccountId();
+      if (!accountId) throw new Error('No account');
+      // The server decides: it alone sees every attribution (other devices, the web).
+      const ref = Platform.OS === 'web' ? id : await serverChildRef(accountId, id);
+      try {
+        await api.deleteChild(ref ?? id);
+      } catch (e) {
+        const status = (e as { status?: number }).status;
+        const code = (e as { code?: string }).code;
+        if (status === 409 || code === 'CHILD_IN_USE') {
+          throw new ChildWriteError('CHILD_IN_USE', 'This child has costs attributed; archive it instead');
+        }
+        // Never reached the server (created offline, not pushed yet): queue the delete after the create.
+        if (status === 404 && Platform.OS !== 'web') {
+          await childRepo.enqueueChildChange({
+            entityType: 'child',
+            entityId: id,
+            operation: 'delete',
+            payload: {},
+            accountId,
+          });
+          void drainChildQueue(accountId);
+        } else {
+          throw e;
+        }
+      }
+      if (Platform.OS !== 'web') await childRepo.softDeleteChildLocally(id);
+      if (currentAccountId() !== accountId) return;
+      set({ children: get().children.filter((c) => c.id !== id) });
     },
 
     syncFromServer: async () => {

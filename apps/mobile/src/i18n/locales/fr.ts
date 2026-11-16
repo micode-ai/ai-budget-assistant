@@ -2743,6 +2743,7 @@ export default {
     loadFailed: "Impossible de charger votre patrimoine.",
   },
   vehicles: {
+    accountNote: "Véhicules du compte « {{account}} ». Chaque compte a sa propre liste.",
     title: "Véhicules",
     settingsDesc: "Ce que votre voiture coûte en carburant",
     add: "Ajouter un véhicule",
@@ -2784,6 +2785,14 @@ export default {
     notSyncedYet: "Cette dépense n'est pas encore sur le serveur. Réessayez après la synchronisation.",
   },
   children: {
+    accountNote: "Enfants du compte « {{account}} ». Chaque compte a sa propre liste.",
+    delete: "Supprimer l'enfant",
+    deleteTitle: "Supprimer {{name}} ?",
+    deleteMessage: "Possible uniquement tant qu'aucune dépense n'est attribuée à cet enfant.",
+    deleteInUseTitle: "Dépenses attribuées",
+    deleteInUse: "Des dépenses sont déjà attribuées à cet enfant : il ne peut qu'être archivé — les dépenses et les relevés le conservent.",
+    encryptionLockedTitle: "Chiffrement verrouillé",
+    encryptionLocked: "Ce compte est chiffré : le nom d'un enfant est enregistré chiffré. Déverrouillez le chiffrement dans Paramètres → Sécurité, puis réessayez.",
     title: "Enfants",
     settingsDesc: "Pour qui est une dépense",
     forLabel: "Pour",

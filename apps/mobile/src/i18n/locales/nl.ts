@@ -2743,6 +2743,7 @@ export default {
     loadFailed: "Je vermogen kon niet worden geladen.",
   },
   vehicles: {
+    accountNote: "Voertuigen van het account \"{{account}}\". Elk account heeft een eigen lijst.",
     title: "Voertuigen",
     settingsDesc: "Wat je auto aan brandstof kost",
     add: "Voertuig toevoegen",
@@ -2784,6 +2785,14 @@ export default {
     notSyncedYet: "Deze uitgave staat nog niet op de server. Probeer het opnieuw na de synchronisatie.",
   },
   children: {
+    accountNote: "Kinderen van het account \"{{account}}\". Elk account heeft een eigen lijst.",
+    delete: "Kind verwijderen",
+    deleteTitle: "{{name}} verwijderen?",
+    deleteMessage: "Alleen mogelijk zolang er geen kosten aan dit kind zijn toegewezen.",
+    deleteInUseTitle: "Kosten toegewezen",
+    deleteInUse: "Aan dit kind zijn al kosten toegewezen, dus het kan alleen worden gearchiveerd — de kosten en overzichten houden het.",
+    encryptionLockedTitle: "Versleuteling vergrendeld",
+    encryptionLocked: "Dit account is versleuteld, dus de naam van een kind wordt versleuteld opgeslagen. Ontgrendel de versleuteling in Instellingen → Beveiliging en probeer het opnieuw.",
     title: "Kinderen",
     settingsDesc: "Voor wie een uitgave is",
     forLabel: "Voor",

@@ -363,6 +363,7 @@ Newest last within each section.
 - 2026-11-16 · [ABA-797](https://github.com/micode-ai/ai-budget-assistant/issues/835) — a year-over-year card per category on the Analytics tab, same-days and financial-month aware; features/analytics-period-comparisons.
 - 2026-11-16 · [ABA-798](https://github.com/micode-ai/ai-budget-assistant/issues/836) — a year-of-days heatmap and average by day of the (financial) month on the Analytics tab; no purchase times exist in production, so no hour view; features/analytics-tab-breakdowns.
 - 2026-11-16 · [ABA-799](https://github.com/micode-ai/ai-budget-assistant/issues/837) — net worth across all accounts with 12 rebuilt month-ends (no snapshot table); features/net-worth.
+- 2026-11-16 · [ABA-800](https://github.com/micode-ai/ai-budget-assistant/issues/838) — a child create on an encrypted account failed silently when encryption was locked; now explained up front, unused children can be deleted, and Children/Vehicles name their account; features/child-costs, features/vehicle-fuel-log.
 
 ## Queries
 

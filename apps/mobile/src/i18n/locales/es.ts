@@ -2743,6 +2743,7 @@ export default {
     loadFailed: "No se pudo cargar tu patrimonio.",
   },
   vehicles: {
+    accountNote: "Vehículos de la cuenta «{{account}}». Cada cuenta tiene su propia lista.",
     title: "Vehículos",
     settingsDesc: "Lo que te cuesta el coche en combustible",
     add: "Añadir vehículo",
@@ -2784,6 +2785,14 @@ export default {
     notSyncedYet: "Este gasto aún no ha llegado al servidor. Inténtalo de nuevo cuando se haya sincronizado.",
   },
   children: {
+    accountNote: "Hijos de la cuenta «{{account}}». Cada cuenta tiene su propia lista.",
+    delete: "Eliminar hijo",
+    deleteTitle: "¿Eliminar a {{name}}?",
+    deleteMessage: "Solo es posible mientras no haya gastos asignados a este hijo.",
+    deleteInUseTitle: "Hay gastos asignados",
+    deleteInUse: "Este hijo ya tiene gastos asignados, así que solo se puede archivar: los gastos y los informes lo conservan.",
+    encryptionLockedTitle: "Cifrado bloqueado",
+    encryptionLocked: "Esta cuenta está cifrada, así que el nombre de un hijo se guarda cifrado. Desbloquea el cifrado en Ajustes → Seguridad e inténtalo de nuevo.",
     title: "Hijos",
     settingsDesc: "Para quién es un gasto",
     forLabel: "Para",

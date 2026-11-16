@@ -180,7 +180,7 @@ Veja e gerencie todas as suas categorias de despesas e de receitas em um só lug
 
 ## Veículos
 
-Acesse em **Configurações → Dados de referência → Veículos**.
+Acesse em **Configurações → Dados de referência → Veículos**. Os veículos pertencem à conta em que você está — a tela mostra qual, e cada conta tem a sua própria lista.
 
 Veja quanto o carro custa em combustível. Adicione um veículo com nome e tipo de combustível (gasolina, diesel, GNV/GLP, elétrico, híbrido ou outro). Cada veículo mostra o consumo a cada 100 km, o custo do combustível a cada 100 km e por km na sua moeda de exibição, o número de abastecimentos e a distância percorrida. Toque em **Mostrar abastecimentos** para ver a lista.
 
