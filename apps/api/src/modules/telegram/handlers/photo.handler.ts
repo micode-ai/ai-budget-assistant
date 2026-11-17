@@ -15,6 +15,7 @@ import { TelegramLinkService } from '../telegram-link.service';
 import { BotContext } from '../types';
 import { formatCurrency, escapeHtml } from '../helpers/format-telegram';
 import { downloadFile } from '../helpers/download-file';
+import { accountFooter } from '../../../common/utils/bot-account';
 import { t, buildCategorySplitLine, buildItemListBlock, buildShoppingListReconciliationLine } from '../helpers/i18n';
 import {
   parseItemEditCommand,
@@ -63,6 +64,9 @@ const pendingScanKey = (scanId: string) => `telegram:dupscan:${scanId}`;
 interface PendingScanData {
   userId: string;
   accountId: string;
+  /** Shown on the card and the saved message (ABA-812); copied from the bot state at scan time. */
+  accountName?: string;
+  multiAccount?: boolean;
   base64: string;
   mimeType: string;
   caption?: string;
@@ -96,6 +100,9 @@ const awaitingItemEditKey = (telegramUserId: string) =>
 interface PendingReceiptData {
   userId: string;
   accountId: string;
+  /** Shown on the card and the saved message (ABA-812); copied from the bot state at scan time. */
+  accountName?: string;
+  multiAccount?: boolean;
   amount: number;
   currencyCode: string;
   description: string;
@@ -254,6 +261,8 @@ export class PhotoHandler {
     return {
       userId: state.userId,
       accountId: state.accountId,
+      accountName: state.accountName,
+      multiAccount: state.multiAccount,
       base64,
       mimeType,
       caption,
@@ -333,6 +342,8 @@ export class PhotoHandler {
     const data: PendingReceiptData = {
       userId: scan.userId,
       accountId: scan.accountId,
+      accountName: scan.accountName,
+      multiAccount: scan.multiAccount,
       ...this.receiptFields(receipt),
       receiptMimeType: scan.mimeType,
       parts: [{ imageBase64: scan.base64, mimeType: scan.mimeType }],
@@ -341,7 +352,7 @@ export class PhotoHandler {
     };
     await this.cache.set<PendingReceiptData>(pendingReceiptKey(receiptId), data, PENDING_RECEIPT_TTL_SEC);
 
-    const sent = await ctx.reply(this.buildCardSummary(receipt, lang), this.cardMarkup(receiptId, lang));
+    const sent = await ctx.reply(this.buildCardSummary(receipt, lang) + this.accountLine(data), this.cardMarkup(receiptId, lang));
 
     // Where the card is, so a continuation can replace it, and the pointer that
     // makes this user's next photo in this chat ask "continuation?". Only an
@@ -375,6 +386,16 @@ export class PhotoHandler {
       scanAttestation: receipt.scanAttestation,
       mergeCandidate: receiptMergeCandidate(receipt.possibleDuplicate),
     };
+  }
+
+  /** Which account the receipt goes to, under the card and the saved message (ABA-812). */
+  private accountLine(data: Pick<PendingReceiptData, 'accountName' | 'multiAccount' | 'language'>): string {
+    return accountFooter(
+      t,
+      data.language,
+      { name: data.accountName ?? '', multiAccount: !!data.multiAccount },
+      escapeHtml,
+    );
   }
 
   private cardMarkup(receiptId: string, lang: string | undefined) {
@@ -589,7 +610,7 @@ export class PhotoHandler {
     const telegramUserId = String(ctx.from!.id);
     await this.cache.del(awaitingItemEditKey(telegramUserId), awaitingDateKey(telegramUserId));
 
-    await this.replaceCard(ctx, receiptId, result.data, this.buildCardSummary(result.receipt, result.data.language));
+    await this.replaceCard(ctx, receiptId, result.data, this.buildCardSummary(result.receipt, result.data.language) + this.accountLine(result.data));
     // The "reading…" note in place of the question has done its job.
     await ctx.deleteMessage().catch(() => undefined);
   }
@@ -724,7 +745,8 @@ export class PhotoHandler {
         (shoppingLine ? `\n${escapeHtml(shoppingLine)}` : '') +
         (mode === 'merge' && data.mergeCandidate
           ? `\n${escapeHtml(t('receiptMergedNote', data.language, { what: data.mergeCandidate.what }))}`
-          : '');
+          : '') +
+        this.accountLine(data);
 
       try {
         await ctx.editMessageText(confirmationText, { parse_mode: 'HTML' });

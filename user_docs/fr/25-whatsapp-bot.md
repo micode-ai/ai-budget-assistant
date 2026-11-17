@@ -62,6 +62,8 @@ Enregistrez un message vocal dans WhatsApp et envoyez-le au bot. Coût : 2 requ�
 
 Envoyez `account` — le bot affiche vos comptes en liste.
 
+Le bot écrit dans son propre compte actif, pas dans celui ouvert dans l’app : changer de compte dans l’app ne le change pas. Pour que vous sachiez toujours où va une opération, chaque dépense, revenu ou ticket que le bot propose ou enregistre se termine par une ligne comme « 💼 Compte : Famille · changer : account » (seulement si vous avez plusieurs comptes), et `account` indique d’abord le compte des nouvelles opérations. Un compte nommé dans votre message n’est utilisé que si son nom apparaît comme un mot entier, et la ligne le précise.
+
 ## Devises supportées
 
 | Symbole | Devise |

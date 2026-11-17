@@ -91,6 +91,8 @@ Se tiver várias contas:
 
 Todos os comandos e consultas à IA seguintes usam a conta selecionada até voltar a mudar.
 
+O bot escreve na sua própria conta ativa, não na que está aberta na app — mudar de conta na app não a altera. Para saber sempre para onde vai um registo, cada despesa, receita ou talão que o bot propõe ou guarda termina com uma linha como «💼 Conta: Família · mudar: account» (só se tiver mais de uma conta), e `account` indica primeiro a conta dos novos registos. Uma conta indicada na mensagem só é usada se o nome aparecer como palavra inteira, e a linha di-lo.
+
 ## Moedas suportadas
 
 O bot reconhece símbolos e códigos de moeda nos comandos:

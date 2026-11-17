@@ -173,10 +173,12 @@ export class CommandHandler {
       const shown = memberships.slice(0, 23);
       const overflow = memberships.slice(23);
 
+      const currentName = memberships.find((m) => m.account.id === userState.accountId)?.account.name;
       await this.slackClient.sendButtons(
         teamId,
         userState.channel,
-        t('chooseAccount', lang),
+        // Name the account new records go to, then offer the others (ABA-812).
+        currentName ? t('currentAccountChoose', lang, { name: currentName }) : t('chooseAccount', lang),
         shown.map((m) => ({
           id: `account:${m.account.id}`,
           title: m.account.name,

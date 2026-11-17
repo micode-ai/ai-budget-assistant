@@ -11,6 +11,7 @@ import { ShoppingListService } from '../../shopping-list/shopping-list.service';
 import { SlackClientService } from '../slack-client.service';
 import { SlackLinkService } from '../slack-link.service';
 import { SLACK_REDIS, SlackFile, SlackUserState } from '../types';
+import { accountFooter } from '../../../common/utils/bot-account';
 import { t, buildCategorySplitLine, buildItemListBlock, buildShoppingListReconciliationLine } from '../helpers/i18n';
 import { buildDuplicateLine, describeDuplicate } from '../../../common/bot-i18n/shared-messages';
 import {
@@ -64,6 +65,9 @@ function sniffImageMime(buffer: Buffer): string | null {
 interface PendingScanData {
   userId: string;
   accountId: string;
+  /** Shown on the card and the saved message (ABA-812); copied from the bot state at scan time. */
+  accountName?: string;
+  multiAccount?: boolean;
   /** Who sent the file: the "continuation?" pointer is per channel AND user. */
   slackUserId?: string;
   /** The image as a receipt PART when the original cannot be one (over the cap or
@@ -81,6 +85,9 @@ interface PendingScanData {
 interface PendingReceiptData {
   userId: string;
   accountId: string;
+  /** Shown on the card and the saved message (ABA-812); copied from the bot state at scan time. */
+  accountName?: string;
+  multiAccount?: boolean;
   amount: number;
   currencyCode: string;
   description: string;
@@ -180,6 +187,8 @@ export class PhotoHandler {
         userId,
         accountId,
         slackUserId: userState.slackUserId,
+        accountName: userState.accountName,
+        multiAccount: userState.multiAccount,
         slackTeamId: teamId,
         channel,
         language,
@@ -251,6 +260,8 @@ export class PhotoHandler {
         userId,
         accountId,
         slackUserId: userState.slackUserId,
+        accountName: userState.accountName,
+        multiAccount: userState.multiAccount,
         slackTeamId: teamId,
         channel,
         language,
@@ -352,6 +363,8 @@ export class PhotoHandler {
       const data: PendingReceiptData = {
         userId,
         accountId,
+        accountName: scan.accountName,
+        multiAccount: scan.multiAccount,
         amount: receipt.amount,
         currencyCode: receipt.currencyCode,
         description: receipt.description,
@@ -380,7 +393,7 @@ export class PhotoHandler {
         teamId,
         channel,
         ts,
-        this.buildCardSummary(receipt, language),
+        this.buildCardSummary(receipt, language) + this.accountLine(data),
         this.cardButtons(shortId, language),
       );
       if (cardTs && cardTs !== ts) {
@@ -399,6 +412,11 @@ export class PhotoHandler {
       this.logger.error(`PhotoHandler.runScan error for ${channel}: ${error}`);
       await this.client.replyText(teamId, channel, ts, t('receiptScanFailed', language));
     }
+  }
+
+  /** Which account the receipt goes to, under the card and the saved message (ABA-812). */
+  private accountLine(data: Pick<PendingReceiptData, 'accountName' | 'multiAccount' | 'language'>): string {
+    return accountFooter(t, data.language, { name: data.accountName ?? '', multiAccount: !!data.multiAccount });
   }
 
   private buildCardSummary(receipt: ReceiptExpense, language: string): string {
@@ -565,7 +583,7 @@ export class PhotoHandler {
     // The card is replaced, so a correction typed against the old lines or an
     // armed date prompt must not apply to the new ones.
     await this.cache.del(`slack:awaiting_item_edit:${slackUserId}`, `slack:awaiting_date:${slackUserId}`);
-    await this.replaceCard(teamId, channel, shortId, result.data, this.buildCardSummary(result.receipt, language));
+    await this.replaceCard(teamId, channel, shortId, result.data, this.buildCardSummary(result.receipt, language) + this.accountLine(result.data));
     // The "reading…" note in place of the question has done its job.
     if (scan.questionTs) {
       await this.client.deleteMessage(teamId, channel, scan.questionTs).catch(() => undefined);
@@ -807,7 +825,8 @@ export class PhotoHandler {
           (shoppingLine ? `\n${shoppingLine}` : '') +
           (mode === 'merge' && data.mergeCandidate
             ? `\n${t('receiptMergedNote', language, { what: data.mergeCandidate.what })}`
-            : ''),
+            : '') +
+          this.accountLine(data),
       );
 
       // Makes this write undoable via chat's "undo" (ABA-599) — a receipt-confirm

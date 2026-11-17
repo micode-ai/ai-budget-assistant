@@ -6,6 +6,7 @@ import { SlackLinkService } from '../slack-link.service';
 import { ChatActionRecorderService } from '../../ai/services/chat-action-recorder.service';
 import { SlackUserState } from '../types';
 import { parseAmount } from '../../whatsapp/helpers/parse-amount';
+import { accountFooter } from '../../../common/utils/bot-account';
 import { t } from '../helpers/i18n';
 import { logFireAndForget } from '../../../common/utils/fire-and-forget';
 
@@ -73,7 +74,7 @@ export class ExpenseHandler {
       await this.slackClient.sendText(
         teamId,
         userState.channel,
-        `${t('expenseCreated', lang)}: *${amountStr}*${descPart}${categoryName}`,
+        `${t('expenseCreated', lang)}: *${amountStr}*${descPart}${categoryName}${accountFooter(t, lang, { name: userState.accountName ?? '', multiAccount: !!userState.multiAccount })}`,
       );
 
       // Makes this write undoable via chat's "undo" (ABA-599) — a plain "expense"

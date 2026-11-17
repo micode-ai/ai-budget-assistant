@@ -1,3 +1,4 @@
+import { registerCommandMenu } from './helpers/bot-commands';
 import { Injectable, Logger, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Telegraf } from 'telegraf';
@@ -58,6 +59,10 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
       // Register middleware and handlers
       this.registerMiddleware();
       this.registerHandlers();
+      // The Menu button's command list, so /account can be found (ABA-812).
+      registerCommandMenu(this.bot.telegram).catch((err) => {
+        this.logger.warn(`setMyCommands failed: ${err}`);
+      });
 
       // Global error handler — without this, any unhandled error in a handler
       // bubbles out of the polling loop and rejects bot.launch(), silently
@@ -150,6 +155,8 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
             userId: link.userId,
             accountId: link.defaultAccountId,
             accountRole: link.accountRole,
+            accountName: link.account?.name ?? '',
+            multiAccount: link.multiAccount,
             conversationId: link.conversationId,
             currencyCode: link.user.currencyCode,
             language: link.user.language || 'en',

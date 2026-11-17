@@ -91,6 +91,8 @@ If you have multiple accounts:
 
 All subsequent commands and AI queries will use the selected account until you switch again.
 
+The bot writes to its own active account, not the one open in the app — switching accounts in the app does not change it. So you always know where a record goes, every expense, income or receipt the bot proposes or saves ends with a line such as “💼 Account: Family · change: account” (shown only when you have more than one account), and `account` first names the account new records go to. An account named in your message is used only when its name appears as a whole word, and the line then says so.
+
 ## Currency Support
 
 The bot recognizes currency symbols and codes in commands:

@@ -7,7 +7,7 @@ import { PrismaService } from '../../../database/prisma.service';
 import { SubscriptionsService } from '../../subscriptions/subscriptions.service';
 import { SlackClientService } from '../slack-client.service';
 import { markdownToSlack } from '../helpers/format-slack';
-import { resolveAccountFromMessage, AccountInfo } from '../../whatsapp/helpers/resolve-account';
+import { accountFooter, resolveAccountFromMessage, AccountInfo } from '../../../common/utils/bot-account';
 import { t } from '../helpers/i18n';
 import { SlackUserState, SLACK_REDIS } from '../types';
 
@@ -33,6 +33,8 @@ export class ChatHandler {
       // Resolve effective account from message text (e.g., "в счёте Family")
       let effectiveAccountId = accountId;
       let effectiveAccountName: string | null = null;
+      let fromMessage = false;
+      let footerName = userState.accountName ?? '';
 
       const memberships = await this.prisma.accountMember.findMany({
         where: { userId },
@@ -48,7 +50,11 @@ export class ChatHandler {
         const resolved = resolveAccountFromMessage(text, accounts, accountId);
         effectiveAccountId = resolved.resolvedAccountId;
         effectiveAccountName = resolved.resolvedAccountName;
+        fromMessage = resolved.wasOverridden;
+        footerName = accounts.find((a) => a.id === effectiveAccountId)?.name ?? footerName;
       }
+      // Which account a write goes to, shown before it is confirmed (ABA-812).
+      const footer = accountFooter(t, language, { name: footerName, multiAccount: memberships.length > 1, fromMessage });
 
       // Post placeholder if caller did not already post one
       if (!ts) {
@@ -90,11 +96,13 @@ export class ChatHandler {
         const shortId = randomUUID().slice(0, 8);
         await this.redis.set(
           `slack:pa:${shortId}`,
-          JSON.stringify({ conversationId: response.conversationId, actionId }),
+          // The proposal's account travels with it: confirm writes there, not to
+          // whatever account is linked by the time the button is pressed (ABA-812).
+          JSON.stringify({ conversationId: response.conversationId, actionId, accountId: effectiveAccountId, accountName: footerName }),
           'EX',
           1800,
         );
-        await this.slackClient.replyButtons(teamId, channel, ts, markdownToSlack(response.message), [
+        await this.slackClient.replyButtons(teamId, channel, ts, markdownToSlack(response.message) + footer, [
           { id: `ca:${shortId}`, title: t('confirm', language) },
           { id: `ra:${shortId}`, title: t('cancel', language) },
         ]);
@@ -129,14 +137,18 @@ export class ChatHandler {
         return;
       }
 
-      const { conversationId, actionId } = JSON.parse(raw) as {
+      const pending = JSON.parse(raw) as {
         conversationId: string;
         actionId: string;
+        accountId?: string;
+        accountName?: string;
       };
+      const { conversationId, actionId } = pending;
+      const targetAccountId = pending.accountId ?? accountId;
 
       // Track AI usage for confirmation (0.5)
       try {
-        await this.subscriptionsService.trackAiUsage(userId, 'chat', 0.5, accountId);
+        await this.subscriptionsService.trackAiUsage(userId, 'chat', 0.5, targetAccountId);
       } catch (e) {
         if (e instanceof ForbiddenException) {
           await this.slackClient.sendText(teamId, channel, t('aiLimitReached', language));
@@ -149,12 +161,17 @@ export class ChatHandler {
         userId,
         conversationId,
         actionId,
-        accountId,
+        targetAccountId,
       );
 
       await this.redis.del(`slack:pa:${shortId}`);
 
-      await this.slackClient.sendText(teamId, channel, markdownToSlack(result.message));
+      await this.slackClient.sendText(
+        teamId,
+        channel,
+        markdownToSlack(result.message) +
+          accountFooter(t, language, { name: pending.accountName ?? '', multiAccount: !!userState.multiAccount }),
+      );
     } catch (error) {
       this.logger.error(`Error in ChatHandler.handleConfirmCallback: ${error}`);
       await this.slackClient.sendText(
@@ -167,7 +184,7 @@ export class ChatHandler {
 
   async handleRejectCallback(shortId: string, userState: SlackUserState): Promise<void> {
     try {
-      const { channel, language, userId } = userState;
+      const { channel, language, userId, accountId } = userState;
       const teamId = userState.slackTeamId;
 
       const raw = await this.redis.get(`slack:pa:${shortId}`);
@@ -180,12 +197,19 @@ export class ChatHandler {
         return;
       }
 
-      const { conversationId, actionId } = JSON.parse(raw) as {
+      const { conversationId, actionId, accountId: pendingAccountId } = JSON.parse(raw) as {
         conversationId: string;
         actionId: string;
+        accountId?: string;
       };
 
-      const result = await this.chatService.rejectAction(userId, conversationId, actionId);
+      const result = await this.chatService.rejectAction(
+        userId,
+        conversationId,
+        actionId,
+        undefined,
+        pendingAccountId ?? accountId,
+      );
 
       await this.redis.del(`slack:pa:${shortId}`);
 

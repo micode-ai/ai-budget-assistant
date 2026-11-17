@@ -98,7 +98,7 @@ const platformMessages: Record<string, Record<string, string>> = {
 
 const messages: Record<string, Record<string, string>> = { ...sharedMessages, ...platformMessages };
 
-export const t = createBotT(messages, { markup: 'html', defaultParams: { platform: 'Telegram' } });
+export const t = createBotT(messages, { markup: 'html', defaultParams: { accountCmd: '/account', platform: 'Telegram' } });
 
 export type { CategorySplitLineItem };
 

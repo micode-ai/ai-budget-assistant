@@ -8,6 +8,10 @@ export interface TelegramUserState {
   currencyCode: string;
   language: string;
   telegramUserId: string;
+  /** The linked account's name, shown under every write (ABA-812). */
+  accountName?: string;
+  /** The user belongs to more than one account; only then is the account shown. */
+  multiAccount?: boolean;
 }
 
 export interface BotContext extends Context {

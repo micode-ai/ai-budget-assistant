@@ -62,6 +62,8 @@ Graba un mensaje de voz en WhatsApp y envíalo al bot. Costo: 2 solicitudes IA.
 
 Envía `account` — el bot muestra tus cuentas como lista tocable.
 
+El bot escribe en su propia cuenta activa, no en la que tienes abierta en la app: cambiar de cuenta en la app no la cambia. Para que siempre sepas adónde va un registro, cada gasto, ingreso o recibo que el bot propone o guarda termina con una línea como «💼 Cuenta: Familia · cambiar: account» (solo si tienes más de una cuenta), y `account` indica primero la cuenta de los nuevos registros. Una cuenta nombrada en tu mensaje solo se usa si su nombre aparece como palabra completa, y la línea lo indica.
+
 ## Monedas soportadas
 
 | Símbolo | Moneda |

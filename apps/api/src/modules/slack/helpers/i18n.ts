@@ -86,7 +86,7 @@ const platformMessages: Record<string, Record<string, string>> = {
 
 const messages: Record<string, Record<string, string>> = { ...sharedMessages, ...platformMessages };
 
-export const t = createBotT(messages, { markup: 'markdown', defaultParams: { platform: 'Slack' } });
+export const t = createBotT(messages, { markup: 'markdown', defaultParams: { accountCmd: 'account', platform: 'Slack' } });
 
 export type { CategorySplitLineItem };
 

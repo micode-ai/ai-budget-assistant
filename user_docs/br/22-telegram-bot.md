@@ -86,6 +86,8 @@ Se você tem várias contas:
 
 Todos os comandos e perguntas à IA seguintes vão usar a conta selecionada até você trocar de novo.
 
+O bot grava na própria conta ativa, não na que está aberta no app — trocar de conta no app não muda a do bot. Para você sempre saber para onde vai um registro, cada despesa, receita ou cupom que o bot propõe ou salva termina com uma linha como “💼 Conta: Família · trocar: /account” (só se você tiver mais de uma conta), e `/account` mostra primeiro a conta dos novos registros. Uma conta citada na mensagem só é usada se o nome aparecer como palavra inteira, e a linha avisa. `/account` também fica no botão **Menu** do bot.
+
 ## Moedas suportadas
 
 O bot reconhece símbolos e códigos de moeda nos comandos:

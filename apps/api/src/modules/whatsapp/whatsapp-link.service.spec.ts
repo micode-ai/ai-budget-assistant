@@ -40,6 +40,7 @@ function makePrismaMock() {
     },
     accountMember: {
       findUnique: jest.fn(),
+      count: jest.fn().mockResolvedValue(1),
     },
   };
 }
@@ -171,6 +172,16 @@ describe('WhatsAppLinkService', () => {
         select: { role: true },
       });
       expect(result?.accountRole).toBe('editor');
+      // One account: the bots show no account line (ABA-812).
+      expect(result?.multiAccount).toBe(false);
+    });
+
+    it('flags a user with more than one account so every write names it (ABA-812)', async () => {
+      prisma.whatsAppLink.findUnique.mockResolvedValue({ userId: 'user-1', defaultAccountId: 'acct-1' } as any);
+      prisma.accountMember.findUnique.mockResolvedValue({ role: 'owner' });
+      prisma.accountMember.count.mockResolvedValue(2);
+      expect((await service.getLink('+1'))?.multiAccount).toBe(true);
+      expect(prisma.accountMember.count).toHaveBeenCalledWith({ where: { userId: 'user-1' } });
     });
   });
 

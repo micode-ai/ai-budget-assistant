@@ -117,6 +117,8 @@ export class SlackBotService {
       userId: link.userId,
       accountId: link.defaultAccountId,
       accountRole: link.accountRole,
+      accountName: link.account?.name ?? '',
+      multiAccount: link.multiAccount,
       conversationId: link.conversationId,
       currencyCode: link.user.currencyCode,
       language: link.user.language || 'en',

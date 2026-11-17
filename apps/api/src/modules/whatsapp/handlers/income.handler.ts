@@ -6,6 +6,7 @@ import { WhatsAppLinkService } from '../whatsapp-link.service';
 import { ChatActionRecorderService } from '../../ai/services/chat-action-recorder.service';
 import { WhatsAppUserState } from '../types';
 import { parseAmount } from '../helpers/parse-amount';
+import { accountFooter } from '../../../common/utils/bot-account';
 import { t } from '../helpers/i18n';
 import { logFireAndForget } from '../../../common/utils/fire-and-forget';
 
@@ -68,7 +69,7 @@ export class IncomeHandler {
 
       await this.whatsappClient.sendText(
         userState.waPhoneNumber,
-        `${t('incomeCreated', lang)}: *${amountStr}*${descPart}${categoryName}`,
+        `${t('incomeCreated', lang)}: *${amountStr}*${descPart}${categoryName}${accountFooter(t, lang, { name: userState.accountName ?? '', multiAccount: !!userState.multiAccount })}`,
       );
 
       // Makes this write undoable via chat's "undo" (ABA-599) — see ExpenseHandler

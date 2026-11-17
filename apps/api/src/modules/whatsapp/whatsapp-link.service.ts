@@ -119,7 +119,13 @@ export class WhatsAppLinkService {
       where: { accountId_userId: { accountId: link.defaultAccountId, userId: link.userId } },
       select: { role: true },
     });
-    return { ...link, accountRole: (membership?.role ?? 'owner') as 'owner' | 'editor' | 'viewer' };
+    // More than one account: every write shows which one it goes to (ABA-812).
+    const accountCount = await this.prisma.accountMember.count({ where: { userId: link.userId } });
+    return {
+      ...link,
+      accountRole: (membership?.role ?? 'owner') as 'owner' | 'editor' | 'viewer',
+      multiAccount: accountCount > 1,
+    };
   }
 
   async getLinkByUserId(userId: string) {

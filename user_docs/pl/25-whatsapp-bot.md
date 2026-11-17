@@ -62,6 +62,8 @@ Nagraj wiadomość głosową w WhatsApp i wyślij ją botowi. Koszt: 2 żądania
 
 Wyślij `account` — bot pokaże konta jako klikalną listę.
 
+Bot zapisuje na swoje aktywne konto, a nie na to otwarte w aplikacji — zmiana konta w aplikacji nie wpływa na bota. Żeby zawsze było widać, dokąd trafia wpis, każdy wydatek, przychód lub paragon, który bot proponuje lub zapisuje, kończy się linią w rodzaju „💼 Konto: Rodzina · zmień: account” (tylko gdy masz więcej niż jedno konto), a `account` najpierw podaje konto, na które trafiają nowe wpisy. Konto podane w wiadomości jest użyte tylko wtedy, gdy jego nazwa występuje jako osobne słowo — i linia to zaznacza.
+
 ## Obsługiwane waluty
 
 | Symbol | Waluta |

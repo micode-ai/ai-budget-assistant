@@ -168,9 +168,11 @@ export class CommandHandler {
         description: m.account.currencyCode,
       }));
 
+      const currentName = memberships.find((m) => m.account.id === userState.accountId)?.account.name;
       await this.client.sendList(
         userState.waPhoneNumber,
-        t('chooseAccount', lang),
+        // Name the account new records go to, then offer the others (ABA-812).
+        currentName ? t('currentAccountChoose', lang, { name: currentName }) : t('chooseAccount', lang),
         'Choose',
         rows,
       );

@@ -8,6 +8,7 @@ import { logFireAndForget } from '../../../common/utils/fire-and-forget';
 import { BotContext } from '../types';
 import { Markup } from 'telegraf';
 import { t } from '../helpers/i18n';
+import { escapeHtml } from '../helpers/format-telegram';
 
 const DIGEST_NOW_TTL_SEC = 86400;
 const DIGEST_NOW_UNAVAILABLE_OUTCOMES: DigestOutcome[] = ['unavailable', 'no_channel', 'failed', 'encrypted'];
@@ -122,7 +123,12 @@ export class CommandHandler {
         return [Markup.button.callback(`${m.account.name} (${m.account.currencyCode})${active}`, `account:${m.account.id}`)];
       });
 
-      await ctx.reply(t('chooseAccount', lang), Markup.inlineKeyboard(buttons));
+      // Name the account new records go to, then offer the others (ABA-812).
+      const current = memberships.find((m) => m.account.id === ctx.userState!.accountId)?.account.name;
+      await ctx.reply(
+        current ? t('currentAccountChoose', lang, { name: escapeHtml(current) }) : t('chooseAccount', lang),
+        { parse_mode: 'HTML', ...Markup.inlineKeyboard(buttons) },
+      );
     } catch (error) {
       this.logger.error(`Error in /account: ${error}`);
       await ctx.reply(t('somethingWrong', ctx.userState?.language));

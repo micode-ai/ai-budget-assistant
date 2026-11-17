@@ -86,6 +86,8 @@ Si tienes varias cuentas:
 
 Todos los comandos y consultas de IA posteriores usaran la cuenta seleccionada hasta que cambies de nuevo.
 
+El bot escribe en su propia cuenta activa, no en la que tienes abierta en la app: cambiar de cuenta en la app no la cambia. Para que siempre sepas adónde va un registro, cada gasto, ingreso o recibo que el bot propone o guarda termina con una línea como «💼 Cuenta: Familia · cambiar: /account» (solo si tienes más de una cuenta), y `/account` indica primero la cuenta de los nuevos registros. Una cuenta nombrada en tu mensaje solo se usa si su nombre aparece como palabra completa, y la línea lo indica. `/account` también está en el botón **Menú** del bot.
+
 ## Soporte de monedas
 
 El bot reconoce simbolos y codigos de moneda en los comandos:

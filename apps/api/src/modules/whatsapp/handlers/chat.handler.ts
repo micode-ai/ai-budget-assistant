@@ -7,7 +7,7 @@ import { PrismaService } from '../../../database/prisma.service';
 import { SubscriptionsService } from '../../subscriptions/subscriptions.service';
 import { WhatsAppClientService } from '../whatsapp-client.service';
 import { markdownToWhatsApp } from '../helpers/format-whatsapp';
-import { resolveAccountFromMessage, AccountInfo } from '../helpers/resolve-account';
+import { accountFooter, resolveAccountFromMessage, AccountInfo } from '../../../common/utils/bot-account';
 import { t } from '../helpers/i18n';
 import { WhatsAppUserState, WA_REDIS } from '../types';
 
@@ -31,6 +31,8 @@ export class ChatHandler {
       // Resolve effective account from message text (e.g., "в счёте Family")
       let effectiveAccountId = accountId;
       let effectiveAccountName: string | null = null;
+      let fromMessage = false;
+      let footerName = userState.accountName ?? '';
 
       const memberships = await this.prisma.accountMember.findMany({
         where: { userId },
@@ -46,7 +48,11 @@ export class ChatHandler {
         const resolved = resolveAccountFromMessage(text, accounts, accountId);
         effectiveAccountId = resolved.resolvedAccountId;
         effectiveAccountName = resolved.resolvedAccountName;
+        fromMessage = resolved.wasOverridden;
+        footerName = accounts.find((a) => a.id === effectiveAccountId)?.name ?? footerName;
       }
+      // Which account a write goes to, shown before it is confirmed (ABA-812).
+      const footer = accountFooter(t, language, { name: footerName, multiAccount: memberships.length > 1, fromMessage });
 
       // Track AI usage (1.0 for chat)
       try {
@@ -84,14 +90,16 @@ export class ChatHandler {
         const shortId = randomUUID().slice(0, 8);
         await this.redis.set(
           `wa:pa:${shortId}`,
-          JSON.stringify({ conversationId: response.conversationId, actionId }),
+          // The proposal's account travels with it: confirm writes there, not to
+          // whatever account is linked by the time the button is pressed (ABA-812).
+          JSON.stringify({ conversationId: response.conversationId, actionId, accountId: effectiveAccountId, accountName: footerName }),
           'EX',
           1800,
         );
 
         await this.whatsAppClient.sendButtons(
           waPhoneNumber,
-          markdownToWhatsApp(response.message),
+          markdownToWhatsApp(response.message) + footer,
           [
             { id: `ca--${shortId}`, title: t('confirm', language) },
             { id: `ra--${shortId}`, title: t('cancel', language) },
@@ -124,14 +132,18 @@ export class ChatHandler {
         return;
       }
 
-      const { conversationId, actionId } = JSON.parse(raw) as {
+      const pending = JSON.parse(raw) as {
         conversationId: string;
         actionId: string;
+        accountId?: string;
+        accountName?: string;
       };
+      const { conversationId, actionId } = pending;
+      const targetAccountId = pending.accountId ?? accountId;
 
       // Track AI usage for confirmation (0.5)
       try {
-        await this.subscriptionsService.trackAiUsage(userId, 'chat', 0.5, accountId);
+        await this.subscriptionsService.trackAiUsage(userId, 'chat', 0.5, targetAccountId);
       } catch (e) {
         if (e instanceof ForbiddenException) {
           await this.whatsAppClient.sendText(waPhoneNumber, t('aiLimitReached', language));
@@ -144,12 +156,16 @@ export class ChatHandler {
         userId,
         conversationId,
         actionId,
-        accountId,
+        targetAccountId,
       );
 
       await this.redis.del(`wa:pa:${shortId}`);
 
-      await this.whatsAppClient.sendText(waPhoneNumber, markdownToWhatsApp(result.message));
+      await this.whatsAppClient.sendText(
+        waPhoneNumber,
+        markdownToWhatsApp(result.message) +
+          accountFooter(t, language, { name: pending.accountName ?? '', multiAccount: !!userState.multiAccount }),
+      );
     } catch (error) {
       this.logger.error(`Error in ChatHandler.handleConfirmCallback: ${error}`);
       await this.whatsAppClient.sendText(
@@ -161,7 +177,7 @@ export class ChatHandler {
 
   async handleRejectCallback(shortId: string, userState: WhatsAppUserState): Promise<void> {
     try {
-      const { waPhoneNumber, language, userId } = userState;
+      const { waPhoneNumber, language, userId, accountId } = userState;
 
       const raw = await this.redis.get(`wa:pa:${shortId}`);
       if (!raw) {
@@ -172,12 +188,19 @@ export class ChatHandler {
         return;
       }
 
-      const { conversationId, actionId } = JSON.parse(raw) as {
+      const { conversationId, actionId, accountId: pendingAccountId } = JSON.parse(raw) as {
         conversationId: string;
         actionId: string;
+        accountId?: string;
       };
 
-      const result = await this.chatService.rejectAction(userId, conversationId, actionId);
+      const result = await this.chatService.rejectAction(
+        userId,
+        conversationId,
+        actionId,
+        undefined,
+        pendingAccountId ?? accountId,
+      );
 
       await this.redis.del(`wa:pa:${shortId}`);
 

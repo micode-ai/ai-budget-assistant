@@ -72,7 +72,7 @@ const platformMessages: Record<string, Record<string, string>> = {
 
 const messages: Record<string, Record<string, string>> = { ...sharedMessages, ...platformMessages };
 
-export const t = createBotT(messages, { markup: 'markdown', defaultParams: { platform: 'WhatsApp' } });
+export const t = createBotT(messages, { markup: 'markdown', defaultParams: { accountCmd: 'account', platform: 'WhatsApp' } });
 
 export type { CategorySplitLineItem };
 

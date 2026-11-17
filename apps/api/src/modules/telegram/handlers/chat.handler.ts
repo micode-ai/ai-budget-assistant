@@ -7,13 +7,21 @@ import { TelegramLinkService } from '../telegram-link.service';
 import { SubscriptionsService } from '../../subscriptions/subscriptions.service';
 import { CacheService } from '../../../common/cache/cache.service';
 import { BotContext } from '../types';
-import { markdownToTelegramHtml } from '../helpers/format-telegram';
-import { resolveAccountFromMessage, AccountInfo } from '../helpers/resolve-account';
+import { escapeHtml, markdownToTelegramHtml } from '../helpers/format-telegram';
+import { accountFooter, resolveAccountFromMessage, AccountInfo } from '../../../common/utils/bot-account';
 import { t } from '../helpers/i18n';
 
 interface PendingActionData {
   conversationId: string;
   actionId: string;
+  /**
+   * The account the proposal was made in (ABA-812) — the linked one, or one the
+   * message named. Confirm and reject use it, never the account linked at
+   * confirm time: the conversation lives in this account, and it is the one
+   * the confirmation message showed.
+   */
+  accountId?: string;
+  accountName?: string;
 }
 
 // Pending confirmation data lives in Redis (like the WhatsApp bot's `wa:pa:*`
@@ -59,6 +67,8 @@ export class ChatHandler {
     // Resolve account from message text (e.g., "в счёте Family")
     let effectiveAccountId = accountId;
     let effectiveAccountName: string | null = null;
+    let fromMessage = false;
+    let footerName = ctx.userState!.accountName ?? '';
 
     const memberships = await this.prisma.accountMember.findMany({
       where: { userId },
@@ -74,7 +84,15 @@ export class ChatHandler {
       const resolved = resolveAccountFromMessage(messageText, accounts, accountId);
       effectiveAccountId = resolved.resolvedAccountId;
       effectiveAccountName = resolved.resolvedAccountName;
+      fromMessage = resolved.wasOverridden;
+      footerName = accounts.find((a) => a.id === effectiveAccountId)?.name ?? footerName;
     }
+    const footer = accountFooter(
+      t,
+      ctx.userState?.language,
+      { name: footerName, multiAccount: memberships.length > 1, fromMessage },
+      escapeHtml,
+    );
 
     // Track AI usage (1.0 for chat)
     try {
@@ -108,14 +126,14 @@ export class ChatHandler {
       const shortId = randomUUID().slice(0, 8);
       await this.cache.set<PendingActionData>(
         pendingActionKey(shortId),
-        { conversationId: response.conversationId, actionId },
+        { conversationId: response.conversationId, actionId, accountId: effectiveAccountId, accountName: footerName },
         PENDING_ACTION_TTL_SEC,
       );
 
       const callbackConfirm = `ca:${shortId}`;
       const callbackReject = `ra:${shortId}`;
 
-      const messageHtml = markdownToTelegramHtml(response.message);
+      const messageHtml = markdownToTelegramHtml(response.message) + footer;
 
       await ctx.reply(
         messageHtml,
@@ -151,7 +169,12 @@ export class ChatHandler {
       await ctx.answerCbQuery('Processing...');
 
       try {
-        await this.subscriptionsService.trackAiUsage(ctx.userState.userId, 'chat', 0.5, ctx.userState.accountId);
+        await this.subscriptionsService.trackAiUsage(
+          ctx.userState.userId,
+          'chat',
+          0.5,
+          actionData.accountId ?? ctx.userState.accountId,
+        );
       } catch (e) {
         if (e instanceof ForbiddenException) {
           await ctx.answerCbQuery('AI request limit reached.');
@@ -164,12 +187,19 @@ export class ChatHandler {
         ctx.userState.userId,
         actionData.conversationId,
         actionData.actionId,
-        ctx.userState.accountId,
+        actionData.accountId ?? ctx.userState.accountId,
       );
 
       await this.cache.del(pendingActionKey(shortId));
 
-      const html = markdownToTelegramHtml(result.message);
+      const html =
+        markdownToTelegramHtml(result.message) +
+        accountFooter(
+          t,
+          ctx.userState.language,
+          { name: actionData.accountName ?? '', multiAccount: !!ctx.userState.multiAccount },
+          escapeHtml,
+        );
       await ctx.editMessageText(html, { parse_mode: 'HTML' });
     } catch (error) {
       this.logger.error(`Error confirming action: ${error}`);
@@ -196,6 +226,8 @@ export class ChatHandler {
         ctx.userState.userId,
         actionData.conversationId,
         actionData.actionId,
+        undefined,
+        actionData.accountId ?? ctx.userState.accountId,
       );
 
       await this.cache.del(pendingActionKey(shortId));

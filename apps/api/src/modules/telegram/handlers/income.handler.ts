@@ -6,6 +6,8 @@ import { TelegramLinkService } from '../telegram-link.service';
 import { BotContext } from '../types';
 import { parseAmount } from '../helpers/parse-amount';
 import { formatCurrency } from '../helpers/format-telegram';
+import { accountFooter } from '../../../common/utils/bot-account';
+import { escapeHtml } from '../helpers/format-telegram';
 import { t } from '../helpers/i18n';
 import { logFireAndForget } from '../../../common/utils/fire-and-forget';
 
@@ -68,7 +70,7 @@ export class IncomeHandler {
 
       const categoryName = (income as any)?.category?.name ? ` (${(income as any).category.name})` : '';
       await ctx.reply(
-        `✅ Income added: <b>${formatCurrency(parsed.amount, currencyCode)}</b>${parsed.description ? ` — ${parsed.description}` : ''}${categoryName}`,
+        `✅ Income added: <b>${formatCurrency(parsed.amount, currencyCode)}</b>${parsed.description ? ` — ${parsed.description}` : ''}${categoryName}${accountFooter(t, ctx.userState.language, { name: ctx.userState.accountName ?? '', multiAccount: !!ctx.userState.multiAccount }, escapeHtml)}`,
         { parse_mode: 'HTML' },
       );
 

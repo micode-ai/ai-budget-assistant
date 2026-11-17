@@ -86,6 +86,8 @@ Wenn du mehrere Konten hast:
 
 Alle nachfolgenden Befehle und KI-Anfragen verwenden das ausgewahlte Konto, bis du erneut wechselst.
 
+Der Bot schreibt auf sein eigenes aktives Konto, nicht auf das in der App geöffnete — ein Kontowechsel in der App ändert es nicht. Damit immer klar ist, wohin ein Eintrag geht, endet jede Ausgabe, Einnahme oder jeder Beleg, den der Bot vorschlägt oder speichert, mit einer Zeile wie „💼 Konto: Familie · wechseln: /account“ (nur wenn du mehr als ein Konto hast), und `/account` nennt zuerst das Konto für neue Einträge. Ein in deiner Nachricht genanntes Konto wird nur verwendet, wenn sein Name als ganzes Wort vorkommt — die Zeile sagt das dann. `/account` steht auch im **Menü**-Button des Bots.
+
 ## Wahrungsunterstutzung
 
 Der Bot erkennt Wahrungssymbole und -codes in Befehlen:

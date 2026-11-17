@@ -11,6 +11,7 @@ import { ShoppingListService } from '../../shopping-list/shopping-list.service';
 import { WhatsAppClientService } from '../whatsapp-client.service';
 import { WhatsAppLinkService } from '../whatsapp-link.service';
 import { WA_REDIS, WaMediaMessage, WhatsAppUserState } from '../types';
+import { accountFooter } from '../../../common/utils/bot-account';
 import { t, buildCategorySplitLine, buildItemListBlock, buildShoppingListReconciliationLine } from '../helpers/i18n';
 import { buildDuplicateLine, describeDuplicate } from '../../../common/bot-i18n/shared-messages';
 import {
@@ -54,6 +55,9 @@ const receiptBusyKey = (shortId: string) => `wa:receipt-busy:${shortId}`;
 interface PendingScanData {
   userId: string;
   accountId: string;
+  /** Shown on the card and the saved message (ABA-812); copied from the bot state at scan time. */
+  accountName?: string;
+  multiAccount?: boolean;
   waPhoneNumber: string;
   base64: string;
   mimeType: string;
@@ -63,6 +67,9 @@ interface PendingScanData {
 interface PendingReceiptData {
   userId: string;
   accountId: string;
+  /** Shown on the card and the saved message (ABA-812); copied from the bot state at scan time. */
+  accountName?: string;
+  multiAccount?: boolean;
   amount: number;
   currencyCode: string;
   description: string;
@@ -140,6 +147,8 @@ export class PhotoHandler {
         userId,
         accountId,
         waPhoneNumber,
+        accountName: userState.accountName,
+        multiAccount: userState.multiAccount,
         language,
         base64,
         mimeType: mimeType || 'image/jpeg',
@@ -194,6 +203,8 @@ export class PhotoHandler {
         userId,
         accountId,
         waPhoneNumber,
+        accountName: userState.accountName,
+        multiAccount: userState.multiAccount,
         language,
         base64,
         mimeType,
@@ -284,6 +295,8 @@ export class PhotoHandler {
     const data: PendingReceiptData = {
       userId,
       accountId,
+      accountName: scan.accountName,
+      multiAccount: scan.multiAccount,
       amount: receipt.amount,
       currencyCode: receipt.currencyCode,
       description: receipt.description,
@@ -304,13 +317,18 @@ export class PhotoHandler {
     };
     await this.redis.set(`wa:receipt:${shortId}`, JSON.stringify(data), 'EX', 1800);
 
-    await this.sendCard(waPhoneNumber, shortId, this.buildCardSummary(receipt, language), language);
+    await this.sendCard(waPhoneNumber, shortId, this.buildCardSummary(receipt, language) + this.accountLine(data), language);
 
     // The pointer that makes this user's next photo ask "continuation?". Only an
     // image the parts reader accepts, within the part cap, can be part 1 — never a PDF.
     if (canBePart(base64, mimeType)) {
       await this.cache.set(this.pointerKey(waPhoneNumber), shortId, PENDING_RECEIPT_TTL_SEC);
     }
+  }
+
+  /** Which account the receipt goes to, under the card and the saved message (ABA-812). */
+  private accountLine(data: Pick<PendingReceiptData, 'accountName' | 'multiAccount' | 'language'>): string {
+    return accountFooter(t, data.language, { name: data.accountName ?? '', multiAccount: !!data.multiAccount });
   }
 
   private buildCardSummary(receipt: ReceiptExpense, language: string): string {
@@ -462,7 +480,7 @@ export class PhotoHandler {
     // The card is replaced, so a correction typed against the old lines or an
     // armed date prompt must not apply to the new ones.
     await this.cache.del(`wa:awaiting_item_edit:${waPhoneNumber}`, `wa:awaiting_date:${waPhoneNumber}`);
-    await this.sendCard(waPhoneNumber, shortId, this.buildCardSummary(result.receipt, language), language);
+    await this.sendCard(waPhoneNumber, shortId, this.buildCardSummary(result.receipt, language) + this.accountLine(result.data), language);
   }
 
   /** The scan result as stored on the pending receipt (replaced wholesale by a continuation). */
@@ -648,7 +666,8 @@ export class PhotoHandler {
           (shoppingLine ? `\n${shoppingLine}` : '') +
           (mode === 'merge' && data.mergeCandidate
             ? `\n${t('receiptMergedNote', language, { what: data.mergeCandidate.what })}`
-            : ''),
+            : '') +
+          this.accountLine(data),
       );
 
       // Makes this write undoable via chat's "undo" (ABA-599) — a receipt-confirm

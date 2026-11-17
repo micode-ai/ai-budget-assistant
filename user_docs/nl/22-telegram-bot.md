@@ -86,6 +86,8 @@ Als je meerdere accounts hebt:
 
 Alle volgende commando's en AI-vragen gebruiken het geselecteerde account totdat je opnieuw wisselt.
 
+De bot schrijft naar zijn eigen actieve account, niet naar het account dat in de app openstaat — wisselen in de app verandert dat niet. Zodat je altijd ziet waar een boeking heen gaat, eindigt elke uitgave, inkomst of bon die de bot voorstelt of opslaat met een regel als „💼 Account: Gezin · wisselen: /account” (alleen als je meer dan één account hebt), en `/account` noemt eerst het account voor nieuwe boekingen. Een account dat je in je bericht noemt, wordt alleen gebruikt als de naam als heel woord voorkomt, en de regel zegt dat dan. `/account` staat ook onder de **Menu**-knop van de bot.
+
 ## Valutaondersteuning
 
 De bot herkent valutasymbolen en -codes in commando's:
