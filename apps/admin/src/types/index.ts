@@ -53,6 +53,9 @@ export interface AdminUserListItem {
   language: string;
   createdAt: string;
   lastSyncAt: string | null;
+  /** The app build that last made a request (ABA-813); null until the user opens an app version that reports it. */
+  appVersion?: string | null;
+  appPlatform?: "android" | "ios" | "web" | string | null;
   /** Expenses this user created across all their accounts, deleted ones excluded. */
   expenseCount: number;
   subscription: {

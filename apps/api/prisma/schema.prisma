@@ -199,6 +199,10 @@ model User {
   emailVerificationExpiresAt DateTime?     @map("email_verification_expires_at")
   defaultAccountId           String?       @map("default_account_id")
   lastSyncAt                 DateTime?     @map("last_sync_at")
+  /// The app build that last made an authenticated request (ABA-813): "1.42.0 (123)" native, "1.42.0+abc1234" web.
+  appVersion                 String?       @map("app_version")
+  /// android | ios | web — which client sent `appVersion`.
+  appPlatform                String?       @map("app_platform")
   passwordResetCode          String?       @map("password_reset_code")
   passwordResetExpiresAt     DateTime?     @map("password_reset_expires_at")
   emailChangePending         String?       @map("email_change_pending")

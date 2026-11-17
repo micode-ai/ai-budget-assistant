@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { UsersService } from '../../users/users.service';
 import { LastActiveService } from '../../users/last-active.service';
 import { tokenVersionMatches } from '../token-version.util';
+import { parseClientInfo } from '../../users/client-info.util';
 
 interface JwtPayload {
   sub: string;
@@ -24,10 +25,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
       secretOrKey: configService.get<string>('JWT_SECRET'),
+      // The request is needed for the app-version headers (ABA-813).
+      passReqToCallback: true,
     });
   }
 
-  async validate(payload: JwtPayload) {
+  async validate(req: { headers?: Record<string, string | string[] | undefined> }, payload: JwtPayload) {
     const user = await this.usersService.findById(payload.sub);
 
     // A password reset or an e-mail change bumps tokenVersion and so ends every older session (ABA-809).
@@ -37,7 +40,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
     // Any authenticated request counts as activity. Throttled inside the service
     // and fire-and-forget so it can neither delay nor fail the request.
-    void this.lastActive.touch(user.id).catch(() => undefined);
+    void this.lastActive.touch(user.id, parseClientInfo(req?.headers)).catch(() => undefined);
 
     return {
       id: user.id,

@@ -157,6 +157,7 @@ export default function UsersPage() {
                   {/* lastSyncAt is a last-*activity* stamp (any authenticated
                       request), not a login event — label it for what it is. */}
                   <SortableHead field="lastSyncAt" label="Last Active" />
+                  <TableHead>App</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -183,11 +184,14 @@ export default function UsersPage() {
                     <TableCell className="text-muted-foreground">
                       {user.lastSyncAt ? formatRelative(user.lastSyncAt) : "Never"}
                     </TableCell>
+                    <TableCell className="text-muted-foreground whitespace-nowrap">
+                      <AppVersionCell version={user.appVersion} platform={user.appPlatform} />
+                    </TableCell>
                   </TableRow>
                 ))}
                 {data?.data.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={8} className="text-center text-muted-foreground py-8">
+                    <TableCell colSpan={9} className="text-center text-muted-foreground py-8">
                       No users found
                     </TableCell>
                   </TableRow>
@@ -225,5 +229,21 @@ export default function UsersPage() {
         </>
       )}
     </div>
+  );
+}
+
+const PLATFORM_LABELS: Record<string, string> = { android: "Android", ios: "iOS", web: "Web" };
+
+/**
+ * The build a user last ran (ABA-813). Recorded only by app versions that send
+ * it, so "—" means "not reported yet", not "no app".
+ */
+function AppVersionCell({ version, platform }: { version?: string | null; platform?: string | null }) {
+  if (!version) return <span title="Not reported yet — the user has not opened an app version that sends it">—</span>;
+  return (
+    <span>
+      <span className="font-mono text-xs text-foreground">{version}</span>
+      {platform && <span className="ml-1.5 text-xs">{PLATFORM_LABELS[platform] ?? platform}</span>}
+    </span>
   );
 }

@@ -18,9 +18,9 @@ describe('JwtStrategy.validate', () => {
     const lastActive = { touch: jest.fn().mockResolvedValue(undefined) } as any;
     const strategy = new JwtStrategy(configService, usersService, lastActive);
 
-    const result = await strategy.validate({ sub: 'u1', email: 'a@b.c' });
+    const result = await strategy.validate({ headers: {} }, { sub: 'u1', email: 'a@b.c' });
 
-    expect(lastActive.touch).toHaveBeenCalledWith('u1');
+    expect(lastActive.touch).toHaveBeenCalledWith('u1', null);
     expect(result.id).toBe('u1');
   });
 
@@ -30,7 +30,7 @@ describe('JwtStrategy.validate', () => {
     const lastActive = { touch: jest.fn().mockRejectedValue(new Error('redis down')) } as any;
     const strategy = new JwtStrategy(configService, usersService, lastActive);
 
-    await expect(strategy.validate({ sub: 'u1', email: 'a@b.c' })).resolves.toMatchObject({ id: 'u1' });
+    await expect(strategy.validate({ headers: {} }, { sub: 'u1', email: 'a@b.c' })).resolves.toMatchObject({ id: 'u1' });
   });
 
   it('does not record activity for a deactivated or missing user', async () => {
@@ -38,7 +38,19 @@ describe('JwtStrategy.validate', () => {
     const lastActive = { touch: jest.fn() } as any;
     const strategy = new JwtStrategy(configService, usersService, lastActive);
 
-    await expect(strategy.validate({ sub: 'u1', email: 'a@b.c' })).rejects.toThrow(UnauthorizedException);
+    await expect(strategy.validate({ headers: {} }, { sub: 'u1', email: 'a@b.c' })).rejects.toThrow(UnauthorizedException);
     expect(lastActive.touch).not.toHaveBeenCalled();
+  });
+
+  it('passes the app build from the request headers to the activity stamp (ABA-813)', async () => {
+    const usersService = { findById: jest.fn().mockResolvedValue(activeUser) } as any;
+    const lastActive = { touch: jest.fn().mockResolvedValue(undefined) } as any;
+    const strategy = new JwtStrategy(configService, usersService, lastActive);
+
+    await strategy.validate(
+      { headers: { 'x-app-version': '1.42.0 (123)', 'x-app-platform': 'android' } },
+      { sub: 'u1', email: 'a@b.c' },
+    );
+    expect(lastActive.touch).toHaveBeenCalledWith('u1', { appVersion: '1.42.0 (123)', appPlatform: 'android' });
   });
 });

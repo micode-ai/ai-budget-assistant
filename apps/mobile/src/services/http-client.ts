@@ -1,6 +1,7 @@
 import { secureStorage } from './secureStorage';
 import { isDemoAccountId, DemoAccountOfflineError } from '@/features/demo/demoAccount';
 import { reportApiFetchFailure, reportApiResponse } from './connectivity';
+import { clientHeaders } from '@/features/about/clientHeaders';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000/api/v1';
 
@@ -81,6 +82,8 @@ export class HttpClient {
 
     const headers: HeadersInit = {
       'Content-Type': 'application/json',
+      // Which build is calling, for the admin users table (ABA-813).
+      ...clientHeaders(),
       ...options.headers,
     };
 

@@ -15,6 +15,8 @@ active-this-week counts, and the activity test that qualifies a referral.
   `lastActiveKey`, `LAST_ACTIVE_THROTTLE_SEC`; provided and exported by `UsersModule`
 - `apps/api/src/modules/auth/strategies/jwt.strategy.ts` — `JwtStrategy.validate()` calls `touch`
 - `apps/api/src/common/cache/cache.service.ts` — `CacheService.setIfAbsent(key, ttlSec)`
+- `apps/api/src/modules/users/client-info.util.ts` — `parseClientInfo` (ABA-813); client side
+  `apps/mobile/src/features/about/clientHeaders.ts`, added to every request by `http-client.ts`
 - Readers: `AdminAnalyticsService.getDashboard` (active counts), `AdminService` users list (sortable
   column), `ReferralsService` (a referred user active within 7 days qualifies)
 
@@ -32,6 +34,12 @@ user per `LAST_ACTIVE_THROTTLE_SEC`.
 `JwtStrategy`. The restore-credential login deliberately does not: the restored client's next
 authenticated request does it.
 
+**The app build rides the same write** ([ABA-813](https://github.com/micode-ai/ai-budget-assistant/issues/851)). The client sends `X-App-Version`
+(the About screen's string: `1.42.0 (123)` native, `1.42.0+abc1234` web) and `X-App-Platform`
+(`android`/`ios`/`web`); `JwtStrategy` (`passReqToCallback`) parses them and `touch` writes
+`User.appVersion`/`appPlatform` together with `lastSyncAt` — no extra write, same throttle. The admin users
+table shows them in its "App" column. A request without the headers leaves the stored values as they are.
+
 ## Invariants
 
 **Do not re-add a per-route `updateLastSync` call.** Before ABA-389 only login, Google login, refresh
@@ -45,10 +53,16 @@ referral bonuses. One central stamp is what closes every path at once.
 Redis is down. The alternative — treating a failure as "first in window" — would turn every request
 into a DB write exactly when the system is already degraded.
 
+**Headers are client input.** `parseClientInfo` keeps only a strict version shape and a known platform;
+anything else is dropped, never stored.
+
 **`touch` can neither delay nor fail a request.** It is `void`-ed with a swallowed rejection, and
 the Prisma update itself is `.catch`-ed.
 
 ## Known gaps
+
+- The app version shows only after a user opens a build that sends it, and a user on phone and web
+  shows whichever client made the last stamped request (ABA-813).
 
 - Bot traffic (Telegram, WhatsApp, Slack) does not authenticate via JWT, so bot-only usage is not
   counted as activity.
@@ -60,3 +74,4 @@ the Prisma update itself is `.catch`-ed.
 
 ABA-389 — moved the stamp from four routes into `JwtStrategy`, renamed the admin column from
 "Last Login" to "Last Active".
+[ABA-813](https://github.com/micode-ai/ai-budget-assistant/issues/851) added the app version and platform to the same stamp.

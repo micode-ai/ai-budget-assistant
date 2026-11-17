@@ -71,4 +71,4 @@ React Query 5 for all server state; shadcn/ui components; Recharts for charts.
 Start at `apps/admin/src/app/<page>/page.tsx` for any page-level change, and `apps/admin/src/lib/api-client.ts` for auth or HTTP issues.
 
 ## History
-ABA-175 (admin service split) · ABA-202 (sortable users table, app-version detail dialog) · ABA-389 ("Last Active") · ABA-420 (communications tab split) · ABA-647 (groups metrics page) · ABA-730 (default Last Active sort, nulls last, Expenses column) · ABA-731 (activation & retention page).
+ABA-175 (admin service split) · ABA-202 (sortable users table, app-version detail dialog) · ABA-389 ("Last Active") · ABA-420 (communications tab split) · ABA-647 (groups metrics page) · ABA-730 (default Last Active sort, nulls last, Expenses column) · ABA-731 (activation & retention page) · ABA-813 (App column: version and platform each user last ran, see [last-active-tracking](features/last-active-tracking.md)).

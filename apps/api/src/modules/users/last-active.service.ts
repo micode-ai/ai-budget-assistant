@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { CacheService } from '../../common/cache/cache.service';
+import type { ClientInfo } from './client-info.util';
 
 /** Canonical Redis key for the per-user "already stamped recently" throttle. */
 export const lastActiveKey = (userId: string) => `lastactive:${userId}`;
@@ -32,7 +33,13 @@ export class LastActiveService {
     private readonly cache: CacheService,
   ) {}
 
-  async touch(userId: string): Promise<void> {
+  /**
+   * `client` (ABA-813) is the app build the request came from, when the client
+   * said so; it rides the same throttled write, so the admin users table shows
+   * the version a user last used within one window. Absent (an older app, an
+   * API client, a bot) leaves the stored version as it was.
+   */
+  async touch(userId: string, client?: ClientInfo | null): Promise<void> {
     const isFirstInWindow = await this.cache.setIfAbsent(
       lastActiveKey(userId),
       LAST_ACTIVE_THROTTLE_SEC,
@@ -40,7 +47,7 @@ export class LastActiveService {
     if (!isFirstInWindow) return;
 
     await this.prisma.user
-      .update({ where: { id: userId }, data: { lastSyncAt: new Date() } })
+      .update({ where: { id: userId }, data: { lastSyncAt: new Date(), ...(client ?? {}) } })
       .catch(() => null);
   }
 }

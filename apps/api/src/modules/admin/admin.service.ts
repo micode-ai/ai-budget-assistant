@@ -142,6 +142,8 @@ export class AdminService {
           language: true,
           createdAt: true,
           lastSyncAt: true,
+          appVersion: true,
+          appPlatform: true,
           subscription: {
             select: { tier: true, status: true, aiRequestsUsed: true, stripeSubscriptionId: true },
           },
