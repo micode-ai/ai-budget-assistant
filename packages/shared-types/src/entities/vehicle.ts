@@ -79,3 +79,40 @@ export interface UpsertFuelLogRequest {
   odometerKm: number;
   isFullTank?: boolean;
 }
+
+/** The vehicle screen's periods in months (ABA-811); 0 = all time. */
+export type VehicleHistoryPeriod = 3 | 6 | 12 | 24 | 0;
+
+/** A fill-up (`kind: 'fuel'` with litres) or another car cost, as `GET /vehicles/:id/history` lists it. */
+export interface VehicleHistoryItem {
+  expenseId: string;
+  clientId: string | null;
+  date: string;
+  kind: VehicleCostKind;
+  amount: number;
+  currencyCode: string;
+  /** In the display currency; null when the rate is unknown (left out of every total). */
+  amountBase: number | null;
+  merchant: string | null;
+  description: string | null;
+  liters?: number;
+  odometerKm?: number;
+  isFullTank?: boolean;
+}
+
+/** `GET /vehicles/:id/history?months=` (ABA-811), every amount in `currencyCode`. */
+export interface VehicleHistory {
+  months: number;
+  from: string | null;
+  currencyCode: string;
+  fxApproximate: boolean;
+  total: number;
+  perMonth: number;
+  byKind: Record<string, number>;
+  km: number;
+  costPerKm: number | null;
+  consumptionLPer100Km: number | null;
+  monthly: { month: string; total: number; byKind: Record<string, number> }[];
+  consumption: { date: string; lPer100Km: number; costPer100Km: number }[];
+  items: VehicleHistoryItem[];
+}

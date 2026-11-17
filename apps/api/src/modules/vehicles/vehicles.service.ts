@@ -11,6 +11,7 @@ import {
 } from './dto';
 import { applyVehicleCategoryRules, parseCategoryRules, type VehicleCostKind } from './vehicle-cost-rules.util';
 import { computeFuelStats, VehicleStats } from './fuel-stats.util';
+import { computeVehicleHistory, VehicleHistory, windowStart } from './vehicle-history.util';
 import { ExchangeRateService } from '../currency-exchange/exchange-rate.service';
 import { convertAmount, getRatesSafe } from '../../common/utils/fx';
 
@@ -322,8 +323,8 @@ export class VehiclesService {
     baseCurrency = 'USD',
   ): Promise<VehicleStats & { currencyCode: string; fxApproximate: boolean; ownership: Ownership }> {
     await this.findOne(accountId, vehicleId);
-    const since = new Date();
-    since.setFullYear(since.getFullYear() - 1);
+    // The same 12 calendar months as the vehicle screen's default period (vehicle-history.util).
+    const since = windowStart(new Date(), 12);
     const [logs, costs] = await Promise.all([
       this.prisma.fuelLog.findMany({
         where: { accountId, vehicleId, expense: { accountId, isDeleted: false } },
@@ -376,5 +377,67 @@ export class VehiclesService {
     };
 
     return { ...stats, currencyCode: baseCurrency, fxApproximate, ownership };
+  }
+
+  /**
+   * The vehicle screen (ABA-811): one period's costs by month and kind, the
+   * consumption segments ending in it, and every fill-up and cost, in the
+   * caller's display currency. `months` 0 = all time. An amount with no known
+   * rate is listed but left out of every total, and `fxApproximate` says so.
+   */
+  async getHistory(
+    accountId: string,
+    vehicleId: string,
+    months: number,
+    baseCurrency = 'USD',
+  ): Promise<VehicleHistory & { currencyCode: string; fxApproximate: boolean }> {
+    await this.findOne(accountId, vehicleId);
+    const [logs, costs] = await Promise.all([
+      this.prisma.fuelLog.findMany({
+        where: { accountId, vehicleId, expense: { accountId, isDeleted: false } },
+        include: { expense: { select: FUEL_LOG_EXPENSE_SELECT } },
+      }),
+      this.prisma.vehicleCost.findMany({
+        where: { accountId, vehicleId, kind: { not: 'none' }, expense: { accountId, isDeleted: false } },
+        include: { expense: { select: FUEL_LOG_EXPENSE_SELECT } },
+      }),
+    ]);
+    const needsFx =
+      logs.some((l) => l.expense.currencyCode !== baseCurrency) || costs.some((c) => c.expense.currencyCode !== baseCurrency);
+    const rates = needsFx ? await getRatesSafe(this.exchangeRateService, baseCurrency) : null;
+    let fxApproximate = false;
+    const base = (amount: number, currency: string) => {
+      const v = convertAmount(amount, currency, baseCurrency, rates);
+      if (v === null) fxApproximate = true;
+      return v;
+    };
+    const history = computeVehicleHistory(
+      logs.map((l) => ({
+        expenseId: l.expense.id,
+        clientId: l.expense.clientId,
+        date: new Date(l.expense.date),
+        amount: Number(l.expense.amount),
+        currencyCode: l.expense.currencyCode,
+        amountBase: base(Number(l.expense.amount), l.expense.currencyCode),
+        merchant: l.expense.merchant,
+        description: l.expense.description,
+        liters: Number(l.liters),
+        odometerKm: l.odometerKm,
+        isFullTank: l.isFullTank,
+      })),
+      costs.map((c) => ({
+        expenseId: c.expense.id,
+        clientId: c.expense.clientId,
+        date: new Date(c.expense.date),
+        amount: Number(c.expense.amount),
+        currencyCode: c.expense.currencyCode,
+        amountBase: base(Number(c.expense.amount), c.expense.currencyCode),
+        merchant: c.expense.merchant,
+        description: c.expense.description,
+        kind: c.kind,
+      })),
+      months,
+    );
+    return { ...history, currencyCode: baseCurrency, fxApproximate };
   }
 }

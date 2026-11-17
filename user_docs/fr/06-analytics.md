@@ -175,7 +175,7 @@ Voyez ce que coûte chaque enfant, sans deviner.
 
 ## Frais de voiture
 
-Si le compte a un véhicule, la carte **Véhicules** montre ce que chacun a coûté sur les 12 derniers mois, la moyenne mensuelle et les deux plus gros types de frais (par exemple carburant et assurance). Elle ne suit pas le filtre de période ci-dessus. Touchez un véhicule ou **Détails** pour ouvrir Réglages → Véhicules, où vous marquez aussi les frais — voir [Réglages](./11-settings.md).
+Si le compte a un véhicule, la carte **Véhicules** indique ce que chacun a coûté sur les 12 derniers mois, la moyenne mensuelle et les deux plus gros types de dépenses (par exemple carburant et assurance). Elle ne suit pas le filtre de période ci-dessus. Touchez un véhicule pour ouvrir son écran : choisissez une période (3, 6, 12 mois, 2 ans ou tout) et voyez le total, la moyenne mensuelle, toutes les dépenses par km et la consommation ; les dépenses par mois en barres (touchez un mois pour ne voir que ses dépenses) ; la répartition par type (touchez un type pour filtrer la liste) ; la consommation entre deux pleins en courbe ; et chaque plein et chaque dépense, qui ouvrent leur dépense. Les montants sont dans votre devise d’affichage ; ceux sans taux de change sont listés mais exclus des totaux. **Gérer** ouvre Réglages → Véhicules, où vous marquez aussi les dépenses — voir [Réglages](./11-settings.md).
 
 ## FAQ
 

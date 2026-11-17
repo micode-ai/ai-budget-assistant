@@ -18,6 +18,9 @@ existing expense. `GET /vehicles/:id/stats` answers "what does the car cost me":
 - Mobile: `src/components/vehicles/VehiclesSettings.tsx` (route `app/settings/vehicles.tsx`, registry key `vehicles`),
   `src/components/vehicles/VehiclesAnalyticsCard.tsx` (Analytics tab, ABA-806),
   `src/components/expenses/detail/FuelSection.tsx`, `src/features/vehicles/` (`useVehicles`, `vehicleDisplay`), `src/services/vehicles.api.ts`
+- Vehicle screen (ABA-811): API `vehicle-history.util.ts` (+ spec) behind `GET /vehicles/:id/history`; app route `app/vehicles/[id].tsx` →
+  `src/components/vehicles/VehicleDetailView(.web).tsx` → `VehicleDetailPhone.tsx` / `desktop/VehicleDetailDesktop.tsx`, shared pieces in
+  `VehicleDetailParts.tsx`, data in `src/features/vehicles/useVehicleDetail.ts`, pure helpers in `vehicleDetailDisplay.ts`
 
 ## Key concepts
 
@@ -43,9 +46,17 @@ drawn only when the account has a vehicle or the expense already has a fill-up, 
 (one-by-one trips the proxy rate limit), as person-made costs, skipping fill-ups.
 
 **On Analytics** ([ABA-806](https://github.com/micode-ai/ai-budget-assistant/issues/844)): `VehiclesAnalyticsCard` lists each vehicle
-with its `ownership` total (last 12 months, never the Analytics period filter), the monthly figure and its two largest kinds, linking to
-Settings → Vehicles. Phone: a section after the children card; desktop: a `BreakdownGrid` secondary tile beside Children. A row still
+with its `ownership` total (last 12 months, never the Analytics period filter), the monthly figure and its two largest kinds; a row opens
+the vehicle screen (ABA-811), the caption link Settings → Vehicles. Phone: a section after the children card; desktop: a `BreakdownGrid` secondary tile beside Children. A row still
 loading reads "—", never 0.
+
+**The vehicle screen** ([ABA-811](https://github.com/micode-ai/ai-budget-assistant/issues/849)): `GET /vehicles/:id/history?months=3|6|12|24|0`
+(0 = all time, anything else 400) answers one period: every calendar month of it by kind (empty months included), the total and
+`perMonth` (total over the months in the window), km and all costs per km, the consumption segments that END in the window — computed
+over ALL fill-ups, so a segment whose baseline full tank predates the window still counts — with the period consumption weighted by
+distance, and every fill-up and cost newest first. An amount with no rate is listed but left out of every total (`fxApproximate`).
+The app's `useVehicleDetail` holds the period, a picked month (tap a bar) and a picked kind (tap a breakdown row), above the 1024 split.
+Analytics rows open it; Settings → Vehicles links to it from each card.
 
 **Fuel without litres** ([ABA-804](https://github.com/micode-ai/ai-budget-assistant/issues/842)): `VehicleCost` kind `fuel` is a purchase known only by its amount — it counts in
 `ownership.byKind.fuel` and never in consumption, which needs a `FuelLog`.
@@ -62,14 +73,19 @@ average, km from the fill-ups in the window and all costs per km.
 - Every query filters by `accountId`; the expense id is accepted as PK or `clientId` and the RESOLVED PK is written.
 - Soft-deleted expenses are excluded from stats.
 - Fuel-log reads also filter on the EXPENSE's current `accountId`, not only `FuelLog.accountId`: moving an expense to another account does not touch its fuel log, and without that filter the source account's stats would keep counting it.
+- The 12-month window is CALENDAR months ending with the current one (`windowStart` in `vehicle-history.util.ts`), shared by
+  `getStats().ownership` and the history endpoint — the Analytics card and the vehicle screen must show the same 12 months.
+- A list row's caption never shows the server's copy of an encrypted field (`enc:` prefix); it prefers the device's decrypted expense.
 - `declared before :id`: `DELETE /vehicles/fuel-logs/:expenseId` must stay above `DELETE /vehicles/:id`.
 
 ## Known gaps
 
 SQLite mirror; OCR litres
-prefill; a trend chart from `series`; community-price comparison; mileage in the tax export.
+prefill; community-price comparison; mileage in the tax export; comparing two vehicles; a yearly forecast; stacked
+monthly bars by kind (the bar chart has no stacking — a picked month's kinds show in the breakdown instead).
 
 ## History
 
 The API (Vehicle + FuelLog, the full-tank method) came first; [ABA-796](https://github.com/micode-ai/ai-budget-assistant/issues/834) added the screens and display-currency costs.
 [ABA-806](https://github.com/micode-ai/ai-budget-assistant/issues/844) put the vehicles on the Analytics tab and corrected the settings hint (the expense section is "Car", litres optional).
+[ABA-811](https://github.com/micode-ai/ai-budget-assistant/issues/849) added the vehicle screen (periods, by month, by kind, consumption trend, every cost) after the card was reported as too thin.

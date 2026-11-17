@@ -175,7 +175,7 @@ Zie wat elk kind kost, zonder te gokken.
 
 ## Autokosten
 
-Heeft het account een voertuig, dan toont de kaart **Voertuigen** wat elk de laatste 12 maanden kostte, het maandgemiddelde en de twee grootste kostensoorten (bijvoorbeeld brandstof en verzekering). Ze volgt het periodefilter hierboven niet. Tik op een voertuig of **Details** om Instellingen → Voertuigen te openen, waar je ook kosten markeert — zie [Instellingen](./11-settings.md).
+Heeft de rekening een voertuig, dan toont de kaart **Voertuigen** wat elk de afgelopen 12 maanden kostte, het maandgemiddelde en de twee grootste soorten kosten (bijvoorbeeld brandstof en verzekering). Ze volgt het periodefilter hierboven niet. Tik op een voertuig om het scherm ervan te openen: kies een periode (3, 6, 12 maanden, 2 jaar of alles) en zie het totaal, het maandgemiddelde, alle kosten per km en het verbruik; de kosten per maand als staven (tik op een maand om alleen die kosten te zien); de verdeling per soort (tik op een soort om de lijst te filteren); het verbruik tussen volle tanks als lijn; en elke tankbeurt en kostenpost, die elk hun uitgave openen. Bedragen staan in je weergavevaluta; bedragen zonder wisselkoers staan in de lijst maar tellen niet mee in de totalen. **Beheren** opent Instellingen → Voertuigen, waar je ook kosten markeert — zie [Instellingen](./11-settings.md).
 
 ## Veelgestelde vragen
 

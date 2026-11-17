@@ -131,3 +131,36 @@ describe('VehiclesService.setCostsBulk (ABA-805)', () => {
     });
   });
 });
+
+describe('VehiclesService.getHistory (ABA-811)', () => {
+  it('converts into the display currency and flags an unknown rate', async () => {
+    const day = new Date();
+    const e = (id: string, amount: number, currencyCode: string) => ({
+      id,
+      clientId: null,
+      amount,
+      currencyCode,
+      date: day,
+      merchant: null,
+      description: null,
+    });
+    const logs = [{ liters: 30, odometerKm: 1000, isFullTank: true, expense: e('f1', 25, 'EUR') }];
+    const costs = [
+      { kind: 'service', expense: e('c1', 100, 'PLN') },
+      { kind: 'tax', expense: e('c2', 7, 'XYZ') },
+    ];
+    const { service, prisma } = make(logs, { PLN: 1, EUR: 0.25 }, costs);
+    const h = await service.getHistory('a1', 'v1', 12, 'PLN');
+    expect(h.currencyCode).toBe('PLN');
+    expect(h.byKind).toMatchObject({ fuel: 100, service: 100, tax: 0 });
+    expect(h.fxApproximate).toBe(true);
+    expect(h.items).toHaveLength(3);
+    // Scoped to the account, deleted expenses excluded, `none` costs excluded.
+    expect(prisma.vehicleCost.findMany.mock.calls[0][0].where).toMatchObject({
+      accountId: 'a1',
+      vehicleId: 'v1',
+      kind: { not: 'none' },
+      expense: { accountId: 'a1', isDeleted: false },
+    });
+  });
+});

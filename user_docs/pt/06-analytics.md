@@ -175,7 +175,7 @@ Veja quanto lhe custa cada filho, sem adivinhar.
 
 ## Custos do carro
 
-Se a conta tiver um veículo, o cartão **Veículos** mostra quanto custou cada um nos últimos 12 meses, a média mensal e os dois maiores tipos de custo (por exemplo, combustível e seguro). Não segue o filtro de período acima. Toque num veículo ou em **Detalhes** para abrir Definições → Veículos, onde também marca os custos — veja [Definições](./11-settings.md).
+Se a conta tiver um veículo, o cartão **Veículos** mostra quanto custou cada um nos últimos 12 meses, a média mensal e os dois maiores tipos de custo (por exemplo, combustível e seguro). Não segue o filtro de período acima. Toque num veículo para abrir o seu ecrã: escolha um período (3, 6, 12 meses, 2 anos ou sempre) e veja o total, a média mensal, todos os custos por km e o consumo; os custos por mês em barras (toque num mês para ver apenas os custos desse mês); a divisão por tipo (toque num tipo para filtrar a lista); o consumo entre depósitos cheios em linha; e cada abastecimento e custo, que abrem a respetiva despesa. Os valores estão na sua moeda de apresentação; os que não têm taxa de câmbio aparecem na lista mas ficam fora dos totais. **Gerir** abre Definições → Veículos, onde também marca os custos — veja [Definições](./11-settings.md).
 
 ## Perguntas frequentes
 

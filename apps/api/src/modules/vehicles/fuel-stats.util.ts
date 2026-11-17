@@ -10,6 +10,9 @@ export interface FuelSeriesPoint {
   date: string;
   lPer100Km: number;
   costPer100Km: number;
+  /** The segment's distance and litres, so a period's consumption can be weighted. */
+  km?: number;
+  liters?: number;
 }
 
 export interface VehicleStats {
@@ -55,6 +58,8 @@ export function computeFuelStats(entries: FuelEntry[]): VehicleStats {
         date: e.date.toISOString().slice(0, 10),
         lPer100Km: round((accLiters / km) * 100, 2),
         costPer100Km: round((accCost / km) * 100, 2),
+        km,
+        liters: round(accLiters, 3),
       });
       totalLiters += accLiters;
       totalCost += accCost;

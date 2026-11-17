@@ -20,9 +20,9 @@ interface Props {
 
 /**
  * The Analytics "Vehicles" entry (ABA-806): each vehicle of the account with
- * its cost over the last 12 months, per month, and its two largest kinds,
- * linking to Settings → Vehicles for the detail. A figure still loading or
- * unavailable reads "—", never 0. Mirrors `ChildrenAnalyticsCard`.
+ * its cost over the last 12 months, per month, and its two largest kinds. A figure still loading or
+ * unavailable reads "—", never 0. Mirrors `ChildrenAnalyticsCard`. A row opens
+ * the vehicle screen (ABA-811); the caption link opens Settings → Vehicles.
  */
 export function VehiclesAnalyticsCard({ vehicles, variant }: Props) {
   const { t } = useTranslation();
@@ -33,7 +33,7 @@ export function VehiclesAnalyticsCard({ vehicles, variant }: Props) {
       <View style={styles.captionRow}>
         <Text style={styles.caption}>{t('vehicles.last12Months')}</Text>
         <Pressable onPress={() => router.push('/settings/vehicles')} accessibilityRole="link" hitSlop={8}>
-          <Text style={styles.allLink}>{t('vehicles.allVehicles')}</Text>
+          <Text style={styles.allLink}>{t('vehicles.manage')}</Text>
         </Pressable>
       </View>
       {vehicles.map((v, i) => (
@@ -87,7 +87,7 @@ function VehicleRow({ vehicle, first }: { vehicle: Vehicle; first: boolean }) {
 
   return (
     <Pressable
-      onPress={() => router.push('/settings/vehicles')}
+      onPress={() => router.push(`/vehicles/${vehicle.id}` as any)}
       onHoverIn={() => setHovered(true)}
       onHoverOut={() => setHovered(false)}
       accessibilityRole="link"

@@ -1191,7 +1191,7 @@ See what each child costs you, without any guessing.
 
 ## Car costs
 
-When the account has a vehicle, the **Vehicles** card shows what each one cost over the last 12 months, the average per month, and the two largest kinds of cost (for example fuel and insurance). It does not follow the period filter above. Tap a vehicle or **Details** to open Settings → Vehicles, where you also mark costs — see Settings.
+When the account has a vehicle, the **Vehicles** card shows what each one cost over the last 12 months, the average per month, and the two largest kinds of cost (for example fuel and insurance). It does not follow the period filter above. Tap a vehicle to open its screen: choose a period (3, 6, 12 months, 2 years or all time) and see the total, the monthly average, all costs per km and fuel consumption; costs by month as bars (tap a month to see only its costs); a breakdown by kind (tap a kind to filter the list); consumption between full tanks as a line; and every fill-up and cost, each opening its expense. Amounts are in your display currency; ones without an exchange rate are listed but left out of the totals. **Manage** opens Settings → Vehicles, where you also mark costs — see Settings.
 
 ## FAQ
 
@@ -6657,7 +6657,7 @@ iOS, Android, Web
 
 ## Расходы на машину
 
-Если в счёте есть машина, карточка **Машины** показывает, во сколько каждая обошлась за последние 12 месяцев, среднее в месяц и два самых крупных вида расходов (например, топливо и страховка). Фильтр периода выше на неё не влияет. Нажмите на машину или **Подробнее**, чтобы открыть Настройки → Машины, где расходы и отмечаются, — см. Настройки.
+Если в счёте есть автомобиль, карточка **Автомобили** показывает, сколько стоил каждый за последние 12 месяцев, среднее в месяц и две самые крупные статьи расходов (например, топливо и страховка). Фильтр периода выше на неё не влияет. Нажмите на машину, чтобы открыть её экран: выберите период (3, 6, 12 месяцев, 2 года или всё время) и увидите итог, среднее в месяц, все расходы на километр и расход топлива; траты по месяцам столбиками (нажмите на месяц, чтобы увидеть только его траты); разбивку по статьям (нажмите на статью, чтобы отфильтровать список); расход между полными баками линией; и все заправки и траты — каждая открывает свой расход. Суммы — в валюте отображения; суммы без курса обмена есть в списке, но не входят в итоги. **Управление** открывает Настройки → Автомобили, где траты и отмечаются, — см. Настройки.
 
 ## Часто задаваемые вопросы
 
@@ -12101,7 +12101,7 @@ iOS, Android, Web
 
 ## Витрати на авто
 
-Якщо в рахунку є автомобіль, картка **Автомобілі** показує, скільки коштував кожен за останні 12 місяців, середнє на місяць і два найбільші види витрат (наприклад, пальне й страховка). Фільтр періоду вище на неї не впливає. Натисніть на авто або **Докладніше**, щоб відкрити Налаштування → Автомобілі, де витрати й позначаються, — див. Налаштування.
+Якщо в рахунку є автомобіль, картка **Автомобілі** показує, скільки коштував кожен за останні 12 місяців, середнє на місяць і два найбільші види витрат (наприклад, пальне й страховка). Фільтр періоду вище на неї не впливає. Натисніть на авто, щоб відкрити його екран: оберіть період (3, 6, 12 місяців, 2 роки або весь час) і побачите підсумок, середнє на місяць, усі витрати на кілометр і витрату пального; витрати за місяцями стовпчиками (натисніть на місяць, щоб побачити лише його витрати); розподіл за статтями (натисніть на статтю, щоб відфільтрувати список); витрату між повними баками лінією; і всі заправки та витрати — кожна відкриває свою витрату. Суми — у валюті відображення; суми без курсу обміну є в списку, але не входять у підсумки. **Керування** відкриває Налаштування → Автомобілі, де витрати й позначаються, — див. Налаштування.
 
 ## Часті запитання
 
@@ -17493,7 +17493,7 @@ Sprawdź, ile kosztuje Cię każde dziecko, bez zgadywania.
 
 ## Koszty auta
 
-Gdy konto ma pojazd, karta **Pojazdy** pokazuje, ile każdy kosztował w ostatnich 12 miesiącach, średnią miesięczną i dwa największe rodzaje kosztów (np. paliwo i ubezpieczenie). Nie podlega filtrowi okresu powyżej. Stuknij pojazd lub **Szczegóły**, aby otworzyć Ustawienia → Pojazdy, gdzie też oznaczasz koszty — zobacz Ustawienia.
+Gdy konto ma pojazd, karta **Pojazdy** pokazuje, ile każdy kosztował w ostatnich 12 miesiącach, średnią miesięczną i dwa największe rodzaje kosztów (np. paliwo i ubezpieczenie). Nie podlega filtrowi okresu powyżej. Stuknij pojazd, aby otworzyć jego ekran: wybierz okres (3, 6, 12 miesięcy, 2 lata lub cały okres) i zobacz sumę, średnią miesięczną, wszystkie koszty na km i spalanie; koszty według miesięcy jako słupki (stuknij miesiąc, aby zobaczyć tylko jego koszty); podział według rodzaju (stuknij rodzaj, aby przefiltrować listę); spalanie między pełnymi bakami jako linię; oraz każde tankowanie i koszt — każdy otwiera swój wydatek. Kwoty są w walucie wyświetlania; te bez kursu wymiany są na liście, ale nie wliczają się do sum. **Zarządzaj** otwiera Ustawienia → Pojazdy, gdzie też oznaczasz koszty — zobacz Ustawienia.
 
 ## FAQ
 
@@ -22881,7 +22881,7 @@ Sehen Sie, was jedes Kind kostet, ohne Raten.
 
 ## Autokosten
 
-Hat das Konto ein Fahrzeug, zeigt die Karte **Fahrzeuge**, was jedes in den letzten 12 Monaten gekostet hat, den Durchschnitt pro Monat und die zwei größten Kostenarten (etwa Kraftstoff und Versicherung). Sie folgt nicht dem Zeitraumfilter oben. Tippe auf ein Fahrzeug oder **Details**, um Einstellungen → Fahrzeuge zu öffnen, wo du auch Kosten markierst — siehe Einstellungen.
+Hat das Konto ein Fahrzeug, zeigt die Karte **Fahrzeuge**, was jedes in den letzten 12 Monaten gekostet hat, den Monatsdurchschnitt und die zwei größten Kostenarten (zum Beispiel Kraftstoff und Versicherung). Sie folgt nicht dem Zeitraumfilter oben. Tippe auf ein Fahrzeug, um seinen Bildschirm zu öffnen: Wähle einen Zeitraum (3, 6, 12 Monate, 2 Jahre oder gesamt) und sieh die Summe, den Monatsdurchschnitt, alle Kosten pro km und den Verbrauch; die Kosten nach Monat als Balken (tippe auf einen Monat, um nur dessen Kosten zu sehen); die Aufteilung nach Art (tippe auf eine Art, um die Liste zu filtern); den Verbrauch zwischen vollen Tankfüllungen als Linie; und jede Tankfüllung und jeden Kostenpunkt, die jeweils ihre Ausgabe öffnen. Beträge stehen in deiner Anzeigewährung; solche ohne Wechselkurs werden gelistet, aber nicht mitgezählt. **Verwalten** öffnet Einstellungen → Fahrzeuge, wo du auch Kosten markierst — siehe Einstellungen.
 
 ## FAQ
 
@@ -28244,7 +28244,7 @@ Vea lo que cuesta cada hijo, sin adivinar.
 
 ## Gastos del coche
 
-Si la cuenta tiene un vehículo, la tarjeta **Vehículos** muestra lo que costó cada uno en los últimos 12 meses, la media mensual y los dos tipos de gasto más grandes (por ejemplo, combustible y seguro). No sigue el filtro de periodo de arriba. Toca un vehículo o **Detalles** para abrir Ajustes → Vehículos, donde también marcas los gastos; consulta Ajustes.
+Si la cuenta tiene un vehículo, la tarjeta **Vehículos** muestra lo que costó cada uno en los últimos 12 meses, la media mensual y los dos tipos de gasto más grandes (por ejemplo, combustible y seguro). No sigue el filtro de periodo de arriba. Toca un vehículo para abrir su pantalla: elige un periodo (3, 6, 12 meses, 2 años o todo) y verás el total, la media mensual, todos los costes por km y el consumo; los gastos por mes en barras (toca un mes para ver solo sus gastos); el desglose por tipo (toca un tipo para filtrar la lista); el consumo entre depósitos llenos como línea; y cada repostaje y gasto, que abren su gasto. Los importes están en tu moneda de visualización; los que no tienen tipo de cambio aparecen en la lista pero no cuentan en los totales. **Gestionar** abre Ajustes → Vehículos, donde también marcas los gastos — consulta Ajustes.
 
 ## Preguntas frecuentes
 
@@ -33596,7 +33596,7 @@ Voyez ce que coûte chaque enfant, sans deviner.
 
 ## Frais de voiture
 
-Si le compte a un véhicule, la carte **Véhicules** montre ce que chacun a coûté sur les 12 derniers mois, la moyenne mensuelle et les deux plus gros types de frais (par exemple carburant et assurance). Elle ne suit pas le filtre de période ci-dessus. Touchez un véhicule ou **Détails** pour ouvrir Réglages → Véhicules, où vous marquez aussi les frais — voir Réglages.
+Si le compte a un véhicule, la carte **Véhicules** indique ce que chacun a coûté sur les 12 derniers mois, la moyenne mensuelle et les deux plus gros types de dépenses (par exemple carburant et assurance). Elle ne suit pas le filtre de période ci-dessus. Touchez un véhicule pour ouvrir son écran : choisissez une période (3, 6, 12 mois, 2 ans ou tout) et voyez le total, la moyenne mensuelle, toutes les dépenses par km et la consommation ; les dépenses par mois en barres (touchez un mois pour ne voir que ses dépenses) ; la répartition par type (touchez un type pour filtrer la liste) ; la consommation entre deux pleins en courbe ; et chaque plein et chaque dépense, qui ouvrent leur dépense. Les montants sont dans votre devise d’affichage ; ceux sans taux de change sont listés mais exclus des totaux. **Gérer** ouvre Réglages → Véhicules, où vous marquez aussi les dépenses — voir Réglages.
 
 ## FAQ
 
@@ -38946,7 +38946,7 @@ iOS, Android, Web
 
 ## Выдаткі на аўто
 
-Калі ў рахунку ёсць аўтамабіль, картка **Аўтамабілі** паказвае, колькі каштаваў кожны за апошнія 12 месяцаў, сярэдняе ў месяц і два найбуйнейшыя віды выдаткаў (напрыклад, паліва і страхоўка). Фільтр перыяду вышэй на яе не ўплывае. Націсніце на аўто або **Падрабязней**, каб адкрыць Налады → Аўтамабілі, дзе выдаткі і адзначаюцца, — гл. Налады.
+Калі ў рахунку ёсць аўтамабіль, картка **Аўтамабілі** паказвае, колькі каштаваў кожны за апошнія 12 месяцаў, сярэдняе ў месяц і два найбуйнейшыя віды выдаткаў (напрыклад, паліва і страхоўка). Фільтр перыяду вышэй на яе не ўплывае. Націсніце на аўто, каб адкрыць яго экран: выберыце перыяд (3, 6, 12 месяцаў, 2 гады або ўвесь час) і ўбачыце вынік, сярэдняе ў месяц, усе выдаткі на кіламетр і расход паліва; выдаткі па месяцах слупкамі (націсніце на месяц, каб убачыць толькі яго выдаткі); размеркаванне па артыкулах (націсніце на артыкул, каб адфільтраваць спіс); расход паміж поўнымі бакамі лініяй; і ўсе запраўкі і выдаткі — кожны адкрывае свой выдатак. Сумы — у валюце адлюстравання; сумы без курсу абмену ёсць у спісе, але не ўваходзяць у вынікі. **Кіраванне** адкрывае Налады → Аўтамабілі, дзе выдаткі і адзначаюцца, — гл. Налады.
 
 ## Частыя пытанні
 
@@ -44260,7 +44260,7 @@ Zie wat elk kind kost, zonder te gokken.
 
 ## Autokosten
 
-Heeft het account een voertuig, dan toont de kaart **Voertuigen** wat elk de laatste 12 maanden kostte, het maandgemiddelde en de twee grootste kostensoorten (bijvoorbeeld brandstof en verzekering). Ze volgt het periodefilter hierboven niet. Tik op een voertuig of **Details** om Instellingen → Voertuigen te openen, waar je ook kosten markeert — zie Instellingen.
+Heeft de rekening een voertuig, dan toont de kaart **Voertuigen** wat elk de afgelopen 12 maanden kostte, het maandgemiddelde en de twee grootste soorten kosten (bijvoorbeeld brandstof en verzekering). Ze volgt het periodefilter hierboven niet. Tik op een voertuig om het scherm ervan te openen: kies een periode (3, 6, 12 maanden, 2 jaar of alles) en zie het totaal, het maandgemiddelde, alle kosten per km en het verbruik; de kosten per maand als staven (tik op een maand om alleen die kosten te zien); de verdeling per soort (tik op een soort om de lijst te filteren); het verbruik tussen volle tanks als lijn; en elke tankbeurt en kostenpost, die elk hun uitgave openen. Bedragen staan in je weergavevaluta; bedragen zonder wisselkoers staan in de lijst maar tellen niet mee in de totalen. **Beheren** opent Instellingen → Voertuigen, waar je ook kosten markeert — zie Instellingen.
 
 ## Veelgestelde vragen
 
@@ -49701,7 +49701,7 @@ Veja quanto lhe custa cada filho, sem adivinhar.
 
 ## Custos do carro
 
-Se a conta tiver um veículo, o cartão **Veículos** mostra quanto custou cada um nos últimos 12 meses, a média mensal e os dois maiores tipos de custo (por exemplo, combustível e seguro). Não segue o filtro de período acima. Toque num veículo ou em **Detalhes** para abrir Definições → Veículos, onde também marca os custos — veja Definições.
+Se a conta tiver um veículo, o cartão **Veículos** mostra quanto custou cada um nos últimos 12 meses, a média mensal e os dois maiores tipos de custo (por exemplo, combustível e seguro). Não segue o filtro de período acima. Toque num veículo para abrir o seu ecrã: escolha um período (3, 6, 12 meses, 2 anos ou sempre) e veja o total, a média mensal, todos os custos por km e o consumo; os custos por mês em barras (toque num mês para ver apenas os custos desse mês); a divisão por tipo (toque num tipo para filtrar a lista); o consumo entre depósitos cheios em linha; e cada abastecimento e custo, que abrem a respetiva despesa. Os valores estão na sua moeda de apresentação; os que não têm taxa de câmbio aparecem na lista mas ficam fora dos totais. **Gerir** abre Definições → Veículos, onde também marca os custos — veja Definições.
 
 ## Perguntas frequentes
 
@@ -55168,7 +55168,7 @@ Veja quanto cada filho custa para você, sem achismo.
 
 ## Custos do carro
 
-Se a conta tiver um veículo, o cartão **Veículos** mostra quanto custou cada um nos últimos 12 meses, a média mensal e os dois maiores tipos de custo (por exemplo, combustível e seguro). Ele não segue o filtro de período acima. Toque em um veículo ou em **Detalhes** para abrir Configurações → Veículos, onde você também marca os custos — veja Configurações.
+Se a conta tiver um veículo, o cartão **Veículos** mostra quanto custou cada um nos últimos 12 meses, a média mensal e os dois maiores tipos de custo (por exemplo, combustível e seguro). Ele não segue o filtro de período acima. Toque em um veículo para abrir a tela dele: escolha um período (3, 6, 12 meses, 2 anos ou tudo) e veja o total, a média mensal, todos os custos por km e o consumo; os custos por mês em barras (toque em um mês para ver só os custos dele); a divisão por tipo (toque em um tipo para filtrar a lista); o consumo entre tanques cheios em linha; e cada abastecimento e custo, que abrem a despesa correspondente. Os valores estão na sua moeda de exibição; os que não têm taxa de câmbio aparecem na lista, mas ficam fora dos totais. **Gerenciar** abre Configurações → Veículos, onde você também marca os custos — veja Configurações.
 
 ## Perguntas frequentes
 

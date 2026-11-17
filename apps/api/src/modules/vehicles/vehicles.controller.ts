@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Req, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Patch, Post, Put, Query, Req, UseGuards } from '@nestjs/common';
 import { VehiclesService } from './vehicles.service';
 import {
   BulkVehicleCostDto,
@@ -13,6 +13,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
 import { ViewerBlockGuard } from '../accounts/guards/account-role.guard';
 import { AuthenticatedRequest } from '../../common/types';
+import { HISTORY_PERIODS } from './vehicle-history.util';
 
 @Controller('vehicles')
 @UseGuards(JwtAuthGuard, AccountContextGuard)
@@ -72,6 +73,16 @@ export class VehiclesController {
   stats(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     // Display currency from the user, never from a row (display-currency-conversion).
     return this.vehicles.getStats(req.accountId, id, req.user.currencyCode || 'USD');
+  }
+
+  /** The vehicle screen (ABA-811); `months` is one of HISTORY_PERIODS, 0 = all time. */
+  @Get(':id/history')
+  history(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Query('months') monthsRaw?: string) {
+    const months = monthsRaw === undefined || monthsRaw === '' ? 12 : Number(monthsRaw);
+    if (!(HISTORY_PERIODS as readonly number[]).includes(months)) {
+      throw new BadRequestException(`months must be one of ${HISTORY_PERIODS.join(', ')}`);
+    }
+    return this.vehicles.getHistory(req.accountId, id, months, req.user.currencyCode || 'USD');
   }
 
   @Get(':id/costs')

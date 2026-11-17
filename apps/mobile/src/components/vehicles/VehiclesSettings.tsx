@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { router } from 'expo-router';
 import { View, Text, TouchableOpacity, TextInput, ActivityIndicator, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -435,6 +436,15 @@ function VehicleCard({ vehicle, canEdit, onEdit }: { vehicle: Vehicle; canEdit: 
           )}
         </View>
       )}
+
+      <TouchableOpacity
+        onPress={() => router.push(`/vehicles/${vehicle.id}` as any)}
+        style={styles.logsToggle}
+        accessibilityRole="link"
+      >
+        <Text style={styles.link}>{t('vehicles.openDetails')}</Text>
+        <Ionicons name="chevron-forward" size={16} color={theme.colors.primary} />
+      </TouchableOpacity>
 
       {stats && stats.fillUps > 0 && (
         <TouchableOpacity

@@ -175,7 +175,7 @@ Vea lo que cuesta cada hijo, sin adivinar.
 
 ## Gastos del coche
 
-Si la cuenta tiene un vehículo, la tarjeta **Vehículos** muestra lo que costó cada uno en los últimos 12 meses, la media mensual y los dos tipos de gasto más grandes (por ejemplo, combustible y seguro). No sigue el filtro de periodo de arriba. Toca un vehículo o **Detalles** para abrir Ajustes → Vehículos, donde también marcas los gastos; consulta [Ajustes](./11-settings.md).
+Si la cuenta tiene un vehículo, la tarjeta **Vehículos** muestra lo que costó cada uno en los últimos 12 meses, la media mensual y los dos tipos de gasto más grandes (por ejemplo, combustible y seguro). No sigue el filtro de periodo de arriba. Toca un vehículo para abrir su pantalla: elige un periodo (3, 6, 12 meses, 2 años o todo) y verás el total, la media mensual, todos los costes por km y el consumo; los gastos por mes en barras (toca un mes para ver solo sus gastos); el desglose por tipo (toca un tipo para filtrar la lista); el consumo entre depósitos llenos como línea; y cada repostaje y gasto, que abren su gasto. Los importes están en tu moneda de visualización; los que no tienen tipo de cambio aparecen en la lista pero no cuentan en los totales. **Gestionar** abre Ajustes → Vehículos, donde también marcas los gastos — consulta [Ajustes](./11-settings.md).
 
 ## Preguntas frecuentes
 

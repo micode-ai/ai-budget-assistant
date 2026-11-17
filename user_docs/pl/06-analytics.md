@@ -175,7 +175,7 @@ Sprawdź, ile kosztuje Cię każde dziecko, bez zgadywania.
 
 ## Koszty auta
 
-Gdy konto ma pojazd, karta **Pojazdy** pokazuje, ile każdy kosztował w ostatnich 12 miesiącach, średnią miesięczną i dwa największe rodzaje kosztów (np. paliwo i ubezpieczenie). Nie podlega filtrowi okresu powyżej. Stuknij pojazd lub **Szczegóły**, aby otworzyć Ustawienia → Pojazdy, gdzie też oznaczasz koszty — zobacz [Ustawienia](./11-settings.md).
+Gdy konto ma pojazd, karta **Pojazdy** pokazuje, ile każdy kosztował w ostatnich 12 miesiącach, średnią miesięczną i dwa największe rodzaje kosztów (np. paliwo i ubezpieczenie). Nie podlega filtrowi okresu powyżej. Stuknij pojazd, aby otworzyć jego ekran: wybierz okres (3, 6, 12 miesięcy, 2 lata lub cały okres) i zobacz sumę, średnią miesięczną, wszystkie koszty na km i spalanie; koszty według miesięcy jako słupki (stuknij miesiąc, aby zobaczyć tylko jego koszty); podział według rodzaju (stuknij rodzaj, aby przefiltrować listę); spalanie między pełnymi bakami jako linię; oraz każde tankowanie i koszt — każdy otwiera swój wydatek. Kwoty są w walucie wyświetlania; te bez kursu wymiany są na liście, ale nie wliczają się do sum. **Zarządzaj** otwiera Ustawienia → Pojazdy, gdzie też oznaczasz koszty — zobacz [Ustawienia](./11-settings.md).
 
 ## FAQ
 

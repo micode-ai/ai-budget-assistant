@@ -4530,7 +4530,7 @@ See what each child costs you, without any guessing.
 
 ## Car costs
 
-When the account has a vehicle, the **Vehicles** card shows what each one cost over the last 12 months, the average per month, and the two largest kinds of cost (for example fuel and insurance). It does not follow the period filter above. Tap a vehicle or **Details** to open Settings → Vehicles, where you also mark costs — see [Settings](./11-settings.md).
+When the account has a vehicle, the **Vehicles** card shows what each one cost over the last 12 months, the average per month, and the two largest kinds of cost (for example fuel and insurance). It does not follow the period filter above. Tap a vehicle to open its screen: choose a period (3, 6, 12 months, 2 years or all time) and see the total, the monthly average, all costs per km and fuel consumption; costs by month as bars (tap a month to see only its costs); a breakdown by kind (tap a kind to filter the list); consumption between full tanks as a line; and every fill-up and cost, each opening its expense. Amounts are in your display currency; ones without an exchange rate are listed but left out of the totals. **Manage** opens Settings → Vehicles, where you also mark costs — see [Settings](./11-settings.md).
 
 ## FAQ
 

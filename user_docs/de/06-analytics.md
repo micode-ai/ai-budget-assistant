@@ -175,7 +175,7 @@ Sehen Sie, was jedes Kind kostet, ohne Raten.
 
 ## Autokosten
 
-Hat das Konto ein Fahrzeug, zeigt die Karte **Fahrzeuge**, was jedes in den letzten 12 Monaten gekostet hat, den Durchschnitt pro Monat und die zwei größten Kostenarten (etwa Kraftstoff und Versicherung). Sie folgt nicht dem Zeitraumfilter oben. Tippe auf ein Fahrzeug oder **Details**, um Einstellungen → Fahrzeuge zu öffnen, wo du auch Kosten markierst — siehe [Einstellungen](./11-settings.md).
+Hat das Konto ein Fahrzeug, zeigt die Karte **Fahrzeuge**, was jedes in den letzten 12 Monaten gekostet hat, den Monatsdurchschnitt und die zwei größten Kostenarten (zum Beispiel Kraftstoff und Versicherung). Sie folgt nicht dem Zeitraumfilter oben. Tippe auf ein Fahrzeug, um seinen Bildschirm zu öffnen: Wähle einen Zeitraum (3, 6, 12 Monate, 2 Jahre oder gesamt) und sieh die Summe, den Monatsdurchschnitt, alle Kosten pro km und den Verbrauch; die Kosten nach Monat als Balken (tippe auf einen Monat, um nur dessen Kosten zu sehen); die Aufteilung nach Art (tippe auf eine Art, um die Liste zu filtern); den Verbrauch zwischen vollen Tankfüllungen als Linie; und jede Tankfüllung und jeden Kostenpunkt, die jeweils ihre Ausgabe öffnen. Beträge stehen in deiner Anzeigewährung; solche ohne Wechselkurs werden gelistet, aber nicht mitgezählt. **Verwalten** öffnet Einstellungen → Fahrzeuge, wo du auch Kosten markierst — siehe [Einstellungen](./11-settings.md).
 
 ## FAQ
 

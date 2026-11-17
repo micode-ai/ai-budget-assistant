@@ -864,6 +864,13 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="vehicles/[id]"
+          options={{
+            headerShown: true,
+            title: t('vehicles.detailTitle'),
+          }}
+        />
+        <Stack.Screen
           name="real-salary/setup"
           options={{
             headerShown: true,

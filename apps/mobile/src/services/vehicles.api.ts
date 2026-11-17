@@ -8,6 +8,8 @@ import type {
   VehicleCategoryRule,
   VehicleCostKind,
   VehicleCostLink,
+  VehicleHistory,
+  VehicleHistoryPeriod,
   VehicleStats,
 } from '@budget/shared-types';
 
@@ -46,6 +48,11 @@ export const vehiclesApi = {
 
   getVehicleStats(id: string): Promise<VehicleStats> {
     return httpClient.request<VehicleStats>(`/vehicles/${encodeURIComponent(id)}/stats`);
+  },
+
+  /** The vehicle screen (ABA-811): one period by month and kind, in the display currency. */
+  getVehicleHistory(id: string, months: VehicleHistoryPeriod): Promise<VehicleHistory> {
+    return httpClient.request<VehicleHistory>(`/vehicles/${encodeURIComponent(id)}/history?months=${months}`);
   },
 
   getVehicleFuelLogs(id: string): Promise<FuelLogWithExpense[]> {
