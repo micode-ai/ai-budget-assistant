@@ -4,6 +4,7 @@ import { toParserResult } from './parsers/ai-statement.parser';
 import { findStatementBalances, reconcile } from './ai/balance-check';
 import { StatementAiService } from './ai/statement-ai.service';
 import { SubscriptionsService } from '../subscriptions/subscriptions.service';
+import { UsageTrackingService } from '../subscriptions/usage-tracking.service';
 import { PARSERS, getParserById } from './parsers/registry';
 import { ImportBankAiPreviewService, parseInferenceQuotaEnv } from './ai-preview.service';
 import { ImportBankDedupService } from './import-bank-dedup.service';
@@ -42,6 +43,7 @@ export class ImportBankAiPdfService {
   constructor(
     private readonly statementAi: StatementAiService,
     private readonly subscriptions: SubscriptionsService,
+    private readonly usage: UsageTrackingService,
     private readonly aiPreview: ImportBankAiPreviewService,
     private readonly dedup: ImportBankDedupService,
   ) {}
@@ -95,7 +97,7 @@ export class ImportBankAiPdfService {
     // `trackAiUsage` below still does its own atomic check-and-increment
     // after a successful extraction, which is what actually bills the user
     // and also protects against a race between this check and that call.
-    const usage = await this.subscriptions.getUsageStats(userId);
+    const usage = await this.usage.getUsageStats(userId);
     if (usage.aiRequestsLimit !== -1 && usage.aiRequestsUsed + ImportBankAiPdfService.AI_PDF_EXTRACTION_COST > usage.aiRequestsLimit) {
       throw new ForbiddenException({
         code: 'TIER_REQUIRED',
@@ -137,7 +139,7 @@ export class ImportBankAiPdfService {
       };
     }
 
-    await this.subscriptions.trackAiUsage(userId, 'ocr', ImportBankAiPdfService.AI_PDF_EXTRACTION_COST, accountId);
+    await this.usage.trackAiUsage(userId, 'ocr', ImportBankAiPdfService.AI_PDF_EXTRACTION_COST, accountId);
 
     const parsed = toParserResult(rows);
     const aiParser = getParserById('ai')!;

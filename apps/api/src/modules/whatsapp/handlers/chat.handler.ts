@@ -4,7 +4,7 @@ import { randomUUID } from 'crypto';
 import { ChatService } from '../../ai/services/chat.service';
 import { WhatsAppLinkService } from '../whatsapp-link.service';
 import { PrismaService } from '../../../database/prisma.service';
-import { SubscriptionsService } from '../../subscriptions/subscriptions.service';
+import { UsageTrackingService } from '../../subscriptions/usage-tracking.service';
 import { WhatsAppClientService } from '../whatsapp-client.service';
 import { markdownToWhatsApp } from '../helpers/format-whatsapp';
 import { accountFooter, resolveAccountFromMessage, AccountInfo } from '../../../common/utils/bot-account';
@@ -19,7 +19,7 @@ export class ChatHandler {
     private readonly chatService: ChatService,
     private readonly linkService: WhatsAppLinkService,
     private readonly prisma: PrismaService,
-    private readonly subscriptionsService: SubscriptionsService,
+    private readonly subscriptionsService: UsageTrackingService,
     private readonly whatsAppClient: WhatsAppClientService,
     @Inject(WA_REDIS) private readonly redis: Redis,
   ) {}

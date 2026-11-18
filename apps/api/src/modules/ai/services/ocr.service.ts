@@ -18,7 +18,7 @@ import type { ReceiptCheckFinding, ReceiptDuplicateMatch, ReceiptImagePart } fro
 import { ReceiptDuplicateService, receiptFingerprint, receiptFingerprintParts } from '../../expenses/receipt-duplicate.service';
 import { ReceiptFinalizerService, type ReceiptFinalizeOptions } from './receipt-finalizer.service';
 import { ReceiptPdfService } from './receipt-pdf.service';
-import { SubscriptionsService } from '../../subscriptions/subscriptions.service';
+import { UsageTrackingService } from '../../subscriptions/usage-tracking.service';
 import { CANONICAL_NAME_RULES } from '../prompts/canonical-name-rules';
 import { RECEIPT_PARTS_INSTRUCTIONS } from '../prompts/receipt-parts.prompt';
 
@@ -444,7 +444,7 @@ export const RECEIPT_PARTS_MAX = 4;
 // fires as a canActivate guard BEFORE this service ever runs, so it can only
 // ever record the fixed first-call cost; this constant is what makes the
 // re-read visible to admin AI-COGS as its own line, via
-// `SubscriptionsService.recordAdditionalUsage` (see docs/tech-debt/
+// `UsageTrackingService.recordAdditionalUsage` (see docs/tech-debt/
 // ocr-reread-cost-not-tracked.md). Deliberately not folded into the 'ocr'
 // quota cost — see that method's doc comment.
 export const OCR_REREAD_FEATURE_TYPE = 'ocr_reread';
@@ -466,7 +466,7 @@ export class OcrService {
     private readonly prisma: PrismaService,
     private readonly receiptFinalizer: ReceiptFinalizerService,
     private readonly receiptPdf: ReceiptPdfService,
-    private readonly subscriptions: SubscriptionsService,
+    private readonly subscriptions: UsageTrackingService,
     @Optional() private readonly receiptDuplicates?: ReceiptDuplicateService,
   ) {
     this.openai = new OpenAI({

@@ -5,7 +5,7 @@ import { OcrService } from '../../ai/services/ocr.service';
 import type { ReceiptExpense } from '../../ai/services/ocr.service';
 import { ExpensesService } from '../../expenses/expenses.service';
 import { ReceiptDuplicateService, receiptFingerprint, receiptMergeCandidate } from '../../expenses/receipt-duplicate.service';
-import { SubscriptionsService } from '../../subscriptions/subscriptions.service';
+import { UsageTrackingService } from '../../subscriptions/usage-tracking.service';
 import { CategoriesService } from '../../categories/categories.service';
 import { ShoppingListService } from '../../shopping-list/shopping-list.service';
 import { WhatsAppClientService } from '../whatsapp-client.service';
@@ -114,7 +114,7 @@ export class PhotoHandler {
   constructor(
     private readonly ocrService: OcrService,
     private readonly expensesService: ExpensesService,
-    private readonly subscriptionsService: SubscriptionsService,
+    private readonly subscriptionsService: UsageTrackingService,
     private readonly categoriesService: CategoriesService,
     private readonly shoppingListService: ShoppingListService,
     private readonly client: WhatsAppClientService,

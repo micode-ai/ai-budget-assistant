@@ -8,7 +8,7 @@ import { InflationShieldService } from '../../insights/inflation-shield.service'
 import { ShoppingListService } from '../../shopping-list/shopping-list.service';
 import { RealSalaryService } from '../../insights/real-salary/real-salary.service';
 import { CoicopClassifierService } from '../../insights/real-salary/coicop-classifier.service';
-import { SubscriptionsService } from '../../subscriptions/subscriptions.service';
+import { UsageTrackingService } from '../../subscriptions/usage-tracking.service';
 import { NotificationsService } from '../../notifications/notifications.service';
 import { DigestChannelRegistry } from '../digest-channel.registry';
 import { VoiceDigestFactsService } from '../voice-digest-facts.service';
@@ -41,7 +41,7 @@ describe('voice-digest module DI wiring', () => {
         { provide: ShoppingListService, useValue: {} },
         { provide: RealSalaryService, useValue: {} },
         { provide: CoicopClassifierService, useValue: {} },
-        { provide: SubscriptionsService, useValue: {} },
+        { provide: UsageTrackingService, useValue: {} },
         { provide: NotificationsService, useValue: {} },
         { provide: ConfigService, useValue: { get: () => undefined } },
       ],

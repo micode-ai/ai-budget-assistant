@@ -250,7 +250,7 @@ export class ImportBankAiPreviewService {
    * its own ceiling.
    *
    * The counter lives in Redis, NOT in `usage_logs`: the only writer of that
-   * table is SubscriptionsService.trackAiUsage, which is exactly the monthly
+   * table is UsageTrackingService.trackAiUsage, which is exactly the monthly
    * billing counter this path is specified to stay out of. CacheService is
    * @Global(), so no module import is needed.
    *

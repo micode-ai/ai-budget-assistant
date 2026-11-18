@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import type { UpdateVoiceDigestDto, VoiceDigestChannel, VoiceDigestSettings } from '@budget/shared-types';
 import { PrismaService } from '../../database/prisma.service';
 import { logFireAndForget } from '../../common/utils/fire-and-forget';
-import { SubscriptionsService } from '../subscriptions/subscriptions.service';
+import { UsageTrackingService } from '../subscriptions/usage-tracking.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { DigestBlockedError, DigestChannelRegistry, DigestUnavailableError } from './digest-channel.registry';
 import { VoiceDigestFactsService } from './voice-digest-facts.service';
@@ -42,7 +42,7 @@ export class VoiceDigestService {
     private readonly factsService: VoiceDigestFactsService,
     private readonly narrator: VoiceDigestNarratorService,
     private readonly tts: TtsService,
-    private readonly subscriptions: SubscriptionsService,
+    private readonly subscriptions: UsageTrackingService,
     private readonly notifications: NotificationsService,
     private readonly config: ConfigService,
   ) {}

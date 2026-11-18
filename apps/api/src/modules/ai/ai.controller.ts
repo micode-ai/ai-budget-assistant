@@ -35,7 +35,7 @@ import { CategorizeSuggestionsService } from './services/categorize-suggestions.
 import { CategorizeIncomeSuggestionsService } from './services/categorize-income-suggestions.service';
 import { ScanPriceTagRequestSchema, ScanReceiptRequestSchema } from './utils/sanitize';
 import { PriceTagService } from './services/price-tag.service';
-import { SubscriptionsService } from '../subscriptions/subscriptions.service';
+import { UsageTrackingService } from '../subscriptions/usage-tracking.service';
 import { PrismaService } from '../../database/prisma.service';
 import { getAiCostMultiplier } from './services/model-resolver';
 import { UpdateConversationTitleDto } from './dto';
@@ -56,7 +56,7 @@ export class AiController {
     private readonly categorizeIncomeSuggestionsService: CategorizeIncomeSuggestionsService,
     private readonly receiptDuplicates: ReceiptDuplicateService,
     private readonly priceTagService: PriceTagService,
-    private readonly subscriptionsService: SubscriptionsService,
+    private readonly subscriptionsService: UsageTrackingService,
     private readonly prisma: PrismaService,
   ) {}
 

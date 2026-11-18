@@ -15,7 +15,7 @@ import { AccountInvitationsService } from './account-invitations.service';
 import { AccountMembersService } from './account-members.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountLimitGuard } from '../subscriptions/guards/account-limit.guard';
-import { SubscriptionsService } from '../subscriptions/subscriptions.service';
+import { UsageTrackingService } from '../subscriptions/usage-tracking.service';
 import {
   CreateAccountDto,
   UpdateAccountDto,
@@ -35,7 +35,7 @@ export class AccountsController {
     private readonly accountsService: AccountsService,
     private readonly invitationsService: AccountInvitationsService,
     private readonly membersService: AccountMembersService,
-    private readonly subscriptionsService: SubscriptionsService,
+    private readonly subscriptionsService: UsageTrackingService,
   ) {}
 
   @Post()

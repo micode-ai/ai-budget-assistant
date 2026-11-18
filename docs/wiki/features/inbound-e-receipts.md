@@ -40,7 +40,7 @@ unless `INBOUND_MAIL_CONTAINER=true`. See *Known gaps → Not activated*.
 - **Touched elsewhere in the API**: `OcrService.parseReceiptText` in
   `apps/api/src/modules/ai/services/ocr.service.ts`; the tier-2 hook in
   `apps/api/src/modules/encryption/encryption.service.ts`; the backup exclusion in
-  `apps/api/src/modules/backups/backups.service.ts`; `SubscriptionsService.refundAiUsage`.
+  `apps/api/src/modules/backups/backups.service.ts`; `UsageTrackingService.refundAiUsage`.
 - **Schema**: `InboundMailAddress` and `InboundReceipt` in `apps/api/prisma/schema.prisma`,
   migration `apps/api/prisma/migrations/20261010000000_add_inbound_mail/`. Types:
   `packages/shared-types/src/entities/inboundMail.ts`.

@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { PrismaService } from '../../database/prisma.service';
 import { BudgetsService } from '../budgets/budgets.service';
-import { SubscriptionsService } from '../subscriptions/subscriptions.service';
+import { UsageTrackingService } from '../subscriptions/usage-tracking.service';
 import { translateUncategorized, localizeStoryBlocks } from '../../common/utils/translate';
 import { getResponseModeInstruction, AiResponseMode } from '../ai/services/response-mode.helper';
 import { getAiCostMultiplier, resolveAiModel } from '../ai/services/model-resolver';
@@ -42,7 +42,7 @@ export class StoryService {
     private readonly configService: ConfigService,
     private readonly prisma: PrismaService,
     private readonly budgetsService: BudgetsService,
-    private readonly subscriptionsService: SubscriptionsService,
+    private readonly subscriptionsService: UsageTrackingService,
     private readonly exchangeRateService: ExchangeRateService,
   ) {
     this.openai = new OpenAI({

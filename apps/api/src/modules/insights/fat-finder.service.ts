@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { PrismaService } from '../../database/prisma.service';
-import { SubscriptionsService } from '../subscriptions/subscriptions.service';
+import { UsageTrackingService } from '../subscriptions/usage-tracking.service';
 import { getResponseModeInstruction, AiResponseMode } from '../ai/services/response-mode.helper';
 import { getAiCostMultiplier, resolveAiModel } from '../ai/services/model-resolver';
 import { logCacheUsage } from '../ai/utils/log-cache-usage';
@@ -49,7 +49,7 @@ export class FatFinderService {
   constructor(
     private readonly configService: ConfigService,
     private readonly prisma: PrismaService,
-    private readonly subscriptionsService: SubscriptionsService,
+    private readonly subscriptionsService: UsageTrackingService,
     private readonly exchangeRateService: ExchangeRateService,
   ) {
     this.openai = new OpenAI({

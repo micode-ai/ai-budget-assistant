@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
 import { WhisperService } from '../../ai/services/whisper.service';
-import { SubscriptionsService } from '../../subscriptions/subscriptions.service';
+import { UsageTrackingService } from '../../subscriptions/usage-tracking.service';
 import { SlackClientService } from '../slack-client.service';
 import { ChatHandler } from './chat.handler';
 import { SlackFile, SlackUserState } from '../types';
@@ -12,7 +12,7 @@ export class VoiceHandler {
 
   constructor(
     private readonly whisperService: WhisperService,
-    private readonly subscriptionsService: SubscriptionsService,
+    private readonly subscriptionsService: UsageTrackingService,
     private readonly slackClient: SlackClientService,
     private readonly chatHandler: ChatHandler,
   ) {}

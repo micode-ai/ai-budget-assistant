@@ -2,6 +2,8 @@ import { Module, forwardRef } from '@nestjs/common';
 import { SubscriptionsController } from './subscriptions.controller';
 import { StripeWebhookController } from './stripe-webhook.controller';
 import { SubscriptionsService } from './subscriptions.service';
+import { StripeBillingService } from './stripe-billing.service';
+import { UsageTrackingService } from './usage-tracking.service';
 import { TrialReminderCron } from './trial-reminder.cron';
 import { SubscriptionTierGuard } from './guards/subscription-tier.guard';
 import { AiUsageGuard } from './guards/ai-usage.guard';
@@ -13,6 +15,8 @@ import { AdminModule } from '../admin/admin.module';
   controllers: [SubscriptionsController, StripeWebhookController],
   providers: [
     SubscriptionsService,
+    StripeBillingService,
+    UsageTrackingService,
     TrialReminderCron,
     SubscriptionTierGuard,
     AiUsageGuard,
@@ -20,6 +24,7 @@ import { AdminModule } from '../admin/admin.module';
   ],
   exports: [
     SubscriptionsService,
+    UsageTrackingService,
     SubscriptionTierGuard,
     AiUsageGuard,
     AccountLimitGuard,

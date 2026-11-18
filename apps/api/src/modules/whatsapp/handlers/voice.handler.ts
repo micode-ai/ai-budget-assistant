@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
 import { WhisperService } from '../../ai/services/whisper.service';
-import { SubscriptionsService } from '../../subscriptions/subscriptions.service';
+import { UsageTrackingService } from '../../subscriptions/usage-tracking.service';
 import { WhatsAppClientService } from '../whatsapp-client.service';
 import { ChatHandler } from './chat.handler';
 import { WaMediaMessage, WhatsAppUserState } from '../types';
@@ -12,7 +12,7 @@ export class VoiceHandler {
 
   constructor(
     private readonly whisperService: WhisperService,
-    private readonly subscriptionsService: SubscriptionsService,
+    private readonly subscriptionsService: UsageTrackingService,
     private readonly whatsAppClient: WhatsAppClientService,
     private readonly chatHandler: ChatHandler,
   ) {}

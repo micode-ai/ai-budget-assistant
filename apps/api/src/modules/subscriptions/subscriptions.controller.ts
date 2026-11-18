@@ -12,11 +12,17 @@ import { Response } from 'express';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AuthenticatedRequest } from '../../common/types';
 import { SubscriptionsService } from './subscriptions.service';
+import { StripeBillingService } from './stripe-billing.service';
+import { UsageTrackingService } from './usage-tracking.service';
 import { CreateCheckoutSessionDto, CreatePortalSessionDto } from './dto';
 
 @Controller('subscriptions')
 export class SubscriptionsController {
-  constructor(private readonly subscriptionsService: SubscriptionsService) {}
+  constructor(
+    private readonly subscriptionsService: SubscriptionsService,
+    private readonly billing: StripeBillingService,
+    private readonly usage: UsageTrackingService,
+  ) {}
 
   /**
    * Public redirect endpoint for Stripe success/cancel URLs.
@@ -51,7 +57,7 @@ export class SubscriptionsController {
   @UseGuards(JwtAuthGuard)
   @Get('usage')
   async getUsage(@Req() req: AuthenticatedRequest) {
-    return this.subscriptionsService.getUsageStats(req.user.id);
+    return this.usage.getUsageStats(req.user.id);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -64,7 +70,7 @@ export class SubscriptionsController {
     const now = new Date();
     const m = month ? parseInt(month) : now.getMonth() + 1;
     const y = year ? parseInt(year) : now.getFullYear();
-    return this.subscriptionsService.getUsageDetails(req.user.id, m, y);
+    return this.usage.getUsageDetails(req.user.id, m, y);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -73,7 +79,7 @@ export class SubscriptionsController {
     @Req() req: AuthenticatedRequest,
     @Body() dto: CreateCheckoutSessionDto,
   ) {
-    return this.subscriptionsService.createCheckoutSession(
+    return this.billing.createCheckoutSession(
       req.user.id,
       dto.priceId,
       dto.successUrl,
@@ -88,7 +94,7 @@ export class SubscriptionsController {
     @Req() req: AuthenticatedRequest,
     @Body() dto: CreatePortalSessionDto,
   ) {
-    return this.subscriptionsService.createPortalSession(
+    return this.billing.createPortalSession(
       req.user.id,
       dto.returnUrl,
     );

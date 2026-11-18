@@ -82,7 +82,7 @@ send ALL parts together with part 1, including offline retries and the retry aft
 a single scan; a split receipt is the likeliest place for a dropped line.
 
 **Billing is 2.0 per part times the model multiplier.** The static `@TrackAiUsage('ocr', 2.0)` covers
-part 1; the controller charges `2.0 × (n−1) × multiplier` through `SubscriptionsService.trackAiUsage`
+part 1; the controller charges `2.0 × (n−1) × multiplier` through `UsageTrackingService.trackAiUsage`
 BEFORE the model call (that is what enforces the tier limit). A refused extra charge, a coded 400
 (`parts_*`) or any Zod failure refunds part 1's guard charge — a client mistake must not cost a scan.
 

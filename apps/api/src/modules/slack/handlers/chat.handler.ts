@@ -4,7 +4,7 @@ import { randomUUID } from 'crypto';
 import { ChatService } from '../../ai/services/chat.service';
 import { SlackLinkService } from '../slack-link.service';
 import { PrismaService } from '../../../database/prisma.service';
-import { SubscriptionsService } from '../../subscriptions/subscriptions.service';
+import { UsageTrackingService } from '../../subscriptions/usage-tracking.service';
 import { SlackClientService } from '../slack-client.service';
 import { markdownToSlack } from '../helpers/format-slack';
 import { accountFooter, resolveAccountFromMessage, AccountInfo } from '../../../common/utils/bot-account';
@@ -19,7 +19,7 @@ export class ChatHandler {
     private readonly chatService: ChatService,
     private readonly linkService: SlackLinkService,
     private readonly prisma: PrismaService,
-    private readonly subscriptionsService: SubscriptionsService,
+    private readonly subscriptionsService: UsageTrackingService,
     private readonly slackClient: SlackClientService,
     @Inject(SLACK_REDIS) private readonly redis: Redis,
   ) {}

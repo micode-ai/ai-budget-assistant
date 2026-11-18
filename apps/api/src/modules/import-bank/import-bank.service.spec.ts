@@ -12,6 +12,7 @@ import { MerchantRulesService } from '../merchant-rules/merchant-rules.service';
 import { SignatureService } from './ai/signature.service';
 import { StatementAiService } from './ai/statement-ai.service';
 import { SubscriptionsService } from '../subscriptions/subscriptions.service';
+import { UsageTrackingService } from '../subscriptions/usage-tracking.service';
 import { CacheService } from '../../common/cache/cache.service';
 import { headerFingerprint } from './utils/header-fingerprint';
 
@@ -86,6 +87,7 @@ describe('ImportBankService.parsePreview', () => {
         { provide: SignatureService, useValue: signatures },
         { provide: StatementAiService, useValue: ai },
         { provide: SubscriptionsService, useValue: subscriptions },
+        { provide: UsageTrackingService, useValue: subscriptions },
         { provide: CacheService, useValue: cache },
       ],
     }).compile();
@@ -480,6 +482,7 @@ describe('ImportBankService.parsePreview', () => {
           { provide: SignatureService, useValue: realSignatures },
           { provide: StatementAiService, useValue: ai },
           { provide: SubscriptionsService, useValue: subscriptions },
+          { provide: UsageTrackingService, useValue: subscriptions },
           { provide: CacheService, useValue: cache },
         ],
       }).compile();

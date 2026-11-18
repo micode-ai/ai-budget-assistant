@@ -2,7 +2,7 @@ import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import type { ReceiptImagePart } from '@budget/shared-types';
 import type { CacheService } from './cache/cache.service';
 import type { OcrService, ReceiptExpense } from '../modules/ai/services/ocr.service';
-import type { SubscriptionsService } from '../modules/subscriptions/subscriptions.service';
+import type { UsageTrackingService } from '../modules/subscriptions/usage-tracking.service';
 import { RECEIPT_PART_MIME_TYPES } from '../modules/ai/utils/sanitize';
 
 /**
@@ -110,7 +110,7 @@ export type ContinuationResult<T> =
 
 export interface ContinuationDeps {
   cache: CacheService;
-  subscriptions: Pick<SubscriptionsService, 'trackAiUsage' | 'refundAiUsage'>;
+  subscriptions: Pick<UsageTrackingService, 'trackAiUsage' | 'refundAiUsage'>;
   ocr: Pick<OcrService, 'parseReceiptParts'>;
 }
 

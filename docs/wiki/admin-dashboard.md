@@ -46,7 +46,7 @@ Dashboard (`/`), Login (`/login`), Investor Metrics (`/metrics`), Activation (`/
 ### Real-time
 `AdminGateway` (namespace `/admin`, one admin room) emits `admin:new-user`, `admin:ai-request`, `admin:subscription-change`, `admin:error` and, every 30 s, `admin:stats`. `use-realtime.ts` feeds the first four into the live activity feed and merges `admin:stats` (`newUsersToday`, `activeUsersToday`, `mrr`) into the `["admin","analytics","overview"]` query with `setQueryData`, so the KPI cards tick without a refetch (`health` is carried but unused by the client).
 
-Emitters: `admin:new-user` (auth), `admin:ai-request` (`AiUsageGuard`), `admin:subscription-change` (`SubscriptionsService` webhook handling — subscription created/updated/checkout and deleted, only when the tier actually changes; `@Optional()` gateway, failures logged and swallowed), `admin:error` (`SentryExceptionFilter`, status >= 500; message is `status METHOD path` plus the truncated error message, no query string, no stack).
+Emitters: `admin:new-user` (auth), `admin:ai-request` (`AiUsageGuard`), `admin:subscription-change` (`StripeBillingService` webhook handling — subscription created/updated/checkout and deleted, only when the tier actually changes; `@Optional()` gateway, failures logged and swallowed), `admin:error` (`SentryExceptionFilter`, status >= 500; message is `status METHOD path` plus the truncated error message, no query string, no stack).
 
 ### Client
 React Query 5 for all server state; shadcn/ui components; Recharts for charts.

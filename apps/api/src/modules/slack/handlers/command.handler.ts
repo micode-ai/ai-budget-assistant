@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { SlackLinkService } from '../slack-link.service';
 import { SlackClientService } from '../slack-client.service';
 import { PrismaService } from '../../../database/prisma.service';
-import { SubscriptionsService } from '../../subscriptions/subscriptions.service';
+import { UsageTrackingService } from '../../subscriptions/usage-tracking.service';
 import { VoiceDigestService, DigestOutcome } from '../../voice-digest/voice-digest.service';
 import { CacheService } from '../../../common/cache/cache.service';
 import { logFireAndForget } from '../../../common/utils/fire-and-forget';
@@ -20,7 +20,7 @@ export class CommandHandler {
     private readonly linkService: SlackLinkService,
     private readonly slackClient: SlackClientService,
     private readonly prisma: PrismaService,
-    private readonly subscriptionsService: SubscriptionsService,
+    private readonly subscriptionsService: UsageTrackingService,
     private readonly voiceDigestService: VoiceDigestService,
     private readonly cache: CacheService,
   ) {}

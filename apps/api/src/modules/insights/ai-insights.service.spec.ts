@@ -2,7 +2,7 @@ import { Test } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import { AiInsightsService } from './ai-insights.service';
 import { PrismaService } from '../../database/prisma.service';
-import { SubscriptionsService } from '../subscriptions/subscriptions.service';
+import { UsageTrackingService } from '../subscriptions/usage-tracking.service';
 
 const mockChatCreate = jest.fn();
 jest.mock('openai', () => ({
@@ -36,7 +36,7 @@ describe('AiInsightsService', () => {
         AiInsightsService,
         { provide: ConfigService, useValue: { get: () => 'sk-test' } },
         { provide: PrismaService, useValue: deps.prisma },
-        { provide: SubscriptionsService, useValue: deps.subscriptionsService },
+        { provide: UsageTrackingService, useValue: deps.subscriptionsService },
       ],
     }).compile();
     service = moduleRef.get(AiInsightsService);

@@ -3,7 +3,7 @@ import { AccountsController } from './accounts.controller';
 import { AccountsService } from './accounts.service';
 import { AccountInvitationsService } from './account-invitations.service';
 import { AccountMembersService } from './account-members.service';
-import { SubscriptionsService } from '../subscriptions/subscriptions.service';
+import { UsageTrackingService } from '../subscriptions/usage-tracking.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountLimitGuard } from '../subscriptions/guards/account-limit.guard';
 
@@ -26,7 +26,7 @@ describe('AccountsController', () => {
       controllers: [AccountsController],
       providers: [
         { provide: AccountsService, useValue: accountsService },
-        { provide: SubscriptionsService, useValue: subscriptionsService },
+        { provide: UsageTrackingService, useValue: subscriptionsService },
         { provide: AccountInvitationsService, useValue: {} },
         { provide: AccountMembersService, useValue: {} },
       ],

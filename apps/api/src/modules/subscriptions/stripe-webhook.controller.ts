@@ -7,13 +7,13 @@ import {
   Logger,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { SubscriptionsService } from './subscriptions.service';
+import { StripeBillingService } from './stripe-billing.service';
 
 @Controller('webhooks')
 export class StripeWebhookController {
   private readonly logger = new Logger(StripeWebhookController.name);
 
-  constructor(private readonly subscriptionsService: SubscriptionsService) {}
+  constructor(private readonly billing: StripeBillingService) {}
 
   @Post('stripe')
   async handleWebhook(@Req() req: Request, @Res() res: Response) {
@@ -27,7 +27,7 @@ export class StripeWebhookController {
     try {
       // req.body is the raw Buffer when rawBody is enabled for this route
       const rawBody = (req as any).rawBody || req.body;
-      event = this.subscriptionsService.constructWebhookEvent(
+      event = this.billing.constructWebhookEvent(
         rawBody,
         signature,
       );
@@ -36,7 +36,7 @@ export class StripeWebhookController {
       throw new BadRequestException('Webhook signature verification failed');
     }
 
-    await this.subscriptionsService.handleWebhookEvent(event);
+    await this.billing.handleWebhookEvent(event);
 
     res.json({ received: true });
   }

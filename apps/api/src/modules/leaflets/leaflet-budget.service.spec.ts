@@ -29,7 +29,7 @@ function make(sub: Record<string, any> = {}) {
     resetUsageIfNeeded: jest.fn().mockResolvedValue(undefined),
     recordAdditionalUsage: jest.fn().mockResolvedValue(undefined),
   };
-  return { service: new LeafletBudgetService(prisma, subs), prisma, subs, state };
+  return { service: new LeafletBudgetService(prisma, subs, subs), prisma, subs, state };
 }
 
 describe('LeafletBudgetService', () => {

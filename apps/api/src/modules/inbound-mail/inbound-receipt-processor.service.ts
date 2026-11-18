@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../../database/prisma.service';
 import { CacheService } from '../../common/cache/cache.service';
 import { NotificationsService } from '../notifications/notifications.service';
-import { SubscriptionsService } from '../subscriptions/subscriptions.service';
+import { UsageTrackingService } from '../subscriptions/usage-tracking.service';
 import { OcrService } from '../ai/services/ocr.service';
 import type { ReceiptExpense } from '../ai/services/ocr.service';
 import { ReceiptDuplicateService } from '../expenses/receipt-duplicate.service';
@@ -40,7 +40,7 @@ export class InboundReceiptProcessorService {
     private readonly cache: CacheService,
     private readonly config: ConfigService,
     private readonly notifications: NotificationsService,
-    private readonly subscriptions: SubscriptionsService,
+    private readonly subscriptions: UsageTrackingService,
     private readonly ocr: OcrService,
     private readonly duplicates: ReceiptDuplicateService,
   ) {}

@@ -2,6 +2,7 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import type { LeafletBudget } from '@budget/shared-types';
 import { PrismaService } from '../../database/prisma.service';
 import { SubscriptionsService } from '../subscriptions/subscriptions.service';
+import { UsageTrackingService } from '../subscriptions/usage-tracking.service';
 
 type Tier = 'free' | 'pro' | 'business';
 
@@ -22,6 +23,7 @@ export class LeafletBudgetService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly subscriptions: SubscriptionsService,
+    private readonly usage: UsageTrackingService,
   ) {}
 
   // Trialing users use the same per-tier row; customAiLimit/bonusAiRequests do not apply.
@@ -31,7 +33,7 @@ export class LeafletBudgetService {
 
   private async fresh(userId: string) {
     const sub = await this.subscriptions.getOrCreateSubscription(userId);
-    await this.subscriptions.resetUsageIfNeeded(sub);
+    await this.usage.resetUsageIfNeeded(sub);
     return this.prisma.subscription.findUniqueOrThrow({ where: { userId } });
   }
 
@@ -49,7 +51,7 @@ export class LeafletBudgetService {
       });
     }
     // COGS visibility only; never throws and never touches the AI quota.
-    await this.subscriptions.recordAdditionalUsage(userId, 'leaflet', pages, accountId ?? undefined);
+    await this.usage.recordAdditionalUsage(userId, 'leaflet', pages, accountId ?? undefined);
   }
 
   async refund(userId: string, pages = 1): Promise<void> {

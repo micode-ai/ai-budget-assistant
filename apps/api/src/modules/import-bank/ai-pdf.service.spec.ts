@@ -57,7 +57,7 @@ function buildService(
   };
   const dedup = new ImportBankDedupService(prisma);
   const aiPreview = new ImportBankAiPreviewService(prisma, cache, signatures, ai, dedup);
-  const aiPdf = new ImportBankAiPdfService(ai, subscriptions, aiPreview, dedup);
+  const aiPdf = new ImportBankAiPdfService(ai, subscriptions, subscriptions, aiPreview, dedup);
   const service = new ImportBankService(
     prisma,
     { create: jest.fn() } as any,

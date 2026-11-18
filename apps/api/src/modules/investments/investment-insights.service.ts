@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { PrismaService } from '../../database/prisma.service';
 import { InvestmentsService } from './investments.service';
-import { SubscriptionsService } from '../subscriptions/subscriptions.service';
+import { UsageTrackingService } from '../subscriptions/usage-tracking.service';
 import { getAiCostMultiplier, resolveAiModel } from '../ai/services/model-resolver';
 import { logCacheUsage } from '../ai/utils/log-cache-usage';
 import { buildInsightsResponseSchema } from '../insights/insight-schema.util';
@@ -42,7 +42,7 @@ export class InvestmentInsightsService {
     private readonly configService: ConfigService,
     private readonly prisma: PrismaService,
     private readonly investmentsService: InvestmentsService,
-    private readonly subscriptionsService: SubscriptionsService,
+    private readonly subscriptionsService: UsageTrackingService,
   ) {
     this.openai = new OpenAI({
       apiKey: this.configService.get<string>('OPENAI_API_KEY'),

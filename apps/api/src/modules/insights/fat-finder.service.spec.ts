@@ -2,7 +2,7 @@ import { Test } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import { FatFinderService } from './fat-finder.service';
 import { PrismaService } from '../../database/prisma.service';
-import { SubscriptionsService } from '../subscriptions/subscriptions.service';
+import { UsageTrackingService } from '../subscriptions/usage-tracking.service';
 import { ExchangeRateService } from '../currency-exchange/exchange-rate.service';
 
 const mockChatCreate = jest.fn();
@@ -57,7 +57,7 @@ describe('FatFinderService', () => {
         FatFinderService,
         { provide: ConfigService, useValue: { get: () => 'sk-test' } },
         { provide: PrismaService, useValue: deps.prisma },
-        { provide: SubscriptionsService, useValue: deps.subscriptionsService },
+        { provide: UsageTrackingService, useValue: deps.subscriptionsService },
         { provide: ExchangeRateService, useValue: deps.exchangeRateService },
       ],
     }).compile();

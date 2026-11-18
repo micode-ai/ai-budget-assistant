@@ -7,7 +7,7 @@ import {
   forwardRef,
   Optional,
 } from '@nestjs/common';
-import { SubscriptionsService } from '../subscriptions.service';
+import { UsageTrackingService } from '../usage-tracking.service';
 import { AI_FEATURE_TYPE_KEY, AI_COST_UNITS_KEY } from '../decorators/track-ai-usage.decorator';
 import { PrismaService } from '../../../database/prisma.service';
 import { getAiCostMultiplier } from '../../ai/services/model-resolver';
@@ -16,7 +16,7 @@ import { AdminGateway } from '../../admin/admin.gateway';
 @Injectable()
 export class AiUsageGuard implements CanActivate {
   constructor(
-    private readonly subscriptionsService: SubscriptionsService,
+    private readonly usage: UsageTrackingService,
     private readonly prisma: PrismaService,
     @Optional() @Inject(forwardRef(() => AdminGateway))
     private readonly adminGateway: AdminGateway | null,
@@ -42,7 +42,7 @@ export class AiUsageGuard implements CanActivate {
     const adjustedCost = baseCost * getAiCostMultiplier(user?.aiModel);
 
     const accountId = request.accountId as string | undefined;
-    await this.subscriptionsService.trackAiUsage(userId, featureType, adjustedCost, accountId);
+    await this.usage.trackAiUsage(userId, featureType, adjustedCost, accountId);
 
     // Broadcast AI request to admin dashboard (fire-and-forget)
     this.adminGateway?.emitAiRequest({

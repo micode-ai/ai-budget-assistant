@@ -18,6 +18,8 @@ The monetisation layer: Stripe-backed subscription plans (Free / Pro / Business)
 - **Paywall and tier gating** — the API refuses a gated endpoint with a `TIER_REQUIRED` 403; the caller opens the one shared sheet via `useUpgradeStore.getState().show()`. Detail, invariants and the P2002 upsert-race rule: [upgrade-paywall](features/upgrade-paywall.md). Prices: [subscription-pricing](features/subscription-pricing.md)
 - **Admin view** — `/subscriptions` page shows current subscriber counts, tier distribution, and per-user subscription details
 
+- **Three services (ABA-824)** — `StripeBillingService` (checkout, portal, webhooks; injected only by the two controllers), `UsageTrackingService` (AI quota, `trackAiUsage`/`refundAiUsage`/`recordAdditionalUsage`, member limit, usage stats; exported and injected by every AI-consuming module) and `SubscriptionsService` (the subscription row via `getOrCreateSubscription`, plans, price-key resolution). New AI callers inject `UsageTrackingService`; a new Stripe event goes in `StripeBillingService`.
+
 ## Cross-references
 - Talks to: Stripe API (checkout sessions, subscription management, webhooks)
 - Used by: `ai-features` — AI usage limits depend on subscription tier

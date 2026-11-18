@@ -359,7 +359,7 @@ describe('OcrService', () => {
    * ocr-reread-cost-not-tracked: the corrective re-read (ABA-442) is a real
    * second OpenAI call that `AiUsageGuard`'s fixed `@TrackAiUsage('ocr', 2.0)`
    * can never see (it runs before this service). Pins that OcrService itself
-   * reports the extra cost via `SubscriptionsService.recordAdditionalUsage`
+   * reports the extra cost via `UsageTrackingService.recordAdditionalUsage`
    * exactly when — and only when — a second call is actually issued.
    */
   describe('readReceipt — corrective re-read cost tracking', () => {

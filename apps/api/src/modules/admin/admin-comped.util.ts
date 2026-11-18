@@ -1,7 +1,7 @@
 // "Complimentary" (comped) = a paid tier an admin granted by hand, with no money behind it.
 //
 // No column stores this. It does not need one: `stripeSubscriptionId` is written by exactly
-// one place in the codebase — the Stripe webhook (`SubscriptionsService.handleSubscriptionCreated`,
+// one place in the codebase — the Stripe webhook (`StripeBillingService.handleSubscriptionUpdated`,
 // via `stripeSub.id`) — while `AdminService.changeSubscriptionTier` sets only `tier` + `status`.
 // So "active paid tier with no Stripe subscription id" identifies the manually-granted set
 // exactly, retroactively for grants already made, and self-heals if the user later actually pays.

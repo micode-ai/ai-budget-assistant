@@ -4,7 +4,7 @@ import { randomUUID } from 'crypto';
 import { ChatService } from '../../ai/services/chat.service';
 import { PrismaService } from '../../../database/prisma.service';
 import { TelegramLinkService } from '../telegram-link.service';
-import { SubscriptionsService } from '../../subscriptions/subscriptions.service';
+import { UsageTrackingService } from '../../subscriptions/usage-tracking.service';
 import { CacheService } from '../../../common/cache/cache.service';
 import { BotContext } from '../types';
 import { escapeHtml, markdownToTelegramHtml } from '../helpers/format-telegram';
@@ -38,7 +38,7 @@ export class ChatHandler {
     private readonly chatService: ChatService,
     private readonly linkService: TelegramLinkService,
     private readonly prisma: PrismaService,
-    private readonly subscriptionsService: SubscriptionsService,
+    private readonly subscriptionsService: UsageTrackingService,
     private readonly cache: CacheService,
   ) {}
 

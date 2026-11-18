@@ -176,7 +176,7 @@ the body — verified against the code while planning); plan:
   `user.voiceDigestChannel`.
 - **Cost is audit-only, never billed against the user's AI limit.** Every real delivery (`'sent'`
   or `'template'`) logs a fixed 0.5-unit `voice_digest` usage entry via
-  `SubscriptionsService.recordAdditionalUsage` — regardless of whether the narration used the
+  `UsageTrackingService.recordAdditionalUsage` — regardless of whether the narration used the
   model or the deterministic fallback — so the admin AI-usage view sees it, but it never touches
   the user-facing quota.
 - **The registry keeps the core module independent of the three bot modules.**

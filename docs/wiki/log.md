@@ -388,6 +388,7 @@ Newest last within each section.
 - 2026-11-18 · [ABA-822](https://github.com/micode-ai/ai-budget-assistant/issues/860) — trip expense-share state extracted from `ExpenseDetailsCard` into `useTripExpenseShareFields`; page `features/mobile-screen-decompositions.md`.
 
 - 2026-11-18 · [ABA-823](https://github.com/micode-ai/ai-budget-assistant/issues/861) — `investmentStore` split into `investmentShared.ts` (state + account-scoping helpers) and holding/transaction/analytics action factories sharing the store's set/get, mirroring the wallet split; public API unchanged. Page touched: `features/account-switch-reload.md`.
+- 2026-11-18 · [ABA-824](https://github.com/micode-ai/ai-budget-assistant/issues/862) — `SubscriptionsService` split into `StripeBillingService`, `UsageTrackingService` and a slim `SubscriptionsService`; callers and specs repointed. Pages: `subscriptions.md` and citations in telegram-bot, admin-dashboard, voice-digest, long-receipt, inbound-e-receipts.
 
 ## Queries
 

@@ -1,6 +1,6 @@
 import { Injectable, Logger, ForbiddenException } from '@nestjs/common';
 import { WhisperService } from '../../ai/services/whisper.service';
-import { SubscriptionsService } from '../../subscriptions/subscriptions.service';
+import { UsageTrackingService } from '../../subscriptions/usage-tracking.service';
 import { ChatHandler } from './chat.handler';
 import { BotContext } from '../types';
 import { downloadFile } from '../helpers/download-file';
@@ -13,7 +13,7 @@ export class VoiceHandler {
   constructor(
     private readonly whisperService: WhisperService,
     private readonly chatHandler: ChatHandler,
-    private readonly subscriptionsService: SubscriptionsService,
+    private readonly subscriptionsService: UsageTrackingService,
   ) {}
 
   async handle(ctx: BotContext): Promise<void> {
