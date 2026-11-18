@@ -1,17 +1,18 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { NotificationsService } from './notifications.service';
+import { CacheService } from '../../common/cache/cache.service';
 import * as ni18n from './notification-i18n';
 
 @Injectable()
 export class SharedActivityService {
   private readonly logger = new Logger(SharedActivityService.name);
-  private readonly sentNotifications = new Map<string, number>();
-  private readonly DEDUP_TTL_MS = 10 * 60 * 1000;
+  private readonly DEDUP_TTL_SEC = 10 * 60;
 
   constructor(
     private readonly prisma: PrismaService,
     private readonly notifications: NotificationsService,
+    private readonly cache: CacheService,
   ) {}
 
   async notifyExpenseCreated(
@@ -22,18 +23,20 @@ export class SharedActivityService {
     currencyCode: string,
     description?: string,
   ): Promise<void> {
+    let stamped = false;
     try {
-      const lastSent = this.sentNotifications.get(expenseId);
-      if (lastSent && Date.now() - lastSent < this.DEDUP_TTL_MS) {
-        this.logger.debug(`Skipping duplicate shared notification for expense ${expenseId}`);
-        return;
-      }
-      this.sentNotifications.set(expenseId, Date.now());
-      if (this.sentNotifications.size > 10000) {
-        const cutoff = Date.now() - this.DEDUP_TTL_MS;
-        for (const [id, ts] of this.sentNotifications) {
-          if (ts < cutoff) this.sentNotifications.delete(id);
+      // Redis-backed dedup (survives deploys, shared across instances). On a Redis outage we
+      // fail open: a duplicate push is better than a lost one.
+      const dedupKey = `shared-expense-push:${expenseId}`;
+      try {
+        const first = await this.cache.setIfAbsentStrict(dedupKey, this.DEDUP_TTL_SEC);
+        if (!first) {
+          this.logger.debug(`Skipping duplicate shared notification for expense ${expenseId}`);
+          return;
         }
+        stamped = true;
+      } catch (err) {
+        this.logger.warn(`shared push dedup unavailable: ${(err as Error).message}`);
       }
       const account = await this.prisma.account.findUnique({
         where: { id: accountId },
@@ -70,6 +73,8 @@ export class SharedActivityService {
         'shared_expense',
       );
     } catch (error) {
+      // Release the stamp so an offline-retry of the same expense can still notify.
+      if (stamped) await this.cache.del(`shared-expense-push:${expenseId}`);
       this.logger.error(`Shared activity notification failed: ${error}`);
     }
   }

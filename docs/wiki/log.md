@@ -380,6 +380,7 @@ Newest last within each section.
 - 2026-11-18 · [ABA-814](https://github.com/micode-ai/ai-budget-assistant/issues/852) — `features/marketing-site.md`: `llms*.txt` and `featureList` listed 8 of 15 currencies; bank pages without a parser allowed when auto-detect-only and verified on the bank's site (Erste = ex-Santander, VeloBank absorbed Citi retail); `term:` frontmatter emits `DefinedTerm`. content-plan Wave 14: new topics PL/EN first.
 - 2026-11-18 · [ABA-815](https://github.com/micode-ai/ai-budget-assistant/issues/853) — `features/marketing-site.md`: German site positioned on "ohne Bankverbindung", Austria inside the DE pages (no `de-AT` copies), Impressum at `/de/about/#impressum`. Sparkasse/DKB/ING/George CSV steps could not be verified on the banks' sites — no pages.
 - 2026-11-18 · [ABA-816](https://github.com/micode-ai/ai-budget-assistant/issues/854) — `GuestController` held ~19 Prisma calls; moved into `ReceiptSplitGuestService` (token collapse, paid claim guard, flag dedup stay as documented). Page: `features/receipt-split.md`.
+- 2026-11-18 · [ABA-817](https://github.com/micode-ai/ai-budget-assistant/issues/855) — shared-expense push dedup moved from a process Map to Redis `setIfAbsentStrict`, stamp released on failure, fails open; new page `features/shared-expense-push.md`.
 
 ## Queries
 

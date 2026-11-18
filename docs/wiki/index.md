@@ -109,6 +109,7 @@ the section you came for — it states what must not break and why. A missing se
   chat or bot write
 - [deposit-and-discount-totals](features/deposit-and-discount-totals.md) — deposit and discount
   answers from the columns, in chat and on the Analytics tab
+- [shared-expense-push](features/shared-expense-push.md) — push to members when a shared-account expense is created; Redis dedup
 - [shared-conversations](features/shared-conversations.md) — group chat per conversation,
   mentions that silence the AI, presence, polling, the cold-start deep link
 - [display-currency-conversion](features/display-currency-conversion.md) — one display currency for
