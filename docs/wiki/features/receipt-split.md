@@ -13,6 +13,7 @@ sees a per-person status list (`sent → opened → claimed → settled`).
 - `apps/api/src/modules/receipt-split/` — the module
 - `guest.controller.ts` (`@Controller('s')`) — `GET /s/:token`, `POST /s/:token/paid`,
   `POST /s/:token/flag`, `GET /s/:token/receipt`, and the QR group routes
+- `receipt-split-guest.service.ts` — every query and rule behind those routes (token resolution, paid claim, flag dedup); the controller only parses and renders and injects no `PrismaService` (ABA-816)
 - `receipt-split.controller.ts` — the payer-facing CRUD under `/expenses/:id/receipt-split*`
 - `apps/api/src/global-prefix-exclusions.ts` — `GLOBAL_PREFIX_EXCLUDED_ROUTES`
 - `apps/api/src/common/utils/expense-filters.ts` — `EXCLUDE_SPLIT_RECEIVABLE`
@@ -130,3 +131,4 @@ have no footer.
 - **QR group split** — `groupToken` on the `seq:0` anchor row, names-only picker page, confirm
   step, `GroupQrModal`. Not a new privacy boundary: "Copy all links" already bundled every
   name+token in one blob.
+- ABA-816 — guest page queries and rules moved from `GuestController` into `ReceiptSplitGuestService`; behaviour unchanged.

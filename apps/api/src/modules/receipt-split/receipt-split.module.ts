@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ReceiptSplitController } from './receipt-split.controller';
 import { GuestController } from './guest.controller';
 import { ReceiptSplitService } from './receipt-split.service';
+import { ReceiptSplitGuestService } from './receipt-split-guest.service';
 import { DebtsModule } from '../debts/debts.module';
 
 // Module-cycle check (per the task brief): DebtsModule declares no `imports` at
@@ -15,7 +16,7 @@ import { DebtsModule } from '../debts/debts.module';
 @Module({
   imports: [DebtsModule],
   controllers: [ReceiptSplitController, GuestController],
-  providers: [ReceiptSplitService],
+  providers: [ReceiptSplitService, ReceiptSplitGuestService],
   exports: [ReceiptSplitService],
 })
 export class ReceiptSplitModule {}

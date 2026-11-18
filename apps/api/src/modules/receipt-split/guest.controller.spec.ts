@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { NotFoundException } from '@nestjs/common';
 import { GuestController } from './guest.controller';
+import { ReceiptSplitGuestService } from './receipt-split-guest.service';
 import { renderGuestPage, buildGuestPayLink, GuestPageModel, GuestPaymentStatus } from './helpers/guest-page';
 import { getGuestPageStrings } from './helpers/guest-page-i18n';
 import { UsersService } from '../users/users.service';
@@ -99,7 +100,7 @@ function buildController(
     sendToUser: jest.fn().mockResolvedValue(true),
   };
 
-  const controller = new GuestController(prisma, notificationsService);
+  const controller = new GuestController(new ReceiptSplitGuestService(prisma, notificationsService));
   return { controller, prisma, notificationsService };
 }
 
@@ -616,7 +617,7 @@ describe('Legacy pair clearing on PUT /users/me/payment-methods closes the stale
 
     const usersService = new UsersService(prisma, { handleOwnerDeparture: jest.fn() } as any);
     const notificationsService: any = { sendToUser: jest.fn().mockResolvedValue(true) };
-    const guestController = new GuestController(prisma, notificationsService);
+    const guestController = new GuestController(new ReceiptSplitGuestService(prisma, notificationsService));
 
     // Step 1: the payer adds 'blik' via the new list editor and saves — the legacy
     // pair is cleared server-side as part of this same call.
@@ -927,7 +928,7 @@ function buildGroupController(
   };
 
   const notificationsService: any = { sendToUser: jest.fn() };
-  const controller = new GuestController(prisma, notificationsService);
+  const controller = new GuestController(new ReceiptSplitGuestService(prisma, notificationsService));
   return { controller, prisma };
 }
 
