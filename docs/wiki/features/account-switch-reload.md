@@ -20,7 +20,7 @@ previous account's amounts after a switch.
 - `apps/mobile/src/stores/hydrateTransactions.ts`, `expenseSync.ts` (`pullAndMergeExpenses`),
   `incomeStore.ts` (`loadIncomes`) — its users
 - `apps/mobile/src/stores/walletStore.ts` (`_walletAccountId`, `loadWallet`), `walletSync.ts`
-- `apps/mobile/src/stores/investmentStore.ts` (`claimAccount`, `switchedAway`)
+- `apps/mobile/src/stores/investmentShared.ts` (`claimAccount`, `switchedAway`; the actions live in `investment{Holding,Transaction,Analytics}Actions.ts`, composed by `investmentStore.ts`)
 
 ## Key concepts
 

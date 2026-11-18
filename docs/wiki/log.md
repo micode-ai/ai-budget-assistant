@@ -387,6 +387,8 @@ Newest last within each section.
 - 2026-11-18 · [ABA-821](https://github.com/micode-ai/ai-budget-assistant/issues/859) — `features/display-currency-conversion.md`: `ExchangeRateService` caches in Redis (`fx:rates:{base}`) instead of an in-memory Map; spec added
 - 2026-11-18 · [ABA-822](https://github.com/micode-ai/ai-budget-assistant/issues/860) — trip expense-share state extracted from `ExpenseDetailsCard` into `useTripExpenseShareFields`; page `features/mobile-screen-decompositions.md`.
 
+- 2026-11-18 · [ABA-823](https://github.com/micode-ai/ai-budget-assistant/issues/861) — `investmentStore` split into `investmentShared.ts` (state + account-scoping helpers) and holding/transaction/analytics action factories sharing the store's set/get, mirroring the wallet split; public API unchanged. Page touched: `features/account-switch-reload.md`.
+
 ## Queries
 
 - 2026-09-29 — why no merge suggestion for bank push + later receipt scan → `features/bank-notification-capture.md` (Known gaps; corrected a false claim)
