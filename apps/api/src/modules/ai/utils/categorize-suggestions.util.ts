@@ -8,6 +8,95 @@
  * `unassigned`, for the user to decide.
  */
 
+import { createHash } from 'crypto';
+import type { CategorizeSuggestionGroup } from '@budget/shared-types';
+
+/**
+ * Shared by CategorizeSuggestionsService (expenses) and
+ * CategorizeIncomeSuggestionsService (incomes): the quota/cache keys, the
+ * daily-limit guard, the language names and the group assembly live here once.
+ * A new categorization target should reuse these, not copy a service.
+ */
+
+export const LANGUAGE_NAMES: Record<string, string> = {
+  en: 'English', pl: 'Polish', de: 'German', es: 'Spanish', fr: 'French',
+  ru: 'Russian', ua: 'Ukrainian', be: 'Belarusian', nl: 'Dutch',
+  pt: 'European Portuguese', br: 'Brazilian Portuguese',
+};
+
+/** NaN-guarded; default 5 passes per account per day. */
+export function resolveDailyLimit(raw: string | undefined): number {
+  const parsed = Number.parseInt(raw ?? '', 10);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 5;
+}
+
+/** One daily account-level counter shared by every categorization target. */
+export function categorizeQuotaKey(accountId: string): string {
+  return `aicat:${accountId}:${new Date().toISOString().slice(0, 10)}`;
+}
+
+/**
+ * Keyed on exactly what the model saw: the candidates and the category list.
+ * `prefix` keeps each target's cache namespace distinct ("aicatres", "aicatinc").
+ */
+export function categorizeResultKey(
+  prefix: string,
+  accountId: string,
+  candidateIds: string[],
+  categories: Array<{ id: string; name: string }>,
+): string {
+  const input = JSON.stringify([
+    [...candidateIds].sort(),
+    categories.map((c) => `${c.id}:${c.name}`).sort(),
+  ]);
+  return `${prefix}:${accountId}:${createHash('sha1').update(input).digest('hex')}`;
+}
+
+/** A model answer expressed in candidate ids, so it survives being cached. */
+export interface CategorizeModelOutcome {
+  assignments: Array<[id: string, categoryId: string]>;
+  proposals: Array<{ name: string; ids: string[] }>;
+}
+
+/** Turns index-based validated output into an id-based, cacheable outcome. */
+export function toModelOutcome(
+  validated: ValidatedCategorization,
+  rows: Array<{ id: string }>,
+): CategorizeModelOutcome {
+  return {
+    assignments: [...validated.assignments].map(([index, categoryId]) => [rows[index].id, categoryId]),
+    proposals: validated.proposals.map((p) => ({ name: p.name, ids: p.indexes.map((i) => rows[i].id) })),
+  };
+}
+
+/** Merges a model outcome into `groups`, marking covered ids in `claimed`. */
+export function mergeOutcomeIntoGroups(
+  groups: Map<string, CategorizeSuggestionGroup>,
+  claimed: Set<string>,
+  outcome: CategorizeModelOutcome | null,
+  validIds: Set<string>,
+): void {
+  for (const [id, categoryId] of outcome?.assignments ?? []) {
+    if (!validIds.has(categoryId)) continue;
+    const key = `c:${categoryId}`;
+    const g = groups.get(key) ?? { categoryId, proposedName: null, expenseIds: [] };
+    g.expenseIds.push(id);
+    groups.set(key, g);
+    claimed.add(id);
+  }
+  (outcome?.proposals ?? []).forEach((p, i) => {
+    groups.set(`p:${i}`, { categoryId: null, proposedName: p.name, expenseIds: [...p.ids] });
+    p.ids.forEach((id) => claimed.add(id));
+  });
+}
+
+/** Existing-category groups first, proposed-name groups after (stable). */
+export function sortedGroups(groups: Map<string, CategorizeSuggestionGroup>): CategorizeSuggestionGroup[] {
+  return [...groups.entries()]
+    .sort(([a], [b]) => (a.startsWith('c:') === b.startsWith('c:') ? 0 : a.startsWith('c:') ? -1 : 1))
+    .map(([, g]) => g);
+}
+
 export const MAX_NEW_CATEGORIES = 5;
 /** A "new category" for one expense is exactly the sprawl this feature exists to prevent. */
 export const MIN_EXPENSES_PER_NEW_CATEGORY = 2;

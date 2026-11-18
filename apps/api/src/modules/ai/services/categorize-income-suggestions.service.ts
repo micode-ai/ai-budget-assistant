@@ -1,4 +1,3 @@
-import { createHash } from 'crypto';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
@@ -16,7 +15,15 @@ import { buildCategorizeSuggestionsFormat } from './categorize-suggestions.servi
 import {
   MAX_NEW_CATEGORIES,
   MIN_EXPENSES_PER_NEW_CATEGORY,
+  LANGUAGE_NAMES,
+  categorizeQuotaKey,
+  categorizeResultKey,
+  mergeOutcomeIntoGroups,
+  resolveDailyLimit,
+  sortedGroups,
+  toModelOutcome,
   validateCategorization,
+  type CategorizeModelOutcome as ModelOutcome,
 } from '../utils/categorize-suggestions.util';
 
 const MAX_CANDIDATES = 100;
@@ -28,27 +35,10 @@ const DAY_SECONDS = 24 * 60 * 60;
  */
 const RESULT_TTL_SECONDS = 30 * 60;
 
-/** A model answer expressed in income ids, so it survives being cached. */
-interface ModelOutcome {
-  assignments: Array<[incomeId: string, categoryId: string]>;
-  proposals: Array<{ name: string; ids: string[] }>;
-}
-
-const LANGUAGE_NAMES: Record<string, string> = {
-  en: 'English', pl: 'Polish', de: 'German', es: 'Spanish', fr: 'French',
-  ru: 'Russian', ua: 'Ukrainian', be: 'Belarusian', nl: 'Dutch',
-  pt: 'European Portuguese', br: 'Brazilian Portuguese',
-};
-
-/**
- * NaN-guarded; default 5 passes per account per day. Reads the SAME env var
- * as CategorizeSuggestionsService — this is a shared account-level daily
- * ceiling, not a second one (docs/contracts/categorize-uncategorized-incomes.md).
- */
-function resolveDailyLimit(raw: string | undefined): number {
-  const parsed = Number.parseInt(raw ?? '', 10);
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : 5;
-}
+// Quota/cache keys, daily limit (the SAME env var and counter as the expense
+// service — one shared account-level ceiling, see
+// docs/contracts/categorize-uncategorized-incomes.md), language names and group
+// assembly are shared via utils/categorize-suggestions.util.
 
 /**
  * Proposes categories for an account's uncategorized incomes. READ-ONLY: it
@@ -106,7 +96,7 @@ export class CategorizeIncomeSuggestionsService {
     }));
 
     const limit = resolveDailyLimit(process.env.AI_CATEGORIZE_MAX_PER_DAY);
-    const used = (await this.cache.get<number>(this.quotaKey(accountId))) ?? 0;
+    const used = (await this.cache.get<number>(categorizeQuotaKey(accountId))) ?? 0;
     const empty: CategorizeIncomeSuggestionsResponse = {
       incomes, groups: [], unassigned: [], skippedEncrypted,
       remainingToday: Math.max(0, limit - used), limitReached: false,
@@ -129,31 +119,18 @@ export class CategorizeIncomeSuggestionsService {
     ): CategorizeIncomeSuggestionsResponse => {
       const groups = new Map<string, CategorizeSuggestionGroup>();
       const claimed = new Set<string>();
-      for (const [incomeId, categoryId] of outcome?.assignments ?? []) {
-        if (!validIds.has(categoryId)) continue;
-        const key = `c:${categoryId}`;
-        const g = groups.get(key) ?? { categoryId, proposedName: null, expenseIds: [] };
-        g.expenseIds.push(incomeId);
-        groups.set(key, g);
-        claimed.add(incomeId);
-      }
-      (outcome?.proposals ?? []).forEach((p, i) => {
-        groups.set(`p:${i}`, { categoryId: null, proposedName: p.name, expenseIds: [...p.ids] });
-        p.ids.forEach((id) => claimed.add(id));
-      });
+      mergeOutcomeIntoGroups(groups, claimed, outcome, validIds);
 
       this.logger.log(`[CategorizeIncome] ${log}`);
       return {
         ...empty,
         ...extra,
-        groups: [...groups.entries()]
-          .sort(([a], [b]) => (a.startsWith('c:') === b.startsWith('c:') ? 0 : a.startsWith('c:') ? -1 : 1))
-          .map(([, g]) => g),
+        groups: sortedGroups(groups),
         unassigned: rows.filter((r) => !claimed.has(r.id)).map((r) => r.id),
       };
     };
 
-    const resultKey = this.resultKey(accountId, rows.map((r) => r.id), categories);
+    const resultKey = categorizeResultKey('aicatinc', accountId, rows.map((r) => r.id), categories);
     const cached = await this.cache.get<ModelOutcome>(resultKey);
     if (cached) {
       return finish(cached, {}, `cached candidates=${rows.length}`);
@@ -170,13 +147,10 @@ export class CategorizeIncomeSuggestionsService {
       this.logger.warn(`[CategorizeIncome] ai_error: ${reason}`);
       return finish(null, {}, `ai_error candidates=${rows.length}`);
     }
-    await this.cache.set(this.quotaKey(accountId), used + 1, DAY_SECONDS);
+    await this.cache.set(categorizeQuotaKey(accountId), used + 1, DAY_SECONDS);
 
     const validated = validateCategorization(raw, rows.length, categories);
-    const outcome: ModelOutcome = {
-      assignments: [...validated.assignments].map(([index, categoryId]) => [rows[index].id, categoryId]),
-      proposals: validated.proposals.map((p) => ({ name: p.name, ids: p.indexes.map((i) => rows[i].id) })),
-    };
+    const outcome = toModelOutcome(validated, rows);
     await this.cache.set(resultKey, outcome, RESULT_TTL_SECONDS);
 
     return finish(
@@ -238,23 +212,5 @@ Rules:
     const content = response.choices[0]?.message?.content;
     if (!content) throw new Error('empty model response');
     return JSON.parse(content);
-  }
-
-  /** Keyed on exactly what the model saw: the candidates and the category list. */
-  private resultKey(accountId: string, candidateIds: string[], categories: Array<{ id: string; name: string }>): string {
-    const input = JSON.stringify([
-      [...candidateIds].sort(),
-      categories.map((c) => `${c.id}:${c.name}`).sort(),
-    ]);
-    // "aicatinc" infix keeps this namespace distinct from the expense
-    // service's "aicatres" result cache even though the hashed content
-    // already differs — never a collision, even by coincidence.
-    return `aicatinc:${accountId}:${createHash('sha1').update(input).digest('hex')}`;
-  }
-
-  private quotaKey(accountId: string): string {
-    // Shared with CategorizeSuggestionsService on purpose — one daily
-    // account-level counter across both entity types, not a second one.
-    return `aicat:${accountId}:${new Date().toISOString().slice(0, 10)}`;
   }
 }

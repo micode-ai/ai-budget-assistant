@@ -275,3 +275,7 @@ language by design; whether the reviewing member's language should win is open.
 ABA-595 — extended the pass to incomes: `POST /ai/categorize-uncategorized-income`,
 `PATCH /incomes/bulk`, and an `entityType` prop threaded through the whole client component tree
 (see **Incomes** above for the fork/parametrize split).
+
+## Shared machinery (ABA-819)
+
+The expense and income services share `apps/api/src/modules/ai/utils/categorize-suggestions.util.ts`: `LANGUAGE_NAMES`, `resolveDailyLimit`, `categorizeQuotaKey` (one daily counter for both), `categorizeResultKey(prefix, ...)` (prefixes `aicatres` / `aicatinc` keep cache namespaces apart), `toModelOutcome`, `mergeOutcomeIntoGroups`, `sortedGroups`. A new categorization target reuses these; only its prompt and pre-passes belong in its own service.
