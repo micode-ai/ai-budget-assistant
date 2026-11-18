@@ -42,6 +42,15 @@ So funktioniert es im Detail, weil die Datenschutz-Seite hier wichtig ist. Wenn 
 
 Die Freigabe erfolgt immer **pro Bank**, nicht "alle Benachrichtigungen auf diesem Handy". Die geprüfte Liste umfasst rund 43 Banking-Apps in acht europäischen Märkten (Polen, Deutschland, Österreich, Spanien, Frankreich, die Niederlande, Ukraine, Russland und Belarus). Ist deine Bank nicht auf der Liste, erkennt ein allgemeiner, bankunabhängiger Parser trotzdem die typische Form einer Zahlungsbenachrichtigung.
 
+**Welche Banking-Apps aus Deutschland und Österreich sind auf der Liste?**
+
+| Land | Banking-Apps |
+|---|---|
+| Deutschland | Deutsche Bank, Commerzbank, comdirect, DKB, ING (Deutschland), N26, Sparkasse, VR Banking (Volksbanken Raiffeisenbanken) |
+| Österreich | George (Erste Bank und Sparkassen), N26 |
+
+Bank Austria und die österreichischen Raiffeisenbanken stehen noch nicht auf der Liste. Ihre Benachrichtigungen gehen an den allgemeinen Parser, der eine typische Formulierung wie "Kartenzahlung 45,99 € bei REWE" erkennt, aber nicht für jede Bank getestet ist. Prüfe die ersten erfassten Ausgaben deshalb kurz von Hand.
+
 Die App bereinigt außerdem Händlernamen zu etwas Lesbarem - aus einer rohen Benachrichtigung wie "REWE SAGT DANKE 4521" wird in der Ausgabenliste einfach "REWE". Eine Kategorie wird automatisch anhand des Händlers vorgeschlagen, und korrigierst du diese Kategorie einmal, merkt sich die App diese Korrektur und wendet sie beim nächsten Einkauf am selben Ort wieder an.
 
 **Auch die Duplikat-Erkennung greift hier.** Landet derselbe Einkauf, der schon per Benachrichtigung erfasst wurde, später in einem als CSV importierten Kontoauszug, erkennt die App, dass es sich um dieselbe Transaktion handelt, und schlägt eine Zusammenführung vor statt einer doppelten Zählung. Ohne diese Prüfung könnten sich die automatische Erfassung und der Kontoauszug-Import gegenseitig verdoppeln.

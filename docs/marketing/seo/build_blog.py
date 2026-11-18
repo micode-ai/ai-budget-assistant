@@ -369,7 +369,7 @@ PAIR_TO_HELP = {
     "expense-map": "expense-map", "split-bill": "receipt-split", "receipts": "voice-and-receipt",
     "auto-capture": "expenses-and-income", "school": "budgets",
     "tax-refund": "savings-goals",
-    **{f"import-{b}": "bank-import" for b in ("revolut", "mbank", "pko", "ing", "millennium", "pekao", "alior", "erste", "velobank")},
+    **{f"import-{b}": "bank-import" for b in ("revolut", "mbank", "pko", "ing", "millennium", "pekao", "alior", "erste", "velobank", "n26")},
 }
 
 # Pillar -> its cluster children. Single source of truth for BOTH the generated pillar
@@ -380,7 +380,8 @@ CLUSTERS = {
     "budget": ["shared-budget", "envelope", "rule-503020", "categories", "family", "ai-budget", "school", "irregular-income"],
     "expenses": ["bank-import", "best-apps", "expense-map", "auto-capture", "receipts", "split-bill", "app-abandonment", "switch-apps", "excel-budget", "free-app",
                  "vs-monefy", "vs-wallet", "vs-ynab", "vs-moneymanager",
-                 "import-revolut", "import-mbank", "import-pko", "import-ing", "import-millennium", "import-pekao", "import-alior", "import-erste", "import-velobank"],
+                 "import-revolut", "import-mbank", "import-pko", "import-ing", "import-millennium", "import-pekao", "import-alior", "import-erste", "import-velobank", "import-n26",
+                 "no-bank-link"],
     "saving": ["groceries", "emergency-fund", "subscriptions", "debt", "inflation", "wrapped", "inflation-shield", "rate-alert", "multi-currency", "christmas", "black-friday", "tax-refund", "live-on-2000"],
 }
 def category_of(pair):
@@ -840,6 +841,7 @@ def foot(lang, src="blog"):
             f'<div class="f-links"><a href="{blog_url(lang)}">{t["blog"]}</a>'
             f'<a href="/help/{lang}/">{HELP_LABELS[lang]}</a>'
             f'<a href="{about_url(lang)}">{ABOUT_LABELS[lang]}</a>'
+            + (f'<a href="{about_url(lang)}#impressum">Impressum</a>' if lang == "de" else '') +
             f'<a href="{dev_url(lang)}">{DEV_LABELS[lang]}</a>'
             f'<a href="{priv_url(lang)}">{LEGAL_LABELS[lang][0]}</a>'
             f'<a href="{terms_url(lang)}">{LEGAL_LABELS[lang][1]}</a>'

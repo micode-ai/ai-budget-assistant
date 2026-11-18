@@ -685,6 +685,17 @@ PRICING = {
  },
 }
 
+# German-language Impressum (DDG section 5 in Germany, ECG section 5 in Austria). The details are the
+# ones already published in the Terms of Service (docs/marketing/landing/legal/*/terms.html).
+IMPRESSUM_DE = (
+    "<h2 id=\"impressum\">Impressum</h2>"
+    "<p><strong>MICODE Sp. z o.o.</strong><br>ul. Jana Heweliusza 11/811<br>80-890 Gdańsk, Polen</p>"
+    "<p>Vertretungsberechtigt: Mikhail Peraviortkin</p>"
+    "<p>E-Mail: <a href=\"mailto:perevertkinma@gmail.com\">perevertkinma@gmail.com</a></p>"
+    "<p>Eingetragen im polnischen Landesgerichtsregister (Krajowy Rejestr Sądowy, KRS) unter der Nummer 0001108050<br>"
+    "Steuernummer (NIP): 5833510147<br>REGON: 528740633</p>"
+)
+
 ABOUT = {
  "en": ("About - AI Budget Assistant",
         "About AI Budget Assistant, a personal and family finance app with an AI assistant, built by MiCode Sp. z o.o.",
@@ -706,7 +717,8 @@ ABOUT = {
         "<h2>Was ist AI Budget Assistant</h2><p>AI Budget Assistant ist eine App für persönliche und Familienfinanzen, die Ausgaben, Budgets, Sparziele, Schulden und Bankimport an einem Ort vereint, mit einem KI-Assistenten, der die mühsame Dateneingabe für dich übernimmt. Erfasse Ausgaben per Sprache oder Beleg-Foto, stelle Fragen in normaler Sprache und führe ein gemeinsames Budget mit deiner Familie in Echtzeit. Verfügbar auf Android und im Web, in 11 Sprachen.</p>"
         "<h2>Wer dahintersteht</h2><p>Die App wird von <strong>MiCode Sp. z o.o.</strong> entwickelt und betrieben, einem Softwareunternehmen aus Polen (siehe <a href=\"https://mi-code.pl/\">mi-code.pl</a>). Wir bauen praktische, datenschutzfreundliche Werkzeuge, die beim Geldmanagement ohne Tabellen helfen.</p>"
         "<h2>Unser Ansatz</h2><p>Wir konzentrieren uns auf drei Dinge: müheloses Erfassen von Daten mit KI, gemeinsames Budgetieren der Familie in Echtzeit und den Schutz deiner Finanzdaten. Die Kernfunktionen sind kostenlos; erweiterte Werkzeuge gibt es mit Pro.</p>"
-        f"<h2>Kontakt</h2><p>Fragen oder Feedback: <a href=\"mailto:perevertkinma@gmail.com\">perevertkinma@gmail.com</a>. Hol dir die App bei <a href=\"{play_url('body', 'de')}\">Google Play</a> oder öffne die <a href=\"https://app.ai-budget.pl\">Web-Version</a>. Lies unseren <a href=\"/blog/de/\">Blog</a> mit Budget-Ratgebern.</p>"),
+        f"<h2>Kontakt</h2><p>Fragen oder Feedback: <a href=\"mailto:perevertkinma@gmail.com\">perevertkinma@gmail.com</a>. Hol dir die App bei <a href=\"{play_url('body', 'de')}\">Google Play</a> oder öffne die <a href=\"https://app.ai-budget.pl\">Web-Version</a>. Lies unseren <a href=\"/blog/de/\">Blog</a> mit Budget-Ratgebern.</p>"
+        + IMPRESSUM_DE),
  "es": ("Acerca de - AI Budget Assistant",
         "Acerca de AI Budget Assistant, una app de finanzas personales y familiares con asistente de IA, de MiCode Sp. z o.o.",
         "Acerca de AI Budget Assistant",
@@ -877,11 +889,11 @@ C = {
    "rights": "All rights reserved.",
  },
  "de": {
-   "title": "AI Budget Assistant - Haushaltsbuch mit KI",
-   "desc": "Haushaltsbuch-App mit KI: Ausgaben per Sprache oder Beleg-Foto erfassen, Budgets und Sparen im Griff, gemeinsam mit der Familie. Kostenlos starten.",
+   "title": "Haushaltsbuch-App mit KI, ohne Bankverbindung | AI Budget",
+   "desc": "Haushaltsbuch-App mit KI, ohne Bankzugang: Ausgaben per Sprache, Kassenbon-Foto oder CSV erfassen, Budgets mit der Familie teilen. Kostenlos starten.",
    "nav_blog": "Blog", "nav_login": "Anmelden",
-   "hero_h1": "Haushaltsbuch mit KI-Assistent",
-   "hero_sub": "Ausgaben, Budgets, Sparziele und gemeinsame Familienfinanzen in einer App. Die KI übernimmt die Fleißarbeit. Kostenlos starten.",
+   "hero_h1": "Haushaltsbuch mit KI-Assistent, ohne Bankverbindung",
+   "hero_sub": "Ausgaben, Budgets, Sparziele und gemeinsame Familienfinanzen in einer App. Du gibst keine Bank-Zugangsdaten heraus, die KI übernimmt trotzdem die Fleißarbeit. Kostenlos starten.",
    "cta_primary": "App öffnen", "cta_secondary": "Bei Google Play laden",
    "intro_title": "Ausgaben im Blick, ganz ohne Excel",
    "intro": "AI Budget Assistant ist eine Haushaltsbuch-App, die Ausgaben, Budgets, Sparziele, Schulden und Bankimport an einem Ort vereint. Statt jeden Beleg manuell einzutippen, erfasst du eine Ausgabe per Sprache oder Foto, und die KI beantwortet Fragen zu deinen Finanzen in normaler Sprache. Führe dein Budget allein oder gemeinsam mit der Familie, in Echtzeit, auf Smartphone, Tablet und im Web.",
@@ -1244,7 +1256,7 @@ def og_default(lang):
     return f"{SITE}/{sec}/{lang}/assets/og-default.png"
 
 BLOG_SRC = os.path.join(ROOT, "..", "seo")
-FROM_BLOG_PAIRS = ["black-friday", "christmas", "tax-refund", "live-on-2000", "budget", "split-bill", "auto-capture", "receipts", "ai-budget", "inflation", "expense-map", "family", "shared-budget", "bank-import", "import-revolut", "import-mbank", "import-pko", "import-ing", "import-millennium", "import-pekao", "import-alior", "import-erste", "import-velobank", "ai-bank-import", "best-apps", "vs-monefy", "vs-wallet", "vs-ynab", "vs-moneymanager", "saving"]  # curated homepage -> article internal links (every list item renders; no truncation). USP + high-intent topics first. The seasonal `christmas` and `black-friday` are included, at the front, on the owner's explicit request (every blog article should appear here); `school` stays absent for now.
+FROM_BLOG_PAIRS = ["black-friday", "christmas", "tax-refund", "live-on-2000", "budget", "split-bill", "auto-capture", "receipts", "ai-budget", "inflation", "expense-map", "family", "shared-budget", "bank-import", "import-revolut", "import-mbank", "import-pko", "import-ing", "import-millennium", "import-pekao", "import-alior", "import-erste", "import-velobank", "import-n26", "no-bank-link", "ai-bank-import", "best-apps", "vs-monefy", "vs-wallet", "vs-ynab", "vs-moneymanager", "saving"]  # curated homepage -> article internal links (every list item renders; no truncation). USP + high-intent topics first. The seasonal `christmas` and `black-friday` are included, at the front, on the owner's explicit request (every blog article should appear here); `school` stays absent for now.
 
 def _blog_front(path):
     raw = open(path, encoding="utf-8").read()
@@ -1402,6 +1414,7 @@ def footer_html(lang):
             f'<a href="{pricing_url(lang)}">{PRICING_LABELS[lang]}</a>'
             f'<a href="/help/{lang}/">{HELP_LABELS[lang]}</a>'
             f'<a href="{about_url(lang)}">{ABOUT_LABELS[lang]}</a>'
+            + (f'<a href="{about_url(lang)}#impressum">Impressum</a>' if lang == "de" else '') +
             f'<a href="{dev_url(lang)}">{DEV_LABELS[lang]}</a>'
             f'<a href="{priv_url(lang)}">{pl}</a><a href="{terms_url(lang)}">{tl}</a>'
             f'<a href="{cookies_url(lang)}">{cl}</a>'

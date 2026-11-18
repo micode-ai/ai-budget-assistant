@@ -233,6 +233,20 @@ Wave 14 rules:
 - **A bank page needs export steps verified on the bank's own site**, with the month of the check in the text. No verified steps, no page: Credit Agricole, BNP Paribas and Nest Bank were researched on 2026-11-18 and skipped, because the retail menu paths could not be confirmed. A bank without a parser is written as "download, then auto-detect", never as a row in the import picker (`scripts/check-blog-bank-claims.py` enforces it).
 - **Definitions for answer engines** live inside the pillars, not on glossary pages: a question H2 ("Czym jest …?"), then a 40–55-word paragraph that opens with the term, and a `term:` frontmatter key that makes `build_blog.py` emit `DefinedTerm` JSON-LD (05, 06, 08, 16).
 
+## Wave 15 — Germany and Austria (ABA-815, 2026-11-18)
+
+| # | Pair | Languages | Angle |
+|---|---|---|---|
+| 49 | `no-bank-link` | de only | "Haushaltsbuch-App ohne Bankverbindung": what works without account linking and what does not, plus a dated comparison with Finanzguru, Outbank and MoneyMoney from their own sites. It replaces separate `vs-finanzguru`/`vs-outbank` pages, which would have been thin |
+| 50 | `import-n26` | de only | N26 account-activity CSV (web banking) → auto-detect; steps from N26's help, English menu names flagged as such |
+| 19, 20, 46 | `auto-capture`, `receipts`, `tax-refund` | de edits | DACH bank-app table for notification capture; Austrian Belegerteilungspflicht and the e-Beleg since 2026-10-01; Arbeitnehmerveranlagung (five years, FinanzOnline, antragslos) |
+
+Wave 15 notes:
+- **Austria is served inside the German pages**, not by `de-AT` copies, which would be near-duplicates.
+- **Skipped for lack of verified export steps on the banks' own sites (2026-11-18):** Sparkasse (each Sparkasse is its own institute), DKB (only PDF export confirmed), ING Deutschland, George (only George Business documents the CSV dialog). Re-check before writing any of them.
+- **Competitor facts are dated and vendor-sourced.** Finanzguru's site does not describe manual bookings, and its Plus price varies by user; never write "Finanzguru needs a bank connection" as a fact.
+- The German landing title and H1 lead with "ohne Bankverbindung", and `/de/about/#impressum` is linked from every German footer.
+
 ## Article conventions (per piece)
 - Frontmatter: `title` (<=60, keyword), `meta_description` (<=155), `target_keyword`, `slug`, `pair`, `lang`, **`date`** (`YYYY-MM-DD`).
 - **`date` is REQUIRED on every new file and is the publication date** (ABA-394). It drives the newest-first order of the blog index, the visible date on each card, and `datePublished` in the article's JSON-LD. It is deliberately NOT derived from git: `git_date()` is the *last-commit* date, so a later edit to an old article would silently promote it to the top of the index and rewrite its publication date. Use the same `date` in all 9 language files of a topic.

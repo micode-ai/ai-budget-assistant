@@ -53,6 +53,12 @@ Behandeln Sie sie als einmalige Einnahme, nicht als Teil des Gehalts. Das laufen
 
 Das hängt vom Finanzamt, vom Bundesland und vom Zeitpunkt Ihrer Abgabe ab. Allgemein gilt: Wer früh eine vollständige, korrekte Steuererklärung abgibt, bekommt sein Geld meist früher. Fristen und Bearbeitungszeiten prüfen Sie bitte auf den offiziellen Seiten von Finanzamt oder ELSTER, nicht in einem Blogartikel, auch nicht in diesem.
 
+### Und in Österreich: die Arbeitnehmerveranlagung
+
+In Österreich heißt die Steuererklärung für Angestellte Arbeitnehmerveranlagung. Laut oesterreich.gv.at hast du dafür fünf Jahre Zeit: 2026 sind also noch die Jahre 2021 bis 2025 offen. Eingereicht wird sie am schnellsten elektronisch über FinanzOnline. Hast du nur Lohneinkommen und reichst nichts ein, kann das Finanzamt unter bestimmten Bedingungen eine antragslose Arbeitnehmerveranlagung durchführen und dir eine Gutschrift auch ohne Antrag überweisen; du kannst innerhalb der fünf Jahre trotzdem selbst eine Veranlagung einreichen. Die genauen Voraussetzungen stehen auf oesterreich.gv.at.
+
+Für dein Budget gilt dasselbe wie in Deutschland: Plane die Gutschrift erst ein, wenn sie auf dem Konto ist, und teile sie dann bewusst auf.
+
 *Dieser Artikel enthält allgemeine Budgetierungs-Informationen und ist keine Steuerberatung.*
 
 Ziele, Schulden und Budgets können Sie ohne Karte im Browser auf [ai-budget.pl](https://ai-budget.pl) testen oder die Android-App bei [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant) installieren.

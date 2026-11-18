@@ -52,6 +52,12 @@ Angenommen, du kaufst jede Woche beim gleichen Rewe ein. Nach ein paar Monaten K
 
 Das gehört klar gesagt, statt mehr zu versprechen, als die App leistet. Ein Scanner braucht einen lesbaren Bon. Ein handschriftlich nachgetragener Rabatt, verblasster Thermodruck oder ein in der Tasche zerknüllter Bon, den die Kasse kaum noch richtig gedruckt hat, kann falsch oder gar nicht gelesen werden, und dann korrigierst du die Daten selbst. Eine manuell eingetippte Ausgabe ohne Bon-Foto hat keine Posten und trägt deshalb überhaupt nichts zur Preishistorie deiner Produkte bei, auch wenn Betrag und Kategorie stimmen. Die App verwaltet keine Garantien für gekaufte Geräte, hilft nicht bei der Mehrwertsteuererstattung und verbindet sich mit keinem behördlichen E-Bon-System. Sie macht genau eine Sache: Sie hält fest, was du gekauft hast und wofür wie viel.
 
+## Österreich: Belegpflicht und elektronischer Beleg
+
+In Österreich muss jedes Unternehmen für Barzahlungen ab dem ersten Umsatz einen Beleg ausstellen (Belegerteilungspflicht, siehe usp.gv.at). Seit 1. Oktober 2026 dürfen Betriebe mit Registrierkasse den Beleg auch elektronisch bereitstellen, zum Beispiel auf einem Bildschirm oder per QR-Code; einen Papierbeleg kannst du weiterhin verlangen.
+
+Für den Scanner heißt das: Ein Papierbeleg wird wie jeder andere Bon fotografiert. Einen elektronischen Beleg speicherst du als PDF oder Screenshot und scannst ihn aus der Galerie oder als PDF. Die App liest dabei das Bild bzw. den Text, nicht den QR-Code selbst.
+
 ## Fang an mit dem zu scannen, was ohnehin schon in deiner Tasche liegt
 
 Du musst dafür keine Gewohnheit ändern. Der Bon landet ohnehin in der Tasche oder im Einkaufskorb an der Kasse. Statt ihn wegzuwerfen, macht ein Foto in der App oder an einen Bot geschickt daraus Daten, die sich Monat für Monat selbst aufbauen, ohne Excel-Tabelle und ohne dass du dir Preise merken musst.

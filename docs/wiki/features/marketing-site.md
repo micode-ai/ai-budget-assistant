@@ -263,6 +263,13 @@ export steps must be verified on the bank's own site, with the month of the chec
 Erste Bank Polska is the former Santander Bank Polska (santander.pl redirects to erste.pl), and
 Citi Handlowy's retail clients moved to VeloBank in 2026, so neither old brand gets its own page.
 
+**Germany and Austria ([ABA-815](https://github.com/micode-ai/ai-budget-assistant/issues/853)).** The German site is positioned on
+"ohne Bankverbindung" (landing title and H1, article `no-bank-link`), because the big German apps
+(Finanzguru, Outbank, MoneyMoney) are built around account linking and this app never links one.
+Austria is served by sections inside the German pages, not by `de-AT` copies. The German footer
+links `/de/about/#impressum` (`IMPRESSUM_DE` in `build_landing.py`, the same company details as the
+Terms; the blog footer adds the link for `de` only, and the help center inherits it).
+
 **Definitions for answer engines ([ABA-814](https://github.com/micode-ai/ai-budget-assistant/issues/852)).** A pillar can carry a
 `term:` frontmatter key. `build_blog.py` (`extract_definition`) then takes the first paragraph that
 opens with the term, which sits right under a "Czym jest …?" H2 and runs 40–55 words, and emits
@@ -308,4 +315,4 @@ ABA-686 (diagnosis of the decline: site-wide ranking loss from 2026-09-15, follo
 ABA-688 (weekly Search Console API snapshot per section with a drop alert) ·
 ABA-689 (per-section sitemaps submitted separately) · ABA-690 (site changes listed next to the weekly series). ·
 ABA-710 (developers page, footer link and llms entry for the public API) ·
-ABA-716 (six shipped features added to `FEATURES_EN`; Organization `founder` and Instagram `sameAs`). · [ABA-739](https://github.com/micode-ai/ai-budget-assistant/issues/777) (search-intent titles, Play short descriptions) · [ABA-740](https://github.com/micode-ai/ai-budget-assistant/issues/778) (blog bank-claims check) · [ABA-814](https://github.com/micode-ai/ai-budget-assistant/issues/852) (all 15 currencies in `llms.txt`, verified Erste and VeloBank pages, `DefinedTerm` definitions, Wave 14 language-scope rule)
+ABA-716 (six shipped features added to `FEATURES_EN`; Organization `founder` and Instagram `sameAs`). · [ABA-739](https://github.com/micode-ai/ai-budget-assistant/issues/777) (search-intent titles, Play short descriptions) · [ABA-740](https://github.com/micode-ai/ai-budget-assistant/issues/778) (blog bank-claims check) · [ABA-814](https://github.com/micode-ai/ai-budget-assistant/issues/852) (all 15 currencies in `llms.txt`, verified Erste and VeloBank pages, `DefinedTerm` definitions, Wave 14 language-scope rule) · [ABA-815](https://github.com/micode-ai/ai-budget-assistant/issues/853) (German site on "ohne Bankverbindung", DACH bank coverage, Austria sections, Impressum)

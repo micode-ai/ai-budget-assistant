@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url><loc>https://ai-budget.pl/</loc><lastmod>2026-06-19</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
-<url><loc>https://ai-budget.pl/blog/pl/</loc><lastmod>2026-11-09</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+<url><loc>https://ai-budget.pl/blog/pl/</loc><lastmod>2026-11-18</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
 <url><loc>https://ai-budget.pl/blog/en/</loc><lastmod>2026-11-09</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
 <url><loc>https://ai-budget.pl/blog/de/</loc><lastmod>2026-10-07</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
 <url><loc>https://ai-budget.pl/blog/es/</loc><lastmod>2026-10-15</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
@@ -16,10 +16,10 @@
 <url><loc>https://ai-budget.pl/blog/pl/kontrola-wydatkow-aplikacja/</loc><lastmod>2026-10-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/pl/jak-oszczedzac-pieniadze/</loc><lastmod>2026-10-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/pl/wspolny-budzet-dla-par/</loc><lastmod>2026-09-20</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-<url><loc>https://ai-budget.pl/blog/pl/metoda-kopertowa/</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-<url><loc>https://ai-budget.pl/blog/pl/zasada-50-30-20/</loc><lastmod>2026-10-07</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ai-budget.pl/blog/pl/metoda-kopertowa/</loc><lastmod>2026-11-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ai-budget.pl/blog/pl/zasada-50-30-20/</loc><lastmod>2026-11-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/pl/najlepsze-aplikacje-do-budzetu/</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-<url><loc>https://ai-budget.pl/blog/pl/poduszka-finansowa/</loc><lastmod>2026-10-07</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ai-budget.pl/blog/pl/poduszka-finansowa/</loc><lastmod>2026-11-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/pl/jak-zarzadzac-subskrypcjami/</loc><lastmod>2026-10-07</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/pl/jak-oszczedzac-na-jedzeniu/</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/pl/kategorie-wydatkow/</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
@@ -27,7 +27,7 @@
 <url><loc>https://ai-budget.pl/blog/pl/jak-zaimportowac-wyciag-bankowy/</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/pl/budzet-domowy-z-dziecmi/</loc><lastmod>2026-11-09</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/pl/ai-w-zarzadzaniu-finansami/</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-<url><loc>https://ai-budget.pl/blog/pl/osobista-inflacja/</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ai-budget.pl/blog/pl/osobista-inflacja/</loc><lastmod>2026-11-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/pl/mapa-wydatkow/</loc><lastmod>2026-10-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/pl/jak-podzielic-rachunek/</loc><lastmod>2026-10-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/pl/automatyczne-zapisywanie-wydatkow/</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
@@ -56,10 +56,10 @@
 <url><loc>https://ai-budget.pl/blog/pl/import-wyciagu-millennium/</loc><lastmod>2026-11-09</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/pl/import-wyciagu-pekao/</loc><lastmod>2026-11-09</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/pl/import-wyciagu-alior-bank/</loc><lastmod>2026-11-09</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-<url><loc>https://ai-budget.pl/blog/pl/import-wyciagu-erste-bank/</loc><lastmod>2026-11-09</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ai-budget.pl/blog/pl/import-wyciagu-erste-bank/</loc><lastmod>2026-11-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/pl/zwrot-podatku-na-co-przeznaczyc/</loc><lastmod>2026-10-07</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/pl/jak-przezyc-za-2000-zl-miesiecznie/</loc><lastmod>2026-10-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-<url><loc>https://ai-budget.pl/blog/pl/import-wyciagu-velobank/</loc><lastmod>2026-06-19</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ai-budget.pl/blog/pl/import-wyciagu-velobank/</loc><lastmod>2026-11-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/be/yak-vesci-budzet/</loc><lastmod>2026-10-07</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/be/ulik-vydatkau/</loc><lastmod>2026-10-07</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/be/yak-ekanomic/</loc><lastmod>2026-10-07</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
@@ -144,6 +144,8 @@
 <url><loc>https://ai-budget.pl/blog/de/money-manager-vergleich-ai-budget-assistant/</loc><lastmod>2026-10-07</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/de/revolut-kontoauszug-importieren/</loc><lastmod>2026-10-07</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/de/steuererstattung-sinnvoll-nutzen/</loc><lastmod>2026-10-07</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ai-budget.pl/blog/de/haushaltsbuch-app-ohne-bankverbindung/</loc><lastmod>2026-06-19</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ai-budget.pl/blog/de/n26-kontoauszug-importieren/</loc><lastmod>2026-06-19</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/en/how-to-budget/</loc><lastmod>2026-10-07</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/en/expense-tracker/</loc><lastmod>2026-10-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/en/how-to-save-money/</loc><lastmod>2026-10-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
