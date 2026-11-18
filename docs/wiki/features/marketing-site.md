@@ -256,7 +256,18 @@ parsers or the import picker change: an article whose slug names an import topic
 when no parser exists for that bank, and warns when the parser is hidden from the import picker
 (ING, Millennium, Pekao today) unless the article tells the reader to use auto-detect. Parser ids
 come from `import-bank/parsers/registry.ts`, the picker from `features/import/importEntries.ts`; a
-new bank NAME in the blog needs one line in the script's `BANKS`.
+new bank NAME in the blog needs one line in the script's `BANKS`. A bank with no parser may still
+get a page ([ABA-814](https://github.com/micode-ai/ai-budget-assistant/issues/852), VeloBank) when it only sends the reader to
+**Rozpoznaj automatycznie** and never shows the bank as an import-picker row (`→ <bank>`); the
+export steps must be verified on the bank's own site, with the month of the check in the text.
+Erste Bank Polska is the former Santander Bank Polska (santander.pl redirects to erste.pl), and
+Citi Handlowy's retail clients moved to VeloBank in 2026, so neither old brand gets its own page.
+
+**Definitions for answer engines ([ABA-814](https://github.com/micode-ai/ai-budget-assistant/issues/852)).** A pillar can carry a
+`term:` frontmatter key. `build_blog.py` (`extract_definition`) then takes the first paragraph that
+opens with the term, which sits right under a "Czym jest …?" H2 and runs 40–55 words, and emits
+it as `DefinedTerm` JSON-LD; a missing paragraph or one outside 30–70 words only warns. Definitions
+stay inside the pillars; separate glossary pages would compete with them.
 
 ## Known gaps
 
@@ -297,4 +308,4 @@ ABA-686 (diagnosis of the decline: site-wide ranking loss from 2026-09-15, follo
 ABA-688 (weekly Search Console API snapshot per section with a drop alert) ·
 ABA-689 (per-section sitemaps submitted separately) · ABA-690 (site changes listed next to the weekly series). ·
 ABA-710 (developers page, footer link and llms entry for the public API) ·
-ABA-716 (six shipped features added to `FEATURES_EN`; Organization `founder` and Instagram `sameAs`). · [ABA-739](https://github.com/micode-ai/ai-budget-assistant/issues/777) (search-intent titles, Play short descriptions) · [ABA-740](https://github.com/micode-ai/ai-budget-assistant/issues/778) (blog bank-claims check)
+ABA-716 (six shipped features added to `FEATURES_EN`; Organization `founder` and Instagram `sameAs`). · [ABA-739](https://github.com/micode-ai/ai-budget-assistant/issues/777) (search-intent titles, Play short descriptions) · [ABA-740](https://github.com/micode-ai/ai-budget-assistant/issues/778) (blog bank-claims check) · [ABA-814](https://github.com/micode-ai/ai-budget-assistant/issues/852) (all 15 currencies in `llms.txt`, verified Erste and VeloBank pages, `DefinedTerm` definitions, Wave 14 language-scope rule)

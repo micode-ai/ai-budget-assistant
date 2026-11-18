@@ -9,7 +9,7 @@
 - Preço: núcleo gratuito; planos Pro e Business
 - Plataformas: Android, Web
 - Idiomas: Polski, English, Deutsch, Español, Français, Русский, Українська, Беларуская, Nederlands, Português (Portugal), Português (Brasil)
-- Moedas: USD, EUR, PLN, GBP, UAH, RUB, BYN, BRL
+- Moedas: USD, EUR, PLN, GBP, CHF, CZK, HUF, RON, SEK, NOK, DKK, UAH, BYN, RUB, BRL
 
 ## Key Features
 

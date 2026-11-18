@@ -6,6 +6,8 @@ A bank-import article is one whose `slug` names an import/statement topic and a 
 
 * ERROR   — the bank has no parser at all (not in the API parser registry, not Wise).
             The article promises something the product does not do.
+* OK      — the bank has no parser, but the article only sends the reader to auto-detect
+            (where the AI import takes over) and never shows the bank as a row to pick (ABA-814).
 * WARNING — the bank has a parser, but it is hidden from the import picker
             (`IMPORT_ENTRIES` in the mobile app), AND the article never points the reader
             to auto-detect. Auto-detect still runs the parser and the AI import is the
@@ -86,7 +88,7 @@ def articles():
 
 def main():
     parsers, picker = parser_ids(), picker_ids()
-    errors, warnings, checked = [], [], 0
+    errors, warnings, checked, ai_only = [], [], 0, 0
     for path, slug in articles():
         if not TOPIC.search(slug):
             continue
@@ -95,6 +97,13 @@ def main():
                 continue
             checked += 1
             if bank not in parsers:
+                body = open(os.path.join(ROOT, path), encoding='utf-8').read()
+                # An honest "download the statement, then import it through auto-detect / the AI
+                # import" article is allowed (ABA-814): it must send the reader to auto-detect and
+                # must never show the bank as a row to pick in the import menu ("→ Santander").
+                if AUTO_DETECT.search(body) and not re.search(r'→[^\n]{0,40}(' + pat + ')', body, re.I):
+                    ai_only += 1
+                    continue
                 errors.append(f'{path}: "{slug}" promises a {bank} import, but no {bank} parser exists')
             elif bank not in picker:
                 body = open(os.path.join(ROOT, path), encoding='utf-8').read()
@@ -107,7 +116,8 @@ def main():
         print(f'WARNING {w}')
     for e in errors:
         print(f'ERROR   {e}')
-    print(f'checked {checked} bank-import article(s): {len(errors)} error(s), {len(warnings)} warning(s)')
+    print(f'checked {checked} bank-import article(s): {len(errors)} error(s), {len(warnings)} warning(s), '
+          f'{ai_only} auto-detect-only article(s) for banks without a parser')
     return 1 if errors else 0
 
 

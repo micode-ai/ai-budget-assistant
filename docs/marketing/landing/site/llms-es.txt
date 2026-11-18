@@ -9,7 +9,7 @@
 - Precio: Núcleo gratuito; planes Pro y Business
 - Plataformas: Android, Web
 - Idiomas: Polski, English, Deutsch, Español, Français, Русский, Українська, Беларуская, Nederlands, Português (Portugal), Português (Brasil)
-- Divisas: USD, EUR, PLN, GBP, UAH, RUB, BYN, BRL
+- Divisas: USD, EUR, PLN, GBP, CHF, CZK, HUF, RON, SEK, NOK, DKK, UAH, BYN, RUB, BRL
 
 ## Key Features
 

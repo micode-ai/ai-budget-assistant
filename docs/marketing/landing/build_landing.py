@@ -440,7 +440,7 @@ PRICING = {
      ("Is the app free?", "Yes, the core features are free forever. Pro and Business unlock higher AI limits, more accounts and advanced analytics."),
      ("Can I cancel anytime?", "Yes. Cancel anytime from Settings — you'll keep access until the end of your current billing period."),
      ("What happens after the free trial?", "If you don't cancel, your card is charged automatically at the end of the 7-day trial. You'll get a reminder before it starts."),
-     ("Which currencies can I pay in?", "Prices are shown in your local currency automatically (USD, EUR, PLN, GBP, UAH or RUB) when you upgrade in the app."),
+     ("Which currencies can I pay in?", "Prices are shown in your local currency automatically (USD, EUR, PLN, GBP, UAH, RUB or BRL) when you upgrade in the app."),
    ],
  },
  "pl": {
@@ -464,7 +464,7 @@ PRICING = {
      ("Czy aplikacja jest darmowa?", "Tak, podstawowe funkcje są darmowe na zawsze. Pro i Business odblokowują wyższe limity AI, więcej kont i zaawansowane analizy."),
      ("Czy mogę zrezygnować w dowolnym momencie?", "Tak. Zrezygnuj w dowolnym momencie w Ustawieniach — zachowasz dostęp do końca opłaconego okresu."),
      ("Co się dzieje po okresie próbnym?", "Jeśli nie zrezygnujesz, karta zostanie obciążona automatycznie po zakończeniu 7-dniowego okresu próbnego. Przypomnimy Ci przed jego startem."),
-     ("W jakiej walucie płacę?", "Ceny są pokazywane automatycznie w Twojej lokalnej walucie (USD, EUR, PLN, GBP, UAH lub RUB) podczas ulepszania planu w aplikacji."),
+     ("W jakiej walucie płacę?", "Ceny są pokazywane automatycznie w Twojej lokalnej walucie (USD, EUR, PLN, GBP, UAH, RUB lub BRL) podczas ulepszania planu w aplikacji."),
    ],
  },
  "de": {
@@ -488,7 +488,7 @@ PRICING = {
      ("Ist die App kostenlos?", "Ja, die Kernfunktionen sind für immer kostenlos. Pro und Business schalten höhere KI-Limits, mehr Konten und erweiterte Analysen frei."),
      ("Kann ich jederzeit kündigen?", "Ja. Kündige jederzeit in den Einstellungen — du behältst den Zugriff bis zum Ende deines aktuellen Abrechnungszeitraums."),
      ("Was passiert nach der Testphase?", "Wenn du nicht kündigst, wird deine Karte am Ende der 7-tägigen Testphase automatisch belastet. Du bekommst vorher eine Erinnerung."),
-     ("In welcher Währung zahle ich?", "Die Preise werden beim Upgrade in der App automatisch in deiner lokalen Währung angezeigt (USD, EUR, PLN, GBP, UAH oder RUB)."),
+     ("In welcher Währung zahle ich?", "Die Preise werden beim Upgrade in der App automatisch in deiner lokalen Währung angezeigt (USD, EUR, PLN, GBP, UAH, RUB oder BRL)."),
    ],
  },
  "es": {
@@ -512,7 +512,7 @@ PRICING = {
      ("¿La app es gratis?", "Sí, las funciones básicas son gratis para siempre. Pro y Business desbloquean más límites de IA, más cuentas y análisis avanzados."),
      ("¿Puedo cancelar cuando quiera?", "Sí. Cancela cuando quieras desde Ajustes — mantendrás el acceso hasta el final del periodo de facturación actual."),
      ("¿Qué pasa después de la prueba gratuita?", "Si no cancelas, tu tarjeta se cobrará automáticamente al terminar los 7 días de prueba. Te avisaremos antes de que empiece el cobro."),
-     ("¿En qué moneda pago?", "Los precios se muestran automáticamente en tu moneda local (USD, EUR, PLN, GBP, UAH o RUB) al mejorar tu plan en la app."),
+     ("¿En qué moneda pago?", "Los precios se muestran automáticamente en tu moneda local (USD, EUR, PLN, GBP, UAH, RUB o BRL) al mejorar tu plan en la app."),
    ],
  },
  "fr": {
@@ -536,7 +536,7 @@ PRICING = {
      ("L'appli est-elle gratuite ?", "Oui, les fonctions de base sont gratuites pour toujours. Pro et Business débloquent plus de requêtes IA, plus de comptes et des analyses avancées."),
      ("Puis-je annuler à tout moment ?", "Oui. Annulez à tout moment depuis les Paramètres — vous gardez l'accès jusqu'à la fin de la période de facturation en cours."),
      ("Que se passe-t-il après l'essai gratuit ?", "Si vous n'annulez pas, votre carte est débitée automatiquement à la fin des 7 jours d'essai. Vous recevrez un rappel avant le début du prélèvement."),
-     ("Dans quelle devise vais-je payer ?", "Les prix s'affichent automatiquement dans votre devise locale (USD, EUR, PLN, GBP, UAH ou RUB) lors de la mise à niveau dans l'appli."),
+     ("Dans quelle devise vais-je payer ?", "Les prix s'affichent automatiquement dans votre devise locale (USD, EUR, PLN, GBP, UAH, RUB ou BRL) lors de la mise à niveau dans l'appli."),
    ],
  },
  "ru": {
@@ -560,7 +560,7 @@ PRICING = {
      ("Приложение бесплатное?", "Да, базовые функции бесплатны навсегда. Pro и Business открывают больше лимитов ИИ, счетов и расширенную аналитику."),
      ("Можно отменить подписку в любой момент?", "Да. Отмените в любой момент в Настройках — доступ сохранится до конца оплаченного периода."),
      ("Что будет после пробного периода?", "Если вы не отмените подписку, карта будет списана автоматически по окончании 7-дневного пробного периода. Мы напомним вам заранее."),
-     ("В какой валюте я плачу?", "Цены автоматически показываются в вашей локальной валюте (USD, EUR, PLN, GBP, UAH или RUB) при оформлении подписки в приложении."),
+     ("В какой валюте я плачу?", "Цены автоматически показываются в вашей локальной валюте (USD, EUR, PLN, GBP, UAH, RUB или BRL) при оформлении подписки в приложении."),
    ],
  },
  "ua": {
@@ -584,7 +584,7 @@ PRICING = {
      ("Застосунок безкоштовний?", "Так, базові функції безкоштовні назавжди. Pro та Business відкривають більше лімітів ШІ, рахунків і розширену аналітику."),
      ("Чи можна скасувати підписку в будь-який момент?", "Так. Скасуйте в будь-який момент у Налаштуваннях — доступ збережеться до кінця оплаченого періоду."),
      ("Що станеться після пробного періоду?", "Якщо ви не скасуєте підписку, картку буде автоматично списано після закінчення 7-денного пробного періоду. Ми нагадаємо заздалегідь."),
-     ("У якій валюті я плачу?", "Ціни автоматично показуються у вашій локальній валюті (USD, EUR, PLN, GBP, UAH або RUB) під час оновлення плану в застосунку."),
+     ("У якій валюті я плачу?", "Ціни автоматично показуються у вашій локальній валюті (USD, EUR, PLN, GBP, UAH, RUB або BRL) під час оновлення плану в застосунку."),
    ],
  },
  "be": {
@@ -608,7 +608,7 @@ PRICING = {
      ("Дадатак бясплатны?", "Так, базавыя функцыі бясплатныя назаўжды. Pro і Business адкрываюць больш лімітаў ШІ, рахункаў і пашыраную аналітыку."),
      ("Ці можна адмяніць падпіску ў любы момант?", "Так. Адмяніце ў любы момант у Налады — доступ захаваецца да канца аплачанага перыяду."),
      ("Што адбудзецца пасля пробнага перыяду?", "Калі вы не адмовіцеся ад падпіскі, картка будзе аўтаматычна спісана пасля заканчэння 7-дзённага пробнага перыяду. Мы нагадаем загадзя."),
-     ("У якой валюце я плачу?", "Цэны аўтаматычна паказваюцца ў вашай лакальнай валюце (USD, EUR, PLN, GBP, UAH або RUB) падчас абнаўлення плана ў дадатку."),
+     ("У якой валюце я плачу?", "Цэны аўтаматычна паказваюцца ў вашай лакальнай валюце (USD, EUR, PLN, GBP, UAH, RUB або BRL) падчас абнаўлення плана ў дадатку."),
    ],
  },
  "nl": {
@@ -632,7 +632,7 @@ PRICING = {
      ("Is de app gratis?", "Ja, de kernfuncties zijn voor altijd gratis. Pro en Business ontgrendelen hogere AI-limieten, meer accounts en geavanceerde analyses."),
      ("Kan ik op elk moment opzeggen?", "Ja. Zeg op elk moment op via Instellingen — je houdt toegang tot het einde van je huidige factureringsperiode."),
      ("Wat gebeurt er na de gratis proefperiode?", "Als je niet opzegt, wordt je kaart automatisch belast aan het einde van de proefperiode van 7 dagen. Je krijgt vooraf een herinnering."),
-     ("In welke valuta betaal ik?", "Prijzen worden automatisch getoond in je lokale valuta (USD, EUR, PLN, GBP, UAH of RUB) wanneer je in de app upgradet."),
+     ("In welke valuta betaal ik?", "Prijzen worden automatisch getoond in je lokale valuta (USD, EUR, PLN, GBP, UAH, RUB of BRL) wanneer je in de app upgradet."),
    ],
  },
  "pt": {
@@ -656,7 +656,7 @@ PRICING = {
      ("A aplicação é gratuita?", "Sim, as funcionalidades principais são gratuitas para sempre. Pro e Business desbloqueiam limites de IA mais altos, mais contas e análises avançadas."),
      ("Posso cancelar a qualquer momento?", "Sim. Cancele a qualquer momento nas Definições — mantém o acesso até ao fim do período de faturação em curso."),
      ("O que acontece depois do período experimental?", "Se não cancelar, o cartão é cobrado automaticamente no fim do período experimental de 7 dias. Recebe um lembrete antes de a cobrança começar."),
-     ("Em que moeda pago?", "Os preços são apresentados automaticamente na sua moeda local (USD, EUR, PLN, GBP, UAH ou RUB) quando faz o upgrade na aplicação."),
+     ("Em que moeda pago?", "Os preços são apresentados automaticamente na sua moeda local (USD, EUR, PLN, GBP, UAH, RUB ou BRL) quando faz o upgrade na aplicação."),
    ],
  },
  "br": {
@@ -1244,7 +1244,7 @@ def og_default(lang):
     return f"{SITE}/{sec}/{lang}/assets/og-default.png"
 
 BLOG_SRC = os.path.join(ROOT, "..", "seo")
-FROM_BLOG_PAIRS = ["black-friday", "christmas", "tax-refund", "live-on-2000", "budget", "split-bill", "auto-capture", "receipts", "ai-budget", "inflation", "expense-map", "family", "shared-budget", "bank-import", "import-revolut", "import-mbank", "import-pko", "import-ing", "import-millennium", "import-pekao", "import-alior", "import-erste", "ai-bank-import", "best-apps", "vs-monefy", "vs-wallet", "vs-ynab", "vs-moneymanager", "saving"]  # curated homepage -> article internal links (every list item renders; no truncation). USP + high-intent topics first. The seasonal `christmas` and `black-friday` are included, at the front, on the owner's explicit request (every blog article should appear here); `school` stays absent for now.
+FROM_BLOG_PAIRS = ["black-friday", "christmas", "tax-refund", "live-on-2000", "budget", "split-bill", "auto-capture", "receipts", "ai-budget", "inflation", "expense-map", "family", "shared-budget", "bank-import", "import-revolut", "import-mbank", "import-pko", "import-ing", "import-millennium", "import-pekao", "import-alior", "import-erste", "import-velobank", "ai-bank-import", "best-apps", "vs-monefy", "vs-wallet", "vs-ynab", "vs-moneymanager", "saving"]  # curated homepage -> article internal links (every list item renders; no truncation). USP + high-intent topics first. The seasonal `christmas` and `black-friday` are included, at the front, on the owner's explicit request (every blog article should appear here); `school` stays absent for now.
 
 def _blog_front(path):
     raw = open(path, encoding="utf-8").read()
@@ -2022,7 +2022,7 @@ def jsonld(lang, langs):
          "downloadUrl": PLAY, "sameAs": APP_SAMEAS,
          "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
          "featureList": FEATURES_EN + [
-             "Multi-currency: USD, EUR, PLN, GBP, UAH, RUB, BYN, BRL",
+             "Multi-currency: USD, EUR, PLN, GBP, CHF, CZK, HUF, RON, SEK, NOK, DKK, UAH, BYN, RUB, BRL",
              f"{len(LANG_NAMES)} interface languages",
          ],
          "screenshot": [
@@ -2782,7 +2782,7 @@ def write_llms_txt_localized(lang):
         f"- {t['pricing_label']}: {t['pricing_value']}\n"
         f"- {t['platforms_label']}: Android, Web\n"
         f"- {t['languages_label']}: {langs_line}\n"
-        f"- {t['currencies_label']}: USD, EUR, PLN, GBP, UAH, RUB, BYN, BRL\n\n"
+        f"- {t['currencies_label']}: USD, EUR, PLN, GBP, CHF, CZK, HUF, RON, SEK, NOK, DKK, UAH, BYN, RUB, BRL\n\n"
         f"## Key Features\n\n"
         + "".join(f"- {feat}\n" for feat in t["features"])
         + "\n"
@@ -3003,7 +3003,7 @@ def build():
             f"- Pricing: Free core; Pro and Business subscription tiers\n"
             f"- Platforms: Android, Web\n"
             f"- Languages: English, Polish, German, Spanish, French, Russian, Ukrainian, Belarusian, Dutch, Portuguese (Portugal), Portuguese (Brazil)\n"
-            f"- Currencies: USD, EUR, PLN, GBP, UAH, RUB, BYN, BRL\n\n"
+            f"- Currencies: USD, EUR, PLN, GBP, CHF, CZK, HUF, RON, SEK, NOK, DKK, UAH, BYN, RUB, BRL\n\n"
             f"## Key Features\n\n"
             + "".join(f"- {feat}\n" for feat in FEATURES_EN)
             + "\n"

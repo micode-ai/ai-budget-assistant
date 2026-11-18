@@ -5,6 +5,7 @@ target_keyword: "metoda kopertowa"
 slug: "metoda-kopertowa"
 pair: "envelope"
 lang: "pl"
+term: "Metoda kopertowa"
 date: "2026-06-20"
 ---
 
@@ -14,7 +15,9 @@ Większość porad o budżetowaniu mówi ci, co masz robić, a potem zostawia ci
 
 To jedna z najstarszych metod budżetowania, a wraca raz za razem, bo działa na konkretny problem, który ma większość ludzi: przepłacanie w kilku przewidywalnych kategoriach.
 
-## Czym właściwie jest metoda kopertowa
+## Czym jest metoda kopertowa?
+
+Metoda kopertowa to sposób prowadzenia budżetu, w którym na początku miesiąca dzielisz dochód na kategorie, na przykład jedzenie, paliwo i rozrywkę, i każdej przypisujesz stałą kwotę, czyli „kopertę”. Wydajesz z koperty, dopóki są w niej pieniądze. Gdy jest pusta, w tej kategorii nie wydajesz już nic do końca miesiąca.
 
 Pomysł jest prosty. Dzielisz miesięczny dochód na kategorie: jedzenie, restauracje, paliwo, rozrywka i tak dalej. Każda kategoria dostaje z góry ustaloną kwotę, swoją "kopertę". Wydajesz z każdej, aż się skończy. Gdy koperta na restauracje wyczerpie się 22. dnia miesiąca, do końca miesiąca gotujesz w domu. Nie pożyczasz z koperty na jedzenie i nie udajesz, że się nie stało.
 

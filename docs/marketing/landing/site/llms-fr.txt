@@ -9,7 +9,7 @@
 - Tarifs: Cœur gratuit ; formules Pro et Business
 - Plateformes: Android, Web
 - Langues: Polski, English, Deutsch, Español, Français, Русский, Українська, Беларуская, Nederlands, Português (Portugal), Português (Brasil)
-- Devises: USD, EUR, PLN, GBP, UAH, RUB, BYN, BRL
+- Devises: USD, EUR, PLN, GBP, CHF, CZK, HUF, RON, SEK, NOK, DKK, UAH, BYN, RUB, BRL
 
 ## Key Features
 

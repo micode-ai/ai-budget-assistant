@@ -9,7 +9,7 @@
 - Цана: бясплатнае ядро; тарыфы Pro і Business
 - Платформы: Android, Web
 - Мовы: Polski, English, Deutsch, Español, Français, Русский, Українська, Беларуская, Nederlands, Português (Portugal), Português (Brasil)
-- Валюты: USD, EUR, PLN, GBP, UAH, RUB, BYN, BRL
+- Валюты: USD, EUR, PLN, GBP, CHF, CZK, HUF, RON, SEK, NOK, DKK, UAH, BYN, RUB, BRL
 
 ## Key Features
 

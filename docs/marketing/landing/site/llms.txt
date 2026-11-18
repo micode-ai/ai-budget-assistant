@@ -9,7 +9,7 @@
 - Pricing: Free core; Pro and Business subscription tiers
 - Platforms: Android, Web
 - Languages: English, Polish, German, Spanish, French, Russian, Ukrainian, Belarusian, Dutch, Portuguese (Portugal), Portuguese (Brazil)
-- Currencies: USD, EUR, PLN, GBP, UAH, RUB, BYN, BRL
+- Currencies: USD, EUR, PLN, GBP, CHF, CZK, HUF, RON, SEK, NOK, DKK, UAH, BYN, RUB, BRL
 
 ## Key Features
 

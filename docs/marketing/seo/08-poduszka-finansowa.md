@@ -5,6 +5,7 @@ target_keyword: "poduszka finansowa"
 slug: "poduszka-finansowa"
 pair: "emergency-fund"
 lang: "pl"
+term: "Poduszka finansowa"
 date: "2026-06-20"
 ---
 
@@ -20,7 +21,7 @@ Ten poradnik omawia, czym właściwie jest poduszka finansowa, ile potrzebujesz,
 
 Poduszka finansowa to gotówka odłożona na nieoczekiwane, konieczne i pilne wydatki: utratę pracy, pilny rachunek medyczny, awarię niezbędnego sprzętu albo naprawę auta potrzebnego w dojeździe do pracy. Wakacje, wyprzedaż i znany z góry przegląd samochodu nią nie są. Sprawdź wydatek trzema pytaniami: czy jest nieoczekiwany, konieczny i pilny?
 
-Poduszka finansowa to gotówka odłożona na prawdziwe, niespodziewane, niezbędne wydatki. Kluczowe słowo to niespodziewane. Wakacje w grudniu nie są nagłym wypadkiem, bo wiedziałeś, że grudzień nadejdzie. Auto, o którym wiedziałeś, że potrzebuje nowych klocków hamulcowych, też nie jest nagłym wypadkiem. To należy do twojego zwykłego budżetu albo do osobnego celu oszczędnościowego.
+Kluczowe słowo to niespodziewane. Wakacje w grudniu nie są nagłym wypadkiem, bo wiedziałeś, że grudzień nadejdzie. Auto, o którym wiedziałeś, że potrzebuje nowych klocków hamulcowych, też nie jest nagłym wypadkiem. To należy do twojego zwykłego budżetu albo do osobnego celu oszczędnościowego.
 
 Prawdziwy nagły wypadek to coś, czego nie dało się rozsądnie zaplanować i nie można odłożyć: utrata pracy, pilny rachunek medyczny lub dentystyczny, awaria niezbędnego sprzętu, naprawa auta, którym musisz dojechać do pracy. Test jest prosty. Czy to niespodziewane, niezbędne i pilne? Jeśli wszystkie trzy są prawdą, to właśnie do tego służy fundusz. Jeśli nie, bierze się to skądinąd.
 

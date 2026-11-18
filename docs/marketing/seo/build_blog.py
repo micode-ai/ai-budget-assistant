@@ -369,7 +369,7 @@ PAIR_TO_HELP = {
     "expense-map": "expense-map", "split-bill": "receipt-split", "receipts": "voice-and-receipt",
     "auto-capture": "expenses-and-income", "school": "budgets",
     "tax-refund": "savings-goals",
-    **{f"import-{b}": "bank-import" for b in ("revolut", "mbank", "pko", "ing", "millennium", "pekao", "alior", "erste")},
+    **{f"import-{b}": "bank-import" for b in ("revolut", "mbank", "pko", "ing", "millennium", "pekao", "alior", "erste", "velobank")},
 }
 
 # Pillar -> its cluster children. Single source of truth for BOTH the generated pillar
@@ -380,7 +380,7 @@ CLUSTERS = {
     "budget": ["shared-budget", "envelope", "rule-503020", "categories", "family", "ai-budget", "school", "irregular-income"],
     "expenses": ["bank-import", "best-apps", "expense-map", "auto-capture", "receipts", "split-bill", "app-abandonment", "switch-apps", "excel-budget", "free-app",
                  "vs-monefy", "vs-wallet", "vs-ynab", "vs-moneymanager",
-                 "import-revolut", "import-mbank", "import-pko", "import-ing", "import-millennium", "import-pekao", "import-alior", "import-erste"],
+                 "import-revolut", "import-mbank", "import-pko", "import-ing", "import-millennium", "import-pekao", "import-alior", "import-erste", "import-velobank"],
     "saving": ["groceries", "emergency-fund", "subscriptions", "debt", "inflation", "wrapped", "inflation-shield", "rate-alert", "multi-currency", "christmas", "black-friday", "tax-refund", "live-on-2000"],
 }
 def category_of(pair):
@@ -696,6 +696,26 @@ _QLINE = re.compile(r"^\*\*(.+\?)\*\*\s*$")
 def _plain(t):
     t = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", t)  # strip markdown links -> text
     return t.replace("**", "").replace("*", "").strip()
+
+def extract_definition(body, term, path):
+    """The answer-first definition of an article's `term` (frontmatter), for DefinedTerm JSON-LD.
+
+    It is the first paragraph that opens with the term itself ("Metoda kopertowa to ..."),
+    placed directly under a question H2, so the same 40-55 words serve the featured snippet,
+    People-also-ask and answer engines. A missing or overlong paragraph only warns.
+    """
+    if not term:
+        return None
+    for para in re.split(r"\n\s*\n", body):
+        text = re.sub(r"[*_`]", "", para.strip())
+        if text.lower().startswith(term.lower()) and not text.startswith("#"):
+            words = len(text.split())
+            if not 30 <= words <= 70:
+                print(f"WARNING: {path}: definition of '{term}' is {words} words (aim for 40-55)")
+            return text
+    print(f"WARNING: {path}: frontmatter term '{term}' has no paragraph opening with it")
+    return None
+
 
 def extract_faq(body):
     """Pull Q&A from the FAQ section (the H2 section with the most bold-question lines)."""
@@ -1022,6 +1042,10 @@ def build():
         if len(faq) >= 2:
             ld["@graph"].append({"@type": "FAQPage", "mainEntity": [
                 {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": ans}} for q, ans in faq]})
+        term = extract_definition(a["body"], m.get("term"), a["path"])
+        if term:
+            ld["@graph"].append({"@type": "DefinedTerm", "name": m["term"], "description": term,
+                                 "inLanguage": m["lang"], "url": url})
         body_html = to_html(a["body"], lang)
         # Lead with the publication date and add "Updated" only when the file really changed
         # later. git_date() is the last-commit date, so a repo-wide frontmatter edit would

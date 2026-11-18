@@ -5,6 +5,7 @@ target_keyword: "osobista inflacja"
 slug: "osobista-inflacja"
 pair: "inflation"
 lang: "pl"
+term: "Osobista inflacja"
 date: "2026-07-05"
 ---
 
@@ -13,6 +14,10 @@ date: "2026-07-05"
 Co miesiąc urząd statystyczny podaje jedną liczbę inflacji i co miesiąc wydaje się ona nietrafiona. W wiadomościach mówią, że ceny wzrosły o kilka procent, a twój rachunek za zakupy urósł znacznie bardziej, kawa kosztuje o jedną trzecią więcej, a ten sam koszyk, który kiedyś mieścił się w jednej torbie, teraz opróżnia portfel. To nie złudzenie. Nagłówkowa liczba to średnia z koszyka, który prawdopodobnie nie pasuje do twojego.
 
 Twoja osobista inflacja to ta, która naprawdę liczy się dla domowego budżetu. Mierzy, o ile więcej płacisz w tym roku za konkretne rzeczy, które faktycznie kupujesz. Kiedy już ją widzisz, wzrost cen przestaje być mglistym niepokojem w tle, a staje się czymś, na co możesz zareagować: zmienić sklep, wymienić produkt albo skorygować budżet konkretnymi liczbami zamiast przeczuciem.
+
+## Czym jest osobista inflacja?
+
+Osobista inflacja to tempo, w jakim rosną ceny rzeczy, które kupujesz ty, a nie przeciętne gospodarstwo domowe. Liczy się ją na twoim własnym koszyku: tych samych produktach, z tych samych sklepów, porównanych rok do roku. Może być wyższa albo niższa od oficjalnego wskaźnika GUS, bo twoje wydatki mają inne wagi.
 
 ## Dlaczego twoja inflacja różni się od tej oficjalnej
 

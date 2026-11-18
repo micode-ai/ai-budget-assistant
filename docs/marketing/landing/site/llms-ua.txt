@@ -9,7 +9,7 @@
 - Ціна: безкоштовне ядро; тарифи Pro та Business
 - Платформи: Android, Web
 - Мови: Polski, English, Deutsch, Español, Français, Русский, Українська, Беларуская, Nederlands, Português (Portugal), Português (Brasil)
-- Валюти: USD, EUR, PLN, GBP, UAH, RUB, BYN, BRL
+- Валюти: USD, EUR, PLN, GBP, CHF, CZK, HUF, RON, SEK, NOK, DKK, UAH, BYN, RUB, BRL
 
 ## Key Features
 

@@ -911,16 +911,25 @@ Z linii pod operacją na wyciągu, w której Alior drukuje kontrahenta lub lokal
 
 Tak, w historii importów na dole ekranu importu, przez 30 dni od importu.
 
-## Jak pobrać wyciąg z Erste Banku (PDF) i dodać go do budżetu
+## Wyciąg z Erste (ex-Santander): pobierz i dodaj do budżetu
 URL: https://ai-budget.pl/blog/pl/import-wyciagu-erste-bank/
 
 Aby zaimportować wyciąg z Erste Bank Polska, pobierz wyciąg w formacie PDF z bankowości internetowej, a w AI Budget Assistant wybierz Ustawienia → Importuj transakcje → Erste Bank (PDF) i wskaż plik. Aplikacja odczyta tabelę z kolumnami wpływy i wydatki, podpowie kategorie i odznaczy transakcje, które już masz.
 
-Erste udostępnia wyciągi jako tekstowy PDF, więc aplikacja ma dla niego osobny czytnik. Nie wymaga on planu Pro.
+Erste Bank Polska to dawny Santander Bank Polska, więc ten poradnik dotyczy też klientów, którzy pamiętają bankowość Santandera. Erste udostępnia wyciągi jako tekstowy PDF, a aplikacja ma dla niego osobny czytnik. Nie wymaga on planu Pro.
 
 ## Jak pobrać wyciąg z Erste Bank?
 
-Zaloguj się do bankowości internetowej Erste, otwórz sekcję wyciągów, wybierz okres i pobierz wyciąg PDF. Dokładnych nazw menu nie udało się nam potwierdzić na stronach banku, więc szukaj wyciągu w formie PDF, takiego, w którym na górze są dane wyciągu, a dalej tabela z saldem początkowym i końcowym.
+Według pomocy banku (stan na listopad 2026) eWyciąg pobierzesz tak:
+
+- **W bankowości internetowej:** w górnym menu **Poczta** → zakładka **eWyciągi**. Albo **Twoje produkty** → **Więcej** przy rachunku → **eWyciąg**. Wybierz wyciąg, format **PDF** i kliknij **Pobierz**.
+- **W aplikacji mobilnej:** w dolnym menu **Kontakt** → **Poczta** → zakładka **eWyciągi**. W aplikacji wyciąg jest tylko w PDF.
+
+W bankowości internetowej eWyciąg jest też w formatach HTML, CSV i XML, ale do importu wybierz PDF, bo dla niego aplikacja ma czytnik.
+
+### Historia rachunku w CSV
+
+Zamiast miesięcznego wyciągu możesz pobrać historię z dowolnego okresu: **Twoje produkty** → **Historia**, ustaw filtry (daty, wpływy lub wydatki) i zapisz ją w formacie CSV. Taki plik wgrasz przez **Rozpoznaj automatycznie (dowolny bank)**. Za pierwszym razem aplikacja zapyta o zgodę na rozpoznanie kolumn przez AI (wysyła tylko nagłówek i do dziesięciu przykładowych wierszy), a ty sprawdzisz w podglądzie, która kolumna jest datą, kwotą i opisem. Import CSV nie wymaga planu Pro.
 
 ## Jak zaimportować wyciąg PDF krok po kroku?
 
@@ -962,7 +971,11 @@ Nie. Erste ma dedykowany czytnik PDF dostępny bez planu Pro. Płatny jest dopie
 
 **Czy Erste Bank udostępnia CSV?**
 
-Aplikacja obsługuje Erste przez wyciąg PDF i tego formatu używaj. Jeśli masz inny plik, wybierz „Rozpoznaj automatycznie (dowolny bank)”, a w razie potrzeby ręczny mapper.
+Tak. Historię rachunku (**Twoje produkty** → **Historia**) zapiszesz w CSV, a eWyciąg w bankowości internetowej jest też w CSV, HTML i XML. Plik CSV wgraj przez „Rozpoznaj automatycznie (dowolny bank)”. Dla wyciągu PDF aplikacja ma osobny czytnik.
+
+**Czy to ten sam bank co Santander?**
+
+Tak. Santander Bank Polska działa teraz pod marką Erste Bank Polska, a dawne adresy santander.pl przekierowują na erste.pl. Wyciągi pobierasz już w bankowości Erste.
 
 **Czy skan wyciągu z Erste się zaimportuje?**
 
@@ -1373,6 +1386,75 @@ Możesz, ale nic się nie zdubluje. Powtórzone wiersze są rozpoznawane i odzna
 **Czy mogę cofnąć import z Revolut?**
 
 Tak. W historii importów na dole ekranu importu dotknij strzałki cofania przy danym imporcie. Jest to możliwe przez 30 dni, a po cofnięciu możesz zaimportować ten sam plik ponownie.
+
+## Historia rachunku VeloBank (też ex-Citi): pobierz i importuj
+URL: https://ai-budget.pl/blog/pl/import-wyciagu-velobank/
+
+Historię rachunku z VeloBanku pobierzesz w bankowości internetowej lub w aplikacji: otwórz zakładkę **Historia**, ustaw okres i wybierz **Drukuj historię**. Dostaniesz plik PDF. W AI Budget Assistant wgrasz go przez **Ustawienia → Importuj transakcje → Rozpoznaj automatycznie (dowolny bank)**. VeloBank nie ma w aplikacji osobnego czytnika, więc PDF odczytuje AI, a to funkcja planu Pro.
+
+Ten poradnik dotyczy też byłych klientów Citi Handlowy: bankowość detaliczna Citi przeszła do VeloBanku, który zakończył integrację w czerwcu 2026 roku.
+
+## Jak pobrać historię rachunku z VeloBanku?
+
+Według pomocy VeloBanku (stan na listopad 2026):
+
+1. Zaloguj się do bankowości internetowej albo aplikacji mobilnej.
+2. Otwórz zakładkę **Historia** albo przycisk **Historia** w oknie rachunku.
+3. Zmień okres, jeśli potrzebujesz. Domyślnie to ostatni miesiąc.
+4. Kliknij **Drukuj historię** w prawym dolnym rogu i zapisz plik PDF.
+
+Jeśli przycisku **Drukuj historię** nie widać, zaznacz w filtrze tylko jeden rachunek. Historię w PDF albo na papierze może też przysłać konsultant infolinii.
+
+W pomocy VeloBanku dla klientów indywidualnych nie znaleźliśmy eksportu historii do CSV ani XLS. Formaty MT940 i XML są opisane tylko dla klientów firmowych.
+
+## Jak zaimportować PDF z VeloBanku krok po kroku?
+
+1. **Pobierz historię w PDF**, jak wyżej. Nie rób zrzutu ekranu ani skanu, bo aplikacja potrzebuje tekstu w pliku.
+2. W aplikacji wejdź w **Ustawienia → Importuj transakcje**.
+3. Wybierz **Rozpoznaj automatycznie (dowolny bank)** i wskaż plik.
+4. Za pierwszym razem aplikacja zapyta o zgodę na odczyt przez AI i pokaże, co zostanie wysłane: pierwsze dwadzieścia linii tekstu z pliku. Zgoda jest jednorazowa dla całego konta.
+5. Sprawdź podgląd: daty, kwoty, opisy i kategorie. Odznacz zbędne wiersze i dotknij **Importuj**.
+
+## Co warto wiedzieć przed importem?
+
+| Kwestia | Jak jest |
+|---|---|
+| Format | PDF z historii rachunku |
+| Czytnik | Odczyt przez AI, bo VeloBank nie ma osobnego czytnika w aplikacji |
+| Plan | Odczyt PDF przez AI wymaga planu Pro |
+| Kontrola kompletności | Aplikacja porównuje sumę operacji z saldem początkowym i końcowym. Jeśli w pliku nie ma sald, pokaże ostrzeżenie, a ty sprawdź kilka pozycji z oryginałem |
+| Duplikaty | Aplikacja porównuje datę, kwotę i walutę z transakcjami, które już masz, i odznacza powtórki |
+| Cofnięcie | Cały import cofniesz w historii importów przez 30 dni |
+
+Bez planu Pro PDF z VeloBanku się nie zaimportuje. Wtedy zostaje ręczne dodawanie transakcji albo przechwytywanie powiadomień bankowych na Androidzie, opisane w artykule [Aplikacja sama zapisuje wydatki](/blog/pl/automatyczne-zapisywanie-wydatkow/).
+
+## A co z dawnymi wyciągami z Citi Handlowy?
+
+Nie znaleźliśmy oficjalnej informacji, czy historię sprzed przeniesienia rachunku z Citi da się pobrać w VeloBanku. Jeśli masz zapisane stare wyciągi PDF z Citibank Online z warstwą tekstową, zaimportujesz je tą samą drogą: **Rozpoznaj automatycznie (dowolny bank)** i odczyt przez AI. Jak działa ten odczyt i co dzieje się z danymi, wyjaśniamy w artykule [Co zrobić, gdy twojego banku nie ma na liście](/blog/pl/import-wyciagu-z-dowolnego-banku/).
+
+Ogólny przewodnik: [Jak zaimportować wyciąg bankowy i nadrobić miesiące w kilka minut](/blog/pl/jak-zaimportowac-wyciag-bankowy/). Aplikację wypróbujesz na [ai-budget.pl](https://ai-budget.pl).
+
+## FAQ: Historia rachunku z VeloBanku
+
+**Czy VeloBank pozwala pobrać historię rachunku w CSV?**
+
+W pomocy VeloBanku dla klientów indywidualnych opisany jest tylko PDF przez przycisk „Drukuj historię”. CSV, MT940 i XML są opisane w bankowości firmowej VeloBiznes.
+
+**Czy import historii z VeloBanku jest darmowy?**
+
+Nie. VeloBank daje PDF, a PDF banku bez własnego czytnika w aplikacji odczytuje AI, co jest funkcją planu Pro. Darmowy jest import plików CSV i XLSX.
+
+**Gdzie jest przycisk „Drukuj historię”?**
+
+W prawym dolnym rogu ekranu historii. Jeśli go nie widać, zaznacz w filtrze tylko jeden rachunek.
+
+**Byłem klientem Citi Handlowy. Czy ten poradnik mnie dotyczy?**
+
+Tak. Bankowość detaliczna Citi Handlowy przeszła do VeloBanku, więc historię pobierasz już w kanałach VeloBanku.
+
+**Czy mogę cofnąć import?**
+
+Tak, w historii importów na dole ekranu importu, przez 30 dni od importu.
 
 ## Co zrobić, gdy twojego banku nie ma na liście
 URL: https://ai-budget.pl/blog/pl/import-wyciagu-z-dowolnego-banku/
@@ -2626,7 +2708,9 @@ Większość porad o budżetowaniu mówi ci, co masz robić, a potem zostawia ci
 
 To jedna z najstarszych metod budżetowania, a wraca raz za razem, bo działa na konkretny problem, który ma większość ludzi: przepłacanie w kilku przewidywalnych kategoriach.
 
-## Czym właściwie jest metoda kopertowa
+## Czym jest metoda kopertowa?
+
+Metoda kopertowa to sposób prowadzenia budżetu, w którym na początku miesiąca dzielisz dochód na kategorie, na przykład jedzenie, paliwo i rozrywkę, i każdej przypisujesz stałą kwotę, czyli „kopertę”. Wydajesz z koperty, dopóki są w niej pieniądze. Gdy jest pusta, w tej kategorii nie wydajesz już nic do końca miesiąca.
 
 Pomysł jest prosty. Dzielisz miesięczny dochód na kategorie: jedzenie, restauracje, paliwo, rozrywka i tak dalej. Każda kategoria dostaje z góry ustaloną kwotę, swoją "kopertę". Wydajesz z każdej, aż się skończy. Gdy koperta na restauracje wyczerpie się 22. dnia miesiąca, do końca miesiąca gotujesz w domu. Nie pożyczasz z koperty na jedzenie i nie udajesz, że się nie stało.
 
@@ -2994,6 +3078,10 @@ Co miesiąc urząd statystyczny podaje jedną liczbę inflacji i co miesiąc wyd
 
 Twoja osobista inflacja to ta, która naprawdę liczy się dla domowego budżetu. Mierzy, o ile więcej płacisz w tym roku za konkretne rzeczy, które faktycznie kupujesz. Kiedy już ją widzisz, wzrost cen przestaje być mglistym niepokojem w tle, a staje się czymś, na co możesz zareagować: zmienić sklep, wymienić produkt albo skorygować budżet konkretnymi liczbami zamiast przeczuciem.
 
+## Czym jest osobista inflacja?
+
+Osobista inflacja to tempo, w jakim rosną ceny rzeczy, które kupujesz ty, a nie przeciętne gospodarstwo domowe. Liczy się ją na twoim własnym koszyku: tych samych produktach, z tych samych sklepów, porównanych rok do roku. Może być wyższa albo niższa od oficjalnego wskaźnika GUS, bo twoje wydatki mają inne wagi.
+
 ## Dlaczego twoja inflacja różni się od tej oficjalnej
 
 Oficjalny wskaźnik powstaje ze stałego, ogólnokrajowego koszyka o stałych wagach. Mieszkanie, transport, energia, żywność i setki innych pozycji są uśredniane z wagami, które mają reprezentować przeciętne gospodarstwo domowe. Ty nim nie jesteś.
@@ -3159,7 +3247,7 @@ Ten poradnik omawia, czym właściwie jest poduszka finansowa, ile potrzebujesz,
 
 Poduszka finansowa to gotówka odłożona na nieoczekiwane, konieczne i pilne wydatki: utratę pracy, pilny rachunek medyczny, awarię niezbędnego sprzętu albo naprawę auta potrzebnego w dojeździe do pracy. Wakacje, wyprzedaż i znany z góry przegląd samochodu nią nie są. Sprawdź wydatek trzema pytaniami: czy jest nieoczekiwany, konieczny i pilny?
 
-Poduszka finansowa to gotówka odłożona na prawdziwe, niespodziewane, niezbędne wydatki. Kluczowe słowo to niespodziewane. Wakacje w grudniu nie są nagłym wypadkiem, bo wiedziałeś, że grudzień nadejdzie. Auto, o którym wiedziałeś, że potrzebuje nowych klocków hamulcowych, też nie jest nagłym wypadkiem. To należy do twojego zwykłego budżetu albo do osobnego celu oszczędnościowego.
+Kluczowe słowo to niespodziewane. Wakacje w grudniu nie są nagłym wypadkiem, bo wiedziałeś, że grudzień nadejdzie. Auto, o którym wiedziałeś, że potrzebuje nowych klocków hamulcowych, też nie jest nagłym wypadkiem. To należy do twojego zwykłego budżetu albo do osobnego celu oszczędnościowego.
 
 Prawdziwy nagły wypadek to coś, czego nie dało się rozsądnie zaplanować i nie można odłożyć: utrata pracy, pilny rachunek medyczny lub dentystyczny, awaria niezbędnego sprzętu, naprawa auta, którym musisz dojechać do pracy. Test jest prosty. Czy to niespodziewane, niezbędne i pilne? Jeśli wszystkie trzy są prawdą, to właśnie do tego służy fundusz. Jeśli nie, bierze się to skądinąd.
 
@@ -3768,13 +3856,13 @@ Tak i to rozsądny sposób porównania. Zostaw YNAB do planowania, a AI Budget A
 ## Zasada 50/30/20 - praktyczny poradnik
 URL: https://ai-budget.pl/blog/pl/zasada-50-30-20/
 
-Zasada 50/30/20 to najczęściej cytowana porada budżetowa w internecie i nie bez powodu. Jest na tyle prosta, że zapamiętasz ją bez aplikacji, na tyle elastyczna, że pasuje do niemal każdego dochodu, i na tyle wyrozumiała, że nie porzucisz jej przy pierwszym zamówieniu jedzenia na wynos. Pomysł, spopularyzowany przez senator Elizabeth Warren w książce "All Your Worth", polega na podziale dochodu na rękę na trzy koszyki: 50% na potrzeby, 30% na zachcianki i 20% na oszczędności oraz spłatę długów.
+To najczęściej cytowana porada budżetowa w internecie i nie bez powodu. Jest na tyle prosta, że zapamiętasz ją bez aplikacji, na tyle elastyczna, że pasuje do niemal każdego dochodu, i na tyle wyrozumiała, że nie porzucisz jej przy pierwszym zamówieniu jedzenia na wynos. Pomysł, spopularyzowany przez senator Elizabeth Warren w książce "All Your Worth", polega na podziale dochodu na rękę na trzy koszyki: 50% na potrzeby, 30% na zachcianki i 20% na oszczędności oraz spłatę długów.
 
 To cała zasada. Trudność nie polega na zapamiętaniu liczb, tylko na zdecydowaniu, co właściwie wchodzi do każdego koszyka i co robić, gdy twoje prawdziwe życie nie dzieli się równo na trzy części. Ten poradnik omawia jedno i drugie.
 
-## Co właściwie oznacza każdy koszyk w zasadzie 50/30/20?
+## Na czym polega zasada 50/30/20?
 
-W zasadzie 50/30/20 dochód na rękę dzielisz na trzy koszyki: 50% na potrzeby (czynsz, rachunki, jedzenie, dojazd, minimalne raty długów), 30% na zachcianki (restauracje, streaming, hobby, podróże) i 20% na oszczędności oraz nadpłaty długów. O przydziale decyduje to, czy wydatek jest nieunikniony, a nie to, czy go lubisz.
+Zasada 50/30/20 to podział dochodu na rękę na trzy koszyki: 50% na potrzeby (czynsz, rachunki, jedzenie, dojazd, minimalne raty długów), 30% na zachcianki (restauracje, streaming, hobby, podróże) i 20% na oszczędności oraz nadpłaty długów. O przydziale decyduje to, czy wydatek jest nieunikniony, a nie to, czy go lubisz.
 
 Procenty są łatwe. Kategorie są miejscem, w którym ludzie się gubią, bo granica między potrzebą a zachcianką jest bardziej rozmyta, niż się wydaje.
 

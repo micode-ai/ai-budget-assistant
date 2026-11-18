@@ -377,6 +377,7 @@ Newest last within each section.
 - 2026-11-17 · [ABA-811](https://github.com/micode-ai/ai-budget-assistant/issues/849) — vehicle screen: `GET /vehicles/:id/history` (periods, calendar months by kind, consumption segments ending in the window, every cost); ownership switched to the same calendar window so card and screen agree — `features/vehicle-fuel-log.md`
 - 2026-11-17 · [ABA-812](https://github.com/micode-ai/ai-budget-assistant/issues/850) — bots write to their own linked account, not the app's; every write now names it, account names match only as whole words, and confirm uses the proposal's account — `telegram-bot.md`, `whatsapp-bot.md`, `slack-bot.md`
 - 2026-11-17 · [ABA-813](https://github.com/micode-ai/ai-budget-assistant/issues/851) — app version + platform per user: client headers, parsed in `JwtStrategy`, written by the throttled last-active stamp, shown as the admin users table's App column — `features/last-active-tracking.md`
+- 2026-11-18 · [ABA-814](https://github.com/micode-ai/ai-budget-assistant/issues/852) — `features/marketing-site.md`: `llms*.txt` and `featureList` listed 8 of 15 currencies; bank pages without a parser allowed when auto-detect-only and verified on the bank's site (Erste = ex-Santander, VeloBank absorbed Citi retail); `term:` frontmatter emits `DefinedTerm`. content-plan Wave 14: new topics PL/EN first.
 
 ## Queries
 

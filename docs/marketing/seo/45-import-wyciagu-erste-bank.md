@@ -1,6 +1,6 @@
 ---
-title: "Jak pobrać wyciąg z Erste Banku (PDF) i dodać go do budżetu"
-meta_description: "Jak pobrać wyciąg z Erste Bank Polska w PDF krok po kroku i zaimportować go do aplikacji budżetowej: kategorie, wpływy i wydatki, bez duplikatów."
+title: "Wyciąg z Erste (ex-Santander): pobierz i dodaj do budżetu"
+meta_description: "Jak pobrać eWyciąg PDF lub historię CSV z Erste Bank Polska (dawniej Santander) i zaimportować je do budżetu: kategorie, wpływy, wydatki, bez duplikatów."
 target_keyword: "jak pobrać wyciąg z erste"
 slug: "import-wyciagu-erste-bank"
 pair: "import-erste"
@@ -8,15 +8,24 @@ lang: "pl"
 date: "2026-10-07"
 ---
 
-# Jak pobrać wyciąg z Erste Banku (PDF) i dodać go do budżetu
+# Jak pobrać wyciąg z Erste Banku (dawniej Santander) i dodać go do budżetu
 
 Aby zaimportować wyciąg z Erste Bank Polska, pobierz wyciąg w formacie PDF z bankowości internetowej, a w AI Budget Assistant wybierz Ustawienia → Importuj transakcje → Erste Bank (PDF) i wskaż plik. Aplikacja odczyta tabelę z kolumnami wpływy i wydatki, podpowie kategorie i odznaczy transakcje, które już masz.
 
-Erste udostępnia wyciągi jako tekstowy PDF, więc aplikacja ma dla niego osobny czytnik. Nie wymaga on planu Pro.
+Erste Bank Polska to dawny Santander Bank Polska, więc ten poradnik dotyczy też klientów, którzy pamiętają bankowość Santandera. Erste udostępnia wyciągi jako tekstowy PDF, a aplikacja ma dla niego osobny czytnik. Nie wymaga on planu Pro.
 
 ## Jak pobrać wyciąg z Erste Bank?
 
-Zaloguj się do bankowości internetowej Erste, otwórz sekcję wyciągów, wybierz okres i pobierz wyciąg PDF. Dokładnych nazw menu nie udało się nam potwierdzić na stronach banku, więc szukaj wyciągu w formie PDF, takiego, w którym na górze są dane wyciągu, a dalej tabela z saldem początkowym i końcowym.
+Według pomocy banku (stan na listopad 2026) eWyciąg pobierzesz tak:
+
+- **W bankowości internetowej:** w górnym menu **Poczta** → zakładka **eWyciągi**. Albo **Twoje produkty** → **Więcej** przy rachunku → **eWyciąg**. Wybierz wyciąg, format **PDF** i kliknij **Pobierz**.
+- **W aplikacji mobilnej:** w dolnym menu **Kontakt** → **Poczta** → zakładka **eWyciągi**. W aplikacji wyciąg jest tylko w PDF.
+
+W bankowości internetowej eWyciąg jest też w formatach HTML, CSV i XML, ale do importu wybierz PDF, bo dla niego aplikacja ma czytnik.
+
+### Historia rachunku w CSV
+
+Zamiast miesięcznego wyciągu możesz pobrać historię z dowolnego okresu: **Twoje produkty** → **Historia**, ustaw filtry (daty, wpływy lub wydatki) i zapisz ją w formacie CSV. Taki plik wgrasz przez **Rozpoznaj automatycznie (dowolny bank)**. Za pierwszym razem aplikacja zapyta o zgodę na rozpoznanie kolumn przez AI (wysyła tylko nagłówek i do dziesięciu przykładowych wierszy), a ty sprawdzisz w podglądzie, która kolumna jest datą, kwotą i opisem. Import CSV nie wymaga planu Pro.
 
 ## Jak zaimportować wyciąg PDF krok po kroku?
 
@@ -58,7 +67,11 @@ Nie. Erste ma dedykowany czytnik PDF dostępny bez planu Pro. Płatny jest dopie
 
 **Czy Erste Bank udostępnia CSV?**
 
-Aplikacja obsługuje Erste przez wyciąg PDF i tego formatu używaj. Jeśli masz inny plik, wybierz „Rozpoznaj automatycznie (dowolny bank)”, a w razie potrzeby ręczny mapper.
+Tak. Historię rachunku (**Twoje produkty** → **Historia**) zapiszesz w CSV, a eWyciąg w bankowości internetowej jest też w CSV, HTML i XML. Plik CSV wgraj przez „Rozpoznaj automatycznie (dowolny bank)”. Dla wyciągu PDF aplikacja ma osobny czytnik.
+
+**Czy to ten sam bank co Santander?**
+
+Tak. Santander Bank Polska działa teraz pod marką Erste Bank Polska, a dawne adresy santander.pl przekierowują na erste.pl. Wyciągi pobierasz już w bankowości Erste.
 
 **Czy skan wyciągu z Erste się zaimportuje?**
 

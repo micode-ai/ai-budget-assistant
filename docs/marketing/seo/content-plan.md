@@ -214,14 +214,24 @@ Wave 12 notes:
 - **Calculators** sit inside topics 06 and 08 via a `<!-- calculator:503020 -->` / `<!-- calculator:emergency -->` line (rendered by `calc_html` in `build_blog.py`), not on separate `/tools/` URLs that would compete for the same query.
 - **Topic 28** links a real `.xlsx` (`assets/<lang>/budget-template.xlsx`, written by `build_excel_template.py`, copied into the site by `build_blog.py`).
 
-Seasonal backlog with publish windows: `new-year` (late Dec). (`christmas` and `black-friday` shipped in Wave 11 above.) (`year-review`, originally slotted here for early Dec, shipped early as Wave 8's `wrapped` topic instead — see above.)
-
 ## Wave 13 — Portuguese locales (pt-PT, pt-BR), 2026-11-14
 
 - Two new blog languages, `pt` (European Portuguese, hreflang `pt-PT`) and `br` (Brazilian Portuguese, hreflang `pt-BR`), shipped with 6 starter topics each, localized per market (not translated from each other): `budget` (pillar, 01), `expenses` (pillar, 02), `shared-budget` (04), `ai-budget` (15), `receipts` (20), `ai-bank-import` (22). 12 articles, all dated 2026-11-14, same `pair` as the other 9 languages so hreflang alternates cluster all 11 languages.
 - The pt/br file counts are intentionally lower than the other 9 languages until the remaining topics are localized; the "all languages or none" rule applies to the original 9, and pt/br are a staged rollout. Pillar down-links in pt/br list only the children that exist in that language (`build_pillar_links.py` reports the rest as MISSING, which is expected).
 - `ai-bank-import` is a child of `expenses` in no `CLUSTERS` list (pre-existing gap, left as is); it was added to the landing `FROM_BLOG_PAIRS`.
 - Blog total: 33 topics in 9 languages (297 articles) plus 12 pt/br articles = 309.
+
+## Wave 14 — search growth pass (ABA-814, 2026-11-18)
+
+| # | Pair | Languages | Angle |
+|---|---|---|---|
+| 45 | `import-erste` (rewritten) | pl only | Erste is the former Santander Bank Polska: verified eWyciąg paths (web and app) and the CSV history export from the bank's own help, replacing the "menu not confirmed" paragraph; title and FAQ name the old brand |
+| 48 | `import-velobank` | pl only | VeloBank history PDF ("Drukuj historię"), also for former Citi Handlowy retail clients; no parser, so it goes through auto-detect and the Pro AI PDF reading, stated plainly |
+
+Wave 14 rules:
+- **New topics go out in PL (and EN when the topic travels), not in nine languages at once.** Translate further only when Search Console shows demand in that market: `blog/be` and `blog/ua` drew 1 and 16 impressions a week, "Discovered – not indexed" doubled while waves landed, and the EN/FR drops coincided with spam updates.
+- **A bank page needs export steps verified on the bank's own site**, with the month of the check in the text. No verified steps, no page: Credit Agricole, BNP Paribas and Nest Bank were researched on 2026-11-18 and skipped, because the retail menu paths could not be confirmed. A bank without a parser is written as "download, then auto-detect", never as a row in the import picker (`scripts/check-blog-bank-claims.py` enforces it).
+- **Definitions for answer engines** live inside the pillars, not on glossary pages: a question H2 ("Czym jest …?"), then a 40–55-word paragraph that opens with the term, and a `term:` frontmatter key that makes `build_blog.py` emit `DefinedTerm` JSON-LD (05, 06, 08, 16).
 
 ## Article conventions (per piece)
 - Frontmatter: `title` (<=60, keyword), `meta_description` (<=155), `target_keyword`, `slug`, `pair`, `lang`, **`date`** (`YYYY-MM-DD`).
@@ -246,3 +256,5 @@ Seasonal backlog with publish windows: `new-year` (late Dec). (`christmas` and `
 - Edit the 3 pillar articles to add "Related guides" links down to the new cluster articles.
 - Add a "From the blog" section on the landing linking the top new articles (internal links + discovery).
 - **IndexNow needs no manual step** — `.github/workflows/web-deploy.yml` runs `scripts/indexnow-ping.sh` after every deploy, which diffs the pushed commit range, maps changed `site/**/index.html` files to their live URLs and POSTs them (verified accepted, HTTP 200, on the Wave-4 deploy). Do not re-add "ping IndexNow" as a manual follow-up.
+
+Seasonal backlog with publish windows: `new-year` (late Dec). (`christmas` and `black-friday` shipped in Wave 11 above.) (`year-review`, originally slotted here for early Dec, shipped early as Wave 8's `wrapped` topic instead — see above.)
