@@ -384,6 +384,7 @@ Newest last within each section.
 - 2026-11-18 · [ABA-818](https://github.com/micode-ai/ai-budget-assistant/issues/856) — `features/merchants.md`: MerchantsSettings rename/merge/reapply sheets extracted into hooks + modal components, mirroring ABA-478
 - 2026-11-18 · [ABA-819](https://github.com/micode-ai/ai-budget-assistant/issues/857) — expense and income categorize services now share `utils/categorize-suggestions.util.ts` (keys, daily limit, language names, group assembly); page `features/categorize-uncategorized.md`.
 - 2026-11-18 · [ABA-820](https://github.com/micode-ai/ai-budget-assistant/issues/858) — `AccountsService` split into `AccountsService` (CRUD, `validateAccess`), `AccountInvitationsService` and `AccountMembersService`, controller injects all three; invitation security order unchanged. Pages: `features/invite-by-search.md`.
+- 2026-11-18 · [ABA-821](https://github.com/micode-ai/ai-budget-assistant/issues/859) — `features/display-currency-conversion.md`: `ExchangeRateService` caches in Redis (`fx:rates:{base}`) instead of an in-memory Map; spec added
 
 ## Queries
 

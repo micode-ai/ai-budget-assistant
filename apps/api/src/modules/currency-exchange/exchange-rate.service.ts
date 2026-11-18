@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { CacheService } from '../../common/cache/cache.service';
 
 interface CachedRates {
   base: string;
@@ -6,7 +7,11 @@ interface CachedRates {
   fetchedAt: number;
 }
 
-const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
+const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour — freshness window
+// Redis keeps the entry far longer than it is "fresh" so a failed refetch can still serve the stale copy.
+const STALE_RETENTION_SEC = 7 * 24 * 60 * 60;
+
+export const fxRatesCacheKey = (base: string) => `fx:rates:${base}`;
 
 /** The currencies this provider returns rates for. Anything else has no rate here. */
 export const SUPPORTED_RATE_CURRENCIES = ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN', 'CZK', 'SEK', 'NOK', 'DKK', 'HUF', 'RON', 'CHF', 'BRL'] as const;
@@ -14,11 +19,12 @@ export const SUPPORTED_RATE_CURRENCIES = ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RU
 @Injectable()
 export class ExchangeRateService {
   private readonly logger = new Logger(ExchangeRateService.name);
-  private cache = new Map<string, CachedRates>();
+
+  constructor(private readonly cache: CacheService) {}
 
   async getRates(baseCurrency: string): Promise<{ base: string; rates: Record<string, number>; updatedAt: string }> {
     // Check cache
-    const cached = this.cache.get(baseCurrency);
+    const cached = await this.cache.get<CachedRates>(fxRatesCacheKey(baseCurrency));
     if (cached && Date.now() - cached.fetchedAt < CACHE_TTL_MS) {
       return {
         base: cached.base,
@@ -50,7 +56,7 @@ export class ExchangeRateService {
         rates,
         fetchedAt: Date.now(),
       };
-      this.cache.set(baseCurrency, entry);
+      await this.cache.set(fxRatesCacheKey(baseCurrency), entry, STALE_RETENTION_SEC);
 
       return {
         base: baseCurrency,

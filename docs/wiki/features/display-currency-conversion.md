@@ -14,7 +14,7 @@ the shared helper. (Changing the display currency on the phone is the `setCurren
 
 - `apps/api/src/common/utils/fx.ts` — `getRatesSafe(provider, base)`, `convertAmount(amount, from,
   base, rates)`; the only home of the formula
-- `ExchangeRateService` (`currency-exchange` module) — rates from open.er-api.com, one singleton
+- `ExchangeRateService` (`currency-exchange` module) — rates from open.er-api.com, one singleton; rates cached in Redis (`fx:rates:{base}`, fresh 1 h, kept 7 days for the stale fallback) so a deploy does not wipe them
 - Consumers: `grep -rl "common/utils/fx" apps/api/src/modules`
 - Chat: `ai/services/ai-tools.service.ts` (read tools, `buildToolCacheKey`),
   `prompt-builder.service.ts` (the labelling rule), `chat.service.ts` (passes `baseCurrency`)
@@ -87,3 +87,4 @@ converted. The story's top-five list is re-sorted by the **converted** amount.
 ABA-263 (chat labelling and conversion) · ABA-386 (Fat Finder currency) · ABA-387 (Spending Story
 currency, `common/utils/fx.ts`) · the `fx-rate-conversion-helper-quintupled` tech-debt item (the
 five remaining copies migrated).
+ABA-821 (FX rate cache moved from a per-process Map to Redis).
