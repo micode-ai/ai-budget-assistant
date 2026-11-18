@@ -7,7 +7,7 @@ describe('AccountsService.update — month anchor busts cached month figures (AB
       account: { update: jest.fn().mockResolvedValue({ id: 'acc-1' }) },
     };
     const cache: any = { delByPrefix: jest.fn().mockResolvedValue(undefined), del: jest.fn().mockResolvedValue(undefined) };
-    return { service: new AccountsService(prisma, {} as any, {} as any, cache), cache };
+    return { service: new AccountsService(prisma, cache), cache };
   }
 
   it('drops Safe-to-Spend and the chat summary when the anchor day changes', async () => {

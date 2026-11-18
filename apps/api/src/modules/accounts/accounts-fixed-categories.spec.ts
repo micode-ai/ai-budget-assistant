@@ -11,7 +11,7 @@ describe('AccountsService.setCategoryFixed (ABA-777)', () => {
         update: jest.fn().mockResolvedValue({}),
       },
     };
-    return { service: new AccountsService(prisma, {} as any, {} as any), prisma };
+    return { service: new AccountsService(prisma), prisma };
   }
 
   it('marks a category under every id it is known by, resolving a device id', async () => {

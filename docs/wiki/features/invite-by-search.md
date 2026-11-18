@@ -10,8 +10,8 @@ delivered as a push, accepted in-app — alongside the older link, code and emai
 ## Entry points
 
 - `GET /users/search?q=` — `users.controller.ts` / `UsersService.search`
-- `AccountsService.createInvitation` (with `invitedUserId`), `getMyInvitations`,
-  `respondToInvitation`; endpoints `GET /accounts/invitations/mine`,
+- `AccountInvitationsService` (`account-invitations.service.ts`: `createInvitation` with `invitedUserId`, `getMyInvitations`,
+  `respondToInvitation`; membership lives in `AccountMembersService`, CRUD + `validateAccess` in `AccountsService`); endpoints `GET /accounts/invitations/mine`,
   `PATCH /accounts/invitations/:id/respond` (`{ action: 'accept' | 'decline' }`)
 - `AccountInvitation.invitedUserId` — a plain field, no Prisma relation
 - Mobile: `src/stores/invitationStore.ts`; the Invitations tab of `app/alerts/index.tsx`

@@ -11,6 +11,8 @@ import {
   Req,
 } from '@nestjs/common';
 import { AccountsService } from './accounts.service';
+import { AccountInvitationsService } from './account-invitations.service';
+import { AccountMembersService } from './account-members.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountLimitGuard } from '../subscriptions/guards/account-limit.guard';
 import { SubscriptionsService } from '../subscriptions/subscriptions.service';
@@ -31,6 +33,8 @@ import { AuthenticatedRequest } from '../../common/types';
 export class AccountsController {
   constructor(
     private readonly accountsService: AccountsService,
+    private readonly invitationsService: AccountInvitationsService,
+    private readonly membersService: AccountMembersService,
     private readonly subscriptionsService: SubscriptionsService,
   ) {}
 
@@ -82,17 +86,17 @@ export class AccountsController {
     @Body() dto: CreateInvitationDto,
   ) {
     await this.subscriptionsService.checkMemberLimit(req.user.id, id);
-    return this.accountsService.createInvitation(id, req.user.id, dto);
+    return this.invitationsService.createInvitation(id, req.user.id, dto);
   }
 
   @Get(':id/invitations')
   async getInvitations(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
-    return this.accountsService.getInvitations(id, req.user.id);
+    return this.invitationsService.getInvitations(id, req.user.id);
   }
 
   @Get('invitations/mine')
   async getMyInvitations(@Req() req: AuthenticatedRequest) {
-    return this.accountsService.getMyInvitations(req.user.id);
+    return this.invitationsService.getMyInvitations(req.user.id);
   }
 
   @Patch('invitations/:id/respond')
@@ -101,7 +105,7 @@ export class AccountsController {
     @Param('id') id: string,
     @Body() dto: RespondToInvitationDto,
   ) {
-    return this.accountsService.respondToInvitation(id, req.user.id, dto.action);
+    return this.invitationsService.respondToInvitation(id, req.user.id, dto.action);
   }
 
   @Delete(':id/invitations/:invitationId')
@@ -110,7 +114,7 @@ export class AccountsController {
     @Param('id') id: string,
     @Param('invitationId') invitationId: string,
   ) {
-    return this.accountsService.cancelInvitation(id, invitationId, req.user.id);
+    return this.invitationsService.cancelInvitation(id, invitationId, req.user.id);
   }
 
   @Post('invitations/accept')
@@ -118,7 +122,7 @@ export class AccountsController {
     @Req() req: AuthenticatedRequest,
     @Body() dto: AcceptInvitationDto,
   ) {
-    return this.accountsService.acceptInvitation(req.user.id, dto.inviteCode);
+    return this.invitationsService.acceptInvitation(req.user.id, dto.inviteCode);
   }
 
   @Post('invitations/decline')
@@ -126,14 +130,14 @@ export class AccountsController {
     @Req() req: AuthenticatedRequest,
     @Body() dto: AcceptInvitationDto,
   ) {
-    return this.accountsService.declineInvitation(req.user.id, dto.inviteCode);
+    return this.invitationsService.declineInvitation(req.user.id, dto.inviteCode);
   }
 
   // ---- Members ----
 
   @Get(':id/members')
   async getMembers(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
-    return this.accountsService.getMembers(id, req.user.id);
+    return this.membersService.getMembers(id, req.user.id);
   }
 
   @Patch(':id/members/me/payment-info')
@@ -142,7 +146,7 @@ export class AccountsController {
     @Param('id') id: string,
     @Body() dto: AccountMemberPaymentInfoDto,
   ) {
-    return this.accountsService.updatePaymentInfo(id, req.user.id, dto);
+    return this.membersService.updatePaymentInfo(id, req.user.id, dto);
   }
 
   @Patch(':id/members/:memberId')
@@ -152,7 +156,7 @@ export class AccountsController {
     @Param('memberId') memberId: string,
     @Body() dto: UpdateMemberRoleDto,
   ) {
-    return this.accountsService.updateMemberRole(id, memberId, req.user.id, dto);
+    return this.membersService.updateMemberRole(id, memberId, req.user.id, dto);
   }
 
   @Delete(':id/members/:memberId')
@@ -161,12 +165,12 @@ export class AccountsController {
     @Param('id') id: string,
     @Param('memberId') memberId: string,
   ) {
-    return this.accountsService.removeMember(id, memberId, req.user.id);
+    return this.membersService.removeMember(id, memberId, req.user.id);
   }
 
   @Post(':id/leave')
   async leaveAccount(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
-    return this.accountsService.leaveAccount(id, req.user.id);
+    return this.membersService.leaveAccount(id, req.user.id);
   }
 
   // ---- Trip lifecycle ----
