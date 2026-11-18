@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { showAlert } from '@/utils/alert';
-import { SheetDialog } from '@/components/SheetDialog';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -14,17 +13,13 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import { BulkActionBar } from '@/components/BulkActionBar';
 import { SettingsScreenScroll } from '../SettingsScreenScroll';
 import { useSettingsPane } from '../SettingsPaneContext';
-import type { MerchantCategoryRule, MerchantRuleReapplyPreview } from '@budget/shared-types';
 import { storedCategoryLabel } from '@/features/categories/storedCategoryLabel';
-
-/**
- * Stable accessible-name ids for the three sheets' titles, wired to the
- * desktop dialogs' `aria-labelledby`. Fixed ids are safe for the same reason
- * `ExpenseDialog.tsx`'s is: only one sheet is ever open at a time.
- */
-const RENAME_SHEET_TITLE_ID = 'merchant-rename-sheet-title';
-const MERGE_SHEET_TITLE_ID = 'merchant-merge-sheet-title';
-const REAPPLY_SHEET_TITLE_ID = 'merchant-reapply-sheet-title';
+import { useMerchantRename } from '@/hooks/useMerchantRename';
+import { useMerchantMerge } from '@/hooks/useMerchantMerge';
+import { useMerchantRuleReapply } from '@/hooks/useMerchantRuleReapply';
+import { RenameMerchantModal } from './RenameMerchantModal';
+import { MergeMerchantsModal } from './MergeMerchantsModal';
+import { ReapplyMerchantRuleModal } from './ReapplyMerchantRuleModal';
 
 /**
  * The merchants screen's body: the merchant list with its rename / merge /
@@ -93,7 +88,6 @@ export function MerchantsSettings() {
   const currentAccountId = useAccountStore((s) => s.currentAccountId);
   const expenses = useExpenseStore((s) => s.expenses);
   const renameMerchant = useExpenseStore((s) => s.renameMerchant);
-  const mergeMerchants = useExpenseStore((s) => s.mergeMerchants);
   const merchants = useMemo(() => getMerchantCounts(expenses), [expenses]);
   const countByMerchant = useMemo(
     () => new Map(merchants.map((m) => [m.merchant, m.count])),
@@ -105,8 +99,6 @@ export function MerchantsSettings() {
   const isRulesLoaded = useMerchantRulesStore((s) => s.isLoaded);
   const loadRules = useMerchantRulesStore((s) => s.loadRules);
   const deleteRule = useMerchantRulesStore((s) => s.deleteRule);
-  const previewReapply = useMerchantRulesStore((s) => s.previewReapply);
-  const reapplyRule = useMerchantRulesStore((s) => s.reapplyRule);
 
   // Keyed on the account: the rules are scoped server-side to `X-Account-Id`.
   // `accountStore` clears `isLoaded` on a switch, so this re-fetches then while
@@ -130,21 +122,9 @@ export function MerchantsSettings() {
     );
   };
 
-  // Single rename modal
-  const [editing, setEditing] = useState<string | null>(null);
-  const [name, setName] = useState('');
-  const [saving, setSaving] = useState(false);
-
-  // Multi-select + merge
+  // Multi-select (the merge itself lives in `useMerchantMerge`)
   const [selecting, setSelecting] = useState(false);
   const [selected, setSelected] = useState<Set<string>>(new Set());
-  const [mergeSources, setMergeSources] = useState<string[] | null>(null);
-  const [mergeName, setMergeName] = useState('');
-
-  // Reapply rule
-  const [reapplyPreview, setReapplyPreview] = useState<MerchantRuleReapplyPreview | null>(null);
-  const [reapplySelected, setReapplySelected] = useState<Set<string>>(new Set());
-  const [reapplyLoading, setReapplyLoading] = useState(false);
 
   // Suggestions — dismissals persist across sessions (MMKV), keyed by fingerprint.
   const dismissed = useMerchantSuggestionStore((s) => s.dismissed);
@@ -158,27 +138,6 @@ export function MerchantsSettings() {
         .slice(0, 3),
     [merchants, dismissed],
   );
-
-  const openRename = (merchant: string) => {
-    setEditing(merchant);
-    setName(merchant);
-  };
-  const closeRename = () => {
-    setEditing(null);
-    setName('');
-  };
-
-  const handleSaveRename = async () => {
-    if (!editing) return;
-    const next = name.trim();
-    if (!next) { showAlert(t('common.error'), t('merchants.nameRequired')); return; }
-    if (next === editing) { closeRename(); return; }
-    setSaving(true);
-    const count = await renameMerchant(editing, next);
-    setSaving(false);
-    closeRename();
-    showAlert('', t('merchants.renamed', { count }));
-  };
 
   const handleDelete = (merchant: string, count: number) => {
     showAlert(t('merchants.delete'), t('merchants.deleteConfirm', { count }), [
@@ -205,92 +164,9 @@ export function MerchantsSettings() {
     setSelected(new Set());
   };
 
-  // Default canonical = highest-count name among the given sources
-  const defaultCanonical = (sources: string[]) =>
-    [...sources].sort((a, b) => (countByMerchant.get(b) ?? 0) - (countByMerchant.get(a) ?? 0))[0] ?? '';
-
-  const openMergeFromSelection = () => {
-    const sources = [...selected];
-    if (sources.length < 2) { showAlert('', t('merchants.selectToMerge')); return; }
-    setMergeSources(sources);
-    setMergeName(defaultCanonical(sources));
-  };
-  const openMergeFromSuggestion = (members: string[], canonical: string) => {
-    setMergeSources(members);
-    setMergeName(canonical);
-  };
-  const closeMerge = () => {
-    setMergeSources(null);
-    setMergeName('');
-  };
-
-  const mergeExpenseCount = useMemo(
-    () => (mergeSources ?? []).reduce((s, m) => s + (countByMerchant.get(m) ?? 0), 0),
-    [mergeSources, countByMerchant],
-  );
-
-  const handleConfirmMerge = async () => {
-    if (!mergeSources) return;
-    const target = mergeName.trim();
-    if (!target) { showAlert(t('common.error'), t('merchants.nameRequired')); return; }
-    setSaving(true);
-    const count = await mergeMerchants(mergeSources, target);
-    setSaving(false);
-    closeMerge();
-    exitSelect();
-    showAlert('', t('merchants.merged', { name: target, count }));
-  };
-
-  const closeReapply = () => {
-    setReapplyPreview(null);
-    setReapplySelected(new Set());
-  };
-
-  const handleReapply = async (rule: MerchantCategoryRule) => {
-    setReapplyLoading(true);
-    try {
-      const preview = await previewReapply(rule.id);
-      if (preview.totalCount === 0) {
-        showAlert('', t('merchants.reapplyNothingToDo', { merchant: preview.merchantNormalized }));
-        return;
-      }
-      setReapplyPreview(preview);
-      setReapplySelected(new Set(preview.groups.map((g) => g.categoryId)));
-    } finally {
-      setReapplyLoading(false);
-    }
-  };
-
-  const toggleReapplyGroup = (categoryId: string) => {
-    setReapplySelected((prev) => {
-      const next = new Set(prev);
-      if (next.has(categoryId)) next.delete(categoryId); else next.add(categoryId);
-      return next;
-    });
-  };
-
-  const reapplySelectedCount = useMemo(() => {
-    if (!reapplyPreview) return 0;
-    return reapplyPreview.groups.reduce(
-      (sum, g) => sum + (reapplySelected.has(g.categoryId) ? g.count : 0),
-      0,
-    );
-  }, [reapplyPreview, reapplySelected]);
-
-  const handleConfirmReapply = async () => {
-    if (!reapplyPreview) return;
-    setSaving(true);
-    const targetCategoryName = reapplyPreview.targetCategoryName;
-    const updated = await reapplyRule(reapplyPreview.ruleId, [...reapplySelected]);
-    setSaving(false);
-    closeReapply();
-    // Fire-and-forget: this write happened server-side in one bulk update, not
-    // through expenseStore's normal optimistic-local-then-push path, so
-    // nothing has told the local store yet — same posture as renameMerchant's
-    // syncPendingExpenses() call above.
-    useExpenseStore.getState().loadExpenses({ force: true });
-    showAlert('', t('merchants.reapplyApplied', { count: updated, category: targetCategoryName }));
-  };
+  const rename = useMerchantRename();
+  const merge = useMerchantMerge({ selected, exitSelect, countByMerchant });
+  const reapply = useMerchantRuleReapply();
 
   return (
     <>
@@ -335,7 +211,7 @@ export function MerchantsSettings() {
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.suggestionMergeButton}
-                onPress={() => openMergeFromSuggestion(g.members, g.canonical)}
+                onPress={() => merge.openMergeFromSuggestion(g.members, g.canonical)}
               >
                 <Text style={styles.suggestionMergeText} numberOfLines={1} ellipsizeMode="tail">
                   {t('merchants.suggestionMerge', { name: g.canonical })}
@@ -356,7 +232,7 @@ export function MerchantsSettings() {
           >
             <TouchableOpacity
               style={[styles.mergeBarButton, selected.size < 2 && styles.mergeButtonDisabled]}
-              onPress={openMergeFromSelection}
+              onPress={merge.openMergeFromSelection}
               disabled={selected.size < 2}
               accessibilityRole="button"
             >
@@ -382,7 +258,7 @@ export function MerchantsSettings() {
                           ? undefined
                           : selecting
                             ? () => toggleSelect(merchant)
-                            : () => openRename(merchant)
+                            : () => rename.openRename(merchant)
                       }
                       activeOpacity={canEdit ? 0.7 : 1}
                     >
@@ -440,10 +316,10 @@ export function MerchantsSettings() {
                   </View>
                   {canEdit && (
                     <TouchableOpacity
-                      onPress={() => handleReapply(rule)}
+                      onPress={() => reapply.handleReapply(rule)}
                       hitSlop={8}
                       style={styles.ruleActionSpacing}
-                      disabled={reapplyLoading}
+                      disabled={reapply.loading}
                     >
                       <Ionicons name="refresh-outline" size={20} color={theme.colors.primary} />
                     </TouchableOpacity>
@@ -471,7 +347,7 @@ export function MerchantsSettings() {
         <View style={[styles.bottomBar, { paddingBottom: Math.max(insets.bottom, 12) }]}>
           <TouchableOpacity
             style={[styles.mergeButton, selected.size < 2 && styles.mergeButtonDisabled]}
-            onPress={openMergeFromSelection}
+            onPress={merge.openMergeFromSelection}
             disabled={selected.size < 2}
           >
             <Ionicons name="git-merge-outline" size={18} color={theme.colors.textInverse} />
@@ -480,139 +356,32 @@ export function MerchantsSettings() {
         </View>
       )}
 
-      {/* Single rename sheet */}
-      <SheetDialog
-        visible={editing !== null}
-        onClose={closeRename}
-        titleId={RENAME_SHEET_TITLE_ID}
-        keyboardAvoiding
-        padBottom={theme.spacing[4]}
-        insetFloor={theme.spacing[6]}
-        scrimColor="rgba(0,0,0,0.4)"
-      >
-        <Text nativeID={RENAME_SHEET_TITLE_ID} style={styles.modalTitle}>{t('merchants.renameTitle')}</Text>
-        <TextInput
-          style={styles.input}
-          value={name}
-          onChangeText={setName}
-          placeholder={t('merchants.renamePlaceholder')}
-          placeholderTextColor={theme.colors.textTertiary}
-          autoFocus
-          autoCapitalize="words"
-        />
-        <View style={styles.actions}>
-          <TouchableOpacity style={styles.cancelButton} onPress={closeRename}>
-            <Text style={styles.cancelText}>{t('common.cancel')}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.saveButton, saving && styles.saveButtonDisabled]}
-            onPress={handleSaveRename}
-            disabled={saving}
-          >
-            <Text style={styles.saveText}>{t('common.save')}</Text>
-          </TouchableOpacity>
-        </View>
-      </SheetDialog>
-
-      {/* Merge sheet */}
-      <SheetDialog
-        visible={mergeSources !== null}
-        onClose={closeMerge}
-        titleId={MERGE_SHEET_TITLE_ID}
-        keyboardAvoiding
-        padBottom={theme.spacing[4]}
-        insetFloor={theme.spacing[6]}
-        scrimColor="rgba(0,0,0,0.4)"
-      >
-        <Text nativeID={MERGE_SHEET_TITLE_ID} style={styles.modalTitle}>{t('merchants.mergeTitle')}</Text>
-        <Text style={styles.mergeLabel}>{t('merchants.mergeInto')}</Text>
-        <TextInput
-          style={styles.input}
-          value={mergeName}
-          onChangeText={setMergeName}
-          placeholder={t('merchants.renamePlaceholder')}
-          placeholderTextColor={theme.colors.textTertiary}
-          autoFocus
-          autoCapitalize="words"
-        />
-        <Text style={styles.mergeCount}>{t('merchants.mergeCount', { count: mergeExpenseCount })}</Text>
-        <View style={styles.actions}>
-          <TouchableOpacity style={styles.cancelButton} onPress={closeMerge}>
-            <Text style={styles.cancelText}>{t('common.cancel')}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.saveButton, saving && styles.saveButtonDisabled]}
-            onPress={handleConfirmMerge}
-            disabled={saving}
-          >
-            <Text style={styles.saveText}>{t('merchants.merge')}</Text>
-          </TouchableOpacity>
-        </View>
-      </SheetDialog>
-
-      {/* Reapply rule sheet */}
-      <SheetDialog
-        visible={reapplyPreview !== null}
-        onClose={closeReapply}
-        titleId={REAPPLY_SHEET_TITLE_ID}
-        padBottom={theme.spacing[4]}
-        insetFloor={theme.spacing[6]}
-        scrimColor="rgba(0,0,0,0.4)"
-      >
-        {reapplyPreview && (
-          <>
-            <Text nativeID={REAPPLY_SHEET_TITLE_ID} style={styles.modalTitle}>
-              {t('merchants.reapplyTitle', {
-                merchant: reapplyPreview.merchantNormalized,
-                category: reapplyPreview.targetCategoryName,
-              })}
-            </Text>
-            {reapplyPreview.groups.map((g) => {
-              const isChecked = reapplySelected.has(g.categoryId);
-              return (
-                <TouchableOpacity
-                  key={g.categoryId}
-                  style={styles.row}
-                  onPress={() => toggleReapplyGroup(g.categoryId)}
-                  activeOpacity={0.7}
-                >
-                  <Ionicons
-                    name={isChecked ? 'checkbox' : 'square-outline'}
-                    size={22}
-                    color={isChecked ? theme.colors.primary : theme.colors.textTertiary}
-                  />
-                  <View style={styles.nameContainer}>
-                    <Text style={styles.name} numberOfLines={1}>
-                      {t('merchants.reapplyGroupLabel', { count: g.count, category: storedCategoryLabel(g.categoryId, g.categoryName) })}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              );
-            })}
-            <Text style={styles.mergeCount}>
-              {t('merchants.reapplySummary', {
-                count: reapplySelectedCount,
-                category: reapplyPreview.targetCategoryName,
-              })}
-            </Text>
-            <View style={styles.actions}>
-              <TouchableOpacity style={styles.cancelButton} onPress={closeReapply}>
-                <Text style={styles.cancelText}>{t('common.cancel')}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[
-                  styles.saveButton,
-                  (saving || reapplySelectedCount === 0) && styles.saveButtonDisabled,
-                ]}
-                onPress={handleConfirmReapply}
-                disabled={saving || reapplySelectedCount === 0}
-              >
-                <Text style={styles.saveText}>{t('merchants.reapplyApply', { count: reapplySelectedCount })}</Text>
-              </TouchableOpacity>
-            </View>
-          </>
-        )}
-      </SheetDialog>
+      <RenameMerchantModal
+        editing={rename.editing}
+        name={rename.name}
+        onChangeName={rename.setName}
+        saving={rename.saving}
+        onClose={rename.closeRename}
+        onSave={rename.handleSaveRename}
+      />
+      <MergeMerchantsModal
+        mergeSources={merge.mergeSources}
+        mergeName={merge.mergeName}
+        onChangeName={merge.setMergeName}
+        expenseCount={merge.mergeExpenseCount}
+        saving={merge.saving}
+        onClose={merge.closeMerge}
+        onConfirm={merge.handleConfirmMerge}
+      />
+      <ReapplyMerchantRuleModal
+        preview={reapply.preview}
+        selected={reapply.selected}
+        selectedCount={reapply.selectedCount}
+        saving={reapply.saving}
+        onToggleGroup={reapply.toggleGroup}
+        onClose={reapply.closeReapply}
+        onConfirm={reapply.handleConfirmReapply}
+      />
     </>
   );
 }
@@ -717,28 +486,4 @@ const createStyles = (theme: Theme) => ({
   },
   mergeButtonDisabled: { opacity: 0.5 },
   mergeButtonText: { fontSize: 16, fontWeight: '600' as const, color: theme.colors.textInverse },
-  // Modals
-  modalTitle: { ...theme.textStyles.h3, color: theme.colors.textPrimary, marginBottom: theme.spacing[4] },
-  mergeLabel: { ...theme.textStyles.bodySm, color: theme.colors.textSecondary, marginBottom: theme.spacing[2] },
-  input: {
-    backgroundColor: theme.colors.surfaceSecondary,
-    borderRadius: theme.borderRadius.lg,
-    padding: theme.spacing[4],
-    fontSize: 16, color: theme.colors.textPrimary, marginBottom: theme.spacing[4],
-  },
-  mergeCount: { ...theme.textStyles.bodySm, color: theme.colors.textTertiary, marginBottom: theme.spacing[4] },
-  actions: { flexDirection: 'row' as const, gap: theme.spacing[3] },
-  cancelButton: {
-    flex: 1, alignItems: 'center' as const, justifyContent: 'center' as const,
-    paddingVertical: theme.spacing[3.5], borderRadius: theme.borderRadius.lg,
-    borderWidth: 1, borderColor: theme.colors.border,
-  },
-  cancelText: { fontSize: 16, fontWeight: '500' as const, color: theme.colors.textSecondary },
-  saveButton: {
-    flex: 1, alignItems: 'center' as const, justifyContent: 'center' as const,
-    paddingVertical: theme.spacing[3.5], borderRadius: theme.borderRadius.lg,
-    backgroundColor: theme.colors.primary,
-  },
-  saveButtonDisabled: { opacity: 0.6 },
-  saveText: { fontSize: 16, fontWeight: '600' as const, color: theme.colors.textInverse },
 });

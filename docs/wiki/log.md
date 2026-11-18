@@ -381,6 +381,7 @@ Newest last within each section.
 - 2026-11-18 · [ABA-815](https://github.com/micode-ai/ai-budget-assistant/issues/853) — `features/marketing-site.md`: German site positioned on "ohne Bankverbindung", Austria inside the DE pages (no `de-AT` copies), Impressum at `/de/about/#impressum`. Sparkasse/DKB/ING/George CSV steps could not be verified on the banks' sites — no pages.
 - 2026-11-18 · [ABA-816](https://github.com/micode-ai/ai-budget-assistant/issues/854) — `GuestController` held ~19 Prisma calls; moved into `ReceiptSplitGuestService` (token collapse, paid claim guard, flag dedup stay as documented). Page: `features/receipt-split.md`.
 - 2026-11-18 · [ABA-817](https://github.com/micode-ai/ai-budget-assistant/issues/855) — shared-expense push dedup moved from a process Map to Redis `setIfAbsentStrict`, stamp released on failure, fails open; new page `features/shared-expense-push.md`.
+- 2026-11-18 · [ABA-818](https://github.com/micode-ai/ai-budget-assistant/issues/856) — `features/merchants.md`: MerchantsSettings rename/merge/reapply sheets extracted into hooks + modal components, mirroring ABA-478
 
 ## Queries
 

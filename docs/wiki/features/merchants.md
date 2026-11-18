@@ -11,6 +11,7 @@ rename, merge and delete merchant names and suggests merges of obvious variants.
 
 ## Entry points
 
+- `MerchantsSettings.tsx` keeps only the list, multi-select, rule list and suggestion banners. Its three sheets are `RenameMerchantModal`/`MergeMerchantsModal`/`ReapplyMerchantRuleModal` (same folder) over `useMerchantRename`/`useMerchantMerge`/`useMerchantRuleReapply` in `src/hooks/`; extend those, not the screen (ABA-818).
 - Schema: `Expense.merchant String?` + `@@index([accountId, merchant])`; mobile SQLite
   `merchant TEXT`. Incomes have no merchant field.
 - `apps/mobile/src/utils/merchant.ts` — `getDistinctMerchants`, `getMerchantCounts`,
