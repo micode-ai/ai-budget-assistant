@@ -53,6 +53,14 @@ not separate state.
 **A sheet that renders as an overlay stays at screen level** (`ItemCategorySheet`), wherever in the
 tree its trigger lives.
 
+## Expense detail card
+
+`ExpenseDetailsCard.tsx` keeps the basic-field state and `triggerSave()`. Trip expense shares live
+in `src/hooks/useTripExpenseShareFields.ts`: it owns the split, the last-saved mirror (Cancel reverts
+to it) and `markSaved()`, which `triggerSave` must call after a successful save. The create form's
+`useCategorySplitEditor` is deliberately not reused for the card's category splits — it is a
+pre-save shape, while the card persists splits immediately.
+
 ## Known gaps
 
 - `ExpenseCreateForm.tsx`, `ProductsSettings.tsx` and `ExpenseDetailsCard.tsx` have regrown to
@@ -61,7 +69,7 @@ tree its trigger lives.
 
 ## History
 
-ABA-414 (account detail) · ABA-424 (debts) · ABA-439 (Fat Finder) · ABA-448 (receipt scan) ·
+ABA-822 (expense detail trip shares) · ABA-414 (account detail) · ABA-424 (debts) · ABA-439 (Fat Finder) · ABA-448 (receipt scan) ·
 ABA-469 (transfer create) · ABA-477 (expense create) · ABA-478 (products settings) · ABA-479
 (transfer detail) · ABA-496 (income detail) · ABA-499, ABA-517 and the settings desktop shell
 (bodies moved out of `app/` so desktop dialogs and panes can host them).

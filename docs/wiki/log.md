@@ -385,6 +385,7 @@ Newest last within each section.
 - 2026-11-18 · [ABA-819](https://github.com/micode-ai/ai-budget-assistant/issues/857) — expense and income categorize services now share `utils/categorize-suggestions.util.ts` (keys, daily limit, language names, group assembly); page `features/categorize-uncategorized.md`.
 - 2026-11-18 · [ABA-820](https://github.com/micode-ai/ai-budget-assistant/issues/858) — `AccountsService` split into `AccountsService` (CRUD, `validateAccess`), `AccountInvitationsService` and `AccountMembersService`, controller injects all three; invitation security order unchanged. Pages: `features/invite-by-search.md`.
 - 2026-11-18 · [ABA-821](https://github.com/micode-ai/ai-budget-assistant/issues/859) — `features/display-currency-conversion.md`: `ExchangeRateService` caches in Redis (`fx:rates:{base}`) instead of an in-memory Map; spec added
+- 2026-11-18 · [ABA-822](https://github.com/micode-ai/ai-budget-assistant/issues/860) — trip expense-share state extracted from `ExpenseDetailsCard` into `useTripExpenseShareFields`; page `features/mobile-screen-decompositions.md`.
 
 ## Queries
 
