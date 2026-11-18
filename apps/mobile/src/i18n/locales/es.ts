@@ -1071,6 +1071,12 @@ export default {
     inAppBrowser: 'Este navegador no puede añadir apps a la pantalla de inicio. Abre primero esta página en Safari.',
     dismiss: 'Cerrar',
   },
+  receiptFuel: {
+    cardTitle: 'Añadir al registro de combustible de {{vehicle}}',
+    cardBody: '{{litres}} l a {{price}} por litro, leído del recibo. Introduce el cuentakilómetros para registrar este repostaje.',
+    odometerLabel: 'Cuentakilómetros (km)',
+    logFailed: 'El gasto se guardó, pero no se pudo añadir la entrada del registro de combustible. Añádela desde la pantalla del gasto.',
+  },
   alerts: {
     title: 'Alertas',
     empty: 'Aún no hay alertas. Te avisaremos cuando notemos algo inusual en tus finanzas.',

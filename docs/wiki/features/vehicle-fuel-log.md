@@ -68,10 +68,13 @@ with `source = 'category'` and never touches a person's decision (`source = null
 tombstone a removal leaves) or a fill-up. Stats carry `ownership`: the last 12 months by kind, monthly
 average, km from the fill-ups in the window and all costs per km.
 
+**Receipt prefill** (`fuel-receipt-litres-ocr-prefill`): the receipt scan carries an optional `fuel {litres, pricePerLitre, fuelType}` read from the fuel line; `extractReceiptFuel` (`ai/utils/receipt-fuel.ts`) keeps it only when litres x price matches a line within 2%. The confirm card (`ReceiptFuelCard`) asks only for the odometer and, on save, writes the `FuelLog` (full tank). Vehicle: only one, else last used, else unique fuel-type match, else no card. Bots get the extraction through the shared finalizer but have no button yet.
+
 ## Invariants
 
 - Every query filters by `accountId`; the expense id is accepted as PK or `clientId` and the RESOLVED PK is written.
 - Soft-deleted expenses are excluded from stats.
+- A scanned `fuel` block is read, never computed, and dropped whole (not half-filled) when litres x price misses every line; no odometer typed means no fuel-log write.
 - Fuel-log reads also filter on the EXPENSE's current `accountId`, not only `FuelLog.accountId`: moving an expense to another account does not touch its fuel log, and without that filter the source account's stats would keep counting it.
 - The 12-month window is CALENDAR months ending with the current one (`windowStart` in `vehicle-history.util.ts`), shared by
   `getStats().ownership` and the history endpoint — the Analytics card and the vehicle screen must show the same 12 months.
@@ -80,8 +83,7 @@ average, km from the fill-ups in the window and all costs per km.
 
 ## Known gaps
 
-SQLite mirror; OCR litres
-prefill; community-price comparison; mileage in the tax export; comparing two vehicles; a yearly forecast; stacked
+SQLite mirror; bot fuel-log button; community-price comparison; mileage in the tax export; comparing two vehicles; a yearly forecast; stacked
 monthly bars by kind (the bar chart has no stacking — a picked month's kinds show in the breakdown instead).
 
 ## History

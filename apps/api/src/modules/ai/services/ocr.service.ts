@@ -21,6 +21,7 @@ import { ReceiptPdfService } from './receipt-pdf.service';
 import { UsageTrackingService } from '../../subscriptions/usage-tracking.service';
 import { CANONICAL_NAME_RULES } from '../prompts/canonical-name-rules';
 import { RECEIPT_PARTS_INSTRUCTIONS } from '../prompts/receipt-parts.prompt';
+import { extractReceiptFuel, type ReceiptFuel } from '../utils/receipt-fuel';
 
 export interface ReceiptItem {
   description: string;
@@ -111,6 +112,8 @@ export interface ParsedReceipt {
   currency: string;
   paymentMethod: string | null;
   confidence: number;
+  /** Litres / price per litre read off a fuel-station line and validated against its value; null otherwise. */
+  fuel?: ReceiptFuel | null;
 }
 
 /**
@@ -142,6 +145,8 @@ export interface ReceiptExpense {
   date: string | null;
   confidence: number;
   receiptItems: ReceiptItem[];
+  /** Fuel-station receipts only (see `extractReceiptFuel`). Null when absent or not trustworthy. */
+  fuel?: ReceiptFuel | null;
   location: { lat: number; lng: number; name: string } | null;
   /** Lines that cost more than usual for this user in this store. Always present; empty when nothing to report. */
   priceFindings: ReceiptCheckFinding[];
@@ -325,6 +330,11 @@ Check your own arithmetic before answering:
 - Σ(items[].totalPrice) − discount + deposit should equal "total", within about 1%.
 - If it does not, RE-READ the line items — especially the quantity and value columns. Do not adjust "total", "discount" or "deposit" to make the sum come out: those three are printed plainly at the foot of the receipt and are almost always right, while the line columns are where misreads happen.
 
+Fuel ("fuel"):
+- Only for a fuel-station receipt (Orlen, BP, Shell, Circle K, Lotos, Moya, Amic) that has a fuel line. Otherwise return null.
+- Copy litres from the quantity printed on the fuel line (Ilość), price per litre from its Cena column, and fuelType from the product name (PB95, PB98, E10, benzyna = petrol; ON, diesel, Verva = diesel; LPG = lpg; anything else = other).
+- READ these, never compute them. If the fuel line does not print both litres and price per litre, return null.
+
 Date extraction:
 - Output STRICTLY in YYYY-MM-DD form. If the receipt shows DD.MM.YYYY, convert it. Do not include time in this field.
 - If the date is partially unreadable or the year is missing, return null. Do NOT guess year from "today's date".
@@ -353,7 +363,7 @@ export const RECEIPT_RESPONSE_FORMAT = {
       required: [
         'merchantName', 'merchantAddress', 'merchantStreet', 'merchantCity', 'merchantPostalCode',
         'merchantCountry', 'date', 'time', 'items', 'subtotal', 'discount', 'deposit', 'tax', 'total',
-        'currency', 'paymentMethod', 'suggestedCategory', 'confidence',
+        'currency', 'paymentMethod', 'suggestedCategory', 'confidence', 'fuel',
       ],
       properties: {
         merchantName: NULLABLE_STRING,
@@ -388,6 +398,21 @@ export const RECEIPT_RESPONSE_FORMAT = {
         paymentMethod: NULLABLE_STRING,
         suggestedCategory: NULLABLE_STRING,
         confidence: NULLABLE_NUMBER,
+        fuel: {
+          anyOf: [
+            { type: 'null' },
+            {
+              type: 'object',
+              additionalProperties: false,
+              required: ['litres', 'pricePerLitre', 'fuelType'],
+              properties: {
+                litres: NULLABLE_NUMBER,
+                pricePerLitre: NULLABLE_NUMBER,
+                fuelType: { type: 'string', enum: ['petrol', 'diesel', 'lpg', 'other'] },
+              },
+            },
+          ],
+        },
       },
     },
   },
@@ -780,6 +805,8 @@ User note about this receipt: "${safeNote}"`;
       );
       parsed.discount = null;
     }
+
+    parsed.fuel = extractReceiptFuel((parsed as { fuel?: unknown }).fuel, parsed.items ?? []);
 
     return parsed;
   }

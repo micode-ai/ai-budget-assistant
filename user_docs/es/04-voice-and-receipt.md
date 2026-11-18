@@ -283,3 +283,7 @@ Revisa los detalles, toca ✓ para guardar o el icono del lápiz para abrir el f
 ---
 
 *Ver tambien: [Gastos e Ingresos](./03-expenses-and-income.md) | [Chat IA](./07-ai-chat.md)*
+
+## Recibos de gasolinera
+
+Si el recibo es de una gasolinera e indica los litros y el precio por litro, la pantalla de confirmación ofrece **Añadir al registro de combustible** para tu vehículo. Introduce el cuentakilómetros y el repostaje se registra con el gasto; déjalo vacío para guardar solo el gasto. Si las cifras del recibo no cuadran, no se rellena nada.

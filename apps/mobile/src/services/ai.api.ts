@@ -31,6 +31,7 @@ export type ScanReceiptResponse = {
     categoryId?: string | null;
     categoryName?: string | null;
   }[];
+  fuel?: { litres: number; pricePerLitre: number; fuelType: 'petrol' | 'diesel' | 'lpg' | 'other' } | null;
   location: { lat: number; lng: number; name: string } | null;
   priceFindings?: ReceiptCheckFinding[];
   categorySplits: {

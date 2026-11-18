@@ -1069,6 +1069,12 @@ export default {
     inAppBrowser: 'Este navegador não consegue adicionar apps à tela de início. Abra esta página no Safari primeiro.',
     dismiss: 'Fechar',
   },
+  receiptFuel: {
+    cardTitle: 'Adicionar ao registro de combustível de {{vehicle}}',
+    cardBody: '{{litres}} l a {{price}} por litro, lidos do recibo. Informe o odômetro para registrar este abastecimento.',
+    odometerLabel: 'Odômetro (km)',
+    logFailed: 'A despesa foi salva, mas não foi possível adicionar a entrada do registro de combustível. Adicione-a na tela da despesa.',
+  },
   alerts: {
     title: 'Alertas',
     empty: "Nenhum alerta ainda. Vamos avisar você quando algo incomum acontecer com seu dinheiro.",

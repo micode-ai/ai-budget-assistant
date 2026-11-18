@@ -149,6 +149,7 @@ export class ReceiptFinalizerService {
       date: parsed.date,
       confidence: parsed.confidence || 0.7,
       receiptItems: parsed.items || [],
+      fuel: parsed.fuel ?? null,
       location,
       priceFindings: [],
       categorySplits: [],

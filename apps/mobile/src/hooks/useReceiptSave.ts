@@ -2,6 +2,9 @@ import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { router } from 'expo-router';
 import { showAlert } from '@/utils/alert';
+import { api } from '@/services/api';
+import { rememberFuelVehicle } from '@/features/vehicles/receiptFuel';
+import { useAccountStore } from '@/stores/accountStore';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useAuthStore } from '@/stores/authStore';
 import { useCategoryStore } from '@/stores/categoryStore';
@@ -54,6 +57,8 @@ interface UseReceiptSaveParams {
    * itself — omit it and the alert is byte-identical to before.
    */
   onSaved?: () => { count: number; isCheckpoint: boolean };
+  /** A fill-up to log against the saved expense (litres read from the receipt, odometer typed). */
+  fuelLog?: { vehicleId: string; litres: number; odometerKm: number } | null;
   /**
    * How this flow finishes once the user picks "Done" on the success alert.
    * Defaults to `router.back()` — the routed screen's behaviour, unchanged.
@@ -113,6 +118,7 @@ export function useReceiptSave({
   mergeWithExpenseId,
   onReset,
   onSaved,
+  fuelLog,
   onDone,
   onEdit,
   queue,
@@ -224,6 +230,26 @@ export function useReceiptSave({
       });
 
       if (created) onExpenseCreated?.(created);
+
+      // Fuel log: litres were read from the receipt, the odometer typed on the
+      // confirm card. Fire-and-forget like the child costs below; a failure is
+      // reported because the expense itself is already saved.
+      if (created && fuelLog) {
+        void api
+          .upsertFuelLog(fuelLog.vehicleId, created.serverId ?? created.id, {
+            liters: fuelLog.litres,
+            odometerKm: fuelLog.odometerKm,
+            isFullTank: true,
+          })
+          .then(() => {
+            const accountId = useAccountStore.getState().currentAccountId;
+            if (accountId) rememberFuelVehicle(accountId, fuelLog.vehicleId);
+          })
+          .catch((e) => {
+            console.warn('[fuel] receipt fuel log failed:', e instanceof Error ? e.message : String(e));
+            showAlert(t('common.error'), t('receiptFuel.logFailed'));
+          });
+      }
 
       // Child costs: lines attributed on the confirm card. Fire-and-forget like
       // the rest of the save; a failure is reported, never swallowed.

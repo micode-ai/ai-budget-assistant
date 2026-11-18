@@ -284,3 +284,7 @@ Review the details, tap ✓ to save or the pencil icon to open the full Add Inco
 ---
 
 *See also: [Expenses & Income](./03-expenses-and-income.md) | [AI Chat](./07-ai-chat.md)*
+
+## Fuel receipts
+
+If the receipt is from a petrol station and prints the litres and the price per litre, the confirm screen offers **Add to fuel log** for your vehicle. Enter the odometer reading and the fill-up is logged with the expense; leave it empty to save the expense only. If the numbers on the receipt do not add up, nothing is prefilled.

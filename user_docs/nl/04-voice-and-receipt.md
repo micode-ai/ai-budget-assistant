@@ -283,3 +283,7 @@ Controleer de details, tik op ✓ om op te slaan of op het potloodpictogram om h
 ---
 
 *Zie ook: [Uitgaven & Inkomsten](./03-expenses-and-income.md) | [AI-chat](./07-ai-chat.md)*
+
+## Tankbonnen
+
+Komt de bon van een tankstation en staan liters en prijs per liter erop, dan biedt het bevestigingsscherm **Toevoegen aan tanklogboek** voor je voertuig. Voer de kilometerstand in en de tankbeurt wordt met de uitgave gelogd; laat leeg om alleen de uitgave op te slaan. Kloppen de cijfers op de bon niet, dan wordt niets vooraf ingevuld.

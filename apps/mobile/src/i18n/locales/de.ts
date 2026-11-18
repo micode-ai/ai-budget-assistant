@@ -1071,6 +1071,12 @@ export default {
     inAppBrowser: 'Dieser Browser kann keine Apps zum Home-Bildschirm hinzufügen. Öffne die Seite zuerst in Safari.',
     dismiss: 'Schließen',
   },
+  receiptFuel: {
+    cardTitle: 'Zum Tankbuch für {{vehicle}} hinzufügen',
+    cardBody: '{{litres}} l zu {{price}} pro Liter, vom Beleg gelesen. Gib den Kilometerstand ein, um die Tankfüllung zu erfassen.',
+    odometerLabel: 'Kilometerstand (km)',
+    logFailed: 'Die Ausgabe ist gespeichert, aber der Tankbuch-Eintrag konnte nicht hinzugefügt werden. Füge ihn im Ausgabenbildschirm hinzu.',
+  },
   alerts: {
     title: 'Hinweise',
     empty: 'Noch keine Hinweise. Wir melden uns, wenn uns etwas Ungewöhnliches auffällt.',

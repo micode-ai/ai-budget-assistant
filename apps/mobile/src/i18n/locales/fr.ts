@@ -1071,6 +1071,12 @@ export default {
     inAppBrowser: 'Ce navigateur ne peut pas ajouter d’applis à l’écran d’accueil. Ouvrez d’abord cette page dans Safari.',
     dismiss: 'Fermer',
   },
+  receiptFuel: {
+    cardTitle: 'Ajouter au carnet de carburant de {{vehicle}}',
+    cardBody: '{{litres}} l à {{price}} le litre, lus sur le ticket. Saisissez le kilométrage pour enregistrer ce plein.',
+    odometerLabel: 'Kilométrage (km)',
+    logFailed: "La dépense est enregistrée, mais l'entrée du carnet de carburant n'a pas pu être ajoutée. Ajoutez-la depuis l'écran de la dépense.",
+  },
   alerts: {
     title: 'Alertes',
     empty: "Pas encore d'alertes. Nous vous préviendrons en cas d'activité inhabituelle.",

@@ -283,3 +283,7 @@ Fotografiere oder lade eine Rechnung oder ein Zahlungsdokument hoch, um Einnahme
 ---
 
 *Siehe auch: [Ausgaben & Einkommen](./03-expenses-and-income.md) | [KI-Chat](./07-ai-chat.md)*
+
+## Tankbelege
+
+Stammt der Beleg von einer Tankstelle und zeigt Liter und Preis pro Liter, bietet der Bestätigungsbildschirm **Zum Tankbuch hinzufügen** für dein Fahrzeug an. Gib den Kilometerstand ein, dann wird die Tankfüllung mit der Ausgabe erfasst; leer lassen, um nur die Ausgabe zu speichern. Passen die Zahlen auf dem Beleg nicht zusammen, wird nichts vorausgefüllt.

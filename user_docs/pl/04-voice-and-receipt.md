@@ -283,3 +283,7 @@ Przejrzyj szczegóły, dotknij ✓, aby zapisać, lub ikonę ołówka, aby otwor
 ---
 
 *Zobacz takze: [Wydatki i przychody](./03-expenses-and-income.md) | [Czat AI](./07-ai-chat.md)*
+
+## Paragony ze stacji paliw
+
+Jeśli paragon pochodzi ze stacji paliw i podaje litry oraz cenę za litr, ekran potwierdzenia proponuje **Dodaj do dziennika paliwa** dla Twojego pojazdu. Wpisz przebieg, a tankowanie zapisze się razem z wydatkiem; zostaw puste, aby zapisać tylko wydatek. Jeśli liczby na paragonie się nie zgadzają, nic nie zostanie uzupełnione.

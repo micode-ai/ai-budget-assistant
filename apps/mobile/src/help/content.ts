@@ -868,6 +868,10 @@ Review the details, tap ✓ to save or the pencil icon to open the full Add Inco
 ---
 
 *See also: Expenses & Income | AI Chat*
+
+## Fuel receipts
+
+If the receipt is from a petrol station and prints the litres and the price per litre, the confirm screen offers **Add to fuel log** for your vehicle. Enter the odometer reading and the fill-up is logged with the expense; leave it empty to save the expense only. If the numbers on the receipt do not add up, nothing is prefilled.
 `,
     },
     {
@@ -6334,6 +6338,10 @@ iOS, Android, Web
 ---
 
 *См. также: Расходы и доходы | ИИ Чат*
+
+## Чеки с АЗС
+
+Если чек с АЗС и на нём указаны литры и цена за литр, экран подтверждения предложит **Добавить в журнал заправок** для вашего автомобиля. Введите пробег — заправка запишется вместе с расходом; оставьте пустым, чтобы сохранить только расход. Если числа на чеке не сходятся, ничего не заполняется.
 `,
     },
     {
@@ -11778,6 +11786,10 @@ iOS, Android, Web
 ---
 
 *Див. також: Витрати та доходи | ШІ Чат*
+
+## Чеки з АЗС
+
+Якщо чек з АЗС і на ньому вказано літри та ціну за літр, екран підтвердження запропонує **Додати до журналу заправок** для вашого авто. Введіть пробіг — заправку буде записано разом із витратою; залиште порожнім, щоб зберегти лише витрату. Якщо числа на чеку не сходяться, нічого не заповнюється.
 `,
     },
     {
@@ -17170,6 +17182,10 @@ Przejrzyj szczegóły, dotknij ✓, aby zapisać, lub ikonę ołówka, aby otwor
 ---
 
 *Zobacz takze: Wydatki i przychody | Czat AI*
+
+## Paragony ze stacji paliw
+
+Jeśli paragon pochodzi ze stacji paliw i podaje litry oraz cenę za litr, ekran potwierdzenia proponuje **Dodaj do dziennika paliwa** dla Twojego pojazdu. Wpisz przebieg, a tankowanie zapisze się razem z wydatkiem; zostaw puste, aby zapisać tylko wydatek. Jeśli liczby na paragonie się nie zgadzają, nic nie zostanie uzupełnione.
 `,
     },
     {
@@ -22558,6 +22574,10 @@ Fotografiere oder lade eine Rechnung oder ein Zahlungsdokument hoch, um Einnahme
 ---
 
 *Siehe auch: Ausgaben & Einkommen | KI-Chat*
+
+## Tankbelege
+
+Stammt der Beleg von einer Tankstelle und zeigt Liter und Preis pro Liter, bietet der Bestätigungsbildschirm **Zum Tankbuch hinzufügen** für dein Fahrzeug an. Gib den Kilometerstand ein, dann wird die Tankfüllung mit der Ausgabe erfasst; leer lassen, um nur die Ausgabe zu speichern. Passen die Zahlen auf dem Beleg nicht zusammen, wird nichts vorausgefüllt.
 `,
     },
     {
@@ -27921,6 +27941,10 @@ Revisa los detalles, toca ✓ para guardar o el icono del lápiz para abrir el f
 ---
 
 *Ver tambien: Gastos e Ingresos | Chat IA*
+
+## Recibos de gasolinera
+
+Si el recibo es de una gasolinera e indica los litros y el precio por litro, la pantalla de confirmación ofrece **Añadir al registro de combustible** para tu vehículo. Introduce el cuentakilómetros y el repostaje se registra con el gasto; déjalo vacío para guardar solo el gasto. Si las cifras del recibo no cuadran, no se rellena nada.
 `,
     },
     {
@@ -33273,6 +33297,10 @@ Vérifiez les détails, appuyez sur ✓ pour sauvegarder ou sur l'icône crayon 
 ---
 
 *Voir aussi : Depenses et revenus | Chat IA*
+
+## Tickets de station-service
+
+Si le ticket vient d'une station-service et indique les litres et le prix au litre, l'écran de confirmation propose **Ajouter au carnet de carburant** pour votre véhicule. Saisissez le kilométrage et le plein est enregistré avec la dépense ; laissez vide pour n'enregistrer que la dépense. Si les chiffres du ticket ne concordent pas, rien n'est prérempli.
 `,
     },
     {
@@ -38623,6 +38651,10 @@ iOS, Android, Web
 ---
 
 *Гл. таксама: Выдаткі і даходы | ІІ Чат*
+
+## Чэкі з АЗС
+
+Калі чэк з АЗС і на ім пазначаны літры і кошт за літр, экран пацвярджэння прапануе **Дадаць у журнал запраўак** для вашага аўто. Увядзіце прабег — запраўка запішацца разам з расходам; пакіньце пустым, каб захаваць толькі расход. Калі лічбы на чэку не сыходзяцца, нічога не запаўняецца.
 `,
     },
     {
@@ -43937,6 +43969,10 @@ Controleer de details, tik op ✓ om op te slaan of op het potloodpictogram om h
 ---
 
 *Zie ook: Uitgaven & Inkomsten | AI-chat*
+
+## Tankbonnen
+
+Komt de bon van een tankstation en staan liters en prijs per liter erop, dan biedt het bevestigingsscherm **Toevoegen aan tanklogboek** voor je voertuig. Voer de kilometerstand in en de tankbeurt wordt met de uitgave gelogd; laat leeg om alleen de uitgave op te slaan. Kloppen de cijfers op de bon niet, dan wordt niets vooraf ingevuld.
 `,
     },
     {
@@ -49378,6 +49414,10 @@ Reveja os dados, toque em ✓ para guardar ou no ícone do lápis para abrir o f
 ---
 
 *Ver também: Despesas e receitas | Chat IA*
+
+## Talões de bomba de gasolina
+
+Se o talão for de um posto de combustível e indicar os litros e o preço por litro, o ecrã de confirmação oferece **Adicionar ao registo de combustível** para o seu veículo. Introduza o conta-quilómetros e o abastecimento fica registado com a despesa; deixe vazio para guardar só a despesa. Se os números do talão não batem certo, nada é preenchido.
 `,
     },
     {
@@ -54845,6 +54885,10 @@ Revise os dados, toque em ✓ para salvar ou no ícone de lápis para abrir o fo
 ---
 
 *Veja também: Despesas e receitas | Chat IA*
+
+## Recibos de posto de gasolina
+
+Se o recibo for de um posto de combustível e informar os litros e o preço por litro, a tela de confirmação oferece **Adicionar ao registro de combustível** para o seu veículo. Informe o odômetro e o abastecimento é registrado com a despesa; deixe vazio para salvar só a despesa. Se os números do recibo não batem, nada é preenchido.
 `,
     },
     {

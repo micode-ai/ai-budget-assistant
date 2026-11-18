@@ -284,3 +284,7 @@ Revise os dados, toque em ✓ para salvar ou no ícone de lápis para abrir o fo
 ---
 
 *Veja também: [Despesas e receitas](./03-expenses-and-income.md) | [Chat IA](./07-ai-chat.md)*
+
+## Recibos de posto de gasolina
+
+Se o recibo for de um posto de combustível e informar os litros e o preço por litro, a tela de confirmação oferece **Adicionar ao registro de combustível** para o seu veículo. Informe o odômetro e o abastecimento é registrado com a despesa; deixe vazio para salvar só a despesa. Se os números do recibo não batem, nada é preenchido.

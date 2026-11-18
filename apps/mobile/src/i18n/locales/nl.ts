@@ -1071,6 +1071,12 @@ export default {
     inAppBrowser: 'Deze browser kan geen apps op het beginscherm zetten. Open deze pagina eerst in Safari.',
     dismiss: 'Sluiten',
   },
+  receiptFuel: {
+    cardTitle: 'Toevoegen aan tanklogboek voor {{vehicle}}',
+    cardBody: '{{litres}} l à {{price}} per liter, van de bon gelezen. Voer de kilometerstand in om deze tankbeurt te loggen.',
+    odometerLabel: 'Kilometerstand (km)',
+    logFailed: 'De uitgave is opgeslagen, maar het tanklogboek-item kon niet worden toegevoegd. Voeg het toe via het uitgavescherm.',
+  },
   alerts: {
     title: 'Meldingen',
     empty: 'Nog geen meldingen. We laten het weten als er iets ongewoons gebeurt met je geld.',

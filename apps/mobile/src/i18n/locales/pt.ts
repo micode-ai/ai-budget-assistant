@@ -1069,6 +1069,12 @@ export default {
     inAppBrowser: 'Este navegador não consegue adicionar aplicações ao ecrã principal. Abra primeiro esta página no Safari.',
     dismiss: 'Fechar',
   },
+  receiptFuel: {
+    cardTitle: 'Adicionar ao registo de combustível de {{vehicle}}',
+    cardBody: '{{litres}} l a {{price}} por litro, lidos do talão. Introduza o conta-quilómetros para registar este abastecimento.',
+    odometerLabel: 'Conta-quilómetros (km)',
+    logFailed: 'A despesa foi guardada, mas não foi possível adicionar a entrada do registo de combustível. Adicione-a no ecrã da despesa.',
+  },
   alerts: {
     title: 'Alertas',
     empty: "Ainda não há alertas. Avisaremos quando acontecer algo invulgar com o seu dinheiro.",

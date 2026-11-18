@@ -283,3 +283,7 @@ Vérifiez les détails, appuyez sur ✓ pour sauvegarder ou sur l'icône crayon 
 ---
 
 *Voir aussi : [Depenses et revenus](./03-expenses-and-income.md) | [Chat IA](./07-ai-chat.md)*
+
+## Tickets de station-service
+
+Si le ticket vient d'une station-service et indique les litres et le prix au litre, l'écran de confirmation propose **Ajouter au carnet de carburant** pour votre véhicule. Saisissez le kilométrage et le plein est enregistré avec la dépense ; laissez vide pour n'enregistrer que la dépense. Si les chiffres du ticket ne concordent pas, rien n'est prérempli.

@@ -390,6 +390,7 @@ Newest last within each section.
 - 2026-11-18 · [ABA-823](https://github.com/micode-ai/ai-budget-assistant/issues/861) — `investmentStore` split into `investmentShared.ts` (state + account-scoping helpers) and holding/transaction/analytics action factories sharing the store's set/get, mirroring the wallet split; public API unchanged. Page touched: `features/account-switch-reload.md`.
 - 2026-11-18 · [ABA-824](https://github.com/micode-ai/ai-budget-assistant/issues/862) — `SubscriptionsService` split into `StripeBillingService`, `UsageTrackingService` and a slim `SubscriptionsService`; callers and specs repointed. Pages: `subscriptions.md` and citations in telegram-bot, admin-dashboard, voice-digest, long-receipt, inbound-e-receipts.
 - 2026-11-18 · [ABA-825](https://github.com/micode-ai/ai-budget-assistant/issues/863) — the bot photo handlers' price-check summary line is now one pure function, `common/bot-receipt-price-check.ts`, taking each bot's `t`; the three copies and their duplicated spec are gone. Pages: `features/receipt-price-check.md`. The remaining triplicated handler flow (date/item-edit input, rescan, parts, merge) is still open.
+- 2026-11-18 · [ABA-826](https://github.com/micode-ai/ai-budget-assistant/issues/864) — receipt scans carry a validated `fuel` block (litres x price must match a line within 2%) and the confirm card logs the fill-up given only the odometer; bots share the extraction via the finalizer but have no button yet. Pages: `features/vehicle-fuel-log.md`.
 
 ## Queries
 

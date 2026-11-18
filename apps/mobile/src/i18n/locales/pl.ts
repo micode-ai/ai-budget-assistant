@@ -1079,6 +1079,12 @@ export default {
     inAppBrowser: 'Ta przeglądarka nie dodaje aplikacji do ekranu. Najpierw otwórz tę stronę w Safari.',
     dismiss: 'Zamknij',
   },
+  receiptFuel: {
+    cardTitle: 'Dodaj do dziennika paliwa dla {{vehicle}}',
+    cardBody: '{{litres}} l po {{price}} za litr, odczytane z paragonu. Podaj przebieg, aby zapisać to tankowanie.',
+    odometerLabel: 'Przebieg (km)',
+    logFailed: 'Wydatek zapisano, ale nie udało się dodać wpisu do dziennika paliwa. Dodaj go z ekranu wydatku.',
+  },
   alerts: {
     title: 'Alerty',
     empty: 'Brak alertów. Powiadomimy Cię, gdy zauważymy coś nietypowego w Twoich finansach.',

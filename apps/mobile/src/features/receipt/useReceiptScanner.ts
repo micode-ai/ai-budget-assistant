@@ -57,6 +57,8 @@ export interface ScannedReceipt {
   date: string | null;
   confidence: number;
   receiptItems: ReceiptItem[];
+  /** Fuel-station receipts: litres and price per litre read off the fuel line (server-validated). */
+  fuel?: { litres: number; pricePerLitre: number; fuelType: 'petrol' | 'diesel' | 'lpg' | 'other' } | null;
   location: { lat: number; lng: number; name: string } | null;
   priceFindings?: ReceiptCheckFinding[];
   /** Category groups derived from the receipt's own lines. Always present on

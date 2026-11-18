@@ -284,3 +284,7 @@ Reveja os dados, toque em ✓ para guardar ou no ícone do lápis para abrir o f
 ---
 
 *Ver também: [Despesas e receitas](./03-expenses-and-income.md) | [Chat IA](./07-ai-chat.md)*
+
+## Talões de bomba de gasolina
+
+Se o talão for de um posto de combustível e indicar os litros e o preço por litro, o ecrã de confirmação oferece **Adicionar ao registo de combustível** para o seu veículo. Introduza o conta-quilómetros e o abastecimento fica registado com a despesa; deixe vazio para guardar só a despesa. Se os números do talão não batem certo, nada é preenchido.

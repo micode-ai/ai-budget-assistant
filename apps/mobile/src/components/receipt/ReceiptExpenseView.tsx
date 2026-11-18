@@ -30,6 +30,10 @@ import { useUpgradeStore } from '@/stores/upgradeStore';
 import { current, remaining } from '@/features/share-intake/shareIntakeQueue';
 import { deleteSharedFile } from '@/services/shareIntake';
 import type { InboundReceiptDetail } from '@budget/shared-types';
+import ReceiptFuelCard from '@/components/receipt/ReceiptFuelCard';
+import { useVehicles } from '@/features/vehicles/useVehicles';
+import { pickFuelVehicle } from '@/features/vehicles/receiptFuel';
+import { parseOdometer } from '@/features/vehicles/vehicleDisplay';
 
 interface ReceiptExpenseViewProps {
   /**
@@ -140,6 +144,9 @@ export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpens
   const [partsMode, setPartsMode] = useState(false);
   /** "Merge with the bank's record" on the confirm card — reset per scan. */
   const [mergeWithBank, setMergeWithBank] = useState(false);
+  /** Odometer typed on the fuel card — reset per scan. */
+  const [fuelOdometer, setFuelOdometer] = useState('');
+  const { vehicles, accountId: fuelAccountId } = useVehicles();
   const getDistinctMerchants = useExpenseStore((s) => s.getDistinctMerchants);
   const { getExpenseCategories } = useCategoryStore();
 
@@ -281,6 +288,7 @@ export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpens
       setShowConfirm(true);
       setMerchant(resolveExistingMerchant(scannedReceipt.merchant, getDistinctMerchants()));
       setMergeWithBank(defaultMergeWithBank(scannedReceipt.possibleDuplicate));
+      setFuelOdometer('');
       useSubscriptionStore.getState().loadUsage();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -428,8 +436,15 @@ export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpens
     if (head) scanShareHead(head);
   };
 
+  const scannedFuel = scannedReceipt?.fuel ?? null;
+  const fuelVehicle = scannedFuel ? pickFuelVehicle(vehicles, fuelAccountId, scannedFuel) : null;
+  const fuelOdometerKm = parseOdometer(fuelOdometer);
   const { handleConfirmExpense, handleEditExpense } = useReceiptSave({
     scannedReceipt,
+    fuelLog:
+      scannedFuel && fuelVehicle && fuelOdometerKm !== null
+        ? { vehicleId: fuelVehicle.id, litres: scannedFuel.litres, odometerKm: fuelOdometerKm }
+        : null,
     merchant,
     saveImage,
     imageUri,
@@ -510,6 +525,14 @@ export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpens
         />
       ) : (
         <>
+          {scannedFuel && fuelVehicle ? (
+            <ReceiptFuelCard
+              fuel={scannedFuel}
+              vehicleName={fuelVehicle.name}
+              odometer={fuelOdometer}
+              onOdometerChange={setFuelOdometer}
+            />
+          ) : null}
           <ReceiptConfirmCard
             scannedReceipt={scannedReceipt}
             imageUri={imageUri}

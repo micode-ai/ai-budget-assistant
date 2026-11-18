@@ -1075,6 +1075,12 @@ export default {
     inAppBrowser: 'This browser can’t add apps to the home screen. Open this page in Safari first.',
     dismiss: 'Dismiss',
   },
+  receiptFuel: {
+    cardTitle: 'Add to fuel log for {{vehicle}}',
+    cardBody: '{{litres}} L at {{price}} per litre, read from the receipt. Enter the odometer to log this fill-up.',
+    odometerLabel: 'Odometer (km)',
+    logFailed: 'The expense is saved, but the fuel log entry could not be added. Add it from the expense screen.',
+  },
   alerts: {
     title: 'Alerts',
     empty: "No alerts yet. We'll notify you when something unusual happens with your money.",
