@@ -25,6 +25,7 @@ import {
 
 import { buildItemCategoryMap, resolveProposedSplits } from '../../ai/utils/receipt-split-items';
 import { ChatActionRecorderService } from '../../ai/services/chat-action-recorder.service';
+import { buildPriceCheckLine } from '../../../common/bot-receipt-price-check';
 import { logFireAndForget } from '../../../common/utils/fire-and-forget';
 import { CacheService } from '../../../common/cache/cache.service';
 import type { ReceiptImagePart } from '@budget/shared-types';
@@ -421,7 +422,7 @@ export class PhotoHandler {
 
   private buildCardSummary(receipt: ReceiptExpense, language: string): string {
     let summary = this.buildSummaryText(receipt.amount, receipt.currencyCode, receipt.date, receipt.merchant, language);
-    const priceCheckLine = this.buildPriceCheckLine(receipt, language);
+    const priceCheckLine = buildPriceCheckLine(receipt, t, language);
     if (priceCheckLine) {
       summary += `\n${priceCheckLine}`;
     }
@@ -1046,22 +1047,5 @@ export class PhotoHandler {
       summary += `\n*Vendor:* ${merchant}`;
     }
     return summary;
-  }
-
-  /**
-   * One summary line reporting price-check findings — lines that cost
-   * measurably more than the user's usual price for that product in that
-   * store. Never phrased as an accusation (no "overcharged"/"scammed"/
-   * "promo not applied"); empty string when there is nothing to report so a
-   * clean receipt reads exactly as it did before this feature existed.
-   */
-  private buildPriceCheckLine(receipt: ReceiptExpense, lang: string): string {
-    const findings = receipt.priceFindings ?? [];
-    if (findings.length === 0) return '';
-    const total = findings.reduce((sum, f) => sum + f.overpaidAmount, 0);
-    return t('priceCheckSummary', lang, {
-      count: String(findings.length),
-      amount: `${total.toFixed(2)} ${findings[0].currencyCode}`,
-    });
   }
 }

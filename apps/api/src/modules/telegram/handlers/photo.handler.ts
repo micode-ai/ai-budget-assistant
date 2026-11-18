@@ -26,6 +26,7 @@ import {
   type ItemEditError,
 } from '../../../common/utils/receipt-item-edit';
 import { buildItemCategoryMap, resolveProposedSplits } from '../../ai/utils/receipt-split-items';
+import { buildPriceCheckLine } from '../../../common/bot-receipt-price-check';
 import { logFireAndForget } from '../../../common/utils/fire-and-forget';
 import type { ReceiptImagePart } from '@budget/shared-types';
 import {
@@ -439,7 +440,7 @@ export class PhotoHandler {
     } else if (receipt.receiptItems && receipt.receiptItems.length > 10) {
       summary += `\n<i>${receipt.receiptItems.length} items found</i>\n`;
     }
-    const priceCheckLine = this.buildPriceCheckLine(receipt, lang);
+    const priceCheckLine = buildPriceCheckLine(receipt, t, lang);
     if (priceCheckLine) {
       summary += `\n${priceCheckLine}\n`;
     }
@@ -1034,23 +1035,6 @@ export class PhotoHandler {
       await this.clearPointer(ctx, receiptId);
       await ctx.answerCbQuery('Cancelled.');
       await ctx.editMessageText(t('receiptCancelled', ctx.userState?.language));
-    });
-  }
-
-  /**
-   * One summary line reporting price-check findings — lines that cost
-   * measurably more than the user's usual price for that product in that
-   * store. Never phrased as an accusation (no "overcharged"/"scammed"/
-   * "promo not applied"); empty string when there is nothing to report so a
-   * clean receipt reads exactly as it did before this feature existed.
-   */
-  private buildPriceCheckLine(receipt: ReceiptExpense, lang: string | undefined): string {
-    const findings = receipt.priceFindings ?? [];
-    if (findings.length === 0) return '';
-    const total = findings.reduce((sum, f) => sum + f.overpaidAmount, 0);
-    return t('priceCheckSummary', lang, {
-      count: String(findings.length),
-      amount: `${total.toFixed(2)} ${findings[0].currencyCode}`,
     });
   }
 }

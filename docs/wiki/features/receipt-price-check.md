@@ -100,3 +100,4 @@ ABA-373 (API, plan 1) and the mobile plan 2 that made the release gate flippable
 `price_overcharge` card, the per-currency "found overpayments" total on the analytics inflation
 section (**never a blended total**: summing would require FX, which this feature forbids), and the
 `receiptCheck.*` strings in eleven locales.
+- [ABA-825](https://github.com/micode-ai/ai-budget-assistant/issues/863) — the bot summary line is built by `apps/api/src/common/bot-receipt-price-check.ts` (shared by Telegram, WhatsApp and Slack; each passes its own `t`), not a per-handler method. Change the wording rule there once.
