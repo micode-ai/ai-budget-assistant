@@ -430,6 +430,8 @@ model Account {
   vehicles                       Vehicle[]
   fuelLogs                       FuelLog[]
   vehicleCosts                   VehicleCost[]
+  pets                           Pet[]
+  petCosts                       PetCost[]
   projects                       Project[]
   achievements                   UserAchievement[]
   streaks                        UserStreak[]
@@ -658,6 +660,7 @@ model Expense {
   expenseChildren      ExpenseChild[]
   fuelLog              FuelLog?
   vehicleCost          VehicleCost?
+  petCost              PetCost?
   categorySplits       ExpenseCategorySplit[]
   projectExpenses      ProjectExpense[]
   purchaseRequest      PurchaseRequest?          @relation("PlannedPurchase")
@@ -3250,4 +3253,45 @@ model LeafletItem {
 
   @@index([leafletId])
   @@map("leaflet_items")
+}
+
+/// A pet of an account (pet-costs-tracking). Costs hang on expenses through PetCost.
+model Pet {
+  id        String    @id @default(uuid())
+  accountId String    @map("account_id")
+  userId    String    @map("user_id")
+  name      String
+  species   String    @default("dog")
+  birthday  DateTime? @db.Date
+  /// Optional reminder dates; the reminder cron is a follow-up.
+  nextVaccinationDate       DateTime? @map("next_vaccination_date") @db.Date
+  nextParasiteTreatmentDate DateTime? @map("next_parasite_treatment_date") @db.Date
+  isDeleted Boolean   @default(false) @map("is_deleted")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  account Account   @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  costs   PetCost[]
+
+  @@index([accountId])
+  @@map("pets")
+}
+
+/// One expense as a cost of one pet; `kind` is food, vet, grooming, supplies, insurance or other.
+model PetCost {
+  id        String   @id @default(uuid())
+  accountId String   @map("account_id")
+  petId     String   @map("pet_id")
+  expenseId String   @unique @map("expense_id")
+  kind      String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  pet     Pet     @relation(fields: [petId], references: [id], onDelete: Cascade)
+  expense Expense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+
+  @@index([petId])
+  @@index([accountId])
+  @@map("pet_costs")
 }

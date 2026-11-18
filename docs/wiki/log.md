@@ -392,6 +392,7 @@ Newest last within each section.
 - 2026-11-18 · [ABA-825](https://github.com/micode-ai/ai-budget-assistant/issues/863) — the bot photo handlers' price-check summary line is now one pure function, `common/bot-receipt-price-check.ts`, taking each bot's `t`; the three copies and their duplicated spec are gone. Pages: `features/receipt-price-check.md`. The remaining triplicated handler flow (date/item-edit input, rescan, parts, merge) is still open.
 - 2026-11-18 · [ABA-826](https://github.com/micode-ai/ai-budget-assistant/issues/864) — receipt scans carry a validated `fuel` block (litres x price must match a line within 2%) and the confirm card logs the fill-up given only the odometer; bots share the extraction via the finalizer but have no button yet. Pages: `features/vehicle-fuel-log.md`.
 - 2026-11-18 · [ABA-827](https://github.com/micode-ai/ai-budget-assistant/issues/865) — vehicle renewal reminders: four optional date/odometer fields on `Vehicle`, daily `VehicleRenewalCron` pushes at 14 and 2 days and 500 km before service. API only; app form and chip are follow-ups. Pages: `features/vehicle-fuel-log.md`.
+- 2026-11-18 · [ABA-828](https://github.com/micode-ai/ai-budget-assistant/issues/866) — pet costs: Pet/PetCost tables, per-pet month/kind history and bulk assign (API only, third parallel module beside vehicles); features/pet-costs.md
 
 ## Queries
 

@@ -30,6 +30,7 @@ import { AdminModule } from './modules/admin/admin.module';
 import { TagsModule } from './modules/tags/tags.module';
 import { ChildrenModule } from './modules/children/children.module';
 import { VehiclesModule } from './modules/vehicles/vehicles.module';
+import { PetsModule } from './modules/pets/pets.module';
 import { ProjectsModule } from './modules/projects/projects.module';
 import { GamificationModule } from './modules/gamification/gamification.module';
 import { AccountTransferModule } from './modules/account-transfers/account-transfer.module';
@@ -130,6 +131,7 @@ import { McpModule } from './modules/mcp/mcp.module';
     TagsModule,
     ChildrenModule,
     VehiclesModule,
+    PetsModule,
     ProjectsModule,
     GamificationModule,
     AccountTransferModule,

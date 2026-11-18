@@ -4,6 +4,7 @@ export * from './account';
 export * from './category';
 export * from './tag';
 export * from './vehicle';
+export * from './pet';
 export * from './expense';
 export * from './income';
 export * from './project';
