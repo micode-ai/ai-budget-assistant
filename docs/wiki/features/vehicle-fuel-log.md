@@ -81,6 +81,14 @@ average, km from the fill-ups in the window and all costs per km.
 - A list row's caption never shows the server's copy of an encrypted field (`enc:` prefix); it prefers the device's decrypted expense.
 - `declared before :id`: `DELETE /vehicles/fuel-logs/:expenseId` must stay above `DELETE /vehicles/:id`.
 
+## Renewal reminders (ABA-827)
+
+A vehicle carries optional `nextInsuranceDate`, `nextInspectionDate`, `nextServiceDate` and `nextServiceOdometer`, set through `PATCH /vehicles/:id`.
+`VehicleRenewalCron` (08:00 UTC, `paginateById`) pushes 14 and 2 days before each date and once when the latest fill-up odometer is within 500 km of
+the target. Pure rules: `vehicle-renewal.util.ts`; copy: `notifications/vehicle-renewal-i18n.ts` (11 locales). The odometer nudge is deduped by
+`serviceOdometerNudgedFor`, stamped before the push. Not yet built: the form fields and "due soon" chip in the app, the roll-forward offer on logging a cost.
+
+
 ## Known gaps
 
 SQLite mirror; bot fuel-log button; community-price comparison; mileage in the tax export; comparing two vehicles; a yearly forecast; stacked

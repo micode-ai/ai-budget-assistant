@@ -1,4 +1,4 @@
-import { ArrayMaxSize, IsArray, IsBoolean, IsIn, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, Min, ValidateNested } from 'class-validator';
+import { IsDateString, ValidateIf, ArrayMaxSize, IsArray, IsBoolean, IsIn, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, Min, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { VEHICLE_COST_KINDS } from '../vehicle-cost-rules.util';
 
@@ -23,6 +23,28 @@ export class UpdateVehicleDto {
   @IsOptional()
   @IsIn(FUEL_TYPES)
   fuelType?: string;
+
+  /** Renewal reminders (ABA-827): `YYYY-MM-DD`, or null to clear. */
+  @IsOptional()
+  @ValidateIf((_o, v) => v !== null)
+  @IsDateString()
+  nextInsuranceDate?: string | null;
+
+  @IsOptional()
+  @ValidateIf((_o, v) => v !== null)
+  @IsDateString()
+  nextInspectionDate?: string | null;
+
+  @IsOptional()
+  @ValidateIf((_o, v) => v !== null)
+  @IsDateString()
+  nextServiceDate?: string | null;
+
+  @IsOptional()
+  @ValidateIf((_o, v) => v !== null)
+  @IsInt()
+  @Min(0)
+  nextServiceOdometer?: number | null;
 }
 
 export class UpsertFuelLogDto {

@@ -5,6 +5,11 @@ export interface Vehicle {
   accountId: string;
   name: string;
   fuelType: FuelType;
+  /** Renewal reminders (ABA-827), `YYYY-MM-DD`. */
+  nextInsuranceDate?: string | null;
+  nextInspectionDate?: string | null;
+  nextServiceDate?: string | null;
+  nextServiceOdometer?: number | null;
   createdAt: string;
   updatedAt: string;
 }

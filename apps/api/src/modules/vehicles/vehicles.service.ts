@@ -38,6 +38,11 @@ export interface Ownership {
   costPerKm: number | null;
 }
 
+/** `YYYY-MM-DD` (or a full ISO string) to a UTC calendar day; null clears. */
+function toDateOnly(v: string | null): Date | null {
+  return v === null ? null : new Date(`${v.slice(0, 10)}T00:00:00Z`);
+}
+
 @Injectable()
 export class VehiclesService {
   constructor(
@@ -65,6 +70,14 @@ export class VehiclesService {
       data: {
         ...(dto.name !== undefined && { name: dto.name.trim() }),
         ...(dto.fuelType !== undefined && { fuelType: dto.fuelType }),
+        ...(dto.nextInsuranceDate !== undefined && { nextInsuranceDate: toDateOnly(dto.nextInsuranceDate) }),
+        ...(dto.nextInspectionDate !== undefined && { nextInspectionDate: toDateOnly(dto.nextInspectionDate) }),
+        ...(dto.nextServiceDate !== undefined && { nextServiceDate: toDateOnly(dto.nextServiceDate) }),
+        ...(dto.nextServiceOdometer !== undefined && {
+          nextServiceOdometer: dto.nextServiceOdometer,
+          // A new target re-arms the odometer nudge.
+          serviceOdometerNudgedFor: null,
+        }),
       },
     });
   }

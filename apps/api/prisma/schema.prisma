@@ -3140,6 +3140,13 @@ model Vehicle {
   /// Expense categories whose expenses are this vehicle's costs, each with a kind:
   /// `[{ categoryId, kind }]` (ABA-803).
   categoryRules Json   @default("[]") @map("category_rules")
+  /// Renewal reminders (ABA-827): optional due dates and a service odometer target.
+  nextInsuranceDate  DateTime? @map("next_insurance_date") @db.Date
+  nextInspectionDate DateTime? @map("next_inspection_date") @db.Date
+  nextServiceDate    DateTime? @map("next_service_date") @db.Date
+  nextServiceOdometer Int?     @map("next_service_odometer")
+  /// The `nextServiceOdometer` value the odometer nudge already fired for (dedup).
+  serviceOdometerNudgedFor Int? @map("service_odometer_nudged_for")
   isDeleted Boolean  @default(false) @map("is_deleted")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
