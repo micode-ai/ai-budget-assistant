@@ -96,3 +96,4 @@ component that installed it. `installGlobalErrorHandler` is idempotent and is a 
 
 - ABA-832 — created: a user on Android 1.42.0 hit the error screen on every launch after hydration
   and nothing reached us.
+- ABA-835 — its first two reports found that user's crash within hours: an i18n plural-rule recursion for pt/br on Android.

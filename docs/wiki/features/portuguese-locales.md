@@ -47,7 +47,14 @@ Brazilian user can keep their books in their own money.
   exist (ABA-757). Feature names are translated: Fat Finder is "Auditoria de despesas", Financial
   Wrapped is "Resumo do ano", in the app, help and landing alike.
 
+- The `getRule` wrapper remaps only the OUTERMOST call. Hermes on Android has no
+  `Intl.PluralRules`, so `pt-PT` always throws there and i18next retries with `this.getRule('pt')`;
+  remapping that retry recursed forever and crashed the home tab for every pt/br Android user
+  (ABA-835). Pinned by `__tests__/pluralRulesWithoutIntl.test.ts`.
+
 ## Known gaps
+- On Android every language uses i18next's one/other fallback (no `Intl.PluralRules` in Hermes),
+  so the pt-PT/pt-BR distinction this page describes only takes effect on web.
 - Report PDF labels have no pt/br. Exact-million counts hit ICU's `many` category and fall back to
   English (as es/fr already do).
 - A Breton-locale external tag `br` resolves to Brazilian Portuguese, on purpose.
@@ -57,3 +64,4 @@ Brazilian user can keep their books in their own money.
   site. Design: `docs/superpowers/specs/2026-11-14-portuguese-pt-br-locales-design.md`.
 - ABA-757 BRL prices, ABA-758 pt/br blog and localized screenshots.
 - [ABA-761](https://github.com/micode-ai/ai-budget-assistant/issues/799): post-launch review; ship-quality, calques and English feature names fixed.
+- [ABA-835](https://github.com/micode-ai/ai-budget-assistant/issues/873): infinite plural-rule recursion on Android fixed.

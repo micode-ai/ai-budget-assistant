@@ -82,12 +82,26 @@ i18n.use(initReactI18next).init({
 // i18next picks plural forms with `new Intl.PluralRules(lng)`. Raw `br` is Breton to Intl
 // (one/two/few/many/other — "2 weeks" would fall through to English) and bare `pt` is ICU's
 // Brazilian rule (0 singular). Resolve plurals through the real Intl tags instead.
+//
+// Only the OUTERMOST call is remapped. When `new Intl.PluralRules('pt-PT')` throws — always on
+// Android, where Hermes has no Intl.PluralRules — i18next retries with the language part via
+// `this.getRule('pt')`, which lands back here. Remapping that inner call to `pt-PT` again recursed
+// until the stack overflowed, and every pt/br user on Android got the error screen on the home tab.
 const pluralLocaleMap: Record<string, string> = { br: 'pt-BR', pt: 'pt-PT' };
 const pluralResolver = i18n.services.pluralResolver as {
   getRule: (code: string, options?: object) => Intl.PluralRules | undefined;
 };
 const getPluralRule = pluralResolver.getRule.bind(pluralResolver);
-pluralResolver.getRule = (code, options) => getPluralRule(pluralLocaleMap[code] ?? code, options);
+let resolvingPluralRule = false;
+pluralResolver.getRule = (code, options) => {
+  if (resolvingPluralRule) return getPluralRule(code, options);
+  resolvingPluralRule = true;
+  try {
+    return getPluralRule(pluralLocaleMap[code] ?? code, options);
+  } finally {
+    resolvingPluralRule = false;
+  }
+};
 
 export async function loadSavedLanguage() {
   const saved = await secureStorage.getItem('appLanguage');
