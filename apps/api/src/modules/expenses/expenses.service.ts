@@ -28,6 +28,7 @@ import {
 } from './receipt-parts.util';
 import { applyChildCategoryRules } from '../children/child-category-rules.util';
 import { applyVehicleCategoryRules } from '../vehicles/vehicle-cost-rules.util';
+import { applyPetCategoryRules } from '../pets/pet-cost-rules.util';
 
 /**
  * CRUD orchestrator for expenses. `bulkUpdate` lives in ExpenseBulkService,
@@ -521,6 +522,9 @@ export class ExpensesService {
       void applyVehicleCategoryRules(this.prisma, accountId).catch(
         logFireAndForget(this.logger, 'ExpensesService.applyVehicleCategoryRules#create'),
       );
+      void applyPetCategoryRules(this.prisma, accountId).catch(
+        logFireAndForget(this.logger, 'ExpensesService.applyPetCategoryRules#create'),
+      );
     }
 
     return result;
@@ -847,6 +851,9 @@ export class ExpensesService {
         );
         void applyVehicleCategoryRules(this.prisma, accountId).catch(
           logFireAndForget(this.logger, 'ExpensesService.applyVehicleCategoryRules#update'),
+        );
+        void applyPetCategoryRules(this.prisma, accountId).catch(
+          logFireAndForget(this.logger, 'ExpensesService.applyPetCategoryRules#update'),
         );
       }
       return updated ? this.toExpenseResponse(updated) : updated;

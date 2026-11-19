@@ -18,6 +18,7 @@ import { ExpenseItemsSection } from '@/components/expenses/detail/ExpenseItemsSe
 import { ReceiptSection } from '@/components/expenses/detail/ReceiptSection';
 import { LocationSection } from '@/components/expenses/detail/LocationSection';
 import { FuelSection } from '@/components/expenses/detail/FuelSection';
+import { PetSection } from '@/components/expenses/detail/PetSection';
 import type { LedgerRow } from '@/features/expenses/desktopTable';
 
 /** Only one instance of this dialog is ever mounted at a time (`ExpensesDesktop`
@@ -304,6 +305,7 @@ export function ExpenseDialog({
                 />
                 <LocationSection expense={row.expense} canEdit={canEdit} />
                 <FuelSection expense={row.expense} canEdit={canEdit} />
+                <PetSection expense={row.expense} canEdit={canEdit} />
               </>
             )}
           </ScrollView>

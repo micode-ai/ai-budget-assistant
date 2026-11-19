@@ -1,71 +1,35 @@
-import { useCallback, useEffect, useState } from 'react';
 import type { Pet } from '@budget/shared-types';
 import { api } from '@/services/api';
-import { useAccountStore } from '@/stores/accountStore';
+import { useAccountList } from '@/hooks/useAccountList';
+import { petsCache } from './petsCache';
 
 /**
- * Per-account cache of the pet list (ABA-831), so the transactions list's bulk
- * action and the Analytics card do not refetch it on every mount. Keyed by
- * account id — a switch or another user's sign-in reads its own key.
+ * Write a pet the server just returned into the account's cached list and tell
+ * every mounted reader (the transactions tab's bulk bar, the expense screen's
+ * Pet section) at once, before any refetch (ABA-833).
  */
-const cache = new Map<string, Pet[]>();
-const listeners = new Set<() => void>();
-const notify = () => listeners.forEach((l) => l());
+export function putPet(accountId: string, pet: Pet): void {
+  petsCache.update(accountId, (list) =>
+    list.some((p) => p.id === pet.id) ? list.map((p) => (p.id === pet.id ? pet : p)) : [...list, pet],
+  );
+}
+
+export function dropPet(accountId: string, petId: string): void {
+  petsCache.update(accountId, (list) => list.filter((p) => p.id !== petId));
+}
 
 /** Refetch an account's list after a write and tell every mounted user. */
 export async function reloadPets(accountId: string): Promise<void> {
-  cache.set(accountId, await api.getPets());
-  notify();
+  petsCache.set(accountId, await api.getPets());
 }
 
 /**
- * The current account's pets. `refresh` reloads on mount (the settings
- * screen); without it a cached list is reused. A failed load is `loadFailed`,
- * never an empty list — offline there is no local copy.
+ * The current account's pets (ABA-831). `refresh` reloads on mount (the
+ * settings screen); otherwise a cached list is reused while fresh and
+ * revalidated when stale or on focus. A failed load is `loadFailed`, never an
+ * empty list — offline there is no local copy.
  */
 export function usePets({ refresh = false }: { refresh?: boolean } = {}) {
-  const accountId = useAccountStore((s) => s.currentAccountId);
-  const [, setTick] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
-  const [failedFor, setFailedFor] = useState<string | null>(null);
-
-  const load = useCallback(async () => {
-    if (!accountId) return;
-    setIsLoading(true);
-    try {
-      cache.set(accountId, await api.getPets());
-      setFailedFor(null);
-      notify();
-    } catch (err) {
-      // Expected offline; never console.error (LogBox shows it as a crash).
-      console.warn('Pets unavailable', err);
-      setFailedFor(accountId);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [accountId]);
-
-  useEffect(() => {
-    const l = () => setTick((n) => n + 1);
-    listeners.add(l);
-    return () => {
-      listeners.delete(l);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!accountId) return;
-    if (refresh || !cache.has(accountId)) void load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [accountId, refresh]);
-
-  const pets = accountId ? cache.get(accountId) : undefined;
-  return {
-    accountId,
-    pets: pets ?? [],
-    isLoaded: pets !== undefined,
-    isLoading,
-    loadFailed: failedFor === accountId && pets === undefined,
-    reload: load,
-  };
+  const { list, ...rest } = useAccountList(petsCache, api.getPets, { refresh, label: 'Pets' });
+  return { ...rest, pets: list };
 }

@@ -8577,6 +8577,27 @@ Sur la carte de l’animal, une date proche est mise en évidence et une date pa
 
 Une dépense n’appartient qu’à un seul animal. L’attribuer à un autre la déplace.
 
+## Catégories d'un animal — des frais qui comptent tout seuls
+
+Si vous avez une catégorie comme *Nourriture animaux* ou *Vétérinaire*, laissez-la travailler :
+
+1. Ouvrez **Réglages → Données de référence → Animaux** et touchez le crayon sur la carte de l'animal.
+2. Sous **Catégories de cet animal**, choisissez un type de frais (**Alimentation**, **Vétérinaire**, **Toilettage**, **Accessoires**, **Assurance** ou **Autre**).
+3. Touchez les catégories qui sont ce type de frais pour cet animal. Toucher à nouveau une catégorie avec le même type la retire.
+4. Touchez **Enregistrer**.
+
+Chaque dépense de ces catégories compte désormais pour l'animal — les anciennes aussi, et les nouvelles. Les dépenses d'un import bancaire ou récurrentes sont prises en compte dans la journée. Si deux animaux revendiquent la même catégorie, elle va à celui ajouté en premier.
+
+Votre propre choix l'emporte toujours : une dépense attribuée à la main garde son animal et son type, et une dépense retirée d'un animal reste retirée, même si sa catégorie appartient à l'animal.
+
+## La section Animal d'une dépense
+
+Quand le compte a un animal, l'écran d'une dépense affiche la section **Animal** (sur ordinateur, dans la fenêtre de la dépense).
+
+- Touchez **Marquer comme frais d'animal**, choisissez l'animal (si vous en avez plusieurs) et le **Type de frais**, puis **Enregistrer**.
+- Touchez de nouveau la ligne pour la modifier, ou **Pas un frais d'animal** pour la retirer.
+- **D'après les catégories de l'animal** sous la ligne signifie qu'une catégorie l'a placée là.
+
 ## L’écran d’un animal
 
 Touchez **Dépenses** sur la carte de l’animal, ou sa ligne dans **Analyses**. Vous voyez :

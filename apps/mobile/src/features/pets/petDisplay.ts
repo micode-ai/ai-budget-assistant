@@ -1,4 +1,4 @@
-import type { PetCostKind, PetHistory, PetHistoryItem, PetHistoryPeriod, PetSpecies } from '@budget/shared-types';
+import type { PetCategoryRule, PetCostKind, PetHistory, PetHistoryItem, PetHistoryPeriod, PetSpecies } from '@budget/shared-types';
 
 /**
  * Pure helpers for the pet screens (ABA-831): the period chips, the kinds and
@@ -116,4 +116,43 @@ export function chunkPetIds(ids: string[], size = PET_BULK_MAX): string[][] {
   const out: string[][] = [];
   for (let i = 0; i < unique.length; i += size) out.push(unique.slice(i, i + size));
   return out;
+}
+
+/** The expense screen's Pet section line: "Yoka · Vet" (the name is left out while the list loads). */
+export function petCostSummary(petName: string | undefined, kindLabel: string): string {
+  return [petName, kindLabel].filter(Boolean).join(' · ');
+}
+
+/** The pet form's rules: the app's category id -> kind. */
+export type PetRuleMap = Record<string, PetCostKind>;
+
+/**
+ * Server rules onto the categories this device knows (ABA-833). A rule carries
+ * every spelling of its category (`ids`: PK and clientId); one the device
+ * cannot match is dropped from the form, as on the vehicle form.
+ */
+export function mapPetRules(serverRules: PetCategoryRule[], localCategoryIds: string[]): PetRuleMap {
+  const out: PetRuleMap = {};
+  for (const r of serverRules) {
+    const local = localCategoryIds.find((id) => (r.ids ?? [r.categoryId]).includes(id));
+    if (local) out[local] = r.kind;
+  }
+  return out;
+}
+
+/** Tapping a category with the picked kind: adds it, re-kinds it, or (same kind again) removes it. */
+export function togglePetRule(rules: PetRuleMap, categoryId: string, kind: PetCostKind): PetRuleMap {
+  const next = { ...rules };
+  if (next[categoryId] === kind) delete next[categoryId];
+  else next[categoryId] = kind;
+  return next;
+}
+
+export function petRulesChanged(a: PetRuleMap, b: PetRuleMap): boolean {
+  const keys = new Set([...Object.keys(a), ...Object.keys(b)]);
+  return [...keys].some((k) => a[k] !== b[k]);
+}
+
+export function petRulesPayload(rules: PetRuleMap): { categoryId: string; kind: PetCostKind }[] {
+  return Object.entries(rules).map(([categoryId, kind]) => ({ categoryId, kind }));
 }

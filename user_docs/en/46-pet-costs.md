@@ -33,6 +33,27 @@ On the pet's card a date that is close is highlighted, and a date that has passe
 
 An expense belongs to one pet at a time. Assigning it to another pet moves it there.
 
+## Categories of a pet — costs that count by themselves
+
+If you have a category such as *Pet food* or *Vet*, let it do the work:
+
+1. Open **Settings → Reference data → Pets** and tap the pencil on the pet's card.
+2. Under **Categories of this pet**, pick a kind of cost (**Food**, **Vet**, **Grooming**, **Supplies**, **Insurance** or **Other**).
+3. Tap the categories that are that kind of cost for this pet. Tap a category again with the same kind to take it off.
+4. Tap **Save**.
+
+Every expense in those categories now counts for the pet — past ones too, and new ones as you add them. Expenses from a bank import or a recurring expense are picked up within a day. If two pets claim the same category, it goes to the pet added first.
+
+A choice you made yourself always wins: an expense you assigned by hand keeps its pet and kind, and an expense you took off a pet stays off, even when its category belongs to the pet.
+
+## The Pet section of an expense
+
+When the account has a pet, an expense's screen has a **Pet** section (on a computer it is in the expense window).
+
+- Tap **Mark as a pet cost**, pick the pet (if you have several) and the **Kind of cost**, then **Save**.
+- Tap the line again to change it, or tap **Not a pet cost** to take it off.
+- **From the pet's categories** under the line means a category put it there.
+
 ## The pet screen
 
 Tap **Costs** on a pet's card, or the pet's row in **Analytics**. You will see:

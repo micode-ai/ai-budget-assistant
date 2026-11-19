@@ -3293,6 +3293,9 @@ model Pet {
   /// Optional reminder dates; the reminder cron is a follow-up.
   nextVaccinationDate       DateTime? @map("next_vaccination_date") @db.Date
   nextParasiteTreatmentDate DateTime? @map("next_parasite_treatment_date") @db.Date
+  /// Expense categories whose expenses are this pet's costs, each with a kind:
+  /// `[{ categoryId, kind }]` (ABA-833).
+  categoryRules Json @default("[]") @map("category_rules")
   isDeleted Boolean   @default(false) @map("is_deleted")
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @updatedAt @map("updated_at")
@@ -3311,6 +3314,8 @@ model PetCost {
   petId     String   @map("pet_id")
   expenseId String   @unique @map("expense_id")
   kind      String
+  /// null = set by a person (including the `none` tombstone a removal leaves); 'category' = by a pet's category rule (ABA-833).
+  source    String?
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 

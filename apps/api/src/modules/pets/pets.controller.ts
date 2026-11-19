@@ -24,6 +24,12 @@ export class PetsController {
   }
 
   // Declared before the `:id` routes so `costs` is not captured as an id.
+  /** The pet cost on one expense (PK or clientId), or `{ cost: null }`; the expense screen's Pet section (ABA-833). */
+  @Get('costs/:expenseId')
+  costForExpense(@Req() req: AuthenticatedRequest, @Param('expenseId') expenseId: string) {
+    return this.pets.findCostForExpense(req.accountId, expenseId);
+  }
+
   @Delete('costs/:expenseId')
   @UseGuards(new ViewerBlockGuard())
   removeCost(@Req() req: AuthenticatedRequest, @Param('expenseId') expenseId: string) {
@@ -50,6 +56,12 @@ export class PetsController {
     }
     // Display currency from the user, never from a row.
     return this.pets.getHistory(req.accountId, id, months, req.user.currencyCode || 'USD');
+  }
+
+  /** The pet's category rules with every spelling of each category (ABA-833); set through PATCH `:id`. */
+  @Get(':id/category-rules')
+  categoryRules(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+    return this.pets.getCategoryRules(req.accountId, id);
   }
 
   @Get(':id/costs')

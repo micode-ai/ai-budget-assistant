@@ -5927,6 +5927,27 @@ No card do pet, uma data próxima fica destacada e uma data que já passou apare
 
 Uma despesa pertence a um pet de cada vez. Atribuí-la a outro pet muda ela para lá.
 
+## Categorias de um pet — custos que contam sozinhos
+
+Se você tem uma categoria como *Ração* ou *Veterinário*, deixe ela trabalhar por você:
+
+1. Abra **Configurações → Dados de referência → Pets** e toque no lápis no cartão do pet.
+2. Em **Categorias deste pet**, escolha um tipo de custo (**Ração**, **Veterinário**, **Banho e tosa**, **Acessórios**, **Seguro** ou **Outros**).
+3. Toque nas categorias que são esse tipo de custo deste pet. Tocar de novo numa categoria com o mesmo tipo tira ela.
+4. Toque em **Salvar**.
+
+Toda despesa dessas categorias passa a contar para o pet — inclusive as anteriores e as novas. Despesas de importação bancária ou recorrentes entram em até um dia. Se dois pets tiverem a mesma categoria, ela fica com o que foi adicionado primeiro.
+
+A sua escolha sempre vence: uma despesa atribuída à mão mantém o pet e o tipo, e uma despesa que você tirou de um pet continua fora, mesmo que a categoria seja do pet.
+
+## A seção Pet de uma despesa
+
+Quando a conta tem um pet, a tela de uma despesa mostra a seção **Pet** (no computador, na janela da despesa).
+
+- Toque em **Marcar como custo do pet**, escolha o pet (se tiver vários) e o **Tipo de custo**, depois **Salvar**.
+- Toque de novo na linha para mudar, ou em **Não é custo do pet** para tirar.
+- **Pelas categorias do pet** embaixo da linha quer dizer que uma categoria colocou ela ali.
+
 ## A tela do pet
 
 Toque em **Custos** no card do pet ou na linha dele em **Análises**. Você vai ver:

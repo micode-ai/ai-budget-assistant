@@ -33,6 +33,27 @@ No cartão do animal, uma data próxima fica destacada e uma data já passada ap
 
 Uma despesa pertence a um só animal. Atribuí-la a outro muda-a para esse.
 
+## Categorias de um animal — custos que contam sozinhos
+
+Se tem uma categoria como *Comida de animais* ou *Veterinário*, deixe-a trabalhar por si:
+
+1. Abra **Definições → Dados de referência → Animais** e toque no lápis no cartão do animal.
+2. Em **Categorias deste animal**, escolha um tipo de custo (**Comida**, **Veterinário**, **Tosquia e banho**, **Acessórios**, **Seguro** ou **Outros**).
+3. Toque nas categorias que são esse tipo de custo deste animal. Tocar de novo numa categoria com o mesmo tipo retira-a.
+4. Toque em **Guardar**.
+
+Cada despesa dessas categorias passa a contar para o animal — também as anteriores e as novas. As despesas de uma importação bancária ou recorrentes entram no prazo de um dia. Se dois animais reclamarem a mesma categoria, fica com o que foi adicionado primeiro.
+
+A sua própria escolha ganha sempre: uma despesa atribuída à mão mantém o animal e o tipo, e uma despesa retirada de um animal continua retirada, mesmo que a categoria pertença ao animal.
+
+## A secção Animal de uma despesa
+
+Quando a conta tem um animal, o ecrã de uma despesa mostra a secção **Animal** (no computador, na janela da despesa).
+
+- Toque em **Marcar como custo do animal**, escolha o animal (se tiver vários) e o **Tipo de custo**, e depois **Guardar**.
+- Toque de novo na linha para a alterar, ou em **Não é um custo do animal** para a retirar.
+- **Pelas categorias do animal** por baixo da linha quer dizer que foi uma categoria a colocá-la ali.
+
 ## O ecrã do animal
 
 Toque em **Custos** no cartão do animal, ou na sua linha em **Análise**. Vai ver:

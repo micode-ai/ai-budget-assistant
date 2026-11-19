@@ -8681,6 +8681,27 @@ Op de kaart van het dier wordt een datum die dichtbij is gemarkeerd, en een datu
 
 Een uitgave hoort bij één dier tegelijk. Wijs je haar toe aan een ander dier, dan verhuist ze daarheen.
 
+## Categorieën van een huisdier — kosten die vanzelf meetellen
+
+Heb je een categorie zoals *Dierenvoer* of *Dierenarts*, laat die dan het werk doen:
+
+1. Open **Instellingen → Referentiegegevens → Huisdieren** en tik op het potlood op de kaart van het huisdier.
+2. Kies onder **Categorieën van dit huisdier** een kostensoort (**Voer**, **Dierenarts**, **Verzorging**, **Benodigdheden**, **Verzekering** of **Overig**).
+3. Tik op de categorieën die die kostensoort voor dit huisdier zijn. Nog eens tikken met dezelfde soort haalt de categorie weg.
+4. Tik op **Opslaan**.
+
+Elke uitgave in die categorieën telt nu mee voor het huisdier — ook eerdere en nieuwe. Uitgaven uit een bankimport of terugkerende uitgaven worden binnen een dag opgepikt. Claimen twee huisdieren dezelfde categorie, dan gaat die naar het huisdier dat het eerst is toegevoegd.
+
+Je eigen keuze wint altijd: een uitgave die je met de hand toewees, houdt haar huisdier en soort, en een uitgave die je van een huisdier haalde, blijft eraf, ook als haar categorie bij het huisdier hoort.
+
+## Het onderdeel Huisdier van een uitgave
+
+Heeft de rekening een huisdier, dan toont het scherm van een uitgave het onderdeel **Huisdier** (op een computer in het uitgavevenster).
+
+- Tik op **Markeren als huisdierkosten**, kies het huisdier (als je er meer hebt) en de **Kostensoort**, en dan **Opslaan**.
+- Tik opnieuw op de regel om die te wijzigen, of op **Geen huisdierkosten** om haar weg te halen.
+- **Via de categorieën van het huisdier** onder de regel betekent dat een categorie haar daar zette.
+
 ## Het scherm van een huisdier
 
 Tik op **Kosten** op de kaart van het dier, of op zijn regel in **Analyse**. Je ziet:

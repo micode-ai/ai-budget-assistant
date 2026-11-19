@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { View, Text, TouchableOpacity, TextInput, ActivityIndicator, Platform, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
-import type { Pet, PetSpecies } from '@budget/shared-types';
+import type { Pet, PetCostKind, PetSpecies } from '@budget/shared-types';
 import { api } from '@/services/api';
 import { showAlert } from '@/utils/alert';
 import { toDateInputValue } from '@/utils/dateInput';
@@ -11,9 +11,22 @@ import { DatePicker } from '@/components/DatePicker';
 import { SheetDialog } from '@/components/SheetDialog';
 import { SettingsScreenScroll } from '@/components/settings/SettingsScreenScroll';
 import { useAccountStore } from '@/stores/accountStore';
-import { usePets, reloadPets } from '@/features/pets/usePets';
+import { usePets, reloadPets, putPet, dropPet } from '@/features/pets/usePets';
+import { useCategoryStore } from '@/stores/categoryStore';
+import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
 import { usePetEncryptionNote } from '@/features/pets/usePetEncryptionNote';
-import { PET_SPECIES, careDateStatus, parsePetDay, petAgeYears } from '@/features/pets/petDisplay';
+import {
+  PET_KINDS,
+  PET_SPECIES,
+  careDateStatus,
+  mapPetRules,
+  parsePetDay,
+  petAgeYears,
+  petRulesChanged,
+  petRulesPayload,
+  togglePetRule,
+  type PetRuleMap,
+} from '@/features/pets/petDisplay';
 import { getIntlLocale } from '@/i18n';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { PetEncryptionNote } from './PetDetailParts';
@@ -30,9 +43,15 @@ const DATE_FIELDS: { key: DateKey; labelKey: string }[] = [
 
 /**
  * Settings → Pets (ABA-831): the account's pets with their care dates, and a
- * link to each pet's costs. Costs themselves are assigned from the
- * transactions list (multi-select → Assign to pet), so this screen only adds,
- * edits and removes pets.
+ * link to each pet's costs. The form also holds the pet's categories
+ * (ABA-833): expense categories, each with a kind, whose expenses count for
+ * the pet automatically (the server's category rule), like a vehicle's. Single
+ * expenses are set on the expense screen's Pet section or in bulk from the
+ * transactions list (multi-select → Assign to pet).
+ *
+ * Every write lands in the shared pet cache straight from the server's answer
+ * (`putPet`/`dropPet`), so a mounted transactions tab shows "Assign to pet" at
+ * once; a background refetch only reconciles.
  *
  * Online only (no SQLite mirror): a failed load shows a retry, never "no
  * pets". Viewers see the cards with no write affordance. Lives under `src/` so
@@ -58,6 +77,16 @@ export function PetsSettings() {
   });
   const [openPicker, setOpenPicker] = useState<DateKey | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  // Category rules (ABA-833): the app's category id -> kind.
+  const allCategories = useCategoryStore((st) => st.categories);
+  const expenseCategories = allCategories
+    .filter((c) => c.type === 'expense' && !(c as { isDeleted?: boolean }).isDeleted)
+    .map((c) => ({ id: c.id, label: getCategoryDisplayName(c, t) }))
+    .sort((a, b) => a.label.localeCompare(b.label));
+  const [rulesState, setRulesState] = useState<'loading' | 'ready' | 'failed'>('ready');
+  const [initialRules, setInitialRules] = useState<PetRuleMap>({});
+  const [rules, setRules] = useState<PetRuleMap>({});
+  const [ruleKind, setRuleKind] = useState<PetCostKind>('food');
 
   const openCreate = () => {
     setEditing(null);
@@ -65,6 +94,10 @@ export function PetsSettings() {
     setSpecies('dog');
     setDates({ birthday: null, nextVaccinationDate: null, nextParasiteTreatmentDate: null });
     setOpenPicker(null);
+    setInitialRules({});
+    setRules({});
+    setRuleKind('food');
+    setRulesState('ready');
     setSheetVisible(true);
   };
   const openEdit = (p: Pet) => {
@@ -79,7 +112,26 @@ export function PetsSettings() {
       nextParasiteTreatmentDate: day(p.nextParasiteTreatmentDate),
     });
     setOpenPicker(null);
+    setInitialRules({});
+    setRules({});
+    setRuleKind('food');
     setSheetVisible(true);
+    setRulesState('loading');
+    api
+      .getPetCategoryRules(p.id)
+      .then(({ rules: serverRules }) => {
+        const mapped = mapPetRules(
+          serverRules,
+          expenseCategories.map((c) => c.id),
+        );
+        setInitialRules(mapped);
+        setRules(mapped);
+        setRulesState('ready');
+      })
+      .catch((err) => {
+        console.warn('[pets] category rules unavailable', err);
+        setRulesState('failed');
+      });
   };
   const close = () => {
     setSheetVisible(false);
@@ -91,11 +143,21 @@ export function PetsSettings() {
     const trimmed = name.trim();
     if (!trimmed || !accountId) return;
     setIsSaving(true);
+    // Rules are sent only when the form holds the server's rules and they changed.
+    const rulePatch =
+      rulesState === 'ready' && petRulesChanged(rules, initialRules) ? { categoryRules: petRulesPayload(rules) } : {};
     try {
-      if (editing) await api.updatePet(editing.id, { name: trimmed, species, ...dates });
-      else await api.createPet({ name: trimmed, species, ...dates });
-      await reloadPets(accountId);
+      const saved = editing
+        ? await api.updatePet(editing.id, { name: trimmed, species, ...dates, ...rulePatch })
+        : await api.createPet({ name: trimmed, species, ...dates, ...rulePatch });
+      const { rulesApplied, ...pet } = saved;
+      putPet(accountId, pet);
       close();
+      if (rulesApplied && (rulesApplied.attributed > 0 || rulesApplied.released > 0)) {
+        showAlert(t('pets.rulesSavedTitle'), t('pets.rulesSaved', { ...rulesApplied }));
+      }
+      // The write is already in the cache; the refetch only reconciles.
+      reloadPets(accountId).catch((err) => console.warn('[pets] refetch after save failed', err));
     } catch (e) {
       console.warn('[pets] save failed:', e instanceof Error ? e.message : String(e));
       showAlert(t('common.error'), t('pets.saveFailed'));
@@ -113,7 +175,10 @@ export function PetsSettings() {
         onPress: async () => {
           try {
             await api.deletePet(p.id);
-            if (accountId) await reloadPets(accountId);
+            if (accountId) {
+              dropPet(accountId, p.id);
+              reloadPets(accountId).catch((err) => console.warn('[pets] refetch after delete failed', err));
+            }
             close();
           } catch (e) {
             console.warn('[pets] delete failed:', e instanceof Error ? e.message : String(e));
@@ -219,6 +284,47 @@ export function PetsSettings() {
             />
           ))}
           <Text style={styles.reminderHint}>{t('pets.reminderHint')}</Text>
+          <View style={styles.rulesBlock}>
+            <Text style={styles.fieldLabel}>{t('pets.rulesTitle')}</Text>
+            <Text style={styles.rulesHint}>{t('pets.rulesHint')}</Text>
+            {rulesState === 'loading' && <ActivityIndicator color={theme.colors.primary} />}
+            {rulesState === 'failed' && <Text style={styles.rulesHint}>{t('pets.rulesFailed')}</Text>}
+            {rulesState === 'ready' && (
+              <>
+                <View style={styles.chips}>
+                  {PET_KINDS.map((k) => (
+                    <TouchableOpacity
+                      key={k}
+                      style={[styles.chip, ruleKind === k && styles.chipSelected]}
+                      onPress={() => setRuleKind(k)}
+                      accessibilityRole="radio"
+                      accessibilityState={{ selected: ruleKind === k }}
+                    >
+                      <Text style={[styles.chipText, ruleKind === k && styles.chipTextSelected]}>{t(`pets.kind_${k}`)}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+                <ScrollView style={styles.rulesScroll} contentContainerStyle={styles.chipsTight} nestedScrollEnabled>
+                  {expenseCategories.map((c) => {
+                    const k = rules[c.id];
+                    return (
+                      <TouchableOpacity
+                        key={c.id}
+                        style={[styles.chip, k ? styles.chipSelected : null]}
+                        onPress={() => setRules((prev) => togglePetRule(prev, c.id, ruleKind))}
+                        accessibilityRole="checkbox"
+                        accessibilityState={{ checked: !!k }}
+                      >
+                        <Text style={[styles.chipText, k ? styles.chipTextSelected : null]}>
+                          {k ? `${c.label} · ${t(`pets.kind_${k}`)}` : c.label}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </ScrollView>
+              </>
+            )}
+          </View>
         </ScrollView>
         <View style={styles.actions}>
           <TouchableOpacity style={styles.cancelButton} onPress={close}>
@@ -469,6 +575,10 @@ const createStyles = (theme: Theme) => ({
   datePlaceholder: { ...theme.textStyles.body, color: theme.colors.textTertiary },
   doneButton: { alignSelf: 'flex-end' as const, paddingVertical: theme.spacing[2] },
   reminderHint: { ...theme.textStyles.caption, color: theme.colors.textTertiary, marginBottom: theme.spacing[4] },
+  rulesBlock: { marginBottom: theme.spacing[4] },
+  rulesHint: { ...theme.textStyles.caption, color: theme.colors.textTertiary, marginBottom: theme.spacing[2] },
+  rulesScroll: { maxHeight: 160 },
+  chipsTight: { flexDirection: 'row' as const, flexWrap: 'wrap' as const, gap: theme.spacing[2] },
   actions: { flexDirection: 'row' as const, gap: theme.spacing[3] },
   cancelButton: {
     flex: 1,

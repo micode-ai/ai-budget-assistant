@@ -12,6 +12,7 @@ import { touchExpenses } from '../expenses/expense-touch.util';
 import { touchIncomes } from '../incomes/income-touch.util';
 import { applyChildCategoryRules } from '../children/child-category-rules.util';
 import { applyVehicleCategoryRules } from '../vehicles/vehicle-cost-rules.util';
+import { applyPetCategoryRules } from '../pets/pet-cost-rules.util';
 
 export type { SyncResult, ExpenseRecord, BudgetRecord, CategoryRecord } from './sync-types';
 
@@ -90,6 +91,9 @@ export class SyncService {
       );
       void applyVehicleCategoryRules(this.prisma, accountId).catch(
         logFireAndForget(this.logger, 'SyncService.applyVehicleCategoryRules'),
+      );
+      void applyPetCategoryRules(this.prisma, accountId).catch(
+        logFireAndForget(this.logger, 'SyncService.applyPetCategoryRules'),
       );
     }
 

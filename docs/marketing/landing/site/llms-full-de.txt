@@ -8771,6 +8771,27 @@ Auf der Karte des Tiers wird ein nahes Datum hervorgehoben, ein vergangenes ist 
 
 Eine Ausgabe gehört immer nur zu einem Tier. Ordnest du sie einem anderen zu, wechselt sie dorthin.
 
+## Kategorien eines Haustiers — Kosten, die von selbst zählen
+
+Wenn du eine Kategorie wie *Tierfutter* oder *Tierarzt* hast, lass sie die Arbeit machen:
+
+1. Öffne **Einstellungen → Stammdaten → Haustiere** und tippe auf den Stift auf der Karte des Haustiers.
+2. Wähle unter **Kategorien dieses Haustiers** eine Kostenart (**Futter**, **Tierarzt**, **Pflege**, **Zubehör**, **Versicherung** oder **Sonstiges**).
+3. Tippe auf die Kategorien, die diese Kostenart für dieses Haustier sind. Ein erneutes Tippen mit derselben Art nimmt die Kategorie wieder heraus.
+4. Tippe auf **Speichern**.
+
+Jede Ausgabe in diesen Kategorien zählt nun für das Haustier — auch frühere und neue. Ausgaben aus einem Bankimport oder wiederkehrende Ausgaben werden innerhalb eines Tages erfasst. Beanspruchen zwei Haustiere dieselbe Kategorie, bekommt sie das zuerst hinzugefügte.
+
+Deine eigene Entscheidung gewinnt immer: Eine von Hand zugeordnete Ausgabe behält ihr Haustier und ihre Art, und eine Ausgabe, die du von einem Haustier entfernt hast, bleibt entfernt, auch wenn ihre Kategorie zum Haustier gehört.
+
+## Der Abschnitt Haustier einer Ausgabe
+
+Hat das Konto ein Haustier, zeigt der Bildschirm einer Ausgabe den Abschnitt **Haustier** (am Computer im Ausgabenfenster).
+
+- Tippe auf **Als Haustierkosten markieren**, wähle das Haustier (wenn du mehrere hast) und die **Kostenart**, dann **Speichern**.
+- Tippe erneut auf die Zeile, um sie zu ändern, oder auf **Keine Haustierkosten**, um sie zu entfernen.
+- **Aus den Kategorien des Haustiers** unter der Zeile heißt, dass eine Kategorie sie zugeordnet hat.
+
 ## Der Bildschirm eines Haustiers
 
 Tippe auf **Kosten** auf der Karte des Tiers oder auf seine Zeile in der **Analyse**. Du siehst:

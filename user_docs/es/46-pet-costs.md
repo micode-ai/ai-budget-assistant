@@ -33,6 +33,27 @@ En la tarjeta de la mascota una fecha cercana se resalta y una ya pasada aparece
 
 Un gasto pertenece a una sola mascota. Si lo asignas a otra, pasa a esa.
 
+## Categorías de una mascota — gastos que cuentan solos
+
+Si tienes una categoría como *Comida para mascotas* o *Veterinario*, deja que trabaje por ti:
+
+1. Abre **Ajustes → Datos de referencia → Mascotas** y toca el lápiz en la tarjeta de la mascota.
+2. En **Categorías de esta mascota**, elige un tipo de gasto (**Comida**, **Veterinario**, **Peluquería**, **Accesorios**, **Seguro** u **Otros**).
+3. Toca las categorías que son ese tipo de gasto para esta mascota. Si vuelves a tocar una categoría con el mismo tipo, se quita.
+4. Toca **Guardar**.
+
+Cada gasto de esas categorías cuenta ahora para la mascota: también los anteriores y los nuevos. Los gastos de una importación bancaria o los recurrentes se recogen en un día. Si dos mascotas reclaman la misma categoría, se la queda la que se añadió primero.
+
+Tu propia decisión siempre gana: un gasto que asignaste a mano conserva su mascota y su tipo, y un gasto que quitaste de una mascota sigue fuera, aunque su categoría pertenezca a la mascota.
+
+## La sección Mascota de un gasto
+
+Cuando la cuenta tiene una mascota, la pantalla de un gasto muestra la sección **Mascota** (en el ordenador, en la ventana del gasto).
+
+- Toca **Marcar como gasto de mascota**, elige la mascota (si tienes varias) y el **Tipo de gasto**, y luego **Guardar**.
+- Vuelve a tocar la línea para cambiarla, o toca **No es un gasto de mascota** para quitarla.
+- **Por las categorías de la mascota** bajo la línea significa que la puso una categoría.
+
 ## La pantalla de la mascota
 
 Toca **Gastos** en la tarjeta de la mascota o su fila en **Análisis**. Verás:

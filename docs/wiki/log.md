@@ -397,6 +397,7 @@ Newest last within each section.
 - 2026-11-19 · [ABA-830](https://github.com/micode-ai/ai-budget-assistant/issues/868) — the three bots offer "Add to fuel log" after a fuel receipt; the odometer prompt is a third mutually exclusive typed-input mode and a digit-less message falls through to chat. Pages: `features/vehicle-fuel-log.md`, `features/bot-receipt-editing.md`, the three bot pages.
 - 2026-11-19 · [ABA-831](https://github.com/micode-ai/ai-budget-assistant/issues/869) — pet costs got their app screens (settings, detail phone+desktop, bulk assign, analytics card) and a daily vaccination/parasite-treatment reminder cron. Pages: `features/pet-costs.md`.
 - 2026-11-19 · [ABA-832](https://github.com/micode-ai/ai-budget-assistant/issues/870) — the app reports ErrorBoundary and global JS errors to `client_errors` with a deduped ops alert; found while a 1.42.0 Android user hit the error screen on every launch with nothing to diagnose it from (nginx logs show the app stops right before the home screen mounts). Pages: `features/client-error-reporting.md`.
+- 2026-11-19 · [ABA-833](https://github.com/micode-ai/ai-budget-assistant/issues/871) — pet category rules (vehicle-style, person's decision wins via `source` + `none` tombstone), a pet field on the expense screen, and a shared account-list cache so a mounted transactions tab sees a newly added pet/vehicle. Pages: `features/pet-costs.md`, `features/vehicle-fuel-log.md`.
 
 ## Queries
 

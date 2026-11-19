@@ -3,6 +3,11 @@ import {
   careDateStatus,
   chunkPetIds,
   filterPetItems,
+  mapPetRules,
+  petCostSummary,
+  petRulesChanged,
+  petRulesPayload,
+  togglePetRule,
   petAgeYears,
   petDaysUntil,
   petItemCaption,
@@ -91,5 +96,39 @@ describe('bulk assign chunking', () => {
     expect(chunkPetIds(ids).map((c) => c.length)).toEqual([500, 500, 1]);
     expect(chunkPetIds(['a', 'b', 'a'])).toEqual([['a', 'b']]);
     expect(chunkPetIds([])).toEqual([]);
+  });
+});
+
+describe('pet category rules in the form (ABA-833)', () => {
+  it('maps a server rule onto the category the device knows by PK or clientId', () => {
+    const rules = [
+      { categoryId: 'pk-food', kind: 'food' as const, ids: ['pk-food', 'local-food'] },
+      { categoryId: 'pk-vet', kind: 'vet' as const },
+      { categoryId: 'pk-gone', kind: 'other' as const, ids: ['pk-gone'] },
+    ];
+    expect(mapPetRules(rules, ['local-food', 'pk-vet'])).toEqual({ 'local-food': 'food', 'pk-vet': 'vet' });
+  });
+
+  it('toggles: adds, re-kinds, and the same kind again removes', () => {
+    let r = togglePetRule({}, 'c', 'food');
+    expect(r).toEqual({ c: 'food' });
+    r = togglePetRule(r, 'c', 'vet');
+    expect(r).toEqual({ c: 'vet' });
+    expect(togglePetRule(r, 'c', 'vet')).toEqual({});
+  });
+
+  it('detects a change and builds the PATCH payload', () => {
+    expect(petRulesChanged({ a: 'food' }, { a: 'food' })).toBe(false);
+    expect(petRulesChanged({ a: 'food' }, { a: 'vet' })).toBe(true);
+    expect(petRulesChanged({}, { a: 'vet' })).toBe(true);
+    expect(petRulesPayload({ a: 'food', b: 'vet' })).toEqual([
+      { categoryId: 'a', kind: 'food' },
+      { categoryId: 'b', kind: 'vet' },
+    ]);
+  });
+
+  it('summarises the expense screen line, leaving out a name not loaded yet', () => {
+    expect(petCostSummary('Yoka', 'Vet')).toBe('Yoka · Vet');
+    expect(petCostSummary(undefined, 'Vet')).toBe('Vet');
   });
 });

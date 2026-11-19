@@ -1,9 +1,16 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { ExchangeRateService } from '../currency-exchange/exchange-rate.service';
 import { convertAmount, getRatesSafe } from '../../common/utils/fx';
-import { BulkPetCostDto, CreatePetDto, SetPetCostDto, UpdatePetDto } from './dto';
+import { BulkPetCostDto, CreatePetDto, PetCategoryRuleDto, SetPetCostDto, UpdatePetDto } from './dto';
 import { computePetHistory, PetHistory } from './pet-history.util';
+import {
+  applyPetCategoryRules,
+  parsePetCategoryRules,
+  PET_COST_NONE,
+  type PetCategoryRule,
+  type PetCostKind,
+} from './pet-cost-rules.util';
 
 const EXPENSE_SELECT = {
   id: true,
@@ -31,8 +38,9 @@ export class PetsService {
     return this.prisma.pet.findMany({ where: { accountId, isDeleted: false }, orderBy: { createdAt: 'asc' } });
   }
 
-  create(accountId: string, userId: string, dto: CreatePetDto) {
-    return this.prisma.pet.create({
+  async create(accountId: string, userId: string, dto: CreatePetDto) {
+    const categoryRules = dto.categoryRules ? await this.resolveRules(accountId, dto.categoryRules) : [];
+    const pet = await this.prisma.pet.create({
       data: {
         accountId,
         userId,
@@ -41,8 +49,11 @@ export class PetsService {
         birthday: dto.birthday ? toDateOnly(dto.birthday) : null,
         nextVaccinationDate: dto.nextVaccinationDate ? toDateOnly(dto.nextVaccinationDate) : null,
         nextParasiteTreatmentDate: dto.nextParasiteTreatmentDate ? toDateOnly(dto.nextParasiteTreatmentDate) : null,
+        categoryRules: categoryRules,
       },
     });
+    if (categoryRules.length === 0) return pet;
+    return { ...pet, rulesApplied: await applyPetCategoryRules(this.prisma, accountId) };
   }
 
   async findOne(accountId: string, id: string) {
@@ -53,7 +64,8 @@ export class PetsService {
 
   async update(accountId: string, id: string, dto: UpdatePetDto) {
     await this.findOne(accountId, id);
-    return this.prisma.pet.update({
+    const categoryRules = dto.categoryRules ? await this.resolveRules(accountId, dto.categoryRules) : undefined;
+    const pet = await this.prisma.pet.update({
       where: { id },
       data: {
         ...(dto.name !== undefined && { name: dto.name.trim() }),
@@ -63,32 +75,102 @@ export class PetsService {
         ...(dto.nextParasiteTreatmentDate !== undefined && {
           nextParasiteTreatmentDate: toDateOnly(dto.nextParasiteTreatmentDate),
         }),
+        ...(categoryRules !== undefined && { categoryRules: categoryRules }),
       },
     });
+    if (categoryRules === undefined) return pet;
+    // Applied at once, so the pet screen shows the claimed expenses straight after saving.
+    return { ...pet, rulesApplied: await applyPetCategoryRules(this.prisma, accountId) };
   }
 
   async remove(accountId: string, id: string) {
     await this.findOne(accountId, id);
     await this.prisma.pet.update({ where: { id }, data: { isDeleted: true } });
+    // A deleted pet no longer claims its categories: release its rule rows.
+    await applyPetCategoryRules(this.prisma, accountId);
     return { success: true };
+  }
+
+  /**
+   * Category ids may be PKs or a device's clientId; only live EXPENSE
+   * categories the account can see are accepted, and the resolved PK is what
+   * is stored (ABA-833).
+   */
+  private async resolveRules(accountId: string, input: PetCategoryRuleDto[]): Promise<PetCategoryRule[]> {
+    const rules: PetCategoryRule[] = [];
+    for (const r of input) {
+      const cat = await this.prisma.category.findFirst({
+        where: {
+          OR: [{ id: r.categoryId }, { clientId: r.categoryId }],
+          AND: [{ OR: [{ accountId }, { accountId: null }] }],
+          isDeleted: false,
+          type: 'expense',
+        },
+        select: { id: true },
+      });
+      if (!cat) throw new BadRequestException('Unknown expense category');
+      if (!rules.some((x) => x.categoryId === cat.id)) rules.push({ categoryId: cat.id, kind: r.kind as PetCostKind });
+    }
+    return rules;
+  }
+
+  /**
+   * The pet's rules with every spelling of each category (PK and the device's
+   * clientId), so a phone that knows a category by its local id matches it
+   * (category-id-resolution).
+   */
+  async getCategoryRules(accountId: string, petId: string) {
+    const pet = await this.findOne(accountId, petId);
+    const rules = parsePetCategoryRules(pet.categoryRules);
+    if (rules.length === 0) return { rules: [] };
+    const rows = await this.prisma.category.findMany({
+      where: { id: { in: rules.map((r) => r.categoryId) } },
+      select: { id: true, clientId: true },
+    });
+    const clientOf = new Map(rows.map((r) => [r.id, r.clientId]));
+    return {
+      rules: rules.map((r) => {
+        const clientId = clientOf.get(r.categoryId);
+        return { ...r, ids: [r.categoryId, ...(clientId ? [clientId] : [])] };
+      }),
+    };
+  }
+
+  /**
+   * The pet cost on one expense (PK or clientId), or null. The expense screen
+   * asks this for every expense, so "none" is an answer, not a 404; a `none`
+   * tombstone reads as no pet.
+   */
+  async findCostForExpense(accountId: string, expenseIdOrClientId: string) {
+    const cost = await this.prisma.petCost.findFirst({
+      where: {
+        accountId,
+        kind: { not: PET_COST_NONE },
+        expense: { accountId, isDeleted: false, OR: [{ id: expenseIdOrClientId }, { clientId: expenseIdOrClientId }] },
+        pet: { isDeleted: false },
+      },
+      select: { petId: true, kind: true, source: true },
+    });
+    return { cost };
   }
 
   private async resolveExpense(accountId: string, expenseIdOrClientId: string) {
     const expense = await this.prisma.expense.findFirst({
       where: { accountId, isDeleted: false, OR: [{ id: expenseIdOrClientId }, { clientId: expenseIdOrClientId }] },
-      select: { id: true },
+      select: { id: true, categoryId: true },
     });
     if (!expense) throw new NotFoundException('Expense not found');
     return expense;
   }
 
+  /** A person's decision (`source: null`): a category rule never overwrites it. */
   async setCost(accountId: string, petId: string, expenseIdOrClientId: string, dto: SetPetCostDto) {
     await this.findOne(accountId, petId);
     const expense = await this.resolveExpense(accountId, expenseIdOrClientId);
     return this.prisma.petCost.upsert({
       where: { expenseId: expense.id },
-      create: { accountId, petId, expenseId: expense.id, kind: dto.kind },
-      update: { petId, kind: dto.kind },
+      create: { accountId, petId, expenseId: expense.id, kind: dto.kind, source: null },
+      update: { petId, kind: dto.kind, source: null },
     });
   }
 
@@ -103,24 +185,43 @@ export class PetsService {
     for (const e of expenses) {
       await this.prisma.petCost.upsert({
         where: { expenseId: e.id },
-        create: { accountId, petId, expenseId: e.id, kind: dto.kind },
-        update: { petId, kind: dto.kind },
+        create: { accountId, petId, expenseId: e.id, kind: dto.kind, source: null },
+        update: { petId, kind: dto.kind, source: null },
       });
     }
     return { assigned: expenses.length, notFound: Math.max(0, ids.length - expenses.length) };
   }
 
+  /**
+   * Takes the pet cost off an expense (ABA-833). When a pet's category rule
+   * claims the expense's category, the row stays as a `none` tombstone set by
+   * a person, so the rule does not put it back; otherwise it is deleted.
+   */
   async removeCost(accountId: string, expenseIdOrClientId: string) {
     const expense = await this.resolveExpense(accountId, expenseIdOrClientId);
-    const { count } = await this.prisma.petCost.deleteMany({ where: { expenseId: expense.id, accountId } });
-    if (count === 0) throw new NotFoundException('Pet cost not found');
+    const existing = await this.prisma.petCost.findFirst({ where: { expenseId: expense.id, accountId } });
+    if (!existing || existing.kind === PET_COST_NONE) throw new NotFoundException('Pet cost not found');
+    if (await this.isClaimedByRule(accountId, expense.categoryId)) {
+      await this.prisma.petCost.update({ where: { id: existing.id }, data: { kind: PET_COST_NONE, source: null } });
+    } else {
+      await this.prisma.petCost.delete({ where: { id: existing.id } });
+    }
     return { success: true };
+  }
+
+  private async isClaimedByRule(accountId: string, categoryId: string | null): Promise<boolean> {
+    if (!categoryId) return false;
+    const pets = await this.prisma.pet.findMany({
+      where: { accountId, isDeleted: false },
+      select: { categoryRules: true },
+    });
+    return pets.some((p) => parsePetCategoryRules(p.categoryRules).some((r) => r.categoryId === categoryId));
   }
 
   async listCosts(accountId: string, petId: string) {
     await this.findOne(accountId, petId);
     return this.prisma.petCost.findMany({
-      where: { accountId, petId, expense: { accountId, isDeleted: false } },
+      where: { accountId, petId, kind: { not: PET_COST_NONE }, expense: { accountId, isDeleted: false } },
       include: { expense: { select: EXPENSE_SELECT } },
       orderBy: { expense: { date: 'desc' } },
     });
@@ -136,7 +237,8 @@ export class PetsService {
   ): Promise<PetHistory & { yearTotal: number; currencyCode: string; fxApproximate: boolean }> {
     await this.findOne(accountId, petId);
     const rows = await this.prisma.petCost.findMany({
-      where: { accountId, petId, expense: { accountId, isDeleted: false } },
+      // A `none` tombstone is a person's "not a pet cost", never a cost.
+      where: { accountId, petId, kind: { not: PET_COST_NONE }, expense: { accountId, isDeleted: false } },
       include: { expense: { select: EXPENSE_SELECT } },
     });
     const rates = rows.some((r) => r.expense.currencyCode !== baseCurrency)

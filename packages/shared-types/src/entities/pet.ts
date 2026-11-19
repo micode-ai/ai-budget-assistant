@@ -12,6 +12,8 @@ export interface Pet {
   birthday?: string | null;
   nextVaccinationDate?: string | null;
   nextParasiteTreatmentDate?: string | null;
+  /** Server PKs of the claimed expense categories; read `GET /pets/:id/category-rules` for every spelling (ABA-833). */
+  categoryRules?: PetCategoryRule[];
   createdAt: string;
   updatedAt: string;
 }
@@ -41,4 +43,26 @@ export interface PetHistoryItem {
   amountBase: number | null;
   merchant: string | null;
   description: string | null;
+}
+
+/** An expense category whose expenses are this pet's cost of `kind` (ABA-833). */
+export interface PetCategoryRule {
+  categoryId: string;
+  kind: PetCostKind;
+  /** In responses: every spelling of the category (server PK and the device's clientId). */
+  ids?: string[];
+}
+
+/** The pet cost on one expense (`GET /pets/costs/:expenseId`, ABA-833). */
+export interface PetCostLink {
+  petId: string;
+  kind: PetCostKind;
+  /** null = set by a person; 'category' = by the pet's category rule. */
+  source: string | null;
+}
+
+/** What a create/update that carried `categoryRules` applied at once. */
+export interface PetRulesApplied {
+  attributed: number;
+  released: number;
 }

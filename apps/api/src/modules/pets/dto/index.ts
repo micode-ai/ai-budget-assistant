@@ -1,5 +1,27 @@
-import { ArrayMaxSize, IsArray, IsDateString, IsIn, IsOptional, IsString, MaxLength, ValidateIf } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  ArrayMaxSize,
+  IsArray,
+  IsDateString,
+  IsIn,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MaxLength,
+  ValidateIf,
+  ValidateNested,
+} from 'class-validator';
 import { PET_COST_KINDS, PET_SPECIES } from '../pet-history.util';
+
+/** One category rule: an expense category (PK or a device's clientId) whose expenses are this pet's cost (ABA-833). */
+export class PetCategoryRuleDto {
+  @IsString()
+  @IsNotEmpty()
+  categoryId: string;
+
+  @IsIn(PET_COST_KINDS)
+  kind: string;
+}
 
 export class CreatePetDto {
   @IsString()
@@ -22,6 +44,14 @@ export class CreatePetDto {
   @IsOptional()
   @IsDateString()
   nextParasiteTreatmentDate?: string;
+
+  /** Replaces the pet's category rules and applies them at once (ABA-833); live expense categories of the account only. */
+  @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(30)
+  @ValidateNested({ each: true })
+  @Type(() => PetCategoryRuleDto)
+  categoryRules?: PetCategoryRuleDto[];
 }
 
 export class UpdatePetDto {
@@ -49,6 +79,14 @@ export class UpdatePetDto {
   @ValidateIf((_o, v) => v !== null)
   @IsDateString()
   nextParasiteTreatmentDate?: string | null;
+
+  /** Replaces the pet's category rules and applies them at once (ABA-833); live expense categories of the account only. */
+  @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(30)
+  @ValidateNested({ each: true })
+  @Type(() => PetCategoryRuleDto)
+  categoryRules?: PetCategoryRuleDto[];
 }
 
 export class SetPetCostDto {

@@ -42,7 +42,9 @@ can edit — fill-ups hang on expenses that stay in the source account. The app 
 (`forgetVehicles`) instead of refetching it under the current account's header.
 
 **The app is online-only here.** `useVehicles` caches the list per account in module scope (keyed by account id, so
-a switch never reads another account's list) and `reloadVehicles` refetches after a write. The Fill-up section is
+a switch never reads another account's list) and `reloadVehicles` refetches after a write. Since ABA-833 the cache
+is `vehiclesCache` (an `AccountListCache`, see [pet-costs](pet-costs.md)): every mounted reader re-renders on a write,
+a stale entry (30 s) is refetched on mount and screen focus, and sign-out clears it. The Fill-up section is
 drawn only when the account has a vehicle or the expense already has a fill-up, and sends `serverId ?? id`.
 
 **Bulk** ([ABA-805](https://github.com/micode-ai/ai-budget-assistant/issues/843)): `POST /vehicles/:id/costs/bulk` takes a whole transactions-list selection in one request

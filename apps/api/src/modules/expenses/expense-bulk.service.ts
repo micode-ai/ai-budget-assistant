@@ -8,6 +8,7 @@ import { MerchantRulesService } from '../merchant-rules/merchant-rules.service';
 import { logFireAndForget } from '../../common/utils/fire-and-forget';
 import { applyChildCategoryRules } from '../children/child-category-rules.util';
 import { applyVehicleCategoryRules } from '../vehicles/vehicle-cost-rules.util';
+import { applyPetCategoryRules } from '../pets/pet-cost-rules.util';
 
 /**
  * Bulk expense mutations (multi-select category/tag/delete from the mobile
@@ -130,6 +131,9 @@ export class ExpenseBulkService {
     );
     void applyVehicleCategoryRules(this.prisma, accountId).catch(
       logFireAndForget(this.logger, 'ExpenseBulkService.applyVehicleCategoryRules'),
+    );
+    void applyPetCategoryRules(this.prisma, accountId).catch(
+      logFireAndForget(this.logger, 'ExpenseBulkService.applyPetCategoryRules'),
     );
     return { updated: ownedIds.length };
   }

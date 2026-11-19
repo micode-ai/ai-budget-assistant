@@ -32,6 +32,8 @@ import { useDeveloperAppsStore } from './developerAppsStore';
 import { useConnectedAppsStore } from './connectedAppsStore';
 import { useChatStore } from './chatStore';
 import { useChildStore } from './childStore';
+import { petsCache } from '@/features/pets/petsCache';
+import { vehiclesCache } from '@/features/vehicles/vehiclesCache';
 import { useScenarioStore } from './scenarioStore';
 import * as investmentRepo from '../db/investmentRepository';
 import { clearAllChildData } from '../db/childRepository';
@@ -704,6 +706,10 @@ export async function logoutAction(set: AuthStoreSet): Promise<void> {
     // unconditionally as well as on the account switch, so sign-out teardown
     // does not depend on the `accountStore.reset()` subscription firing.
     useChildStore.getState().reset();
+    // Pets and vehicles (ABA-833): online-only lists in module-scope caches, not stores; the
+    // previous user's pet and car names must not paint for whoever signs in next.
+    petsCache.clear();
+    vehiclesCache.clear();
 
     // Clear investment data from SQLite
     await investmentRepo.clearAllInvestments();

@@ -33,6 +33,27 @@ Na karcie zwierzęcia zbliżająca się data jest wyróżniona, a miniona oznacz
 
 Wydatek należy naraz do jednego zwierzęcia. Przypisanie go innemu przenosi go tam.
 
+## Kategorie zwierzęcia — koszty, które liczą się same
+
+Jeśli masz kategorię, np. *Karma* albo *Weterynarz*, niech pracuje za ciebie:
+
+1. Otwórz **Ustawienia → Słowniki → Zwierzęta** i stuknij ołówek na karcie zwierzęcia.
+2. W sekcji **Kategorie tego zwierzęcia** wybierz rodzaj kosztu (**Karma**, **Weterynarz**, **Pielęgnacja**, **Akcesoria**, **Ubezpieczenie** lub **Inne**).
+3. Stuknij kategorie, które są tym rodzajem kosztu dla tego zwierzęcia. Ponowne stuknięcie kategorii z tym samym rodzajem ją odznacza.
+4. Stuknij **Zapisz**.
+
+Każdy wydatek w tych kategoriach liczy się teraz dla zwierzęcia — także wcześniejsze i nowe, które dodasz. Wydatki z importu bankowego lub cykliczne trafiają tam w ciągu doby. Jeśli dwa zwierzęta mają tę samą kategorię, dostaje ją to dodane wcześniej.
+
+Twoja własna decyzja zawsze wygrywa: wydatek przypisany ręcznie zachowuje swoje zwierzę i rodzaj, a wydatek zdjęty ze zwierzęcia pozostaje zdjęty, nawet jeśli jego kategoria należy do zwierzęcia.
+
+## Sekcja Zwierzę w wydatku
+
+Gdy konto ma zwierzę, ekran wydatku ma sekcję **Zwierzę** (na komputerze — w oknie wydatku).
+
+- Stuknij **Oznacz jako koszt zwierzęcia**, wybierz zwierzę (jeśli masz kilka) i **Rodzaj kosztu**, potem **Zapisz**.
+- Stuknij wiersz ponownie, aby go zmienić, albo **To nie koszt zwierzęcia**, aby go zdjąć.
+- Dopisek **Z kategorii zwierzęcia** oznacza, że przypisała go kategoria.
+
 ## Ekran zwierzęcia
 
 Stuknij **Koszty** na karcie zwierzęcia albo jego wiersz w **Analityce**. Zobaczysz:

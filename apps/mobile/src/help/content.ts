@@ -5526,6 +5526,27 @@ On the pet's card a date that is close is highlighted, and a date that has passe
 
 An expense belongs to one pet at a time. Assigning it to another pet moves it there.
 
+## Categories of a pet — costs that count by themselves
+
+If you have a category such as *Pet food* or *Vet*, let it do the work:
+
+1. Open **Settings → Reference data → Pets** and tap the pencil on the pet's card.
+2. Under **Categories of this pet**, pick a kind of cost (**Food**, **Vet**, **Grooming**, **Supplies**, **Insurance** or **Other**).
+3. Tap the categories that are that kind of cost for this pet. Tap a category again with the same kind to take it off.
+4. Tap **Save**.
+
+Every expense in those categories now counts for the pet — past ones too, and new ones as you add them. Expenses from a bank import or a recurring expense are picked up within a day. If two pets claim the same category, it goes to the pet added first.
+
+A choice you made yourself always wins: an expense you assigned by hand keeps its pet and kind, and an expense you took off a pet stays off, even when its category belongs to the pet.
+
+## The Pet section of an expense
+
+When the account has a pet, an expense's screen has a **Pet** section (on a computer it is in the expense window).
+
+- Tap **Mark as a pet cost**, pick the pet (if you have several) and the **Kind of cost**, then **Save**.
+- Tap the line again to change it, or tap **Not a pet cost** to take it off.
+- **From the pet's categories** under the line means a category put it there.
+
 ## The pet screen
 
 Tap **Costs** on a pet's card, or the pet's row in **Analytics**. You will see:
@@ -11035,6 +11056,27 @@ OCR иногда неверно читает цену, выдумывает ст
 
 Расход относится только к одному питомцу. Если назначить его другому, он перейдёт к нему.
 
+## Категории питомца — расходы, которые учитываются сами
+
+Если у вас есть категория вроде *Корм для питомца* или *Ветеринар*, пусть она работает за вас:
+
+1. Откройте **Настройки → Справочники → Питомцы** и нажмите карандаш на карточке питомца.
+2. В блоке **Категории этого питомца** выберите вид расхода (**Корм**, **Ветеринар**, **Груминг**, **Товары**, **Страховка** или **Другое**).
+3. Нажмите на категории, которые относятся к этому виду расходов на питомца. Повторное нажатие с тем же видом снимает категорию.
+4. Нажмите **Сохранить**.
+
+Теперь каждая трата в этих категориях учитывается для питомца — и прошлые, и новые. Траты из банковского импорта и повторяющиеся подхватываются в течение суток. Если одну категорию выбрали два питомца, она достаётся тому, кто добавлен раньше.
+
+Ваше собственное решение всегда главнее: трата, назначенная вручную, сохраняет своего питомца и вид, а трата, которую вы сняли с питомца, остаётся снятой, даже если её категория принадлежит питомцу.
+
+## Раздел «Питомец» в трате
+
+Когда у счёта есть питомец, на экране траты есть раздел **Питомец** (на компьютере — в окне траты).
+
+- Нажмите **Отметить как расход на питомца**, выберите питомца (если их несколько) и **Вид расхода**, затем **Сохранить**.
+- Нажмите на строку ещё раз, чтобы изменить, или **Не расход на питомца**, чтобы снять.
+- Подпись **По категориям питомца** под строкой означает, что её назначила категория.
+
 ## Экран питомца
 
 Нажмите **Расходы** на карточке питомца или его строку в **Аналитике**. Вы увидите:
@@ -16514,6 +16556,27 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 Витрата належить лише одному улюбленцю. Якщо призначити її іншому, вона перейде до нього.
 
+## Категорії улюбленця — витрати, що враховуються самі
+
+Якщо у вас є категорія на кшталт *Корм для улюбленця* або *Ветеринар*, нехай вона працює за вас:
+
+1. Відкрийте **Налаштування → Довідники → Улюбленці** й натисніть олівець на картці улюбленця.
+2. У блоці **Категорії цього улюбленця** оберіть вид витрати (**Корм**, **Ветеринар**, **Грумінг**, **Товари**, **Страхування** або **Інше**).
+3. Натисніть на категорії, що належать до цього виду витрат на улюбленця. Повторне натискання з тим самим видом знімає категорію.
+4. Натисніть **Зберегти**.
+
+Тепер кожна витрата в цих категоріях враховується для улюбленця — і минулі, і нові. Витрати з банківського імпорту та повторювані підхоплюються протягом доби. Якщо одну категорію обрали два улюбленці, вона дістається тому, кого додано раніше.
+
+Ваше власне рішення завжди головніше: витрата, призначена вручну, зберігає свого улюбленця й вид, а витрата, яку ви зняли з улюбленця, лишається знятою, навіть якщо її категорія належить улюбленцю.
+
+## Розділ «Улюбленець» у витраті
+
+Коли рахунок має улюбленця, на екрані витрати є розділ **Улюбленець** (на комп'ютері — у вікні витрати).
+
+- Натисніть **Позначити як витрату на улюбленця**, оберіть улюбленця (якщо їх кілька) і **Вид витрати**, потім **Зберегти**.
+- Натисніть на рядок ще раз, щоб змінити, або **Не витрата на улюбленця**, щоб зняти.
+- Підпис **За категоріями улюбленця** під рядком означає, що її призначила категорія.
+
 ## Екран улюбленця
 
 Натисніть **Витрати** на картці улюбленця або його рядок в **Аналітиці**. Ви побачите:
@@ -21978,6 +22041,27 @@ Na karcie zwierzęcia zbliżająca się data jest wyróżniona, a miniona oznacz
 
 Wydatek należy naraz do jednego zwierzęcia. Przypisanie go innemu przenosi go tam.
 
+## Kategorie zwierzęcia — koszty, które liczą się same
+
+Jeśli masz kategorię, np. *Karma* albo *Weterynarz*, niech pracuje za ciebie:
+
+1. Otwórz **Ustawienia → Słowniki → Zwierzęta** i stuknij ołówek na karcie zwierzęcia.
+2. W sekcji **Kategorie tego zwierzęcia** wybierz rodzaj kosztu (**Karma**, **Weterynarz**, **Pielęgnacja**, **Akcesoria**, **Ubezpieczenie** lub **Inne**).
+3. Stuknij kategorie, które są tym rodzajem kosztu dla tego zwierzęcia. Ponowne stuknięcie kategorii z tym samym rodzajem ją odznacza.
+4. Stuknij **Zapisz**.
+
+Każdy wydatek w tych kategoriach liczy się teraz dla zwierzęcia — także wcześniejsze i nowe, które dodasz. Wydatki z importu bankowego lub cykliczne trafiają tam w ciągu doby. Jeśli dwa zwierzęta mają tę samą kategorię, dostaje ją to dodane wcześniej.
+
+Twoja własna decyzja zawsze wygrywa: wydatek przypisany ręcznie zachowuje swoje zwierzę i rodzaj, a wydatek zdjęty ze zwierzęcia pozostaje zdjęty, nawet jeśli jego kategoria należy do zwierzęcia.
+
+## Sekcja Zwierzę w wydatku
+
+Gdy konto ma zwierzę, ekran wydatku ma sekcję **Zwierzę** (na komputerze — w oknie wydatku).
+
+- Stuknij **Oznacz jako koszt zwierzęcia**, wybierz zwierzę (jeśli masz kilka) i **Rodzaj kosztu**, potem **Zapisz**.
+- Stuknij wiersz ponownie, aby go zmienić, albo **To nie koszt zwierzęcia**, aby go zdjąć.
+- Dopisek **Z kategorii zwierzęcia** oznacza, że przypisała go kategoria.
+
 ## Ekran zwierzęcia
 
 Stuknij **Koszty** na karcie zwierzęcia albo jego wiersz w **Analityce**. Zobaczysz:
@@ -27417,6 +27501,27 @@ Auf der Karte des Tiers wird ein nahes Datum hervorgehoben, ein vergangenes ist 
 
 Eine Ausgabe gehört immer nur zu einem Tier. Ordnest du sie einem anderen zu, wechselt sie dorthin.
 
+## Kategorien eines Haustiers — Kosten, die von selbst zählen
+
+Wenn du eine Kategorie wie *Tierfutter* oder *Tierarzt* hast, lass sie die Arbeit machen:
+
+1. Öffne **Einstellungen → Stammdaten → Haustiere** und tippe auf den Stift auf der Karte des Haustiers.
+2. Wähle unter **Kategorien dieses Haustiers** eine Kostenart (**Futter**, **Tierarzt**, **Pflege**, **Zubehör**, **Versicherung** oder **Sonstiges**).
+3. Tippe auf die Kategorien, die diese Kostenart für dieses Haustier sind. Ein erneutes Tippen mit derselben Art nimmt die Kategorie wieder heraus.
+4. Tippe auf **Speichern**.
+
+Jede Ausgabe in diesen Kategorien zählt nun für das Haustier — auch frühere und neue. Ausgaben aus einem Bankimport oder wiederkehrende Ausgaben werden innerhalb eines Tages erfasst. Beanspruchen zwei Haustiere dieselbe Kategorie, bekommt sie das zuerst hinzugefügte.
+
+Deine eigene Entscheidung gewinnt immer: Eine von Hand zugeordnete Ausgabe behält ihr Haustier und ihre Art, und eine Ausgabe, die du von einem Haustier entfernt hast, bleibt entfernt, auch wenn ihre Kategorie zum Haustier gehört.
+
+## Der Abschnitt Haustier einer Ausgabe
+
+Hat das Konto ein Haustier, zeigt der Bildschirm einer Ausgabe den Abschnitt **Haustier** (am Computer im Ausgabenfenster).
+
+- Tippe auf **Als Haustierkosten markieren**, wähle das Haustier (wenn du mehrere hast) und die **Kostenart**, dann **Speichern**.
+- Tippe erneut auf die Zeile, um sie zu ändern, oder auf **Keine Haustierkosten**, um sie zu entfernen.
+- **Aus den Kategorien des Haustiers** unter der Zeile heißt, dass eine Kategorie sie zugeordnet hat.
+
 ## Der Bildschirm eines Haustiers
 
 Tippe auf **Kosten** auf der Karte des Tiers oder auf seine Zeile in der **Analyse**. Du siehst:
@@ -32845,6 +32950,27 @@ En la tarjeta de la mascota una fecha cercana se resalta y una ya pasada aparece
 
 Un gasto pertenece a una sola mascota. Si lo asignas a otra, pasa a esa.
 
+## Categorías de una mascota — gastos que cuentan solos
+
+Si tienes una categoría como *Comida para mascotas* o *Veterinario*, deja que trabaje por ti:
+
+1. Abre **Ajustes → Datos de referencia → Mascotas** y toca el lápiz en la tarjeta de la mascota.
+2. En **Categorías de esta mascota**, elige un tipo de gasto (**Comida**, **Veterinario**, **Peluquería**, **Accesorios**, **Seguro** u **Otros**).
+3. Toca las categorías que son ese tipo de gasto para esta mascota. Si vuelves a tocar una categoría con el mismo tipo, se quita.
+4. Toca **Guardar**.
+
+Cada gasto de esas categorías cuenta ahora para la mascota: también los anteriores y los nuevos. Los gastos de una importación bancaria o los recurrentes se recogen en un día. Si dos mascotas reclaman la misma categoría, se la queda la que se añadió primero.
+
+Tu propia decisión siempre gana: un gasto que asignaste a mano conserva su mascota y su tipo, y un gasto que quitaste de una mascota sigue fuera, aunque su categoría pertenezca a la mascota.
+
+## La sección Mascota de un gasto
+
+Cuando la cuenta tiene una mascota, la pantalla de un gasto muestra la sección **Mascota** (en el ordenador, en la ventana del gasto).
+
+- Toca **Marcar como gasto de mascota**, elige la mascota (si tienes varias) y el **Tipo de gasto**, y luego **Guardar**.
+- Vuelve a tocar la línea para cambiarla, o toca **No es un gasto de mascota** para quitarla.
+- **Por las categorías de la mascota** bajo la línea significa que la puso una categoría.
+
 ## La pantalla de la mascota
 
 Toca **Gastos** en la tarjeta de la mascota o su fila en **Análisis**. Verás:
@@ -38271,6 +38397,27 @@ Sur la carte de l’animal, une date proche est mise en évidence et une date pa
 
 Une dépense n’appartient qu’à un seul animal. L’attribuer à un autre la déplace.
 
+## Catégories d'un animal — des frais qui comptent tout seuls
+
+Si vous avez une catégorie comme *Nourriture animaux* ou *Vétérinaire*, laissez-la travailler :
+
+1. Ouvrez **Réglages → Données de référence → Animaux** et touchez le crayon sur la carte de l'animal.
+2. Sous **Catégories de cet animal**, choisissez un type de frais (**Alimentation**, **Vétérinaire**, **Toilettage**, **Accessoires**, **Assurance** ou **Autre**).
+3. Touchez les catégories qui sont ce type de frais pour cet animal. Toucher à nouveau une catégorie avec le même type la retire.
+4. Touchez **Enregistrer**.
+
+Chaque dépense de ces catégories compte désormais pour l'animal — les anciennes aussi, et les nouvelles. Les dépenses d'un import bancaire ou récurrentes sont prises en compte dans la journée. Si deux animaux revendiquent la même catégorie, elle va à celui ajouté en premier.
+
+Votre propre choix l'emporte toujours : une dépense attribuée à la main garde son animal et son type, et une dépense retirée d'un animal reste retirée, même si sa catégorie appartient à l'animal.
+
+## La section Animal d'une dépense
+
+Quand le compte a un animal, l'écran d'une dépense affiche la section **Animal** (sur ordinateur, dans la fenêtre de la dépense).
+
+- Touchez **Marquer comme frais d'animal**, choisissez l'animal (si vous en avez plusieurs) et le **Type de frais**, puis **Enregistrer**.
+- Touchez de nouveau la ligne pour la modifier, ou **Pas un frais d'animal** pour la retirer.
+- **D'après les catégories de l'animal** sous la ligne signifie qu'une catégorie l'a placée là.
+
 ## L’écran d’un animal
 
 Touchez **Dépenses** sur la carte de l’animal, ou sa ligne dans **Analyses**. Vous voyez :
@@ -43660,6 +43807,27 @@ OCR часам няправільна чытае цану, выдумляе ра
 5. Націсніце **Прызначыць**.
 
 Выдатак належыць толькі аднаму гадаванцу. Калі прызначыць яго іншаму, ён пяройдзе да яго.
+
+## Катэгорыі гадаванца — выдаткі, якія ўлічваюцца самі
+
+Калі ў вас ёсць катэгорыя накшталт *Корм для гадаванца* або *Ветэрынар*, няхай яна працуе за вас:
+
+1. Адкрыйце **Налады → Даведнікі → Гадаванцы** і націсніце аловак на картцы гадаванца.
+2. У блоку **Катэгорыі гэтага гадаванца** выберыце від выдатку (**Корм**, **Ветэрынар**, **Догляд**, **Тавары**, **Страхоўка** або **Іншае**).
+3. Націсніце на катэгорыі, якія адносяцца да гэтага віду выдаткаў на гадаванца. Паўторнае націсканне з тым жа відам здымае катэгорыю.
+4. Націсніце **Захаваць**.
+
+Цяпер кожны выдатак у гэтых катэгорыях улічваецца для гадаванца — і мінулыя, і новыя. Выдаткі з банкаўскага імпарту і паўторныя падхопліваюцца на працягу сутак. Калі адну катэгорыю выбралі два гадаванцы, яна дастаецца таму, каго дададзена раней.
+
+Ваша ўласнае рашэнне заўсёды галоўнае: выдатак, прызначаны ўручную, захоўвае свайго гадаванца і від, а выдатак, які вы знялі з гадаванца, застаецца знятым, нават калі яго катэгорыя належыць гадаванцу.
+
+## Раздзел «Гадаванец» у выдатку
+
+Калі ў рахунку ёсць гадаванец, на экране выдатку ёсць раздзел **Гадаванец** (на камп'ютары — у акне выдатку).
+
+- Націсніце **Адзначыць як выдатак на гадаванца**, выберыце гадаванца (калі іх некалькі) і **Від выдатку**, потым **Захаваць**.
+- Націсніце на радок яшчэ раз, каб змяніць, або **Не выдатак на гадаванца**, каб зняць.
+- Подпіс **Па катэгорыях гадаванца** пад радком азначае, што яго прызначыла катэгорыя.
 
 ## Экран гадаванца
 
@@ -49176,6 +49344,27 @@ Op de kaart van het dier wordt een datum die dichtbij is gemarkeerd, en een datu
 5. Tik op **Toewijzen**.
 
 Een uitgave hoort bij één dier tegelijk. Wijs je haar toe aan een ander dier, dan verhuist ze daarheen.
+
+## Categorieën van een huisdier — kosten die vanzelf meetellen
+
+Heb je een categorie zoals *Dierenvoer* of *Dierenarts*, laat die dan het werk doen:
+
+1. Open **Instellingen → Referentiegegevens → Huisdieren** en tik op het potlood op de kaart van het huisdier.
+2. Kies onder **Categorieën van dit huisdier** een kostensoort (**Voer**, **Dierenarts**, **Verzorging**, **Benodigdheden**, **Verzekering** of **Overig**).
+3. Tik op de categorieën die die kostensoort voor dit huisdier zijn. Nog eens tikken met dezelfde soort haalt de categorie weg.
+4. Tik op **Opslaan**.
+
+Elke uitgave in die categorieën telt nu mee voor het huisdier — ook eerdere en nieuwe. Uitgaven uit een bankimport of terugkerende uitgaven worden binnen een dag opgepikt. Claimen twee huisdieren dezelfde categorie, dan gaat die naar het huisdier dat het eerst is toegevoegd.
+
+Je eigen keuze wint altijd: een uitgave die je met de hand toewees, houdt haar huisdier en soort, en een uitgave die je van een huisdier haalde, blijft eraf, ook als haar categorie bij het huisdier hoort.
+
+## Het onderdeel Huisdier van een uitgave
+
+Heeft de rekening een huisdier, dan toont het scherm van een uitgave het onderdeel **Huisdier** (op een computer in het uitgavevenster).
+
+- Tik op **Markeren als huisdierkosten**, kies het huisdier (als je er meer hebt) en de **Kostensoort**, en dan **Opslaan**.
+- Tik opnieuw op de regel om die te wijzigen, of op **Geen huisdierkosten** om haar weg te halen.
+- **Via de categorieën van het huisdier** onder de regel betekent dat een categorie haar daar zette.
 
 ## Het scherm van een huisdier
 
@@ -54720,6 +54909,27 @@ No cartão do animal, uma data próxima fica destacada e uma data já passada ap
 
 Uma despesa pertence a um só animal. Atribuí-la a outro muda-a para esse.
 
+## Categorias de um animal — custos que contam sozinhos
+
+Se tem uma categoria como *Comida de animais* ou *Veterinário*, deixe-a trabalhar por si:
+
+1. Abra **Definições → Dados de referência → Animais** e toque no lápis no cartão do animal.
+2. Em **Categorias deste animal**, escolha um tipo de custo (**Comida**, **Veterinário**, **Tosquia e banho**, **Acessórios**, **Seguro** ou **Outros**).
+3. Toque nas categorias que são esse tipo de custo deste animal. Tocar de novo numa categoria com o mesmo tipo retira-a.
+4. Toque em **Guardar**.
+
+Cada despesa dessas categorias passa a contar para o animal — também as anteriores e as novas. As despesas de uma importação bancária ou recorrentes entram no prazo de um dia. Se dois animais reclamarem a mesma categoria, fica com o que foi adicionado primeiro.
+
+A sua própria escolha ganha sempre: uma despesa atribuída à mão mantém o animal e o tipo, e uma despesa retirada de um animal continua retirada, mesmo que a categoria pertença ao animal.
+
+## A secção Animal de uma despesa
+
+Quando a conta tem um animal, o ecrã de uma despesa mostra a secção **Animal** (no computador, na janela da despesa).
+
+- Toque em **Marcar como custo do animal**, escolha o animal (se tiver vários) e o **Tipo de custo**, e depois **Guardar**.
+- Toque de novo na linha para a alterar, ou em **Não é um custo do animal** para a retirar.
+- **Pelas categorias do animal** por baixo da linha quer dizer que foi uma categoria a colocá-la ali.
+
 ## O ecrã do animal
 
 Toque em **Custos** no cartão do animal, ou na sua linha em **Análise**. Vai ver:
@@ -60262,6 +60472,27 @@ No card do pet, uma data próxima fica destacada e uma data que já passou apare
 5. Toque em **Atribuir**.
 
 Uma despesa pertence a um pet de cada vez. Atribuí-la a outro pet muda ela para lá.
+
+## Categorias de um pet — custos que contam sozinhos
+
+Se você tem uma categoria como *Ração* ou *Veterinário*, deixe ela trabalhar por você:
+
+1. Abra **Configurações → Dados de referência → Pets** e toque no lápis no cartão do pet.
+2. Em **Categorias deste pet**, escolha um tipo de custo (**Ração**, **Veterinário**, **Banho e tosa**, **Acessórios**, **Seguro** ou **Outros**).
+3. Toque nas categorias que são esse tipo de custo deste pet. Tocar de novo numa categoria com o mesmo tipo tira ela.
+4. Toque em **Salvar**.
+
+Toda despesa dessas categorias passa a contar para o pet — inclusive as anteriores e as novas. Despesas de importação bancária ou recorrentes entram em até um dia. Se dois pets tiverem a mesma categoria, ela fica com o que foi adicionado primeiro.
+
+A sua escolha sempre vence: uma despesa atribuída à mão mantém o pet e o tipo, e uma despesa que você tirou de um pet continua fora, mesmo que a categoria seja do pet.
+
+## A seção Pet de uma despesa
+
+Quando a conta tem um pet, a tela de uma despesa mostra a seção **Pet** (no computador, na janela da despesa).
+
+- Toque em **Marcar como custo do pet**, escolha o pet (se tiver vários) e o **Tipo de custo**, depois **Salvar**.
+- Toque de novo na linha para mudar, ou em **Não é custo do pet** para tirar.
+- **Pelas categorias do pet** embaixo da linha quer dizer que uma categoria colocou ela ali.
 
 ## A tela do pet
 
