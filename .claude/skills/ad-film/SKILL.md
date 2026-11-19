@@ -39,6 +39,9 @@ for a campaign.
   object of one scene becomes the first object of the next (match cuts, G tables).
 - **Captions**: cap height ≥ 48–56 px at 1080 wide (≈ 66–78 px font), slogans ≥ 64 px cap height;
   nothing must-read in the bottom 20 % (the Shorts/Reels UI).
+- **Instagram's feed shows Reels center-cropped to 4:5**: at 1080×1920 nothing must-read above y 260 (or below
+  1536) — captions, loupes, tags, phone text and the poster all live in the band y 260–1536. Enforce it in the
+  film's geometry check (`przeswietlenie/tools/geometry-check.cjs`, "feed band" rows).
 - **Plan a magnifier** for every payoff UI state (a chip, a pill, a total) — a character's phone is
   too small to read at feed size (PITFALLS.md, Readability).
 
