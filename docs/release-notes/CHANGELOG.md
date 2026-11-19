@@ -8,6 +8,51 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.43.0 - 2026-11-19
+
+**Pets**
+
+- Pet costs: add your pets in Settings, assign expenses to a pet (many at once from Transactions)
+  with a kind — food, vet, grooming, supplies, insurance — and see each pet's cost by month and
+  kind, on the phone and the desktop, with a card on the Analytics tab. Reminders 14 and 2 days
+  before the next vaccination and flea & tick treatment (ABA-828, ABA-831).
+
+**Cars**
+
+- A vehicle screen with costs by month, the consumption trend and every cost (ABA-811).
+- Insurance, inspection and service dates and a service odometer target, with pushes 14 and 2
+  days ahead and when the odometer nears the target, "due soon" chips, and an offer to move the
+  date a year forward when you log the cost (ABA-827, ABA-829).
+- A petrol-station receipt prefills the fill-up: enter the odometer and it is logged — in the app
+  and, through an "Add to fuel log" button, in the Telegram, WhatsApp and Slack bots (ABA-826,
+  ABA-830).
+
+**Bots**
+
+- Every bot write says which account it went to, and switching account needs the full name
+  (ABA-812).
+
+**Security**
+
+- Encryption routes check the account in the path; profile updates accept only profile fields;
+  viewers cannot import (ABA-807). Bot linking codes, Google auto-link and sign-in rate limits
+  hardened (ABA-808). A password or e-mail change signs out every other session (ABA-809).
+  Dependency security updates (ABA-810).
+
+**Reliability**
+
+- The app now reports an unexpected error screen to us, with the error itself, so a crash can
+  be fixed without asking you to reproduce it (ABA-832).
+
+**Behind the scenes**
+
+- Admin shows each user's app version and platform (ABA-813). Shared-expense pushes deduplicated
+  across restarts and exchange rates cached in Redis (ABA-817, ABA-821). Service and screen
+  refactors with no change in behaviour (ABA-816, ABA-818, ABA-819, ABA-820, ABA-822, ABA-823,
+  ABA-824, ABA-825). German site and llms.txt updates (ABA-814, ABA-815).
+
+---
+
 ## 1.42.0 - 2026-11-16
 
 **Analytics**
