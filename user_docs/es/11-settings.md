@@ -175,6 +175,8 @@ Para registrar un repostaje, abre un gasto de combustible: si la cuenta tiene un
 
 También cuentan otros gastos del coche. En cualquier gasto, la sección **Coche** permite elegir el vehículo y el tipo: combustible, taller, seguro, aparcamiento, impuestos y tasas u otro (los litros y el cuentakilómetros solo se piden para el combustible). En la ficha del vehículo, **Categorías de este vehículo** lo hace automático: elige un tipo, toca las categorías (por ejemplo «Seguro del coche» como seguro) y sus gastos cuentan para el coche: los anteriores al guardar y los nuevos según llegan. La tarjeta muestra entonces los últimos 12 meses: el total, la media mensual, cada tipo y todos los gastos por km. Los vehículos necesitan conexión a internet. Al eliminar un vehículo se conservan los gastos; solo desaparecen el vehículo y sus estadísticas. Varios a la vez: en Transacciones, busca (por ejemplo «Benzyna» o «Parking»), selecciona los gastos y elige **Asignar a vehículo**, luego el vehículo y el tipo. Los repostajes que ya tienen litros no cambian.
 
+**Vencimientos.** En la ficha del vehículo indica la próxima renovación del seguro, la próxima ITV, la próxima revisión y el kilometraje de la próxima revisión (todo opcional; la cruz borra una fecha). Recibirás un aviso 14 y 2 días antes de cada fecha, y una vez cuando el kilometraje de un repostaje quede a menos de 500 km de la revisión. Los vencimientos de los próximos 30 días o ya pasados aparecen como etiquetas en la tarjeta del vehículo y en su pantalla, donde la tarjeta **Vencimientos** muestra todas las fechas. Al marcar un gasto como seguro o revisión, la app ofrece mover ese vencimiento un año; nada cambia sin tu confirmación.
+
 ## Datos e informes
 
 ### Datos y sincronizacion

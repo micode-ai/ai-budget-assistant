@@ -37,6 +37,8 @@ export interface VehicleStats {
   fxApproximate?: boolean;
   /** Last 12 months of every cost, fuel included (ABA-803). */
   ownership?: VehicleOwnership;
+  /** Highest fill-up odometer reading ever logged, for the service-by-odometer chip (ABA-829). */
+  latestOdometerKm?: number | null;
 }
 
 /** Car cost kinds (ABA-803). `fuel` without litres/odometer (ABA-804); a full fill-up is a FuelLog. */
@@ -120,4 +122,6 @@ export interface VehicleHistory {
   monthly: { month: string; total: number; byKind: Record<string, number> }[];
   consumption: { date: string; lPer100Km: number; costPer100Km: number }[];
   items: VehicleHistoryItem[];
+  /** Highest fill-up odometer over ALL fill-ups, not just the period (ABA-829). */
+  latestOdometerKm?: number | null;
 }

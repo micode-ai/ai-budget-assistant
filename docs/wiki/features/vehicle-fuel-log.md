@@ -21,6 +21,7 @@ existing expense. `GET /vehicles/:id/stats` answers "what does the car cost me":
 - Vehicle screen (ABA-811): API `vehicle-history.util.ts` (+ spec) behind `GET /vehicles/:id/history`; app route `app/vehicles/[id].tsx` →
   `src/components/vehicles/VehicleDetailView(.web).tsx` → `VehicleDetailPhone.tsx` / `desktop/VehicleDetailDesktop.tsx`, shared pieces in
   `VehicleDetailParts.tsx`, data in `src/features/vehicles/useVehicleDetail.ts`, pure helpers in `vehicleDetailDisplay.ts`
+- Renewals in the app (ABA-829): `src/components/vehicles/VehicleRenewals.tsx`, `VehicleRenewalFields.tsx`, `src/features/vehicles/vehicleRenewals.ts`
 
 ## Key concepts
 
@@ -86,7 +87,21 @@ average, km from the fill-ups in the window and all costs per km.
 A vehicle carries optional `nextInsuranceDate`, `nextInspectionDate`, `nextServiceDate` and `nextServiceOdometer`, set through `PATCH /vehicles/:id`.
 `VehicleRenewalCron` (08:00 UTC, `paginateById`) pushes 14 and 2 days before each date and once when the latest fill-up odometer is within 500 km of
 the target. Pure rules: `vehicle-renewal.util.ts`; copy: `notifications/vehicle-renewal-i18n.ts` (11 locales). The odometer nudge is deduped by
-`serviceOdometerNudgedFor`, stamped before the push. Not yet built: the form fields and "due soon" chip in the app, the roll-forward offer on logging a cost.
+`serviceOdometerNudgedFor`, stamped before the push.
+
+In the app (ABA-829): the vehicle sheet in Settings → Vehicles (phone, and the desktop settings pane — same component) has the four fields
+(`VehicleRenewalFields.tsx`, dates through `DatePicker`, calendar days via `toDateInputValue`; the cross clears a date and the save sends `null`).
+A "due soon" chip (a date within 30 days or past, or the latest odometer within 500 km of the target) shows on each vehicle card and under the
+vehicle screen's heading on phone and desktop, and the screen has a **Renewals** card listing every set date (`VehicleRenewals.tsx`; in the
+desktop rail at >= 1440, under the breakdown below it). Pure rules: `src/features/vehicles/vehicleRenewals.ts` (+ jest spec). The latest odometer
+is `latestOdometerKm` on `GET /vehicles/:id/stats` and `/history` (max over ALL fill-ups, the same reading the cron uses), falling back to the
+period's items for an older API. Marking an expense as an insurance or service cost in its Car section (`FuelSection.tsx`) offers to roll that
+date a year forward (`proposedRenewal`, Feb 29 -> Feb 28): only while the date is set and due within 60 days or past, or from the expense's own
+day when none is set; nothing is written unless the user confirms.
+
+- The PATCH carries only the CHANGED renewal fields: re-sending an unchanged `nextServiceOdometer` would reset `serviceOdometerNudgedFor` on the
+  server and re-arm a nudge already sent.
+- Inspection has no `VehicleCostKind`, so no cost offers to roll it forward; bulk assignment (`BulkVehiclePickerSheet`) offers nothing either.
 
 
 ## Known gaps
@@ -99,3 +114,4 @@ monthly bars by kind (the bar chart has no stacking — a picked month's kinds s
 The API (Vehicle + FuelLog, the full-tank method) came first; [ABA-796](https://github.com/micode-ai/ai-budget-assistant/issues/834) added the screens and display-currency costs.
 [ABA-806](https://github.com/micode-ai/ai-budget-assistant/issues/844) put the vehicles on the Analytics tab and corrected the settings hint (the expense section is "Car", litres optional).
 [ABA-811](https://github.com/micode-ai/ai-budget-assistant/issues/849) added the vehicle screen (periods, by month, by kind, consumption trend, every cost) after the card was reported as too thin.
+ABA-827 added the renewal dates and the reminder cron; ABA-829 the app's fields, due-soon chips, Renewals card and the roll-forward offer.

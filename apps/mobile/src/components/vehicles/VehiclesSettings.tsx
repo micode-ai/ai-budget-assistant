@@ -14,8 +14,11 @@ import { SettingsScreenScroll } from '@/components/settings/SettingsScreenScroll
 import { MoveToAccountPicker } from '@/components/settings/MoveToAccountPicker';
 import { useAccountStore } from '@/stores/accountStore';
 import { useVehicles, reloadVehicles, forgetVehicles } from '@/features/vehicles/useVehicles';
-import { formatConsumption, formatKm, fuelUnitKey, hasConsumption, parseDay } from '@/features/vehicles/vehicleDisplay';
+import { formatConsumption, formatKm, fuelUnitKey, hasConsumption, parseDay, parseOdometer } from '@/features/vehicles/vehicleDisplay';
+import { renewalFormFrom, renewalPatch, type RenewalForm } from '@/features/vehicles/vehicleRenewals';
 import { getIntlLocale } from '@/i18n';
+import { VehicleRenewalFields } from './VehicleRenewalFields';
+import { VehicleRenewalChips } from './VehicleRenewals';
 import { useTheme, useStyles, type Theme } from '@/theme';
 
 const SHEET_TITLE_ID = 'vehicle-sheet-title';
@@ -60,6 +63,13 @@ export function VehiclesSettings() {
   const [initialRules, setInitialRules] = useState<Record<string, VehicleCostKind>>({});
   const [rules, setRules] = useState<Record<string, VehicleCostKind>>({});
   const [ruleKind, setRuleKind] = useState<VehicleCostKind>('service');
+  // Renewal dates (ABA-829): what the sheet opened with, and what it holds now.
+  const [initialRenewal, setInitialRenewal] = useState<RenewalForm>(() => renewalFormFrom(null));
+  const [renewal, setRenewal] = useState<RenewalForm>(() => renewalFormFrom(null));
+  const odometerText = renewal.nextServiceOdometer.trim();
+  // null = empty (no target), undefined = not a reading (blocks saving).
+  const serviceOdometer = odometerText === '' ? null : parseOdometer(odometerText) ?? undefined;
+  const odometerInvalid = serviceOdometer === undefined;
 
   const toggleRule = (categoryId: string) =>
     setRules((prev) => {
@@ -73,12 +83,16 @@ export function VehiclesSettings() {
     setEditing(null);
     setName('');
     setFuelType('petrol');
+    setInitialRenewal(renewalFormFrom(null));
+    setRenewal(renewalFormFrom(null));
     setSheetVisible(true);
   };
   const openEdit = (v: Vehicle) => {
     setEditing(v);
     setName(v.name);
     setFuelType(v.fuelType);
+    setInitialRenewal(renewalFormFrom(v));
+    setRenewal(renewalFormFrom(v));
     setSheetVisible(true);
     setRulesState('loading');
     api
@@ -105,11 +119,13 @@ export function VehiclesSettings() {
 
   const save = async () => {
     const trimmed = name.trim();
-    if (!trimmed || !accountId) return;
+    if (!trimmed || !accountId || odometerInvalid) return;
     setIsSaving(true);
+    // Only what changed: re-sending an unchanged odometer target would re-arm the server's nudge.
+    const renewals = renewalPatch(initialRenewal, renewal, serviceOdometer);
     try {
       if (editing) {
-        await api.updateVehicle(editing.id, { name: trimmed, fuelType });
+        await api.updateVehicle(editing.id, { name: trimmed, fuelType, ...renewals });
         const keys = new Set([...Object.keys(rules), ...Object.keys(initialRules)]);
         const changed = rulesState === 'ready' && [...keys].some((k) => rules[k] !== initialRules[k]);
         if (changed) {
@@ -122,7 +138,9 @@ export function VehiclesSettings() {
           }
         }
       } else {
-        await api.createVehicle({ name: trimmed, fuelType });
+        const created = await api.createVehicle({ name: trimmed, fuelType });
+        // Create takes no renewal fields; set them on the new vehicle.
+        if (Object.keys(renewals).length > 0) await api.updateVehicle(created.id, renewals);
       }
       await reloadVehicles(accountId);
       close();
@@ -249,6 +267,7 @@ export function VehiclesSettings() {
             </TouchableOpacity>
           ))}
         </View>
+        <VehicleRenewalFields form={renewal} onChange={setRenewal} odometerInvalid={odometerInvalid} />
         {editing && (
           <View style={styles.rulesBlock}>
             <Text style={styles.fieldLabel}>{t('vehicles.rulesTitle')}</Text>
@@ -297,9 +316,9 @@ export function VehiclesSettings() {
             <Text style={styles.cancelText}>{t('common.cancel')}</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.saveButton, (isSaving || !name.trim()) && styles.saveButtonDisabled]}
+            style={[styles.saveButton, (isSaving || !name.trim() || odometerInvalid) && styles.saveButtonDisabled]}
             onPress={save}
-            disabled={isSaving || !name.trim()}
+            disabled={isSaving || !name.trim() || odometerInvalid}
           >
             <Text style={styles.saveText}>{editing ? t('common.save') : t('vehicles.add')}</Text>
           </TouchableOpacity>
@@ -411,6 +430,7 @@ function VehicleCard({ vehicle, canEdit, onEdit }: { vehicle: Vehicle; canEdit: 
         )}
       </View>
 
+      <VehicleRenewalChips vehicle={vehicle} latestOdometerKm={stats?.latestOdometerKm} />
       {statsBody}
       {metaParts.length > 0 && <Text style={styles.meta}>{metaParts.join(' · ')}</Text>}
 

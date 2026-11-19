@@ -188,6 +188,8 @@ To log a fill-up, open a fuel expense: when the account has a vehicle, the expen
 
 Other car costs count too. On any expense, the **Car** section lets you pick the vehicle and the kind: fuel, service, insurance, parking, taxes & fees or other (litres and odometer are asked only for fuel). In the vehicle's sheet, **Categories of this vehicle** makes it automatic: pick a kind, tap the categories (for example "Car insurance" as insurance), and their expenses count for the car — past ones as soon as you save, new ones as they arrive. The card then shows the last 12 months: the total, the monthly average, each kind, and all costs per km. Vehicles need an internet connection. Deleting a vehicle keeps the expenses; only the vehicle and its statistics go. Many at once: on the Transactions screen, search (for example "Benzyna" or "Parking"), select the expenses and choose **Assign to vehicle**, then the vehicle and the kind. Fill-ups that already have litres stay as they are.
 
+**Renewals.** In the vehicle's sheet, set the next insurance renewal, the next inspection, the next service date and the odometer reading for the next service (all optional; tap the cross to clear one). You get a reminder 14 and 2 days before each date, and once when a fill-up's odometer comes within 500 km of the service target. Dates due within 30 days or already past appear as chips on the vehicle's card and on its screen, which also has a **Renewals** card listing every date. When you mark an expense as insurance or service, the app offers to move that renewal a year forward; nothing changes unless you confirm.
+
 ## Data & Reports
 
 ### Data & Sync

@@ -27,7 +27,18 @@ export const vehiclesApi = {
     return httpClient.request<Vehicle>('/vehicles', { method: 'POST', body: JSON.stringify(data) });
   },
 
-  updateVehicle(id: string, data: { name?: string; fuelType?: FuelType }): Promise<Vehicle> {
+  /** Renewal dates are `YYYY-MM-DD`; `null` clears one, an omitted field keeps it (ABA-829). */
+  updateVehicle(
+    id: string,
+    data: {
+      name?: string;
+      fuelType?: FuelType;
+      nextInsuranceDate?: string | null;
+      nextInspectionDate?: string | null;
+      nextServiceDate?: string | null;
+      nextServiceOdometer?: number | null;
+    },
+  ): Promise<Vehicle> {
     return httpClient.request<Vehicle>(`/vehicles/${encodeURIComponent(id)}`, {
       method: 'PATCH',
       body: JSON.stringify(data),

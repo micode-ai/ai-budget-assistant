@@ -6,7 +6,14 @@ import type { Expense, FuelLog, VehicleCostKind, VehicleCostLink } from '@budget
 import { api } from '@/services/api';
 import { showAlert } from '@/utils/alert';
 import { SheetDialog } from '@/components/SheetDialog';
-import { useVehicles } from '@/features/vehicles/useVehicles';
+import { reloadVehicles, useVehicles } from '@/features/vehicles/useVehicles';
+import {
+  expenseDayKey,
+  proposedRenewal,
+  renewalFieldForCost,
+  todayKey,
+} from '@/features/vehicles/vehicleRenewals';
+import { parseDay } from '@/features/vehicles/vehicleDisplay';
 import { formatKm, fuelUnitKey, parseLiters, parseOdometer } from '@/features/vehicles/vehicleDisplay';
 import { getIntlLocale } from '@/i18n';
 import { useTheme, useStyles, type Theme } from '@/theme';
@@ -35,7 +42,7 @@ export function FuelSection({ expense, canEdit }: Props) {
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const locale = getIntlLocale();
-  const { vehicles } = useVehicles();
+  const { vehicles, accountId } = useVehicles();
   const expenseId = expense.serverId ?? expense.id;
 
   const [fuelLog, setFuelLog] = useState<FuelLog | null>(null);
@@ -104,9 +111,11 @@ export function FuelSection({ expense, canEdit }: Props) {
         setFuelLog(saved);
         setCost(null);
       } else {
+        const isNewLink = cost?.vehicleId !== vehicleId || cost?.kind !== kind;
         await api.setVehicleCost(vehicleId, expenseId, kind);
         setCost({ vehicleId, kind, source: null });
         setFuelLog(null);
+        if (isNewLink) offerRollForward(vehicleId, kind);
       }
       setSheetVisible(false);
     } catch (e) {
@@ -116,6 +125,36 @@ export function FuelSection({ expense, canEdit }: Props) {
     } finally {
       setIsSaving(false);
     }
+  };
+
+  /**
+   * An insurance or service cost was just logged (ABA-829): offer to move the
+   * vehicle's next date a year on. Only an offer — the user confirms, and a
+   * date already a year out (rolled before) is left alone.
+   */
+  const offerRollForward = (forVehicleId: string, costKind: VehicleCostKind) => {
+    const field = renewalFieldForCost(costKind);
+    const target = vehicles.find((v) => v.id === forVehicleId);
+    const expenseDay = expenseDayKey(expense.date);
+    if (!field || !target || !expenseDay) return;
+    const next = proposedRenewal(target[field], expenseDay, todayKey());
+    if (!next) return;
+    const date = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'long', year: 'numeric' }).format(parseDay(next));
+    showAlert(t('vehicles.rollForwardTitle'), t(`vehicles.rollForward_${costKind}`, { vehicle: target.name, date }), [
+      { text: t('vehicles.rollForwardSkip'), style: 'cancel' },
+      {
+        text: t('vehicles.rollForwardConfirm'),
+        onPress: async () => {
+          try {
+            await api.updateVehicle(forVehicleId, { [field]: next });
+            if (accountId) await reloadVehicles(accountId);
+          } catch (e) {
+            console.warn('[fuel] roll-forward failed:', e instanceof Error ? e.message : String(e));
+            showAlert(t('common.error'), t('vehicles.saveFailed'));
+          }
+        },
+      },
+    ]);
   };
 
   const remove = async () => {

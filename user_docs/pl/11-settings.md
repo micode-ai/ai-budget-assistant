@@ -175,6 +175,8 @@ Aby zapisać tankowanie, otwórz wydatek na paliwo: jeśli konto ma pojazd, wyda
 
 Liczą się też inne koszty auta. Przy dowolnym wydatku sekcja **Samochód** pozwala wybrać pojazd i rodzaj: paliwo, serwis, ubezpieczenie, parkowanie, podatki i opłaty albo inne (litry i przebieg są potrzebne tylko przy paliwie). W oknie pojazdu **Kategorie tego pojazdu** robią to automatycznie: wybierz rodzaj, stuknij kategorie (np. „Ubezpieczenie auta” jako ubezpieczenie), a ich wydatki liczą się dla auta — wcześniejsze po zapisaniu, nowe na bieżąco. Karta pokazuje wtedy ostatnie 12 miesięcy: sumę, średnią miesięczną, każdy rodzaj i wszystkie koszty za kilometr. Pojazdy wymagają połączenia z internetem. Usunięcie pojazdu zachowuje wydatki; znikają tylko pojazd i jego statystyki. Wiele naraz: na ekranie Transakcje wyszukaj (np. „Benzyna” lub „Parking”), zaznacz wydatki i wybierz **Przypisz do pojazdu**, a potem pojazd i rodzaj. Tankowania z litrami pozostają bez zmian.
 
+**Terminy.** W karcie pojazdu ustaw termin odnowienia ubezpieczenia, następnego przeglądu, następnego serwisu oraz przebieg, przy którym wypada serwis (wszystko opcjonalne; krzyżyk czyści termin). Przypomnienie przychodzi 14 i 2 dni przed każdą datą oraz raz, gdy przebieg z tankowania zbliży się na 500 km do serwisu. Terminy przypadające w ciągu 30 dni lub już minione widać jako etykiety na karcie pojazdu i na jego ekranie, gdzie karta **Terminy** pokazuje wszystkie daty. Gdy oznaczysz wydatek jako ubezpieczenie lub serwis, aplikacja zaproponuje przesunięcie tego terminu o rok; nic się nie zmienia bez Twojego potwierdzenia.
+
 ## Dane i raporty
 
 ### Dane i synchronizacja

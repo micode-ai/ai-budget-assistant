@@ -334,7 +334,7 @@ export class VehiclesService {
     accountId: string,
     vehicleId: string,
     baseCurrency = 'USD',
-  ): Promise<VehicleStats & { currencyCode: string; fxApproximate: boolean; ownership: Ownership }> {
+  ): Promise<VehicleStats & { currencyCode: string; fxApproximate: boolean; ownership: Ownership; latestOdometerKm: number | null }> {
     await this.findOne(accountId, vehicleId);
     // The same 12 calendar months as the vehicle screen's default period (vehicle-history.util).
     const since = windowStart(new Date(), 12);
@@ -389,7 +389,9 @@ export class VehiclesService {
       costPerKm: km > 0 ? Math.round((total / km) * 1000) / 1000 : null,
     };
 
-    return { ...stats, currencyCode: baseCurrency, fxApproximate, ownership };
+    // The renewal chip's odometer (ABA-829): the same max reading the reminder cron reads.
+    const latestOdometerKm = logs.length > 0 ? Math.max(...logs.map((l) => l.odometerKm)) : null;
+    return { ...stats, currencyCode: baseCurrency, fxApproximate, ownership, latestOdometerKm };
   }
 
   /**
@@ -403,7 +405,7 @@ export class VehiclesService {
     vehicleId: string,
     months: number,
     baseCurrency = 'USD',
-  ): Promise<VehicleHistory & { currencyCode: string; fxApproximate: boolean }> {
+  ): Promise<VehicleHistory & { currencyCode: string; fxApproximate: boolean; latestOdometerKm: number | null }> {
     await this.findOne(accountId, vehicleId);
     const [logs, costs] = await Promise.all([
       this.prisma.fuelLog.findMany({
@@ -451,6 +453,8 @@ export class VehiclesService {
       })),
       months,
     );
-    return { ...history, currencyCode: baseCurrency, fxApproximate };
+    // Over every fill-up, not the period: the service-by-odometer chip (ABA-829).
+    const latestOdometerKm = logs.length > 0 ? Math.max(...logs.map((l) => l.odometerKm)) : null;
+    return { ...history, currencyCode: baseCurrency, fxApproximate, latestOdometerKm };
   }
 }

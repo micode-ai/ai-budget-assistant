@@ -6,6 +6,8 @@ import { Ionicons } from '@expo/vector-icons';
 import type { VehicleDetailState } from '@/features/vehicles/useVehicleDetail';
 import { filterItems, kindRows } from '@/features/vehicles/vehicleDetailDisplay';
 import { fuelUnitKey } from '@/features/vehicles/vehicleDisplay';
+import { latestOdometer } from '@/features/vehicles/vehicleRenewals';
+import { VehicleRenewalChips, VehicleRenewalsCard } from './VehicleRenewals';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import {
   ConsumptionChart,
@@ -53,6 +55,7 @@ export function VehicleDetailPhone({ detail }: VehicleDetailLayoutProps) {
               {vehicle.name}
             </Text>
             <Text style={styles.sub}>{t(`vehicles.fuel_${vehicle.fuelType}`)}</Text>
+            <VehicleRenewalChips vehicle={vehicle} latestOdometerKm={latestOdometer(history)} />
           </View>
         </View>
 
@@ -71,6 +74,8 @@ export function VehicleDetailPhone({ detail }: VehicleDetailLayoutProps) {
         </View>
 
         {history.fxApproximate && <VehicleFxNotice />}
+
+        <VehicleRenewalsCard vehicle={vehicle} latestOdometerKm={latestOdometer(history)} />
 
         <View style={styles.card}>
           <Text style={styles.cardTitle}>{t('vehicles.byMonth')}</Text>

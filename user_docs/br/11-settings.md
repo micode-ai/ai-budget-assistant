@@ -188,6 +188,8 @@ Para registrar um abastecimento, abra uma despesa de combustível: se a conta ti
 
 Os outros custos do carro também contam. Em qualquer despesa, a seção **Carro** permite escolher o veículo e o tipo: combustível, manutenção, seguro, estacionamento, impostos e taxas ou outro (litros e hodômetro só são pedidos para combustível). Na tela do veículo, **Categorias deste veículo** deixa isso automático: escolha um tipo, toque nas categorias (por exemplo "Seguro do carro" como seguro) e as despesas delas contam para o carro — as anteriores assim que você salva, as novas conforme chegam. O cartão então mostra os últimos 12 meses: o total, a média mensal, cada tipo e todos os custos por km. Os veículos precisam de conexão com a internet. Excluir um veículo mantém as despesas; só o veículo e as estatísticas são excluídos. Vários de uma vez: na tela Transações, pesquise (por exemplo "Benzyna" ou "Parking"), selecione as despesas e escolha **Atribuir ao veículo**, depois o veículo e o tipo. Abastecimentos que já têm litros continuam como estão.
 
+**Vencimentos.** Na ficha do veículo, defina a próxima renovação do seguro, a próxima vistoria, a próxima revisão e a quilometragem da próxima revisão (tudo opcional; o X limpa uma data). Você recebe um lembrete 14 e 2 dias antes de cada data, e uma vez quando a quilometragem de um abastecimento ficar a menos de 500 km da revisão. Vencimentos nos próximos 30 dias ou já passados aparecem como etiquetas no cartão do veículo e na tela dele, onde o cartão **Vencimentos** mostra todas as datas. Quando você marca uma despesa como seguro ou revisão, o app oferece adiar esse vencimento em um ano; nada muda sem a sua confirmação.
+
 ## Dados e relatórios
 
 ### Dados e sincronização

@@ -7,6 +7,7 @@ import { SummaryTile } from '@/components/analytics/desktop/SummaryTile';
 import { FACET_RAIL_MIN_WIDTH } from '@/components/webLayout.constants';
 import { filterItems, kindRows } from '@/features/vehicles/vehicleDetailDisplay';
 import { fuelUnitKey } from '@/features/vehicles/vehicleDisplay';
+import { latestOdometer } from '@/features/vehicles/vehicleRenewals';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import {
   ConsumptionChart,
@@ -20,6 +21,7 @@ import {
   useVehicleTiles,
 } from '../VehicleDetailParts';
 import type { VehicleDetailLayoutProps } from '../VehicleDetailPhone';
+import { VehicleRenewalChips, VehicleRenewalsCard } from '../VehicleRenewals';
 
 /** The rail's width beside the focus column (the dashboard pattern). */
 const RAIL_WIDTH = 320;
@@ -55,6 +57,8 @@ export function VehicleDetailDesktop({ detail }: VehicleDetailLayoutProps) {
 
   const rows = kindRows(history, detail.month);
   const items = filterItems(history.items, detail.month, detail.kind);
+  const odometerKm = latestOdometer(history);
+  const renewals = <VehicleRenewalsCard vehicle={vehicle} latestOdometerKm={odometerKm} />;
 
   const breakdown = (
     <View style={styles.card}>
@@ -76,6 +80,7 @@ export function VehicleDetailDesktop({ detail }: VehicleDetailLayoutProps) {
         </View>
         <PeriodChips period={detail.period} onChange={detail.setPeriod} />
       </View>
+      <VehicleRenewalChips vehicle={vehicle} latestOdometerKm={odometerKm} />
 
       <View style={[styles.tiles, detail.loading && styles.stale]}>
         {tiles.map((tile) => (
@@ -96,6 +101,7 @@ export function VehicleDetailDesktop({ detail }: VehicleDetailLayoutProps) {
           </View>
           {detail.month && <MonthFilterBar month={detail.month} onClear={() => detail.setMonth(null)} />}
           {!sideBySide && breakdown}
+          {!sideBySide && renewals}
           <View style={styles.card}>
             <Text style={styles.cardTitle}>{t('vehicles.consumptionTitle', { unit })}</Text>
             <ConsumptionChart history={history} unit={t('vehicles.per100', { unit })} />
@@ -107,7 +113,12 @@ export function VehicleDetailDesktop({ detail }: VehicleDetailLayoutProps) {
             <VehicleItemList items={items} unit={unit} />
           </View>
         </View>
-        {sideBySide && <View style={styles.rail}>{breakdown}</View>}
+        {sideBySide && (
+          <View style={styles.rail}>
+            {breakdown}
+            {renewals}
+          </View>
+        )}
       </View>
     </ScrollView>
   );
@@ -157,7 +168,7 @@ const createStyles = (theme: Theme) => ({
   columns: { flexDirection: 'row' as const, gap: theme.spacing[4], alignItems: 'flex-start' as const },
   columnsStacked: { flexDirection: 'column' as const, alignItems: 'stretch' as const },
   focus: { flexGrow: 1, flexShrink: 1, minWidth: 0, gap: theme.spacing[4] },
-  rail: { width: RAIL_WIDTH, flexShrink: 0 },
+  rail: { width: RAIL_WIDTH, flexShrink: 0, gap: theme.spacing[4] },
   card: {
     backgroundColor: theme.colors.surface,
     borderRadius: theme.borderRadius.xl,
