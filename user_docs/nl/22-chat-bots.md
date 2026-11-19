@@ -83,6 +83,10 @@ Zowel `14,69` als `14.69` werkt. Na elke correctie stuurt de bot de genummerde l
 
 Ben je klaar, tik dan op **Uitgave toevoegen** — daarvoor wordt niets opgeslagen, en annuleren gooit alle correcties weg. Alleen de regels en het totaal zijn hier te corrigeren; open de uitgave in de app om de categorie van een regel te wijzigen.
 
+### Tankbon → brandstoflogboek
+
+Is de gescande bon van een tankstation en zijn de liters en de literprijs duidelijk gelezen, dan biedt de bot direct na het opslaan van de uitgave **⛽ Naar brandstoflogboek (je auto)** aan (op WhatsApp heet de knop **⛽ Naar logboek** en staat de auto in het bericht). Tik erop en typ de kilometerstand, bijvoorbeeld `123456`; de tankbeurt wordt voor die auto vastgelegd als volle tank. De auto wordt gekozen zoals in de app: je enige auto, anders die waarvoor je het laatst een tankbeurt vastlegde, anders de enige auto met die brandstof — is het dan nog onduidelijk, dan verschijnt er geen knop. Met **Overslaan** blijft de uitgave zonder tankbeurt; elk ander bericht gaat zoals gewoonlijk naar de chat. Kijkers kunnen geen tankbeurten vastleggen.
+
 ## Meerdere accounts
 
 Als je meerdere accounts hebt (bijv. "Persoonlijk" en "Familie"):

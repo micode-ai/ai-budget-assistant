@@ -22,6 +22,8 @@ import { SubscriptionsModule } from '../subscriptions/subscriptions.module';
 import { PurchaseRequestsModule } from '../purchase-requests/purchase-requests.module';
 import { ShoppingListModule } from '../shopping-list/shopping-list.module';
 import { GroupsModule } from '../groups/groups.module';
+import { VehiclesModule } from '../vehicles/vehicles.module';
+import { BotReceiptFuelService } from '../../common/bot-receipt-fuel';
 
 @Global()
 @Module({
@@ -34,6 +36,7 @@ import { GroupsModule } from '../groups/groups.module';
     PurchaseRequestsModule,
     ShoppingListModule,
     GroupsModule, // GroupBotService: the /group command (ABA-658)
+    VehiclesModule, // "Add to fuel log" after a fuel receipt (ABA-830)
   ],
   controllers: [TelegramBotController],
   providers: [
@@ -51,6 +54,7 @@ import { GroupsModule } from '../groups/groups.module';
     CategorizeHandler,
     GroupHandler,
     TelegramDigestSender,
+    BotReceiptFuelService,
   ],
   exports: [TelegramService, TelegramLinkService, TelegramBotService],
 })

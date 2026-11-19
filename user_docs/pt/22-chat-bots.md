@@ -83,6 +83,10 @@ Tanto `14,69` como `14.69` funcionam. Depois de cada correção, o bot volta a e
 
 Quando terminar, toque em **Adicionar despesa** — nada é guardado até o fazer, e cancelar descarta todas as correções. Aqui só é possível corrigir as linhas e o total; para mudar a categoria de uma linha, abra a despesa na aplicação.
 
+### Talão de combustível → registo de combustível
+
+Se o talão digitalizado for de um posto de combustível e os litros e o preço por litro tiverem sido lidos com clareza, o bot propõe **⛽ Adicionar ao registo (o seu carro)** logo depois de guardar a despesa (no WhatsApp o botão diz **⛽ Ao registo** e o carro aparece na mensagem). Toque nele e escreva a quilometragem em km, por exemplo `123456`; o abastecimento fica registado como depósito cheio para esse carro. O carro é escolhido como na aplicação: o seu único carro, senão aquele em que registou o último abastecimento, senão o único carro com esse combustível — se ainda assim não for claro, o botão não aparece. Toque em **Ignorar** para deixar a despesa sem abastecimento; qualquer outra mensagem segue para o chat como habitualmente. Os observadores não podem registar abastecimentos.
+
 ## Várias contas
 
 Se tiver várias contas (por exemplo, «Pessoal» e «Família»):

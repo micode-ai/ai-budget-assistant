@@ -27,6 +27,15 @@ import {
 } from '../../../common/utils/receipt-item-edit';
 import { buildItemCategoryMap, resolveProposedSplits } from '../../ai/utils/receipt-split-items';
 import { buildPriceCheckLine } from '../../../common/bot-receipt-price-check';
+import {
+  BotReceiptFuelService,
+  awaitingFuelOdometerKey,
+  buildFuelOfferButton,
+  buildFuelOfferText,
+  buildFuelSavedText,
+  fuelOfferParams,
+} from '../../../common/bot-receipt-fuel';
+import type { ReceiptFuel } from '../../ai/utils/receipt-fuel';
 import { logFireAndForget } from '../../../common/utils/fire-and-forget';
 import type { ReceiptImagePart } from '@budget/shared-types';
 import {
@@ -97,6 +106,8 @@ function pickPartPhotoSize<T extends { file_size?: number }>(sizes: T[]): T | nu
 const awaitingDateKey = (telegramUserId: string) => `telegram:awaiting_date:${telegramUserId}`;
 const awaitingItemEditKey = (telegramUserId: string) =>
   `telegram:awaiting_item_edit:${telegramUserId}`;
+// The third typed-input mode: the odometer for "Add to fuel log" (ABA-830).
+const awaitingFuelKey = (telegramUserId: string) => awaitingFuelOdometerKey('telegram', telegramUserId);
 
 interface PendingReceiptData {
   userId: string;
@@ -144,6 +155,8 @@ interface PendingReceiptData {
   scanAttestation?: string;
   /** A bank or user-entered row this receipt may be folded into on save (ABA-744). */
   mergeCandidate?: { id: string; what: string };
+  /** Litres / price per litre of a fuel receipt (ABA-826); offers "Add to fuel log" after save. */
+  fuel?: ReceiptFuel | null;
   language?: string;
 }
 
@@ -161,6 +174,7 @@ export class PhotoHandler {
     private readonly chatActionRecorder: ChatActionRecorderService,
     private readonly linkService: TelegramLinkService,
     @Optional() private readonly receiptDuplicates?: ReceiptDuplicateService,
+    @Optional() private readonly fuelLog?: BotReceiptFuelService,
   ) {}
 
   async handlePhoto(ctx: BotContext): Promise<void> {
@@ -386,6 +400,7 @@ export class PhotoHandler {
       receiptFingerprint: receipt.fingerprint,
       scanAttestation: receipt.scanAttestation,
       mergeCandidate: receiptMergeCandidate(receipt.possibleDuplicate),
+      fuel: receipt.fuel ?? null,
     };
   }
 
@@ -728,7 +743,11 @@ export class PhotoHandler {
       await this.clearPointer(ctx, receiptId);
       // Leave item-edit and date-edit modes, or the user's next chat message would
       // be swallowed by a correction parser instead of reaching the AI.
-      await this.cache.del(awaitingItemEditKey(String(ctx.from!.id)), awaitingDateKey(String(ctx.from!.id)));
+      await this.cache.del(
+        awaitingItemEditKey(String(ctx.from!.id)),
+        awaitingDateKey(String(ctx.from!.id)),
+        awaitingFuelKey(String(ctx.from!.id)),
+      );
 
       // Auto-check-off matching shopping-list items (ABA bot-receipt-shopping-list-reconciliation).
       // Awaited so its count can ride the SAME confirmation message, but its own
@@ -792,9 +811,104 @@ export class PhotoHandler {
           })
           .catch(logFireAndForget(this.logger, 'PhotoHandler.recordUndoable'));
       }
+
+      if (expense) await this.offerFuelLog(ctx, data, expense.id);
     } catch (error) {
       this.logger.error(`Error creating receipt expense: ${error}`);
       await safeAnswerCb(ctx, 'Failed to create expense.');
+    }
+  }
+
+  // ── "Add to fuel log" after a fuel receipt (ABA-830, common/bot-receipt-fuel.ts) ──
+
+  /** A saved fuel receipt with a resolvable vehicle gets the button; otherwise nothing is shown. */
+  private async offerFuelLog(ctx: BotContext, data: PendingReceiptData, expenseId: string): Promise<void> {
+    if (!this.fuelLog || !data.fuel) return;
+    try {
+      const created = await this.fuelLog.createOffer('telegram', {
+        userId: data.userId,
+        accountId: data.accountId,
+        expenseId,
+        fuel: data.fuel,
+        currencyCode: data.currencyCode,
+      });
+      if (!created) return;
+      const lang = data.language;
+      await ctx.reply(buildFuelOfferText(created.offer, t, lang, escapeHtml), {
+        parse_mode: 'HTML',
+        ...Markup.inlineKeyboard([
+          [Markup.button.callback(buildFuelOfferButton(created.offer, t, lang), `fuel_log:${created.offerId}`)],
+          [Markup.button.callback(t('fuelLogSkip', lang), `fuel_skip:${created.offerId}`)],
+        ]),
+      });
+    } catch (e) {
+      // The expense is saved; a missing offer must never read as a failed save.
+      this.logger.warn(`fuel-log offer failed: ${e}`);
+    }
+  }
+
+  /** "⛽ Add to fuel log": arms the odometer prompt (and leaves the other typed-input modes). */
+  async handleFuelLogCallback(ctx: BotContext, offerId: string): Promise<void> {
+    const lang = ctx.userState?.language;
+    if (!this.fuelLog || !ctx.userState || !ctx.from) {
+      await safeAnswerCb(ctx);
+      return;
+    }
+    const telegramUserId = String(ctx.from.id);
+    const result = await this.fuelLog.arm('telegram', telegramUserId, offerId, ctx.userState.userId, [
+      awaitingItemEditKey(telegramUserId),
+      awaitingDateKey(telegramUserId),
+    ]);
+    await safeAnswerCb(ctx);
+    if (result.status === 'not_owner') return;
+    if (result.status === 'expired') {
+      await ctx.reply(t('fuelLogExpired', lang));
+      return;
+    }
+    if (result.status === 'viewer') {
+      await ctx.reply(t('viewerRestricted', lang));
+      return;
+    }
+    await ctx.reply(t('fuelLogAskOdometer', lang, fuelOfferParams(result.offer, escapeHtml)), {
+      parse_mode: 'HTML',
+      ...Markup.inlineKeyboard([[Markup.button.callback(t('fuelLogSkip', lang), `fuel_skip:${offerId}`)]]),
+    });
+  }
+
+  async handleFuelSkipCallback(ctx: BotContext, offerId: string): Promise<void> {
+    await safeAnswerCb(ctx);
+    if (!this.fuelLog || !ctx.userState || !ctx.from) return;
+    const skipped = await this.fuelLog.skip('telegram', String(ctx.from.id), offerId, ctx.userState.userId);
+    if (!skipped) return;
+    await ctx.editMessageText(t('fuelLogSkipped', ctx.userState.language)).catch(() => undefined);
+  }
+
+  /**
+   * Consumes the typed odometer reading. Returns false when the prompt is not
+   * armed (or the message has no digit — the user moved on), so the bot's text
+   * router passes the message on to the AI chat.
+   */
+  async handleFuelOdometerInput(ctx: BotContext): Promise<boolean> {
+    if (!this.fuelLog || !ctx.from) return false;
+    const text = ctx.message && 'text' in ctx.message ? ctx.message.text?.trim() : '';
+    if (!text) return false;
+    const lang = ctx.userState?.language;
+    const result = await this.fuelLog.consumeOdometer('telegram', String(ctx.from.id), text);
+    switch (result.status) {
+      case 'idle':
+        return false;
+      case 'invalid':
+        await ctx.reply(t('fuelLogInvalidOdometer', lang));
+        return true;
+      case 'viewer':
+        await ctx.reply(t('viewerRestricted', lang));
+        return true;
+      case 'failed':
+        await ctx.reply(t('fuelLogFailed', lang));
+        return true;
+      case 'saved':
+        await ctx.reply(buildFuelSavedText(result.offer, result.odometerKm, t, lang, escapeHtml), { parse_mode: 'HTML' });
+        return true;
     }
   }
 
@@ -807,6 +921,8 @@ export class PhotoHandler {
       }
 
       const telegramUserId = String(ctx.from!.id);
+      // The typed-input modes are mutually exclusive.
+      await this.cache.del(awaitingItemEditKey(telegramUserId), awaitingFuelKey(telegramUserId));
       await this.cache.set(awaitingDateKey(telegramUserId), receiptId, AWAITING_DATE_TTL_SEC);
       await ctx.answerCbQuery('');
       await ctx.reply(t('sendDate', data.language), { parse_mode: 'HTML' });
@@ -905,7 +1021,7 @@ export class PhotoHandler {
         const telegramUserId = String(ctx.from!.id);
         // The two typed-input modes are mutually exclusive — leaving a date prompt
         // armed would make the next message ambiguous.
-        await this.cache.del(awaitingDateKey(telegramUserId));
+        await this.cache.del(awaitingDateKey(telegramUserId), awaitingFuelKey(telegramUserId));
         await this.cache.set(awaitingItemEditKey(telegramUserId), receiptId, AWAITING_ITEM_EDIT_TTL_SEC);
         await safeAnswerCb(ctx, '');
 
@@ -1031,7 +1147,7 @@ export class PhotoHandler {
     await this.withReceiptLock(ctx, receiptId, ctx.userState?.language, async () => {
       const telegramUserId = String(ctx.from!.id);
       await this.cache.del(pendingReceiptKey(receiptId));
-      await this.cache.del(awaitingItemEditKey(telegramUserId), awaitingDateKey(telegramUserId));
+      await this.cache.del(awaitingItemEditKey(telegramUserId), awaitingDateKey(telegramUserId), awaitingFuelKey(telegramUserId));
       await this.clearPointer(ctx, receiptId);
       await ctx.answerCbQuery('Cancelled.');
       await ctx.editMessageText(t('receiptCancelled', ctx.userState?.language));

@@ -27,6 +27,7 @@ A NestJS module (`modules/whatsapp/`) embedded in the API that lets users intera
   - `wa:dupscan:*` — a receipt held behind the duplicate-receipt warning
   - `wa:receipt-latest:{phone}:{phone}`, `wa:scan:{tmpId}`, `wa:receipt-busy:{shortId}` — a long receipt in several photos (callbacks `receipt_part--{receiptId}--{tmpId}` / `receipt_new--{tmpId}`); the old card's buttons still act on the updated receipt ([long-receipt](features/long-receipt.md))
   - `wa:awaiting_item_edit:{phone}` — the typed line-item correction cursor ([bot-receipt-editing](features/bot-receipt-editing.md))
+  - `wa:fuel_offer:{offerId}` + `wa:awaiting_fuel_odo:{phone}` — "⛽ Add to fuel log" after a saved fuel receipt and its typed odometer prompt (callbacks `fuel_log--{offerId}` / `fuel_skip--{offerId}`; the button title is the short form, the vehicle is named in the body) — [vehicle-fuel-log](features/vehicle-fuel-log.md), ABA-830
   - `wa:catz:{phone}` — the `/categorize` session ([bot-categorize-command](features/bot-categorize-command.md))
   - `wa:vd:{userId}`, `wa:vdmsg:{wamid}` — the weekly voice digest's pending send and message mapping ([voice-digest](features/voice-digest.md))
 - **Callback IDs** use `--` separator (UUIDs already contain single `-`)

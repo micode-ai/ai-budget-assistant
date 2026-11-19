@@ -24,6 +24,8 @@ import { SubscriptionsModule } from '../subscriptions/subscriptions.module';
 import { PurchaseRequestsModule } from '../purchase-requests/purchase-requests.module';
 import { ShoppingListModule } from '../shopping-list/shopping-list.module';
 import { GroupsModule } from '../groups/groups.module';
+import { VehiclesModule } from '../vehicles/vehicles.module';
+import { BotReceiptFuelService } from '../../common/bot-receipt-fuel';
 import { WA_REDIS } from './types';
 
 @Global()
@@ -37,6 +39,7 @@ import { WA_REDIS } from './types';
     PurchaseRequestsModule,
     ShoppingListModule,
     GroupsModule, // GroupBotService: the `group` command (ABA-658)
+    VehiclesModule, // "Add to fuel log" after a fuel receipt (ABA-830)
   ],
   controllers: [WhatsAppBotController],
   providers: [
@@ -54,6 +57,7 @@ import { WA_REDIS } from './types';
     CategorizeHandler,
     GroupHandler,
     WhatsAppDigestSender,
+    BotReceiptFuelService,
     {
       provide: WA_REDIS,
       useFactory: (config: ConfigService) =>

@@ -93,3 +93,43 @@ describe('createBotT — external language tags', () => {
     expect(t('receiptBusy', 'xx')).toBe(t('receiptBusy', 'en'));
   });
 });
+
+describe('sharedMessages — "Add to fuel log" (ABA-830)', () => {
+  const keys = Object.keys(sharedMessages).filter((k) => k.startsWith('fuelLog'));
+
+  it('has the keys the bot fuel-log flow uses', () => {
+    expect(keys.sort()).toEqual(
+      [
+        'fuelLogAskOdometer',
+        'fuelLogButton',
+        'fuelLogButtonShort',
+        'fuelLogExpired',
+        'fuelLogFailed',
+        'fuelLogInvalidOdometer',
+        'fuelLogOffer',
+        'fuelLogSaved',
+        'fuelLogSkip',
+        'fuelLogSkipped',
+      ].sort(),
+    );
+  });
+
+  it.each(keys)('%s is translated into every language with the same placeholders', (key) => {
+    const entry = sharedMessages[key];
+    const placeholders = (s: string) => (s.match(/\{\{\w+\}\}/g) ?? []).sort().join(',');
+    for (const lang of LANGS) {
+      expect(entry[lang]?.trim()).toBeTruthy();
+      expect(placeholders(entry[lang])).toBe(placeholders(entry.en));
+    }
+  });
+
+  it("keeps the WhatsApp buttons within the 20-character limit", () => {
+    for (const key of ['fuelLogButtonShort', 'fuelLogSkip']) {
+      for (const lang of LANGS) expect(sharedMessages[key][lang].length).toBeLessThanOrEqual(20);
+    }
+  });
+
+  it('puts no markup around the user-typed vehicle name', () => {
+    for (const key of keys) for (const lang of LANGS) expect(sharedMessages[key][lang]).not.toMatch(/<\/?(b|code)>/);
+  });
+});

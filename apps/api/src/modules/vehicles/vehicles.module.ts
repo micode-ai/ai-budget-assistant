@@ -9,5 +9,7 @@ import { CurrencyExchangeModule } from '../currency-exchange/currency-exchange.m
   imports: [CurrencyExchangeModule],
   controllers: [VehiclesController],
   providers: [VehiclesService, VehicleCostRulesCron, VehicleRenewalCron],
+  // The bots' "Add to fuel log" button writes through the app's own upsert (ABA-830).
+  exports: [VehiclesService],
 })
 export class VehiclesModule {}

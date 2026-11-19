@@ -157,6 +157,20 @@ export class VehiclesService {
     return { fuelLog, cost: costRow };
   }
 
+  /**
+   * The vehicle of the account's most recent fill-up (on a live expense), or
+   * null — the bots' "last used" when a scanned fuel receipt picks a vehicle
+   * (ABA-830), the server-side counterpart of the app's session memory.
+   */
+  async lastFuelVehicleId(accountId: string): Promise<string | null> {
+    const last = await this.prisma.fuelLog.findFirst({
+      where: { accountId, vehicle: { isDeleted: false }, expense: { accountId, isDeleted: false } },
+      orderBy: { createdAt: 'desc' },
+      select: { vehicleId: true },
+    });
+    return last?.vehicleId ?? null;
+  }
+
   private async resolveExpense(accountId: string, expenseIdOrClientId: string) {
     const expense = await this.prisma.expense.findFirst({
       where: { accountId, isDeleted: false, OR: [{ id: expenseIdOrClientId }, { clientId: expenseIdOrClientId }] },

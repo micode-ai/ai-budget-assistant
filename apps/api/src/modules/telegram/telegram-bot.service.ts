@@ -302,6 +302,16 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
         return;
       }
 
+      // "Add to fuel log" after a fuel receipt (ABA-830).
+      if (data.startsWith('fuel_log:')) {
+        await this.photoHandler.handleFuelLogCallback(ctx, data.slice('fuel_log:'.length));
+        return;
+      }
+      if (data.startsWith('fuel_skip:')) {
+        await this.photoHandler.handleFuelSkipCallback(ctx, data.slice('fuel_skip:'.length));
+        return;
+      }
+
       if (data.startsWith('receipt_cancel:')) {
         const receiptId = data.slice('receipt_cancel:'.length);
         await this.photoHandler.handleReceiptCancelCallback(ctx, receiptId);
@@ -344,10 +354,12 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
 
     // Free-form text messages (catch-all — must be registered last)
     this.bot.on('text', async (ctx) => {
-      // Check if the user is correcting scanned receipt lines, then the date. The
-      // two modes are mutually exclusive (entering one clears the other), so the
-      // order only decides which check runs first.
+      // Check if the user is correcting scanned receipt lines, then the date, then
+      // typing an odometer for the fuel log. The three modes are mutually exclusive
+      // (entering one clears the others), so the order only decides which check
+      // runs first.
       if (await this.photoHandler.handleItemEditInput(ctx)) return;
+      if (await this.photoHandler.handleFuelOdometerInput(ctx)) return;
       const handled = await this.photoHandler.handleDateInput(ctx);
       if (handled) return;
       return this.chatHandler.handleText(ctx);

@@ -15,6 +15,8 @@ existing expense. `GET /vehicles/:id/stats` answers "what does the car cost me":
 - Schema: `Vehicle`, `FuelLog` (migration `20261109020000_vehicle_fuel_log`)
 - Shared types: `packages/shared-types/src/entities/vehicle.ts`
 - Tests: `apps/api/src/modules/vehicles/fuel-stats.util.spec.ts`, `vehicles.service.spec.ts`
+- Bots (ABA-830): `apps/api/src/common/bot-receipt-fuel.ts` (+ spec), `modules/{telegram,whatsapp,slack}/handlers/photo.handler.ts`
+  (`offerFuelLog`, `handleFuelLogCallback`, `handleFuelSkipCallback`, `handleFuelOdometerInput`; specs `photo.handler.fuel.spec.ts`)
 - Mobile: `src/components/vehicles/VehiclesSettings.tsx` (route `app/settings/vehicles.tsx`, registry key `vehicles`),
   `src/components/vehicles/VehiclesAnalyticsCard.tsx` (Analytics tab, ABA-806),
   `src/components/expenses/detail/FuelSection.tsx`, `src/features/vehicles/` (`useVehicles`, `vehicleDisplay`), `src/services/vehicles.api.ts`
@@ -69,7 +71,20 @@ with `source = 'category'` and never touches a person's decision (`source = null
 tombstone a removal leaves) or a fill-up. Stats carry `ownership`: the last 12 months by kind, monthly
 average, km from the fill-ups in the window and all costs per km.
 
-**Receipt prefill** (`fuel-receipt-litres-ocr-prefill`): the receipt scan carries an optional `fuel {litres, pricePerLitre, fuelType}` read from the fuel line; `extractReceiptFuel` (`ai/utils/receipt-fuel.ts`) keeps it only when litres x price matches a line within 2%. The confirm card (`ReceiptFuelCard`) asks only for the odometer and, on save, writes the `FuelLog` (full tank). Vehicle: only one, else last used, else unique fuel-type match, else no card. Bots get the extraction through the shared finalizer but have no button yet.
+**Receipt prefill** (`fuel-receipt-litres-ocr-prefill`): the receipt scan carries an optional `fuel {litres, pricePerLitre, fuelType}` read from the fuel line; `extractReceiptFuel` (`ai/utils/receipt-fuel.ts`) keeps it only when litres x price matches a line within 2%. The confirm card (`ReceiptFuelCard`) asks only for the odometer and, on save, writes the `FuelLog` (full tank). Vehicle: only one, else last used, else unique fuel-type match, else no card.
+
+**From the bots** (ABA-830): Telegram, WhatsApp and Slack offer **⛽ Add to fuel log (vehicle)** right after a scanned receipt
+with a `fuel` block is saved as an expense. One shared core, `apps/api/src/common/bot-receipt-fuel.ts` (`BotReceiptFuelService` +
+pure `pickFuelVehicle`/`parseOdometer` and the message builders; copy in `common/bot-i18n/shared-messages.ts`, keys `fuelLog*`), is
+provided in each bot module; each `handlers/photo.handler.ts` only renders buttons. The vehicle rule is the app's, with "last
+used" read on the server as the vehicle of the account's most recent fill-up (`VehiclesService.lastFuelVehicleId`); no vehicle
+resolves → no button. The button arms a typed odometer prompt; a valid whole-km reading (`123456`, `123 456`, `123456 km`) writes
+through `VehiclesService.upsertFuelLog` — the same method the app's save path calls — as a full tank with the receipt's litres.
+**Skip** drops the offer. Callbacks: `fuel_log:{offerId}` / `fuel_skip:{offerId}` (WhatsApp `fuel_log--{offerId}`, whose button
+title is the 20-character-safe `fuelLogButtonShort`, the vehicle named in the body). Redis keys, per platform prefix
+(`telegram`/`wa`/`slack`): `{prefix}:fuel_offer:{offerId}` (1800 s) and `{prefix}:awaiting_fuel_odo:{userKey}` (600 s). `FuelLog`
+has no price-per-litre or fuel-type column, so those two values are shown in the offer but not stored (price per litre is
+the expense amount over the litres, as in the app).
 
 ## Invariants
 
@@ -81,6 +96,14 @@ average, km from the fill-ups in the window and all costs per km.
   `getStats().ownership` and the history endpoint — the Analytics card and the vehicle screen must show the same 12 months.
 - A list row's caption never shows the server's copy of an encrypted field (`enc:` prefix); it prefers the device's decrypted expense.
 - `declared before :id`: `DELETE /vehicles/fuel-logs/:expenseId` must stay above `DELETE /vehicles/:id`.
+- Bot odometer prompt (ABA-830): it is the THIRD typed-input mode beside item-edit and date-edit ([bot-receipt-editing](bot-receipt-editing.md)).
+  Arming any one clears the other two; save, cancel, skip, a written or failed fuel log and an expired offer all clear it; and a
+  message with no digit at all leaves the mode and goes on to the AI chat — otherwise the next chat message is swallowed. A number
+  that is not a valid reading keeps the mode for a retry.
+- Bot fuel log permissions: the offer remembers its `userId`, so another member tapping it in a group or channel is ignored, and
+  the writer role (`AccountMember.role !== 'viewer'`) is re-checked both when the button is tapped and when the reading is
+  written — the role may have changed since the receipt was saved.
+- A failure to build the offer never reads as a failed save: the expense is already written, so the offer path logs and shows no button.
 
 ## Renewal reminders (ABA-827)
 
@@ -106,7 +129,7 @@ day when none is set; nothing is written unless the user confirms.
 
 ## Known gaps
 
-SQLite mirror; bot fuel-log button; community-price comparison; mileage in the tax export; comparing two vehicles; a yearly forecast; stacked
+SQLite mirror; community-price comparison; a bot partial-fill option (the bot always logs a full tank); mileage in the tax export; comparing two vehicles; a yearly forecast; stacked
 monthly bars by kind (the bar chart has no stacking — a picked month's kinds show in the breakdown instead).
 
 ## History
@@ -115,3 +138,4 @@ The API (Vehicle + FuelLog, the full-tank method) came first; [ABA-796](https://
 [ABA-806](https://github.com/micode-ai/ai-budget-assistant/issues/844) put the vehicles on the Analytics tab and corrected the settings hint (the expense section is "Car", litres optional).
 [ABA-811](https://github.com/micode-ai/ai-budget-assistant/issues/849) added the vehicle screen (periods, by month, by kind, consumption trend, every cost) after the card was reported as too thin.
 ABA-827 added the renewal dates and the reminder cron; ABA-829 the app's fields, due-soon chips, Renewals card and the roll-forward offer.
+ABA-826 read litres and price per litre off a fuel receipt; ABA-830 gave the three bots the "Add to fuel log" button.

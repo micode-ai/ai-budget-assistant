@@ -83,6 +83,10 @@ Tanto `14,69` quanto `14.69` funcionam. Depois de cada correção, o bot reenvia
 
 Quando terminar, toque em **Adicionar despesa** — nada é salvo antes disso, e cancelar descarta todas as correções. Aqui só dá para corrigir as linhas e o total; para mudar a categoria de uma linha, abra a despesa no app.
 
+### Cupom de combustível → registro de combustível
+
+Se o recibo escaneado for de um posto de combustível e os litros e o preço por litro tiverem sido lidos com clareza, o bot oferece **⛽ Adicionar ao registro (seu carro)** logo depois de salvar a despesa (no WhatsApp o botão diz **⛽ Ao registro** e o carro aparece na mensagem). Toque nele e digite a quilometragem em km, por exemplo `123456`; o abastecimento é registrado como tanque cheio para esse carro. O carro é escolhido como no app: seu único carro, senão aquele em que você registrou o último abastecimento, senão o único carro com esse combustível — se ainda assim não ficar claro, o botão não aparece. Toque em **Pular** para deixar a despesa sem abastecimento; qualquer outra mensagem vai para o chat normalmente. Observadores não podem registrar abastecimentos.
+
 ## Várias contas
 
 Se você tem várias contas (por exemplo, “Pessoal” e “Família”):

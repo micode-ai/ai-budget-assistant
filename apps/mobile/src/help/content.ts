@@ -3629,6 +3629,10 @@ Both \`14.69\` and \`14,69\` work. After every correction the bot re-sends the n
 
 When you are done, tap **Add expense** — nothing is saved until you do, and cancelling discards every correction. Only the lines and the total can be corrected here; to change a line's category, open the expense in the app.
 
+### Fuel receipt → fuel log
+
+When the scanned receipt is from a fuel station and the litres and price per litre were read clearly, the bot offers **⛽ Add to fuel log (your car)** right after you save the expense (on WhatsApp the button reads **⛽ Add to fuel log** and the car is named in the message). Tap it and type the odometer reading in km, for example \`123456\`; the fill-up is logged as a full tank for that car. The car is picked the same way as in the app: your only car, else the one you last logged a fill-up for, else the only car with that fuel type — when it is still unclear, no button is shown. Tap **Skip** to leave the expense without a fill-up; any other message you send goes to the chat as usual. Viewers cannot log fill-ups.
+
 ## Multiple Accounts
 
 If you have several accounts (e.g. "Personal" and "Family"):
@@ -9088,6 +9092,10 @@ OCR иногда неверно читает цену, выдумывает ст
 
 Когда закончите — нажмите **Добавить расход**: до этого ничего не сохраняется, а отмена отбрасывает все правки. Здесь правятся только строки и итог; чтобы сменить категорию строки, откройте расход в приложении.
 
+### Чек с заправки → журнал топлива
+
+Если отсканированный чек с заправки и литры с ценой за литр распознаны чётко, сразу после сохранения расхода бот предложит **⛽ В журнал топлива (ваша машина)** (в WhatsApp кнопка называется **⛽ В журнал топлива**, а машина указана в сообщении). Нажмите её и напишите показание одометра в км, например \`123456\` — заправка запишется для этой машины как полный бак. Машина выбирается так же, как в приложении: единственная машина, иначе та, для которой последней записывали заправку, иначе единственная машина с таким видом топлива — если и это неоднозначно, кнопки не будет. **Пропустить** оставляет расход без заправки; любое другое сообщение уходит в чат как обычно. Наблюдатели записывать заправки не могут.
+
 ## Несколько аккаунтов
 
 - Упомяните название аккаунта в сообщении: «Покажи расходы в Семейном» — ИИ запросит этот аккаунт только для данного сообщения
@@ -14510,6 +14518,10 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 Коли завершите — натисніть **Додати витрату**: до цього нічого не зберігається, а скасування відкидає всі правки. Тут правляться лише рядки та ітог; щоб змінити категорію рядка, відкрийте витрату в застосунку.
 
+### Чек із заправки → журнал пального
+
+Якщо відсканований чек із заправки й літри з ціною за літр розпізнано чітко, одразу після збереження витрати бот запропонує **⛽ До журналу пального (ваше авто)** (у WhatsApp кнопка називається **⛽ До журналу**, а авто вказано в повідомленні). Натисніть її та напишіть показник одометра в км, наприклад \`123456\` — заправку буде записано для цього авто як повний бак. Авто обирається так само, як у застосунку: єдине авто, інакше те, для якого востаннє записували заправку, інакше єдине авто з таким видом пального — якщо й це неоднозначно, кнопки не буде. **Пропустити** залишає витрату без заправки; будь-яке інше повідомлення йде в чат як завжди. Спостерігачі записувати заправки не можуть.
+
 ## Кілька акаунтів
 
 - Згадайте назву акаунту в повідомленні: «Покажи витрати в Сімейному» — ШІ запитає цей акаунт лише для цього повідомлення
@@ -19903,6 +19915,10 @@ Działa i \`14,69\`, i \`14.69\`. Po każdej poprawce bot ponownie wysyła numer
 
 Gdy skończysz, dotknij **Dodaj wydatek** — nic nie jest zapisywane wcześniej, a anulowanie odrzuca wszystkie poprawki. Tutaj można poprawić tylko pozycje i sumę; aby zmienić kategorię pozycji, otwórz wydatek w aplikacji.
 
+### Paragon ze stacji → dziennik paliwa
+
+Jeśli zeskanowany paragon pochodzi ze stacji paliw, a litry i cena za litr zostały odczytane wyraźnie, bot zaraz po zapisaniu wydatku proponuje **⛽ Dodaj do dziennika paliwa (Twoje auto)** (na WhatsAppie przycisk brzmi **⛽ Do dziennika**, a auto jest podane w wiadomości). Stuknij go i wpisz stan licznika w km, np. \`123456\`; tankowanie zostanie zapisane dla tego auta jako do pełna. Auto jest wybierane tak samo jak w aplikacji: jedyne auto, w przeciwnym razie to, dla którego ostatnio zapisano tankowanie, w przeciwnym razie jedyne auto z tym rodzajem paliwa — gdy nadal nie wiadomo, przycisk się nie pojawia. **Pomiń** zostawia wydatek bez tankowania; każda inna wiadomość trafia do czatu jak zwykle. Obserwatorzy nie mogą zapisywać tankowań.
+
 ## Wiele kont
 
 - Wspomnij nazwę konta w wiadomości: „Pokaż wydatki na koncie Rodzinnym" — AI zapyta to konto tylko dla tej wiadomości
@@ -25294,6 +25310,10 @@ Die Texterkennung liest manchmal einen Preis falsch, erfindet eine Position oder
 
 Wenn du fertig bist, tippe auf **Ausgabe hinzufügen** — vorher wird nichts gespeichert, und ein Abbruch verwirft alle Korrekturen. Hier lassen sich nur die Zeilen und die Summe korrigieren; um die Kategorie einer Zeile zu ändern, öffne die Ausgabe in der App.
 
+### Tankbeleg → Tankbuch
+
+Stammt der gescannte Beleg von einer Tankstelle und wurden Liter und Literpreis eindeutig gelesen, bietet der Bot direkt nach dem Speichern der Ausgabe **⛽ Ins Tankbuch (dein Auto)** an (auf WhatsApp heißt der Button **⛽ Ins Tankbuch**, das Auto steht in der Nachricht). Tippe darauf und schreib den Kilometerstand, zum Beispiel \`123456\`; die Tankfüllung wird für dieses Auto als volltanken eingetragen. Das Auto wird wie in der App gewählt: dein einziges Auto, sonst das, für das du zuletzt getankt hast, sonst das einzige Auto mit dieser Kraftstoffart — ist es dann noch unklar, erscheint kein Button. Mit **Überspringen** bleibt die Ausgabe ohne Tankfüllung; jede andere Nachricht geht wie gewohnt an den Chat. Betrachter können keine Tankfüllungen eintragen.
+
 ## Mehrere Konten
 
 - Erwähne den Kontonamen in deiner Nachricht für eine einmalige Abfrage
@@ -30663,6 +30683,10 @@ Sirven tanto \`14,69\` como \`14.69\`. Tras cada corrección el bot reenvía la 
 
 Cuando termines, toca **Añadir gasto**: nada se guarda hasta entonces, y cancelar descarta todas las correcciones. Aquí solo se pueden corregir las líneas y el total; para cambiar la categoría de una línea, abre el gasto en la aplicación.
 
+### Tique de gasolinera → registro de combustible
+
+Si el recibo escaneado es de una gasolinera y los litros y el precio por litro se leyeron con claridad, el bot ofrece **⛽ Añadir al registro (tu coche)** justo después de guardar el gasto (en WhatsApp el botón dice **⛽ Al registro** y el coche aparece en el mensaje). Púlsalo y escribe el cuentakilómetros en km, por ejemplo \`123456\`; el repostaje se registra como depósito lleno para ese coche. El coche se elige igual que en la app: tu único coche, si no el último al que registraste un repostaje, si no el único coche con ese combustible; si aún no está claro, no aparece el botón. Pulsa **Omitir** para dejar el gasto sin repostaje; cualquier otro mensaje va al chat como siempre. Los lectores no pueden registrar repostajes.
+
 ## Coste de solicitudes IA
 
 | Acción | Solicitudes IA |
@@ -36019,6 +36043,10 @@ L'OCR lit parfois mal un prix, invente une ligne ou en oublie une. Appuyez sur *
 
 Quand vous avez fini, appuyez sur **Ajouter la dépense** : rien n'est enregistré avant, et annuler abandonne toutes les corrections. Seules les lignes et le total sont corrigeables ici ; pour changer la catégorie d'une ligne, ouvrez la dépense dans l'application.
 
+### Ticket de carburant → carnet de carburant
+
+Si le reçu scanné vient d'une station-service et que les litres et le prix au litre ont été lus clairement, le bot propose **⛽ Ajouter au carnet (votre voiture)** juste après l'enregistrement de la dépense (sur WhatsApp, le bouton s'appelle **⛽ Au carnet** et la voiture est nommée dans le message). Appuyez dessus et tapez le kilométrage, par exemple \`123456\` ; le plein est enregistré comme réservoir plein pour cette voiture. La voiture est choisie comme dans l'app : votre seule voiture, sinon celle du dernier plein enregistré, sinon la seule voiture avec ce carburant — si c'est encore ambigu, aucun bouton n'apparaît. Appuyez sur **Ignorer** pour laisser la dépense sans plein ; tout autre message part dans le chat comme d'habitude. Les lecteurs ne peuvent pas enregistrer de plein.
+
 ## Coût des requêtes IA
 
 | Action | Requêtes IA |
@@ -41369,6 +41397,10 @@ OCR часам няправільна чытае цану, выдумляе ра
 Працуюць і \`14,69\`, і \`14.69\`. Пасля кожнай правкі бот прысылае нумараваны спіс заново і радок \`Сума пазіцый: … · ітог чэка: …\` — калі гэтыя два лікі разыходзяцца, штосьці ў чэку ўсё яшчэ прачытана няправільна. Разбіўка па катэгорыях пералічваецца па выпраўленых радках, таму пры зміне цаны выпраўце і ітог.
 
 Калі скончыце — націсніце **Дадаць выдаткі**: да гэтага нічога не захоўваецца, а скасаванне адкідае ўсе правкі. Тут правяцца толькі радкі і ітог; каб змяніць катэгорыю радка, адкрыйце выдатак у дадатку.
+
+### Чэк з запраўкі → журнал паліва
+
+Калі адсканаваны чэк з запраўкі і літры з цаной за літр распазнаныя выразна, адразу пасля захавання выдатку бот прапануе **⛽ У журнал паліва (ваша машына)** (у WhatsApp кнопка называецца **⛽ У журнал паліва**, а машына названая ў паведамленні). Націсніце яе і напішыце паказанне адометра ў км, напрыклад \`123456\` — запраўка запішацца для гэтай машыны як поўны бак. Машына выбіраецца гэтак жа, як у праграме: адзіная машына, інакш тая, для якой апошняй запісвалі запраўку, інакш адзіная машына з такім відам паліва — калі і гэта неадназначна, кнопкі не будзе. **Прапусціць** пакідае выдатак без запраўкі; любое іншае паведамленне ідзе ў чат як звычайна. Назіральнікі запісваць запраўкі не могуць.
 
 ## Кошт запытаў ШІ
 
@@ -46726,6 +46758,10 @@ OCR leest soms een prijs verkeerd, verzint een regel of mist er een. Tik op **�
 Zowel \`14,69\` als \`14.69\` werkt. Na elke correctie stuurt de bot de genummerde lijst opnieuw, met een regel \`Regels: … · bontotaal: …\` — verschillen die twee, dan is er nog iets verkeerd gelezen. De categorieverdeling wordt opnieuw berekend uit de gecorrigeerde regels, dus corrigeer ook het totaal als je een prijs wijzigt.
 
 Ben je klaar, tik dan op **Uitgave toevoegen** — daarvoor wordt niets opgeslagen, en annuleren gooit alle correcties weg. Alleen de regels en het totaal zijn hier te corrigeren; open de uitgave in de app om de categorie van een regel te wijzigen.
+
+### Tankbon → brandstoflogboek
+
+Is de gescande bon van een tankstation en zijn de liters en de literprijs duidelijk gelezen, dan biedt de bot direct na het opslaan van de uitgave **⛽ Naar brandstoflogboek (je auto)** aan (op WhatsApp heet de knop **⛽ Naar logboek** en staat de auto in het bericht). Tik erop en typ de kilometerstand, bijvoorbeeld \`123456\`; de tankbeurt wordt voor die auto vastgelegd als volle tank. De auto wordt gekozen zoals in de app: je enige auto, anders die waarvoor je het laatst een tankbeurt vastlegde, anders de enige auto met die brandstof — is het dan nog onduidelijk, dan verschijnt er geen knop. Met **Overslaan** blijft de uitgave zonder tankbeurt; elk ander bericht gaat zoals gewoonlijk naar de chat. Kijkers kunnen geen tankbeurten vastleggen.
 
 ## Meerdere accounts
 
@@ -52192,6 +52228,10 @@ O OCR às vezes lê mal um preço, inventa uma linha ou salta outra. Toque em **
 Tanto \`14,69\` como \`14.69\` funcionam. Depois de cada correção, o bot volta a enviar a lista numerada e uma linha \`Linhas: … · total do talão: …\` — quando os dois valores não coincidem, ainda há algo mal lido no talão. A divisão por categorias é recalculada a partir das linhas corrigidas, por isso corrija também o total quando alterar um preço.
 
 Quando terminar, toque em **Adicionar despesa** — nada é guardado até o fazer, e cancelar descarta todas as correções. Aqui só é possível corrigir as linhas e o total; para mudar a categoria de uma linha, abra a despesa na aplicação.
+
+### Talão de combustível → registo de combustível
+
+Se o talão digitalizado for de um posto de combustível e os litros e o preço por litro tiverem sido lidos com clareza, o bot propõe **⛽ Adicionar ao registo (o seu carro)** logo depois de guardar a despesa (no WhatsApp o botão diz **⛽ Ao registo** e o carro aparece na mensagem). Toque nele e escreva a quilometragem em km, por exemplo \`123456\`; o abastecimento fica registado como depósito cheio para esse carro. O carro é escolhido como na aplicação: o seu único carro, senão aquele em que registou o último abastecimento, senão o único carro com esse combustível — se ainda assim não for claro, o botão não aparece. Toque em **Ignorar** para deixar a despesa sem abastecimento; qualquer outra mensagem segue para o chat como habitualmente. Os observadores não podem registar abastecimentos.
 
 ## Várias contas
 
@@ -57665,6 +57705,10 @@ Envie \`/group 120 pizza\` para adicionar uma despesa a um dos seus grupos compa
 Tanto \`14,69\` quanto \`14.69\` funcionam. Depois de cada correção, o bot reenvia a lista numerada e uma linha \`Linhas: … · total do recibo: …\` — quando os dois valores não batem, ainda tem algo lido errado no recibo. A divisão por categorias é refeita a partir das linhas corrigidas, então corrija também o total quando mudar um preço.
 
 Quando terminar, toque em **Adicionar despesa** — nada é salvo antes disso, e cancelar descarta todas as correções. Aqui só dá para corrigir as linhas e o total; para mudar a categoria de uma linha, abra a despesa no app.
+
+### Cupom de combustível → registro de combustível
+
+Se o recibo escaneado for de um posto de combustível e os litros e o preço por litro tiverem sido lidos com clareza, o bot oferece **⛽ Adicionar ao registro (seu carro)** logo depois de salvar a despesa (no WhatsApp o botão diz **⛽ Ao registro** e o carro aparece na mensagem). Toque nele e digite a quilometragem em km, por exemplo \`123456\`; o abastecimento é registrado como tanque cheio para esse carro. O carro é escolhido como no app: seu único carro, senão aquele em que você registrou o último abastecimento, senão o único carro com esse combustível — se ainda assim não ficar claro, o botão não aparece. Toque em **Pular** para deixar a despesa sem abastecimento; qualquer outra mensagem vai para o chat normalmente. Observadores não podem registrar abastecimentos.
 
 ## Várias contas
 

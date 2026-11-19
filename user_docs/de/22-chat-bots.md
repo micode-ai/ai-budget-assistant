@@ -82,6 +82,10 @@ Die Texterkennung liest manchmal einen Preis falsch, erfindet eine Position oder
 
 Wenn du fertig bist, tippe auf **Ausgabe hinzufügen** — vorher wird nichts gespeichert, und ein Abbruch verwirft alle Korrekturen. Hier lassen sich nur die Zeilen und die Summe korrigieren; um die Kategorie einer Zeile zu ändern, öffne die Ausgabe in der App.
 
+### Tankbeleg → Tankbuch
+
+Stammt der gescannte Beleg von einer Tankstelle und wurden Liter und Literpreis eindeutig gelesen, bietet der Bot direkt nach dem Speichern der Ausgabe **⛽ Ins Tankbuch (dein Auto)** an (auf WhatsApp heißt der Button **⛽ Ins Tankbuch**, das Auto steht in der Nachricht). Tippe darauf und schreib den Kilometerstand, zum Beispiel `123456`; die Tankfüllung wird für dieses Auto als volltanken eingetragen. Das Auto wird wie in der App gewählt: dein einziges Auto, sonst das, für das du zuletzt getankt hast, sonst das einzige Auto mit dieser Kraftstoffart — ist es dann noch unklar, erscheint kein Button. Mit **Überspringen** bleibt die Ausgabe ohne Tankfüllung; jede andere Nachricht geht wie gewohnt an den Chat. Betrachter können keine Tankfüllungen eintragen.
+
 ## Mehrere Konten
 
 - Erwähne den Kontonamen in deiner Nachricht für eine einmalige Abfrage

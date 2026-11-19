@@ -232,6 +232,8 @@ export class WhatsAppBotService {
       // exclusive (entering one clears the other), so the order only decides which
       // check runs first.
       if (await this.photoHandler.handleItemEditInput(text, userState)) return;
+      // The odometer for "Add to fuel log" — the third, equally exclusive mode (ABA-830).
+      if (await this.photoHandler.handleFuelOdometerInput(text, userState)) return;
       const consumed = await this.photoHandler.handleDateInput(text, userState);
       if (consumed) return;
 
@@ -320,6 +322,11 @@ export class WhatsAppBotService {
       }
       case 'receipt_new':
         return this.photoHandler.handleNewReceiptCallback(payload, userState);
+      // "Add to fuel log" after a fuel receipt (ABA-830): `fuel_log--{offerId}` / `fuel_skip--{offerId}`.
+      case 'fuel_log':
+        return this.photoHandler.handleFuelLogCallback(payload, userState);
+      case 'fuel_skip':
+        return this.photoHandler.handleFuelSkipCallback(payload, userState);
       case 'pr_approve':
       case 'pr_reject':
         return this.purchaseRequestHandler.handleCallback(prefix, payload, userState);

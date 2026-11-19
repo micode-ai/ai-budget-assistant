@@ -34,8 +34,11 @@ the only signal a misread is still there.
 
 ## Invariants
 
-**The two typed-input modes are mutually exclusive.** Entering one clears the other, and confirm or
-cancel clears both, or the next chat message is swallowed by the correction parser.
+**The typed-input modes are mutually exclusive.** Entering one clears the others, and confirm or
+cancel clears them all, or the next chat message is swallowed by the correction parser. Since
+ABA-830 there is a third: the odometer prompt behind "⛽ Add to fuel log" after a saved fuel receipt
+(`{prefix}:awaiting_fuel_odo:{userKey}`, [vehicle-fuel-log](vehicle-fuel-log.md)) — arming it clears
+item-edit and date-edit, entering either of those clears it, and a message with no digit leaves it.
 
 **Parsing is syntax only; every money rule lives in `applyItemEditCommand`.** That is why `3 = 0`
 parses and is then rejected. A price correction recomputes `unitPrice` from the quantity (a stale one

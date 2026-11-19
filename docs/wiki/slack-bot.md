@@ -19,6 +19,7 @@ A NestJS module (`modules/slack/`) embedded in the API that lets users interact 
   - `slack:msg:{event_id}` — idempotency, 24h (guards against Slack automatic retries)
   - `slack:pa:{shortId}` — pending AI actions, 1800s
   - `slack:receipt:{shortId}` + `slack:awaiting_date:{slackUserId}` — receipt-scan date-change flow
+  - `slack:fuel_offer:{offerId}` + `slack:awaiting_fuel_odo:{slackUserId}` — "⛽ Add to fuel log" after a saved fuel receipt and its typed odometer prompt (callbacks `fuel_log:` / `fuel_skip:`, always new posts, never a placeholder update) — [vehicle-fuel-log](features/vehicle-fuel-log.md), ABA-830
   - `slack:cat:{shortId}` — category-name passthrough
 - **Callback IDs** use a single `:` separator (`ca:`, `ra:`, `account:`, `cat_e:`, `cat_i:`, `cat_d:`, `receipt_*:`), parsed on the first `:`. This differs from the WhatsApp `--` separator, which was chosen to avoid UUID collision — Slack callback IDs are not UUIDs.
 - **Interactive elements** via `@slack/web-api` `WebClient.chat.postMessage` with Block Kit `actions` blocks (buttons). No `sendList` equivalent — pickers use buttons instead. Account lists are capped at 23 items; category lists at 20, with overflow text when more exist.

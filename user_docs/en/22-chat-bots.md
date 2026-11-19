@@ -83,6 +83,10 @@ Both `14.69` and `14,69` work. After every correction the bot re-sends the numbe
 
 When you are done, tap **Add expense** — nothing is saved until you do, and cancelling discards every correction. Only the lines and the total can be corrected here; to change a line's category, open the expense in the app.
 
+### Fuel receipt → fuel log
+
+When the scanned receipt is from a fuel station and the litres and price per litre were read clearly, the bot offers **⛽ Add to fuel log (your car)** right after you save the expense (on WhatsApp the button reads **⛽ Add to fuel log** and the car is named in the message). Tap it and type the odometer reading in km, for example `123456`; the fill-up is logged as a full tank for that car. The car is picked the same way as in the app: your only car, else the one you last logged a fill-up for, else the only car with that fuel type — when it is still unclear, no button is shown. Tap **Skip** to leave the expense without a fill-up; any other message you send goes to the chat as usual. Viewers cannot log fill-ups.
+
 ## Multiple Accounts
 
 If you have several accounts (e.g. "Personal" and "Family"):

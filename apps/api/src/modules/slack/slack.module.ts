@@ -25,6 +25,8 @@ import { CategoriesModule } from '../categories/categories.module';
 import { SubscriptionsModule } from '../subscriptions/subscriptions.module';
 import { ShoppingListModule } from '../shopping-list/shopping-list.module';
 import { GroupsModule } from '../groups/groups.module';
+import { VehiclesModule } from '../vehicles/vehicles.module';
+import { BotReceiptFuelService } from '../../common/bot-receipt-fuel';
 import { SLACK_REDIS } from './types';
 
 @Global()
@@ -37,6 +39,7 @@ import { SLACK_REDIS } from './types';
     SubscriptionsModule,
     ShoppingListModule,
     GroupsModule, // GroupBotService: the `group` command (ABA-658)
+    VehiclesModule, // "Add to fuel log" after a fuel receipt (ABA-830)
   ],
   controllers: [SlackBotController, SlackOAuthController],
   providers: [
@@ -55,6 +58,7 @@ import { SLACK_REDIS } from './types';
     CategorizeHandler,
     GroupHandler,
     SlackDigestSender,
+    BotReceiptFuelService,
     {
       provide: SLACK_REDIS,
       useFactory: (config: ConfigService) =>

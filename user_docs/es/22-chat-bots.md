@@ -82,6 +82,10 @@ Sirven tanto `14,69` como `14.69`. Tras cada corrección el bot reenvía la list
 
 Cuando termines, toca **Añadir gasto**: nada se guarda hasta entonces, y cancelar descarta todas las correcciones. Aquí solo se pueden corregir las líneas y el total; para cambiar la categoría de una línea, abre el gasto en la aplicación.
 
+### Tique de gasolinera → registro de combustible
+
+Si el recibo escaneado es de una gasolinera y los litros y el precio por litro se leyeron con claridad, el bot ofrece **⛽ Añadir al registro (tu coche)** justo después de guardar el gasto (en WhatsApp el botón dice **⛽ Al registro** y el coche aparece en el mensaje). Púlsalo y escribe el cuentakilómetros en km, por ejemplo `123456`; el repostaje se registra como depósito lleno para ese coche. El coche se elige igual que en la app: tu único coche, si no el último al que registraste un repostaje, si no el único coche con ese combustible; si aún no está claro, no aparece el botón. Pulsa **Omitir** para dejar el gasto sin repostaje; cualquier otro mensaje va al chat como siempre. Los lectores no pueden registrar repostajes.
+
 ## Coste de solicitudes IA
 
 | Acción | Solicitudes IA |

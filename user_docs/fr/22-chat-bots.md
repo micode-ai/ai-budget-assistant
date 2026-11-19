@@ -82,6 +82,10 @@ L'OCR lit parfois mal un prix, invente une ligne ou en oublie une. Appuyez sur *
 
 Quand vous avez fini, appuyez sur **Ajouter la dépense** : rien n'est enregistré avant, et annuler abandonne toutes les corrections. Seules les lignes et le total sont corrigeables ici ; pour changer la catégorie d'une ligne, ouvrez la dépense dans l'application.
 
+### Ticket de carburant → carnet de carburant
+
+Si le reçu scanné vient d'une station-service et que les litres et le prix au litre ont été lus clairement, le bot propose **⛽ Ajouter au carnet (votre voiture)** juste après l'enregistrement de la dépense (sur WhatsApp, le bouton s'appelle **⛽ Au carnet** et la voiture est nommée dans le message). Appuyez dessus et tapez le kilométrage, par exemple `123456` ; le plein est enregistré comme réservoir plein pour cette voiture. La voiture est choisie comme dans l'app : votre seule voiture, sinon celle du dernier plein enregistré, sinon la seule voiture avec ce carburant — si c'est encore ambigu, aucun bouton n'apparaît. Appuyez sur **Ignorer** pour laisser la dépense sans plein ; tout autre message part dans le chat comme d'habitude. Les lecteurs ne peuvent pas enregistrer de plein.
+
 ## Coût des requêtes IA
 
 | Action | Requêtes IA |

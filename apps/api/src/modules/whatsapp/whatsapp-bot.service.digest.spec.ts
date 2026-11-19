@@ -50,6 +50,7 @@ function makeCommandHandler() {
 function makePhotoHandler() {
   return {
     handleItemEditInput: jest.fn().mockResolvedValue(false),
+    handleFuelOdometerInput: jest.fn().mockResolvedValue(false),
     handleDateInput: jest.fn().mockResolvedValue(false),
     handlePartCallback: jest.fn().mockResolvedValue(undefined),
     handleNewReceiptCallback: jest.fn().mockResolvedValue(undefined),

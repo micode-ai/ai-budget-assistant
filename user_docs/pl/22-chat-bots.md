@@ -83,6 +83,10 @@ Działa i `14,69`, i `14.69`. Po każdej poprawce bot ponownie wysyła numerowan
 
 Gdy skończysz, dotknij **Dodaj wydatek** — nic nie jest zapisywane wcześniej, a anulowanie odrzuca wszystkie poprawki. Tutaj można poprawić tylko pozycje i sumę; aby zmienić kategorię pozycji, otwórz wydatek w aplikacji.
 
+### Paragon ze stacji → dziennik paliwa
+
+Jeśli zeskanowany paragon pochodzi ze stacji paliw, a litry i cena za litr zostały odczytane wyraźnie, bot zaraz po zapisaniu wydatku proponuje **⛽ Dodaj do dziennika paliwa (Twoje auto)** (na WhatsAppie przycisk brzmi **⛽ Do dziennika**, a auto jest podane w wiadomości). Stuknij go i wpisz stan licznika w km, np. `123456`; tankowanie zostanie zapisane dla tego auta jako do pełna. Auto jest wybierane tak samo jak w aplikacji: jedyne auto, w przeciwnym razie to, dla którego ostatnio zapisano tankowanie, w przeciwnym razie jedyne auto z tym rodzajem paliwa — gdy nadal nie wiadomo, przycisk się nie pojawia. **Pomiń** zostawia wydatek bez tankowania; każda inna wiadomość trafia do czatu jak zwykle. Obserwatorzy nie mogą zapisywać tankowań.
+
 ## Wiele kont
 
 - Wspomnij nazwę konta w wiadomości: „Pokaż wydatki na koncie Rodzinnym" — AI zapyta to konto tylko dla tej wiadomości

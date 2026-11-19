@@ -10,6 +10,7 @@ function makeService() {
     handleDocument: jest.fn().mockResolvedValue(undefined),
     handleDateInput: jest.fn().mockResolvedValue(false),
     handleItemEditInput: jest.fn().mockResolvedValue(false),
+    handleFuelOdometerInput: jest.fn().mockResolvedValue(false),
   };
   const voiceHandler = { handle: jest.fn().mockResolvedValue(undefined) };
   const chatHandler = { handleText: jest.fn().mockResolvedValue(undefined) };

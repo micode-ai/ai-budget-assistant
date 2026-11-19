@@ -26,6 +26,15 @@ import {
 import { buildItemCategoryMap, resolveProposedSplits } from '../../ai/utils/receipt-split-items';
 import { ChatActionRecorderService } from '../../ai/services/chat-action-recorder.service';
 import { buildPriceCheckLine } from '../../../common/bot-receipt-price-check';
+import {
+  BotReceiptFuelService,
+  awaitingFuelOdometerKey,
+  buildFuelOfferButton,
+  buildFuelOfferText,
+  buildFuelSavedText,
+  fuelOfferParams,
+} from '../../../common/bot-receipt-fuel';
+import type { ReceiptFuel } from '../../ai/utils/receipt-fuel';
 import { logFireAndForget } from '../../../common/utils/fire-and-forget';
 import { CacheService } from '../../../common/cache/cache.service';
 import type { ReceiptImagePart } from '@budget/shared-types';
@@ -48,6 +57,8 @@ const questionScanKey = (tmpId: string) => `slack:scan:${tmpId}`;
 // Held while one action owns a pending receipt (a continuation's model call, a
 // save, a cancel) so none of them overwrites another's result.
 const receiptBusyKey = (shortId: string) => `slack:receipt-busy:${shortId}`;
+// The third typed-input mode: the odometer for "Add to fuel log" (ABA-830).
+const awaitingFuelKey = (slackUserId: string) => awaitingFuelOdometerKey('slack', slackUserId);
 
 /** The image type from its first bytes (Slack's download carries no reliable type for a thumbnail). */
 function sniffImageMime(buffer: Buffer): string | null {
@@ -128,6 +139,8 @@ interface PendingReceiptData {
   scanAttestation?: string;
   /** A bank or user-entered row this receipt may be folded into on save (ABA-744). */
   mergeCandidate?: { id: string; what: string };
+  /** Litres / price per litre of a fuel receipt (ABA-826); offers "Add to fuel log" after save. */
+  fuel?: ReceiptFuel | null;
   language: string;
 }
 
@@ -149,6 +162,7 @@ export class PhotoHandler {
     // CacheService; it is the same Redis and JSON encoding as `slack:receipt:*`.
     private readonly cache: CacheService,
     @Optional() private readonly receiptDuplicates?: ReceiptDuplicateService,
+    @Optional() private readonly fuelLog?: BotReceiptFuelService,
   ) {}
 
   /**
@@ -386,6 +400,7 @@ export class PhotoHandler {
         receiptFingerprint: receipt.fingerprint,
         scanAttestation: receipt.scanAttestation,
         mergeCandidate: receiptMergeCandidate(receipt.possibleDuplicate),
+        fuel: receipt.fuel ?? null,
         language,
       };
       await this.redis.set(`slack:receipt:${shortId}`, JSON.stringify(data), 'EX', 1800);
@@ -654,6 +669,7 @@ export class PhotoHandler {
       receiptFingerprint: receipt.fingerprint,
       scanAttestation: receipt.scanAttestation,
       mergeCandidate: receiptMergeCandidate(receipt.possibleDuplicate),
+      fuel: receipt.fuel ?? null,
     };
   }
 
@@ -804,7 +820,7 @@ export class PhotoHandler {
       await this.redis.del(`slack:awaiting_date:${userState.slackUserId}`);
       // Leave item-edit mode, or the next chat message would be swallowed by the
       // correction parser instead of reaching the AI.
-      await this.redis.del(`slack:awaiting_item_edit:${userState.slackUserId}`);
+      await this.redis.del(`slack:awaiting_item_edit:${userState.slackUserId}`, awaitingFuelKey(userState.slackUserId));
 
       // Auto-check-off matching shopping-list items (ABA bot-receipt-shopping-list-reconciliation).
       // Awaited so its count can ride the SAME confirmation message, but its own
@@ -858,9 +874,108 @@ export class PhotoHandler {
           })
           .catch(logFireAndForget(this.logger, 'PhotoHandler.recordUndoable'));
       }
+
+      if (expense) await this.offerFuelLog(data, expense.id, userState);
     } catch (error) {
       this.logger.error(`PhotoHandler.handleReceiptAddCallback error for ${userState.channel}: ${error}`);
       await this.client.sendText(teamId, channel, t('somethingWrong', language));
+    }
+  }
+
+  // ── "Add to fuel log" after a fuel receipt (ABA-830, common/bot-receipt-fuel.ts) ──
+  // Every message here is a new post (sendText/sendButtons) — never a placeholder
+  // update, so there is no `chat.update` whose `blocks` could blank the body.
+
+  /** A saved fuel receipt with a resolvable vehicle gets the button; otherwise nothing is shown. */
+  private async offerFuelLog(data: PendingReceiptData, expenseId: string, userState: SlackUserState): Promise<void> {
+    if (!this.fuelLog || !data.fuel) return;
+    const { slackTeamId: teamId, channel, language } = userState;
+    try {
+      const created = await this.fuelLog.createOffer('slack', {
+        userId: data.userId,
+        accountId: data.accountId,
+        expenseId,
+        fuel: data.fuel,
+        currencyCode: data.currencyCode,
+      });
+      if (!created) return;
+      await this.client.sendButtons(teamId, channel, buildFuelOfferText(created.offer, t, language), [
+        { id: `fuel_log:${created.offerId}`, title: buildFuelOfferButton(created.offer, t, language) },
+        { id: `fuel_skip:${created.offerId}`, title: t('fuelLogSkip', language) },
+      ]);
+    } catch (e) {
+      // The expense is saved; a missing offer must never read as a failed save.
+      this.logger.warn(`fuel-log offer failed: ${e}`);
+    }
+  }
+
+  /** "⛽ Add to fuel log": arms the odometer prompt (and leaves the other typed-input modes). */
+  async handleFuelLogCallback(offerId: string, userState: SlackUserState): Promise<void> {
+    const { slackTeamId: teamId, channel, language, slackUserId } = userState;
+    if (!this.fuelLog) return;
+    try {
+      const result = await this.fuelLog.arm('slack', slackUserId, offerId, userState.userId, [
+        `slack:awaiting_item_edit:${slackUserId}`,
+        `slack:awaiting_date:${slackUserId}`,
+      ]);
+      if (result.status === 'not_owner') return;
+      if (result.status === 'expired') {
+        await this.client.sendText(teamId, channel, t('fuelLogExpired', language));
+        return;
+      }
+      if (result.status === 'viewer') {
+        await this.client.sendText(teamId, channel, t('viewerRestricted', language));
+        return;
+      }
+      await this.client.sendButtons(teamId, channel, t('fuelLogAskOdometer', language, fuelOfferParams(result.offer)), [
+        { id: `fuel_skip:${offerId}`, title: t('fuelLogSkip', language) },
+      ]);
+    } catch (error) {
+      this.logger.error(`PhotoHandler.handleFuelLogCallback error for ${channel}: ${error}`);
+      await this.client.sendText(teamId, channel, t('somethingWrong', language));
+    }
+  }
+
+  async handleFuelSkipCallback(offerId: string, userState: SlackUserState): Promise<void> {
+    const { slackTeamId: teamId, channel, language, slackUserId } = userState;
+    if (!this.fuelLog) return;
+    try {
+      if (await this.fuelLog.skip('slack', slackUserId, offerId, userState.userId)) {
+        await this.client.sendText(teamId, channel, t('fuelLogSkipped', language));
+      }
+    } catch (error) {
+      this.logger.error(`PhotoHandler.handleFuelSkipCallback error for ${channel}: ${error}`);
+    }
+  }
+
+  /**
+   * Returns true if the text was consumed by the odometer prompt. A message with
+   * no digit leaves the mode and goes on to the AI chat.
+   */
+  async handleFuelOdometerInput(text: string, userState: SlackUserState): Promise<boolean> {
+    const { slackTeamId: teamId, channel, language, slackUserId } = userState;
+    if (!this.fuelLog) return false;
+    try {
+      const result = await this.fuelLog.consumeOdometer('slack', slackUserId, text);
+      switch (result.status) {
+        case 'idle':
+          return false;
+        case 'invalid':
+          await this.client.sendText(teamId, channel, t('fuelLogInvalidOdometer', language));
+          return true;
+        case 'viewer':
+          await this.client.sendText(teamId, channel, t('viewerRestricted', language));
+          return true;
+        case 'failed':
+          await this.client.sendText(teamId, channel, t('fuelLogFailed', language));
+          return true;
+        case 'saved':
+          await this.client.sendText(teamId, channel, buildFuelSavedText(result.offer, result.odometerKm, t, language));
+          return true;
+      }
+    } catch (error) {
+      this.logger.error(`PhotoHandler.handleFuelOdometerInput error for ${channel}: ${error}`);
+      return false;
     }
   }
 
@@ -874,6 +989,8 @@ export class PhotoHandler {
         return;
       }
 
+      // The typed-input modes are mutually exclusive.
+      await this.redis.del(`slack:awaiting_item_edit:${userState.slackUserId}`, awaitingFuelKey(userState.slackUserId));
       await this.redis.set(`slack:awaiting_date:${userState.slackUserId}`, shortId, 'EX', 600);
       await this.client.sendText(teamId, channel, t('sendDate', language));
     } catch (error) {
@@ -902,7 +1019,7 @@ export class PhotoHandler {
         await this.redis.set(`slack:receipt:${shortId}`, JSON.stringify(data), 'EX', 1800);
 
         // The two typed-input modes are mutually exclusive.
-        await this.redis.del(`slack:awaiting_date:${slackUserId}`);
+        await this.redis.del(`slack:awaiting_date:${slackUserId}`, awaitingFuelKey(slackUserId));
         await this.redis.set(`slack:awaiting_item_edit:${slackUserId}`, shortId, 'EX', 600);
 
         await this.client.sendText(teamId, channel, t('itemEditHint', language));
@@ -1023,7 +1140,7 @@ export class PhotoHandler {
         await this.redis.del(`slack:awaiting_date:${userState.slackUserId}`);
         // Leave item-edit mode, or the next chat message would be swallowed by the
         // correction parser instead of reaching the AI.
-        await this.redis.del(`slack:awaiting_item_edit:${userState.slackUserId}`);
+        await this.redis.del(`slack:awaiting_item_edit:${userState.slackUserId}`, awaitingFuelKey(userState.slackUserId));
         await this.client.sendText(teamId, channel, t('receiptCancelled', language));
       });
     } catch (error) {
