@@ -284,6 +284,7 @@ model User {
   restoreCredentials   RestoreCredential[]
   exchangeRateWatches  ExchangeRateWatch[]
   telemetryEvents      TelemetryEvent[]
+  clientErrors         ClientError[]
   chatConversationPins ChatConversationPin[]
   salaryProfiles       SalaryProfile[]
 
@@ -2584,6 +2585,32 @@ model TelemetryEvent {
   @@index([name, createdAt])
   @@index([userId, sessionId])
   @@map("telemetry_events")
+}
+
+/// A render or global JS error reported by the app (ABA-832). The mobile app has no
+/// crash-reporting SDK, so this table is the only place a client-side crash becomes visible.
+/// Retention 90 days (`TelemetryCleanupCron`). `userId` is SET NULL on account deletion — the
+/// error stays useful for the fingerprint count without pointing at a person.
+model ClientError {
+  id             String   @id @default(uuid())
+  userId         String?  @map("user_id")
+  platform       String
+  appVersion     String   @map("app_version")
+  message        String
+  stack          String
+  componentStack String   @map("component_stack")
+  route          String?
+  fatal          Boolean  @default(false)
+  locale         String?
+  /// sha1(message + first stack frame) — groups repeats of one bug.
+  fingerprint    String
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@index([fingerprint])
+  @@map("client_errors")
 }
 
 /// Official annual inflation (HICP, COICOP 2018) per country, division and month — fed by

@@ -396,6 +396,7 @@ Newest last within each section.
 - 2026-11-19 · [ABA-829](https://github.com/micode-ai/ai-budget-assistant/issues/867) — vehicle renewal dates are set in the app (PATCH sends only changed fields so an unchanged odometer target does not re-arm the nudge), due-soon chips and a Renewals card on phone and desktop, a roll-forward offer when a cost is marked insurance/service. Pages: `features/vehicle-fuel-log.md`.
 - 2026-11-19 · [ABA-830](https://github.com/micode-ai/ai-budget-assistant/issues/868) — the three bots offer "Add to fuel log" after a fuel receipt; the odometer prompt is a third mutually exclusive typed-input mode and a digit-less message falls through to chat. Pages: `features/vehicle-fuel-log.md`, `features/bot-receipt-editing.md`, the three bot pages.
 - 2026-11-19 · [ABA-831](https://github.com/micode-ai/ai-budget-assistant/issues/869) — pet costs got their app screens (settings, detail phone+desktop, bulk assign, analytics card) and a daily vaccination/parasite-treatment reminder cron. Pages: `features/pet-costs.md`.
+- 2026-11-19 · [ABA-832](https://github.com/micode-ai/ai-budget-assistant/issues/870) — the app reports ErrorBoundary and global JS errors to `client_errors` with a deduped ops alert; found while a 1.42.0 Android user hit the error screen on every launch with nothing to diagnose it from (nginx logs show the app stops right before the home screen mounts). Pages: `features/client-error-reporting.md`.
 
 ## Queries
 

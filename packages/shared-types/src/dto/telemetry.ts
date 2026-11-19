@@ -67,3 +67,20 @@ export interface TelemetryFunnelResponse {
   /** The screen each session ended on, most frequent first — where people leave. */
   lastScreens: TelemetryScreenRow[];
 }
+
+/** `POST /telemetry/client-errors` (ABA-832): a render or global JS error from the app. */
+export interface ReportClientErrorRequest {
+  /** `Platform.OS`: `android` | `ios` | `web`. */
+  platform: string;
+  /** The same string the About screen shows: `1.42.0 (310)` native, `1.42.0+abc1234` web. */
+  appVersion: string;
+  message: string;
+  stack?: string;
+  /** React's component stack, for a render error caught by `ErrorBoundary`. */
+  componentStack?: string;
+  /** The route PATTERN (`expense/[id]`), never a resolved path. */
+  route?: string;
+  fatal: boolean;
+  /** The app's i18n language code. */
+  locale?: string;
+}

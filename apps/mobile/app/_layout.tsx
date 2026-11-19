@@ -31,6 +31,7 @@ import { useGenericDeepLink } from '@/hooks/useGenericDeepLink';
 import { useOAuthConsentResume } from '@/hooks/useOAuthConsentResume';
 import { useFirstRunOnboarding } from '@/hooks/useFirstRunOnboarding';
 import { useTelemetryScreenViews } from '@/hooks/useTelemetryScreenViews';
+import { useClientErrorReporting } from '@/hooks/useClientErrorReporting';
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -66,6 +67,7 @@ function RootNavigator() {
   useFirstRunOnboarding(coldStartGateReady);
   useGenericDeepLink(isInitializing, isAuthenticated);
   useTelemetryScreenViews(coldStartGateReady);
+  useClientErrorReporting();
 
   // Only changes on a window resize, never on navigation — safe to read here
   // even though this component renders every <Stack.Screen> in the app.

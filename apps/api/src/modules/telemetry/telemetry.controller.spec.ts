@@ -1,11 +1,25 @@
 import { TelemetryController } from './telemetry.controller';
 import { TelemetryService } from './telemetry.service';
+import { ClientErrorsService } from './client-errors.service';
 
 describe('TelemetryController', () => {
   function makeController(ingest = jest.fn().mockResolvedValue({ accepted: 0 })) {
     const service = { ingest } as unknown as TelemetryService;
-    return { controller: new TelemetryController(service), ingest };
+    const report = jest.fn().mockResolvedValue(undefined);
+    const clientErrors = { report } as unknown as ClientErrorsService;
+    return { controller: new TelemetryController(service, clientErrors), ingest, report };
   }
+
+  it('reports a client error under the token user, resolving with no body', async () => {
+    const { controller, report } = makeController();
+    const dto = { platform: 'android', appVersion: '1.42.0', message: 'boom', fatal: false };
+
+    await expect(
+      controller.reportClientError({ user: { id: 'user-1' } } as never, dto as never),
+    ).resolves.toBeUndefined();
+
+    expect(report).toHaveBeenCalledWith('user-1', dto);
+  });
 
   it('takes the user from the request, not the body', async () => {
     const { controller, ingest } = makeController();

@@ -1,5 +1,7 @@
 import React, { Component, type ErrorInfo, type ReactNode } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { reportClientError } from '@/services/clientErrors';
+import { shortErrorMessage } from '@/services/clientErrorReport';
 
 interface Props {
   children: ReactNode;
@@ -7,22 +9,26 @@ interface Props {
 
 interface State {
   hasError: boolean;
+  /** The error message, shortened, shown under the subtitle so a user's
+   *  screenshot tells support what broke (ABA-832). */
+  message: string;
 }
 
 export class ErrorBoundary extends Component<Props, State> {
-  state: State = { hasError: false };
+  state: State = { hasError: false, message: '' };
 
-  static getDerivedStateFromError(): State {
-    return { hasError: true };
+  static getDerivedStateFromError(error: unknown): State {
+    return { hasError: true, message: shortErrorMessage(error) };
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
-    // Future: send to Sentry/Crashlytics
     console.error('ErrorBoundary caught:', error, info.componentStack);
+    // Never throws; deduped per session, so a crash on every "Try Again" is sent once.
+    void reportClientError({ error, componentStack: info.componentStack, fatal: false });
   }
 
   private handleReset = () => {
-    this.setState({ hasError: false });
+    this.setState({ hasError: false, message: '' });
   };
 
   render() {
@@ -31,9 +37,14 @@ export class ErrorBoundary extends Component<Props, State> {
         <View style={styles.container}>
           <Text style={styles.emoji}>:(</Text>
           <Text style={styles.title}>Something went wrong</Text>
-          <Text style={styles.subtitle}>
+          <Text style={[styles.subtitle, this.state.message ? styles.subtitleWithDetail : null]}>
             The app encountered an unexpected error.
           </Text>
+          {this.state.message ? (
+            <Text style={styles.detail} selectable numberOfLines={4}>
+              {this.state.message}
+            </Text>
+          ) : null}
           <TouchableOpacity style={styles.button} onPress={this.handleReset}>
             <Text style={styles.buttonText}>Try Again</Text>
           </TouchableOpacity>
@@ -67,6 +78,15 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 15,
     color: '#94A3B8',
+    textAlign: 'center',
+    marginBottom: 24,
+  },
+  subtitleWithDetail: {
+    marginBottom: 8,
+  },
+  detail: {
+    fontSize: 12,
+    color: '#7C8BA1',
     textAlign: 'center',
     marginBottom: 24,
   },

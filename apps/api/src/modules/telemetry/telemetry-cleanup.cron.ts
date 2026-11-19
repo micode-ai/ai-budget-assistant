@@ -19,6 +19,10 @@ export class TelemetryCleanupCron {
     if (deleted > 0) {
       this.logger.log(`Pruned ${deleted} telemetry events older than ${RETENTION_DAYS} days`);
     }
+    const deletedErrors = await this.pruneClientErrors();
+    if (deletedErrors > 0) {
+      this.logger.log(`Pruned ${deletedErrors} client errors older than ${RETENTION_DAYS} days`);
+    }
   }
 
   async prune(): Promise<number> {
@@ -30,6 +34,20 @@ export class TelemetryCleanupCron {
       return count;
     } catch (error) {
       this.logger.warn(`Telemetry prune failed: ${error}`);
+      return 0;
+    }
+  }
+
+  /** Client error reports (ABA-832) share the same 90-day window. */
+  async pruneClientErrors(): Promise<number> {
+    const cutoff = new Date(Date.now() - RETENTION_DAYS * 86_400_000);
+    try {
+      const { count } = await this.prisma.clientError.deleteMany({
+        where: { createdAt: { lt: cutoff } },
+      });
+      return count;
+    } catch (error) {
+      this.logger.warn(`Client error prune failed: ${error}`);
       return 0;
     }
   }

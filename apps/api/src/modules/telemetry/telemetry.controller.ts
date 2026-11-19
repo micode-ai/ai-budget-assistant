@@ -3,7 +3,8 @@ import { ThrottlerGuard, Throttle } from '@nestjs/throttler';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AuthenticatedRequest } from '../../common/types';
 import { TelemetryService } from './telemetry.service';
-import { IngestTelemetryDto } from './dto';
+import { ClientErrorsService } from './client-errors.service';
+import { IngestTelemetryDto, ReportClientErrorDto } from './dto';
 
 /**
  * No AccountContextGuard: telemetry is about the person using the app, not about
@@ -14,7 +15,10 @@ import { IngestTelemetryDto } from './dto';
 @Controller('telemetry')
 @UseGuards(JwtAuthGuard, ThrottlerGuard)
 export class TelemetryController {
-  constructor(private readonly service: TelemetryService) {}
+  constructor(
+    private readonly service: TelemetryService,
+    private readonly clientErrors: ClientErrorsService,
+  ) {}
 
   @Post('events')
   @HttpCode(204)
@@ -23,5 +27,21 @@ export class TelemetryController {
     // 204 regardless of how many events survived: the client has nothing useful
     // to do with a rejection and must never retry.
     await this.service.ingest(req.user.id, dto);
+  }
+
+  /**
+   * A render or global JS error from the app (ABA-832). 10/min (per IP, the default
+   * throttler tracker): a render loop must not turn one crash into a flood — the
+   * client also dedupes per session.
+   * The user id comes from the token, never the body.
+   */
+  @Post('client-errors')
+  @HttpCode(204)
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
+  async reportClientError(
+    @Req() req: AuthenticatedRequest,
+    @Body() dto: ReportClientErrorDto,
+  ): Promise<void> {
+    await this.clientErrors.report(req.user.id, dto);
   }
 }

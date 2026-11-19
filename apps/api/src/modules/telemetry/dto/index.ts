@@ -1,4 +1,4 @@
-import { IsArray, IsString, MaxLength, ArrayMaxSize } from 'class-validator';
+import { IsArray, IsBoolean, IsOptional, IsString, MaxLength, ArrayMaxSize } from 'class-validator';
 
 /**
  * Two different numbers guard two different things, and neither is
@@ -44,4 +44,50 @@ export class IngestTelemetryDto {
   @IsArray()
   @ArrayMaxSize(MAX_EVENTS_PER_REQUEST)
   events: unknown[];
+}
+
+/**
+ * A render or global JS error from the app (ABA-832).
+ *
+ * The `@MaxLength` bounds here are a transport ceiling, deliberately about
+ * twice the stored limits in `client-error.util.ts` (`CLIENT_ERROR_LIMITS`):
+ * the global pipe turns a violation into a hard 400, and the client never
+ * retries, so a bound at the stored size would silently lose exactly the
+ * oversized stack we most need. The service truncates to the stored limits.
+ */
+export class ReportClientErrorDto {
+  @IsString()
+  @MaxLength(16)
+  platform: string;
+
+  @IsString()
+  @MaxLength(64)
+  appVersion: string;
+
+  @IsString()
+  @MaxLength(2000)
+  message: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(16000)
+  stack?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(16000)
+  componentStack?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(400)
+  route?: string;
+
+  @IsBoolean()
+  fatal: boolean;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(20)
+  locale?: string;
 }

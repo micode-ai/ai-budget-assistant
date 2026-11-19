@@ -270,6 +270,7 @@ the section you came for — it states what must not break and why. A missing se
 
 ### Instrumentation
 - [web-telemetry](features/web-telemetry.md) — first-party product analytics for the web build only
+- [client-error-reporting](features/client-error-reporting.md) — render and global JS errors from the app, stored and alerted to ops
 
 ### Categories
 - [category-id-resolution](features/category-id-resolution.md) — how a category id is resolved
