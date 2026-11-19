@@ -6,7 +6,8 @@ import type { Category, Child, Tag } from '@budget/shared-types';
 import { BulkTagPickerSheet } from '@/components/BulkTagPickerSheet';
 import { BulkChildPickerSheet } from '@/components/children/BulkChildPickerSheet';
 import { BulkVehiclePickerSheet } from '@/components/vehicles/BulkVehiclePickerSheet';
-import type { Vehicle, VehicleCostKind } from '@budget/shared-types';
+import type { Pet, PetCostKind, Vehicle, VehicleCostKind } from '@budget/shared-types';
+import { BulkPetPickerSheet } from '@/components/pets/BulkPetPickerSheet';
 import type { LedgerRow } from '@/features/expenses/desktopTable';
 import { ExpenseDialog } from './ExpenseDialog';
 import { CreateDialog } from './CreateDialog';
@@ -75,6 +76,11 @@ interface Props {
   vehicles: Vehicle[];
   selectedCount: number;
   onBulkAssignVehicle: (vehicleId: string, kind: VehicleCostKind) => void;
+  /** Bulk "Assign to pet" (ABA-831) — hosts the same `BulkPetPickerSheet` the phone does. */
+  showBulkPetPicker: boolean;
+  onCloseBulkPetPicker: () => void;
+  pets: Pet[];
+  onBulkAssignPet: (petId: string, kind: PetCostKind) => void;
   activeChildren: Child[];
   onBulkAssignChildren: (childIds: string[]) => void;
 }
@@ -134,6 +140,10 @@ export function ExpensesDesktopDialogs({
   vehicles,
   selectedCount,
   onBulkAssignVehicle,
+  showBulkPetPicker,
+  onCloseBulkPetPicker,
+  pets,
+  onBulkAssignPet,
   activeChildren,
   onBulkAssignChildren,
 }: Props) {
@@ -300,6 +310,33 @@ export function ExpensesDesktopDialogs({
                 onConfirm={onBulkAssignVehicle}
                 onClose={onCloseBulkVehiclePicker}
               />
+            </View>
+          </div>
+        </Modal>
+      )}
+
+      {showBulkPetPicker && (
+        <Modal visible transparent animationType="fade" onRequestClose={onCloseBulkPetPicker}>
+          <div
+            role="presentation"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) onCloseBulkPetPicker();
+            }}
+            style={{
+              position: 'fixed',
+              top: 0,
+              right: 0,
+              bottom: 0,
+              left: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: theme.colors.overlay,
+              padding: 24,
+            }}
+          >
+            <View style={styles.pickerPanel}>
+              <BulkPetPickerSheet pets={pets} count={selectedCount} onConfirm={onBulkAssignPet} onClose={onCloseBulkPetPicker} />
             </View>
           </div>
         </Modal>

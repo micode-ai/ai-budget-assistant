@@ -4232,6 +4232,10 @@ Revisa los detalles, toca ✓ para guardar o el icono del lápiz para abrir el f
 
 *Ver tambien: [Gastos e Ingresos](./03-expenses-and-income.md) | [Chat IA](./07-ai-chat.md)*
 
+## Recibos de gasolinera
+
+Si el recibo es de una gasolinera e indica los litros y el precio por litro, la pantalla de confirmación ofrece **Añadir al registro de combustible** para tu vehículo. Introduce el cuentakilómetros y el repostaje se registra con el gasto; déjalo vacío para guardar solo el gasto. Si las cifras del recibo no cuadran, no se rellena nada.
+
 ## Presupuestos
 URL: https://ai-budget.pl/help/es/budgets/
 
@@ -5477,6 +5481,8 @@ Mira lo que te cuesta el coche en combustible. Añade un vehículo con su nombre
 Para registrar un repostaje, abre un gasto de combustible: si la cuenta tiene un vehículo, el gasto muestra una sección **Repostaje**. Toca **Marcar como repostaje** e indica la cantidad (litros, o kWh en un coche eléctrico), la lectura del cuentakilómetros y si llenaste el depósito. El consumo se mide entre depósitos llenos, así que las cifras aparecen tras dos repostajes con el depósito lleno; un repostaje parcial se suma al siguiente lleno. ¿No tienes los litros ni el cuentakilómetros? Deja ambos vacíos: la compra cuenta como combustible en el coste total, solo que no en el consumo.
 
 También cuentan otros gastos del coche. En cualquier gasto, la sección **Coche** permite elegir el vehículo y el tipo: combustible, taller, seguro, aparcamiento, impuestos y tasas u otro (los litros y el cuentakilómetros solo se piden para el combustible). En la ficha del vehículo, **Categorías de este vehículo** lo hace automático: elige un tipo, toca las categorías (por ejemplo «Seguro del coche» como seguro) y sus gastos cuentan para el coche: los anteriores al guardar y los nuevos según llegan. La tarjeta muestra entonces los últimos 12 meses: el total, la media mensual, cada tipo y todos los gastos por km. Los vehículos necesitan conexión a internet. Al eliminar un vehículo se conservan los gastos; solo desaparecen el vehículo y sus estadísticas. Varios a la vez: en Transacciones, busca (por ejemplo «Benzyna» o «Parking»), selecciona los gastos y elige **Asignar a vehículo**, luego el vehículo y el tipo. Los repostajes que ya tienen litros no cambian.
+
+**Vencimientos.** En la ficha del vehículo indica la próxima renovación del seguro, la próxima ITV, la próxima revisión y el kilometraje de la próxima revisión (todo opcional; la cruz borra una fecha). Recibirás un aviso 14 y 2 días antes de cada fecha, y una vez cuando el kilometraje de un repostaje quede a menos de 500 km de la revisión. Los vencimientos de los próximos 30 días o ya pasados aparecen como etiquetas en la tarjeta del vehículo y en su pantalla, donde la tarjeta **Vencimientos** muestra todas las fechas. Al marcar un gasto como seguro o revisión, la app ofrece mover ese vencimiento un año; nada cambia sin tu confirmación.
 
 ## Datos e informes
 
@@ -6851,6 +6857,10 @@ El OCR a veces lee mal un precio, inventa una línea o se salta otra. Toca **✏
 Sirven tanto `14,69` como `14.69`. Tras cada corrección el bot reenvía la lista numerada y una línea `Líneas: … · total del recibo: …`; si esas dos cifras no coinciden, algo del recibo sigue mal leído. El reparto por categorías se recalcula a partir de las líneas corregidas, así que corrige también el total cuando cambies un precio.
 
 Cuando termines, toca **Añadir gasto**: nada se guarda hasta entonces, y cancelar descarta todas las correcciones. Aquí solo se pueden corregir las líneas y el total; para cambiar la categoría de una línea, abre el gasto en la aplicación.
+
+### Tique de gasolinera → registro de combustible
+
+Si el recibo escaneado es de una gasolinera y los litros y el precio por litro se leyeron con claridad, el bot ofrece **⛽ Añadir al registro (tu coche)** justo después de guardar el gasto (en WhatsApp el botón dice **⛽ Al registro** y el coche aparece en el mensaje). Púlsalo y escribe el cuentakilómetros en km, por ejemplo `123456`; el repostaje se registra como depósito lleno para ese coche. El coche se elige igual que en la app: tu único coche, si no el último al que registraste un repostaje, si no el único coche con ese combustible; si aún no está claro, no aparece el botón. Pulsa **Omitir** para dejar el gasto sin repostaje; cualquier otro mensaje va al chat como siempre. Los lectores no pueden registrar repostajes.
 
 ## Coste de solicitudes IA
 
@@ -8552,3 +8562,65 @@ Qué cubre cada nivel se explica en [Cifrado de extremo a extremo](./15-encrypti
 Puedes crear tu propia app sobre la API de AI Budget, gratis. Abre **Ajustes → Desarrolladores** y pulsa **Crear app**: ponle un nombre, una web y las direcciones de redirección que usará, y elige **App de servidor** o **App móvil o de navegador**. El **Client ID** lo recibes al momento; una app de servidor recibe además un client secret que se muestra **una sola vez**: cópialo enseguida.
 
 La referencia completa de la API y una guía paso a paso (en inglés, polaco y ruso) están en [api.ai-budget.pl/public/docs](https://api.ai-budget.pl/public/docs), también enlazadas desde **Documentación de la API** en la pantalla de desarrolladores. Puedes registrar hasta 10 apps.
+
+## Mascotas — lo que de verdad cuesta tu perro o tu gato
+URL: https://ai-budget.pl/help/es/pet-costs/
+
+> Añade tus mascotas, marca entre tus gastos la comida, las visitas al veterinario y la peluquería, y verás lo que cuesta cada una al mes y al año. La app también te avisa antes de la próxima vacuna y del próximo antiparasitario.
+
+## Dónde encontrarlo
+
+Ve a **Ajustes → Datos de referencia → Mascotas**. En un ordenador (una ventana del navegador de más de unos 1000 píxeles) **Mascotas** está en la columna izquierda de **Ajustes**.
+
+Las mascotas pertenecen a una cuenta: una cuenta familiar compartida tiene su propia lista, separada de la personal.
+
+## Añadir una mascota
+
+1. Toca el **+** junto a **Mascotas**.
+2. Escribe un nombre y elige la **Especie**: **Perro**, **Gato** u **Otra**.
+3. Si quieres, indica la **Fecha de nacimiento**, la **Próxima vacuna** y el **Próximo antiparasitario**.
+4. Toca **Añadir mascota**.
+
+Para cambiar o eliminar una mascota, toca el lápiz de su tarjeta. Al eliminarla, todos los gastos se quedan; solo desaparecen la mascota y su historial de gastos.
+
+## Recordatorios
+
+Si una mascota tiene fecha de **Próxima vacuna** o de **Próximo antiparasitario**, recibes una notificación **14 días** y **2 días** antes. Los recordatorios siguen el interruptor **Renovaciones de suscripciones** de los ajustes de notificaciones. Después de la visita, abre la mascota y pon la fecha siguiente.
+
+En la tarjeta de la mascota una fecha cercana se resalta y una ya pasada aparece como **vencida**.
+
+## Asignar gastos a una mascota
+
+1. En **Transacciones**, mantén pulsado un gasto y elige seleccionar varios.
+2. Selecciona todos los gastos que son de la mascota: comida, veterinario, peluquería, etc.
+3. Toca **Mascota** (en el ordenador, **Asignar a mascota** en la barra de selección).
+4. Elige la mascota (si tienes varias) y el tipo de gasto: **Comida**, **Veterinario**, **Peluquería**, **Accesorios**, **Seguro** u **Otros**.
+5. Toca **Asignar**.
+
+Un gasto pertenece a una sola mascota. Si lo asignas a otra, pasa a esa.
+
+## La pantalla de la mascota
+
+Toca **Gastos** en la tarjeta de la mascota o su fila en **Análisis**. Verás:
+
+- botones de **Periodo**: 3, 6, 12 meses, 2 años o todo;
+- cuatro cifras: el **Total** del periodo, la media **Al mes**, **Este año** y el número de **Entradas**;
+- **Por mes**: una barra por mes. Toca una barra para ver solo ese mes; **Mostrar todo** vuelve atrás;
+- **Por tipo**: comida, veterinario y el resto, con su porcentaje. Toca uno para filtrar la lista;
+- **Todos los gastos**: cada gasto del periodo. Tócalo para abrirlo, o toca la cruz de al lado para **Quitar de la mascota**; el gasto en sí se queda.
+
+Todos los importes se muestran en tu moneda de visualización. Un importe sin tipo de cambio sigue en la lista pero queda fuera de los totales, y una nota lo indica.
+
+En el ordenador, el desglose por tipo está en una columna a la derecha del gráfico y la lista.
+
+## Análisis
+
+Si la cuenta tiene una mascota, **Análisis** muestra una tarjeta **Mascotas**: cada mascota con su gasto de los últimos 12 meses, la media mensual y sus dos tipos de gasto más grandes. **Gestionar** abre los ajustes de mascotas.
+
+## Cuentas cifradas
+
+Los nombres de las mascotas y las fechas de cuidado no se cifran, ni siquiera en una cuenta con cifrado de extremo a extremo; la pantalla lo avisa, así que no pongas en ellos nada privado. Si el cifrado está bloqueado en tu dispositivo, los gastos se siguen sumando, pero dónde se hizo cada uno queda oculto hasta que lo desbloquees en **Ajustes → Seguridad y cifrado**.
+
+## Quién puede cambiar qué
+
+Los propietarios y editores pueden añadir mascotas, asignar gastos y quitarlos. Los lectores ven las mascotas y sus gastos, pero no pueden cambiar nada.

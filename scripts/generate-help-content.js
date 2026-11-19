@@ -48,6 +48,7 @@ const SECTIONS = [
   '43-real-salary',
   '44-shared-groups',
   '45-connected-apps',
+  '46-pet-costs',
 ];
 
 const docsRoot = path.resolve(__dirname, '..', 'user_docs');

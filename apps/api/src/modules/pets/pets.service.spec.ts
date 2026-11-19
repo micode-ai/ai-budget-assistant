@@ -19,6 +19,16 @@ describe('PetsService', () => {
     expect(prisma.petCost.upsert.mock.calls[0][0].create).toMatchObject({ expenseId: 'e1', petId: 'p1', kind: 'vet' });
   });
 
+  it('create stores the reminder dates as calendar days in the caller account', async () => {
+    const { service, prisma } = make();
+    prisma.pet.create = jest.fn().mockResolvedValue({});
+    await service.create('a1', 'u1', { name: ' Yoka ', species: 'dog', nextVaccinationDate: '2026-12-01', nextParasiteTreatmentDate: '2026-11-30' });
+    const data = prisma.pet.create.mock.calls[0][0].data;
+    expect(data).toMatchObject({ accountId: 'a1', userId: 'u1', name: 'Yoka', species: 'dog' });
+    expect(data.nextVaccinationDate.toISOString()).toBe('2026-12-01T00:00:00.000Z');
+    expect(data.nextParasiteTreatmentDate.toISOString()).toBe('2026-11-30T00:00:00.000Z');
+  });
+
   it('history converts to the display currency and totals the current year', async () => {
     const row = (amount: number, cur: string, date: string, kind: string) => ({
       kind,

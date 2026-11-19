@@ -393,6 +393,9 @@ Newest last within each section.
 - 2026-11-18 · [ABA-826](https://github.com/micode-ai/ai-budget-assistant/issues/864) — receipt scans carry a validated `fuel` block (litres x price must match a line within 2%) and the confirm card logs the fill-up given only the odometer; bots share the extraction via the finalizer but have no button yet. Pages: `features/vehicle-fuel-log.md`.
 - 2026-11-18 · [ABA-827](https://github.com/micode-ai/ai-budget-assistant/issues/865) — vehicle renewal reminders: four optional date/odometer fields on `Vehicle`, daily `VehicleRenewalCron` pushes at 14 and 2 days and 500 km before service. API only; app form and chip are follow-ups. Pages: `features/vehicle-fuel-log.md`.
 - 2026-11-18 · [ABA-828](https://github.com/micode-ai/ai-budget-assistant/issues/866) — pet costs: Pet/PetCost tables, per-pet month/kind history and bulk assign (API only, third parallel module beside vehicles); features/pet-costs.md
+- 2026-11-19 · [ABA-829](https://github.com/micode-ai/ai-budget-assistant/issues/867) — vehicle renewal dates are set in the app (PATCH sends only changed fields so an unchanged odometer target does not re-arm the nudge), due-soon chips and a Renewals card on phone and desktop, a roll-forward offer when a cost is marked insurance/service. Pages: `features/vehicle-fuel-log.md`.
+- 2026-11-19 · [ABA-830](https://github.com/micode-ai/ai-budget-assistant/issues/868) — the three bots offer "Add to fuel log" after a fuel receipt; the odometer prompt is a third mutually exclusive typed-input mode and a digit-less message falls through to chat. Pages: `features/vehicle-fuel-log.md`, `features/bot-receipt-editing.md`, the three bot pages.
+- 2026-11-19 · [ABA-831](https://github.com/micode-ai/ai-budget-assistant/issues/869) — pet costs got their app screens (settings, detail phone+desktop, bulk assign, analytics card) and a daily vaccination/parasite-treatment reminder cron. Pages: `features/pet-costs.md`.
 
 ## Queries
 

@@ -81,6 +81,7 @@ export const SETTINGS_PANE_KEYS = [
   'projects',
   'children',
   'vehicles',
+  'pets',
   'developers',
   'connectedApps',
 ] as const;
@@ -223,6 +224,8 @@ export const SETTINGS_ENTRIES: readonly SettingsEntry[] = [
   { kind: 'pane', key: 'children', labelKey: 'children.title', route: '/settings/children', width: 'form' },
   // Vehicles and what they cost in fuel (ABA-796): cards with three figures each, `'form'` like children.
   { kind: 'pane', key: 'vehicles', labelKey: 'vehicles.title', route: '/settings/vehicles', width: 'form' },
+  // Pets and what they cost (ABA-831): cards with care dates, `'form'` like vehicles.
+  { kind: 'pane', key: 'pets', labelKey: 'pets.title', route: '/settings/pets', width: 'form' },
   // Public API: the OAuth apps you registered as a developer. Last before `about`, since
   // almost nobody needs it.
   { kind: 'pane', key: 'developers', labelKey: 'developerApps.title', route: '/settings/developers', width: 'form', requiresFeature: 'publicApi' },

@@ -5487,6 +5487,72 @@ You can build your own app on the AI Budget API — it's free. Open **Settings �
 The full API reference and a step-by-step guide (in English, Polish and Russian) are at [api.ai-budget.pl/public/docs](https://api.ai-budget.pl/public/docs), also linked from **API documentation** on the Developers screen. You can register up to 10 apps.
 `,
     },
+    {
+      id: '46-pet-costs',
+      title: `Pets — what your dog or cat really costs`,
+      description: `Add your pets, mark the food, vet visits and grooming among your expenses, and see what each pet costs per month and per year. The app also reminds you before the next vaccination and flea & tick treatment.`,
+      body: `# Pets — what your dog or cat really costs
+
+> Add your pets, mark the food, vet visits and grooming among your expenses, and see what each pet costs per month and per year. The app also reminds you before the next vaccination and flea & tick treatment.
+
+## Where to find it
+
+Go to **Settings → Reference data → Pets**. On a computer (a browser window wider than about 1000 pixels) **Pets** is in the left column of **Settings**.
+
+Pets belong to an account: a shared family account has its own list, separate from your personal one.
+
+## Adding a pet
+
+1. Tap the **+** next to **Pets**.
+2. Type a name and pick the **Species**: **Dog**, **Cat** or **Other**.
+3. Optionally set the **Birthday**, the **Next vaccination** and the **Next flea & tick treatment** dates.
+4. Tap **Add pet**.
+
+To change or remove a pet later, tap the pencil on its card. Deleting a pet keeps all the expenses; only the pet and its cost history go.
+
+## Reminders
+
+When a pet has a **Next vaccination** or **Next flea & tick treatment** date, you get a push notification **14 days** and **2 days** before it. The reminders follow the **Subscription Renewals** switch in your notification settings. After the visit, open the pet and set the next date.
+
+On the pet's card a date that is close is highlighted, and a date that has passed is marked **overdue**.
+
+## Assigning expenses to a pet
+
+1. On **Transactions**, long-press an expense and choose to select several.
+2. Select every expense that is a cost of the pet — food, vet, grooming and so on.
+3. Tap **For pet** (on a computer, **Assign to pet** in the selection bar).
+4. Pick the pet (if you have several) and the kind of cost: **Food**, **Vet**, **Grooming**, **Supplies**, **Insurance** or **Other**.
+5. Tap **Assign**.
+
+An expense belongs to one pet at a time. Assigning it to another pet moves it there.
+
+## The pet screen
+
+Tap **Costs** on a pet's card, or the pet's row in **Analytics**. You will see:
+
+- **Period** chips: 3, 6, 12 months, 2 years or all time.
+- Four figures: the **Total** of the period, the average **Per month**, **This year** and the number of **Entries**.
+- **By month**: a bar per month. Tap a bar to see only that month; tap **Show all** to go back.
+- **By kind**: food, vet and the rest, with their share. Tap one to filter the list.
+- **All costs**: every expense of the period. Tap one to open it, or tap the cross beside it to **Remove from pet** — the expense itself stays.
+
+All amounts are shown in your display currency. If an amount has no exchange rate, it stays in the list but is left out of the totals, and a note says so.
+
+On a computer the breakdown by kind sits in a column to the right of the chart and the list.
+
+## Analytics
+
+When the account has a pet, **Analytics** shows a **Pets** card: each pet with its cost over the last 12 months, the monthly average and its two largest kinds of cost. **Manage** opens the pet settings.
+
+## Encrypted accounts
+
+Pet names and care dates are not encrypted, even on an account with end-to-end encryption — the screen tells you so, so keep anything private out of them. If encryption is locked on your device, the costs still add up, but where each one was bought is hidden until you unlock it in **Settings → Security**.
+
+## Who can change what
+
+Owners and editors can add pets, assign costs and remove them. Viewers see the pets and their costs but cannot change anything.
+`,
+    },
   ],
   ru: [
     {
@@ -10930,6 +10996,72 @@ OCR иногда неверно читает цену, выдумывает ст
 Полный справочник API и пошаговое руководство (на английском, польском и русском) — на [api.ai-budget.pl/public/docs](https://api.ai-budget.pl/public/docs); туда же ведёт ссылка **Документация API** на экране «Разработчикам». Можно зарегистрировать до 10 приложений.
 `,
     },
+    {
+      id: '46-pet-costs',
+      title: `Питомцы — во сколько на самом деле обходится собака или кошка`,
+      description: `Добавьте своих питомцев, отметьте среди расходов корм, визиты к ветеринару и груминг — и увидите, сколько каждый питомец стоит в месяц и в год. Приложение также напомнит о следующей прививке и обработке от блох и клещей.`,
+      body: `# Питомцы — во сколько на самом деле обходится собака или кошка
+
+> Добавьте своих питомцев, отметьте среди расходов корм, визиты к ветеринару и груминг — и увидите, сколько каждый питомец стоит в месяц и в год. Приложение также напомнит о следующей прививке и обработке от блох и клещей.
+
+## Где найти
+
+Откройте **Настройки → Справочники → Питомцы**. На компьютере (окно браузера шире примерно 1000 пикселей) **Питомцы** находятся в левой колонке **Настроек**.
+
+Питомцы принадлежат счёту: у общего семейного счёта свой список, отдельный от личного.
+
+## Как добавить питомца
+
+1. Нажмите **+** рядом с **Питомцы**.
+2. Введите имя и выберите **Вид**: **Собака**, **Кошка** или **Другое**.
+3. По желанию укажите **День рождения**, **Следующую прививку** и **Следующую обработку от блох и клещей**.
+4. Нажмите **Добавить питомца**.
+
+Чтобы позже изменить или удалить питомца, нажмите карандаш на его карточке. При удалении все расходы остаются; удаляются только питомец и его история расходов.
+
+## Напоминания
+
+Если у питомца указана дата **Следующей прививки** или **Следующей обработки от блох и клещей**, за **14 дней** и за **2 дня** до неё придёт push-уведомление. Напоминания подчиняются переключателю **Продление подписок** в настройках уведомлений. После визита откройте питомца и укажите следующую дату.
+
+На карточке питомца близкая дата выделяется, а прошедшая помечается как **просрочено**.
+
+## Как назначить расходы питомцу
+
+1. В **Операциях** удерживайте расход и выберите выделение нескольких.
+2. Выделите все расходы на питомца — корм, ветеринара, груминг и т. д.
+3. Нажмите **Питомцу** (на компьютере — **Назначить питомцу** на панели выделения).
+4. Выберите питомца (если их несколько) и вид расхода: **Корм**, **Ветеринар**, **Груминг**, **Товары**, **Страховка** или **Другое**.
+5. Нажмите **Назначить**.
+
+Расход относится только к одному питомцу. Если назначить его другому, он перейдёт к нему.
+
+## Экран питомца
+
+Нажмите **Расходы** на карточке питомца или его строку в **Аналитике**. Вы увидите:
+
+- кнопки **Периода**: 3, 6, 12 месяцев, 2 года или всё время;
+- четыре цифры: **Всего** за период, среднее **В месяц**, **В этом году** и число **Записей**;
+- **По месяцам**: столбик на каждый месяц. Нажмите на столбик, чтобы увидеть только этот месяц; **Показать всё** вернёт обратно;
+- **По видам**: корм, ветеринар и остальное с долей. Нажмите на вид, чтобы отфильтровать список;
+- **Все расходы**: каждый расход периода. Нажмите, чтобы открыть его, или на крестик рядом, чтобы **Убрать у питомца** — сам расход останется.
+
+Все суммы показаны в вашей валюте отображения. Сумма без курса остаётся в списке, но не входит в итоги — об этом скажет пометка.
+
+На компьютере разбивка по видам стоит в колонке справа от графика и списка.
+
+## Аналитика
+
+Если у счёта есть питомец, в **Аналитике** появляется карточка **Питомцы**: каждый питомец с расходами за последние 12 месяцев, средним в месяц и двумя крупнейшими видами расходов. **Управлять** открывает настройки питомцев.
+
+## Зашифрованные счета
+
+Имена питомцев и даты ухода не шифруются даже на счёте со сквозным шифрованием — экран об этом предупреждает, так что не пишите в них ничего личного. Если шифрование на устройстве заблокировано, расходы всё равно суммируются, но где был сделан каждый расход, скрыто, пока вы не разблокируете его в **Настройки → Безопасность и шифрование**.
+
+## Кто что может менять
+
+Владельцы и редакторы могут добавлять питомцев, назначать и убирать расходы. Наблюдатели видят питомцев и их расходы, но ничего не могут изменить.
+`,
+    },
   ],
   ua: [
     {
@@ -16343,6 +16475,72 @@ OCR іноді неправильно читає ціну, вигадує ряд
 Повний довідник API та покрокова інструкція (англійською, польською й російською) — на [api.ai-budget.pl/public/docs](https://api.ai-budget.pl/public/docs); туди ж веде посилання **Документація API** на екрані «Розробникам». Можна зареєструвати до 10 застосунків.
 `,
     },
+    {
+      id: '46-pet-costs',
+      title: `Улюбленці — скільки насправді коштує собака чи кіт`,
+      description: `Додайте своїх улюбленців, позначте серед витрат корм, візити до ветеринара й грумінг — і побачите, скільки кожен улюбленець коштує на місяць і на рік. Застосунок також нагадає про наступне щеплення та обробку від бліх і кліщів.`,
+      body: `# Улюбленці — скільки насправді коштує собака чи кіт
+
+> Додайте своїх улюбленців, позначте серед витрат корм, візити до ветеринара й грумінг — і побачите, скільки кожен улюбленець коштує на місяць і на рік. Застосунок також нагадає про наступне щеплення та обробку від бліх і кліщів.
+
+## Де знайти
+
+Відкрийте **Налаштування → Довідники → Улюбленці**. На комп’ютері (вікно браузера ширше приблизно 1000 пікселів) **Улюбленці** розташовані в лівій колонці **Налаштувань**.
+
+Улюбленці належать рахунку: у спільного сімейного рахунку свій список, окремий від особистого.
+
+## Як додати улюбленця
+
+1. Натисніть **+** поруч з **Улюбленці**.
+2. Введіть ім’я та оберіть **Вид**: **Собака**, **Кіт** або **Інше**.
+3. За бажанням вкажіть **День народження**, **Наступне щеплення** і **Наступну обробку від бліх і кліщів**.
+4. Натисніть **Додати улюбленця**.
+
+Щоб пізніше змінити чи видалити улюбленця, натисніть олівець на його картці. Під час видалення всі витрати залишаються; видаляються лише улюбленець та його історія витрат.
+
+## Нагадування
+
+Якщо в улюбленця вказано дату **Наступного щеплення** або **Наступної обробки від бліх і кліщів**, за **14 днів** і за **2 дні** до неї надійде push-сповіщення. Нагадування підкоряються перемикачу **Поновлення підписок** у налаштуваннях сповіщень. Після візиту відкрийте улюбленця й вкажіть наступну дату.
+
+На картці улюбленця близька дата виділяється, а минула позначається як **прострочено**.
+
+## Як призначити витрати улюбленцю
+
+1. В **Операціях** утримуйте витрату й оберіть виділення кількох.
+2. Виділіть усі витрати на улюбленця — корм, ветеринара, грумінг тощо.
+3. Натисніть **Улюбленцю** (на комп’ютері — **Призначити улюбленцю** на панелі виділення).
+4. Оберіть улюбленця (якщо їх кілька) і вид витрати: **Корм**, **Ветеринар**, **Грумінг**, **Товари**, **Страхування** або **Інше**.
+5. Натисніть **Призначити**.
+
+Витрата належить лише одному улюбленцю. Якщо призначити її іншому, вона перейде до нього.
+
+## Екран улюбленця
+
+Натисніть **Витрати** на картці улюбленця або його рядок в **Аналітиці**. Ви побачите:
+
+- кнопки **Періоду**: 3, 6, 12 місяців, 2 роки або увесь час;
+- чотири цифри: **Усього** за період, середнє **На місяць**, **Цього року** і кількість **Записів**;
+- **За місяцями**: стовпчик на кожен місяць. Натисніть на стовпчик, щоб побачити лише цей місяць; **Показати все** поверне назад;
+- **За видами**: корм, ветеринар та інше з часткою. Натисніть на вид, щоб відфільтрувати список;
+- **Усі витрати**: кожна витрата періоду. Натисніть, щоб відкрити її, або на хрестик поруч, щоб **Прибрати в улюбленця** — сама витрата залишиться.
+
+Усі суми показано у вашій валюті відображення. Сума без курсу залишається у списку, але не входить у підсумки — про це скаже позначка.
+
+На комп’ютері розбивка за видами стоїть у колонці праворуч від графіка та списку.
+
+## Аналітика
+
+Якщо в рахунку є улюбленець, в **Аналітиці** з’являється картка **Улюбленці**: кожен улюбленець із витратами за останні 12 місяців, середнім на місяць і двома найбільшими видами витрат. **Керувати** відкриває налаштування улюбленців.
+
+## Зашифровані рахунки
+
+Імена улюбленців і дати догляду не шифруються навіть на рахунку з наскрізним шифруванням — екран про це попереджає, тож не пишіть у них нічого особистого. Якщо шифрування на пристрої заблоковано, витрати все одно підсумовуються, але де було зроблено кожну, приховано, доки ви не розблокуєте його в **Налаштування → Безпека та шифрування**.
+
+## Хто що може змінювати
+
+Власники й редактори можуть додавати улюбленців, призначати й прибирати витрати. Спостерігачі бачать улюбленців і їхні витрати, але нічого не можуть змінити.
+`,
+    },
   ],
   pl: [
     {
@@ -21741,6 +21939,72 @@ Możesz zbudować własną aplikację na API AI Budget — za darmo. Otwórz **U
 Pełna dokumentacja API i przewodnik krok po kroku (po angielsku, polsku i rosyjsku) są pod adresem [api.ai-budget.pl/public/docs](https://api.ai-budget.pl/public/docs), a także pod linkiem **Dokumentacja API** na ekranie dla deweloperów. Możesz zarejestrować do 10 aplikacji.
 `,
     },
+    {
+      id: '46-pet-costs',
+      title: `Zwierzęta — ile naprawdę kosztuje pies lub kot`,
+      description: `Dodaj swoje zwierzęta, oznacz wśród wydatków karmę, wizyty u weterynarza i pielęgnację, a zobaczysz, ile każde zwierzę kosztuje miesięcznie i rocznie. Aplikacja przypomni też o kolejnym szczepieniu i zabezpieczeniu przed pchłami i kleszczami.`,
+      body: `# Zwierzęta — ile naprawdę kosztuje pies lub kot
+
+> Dodaj swoje zwierzęta, oznacz wśród wydatków karmę, wizyty u weterynarza i pielęgnację, a zobaczysz, ile każde zwierzę kosztuje miesięcznie i rocznie. Aplikacja przypomni też o kolejnym szczepieniu i zabezpieczeniu przed pchłami i kleszczami.
+
+## Gdzie to znaleźć
+
+Wejdź w **Ustawienia → Słowniki → Zwierzęta**. Na komputerze (okno przeglądarki szersze niż ok. 1000 pikseli) **Zwierzęta** są w lewej kolumnie **Ustawień**.
+
+Zwierzęta należą do konta: wspólne konto rodzinne ma własną listę, oddzielną od Twojego konta osobistego.
+
+## Dodawanie zwierzęcia
+
+1. Stuknij **+** obok **Zwierzęta**.
+2. Wpisz imię i wybierz **Gatunek**: **Pies**, **Kot** lub **Inne**.
+3. Opcjonalnie ustaw **Datę urodzenia**, **Następne szczepienie** i **Następne zabezpieczenie przed pchłami i kleszczami**.
+4. Stuknij **Dodaj zwierzę**.
+
+Aby później zmienić lub usunąć zwierzę, stuknij ołówek na jego karcie. Usunięcie zwierzęcia zostawia wszystkie wydatki; znika tylko zwierzę i jego historia kosztów.
+
+## Przypomnienia
+
+Gdy zwierzę ma datę **Następnego szczepienia** lub **Następnego zabezpieczenia przed pchłami i kleszczami**, dostaniesz powiadomienie push **14 dni** i **2 dni** wcześniej. Przypomnienia podlegają przełącznikowi **Odnowienia subskrypcji** w ustawieniach powiadomień. Po wizycie otwórz zwierzę i ustaw kolejną datę.
+
+Na karcie zwierzęcia zbliżająca się data jest wyróżniona, a miniona oznaczona jako **po terminie**.
+
+## Przypisywanie wydatków do zwierzęcia
+
+1. W **Transakcjach** przytrzymaj wydatek i wybierz zaznaczanie kilku.
+2. Zaznacz wszystkie wydatki, które są kosztem zwierzęcia — karmę, weterynarza, pielęgnację itd.
+3. Stuknij **Dla zwierzęcia** (na komputerze **Przypisz do zwierzęcia** na pasku zaznaczenia).
+4. Wybierz zwierzę (jeśli masz kilka) i rodzaj kosztu: **Karma**, **Weterynarz**, **Pielęgnacja**, **Akcesoria**, **Ubezpieczenie** lub **Inne**.
+5. Stuknij **Przypisz**.
+
+Wydatek należy naraz do jednego zwierzęcia. Przypisanie go innemu przenosi go tam.
+
+## Ekran zwierzęcia
+
+Stuknij **Koszty** na karcie zwierzęcia albo jego wiersz w **Analityce**. Zobaczysz:
+
+- przyciski **Okresu**: 3, 6, 12 miesięcy, 2 lata lub cały okres;
+- cztery liczby: **Razem** za okres, średnio **Miesięcznie**, **W tym roku** i liczbę **Pozycji**;
+- **Według miesięcy**: słupek na miesiąc. Stuknij słupek, aby zobaczyć tylko ten miesiąc; **Pokaż wszystko** wraca do całości;
+- **Według rodzaju**: karma, weterynarz i reszta z udziałem procentowym. Stuknij rodzaj, aby przefiltrować listę;
+- **Wszystkie koszty**: każdy wydatek z okresu. Stuknij, aby go otworzyć, albo krzyżyk obok, aby **Usunąć ze zwierzęcia** — sam wydatek zostaje.
+
+Wszystkie kwoty są w Twojej walucie wyświetlania. Kwota bez kursu wymiany zostaje na liście, ale nie wlicza się do sum — informuje o tym notka.
+
+Na komputerze podział według rodzaju stoi w kolumnie po prawej od wykresu i listy.
+
+## Analityka
+
+Gdy konto ma zwierzę, **Analityka** pokazuje kartę **Zwierzęta**: każde zwierzę z kosztem z ostatnich 12 miesięcy, średnią miesięczną i dwoma największymi rodzajami kosztów. **Zarządzaj** otwiera ustawienia zwierząt.
+
+## Konta zaszyfrowane
+
+Imiona zwierząt i daty opieki nie są szyfrowane, nawet na koncie z szyfrowaniem end-to-end — ekran o tym informuje, więc nie wpisuj w nie nic prywatnego. Jeśli szyfrowanie jest zablokowane na Twoim urządzeniu, koszty nadal się sumują, ale miejsce zakupu jest ukryte, dopóki nie odblokujesz go w **Ustawienia → Bezpieczeństwo i szyfrowanie**.
+
+## Kto może co zmieniać
+
+Właściciele i edytorzy mogą dodawać zwierzęta, przypisywać koszty i je usuwać. Obserwatorzy widzą zwierzęta i ich koszty, ale niczego nie zmienią.
+`,
+    },
   ],
   de: [
     {
@@ -27114,6 +27378,72 @@ Du kannst eigene Apps auf der AI Budget API bauen – kostenlos. Öffne **Einste
 Die vollständige API-Referenz und eine Schritt-für-Schritt-Anleitung (auf Englisch, Polnisch und Russisch) findest du unter [api.ai-budget.pl/public/docs](https://api.ai-budget.pl/public/docs), auch verlinkt über **API-Dokumentation** im Entwickler-Bildschirm. Du kannst bis zu 10 Apps registrieren.
 `,
     },
+    {
+      id: '46-pet-costs',
+      title: `Haustiere — was dein Hund oder deine Katze wirklich kostet`,
+      description: `Lege deine Haustiere an, markiere Futter, Tierarztbesuche und Pflege unter deinen Ausgaben und sieh, was jedes Tier pro Monat und pro Jahr kostet. Die App erinnert dich außerdem vor der nächsten Impfung und dem nächsten Floh- und Zeckenschutz.`,
+      body: `# Haustiere — was dein Hund oder deine Katze wirklich kostet
+
+> Lege deine Haustiere an, markiere Futter, Tierarztbesuche und Pflege unter deinen Ausgaben und sieh, was jedes Tier pro Monat und pro Jahr kostet. Die App erinnert dich außerdem vor der nächsten Impfung und dem nächsten Floh- und Zeckenschutz.
+
+## Wo du es findest
+
+Öffne **Einstellungen → Stammdaten → Haustiere**. Am Computer (ein Browserfenster breiter als etwa 1000 Pixel) steht **Haustiere** in der linken Spalte der **Einstellungen**.
+
+Haustiere gehören zu einem Konto: Ein gemeinsames Familienkonto hat seine eigene Liste, getrennt von deinem persönlichen Konto.
+
+## Ein Haustier hinzufügen
+
+1. Tippe auf das **+** neben **Haustiere**.
+2. Gib einen Namen ein und wähle die **Tierart**: **Hund**, **Katze** oder **Andere**.
+3. Lege optional **Geburtstag**, **Nächste Impfung** und **Nächster Floh- und Zeckenschutz** fest.
+4. Tippe auf **Haustier hinzufügen**.
+
+Um ein Haustier später zu ändern oder zu entfernen, tippe auf den Stift auf seiner Karte. Beim Löschen bleiben alle Ausgaben erhalten; nur das Tier und sein Kostenverlauf werden entfernt.
+
+## Erinnerungen
+
+Hat ein Haustier ein Datum für **Nächste Impfung** oder **Nächster Floh- und Zeckenschutz**, bekommst du **14 Tage** und **2 Tage** vorher eine Push-Benachrichtigung. Die Erinnerungen folgen dem Schalter **Abonnement-Verlängerungen** in den Benachrichtigungseinstellungen. Nach dem Termin öffnest du das Tier und trägst das nächste Datum ein.
+
+Auf der Karte des Tiers wird ein nahes Datum hervorgehoben, ein vergangenes ist als **überfällig** markiert.
+
+## Ausgaben einem Haustier zuordnen
+
+1. Halte unter **Transaktionen** eine Ausgabe gedrückt und wähle die Mehrfachauswahl.
+2. Wähle alle Ausgaben, die Kosten des Tiers sind — Futter, Tierarzt, Pflege usw.
+3. Tippe auf **Für Haustier** (am Computer **Einem Haustier zuordnen** in der Auswahlleiste).
+4. Wähle das Tier (falls du mehrere hast) und die Kostenart: **Futter**, **Tierarzt**, **Pflege**, **Zubehör**, **Versicherung** oder **Sonstiges**.
+5. Tippe auf **Zuordnen**.
+
+Eine Ausgabe gehört immer nur zu einem Tier. Ordnest du sie einem anderen zu, wechselt sie dorthin.
+
+## Der Bildschirm eines Haustiers
+
+Tippe auf **Kosten** auf der Karte des Tiers oder auf seine Zeile in der **Analyse**. Du siehst:
+
+- **Zeitraum**-Chips: 3, 6, 12 Monate, 2 Jahre oder gesamter Zeitraum;
+- vier Kennzahlen: **Gesamt** im Zeitraum, der Durchschnitt **Pro Monat**, **Dieses Jahr** und die Zahl der **Einträge**;
+- **Nach Monat**: ein Balken pro Monat. Tippe auf einen Balken, um nur diesen Monat zu sehen; **Alle anzeigen** führt zurück;
+- **Nach Art**: Futter, Tierarzt und der Rest mit ihrem Anteil. Tippe auf eine Art, um die Liste zu filtern;
+- **Alle Kosten**: jede Ausgabe des Zeitraums. Tippe darauf, um sie zu öffnen, oder auf das Kreuz daneben, um sie **Vom Haustier entfernen** — die Ausgabe selbst bleibt.
+
+Alle Beträge erscheinen in deiner Anzeigewährung. Ein Betrag ohne Wechselkurs bleibt in der Liste, fließt aber nicht in die Summen ein; ein Hinweis sagt es dir.
+
+Am Computer steht die Aufteilung nach Art in einer Spalte rechts neben Diagramm und Liste.
+
+## Analyse
+
+Hat das Konto ein Haustier, zeigt die **Analyse** eine Karte **Haustiere**: jedes Tier mit seinen Kosten der letzten 12 Monate, dem Monatsdurchschnitt und seinen zwei größten Kostenarten. **Verwalten** öffnet die Haustier-Einstellungen.
+
+## Verschlüsselte Konten
+
+Namen der Haustiere und Pflegetermine werden nicht verschlüsselt, auch nicht auf einem Konto mit Ende-zu-Ende-Verschlüsselung — der Bildschirm weist darauf hin, trage dort also nichts Privates ein. Ist die Verschlüsselung auf deinem Gerät gesperrt, werden die Kosten trotzdem summiert, aber wo sie angefallen sind, bleibt verborgen, bis du sie unter **Einstellungen → Sicherheit & Verschlüsselung** entsperrst.
+
+## Wer was ändern darf
+
+Eigentümer und Bearbeiter können Haustiere anlegen, Kosten zuordnen und entfernen. Betrachter sehen die Tiere und ihre Kosten, können aber nichts ändern.
+`,
+    },
   ],
   es: [
     {
@@ -32476,6 +32806,72 @@ Puedes crear tu propia app sobre la API de AI Budget, gratis. Abre **Ajustes →
 La referencia completa de la API y una guía paso a paso (en inglés, polaco y ruso) están en [api.ai-budget.pl/public/docs](https://api.ai-budget.pl/public/docs), también enlazadas desde **Documentación de la API** en la pantalla de desarrolladores. Puedes registrar hasta 10 apps.
 `,
     },
+    {
+      id: '46-pet-costs',
+      title: `Mascotas — lo que de verdad cuesta tu perro o tu gato`,
+      description: `Añade tus mascotas, marca entre tus gastos la comida, las visitas al veterinario y la peluquería, y verás lo que cuesta cada una al mes y al año. La app también te avisa antes de la próxima vacuna y del próximo antiparasitario.`,
+      body: `# Mascotas — lo que de verdad cuesta tu perro o tu gato
+
+> Añade tus mascotas, marca entre tus gastos la comida, las visitas al veterinario y la peluquería, y verás lo que cuesta cada una al mes y al año. La app también te avisa antes de la próxima vacuna y del próximo antiparasitario.
+
+## Dónde encontrarlo
+
+Ve a **Ajustes → Datos de referencia → Mascotas**. En un ordenador (una ventana del navegador de más de unos 1000 píxeles) **Mascotas** está en la columna izquierda de **Ajustes**.
+
+Las mascotas pertenecen a una cuenta: una cuenta familiar compartida tiene su propia lista, separada de la personal.
+
+## Añadir una mascota
+
+1. Toca el **+** junto a **Mascotas**.
+2. Escribe un nombre y elige la **Especie**: **Perro**, **Gato** u **Otra**.
+3. Si quieres, indica la **Fecha de nacimiento**, la **Próxima vacuna** y el **Próximo antiparasitario**.
+4. Toca **Añadir mascota**.
+
+Para cambiar o eliminar una mascota, toca el lápiz de su tarjeta. Al eliminarla, todos los gastos se quedan; solo desaparecen la mascota y su historial de gastos.
+
+## Recordatorios
+
+Si una mascota tiene fecha de **Próxima vacuna** o de **Próximo antiparasitario**, recibes una notificación **14 días** y **2 días** antes. Los recordatorios siguen el interruptor **Renovaciones de suscripciones** de los ajustes de notificaciones. Después de la visita, abre la mascota y pon la fecha siguiente.
+
+En la tarjeta de la mascota una fecha cercana se resalta y una ya pasada aparece como **vencida**.
+
+## Asignar gastos a una mascota
+
+1. En **Transacciones**, mantén pulsado un gasto y elige seleccionar varios.
+2. Selecciona todos los gastos que son de la mascota: comida, veterinario, peluquería, etc.
+3. Toca **Mascota** (en el ordenador, **Asignar a mascota** en la barra de selección).
+4. Elige la mascota (si tienes varias) y el tipo de gasto: **Comida**, **Veterinario**, **Peluquería**, **Accesorios**, **Seguro** u **Otros**.
+5. Toca **Asignar**.
+
+Un gasto pertenece a una sola mascota. Si lo asignas a otra, pasa a esa.
+
+## La pantalla de la mascota
+
+Toca **Gastos** en la tarjeta de la mascota o su fila en **Análisis**. Verás:
+
+- botones de **Periodo**: 3, 6, 12 meses, 2 años o todo;
+- cuatro cifras: el **Total** del periodo, la media **Al mes**, **Este año** y el número de **Entradas**;
+- **Por mes**: una barra por mes. Toca una barra para ver solo ese mes; **Mostrar todo** vuelve atrás;
+- **Por tipo**: comida, veterinario y el resto, con su porcentaje. Toca uno para filtrar la lista;
+- **Todos los gastos**: cada gasto del periodo. Tócalo para abrirlo, o toca la cruz de al lado para **Quitar de la mascota**; el gasto en sí se queda.
+
+Todos los importes se muestran en tu moneda de visualización. Un importe sin tipo de cambio sigue en la lista pero queda fuera de los totales, y una nota lo indica.
+
+En el ordenador, el desglose por tipo está en una columna a la derecha del gráfico y la lista.
+
+## Análisis
+
+Si la cuenta tiene una mascota, **Análisis** muestra una tarjeta **Mascotas**: cada mascota con su gasto de los últimos 12 meses, la media mensual y sus dos tipos de gasto más grandes. **Gestionar** abre los ajustes de mascotas.
+
+## Cuentas cifradas
+
+Los nombres de las mascotas y las fechas de cuidado no se cifran, ni siquiera en una cuenta con cifrado de extremo a extremo; la pantalla lo avisa, así que no pongas en ellos nada privado. Si el cifrado está bloqueado en tu dispositivo, los gastos se siguen sumando, pero dónde se hizo cada uno queda oculto hasta que lo desbloquees en **Ajustes → Seguridad y cifrado**.
+
+## Quién puede cambiar qué
+
+Los propietarios y editores pueden añadir mascotas, asignar gastos y quitarlos. Los lectores ven las mascotas y sus gastos, pero no pueden cambiar nada.
+`,
+    },
   ],
   fr: [
     {
@@ -37836,6 +38232,72 @@ Vous pouvez créer votre propre application sur l'API AI Budget, gratuitement. O
 La référence complète de l'API et un guide pas à pas (en anglais, polonais et russe) sont sur [api.ai-budget.pl/public/docs](https://api.ai-budget.pl/public/docs), accessibles aussi via **Documentation de l’API** sur l'écran Développeurs. Vous pouvez enregistrer jusqu'à 10 applications.
 `,
     },
+    {
+      id: '46-pet-costs',
+      title: `Animaux — ce que coûte vraiment votre chien ou votre chat`,
+      description: `Ajoutez vos animaux, marquez parmi vos dépenses la nourriture, les visites chez le vétérinaire et le toilettage, et voyez ce que coûte chaque animal par mois et par an. L’app vous prévient aussi avant le prochain vaccin et le prochain antiparasitaire.`,
+      body: `# Animaux — ce que coûte vraiment votre chien ou votre chat
+
+> Ajoutez vos animaux, marquez parmi vos dépenses la nourriture, les visites chez le vétérinaire et le toilettage, et voyez ce que coûte chaque animal par mois et par an. L’app vous prévient aussi avant le prochain vaccin et le prochain antiparasitaire.
+
+## Où le trouver
+
+Allez dans **Réglages → Données de référence → Animaux**. Sur un ordinateur (une fenêtre de navigateur de plus de 1000 pixels environ), **Animaux** se trouve dans la colonne de gauche des **Réglages**.
+
+Les animaux appartiennent à un compte : un compte familial partagé a sa propre liste, distincte de votre compte personnel.
+
+## Ajouter un animal
+
+1. Touchez le **+** à côté de **Animaux**.
+2. Saisissez un nom et choisissez l’**Espèce** : **Chien**, **Chat** ou **Autre**.
+3. Indiquez si vous le souhaitez la **Date de naissance**, le **Prochain vaccin** et le **Prochain antiparasitaire**.
+4. Touchez **Ajouter un animal**.
+
+Pour modifier ou supprimer un animal plus tard, touchez le crayon sur sa carte. La suppression conserve toutes les dépenses ; seuls l’animal et son historique de coûts disparaissent.
+
+## Rappels
+
+Quand un animal a une date de **Prochain vaccin** ou de **Prochain antiparasitaire**, vous recevez une notification **14 jours** et **2 jours** avant. Les rappels suivent l’interrupteur **Renouvellements d’abonnements** des réglages de notifications. Après la visite, ouvrez l’animal et saisissez la date suivante.
+
+Sur la carte de l’animal, une date proche est mise en évidence et une date passée est marquée **en retard**.
+
+## Attribuer des dépenses à un animal
+
+1. Dans **Transactions**, appuyez longuement sur une dépense et choisissez d’en sélectionner plusieurs.
+2. Sélectionnez toutes les dépenses qui concernent l’animal : nourriture, vétérinaire, toilettage, etc.
+3. Touchez **Animal** (sur ordinateur, **Attribuer à un animal** dans la barre de sélection).
+4. Choisissez l’animal (si vous en avez plusieurs) et le type de dépense : **Alimentation**, **Vétérinaire**, **Toilettage**, **Accessoires**, **Assurance** ou **Autre**.
+5. Touchez **Attribuer**.
+
+Une dépense n’appartient qu’à un seul animal. L’attribuer à un autre la déplace.
+
+## L’écran d’un animal
+
+Touchez **Dépenses** sur la carte de l’animal, ou sa ligne dans **Analyses**. Vous voyez :
+
+- les boutons de **Période** : 3, 6, 12 mois, 2 ans ou tout ;
+- quatre chiffres : le **Total** de la période, la moyenne **Par mois**, **Cette année** et le nombre d’**Entrées** ;
+- **Par mois** : une barre par mois. Touchez une barre pour ne voir que ce mois ; **Tout afficher** revient en arrière ;
+- **Par type** : alimentation, vétérinaire et le reste, avec leur part. Touchez-en un pour filtrer la liste ;
+- **Toutes les dépenses** : chaque dépense de la période. Touchez-la pour l’ouvrir, ou touchez la croix à côté pour la **Retirer de l’animal** — la dépense elle-même reste.
+
+Tous les montants sont dans votre devise d’affichage. Un montant sans taux de change reste dans la liste mais n’entre pas dans les totaux, et une note le signale.
+
+Sur ordinateur, la répartition par type est dans une colonne à droite du graphique et de la liste.
+
+## Analyses
+
+Quand le compte a un animal, **Analyses** affiche une carte **Animaux** : chaque animal avec son coût sur les 12 derniers mois, la moyenne mensuelle et ses deux plus gros types de dépense. **Gérer** ouvre les réglages des animaux.
+
+## Comptes chiffrés
+
+Les noms des animaux et les dates de soins ne sont pas chiffrés, même sur un compte avec chiffrement de bout en bout — l’écran vous le signale, n’y mettez donc rien de privé. Si le chiffrement est verrouillé sur votre appareil, les dépenses s’additionnent toujours, mais le lieu d’achat reste masqué jusqu’à ce que vous le déverrouilliez dans **Réglages → Sécurité et chiffrement**.
+
+## Qui peut modifier quoi
+
+Les propriétaires et éditeurs peuvent ajouter des animaux, attribuer des dépenses et les retirer. Les lecteurs voient les animaux et leurs dépenses, mais ne peuvent rien modifier.
+`,
+    },
   ],
   be: [
     {
@@ -43158,6 +43620,72 @@ OCR часам няправільна чытае цану, выдумляе ра
 Вы можаце зрабіць уласную праграму на API AI Budget — бясплатна. Адкрыйце **Налады → Распрацоўшчыкам** і націсніце **Стварыць праграму**: пазначце назву, сайт і адрасы перанакіравання (redirect URI) і выберыце **Серверная праграма** або **Мабільная або браўзерная праграма**. **Client ID** вы атрымаеце адразу; сервернай праграме выдаецца яшчэ і client secret, які паказваецца **толькі адзін раз** — скапіруйце яго адразу.
 
 Поўны даведнік API і пакрокавае кіраўніцтва (на англійскай, польскай і рускай мовах) — на [api.ai-budget.pl/public/docs](https://api.ai-budget.pl/public/docs); туды ж вядзе спасылка **Дакументацыя API** на экране «Распрацоўшчыкам». Можна зарэгістраваць да 10 праграм.
+`,
+    },
+    {
+      id: '46-pet-costs',
+      title: `Гадаванцы — колькі насамрэч каштуе сабака ці кот`,
+      description: `Дадайце сваіх гадаванцаў, адзначце сярод выдаткаў корм, візіты да ветэрынара і догляд — і ўбачыце, колькі кожны гадаванец каштуе ў месяц і ў год. Дадатак таксама нагадае пра наступную прышчэпку і апрацоўку ад блох і кляшчоў.`,
+      body: `# Гадаванцы — колькі насамрэч каштуе сабака ці кот
+
+> Дадайце сваіх гадаванцаў, адзначце сярод выдаткаў корм, візіты да ветэрынара і догляд — і ўбачыце, колькі кожны гадаванец каштуе ў месяц і ў год. Дадатак таксама нагадае пра наступную прышчэпку і апрацоўку ад блох і кляшчоў.
+
+## Дзе знайсці
+
+Адкрыйце **Налады → Даведнікі → Гадаванцы**. На камп’ютары (акно браўзера шырэйшае за прыкладна 1000 пікселяў) **Гадаванцы** знаходзяцца ў левай калонцы **Налад**.
+
+Гадаванцы належаць рахунку: у агульнага сямейнага рахунку свой спіс, асобны ад асабістага.
+
+## Як дадаць гадаванца
+
+1. Націсніце **+** побач з **Гадаванцы**.
+2. Увядзіце імя і выберыце **Від**: **Сабака**, **Кот** або **Іншае**.
+3. Пры жаданні пазначце **Дзень нараджэння**, **Наступную прышчэпку** і **Наступную апрацоўку ад блох і кляшчоў**.
+4. Націсніце **Дадаць гадаванца**.
+
+Каб пазней змяніць ці выдаліць гадаванца, націсніце аловак на яго картцы. Пры выдаленні ўсе выдаткі застаюцца; выдаляюцца толькі гадаванец і яго гісторыя выдаткаў.
+
+## Напаміны
+
+Калі ў гадаванца пазначана дата **Наступнай прышчэпкі** або **Наступнай апрацоўкі ад блох і кляшчоў**, за **14 дзён** і за **2 дні** да яе прыйдзе push-апавяшчэнне. Напаміны падпарадкоўваюцца пераключальніку **Аднаўленне падпісак** у наладах апавяшчэнняў. Пасля візіту адкрыйце гадаванца і пазначце наступную дату.
+
+На картцы гадаванца блізкая дата вылучаецца, а мінулая пазначаецца як **пратэрмінавана**.
+
+## Як прызначыць выдаткі гадаванцу
+
+1. У **Аперацыях** утрымлівайце выдатак і выберыце вылучэнне некалькіх.
+2. Вылучыце ўсе выдаткі на гадаванца — корм, ветэрынара, догляд і г. д.
+3. Націсніце **Гадаванцу** (на камп’ютары — **Прызначыць гадаванцу** на панэлі вылучэння).
+4. Выберыце гадаванца (калі іх некалькі) і від выдатку: **Корм**, **Ветэрынар**, **Догляд**, **Тавары**, **Страхоўка** або **Іншае**.
+5. Націсніце **Прызначыць**.
+
+Выдатак належыць толькі аднаму гадаванцу. Калі прызначыць яго іншаму, ён пяройдзе да яго.
+
+## Экран гадаванца
+
+Націсніце **Выдаткі** на картцы гадаванца або яго радок у **Аналітыцы**. Вы ўбачыце:
+
+- кнопкі **Перыяду**: 3, 6, 12 месяцаў, 2 гады або ўвесь час;
+- чатыры лічбы: **Усяго** за перыяд, сярэдняе **У месяц**, **У гэтым годзе** і колькасць **Запісаў**;
+- **Па месяцах**: слупок на кожны месяц. Націсніце на слупок, каб убачыць толькі гэты месяц; **Паказаць усё** верне назад;
+- **Па відах**: корм, ветэрынар і астатняе з доляй. Націсніце на від, каб адфільтраваць спіс;
+- **Усе выдаткі**: кожны выдатак перыяду. Націсніце, каб адкрыць яго, або на крыжык побач, каб **Прыбраць у гадаванца** — сам выдатак застанецца.
+
+Усе сумы паказаны ў вашай валюце адлюстравання. Сума без курсу застаецца ў спісе, але не ўваходзіць у вынікі — пра гэта скажа пазнака.
+
+На камп’ютары разбіўка па відах стаіць у калонцы справа ад графіка і спісу.
+
+## Аналітыка
+
+Калі ў рахунку ёсць гадаванец, у **Аналітыцы** з’яўляецца картка **Гадаванцы**: кожны гадаванец з выдаткамі за апошнія 12 месяцаў, сярэднім у месяц і двума найбуйнейшымі відамі выдаткаў. **Кіраваць** адкрывае налады гадаванцаў.
+
+## Зашыфраваныя рахункі
+
+Імёны гадаванцаў і даты догляду не шыфруюцца нават на рахунку са скразным шыфраваннем — экран пра гэта папярэджвае, таму не пішыце ў іх нічога асабістага. Калі шыфраванне на прыладзе заблакавана, выдаткі ўсё роўна сумуюцца, але дзе быў зроблены кожны, схавана, пакуль вы не разблакуеце яго ў **Налады → Бяспека і шыфраванне**.
+
+## Хто што можа змяняць
+
+Уладальнікі і рэдактары могуць дадаваць гадаванцаў, прызначаць і прыбіраць выдаткі. Назіральнікі бачаць гадаванцаў і іх выдаткі, але нічога не могуць змяніць.
 `,
     },
   ],
@@ -48608,6 +49136,72 @@ Wat elk niveau omvat, lees je in End-to-end-versleuteling.
 Je kunt je eigen app bouwen op de AI Budget API – gratis. Open **Instellingen → Ontwikkelaars** en tik op **App maken**: geef een naam, een website en de redirect-adressen die hij gebruikt, en kies **Server-app** of **Mobiele of browser-app**. De **Client-ID** krijg je meteen; een server-app krijgt daarnaast een client secret die **maar één keer** getoond wordt – kopieer hem direct.
 
 De volledige API-referentie en een stapsgewijze handleiding (in het Engels, Pools en Russisch) staan op [api.ai-budget.pl/public/docs](https://api.ai-budget.pl/public/docs), ook te bereiken via **API-documentatie** op het scherm Ontwikkelaars. Je kunt tot 10 apps registreren.
+`,
+    },
+    {
+      id: '46-pet-costs',
+      title: `Huisdieren — wat je hond of kat echt kost`,
+      description: `Voeg je huisdieren toe, markeer voer, dierenartsbezoeken en verzorging tussen je uitgaven en zie wat elk dier per maand en per jaar kost. De app herinnert je ook aan de volgende vaccinatie en vlooien- en tekenbehandeling.`,
+      body: `# Huisdieren — wat je hond of kat echt kost
+
+> Voeg je huisdieren toe, markeer voer, dierenartsbezoeken en verzorging tussen je uitgaven en zie wat elk dier per maand en per jaar kost. De app herinnert je ook aan de volgende vaccinatie en vlooien- en tekenbehandeling.
+
+## Waar je het vindt
+
+Ga naar **Instellingen → Referentiegegevens → Huisdieren**. Op een computer (een browservenster breder dan ongeveer 1000 pixels) staat **Huisdieren** in de linkerkolom van **Instellingen**.
+
+Huisdieren horen bij een rekening: een gedeelde gezinsrekening heeft een eigen lijst, los van je persoonlijke rekening.
+
+## Een huisdier toevoegen
+
+1. Tik op de **+** naast **Huisdieren**.
+2. Typ een naam en kies de **Soort**: **Hond**, **Kat** of **Anders**.
+3. Stel eventueel de **Geboortedatum**, de **Volgende vaccinatie** en de **Volgende vlooien- en tekenbehandeling** in.
+4. Tik op **Huisdier toevoegen**.
+
+Om een huisdier later te wijzigen of te verwijderen, tik je op het potlood op zijn kaart. Bij verwijderen blijven alle uitgaven bestaan; alleen het dier en zijn kostenoverzicht verdwijnen.
+
+## Herinneringen
+
+Heeft een huisdier een datum voor **Volgende vaccinatie** of **Volgende vlooien- en tekenbehandeling**, dan krijg je **14 dagen** en **2 dagen** van tevoren een pushmelding. De herinneringen volgen de schakelaar **Abonnementsverlengingen** in de meldingsinstellingen. Open na het bezoek het dier en vul de volgende datum in.
+
+Op de kaart van het dier wordt een datum die dichtbij is gemarkeerd, en een datum die voorbij is staat als **verlopen**.
+
+## Uitgaven aan een huisdier toewijzen
+
+1. Houd in **Transacties** een uitgave ingedrukt en kies meerdere selecteren.
+2. Selecteer alle uitgaven die kosten van het dier zijn — voer, dierenarts, verzorging enzovoort.
+3. Tik op **Huisdier** (op de computer **Toewijzen aan huisdier** in de selectiebalk).
+4. Kies het dier (als je er meerdere hebt) en de soort kosten: **Voer**, **Dierenarts**, **Verzorging**, **Benodigdheden**, **Verzekering** of **Overig**.
+5. Tik op **Toewijzen**.
+
+Een uitgave hoort bij één dier tegelijk. Wijs je haar toe aan een ander dier, dan verhuist ze daarheen.
+
+## Het scherm van een huisdier
+
+Tik op **Kosten** op de kaart van het dier, of op zijn regel in **Analyse**. Je ziet:
+
+- **Periode**-knoppen: 3, 6, 12 maanden, 2 jaar of alles;
+- vier cijfers: het **Totaal** van de periode, het gemiddelde **Per maand**, **Dit jaar** en het aantal **Posten**;
+- **Per maand**: een staaf per maand. Tik op een staaf om alleen die maand te zien; **Alles tonen** gaat terug;
+- **Per soort**: voer, dierenarts en de rest met hun aandeel. Tik op een soort om de lijst te filteren;
+- **Alle kosten**: elke uitgave van de periode. Tik om haar te openen, of tik op het kruisje ernaast om haar **Los te koppelen van het huisdier** — de uitgave zelf blijft.
+
+Alle bedragen staan in je weergavevaluta. Een bedrag zonder wisselkoers blijft in de lijst, maar telt niet mee in de totalen; een notitie meldt dat.
+
+Op de computer staat de verdeling per soort in een kolom rechts van de grafiek en de lijst.
+
+## Analyse
+
+Heeft de rekening een huisdier, dan toont **Analyse** een kaart **Huisdieren**: elk dier met zijn kosten over de laatste 12 maanden, het maandgemiddelde en zijn twee grootste kostensoorten. **Beheren** opent de huisdierinstellingen.
+
+## Versleutelde rekeningen
+
+Namen van huisdieren en verzorgingsdatums worden niet versleuteld, ook niet op een rekening met end-to-end-versleuteling — het scherm meldt dat, dus zet er niets privés in. Is de versleuteling op je apparaat vergrendeld, dan worden de kosten nog steeds opgeteld, maar waar elke uitgave is gedaan blijft verborgen tot je haar ontgrendelt via **Instellingen → Beveiliging & versleuteling**.
+
+## Wie wat mag wijzigen
+
+Eigenaren en bewerkers kunnen huisdieren toevoegen, kosten toewijzen en loskoppelen. Kijkers zien de dieren en hun kosten, maar kunnen niets wijzigen.
 `,
     },
   ],
@@ -54087,6 +54681,72 @@ Pode criar a sua própria aplicação sobre a API do AI Budget — é gratuito. 
 A referência completa da API e um guia passo a passo (em inglês, polaco e russo) estão em [api.ai-budget.pl/public/docs](https://api.ai-budget.pl/public/docs), também acessíveis através de **Documentação da API** no ecrã Programadores. Pode registar até 10 aplicações.
 `,
     },
+    {
+      id: '46-pet-costs',
+      title: `Animais — quanto custa realmente o seu cão ou gato`,
+      description: `Adicione os seus animais, marque entre as despesas a comida, as idas ao veterinário e a tosquia, e veja quanto custa cada animal por mês e por ano. A app também o avisa antes da próxima vacina e da próxima desparasitação.`,
+      body: `# Animais — quanto custa realmente o seu cão ou gato
+
+> Adicione os seus animais, marque entre as despesas a comida, as idas ao veterinário e a tosquia, e veja quanto custa cada animal por mês e por ano. A app também o avisa antes da próxima vacina e da próxima desparasitação.
+
+## Onde encontrar
+
+Vá a **Definições → Dados de referência → Animais**. Num computador (uma janela do navegador com mais de cerca de 1000 píxeis) **Animais** está na coluna esquerda das **Definições**.
+
+Os animais pertencem a uma conta: uma conta familiar partilhada tem a sua própria lista, separada da conta pessoal.
+
+## Adicionar um animal
+
+1. Toque no **+** junto a **Animais**.
+2. Escreva um nome e escolha a **Espécie**: **Cão**, **Gato** ou **Outro**.
+3. Se quiser, indique a **Data de nascimento**, a **Próxima vacina** e a **Próxima desparasitação**.
+4. Toque em **Adicionar animal**.
+
+Para alterar ou eliminar um animal mais tarde, toque no lápis do seu cartão. Ao eliminar, todas as despesas ficam; só o animal e o seu histórico de custos desaparecem.
+
+## Lembretes
+
+Quando um animal tem data de **Próxima vacina** ou de **Próxima desparasitação**, recebe uma notificação **14 dias** e **2 dias** antes. Os lembretes seguem o interruptor **Renovações de subscrições** das definições de notificações. Depois da consulta, abra o animal e indique a data seguinte.
+
+No cartão do animal, uma data próxima fica destacada e uma data já passada aparece como **em atraso**.
+
+## Atribuir despesas a um animal
+
+1. Em **Transações**, mantenha premida uma despesa e escolha selecionar várias.
+2. Selecione todas as despesas que são custos do animal — comida, veterinário, tosquia, etc.
+3. Toque em **Animal** (no computador, **Atribuir a animal** na barra de seleção).
+4. Escolha o animal (se tiver vários) e o tipo de custo: **Comida**, **Veterinário**, **Tosquia e banho**, **Acessórios**, **Seguro** ou **Outros**.
+5. Toque em **Atribuir**.
+
+Uma despesa pertence a um só animal. Atribuí-la a outro muda-a para esse.
+
+## O ecrã do animal
+
+Toque em **Custos** no cartão do animal, ou na sua linha em **Análise**. Vai ver:
+
+- botões de **Período**: 3, 6, 12 meses, 2 anos ou tudo;
+- quatro valores: o **Total** do período, a média **Por mês**, **Este ano** e o número de **Registos**;
+- **Por mês**: uma barra por mês. Toque numa barra para ver só esse mês; **Mostrar tudo** volta atrás;
+- **Por tipo**: comida, veterinário e o resto, com a sua parte. Toque num para filtrar a lista;
+- **Todos os custos**: cada despesa do período. Toque para a abrir, ou na cruz ao lado para **Retirar do animal** — a despesa em si fica.
+
+Todos os valores aparecem na sua moeda de apresentação. Um valor sem taxa de câmbio fica na lista mas não entra nos totais, e uma nota indica-o.
+
+No computador, a divisão por tipo fica numa coluna à direita do gráfico e da lista.
+
+## Análise
+
+Quando a conta tem um animal, a **Análise** mostra um cartão **Animais**: cada animal com o custo dos últimos 12 meses, a média mensal e os seus dois maiores tipos de custo. **Gerir** abre as definições dos animais.
+
+## Contas encriptadas
+
+Os nomes dos animais e as datas de cuidados não são encriptados, mesmo numa conta com encriptação ponto a ponto — o ecrã avisa, por isso não coloque neles nada privado. Se a encriptação estiver bloqueada no seu dispositivo, os custos continuam a ser somados, mas onde cada um foi feito fica oculto até a desbloquear em **Definições → Segurança e encriptação**.
+
+## Quem pode alterar o quê
+
+Proprietários e editores podem adicionar animais, atribuir custos e retirá-los. Os leitores veem os animais e os seus custos, mas não podem alterar nada.
+`,
+    },
   ],
   br: [
     {
@@ -59562,6 +60222,72 @@ Veja Criptografia de ponta a ponta para saber o que cada nível cobre.
 Você pode criar seu próprio app sobre a API do AI Budget — é grátis. Abra **Configurações → Desenvolvedores** e toque em **Criar app**: dê a ele um nome, uma página inicial e os endereços de redirecionamento que ele vai usar, e escolha **App de servidor** ou **App móvel ou de navegador**. Você recebe um **Client ID** na hora; um app de servidor também recebe um client secret, mostrado **uma única vez** — copie-o imediatamente.
 
 A referência completa da API e um guia passo a passo (em inglês, polonês e russo) estão em [api.ai-budget.pl/public/docs](https://api.ai-budget.pl/public/docs), também disponíveis em **Documentação da API** na tela Desenvolvedores. Você pode registrar até 10 apps.
+`,
+    },
+    {
+      id: '46-pet-costs',
+      title: `Pets — quanto seu cachorro ou gato custa de verdade`,
+      description: `Adicione seus pets, marque entre as despesas a ração, as consultas no veterinário e o banho e tosa, e veja quanto cada pet custa por mês e por ano. O app também avisa antes da próxima vacina e do próximo antipulgas e carrapatos.`,
+      body: `# Pets — quanto seu cachorro ou gato custa de verdade
+
+> Adicione seus pets, marque entre as despesas a ração, as consultas no veterinário e o banho e tosa, e veja quanto cada pet custa por mês e por ano. O app também avisa antes da próxima vacina e do próximo antipulgas e carrapatos.
+
+## Onde encontrar
+
+Vá em **Configurações → Dados de referência → Pets**. No computador (uma janela do navegador com mais de uns 1000 pixels), **Pets** fica na coluna da esquerda das **Configurações**.
+
+Os pets pertencem a uma conta: uma conta familiar compartilhada tem sua própria lista, separada da conta pessoal.
+
+## Adicionar um pet
+
+1. Toque no **+** ao lado de **Pets**.
+2. Digite um nome e escolha a **Espécie**: **Cachorro**, **Gato** ou **Outro**.
+3. Se quiser, informe a **Data de nascimento**, a **Próxima vacina** e o **Próximo antipulgas e carrapatos**.
+4. Toque em **Adicionar pet**.
+
+Para alterar ou excluir um pet depois, toque no lápis do card dele. Ao excluir, todas as despesas continuam; só o pet e o histórico de custos dele são removidos.
+
+## Lembretes
+
+Quando um pet tem data de **Próxima vacina** ou de **Próximo antipulgas e carrapatos**, você recebe uma notificação **14 dias** e **2 dias** antes. Os lembretes seguem a chave **Renovações de assinaturas** nas configurações de notificações. Depois da consulta, abra o pet e informe a próxima data.
+
+No card do pet, uma data próxima fica destacada e uma data que já passou aparece como **atrasado**.
+
+## Atribuir despesas a um pet
+
+1. Em **Transações**, mantenha pressionada uma despesa e escolha selecionar várias.
+2. Selecione todas as despesas que são custos do pet — ração, veterinário, banho e tosa etc.
+3. Toque em **Para o pet** (no computador, **Atribuir ao pet** na barra de seleção).
+4. Escolha o pet (se tiver vários) e o tipo de custo: **Ração**, **Veterinário**, **Banho e tosa**, **Acessórios**, **Seguro** ou **Outros**.
+5. Toque em **Atribuir**.
+
+Uma despesa pertence a um pet de cada vez. Atribuí-la a outro pet muda ela para lá.
+
+## A tela do pet
+
+Toque em **Custos** no card do pet ou na linha dele em **Análises**. Você vai ver:
+
+- botões de **Período**: 3, 6, 12 meses, 2 anos ou tudo;
+- quatro números: o **Total** do período, a média **Por mês**, **Este ano** e o número de **Registros**;
+- **Por mês**: uma barra por mês. Toque em uma barra para ver só aquele mês; **Mostrar tudo** volta;
+- **Por tipo**: ração, veterinário e o resto, com a participação de cada um. Toque em um para filtrar a lista;
+- **Todos os custos**: cada despesa do período. Toque para abrir, ou no X ao lado para **Remover do pet** — a despesa em si continua.
+
+Todos os valores aparecem na sua moeda de exibição. Um valor sem taxa de câmbio continua na lista, mas fica fora dos totais, e um aviso informa isso.
+
+No computador, a divisão por tipo fica em uma coluna à direita do gráfico e da lista.
+
+## Análises
+
+Quando a conta tem um pet, **Análises** mostra um card **Pets**: cada pet com o custo dos últimos 12 meses, a média mensal e os dois maiores tipos de custo. **Gerenciar** abre as configurações de pets.
+
+## Contas criptografadas
+
+Os nomes dos pets e as datas de cuidados não são criptografados, nem em uma conta com criptografia de ponta a ponta — a tela avisa, então não coloque nada privado neles. Se a criptografia estiver bloqueada no seu dispositivo, os custos continuam sendo somados, mas onde cada um foi feito fica oculto até você desbloquear em **Configurações → Segurança e criptografia**.
+
+## Quem pode mudar o quê
+
+Proprietários e editores podem adicionar pets, atribuir custos e removê-los. Leitores veem os pets e os custos deles, mas não podem mudar nada.
 `,
     },
   ],

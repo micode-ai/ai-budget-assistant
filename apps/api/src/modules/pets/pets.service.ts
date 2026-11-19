@@ -39,6 +39,8 @@ export class PetsService {
         name: dto.name.trim(),
         species: dto.species ?? 'dog',
         birthday: dto.birthday ? toDateOnly(dto.birthday) : null,
+        nextVaccinationDate: dto.nextVaccinationDate ? toDateOnly(dto.nextVaccinationDate) : null,
+        nextParasiteTreatmentDate: dto.nextParasiteTreatmentDate ? toDateOnly(dto.nextParasiteTreatmentDate) : null,
       },
     });
   }

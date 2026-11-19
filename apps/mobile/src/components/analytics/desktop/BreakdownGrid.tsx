@@ -17,7 +17,8 @@ import { BreakdownCard, type BreakdownRow } from './BreakdownCard';
 import { ChildrenAnalyticsCard } from '@/components/children/ChildrenAnalyticsCard';
 import type { ChildMonthRow } from '@/features/children/useChildCosts';
 import { VehiclesAnalyticsCard } from '@/components/vehicles/VehiclesAnalyticsCard';
-import type { Vehicle } from '@budget/shared-types';
+import type { Pet, Vehicle } from '@budget/shared-types';
+import { PetsAnalyticsCard } from '@/components/pets/PetsAnalyticsCard';
 
 function categoryToRows(categorySpending: CategorySpending[]): BreakdownRow[] {
   return categorySpending.map((c, index) => ({
@@ -105,6 +106,8 @@ export interface BreakdownGridProps {
   childCurrency?: string;
   /** The account's vehicles; the "Vehicles" tile (ABA-806) shows only when non-empty. */
   vehicles?: Vehicle[];
+  /** The account's pets; the "Pets" tile (ABA-831) shows only when non-empty. */
+  pets?: Pet[];
 }
 
 /**
@@ -135,6 +138,7 @@ export function BreakdownGrid({
   childRows = [],
   childCurrency,
   vehicles = [],
+  pets = [],
 }: BreakdownGridProps) {
   const { t } = useTranslation();
   const styles = useStyles(createStyles);
@@ -178,6 +182,9 @@ export function BreakdownGrid({
     }] : []),
     ...(vehicles.length > 0 ? [{ key: 'vehicles', title: t('vehicles.analyticsTitle'), rows: [],
       render: () => <VehiclesAnalyticsCard vehicles={vehicles} variant="card" />,
+    }] : []),
+    ...(pets.length > 0 ? [{ key: 'pets', title: t('pets.analyticsTitle'), rows: [],
+      render: () => <PetsAnalyticsCard pets={pets} variant="card" />,
     }] : []),
   ];
 

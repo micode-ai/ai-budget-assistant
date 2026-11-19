@@ -4218,6 +4218,10 @@ Review the details, tap ✓ to save or the pencil icon to open the full Add Inco
 
 *See also: [Expenses & Income](./03-expenses-and-income.md) | [AI Chat](./07-ai-chat.md)*
 
+## Fuel receipts
+
+If the receipt is from a petrol station and prints the litres and the price per litre, the confirm screen offers **Add to fuel log** for your vehicle. Enter the odometer reading and the fill-up is logged with the expense; leave it empty to save the expense only. If the numbers on the receipt do not add up, nothing is prefilled.
+
 ## Budgets
 URL: https://ai-budget.pl/help/en/budgets/
 
@@ -5489,6 +5493,8 @@ See what your car costs in fuel. Add a vehicle with its name and fuel type (petr
 To log a fill-up, open a fuel expense: when the account has a vehicle, the expense shows a **Fill-up** section. Tap **Mark as a fill-up** and enter the amount (litres, or kWh for an electric car), the odometer reading and whether you filled the tank to the top. Consumption is measured between full tanks, so the figures appear after two full-tank fill-ups; a partial fill-up is counted into the next full one. No litres or odometer at hand? Leave both empty: the purchase still counts as fuel in the cost of ownership, just not in consumption.
 
 Other car costs count too. On any expense, the **Car** section lets you pick the vehicle and the kind: fuel, service, insurance, parking, taxes & fees or other (litres and odometer are asked only for fuel). In the vehicle's sheet, **Categories of this vehicle** makes it automatic: pick a kind, tap the categories (for example "Car insurance" as insurance), and their expenses count for the car — past ones as soon as you save, new ones as they arrive. The card then shows the last 12 months: the total, the monthly average, each kind, and all costs per km. Vehicles need an internet connection. Deleting a vehicle keeps the expenses; only the vehicle and its statistics go. Many at once: on the Transactions screen, search (for example "Benzyna" or "Parking"), select the expenses and choose **Assign to vehicle**, then the vehicle and the kind. Fill-ups that already have litres stay as they are.
+
+**Renewals.** In the vehicle's sheet, set the next insurance renewal, the next inspection, the next service date and the odometer reading for the next service (all optional; tap the cross to clear one). You get a reminder 14 and 2 days before each date, and once when a fill-up's odometer comes within 500 km of the service target. Dates due within 30 days or already past appear as chips on the vehicle's card and on its screen, which also has a **Renewals** card listing every date. When you mark an expense as insurance or service, the app offers to move that renewal a year forward; nothing changes unless you confirm.
 
 ## Data & Reports
 
@@ -6885,6 +6891,10 @@ OCR sometimes misreads a price, invents a line, or misses one. Tap **✏️ Item
 Both `14.69` and `14,69` work. After every correction the bot re-sends the numbered list and a `Lines: … · receipt total: …` line — when those two disagree, something on the receipt is still misread. The category split is rebuilt from the corrected lines, so correct the total too when you change a price.
 
 When you are done, tap **Add expense** — nothing is saved until you do, and cancelling discards every correction. Only the lines and the total can be corrected here; to change a line's category, open the expense in the app.
+
+### Fuel receipt → fuel log
+
+When the scanned receipt is from a fuel station and the litres and price per litre were read clearly, the bot offers **⛽ Add to fuel log (your car)** right after you save the expense (on WhatsApp the button reads **⛽ Add to fuel log** and the car is named in the message). Tap it and type the odometer reading in km, for example `123456`; the fill-up is logged as a full tank for that car. The car is picked the same way as in the app: your only car, else the one you last logged a fill-up for, else the only car with that fuel type — when it is still unclear, no button is shown. Tap **Skip** to leave the expense without a fill-up; any other message you send goes to the chat as usual. Viewers cannot log fill-ups.
 
 ## Multiple Accounts
 
@@ -8651,3 +8661,65 @@ See [End-to-End Encryption](./15-encryption.md) for what each level covers.
 You can build your own app on the AI Budget API — it's free. Open **Settings → Developers** and tap **Create app**: give it a name, a homepage and the redirect addresses it will use, and choose **Server app** or **Mobile or browser app**. You get a **Client ID** right away; a server app also gets a client secret, shown **only once** — copy it immediately.
 
 The full API reference and a step-by-step guide (in English, Polish and Russian) are at [api.ai-budget.pl/public/docs](https://api.ai-budget.pl/public/docs), also linked from **API documentation** on the Developers screen. You can register up to 10 apps.
+
+## Pets — what your dog or cat really costs
+URL: https://ai-budget.pl/help/en/pet-costs/
+
+> Add your pets, mark the food, vet visits and grooming among your expenses, and see what each pet costs per month and per year. The app also reminds you before the next vaccination and flea & tick treatment.
+
+## Where to find it
+
+Go to **Settings → Reference data → Pets**. On a computer (a browser window wider than about 1000 pixels) **Pets** is in the left column of **Settings**.
+
+Pets belong to an account: a shared family account has its own list, separate from your personal one.
+
+## Adding a pet
+
+1. Tap the **+** next to **Pets**.
+2. Type a name and pick the **Species**: **Dog**, **Cat** or **Other**.
+3. Optionally set the **Birthday**, the **Next vaccination** and the **Next flea & tick treatment** dates.
+4. Tap **Add pet**.
+
+To change or remove a pet later, tap the pencil on its card. Deleting a pet keeps all the expenses; only the pet and its cost history go.
+
+## Reminders
+
+When a pet has a **Next vaccination** or **Next flea & tick treatment** date, you get a push notification **14 days** and **2 days** before it. The reminders follow the **Subscription Renewals** switch in your notification settings. After the visit, open the pet and set the next date.
+
+On the pet's card a date that is close is highlighted, and a date that has passed is marked **overdue**.
+
+## Assigning expenses to a pet
+
+1. On **Transactions**, long-press an expense and choose to select several.
+2. Select every expense that is a cost of the pet — food, vet, grooming and so on.
+3. Tap **For pet** (on a computer, **Assign to pet** in the selection bar).
+4. Pick the pet (if you have several) and the kind of cost: **Food**, **Vet**, **Grooming**, **Supplies**, **Insurance** or **Other**.
+5. Tap **Assign**.
+
+An expense belongs to one pet at a time. Assigning it to another pet moves it there.
+
+## The pet screen
+
+Tap **Costs** on a pet's card, or the pet's row in **Analytics**. You will see:
+
+- **Period** chips: 3, 6, 12 months, 2 years or all time.
+- Four figures: the **Total** of the period, the average **Per month**, **This year** and the number of **Entries**.
+- **By month**: a bar per month. Tap a bar to see only that month; tap **Show all** to go back.
+- **By kind**: food, vet and the rest, with their share. Tap one to filter the list.
+- **All costs**: every expense of the period. Tap one to open it, or tap the cross beside it to **Remove from pet** — the expense itself stays.
+
+All amounts are shown in your display currency. If an amount has no exchange rate, it stays in the list but is left out of the totals, and a note says so.
+
+On a computer the breakdown by kind sits in a column to the right of the chart and the list.
+
+## Analytics
+
+When the account has a pet, **Analytics** shows a **Pets** card: each pet with its cost over the last 12 months, the monthly average and its two largest kinds of cost. **Manage** opens the pet settings.
+
+## Encrypted accounts
+
+Pet names and care dates are not encrypted, even on an account with end-to-end encryption — the screen tells you so, so keep anything private out of them. If encryption is locked on your device, the costs still add up, but where each one was bought is hidden until you unlock it in **Settings → Security**.
+
+## Who can change what
+
+Owners and editors can add pets, assign costs and remove them. Viewers see the pets and their costs but cannot change anything.

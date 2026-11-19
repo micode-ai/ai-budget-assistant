@@ -4393,6 +4393,10 @@ Fotografiere oder lade eine Rechnung oder ein Zahlungsdokument hoch, um Einnahme
 
 *Siehe auch: [Ausgaben & Einkommen](./03-expenses-and-income.md) | [KI-Chat](./07-ai-chat.md)*
 
+## Tankbelege
+
+Stammt der Beleg von einer Tankstelle und zeigt Liter und Preis pro Liter, bietet der Bestätigungsbildschirm **Zum Tankbuch hinzufügen** für dein Fahrzeug an. Gib den Kilometerstand ein, dann wird die Tankfüllung mit der Ausgabe erfasst; leer lassen, um nur die Ausgabe zu speichern. Passen die Zahlen auf dem Beleg nicht zusammen, wird nichts vorausgefüllt.
+
 ## Budgets
 URL: https://ai-budget.pl/help/de/budgets/
 
@@ -5637,6 +5641,8 @@ Sieh, was dein Auto an Kraftstoff kostet. Lege ein Fahrzeug mit Namen und Krafts
 Um einen Tankvorgang zu erfassen, öffne eine Kraftstoff-Ausgabe: Hat das Konto ein Fahrzeug, zeigt die Ausgabe einen Abschnitt **Tanken**. Tippe auf **Als Tankvorgang markieren** und gib die Menge (Liter, bei einem Elektroauto kWh), den Kilometerstand und an, ob du voll getankt hast. Der Verbrauch wird zwischen vollen Tanks gemessen, die Werte erscheinen also nach zwei Volltankungen; ein Teiltanken zählt zum nächsten vollen. Keine Liter oder kein Kilometerstand zur Hand? Lass beides leer: Der Kauf zählt dann als Kraftstoff in den Gesamtkosten, nur nicht beim Verbrauch.
 
 Auch andere Autokosten zählen. Bei jeder Ausgabe wählst du im Abschnitt **Auto** das Fahrzeug und die Art: Kraftstoff, Werkstatt, Versicherung, Parken, Steuern & Gebühren oder Sonstiges (Liter und Kilometerstand nur bei Kraftstoff). Im Fahrzeugfenster macht **Kategorien dieses Fahrzeugs** das automatisch: Art wählen, Kategorien antippen (etwa „Kfz-Versicherung“ als Versicherung), und ihre Ausgaben zählen für das Auto — frühere beim Speichern, neue beim Eintreffen. Die Karte zeigt dann die letzten 12 Monate: Summe, Monatsdurchschnitt, jede Art und alle Kosten pro km. Fahrzeuge brauchen eine Internetverbindung. Beim Löschen eines Fahrzeugs bleiben die Ausgaben erhalten; nur das Fahrzeug und seine Statistik verschwinden. Viele auf einmal: Suche auf dem Bildschirm Transaktionen (etwa „Benzyna“ oder „Parking“), wähle die Ausgaben aus und tippe auf **Fahrzeug zuordnen**, dann Fahrzeug und Art. Tankvorgänge mit Litern bleiben, wie sie sind.
+
+**Fristen.** Lege im Fahrzeugblatt die nächste Versicherungsverlängerung, die nächste Hauptuntersuchung, den nächsten Service und den Kilometerstand für den nächsten Service fest (alles optional; das Kreuz löscht ein Datum). Du wirst 14 und 2 Tage vor jedem Datum erinnert und einmal, wenn der Kilometerstand einer Tankfüllung weniger als 500 km vor dem Service liegt. Fristen in den nächsten 30 Tagen oder bereits überschrittene erscheinen als Chips auf der Fahrzeugkarte und auf dem Fahrzeugbildschirm, wo die Karte **Fristen** alle Daten auflistet. Wenn du eine Ausgabe als Versicherung oder Service markierst, bietet die App an, diese Frist um ein Jahr zu verschieben; ohne deine Bestätigung ändert sich nichts.
 
 ## Daten & Berichte
 
@@ -7012,6 +7018,10 @@ Die Texterkennung liest manchmal einen Preis falsch, erfindet eine Position oder
 `14,69` und `14.69` funktionieren beide. Nach jeder Korrektur sendet der Bot die nummerierte Liste erneut, dazu eine Zeile `Positionen: … · Belegsumme: …` — weichen die beiden voneinander ab, ist auf dem Beleg noch etwas falsch gelesen. Die Kategorienaufteilung wird aus den korrigierten Zeilen neu berechnet, korrigiere daher bei einer Preisänderung auch die Summe.
 
 Wenn du fertig bist, tippe auf **Ausgabe hinzufügen** — vorher wird nichts gespeichert, und ein Abbruch verwirft alle Korrekturen. Hier lassen sich nur die Zeilen und die Summe korrigieren; um die Kategorie einer Zeile zu ändern, öffne die Ausgabe in der App.
+
+### Tankbeleg → Tankbuch
+
+Stammt der gescannte Beleg von einer Tankstelle und wurden Liter und Literpreis eindeutig gelesen, bietet der Bot direkt nach dem Speichern der Ausgabe **⛽ Ins Tankbuch (dein Auto)** an (auf WhatsApp heißt der Button **⛽ Ins Tankbuch**, das Auto steht in der Nachricht). Tippe darauf und schreib den Kilometerstand, zum Beispiel `123456`; die Tankfüllung wird für dieses Auto als volltanken eingetragen. Das Auto wird wie in der App gewählt: dein einziges Auto, sonst das, für das du zuletzt getankt hast, sonst das einzige Auto mit dieser Kraftstoffart — ist es dann noch unklar, erscheint kein Button. Mit **Überspringen** bleibt die Ausgabe ohne Tankfüllung; jede andere Nachricht geht wie gewohnt an den Chat. Betrachter können keine Tankfüllungen eintragen.
 
 ## Mehrere Konten
 
@@ -8724,3 +8734,65 @@ Was jede Stufe umfasst, steht unter [Ende-zu-Ende-Verschlüsselung](./15-encrypt
 Du kannst eigene Apps auf der AI Budget API bauen – kostenlos. Öffne **Einstellungen → Entwickler** und tippe auf **App erstellen**: Gib einen Namen, eine Website und die Weiterleitungsadressen (Redirect-URIs) an und wähle **Server-App** oder **Mobile oder Browser-App**. Die **Client-ID** bekommst du sofort; eine Server-App erhält zusätzlich ein Client-Secret, das **nur ein einziges Mal** angezeigt wird – kopiere es gleich.
 
 Die vollständige API-Referenz und eine Schritt-für-Schritt-Anleitung (auf Englisch, Polnisch und Russisch) findest du unter [api.ai-budget.pl/public/docs](https://api.ai-budget.pl/public/docs), auch verlinkt über **API-Dokumentation** im Entwickler-Bildschirm. Du kannst bis zu 10 Apps registrieren.
+
+## Haustiere — was dein Hund oder deine Katze wirklich kostet
+URL: https://ai-budget.pl/help/de/pet-costs/
+
+> Lege deine Haustiere an, markiere Futter, Tierarztbesuche und Pflege unter deinen Ausgaben und sieh, was jedes Tier pro Monat und pro Jahr kostet. Die App erinnert dich außerdem vor der nächsten Impfung und dem nächsten Floh- und Zeckenschutz.
+
+## Wo du es findest
+
+Öffne **Einstellungen → Stammdaten → Haustiere**. Am Computer (ein Browserfenster breiter als etwa 1000 Pixel) steht **Haustiere** in der linken Spalte der **Einstellungen**.
+
+Haustiere gehören zu einem Konto: Ein gemeinsames Familienkonto hat seine eigene Liste, getrennt von deinem persönlichen Konto.
+
+## Ein Haustier hinzufügen
+
+1. Tippe auf das **+** neben **Haustiere**.
+2. Gib einen Namen ein und wähle die **Tierart**: **Hund**, **Katze** oder **Andere**.
+3. Lege optional **Geburtstag**, **Nächste Impfung** und **Nächster Floh- und Zeckenschutz** fest.
+4. Tippe auf **Haustier hinzufügen**.
+
+Um ein Haustier später zu ändern oder zu entfernen, tippe auf den Stift auf seiner Karte. Beim Löschen bleiben alle Ausgaben erhalten; nur das Tier und sein Kostenverlauf werden entfernt.
+
+## Erinnerungen
+
+Hat ein Haustier ein Datum für **Nächste Impfung** oder **Nächster Floh- und Zeckenschutz**, bekommst du **14 Tage** und **2 Tage** vorher eine Push-Benachrichtigung. Die Erinnerungen folgen dem Schalter **Abonnement-Verlängerungen** in den Benachrichtigungseinstellungen. Nach dem Termin öffnest du das Tier und trägst das nächste Datum ein.
+
+Auf der Karte des Tiers wird ein nahes Datum hervorgehoben, ein vergangenes ist als **überfällig** markiert.
+
+## Ausgaben einem Haustier zuordnen
+
+1. Halte unter **Transaktionen** eine Ausgabe gedrückt und wähle die Mehrfachauswahl.
+2. Wähle alle Ausgaben, die Kosten des Tiers sind — Futter, Tierarzt, Pflege usw.
+3. Tippe auf **Für Haustier** (am Computer **Einem Haustier zuordnen** in der Auswahlleiste).
+4. Wähle das Tier (falls du mehrere hast) und die Kostenart: **Futter**, **Tierarzt**, **Pflege**, **Zubehör**, **Versicherung** oder **Sonstiges**.
+5. Tippe auf **Zuordnen**.
+
+Eine Ausgabe gehört immer nur zu einem Tier. Ordnest du sie einem anderen zu, wechselt sie dorthin.
+
+## Der Bildschirm eines Haustiers
+
+Tippe auf **Kosten** auf der Karte des Tiers oder auf seine Zeile in der **Analyse**. Du siehst:
+
+- **Zeitraum**-Chips: 3, 6, 12 Monate, 2 Jahre oder gesamter Zeitraum;
+- vier Kennzahlen: **Gesamt** im Zeitraum, der Durchschnitt **Pro Monat**, **Dieses Jahr** und die Zahl der **Einträge**;
+- **Nach Monat**: ein Balken pro Monat. Tippe auf einen Balken, um nur diesen Monat zu sehen; **Alle anzeigen** führt zurück;
+- **Nach Art**: Futter, Tierarzt und der Rest mit ihrem Anteil. Tippe auf eine Art, um die Liste zu filtern;
+- **Alle Kosten**: jede Ausgabe des Zeitraums. Tippe darauf, um sie zu öffnen, oder auf das Kreuz daneben, um sie **Vom Haustier entfernen** — die Ausgabe selbst bleibt.
+
+Alle Beträge erscheinen in deiner Anzeigewährung. Ein Betrag ohne Wechselkurs bleibt in der Liste, fließt aber nicht in die Summen ein; ein Hinweis sagt es dir.
+
+Am Computer steht die Aufteilung nach Art in einer Spalte rechts neben Diagramm und Liste.
+
+## Analyse
+
+Hat das Konto ein Haustier, zeigt die **Analyse** eine Karte **Haustiere**: jedes Tier mit seinen Kosten der letzten 12 Monate, dem Monatsdurchschnitt und seinen zwei größten Kostenarten. **Verwalten** öffnet die Haustier-Einstellungen.
+
+## Verschlüsselte Konten
+
+Namen der Haustiere und Pflegetermine werden nicht verschlüsselt, auch nicht auf einem Konto mit Ende-zu-Ende-Verschlüsselung — der Bildschirm weist darauf hin, trage dort also nichts Privates ein. Ist die Verschlüsselung auf deinem Gerät gesperrt, werden die Kosten trotzdem summiert, aber wo sie angefallen sind, bleibt verborgen, bis du sie unter **Einstellungen → Sicherheit & Verschlüsselung** entsperrst.
+
+## Wer was ändern darf
+
+Eigentümer und Bearbeiter können Haustiere anlegen, Kosten zuordnen und entfernen. Betrachter sehen die Tiere und ihre Kosten, können aber nichts ändern.

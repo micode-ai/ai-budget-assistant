@@ -4903,6 +4903,10 @@ Przejrzyj szczegóły, dotknij ✓, aby zapisać, lub ikonę ołówka, aby otwor
 
 *Zobacz takze: [Wydatki i przychody](./03-expenses-and-income.md) | [Czat AI](./07-ai-chat.md)*
 
+## Paragony ze stacji paliw
+
+Jeśli paragon pochodzi ze stacji paliw i podaje litry oraz cenę za litr, ekran potwierdzenia proponuje **Dodaj do dziennika paliwa** dla Twojego pojazdu. Wpisz przebieg, a tankowanie zapisze się razem z wydatkiem; zostaw puste, aby zapisać tylko wydatek. Jeśli liczby na paragonie się nie zgadzają, nic nie zostanie uzupełnione.
+
 ## Budżety
 URL: https://ai-budget.pl/help/pl/budgets/
 
@@ -6150,6 +6154,8 @@ Zobacz, ile kosztuje Cię paliwo do auta. Dodaj pojazd z nazwą i rodzajem paliw
 Aby zapisać tankowanie, otwórz wydatek na paliwo: jeśli konto ma pojazd, wydatek ma sekcję **Tankowanie**. Stuknij **Oznacz jako tankowanie** i podaj ilość (litry, a w aucie elektrycznym kWh), stan licznika i czy zatankowano do pełna. Spalanie liczone jest między pełnymi bakami, więc wyniki pojawią się po dwóch tankowaniach do pełna; niepełne tankowanie wlicza się do następnego pełnego. Nie masz litrów ani przebiegu? Zostaw oba pola puste: zakup liczy się jako paliwo w kosztach utrzymania, tylko bez spalania.
 
 Liczą się też inne koszty auta. Przy dowolnym wydatku sekcja **Samochód** pozwala wybrać pojazd i rodzaj: paliwo, serwis, ubezpieczenie, parkowanie, podatki i opłaty albo inne (litry i przebieg są potrzebne tylko przy paliwie). W oknie pojazdu **Kategorie tego pojazdu** robią to automatycznie: wybierz rodzaj, stuknij kategorie (np. „Ubezpieczenie auta” jako ubezpieczenie), a ich wydatki liczą się dla auta — wcześniejsze po zapisaniu, nowe na bieżąco. Karta pokazuje wtedy ostatnie 12 miesięcy: sumę, średnią miesięczną, każdy rodzaj i wszystkie koszty za kilometr. Pojazdy wymagają połączenia z internetem. Usunięcie pojazdu zachowuje wydatki; znikają tylko pojazd i jego statystyki. Wiele naraz: na ekranie Transakcje wyszukaj (np. „Benzyna” lub „Parking”), zaznacz wydatki i wybierz **Przypisz do pojazdu**, a potem pojazd i rodzaj. Tankowania z litrami pozostają bez zmian.
+
+**Terminy.** W karcie pojazdu ustaw termin odnowienia ubezpieczenia, następnego przeglądu, następnego serwisu oraz przebieg, przy którym wypada serwis (wszystko opcjonalne; krzyżyk czyści termin). Przypomnienie przychodzi 14 i 2 dni przed każdą datą oraz raz, gdy przebieg z tankowania zbliży się na 500 km do serwisu. Terminy przypadające w ciągu 30 dni lub już minione widać jako etykiety na karcie pojazdu i na jego ekranie, gdzie karta **Terminy** pokazuje wszystkie daty. Gdy oznaczysz wydatek jako ubezpieczenie lub serwis, aplikacja zaproponuje przesunięcie tego terminu o rok; nic się nie zmienia bez Twojego potwierdzenia.
 
 ## Dane i raporty
 
@@ -7525,6 +7531,10 @@ OCR czasem źle odczyta cenę, wymyśli pozycję albo jakąś pominie. Dotknij *
 Działa i `14,69`, i `14.69`. Po każdej poprawce bot ponownie wysyła numerowaną listę oraz wiersz `Pozycje: … · suma paragonu: …` — jeśli te dwie liczby się nie zgadzają, coś na paragonie nadal jest źle odczytane. Podział na kategorie jest przeliczany z poprawionych pozycji, więc przy zmianie ceny popraw też sumę.
 
 Gdy skończysz, dotknij **Dodaj wydatek** — nic nie jest zapisywane wcześniej, a anulowanie odrzuca wszystkie poprawki. Tutaj można poprawić tylko pozycje i sumę; aby zmienić kategorię pozycji, otwórz wydatek w aplikacji.
+
+### Paragon ze stacji → dziennik paliwa
+
+Jeśli zeskanowany paragon pochodzi ze stacji paliw, a litry i cena za litr zostały odczytane wyraźnie, bot zaraz po zapisaniu wydatku proponuje **⛽ Dodaj do dziennika paliwa (Twoje auto)** (na WhatsAppie przycisk brzmi **⛽ Do dziennika**, a auto jest podane w wiadomości). Stuknij go i wpisz stan licznika w km, np. `123456`; tankowanie zostanie zapisane dla tego auta jako do pełna. Auto jest wybierane tak samo jak w aplikacji: jedyne auto, w przeciwnym razie to, dla którego ostatnio zapisano tankowanie, w przeciwnym razie jedyne auto z tym rodzajem paliwa — gdy nadal nie wiadomo, przycisk się nie pojawia. **Pomiń** zostawia wydatek bez tankowania; każda inna wiadomość trafia do czatu jak zwykle. Obserwatorzy nie mogą zapisywać tankowań.
 
 ## Wiele kont
 
@@ -9259,3 +9269,65 @@ Co obejmuje każdy poziom, opisaliśmy w [Szyfrowaniu end-to-end](./15-encryptio
 Możesz zbudować własną aplikację na API AI Budget — za darmo. Otwórz **Ustawienia → Dla deweloperów** i dotknij **Utwórz aplikację**: podaj nazwę, stronę domową i adresy przekierowania (redirect URI), a potem wybierz **Aplikacja serwerowa** albo **Aplikacja mobilna lub przeglądarkowa**. **Client ID** dostajesz od razu; aplikacja serwerowa dostaje też client secret, który wyświetlamy **tylko raz** — skopiuj go natychmiast.
 
 Pełna dokumentacja API i przewodnik krok po kroku (po angielsku, polsku i rosyjsku) są pod adresem [api.ai-budget.pl/public/docs](https://api.ai-budget.pl/public/docs), a także pod linkiem **Dokumentacja API** na ekranie dla deweloperów. Możesz zarejestrować do 10 aplikacji.
+
+## Zwierzęta — ile naprawdę kosztuje pies lub kot
+URL: https://ai-budget.pl/help/pl/pet-costs/
+
+> Dodaj swoje zwierzęta, oznacz wśród wydatków karmę, wizyty u weterynarza i pielęgnację, a zobaczysz, ile każde zwierzę kosztuje miesięcznie i rocznie. Aplikacja przypomni też o kolejnym szczepieniu i zabezpieczeniu przed pchłami i kleszczami.
+
+## Gdzie to znaleźć
+
+Wejdź w **Ustawienia → Słowniki → Zwierzęta**. Na komputerze (okno przeglądarki szersze niż ok. 1000 pikseli) **Zwierzęta** są w lewej kolumnie **Ustawień**.
+
+Zwierzęta należą do konta: wspólne konto rodzinne ma własną listę, oddzielną od Twojego konta osobistego.
+
+## Dodawanie zwierzęcia
+
+1. Stuknij **+** obok **Zwierzęta**.
+2. Wpisz imię i wybierz **Gatunek**: **Pies**, **Kot** lub **Inne**.
+3. Opcjonalnie ustaw **Datę urodzenia**, **Następne szczepienie** i **Następne zabezpieczenie przed pchłami i kleszczami**.
+4. Stuknij **Dodaj zwierzę**.
+
+Aby później zmienić lub usunąć zwierzę, stuknij ołówek na jego karcie. Usunięcie zwierzęcia zostawia wszystkie wydatki; znika tylko zwierzę i jego historia kosztów.
+
+## Przypomnienia
+
+Gdy zwierzę ma datę **Następnego szczepienia** lub **Następnego zabezpieczenia przed pchłami i kleszczami**, dostaniesz powiadomienie push **14 dni** i **2 dni** wcześniej. Przypomnienia podlegają przełącznikowi **Odnowienia subskrypcji** w ustawieniach powiadomień. Po wizycie otwórz zwierzę i ustaw kolejną datę.
+
+Na karcie zwierzęcia zbliżająca się data jest wyróżniona, a miniona oznaczona jako **po terminie**.
+
+## Przypisywanie wydatków do zwierzęcia
+
+1. W **Transakcjach** przytrzymaj wydatek i wybierz zaznaczanie kilku.
+2. Zaznacz wszystkie wydatki, które są kosztem zwierzęcia — karmę, weterynarza, pielęgnację itd.
+3. Stuknij **Dla zwierzęcia** (na komputerze **Przypisz do zwierzęcia** na pasku zaznaczenia).
+4. Wybierz zwierzę (jeśli masz kilka) i rodzaj kosztu: **Karma**, **Weterynarz**, **Pielęgnacja**, **Akcesoria**, **Ubezpieczenie** lub **Inne**.
+5. Stuknij **Przypisz**.
+
+Wydatek należy naraz do jednego zwierzęcia. Przypisanie go innemu przenosi go tam.
+
+## Ekran zwierzęcia
+
+Stuknij **Koszty** na karcie zwierzęcia albo jego wiersz w **Analityce**. Zobaczysz:
+
+- przyciski **Okresu**: 3, 6, 12 miesięcy, 2 lata lub cały okres;
+- cztery liczby: **Razem** za okres, średnio **Miesięcznie**, **W tym roku** i liczbę **Pozycji**;
+- **Według miesięcy**: słupek na miesiąc. Stuknij słupek, aby zobaczyć tylko ten miesiąc; **Pokaż wszystko** wraca do całości;
+- **Według rodzaju**: karma, weterynarz i reszta z udziałem procentowym. Stuknij rodzaj, aby przefiltrować listę;
+- **Wszystkie koszty**: każdy wydatek z okresu. Stuknij, aby go otworzyć, albo krzyżyk obok, aby **Usunąć ze zwierzęcia** — sam wydatek zostaje.
+
+Wszystkie kwoty są w Twojej walucie wyświetlania. Kwota bez kursu wymiany zostaje na liście, ale nie wlicza się do sum — informuje o tym notka.
+
+Na komputerze podział według rodzaju stoi w kolumnie po prawej od wykresu i listy.
+
+## Analityka
+
+Gdy konto ma zwierzę, **Analityka** pokazuje kartę **Zwierzęta**: każde zwierzę z kosztem z ostatnich 12 miesięcy, średnią miesięczną i dwoma największymi rodzajami kosztów. **Zarządzaj** otwiera ustawienia zwierząt.
+
+## Konta zaszyfrowane
+
+Imiona zwierząt i daty opieki nie są szyfrowane, nawet na koncie z szyfrowaniem end-to-end — ekran o tym informuje, więc nie wpisuj w nie nic prywatnego. Jeśli szyfrowanie jest zablokowane na Twoim urządzeniu, koszty nadal się sumują, ale miejsce zakupu jest ukryte, dopóki nie odblokujesz go w **Ustawienia → Bezpieczeństwo i szyfrowanie**.
+
+## Kto może co zmieniać
+
+Właściciele i edytorzy mogą dodawać zwierzęta, przypisywać koszty i je usuwać. Obserwatorzy widzą zwierzęta i ich koszty, ale niczego nie zmienią.

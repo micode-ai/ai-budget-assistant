@@ -23,6 +23,7 @@ import { FacetRail, FacetRailTrigger, type KindFacet, type PeriodFacet } from '.
 import { RowContextMenu } from './RowContextMenu';
 import { ExpensesDesktopDialogs } from './ExpensesDesktopDialogs';
 import { useVehicles } from '@/features/vehicles/useVehicles';
+import { usePets } from '@/features/pets/usePets';
 
 /** The Map toggle only ever applied to the expenses stream (income carries no
  *  location) — mirrors the exact conditional `ExpensesMobile` uses, so a
@@ -85,6 +86,8 @@ export function ExpensesDesktop() {
   const { t } = useTranslation();
   // Car costs (ABA-805): the bulk action shows only on an account with a vehicle.
   const { vehicles } = useVehicles();
+  // Pet costs (ABA-831): likewise only on an account with a pet.
+  const { pets } = usePets();
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const { width } = useWindowDimensions();
@@ -565,6 +568,22 @@ export function ExpensesDesktop() {
                       <Text style={styles.bulkBarButtonText}>{t('vehicles.bulkAssign')}</Text>
                     </Pressable>
                   )}
+                  {pets.length > 0 && (
+                    <Pressable
+                      style={styles.bulkBarButton}
+                      onPress={() => {
+                        multiSelect.setShowBulkCategoryPicker(false);
+                        multiSelect.setShowBulkTagPicker(false);
+                        multiSelect.setShowBulkChildPicker(false);
+                        multiSelect.setShowBulkVehiclePicker(false);
+                        multiSelect.setShowBulkPetPicker(true);
+                      }}
+                      accessibilityRole="button"
+                    >
+                      <Ionicons name="paw-outline" size={16} color={theme.colors.primary} />
+                      <Text style={styles.bulkBarButtonText}>{t('pets.bulkAssign')}</Text>
+                    </Pressable>
+                  )}
                   {activeChildren.length > 0 && (
                     <Pressable
                       style={styles.bulkBarButton}
@@ -717,6 +736,10 @@ export function ExpensesDesktop() {
         vehicles={vehicles}
         selectedCount={multiSelect.selectedIds.size}
         onBulkAssignVehicle={(vehicleId, kind) => void multiSelect.handleBulkAssignVehicle(vehicleId, kind)}
+        showBulkPetPicker={multiSelect.showBulkPetPicker}
+        onCloseBulkPetPicker={() => multiSelect.setShowBulkPetPicker(false)}
+        pets={pets}
+        onBulkAssignPet={(petId, kind) => void multiSelect.handleBulkAssignPet(petId, kind)}
       />
     </View>
   );

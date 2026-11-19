@@ -1446,6 +1446,10 @@ Reveja os dados, toque em ✓ para guardar ou no ícone do lápis para abrir o f
 
 *Ver também: [Despesas e receitas](./03-expenses-and-income.md) | [Chat IA](./07-ai-chat.md)*
 
+## Talões de bomba de gasolina
+
+Se o talão for de um posto de combustível e indicar os litros e o preço por litro, o ecrã de confirmação oferece **Adicionar ao registo de combustível** para o seu veículo. Introduza o conta-quilómetros e o abastecimento fica registado com a despesa; deixe vazio para guardar só a despesa. Se os números do talão não batem certo, nada é preenchido.
+
 ## Orçamentos
 URL: https://ai-budget.pl/help/pt/budgets/
 
@@ -2717,6 +2721,8 @@ Veja quanto o carro lhe custa em combustível. Adicione um veículo com nome e t
 Para registar um abastecimento, abra uma despesa de combustível: se a conta tiver um veículo, a despesa mostra uma secção **Abastecimento**. Toque em **Marcar como abastecimento** e indique a quantidade (litros, ou kWh num carro elétrico), o conta-quilómetros e se encheu o depósito. O consumo é medido entre depósitos cheios, por isso os valores aparecem após dois abastecimentos de depósito cheio; um abastecimento parcial conta para o seguinte completo. Não tem os litros nem o conta-quilómetros? Deixe ambos vazios: a compra conta como combustível no custo total, só não no consumo.
 
 Os outros custos do carro também contam. Em qualquer despesa, a secção **Carro** permite escolher o veículo e o tipo: combustível, manutenção, seguro, estacionamento, impostos e taxas ou outro (litros e conta-quilómetros só são pedidos para o combustível). Na ficha do veículo, **Categorias deste veículo** torna isto automático: escolha um tipo, toque nas categorias (por exemplo «Seguro automóvel» como seguro) e as despesas delas contam para o carro — as anteriores assim que guarda, as novas à medida que chegam. O cartão mostra então os últimos 12 meses: o total, a média mensal, cada tipo e todos os custos por km. Os veículos precisam de ligação à internet. Eliminar um veículo mantém as despesas; só desaparecem o veículo e as estatísticas. Vários de uma vez: no ecrã Transações, pesquise (por exemplo «Benzyna» ou «Parking»), selecione as despesas e escolha **Atribuir ao veículo**, depois o veículo e o tipo. Os abastecimentos que já têm litros ficam como estão.
+
+**Prazos.** Na ficha do veículo, defina a próxima renovação do seguro, a próxima inspeção, a próxima revisão e a quilometragem da próxima revisão (tudo opcional; a cruz limpa uma data). Recebe um lembrete 14 e 2 dias antes de cada data, e uma vez quando a quilometragem de um abastecimento ficar a menos de 500 km da revisão. Os prazos nos próximos 30 dias ou já ultrapassados aparecem como etiquetas no cartão do veículo e no seu ecrã, onde o cartão **Prazos** mostra todas as datas. Quando marca uma despesa como seguro ou revisão, a app propõe adiar esse prazo um ano; nada muda sem a sua confirmação.
 
 ## Dados e relatórios
 
@@ -4113,6 +4119,10 @@ O OCR às vezes lê mal um preço, inventa uma linha ou salta outra. Toque em **
 Tanto `14,69` como `14.69` funcionam. Depois de cada correção, o bot volta a enviar a lista numerada e uma linha `Linhas: … · total do talão: …` — quando os dois valores não coincidem, ainda há algo mal lido no talão. A divisão por categorias é recalculada a partir das linhas corrigidas, por isso corrija também o total quando alterar um preço.
 
 Quando terminar, toque em **Adicionar despesa** — nada é guardado até o fazer, e cancelar descarta todas as correções. Aqui só é possível corrigir as linhas e o total; para mudar a categoria de uma linha, abra a despesa na aplicação.
+
+### Talão de combustível → registo de combustível
+
+Se o talão digitalizado for de um posto de combustível e os litros e o preço por litro tiverem sido lidos com clareza, o bot propõe **⛽ Adicionar ao registo (o seu carro)** logo depois de guardar a despesa (no WhatsApp o botão diz **⛽ Ao registo** e o carro aparece na mensagem). Toque nele e escreva a quilometragem em km, por exemplo `123456`; o abastecimento fica registado como depósito cheio para esse carro. O carro é escolhido como na aplicação: o seu único carro, senão aquele em que registou o último abastecimento, senão o único carro com esse combustível — se ainda assim não for claro, o botão não aparece. Toque em **Ignorar** para deixar a despesa sem abastecimento; qualquer outra mensagem segue para o chat como habitualmente. Os observadores não podem registar abastecimentos.
 
 ## Várias contas
 
@@ -5879,3 +5889,65 @@ Consulte [Encriptação ponto a ponto](./15-encryption.md) para saber o que cada
 Pode criar a sua própria aplicação sobre a API do AI Budget — é gratuito. Abra **Definições → Programadores** e toque em **Criar aplicação**: dê-lhe um nome, uma página inicial e os endereços de redirecionamento que vai usar, e escolha **Aplicação de servidor** ou **Aplicação móvel ou de navegador**. Recebe de imediato um **Client ID**; uma aplicação de servidor recebe também um client secret, mostrado **uma única vez** — copie-o imediatamente.
 
 A referência completa da API e um guia passo a passo (em inglês, polaco e russo) estão em [api.ai-budget.pl/public/docs](https://api.ai-budget.pl/public/docs), também acessíveis através de **Documentação da API** no ecrã Programadores. Pode registar até 10 aplicações.
+
+## Animais — quanto custa realmente o seu cão ou gato
+URL: https://ai-budget.pl/help/pt/pet-costs/
+
+> Adicione os seus animais, marque entre as despesas a comida, as idas ao veterinário e a tosquia, e veja quanto custa cada animal por mês e por ano. A app também o avisa antes da próxima vacina e da próxima desparasitação.
+
+## Onde encontrar
+
+Vá a **Definições → Dados de referência → Animais**. Num computador (uma janela do navegador com mais de cerca de 1000 píxeis) **Animais** está na coluna esquerda das **Definições**.
+
+Os animais pertencem a uma conta: uma conta familiar partilhada tem a sua própria lista, separada da conta pessoal.
+
+## Adicionar um animal
+
+1. Toque no **+** junto a **Animais**.
+2. Escreva um nome e escolha a **Espécie**: **Cão**, **Gato** ou **Outro**.
+3. Se quiser, indique a **Data de nascimento**, a **Próxima vacina** e a **Próxima desparasitação**.
+4. Toque em **Adicionar animal**.
+
+Para alterar ou eliminar um animal mais tarde, toque no lápis do seu cartão. Ao eliminar, todas as despesas ficam; só o animal e o seu histórico de custos desaparecem.
+
+## Lembretes
+
+Quando um animal tem data de **Próxima vacina** ou de **Próxima desparasitação**, recebe uma notificação **14 dias** e **2 dias** antes. Os lembretes seguem o interruptor **Renovações de subscrições** das definições de notificações. Depois da consulta, abra o animal e indique a data seguinte.
+
+No cartão do animal, uma data próxima fica destacada e uma data já passada aparece como **em atraso**.
+
+## Atribuir despesas a um animal
+
+1. Em **Transações**, mantenha premida uma despesa e escolha selecionar várias.
+2. Selecione todas as despesas que são custos do animal — comida, veterinário, tosquia, etc.
+3. Toque em **Animal** (no computador, **Atribuir a animal** na barra de seleção).
+4. Escolha o animal (se tiver vários) e o tipo de custo: **Comida**, **Veterinário**, **Tosquia e banho**, **Acessórios**, **Seguro** ou **Outros**.
+5. Toque em **Atribuir**.
+
+Uma despesa pertence a um só animal. Atribuí-la a outro muda-a para esse.
+
+## O ecrã do animal
+
+Toque em **Custos** no cartão do animal, ou na sua linha em **Análise**. Vai ver:
+
+- botões de **Período**: 3, 6, 12 meses, 2 anos ou tudo;
+- quatro valores: o **Total** do período, a média **Por mês**, **Este ano** e o número de **Registos**;
+- **Por mês**: uma barra por mês. Toque numa barra para ver só esse mês; **Mostrar tudo** volta atrás;
+- **Por tipo**: comida, veterinário e o resto, com a sua parte. Toque num para filtrar a lista;
+- **Todos os custos**: cada despesa do período. Toque para a abrir, ou na cruz ao lado para **Retirar do animal** — a despesa em si fica.
+
+Todos os valores aparecem na sua moeda de apresentação. Um valor sem taxa de câmbio fica na lista mas não entra nos totais, e uma nota indica-o.
+
+No computador, a divisão por tipo fica numa coluna à direita do gráfico e da lista.
+
+## Análise
+
+Quando a conta tem um animal, a **Análise** mostra um cartão **Animais**: cada animal com o custo dos últimos 12 meses, a média mensal e os seus dois maiores tipos de custo. **Gerir** abre as definições dos animais.
+
+## Contas encriptadas
+
+Os nomes dos animais e as datas de cuidados não são encriptados, mesmo numa conta com encriptação ponto a ponto — o ecrã avisa, por isso não coloque neles nada privado. Se a encriptação estiver bloqueada no seu dispositivo, os custos continuam a ser somados, mas onde cada um foi feito fica oculto até a desbloquear em **Definições → Segurança e encriptação**.
+
+## Quem pode alterar o quê
+
+Proprietários e editores podem adicionar animais, atribuir custos e retirá-los. Os leitores veem os animais e os seus custos, mas não podem alterar nada.

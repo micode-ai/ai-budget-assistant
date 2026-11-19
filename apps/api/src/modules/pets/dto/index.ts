@@ -13,6 +13,15 @@ export class CreatePetDto {
   @IsOptional()
   @IsDateString()
   birthday?: string;
+
+  /** `YYYY-MM-DD`; the reminder cron pushes 14 and 2 days before (ABA-831). */
+  @IsOptional()
+  @IsDateString()
+  nextVaccinationDate?: string;
+
+  @IsOptional()
+  @IsDateString()
+  nextParasiteTreatmentDate?: string;
 }
 
 export class UpdatePetDto {

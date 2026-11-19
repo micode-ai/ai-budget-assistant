@@ -64,6 +64,12 @@ export default function ReferenceDataScreen() {
       description: t('vehicles.settingsDesc'),
       route: '/settings/vehicles',
     },
+    {
+      icon: 'paw-outline',
+      label: t('pets.title'),
+      description: t('pets.settingsDesc'),
+      route: '/settings/pets',
+    },
   ];
 
   return (

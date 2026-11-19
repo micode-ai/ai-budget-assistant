@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { showAlert } from '@/utils/alert';
 import { useTranslation } from 'react-i18next';
-import type { Expense, VehicleCostKind } from '@budget/shared-types';
+import type { Expense, PetCostKind, VehicleCostKind } from '@budget/shared-types';
 import { api } from '@/services/api';
 import type { AttributionMode } from '@budget/shared-utils';
 import { useAccountStore } from '@/stores/accountStore';
@@ -9,6 +9,7 @@ import { useChildStore } from '@/stores/childStore';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { loadAttributionModes } from '@/features/children/attributionModes';
 import { planBulkAssign } from '@/features/children/bulkAssign';
+import { chunkPetIds } from '@/features/pets/petDisplay';
 
 type BulkPatch = { categoryId?: string; tagIds?: string[]; isDeleted?: boolean };
 
@@ -23,6 +24,7 @@ export function useExpenseMultiSelect(
   const [showBulkTagPicker, setShowBulkTagPicker] = useState(false);
   const [showBulkChildPicker, setShowBulkChildPicker] = useState(false);
   const [showBulkVehiclePicker, setShowBulkVehiclePicker] = useState(false);
+  const [showBulkPetPicker, setShowBulkPetPicker] = useState(false);
   const [isBulkProcessing, setIsBulkProcessing] = useState(false);
 
   const enterMultiSelect = (firstId: string) => {
@@ -32,6 +34,7 @@ export function useExpenseMultiSelect(
     setShowBulkTagPicker(false);
     setShowBulkChildPicker(false);
     setShowBulkVehiclePicker(false);
+    setShowBulkPetPicker(false);
   };
 
   const exitMultiSelect = () => {
@@ -41,6 +44,7 @@ export function useExpenseMultiSelect(
     setShowBulkTagPicker(false);
     setShowBulkChildPicker(false);
     setShowBulkVehiclePicker(false);
+    setShowBulkPetPicker(false);
   };
 
   const toggleSelection = (id: string) => {
@@ -172,6 +176,35 @@ ${t('children.bulkAssignFailed', { count: failed })}` : summary);
     }
   };
 
+  /**
+   * Pet costs (ABA-831): every selected expense as one kind of cost of a pet.
+   * One request per 500 ids (the server's cap) — never one per expense, which
+   * would trip the proxy's rate limit. The server PK is sent when known, else
+   * the device id (the server resolves either).
+   */
+  const handleBulkAssignPet = async (petId: string, kind: PetCostKind) => {
+    if (selectedIds.size === 0) return;
+    setShowBulkPetPicker(false);
+    setIsBulkProcessing(true);
+    try {
+      const chosen = useExpenseStore.getState().expenses.filter((e) => selectedIds.has(e.id));
+      let assigned = 0;
+      let notFound = 0;
+      for (const ids of chunkPetIds(chosen.map((e) => e.serverId ?? e.id))) {
+        const res = await api.setPetCostsBulk(petId, ids, kind);
+        assigned += res.assigned;
+        notFound += res.notFound;
+      }
+      showAlert('', t('pets.bulkAssigned', { assigned, notFound }));
+      exitMultiSelect();
+    } catch (e) {
+      console.warn('[pets] bulk assign failed:', e instanceof Error ? e.message : String(e));
+      showAlert(t('common.error'), t('pets.saveFailed'));
+    } finally {
+      setIsBulkProcessing(false);
+    }
+  };
+
   const handleBulkDelete = () => {
     if (selectedIds.size === 0) return;
     showAlert(
@@ -208,6 +241,8 @@ ${t('children.bulkAssignFailed', { count: failed })}` : summary);
     setShowBulkChildPicker,
     showBulkVehiclePicker,
     setShowBulkVehiclePicker,
+    showBulkPetPicker,
+    setShowBulkPetPicker,
     isBulkProcessing,
     enterMultiSelect,
     exitMultiSelect,
@@ -218,6 +253,7 @@ ${t('children.bulkAssignFailed', { count: failed })}` : summary);
     handleBulkAddTags,
     handleBulkAssignChildren,
     handleBulkAssignVehicle,
+    handleBulkAssignPet,
     handleBulkDelete,
   };
 }

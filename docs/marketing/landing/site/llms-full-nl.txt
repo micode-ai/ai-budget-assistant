@@ -4227,6 +4227,10 @@ Controleer de details, tik op ✓ om op te slaan of op het potloodpictogram om h
 
 *Zie ook: [Uitgaven & Inkomsten](./03-expenses-and-income.md) | [AI-chat](./07-ai-chat.md)*
 
+## Tankbonnen
+
+Komt de bon van een tankstation en staan liters en prijs per liter erop, dan biedt het bevestigingsscherm **Toevoegen aan tanklogboek** voor je voertuig. Voer de kilometerstand in en de tankbeurt wordt met de uitgave gelogd; laat leeg om alleen de uitgave op te slaan. Kloppen de cijfers op de bon niet, dan wordt niets vooraf ingevuld.
+
 ## Budgetten
 URL: https://ai-budget.pl/help/nl/budgets/
 
@@ -5483,6 +5487,8 @@ Zie wat je auto aan brandstof kost. Voeg een voertuig toe met een naam en brands
 Open een brandstofuitgave om een tankbeurt vast te leggen: heeft het account een voertuig, dan toont de uitgave een onderdeel **Tankbeurt**. Tik op **Markeren als tankbeurt** en vul de hoeveelheid in (liters, of kWh bij een elektrische auto), de kilometerstand en of je de tank vol hebt gegooid. Het verbruik wordt gemeten tussen volle tanks, dus de cijfers verschijnen na twee tankbeurten met een volle tank; een gedeeltelijke tankbeurt telt mee bij de volgende volle. Geen liters of kilometerstand bij de hand? Laat beide leeg: de aankoop telt als brandstof in de totale kosten, alleen niet in het verbruik.
 
 Ook andere autokosten tellen mee. Bij elke uitgave kies je in het onderdeel **Auto** het voertuig en de soort: brandstof, onderhoud, verzekering, parkeren, belastingen & heffingen of overig (liters en kilometerstand alleen bij brandstof). In het voertuigvenster maakt **Categorieën van dit voertuig** het automatisch: kies een soort, tik op de categorieën (bijvoorbeeld "Autoverzekering" als verzekering) en hun uitgaven tellen voor de auto — eerdere bij het opslaan, nieuwe zodra ze binnenkomen. De kaart toont dan de afgelopen 12 maanden: het totaal, het maandgemiddelde, elke soort en alle kosten per km. Voertuigen hebben een internetverbinding nodig. Een voertuig verwijderen laat de uitgaven staan; alleen het voertuig en zijn statistieken verdwijnen. Veel tegelijk: zoek op het scherm Transacties (bijvoorbeeld "Benzyna" of "Parking"), selecteer de uitgaven en kies **Aan voertuig toewijzen**, daarna het voertuig en de soort. Tankbeurten die al liters hebben, blijven zoals ze zijn.
+
+**Vervaldata.** Stel in het voertuigblad de volgende verlenging van de verzekering, de volgende APK, de volgende onderhoudsbeurt en de kilometerstand voor het volgende onderhoud in (alles optioneel; het kruisje wist een datum). Je krijgt een herinnering 14 en 2 dagen voor elke datum, en één keer wanneer de kilometerstand van een tankbeurt binnen 500 km van het onderhoud komt. Vervaldata binnen 30 dagen of al verstreken verschijnen als labels op de voertuigkaart en op het voertuigscherm, waar de kaart **Vervaldata** alle data toont. Markeer je een uitgave als verzekering of onderhoud, dan biedt de app aan die vervaldatum een jaar op te schuiven; zonder jouw bevestiging verandert er niets.
 
 ## Gegevens & Rapporten
 
@@ -6875,6 +6881,10 @@ OCR leest soms een prijs verkeerd, verzint een regel of mist er een. Tik op **�
 Zowel `14,69` als `14.69` werkt. Na elke correctie stuurt de bot de genummerde lijst opnieuw, met een regel `Regels: … · bontotaal: …` — verschillen die twee, dan is er nog iets verkeerd gelezen. De categorieverdeling wordt opnieuw berekend uit de gecorrigeerde regels, dus corrigeer ook het totaal als je een prijs wijzigt.
 
 Ben je klaar, tik dan op **Uitgave toevoegen** — daarvoor wordt niets opgeslagen, en annuleren gooit alle correcties weg. Alleen de regels en het totaal zijn hier te corrigeren; open de uitgave in de app om de categorie van een regel te wijzigen.
+
+### Tankbon → brandstoflogboek
+
+Is de gescande bon van een tankstation en zijn de liters en de literprijs duidelijk gelezen, dan biedt de bot direct na het opslaan van de uitgave **⛽ Naar brandstoflogboek (je auto)** aan (op WhatsApp heet de knop **⛽ Naar logboek** en staat de auto in het bericht). Tik erop en typ de kilometerstand, bijvoorbeeld `123456`; de tankbeurt wordt voor die auto vastgelegd als volle tank. De auto wordt gekozen zoals in de app: je enige auto, anders die waarvoor je het laatst een tankbeurt vastlegde, anders de enige auto met die brandstof — is het dan nog onduidelijk, dan verschijnt er geen knop. Met **Overslaan** blijft de uitgave zonder tankbeurt; elk ander bericht gaat zoals gewoonlijk naar de chat. Kijkers kunnen geen tankbeurten vastleggen.
 
 ## Meerdere accounts
 
@@ -8634,3 +8644,65 @@ Wat elk niveau omvat, lees je in [End-to-end-versleuteling](./15-encryption.md).
 Je kunt je eigen app bouwen op de AI Budget API – gratis. Open **Instellingen → Ontwikkelaars** en tik op **App maken**: geef een naam, een website en de redirect-adressen die hij gebruikt, en kies **Server-app** of **Mobiele of browser-app**. De **Client-ID** krijg je meteen; een server-app krijgt daarnaast een client secret die **maar één keer** getoond wordt – kopieer hem direct.
 
 De volledige API-referentie en een stapsgewijze handleiding (in het Engels, Pools en Russisch) staan op [api.ai-budget.pl/public/docs](https://api.ai-budget.pl/public/docs), ook te bereiken via **API-documentatie** op het scherm Ontwikkelaars. Je kunt tot 10 apps registreren.
+
+## Huisdieren — wat je hond of kat echt kost
+URL: https://ai-budget.pl/help/nl/pet-costs/
+
+> Voeg je huisdieren toe, markeer voer, dierenartsbezoeken en verzorging tussen je uitgaven en zie wat elk dier per maand en per jaar kost. De app herinnert je ook aan de volgende vaccinatie en vlooien- en tekenbehandeling.
+
+## Waar je het vindt
+
+Ga naar **Instellingen → Referentiegegevens → Huisdieren**. Op een computer (een browservenster breder dan ongeveer 1000 pixels) staat **Huisdieren** in de linkerkolom van **Instellingen**.
+
+Huisdieren horen bij een rekening: een gedeelde gezinsrekening heeft een eigen lijst, los van je persoonlijke rekening.
+
+## Een huisdier toevoegen
+
+1. Tik op de **+** naast **Huisdieren**.
+2. Typ een naam en kies de **Soort**: **Hond**, **Kat** of **Anders**.
+3. Stel eventueel de **Geboortedatum**, de **Volgende vaccinatie** en de **Volgende vlooien- en tekenbehandeling** in.
+4. Tik op **Huisdier toevoegen**.
+
+Om een huisdier later te wijzigen of te verwijderen, tik je op het potlood op zijn kaart. Bij verwijderen blijven alle uitgaven bestaan; alleen het dier en zijn kostenoverzicht verdwijnen.
+
+## Herinneringen
+
+Heeft een huisdier een datum voor **Volgende vaccinatie** of **Volgende vlooien- en tekenbehandeling**, dan krijg je **14 dagen** en **2 dagen** van tevoren een pushmelding. De herinneringen volgen de schakelaar **Abonnementsverlengingen** in de meldingsinstellingen. Open na het bezoek het dier en vul de volgende datum in.
+
+Op de kaart van het dier wordt een datum die dichtbij is gemarkeerd, en een datum die voorbij is staat als **verlopen**.
+
+## Uitgaven aan een huisdier toewijzen
+
+1. Houd in **Transacties** een uitgave ingedrukt en kies meerdere selecteren.
+2. Selecteer alle uitgaven die kosten van het dier zijn — voer, dierenarts, verzorging enzovoort.
+3. Tik op **Huisdier** (op de computer **Toewijzen aan huisdier** in de selectiebalk).
+4. Kies het dier (als je er meerdere hebt) en de soort kosten: **Voer**, **Dierenarts**, **Verzorging**, **Benodigdheden**, **Verzekering** of **Overig**.
+5. Tik op **Toewijzen**.
+
+Een uitgave hoort bij één dier tegelijk. Wijs je haar toe aan een ander dier, dan verhuist ze daarheen.
+
+## Het scherm van een huisdier
+
+Tik op **Kosten** op de kaart van het dier, of op zijn regel in **Analyse**. Je ziet:
+
+- **Periode**-knoppen: 3, 6, 12 maanden, 2 jaar of alles;
+- vier cijfers: het **Totaal** van de periode, het gemiddelde **Per maand**, **Dit jaar** en het aantal **Posten**;
+- **Per maand**: een staaf per maand. Tik op een staaf om alleen die maand te zien; **Alles tonen** gaat terug;
+- **Per soort**: voer, dierenarts en de rest met hun aandeel. Tik op een soort om de lijst te filteren;
+- **Alle kosten**: elke uitgave van de periode. Tik om haar te openen, of tik op het kruisje ernaast om haar **Los te koppelen van het huisdier** — de uitgave zelf blijft.
+
+Alle bedragen staan in je weergavevaluta. Een bedrag zonder wisselkoers blijft in de lijst, maar telt niet mee in de totalen; een notitie meldt dat.
+
+Op de computer staat de verdeling per soort in een kolom rechts van de grafiek en de lijst.
+
+## Analyse
+
+Heeft de rekening een huisdier, dan toont **Analyse** een kaart **Huisdieren**: elk dier met zijn kosten over de laatste 12 maanden, het maandgemiddelde en zijn twee grootste kostensoorten. **Beheren** opent de huisdierinstellingen.
+
+## Versleutelde rekeningen
+
+Namen van huisdieren en verzorgingsdatums worden niet versleuteld, ook niet op een rekening met end-to-end-versleuteling — het scherm meldt dat, dus zet er niets privés in. Is de versleuteling op je apparaat vergrendeld, dan worden de kosten nog steeds opgeteld, maar waar elke uitgave is gedaan blijft verborgen tot je haar ontgrendelt via **Instellingen → Beveiliging & versleuteling**.
+
+## Wie wat mag wijzigen
+
+Eigenaren en bewerkers kunnen huisdieren toevoegen, kosten toewijzen en loskoppelen. Kijkers zien de dieren en hun kosten, maar kunnen niets wijzigen.

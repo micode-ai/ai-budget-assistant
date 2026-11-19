@@ -589,6 +589,13 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="settings/pets"
+          options={{
+            headerShown: settingsHeaderShown('settings/pets'),
+            title: t('pets.title'),
+          }}
+        />
+        <Stack.Screen
           name="settings/reference"
           options={{
             headerShown: true,
@@ -868,6 +875,13 @@ function RootNavigator() {
           options={{
             headerShown: true,
             title: t('vehicles.detailTitle'),
+          }}
+        />
+        <Stack.Screen
+          name="pets/[id]"
+          options={{
+            headerShown: true,
+            title: t('pets.detailTitle'),
           }}
         />
         <Stack.Screen

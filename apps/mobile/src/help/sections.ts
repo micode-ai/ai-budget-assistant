@@ -53,4 +53,5 @@ export const sectionsMeta: SectionMeta[] = [
   { id: '43-real-salary', icon: 'trending-up-outline', color: '#0EA5E9' },
   { id: '44-shared-groups', icon: 'people-outline', color: '#14B8A6' },
   { id: '45-connected-apps', icon: 'link-outline', color: '#6366F1' },
+  { id: '46-pet-costs', icon: 'paw-outline', color: '#F59E0B' },
 ];
