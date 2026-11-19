@@ -8,6 +8,24 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.43.1 - 2026-11-20
+
+**Fixes**
+
+- Android: with the app language set to Portuguese (Portugal or Brazil), the home screen showed
+  "Something went wrong" right after sign-in (since 1.41.0). Fixed (ABA-835).
+
+**Pets**
+
+- Category rules for pets: expenses in a chosen category are attributed to a pet automatically,
+  your own choice on an expense always wins; a pet field on the expense screen (ABA-833).
+
+**Behind the scenes**
+
+- A new ad film for pet costs (ABA-834).
+
+---
+
 ## 1.43.0 - 2026-11-19
 
 **Pets**
