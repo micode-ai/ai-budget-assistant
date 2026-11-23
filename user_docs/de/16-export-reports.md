@@ -44,6 +44,16 @@ Wenn du diesen Bildschirm über **Bericht exportieren** im Analyse-Tab öffnest,
 
 Berichte werden 7 Tage gespeichert und dann automatisch gelöscht.
 
+## Berichtsumfang
+
+Unter **Bericht umfasst** wählst du, was die Datei enthält:
+
+- **Dieses Konto** - das aktuelle Konto (Standard).
+- **Alle Konten** - alle deine Konten, außer denen, die du auf dem Bildschirm Alle Konten ausgeschaltet hast.
+- **Gruppe** - eine deiner Kontogruppen (Pro).
+
+Ein Bericht über mehrere Konten hat eine Spalte **Konto** und eine Spalte **Hinweis** und zeigt je Konto eine Zwischensumme. Zeilen mit Hinweis - geplante Ausgaben, Beträge aus geteilten Rechnungen und Übertragungen zwischen eigenen Konten - werden aufgeführt, aber in **keiner** Summe mitgezählt. Vollständig verschlüsselte Konten fehlen und werden am Ende des Berichts genannt. Die Zahlen stimmen mit dem Bildschirm Alle Konten überein. Ein solcher Bericht wird wie jeder andere 7 Tage aufbewahrt und lässt sich aus jedem Konto öffnen.
+
 ## Monatliche Zusammenfassung
 
 Eine Momentaufnahme deiner aktuellen Monatsfinanzaktivität:

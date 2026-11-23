@@ -30,6 +30,10 @@ import {
 import { formatCurrency, formatDate } from '@budget/shared-utils';
 import type { GenerateReportDto, ReportListItem } from '@budget/shared-types';
 import type { Currency } from '@budget/shared-types';
+import { ReportScopePicker, type ReportScope } from '@/components/reports/ReportScopePicker';
+import { useAccountGroups } from '@/features/all-accounts/useAccountGroups';
+import { resolveExcludedAccounts } from '@/features/all-accounts/useAllAccounts';
+import { useAccountStore } from '@/stores/accountStore';
 import { categoryLabel } from '@/utils/entityLabel';
 
 type ReportFormat = 'csv' | 'pdf' | 'excel';
@@ -51,6 +55,7 @@ export default function ReportsScreen() {
     error,
     digest,
     generateReport,
+    generateConsolidatedReport,
     loadReports,
     deleteReport,
     shareReport,
@@ -72,6 +77,17 @@ export default function ReportsScreen() {
   const [monthAnchor, setMonthAnchor] = useState<Date | null>(seed?.monthAnchor ?? null);
   const [customStart, setCustomStart] = useState<Date | null>(seed?.customStart ?? null);
   const [customEnd, setCustomEnd] = useState<Date | null>(seed?.customEnd ?? null);
+  const [scope, setScope] = useState<ReportScope>('thisAccount');
+  const [groupId, setGroupId] = useState<string | null>(null);
+  // Groups are Pro and only matter for the group scope: do not hit the paywalled route on every mount.
+  const { groups } = useAccountGroups(scope === 'group');
+  // A group deleted elsewhere (or gone after a reload) must not stay selected.
+  useEffect(() => {
+    if (groupId && !groups.some((g) => g.id === groupId)) setGroupId(null);
+  }, [groups, groupId]);
+  const accounts = useAccountStore((s) => s.accounts);
+  // A cross-account report spans accounts with different anchors: use calendar months there.
+  const rangeAnchorDay = scope === 'thisAccount' ? anchorDay : null;
   const [showStartPicker, setShowStartPicker] = useState(false);
   const [showEndPicker, setShowEndPicker] = useState(false);
 
@@ -85,20 +101,20 @@ export default function ReportsScreen() {
   const intlLocale = getIntlLocale();
 
   const monthOptions = useMemo(() => {
-    const anchors = buildRecentMonthAnchors(MONTH_PICKER_COUNT, new Date(), anchorDay);
+    const anchors = buildRecentMonthAnchors(MONTH_PICKER_COUNT, new Date(), rangeAnchorDay);
     const seeded = seed?.monthAnchor;
     // Analytics can page back further than the picker offers; keep that month
     // reachable instead of showing the strip with nothing selected.
     if (
       seeded &&
       !anchors.some(
-        (a) => a.getFullYear() === seeded.getFullYear() && a.getMonth() === seeded.getMonth(),
+        (a) => a.getFullYear() === seeded.getFullYear() && a.getMonth() === seeded.getMonth()
       )
     ) {
       anchors.push(seeded);
     }
     return anchors;
-  }, [seed, anchorDay]);
+  }, [seed, rangeAnchorDay]);
 
   const monthScrollRef = useRef<ScrollView>(null);
   const monthRevealed = useRef(false);
@@ -114,14 +130,40 @@ export default function ReportsScreen() {
   // `null` while a custom range is half-picked or backwards — Generate stays
   // disabled rather than sending a range the report cannot honour.
   const resolvedRange = useMemo(
-    () => resolveReportDateRange({ mode: rangeMode, monthAnchor, customStart, customEnd }, new Date(), anchorDay),
-    [rangeMode, monthAnchor, customStart, customEnd, anchorDay],
+    () =>
+      resolveReportDateRange(
+        { mode: rangeMode, monthAnchor, customStart, customEnd },
+        new Date(),
+        rangeAnchorDay
+      ),
+    [rangeMode, monthAnchor, customStart, customEnd, rangeAnchorDay]
   );
+
+  const groupMissing = scope === 'group' && !groupId;
 
   const handleGenerate = async () => {
     if (!resolvedRange) return;
     const { startDate, endDate } = resolvedRange;
-    const dto: GenerateReportDto = {
+    if (groupMissing) return;
+    const reportId =
+      scope === 'thisAccount'
+        ? await generateReport(buildDto(startDate, endDate))
+        : await generateConsolidatedReport({
+            format: selectedFormat,
+            startDate,
+            endDate,
+            includeExpenses: true,
+            includeIncomes: true,
+            locale: i18n.language,
+            ...(scope === 'group' && groupId
+              ? { groupId }
+              : { exclude: resolveExcludedAccounts(user?.id, accounts) }),
+          });
+    await finishGenerate(reportId);
+  };
+
+  const buildDto = (startDate: string, endDate: string): GenerateReportDto => {
+    return {
       format: selectedFormat,
       startDate,
       endDate,
@@ -129,11 +171,12 @@ export default function ReportsScreen() {
       includeIncomes: true,
       locale: i18n.language,
     };
+  };
 
-    const reportId = await generateReport(dto);
+  const finishGenerate = async (reportId: string | null) => {
     if (!reportId) return;
 
-    const newReport = useReportStore.getState().reports.find(r => r.id === reportId);
+    const newReport = useReportStore.getState().reports.find((r) => r.id === reportId);
     if (!newReport) return;
 
     // Save it, don't just offer to forward it: on Android this opens the folder
@@ -159,18 +202,14 @@ export default function ReportsScreen() {
   };
 
   const handleDelete = (report: ReportListItem) => {
-    showAlert(
-      t('reports.deleteTitle'),
-      t('reports.deleteConfirm'),
-      [
-        { text: t('common.cancel'), style: 'cancel' },
-        {
-          text: t('common.delete'),
-          style: 'destructive',
-          onPress: () => deleteReport(report.id),
-        },
-      ],
-    );
+    showAlert(t('reports.deleteTitle'), t('reports.deleteConfirm'), [
+      { text: t('common.cancel'), style: 'cancel' },
+      {
+        text: t('common.delete'),
+        style: 'destructive',
+        onPress: () => deleteReport(report.id),
+      },
+    ]);
   };
 
   const FORMATS: { key: ReportFormat; label: string; icon: string }[] = [
@@ -188,7 +227,7 @@ export default function ReportsScreen() {
     { key: 'custom', label: t('reports.customRange') },
   ];
 
-  const currency = ((digest?.digest.currencyCode || user?.currencyCode || 'USD')) as Currency;
+  const currency = (digest?.digest.currencyCode || user?.currencyCode || 'USD') as Currency;
 
   return (
     <SafeAreaView style={styles.container} edges={[]}>
@@ -197,8 +236,20 @@ export default function ReportsScreen() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{t('reports.generateReport')}</Text>
 
+          {accounts.length >= 2 && (
+            <ReportScopePicker
+              scope={scope}
+              onScope={setScope}
+              groups={groups}
+              groupId={groupId}
+              onGroupId={setGroupId}
+            />
+          )}
+
           {/* Format Selector */}
-          <Text style={styles.fieldLabel}>{t('reports.format')}</Text>
+          <Text style={[styles.fieldLabel, { marginTop: theme.spacing[4] }]}>
+            {t('reports.format')}
+          </Text>
           <View style={styles.formatRow}>
             {FORMATS.map((fmt) => (
               <TouchableOpacity
@@ -209,9 +260,16 @@ export default function ReportsScreen() {
                 <Ionicons
                   name={fmt.icon as any}
                   size={24}
-                  color={selectedFormat === fmt.key ? theme.colors.primary : theme.colors.textTertiary}
+                  color={
+                    selectedFormat === fmt.key ? theme.colors.primary : theme.colors.textTertiary
+                  }
                 />
-                <Text style={[styles.formatLabel, selectedFormat === fmt.key && styles.formatLabelActive]}>
+                <Text
+                  style={[
+                    styles.formatLabel,
+                    selectedFormat === fmt.key && styles.formatLabelActive,
+                  ]}
+                >
                   {fmt.label}
                 </Text>
               </TouchableOpacity>
@@ -219,7 +277,9 @@ export default function ReportsScreen() {
           </View>
 
           {/* Date Range */}
-          <Text style={[styles.fieldLabel, { marginTop: theme.spacing[4] }]}>{t('reports.dateRange')}</Text>
+          <Text style={[styles.fieldLabel, { marginTop: theme.spacing[4] }]}>
+            {t('reports.dateRange')}
+          </Text>
           <View style={styles.rangeRow}>
             {DATE_RANGES.map((range) => (
               <TouchableOpacity
@@ -227,7 +287,12 @@ export default function ReportsScreen() {
                 style={[styles.rangeChip, rangeMode === range.key && styles.rangeChipActive]}
                 onPress={() => setRangeMode(range.key)}
               >
-                <Text style={[styles.rangeChipText, rangeMode === range.key && styles.rangeChipTextActive]}>
+                <Text
+                  style={[
+                    styles.rangeChipText,
+                    rangeMode === range.key && styles.rangeChipTextActive,
+                  ]}
+                >
                   {range.label}
                 </Text>
               </TouchableOpacity>
@@ -260,7 +325,9 @@ export default function ReportsScreen() {
                       // offset is only knowable once it has laid out.
                       onLayout={isSelected ? (e) => revealMonth(e.nativeEvent.layout.x) : undefined}
                     >
-                      <Text style={[styles.rangeChipText, isSelected && styles.rangeChipTextActive]}>
+                      <Text
+                        style={[styles.rangeChipText, isSelected && styles.rangeChipTextActive]}
+                      >
                         {formatMonthLabel(anchor, intlLocale)}
                       </Text>
                     </TouchableOpacity>
@@ -339,10 +406,10 @@ export default function ReportsScreen() {
           <TouchableOpacity
             style={[
               styles.generateButton,
-              (isGenerating || !resolvedRange) && styles.generateButtonDisabled,
+              (isGenerating || !resolvedRange || groupMissing) && styles.generateButtonDisabled,
             ]}
             onPress={handleGenerate}
-            disabled={isGenerating || !resolvedRange}
+            disabled={isGenerating || !resolvedRange || groupMissing}
           >
             {isGenerating ? (
               <ActivityIndicator size="small" color="#FFFFFF" />
@@ -382,10 +449,15 @@ export default function ReportsScreen() {
               </View>
               <View style={styles.digestSavings}>
                 <Text style={styles.digestSavingsLabel}>{t('reports.savingsRate')}</Text>
-                <Text style={[
-                  styles.digestSavingsValue,
-                  { color: digest.digest.savingsRate >= 0 ? theme.colors.success : theme.colors.danger },
-                ]}>
+                <Text
+                  style={[
+                    styles.digestSavingsValue,
+                    {
+                      color:
+                        digest.digest.savingsRate >= 0 ? theme.colors.success : theme.colors.danger,
+                    },
+                  ]}
+                >
                   {digest.digest.savingsRate.toFixed(1)}%
                 </Text>
               </View>
@@ -394,14 +466,16 @@ export default function ReportsScreen() {
                   <Text style={styles.digestCategoriesTitle}>{t('reports.topCategories')}</Text>
                   {digest.digest.topCategories.slice(0, 3).map((cat, i) => {
                     const localCat = cat.categoryId ? getCategoryById(cat.categoryId) : null;
-                    const displayName = localCat ? categoryLabel(localCat) : cat.name || t('common.uncategorized');
+                    const displayName = localCat
+                      ? categoryLabel(localCat)
+                      : cat.name || t('common.uncategorized');
                     return (
-                    <View key={i} style={styles.digestCategoryRow}>
-                      <Text style={styles.digestCategoryName}>{displayName}</Text>
-                      <Text style={styles.digestCategoryAmount}>
-                        {formatCurrency(cat.amount, currency)}
-                      </Text>
-                    </View>
+                      <View key={i} style={styles.digestCategoryRow}>
+                        <Text style={styles.digestCategoryName}>{displayName}</Text>
+                        <Text style={styles.digestCategoryAmount}>
+                          {formatCurrency(cat.amount, currency)}
+                        </Text>
+                      </View>
                     );
                   })}
                 </View>
@@ -429,21 +503,27 @@ export default function ReportsScreen() {
                       report.format === 'pdf'
                         ? 'document-outline'
                         : report.format === 'excel'
-                        ? 'grid-outline'
-                        : 'document-text-outline'
+                          ? 'grid-outline'
+                          : 'document-text-outline'
                     }
                     size={20}
                     color={theme.colors.primary}
                   />
                 </View>
                 <View style={styles.reportInfo}>
-                  <Text style={styles.reportName} numberOfLines={1}>{report.fileName}</Text>
+                  <Text style={styles.reportName} numberOfLines={1}>
+                    {report.fileName}
+                  </Text>
                   <Text style={styles.reportMeta}>
-                    {report.format.toUpperCase()} · {new Date(report.createdAt).toLocaleDateString()}
+                    {report.format.toUpperCase()} ·{' '}
+                    {new Date(report.createdAt).toLocaleDateString()}
                     {report.fileSize ? ` · ${(report.fileSize / 1024).toFixed(0)} KB` : ''}
                   </Text>
                 </View>
-                <TouchableOpacity onPress={() => handleDownload(report)} style={styles.reportAction}>
+                <TouchableOpacity
+                  onPress={() => handleDownload(report)}
+                  style={styles.reportAction}
+                >
                   <Ionicons name="download-outline" size={20} color={theme.colors.textTertiary} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => handleShare(report)} style={styles.reportAction}>

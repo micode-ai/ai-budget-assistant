@@ -20,11 +20,12 @@ export interface DiscoveryItem {
  * horizontal strip; neither hardcodes its own copy, so an entry added here
  * reaches both layouts.
  *
+ * `accountCount` gates the all-accounts entry (>= 2 accounts).
  * `onOpenStory` differs by platform (desktop opens a dialog, phone navigates),
  * which is the only reason it is a parameter.
  */
-export function discoveryItems(selectedYear: number, onOpenStory: () => void): DiscoveryItem[] {
-  return [
+export function discoveryItems(selectedYear: number, onOpenStory: () => void, accountCount: number): DiscoveryItem[] {
+  const items: DiscoveryItem[] = [
     { key: 'story', icon: 'book-outline', titleKey: 'story.viewStory', subtitleKey: 'story.title', ai: true, onPress: onOpenStory },
     {
       key: 'scenario',
@@ -65,4 +66,15 @@ export function discoveryItems(selectedYear: number, onOpenStory: () => void): D
       onPress: () => router.push('/real-salary'),
     },
   ];
+  // Spending across accounts only means something with two or more of them.
+  if (accountCount >= 2) {
+    items.splice(5, 0, {
+      key: 'all-accounts',
+      icon: 'layers-outline',
+      titleKey: 'allAccounts.title',
+      subtitleKey: 'allAccounts.entrySub',
+      onPress: () => router.push('/all-accounts'),
+    });
+  }
+  return items;
 }

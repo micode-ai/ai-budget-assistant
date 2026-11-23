@@ -44,6 +44,16 @@ Se você abrir esta tela pelo botão **Exportar relatório** na aba Análises, o
 
 Os relatórios ficam armazenados por 7 dias e depois são excluídos automaticamente.
 
+## Abrangência do relatório
+
+Em **O relatório abrange** escolha o que o arquivo inclui:
+
+- **Esta conta** - a conta em que você está (padrão).
+- **Todas as contas** - todas as suas contas, exceto as que você desligou na tela Todas as contas.
+- **Grupo** - um dos seus grupos de contas (Pro).
+
+Um relatório de várias contas tem uma coluna **Conta** e uma coluna **Nota** e mostra um subtotal por conta. As linhas com nota - despesas planejadas, valores de contas divididas e transferências entre as suas contas - são listadas para você vê-las, mas **não** entram em nenhum total. As contas totalmente criptografadas ficam de fora e são citadas no fim do relatório. Os valores batem com a tela Todas as contas. Esse relatório é guardado por 7 dias, como qualquer outro, e você pode abri-lo a partir de qualquer conta.
+
 ## Resumo mensal
 
 Um retrato da atividade financeira do mês atual:

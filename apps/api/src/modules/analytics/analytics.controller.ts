@@ -55,19 +55,6 @@ export class AnalyticsController {
     );
   }
 
-  @Get('aggregated')
-  async getAggregatedSummary(
-    @Req() req: AuthenticatedRequest,
-    @Query('startDate') startDate: string,
-    @Query('endDate') endDate: string,
-  ) {
-    return this.analyticsService.getAggregatedSummary(
-      req.user.id,
-      new Date(startDate),
-      new Date(endDate),
-    );
-  }
-
   @Post('drill-down')
   async getDrillDown(
     @Req() req: AuthenticatedRequest,

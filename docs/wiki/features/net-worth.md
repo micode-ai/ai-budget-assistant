@@ -49,3 +49,5 @@ summed because only memberships are enumerated. Accounts at `encryptionTier >= 2
 ## History
 
 [ABA-799](https://github.com/micode-ai/ai-budget-assistant/issues/837) — the endpoint, the history, the screen.
+
+See also [all-accounts-analytics](all-accounts-analytics.md) — the same membership-only scoping for spending and income.

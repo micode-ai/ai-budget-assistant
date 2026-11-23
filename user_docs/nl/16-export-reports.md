@@ -44,6 +44,16 @@ Open je dit scherm via **Rapport exporteren** op het tabblad Analyse, dan gaat d
 
 Rapporten worden 7 dagen bewaard en daarna automatisch verwijderd.
 
+## Bereik van het rapport
+
+Kies onder **Rapport omvat** wat het bestand bevat:
+
+- **Deze rekening** - de rekening waarin je zit (standaard).
+- **Alle rekeningen** - al je rekeningen, behalve die je op het scherm Alle rekeningen hebt uitgezet.
+- **Groep** - een van je rekeninggroepen (Pro).
+
+Een rapport over meerdere rekeningen heeft een kolom **Rekening** en een kolom **Opmerking** en toont een subtotaal per rekening. Rijen met een opmerking - geplande uitgaven, bedragen uit gedeelde rekeningen en overboekingen tussen eigen rekeningen - worden getoond, maar tellen in **geen** enkel totaal mee. Volledig versleutelde rekeningen ontbreken en worden aan het einde van het rapport genoemd. De cijfers komen overeen met het scherm Alle rekeningen. Zo'n rapport blijft 7 dagen bewaard, zoals elk ander, en je opent het vanuit elke rekening.
+
 ## Maandelijkse digest
 
 Een momentopname van de financiële activiteit van je huidige maand:

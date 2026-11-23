@@ -100,3 +100,5 @@ Monday-based calendar week, the preset means trailing 7 days, and on a Monday th
 ABA-409 (periods) · ABA-410 (tiering corrected — reports are free, only the e-mail schedule is paid;
 user docs had claimed PDF/Excel were Pro in all nine locales) · ABA-411 (the Analytics hand-off) ·
 ABA-412 (the file-export platform split) · ABA-413 (report currency and PDF row layout).
+
+The consolidated (all accounts / group) report is on [all-accounts-analytics](all-accounts-analytics.md).

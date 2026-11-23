@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import * as PDFDocument from 'pdfkit';
 import * as path from 'path';
 import { planTransactionRows } from './pdf-row-layout.util';
+import { consolidatedLabels } from './consolidated-labels';
 
 // Inter covers Latin, Cyrillic, Latin-Extended — already in node_modules via @expo-google-fonts/inter
 const INTER_DIR = path.dirname(require.resolve('@expo-google-fonts/inter/package.json'));
@@ -29,7 +30,15 @@ interface PdfReportData {
     category: string;
     amount: number;
     currency: string;
+    /** Consolidated reports only: the account the row belongs to. */
+    account?: string;
+    /** Consolidated reports only: why a listed row is excluded from every total. */
+    note?: string;
   }>;
+  /** Consolidated reports only: per-account figures. */
+  accountSubtotals?: Array<{ name: string; spent: number; income: number; net: number }>;
+  /** Consolidated reports only: names of encrypted accounts left out. */
+  excludedAccounts?: string[];
   /** Some amount came from another currency and was converted into `currencyCode`. */
   fxConverted?: boolean;
   /** Some amount had no known rate and is missing from the totals. */
@@ -253,6 +262,21 @@ export class PdfGenerator {
         );
       }
 
+      if (data.accountSubtotals?.length) {
+        doc.moveDown(0.6);
+        doc.fontSize(11).font('Inter-Bold').text(consolidatedLabels(data.locale).accounts);
+        doc.fontSize(9).font('Inter');
+        for (const a of data.accountSubtotals) {
+          doc.text(
+            `${a.name}:  ${data.currencyCode} ${a.spent.toFixed(2)} / ${a.income.toFixed(2)} / ${a.net.toFixed(2)}`,
+            { width: 470 },
+          );
+        }
+      }
+      for (const name of data.excludedAccounts ?? []) {
+        doc.fontSize(8).font('Inter').text(`${name}: ${consolidatedLabels(data.locale).notIncluded}`, { width: 470 });
+      }
+
       doc.moveDown(1);
 
       // Category Breakdown
@@ -311,8 +335,15 @@ export class PdfGenerator {
         // wrapped inside its 170pt column and printed its second line ON TOP of
         // the next transaction. heightOfString reads the font/size set just above,
         // so the measuring must stay inside this block.
+        // Consolidated rows carry the account and a note; fold both into the description cell.
+        const txRows = data.transactions.map((tx) => {
+          if (tx.account === undefined && tx.note === undefined) return tx;
+          const prefix = tx.account ? `[${tx.account}] ` : '';
+          const suffix = tx.note ? ` (${tx.note})` : '';
+          return { ...tx, description: `${prefix}${tx.description}${suffix}` };
+        });
         const plan = planTransactionRows(
-          data.transactions,
+          txRows,
           (tx) =>
             Math.max(
               doc.heightOfString(tx.description || '-', { width: 170 }),

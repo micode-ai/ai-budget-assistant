@@ -229,6 +229,7 @@ the section you came for — it states what must not break and why. A missing se
 - [analytics-tab-breakdowns](features/analytics-tab-breakdowns.md) — the by-merchant and by-income-category donuts
 - [cash-flow-forecast](features/cash-flow-forecast.md) — the next 30 days of the balance: income, subscriptions, recurring expenses and a typical day of spending, on the Analytics tab
 - [net-worth](features/net-worth.md) — net worth across all the user's accounts, now and the last 12 month-ends
+- [all-accounts-analytics](features/all-accounts-analytics.md) — all-accounts overview, account groups (Pro) and the consolidated report
 - [analytics-cash-flow](features/analytics-cash-flow.md) — income vs spending with the savings rate and monthly bars, and fixed (recurring + tracked subscriptions) vs flexible spending
 - [analytics-period-comparisons](features/analytics-period-comparisons.md) — "vs last period", "vs 3-month average", avg per day, category chips and the anomaly list compare the same days while a period is in progress
 - [spending-by-member](features/spending-by-member.md) — the by-member donut on shared accounts

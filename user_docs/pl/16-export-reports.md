@@ -44,6 +44,16 @@ Otwarcie tego ekranu przyciskiem **Eksportuj raport** na zakladce Analityka prze
 
 Raporty sa przechowywane przez 7 dni, a nastepnie automatycznie usuwane.
 
+## Zakres raportu
+
+W polu **Raport obejmuje** wybierz, co zawiera plik:
+
+- **To konto** - konto, w którym jesteś (domyślnie).
+- **Wszystkie konta** - wszystkie twoje konta, oprócz tych wyłączonych na ekranie Wszystkie konta.
+- **Grupa** - jedna z twoich grup kont (Pro).
+
+Raport z wielu kont ma kolumny **Konto** i **Uwaga** oraz podsumowanie dla każdego konta. Wiersze z uwagą - wydatki planowane, kwoty z podziału rachunku i przelewy między własnymi kontami - są wypisane, żebyś je widział, ale **nie** wchodzą do żadnej sumy. W pełni zaszyfrowane konta są pominięte i wymienione na końcu raportu. Liczby zgadzają się z ekranem Wszystkie konta. Taki raport jest przechowywany 7 dni, jak każdy inny, i otworzysz go z dowolnego konta.
+
 ## Podsumowanie miesieczne
 
 Migawka aktywnosci finansowej biezacego miesiaca:

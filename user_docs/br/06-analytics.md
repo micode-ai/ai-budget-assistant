@@ -50,6 +50,16 @@ Nas visões de mês e ano, este cartão compara o período com o mesmo período 
 
 Uma grade dos seus dias recentes, uma coluna por semana e uma linha por dia da semana, colorida pelo quanto você gastou naquele dia — quanto mais escuro, mais (cada tom é um quarto dos seus dias com gastos). No computador ela cobre os últimos 12 meses; no celular, quantos meses couberem em tamanho legível. Toque em um dia para ver a data e o total; senão o cartão mostra seu dia de maior gasto. Abaixo, **Média por dia do mês** mostra quanto você gasta em média em cada dia do mês e quais três dias custam mais. Se a sua conta tiver um **Mês financeiro**, o dia 1 é o primeiro dia dele — o do pagamento. O app não sabe o horário das compras, então o cartão trabalha com dias, não com horas. Ele aparece quando você tiver pelo menos 14 dias com gastos.
 
+## Todas as contas
+
+Abra **Todas as contas** na aba Análises para ver juntas todas as contas de que você faz parte, na sua moeda de exibição. Escolha um período (este mês, mês passado, este ano, ano passado ou um intervalo personalizado) e você verá **Gasto**, **Receitas** e **Líquido** com a comparação com o período anterior, a contribuição de cada conta, despesas e receitas por categoria e os meses em barras empilhadas.
+
+- **Ligue e desligue contas.** Desligue uma conta que você não quer contar, por exemplo uma conta compartilhada que outro membro também conta. A escolha fica salva neste dispositivo. As contas de investimento começam desligadas.
+- **As categorias são unidas pelo nome.** "Mercado" em duas contas vira uma só linha.
+- **Contas criptografadas.** Uma conta totalmente criptografada não pode ser lida e não é incluída. Com criptografia de texto, uma categoria que você renomeou aparece como **Outros**.
+- **Não contam como despesa nem receita:** despesas planejadas, valores que devem a você de uma conta dividida e transferências entre as suas próprias contas incluídas.
+- **Grupos (Pro).** Salve um conjunto de contas como grupo - por exemplo "Aluguéis" - e compare lado a lado as contas dentro de um grupo. Você pode ter até 20 grupos; excluir um grupo nunca mexe nas suas contas nem nos dados. Grupos são um recurso Pro: depois de um downgrade, seus grupos ficam ocultos (não são apagados) até você fazer upgrade de novo.
+
 ## Patrimônio líquido
 
 Abra pela entrada **Patrimônio líquido** na aba Análises ou tocando no cartão **Net Capital** da tela inicial. Ele soma tudo o que você tem em todas as suas contas — o dinheiro de cada carteira, o valor de mercado dos seus investimentos e o dinheiro que devem a você — menos as suas próprias dívidas, na sua moeda de exibição. Você vê a variação em relação ao mês passado e a um ano atrás, as quatro partes e os últimos 12 meses em barras: cada mês passado é reconstruído com base nos seus registros e nas taxas de câmbio daquele mês, então o histórico já existe desde o primeiro dia. Uma barra mais clara indica que alguns investimentos foram avaliados pelo preço de compra porque não havia preço de mercado naquela data. Em **Contas** você pode desativar uma conta — por exemplo uma conta compartilhada que outro membro também conta no patrimônio dele; a escolha fica salva neste dispositivo. Uma conta totalmente criptografada não pode ser lida e não é contada.

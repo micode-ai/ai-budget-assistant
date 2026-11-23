@@ -179,18 +179,6 @@ describe('income totals exclude split-receivable incomes and are otherwise uncha
     expectEveryIncomeQueryExcludes(wheres);
   });
 
-  it('AnalyticsService.getAggregatedSummary — totalIncome across accounts', async () => {
-    const run = (p: any) => {
-      p.accountMember.findMany.mockResolvedValue([{ accountId: 'a1' }]);
-      p.account.findMany.mockResolvedValue([{ id: 'a1', encryptionTier: 0 }]);
-      return new AnalyticsService(p, cache() as any).getAggregatedSummary('u1', day('2026-10-01'), day('2026-10-31'));
-    };
-    const { a, b, wheres } = await twice(salary, [flagged()], run);
-    expect((a.ok as any).totalIncome).toBe(3200);
-    expect(b).toEqual(a);
-    expectEveryIncomeQueryExcludes(wheres);
-  });
-
   it('AnalyticsService.getProjectBreakdown — a project`s income total filters the linked income', async () => {
     const p = fakePrisma([]);
     await new AnalyticsService(p, cache() as any).getProjectBreakdown('a1');

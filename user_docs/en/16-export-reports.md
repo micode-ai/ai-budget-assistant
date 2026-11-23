@@ -44,6 +44,16 @@ Opening this screen through **Export Report** on the Analytics tab carries the p
 
 Reports are stored for 7 days and then automatically deleted.
 
+## Report Scope
+
+Under **Report covers** choose what the file includes:
+
+- **This account** - the account you are in (the default).
+- **All accounts** - every account you belong to, except the ones you switched off on the All accounts screen.
+- **Group** - one of your account groups (Pro).
+
+A report for several accounts has an **Account** column and a **Note** column, and shows a subtotal for each account. Rows with a note - planned expenses, split-bill amounts and transfers between your own accounts - are listed so you can see them, but are **not** included in any total. Fully encrypted accounts are left out and named at the end of the report. The figures match the All accounts screen. Such a report is kept for 7 days, like any other, and you can open it from any account.
+
 ## Monthly Digest
 
 A snapshot of your current month's financial activity:

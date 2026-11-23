@@ -21,6 +21,6 @@ import { CurrencyExchangeModule } from '../currency-exchange/currency-exchange.m
     PdfGenerator,
     ExcelGenerator,
   ],
-  exports: [ReportsService, DigestService],
+  exports: [ReportsService, DigestService, CsvGenerator, PdfGenerator, ExcelGenerator],
 })
 export class ReportsModule {}

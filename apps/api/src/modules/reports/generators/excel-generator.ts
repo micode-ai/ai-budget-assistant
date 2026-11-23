@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as ExcelJS from 'exceljs';
+import { consolidatedLabels } from './consolidated-labels';
 
 interface ExcelReportData {
   accountName: string;
@@ -22,7 +23,16 @@ interface ExcelReportData {
     amount: number;
     currency: string;
     notes: string;
+    /** Consolidated reports only. */
+    account?: string;
+    note?: string;
   }>;
+  /** Consolidated reports only: per-account figures, printed on the Summary sheet. */
+  accountSubtotals?: Array<{ name: string; spent: number; income: number; net: number }>;
+  /** Consolidated reports only: names of encrypted accounts left out. */
+  excludedAccounts?: string[];
+  /** Picks the label language for consolidated-only strings; falls back to en. */
+  locale?: string;
   incomes: Array<{
     date: string;
     description: string;
@@ -32,6 +42,9 @@ interface ExcelReportData {
     amount: number;
     currency: string;
     notes: string;
+    /** Consolidated reports only. */
+    account?: string;
+    note?: string;
   }>;
 }
 
@@ -87,6 +100,30 @@ export class ExcelGenerator {
       }
     }
 
+    if (data.accountSubtotals?.length) {
+      summary.addRow({});
+      summary.addRow({ metric: consolidatedLabels(data.locale).accounts, value: '' });
+      const accHeader = summary.addRow(['Account', 'Spent', 'Income', 'Net']);
+      accHeader.eachCell((cell) => { cell.font = { bold: true }; });
+      summary.getColumn(3).width = 14;
+      summary.getColumn(4).width = 14;
+      for (const a of data.accountSubtotals) {
+        const r = summary.addRow([a.name, a.spent, a.income, a.net]);
+        for (const c of [2, 3, 4]) r.getCell(c).numFmt = '0.00';
+      }
+    }
+    for (const name of data.excludedAccounts ?? []) {
+      summary.addRow({ metric: name, value: consolidatedLabels(data.locale).notIncluded });
+    }
+
+    const consolidated = [...data.expenses, ...data.incomes].some((r) => r.account !== undefined || r.note !== undefined);
+    const extraColumns: Array<Partial<ExcelJS.Column>> = consolidated
+      ? [
+          { header: 'Account', key: 'account', width: 18 },
+          { header: 'Note', key: 'note', width: 16 },
+        ]
+      : [];
+
     // Expenses sheet
     if (data.expenses.length > 0) {
       const expSheet = workbook.addWorksheet('Expenses');
@@ -99,6 +136,7 @@ export class ExcelGenerator {
         { header: 'Amount', key: 'amount', width: 14 },
         { header: 'Currency', key: 'currency', width: 10 },
         { header: 'Notes', key: 'notes', width: 25 },
+        ...extraColumns,
       ];
       expSheet.getRow(1).eachCell((cell) => { Object.assign(cell.style, headerStyle); });
       for (const exp of data.expenses) {
@@ -118,6 +156,7 @@ export class ExcelGenerator {
         { header: 'Amount', key: 'amount', width: 14 },
         { header: 'Currency', key: 'currency', width: 10 },
         { header: 'Notes', key: 'notes', width: 25 },
+        ...extraColumns,
       ];
       incSheet.getRow(1).eachCell((cell) => { Object.assign(cell.style, headerStyle); });
       for (const inc of data.incomes) {

@@ -25,6 +25,7 @@ import { WhatsAppModule } from './modules/whatsapp/whatsapp.module';
 import { SlackModule } from './modules/slack/slack.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { InsightsModule } from './modules/insights/insights.module';
+import { AllAccountsModule } from './modules/all-accounts/all-accounts.module';
 import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { TagsModule } from './modules/tags/tags.module';
@@ -124,6 +125,7 @@ import { McpModule } from './modules/mcp/mcp.module';
     CurrencyExchangeModule,
     ExchangeRateAlertsModule,
     InsightsModule,
+    AllAccountsModule,
     SubscriptionsModule,
     AdminModule,
     AnomalyModule,

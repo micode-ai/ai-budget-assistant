@@ -3,6 +3,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { discoveryItems } from '../discoveryItems';
+import { useAccountStore } from '@/stores/accountStore';
 
 /**
  * Story / Scenario Simulator / Wrapped / Month in review (ABA-641) / Real salary, demoted from mid-scroll full-width
@@ -16,11 +17,12 @@ export function DiscoveryRow({ selectedYear, onOpenStory }: { selectedYear: numb
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
+  const accountCount = useAccountStore((s) => s.accounts.length);
 
   return (
     <View style={styles.discoveryRow}>
       {/* The list lives in ../discoveryItems.ts, shared with the phone strip. */}
-      {discoveryItems(selectedYear, onOpenStory).map((item) => (
+      {discoveryItems(selectedYear, onOpenStory, accountCount).map((item) => (
         <Pressable key={item.key} style={styles.discoveryCard} onPress={item.onPress} accessibilityRole="button">
           <Ionicons name={item.icon} size={20} color={theme.colors.primary} />
           <Text style={styles.discoveryTitle} numberOfLines={1}>{t(item.titleKey)}</Text>

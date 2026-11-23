@@ -3580,29 +3580,42 @@ Top 50 receipt line items in the period by spend, grouped by description.
 ]
 ```
 
-### Get Aggregated Summary (all accounts)
+### All-Accounts Analytics
 
 ```http
-GET /analytics/aggregated?startDate=2026-09-01&endDate=2026-09-30
+GET /all-accounts/analytics?start=2026-09-01&end=2026-09-30&exclude=<id>,<id>
 Authorization: Bearer <token>
-X-Account-Id: <account-uuid>
 ```
 
-Summary across **every** account the caller is a member of (tier-2 encrypted accounts excluded), not just the one in `X-Account-Id`.
+Spending and income across **every** account the caller is a member of, in the caller's `user.currencyCode`. User-scoped: no `X-Account-Id` header. `start` / `end` are `YYYY-MM-DD` and the period is capped. `exclude` is a comma-separated list of account ids to leave out (a filter over memberships, never an allow-list). Tier-2 encrypted accounts are listed but never summed. Categories are merged by displayed name; planned expenses, split-bill receivables and transfers between included accounts are not counted. Details: `docs/wiki/features/all-accounts-analytics.md`.
 
-**Response** `200 OK`
-```json
-{
-  "period": { "start": "2026-09-01T00:00:00.000Z", "end": "2026-09-30T00:00:00.000Z" },
-  "totalIncome": 5200,
-  "totalExpenses": 3100,
-  "netSavings": 2100,
-  "expensesByCategory": [],
-  "topExpenses": [],
-  "trends": { "vsLastPeriod": 0, "vsAverage": 0 },
-  "accountCount": 3
-}
+**Response** `200 OK` — `AllAccountsAnalyticsResponse` (`packages/shared-types/src/dto/all-accounts.ts`): `currencyCode`, `start`, `end`, `groupId`, `fxApproximate`, `computedAt`, `totals`, `accounts[]`, `months[]`, `expenseCategories[]`, `incomeCategories[]`.
+
+### Consolidated Report (all accounts / group)
+
+```http
+POST /all-accounts/reports
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{ "format": "pdf", "startDate": "2026-09-01", "endDate": "2026-09-30", "exclude": [], "groupId": "<group-uuid>" }
 ```
+
+One PDF / Excel / CSV across all of the caller's accounts, or one group's (`groupId`, **Pro** — `403 TIER_REQUIRED` otherwise). Optional: `includeIncomes`, `includeExpenses`, `locale`, `exclude`. The file has Account and Note columns and a subtotal per account; noted rows are listed but not totalled. The report is stored with `accountId = null`, owned by the caller, and expires after 7 days; download it with `GET /reports/:id/download`. `400` when no account is left to include.
+
+**Response** `200 OK`: `{ "reportId", "status": "completed", "downloadUrl", "fileName", "fileSize" }`.
+
+### Account Groups (Pro)
+
+All routes require the **pro** tier and are user-scoped (no `X-Account-Id`). At most 20 groups per user.
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/account-groups` | List the caller's groups: `[{ id, name, accountIds }]` |
+| `POST` | `/account-groups` | Create. Body `{ "name": "Rentals", "accountIds": ["<uuid>"] }` (name 1-100 chars, 1-100 ids, caller must be a member of each) |
+| `PATCH` | `/account-groups/:id` | Replace name and accounts (same body) |
+| `DELETE` | `/account-groups/:id` | Delete the group only; accounts and data are untouched |
+| `GET` | `/account-groups/:id/analytics?start=&end=` | The all-accounts analytics restricted to the group's accounts (re-filtered by current membership) |
 
 ### Get Savings Detail (discounts / deposits)
 

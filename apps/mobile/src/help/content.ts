@@ -1070,6 +1070,16 @@ In the month and year views, this card compares the period with the same period 
 
 A grid of your recent days, one column per week and one row per weekday, shaded by how much you spent that day — the darker, the more (each shade is a quarter of your spending days). On a computer it covers the last 12 months; on a phone, as many recent months as fit at a readable size. Tap a day to see its date and total; otherwise the card names your biggest day. Below it, **Average by day of the month** shows how much you spend on each day of the month on average over the past months, and which three days take the most. If your account has a **Financial Month**, day 1 is its first day — payday. The app has no time of purchase for transactions, so the card works with days, not hours. It appears once you have at least 14 days with spending.
 
+## All Accounts
+
+Open **All accounts** from the Analytics tab to see all the accounts you belong to together, in your display currency. Pick a period (this month, last month, this year, last year or a custom range) and you get **Spent**, **Income** and **Net** with a comparison to the previous period, what each account contributed, spending and income by category, and the months as stacked bars.
+
+- **Switch accounts on and off.** Turn off an account you do not want counted - for example a shared account that another member also counts. The choice is kept on this device. Investment accounts start switched off.
+- **Categories are merged by name.** "Groceries" in two accounts becomes one row.
+- **Encrypted accounts.** A fully encrypted account cannot be read and is not included. With text encryption, a category you renamed yourself shows as **Other**.
+- **Not counted as spending or income:** planned expenses, amounts you are owed from a split bill, and transfers between your own accounts that are included.
+- **Groups (Pro).** Save a set of accounts as a group - for example "Rentals" - and compare the accounts inside a group side by side. You can keep up to 20 groups; deleting a group never touches your accounts or their data. Groups are a Pro feature: after a downgrade your groups are hidden (not deleted) until you upgrade again.
+
 ## Net Worth
 
 Open it from the **Net worth** entry on the Analytics tab, or by tapping the **Net Capital** card on the home screen. It adds up everything you have across all your accounts — the money in every wallet, the market value of your investments and the money others owe you — minus your own debts, in your display currency. You see the change since last month and since a year ago, the four parts, and the last 12 months as bars: each past month is rebuilt from your records and that month's exchange rates, so the history is there from the first day. A paler bar means some investments were valued at their purchase price because there was no market price for that date. Under **Accounts** you can switch an account off — for example a shared account that another member also counts in their own net worth; the choice is kept on this device. A fully encrypted account cannot be read and is not counted.
@@ -2835,6 +2845,16 @@ Under the buttons you can see the exact dates the report will cover — the same
 Opening this screen through **Export Report** on the Analytics tab carries the period you were looking at over with you - page back to June there and the report is prepared for June, not for the current month. A period that is still running ends today; a finished one covers its full span.
 
 Reports are stored for 7 days and then automatically deleted.
+
+## Report Scope
+
+Under **Report covers** choose what the file includes:
+
+- **This account** - the account you are in (the default).
+- **All accounts** - every account you belong to, except the ones you switched off on the All accounts screen.
+- **Group** - one of your account groups (Pro).
+
+A report for several accounts has an **Account** column and a **Note** column, and shows a subtotal for each account. Rows with a note - planned expenses, split-bill amounts and transfers between your own accounts - are listed so you can see them, but are **not** included in any total. Fully encrypted accounts are left out and named at the end of the report. The figures match the All accounts screen. Such a report is kept for 7 days, like any other, and you can open it from any account.
 
 ## Monthly Digest
 
@@ -6633,6 +6653,16 @@ iOS, Android, Web
 
 Сетка последних дней — столбец на неделю, строка на день недели, — окрашенная по сумме трат за день: чем темнее, тем больше (каждый оттенок — четверть ваших дней с тратами). На компьютере она охватывает последние 12 месяцев, на телефоне — столько месяцев, сколько помещается в читаемом размере. Нажмите на день, чтобы увидеть дату и сумму; иначе карточка называет самый дорогой день. Ниже **В среднем по дням месяца** показывает, сколько вы в среднем тратите в каждый день месяца и какие три дня обходятся дороже всего. Если у аккаунта задан **Финансовый месяц**, день 1 — его первый день, день зарплаты. Время покупки приложение не знает, поэтому карточка работает с днями, а не с часами. Она появляется, когда набирается хотя бы 14 дней с тратами.
 
+## Все счета
+
+Откройте **Все счета** на вкладке «Аналитика», чтобы увидеть вместе все счета, в которых вы участвуете, в вашей валюте отображения. Выберите период (этот месяц, прошлый месяц, этот год, прошлый год или свой диапазон), и вы увидите **Потрачено**, **Доходы** и **Итог** со сравнением с прошлым периодом, вклад каждого счёта, расходы и доходы по категориям и месяцы столбиками с накоплением.
+
+- **Включайте и выключайте счета.** Выключите счёт, который не нужно считать, например общий счёт, который считает и другой участник. Выбор сохраняется на этом устройстве. Инвестиционные счета изначально выключены.
+- **Категории объединяются по названию.** «Продукты» в двух счетах станет одной строкой.
+- **Зашифрованные счета.** Полностью зашифрованный счёт прочитать нельзя, он не учитывается. При шифровании текста категория, которую вы переименовали сами, показывается как **Прочее**.
+- **Не считаются расходом или доходом:** запланированные расходы, суммы, которые вам должны после разделённого счёта, и переводы между вашими включёнными счетами.
+- **Группы (Pro).** Сохраните набор счетов как группу, например «Аренда», и сравнивайте рядом счета внутри группы. Можно создать до 20 групп; удаление группы не затрагивает ваши счета и их данные. Группы доступны в Pro: после перехода на более низкий тариф группы скрыты (не удалены), пока вы снова не перейдёте на Pro.
+
 ## Капитал
 
 Откройте его из пункта **Капитал** на вкладке «Аналитика» или нажав на карточку **Net Capital** на главном экране. Он складывает всё, что у вас есть на всех аккаунтах, — деньги во всех кошельках, рыночную стоимость инвестиций и деньги, которые вам должны, — и вычитает ваши долги, в валюте отображения. Видно изменение к прошлому месяцу и к прошлому году, четыре части и последние 12 месяцев столбиками: каждый прошлый месяц восстанавливается по вашим записям и курсам валют того месяца, так что история есть с первого дня. Бледный столбик значит, что часть инвестиций оценена по цене покупки: рыночной цены на ту дату не было. В разделе **Аккаунты** можно выключить аккаунт — например общий, который другой участник тоже считает в своём капитале; выбор хранится на этом устройстве. Полностью зашифрованный аккаунт прочитать нельзя, он не учитывается.
@@ -8385,6 +8415,16 @@ AI Budget Assistant предлагает три уровня подписки. �
 Если открыть этот экран кнопкой **Экспортировать отчёт** на вкладке Аналитика, сюда переносится тот период, который вы там смотрели — отлистали до июня, значит отчёт готовится за июнь, а не за текущий месяц. Незакончившийся период заканчивается сегодняшним днём, завершённый берётся целиком.
 
 Отчёты хранятся в течение 7 дней, затем автоматически удаляются.
+
+## Охват отчёта
+
+В поле **Отчёт охватывает** выберите, что войдёт в файл:
+
+- **Этот счёт** - счёт, в котором вы находитесь (по умолчанию).
+- **Все счета** - все ваши счета, кроме выключенных на экране «Все счета».
+- **Группа** - одна из ваших групп счетов (Pro).
+
+В отчёте по нескольким счетам есть столбцы **Счёт** и **Примечание** и подытог по каждому счёту. Строки с примечанием - запланированные расходы, суммы разделённых счетов и переводы между вашими счетами - перечислены, чтобы вы их видели, но **не** входят ни в один итог. Полностью зашифрованные счета не включаются и названы в конце отчёта. Цифры совпадают с экраном «Все счета». Такой отчёт хранится 7 дней, как и любой другой, и открывается из любого счёта.
 
 ## Ежемесячный дайджест
 
@@ -12174,6 +12214,16 @@ iOS, Android, Web
 
 Сітка останніх днів — стовпець на тиждень, рядок на день тижня, — зафарбована за сумою витрат за день: що темніше, то більше (кожен відтінок — чверть ваших днів із витратами). На компʼютері вона охоплює останні 12 місяців, на телефоні — стільки місяців, скільки вміщується в читабельному розмірі. Натисніть на день, щоб побачити дату й суму; інакше картка називає найдорожчий день. Нижче **У середньому за днями місяця** показує, скільки ви в середньому витрачаєте в кожен день місяця і які три дні обходяться найдорожче. Якщо в акаунті задано **Фінансовий місяць**, день 1 — його перший день, день зарплати. Часу покупки застосунок не знає, тож картка працює з днями, а не з годинами. Вона зʼявляється, коли набирається щонайменше 14 днів із витратами.
 
+## Усі рахунки
+
+Відкрийте **Усі рахунки** на вкладці «Аналітика», щоб побачити разом усі рахунки, до яких ви належите, у вашій валюті відображення. Виберіть період (цей місяць, минулий місяць, цей рік, минулий рік або свій діапазон), і ви побачите **Витрачено**, **Доходи** та **Підсумок** з порівнянням з попереднім періодом, внесок кожного рахунку, витрати й доходи за категоріями та місяці стовпчиками з накопиченням.
+
+- **Вмикайте й вимикайте рахунки.** Вимкніть рахунок, який не потрібно рахувати, наприклад спільний рахунок, який рахує й інший учасник. Вибір зберігається на цьому пристрої. Інвестиційні рахунки спочатку вимкнені.
+- **Категорії об'єднуються за назвою.** «Продукти» у двох рахунках стане одним рядком.
+- **Зашифровані рахунки.** Повністю зашифрований рахунок прочитати не можна, він не враховується. За шифрування тексту категорія, яку ви перейменували самі, показується як **Інше**.
+- **Не рахуються витратою чи доходом:** заплановані витрати, суми, які вам винні після розділеного рахунку, та перекази між вашими ввімкненими рахунками.
+- **Групи (Pro).** Збережіть набір рахунків як групу, наприклад «Оренда», і порівнюйте поруч рахунки всередині групи. Можна створити до 20 груп; видалення групи не зачіпає ваші рахунки та їхні дані. Групи доступні в Pro: після переходу на нижчий тариф групи приховані (не видалені), доки ви знову не перейдете на Pro.
+
 ## Капітал
 
 Відкрийте його з пункту **Капітал** на вкладці «Аналітика» або натиснувши картку **Net Capital** на головному екрані. Він додає все, що у вас є на всіх акаунтах, — гроші в усіх гаманцях, ринкову вартість інвестицій і гроші, які вам винні, — і віднімає ваші борги, у валюті відображення. Видно зміну до минулого місяця й до минулого року, чотири частини та останні 12 місяців стовпчиками: кожен минулий місяць відновлюється за вашими записами й курсами валют того місяця, тож історія є з першого дня. Блідий стовпчик означає, що частину інвестицій оцінено за ціною купівлі: ринкової ціни на ту дату не було. У розділі **Акаунти** можна вимкнути акаунт — наприклад спільний, який інший учасник теж рахує у своєму капіталі; вибір зберігається на цьому пристрої. Повністю зашифрований акаунт прочитати не можна, він не враховується.
@@ -13919,6 +13969,16 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 Якщо відкрити цей екран кнопкою **Експортувати звіт** на вкладці Аналітика, сюди переноситься той період, який ви там дивилися — відлистали до червня, отже звіт готується за червень, а не за поточний місяць. Незавершений період завершується сьогоднішнім днем, завершений береться повністю.
 
 Звіти зберігаються протягом 7 днів, після чого автоматично видаляються.
+
+## Охоплення звіту
+
+У полі **Звіт охоплює** виберіть, що потрапить у файл:
+
+- **Цей рахунок** - рахунок, у якому ви перебуваєте (за замовчуванням).
+- **Усі рахунки** - усі ваші рахунки, окрім вимкнених на екрані «Усі рахунки».
+- **Група** - одна з ваших груп рахунків (Pro).
+
+У звіті за кількома рахунками є стовпці **Рахунок** і **Примітка** та підсумок за кожним рахунком. Рядки з примітками - заплановані витрати, суми розділених рахунків і перекази між вашими рахунками - перелічені, щоб ви їх бачили, але **не** входять до жодного підсумку. Повністю зашифровані рахунки не включаються й названі наприкінці звіту. Цифри збігаються з екраном «Усі рахунки». Такий звіт зберігається 7 днів, як і будь-який інший, і відкривається з будь-якого рахунку.
 
 ## Щомісячний дайджест
 
@@ -17663,6 +17723,16 @@ W widoku miesiąca i roku ta karta porównuje okres z tym samym okresem rok wcze
 
 Siatka ostatnich dni — kolumna na tydzień i wiersz na dzień tygodnia — zabarwiona według wydatków danego dnia: im ciemniej, tym więcej (każdy odcień to ćwierć Twoich dni z wydatkami). Na komputerze obejmuje ostatnie 12 miesięcy, na telefonie tyle miesięcy, ile mieści się czytelnie. Stuknij dzień, aby zobaczyć datę i sumę; w przeciwnym razie karta podaje Twój największy dzień. Pod spodem **Średnio według dnia miesiąca** pokazuje, ile średnio wydajesz w każdym dniu miesiąca i które trzy dni kosztują najwięcej. Jeśli konto ma **Miesiąc finansowy**, dzień 1 to jego pierwszy dzień — dzień wypłaty. Aplikacja nie zna godziny zakupów, więc karta działa na dniach, nie godzinach. Pojawia się od 14 dni z wydatkami.
 
+## Wszystkie konta
+
+Otwórz **Wszystkie konta** na karcie Analityka, aby zobaczyć razem wszystkie konta, do których należysz, w walucie wyświetlania. Wybierz okres (ten miesiąc, poprzedni miesiąc, ten rok, poprzedni rok lub własny zakres), a zobaczysz **Wydano**, **Przychody** i **Saldo** wraz z porównaniem do poprzedniego okresu, udział każdego konta, wydatki i przychody według kategorii oraz miesiące jako słupki skumulowane.
+
+- **Włączaj i wyłączaj konta.** Wyłącz konto, którego nie chcesz liczyć - na przykład konto wspólne, które liczy też inny członek. Wybór zapamiętujemy na tym urządzeniu. Konta inwestycyjne są na początku wyłączone.
+- **Kategorie łączą się po nazwie.** "Zakupy spożywcze" na dwóch kontach to jeden wiersz.
+- **Konta szyfrowane.** W pełni zaszyfrowanego konta nie da się odczytać i nie jest uwzględniane. Przy szyfrowaniu tekstu kategoria, którą sam zmieniłeś, widnieje jako **Inne**.
+- **Nie liczą się jako wydatek ani przychód:** wydatki planowane, kwoty, które ktoś ci wisi po podziale rachunku, oraz przelewy między twoimi uwzględnionymi kontami.
+- **Grupy (Pro).** Zapisz zestaw kont jako grupę - na przykład "Wynajem" - i porównuj obok siebie konta w obrębie grupy. Możesz mieć do 20 grup; usunięcie grupy nie rusza twoich kont ani danych. Grupy to funkcja Pro: po zmianie planu na niższy twoje grupy są ukryte (nie usunięte), dopóki znów nie przejdziesz na Pro.
+
 ## Majątek netto
 
 Otwórz go z pozycji **Majątek netto** na karcie Analityka albo stukając kartę **Net Capital** na ekranie głównym. Sumuje wszystko, co masz na wszystkich kontach — pieniądze w każdym portfelu, wartość rynkową inwestycji i pieniądze, które ktoś jest Ci winien — minus Twoje własne długi, w walucie wyświetlania. Widzisz zmianę od poprzedniego miesiąca i od roku, cztery składniki i ostatnie 12 miesięcy na słupkach: każdy miniony miesiąc jest odtwarzany z Twoich zapisów i kursów walut z tego miesiąca, więc historia jest od pierwszego dnia. Jaśniejszy słupek oznacza, że część inwestycji wyceniono po cenie zakupu, bo dla tej daty nie było ceny rynkowej. W sekcji **Konta** możesz wyłączyć konto — np. wspólne konto, które inny członek też wlicza do swojego majątku; wybór zostaje na tym urządzeniu. W pełni zaszyfrowanego konta nie da się odczytać i nie jest liczone.
@@ -19403,6 +19473,16 @@ Pod przyciskami widac dokladne daty, ktore obejmie raport — te same daty sa wp
 Otwarcie tego ekranu przyciskiem **Eksportuj raport** na zakladce Analityka przenosi tu okres, ktory wlasnie ogladasz - jesli cofnales sie tam do czerwca, raport bedzie przygotowany za czerwiec, a nie za biezacy miesiac. Okres trwajacy konczy sie na dzisiaj, zakonczony obejmuje caly swoj zakres.
 
 Raporty sa przechowywane przez 7 dni, a nastepnie automatycznie usuwane.
+
+## Zakres raportu
+
+W polu **Raport obejmuje** wybierz, co zawiera plik:
+
+- **To konto** - konto, w którym jesteś (domyślnie).
+- **Wszystkie konta** - wszystkie twoje konta, oprócz tych wyłączonych na ekranie Wszystkie konta.
+- **Grupa** - jedna z twoich grup kont (Pro).
+
+Raport z wielu kont ma kolumny **Konto** i **Uwaga** oraz podsumowanie dla każdego konta. Wiersze z uwagą - wydatki planowane, kwoty z podziału rachunku i przelewy między własnymi kontami - są wypisane, żebyś je widział, ale **nie** wchodzą do żadnej sumy. W pełni zaszyfrowane konta są pominięte i wymienione na końcu raportu. Liczby zgadzają się z ekranem Wszystkie konta. Taki raport jest przechowywany 7 dni, jak każdy inny, i otworzysz go z dowolnego konta.
 
 ## Podsumowanie miesieczne
 
@@ -23148,6 +23228,16 @@ In der Monats- und Jahresansicht vergleicht diese Karte den Zeitraum mit demselb
 
 Ein Raster deiner letzten Tage, eine Spalte pro Woche und eine Zeile pro Wochentag, eingefärbt nach den Ausgaben des Tages — je dunkler, desto mehr (jede Stufe ist ein Viertel deiner Ausgabentage). Am Computer umfasst es die letzten 12 Monate, auf dem Telefon so viele Monate, wie gut lesbar hineinpassen. Tippe auf einen Tag für Datum und Summe; sonst nennt die Karte deinen größten Tag. Darunter zeigt **Durchschnitt nach Tag des Monats**, wie viel du im Schnitt an jedem Tag des Monats ausgibst und welche drei Tage am meisten kosten. Hat dein Konto einen **Finanzmonat**, ist Tag 1 sein erster Tag — der Zahltag. Die App kennt keine Uhrzeit der Käufe, daher arbeitet die Karte mit Tagen, nicht mit Stunden. Sie erscheint ab 14 Tagen mit Ausgaben.
 
+## Alle Konten
+
+Öffne **Alle Konten** im Analyse-Tab, um alle Konten, in denen du Mitglied bist, zusammen in deiner Anzeigewährung zu sehen. Wähle einen Zeitraum (dieser Monat, letzter Monat, dieses Jahr, letztes Jahr oder eigener Bereich) und du erhältst **Ausgegeben**, **Einnahmen** und **Saldo** mit Vergleich zum Vorzeitraum, den Beitrag jedes Kontos, Ausgaben und Einnahmen nach Kategorie sowie die Monate als gestapelte Balken.
+
+- **Konten ein- und ausschalten.** Schalte ein Konto aus, das nicht mitzählen soll, zum Beispiel ein gemeinsames Konto, das auch ein anderes Mitglied zählt. Die Auswahl wird auf diesem Gerät gespeichert. Anlagekonten sind zunächst ausgeschaltet.
+- **Kategorien werden nach Namen zusammengeführt.** "Lebensmittel" in zwei Konten wird zu einer Zeile.
+- **Verschlüsselte Konten.** Ein vollständig verschlüsseltes Konto kann nicht gelesen werden und ist nicht enthalten. Bei Textverschlüsselung erscheint eine selbst umbenannte Kategorie als **Sonstiges**.
+- **Nicht als Ausgabe oder Einnahme gezählt:** geplante Ausgaben, Beträge, die dir aus einer geteilten Rechnung geschuldet werden, und Übertragungen zwischen deinen eigenen einbezogenen Konten.
+- **Gruppen (Pro).** Speichere mehrere Konten als Gruppe - zum Beispiel "Vermietung" - und vergleiche die Konten innerhalb einer Gruppe nebeneinander. Du kannst bis zu 20 Gruppen anlegen; das Löschen einer Gruppe berührt deine Konten und Daten nicht. Gruppen sind eine Pro-Funktion: nach einem Downgrade werden deine Gruppen ausgeblendet (nicht gelöscht), bis du wieder upgradest.
+
 ## Vermögen
 
 Öffne es über den Eintrag **Vermögen** im Tab Analysen oder mit einem Tipp auf die Karte **Net Capital** auf dem Startbildschirm. Es addiert alles, was du über alle Konten hast — das Geld in jeder Geldbörse, den Marktwert deiner Investitionen und das Geld, das dir andere schulden — abzüglich deiner eigenen Schulden, in deiner Anzeigewährung. Du siehst die Veränderung zum Vormonat und zum Vorjahr, die vier Bestandteile und die letzten 12 Monate als Balken: Jeder vergangene Monat wird aus deinen Daten und den Wechselkursen dieses Monats rekonstruiert, die Historie ist also vom ersten Tag an da. Ein hellerer Balken bedeutet, dass einige Investitionen zum Kaufpreis bewertet wurden, weil es für dieses Datum keinen Marktpreis gab. Unter **Konten** kannst du ein Konto ausschalten — etwa ein gemeinsames Konto, das ein anderes Mitglied auch in sein Vermögen einrechnet; die Auswahl bleibt auf diesem Gerät. Ein vollständig verschlüsseltes Konto kann nicht gelesen werden und zählt nicht mit.
@@ -24885,6 +24975,16 @@ Unter den Schaltflächen stehen die genauen Daten, die der Bericht abdeckt — d
 Wenn du diesen Bildschirm über **Bericht exportieren** im Analyse-Tab öffnest, wird der Zeitraum mitgenommen, den du dort angesehen hast - bist du dort auf Juni zurückgeblättert, wird der Bericht für Juni erstellt und nicht für den aktuellen Monat. Ein laufender Zeitraum endet heute, ein abgeschlossener umfasst seine volle Spanne.
 
 Berichte werden 7 Tage gespeichert und dann automatisch gelöscht.
+
+## Berichtsumfang
+
+Unter **Bericht umfasst** wählst du, was die Datei enthält:
+
+- **Dieses Konto** - das aktuelle Konto (Standard).
+- **Alle Konten** - alle deine Konten, außer denen, die du auf dem Bildschirm Alle Konten ausgeschaltet hast.
+- **Gruppe** - eine deiner Kontogruppen (Pro).
+
+Ein Bericht über mehrere Konten hat eine Spalte **Konto** und eine Spalte **Hinweis** und zeigt je Konto eine Zwischensumme. Zeilen mit Hinweis - geplante Ausgaben, Beträge aus geteilten Rechnungen und Übertragungen zwischen eigenen Konten - werden aufgeführt, aber in **keiner** Summe mitgezählt. Vollständig verschlüsselte Konten fehlen und werden am Ende des Berichts genannt. Die Zahlen stimmen mit dem Bildschirm Alle Konten überein. Ein solcher Bericht wird wie jeder andere 7 Tage aufbewahrt und lässt sich aus jedem Konto öffnen.
 
 ## Monatliche Zusammenfassung
 
@@ -28608,6 +28708,16 @@ En las vistas de mes y año, esta tarjeta compara el periodo con el mismo period
 
 Una cuadrícula de tus últimos días, una columna por semana y una fila por día de la semana, coloreada según lo que gastaste ese día: cuanto más oscuro, más (cada tono es un cuarto de tus días con gastos). En el ordenador abarca los últimos 12 meses; en el móvil, tantos meses como quepan a un tamaño legible. Toca un día para ver su fecha y total; si no, la tarjeta indica tu día de más gasto. Debajo, **Media por día del mes** muestra cuánto gastas de media cada día del mes y qué tres días se llevan más. Si tu cuenta tiene un **Mes financiero**, el día 1 es su primer día, el de cobro. La app no conoce la hora de las compras, así que la tarjeta trabaja con días, no con horas. Aparece cuando tienes al menos 14 días con gastos.
 
+## Todas las cuentas
+
+Abre **Todas las cuentas** en la pestaña Análisis para ver juntas todas las cuentas de las que formas parte, en tu moneda de visualización. Elige un periodo (este mes, el mes pasado, este año, el año pasado o un rango personalizado) y verás **Gastado**, **Ingresos** y **Neto** con la comparación con el periodo anterior, lo que aporta cada cuenta, gastos e ingresos por categoría y los meses como barras apiladas.
+
+- **Activa y desactiva cuentas.** Desactiva una cuenta que no quieras contar, por ejemplo una cuenta compartida que otro miembro también cuenta. La elección se guarda en este dispositivo. Las cuentas de inversión empiezan desactivadas.
+- **Las categorías se unen por nombre.** "Supermercado" en dos cuentas pasa a ser una sola fila.
+- **Cuentas cifradas.** Una cuenta totalmente cifrada no se puede leer y no se incluye. Con cifrado de texto, una categoría que renombraste tú aparece como **Otros**.
+- **No cuentan como gasto ni ingreso:** los gastos planificados, lo que te deben de una cuenta dividida y las transferencias entre tus propias cuentas incluidas.
+- **Grupos (Pro).** Guarda un conjunto de cuentas como grupo - por ejemplo "Alquileres" - y compara las cuentas dentro de un grupo lado a lado. Puedes tener hasta 20 grupos; borrar un grupo nunca toca tus cuentas ni sus datos. Los grupos son una función Pro: tras un downgrade tus grupos quedan ocultos (no se borran) hasta que vuelvas a mejorar el plan.
+
 ## Patrimonio
 
 Ábrelo desde la entrada **Patrimonio** en la pestaña Análisis o tocando la tarjeta **Net Capital** de la pantalla de inicio. Suma todo lo que tienes en todas tus cuentas —el dinero de cada cartera, el valor de mercado de tus inversiones y lo que otros te deben— menos tus propias deudas, en tu moneda de visualización. Ves la variación frente al mes pasado y frente a hace un año, las cuatro partes y los últimos 12 meses en barras: cada mes pasado se reconstruye a partir de tus registros y de los tipos de cambio de ese mes, así que el historial está desde el primer día. Una barra más clara indica que algunas inversiones se valoraron a su precio de compra porque no había precio de mercado para esa fecha. En **Cuentas** puedes desactivar una cuenta, por ejemplo una compartida que otro miembro también cuenta en su patrimonio; la elección se guarda en este dispositivo. Una cuenta cifrada por completo no se puede leer y no se cuenta.
@@ -30345,6 +30455,16 @@ Debajo de los botones se ven las fechas exactas que cubrira el informe: las mism
 Si abres esta pantalla con **Exportar informe** en la pestana Analiticas, se trae el periodo que estabas viendo: si alli retrocediste a junio, el informe se prepara para junio y no para el mes actual. Un periodo en curso termina hoy; uno cerrado cubre su rango completo.
 
 Los informes se almacenan durante 7 dias y luego se eliminan automaticamente.
+
+## Alcance del informe
+
+En **El informe abarca** elige qué incluye el archivo:
+
+- **Esta cuenta** - la cuenta en la que estás (por defecto).
+- **Todas las cuentas** - todas tus cuentas, salvo las que desactivaste en la pantalla Todas las cuentas.
+- **Grupo** - uno de tus grupos de cuentas (Pro).
+
+Un informe de varias cuentas tiene una columna **Cuenta** y una columna **Nota**, y muestra un subtotal por cuenta. Las filas con nota - gastos planificados, importes de cuentas divididas y transferencias entre tus cuentas - se listan para que las veas, pero **no** entran en ningún total. Las cuentas totalmente cifradas quedan fuera y se nombran al final del informe. Las cifras coinciden con la pantalla Todas las cuentas. Este informe se conserva 7 días, como cualquier otro, y puedes abrirlo desde cualquier cuenta.
 
 ## Resumen mensual
 
@@ -34057,6 +34177,16 @@ Dans les vues mois et année, cette carte compare la période à la même pério
 
 Une grille de vos derniers jours, une colonne par semaine et une ligne par jour de la semaine, teintée selon vos dépenses du jour — plus c'est foncé, plus vous avez dépensé (chaque teinte est un quart de vos jours de dépense). Sur ordinateur, elle couvre les 12 derniers mois ; sur téléphone, autant de mois qu'il en tient lisiblement. Touchez un jour pour voir sa date et son total ; sinon la carte indique votre plus grosse journée. En dessous, **Moyenne par jour du mois** montre combien vous dépensez en moyenne chaque jour du mois et quels trois jours coûtent le plus. Si votre compte a un **Mois financier**, le jour 1 est son premier jour — le jour de paie. L'app ne connaît pas l'heure des achats : la carte travaille par jours, pas par heures. Elle apparaît dès 14 jours de dépenses.
 
+## Tous les comptes
+
+Ouvrez **Tous les comptes** dans l'onglet Analyses pour voir ensemble tous les comptes dont vous faites partie, dans votre devise d'affichage. Choisissez une période (ce mois-ci, le mois dernier, cette année, l'année dernière ou une plage personnalisée) pour obtenir **Dépensé**, **Revenus** et **Net** avec la comparaison à la période précédente, la part de chaque compte, les dépenses et revenus par catégorie et les mois en barres empilées.
+
+- **Activez ou désactivez des comptes.** Désactivez un compte que vous ne voulez pas compter, par exemple un compte partagé qu'un autre membre compte aussi. Le choix est conservé sur cet appareil. Les comptes d'investissement sont désactivés au départ.
+- **Les catégories sont fusionnées par nom.** « Courses » dans deux comptes devient une seule ligne.
+- **Comptes chiffrés.** Un compte entièrement chiffré ne peut pas être lu et n'est pas inclus. Avec le chiffrement du texte, une catégorie que vous avez renommée apparaît comme **Autre**.
+- **Non comptés comme dépense ou revenu :** les dépenses prévues, les sommes qu'on vous doit après une addition partagée et les virements entre vos propres comptes inclus.
+- **Groupes (Pro).** Enregistrez un ensemble de comptes comme groupe - par exemple « Locations » - et comparez côte à côte les comptes d'un même groupe. Vous pouvez avoir jusqu'à 20 groupes ; supprimer un groupe ne touche jamais vos comptes ni leurs données. Les groupes sont une fonction Pro : après un passage à une offre inférieure, vos groupes sont masqués (pas supprimés) jusqu'à votre prochain abonnement Pro.
+
 ## Patrimoine
 
 Ouvrez-le depuis l'entrée **Patrimoine** de l'onglet Analyses ou en touchant la carte **Net Capital** de l'écran d'accueil. Il additionne tout ce que vous avez sur tous vos comptes — l'argent de chaque portefeuille, la valeur de marché de vos investissements et ce qu'on vous doit — moins vos propres dettes, dans votre devise d'affichage. Vous voyez l'évolution depuis le mois dernier et depuis un an, les quatre composantes et les 12 derniers mois en barres : chaque mois passé est reconstitué à partir de vos données et des taux de change de ce mois, l'historique est donc là dès le premier jour. Une barre plus claire signifie que certains investissements ont été valorisés à leur prix d'achat faute de prix de marché à cette date. Sous **Comptes**, vous pouvez désactiver un compte — par exemple un compte partagé qu'un autre membre compte aussi dans son patrimoine ; ce choix est conservé sur cet appareil. Un compte entièrement chiffré ne peut pas être lu et n'est pas compté.
@@ -35792,6 +35922,16 @@ Sous les boutons figurent les dates exactes que couvrira le rapport — les meme
 Si vous ouvrez cet ecran via **Exporter le rapport** dans l'onglet Analyses, la periode que vous consultiez vous suit : si vous y etiez revenu a juin, le rapport est prepare pour juin et non pour le mois en cours. Une periode en cours s'arrete aujourd'hui ; une periode terminee couvre toute son etendue.
 
 Les rapports sont conserves pendant 7 jours puis automatiquement supprimes.
+
+## Périmètre du rapport
+
+Sous **Le rapport couvre**, choisissez ce que le fichier contient :
+
+- **Ce compte** - le compte dans lequel vous êtes (par défaut).
+- **Tous les comptes** - tous vos comptes, sauf ceux que vous avez désactivés sur l'écran Tous les comptes.
+- **Groupe** - l'un de vos groupes de comptes (Pro).
+
+Un rapport sur plusieurs comptes comporte une colonne **Compte** et une colonne **Note**, et affiche un sous-total par compte. Les lignes avec une note - dépenses prévues, montants d'additions partagées et virements entre vos comptes - sont listées pour que vous les voyiez, mais ne sont **pas** incluses dans les totaux. Les comptes entièrement chiffrés sont exclus et nommés à la fin du rapport. Les chiffres correspondent à l'écran Tous les comptes. Ce rapport est conservé 7 jours, comme les autres, et s'ouvre depuis n'importe quel compte.
 
 ## Resume mensuel
 
@@ -39504,6 +39644,16 @@ iOS, Android, Web
 
 Сетка апошніх дзён — слупок на тыдзень, радок на дзень тыдня, — афарбаваная па суме выдаткаў за дзень: чым цямней, тым больш (кожны адценне — чвэрць вашых дзён з выдаткамі). На камп’ютары яна ахоплівае апошнія 12 месяцаў, на тэлефоне — столькі месяцаў, колькі змяшчаецца ў чытэльным памеры. Націсніце на дзень, каб убачыць дату і суму; інакш картка называе самы дарагі дзень. Ніжэй **У сярэднім па днях месяца** паказвае, колькі вы ў сярэднім трацiце ў кожны дзень месяца і якія тры дні абыходзяцца даражэй за ўсё. Калі ў акаўнта зададзены **Фінансавы месяц**, дзень 1 — яго першы дзень, дзень заробку. Часу пакупкі праграма не ведае, таму картка працуе з днямі, а не з гадзінамі. Яна з’яўляецца, калі набіраецца хаця б 14 дзён з выдаткамі.
 
+## Усе рахункі
+
+Адкрыйце **Усе рахункі** на ўкладцы «Аналітыка», каб убачыць разам усе рахункі, да якіх вы належыце, у вашай валюце адлюстравання. Абярыце перыяд (гэты месяц, мінулы месяц, гэты год, мінулы год або свой дыяпазон), і вы ўбачыце **Выдаткавана**, **Даходы** і **Вынік** з параўнаннем з папярэднім перыядам, уклад кожнага рахунку, выдаткі і даходы па катэгорыях і месяцы слупкамі з назапашваннем.
+
+- **Уключайце і выключайце рахункі.** Выключыце рахунак, які не трэба лічыць, напрыклад агульны рахунак, які лічыць і іншы ўдзельнік. Выбар захоўваецца на гэтай прыладзе. Інвестыцыйныя рахункі спачатку выключаны.
+- **Катэгорыі аб'ядноўваюцца па назве.** «Прадукты» ў двух рахунках стане адным радком.
+- **Зашыфраваныя рахункі.** Цалкам зашыфраваны рахунак прачытаць нельга, ён не ўлічваецца. Пры шыфраванні тэксту катэгорыя, якую вы перайменавалі самі, паказваецца як **Іншае**.
+- **Не лічацца выдаткам або даходам:** запланаваныя выдаткі, сумы, якія вам вінны пасля падзеленага рахунку, і пераводы паміж вашымі ўключанымі рахункамі.
+- **Групы (Pro).** Захавайце набор рахункаў як групу, напрыклад «Арэнда», і параўноўвайце побач рахункі ўнутры групы. Можна стварыць да 20 груп; выдаленне групы не кранае вашы рахункі і іх даныя. Групы даступныя ў Pro: пасля пераходу на ніжэйшы тарыф групы схаваныя (не выдаленыя), пакуль вы зноў не перайдзеце на Pro.
+
 ## Капітал
 
 Адкрыйце яго з пункта **Капітал** на ўкладцы «Аналітыка» або націснуўшы картку **Net Capital** на галоўным экране. Ён складае ўсё, што ў вас ёсць на ўсіх акаўнтах, — грошы ва ўсіх кашальках, рыначны кошт інвестыцый і грошы, якія вам вінны, — і адымае вашы даўгі, у валюце адлюстравання. Відаць змяненне да мінулага месяца і да мінулага года, чатыры часткі і апошнія 12 месяцаў слупкамі: кожны мінулы месяц аднаўляецца па вашых запісах і курсах валют таго месяца, таму гісторыя ёсць з першага дня. Бледны слупок азначае, што частку інвестыцый ацэнена па цане пакупкі: рыначнай цаны на тую дату не было. У раздзеле **Акаўнты** можна выключыць акаўнт — напрыклад агульны, які іншы ўдзельнік таксама лічыць у сваім капітале; выбар захоўваецца на гэтай прыладзе. Цалкам зашыфраваны акаўнт прачытаць нельга, ён не ўлічваецца.
@@ -41244,6 +41394,16 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 Калі адкрыць гэты экран кнопкай **Экспартаваць справаздачу** на закладцы Аналітыка, сюда пераносіцца той перыяд, які вы там глядзелі — адлісталі да чэрвеня, значыць справаздача гатуецца за чэрвень, а не за цяперашні месяц. Незакончаны перыяд заканчваецца сённяшнім днём, завершаны бярэцца цалкам.
 
 Справаздачы захоўваюцца на працягу 7 дзён, а потым аўтаматычна выдаляюцца.
+
+## Ахоп справаздачы
+
+У полі **Справаздача ахоплівае** абярыце, што трапіць у файл:
+
+- **Гэты рахунак** - рахунак, у якім вы знаходзіцеся (па змаўчанні).
+- **Усе рахункі** - усе вашы рахункі, акрамя выключаных на экране «Усе рахункі».
+- **Група** - адна з вашых груп рахункаў (Pro).
+
+У справаздачы па некалькіх рахунках ёсць слупкі **Рахунак** і **Заўвага** і вынік па кожным рахунку. Радкі з заўвагай - запланаваныя выдаткі, сумы падзеленых рахункаў і пераводы паміж вашымі рахункамі - пералічаны, каб вы іх бачылі, але **не** ўваходзяць ні ў адзін вынік. Цалкам зашыфраваныя рахункі не ўключаюцца і названы ў канцы справаздачы. Лічбы супадаюць з экранам «Усе рахункі». Такая справаздача захоўваецца 7 дзён, як і любая іншая, і адкрываецца з любога рахунку.
 
 ## Штомесячны дайджэст
 
@@ -44915,6 +45075,16 @@ In de maand- en jaarweergave vergelijkt deze kaart de periode met dezelfde perio
 
 Een raster van je recente dagen, een kolom per week en een rij per weekdag, ingekleurd naar wat je die dag uitgaf — hoe donkerder, hoe meer (elke tint is een kwart van je dagen met uitgaven). Op de computer beslaat het de afgelopen 12 maanden, op de telefoon zoveel maanden als leesbaar passen. Tik op een dag voor datum en totaal; anders noemt de kaart je duurste dag. Daaronder laat **Gemiddeld per dag van de maand** zien hoeveel je gemiddeld op elke dag van de maand uitgeeft en welke drie dagen het meest kosten. Heeft je account een **Financiële maand**, dan is dag 1 de eerste dag ervan — betaaldag. De app kent geen tijdstip van aankopen, dus de kaart werkt met dagen, niet met uren. Hij verschijnt zodra je minstens 14 dagen met uitgaven hebt.
 
+## Alle rekeningen
+
+Open **Alle rekeningen** op het tabblad Analyse om alle rekeningen waar je bij hoort samen te zien, in je weergavevaluta. Kies een periode (deze maand, vorige maand, dit jaar, vorig jaar of een eigen bereik) en je ziet **Uitgegeven**, **Inkomsten** en **Netto** met een vergelijking met de vorige periode, wat elke rekening bijdraagt, uitgaven en inkomsten per categorie en de maanden als gestapelde balken.
+
+- **Rekeningen aan- en uitzetten.** Zet een rekening uit die je niet wilt meetellen, bijvoorbeeld een gedeelde rekening die ook een ander lid meetelt. De keuze wordt op dit apparaat bewaard. Beleggingsrekeningen staan eerst uit.
+- **Categorieën worden samengevoegd op naam.** "Boodschappen" op twee rekeningen wordt één rij.
+- **Versleutelde rekeningen.** Een volledig versleutelde rekening kan niet gelezen worden en telt niet mee. Bij tekstversleuteling verschijnt een categorie die je zelf hebt hernoemd als **Overig**.
+- **Tellen niet als uitgave of inkomst:** geplande uitgaven, bedragen die je nog krijgt van een gedeelde rekening en overboekingen tussen je eigen meegetelde rekeningen.
+- **Groepen (Pro).** Bewaar een reeks rekeningen als groep - bijvoorbeeld "Verhuur" - en vergelijk de rekeningen binnen een groep naast elkaar. Je kunt tot 20 groepen hebben; een groep verwijderen raakt je rekeningen en gegevens niet. Groepen zijn een Pro-functie: na een downgrade zijn je groepen verborgen (niet verwijderd) totdat je weer upgradet.
+
 ## Vermogen
 
 Open het via **Vermogen** op het tabblad Analyse of door op de kaart **Net Capital** op het startscherm te tikken. Het telt alles op wat je op al je accounts hebt — het geld in elke portemonnee, de marktwaarde van je beleggingen en het geld dat anderen je schuldig zijn — min je eigen schulden, in je weergavevaluta. Je ziet de verandering t.o.v. vorige maand en t.o.v. een jaar geleden, de vier onderdelen en de afgelopen 12 maanden als staven: elke afgelopen maand wordt opgebouwd uit je gegevens en de wisselkoersen van die maand, dus de geschiedenis is er vanaf dag één. Een lichtere staaf betekent dat sommige beleggingen tegen aankoopprijs zijn gewaardeerd omdat er voor die datum geen marktprijs was. Onder **Accounts** kun je een account uitzetten — bijvoorbeeld een gedeeld account dat een ander lid ook in zijn vermogen meetelt; de keuze blijft op dit apparaat. Een volledig versleuteld account kan niet worden gelezen en telt niet mee.
@@ -46661,6 +46831,16 @@ Onder de knoppen staan de exacte datums die het rapport dekt — dezelfde datums
 Open je dit scherm via **Rapport exporteren** op het tabblad Analyse, dan gaat de periode die je bekeek mee - ben je daar teruggebladerd naar juni, dan wordt het rapport voor juni gemaakt en niet voor de huidige maand. Een lopende periode eindigt vandaag; een afgeronde beslaat haar volle bereik.
 
 Rapporten worden 7 dagen bewaard en daarna automatisch verwijderd.
+
+## Bereik van het rapport
+
+Kies onder **Rapport omvat** wat het bestand bevat:
+
+- **Deze rekening** - de rekening waarin je zit (standaard).
+- **Alle rekeningen** - al je rekeningen, behalve die je op het scherm Alle rekeningen hebt uitgezet.
+- **Groep** - een van je rekeninggroepen (Pro).
+
+Een rapport over meerdere rekeningen heeft een kolom **Rekening** en een kolom **Opmerking** en toont een subtotaal per rekening. Rijen met een opmerking - geplande uitgaven, bedragen uit gedeelde rekeningen en overboekingen tussen eigen rekeningen - worden getoond, maar tellen in **geen** enkel totaal mee. Volledig versleutelde rekeningen ontbreken en worden aan het einde van het rapport genoemd. De cijfers komen overeen met het scherm Alle rekeningen. Zo'n rapport blijft 7 dagen bewaard, zoals elk ander, en je opent het vanuit elke rekening.
 
 ## Maandelijkse digest
 
@@ -50453,6 +50633,16 @@ Nas vistas de mês e ano, este cartão compara o período com o mesmo período d
 
 Uma grelha dos seus dias recentes, uma coluna por semana e uma linha por dia da semana, sombreada pelo que gastou nesse dia — quanto mais escuro, mais (cada tom é um quarto dos seus dias com gastos). No computador abrange os últimos 12 meses; no telemóvel, tantos meses quantos couberem num tamanho legível. Toque num dia para ver a data e o total; caso contrário, o cartão indica o dia de maior gasto. Por baixo, **Média por dia do mês** mostra quanto gasta em média em cada dia do mês e que três dias custam mais. Se a sua conta tiver um **Mês financeiro**, o dia 1 é o primeiro dia dele — o do ordenado. A app não sabe a hora das compras, por isso o cartão trabalha com dias, não com horas. Aparece quando tiver pelo menos 14 dias com gastos.
 
+## Todas as contas
+
+Abra **Todas as contas** no separador Análise para ver juntas todas as contas de que faz parte, na sua moeda de apresentação. Escolha um período (este mês, mês passado, este ano, ano passado ou um intervalo personalizado) e verá **Gasto**, **Receitas** e **Líquido** com a comparação com o período anterior, o contributo de cada conta, despesas e receitas por categoria e os meses em barras empilhadas.
+
+- **Ligue e desligue contas.** Desligue uma conta que não quer contar, por exemplo uma conta partilhada que outro membro também conta. A escolha fica guardada neste dispositivo. As contas de investimento começam desligadas.
+- **As categorias juntam-se pelo nome.** "Supermercado" em duas contas passa a ser uma só linha.
+- **Contas cifradas.** Uma conta totalmente cifrada não pode ser lida e não é incluída. Com cifragem de texto, uma categoria que renomeou aparece como **Outros**.
+- **Não contam como despesa nem receita:** despesas planeadas, valores que lhe devem de uma conta dividida e transferências entre as suas próprias contas incluídas.
+- **Grupos (Pro).** Guarde um conjunto de contas como grupo - por exemplo "Arrendamentos" - e compare lado a lado as contas dentro de um grupo. Pode ter até 20 grupos; apagar um grupo nunca toca nas suas contas nem nos dados. Os grupos são uma funcionalidade Pro: após um downgrade, os seus grupos ficam ocultos (não são apagados) até voltar a subscrever o plano.
+
 ## Património líquido
 
 Abra-o a partir da entrada **Património líquido** no separador Análise ou tocando no cartão **Net Capital** do ecrã inicial. Soma tudo o que tem em todas as suas contas — o dinheiro de cada carteira, o valor de mercado dos seus investimentos e o dinheiro que lhe devem — menos as suas próprias dívidas, na sua moeda de apresentação. Vê a variação face ao mês passado e a há um ano, as quatro partes e os últimos 12 meses em barras: cada mês passado é reconstruído a partir dos seus registos e das taxas de câmbio desse mês, por isso o histórico existe desde o primeiro dia. Uma barra mais clara indica que alguns investimentos foram avaliados ao preço de compra por não haver preço de mercado nessa data. Em **Contas** pode desativar uma conta — por exemplo uma conta partilhada que outro membro também conta no seu património; a escolha fica guardada neste dispositivo. Uma conta totalmente encriptada não pode ser lida e não é contada.
@@ -52218,6 +52408,16 @@ Por baixo dos botões vê as datas exatas que o relatório vai abranger — as m
 Se abrir este ecrã através de **Exportar relatório** no separador Análise, o período que estava a ver é mantido - recue até junho e o relatório é preparado para junho, não para o mês atual. Um período ainda a decorrer termina hoje; um período já terminado abrange toda a sua duração.
 
 Os relatórios ficam guardados durante 7 dias e depois são eliminados automaticamente.
+
+## Âmbito do relatório
+
+Em **O relatório abrange** escolha o que o ficheiro inclui:
+
+- **Esta conta** - a conta em que está (predefinição).
+- **Todas as contas** - todas as suas contas, exceto as que desligou no ecrã Todas as contas.
+- **Grupo** - um dos seus grupos de contas (Pro).
+
+Um relatório de várias contas tem uma coluna **Conta** e uma coluna **Nota** e mostra um subtotal por conta. As linhas com nota - despesas planeadas, valores de contas divididas e transferências entre as suas contas - são listadas para que as veja, mas **não** entram em nenhum total. As contas totalmente cifradas ficam de fora e são indicadas no fim do relatório. Os valores coincidem com o ecrã Todas as contas. Este relatório é guardado 7 dias, como qualquer outro, e pode abri-lo a partir de qualquer conta.
 
 ## Resumo mensal
 
@@ -56017,6 +56217,16 @@ Nas visões de mês e ano, este cartão compara o período com o mesmo período 
 
 Uma grade dos seus dias recentes, uma coluna por semana e uma linha por dia da semana, colorida pelo quanto você gastou naquele dia — quanto mais escuro, mais (cada tom é um quarto dos seus dias com gastos). No computador ela cobre os últimos 12 meses; no celular, quantos meses couberem em tamanho legível. Toque em um dia para ver a data e o total; senão o cartão mostra seu dia de maior gasto. Abaixo, **Média por dia do mês** mostra quanto você gasta em média em cada dia do mês e quais três dias custam mais. Se a sua conta tiver um **Mês financeiro**, o dia 1 é o primeiro dia dele — o do pagamento. O app não sabe o horário das compras, então o cartão trabalha com dias, não com horas. Ele aparece quando você tiver pelo menos 14 dias com gastos.
 
+## Todas as contas
+
+Abra **Todas as contas** na aba Análises para ver juntas todas as contas de que você faz parte, na sua moeda de exibição. Escolha um período (este mês, mês passado, este ano, ano passado ou um intervalo personalizado) e você verá **Gasto**, **Receitas** e **Líquido** com a comparação com o período anterior, a contribuição de cada conta, despesas e receitas por categoria e os meses em barras empilhadas.
+
+- **Ligue e desligue contas.** Desligue uma conta que você não quer contar, por exemplo uma conta compartilhada que outro membro também conta. A escolha fica salva neste dispositivo. As contas de investimento começam desligadas.
+- **As categorias são unidas pelo nome.** "Mercado" em duas contas vira uma só linha.
+- **Contas criptografadas.** Uma conta totalmente criptografada não pode ser lida e não é incluída. Com criptografia de texto, uma categoria que você renomeou aparece como **Outros**.
+- **Não contam como despesa nem receita:** despesas planejadas, valores que devem a você de uma conta dividida e transferências entre as suas próprias contas incluídas.
+- **Grupos (Pro).** Salve um conjunto de contas como grupo - por exemplo "Aluguéis" - e compare lado a lado as contas dentro de um grupo. Você pode ter até 20 grupos; excluir um grupo nunca mexe nas suas contas nem nos dados. Grupos são um recurso Pro: depois de um downgrade, seus grupos ficam ocultos (não são apagados) até você fazer upgrade de novo.
+
 ## Patrimônio líquido
 
 Abra pela entrada **Patrimônio líquido** na aba Análises ou tocando no cartão **Net Capital** da tela inicial. Ele soma tudo o que você tem em todas as suas contas — o dinheiro de cada carteira, o valor de mercado dos seus investimentos e o dinheiro que devem a você — menos as suas próprias dívidas, na sua moeda de exibição. Você vê a variação em relação ao mês passado e a um ano atrás, as quatro partes e os últimos 12 meses em barras: cada mês passado é reconstruído com base nos seus registros e nas taxas de câmbio daquele mês, então o histórico já existe desde o primeiro dia. Uma barra mais clara indica que alguns investimentos foram avaliados pelo preço de compra porque não havia preço de mercado naquela data. Em **Contas** você pode desativar uma conta — por exemplo uma conta compartilhada que outro membro também conta no patrimônio dele; a escolha fica salva neste dispositivo. Uma conta totalmente criptografada não pode ser lida e não é contada.
@@ -57782,6 +57992,16 @@ Abaixo dos botões, você vê as datas exatas que o relatório vai cobrir — as
 Se você abrir esta tela pelo botão **Exportar relatório** na aba Análises, o período que você estava vendo vem junto - volte até junho lá e o relatório será preparado para junho, não para o mês atual. Um período ainda em andamento termina hoje; um período já encerrado cobre toda a sua duração.
 
 Os relatórios ficam armazenados por 7 dias e depois são excluídos automaticamente.
+
+## Abrangência do relatório
+
+Em **O relatório abrange** escolha o que o arquivo inclui:
+
+- **Esta conta** - a conta em que você está (padrão).
+- **Todas as contas** - todas as suas contas, exceto as que você desligou na tela Todas as contas.
+- **Grupo** - um dos seus grupos de contas (Pro).
+
+Um relatório de várias contas tem uma coluna **Conta** e uma coluna **Nota** e mostra um subtotal por conta. As linhas com nota - despesas planejadas, valores de contas divididas e transferências entre as suas contas - são listadas para você vê-las, mas **não** entram em nenhum total. As contas totalmente criptografadas ficam de fora e são citadas no fim do relatório. Os valores batem com a tela Todas as contas. Esse relatório é guardado por 7 dias, como qualquer outro, e você pode abri-lo a partir de qualquer conta.
 
 ## Resumo mensal
 

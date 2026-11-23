@@ -50,6 +50,16 @@ Nas vistas de mês e ano, este cartão compara o período com o mesmo período d
 
 Uma grelha dos seus dias recentes, uma coluna por semana e uma linha por dia da semana, sombreada pelo que gastou nesse dia — quanto mais escuro, mais (cada tom é um quarto dos seus dias com gastos). No computador abrange os últimos 12 meses; no telemóvel, tantos meses quantos couberem num tamanho legível. Toque num dia para ver a data e o total; caso contrário, o cartão indica o dia de maior gasto. Por baixo, **Média por dia do mês** mostra quanto gasta em média em cada dia do mês e que três dias custam mais. Se a sua conta tiver um **Mês financeiro**, o dia 1 é o primeiro dia dele — o do ordenado. A app não sabe a hora das compras, por isso o cartão trabalha com dias, não com horas. Aparece quando tiver pelo menos 14 dias com gastos.
 
+## Todas as contas
+
+Abra **Todas as contas** no separador Análise para ver juntas todas as contas de que faz parte, na sua moeda de apresentação. Escolha um período (este mês, mês passado, este ano, ano passado ou um intervalo personalizado) e verá **Gasto**, **Receitas** e **Líquido** com a comparação com o período anterior, o contributo de cada conta, despesas e receitas por categoria e os meses em barras empilhadas.
+
+- **Ligue e desligue contas.** Desligue uma conta que não quer contar, por exemplo uma conta partilhada que outro membro também conta. A escolha fica guardada neste dispositivo. As contas de investimento começam desligadas.
+- **As categorias juntam-se pelo nome.** "Supermercado" em duas contas passa a ser uma só linha.
+- **Contas cifradas.** Uma conta totalmente cifrada não pode ser lida e não é incluída. Com cifragem de texto, uma categoria que renomeou aparece como **Outros**.
+- **Não contam como despesa nem receita:** despesas planeadas, valores que lhe devem de uma conta dividida e transferências entre as suas próprias contas incluídas.
+- **Grupos (Pro).** Guarde um conjunto de contas como grupo - por exemplo "Arrendamentos" - e compare lado a lado as contas dentro de um grupo. Pode ter até 20 grupos; apagar um grupo nunca toca nas suas contas nem nos dados. Os grupos são uma funcionalidade Pro: após um downgrade, os seus grupos ficam ocultos (não são apagados) até voltar a subscrever o plano.
+
 ## Património líquido
 
 Abra-o a partir da entrada **Património líquido** no separador Análise ou tocando no cartão **Net Capital** do ecrã inicial. Soma tudo o que tem em todas as suas contas — o dinheiro de cada carteira, o valor de mercado dos seus investimentos e o dinheiro que lhe devem — menos as suas próprias dívidas, na sua moeda de apresentação. Vê a variação face ao mês passado e a há um ano, as quatro partes e os últimos 12 meses em barras: cada mês passado é reconstruído a partir dos seus registos e das taxas de câmbio desse mês, por isso o histórico existe desde o primeiro dia. Uma barra mais clara indica que alguns investimentos foram avaliados ao preço de compra por não haver preço de mercado nessa data. Em **Contas** pode desativar uma conta — por exemplo uma conta partilhada que outro membro também conta no seu património; a escolha fica guardada neste dispositivo. Uma conta totalmente encriptada não pode ser lida e não é contada.

@@ -88,3 +88,5 @@ ABA-263 (chat labelling and conversion) · ABA-386 (Fat Finder currency) · ABA-
 currency, `common/utils/fx.ts`) · the `fx-rate-conversion-helper-quintupled` tech-debt item (the
 five remaining copies migrated).
 ABA-821 (FX rate cache moved from a per-process Map to Redis).
+
+The consolidated all-accounts report and analytics convert through the same `fx.ts`: [all-accounts-analytics](all-accounts-analytics.md).

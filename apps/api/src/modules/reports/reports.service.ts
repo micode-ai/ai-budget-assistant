@@ -294,7 +294,7 @@ export class ReportsService {
 
   async listReports(accountId: string, userId: string) {
     const reports = await this.prisma.generatedReport.findMany({
-      where: { accountId, userId },
+      where: { userId, OR: [{ accountId }, { accountId: null }] },
       select: {
         id: true,
         format: true,
@@ -313,7 +313,7 @@ export class ReportsService {
 
   async downloadReport(accountId: string, userId: string, reportId: string, res: Response) {
     const report = await this.prisma.generatedReport.findFirst({
-      where: { id: reportId, accountId, userId },
+      where: { id: reportId, userId, OR: [{ accountId }, { accountId: null }] },
     });
 
     if (!report) throw new NotFoundException('Report not found');
@@ -334,7 +334,7 @@ export class ReportsService {
 
   async deleteReport(accountId: string, userId: string, reportId: string) {
     const report = await this.prisma.generatedReport.findFirst({
-      where: { id: reportId, accountId, userId },
+      where: { id: reportId, userId, OR: [{ accountId }, { accountId: null }] },
     });
     if (!report) throw new NotFoundException('Report not found');
     await this.prisma.generatedReport.delete({ where: { id: reportId } });

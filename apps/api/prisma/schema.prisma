@@ -148,6 +148,7 @@ enum FeedEventType {
 
 model User {
   transactionRevisions TransactionRevision[]
+  accountGroups        AccountGroup[]
   id                         String        @id @default(uuid())
   email                      String        @unique
   passwordHash               String?       @map("password_hash")
@@ -382,6 +383,7 @@ model ExchangeRateWatch {
 }
 
 model Account {
+  accountGroupAccounts AccountGroupAccount[]
   leaflets             Leaflet[]
   transactionRevisions TransactionRevision[]
   id                   String       @id @default(uuid())
@@ -1969,7 +1971,9 @@ model AccountEncryptionKey {
 
 model GeneratedReport {
   id           String    @id @default(uuid())
-  accountId    String    @map("account_id")
+  // null = a consolidated (all-accounts / group) report, scoped by userId; accountIds lists what it covered
+  accountId    String?   @map("account_id")
+  accountIds   String[]  @default([]) @map("account_ids")
   userId       String    @map("user_id")
   format       String
   status       String    @default("pending")
@@ -1983,7 +1987,7 @@ model GeneratedReport {
   createdAt    DateTime  @default(now()) @map("created_at")
 
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  account Account? @relation(fields: [accountId], references: [id], onDelete: Cascade)
 
   @@index([userId, createdAt])
   @@index([accountId, userId])
@@ -3326,4 +3330,29 @@ model PetCost {
   @@index([petId])
   @@index([accountId])
   @@map("pet_costs")
+}
+
+model AccountGroup {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  name      String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user     User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accounts AccountGroupAccount[]
+
+  @@index([userId])
+  @@map("account_groups")
+}
+
+model AccountGroupAccount {
+  groupId   String @map("group_id")
+  accountId String @map("account_id")
+
+  group   AccountGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  account Account      @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@id([groupId, accountId])
+  @@map("account_group_accounts")
 }

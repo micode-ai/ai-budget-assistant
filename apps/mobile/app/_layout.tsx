@@ -1022,6 +1022,20 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="all-accounts/index"
+          options={{
+            headerShown: true,
+            title: t('allAccounts.title'),
+          }}
+        />
+        <Stack.Screen
+          name="all-accounts/group/[id]"
+          options={{
+            headerShown: true,
+            title: t('allAccounts.groups.title'),
+          }}
+        />
+        <Stack.Screen
           name="net-worth"
           options={{
             headerShown: true,

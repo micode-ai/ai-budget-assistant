@@ -50,6 +50,16 @@ In the month and year views, this card compares the period with the same period 
 
 A grid of your recent days, one column per week and one row per weekday, shaded by how much you spent that day — the darker, the more (each shade is a quarter of your spending days). On a computer it covers the last 12 months; on a phone, as many recent months as fit at a readable size. Tap a day to see its date and total; otherwise the card names your biggest day. Below it, **Average by day of the month** shows how much you spend on each day of the month on average over the past months, and which three days take the most. If your account has a **Financial Month**, day 1 is its first day — payday. The app has no time of purchase for transactions, so the card works with days, not hours. It appears once you have at least 14 days with spending.
 
+## All Accounts
+
+Open **All accounts** from the Analytics tab to see all the accounts you belong to together, in your display currency. Pick a period (this month, last month, this year, last year or a custom range) and you get **Spent**, **Income** and **Net** with a comparison to the previous period, what each account contributed, spending and income by category, and the months as stacked bars.
+
+- **Switch accounts on and off.** Turn off an account you do not want counted - for example a shared account that another member also counts. The choice is kept on this device. Investment accounts start switched off.
+- **Categories are merged by name.** "Groceries" in two accounts becomes one row.
+- **Encrypted accounts.** A fully encrypted account cannot be read and is not included. With text encryption, a category you renamed yourself shows as **Other**.
+- **Not counted as spending or income:** planned expenses, amounts you are owed from a split bill, and transfers between your own accounts that are included.
+- **Groups (Pro).** Save a set of accounts as a group - for example "Rentals" - and compare the accounts inside a group side by side. You can keep up to 20 groups; deleting a group never touches your accounts or their data. Groups are a Pro feature: after a downgrade your groups are hidden (not deleted) until you upgrade again.
+
 ## Net Worth
 
 Open it from the **Net worth** entry on the Analytics tab, or by tapping the **Net Capital** card on the home screen. It adds up everything you have across all your accounts — the money in every wallet, the market value of your investments and the money others owe you — minus your own debts, in your display currency. You see the change since last month and since a year ago, the four parts, and the last 12 months as bars: each past month is rebuilt from your records and that month's exchange rates, so the history is there from the first day. A paler bar means some investments were valued at their purchase price because there was no market price for that date. Under **Accounts** you can switch an account off — for example a shared account that another member also counts in their own net worth; the choice is kept on this device. A fully encrypted account cannot be read and is not counted.

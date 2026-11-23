@@ -3,6 +3,7 @@ import { api } from '@/services/api';
 import { saveFile, shareFile, type FileExportResult } from '@/services/fileExport';
 import type {
   GenerateReportDto,
+  ConsolidatedReportRequest,
   ReportListItem,
   MonthlyDigestResponse,
   BackupHistoryItem,
@@ -36,6 +37,8 @@ interface ReportState {
 
   // Actions
   generateReport: (dto: GenerateReportDto) => Promise<string | null>;
+  /** One report across all (or a group's) accounts; returns the report id, or null on failure. */
+  generateConsolidatedReport: (req: ConsolidatedReportRequest) => Promise<string | null>;
   loadReports: () => Promise<void>;
   deleteReport: (reportId: string) => Promise<void>;
   shareReport: (reportId: string, fileName: string) => Promise<FileExportResult>;
@@ -66,6 +69,22 @@ export const useReportStore = create<ReportState>()((set, get) => ({
     try {
       const response = await api.generateReport(dto);
       // Reload reports list
+      await get().loadReports();
+      set({ isGenerating: false });
+      return response.reportId;
+    } catch (err) {
+      set({
+        isGenerating: false,
+        error: err instanceof Error ? err.message : 'Failed to generate report',
+      });
+      return null;
+    }
+  },
+
+  generateConsolidatedReport: async (req: ConsolidatedReportRequest) => {
+    set({ isGenerating: true, error: null });
+    try {
+      const response = await api.generateConsolidatedReport(req);
       await get().loadReports();
       set({ isGenerating: false });
       return response.reportId;

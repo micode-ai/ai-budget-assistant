@@ -50,6 +50,16 @@ In de maand- en jaarweergave vergelijkt deze kaart de periode met dezelfde perio
 
 Een raster van je recente dagen, een kolom per week en een rij per weekdag, ingekleurd naar wat je die dag uitgaf — hoe donkerder, hoe meer (elke tint is een kwart van je dagen met uitgaven). Op de computer beslaat het de afgelopen 12 maanden, op de telefoon zoveel maanden als leesbaar passen. Tik op een dag voor datum en totaal; anders noemt de kaart je duurste dag. Daaronder laat **Gemiddeld per dag van de maand** zien hoeveel je gemiddeld op elke dag van de maand uitgeeft en welke drie dagen het meest kosten. Heeft je account een **Financiële maand**, dan is dag 1 de eerste dag ervan — betaaldag. De app kent geen tijdstip van aankopen, dus de kaart werkt met dagen, niet met uren. Hij verschijnt zodra je minstens 14 dagen met uitgaven hebt.
 
+## Alle rekeningen
+
+Open **Alle rekeningen** op het tabblad Analyse om alle rekeningen waar je bij hoort samen te zien, in je weergavevaluta. Kies een periode (deze maand, vorige maand, dit jaar, vorig jaar of een eigen bereik) en je ziet **Uitgegeven**, **Inkomsten** en **Netto** met een vergelijking met de vorige periode, wat elke rekening bijdraagt, uitgaven en inkomsten per categorie en de maanden als gestapelde balken.
+
+- **Rekeningen aan- en uitzetten.** Zet een rekening uit die je niet wilt meetellen, bijvoorbeeld een gedeelde rekening die ook een ander lid meetelt. De keuze wordt op dit apparaat bewaard. Beleggingsrekeningen staan eerst uit.
+- **Categorieën worden samengevoegd op naam.** "Boodschappen" op twee rekeningen wordt één rij.
+- **Versleutelde rekeningen.** Een volledig versleutelde rekening kan niet gelezen worden en telt niet mee. Bij tekstversleuteling verschijnt een categorie die je zelf hebt hernoemd als **Overig**.
+- **Tellen niet als uitgave of inkomst:** geplande uitgaven, bedragen die je nog krijgt van een gedeelde rekening en overboekingen tussen je eigen meegetelde rekeningen.
+- **Groepen (Pro).** Bewaar een reeks rekeningen als groep - bijvoorbeeld "Verhuur" - en vergelijk de rekeningen binnen een groep naast elkaar. Je kunt tot 20 groepen hebben; een groep verwijderen raakt je rekeningen en gegevens niet. Groepen zijn een Pro-functie: na een downgrade zijn je groepen verborgen (niet verwijderd) totdat je weer upgradet.
+
 ## Vermogen
 
 Open het via **Vermogen** op het tabblad Analyse of door op de kaart **Net Capital** op het startscherm te tikken. Het telt alles op wat je op al je accounts hebt — het geld in elke portemonnee, de marktwaarde van je beleggingen en het geld dat anderen je schuldig zijn — min je eigen schulden, in je weergavevaluta. Je ziet de verandering t.o.v. vorige maand en t.o.v. een jaar geleden, de vier onderdelen en de afgelopen 12 maanden als staven: elke afgelopen maand wordt opgebouwd uit je gegevens en de wisselkoersen van die maand, dus de geschiedenis is er vanaf dag één. Een lichtere staaf betekent dat sommige beleggingen tegen aankoopprijs zijn gewaardeerd omdat er voor die datum geen marktprijs was. Onder **Accounts** kun je een account uitzetten — bijvoorbeeld een gedeeld account dat een ander lid ook in zijn vermogen meetelt; de keuze blijft op dit apparaat. Een volledig versleuteld account kan niet worden gelezen en telt niet mee.

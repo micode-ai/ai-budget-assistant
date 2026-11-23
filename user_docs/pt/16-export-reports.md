@@ -44,6 +44,16 @@ Se abrir este ecrã através de **Exportar relatório** no separador Análise, o
 
 Os relatórios ficam guardados durante 7 dias e depois são eliminados automaticamente.
 
+## Âmbito do relatório
+
+Em **O relatório abrange** escolha o que o ficheiro inclui:
+
+- **Esta conta** - a conta em que está (predefinição).
+- **Todas as contas** - todas as suas contas, exceto as que desligou no ecrã Todas as contas.
+- **Grupo** - um dos seus grupos de contas (Pro).
+
+Um relatório de várias contas tem uma coluna **Conta** e uma coluna **Nota** e mostra um subtotal por conta. As linhas com nota - despesas planeadas, valores de contas divididas e transferências entre as suas contas - são listadas para que as veja, mas **não** entram em nenhum total. As contas totalmente cifradas ficam de fora e são indicadas no fim do relatório. Os valores coincidem com o ecrã Todas as contas. Este relatório é guardado 7 dias, como qualquer outro, e pode abri-lo a partir de qualquer conta.
+
 ## Resumo mensal
 
 Um retrato da atividade financeira do mês atual:

@@ -3515,29 +3515,42 @@ X-Account-Id: <account-uuid>
 ]
 ```
 
-### Сводка по всем аккаунтам
+### Аналитика по всем счетам
 
 ```http
-GET /analytics/aggregated?startDate=2026-09-01&endDate=2026-09-30
+GET /all-accounts/analytics?start=2026-09-01&end=2026-09-30&exclude=<id>,<id>
 Authorization: Bearer <token>
-X-Account-Id: <account-uuid>
 ```
 
-Сводка по **всем** аккаунтам, в которых состоит пользователь (кроме tier-2 зашифрованных), а не только по аккаунту из `X-Account-Id`.
+Расходы и доходы по **всем** аккаунтам, в которых состоит пользователь, в `user.currencyCode`. Привязка к пользователю: заголовок `X-Account-Id` не нужен. `start` / `end` - `YYYY-MM-DD`, длина периода ограничена. `exclude` - список id аккаунтов через запятую, которые нужно исключить (фильтр поверх членства, а не белый список). Аккаунты с шифрованием tier-2 перечисляются, но не суммируются. Категории объединяются по отображаемому названию; запланированные расходы, суммы по разделённым счетам и переводы между включёнными аккаунтами не учитываются. Подробнее: `docs/wiki/features/all-accounts-analytics.md`.
 
-**Ответ** `200 OK`
-```json
-{
-  "period": { "start": "2026-09-01T00:00:00.000Z", "end": "2026-09-30T00:00:00.000Z" },
-  "totalIncome": 5200,
-  "totalExpenses": 3100,
-  "netSavings": 2100,
-  "expensesByCategory": [],
-  "topExpenses": [],
-  "trends": { "vsLastPeriod": 0, "vsAverage": 0 },
-  "accountCount": 3
-}
+**Ответ** `200 OK` - `AllAccountsAnalyticsResponse` (`packages/shared-types/src/dto/all-accounts.ts`): `currencyCode`, `start`, `end`, `groupId`, `fxApproximate`, `computedAt`, `totals`, `accounts[]`, `months[]`, `expenseCategories[]`, `incomeCategories[]`.
+
+### Сводный отчёт (все аккаунты / группа)
+
+```http
+POST /all-accounts/reports
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{ "format": "pdf", "startDate": "2026-09-01", "endDate": "2026-09-30", "exclude": [], "groupId": "<group-uuid>" }
 ```
+
+Один PDF / Excel / CSV по всем аккаунтам пользователя или по одной группе (`groupId`, тариф **Pro** - иначе `403 TIER_REQUIRED`). Необязательные поля: `includeIncomes`, `includeExpenses`, `locale`, `exclude`. В файле есть столбцы «Аккаунт» и «Примечание» и подытог по каждому аккаунту; строки с примечанием выводятся, но в итоги не входят. Отчёт сохраняется с `accountId = null`, принадлежит пользователю и удаляется через 7 дней; скачивание - `GET /reports/:id/download`. `400`, если не осталось аккаунтов для включения.
+
+**Ответ** `200 OK`: `{ "reportId", "status": "completed", "downloadUrl", "fileName", "fileSize" }`.
+
+### Группы аккаунтов (Pro)
+
+Все маршруты требуют тариф **pro** и привязаны к пользователю (без `X-Account-Id`). Не более 20 групп на пользователя.
+
+| Метод | Путь | Описание |
+|---|---|---|
+| `GET` | `/account-groups` | Список групп пользователя: `[{ id, name, accountIds }]` |
+| `POST` | `/account-groups` | Создать. Тело `{ "name": "Аренда", "accountIds": ["<uuid>"] }` (имя 1-100 символов, 1-100 id, пользователь должен состоять в каждом аккаунте) |
+| `PATCH` | `/account-groups/:id` | Заменить имя и аккаунты (то же тело) |
+| `DELETE` | `/account-groups/:id` | Удалить только группу; аккаунты и данные не затрагиваются |
+| `GET` | `/account-groups/:id/analytics?start=&end=` | Аналитика по всем счетам, ограниченная аккаунтами группы (с повторной фильтрацией по текущему членству) |
 
 ### Детализация экономии (скидки / залоги)
 

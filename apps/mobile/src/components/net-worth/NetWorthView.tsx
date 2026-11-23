@@ -1,10 +1,12 @@
 import { View, Text, ScrollView, Switch, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '@budget/shared-utils';
 import type { NetWorthParts } from '@budget/shared-types';
 import { useNetWorth } from '@/features/net-worth/useNetWorth';
 import { changeSince, isEmptyHistory } from '@/features/net-worth/netWorthDisplay';
 import { getIntlLocale } from '@/i18n';
+import { useAccountStore } from '@/stores/accountStore';
 import { useTheme, useStyles, type Theme } from '@/theme';
 
 const CHART_HEIGHT = 120;
@@ -27,6 +29,7 @@ export function NetWorthView() {
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const locale = getIntlLocale();
+  const accountCount = useAccountStore((s) => s.accounts.length);
   const { data, failed, loading, reload, toggleAccount } = useNetWorth();
 
   if (!data) {
@@ -174,6 +177,12 @@ export function NetWorthView() {
             </View>
           ))}
         </View>
+
+        {accountCount >= 2 && (
+          <TouchableOpacity onPress={() => router.push('/all-accounts')} accessibilityRole="link">
+            <Text style={styles.link}>{t('allAccounts.entrySub')}</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </ScrollView>
   );

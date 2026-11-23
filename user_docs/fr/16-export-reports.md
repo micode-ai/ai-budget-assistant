@@ -44,6 +44,16 @@ Si vous ouvrez cet ecran via **Exporter le rapport** dans l'onglet Analyses, la 
 
 Les rapports sont conserves pendant 7 jours puis automatiquement supprimes.
 
+## Périmètre du rapport
+
+Sous **Le rapport couvre**, choisissez ce que le fichier contient :
+
+- **Ce compte** - le compte dans lequel vous êtes (par défaut).
+- **Tous les comptes** - tous vos comptes, sauf ceux que vous avez désactivés sur l'écran Tous les comptes.
+- **Groupe** - l'un de vos groupes de comptes (Pro).
+
+Un rapport sur plusieurs comptes comporte une colonne **Compte** et une colonne **Note**, et affiche un sous-total par compte. Les lignes avec une note - dépenses prévues, montants d'additions partagées et virements entre vos comptes - sont listées pour que vous les voyiez, mais ne sont **pas** incluses dans les totaux. Les comptes entièrement chiffrés sont exclus et nommés à la fin du rapport. Les chiffres correspondent à l'écran Tous les comptes. Ce rapport est conservé 7 jours, comme les autres, et s'ouvre depuis n'importe quel compte.
+
 ## Resume mensuel
 
 Un apercu de votre activite financiere du mois en cours :

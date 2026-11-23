@@ -3,6 +3,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { discoveryItems } from './discoveryItems';
+import { useAccountStore } from '@/stores/accountStore';
 
 /**
  * Phone: the five "discover" entries as one horizontal strip instead of five
@@ -13,6 +14,7 @@ export function DiscoveryStrip({ selectedYear, onOpenStory }: { selectedYear: nu
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
+  const accountCount = useAccountStore((s) => s.accounts.length);
 
   return (
     <ScrollView
@@ -21,7 +23,7 @@ export function DiscoveryStrip({ selectedYear, onOpenStory }: { selectedYear: nu
       style={styles.strip}
       contentContainerStyle={styles.stripContent}
     >
-      {discoveryItems(selectedYear, onOpenStory).map((item) => (
+      {discoveryItems(selectedYear, onOpenStory, accountCount).map((item) => (
         <TouchableOpacity
           key={item.key}
           style={styles.card}

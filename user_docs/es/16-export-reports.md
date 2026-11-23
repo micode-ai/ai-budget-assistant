@@ -44,6 +44,16 @@ Si abres esta pantalla con **Exportar informe** en la pestana Analiticas, se tra
 
 Los informes se almacenan durante 7 dias y luego se eliminan automaticamente.
 
+## Alcance del informe
+
+En **El informe abarca** elige qué incluye el archivo:
+
+- **Esta cuenta** - la cuenta en la que estás (por defecto).
+- **Todas las cuentas** - todas tus cuentas, salvo las que desactivaste en la pantalla Todas las cuentas.
+- **Grupo** - uno de tus grupos de cuentas (Pro).
+
+Un informe de varias cuentas tiene una columna **Cuenta** y una columna **Nota**, y muestra un subtotal por cuenta. Las filas con nota - gastos planificados, importes de cuentas divididas y transferencias entre tus cuentas - se listan para que las veas, pero **no** entran en ningún total. Las cuentas totalmente cifradas quedan fuera y se nombran al final del informe. Las cifras coinciden con la pantalla Todas las cuentas. Este informe se conserva 7 días, como cualquier otro, y puedes abrirlo desde cualquier cuenta.
+
 ## Resumen mensual
 
 Una instantanea de tu actividad financiera del mes actual:
