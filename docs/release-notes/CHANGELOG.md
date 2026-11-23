@@ -8,6 +8,21 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.44.0 - 2026-11-23
+
+**All accounts**
+
+- Analytics across all your accounts: spent, income and net for any period, a line per account
+  with the change against the previous period, a monthly chart, and switches to leave accounts
+  out. Categories with the same name are added up across accounts. From Analytics and Net worth,
+  with two or more accounts; phone and desktop (ABA-836).
+- Account groups (Pro): put accounts together, for example your properties, and compare them side
+  by side — income, costs and the result per account and per month (ABA-836).
+- A consolidated report: one CSV, Excel or PDF for all accounts or a group, with an Account column,
+  subtotals per account and a grand total — choose the scope on the Reports screen (ABA-836).
+
+---
+
 ## 1.43.1 - 2026-11-20
 
 **Fixes**
