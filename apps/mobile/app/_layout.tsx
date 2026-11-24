@@ -21,6 +21,7 @@ import { isShellHostedSettingsRoute } from '@/features/settings/settingsRegistry
 import { useOrientationLock } from '@/hooks/useOrientationLock';
 import { useAppBootstrap } from '@/hooks/useAppBootstrap';
 import { useColdStartGate } from '@/hooks/useColdStartGate';
+import { useTransferQueueAutoFlush } from '@/hooks/useTransferQueueAutoFlush';
 import { useBankNotificationCapture } from '@/hooks/useBankNotificationCapture';
 import { useAuthenticatedBootstrap } from '@/hooks/useAuthenticatedBootstrap';
 import { useNotificationDeepLink } from '@/hooks/useNotificationDeepLink';
@@ -56,6 +57,7 @@ function RootNavigator() {
   const coldStartGateReady = useColdStartGate({ isInitializing, isAuthenticated, fontsLoaded });
 
   useAuthenticatedBootstrap(isAuthenticated);
+  useTransferQueueAutoFlush(isAuthenticated);
   useBankNotificationCapture();
   // Unconditional, not behind the cold-start gate: a foreground service
   // stranded by a crash must be cleaned up whether or not anyone signs in.

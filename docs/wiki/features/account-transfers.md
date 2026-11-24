@@ -13,6 +13,7 @@ generic `/sync` machinery.
 - `GET /wallet/summaries` — on `WalletController`, ignores `req.accountId` by design
 - `apps/api/src/modules/wallet/wallet-balance.util.ts` — `buildWalletBalanceRow`
 - `apps/mobile/src/stores/accountTransferActions.ts` — `syncPendingTransfersAction`
+- `apps/mobile/src/hooks/useTransferQueueAutoFlush.ts`, `src/features/wallet/transferQueueFlusher.ts`
 - `apps/mobile/src/features/wallet/transferBalances.ts`, `frequentTransfers.ts`
 - `apps/mobile/src/hooks/useTransferForm.ts`, `useTransferEditForm.ts`
 
@@ -64,6 +65,13 @@ pull and never throws. A `404` on delete counts as done; a **4xx** marks the row
 is pointless, and `'error'` also drops it out of the pull's pending-guard so the server's truth can
 overwrite it); a transport failure breaks the loop and leaves the rest queued.
 
+**The queue is also pumped without a wallet visit.** `useTransferQueueAutoFlush` (mounted in
+`app/_layout.tsx`) requests a flush when `useConnectivityStore` goes `offline` → `online` and on
+`AppState` `active`, through `createTransferQueueFlusher` — one flush in flight, 15 s minimum
+interval, never throws, `console.warn` only. Only the trigger is new: the queue, `localId`
+idempotency and the 4xx → `'error'` rule are unchanged, so a refused row (deleted account) leaves
+the queue instead of being retried.
+
 **`loadPendingTransfers` must include soft-deleted rows** — a pending delete has to be pushed — and
 is account-scoped, since the push travels under one `X-Account-Id`.
 
@@ -90,8 +98,8 @@ account whose initial balance was never set looks emptier than it is.
 
 - No creator attribution on the list now that members see each other's rows; expenses cache
   `createdByUserName`, transfers have no equivalent.
-- The queue is pumped only by `loadWallet`, so there is no connectivity listener — a queued write
-  waits for the next visit to a wallet screen.
+- The auto-flush drains only the CURRENT account's queue (the push travels under one
+  `X-Account-Id`); a transfer queued under another account waits until that account is current.
 - Other accounts' balances need network on first use.
 - Clearing a transfer's note does not work in either direction: `notes: undefined` is dropped by
   `updateTransferInDb` and by JSON serialisation.
@@ -100,4 +108,4 @@ account whose initial balance was never set looks emptier than it is.
 
 ABA-388 (the feature and `GET /wallet/summaries`) · ABA-469 (create-form decomposition) · ABA-472
 (the party rail removed) · ABA-473 (idempotent create, account-scoped reads, the write queue wired
-up at last) · ABA-479 (detail-screen decomposition).
+up at last) · ABA-479 (detail-screen decomposition) · auto-flush trigger on reconnect/resume.
