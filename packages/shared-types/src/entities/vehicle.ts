@@ -10,6 +10,9 @@ export interface Vehicle {
   nextInspectionDate?: string | null;
   nextServiceDate?: string | null;
   nextServiceOdometer?: number | null;
+  /** Service every N km from `lastServiceKm`; wins over `nextServiceOdometer`. */
+  serviceIntervalKm?: number | null;
+  lastServiceKm?: number | null;
   createdAt: string;
   updatedAt: string;
 }

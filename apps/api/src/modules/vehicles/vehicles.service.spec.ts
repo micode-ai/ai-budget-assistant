@@ -164,3 +164,27 @@ describe('VehiclesService.getHistory (ABA-811)', () => {
     });
   });
 });
+
+describe('VehiclesService service interval', () => {
+  it('a service cost sets lastServiceKm to the latest reading and re-arms the nudge', async () => {
+    const { service, prisma } = make([]);
+    prisma.vehicle.findFirst.mockResolvedValue({ id: 'v1', accountId: 'a1', serviceIntervalKm: 10000, lastServiceKm: 40000 });
+    prisma.vehicle.update = jest.fn().mockResolvedValue({});
+    prisma.expense = { findFirst: jest.fn().mockResolvedValue({ id: 'e1' }) };
+    prisma.fuelLog.deleteMany = jest.fn();
+    prisma.fuelLog.aggregate = jest.fn().mockResolvedValue({ _max: { odometerKm: 52000 } });
+    prisma.vehicleCost.upsert = jest.fn().mockResolvedValue({ id: 'c1' });
+    await service.setCost('a1', 'v1', 'e1', { kind: 'service' } as any);
+    expect(prisma.vehicle.update).toHaveBeenCalledWith({
+      where: { id: 'v1' },
+      data: { lastServiceKm: 52000, serviceOdometerNudgedFor: null },
+    });
+  });
+
+  it('exposes serviceForecast on stats', async () => {
+    const { service, prisma } = make([]);
+    prisma.vehicle.findFirst.mockResolvedValue({ id: 'v1', accountId: 'a1', serviceIntervalKm: 10000, lastServiceKm: 50000, nextServiceOdometer: null });
+    const stats = await service.getStats('a1', 'v1', 'PLN');
+    expect(stats.serviceForecast).toBeNull(); // no readings yet
+  });
+});

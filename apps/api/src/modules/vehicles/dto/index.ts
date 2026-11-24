@@ -45,6 +45,18 @@ export class UpdateVehicleDto {
   @IsInt()
   @Min(0)
   nextServiceOdometer?: number | null;
+
+  @IsOptional()
+  @ValidateIf((_o, v) => v !== null)
+  @IsInt()
+  @Min(1)
+  serviceIntervalKm?: number | null;
+
+  @IsOptional()
+  @ValidateIf((_o, v) => v !== null)
+  @IsInt()
+  @Min(0)
+  lastServiceKm?: number | null;
 }
 
 export class UpsertFuelLogDto {

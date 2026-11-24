@@ -129,6 +129,20 @@ day when none is set; nothing is written unless the user confirms.
 - Inspection has no `VehicleCostKind`, so no cost offers to roll it forward; bulk assignment (`BulkVehiclePickerSheet`) offers nothing either.
 
 
+## Service interval by km (vehicle-odometer-service-interval)
+
+`Vehicle.serviceIntervalKm` + `lastServiceKm` (migration `20261124090000_vehicle_service_interval`) give "service every N km". The target is
+`lastServiceKm + serviceIntervalKm` and wins over the manual `nextServiceOdometer` (ABA-827), which stays the fallback. Pure rules:
+`service-interval.util.ts` (+ spec). `GET /vehicles/:id/stats` and `/history` carry
+`serviceForecast` (`targetKm`, `estimatedKm`, `remainingKm`, `daysLeft`, `kmPerDay`).
+
+- Estimated mileage = latest reading + km/day over the last 60 days x days since it. The rate needs >= 2 readings spanning >= 7 days; with sparse
+  readings it is `null` and the forecast is km left from the latest reading only, never "about N weeks" — the answer to users who skip the odometer.
+- Marking an expense as a `service` cost (`setCost`) resets the counter: `lastServiceKm` = latest reading (never lowered), nudge re-armed. The bulk
+  path and category rules do not reset it. Setting an interval with no `lastServiceKm` prefills it from the reading at the newest service expense.
+- `VehicleRenewalCron` nudges interval vehicles on the ESTIMATED mileage (<= 500 km left), same `serviceOdometerNudgedFor` dedup.
+- Not built yet: the vehicle screen row ("Service in ~900 km, about 3 weeks"), the interval field in the vehicle sheet, 11 locales; per-service-type intervals.
+
 ## Known gaps
 
 SQLite mirror; community-price comparison; a bot partial-fill option (the bot always logs a full tank); mileage in the tax export; comparing two vehicles; a yearly forecast; stacked
@@ -141,3 +155,4 @@ The API (Vehicle + FuelLog, the full-tank method) came first; [ABA-796](https://
 [ABA-811](https://github.com/micode-ai/ai-budget-assistant/issues/849) added the vehicle screen (periods, by month, by kind, consumption trend, every cost) after the card was reported as too thin.
 ABA-827 added the renewal dates and the reminder cron; ABA-829 the app's fields, due-soon chips, Renewals card and the roll-forward offer.
 ABA-826 read litres and price per litre off a fuel receipt; ABA-830 gave the three bots the "Add to fuel log" button.
+ABA-838 added the km-based service interval, the mileage estimate and the reset on a service cost (API only).

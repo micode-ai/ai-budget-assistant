@@ -6,6 +6,7 @@ import * as vi18n from '../notifications/vehicle-renewal-i18n';
 import { paginateById } from '../../common/utils/paginate';
 import { logFireAndForget } from '../../common/utils/fire-and-forget';
 import { dueRenewals, odometerNudgeDue } from './vehicle-renewal.util';
+import { serviceForecast, serviceTargetKm } from './service-interval.util';
 
 const BATCH_SIZE = 500;
 
@@ -32,6 +33,7 @@ export class VehicleRenewalCron {
               { nextInspectionDate: { not: null } },
               { nextServiceDate: { not: null } },
               { nextServiceOdometer: { not: null } },
+              { serviceIntervalKm: { not: null }, lastServiceKm: { not: null } },
             ],
           },
           select: {
@@ -42,6 +44,8 @@ export class VehicleRenewalCron {
             nextInspectionDate: true,
             nextServiceDate: true,
             nextServiceOdometer: true,
+            serviceIntervalKm: true,
+            lastServiceKm: true,
             serviceOdometerNudgedFor: true,
           },
           take: BATCH_SIZE,
@@ -59,6 +63,14 @@ export class VehicleRenewalCron {
         _max: { odometerKm: true },
       });
       const kmByVehicle = new Map(latest.map((r) => [r.vehicleId, r._max.odometerKm]));
+      // Interval vehicles are nudged on the estimated mileage, which needs the readings' dates.
+      const intervalIds = vehicles.filter((v) => v.serviceIntervalKm != null && v.lastServiceKm != null).map((v) => v.id);
+      const logs = intervalIds.length
+        ? await this.prisma.fuelLog.findMany({
+            where: { vehicleId: { in: intervalIds }, expense: { isDeleted: false } },
+            select: { vehicleId: true, odometerKm: true, expense: { select: { date: true } } },
+          })
+        : [];
 
       for (const v of vehicles) {
         const { id, userId, name } = v;
@@ -75,8 +87,22 @@ export class VehicleRenewalCron {
             .catch(logFireAndForget(this.logger, 'VehicleRenewalCron.sendToUser#date'));
         }
 
-        const km = kmByVehicle.get(id) ?? null;
-        const target = v.nextServiceOdometer;
+        let km = kmByVehicle.get(id) ?? null;
+        const target = serviceTargetKm({
+          intervalKm: v.serviceIntervalKm,
+          lastServiceKm: v.lastServiceKm,
+          legacyTargetKm: v.nextServiceOdometer,
+        });
+        if (v.serviceIntervalKm != null && v.lastServiceKm != null) {
+          const f = serviceForecast({
+            intervalKm: v.serviceIntervalKm,
+            lastServiceKm: v.lastServiceKm,
+            legacyTargetKm: v.nextServiceOdometer,
+            readings: logs.filter((l) => l.vehicleId === id).map((l) => ({ date: l.expense.date, odometerKm: l.odometerKm })),
+            today,
+          });
+          km = f ? f.estimatedKm : km;
+        }
         if (target != null && odometerNudgeDue(target, km, v.serviceOdometerNudgedFor)) {
           // Stamp first: a lost push is better than a daily repeat.
           await this.prisma.vehicle.update({ where: { id }, data: { serviceOdometerNudgedFor: target } });

@@ -11,6 +11,7 @@ import {
 } from './dto';
 import { applyVehicleCategoryRules, parseCategoryRules, type VehicleCostKind } from './vehicle-cost-rules.util';
 import { computeFuelStats, VehicleStats } from './fuel-stats.util';
+import { serviceForecast, type ServiceForecast } from './service-interval.util';
 import { computeVehicleHistory, VehicleHistory, windowStart } from './vehicle-history.util';
 import { ExchangeRateService } from '../currency-exchange/exchange-rate.service';
 import { convertAmount, getRatesSafe } from '../../common/utils/fx';
@@ -64,20 +65,30 @@ export class VehiclesService {
   }
 
   async update(accountId: string, id: string, dto: UpdateVehicleDto) {
-    await this.findOne(accountId, id);
+    const existing = await this.findOne(accountId, id);
+    // An interval with no last-service odometer prefills it from the history.
+    let prefillKm: number | null = null;
+    if (dto.serviceIntervalKm != null && dto.lastServiceKm === undefined && existing.lastServiceKm == null) {
+      prefillKm = await this.odometerAtLastService(accountId, id);
+    }
+    const rearm =
+      dto.nextServiceOdometer !== undefined ||
+      dto.serviceIntervalKm !== undefined ||
+      dto.lastServiceKm !== undefined;
     return this.prisma.vehicle.update({
       where: { id },
       data: {
+        ...(dto.serviceIntervalKm !== undefined && { serviceIntervalKm: dto.serviceIntervalKm }),
+        ...(dto.lastServiceKm !== undefined && { lastServiceKm: dto.lastServiceKm }),
+        ...(prefillKm != null && { lastServiceKm: prefillKm }),
         ...(dto.name !== undefined && { name: dto.name.trim() }),
         ...(dto.fuelType !== undefined && { fuelType: dto.fuelType }),
         ...(dto.nextInsuranceDate !== undefined && { nextInsuranceDate: toDateOnly(dto.nextInsuranceDate) }),
         ...(dto.nextInspectionDate !== undefined && { nextInspectionDate: toDateOnly(dto.nextInspectionDate) }),
         ...(dto.nextServiceDate !== undefined && { nextServiceDate: toDateOnly(dto.nextServiceDate) }),
-        ...(dto.nextServiceOdometer !== undefined && {
-          nextServiceOdometer: dto.nextServiceOdometer,
-          // A new target re-arms the odometer nudge.
-          serviceOdometerNudgedFor: null,
-        }),
+        ...(dto.nextServiceOdometer !== undefined && { nextServiceOdometer: dto.nextServiceOdometer }),
+        // A new target, interval or last-service odometer re-arms the odometer nudge.
+        ...(rearm && { serviceOdometerNudgedFor: null }),
       },
     });
   }
@@ -185,10 +196,64 @@ export class VehiclesService {
     await this.findOne(accountId, vehicleId);
     const expense = await this.resolveExpense(accountId, expenseIdOrClientId);
     await this.prisma.fuelLog.deleteMany({ where: { expenseId: expense.id } });
-    return this.prisma.vehicleCost.upsert({
+    const row = await this.prisma.vehicleCost.upsert({
       where: { expenseId: expense.id },
       create: { accountId, vehicleId, expenseId: expense.id, kind: dto.kind, source: null },
       update: { vehicleId, kind: dto.kind, source: null },
+    });
+    if (dto.kind === 'service') await this.resetServiceCounter(accountId, vehicleId);
+    return row;
+  }
+
+  /**
+   * A service expense restarts the km counter: `lastServiceKm` becomes the latest
+   * odometer reading (never lower than it was) and the nudge is re-armed. No-op
+   * without an interval or without any reading.
+   */
+  private async resetServiceCounter(accountId: string, vehicleId: string): Promise<void> {
+    const v = await this.prisma.vehicle.findFirst({
+      where: { id: vehicleId, accountId, isDeleted: false },
+      select: { serviceIntervalKm: true, lastServiceKm: true },
+    });
+    if (!v || v.serviceIntervalKm == null) return;
+    const agg = await this.prisma.fuelLog.aggregate({
+      where: { accountId, vehicleId, expense: { accountId, isDeleted: false } },
+      _max: { odometerKm: true },
+    });
+    const km = agg._max.odometerKm;
+    if (km == null) return;
+    await this.prisma.vehicle.update({
+      where: { id: vehicleId },
+      data: { lastServiceKm: Math.max(km, v.lastServiceKm ?? 0), serviceOdometerNudgedFor: null },
+    });
+  }
+
+  /** The latest odometer reading at or before the newest service expense's day; null without either. */
+  private async odometerAtLastService(accountId: string, vehicleId: string): Promise<number | null> {
+    const svc = await this.prisma.vehicleCost.findFirst({
+      where: { accountId, vehicleId, kind: 'service', expense: { accountId, isDeleted: false } },
+      orderBy: { expense: { date: 'desc' } },
+      select: { expense: { select: { date: true } } },
+    });
+    if (!svc) return null;
+    const log = await this.prisma.fuelLog.findFirst({
+      where: { accountId, vehicleId, expense: { accountId, isDeleted: false, date: { lte: svc.expense.date } } },
+      orderBy: { odometerKm: 'desc' },
+      select: { odometerKm: true },
+    });
+    return log?.odometerKm ?? null;
+  }
+
+  private forecastFor(
+    v: { serviceIntervalKm: number | null; lastServiceKm: number | null; nextServiceOdometer: number | null },
+    logs: { odometerKm: number; expense: { date: Date | string } }[],
+  ): ServiceForecast | null {
+    return serviceForecast({
+      intervalKm: v.serviceIntervalKm,
+      lastServiceKm: v.lastServiceKm,
+      legacyTargetKm: v.nextServiceOdometer,
+      readings: logs.map((l) => ({ date: new Date(l.expense.date), odometerKm: l.odometerKm })),
+      today: new Date(),
     });
   }
 
@@ -348,8 +413,8 @@ export class VehiclesService {
     accountId: string,
     vehicleId: string,
     baseCurrency = 'USD',
-  ): Promise<VehicleStats & { currencyCode: string; fxApproximate: boolean; ownership: Ownership; latestOdometerKm: number | null }> {
-    await this.findOne(accountId, vehicleId);
+  ): Promise<VehicleStats & { currencyCode: string; fxApproximate: boolean; ownership: Ownership; latestOdometerKm: number | null; serviceForecast: ServiceForecast | null }> {
+    const vehicle = await this.findOne(accountId, vehicleId);
     // The same 12 calendar months as the vehicle screen's default period (vehicle-history.util).
     const since = windowStart(new Date(), 12);
     const [logs, costs] = await Promise.all([
@@ -405,7 +470,7 @@ export class VehiclesService {
 
     // The renewal chip's odometer (ABA-829): the same max reading the reminder cron reads.
     const latestOdometerKm = logs.length > 0 ? Math.max(...logs.map((l) => l.odometerKm)) : null;
-    return { ...stats, currencyCode: baseCurrency, fxApproximate, ownership, latestOdometerKm };
+    return { ...stats, currencyCode: baseCurrency, fxApproximate, ownership, latestOdometerKm, serviceForecast: this.forecastFor(vehicle, logs) };
   }
 
   /**
@@ -419,8 +484,8 @@ export class VehiclesService {
     vehicleId: string,
     months: number,
     baseCurrency = 'USD',
-  ): Promise<VehicleHistory & { currencyCode: string; fxApproximate: boolean; latestOdometerKm: number | null }> {
-    await this.findOne(accountId, vehicleId);
+  ): Promise<VehicleHistory & { currencyCode: string; fxApproximate: boolean; latestOdometerKm: number | null; serviceForecast: ServiceForecast | null }> {
+    const vehicle = await this.findOne(accountId, vehicleId);
     const [logs, costs] = await Promise.all([
       this.prisma.fuelLog.findMany({
         where: { accountId, vehicleId, expense: { accountId, isDeleted: false } },
@@ -469,6 +534,6 @@ export class VehiclesService {
     );
     // Over every fill-up, not the period: the service-by-odometer chip (ABA-829).
     const latestOdometerKm = logs.length > 0 ? Math.max(...logs.map((l) => l.odometerKm)) : null;
-    return { ...history, currencyCode: baseCurrency, fxApproximate, latestOdometerKm };
+    return { ...history, currencyCode: baseCurrency, fxApproximate, latestOdometerKm, serviceForecast: this.forecastFor(vehicle, logs) };
   }
 }

@@ -3181,6 +3181,9 @@ model Vehicle {
   nextServiceOdometer Int?     @map("next_service_odometer")
   /// The `nextServiceOdometer` value the odometer nudge already fired for (dedup).
   serviceOdometerNudgedFor Int? @map("service_odometer_nudged_for")
+  /// Service every N km from `lastServiceKm`; wins over `nextServiceOdometer`.
+  serviceIntervalKm Int? @map("service_interval_km")
+  lastServiceKm     Int? @map("last_service_km")
   isDeleted Boolean  @default(false) @map("is_deleted")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
