@@ -404,6 +404,7 @@ Newest last within each section.
 - 2026-11-23 · [ABA-836](https://github.com/micode-ai/ai-budget-assistant/issues/874) — all-accounts analytics (overview, name-merged categories, Pro account groups, consolidated PDF/Excel/CSV report; noted rows listed but never totalled); features/all-accounts-analytics.
 - 2026-11-24 · [ABA-838](https://github.com/micode-ai/ai-budget-assistant/issues/876) — km-based service reminder on top of ABA-827: interval + last-service odometer, mileage estimated from the 60-day km/day rate (none on sparse readings), reset by a service cost, `serviceForecast` on stats/history, cron nudges on the estimate. API only; the vehicle-screen row is a known gap. Page: `features/vehicle-fuel-log.md`.
 - 2026-11-24 · [ABA-839](https://github.com/micode-ai/ai-budget-assistant/issues/877) — the transfer write queue is now drained on reconnect and app resume (`useTransferQueueAutoFlush`, single-flight 15 s throttle) instead of only on wallet load; only the trigger is new, 4xx rows already leave the queue so no extra back-off. Only the current account's queue is drained. Pages: `features/account-transfers.md`.
+- 2026-11-25 · [ABA-840](https://github.com/micode-ai/ai-budget-assistant/issues/878) — growth digest's transactions line split into logged / imported / users who imported (import = `source='import'` or an import batch or an `external_ref`). A 4079 | 161 swing, most likely one import (not yet confirmed). Page: `features/growth-digest.md` (new).
 
 ## Queries
 

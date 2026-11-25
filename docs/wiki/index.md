@@ -90,6 +90,7 @@ the section you came for — it states what must not break and why. A missing se
   the two nginx containers, and the deploy traps that have bitten
 - [marketing-site](features/marketing-site.md) — the three static generators, nine blog languages (eleven on the landing and help), and
   the regeneration commands that must not be run with the wrong environment
+- [growth-digest](features/growth-digest.md) — the Monday ops-channel report: signups by source, activation, active users, transactions with imports split out
 - [acquisition-tracking](features/acquisition-tracking.md) — link tagging, first-touch capture,
   GA4 events, Play install referrer
 - [directory-badges](features/directory-badges.md) — the footer badge row and its width arithmetic

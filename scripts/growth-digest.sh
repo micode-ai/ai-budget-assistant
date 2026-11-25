@@ -60,15 +60,28 @@ SELECT count(*) FILTER (WHERE last_sync_at >= now() - interval '7 days') || ' | 
        count(*) FILTER (WHERE last_sync_at >= now() - interval '14 days' AND last_sync_at < now() - interval '7 days')
 FROM real_users;
 
-SELECT '== Transactions logged (last 7 days | previous 7) ==';
-WITH real_users AS (SELECT * FROM users WHERE NOT (lower(email) = ANY (string_to_array(:'internal', ','))))
-SELECT count(*) FILTER (WHERE t.created_at >= now() - interval '7 days') || ' | ' ||
-       count(*) FILTER (WHERE t.created_at < now() - interval '7 days')
-FROM (
-  SELECT user_id, created_at FROM expenses WHERE NOT is_deleted AND created_at >= now() - interval '14 days'
+-- Imported rows are counted apart from the rest: one bank-statement or competitor-app import
+-- writes thousands of rows at once and swamped the total (4079 | 161 on 2026-11-24 was one week
+-- with an import followed by an ordinary one). "imported" = the import paths' own markers.
+SELECT '== Transactions (last 7 days | previous 7) ==';
+WITH real_users AS (SELECT * FROM users WHERE NOT (lower(email) = ANY (string_to_array(:'internal', ',')))),
+t AS (
+  SELECT user_id, created_at, (source = 'import' OR import_batch_id IS NOT NULL OR external_ref IS NOT NULL) AS imported
+  FROM expenses WHERE NOT is_deleted AND created_at >= now() - interval '14 days'
   UNION ALL
-  SELECT user_id, created_at FROM incomes WHERE NOT is_deleted AND created_at >= now() - interval '14 days'
-) t JOIN real_users u ON u.id = t.user_id;
+  SELECT user_id, created_at, (source = 'import' OR import_batch_id IS NOT NULL OR external_ref IS NOT NULL)
+  FROM incomes WHERE NOT is_deleted AND created_at >= now() - interval '14 days'
+)
+SELECT 'logged (not imported) ' ||
+       count(*) FILTER (WHERE NOT t.imported AND t.created_at >= now() - interval '7 days') || ' | ' ||
+       count(*) FILTER (WHERE NOT t.imported AND t.created_at < now() - interval '7 days')
+    || E'\nimported ' ||
+       count(*) FILTER (WHERE t.imported AND t.created_at >= now() - interval '7 days') || ' | ' ||
+       count(*) FILTER (WHERE t.imported AND t.created_at < now() - interval '7 days')
+    || E'\nusers who imported ' ||
+       count(DISTINCT t.user_id) FILTER (WHERE t.imported AND t.created_at >= now() - interval '7 days') || ' | ' ||
+       count(DISTINCT t.user_id) FILTER (WHERE t.imported AND t.created_at < now() - interval '7 days')
+FROM t JOIN real_users u ON u.id = t.user_id;
 
 SELECT '== Onboarding e-mail opt-outs (total) ==';
 WITH real_users AS (SELECT * FROM users WHERE NOT (lower(email) = ANY (string_to_array(:'internal', ','))))
