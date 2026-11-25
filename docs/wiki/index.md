@@ -286,6 +286,15 @@ the section you came for — it states what must not break and why. A missing se
 - [merchants](features/merchants.md) — the merchant field, filters, capture reconciliation, rename/merge and grouping suggestions
 - [reference-data-screens](features/reference-data-screens.md) — the shared layout of the four reference-data screens, and the viewer-role UI gate
 
+### Platform, build and operations
+- [production-operations](features/production-operations.md) — the prod stack, deploy guards, backups, disk pressure, ops alerts, log rotation
+- [prisma-migrations](features/prisma-migrations.md) — why a schema change must ship with its migration, and how to recover when it did not
+- [api-cross-cutting-utilities](features/api-cross-cutting-utilities.md) — `logFireAndForget`, `paginateById`, `CacheService` and fail-closed rate limits
+- [android-releases](features/android-releases.md) — `versionName` vs `versionCode`, the release-version guard, the web build id, Galaxy Store
+- [mobile-native-constraints](features/mobile-native-constraints.md) — `MainActivity`, no keyboard native module, Metro crawl scoping, bottom sheets and the nav bar
+- [shopping-mode](features/shopping-mode.md) — Store Arrival and Shopping Mode, kept off `development` by the foreground-service declaration
+- [bot-shared-i18n](features/bot-shared-i18n.md) — one dictionary and `createBotT` for the copy all three bots share
+
 ## Health
 
 [`wiki-health-trends.md`](wiki-health-trends.md) — appended by the `/wiki-health-scan` command.

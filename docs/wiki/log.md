@@ -406,6 +406,8 @@ Newest last within each section.
 - 2026-11-24 · [ABA-839](https://github.com/micode-ai/ai-budget-assistant/issues/877) — the transfer write queue is now drained on reconnect and app resume (`useTransferQueueAutoFlush`, single-flight 15 s throttle) instead of only on wallet load; only the trigger is new, 4xx rows already leave the queue so no extra back-off. Only the current account's queue is drained. Pages: `features/account-transfers.md`.
 - 2026-11-25 · [ABA-840](https://github.com/micode-ai/ai-budget-assistant/issues/878) — growth digest's transactions line split into logged / imported / users who imported (import = `source='import'` or an import batch or an `external_ref`). A 4079 | 161 swing, most likely one import (not yet confirmed). Page: `features/growth-digest.md` (new).
 
+- 2026-11-25 · [ABA-841](https://github.com/micode-ai/ai-budget-assistant/issues/879) — CLAUDE.md slimmed 14.7k → 11.8k words: production stack, deploy guards, backups, release/versioning, native build traps, bot i18n and cache/cron utilities moved verbatim to seven new pages, short rules left behind. Pages: `features/production-operations.md`, `features/prisma-migrations.md`, `features/api-cross-cutting-utilities.md`, `features/android-releases.md`, `features/mobile-native-constraints.md`, `features/shopping-mode.md`, `features/bot-shared-i18n.md`.
+
 ## Queries
 
 - 2026-09-29 — why no merge suggestion for bank push + later receipt scan → `features/bank-notification-capture.md` (Known gaps; corrected a false claim)
