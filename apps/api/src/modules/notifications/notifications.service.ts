@@ -1,6 +1,35 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import type { NotificationType } from '@budget/shared-types';
+import { isInQuietHours, quietHoursReleaseAt } from './quiet-hours.util';
+
+/** Untyped (security/system) pushes are never held either; see holdIfQuiet. */
+const QUIET_HOURS_EXEMPT: ReadonlySet<string> = new Set(['voice_digest_disabled']);
+
+/** Notification type -> the User preference column that governs it (used when releasing held pushes). */
+const NOTIFY_FLAGS: Record<string, string> = {
+  budget_alert: 'notifyBudgetAlerts',
+  spending_anomaly: 'notifyAnomalyAlerts',
+  shared_expense: 'notifySharedActivity',
+  chat_mention: 'notifySharedActivity',
+  debt_reminder: 'notifyDebtReminders',
+  recurring_expense: 'notifyRecurringExpenses',
+  subscription_renewal: 'notifySubscriptionRenewals',
+  tracking_gap_reminder: 'notifyTrackingGap',
+  activation_nudge: 'notifyTrackingGap',
+  purchase_request_created: 'notifyPurchaseRequests',
+  purchase_request_voted: 'notifyPurchaseRequests',
+  purchase_request_approved: 'notifyPurchaseRequests',
+  purchase_request_rejected: 'notifyPurchaseRequests',
+  trip_settle_up: 'notifyTripSettleUp',
+  shopping_reminder: 'notifyShoppingReminders',
+  shopping_deal: 'notifyShoppingDeals',
+  inflation_shield: 'notifyInflationShield',
+  monthly_wrapped: 'notifyMonthlyWrapped',
+  group_activity: 'notifyGroupActivity',
+  group_reminder: 'notifyGroupReminders',
+  leaflet_promo: 'notifyLeafletPromos',
+};
 
 interface ExpoPushMessage {
   to: string;
@@ -53,6 +82,10 @@ export class NotificationsService {
         notifyGroupActivity: true,
         notifyGroupReminders: true,
         notifyLeafletPromos: true,
+        timezone: true,
+        quietHoursEnabled: true,
+        quietHoursStart: true,
+        quietHoursEnd: true,
       },
     });
 
@@ -90,6 +123,8 @@ export class NotificationsService {
     const lang = user.language || 'en';
     const resolvedTitle = typeof title === 'function' ? title(lang) : title;
     const resolvedBody = typeof body === 'function' ? body(lang) : body;
+
+    if (await this.holdIfQuiet(user, userId, resolvedTitle, resolvedBody, data, notificationType)) return true;
 
     const tickets = await this.sendPushNotifications([{
       to: user.pushToken,
@@ -130,11 +165,15 @@ export class NotificationsService {
         notifyGroupActivity: true,
         notifyGroupReminders: true,
         notifyLeafletPromos: true,
+        timezone: true,
+        quietHoursEnabled: true,
+        quietHoursStart: true,
+        quietHoursEnd: true,
       },
     });
 
     type UserWithToken = typeof users[number];
-    const eligible = users.filter((u: UserWithToken) => {
+    let eligible = users.filter((u: UserWithToken) => {
       if (!u.pushToken || !this.isValidExpoPushToken(u.pushToken)) return false;
       if (notificationType === 'budget_alert' && !u.notifyBudgetAlerts) return false;
       if (notificationType === 'spending_anomaly' && !u.notifyAnomalyAlerts) return false;
@@ -156,6 +195,24 @@ export class NotificationsService {
 
     if (eligible.length === 0) return;
 
+    const now = new Date();
+    const toSend: UserWithToken[] = [];
+    for (const u of eligible) {
+      const lang = u.language || 'en';
+      const held = await this.holdIfQuiet(
+        u,
+        u.id,
+        typeof title === 'function' ? title(lang) : title,
+        typeof body === 'function' ? body(lang) : body,
+        data,
+        notificationType,
+        now,
+      );
+      if (!held) toSend.push(u);
+    }
+    eligible = toSend;
+    if (eligible.length === 0) return;
+
     const messages: ExpoPushMessage[] = eligible.map((u: UserWithToken) => {
       const lang = u.language || 'en';
       return {
@@ -175,6 +232,120 @@ export class NotificationsService {
       const tickets = await this.sendPushNotifications(batch);
       await this.handleTicketErrors(tickets, tokenMap);
     }
+  }
+
+  /** Queue the push for the end of the user's quiet window. True when it was held. */
+  private async holdIfQuiet(
+    user: { timezone?: string | null; quietHoursEnabled?: boolean; quietHoursStart?: number; quietHoursEnd?: number },
+    userId: string,
+    title: string,
+    body: string,
+    data: Record<string, unknown> | undefined,
+    notificationType: NotificationType | undefined,
+    now: Date = new Date(),
+  ): Promise<boolean> {
+    if (!user.quietHoursEnabled || !notificationType || QUIET_HOURS_EXEMPT.has(notificationType)) return false;
+    const start = user.quietHoursStart ?? 1320;
+    const end = user.quietHoursEnd ?? 480;
+    if (!isInQuietHours(now, user.timezone, start, end)) return false;
+    try {
+      await this.prisma.heldPush.create({
+        data: {
+          userId,
+          title,
+          body,
+          data: { ...(data ?? {}), type: notificationType } as object,
+          type: notificationType,
+          releaseAt: quietHoursReleaseAt(now, user.timezone, end),
+        },
+      });
+      return true;
+    } catch (err) {
+      // Failing to queue must not lose the push: deliver it now instead.
+      this.logger.warn(`Could not hold push for user ${userId}: ${(err as Error).message}`);
+      return false;
+    }
+  }
+
+  /** True when the user has switched off the preference that governs this notification type. */
+  private isTypeDisabled(
+    u: Record<string, unknown> | null | undefined,
+    type: string | null | undefined,
+  ): boolean {
+    const flag = type ? NOTIFY_FLAGS[type] : undefined;
+    return !!flag && !!u && !u[flag];
+  }
+
+  /** Delivers held pushes that are due. Returns how many were sent. */
+  async releaseHeldPushes(now: Date = new Date()): Promise<number> {
+    const due = await this.prisma.heldPush.findMany({
+      where: { releaseAt: { lte: now } },
+      orderBy: { releaseAt: 'asc' },
+      take: 500,
+      include: {
+        user: {
+          select: {
+            pushToken: true,
+            notifyBudgetAlerts: true,
+            notifySharedActivity: true,
+            notifyDebtReminders: true,
+            notifyRecurringExpenses: true,
+            notifyAnomalyAlerts: true,
+            notifyPurchaseRequests: true,
+            notifyInflationShield: true,
+            notifyMonthlyWrapped: true,
+            notifyGroupActivity: true,
+            notifyGroupReminders: true,
+            notifyLeafletPromos: true,
+            notifySubscriptionRenewals: true,
+            notifyTrackingGap: true,
+            notifyTripSettleUp: true,
+            notifyShoppingReminders: true,
+            notifyShoppingDeals: true,
+          },
+        },
+      },
+    });
+    let sent = 0;
+    for (const row of due) {
+      try {
+        // Claim the row first (CAS on delete): a concurrent tick or a throw after a successful
+        // send can then never deliver it twice.
+        const claimed = await this.prisma.heldPush.deleteMany({ where: { id: row.id } });
+        if (claimed.count === 0) continue;
+
+        const token = row.user?.pushToken;
+        // The preference may have been switched off while the push was waiting.
+        if (!token || !this.isValidExpoPushToken(token) || this.isTypeDisabled(row.user, row.type)) continue;
+
+        const tickets = await this.sendPushNotifications([
+          { to: token, title: row.title, body: row.body, data: (row.data as Record<string, unknown>) ?? undefined, sound: 'default' },
+        ]);
+        if (tickets.length === 0) {
+          // Transport failure: re-queue for the next tick.
+          await this.prisma.heldPush.create({
+            data: {
+              userId: row.userId,
+              title: row.title,
+              body: row.body,
+              data: (row.data ?? {}) as object,
+              type: row.type,
+              releaseAt: row.releaseAt,
+            },
+          });
+          continue;
+        }
+        if (tickets[0].status === 'ok') sent++;
+        try {
+          await this.handleTicketErrors(tickets, [{ userId: row.userId, token }]);
+        } catch (err) {
+          this.logger.warn(`handleTicketErrors failed for held push ${row.id}: ${(err as Error).message}`);
+        }
+      } catch (err) {
+        this.logger.warn(`Could not release held push ${row.id}: ${(err as Error).message}`);
+      }
+    }
+    return sent;
   }
 
   private async sendPushNotifications(messages: ExpoPushMessage[]): Promise<ExpoPushTicket[]> {

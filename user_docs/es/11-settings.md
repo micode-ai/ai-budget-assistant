@@ -142,6 +142,8 @@ Interruptores para las preferencias de notificaciones:
 
 ### Bot de Telegram
 
+**Horas de silencio:** actívalas para retener las notificaciones no urgentes por la noche (por defecto 22:00–08:00, en tu zona horaria). Llegan al terminar la franja; las alertas de seguridad siempre llegan al instante.
+
 Vincula tu cuenta de Telegram para recibir notificaciones y gestionar gastos a traves del bot de Telegram. Consulta [Bot de Telegram](./22-telegram-bot.md) para mas detalles.
 
 ## Seguridad y cifrado

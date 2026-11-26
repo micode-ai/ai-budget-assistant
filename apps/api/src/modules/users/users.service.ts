@@ -29,6 +29,8 @@ interface CreateUserData {
   acquisitionReferrerRaw?: string;
 }
 
+import { isValidMinuteOfDay } from '../notifications/quiet-hours.util';
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -208,6 +210,9 @@ export class UsersService {
         notifyGroupActivity: true,
         notifyGroupReminders: true,
         notifyLeafletPromos: true,
+        quietHoursEnabled: true,
+        quietHoursStart: true,
+        quietHoursEnd: true,
       },
     });
     return {
@@ -227,14 +232,25 @@ export class UsersService {
       groupActivity: user?.notifyGroupActivity ?? true,
       groupReminders: user?.notifyGroupReminders ?? true,
       leafletPromos: user?.notifyLeafletPromos ?? true,
+      quietHoursEnabled: user?.quietHoursEnabled ?? false,
+      quietHoursStart: user?.quietHoursStart ?? 1320,
+      quietHoursEnd: user?.quietHoursEnd ?? 480,
     };
   }
 
   async updateNotificationPreferences(
     userId: string,
-    prefs: { budgetAlerts?: boolean; sharedAccountActivity?: boolean; debtReminders?: boolean; recurringExpenses?: boolean; subscriptionRenewals?: boolean; anomalyAlerts?: boolean; trackingGap?: boolean; purchaseRequests?: boolean; tripSettleUp?: boolean; shoppingReminders?: boolean; shoppingDeals?: boolean; inflationShield?: boolean; monthlyWrapped?: boolean; groupActivity?: boolean; groupReminders?: boolean; leafletPromos?: boolean },
+    prefs: { budgetAlerts?: boolean; sharedAccountActivity?: boolean; debtReminders?: boolean; recurringExpenses?: boolean; subscriptionRenewals?: boolean; anomalyAlerts?: boolean; trackingGap?: boolean; purchaseRequests?: boolean; tripSettleUp?: boolean; shoppingReminders?: boolean; shoppingDeals?: boolean; inflationShield?: boolean; monthlyWrapped?: boolean; groupActivity?: boolean; groupReminders?: boolean; leafletPromos?: boolean; quietHoursEnabled?: boolean; quietHoursStart?: number; quietHoursEnd?: number },
   ) {
-    const data: Record<string, boolean> = {};
+    const data: Record<string, boolean | number> = {};
+    for (const k of ['quietHoursStart', 'quietHoursEnd'] as const) {
+      if (prefs[k] !== undefined && !isValidMinuteOfDay(prefs[k])) {
+        throw new BadRequestException(`${k} must be an integer between 0 and 1439`);
+      }
+    }
+    if (prefs.quietHoursEnabled !== undefined) data.quietHoursEnabled = !!prefs.quietHoursEnabled;
+    if (prefs.quietHoursStart !== undefined) data.quietHoursStart = prefs.quietHoursStart;
+    if (prefs.quietHoursEnd !== undefined) data.quietHoursEnd = prefs.quietHoursEnd;
     if (prefs.budgetAlerts !== undefined) data.notifyBudgetAlerts = prefs.budgetAlerts;
     if (prefs.sharedAccountActivity !== undefined) data.notifySharedActivity = prefs.sharedAccountActivity;
     if (prefs.debtReminders !== undefined) data.notifyDebtReminders = prefs.debtReminders;

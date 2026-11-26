@@ -142,6 +142,8 @@ Przelaczniki dla preferencji powiadomien:
 
 ### Bot Telegram
 
+**Godziny ciszy:** włącz, aby wstrzymać niepilne powiadomienia na noc (domyślnie 22:00–08:00, w Twojej strefie czasowej). Dotrą po zakończeniu okna; alerty bezpieczeństwa zawsze przychodzą od razu.
+
 Polacz swoje konto Telegram, aby otrzymywac powiadomienia i zarzadzac wydatkami za pomoca bota Telegram. Zobacz [Bot Telegram](./22-telegram-bot.md), aby uzyskac szczegoly.
 
 ## Bezpieczenstwo i szyfrowanie

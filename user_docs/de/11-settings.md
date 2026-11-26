@@ -142,6 +142,8 @@ Umschaltflachen fur Benachrichtigungspraferenzen:
 
 ### Telegram-Bot
 
+**Ruhezeiten:** Aktiviere sie, um nicht dringende Benachrichtigungen über Nacht zurückzuhalten (Standard 22:00–08:00, in deiner Zeitzone). Sie kommen nach Ende des Zeitfensters; Sicherheitswarnungen immer sofort.
+
 Verknupfe dein Telegram-Konto, um Benachrichtigungen zu erhalten und Ausgaben uber den Telegram-Bot zu verwalten. Siehe [Telegram-Bot](./22-telegram-bot.md) fur Details.
 
 ## Sicherheit & Verschlusselung

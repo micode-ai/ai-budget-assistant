@@ -58,13 +58,13 @@ export const usersApi = {
   },
 
   getNotificationPreferences() {
-    return httpClient.request<{ budgetAlerts: boolean; sharedAccountActivity: boolean; debtReminders: boolean; recurringExpenses: boolean; subscriptionRenewals: boolean; anomalyAlerts: boolean; trackingGap: boolean; purchaseRequests: boolean; tripSettleUp: boolean; shoppingReminders?: boolean; shoppingDeals?: boolean; inflationShield?: boolean; monthlyWrapped?: boolean; groupActivity?: boolean; groupReminders?: boolean; leafletPromos?: boolean }>(
+    return httpClient.request<{ budgetAlerts: boolean; sharedAccountActivity: boolean; debtReminders: boolean; recurringExpenses: boolean; subscriptionRenewals: boolean; anomalyAlerts: boolean; trackingGap: boolean; purchaseRequests: boolean; tripSettleUp: boolean; shoppingReminders?: boolean; shoppingDeals?: boolean; inflationShield?: boolean; monthlyWrapped?: boolean; groupActivity?: boolean; groupReminders?: boolean; leafletPromos?: boolean; quietHoursEnabled?: boolean; quietHoursStart?: number; quietHoursEnd?: number }>(
       '/users/me/notification-preferences',
     );
   },
 
-  updateNotificationPreferences(prefs: { budgetAlerts?: boolean; sharedAccountActivity?: boolean; debtReminders?: boolean; recurringExpenses?: boolean; subscriptionRenewals?: boolean; anomalyAlerts?: boolean; trackingGap?: boolean; purchaseRequests?: boolean; tripSettleUp?: boolean; shoppingReminders?: boolean; shoppingDeals?: boolean; inflationShield?: boolean; monthlyWrapped?: boolean; groupActivity?: boolean; groupReminders?: boolean; leafletPromos?: boolean }) {
-    return httpClient.request<{ budgetAlerts: boolean; sharedAccountActivity: boolean; debtReminders: boolean; recurringExpenses: boolean; subscriptionRenewals: boolean; anomalyAlerts: boolean; trackingGap: boolean; purchaseRequests: boolean; tripSettleUp: boolean; shoppingReminders?: boolean; shoppingDeals?: boolean; inflationShield?: boolean; monthlyWrapped?: boolean; groupActivity?: boolean; groupReminders?: boolean; leafletPromos?: boolean }>(
+  updateNotificationPreferences(prefs: { budgetAlerts?: boolean; sharedAccountActivity?: boolean; debtReminders?: boolean; recurringExpenses?: boolean; subscriptionRenewals?: boolean; anomalyAlerts?: boolean; trackingGap?: boolean; purchaseRequests?: boolean; tripSettleUp?: boolean; shoppingReminders?: boolean; shoppingDeals?: boolean; inflationShield?: boolean; monthlyWrapped?: boolean; groupActivity?: boolean; groupReminders?: boolean; leafletPromos?: boolean; quietHoursEnabled?: boolean; quietHoursStart?: number; quietHoursEnd?: number }) {
+    return httpClient.request<{ budgetAlerts: boolean; sharedAccountActivity: boolean; debtReminders: boolean; recurringExpenses: boolean; subscriptionRenewals: boolean; anomalyAlerts: boolean; trackingGap: boolean; purchaseRequests: boolean; tripSettleUp: boolean; shoppingReminders?: boolean; shoppingDeals?: boolean; inflationShield?: boolean; monthlyWrapped?: boolean; groupActivity?: boolean; groupReminders?: boolean; leafletPromos?: boolean; quietHoursEnabled?: boolean; quietHoursStart?: number; quietHoursEnd?: number }>(
       '/users/me/notification-preferences',
       {
         method: 'PATCH',

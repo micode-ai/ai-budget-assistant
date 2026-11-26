@@ -2163,6 +2163,8 @@ Toggle switches for notification preferences:
 
 ### Telegram Bot
 
+**Quiet hours:** switch on to hold non-urgent notifications overnight (default 22:00–08:00, in your time zone). They arrive when the window ends; security alerts always arrive immediately.
+
 Link your Telegram account to receive notifications and manage expenses via the Telegram bot. See Telegram Bot for details.
 
 ## Security & Encryption
@@ -7737,6 +7739,8 @@ Email обновляется мгновенно, выдаются новые т�
 
 ### Telegram-бот
 
+**Тихие часы:** включите, чтобы несрочные уведомления задерживались на ночь (по умолчанию 22:00–08:00, в вашем часовом поясе). Они придут по окончании окна; уведомления безопасности приходят всегда сразу.
+
 Привяжите Telegram-аккаунт для получения уведомлений и управления расходами через Telegram-бот. См. Telegram-бот для подробностей.
 
 ## Безопасность и шифрование
@@ -13297,6 +13301,8 @@ iOS, Android, Web
 
 ### Telegram-бот
 
+**Тихі години:** увімкніть, щоб нетермінові сповіщення затримувалися на ніч (за замовчуванням 22:00–08:00, у вашому часовому поясі). Вони надійдуть після завершення вікна; сповіщення безпеки надходять завжди одразу.
+
 Прив'яжіть свій Telegram-акаунт для отримання сповіщень та керування витратами через Telegram-бот. Див. Telegram-бот для деталей.
 
 ## Безпека та шифрування
@@ -18804,6 +18810,8 @@ Przelaczniki dla preferencji powiadomien:
 
 ### Bot Telegram
 
+**Godziny ciszy:** włącz, aby wstrzymać niepilne powiadomienia na noc (domyślnie 22:00–08:00, w Twojej strefie czasowej). Dotrą po zakończeniu okna; alerty bezpieczeństwa zawsze przychodzą od razu.
+
 Polacz swoje konto Telegram, aby otrzymywac powiadomienia i zarzadzac wydatkami za pomoca bota Telegram. Zobacz Bot Telegram, aby uzyskac szczegoly.
 
 ## Bezpieczenstwo i szyfrowanie
@@ -24310,6 +24318,8 @@ Umschaltflachen fur Benachrichtigungspraferenzen:
 
 ### Telegram-Bot
 
+**Ruhezeiten:** Aktiviere sie, um nicht dringende Benachrichtigungen über Nacht zurückzuhalten (Standard 22:00–08:00, in deiner Zeitzone). Sie kommen nach Ende des Zeitfensters; Sicherheitswarnungen immer sofort.
+
 Verknupfe dein Telegram-Konto, um Benachrichtigungen zu erhalten und Ausgaben uber den Telegram-Bot zu verwalten. Siehe Telegram-Bot fur Details.
 
 ## Sicherheit & Verschlusselung
@@ -29795,6 +29805,8 @@ Interruptores para las preferencias de notificaciones:
 
 ### Bot de Telegram
 
+**Horas de silencio:** actívalas para retener las notificaciones no urgentes por la noche (por defecto 22:00–08:00, en tu zona horaria). Llegan al terminar la franja; las alertas de seguridad siempre llegan al instante.
+
 Vincula tu cuenta de Telegram para recibir notificaciones y gestionar gastos a traves del bot de Telegram. Consulta Bot de Telegram para mas detalles.
 
 ## Seguridad y cifrado
@@ -35265,6 +35277,8 @@ Interrupteurs a bascule pour les preferences de notifications :
 | **Rappel de suivi** | Notification si vous n'avez pas enregistré de dépenses depuis 3+ jours, plus un rappel le lendemain de votre inscription si vous n'avez encore rien ajouté |
 
 ### Bot Telegram
+
+**Heures calmes :** activez-les pour retenir les notifications non urgentes la nuit (par défaut 22:00–08:00, dans votre fuseau horaire). Elles arrivent à la fin de la plage ; les alertes de sécurité arrivent toujours immédiatement.
 
 Liez votre compte Telegram pour recevoir des notifications et gerer vos depenses via le bot Telegram. Voir Bot Telegram pour plus de details.
 
@@ -40739,6 +40753,8 @@ iOS, Android, Web
 
 ### Telegram-бот
 
+**Ціхія гадзіны:** уключыце, каб нетэрміновыя апавяшчэнні затрымліваліся на ноч (па змаўчанні 22:00–08:00, у вашым часавым поясе). Яны прыйдуць пасля заканчэння акна; апавяшчэнні бяспекі прыходзяць заўсёды адразу.
+
 Звяжыце свой акаўнт Telegram, каб атрымліваць апавяшчэнні і кіраваць выдаткамі праз Telegram-бота. Гл. Telegram-бот для падрабязнасцей.
 
 ## Бяспека і шыфраванне
@@ -46184,6 +46200,8 @@ Schakelaars voor meldingsvoorkeuren:
 | **Trackingherinnering** | Melding als je 3+ dagen geen uitgaven hebt geregistreerd, plus één herinnering de dag na je aanmelding als je nog niets hebt toegevoegd |
 
 ### Telegram-bot
+
+**Stille uren:** schakel in om niet-urgente meldingen 's nachts vast te houden (standaard 22:00–08:00, in jouw tijdzone). Ze komen binnen na afloop van het venster; beveiligingsmeldingen komen altijd direct.
 
 Koppel je Telegram-account om meldingen te ontvangen en uitgaven te beheren via de Telegram-bot. Zie Telegram-bot voor details.
 
@@ -51761,6 +51779,8 @@ Interruptores para as preferências de notificação:
 | **Lembrete de registo** | Receba um lembrete se não registar despesas há 3 ou mais dias, e ainda um lembrete no dia seguinte a registar-se na aplicação, se ainda não tiver adicionado nada |
 
 ### Bot do Telegram
+
+**Horas de silêncio:** ative para reter as notificações não urgentes durante a noite (por defeito 22:00–08:00, no seu fuso horário). Chegam quando a janela termina; os alertas de segurança chegam sempre de imediato.
 
 Associe a sua conta do Telegram para receber notificações e gerir despesas através do bot do Telegram. Consulte Bot do Telegram para mais detalhes.
 
@@ -57349,6 +57369,8 @@ Chaves para as preferências de notificação:
 | **Lembrete de registro** | Receba um lembrete se você não registrar despesas há 3 dias ou mais, além de um lembrete no dia seguinte ao cadastro, caso ainda não tenha adicionado nada |
 
 ### Bot do Telegram
+
+**Horário silencioso:** ative para reter as notificações não urgentes durante a noite (padrão 22:00–08:00, no seu fuso horário). Elas chegam quando a janela termina; os alertas de segurança sempre chegam na hora.
 
 Vincule sua conta do Telegram para receber notificações e gerenciar despesas pelo bot do Telegram. Veja Bot do Telegram para mais detalhes.
 

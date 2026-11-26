@@ -142,6 +142,8 @@ Interrupteurs a bascule pour les preferences de notifications :
 
 ### Bot Telegram
 
+**Heures calmes :** activez-les pour retenir les notifications non urgentes la nuit (par défaut 22:00–08:00, dans votre fuseau horaire). Elles arrivent à la fin de la plage ; les alertes de sécurité arrivent toujours immédiatement.
+
 Liez votre compte Telegram pour recevoir des notifications et gerer vos depenses via le bot Telegram. Voir [Bot Telegram](./22-telegram-bot.md) pour plus de details.
 
 ## Securite et chiffrement

@@ -155,6 +155,8 @@ Toggle switches for notification preferences:
 
 ### Telegram Bot
 
+**Quiet hours:** switch on to hold non-urgent notifications overnight (default 22:00–08:00, in your time zone). They arrive when the window ends; security alerts always arrive immediately.
+
 Link your Telegram account to receive notifications and manage expenses via the Telegram bot. See [Telegram Bot](./22-telegram-bot.md) for details.
 
 ## Security & Encryption

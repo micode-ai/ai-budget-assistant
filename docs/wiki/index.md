@@ -203,6 +203,7 @@ the section you came for — it states what must not break and why. A missing se
 - [supported-currencies](features/supported-currencies.md) — the currency list and every place that copies it
 
 ### Capturing expenses automatically
+- [notification-quiet-hours](features/notification-quiet-hours.md) — hold non-urgent pushes overnight
 - [bank-notification-capture](features/bank-notification-capture.md) — Android bank pushes parsed on
   the device, the spend gate, and reconciliation with receipts and imports
 - [income-voice-and-receipt-capture](features/income-voice-and-receipt-capture.md) — voice and receipt capture for incomes, `POST /ai/parse-income`, `Income.source`

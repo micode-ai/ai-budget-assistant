@@ -155,6 +155,8 @@ Schakelaars voor meldingsvoorkeuren:
 
 ### Telegram-bot
 
+**Stille uren:** schakel in om niet-urgente meldingen 's nachts vast te houden (standaard 22:00–08:00, in jouw tijdzone). Ze komen binnen na afloop van het venster; beveiligingsmeldingen komen altijd direct.
+
 Koppel je Telegram-account om meldingen te ontvangen en uitgaven te beheren via de Telegram-bot. Zie [Telegram-bot](./22-telegram-bot.md) voor details.
 
 ## Beveiliging & Versleuteling

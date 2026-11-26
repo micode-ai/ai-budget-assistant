@@ -155,6 +155,8 @@ Chaves para as preferências de notificação:
 
 ### Bot do Telegram
 
+**Horário silencioso:** ative para reter as notificações não urgentes durante a noite (padrão 22:00–08:00, no seu fuso horário). Elas chegam quando a janela termina; os alertas de segurança sempre chegam na hora.
+
 Vincule sua conta do Telegram para receber notificações e gerenciar despesas pelo bot do Telegram. Veja [Bot do Telegram](./22-telegram-bot.md) para mais detalhes.
 
 ## Segurança e criptografia

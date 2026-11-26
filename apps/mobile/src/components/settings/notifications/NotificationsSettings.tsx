@@ -3,6 +3,7 @@ import {
   View,
   Text,
   Switch,
+  TouchableOpacity,
 } from 'react-native';
 import { showAlert } from '@/utils/alert';
 import { useTranslation } from 'react-i18next';
@@ -63,6 +64,9 @@ export function NotificationsSettings() {
   const [notifMonthlyWrapped, setNotifMonthlyWrapped] = useState(true);
   const [notifGroupActivity, setNotifGroupActivity] = useState(true);
   const [notifGroupReminders, setNotifGroupReminders] = useState(true);
+  const [quietEnabled, setQuietEnabled] = useState(false);
+  const [quietStart, setQuietStart] = useState(1320);
+  const [quietEnd, setQuietEnd] = useState(480);
   const [notifLoading, setNotifLoading] = useState(true);
 
   const loadNotificationPreferences = useCallback(async () => {
@@ -84,6 +88,9 @@ export function NotificationsSettings() {
       setNotifMonthlyWrapped(prefs.monthlyWrapped ?? true);
       setNotifGroupActivity(prefs.groupActivity ?? true);
       setNotifGroupReminders(prefs.groupReminders ?? true);
+      setQuietEnabled(prefs.quietHoursEnabled ?? false);
+      setQuietStart(prefs.quietHoursStart ?? 1320);
+      setQuietEnd(prefs.quietHoursEnd ?? 480);
     } catch (e) {
       console.error('Failed to load notification preferences:', e);
     } finally {
@@ -214,6 +221,31 @@ export function NotificationsSettings() {
       showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
     }
   };
+
+  const handleToggleQuiet = async (value: boolean) => {
+    setQuietEnabled(value);
+    try {
+      await api.updateNotificationPreferences({ quietHoursEnabled: value });
+    } catch (e) {
+      setQuietEnabled(!value);
+      showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+    }
+  };
+
+  const shiftQuiet = async (which: 'start' | 'end', deltaHours: number) => {
+    const prev = which === 'start' ? quietStart : quietEnd;
+    const next = (((prev + deltaHours * 60) % 1440) + 1440) % 1440;
+    (which === 'start' ? setQuietStart : setQuietEnd)(next);
+    try {
+      await api.updateNotificationPreferences(which === 'start' ? { quietHoursStart: next } : { quietHoursEnd: next });
+    } catch (e) {
+      (which === 'start' ? setQuietStart : setQuietEnd)(prev);
+      showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+    }
+  };
+
+  const formatMinutes = (m: number) =>
+    `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
 
   const handleToggleLeafletPromos = async (value: boolean) => {
     setNotifLeafletPromos(value);
@@ -493,6 +525,39 @@ export function NotificationsSettings() {
               disabled={notifLoading}
             />
           </View>
+
+          <View style={styles.divider} />
+
+          <View style={styles.fieldRow}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.fieldLabel}>{t('notifications.quietHours')}</Text>
+              <Text style={styles.fieldDesc}>{t('notifications.quietHoursDesc')}</Text>
+            </View>
+            <Switch
+              value={quietEnabled}
+              onValueChange={handleToggleQuiet}
+              trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
+              disabled={notifLoading}
+            />
+          </View>
+          {quietEnabled && (
+            <>
+              {(['start', 'end'] as const).map((which) => (
+                <View key={which} style={styles.fieldRow}>
+                  <Text style={[styles.fieldLabel, { flex: 1 }]}>
+                    {t(which === 'start' ? 'notifications.quietHoursFrom' : 'notifications.quietHoursUntil')}
+                  </Text>
+                  <TouchableOpacity accessibilityRole="button" onPress={() => shiftQuiet(which, -1)} style={{ padding: 10 }}>
+                    <Text style={styles.fieldLabel}>−</Text>
+                  </TouchableOpacity>
+                  <Text style={styles.fieldLabel}>{formatMinutes(which === 'start' ? quietStart : quietEnd)}</Text>
+                  <TouchableOpacity accessibilityRole="button" onPress={() => shiftQuiet(which, 1)} style={{ padding: 10 }}>
+                    <Text style={styles.fieldLabel}>+</Text>
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </>
+          )}
 
           <View style={styles.divider} />
 
