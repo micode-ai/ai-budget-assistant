@@ -218,6 +218,10 @@ Appuyez sur une entree de revenu pour afficher les details :
 - **Q : Pourquoi l'onglet Transactions s'ouvre-t-il instantanement, meme sans internet ?**
   **R :** L'application stocke vos transactions localement sur votre appareil. Quand vous ouvrez l'onglet, la liste s'affiche immediatement depuis cette copie locale, et les nouveaux changements du serveur sont charges en arriere-plan. Si la liste est vide au premier lancement, un bref indicateur de chargement apparait pendant que l'appareil recupere vos donnees.
 
+### Calculer dans le champ du montant
+
+Dans le champ du montant, tu peux saisir un petit calcul, par exemple `12.50+3.20*2`. Utilise `+ − × ÷` et les parenthèses ; `,` ou `.` servent de séparateur décimal. Le résultat s'affiche sous le champ et c'est ce nombre qui est enregistré. Si le calcul n'est pas valide, Enregistrer reste désactivé.
+
 ---
 
 *Voir aussi : [Saisie vocale et scan de recus](./04-voice-and-receipt.md) | [Budgets](./05-budgets.md)*

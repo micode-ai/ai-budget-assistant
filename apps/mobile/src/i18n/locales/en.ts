@@ -834,6 +834,11 @@ export default {
     focusEmptyBody: 'Turn on {{safeToSpend}}, {{netProfit}}, {{incomeExpenses}}, {{monthlyBudget}} or {{wallets}} to see it here.',
     manageWidgets: 'Manage widgets',
   },
+  amountCalc: {
+    result: '= {{value}}',
+    invalid: 'Not a valid sum',
+    divideByZero: 'Cannot divide by zero',
+  },
   validation: {
     fillAllFields: 'Please fill in all fields',
     invalidEmail: 'Please enter a valid email address',

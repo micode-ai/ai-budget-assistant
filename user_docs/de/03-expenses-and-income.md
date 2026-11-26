@@ -218,6 +218,10 @@ Tippe auf einen beliebigen Einkommensentrag, um Details anzuzeigen:
 - **F: Warum offnet sich der Tab "Transaktionen" sofort, sogar ohne Internet?**
   **A:** Die App speichert deine Transaktionen lokal auf deinem Gerat. Wenn du den Tab offnest, wird die Liste sofort aus dieser lokalen Kopie angezeigt, und neue Anderungen vom Server werden im Hintergrund geladen. Ist die Liste beim ersten Start leer, siehst du kurz einen Ladeindikator, wahrend das Gerat deine Daten abruft.
 
+### Rechnen im Betragsfeld
+
+Im Betragsfeld kannst du eine kleine Rechnung eingeben, z. B. `12.50+3.20*2`. Verwende `+ − × ÷` und Klammern; `,` oder `.` gelten als Dezimaltrennzeichen. Das Ergebnis erscheint unter dem Feld und wird gespeichert. Bei einer ungültigen Rechnung bleibt Speichern deaktiviert.
+
 ---
 
 *Siehe auch: [Spracheingabe & Beleg scannen](./04-voice-and-receipt.md) | [Budgets](./05-budgets.md)*

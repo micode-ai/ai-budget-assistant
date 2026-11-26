@@ -9,7 +9,8 @@ import {
   Switch,
 } from 'react-native';
 import { showAlert } from '@/utils/alert';
-import { parseAmount } from '@/utils/amount';
+import { parseAmountExpression, isAmountExpressionInvalid } from '@/utils/amount';
+import { AmountExpressionHelper } from '@/components/AmountExpressionHelper';
 import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -97,7 +98,7 @@ export function IncomeCreateForm({ initial, onDone, onOpenVoice, onOpenReceipt }
   }, []);
 
   const handleSubmit = async () => {
-    const numericAmount = parseAmount(amount);
+    const numericAmount = parseAmountExpression(amount);
     if (!numericAmount || numericAmount <= 0) {
       trackAction('income_manual', 'failed');
       showAlert(t('common.error'), t('validation.invalidAmount'));
@@ -166,6 +167,7 @@ export function IncomeCreateForm({ initial, onDone, onOpenVoice, onOpenReceipt }
               autoFocus
             />
           </View>
+          <AmountExpressionHelper value={amount} onChange={setAmount} />
 
           {showCurrencyPicker && (
             <View style={styles.pickerContainer}>
@@ -384,9 +386,9 @@ export function IncomeCreateForm({ initial, onDone, onOpenVoice, onOpenReceipt }
             </View>
           )}
           <TouchableOpacity
-            style={[styles.submitButton, isSubmitting && styles.submitButtonDisabled]}
+            style={[styles.submitButton, (isSubmitting || isAmountExpressionInvalid(amount)) && styles.submitButtonDisabled]}
             onPress={handleSubmit}
-            disabled={isSubmitting}
+            disabled={isSubmitting || isAmountExpressionInvalid(amount)}
           >
             <Ionicons name="checkmark" size={22} color={theme.colors.onSemantic} />
             <Text style={styles.submitButtonText}>

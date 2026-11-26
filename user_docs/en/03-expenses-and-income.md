@@ -218,6 +218,10 @@ Tap any income entry to view details:
 - **Q: Why does the Transactions tab open instantly, even with no internet?**
   **A:** The app stores your transactions locally on your device. When you open the tab, the list is shown immediately from this local copy, and any new changes from the server are loaded in the background. If the list is empty on first launch, you'll see a brief loading spinner while the device fetches your data.
 
+### Calculate in the amount field
+
+In the amount field you can type a small sum, for example `12.50+3.20*2`. Use `+ − × ÷` and brackets; `,` or `.` both work as a decimal separator. The result appears under the field and that number is saved. If the sum is not valid, Save stays disabled.
+
 ---
 
 *See also: [Voice Input & Receipt Scanning](./04-voice-and-receipt.md) | [Budgets](./05-budgets.md)*

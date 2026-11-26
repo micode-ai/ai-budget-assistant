@@ -839,6 +839,11 @@ export default {
     focusEmptyBody: 'Увімкніть {{safeToSpend}}, {{netProfit}}, {{incomeExpenses}}, {{monthlyBudget}} або {{wallets}}, щоб побачити це тут.',
     manageWidgets: 'Керування віджетами',
   },
+  amountCalc: {
+    result: '= {{value}}',
+    invalid: 'Некоректний вираз',
+    divideByZero: 'Ділення на нуль неможливе',
+  },
   validation: {
     fillAllFields: 'Будь ласка, заповніть усі поля',
     invalidEmail: 'Будь ласка, введіть дійсну електронну адресу',

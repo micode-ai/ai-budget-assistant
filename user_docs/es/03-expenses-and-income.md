@@ -218,6 +218,10 @@ Toca cualquier entrada de ingreso para ver los detalles:
 - **P: Por que la pestana de Transacciones se abre al instante, incluso sin internet?**
   **R:** La aplicacion guarda tus transacciones localmente en tu dispositivo. Al abrir la pestana, la lista se muestra de inmediato desde esa copia local, y los cambios nuevos del servidor se cargan en segundo plano. Si la lista esta vacia en el primer inicio, veras brevemente un indicador de carga mientras el dispositivo obtiene tus datos.
 
+### Calcular en el campo de importe
+
+En el campo de importe puedes escribir una operación sencilla, por ejemplo `12.50+3.20*2`. Usa `+ − × ÷` y paréntesis; `,` o `.` sirven como separador decimal. El resultado aparece bajo el campo y ese número se guarda. Si la operación no es válida, Guardar queda desactivado.
+
 ---
 
 *Ver tambien: [Entrada de voz y Escaneo de recibos](./04-voice-and-receipt.md) | [Presupuestos](./05-budgets.md)*

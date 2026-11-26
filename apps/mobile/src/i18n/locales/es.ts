@@ -831,6 +831,11 @@ export default {
     focusEmptyBody: 'Activa {{safeToSpend}}, {{netProfit}}, {{incomeExpenses}}, {{monthlyBudget}} o {{wallets}} para verlo aquí.',
     manageWidgets: 'Gestionar widgets',
   },
+  amountCalc: {
+    result: '= {{value}}',
+    invalid: 'Operación no válida',
+    divideByZero: 'No se puede dividir entre cero',
+  },
   validation: {
     fillAllFields: 'Por favor completa todos los campos',
     invalidEmail: 'Por favor ingresa un correo electrónico válido',

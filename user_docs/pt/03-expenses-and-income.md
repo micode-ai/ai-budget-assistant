@@ -218,6 +218,10 @@ Toque em qualquer receita para ver os detalhes:
 - **P: Porque é que o separador Transações abre de imediato, mesmo sem Internet?**
   **R:** A aplicação guarda as transações localmente no dispositivo. Quando abre o separador, a lista aparece logo a partir desta cópia local, e as alterações novas do servidor são carregadas em segundo plano. Se a lista estiver vazia na primeira utilização, aparece um breve indicador de carregamento enquanto o dispositivo obtém os dados.
 
+### Calcular no campo do valor
+
+No campo do valor podes escrever um cálculo simples, por exemplo `12.50+3.20*2`. Usa `+ − × ÷` e parênteses; `,` ou `.` servem de separador decimal. O resultado aparece por baixo do campo e é esse número que fica guardado. Se o cálculo não for válido, Guardar fica desativado.
+
 ---
 
 *Ver também: [Entrada por voz e digitalização de talões](./04-voice-and-receipt.md) | [Orçamentos](./05-budgets.md)*

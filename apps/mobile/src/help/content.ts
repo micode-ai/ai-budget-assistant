@@ -581,6 +581,10 @@ Tap any income entry to view details:
 - **Q: Why does the Transactions tab open instantly, even with no internet?**
   **A:** The app stores your transactions locally on your device. When you open the tab, the list is shown immediately from this local copy, and any new changes from the server are loaded in the background. If the list is empty on first launch, you'll see a brief loading spinner while the device fetches your data.
 
+### Calculate in the amount field
+
+In the amount field you can type a small sum, for example \`12.50+3.20*2\`. Use \`+ − × ÷\` and brackets; \`,\` or \`.\` both work as a decimal separator. The result appears under the field and that number is saved. If the sum is not valid, Save stays disabled.
+
 ---
 
 *See also: Voice Input & Receipt Scanning | Budgets*
@@ -6183,6 +6187,10 @@ iOS, Android, Web
 - **В: Почему вкладка «Транзакции» открывается мгновенно, даже без интернета?**
   **О:** Приложение хранит ваши транзакции локально на устройстве. При открытии вкладки список сразу показывается из локальной копии, а новые изменения с сервера подгружаются в фоне. Если список пуст при первом запуске, вы увидите короткий индикатор загрузки, пока устройство получает данные.
 
+### Вычисления в поле суммы
+
+В поле суммы можно ввести небольшое выражение, например \`12.50+3.20*2\`. Используйте \`+ − × ÷\` и скобки; разделитель — запятая или точка. Результат показывается под полем, и сохраняется именно он. Если выражение некорректно, кнопка «Сохранить» остаётся неактивной.
+
 ---
 
 *См. также: Голосовой ввод и сканирование чеков | Бюджеты*
@@ -11762,6 +11770,10 @@ iOS, Android, Web
 - **П:** Чому вкладка «Транзакції» відкривається миттєво навіть без інтернету?
   **В:** Програма зберігає ваші транзакції локально на пристрої. Коли ви відкриваєте вкладку, список одразу показується з локальної копії, а нові зміни з сервера підвантажуються у фоні. Якщо список порожній при першому запуску, ви побачите короткий індикатор завантаження, поки пристрій отримує дані.
 
+### Обчислення в полі суми
+
+У полі суми можна ввести невеликий вираз, наприклад \`12.50+3.20*2\`. Використовуйте \`+ − × ÷\` і дужки; роздільник — кома або крапка. Результат показується під полем, і зберігається саме він. Якщо вираз некоректний, кнопка «Зберегти» залишається неактивною.
+
 ---
 
 *Див. також: Голосовий ввід та сканування чеків | Бюджети*
@@ -17289,6 +17301,10 @@ Dotknij dowolny wpis przychodu, aby zobaczyc szczegoly:
 - **P: Dlaczego zakladka Transakcje otwiera sie natychmiast, nawet bez internetu?**
   **O:** Aplikacja przechowuje Twoje transakcje lokalnie na urzadzeniu. Po otwarciu zakladki lista jest natychmiast wyswietlana z tej lokalnej kopii, a nowe zmiany z serwera sa wczytywane w tle. Jesli lista jest pusta przy pierwszym uruchomieniu, zobaczysz krotki wskaznik ladowania, podczas gdy urzadzenie pobiera Twoje dane.
 
+### Liczenie w polu kwoty
+
+W polu kwoty możesz wpisać proste działanie, np. \`12.50+3.20*2\`. Używaj \`+ − × ÷\` i nawiasów; przecinek lub kropka działają jako separator dziesiętny. Wynik pojawia się pod polem i ta liczba zostaje zapisana. Przy nieprawidłowym działaniu przycisk Zapisz pozostaje wyłączony.
+
 ---
 
 *Zobacz takze: Wprowadzanie glosowe i skanowanie paragonow | Budzety*
@@ -22812,6 +22828,10 @@ Tippe auf einen beliebigen Einkommensentrag, um Details anzuzeigen:
 - **F: Warum offnet sich der Tab "Transaktionen" sofort, sogar ohne Internet?**
   **A:** Die App speichert deine Transaktionen lokal auf deinem Gerat. Wenn du den Tab offnest, wird die Liste sofort aus dieser lokalen Kopie angezeigt, und neue Anderungen vom Server werden im Hintergrund geladen. Ist die Liste beim ersten Start leer, siehst du kurz einen Ladeindikator, wahrend das Gerat deine Daten abruft.
 
+### Rechnen im Betragsfeld
+
+Im Betragsfeld kannst du eine kleine Rechnung eingeben, z. B. \`12.50+3.20*2\`. Verwende \`+ − × ÷\` und Klammern; \`,\` oder \`.\` gelten als Dezimaltrennzeichen. Das Ergebnis erscheint unter dem Feld und wird gespeichert. Bei einer ungültigen Rechnung bleibt Speichern deaktiviert.
+
 ---
 
 *Siehe auch: Spracheingabe & Beleg scannen | Budgets*
@@ -28310,6 +28330,10 @@ Toca cualquier entrada de ingreso para ver los detalles:
 - **P: Por que la pestana de Transacciones se abre al instante, incluso sin internet?**
   **R:** La aplicacion guarda tus transacciones localmente en tu dispositivo. Al abrir la pestana, la lista se muestra de inmediato desde esa copia local, y los cambios nuevos del servidor se cargan en segundo plano. Si la lista esta vacia en el primer inicio, veras brevemente un indicador de carga mientras el dispositivo obtiene tus datos.
 
+### Calcular en el campo de importe
+
+En el campo de importe puedes escribir una operación sencilla, por ejemplo \`12.50+3.20*2\`. Usa \`+ − × ÷\` y paréntesis; \`,\` o \`.\` sirven como separador decimal. El resultado aparece bajo el campo y ese número se guarda. Si la operación no es válida, Guardar queda desactivado.
+
 ---
 
 *Ver tambien: Entrada de voz y Escaneo de recibos | Presupuestos*
@@ -33797,6 +33821,10 @@ Appuyez sur une entree de revenu pour afficher les details :
 - **Q : Pourquoi l'onglet Transactions s'ouvre-t-il instantanement, meme sans internet ?**
   **R :** L'application stocke vos transactions localement sur votre appareil. Quand vous ouvrez l'onglet, la liste s'affiche immediatement depuis cette copie locale, et les nouveaux changements du serveur sont charges en arriere-plan. Si la liste est vide au premier lancement, un bref indicateur de chargement apparait pendant que l'appareil recupere vos donnees.
 
+### Calculer dans le champ du montant
+
+Dans le champ du montant, tu peux saisir un petit calcul, par exemple \`12.50+3.20*2\`. Utilise \`+ − × ÷\` et les parenthèses ; \`,\` ou \`.\` servent de séparateur décimal. Le résultat s'affiche sous le champ et c'est ce nombre qui est enregistré. Si le calcul n'est pas valide, Enregistrer reste désactivé.
+
 ---
 
 *Voir aussi : Saisie vocale et scan de recus | Budgets*
@@ -39282,6 +39310,10 @@ iOS, Android, Web
 - **П: Чаму ўкладка «Транзакцыі» адкрываецца імгненна, нават без інтэрнэту?**
   **А:** Праграма захоўвае вашы транзакцыі лакальна на прыладзе. Калі вы адкрываеце ўкладку, спіс адразу паказваецца з лакальнай копіі, а новыя змены з сервера падгружаюцца ў фоне. Калі спіс пусты пры першым запуску, вы ўбачыце кароткі індыкатар загрузкі, пакуль прылада атрымлівае даныя.
 
+### Вылічэнні ў полі сумы
+
+У полі сумы можна ўвесці невялікі выраз, напрыклад \`12.50+3.20*2\`. Выкарыстоўвайце \`+ − × ÷\` і дужкі; падзельнік — коска або кропка. Вынік паказваецца пад полем, і захоўваецца іменна ён. Калі выраз некарэктны, кнопка «Захаваць» застаецца неактыўнай.
+
 ---
 
 *Гл. таксама: Галасавы ўвод і сканаванне чэкаў | Бюджэты*
@@ -44730,6 +44762,10 @@ Tik op een inkomstenpost om de details te bekijken:
 
 - **V: Waarom opent het tabblad Transacties direct, zelfs zonder internet?**
   **A:** De app slaat je transacties lokaal op je apparaat op. Wanneer je het tabblad opent, wordt de lijst direct getoond vanuit deze lokale kopie, en eventuele nieuwe wijzigingen van de server worden op de achtergrond geladen. Als de lijst bij de eerste keer leeg is, zie je kort een laadspinner terwijl het apparaat je gegevens ophaalt.
+
+### Rekenen in het bedragveld
+
+In het bedragveld kun je een kleine som typen, bijvoorbeeld \`12.50+3.20*2\`. Gebruik \`+ − × ÷\` en haakjes; \`,\` of \`.\` werken als decimaalteken. Het resultaat verschijnt onder het veld en dat getal wordt opgeslagen. Is de som ongeldig, dan blijft Opslaan uitgeschakeld.
 
 ---
 
@@ -50305,6 +50341,10 @@ Toque em qualquer receita para ver os detalhes:
 
 - **P: Porque é que o separador Transações abre de imediato, mesmo sem Internet?**
   **R:** A aplicação guarda as transações localmente no dispositivo. Quando abre o separador, a lista aparece logo a partir desta cópia local, e as alterações novas do servidor são carregadas em segundo plano. Se a lista estiver vazia na primeira utilização, aparece um breve indicador de carregamento enquanto o dispositivo obtém os dados.
+
+### Calcular no campo do valor
+
+No campo do valor podes escrever um cálculo simples, por exemplo \`12.50+3.20*2\`. Usa \`+ − × ÷\` e parênteses; \`,\` ou \`.\` servem de separador decimal. O resultado aparece por baixo do campo e é esse número que fica guardado. Se o cálculo não for válido, Guardar fica desativado.
 
 ---
 
@@ -55907,6 +55947,10 @@ Toque em qualquer receita para ver os detalhes:
 
 - **P: Por que a aba Transações abre na hora, mesmo sem internet?**
   **R:** O app guarda suas transações localmente no dispositivo. Quando você abre a aba, a lista aparece imediatamente a partir dessa cópia local, e as novidades do servidor são carregadas em segundo plano. Se a lista estiver vazia no primeiro uso, aparece rapidamente um indicador de carregamento enquanto o dispositivo busca seus dados.
+
+### Calcular no campo de valor
+
+No campo de valor você pode digitar uma conta simples, por exemplo \`12.50+3.20*2\`. Use \`+ − × ÷\` e parênteses; \`,\` ou \`.\` funcionam como separador decimal. O resultado aparece abaixo do campo e é esse número que fica salvo. Se a conta não for válida, Salvar fica desativado.
 
 ---
 

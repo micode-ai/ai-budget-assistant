@@ -218,6 +218,10 @@ Dotknij dowolny wpis przychodu, aby zobaczyc szczegoly:
 - **P: Dlaczego zakladka Transakcje otwiera sie natychmiast, nawet bez internetu?**
   **O:** Aplikacja przechowuje Twoje transakcje lokalnie na urzadzeniu. Po otwarciu zakladki lista jest natychmiast wyswietlana z tej lokalnej kopii, a nowe zmiany z serwera sa wczytywane w tle. Jesli lista jest pusta przy pierwszym uruchomieniu, zobaczysz krotki wskaznik ladowania, podczas gdy urzadzenie pobiera Twoje dane.
 
+### Liczenie w polu kwoty
+
+W polu kwoty możesz wpisać proste działanie, np. `12.50+3.20*2`. Używaj `+ − × ÷` i nawiasów; przecinek lub kropka działają jako separator dziesiętny. Wynik pojawia się pod polem i ta liczba zostaje zapisana. Przy nieprawidłowym działaniu przycisk Zapisz pozostaje wyłączony.
+
 ---
 
 *Zobacz takze: [Wprowadzanie glosowe i skanowanie paragonow](./04-voice-and-receipt.md) | [Budzety](./05-budgets.md)*

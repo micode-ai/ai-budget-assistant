@@ -218,6 +218,10 @@ Toque em qualquer receita para ver os detalhes:
 - **P: Por que a aba Transações abre na hora, mesmo sem internet?**
   **R:** O app guarda suas transações localmente no dispositivo. Quando você abre a aba, a lista aparece imediatamente a partir dessa cópia local, e as novidades do servidor são carregadas em segundo plano. Se a lista estiver vazia no primeiro uso, aparece rapidamente um indicador de carregamento enquanto o dispositivo busca seus dados.
 
+### Calcular no campo de valor
+
+No campo de valor você pode digitar uma conta simples, por exemplo `12.50+3.20*2`. Use `+ − × ÷` e parênteses; `,` ou `.` funcionam como separador decimal. O resultado aparece abaixo do campo e é esse número que fica salvo. Se a conta não for válida, Salvar fica desativado.
+
 ---
 
 *Veja também: [Entrada por voz e escaneamento de recibos](./04-voice-and-receipt.md) | [Orçamentos](./05-budgets.md)*

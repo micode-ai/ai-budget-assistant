@@ -8,7 +8,8 @@ import {
   Platform,
 } from 'react-native';
 import { showAlert } from '@/utils/alert';
-import { parseAmount } from '@/utils/amount';
+import { parseAmountExpression, isAmountExpressionInvalid } from '@/utils/amount';
+import { AmountExpressionHelper } from '@/components/AmountExpressionHelper';
 import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -183,7 +184,7 @@ export function ExpenseCreateForm({ initial, onDone }: ExpenseCreateFormProps) {
   }, [currentAccount?.id, isTripAccount]);
 
   const handleSubmit = async () => {
-    const numericAmount = parseAmount(amount);
+    const numericAmount = parseAmountExpression(amount);
     if (!numericAmount || numericAmount <= 0) {
       trackAction('expense_manual', 'failed');
       showAlert(t('common.error'), t('validation.invalidAmount'));
@@ -324,6 +325,7 @@ export function ExpenseCreateForm({ initial, onDone }: ExpenseCreateFormProps) {
               autoFocus={!initial?.amount}
             />
           </View>
+          <AmountExpressionHelper value={amount} onChange={setAmount} />
 
           {showCurrencyPicker && (
             <View style={styles.pickerContainer}>
@@ -359,7 +361,7 @@ export function ExpenseCreateForm({ initial, onDone }: ExpenseCreateFormProps) {
           {isTripAccount && tripMembers.length > 0 && (
             <TripExpenseSplitPicker
               members={tripMembers}
-              totalAmount={parseAmount(amount) || 0}
+              totalAmount={parseAmountExpression(amount) || 0}
               onChange={(nextSplitType, nextShares) => {
                 setSplitType(nextSplitType);
                 setShares(nextShares);
@@ -491,7 +493,7 @@ export function ExpenseCreateForm({ initial, onDone }: ExpenseCreateFormProps) {
           {/* Category Split */}
           <CategorySplitSection
             {...categorySplit}
-            totalAmount={parseAmount(amount) || 0}
+            totalAmount={parseAmountExpression(amount) || 0}
             currencyCode={currencyCode}
           />
         </ScrollView>
@@ -499,9 +501,9 @@ export function ExpenseCreateForm({ initial, onDone }: ExpenseCreateFormProps) {
         {/* Submit Button */}
         <View style={styles.footer}>
           <TouchableOpacity
-            style={[styles.submitButton, isSubmitting && styles.submitButtonDisabled]}
+            style={[styles.submitButton, (isSubmitting || isAmountExpressionInvalid(amount)) && styles.submitButtonDisabled]}
             onPress={handleSubmit}
-            disabled={isSubmitting}
+            disabled={isSubmitting || isAmountExpressionInvalid(amount)}
           >
             <Ionicons name="checkmark" size={22} color={theme.colors.textInverse} />
             <Text style={styles.submitButtonText}>

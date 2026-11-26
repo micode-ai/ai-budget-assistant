@@ -831,6 +831,11 @@ export default {
     focusEmptyBody: 'Zet {{safeToSpend}}, {{netProfit}}, {{incomeExpenses}}, {{monthlyBudget}} of {{wallets}} aan om het hier te zien.',
     manageWidgets: 'Widgets beheren',
   },
+  amountCalc: {
+    result: '= {{value}}',
+    invalid: 'Ongeldige som',
+    divideByZero: 'Delen door nul is niet mogelijk',
+  },
   validation: {
     fillAllFields: 'Vul alle velden in',
     invalidEmail: 'Voer een geldig e-mailadres in',

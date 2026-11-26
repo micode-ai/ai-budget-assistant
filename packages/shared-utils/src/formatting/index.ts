@@ -22,6 +22,7 @@ const currencyConfig: Record<Currency, { symbol: string; locale: string; positio
 };
 
 export * from './amount-mask';
+export * from './amount-expression';
 
 export function formatCurrency(amount: number, currency: Currency | string): string {
   if (isAmountMasked()) return AMOUNT_MASK;

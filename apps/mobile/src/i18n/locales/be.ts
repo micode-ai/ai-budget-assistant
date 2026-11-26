@@ -837,6 +837,11 @@ export default {
     focusEmptyBody: 'Уключыце {{safeToSpend}}, {{netProfit}}, {{incomeExpenses}}, {{monthlyBudget}} або {{wallets}}, каб убачыць гэта тут.',
     manageWidgets: 'Кіраванне віджэтамі',
   },
+  amountCalc: {
+    result: '= {{value}}',
+    invalid: 'Няправільны выраз',
+    divideByZero: 'Дзяленне на нуль немагчымае',
+  },
   validation: {
     fillAllFields: 'Калі ласка, запоўніце ўсе палі',
     invalidEmail: 'Калі ласка, увядзіце карэктны адрас электроннай пошты',

@@ -218,6 +218,10 @@ Tik op een inkomstenpost om de details te bekijken:
 - **V: Waarom opent het tabblad Transacties direct, zelfs zonder internet?**
   **A:** De app slaat je transacties lokaal op je apparaat op. Wanneer je het tabblad opent, wordt de lijst direct getoond vanuit deze lokale kopie, en eventuele nieuwe wijzigingen van de server worden op de achtergrond geladen. Als de lijst bij de eerste keer leeg is, zie je kort een laadspinner terwijl het apparaat je gegevens ophaalt.
 
+### Rekenen in het bedragveld
+
+In het bedragveld kun je een kleine som typen, bijvoorbeeld `12.50+3.20*2`. Gebruik `+ − × ÷` en haakjes; `,` of `.` werken als decimaalteken. Het resultaat verschijnt onder het veld en dat getal wordt opgeslagen. Is de som ongeldig, dan blijft Opslaan uitgeschakeld.
+
 ---
 
 *Zie ook: [Spraakinvoer & Bonnen scannen](./04-voice-and-receipt.md) | [Budgetten](./05-budgets.md)*
