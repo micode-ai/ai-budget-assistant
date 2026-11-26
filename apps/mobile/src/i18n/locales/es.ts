@@ -474,6 +474,7 @@ export default {
     actionGetCategoryBreakdown: 'Desglose por categoría',
     actionAddShoppingList: 'Añadido a la lista de la compra',
     actionRemoveShoppingList: 'Eliminado de la lista de la compra',
+    actionHelpSources: 'Del centro de ayuda',
     actionShoppingNotFound: 'No encontrado: {{names}}',
     actionShoppingSuggestions: 'Sugerencias de compra',
     shoppingSuggestionsRestock: 'Se está acabando',

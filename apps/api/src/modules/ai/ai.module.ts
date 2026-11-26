@@ -25,6 +25,7 @@ import { AiExpenseToolsService } from './services/ai-expense-tools.service';
 import { AiBudgetToolsService } from './services/ai-budget-tools.service';
 import { AiDebtGoalToolsService } from './services/ai-debt-goal-tools.service';
 import { AiShoppingToolsService } from './services/ai-shopping-tools.service';
+import { AiHelpToolsService } from './services/ai-help-tools.service';
 import { AiUndoToolsService } from './services/ai-undo-tools.service';
 import { PromptBuilder } from './services/prompt-builder.service';
 import { EmbeddingModule } from './embedding.module';
@@ -72,6 +73,7 @@ import { ReceiptRescanAdminController } from './receipt-rescan.admin.controller'
     AiBudgetToolsService,
     AiDebtGoalToolsService,
     AiShoppingToolsService,
+    AiHelpToolsService,
     AiUndoToolsService,
     PromptBuilder,
     ReceiptRescanService,

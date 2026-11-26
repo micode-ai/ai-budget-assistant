@@ -171,3 +171,62 @@ fs.writeFileSync(outputPath, output, 'utf-8');
 console.log(
   `Generated ${totalSections} sections across ${LANGUAGES.length} languages at ${outputPath}`
 );
+
+// ---------------------------------------------------------------------------
+// Chat help index (ai-chat-app-help-answers): a compact, chunked plain-text
+// copy of the same sections for the API's `search_help` tool. Written next to
+// the tool, imported as JSON (no Dockerfile change). Never hand-edit.
+// ---------------------------------------------------------------------------
+const helpIndexPath = path.resolve(
+  __dirname, '..', 'apps', 'api', 'src', 'modules', 'ai', 'help', 'help-index.json'
+);
+
+function toPlain(md) {
+  return md
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+    .replace(/[*_`>|]/g, '')
+    .replace(/^[-+]\s+/gm, '')
+    .replace(/^-{3,}$/gm, '')
+    .replace(/[ \t]+/g, ' ')
+    .replace(/\n{2,}/g, '\n')
+    .trim();
+}
+
+function chunkSection(markdown) {
+  const chunks = [];
+  let heading = '';
+  let buf = [];
+  const flush = () => {
+    const text = toPlain(buf.join('\n'));
+    if (text.length > 0) chunks.push({ heading, text });
+    buf = [];
+  };
+  for (const line of markdown.split('\n')) {
+    const m = /^(#{2,3})\s+(.*)$/.exec(line);
+    if (m) {
+      flush();
+      heading = toPlain(m[2]);
+    } else if (!line.startsWith('# ')) {
+      buf.push(line);
+    }
+  }
+  flush();
+  return chunks;
+}
+
+const helpIndex = {};
+for (const lang of LANGUAGES) {
+  helpIndex[lang] = [];
+  for (const sectionId of SECTIONS) {
+    if (sectionId === '00-index') continue;
+    const filePath = path.join(docsRoot, lang, `${sectionId}.md`);
+    if (!fs.existsSync(filePath)) continue;
+    const raw = fs.readFileSync(filePath, 'utf-8');
+    const { title } = extractTitleAndDescription(raw);
+    helpIndex[lang].push({ id: sectionId, title, chunks: chunkSection(raw) });
+  }
+}
+fs.mkdirSync(path.dirname(helpIndexPath), { recursive: true });
+fs.writeFileSync(helpIndexPath, JSON.stringify(helpIndex), 'utf-8');
+console.log(`Generated chat help index at ${helpIndexPath}`);

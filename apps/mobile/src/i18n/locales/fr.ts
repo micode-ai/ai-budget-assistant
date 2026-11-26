@@ -474,6 +474,7 @@ export default {
     actionGetCategoryBreakdown: 'Répartition par catégorie',
     actionAddShoppingList: 'Ajouté à la liste de courses',
     actionRemoveShoppingList: 'Retiré de la liste de courses',
+    actionHelpSources: "Du centre d'aide",
     actionShoppingNotFound: 'Introuvable : {{names}}',
     actionShoppingSuggestions: 'Suggestions d’achats',
     shoppingSuggestionsRestock: 'Stock bas',

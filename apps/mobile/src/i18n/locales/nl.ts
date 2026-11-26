@@ -474,6 +474,7 @@ export default {
     actionGetCategoryBreakdown: 'Categorieverdeling',
     actionAddShoppingList: 'Toegevoegd aan boodschappenlijst',
     actionRemoveShoppingList: 'Verwijderd van boodschappenlijst',
+    actionHelpSources: 'Uit het helpcentrum',
     actionShoppingNotFound: 'Niet gevonden: {{names}}',
     actionShoppingSuggestions: 'Boodschappensuggesties',
     shoppingSuggestionsRestock: 'Bijna op',

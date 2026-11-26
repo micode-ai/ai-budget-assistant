@@ -233,6 +233,9 @@ Rückgängig machen erreicht nur die **letzte** Aktion, die du in dieser Unterha
 - **F: Woher weiss die KI, welches Konto ich meine?**
   **A:** Wenn du einen Kontonamen in deiner Nachricht erwahnst (z.B. "Ausgaben in Family"), fragt die KI automatisch dieses Konto ab. Andernfalls wird dein aktuelles Standardkonto verwendet.
 
+- **Q: Kann ich die KI fragen, wie die App funktioniert?**
+  **A:** Ja. Frage einfach in normalen Worten, z. B. „Wie teile ich einen Beleg?“ oder „Wo ändere ich meine Währung?“. Die KI antwortet anhand dieses Hilfecenters und zeigt eine Karte mit den verwendeten Artikeln – tippe darauf, um sie zu öffnen. Gibt es keinen passenden Artikel, sagt sie das. Der Hilfetext kann der neuesten App-Version leicht hinterherhinken.
+
 ---
 
 *Siehe auch: [Ausgabengeschichte](./08-spending-story.md) | [Analysen](./06-analytics.md)*

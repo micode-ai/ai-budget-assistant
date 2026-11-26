@@ -5479,6 +5479,9 @@ Cofniecie siega tylko do **jednej, najnowszej** akcji, ktora potwierdziles w tej
 - **P: Skad AI wie, o ktore konto pytam?**
   **O:** Jezeli wspomnisz nazwe konta w wiadomosci (np. "wydatki w Family"), AI automatycznie odpyta to konto. W przeciwnym razie uzyje Twojego domyslnego konta.
 
+- **Q: Czy mogę zapytać AI, jak działa sama aplikacja?**
+  **A:** Tak. Zapytaj zwykłymi słowami, np. „jak podzielić paragon?” albo „gdzie zmienić walutę?”. AI odpowiada na podstawie tego centrum pomocy i pokazuje kartę z użytymi artykułami – dotknij, aby otworzyć. Jeśli nie ma pasującego artykułu, powie to wprost. Treść pomocy może nieco odstawać od najnowszej wersji aplikacji.
+
 ---
 
 *Zobacz takze: [Historia wydatkow](./08-spending-story.md) | [Analityka](./06-analytics.md)*

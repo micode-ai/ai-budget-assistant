@@ -6,6 +6,7 @@ import { useTheme, useStyles } from '@/theme';
 import type { ChatActionResult } from '@budget/shared-types';
 import { createSharedResultStyles } from './results/sharedResultStyles';
 import { UndoResult } from './results/UndoResult';
+import { HelpSourcesResult } from './results/HelpSourcesResult';
 import { DepositTotalResult } from './results/DepositTotalResult';
 import { DiscountTotalResult } from './results/DiscountTotalResult';
 import { ShieldResult } from './results/ShieldResult';
@@ -79,6 +80,8 @@ export function ActionResultCard({ actionResult, desktop = false }: ActionResult
       return <DepositTotalResult data={data} desktop={desktop} />;
     case 'get_discount_total':
       return <DiscountTotalResult data={data} desktop={desktop} />;
+    case 'search_help':
+      return <HelpSourcesResult data={data} />;
     case 'undo_last_action':
       return <UndoResult data={data} />;
     default:

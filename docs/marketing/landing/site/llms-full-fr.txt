@@ -4787,6 +4787,9 @@ L'annulation ne remonte qu'a la **seule action la plus recente** que vous avez c
 - **Q : Comment l'IA sait-elle de quel compte je parle ?**
   **R :** Si vous mentionnez un nom de compte dans votre message (ex., "depenses dans Family"), l'IA interroge automatiquement ce compte. Sinon, votre compte par defaut est utilise.
 
+- **Q: Puis-je demander à l'IA comment fonctionne l'application ?**
+  **A:** Oui. Posez la question simplement, par exemple « comment diviser un reçu ? » ou « où changer ma devise ? ». L'IA répond à partir de ce centre d'aide et affiche une carte avec les articles utilisés : touchez-en un pour l'ouvrir. S'il n'y a pas d'article correspondant, elle le dit. L'aide peut avoir un léger retard sur la dernière version de l'application.
+
 ---
 
 *Voir aussi : [Histoire des depenses](./08-spending-story.md) | [Analyses](./06-analytics.md)*

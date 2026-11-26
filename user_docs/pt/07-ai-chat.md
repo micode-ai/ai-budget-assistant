@@ -248,6 +248,9 @@ A anulação só chega à **última** ação que confirmou nessa conversa, e ape
 - **P: Como é que a IA sabe sobre que conta estou a perguntar?**
   **R:** Se mencionar o nome de uma conta na mensagem (por exemplo, «despesas em Família»), a IA consulta automaticamente essa conta. Caso contrário, usa a sua conta predefinida atual.
 
+- **Q: Posso perguntar à IA como funciona a própria aplicação?**
+  **A:** Sim. Pergunte por palavras simples, por exemplo «como divido um recibo?» ou «onde altero a minha moeda?». A IA responde com base neste centro de ajuda e mostra um cartão com os artigos usados — toque num para o abrir. Se não houver artigo correspondente, di-lo. O texto de ajuda pode estar ligeiramente atrasado face à versão mais recente da aplicação.
+
 ---
 
 *Ver também: [História dos gastos](./08-spending-story.md) | [Análise](./06-analytics.md)*

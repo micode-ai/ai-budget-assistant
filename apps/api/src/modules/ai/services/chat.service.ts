@@ -258,7 +258,10 @@ export class ChatService {
         const r = await this.chatActionLifecycle.handleWriteActionRequest(conversation, functionName, functionArgs, systemPrompt, history, message, aiModel, accountId, userId, user?.language);
         return { ...r, aiResponded: true, userMessageId: userMsg.id, userMessageCreatedAt: userMsg.createdAt.toISOString() };
       }
-      const readArgs = withFinancialMonthDefault(functionName, functionArgs, context.monthStart);
+      // search_help answers in the UI language; the model never chooses it (and it keys the cache).
+      const readArgs = functionName === 'search_help'
+        ? { query: functionArgs.query, language: user?.language ?? undefined }
+        : withFinancialMonthDefault(functionName, functionArgs, context.monthStart);
       const r = await this.handleReadAction(conversation, functionName, readArgs, toolCall, systemPrompt, history, message, accountId, userId, user?.currencyCode);
       return { ...r, aiResponded: true, userMessageId: userMsg.id, userMessageCreatedAt: userMsg.createdAt.toISOString() };
     }

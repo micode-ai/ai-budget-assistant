@@ -478,6 +478,7 @@ export default {
     actionGetCategoryBreakdown: 'Разбивка по категориям',
     actionAddShoppingList: 'Добавлено в список покупок',
     actionRemoveShoppingList: 'Удалено из списка покупок',
+    actionHelpSources: 'Из центра помощи',
     actionShoppingNotFound: 'Не найдено: {{names}}',
     actionShoppingSuggestions: 'Предложения по покупкам',
     shoppingSuggestionsRestock: 'Заканчивается',

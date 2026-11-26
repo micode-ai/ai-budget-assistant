@@ -478,6 +478,7 @@ export default {
     actionGetCategoryBreakdown: 'Podział na kategorie',
     actionAddShoppingList: 'Dodano do listy zakupów',
     actionRemoveShoppingList: 'Usunięto z listy zakupów',
+    actionHelpSources: 'Z centrum pomocy',
     actionShoppingNotFound: 'Nie znaleziono: {{names}}',
     actionShoppingSuggestions: 'Sugestie zakupowe',
     shoppingSuggestionsRestock: 'Kończy się',

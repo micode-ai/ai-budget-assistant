@@ -2037,6 +2037,9 @@ Desfazer só alcança a **última** ação que você confirmou naquela conversa,
 - **P: Como a IA sabe sobre qual conta estou perguntando?**
   **R:** Se você mencionar o nome de uma conta na mensagem (por exemplo, “despesas em Família”), a IA consulta essa conta automaticamente. Caso contrário, usa sua conta padrão atual.
 
+- **Q: Posso perguntar à IA como o próprio app funciona?**
+  **A:** Sim. Pergunte com palavras simples, por exemplo "como divido um recibo?" ou "onde altero minha moeda?". A IA responde com base nesta central de ajuda e mostra um cartão com os artigos usados — toque em um para abri-lo. Se não houver artigo correspondente, ela avisa. O texto de ajuda pode ficar um pouco atrás da versão mais recente do app.
+
 ---
 
 *Veja também: [História dos gastos](./08-spending-story.md) | [Análises](./06-analytics.md)*

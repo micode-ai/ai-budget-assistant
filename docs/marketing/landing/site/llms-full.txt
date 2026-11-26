@@ -4808,6 +4808,9 @@ Undo only reaches back to the **single most recent** action you confirmed in tha
 - **Q: How does AI know which account I'm asking about?**
   **A:** If you mention an account name in your message (e.g., "expenses in Family"), the AI automatically queries that account. Otherwise, it uses your current default account.
 
+- **Q: Can I ask the AI how the app itself works?**
+  **A:** Yes. Ask in plain words, for example "how do I split a receipt?" or "where do I change my currency?". The AI answers from this help center and shows a card with the articles it used - tap one to open it. If there is no matching article it says so. Help text can lag slightly behind the newest app version.
+
 ---
 
 *See also: [Spending Story](./08-spending-story.md) | [Analytics](./06-analytics.md)*

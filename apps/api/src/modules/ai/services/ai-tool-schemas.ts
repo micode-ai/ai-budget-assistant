@@ -307,6 +307,24 @@ export const AI_TOOL_DEFINITIONS: OpenAI.Chat.Completions.ChatCompletionTool[] =
       parameters: { type: 'object', properties: {}, required: [] },
     },
   },
+  {
+    type: 'function',
+    function: {
+      name: 'search_help',
+      description:
+        'Look up how the APP ITSELF works in its built-in help center: where a screen or setting is, how to use a feature (receipt splitting, Inflation Shield, budgets, import, currency, encryption, bots, subscriptions...). Use for "how do I...", "where do I change...", "what does X do", "как мне...", "gdzie zmienić..." questions about the app, NOT for questions about the user\'s own money. Read-only, no account data. Pass `query` as a SHORT keyword query (3-8 words) in the user\'s language naming the feature/action. Answer ONLY from the returned `matches` excerpts: give the steps they describe, name the article (`sectionTitle`) so the user can open it from the card shown under your reply, and never invent screens, buttons or settings that the excerpts do not mention. If `matches` is empty, say plainly that you could not find a help article for that and suggest opening Settings → Help. The help text can lag behind the latest app version — if the excerpt seems to conflict with what the user sees, say so rather than insisting.',
+      parameters: {
+        type: 'object',
+        properties: {
+          query: {
+            type: 'string',
+            description: 'Short keyword query describing the feature or action, in the user\'s language, e.g. "split receipt between friends", "change currency".',
+          },
+        },
+        required: ['query'],
+      },
+    },
+  },
 ];
 
 /**

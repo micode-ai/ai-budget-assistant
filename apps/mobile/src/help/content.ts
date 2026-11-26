@@ -1474,6 +1474,9 @@ Undo only reaches back to the **single most recent** action you confirmed in tha
 - **Q: How does AI know which account I'm asking about?**
   **A:** If you mention an account name in your message (e.g., "expenses in Family"), the AI automatically queries that account. Otherwise, it uses your current default account.
 
+- **Q: Can I ask the AI how the app itself works?**
+  **A:** Yes. Ask in plain words, for example "how do I split a receipt?" or "where do I change my currency?". The AI answers from this help center and shows a card with the articles it used - tap one to open it. If there is no matching article it says so. Help text can lag slightly behind the newest app version.
+
 ---
 
 *See also: Spending Story | Analytics*
@@ -7043,6 +7046,9 @@ iOS, Android, Web
 - **В: Как ИИ понимает, о каком счёте я спрашиваю?**
   **О:** Если вы упоминаете название счёта в сообщении (например, «расходы в Family»), ИИ автоматически обращается к этому счёту. В остальных случаях используется текущий счёт по умолчанию.
 
+- **Q: Можно ли спросить ИИ, как работает само приложение?**
+  **A:** Да. Спросите простыми словами, например «как разделить чек?» или «где сменить валюту?». ИИ отвечает по этому центру помощи и показывает карточку со статьями, на которые опирался, — нажмите, чтобы открыть. Если подходящей статьи нет, он так и скажет. Текст справки может немного отставать от новейшей версии приложения.
+
 ---
 
 *См. также: История расходов | Аналитика*
@@ -12605,6 +12611,9 @@ iOS, Android, Web
 - **П:** Як ШІ розуміє, про який рахунок я питаю?
   **В:** Якщо ви згадуєте назву рахунку в повідомленні (наприклад, «витрати в Family»), ШІ автоматично звертається до цього рахунку. В інших випадках використовується поточний рахунок за замовчуванням.
 
+- **Q: Чи можна спитати ШІ, як працює сам застосунок?**
+  **A:** Так. Запитайте простими словами, наприклад «як розділити чек?» або «де змінити валюту?». ШІ відповідає за цим центром допомоги й показує картку зі статтями, на які спирався, — натисніть, щоб відкрити. Якщо відповідної статті немає, він так і скаже. Текст довідки може трохи відставати від найновішої версії застосунку.
+
 ---
 
 *Див. також: Історія витрат | Аналітика*
@@ -18115,6 +18124,9 @@ Cofniecie siega tylko do **jednej, najnowszej** akcji, ktora potwierdziles w tej
 - **P: Skad AI wie, o ktore konto pytam?**
   **O:** Jezeli wspomnisz nazwe konta w wiadomosci (np. "wydatki w Family"), AI automatycznie odpyta to konto. W przeciwnym razie uzyje Twojego domyslnego konta.
 
+- **Q: Czy mogę zapytać AI, jak działa sama aplikacja?**
+  **A:** Tak. Zapytaj zwykłymi słowami, np. „jak podzielić paragon?” albo „gdzie zmienić walutę?”. AI odpowiada na podstawie tego centrum pomocy i pokazuje kartę z użytymi artykułami – dotknij, aby otworzyć. Jeśli nie ma pasującego artykułu, powie to wprost. Treść pomocy może nieco odstawać od najnowszej wersji aplikacji.
+
 ---
 
 *Zobacz takze: Historia wydatkow | Analityka*
@@ -23621,6 +23633,9 @@ Rückgängig machen erreicht nur die **letzte** Aktion, die du in dieser Unterha
 - **F: Woher weiss die KI, welches Konto ich meine?**
   **A:** Wenn du einen Kontonamen in deiner Nachricht erwahnst (z.B. "Ausgaben in Family"), fragt die KI automatisch dieses Konto ab. Andernfalls wird dein aktuelles Standardkonto verwendet.
 
+- **Q: Kann ich die KI fragen, wie die App funktioniert?**
+  **A:** Ja. Frage einfach in normalen Worten, z. B. „Wie teile ich einen Beleg?“ oder „Wo ändere ich meine Währung?“. Die KI antwortet anhand dieses Hilfecenters und zeigt eine Karte mit den verwendeten Artikeln – tippe darauf, um sie zu öffnen. Gibt es keinen passenden Artikel, sagt sie das. Der Hilfetext kann der neuesten App-Version leicht hinterherhinken.
+
 ---
 
 *Siehe auch: Ausgabengeschichte | Analysen*
@@ -29102,6 +29117,9 @@ Deshacer solo alcanza la **unica accion mas reciente** que confirmaste en esa co
 - **P: Como sabe la IA sobre que cuenta pregunto?**
   **R:** Si mencionas el nombre de una cuenta en tu mensaje (ej., "gastos en Family"), la IA consulta automaticamente esa cuenta. De lo contrario, usa tu cuenta predeterminada actual.
 
+- **Q: ¿Puedo preguntarle a la IA cómo funciona la app?**
+  **A:** Sí. Pregunta con tus palabras, por ejemplo «¿cómo divido un recibo?» o «¿dónde cambio mi moneda?». La IA responde con este centro de ayuda y muestra una tarjeta con los artículos usados: toca uno para abrirlo. Si no hay un artículo adecuado, lo dice. El texto de ayuda puede ir algo por detrás de la última versión de la app.
+
 ---
 
 *Ver tambien: Historia de gastos | Analisis*
@@ -34572,6 +34590,9 @@ L'annulation ne remonte qu'a la **seule action la plus recente** que vous avez c
 - **Q : Comment l'IA sait-elle de quel compte je parle ?**
   **R :** Si vous mentionnez un nom de compte dans votre message (ex., "depenses dans Family"), l'IA interroge automatiquement ce compte. Sinon, votre compte par defaut est utilise.
 
+- **Q: Puis-je demander à l'IA comment fonctionne l'application ?**
+  **A:** Oui. Posez la question simplement, par exemple « comment diviser un reçu ? » ou « où changer ma devise ? ». L'IA répond à partir de ce centre d'aide et affiche une carte avec les articles utilisés : touchez-en un pour l'ouvrir. S'il n'y a pas d'article correspondant, elle le dit. L'aide peut avoir un léger retard sur la dernière version de l'application.
+
 ---
 
 *Voir aussi : Histoire des depenses | Analyses*
@@ -40040,6 +40061,9 @@ iOS, Android, Web
 - **П: Як ІІ разумее, пра які рахунак я пытаюся?**
   **А:** Калі вы згадваеце назву рахунку ў паведамленні (напрыклад, «выдаткі ў Family»), ІІ аўтаматычна звяртаецца да гэтага рахунку. У астатніх выпадках выкарыстоўваецца бягучы рахунак па змаўчанні.
 
+- **Q: Ці можна спытаць ШІ, як працуе само прыкладанне?**
+  **A:** Так. Спытайце простымі словамі, напрыклад «як падзяліць чэк?» або «дзе змяніць валюту?». ШІ адказвае паводле гэтага цэнтра дапамогі і паказвае картку з артыкуламі, на якія абапіраўся, — націсніце, каб адкрыць. Калі патрэбнага артыкула няма, ён так і скажа. Тэкст даведкі можа крыху адставаць ад найноўшай версіі прыкладання.
+
 ---
 
 *Гл. таксама: Гісторыя выдаткаў | Аналітыка*
@@ -45471,6 +45495,9 @@ Ongedaan maken reikt alleen terug tot de **enige, meest recente** actie die je i
 
 - **V: Hoe weet de AI welk account ik bedoel?**
   **A:** Als je een accountnaam in je bericht vermeldt (bijv. "uitgaven in Familie"), bevraagt de AI dat account automatisch. Anders gebruikt het je huidige standaardaccount.
+
+- **Q: Kan ik de AI vragen hoe de app zelf werkt?**
+  **A:** Ja. Vraag het in gewone woorden, bijvoorbeeld „hoe splits ik een bon?” of „waar wijzig ik mijn valuta?”. De AI antwoordt op basis van dit helpcentrum en toont een kaart met de gebruikte artikelen – tik erop om te openen. Is er geen passend artikel, dan zegt de AI dat. De helptekst kan iets achterlopen op de nieuwste appversie.
 
 ---
 
@@ -51045,6 +51072,9 @@ A anulação só chega à **última** ação que confirmou nessa conversa, e ape
 
 - **P: Como é que a IA sabe sobre que conta estou a perguntar?**
   **R:** Se mencionar o nome de uma conta na mensagem (por exemplo, «despesas em Família»), a IA consulta automaticamente essa conta. Caso contrário, usa a sua conta predefinida atual.
+
+- **Q: Posso perguntar à IA como funciona a própria aplicação?**
+  **A:** Sim. Pergunte por palavras simples, por exemplo «como divido um recibo?» ou «onde altero a minha moeda?». A IA responde com base neste centro de ajuda e mostra um cartão com os artigos usados — toque num para o abrir. Se não houver artigo correspondente, di-lo. O texto de ajuda pode estar ligeiramente atrasado face à versão mais recente da aplicação.
 
 ---
 
@@ -56630,6 +56660,9 @@ Desfazer só alcança a **última** ação que você confirmou naquela conversa,
 
 - **P: Como a IA sabe sobre qual conta estou perguntando?**
   **R:** Se você mencionar o nome de uma conta na mensagem (por exemplo, “despesas em Família”), a IA consulta essa conta automaticamente. Caso contrário, usa sua conta padrão atual.
+
+- **Q: Posso perguntar à IA como o próprio app funciona?**
+  **A:** Sim. Pergunte com palavras simples, por exemplo "como divido um recibo?" ou "onde altero minha moeda?". A IA responde com base nesta central de ajuda e mostra um cartão com os artigos usados — toque em um para abri-lo. Se não houver artigo correspondente, ela avisa. O texto de ajuda pode ficar um pouco atrás da versão mais recente do app.
 
 ---
 

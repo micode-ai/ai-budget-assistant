@@ -4802,6 +4802,9 @@ Ongedaan maken reikt alleen terug tot de **enige, meest recente** actie die je i
 - **V: Hoe weet de AI welk account ik bedoel?**
   **A:** Als je een accountnaam in je bericht vermeldt (bijv. "uitgaven in Familie"), bevraagt de AI dat account automatisch. Anders gebruikt het je huidige standaardaccount.
 
+- **Q: Kan ik de AI vragen hoe de app zelf werkt?**
+  **A:** Ja. Vraag het in gewone woorden, bijvoorbeeld „hoe splits ik een bon?” of „waar wijzig ik mijn valuta?”. De AI antwoordt op basis van dit helpcentrum en toont een kaart met de gebruikte artikelen – tik erop om te openen. Is er geen passend artikel, dan zegt de AI dat. De helptekst kan iets achterlopen op de nieuwste appversie.
+
 ---
 
 *Zie ook: [Uitgavenverhaal](./08-spending-story.md) | [Analyse](./06-analytics.md)*

@@ -4807,6 +4807,9 @@ Deshacer solo alcanza la **unica accion mas reciente** que confirmaste en esa co
 - **P: Como sabe la IA sobre que cuenta pregunto?**
   **R:** Si mencionas el nombre de una cuenta en tu mensaje (ej., "gastos en Family"), la IA consulta automaticamente esa cuenta. De lo contrario, usa tu cuenta predeterminada actual.
 
+- **Q: ¿Puedo preguntarle a la IA cómo funciona la app?**
+  **A:** Sí. Pregunta con tus palabras, por ejemplo «¿cómo divido un recibo?» o «¿dónde cambio mi moneda?». La IA responde con este centro de ayuda y muestra una tarjeta con los artículos usados: toca uno para abrirlo. Si no hay un artículo adecuado, lo dice. El texto de ayuda puede ir algo por detrás de la última versión de la app.
+
 ---
 
 *Ver tambien: [Historia de gastos](./08-spending-story.md) | [Analisis](./06-analytics.md)*

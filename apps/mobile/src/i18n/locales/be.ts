@@ -476,6 +476,7 @@ export default {
     actionGetCategoryBreakdown: 'Разбіўка па катэгорыях',
     actionAddShoppingList: 'Дададзена ў спіс пакупак',
     actionRemoveShoppingList: 'Выдалена са спісу пакупак',
+    actionHelpSources: 'З цэнтра дапамогі',
     actionShoppingNotFound: 'Не знойдзена: {{names}}',
     actionShoppingSuggestions: 'Прапановы па пакупках',
     shoppingSuggestionsRestock: 'Заканчваецца',

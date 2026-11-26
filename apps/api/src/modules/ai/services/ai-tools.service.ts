@@ -6,14 +6,15 @@ import { AiBudgetToolsService } from './ai-budget-tools.service';
 import { AiDebtGoalToolsService } from './ai-debt-goal-tools.service';
 import { AiShoppingToolsService } from './ai-shopping-tools.service';
 import { AiUndoToolsService } from './ai-undo-tools.service';
+import { AiHelpToolsService } from './ai-help-tools.service';
 import { AI_TOOL_DEFINITIONS, AI_WRITE_ACTION_TYPES } from './ai-tool-schemas';
 import type { ChatActionType, ChatActionResult } from '@budget/shared-types';
 
 /**
  * Thin dispatcher over the AI function-calling tools. The schemas live in
- * ai-tool-schemas.ts and the per-tool logic lives in five domain provider services
+ * ai-tool-schemas.ts and the per-tool logic lives in six domain provider services
  * (ai-expense-tools, ai-budget-tools, ai-debt-goal-tools, ai-shopping-tools,
- * ai-undo-tools) — see tech-debt ai-tools-service-god-file for why this was split.
+ * ai-undo-tools, ai-help-tools) — see tech-debt ai-tools-service-god-file for why this was split.
  * This class's public API (getToolDefinitions/isWriteAction/executeAction/
  * executeWithCache) is unchanged, so chat.service.ts needed no changes.
  */
@@ -28,6 +29,7 @@ export class AiToolsService {
     private readonly aiDebtGoalTools: AiDebtGoalToolsService,
     private readonly aiShoppingTools: AiShoppingToolsService,
     private readonly aiUndoTools: AiUndoToolsService,
+    private readonly aiHelpTools: AiHelpToolsService,
   ) {}
 
   getToolDefinitions(): OpenAI.Chat.Completions.ChatCompletionTool[] {
@@ -102,6 +104,8 @@ export class AiToolsService {
           return await this.aiExpenseTools.executeGetDiscountTotal(data, accountId, baseCurrency);
         case 'undo_last_action':
           return await this.aiUndoTools.executeUndoLastAction(data, accountId);
+        case 'search_help':
+          return await this.aiHelpTools.executeSearchHelp(data);
         default:
           return { actionType, success: false, errorMessage: 'Unknown action type' };
       }

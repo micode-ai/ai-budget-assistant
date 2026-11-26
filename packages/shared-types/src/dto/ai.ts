@@ -50,7 +50,8 @@ export type ChatActionType =
   | 'get_inflation_shield'
   | 'get_deposit_total'
   | 'get_discount_total'
-  | 'undo_last_action';
+  | 'undo_last_action'
+  | 'search_help';
 
 export interface CreateExpenseActionData {
   amount: number;

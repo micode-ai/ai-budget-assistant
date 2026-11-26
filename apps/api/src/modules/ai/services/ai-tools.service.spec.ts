@@ -64,12 +64,13 @@ function buildService(overrides: {
     aiDebtGoalTools as any,
     aiShoppingTools as any,
     aiUndoTools as any,
+    { executeSearchHelp: jest.fn() } as any,
   );
   return { svc, aiExpenseTools, aiBudgetTools, aiDebtGoalTools, aiShoppingTools, aiUndoTools, cacheService };
 }
 
 describe('AiToolsService.getToolDefinitions', () => {
-  it('exposes all 18 tool schemas', () => {
+  it('exposes all 19 tool schemas', () => {
     const { svc } = buildService();
     const names = svc.getToolDefinitions().map((t) => t.function.name);
     expect(names).toEqual([
@@ -92,6 +93,7 @@ describe('AiToolsService.getToolDefinitions', () => {
       'get_deposit_total',
       'get_discount_total',
       'undo_last_action',
+      'search_help',
     ]);
   });
 });
