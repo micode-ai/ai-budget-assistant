@@ -941,6 +941,10 @@ Puxe para baixo em qualquer ponto do Painel para atualizar todos os dados e sinc
 
 *Ver também: [Despesas e receitas](./03-expenses-and-income.md) | [Carteira e câmbio](./10-wallet-and-exchange.md) | [Auditoria de despesas](./19-fat-finder.md) | [Análise](./06-analytics.md)*
 
+## Ocultar valores
+
+Toque no ícone do olho no topo do ecrã inicial para substituir todos os valores por ••••. Toque novamente para os mostrar. A escolha fica guardada neste dispositivo.
+
 ## Despesas e receitas
 URL: https://ai-budget.pl/help/pt/expenses-and-income/
 
@@ -978,6 +982,10 @@ Nas despesas, o menu de toque longo inclui também **Selecionar vários**. Toque
 - Toque em **Cancelar** para sair do modo de seleção múltipla sem fazer alterações
 
 Use o botão flutuante **+** (canto inferior direito) para adicionar uma nova transação.
+
+### Vistas guardadas
+
+Com filtros ou pesquisa ativos, toque em **+ Guardar vista**, dê-lhe um nome e aparece como chip por cima da lista. Toque no chip para a reaplicar; prima longamente para mudar o nome ou eliminar. Os períodos são guardados de forma relativa («este mês»). O plano gratuito guarda 5 vistas, o Pro sem limite. As vistas ficam neste dispositivo.
 
 ## Adicionar uma nova despesa (manual)
 
@@ -2701,6 +2709,8 @@ Interruptores para as preferências de notificação:
 | **Lembrete de registo** | Receba um lembrete se não registar despesas há 3 ou mais dias, e ainda um lembrete no dia seguinte a registar-se na aplicação, se ainda não tiver adicionado nada |
 
 ### Bot do Telegram
+
+**Horas de silêncio:** ative para reter as notificações não urgentes durante a noite (por defeito 22:00–08:00, no seu fuso horário). Chegam quando a janela termina; os alertas de segurança chegam sempre de imediato.
 
 Associe a sua conta do Telegram para receber notificações e gerir despesas através do bot do Telegram. Consulte [Bot do Telegram](./22-telegram-bot.md) para mais detalhes.
 

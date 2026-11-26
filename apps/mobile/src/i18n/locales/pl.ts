@@ -2706,6 +2706,14 @@ export default {
     tapToViewDetails: 'Dotknij, aby zobaczyć szczegóły',
     allMonth: 'Cały miesiąc',
   },
+  savedViews: {
+    title: 'Zapisane widoki',
+    save: 'Zapisz widok',
+    namePlaceholder: 'Nazwa, np. Restauracje',
+    rename: 'Zmień nazwę',
+    delete: 'Usuń',
+    limitFree: 'Plan darmowy pozwala na 5 zapisanych widoków. Usuń jeden lub przejdź na Pro.',
+  },
   scenarioSimulator: {
     title: 'Symulator scenariuszy',
     subtitle: 'Dostosuj wydatki i dochody, aby zobaczyć zmiany oszczędności',

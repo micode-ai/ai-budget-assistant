@@ -36,6 +36,10 @@ En los gastos, el menu tambien incluye **Seleccionar varios**. Tocalo para activ
 
 Usa el boton flotante **+** (esquina inferior derecha) para agregar una nueva transaccion.
 
+### Vistas guardadas
+
+Con filtros o búsqueda activos, toca **+ Guardar vista**, ponle nombre y aparecerá como chip sobre la lista. Toca el chip para reaplicarla; mantén pulsado para renombrar o eliminar. Los periodos se guardan de forma relativa («este mes»). El plan gratuito guarda 5 vistas, Pro sin límite. Las vistas se guardan en este dispositivo.
+
 ## Agregar un nuevo gasto (Manual)
 
 ![Formulario de nuevo gasto](../img/expense-3.jpg)

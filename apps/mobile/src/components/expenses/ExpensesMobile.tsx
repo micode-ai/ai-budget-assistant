@@ -20,6 +20,8 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import { TransactionActionSheet } from '@/components/TransactionActionSheet';
 import { ExpenseListItem } from '@/components/expenses/ExpenseListItem';
 import { IncomeListItem } from '@/components/expenses/IncomeListItem';
+import { SavedViewsBar } from '@/components/expenses/SavedViewsBar';
+import { captureView } from '@/features/expenses/savedViews';
 import { ExpenseFilterBar } from '@/components/expenses/ExpenseFilterBar';
 import { BulkTagPickerSheet } from '@/components/BulkTagPickerSheet';
 import { BulkChildPickerSheet } from '@/components/children/BulkChildPickerSheet';
@@ -73,6 +75,8 @@ export function ExpensesMobile() {
     clearSearch,
     toggleSearch,
     switchTab,
+    savedViewState,
+    applySavedView,
     multiSelect,
     expenses,
     incomes,
@@ -247,6 +251,8 @@ export function ExpensesMobile() {
       {activeTab === 'income' && (
         <UncategorizedBanner entityType="income" onPress={() => router.push('/income/categorize')} />
       )}
+
+      <SavedViewsBar state={savedViewState} snapshot={captureView(savedViewState)} onApply={applySavedView} />
 
       {/* Period chips + category/merchant filters + month navigator */}
       <ExpenseFilterBar

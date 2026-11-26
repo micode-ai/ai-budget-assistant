@@ -36,6 +36,10 @@ For expenses, the long-press menu also includes **Select multiple**. Tap it to t
 
 Use the floating **+** button (bottom-right) to add a new transaction.
 
+### Saved views
+
+When you have filters or a search active, tap **+ Save view**, name it and it appears as a chip above the list. Tap a chip to reapply it; long-press to rename or delete. Periods are saved relative ("this month"). The free plan keeps 5 views, Pro keeps unlimited. Views are stored on this device.
+
 ## Adding a New Expense (Manual)
 
 ![New expense form](../img/expense-3.jpg)

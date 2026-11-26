@@ -36,6 +36,10 @@ Nas despesas, o menu de toque longo inclui também **Selecionar vários**. Toque
 
 Use o botão flutuante **+** (canto inferior direito) para adicionar uma nova transação.
 
+### Vistas guardadas
+
+Com filtros ou pesquisa ativos, toque em **+ Guardar vista**, dê-lhe um nome e aparece como chip por cima da lista. Toque no chip para a reaplicar; prima longamente para mudar o nome ou eliminar. Os períodos são guardados de forma relativa («este mês»). O plano gratuito guarda 5 vistas, o Pro sem limite. As vistas ficam neste dispositivo.
+
 ## Adicionar uma nova despesa (manual)
 
 ![Formulário de nova despesa](../img/expense-3.jpg)

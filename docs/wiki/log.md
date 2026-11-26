@@ -413,6 +413,8 @@ Newest last within each section.
 - 2026-11-26 · [ABA-845](https://github.com/micode-ai/ai-budget-assistant/issues/883) — added `features/recently-deleted.md`: list + restore endpoints and a 30-day purge cron, no migration (`updatedAt` = deletion time). Mobile/desktop UI still open.
 - 2026-11-26 · [ABA-846](https://github.com/micode-ai/ai-budget-assistant/issues/884) — quiet hours: typed pushes held in `held_pushes` inside the user window and released by a 10-minute cron; untyped security pushes exempt; page `features/notification-quiet-hours.md`.
 - 2026-11-26 · [ABA-847](https://github.com/micode-ai/ai-budget-assistant/issues/885) — privacy mode: mask lives in shared `formatCurrency` (amount-mask.ts), home eye toggle remounts the stack; desktop toggle, hold-to-reveal and non-shared-formatter audit open; page `features/privacy-mode.md`
+- 2026-11-26 · [ABA-848](https://github.com/micode-ai/ai-budget-assistant/issues/886) — saved transaction views: device-local per user+account, relative period, shared bar for phone and desktop; new page `features/saved-transaction-views.md`.
+
 ## Queries
 
 - 2026-11-26 (no issue, query ritual) — GSC 11-16: fr Monefy comparison 143 → 3 is one page dropped from a zero-click query trial on 2026-11-07, not technical; the rest of `blog/fr` grew. Pages: `features/marketing-site.md`.

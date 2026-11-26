@@ -36,6 +36,10 @@ Voor uitgaven bevat het lang-indrukkenmenu ook **Meerdere selecteren**. Tik erop
 
 Gebruik de zwevende **+**-knop (rechtsonder) om een nieuwe transactie toe te voegen.
 
+### Opgeslagen weergaven
+
+Tik bij actieve filters of zoekopdracht op **+ Weergave opslaan**, geef een naam en hij verschijnt als chip boven de lijst. Tik op de chip om hem toe te passen; lang indrukken om te hernoemen of te verwijderen. Periodes worden relatief opgeslagen (“deze maand”). Gratis: 5 weergaven, Pro onbeperkt. Weergaven staan op dit apparaat.
+
 ## Een nieuwe uitgave toevoegen (handmatig)
 
 ![Formulier nieuwe uitgave](../img/expense-3.jpg)

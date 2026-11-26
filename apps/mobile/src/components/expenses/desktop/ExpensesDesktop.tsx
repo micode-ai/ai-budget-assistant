@@ -19,6 +19,8 @@ import { FACET_RAIL_MIN_WIDTH } from '@/components/webLayout.constants';
 import { BulkActionBar } from '@/components/BulkActionBar';
 import { SummaryStrip } from './SummaryStrip';
 import { TransactionTable } from './TransactionTable';
+import { SavedViewsBar } from '../SavedViewsBar';
+import { captureView, type SavedView, type ScreenFilterState } from '@/features/expenses/savedViews';
 import { FacetRail, FacetRailTrigger, type KindFacet, type PeriodFacet } from './FacetRail';
 import { RowContextMenu } from './RowContextMenu';
 import { ExpensesDesktopDialogs } from './ExpensesDesktopDialogs';
@@ -361,6 +363,21 @@ export function ExpensesDesktop() {
     handlePeriodChange('all');
   };
 
+  // Saved views: the desktop snapshot is its multi-select facets + kind + period.
+  const savedViewState: ScreenFilterState = {
+    kind,
+    dateRange: period,
+    searchQuery,
+    categoryIds: active.categoryId,
+    merchants: active.merchant,
+  };
+  const applySavedView = (v: SavedView) => {
+    setKind(v.kind);
+    setActive({ categoryId: v.categoryIds, accountId: [], merchant: v.merchants });
+    if (v.period) handlePeriodChange(v.period);
+    handleSearchChange(v.query);
+  };
+
   // "How many facet GROUPS currently narrow the view" — not a raw count of
   // selected values, so picking 3 categories still reads as one active
   // filter. Counted whenever a group is away from its neutral/"everything"
@@ -503,6 +520,8 @@ export function ExpensesDesktop() {
           )}
         </View>
       </View>
+
+      <SavedViewsBar state={savedViewState} snapshot={captureView(savedViewState)} onApply={applySavedView} />
 
       {collapsed && dropdownOpen && <FacetRail layout="row" {...facetRailProps} />}
 

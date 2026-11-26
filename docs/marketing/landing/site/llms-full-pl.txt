@@ -4400,6 +4400,10 @@ Przeciagnij w dol w dowolnym miejscu na Pulpicie, aby odswiezyc wszystkie dane i
 
 *Zobacz takze: [Wydatki i przychody](./03-expenses-and-income.md) | [Portfel i wymiana walut](./10-wallet-and-exchange.md) | [Tropiciel wydatkow](./19-fat-finder.md) | [Analizy](./06-analytics.md)*
 
+## Ukrywanie kwot
+
+Dotknij ikony oka u góry ekranu głównego, aby zastąpić wszystkie kwoty znakami ••••. Dotknij ponownie, aby je pokazać. Wybór jest zapamiętywany na tym urządzeniu.
+
 ## Wydatki i przychody
 URL: https://ai-budget.pl/help/pl/expenses-and-income/
 
@@ -4437,6 +4441,10 @@ W przypadku wydatkow menu zawiera dodatkowo **Zaznacz wiele**. Dotknij, aby wlac
 - Dotknij **Anuluj**, aby wyjsc z trybu wielokrotnego wyboru bez zmian
 
 Uzyj plywajacego przycisku **+** (prawy dolny rog), aby dodac nowa transakcje.
+
+### Zapisane widoki
+
+Gdy aktywne są filtry lub wyszukiwanie, dotknij **+ Zapisz widok**, nadaj nazwę, a pojawi się jako chip nad listą. Dotknij chipa, by zastosować widok; przytrzymaj, by zmienić nazwę lub usunąć. Okresy są zapisywane względnie („ten miesiąc”). Plan darmowy zapisuje 5 widoków, Pro bez limitu. Widoki są przechowywane na tym urządzeniu.
 
 ## Dodawanie nowego wydatku (recznie)
 
@@ -6135,6 +6143,8 @@ Przelaczniki dla preferencji powiadomien:
 | **Przypomnienie o śledzeniu** | Powiadomienie, gdy nie rejestrowałeś wydatków przez 3+ dni, oraz jedno przypomnienie dzień po rejestracji, jeśli jeszcze niczego nie dodałeś |
 
 ### Bot Telegram
+
+**Godziny ciszy:** włącz, aby wstrzymać niepilne powiadomienia na noc (domyślnie 22:00–08:00, w Twojej strefie czasowej). Dotrą po zakończeniu okna; alerty bezpieczeństwa zawsze przychodzą od razu.
 
 Polacz swoje konto Telegram, aby otrzymywac powiadomienia i zarzadzac wydatkami za pomoca bota Telegram. Zobacz [Bot Telegram](./22-telegram-bot.md), aby uzyskac szczegoly.
 

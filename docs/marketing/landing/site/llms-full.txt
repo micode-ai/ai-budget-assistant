@@ -3713,6 +3713,10 @@ Pull down anywhere on the Dashboard to refresh all data and sync with the server
 
 *See also: [Expenses & Income](./03-expenses-and-income.md) | [Wallet & Exchange](./10-wallet-and-exchange.md) | [Fat Finder](./19-fat-finder.md) | [Analytics](./06-analytics.md)*
 
+## Hide amounts
+
+Tap the eye icon at the top of the home screen to replace every amount with ••••. Tap it again to show them. The choice is remembered on this device.
+
 ## Expenses & Income
 URL: https://ai-budget.pl/help/en/expenses-and-income/
 
@@ -3750,6 +3754,10 @@ For expenses, the long-press menu also includes **Select multiple**. Tap it to t
 - Tap **Cancel** to leave multi-select mode without making changes
 
 Use the floating **+** button (bottom-right) to add a new transaction.
+
+### Saved views
+
+When you have filters or a search active, tap **+ Save view**, name it and it appears as a chip above the list. Tap a chip to reapply it; long-press to rename or delete. Periods are saved relative ("this month"). The free plan keeps 5 views, Pro keeps unlimited. Views are stored on this device.
 
 ## Adding a New Expense (Manual)
 
@@ -5473,6 +5481,8 @@ Toggle switches for notification preferences:
 | **Tracking Reminder** | Get a nudge if you haven't logged any expenses for 3+ days, plus one reminder the day after you sign up if you haven't added anything yet |
 
 ### Telegram Bot
+
+**Quiet hours:** switch on to hold non-urgent notifications overnight (default 22:00–08:00, in your time zone). They arrive when the window ends; security alerts always arrive immediately.
 
 Link your Telegram account to receive notifications and manage expenses via the Telegram bot. See [Telegram Bot](./22-telegram-bot.md) for details.
 

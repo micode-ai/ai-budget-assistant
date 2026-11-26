@@ -3723,6 +3723,10 @@ Trek ergens op het Dashboard omlaag om alle gegevens te vernieuwen en met de ser
 
 *Zie ook: [Uitgaven & Inkomsten](./03-expenses-and-income.md) | [Portemonnee & Wissel](./10-wallet-and-exchange.md) | [Fat Finder](./19-fat-finder.md) | [Analyse](./06-analytics.md)*
 
+## Bedragen verbergen
+
+Tik bovenaan het startscherm op het oogpictogram om alle bedragen te vervangen door ••••. Tik nogmaals om ze weer te tonen. De keuze wordt op dit apparaat onthouden.
+
 ## Uitgaven & Inkomsten
 URL: https://ai-budget.pl/help/nl/expenses-and-income/
 
@@ -3760,6 +3764,10 @@ Voor uitgaven bevat het lang-indrukkenmenu ook **Meerdere selecteren**. Tik erop
 - Tik op **Annuleren** om de multiselectiemodus te verlaten zonder wijzigingen aan te brengen
 
 Gebruik de zwevende **+**-knop (rechtsonder) om een nieuwe transactie toe te voegen.
+
+### Opgeslagen weergaven
+
+Tik bij actieve filters of zoekopdracht op **+ Weergave opslaan**, geef een naam en hij verschijnt als chip boven de lijst. Tik op de chip om hem toe te passen; lang indrukken om te hernoemen of te verwijderen. Periodes worden relatief opgeslagen (“deze maand”). Gratis: 5 weergaven, Pro onbeperkt. Weergaven staan op dit apparaat.
 
 ## Een nieuwe uitgave toevoegen (handmatig)
 
@@ -5467,6 +5475,8 @@ Schakelaars voor meldingsvoorkeuren:
 | **Trackingherinnering** | Melding als je 3+ dagen geen uitgaven hebt geregistreerd, plus één herinnering de dag na je aanmelding als je nog niets hebt toegevoegd |
 
 ### Telegram-bot
+
+**Stille uren:** schakel in om niet-urgente meldingen 's nachts vast te houden (standaard 22:00–08:00, in jouw tijdzone). Ze komen binnen na afloop van het venster; beveiligingsmeldingen komen altijd direct.
 
 Koppel je Telegram-account om meldingen te ontvangen en uitgaven te beheren via de Telegram-bot. Zie [Telegram-bot](./22-telegram-bot.md) voor details.
 

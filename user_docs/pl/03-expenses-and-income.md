@@ -36,6 +36,10 @@ W przypadku wydatkow menu zawiera dodatkowo **Zaznacz wiele**. Dotknij, aby wlac
 
 Uzyj plywajacego przycisku **+** (prawy dolny rog), aby dodac nowa transakcje.
 
+### Zapisane widoki
+
+Gdy aktywne są filtry lub wyszukiwanie, dotknij **+ Zapisz widok**, nadaj nazwę, a pojawi się jako chip nad listą. Dotknij chipa, by zastosować widok; przytrzymaj, by zmienić nazwę lub usunąć. Okresy są zapisywane względnie („ten miesiąc”). Plan darmowy zapisuje 5 widoków, Pro bez limitu. Widoki są przechowywane na tym urządzeniu.
+
 ## Dodawanie nowego wydatku (recznie)
 
 ![Formularz nowego wydatku](../img/expense-3.jpg)

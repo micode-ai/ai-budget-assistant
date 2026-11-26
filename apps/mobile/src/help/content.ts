@@ -399,6 +399,10 @@ For expenses, the long-press menu also includes **Select multiple**. Tap it to t
 
 Use the floating **+** button (bottom-right) to add a new transaction.
 
+### Saved views
+
+When you have filters or a search active, tap **+ Save view**, name it and it appears as a chip above the list. Tap a chip to reapply it; long-press to rename or delete. Periods are saved relative ("this month"). The free plan keeps 5 views, Pro keeps unlimited. Views are stored on this device.
+
 ## Adding a New Expense (Manual)
 
 ![New expense form]({{IMG:expense-3.jpg}})
@@ -5993,6 +5997,10 @@ iOS, Android, Web
 
 Используйте плавающую кнопку **+** (внизу справа), чтобы добавить новую транзакцию.
 
+### Сохранённые виды
+
+Когда включены фильтры или поиск, нажмите **+ Сохранить вид**, задайте название — он появится чипом над списком. Нажмите чип, чтобы применить; долгое нажатие — переименовать или удалить. Период сохраняется относительно («этот месяц»). В бесплатном тарифе 5 видов, в Pro без ограничений. Виды хранятся на этом устройстве.
+
 ## Добавление нового расхода (ручной ввод)
 
 ![Форма нового расхода]({{IMG:expense-3.jpg}})
@@ -11564,6 +11572,10 @@ iOS, Android, Web
 
 Використовуйте плаваючу кнопку **+** (внизу справа), щоб додати нову транзакцію.
 
+### Збережені види
+
+Коли ввімкнені фільтри або пошук, натисніть **+ Зберегти вигляд**, дайте назву — він з’явиться чипом над списком. Натисніть чип, щоб застосувати; довге натискання — перейменувати або видалити. Період зберігається відносно («цей місяць»). У безкоштовному тарифі 5 видів, у Pro без обмежень. Види зберігаються на цьому пристрої.
+
 ## Додавання нової витрати (ручне введення)
 
 ![Форма нової витрати]({{IMG:expense-3.jpg}})
@@ -17083,6 +17095,10 @@ W przypadku wydatkow menu zawiera dodatkowo **Zaznacz wiele**. Dotknij, aby wlac
 
 Uzyj plywajacego przycisku **+** (prawy dolny rog), aby dodac nowa transakcje.
 
+### Zapisane widoki
+
+Gdy aktywne są filtry lub wyszukiwanie, dotknij **+ Zapisz widok**, nadaj nazwę, a pojawi się jako chip nad listą. Dotknij chipa, by zastosować widok; przytrzymaj, by zmienić nazwę lub usunąć. Okresy są zapisywane względnie („ten miesiąc”). Plan darmowy zapisuje 5 widoków, Pro bez limitu. Widoki są przechowywane na tym urządzeniu.
+
 ## Dodawanie nowego wydatku (recznie)
 
 ![Formularz nowego wydatku]({{IMG:expense-3.jpg}})
@@ -22598,6 +22614,10 @@ Bei Ausgaben enthalt das Menu zusatzlich **Mehrere auswahlen**. Tippe darauf, um
 
 Verwende die schwebende **+**-Schaltflache (unten rechts), um eine neue Transaktion hinzuzufugen.
 
+### Gespeicherte Ansichten
+
+Bei aktiven Filtern oder aktiver Suche tippe auf **+ Ansicht speichern**, vergib einen Namen, und sie erscheint als Chip über der Liste. Tippe auf den Chip, um sie anzuwenden; lange drücken zum Umbenennen oder Löschen. Zeiträume werden relativ gespeichert („dieser Monat“). Der kostenlose Tarif speichert 5 Ansichten, Pro unbegrenzt. Die Ansichten liegen auf diesem Gerät.
+
 ## Neue Ausgabe hinzufugen (Manuell)
 
 ![Neues Ausgabenformular]({{IMG:expense-3.jpg}})
@@ -28088,6 +28108,10 @@ En los gastos, el menu tambien incluye **Seleccionar varios**. Tocalo para activ
 
 Usa el boton flotante **+** (esquina inferior derecha) para agregar una nueva transaccion.
 
+### Vistas guardadas
+
+Con filtros o búsqueda activos, toca **+ Guardar vista**, ponle nombre y aparecerá como chip sobre la lista. Toca el chip para reaplicarla; mantén pulsado para renombrar o eliminar. Los periodos se guardan de forma relativa («este mes»). El plan gratuito guarda 5 vistas, Pro sin límite. Las vistas se guardan en este dispositivo.
+
 ## Agregar un nuevo gasto (Manual)
 
 ![Formulario de nuevo gasto]({{IMG:expense-3.jpg}})
@@ -33567,6 +33591,10 @@ Pour les depenses, le menu inclut aussi **Selectionner plusieurs**. Touchez-le p
 
 Utilisez le bouton flottant **+** (en bas a droite) pour ajouter une nouvelle transaction.
 
+### Vues enregistrées
+
+Quand des filtres ou une recherche sont actifs, touchez **+ Enregistrer la vue**, nommez-la : elle apparaît en puce au-dessus de la liste. Touchez la puce pour la réappliquer ; appui long pour renommer ou supprimer. Les périodes sont enregistrées en relatif (« ce mois-ci »). Le forfait gratuit garde 5 vues, Pro sans limite. Les vues sont stockées sur cet appareil.
+
 ## Ajouter une nouvelle depense (Saisie manuelle)
 
 ![Formulaire de nouvelle depense]({{IMG:expense-3.jpg}})
@@ -39044,6 +39072,10 @@ iOS, Android, Web
 
 Выкарыстоўвайце плаваючую кнопку **+** (унізе справа), каб дадаць новую транзакцыю.
 
+### Захаваныя віды
+
+Калі ўключаны фільтры або пошук, націсніце **+ Захаваць выгляд**, дайце назву — ён з’явіцца чыпам над спісам. Націсніце чып, каб ужыць; доўгае націсканне — перайменаваць або выдаліць. Перыяд захоўваецца адносна («гэты месяц»). У бясплатным тарыфе 5 відаў, у Pro без абмежаванняў. Віды захоўваюцца на гэтай прыладзе.
+
 ## Даданне новага выдатку (ручны ўвод)
 
 ![Форма новага выдатку]({{IMG:expense-3.jpg}})
@@ -44484,6 +44516,10 @@ Voor uitgaven bevat het lang-indrukkenmenu ook **Meerdere selecteren**. Tik erop
 - Tik op **Annuleren** om de multiselectiemodus te verlaten zonder wijzigingen aan te brengen
 
 Gebruik de zwevende **+**-knop (rechtsonder) om een nieuwe transactie toe te voegen.
+
+### Opgeslagen weergaven
+
+Tik bij actieve filters of zoekopdracht op **+ Weergave opslaan**, geef een naam en hij verschijnt als chip boven de lijst. Tik op de chip om hem toe te passen; lang indrukken om te hernoemen of te verwijderen. Periodes worden relatief opgeslagen (“deze maand”). Gratis: 5 weergaven, Pro onbeperkt. Weergaven staan op dit apparaat.
 
 ## Een nieuwe uitgave toevoegen (handmatig)
 
@@ -50051,6 +50087,10 @@ Nas despesas, o menu de toque longo inclui também **Selecionar vários**. Toque
 - Toque em **Cancelar** para sair do modo de seleção múltipla sem fazer alterações
 
 Use o botão flutuante **+** (canto inferior direito) para adicionar uma nova transação.
+
+### Vistas guardadas
+
+Com filtros ou pesquisa ativos, toque em **+ Guardar vista**, dê-lhe um nome e aparece como chip por cima da lista. Toque no chip para a reaplicar; prima longamente para mudar o nome ou eliminar. Os períodos são guardados de forma relativa («este mês»). O plano gratuito guarda 5 vistas, o Pro sem limite. As vistas ficam neste dispositivo.
 
 ## Adicionar uma nova despesa (manual)
 
@@ -55645,6 +55685,10 @@ Nas despesas, o menu de toque longo também inclui **Selecionar vários**. Toque
 - Toque em **Cancelar** para sair do modo de seleção múltipla sem fazer alterações
 
 Use o botão flutuante **+** (canto inferior direito) para adicionar uma nova transação.
+
+### Visões salvas
+
+Com filtros ou busca ativos, toque em **+ Salvar visão**, dê um nome e ela aparece como chip acima da lista. Toque no chip para reaplicar; segure para renomear ou excluir. Os períodos são salvos de forma relativa (“este mês”). O plano gratuito guarda 5 visões, o Pro sem limite. As visões ficam neste dispositivo.
 
 ## Adicionando uma nova despesa (manual)
 

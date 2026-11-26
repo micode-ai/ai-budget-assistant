@@ -2694,6 +2694,14 @@ export default {
     tapToViewDetails: 'Appuyez pour voir les détails',
     allMonth: 'Tout le mois',
   },
+  savedViews: {
+    title: 'Vues enregistrées',
+    save: 'Enregistrer la vue',
+    namePlaceholder: 'Nom, p. ex. Restaurants',
+    rename: 'Renommer',
+    delete: 'Supprimer',
+    limitFree: 'Le forfait gratuit permet 5 vues enregistrées. Supprimez-en une ou passez à Pro.',
+  },
   scenarioSimulator: {
     title: 'Simulateur de scénarios',
     subtitle: 'Ajustez dépenses et revenus pour voir l\'évolution de vos économies',

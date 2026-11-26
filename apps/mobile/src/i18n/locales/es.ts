@@ -2694,6 +2694,14 @@ export default {
     tapToViewDetails: 'Toca para ver detalles',
     allMonth: 'Todo el mes',
   },
+  savedViews: {
+    title: 'Vistas guardadas',
+    save: 'Guardar vista',
+    namePlaceholder: 'Nombre, p. ej. Restaurantes',
+    rename: 'Renombrar',
+    delete: 'Eliminar',
+    limitFree: 'El plan gratuito permite 5 vistas guardadas. Elimina una o pásate a Pro.',
+  },
   scenarioSimulator: {
     title: 'Simulador de escenarios',
     subtitle: 'Ajusta gastos e ingresos para ver cómo cambian tus ahorros',

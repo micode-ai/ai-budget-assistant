@@ -36,6 +36,10 @@ Bei Ausgaben enthalt das Menu zusatzlich **Mehrere auswahlen**. Tippe darauf, um
 
 Verwende die schwebende **+**-Schaltflache (unten rechts), um eine neue Transaktion hinzuzufugen.
 
+### Gespeicherte Ansichten
+
+Bei aktiven Filtern oder aktiver Suche tippe auf **+ Ansicht speichern**, vergib einen Namen, und sie erscheint als Chip über der Liste. Tippe auf den Chip, um sie anzuwenden; lange drücken zum Umbenennen oder Löschen. Zeiträume werden relativ gespeichert („dieser Monat“). Der kostenlose Tarif speichert 5 Ansichten, Pro unbegrenzt. Die Ansichten liegen auf diesem Gerät.
+
 ## Neue Ausgabe hinzufugen (Manuell)
 
 ![Neues Ausgabenformular](../img/expense-3.jpg)

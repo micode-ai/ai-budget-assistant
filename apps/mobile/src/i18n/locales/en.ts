@@ -2701,6 +2701,14 @@ export default {
     tapToViewDetails: 'Tap to view details',
     allMonth: 'Entire Month',
   },
+  savedViews: {
+    title: 'Saved views',
+    save: 'Save view',
+    namePlaceholder: 'View name, e.g. Restaurants',
+    rename: 'Rename',
+    delete: 'Delete',
+    limitFree: 'Free plan allows 5 saved views. Delete one or upgrade to Pro.',
+  },
   scenarioSimulator: {
     title: 'Scenario Simulator',
     subtitle: 'Adjust spending & income to see how savings change',

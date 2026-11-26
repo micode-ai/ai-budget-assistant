@@ -4288,6 +4288,10 @@ Ziehe auf der Ubersicht nach unten, um alle Daten zu aktualisieren und mit dem S
 
 *Siehe auch: [Ausgaben & Einkommen](./03-expenses-and-income.md) | [Geldborse & Umtausch](./10-wallet-and-exchange.md) | [Fat Finder](./19-fat-finder.md) | [Analysen](./06-analytics.md)*
 
+## Beträge ausblenden
+
+Tippe oben auf dem Startbildschirm auf das Augen-Symbol, um alle Beträge durch •••• zu ersetzen. Tippe erneut, um sie wieder anzuzeigen. Die Einstellung bleibt auf diesem Gerät gespeichert.
+
 ## Ausgaben & Einkommen
 URL: https://ai-budget.pl/help/de/expenses-and-income/
 
@@ -4325,6 +4329,10 @@ Bei Ausgaben enthalt das Menu zusatzlich **Mehrere auswahlen**. Tippe darauf, um
 - Tippe auf **Abbrechen**, um den Mehrfachauswahlmodus ohne Anderungen zu verlassen
 
 Verwende die schwebende **+**-Schaltflache (unten rechts), um eine neue Transaktion hinzuzufugen.
+
+### Gespeicherte Ansichten
+
+Bei aktiven Filtern oder aktiver Suche tippe auf **+ Ansicht speichern**, vergib einen Namen, und sie erscheint als Chip über der Liste. Tippe auf den Chip, um sie anzuwenden; lange drücken zum Umbenennen oder Löschen. Zeiträume werden relativ gespeichert („dieser Monat“). Der kostenlose Tarif speichert 5 Ansichten, Pro unbegrenzt. Die Ansichten liegen auf diesem Gerät.
 
 ## Neue Ausgabe hinzufugen (Manuell)
 
@@ -6020,6 +6028,8 @@ Umschaltflachen fur Benachrichtigungspraferenzen:
 | **Tracking-Erinnerung** | Hinweis, wenn du seit 3+ Tagen keine Ausgaben erfasst hast, sowie eine Erinnerung am Tag nach der Registrierung, falls du noch nichts eingetragen hast |
 
 ### Telegram-Bot
+
+**Ruhezeiten:** Aktiviere sie, um nicht dringende Benachrichtigungen über Nacht zurückzuhalten (Standard 22:00–08:00, in deiner Zeitzone). Sie kommen nach Ende des Zeitfensters; Sicherheitswarnungen immer sofort.
 
 Verknupfe dein Telegram-Konto, um Benachrichtigungen zu erhalten und Ausgaben uber den Telegram-Bot zu verwalten. Siehe [Telegram-Bot](./22-telegram-bot.md) fur Details.
 

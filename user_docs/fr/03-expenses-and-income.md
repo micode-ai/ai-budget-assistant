@@ -36,6 +36,10 @@ Pour les depenses, le menu inclut aussi **Selectionner plusieurs**. Touchez-le p
 
 Utilisez le bouton flottant **+** (en bas a droite) pour ajouter une nouvelle transaction.
 
+### Vues enregistrées
+
+Quand des filtres ou une recherche sont actifs, touchez **+ Enregistrer la vue**, nommez-la : elle apparaît en puce au-dessus de la liste. Touchez la puce pour la réappliquer ; appui long pour renommer ou supprimer. Les périodes sont enregistrées en relatif (« ce mois-ci »). Le forfait gratuit garde 5 vues, Pro sans limite. Les vues sont stockées sur cet appareil.
+
 ## Ajouter une nouvelle depense (Saisie manuelle)
 
 ![Formulaire de nouvelle depense](../img/expense-3.jpg)

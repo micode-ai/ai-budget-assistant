@@ -36,6 +36,10 @@ Nas despesas, o menu de toque longo também inclui **Selecionar vários**. Toque
 
 Use o botão flutuante **+** (canto inferior direito) para adicionar uma nova transação.
 
+### Visões salvas
+
+Com filtros ou busca ativos, toque em **+ Salvar visão**, dê um nome e ela aparece como chip acima da lista. Toque no chip para reaplicar; segure para renomear ou excluir. Os períodos são salvos de forma relativa (“este mês”). O plano gratuito guarda 5 visões, o Pro sem limite. As visões ficam neste dispositivo.
+
 ## Adicionando uma nova despesa (manual)
 
 ![Formulário de nova despesa](../img/expense-3.jpg)

@@ -2694,6 +2694,14 @@ export default {
     tapToViewDetails: 'Tik om details te bekijken',
     allMonth: 'Hele maand',
   },
+  savedViews: {
+    title: 'Opgeslagen weergaven',
+    save: 'Weergave opslaan',
+    namePlaceholder: 'Naam, bv. Restaurants',
+    rename: 'Hernoemen',
+    delete: 'Verwijderen',
+    limitFree: 'Het gratis abonnement staat 5 opgeslagen weergaven toe. Verwijder er een of upgrade naar Pro.',
+  },
   scenarioSimulator: {
     title: 'Scenariosimulator',
     subtitle: 'Pas uitgaven en inkomsten aan om te zien hoe besparingen veranderen',

@@ -130,6 +130,7 @@ the section you came for — it states what must not break and why. A missing se
   screen sits in, and the one width gate
 - [expense-location-and-map](features/expense-location-and-map.md) — geocoding, the pin picker, and
   a map with no native map module
+- [saved-transaction-views](features/saved-transaction-views.md) — one-tap saved filter combinations on the transactions screen
 - [desktop-transactions-screen](features/desktop-transactions-screen.md) — the reference screen of
   the desktop design language
 - [desktop-dashboard](features/desktop-dashboard.md) — the home tab's rail layout, its readiness

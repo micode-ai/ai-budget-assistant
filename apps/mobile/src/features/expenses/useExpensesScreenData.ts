@@ -8,6 +8,7 @@ import { useExpenseStore } from '@/stores/expenseStore';
 import { useIncomeStore } from '@/stores/incomeStore';
 import { hydrateTransactions } from '@/stores/hydrateTransactions';
 import { useAccountStore } from '@/stores/accountStore';
+import type { SavedView, ScreenFilterState } from '@/features/expenses/savedViews';
 import { useAuthStore } from '@/stores/authStore';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { useExchangeRateStore } from '@/stores/exchangeRateStore';
@@ -160,6 +161,28 @@ export function useExpensesScreenData() {
     setIncomeFilters({ searchQuery: '' });
   };
 
+  // Saved transaction views (phone): snapshot of what the screen filters by now,
+  // and the inverse. Desktop builds its own pair from its multi-select facets.
+  const savedViewState: ScreenFilterState = {
+    kind: activeTab === 'income' ? 'income' : 'expenses',
+    dateRange: (activeTab === 'income' ? incomeFilters : expenseFilters).dateRange,
+    searchQuery: (activeTab === 'income' ? incomeFilters : expenseFilters).searchQuery,
+    categoryIds: (activeTab === 'income' ? incomeFilters : expenseFilters).categoryId
+      ? [(activeTab === 'income' ? incomeFilters : expenseFilters).categoryId as string]
+      : [],
+    merchants: activeTab === 'income' ? [] : expenseFilters.merchants,
+  };
+
+  const applySavedView = (v: SavedView) => {
+    setActiveTab(v.kind === 'income' ? 'income' : 'expenses');
+    multiSelect.exitMultiSelect();
+    setSearchQuery(v.query);
+    setSearchVisible(v.query !== '');
+    const common = { searchQuery: v.query, categoryId: v.categoryIds[0] ?? null, ...(v.period ? { dateRange: v.period } : {}) };
+    setExpenseFilters({ ...common, merchants: v.merchants });
+    setIncomeFilters(common);
+  };
+
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     try {
@@ -282,6 +305,8 @@ export function useExpensesScreenData() {
     clearSearch,
     toggleSearch,
     switchTab,
+    savedViewState,
+    applySavedView,
     multiSelect,
     expenses,
     incomes,

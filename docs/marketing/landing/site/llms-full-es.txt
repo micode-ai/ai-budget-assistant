@@ -3728,6 +3728,10 @@ Desliza hacia abajo en cualquier parte del Panel para actualizar todos los datos
 
 *Ver tambien: [Gastos e Ingresos](./03-expenses-and-income.md) | [Billetera y Cambio](./10-wallet-and-exchange.md) | [Fat Finder](./19-fat-finder.md) | [Analiticas](./06-analytics.md)*
 
+## Ocultar importes
+
+Toca el icono del ojo en la parte superior de la pantalla de inicio para sustituir todos los importes por ••••. Vuelve a tocarlo para mostrarlos. La elección se recuerda en este dispositivo.
+
 ## Gastos e Ingresos
 URL: https://ai-budget.pl/help/es/expenses-and-income/
 
@@ -3765,6 +3769,10 @@ En los gastos, el menu tambien incluye **Seleccionar varios**. Tocalo para activ
 - Toca **Cancelar** para salir del modo de seleccion multiple sin hacer cambios
 
 Usa el boton flotante **+** (esquina inferior derecha) para agregar una nueva transaccion.
+
+### Vistas guardadas
+
+Con filtros o búsqueda activos, toca **+ Guardar vista**, ponle nombre y aparecerá como chip sobre la lista. Toca el chip para reaplicarla; mantén pulsado para renombrar o eliminar. Los periodos se guardan de forma relativa («este mes»). El plan gratuito guarda 5 vistas, Pro sin límite. Las vistas se guardan en este dispositivo.
 
 ## Agregar un nuevo gasto (Manual)
 
@@ -5461,6 +5469,8 @@ Interruptores para las preferencias de notificaciones:
 | **Recordatorio de seguimiento** | Aviso si no has registrado gastos en 3+ días, y un recordatorio el día después de registrarte si aún no has añadido nada |
 
 ### Bot de Telegram
+
+**Horas de silencio:** actívalas para retener las notificaciones no urgentes por la noche (por defecto 22:00–08:00, en tu zona horaria). Llegan al terminar la franja; las alertas de seguridad siempre llegan al instante.
 
 Vincula tu cuenta de Telegram para recibir notificaciones y gestionar gastos a traves del bot de Telegram. Consulta [Bot de Telegram](./22-telegram-bot.md) para mas detalles.
 

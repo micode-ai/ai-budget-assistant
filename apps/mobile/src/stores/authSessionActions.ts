@@ -35,6 +35,7 @@ import { useChildStore } from './childStore';
 import { petsCache } from '@/features/pets/petsCache';
 import { vehiclesCache } from '@/features/vehicles/vehiclesCache';
 import { useScenarioStore } from './scenarioStore';
+import { useSavedViewStore } from './savedViewStore';
 import * as investmentRepo from '../db/investmentRepository';
 import { clearAllChildData } from '../db/childRepository';
 import { registerRestoreCredential, attemptRestoreSession } from '../features/auth/restoreCredential';
@@ -653,6 +654,7 @@ export async function logoutAction(set: AuthStoreSet): Promise<void> {
     // Reset stores
     useAccountStore.getState().reset();
     useScenarioStore.getState().reset();
+    useSavedViewStore.getState().reset();
     useBudgetStore.getState().reset();
     // Categories are account-scoped and this store had no reset until ABA-520:
     // the previous user's category names survived sign-out in memory.

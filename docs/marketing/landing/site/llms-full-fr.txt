@@ -3708,6 +3708,10 @@ Tirez vers le bas n'importe ou sur le Tableau de bord pour actualiser toutes les
 
 *Voir aussi : [Depenses et revenus](./03-expenses-and-income.md) | [Portefeuille et change](./10-wallet-and-exchange.md) | [Fat Finder](./19-fat-finder.md) | [Analyses](./06-analytics.md)*
 
+## Masquer les montants
+
+Touchez l'icône en forme d'œil en haut de l'écran d'accueil pour remplacer tous les montants par ••••. Touchez-la de nouveau pour les réafficher. Le choix est conservé sur cet appareil.
+
 ## Depenses et revenus
 URL: https://ai-budget.pl/help/fr/expenses-and-income/
 
@@ -3745,6 +3749,10 @@ Pour les depenses, le menu inclut aussi **Selectionner plusieurs**. Touchez-le p
 - Touchez **Annuler** pour quitter le mode selection multiple sans modification
 
 Utilisez le bouton flottant **+** (en bas a droite) pour ajouter une nouvelle transaction.
+
+### Vues enregistrées
+
+Quand des filtres ou une recherche sont actifs, touchez **+ Enregistrer la vue**, nommez-la : elle apparaît en puce au-dessus de la liste. Touchez la puce pour la réappliquer ; appui long pour renommer ou supprimer. Les périodes sont enregistrées en relatif (« ce mois-ci »). Le forfait gratuit garde 5 vues, Pro sans limite. Les vues sont stockées sur cet appareil.
 
 ## Ajouter une nouvelle depense (Saisie manuelle)
 
@@ -5439,6 +5447,8 @@ Interrupteurs a bascule pour les preferences de notifications :
 | **Rappel de suivi** | Notification si vous n'avez pas enregistré de dépenses depuis 3+ jours, plus un rappel le lendemain de votre inscription si vous n'avez encore rien ajouté |
 
 ### Bot Telegram
+
+**Heures calmes :** activez-les pour retenir les notifications non urgentes la nuit (par défaut 22:00–08:00, dans votre fuseau horaire). Elles arrivent à la fin de la plage ; les alertes de sécurité arrivent toujours immédiatement.
 
 Liez votre compte Telegram pour recevoir des notifications et gerer vos depenses via le bot Telegram. Voir [Bot Telegram](./22-telegram-bot.md) pour plus de details.
 

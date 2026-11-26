@@ -2694,6 +2694,14 @@ export default {
     tapToViewDetails: 'Tippen für Details',
     allMonth: 'Ganzer Monat',
   },
+  savedViews: {
+    title: 'Gespeicherte Ansichten',
+    save: 'Ansicht speichern',
+    namePlaceholder: 'Name, z. B. Restaurants',
+    rename: 'Umbenennen',
+    delete: 'Löschen',
+    limitFree: 'Der kostenlose Tarif erlaubt 5 gespeicherte Ansichten. Lösche eine oder wechsle zu Pro.',
+  },
   scenarioSimulator: {
     title: 'Szenario-Simulator',
     subtitle: 'Passen Sie Ausgaben & Einnahmen an, um Ersparnisveränderungen zu sehen',
