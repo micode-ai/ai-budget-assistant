@@ -45,11 +45,6 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 - Ask the assistant how the app works — it answers from the help center with links to the
   articles (ABA-844).
 
-**Cars**
-
-- Service reminder by kilometres: a service interval, an estimated current mileage, and a reset
-  when you log a service expense (ABA-838).
-
 **Import**
 
 - Statements from German banks: Sparkasse, DKB, ING, N26, Commerzbank, comdirect and more
@@ -61,8 +56,9 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 **Behind the scenes**
 
-- Server groundwork for a 30-day "Recently deleted" list with restore (ABA-845) and for linking
-  a refund to its original expense so category spend nets out (ABA-854); weekly reporting and
+- Server groundwork for a 30-day "Recently deleted" list with restore (ABA-845), for linking
+  a refund to its original expense so category spend nets out (ABA-854) and for a service
+  reminder by kilometres (ABA-838); weekly reporting and
   wiki housekeeping (ABA-840, ABA-841, ABA-842).
 
 ---
