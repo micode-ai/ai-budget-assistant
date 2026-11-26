@@ -410,6 +410,7 @@ Newest last within each section.
 - 2026-11-26 · [ABA-842](https://github.com/micode-ai/ai-budget-assistant/issues/880) — weekly GSC report lists the visible queries of its top 15 pages; RU New Year article retitled around the Christmas-budget query it ranks for, with a late-start section. Pages: `features/marketing-site.md`.
 - 2026-11-26 · [ABA-843](https://github.com/micode-ai/ai-budget-assistant/issues/881) — German bank imports (Sparkasse, Volksbank, DKB, ING-de, comdirect, Commerzbank, N26) with pending rows skipped and detection from metadata lines; German-only bank-export blog pages; de-DE Play copy. Pages: `features/bank-statement-import.md`, `features/marketing-site.md`.
 - 2026-11-26 · [ABA-844](https://github.com/micode-ai/ai-budget-assistant/issues/882) — chat answers how-the-app-works questions via read tool `search_help` over a generated help index; pages: chat-architecture, help-content-pipeline.
+- 2026-11-26 · [ABA-845](https://github.com/micode-ai/ai-budget-assistant/issues/883) — added `features/recently-deleted.md`: list + restore endpoints and a 30-day purge cron, no migration (`updatedAt` = deletion time). Mobile/desktop UI still open.
 
 ## Queries
 

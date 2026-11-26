@@ -60,6 +60,7 @@ import { CommunityPriceModule } from './modules/community-prices/community-price
 import { GroupsModule } from './modules/groups/groups.module';
 import { ReceiptSplitModule } from './modules/receipt-split/receipt-split.module';
 import { RestoreCredentialsModule } from './modules/restore-credentials/restore-credentials.module';
+import { RecentlyDeletedModule } from './modules/recently-deleted/recently-deleted.module';
 import { TelemetryModule } from './modules/telemetry/telemetry.module';
 import { VoiceDigestModule } from './modules/voice-digest/voice-digest.module';
 import { InboundMailModule } from './modules/inbound-mail/inbound-mail.module';
@@ -161,6 +162,7 @@ import { McpModule } from './modules/mcp/mcp.module';
     // risk here — see receipt-split.controller.ts's doc comment).
     ReceiptSplitModule,
     RestoreCredentialsModule,
+    RecentlyDeletedModule,
     TelemetryModule,
     GroupsModule,
     OAuthModule,

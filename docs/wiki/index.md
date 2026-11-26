@@ -107,6 +107,7 @@ the section you came for — it states what must not break and why. A missing se
 - [chat-spending-questions](features/chat-spending-questions.md) — split-aware category answers and
   line-item product search
 - [chat-undo-last-action](features/chat-undo-last-action.md) — revert the most recent confirmed
+- [recently-deleted](features/recently-deleted.md) — list and restore soft-deleted transactions for 30 days
   chat or bot write
 - [deposit-and-discount-totals](features/deposit-and-discount-totals.md) — deposit and discount
   answers from the columns, in chat and on the Analytics tab
