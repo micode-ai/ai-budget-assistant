@@ -164,3 +164,7 @@ Pull down anywhere on the Dashboard to refresh all data and sync with the server
 ---
 
 *See also: [Expenses & Income](./03-expenses-and-income.md) | [Wallet & Exchange](./10-wallet-and-exchange.md) | [Fat Finder](./19-fat-finder.md) | [Analytics](./06-analytics.md)*
+
+## Hide amounts
+
+Tap the eye icon at the top of the home screen to replace every amount with ••••. Tap it again to show them. The choice is remembered on this device.

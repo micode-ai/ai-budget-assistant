@@ -17,7 +17,7 @@ import { LineChart } from 'react-native-gifted-charts';
 import { Dimensions } from 'react-native';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { useAuthStore } from '@/stores/authStore';
-import { formatCurrency } from '@budget/shared-utils';
+import { formatCurrency, withAmountsRevealed } from '@budget/shared-utils';
 import {
   useScenarioProjection,
   type ExtraIncome,
@@ -93,7 +93,7 @@ export default function ScenarioSimulatorScreen() {
   const handleShare = useCallback(async () => {
     const savingsDiff = projection.monthlySavingsDiff;
     const horizonTotal = projection.horizonTotals[horizon];
-    const message = [
+    const message = withAmountsRevealed(() => [
       `📊 ${t('scenarioSimulator.projectionTitle')}`,
       '',
       `${t('scenarioSimulator.currentSavings')}: ${fmtSigned(projection.currentMonthlySavings)}${t('scenarioSimulator.perMonth')}`,
@@ -101,7 +101,7 @@ export default function ScenarioSimulatorScreen() {
       `Δ ${savingsDiff >= 0 ? '+' : '−'}${fmt(savingsDiff)}${t('scenarioSimulator.perMonth')}`,
       '',
       `${horizon} ${t('scenarioSimulator.months')}: ${fmtSigned(horizonTotal.scenario)} (${savingsDiff >= 0 ? '+' : '−'}${fmt(horizonTotal.diff)})`,
-    ].join('\n');
+    ].join('\n'));
 
     try {
       await Share.share({ message });

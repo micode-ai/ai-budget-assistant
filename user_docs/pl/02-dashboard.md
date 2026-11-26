@@ -164,3 +164,7 @@ Przeciagnij w dol w dowolnym miejscu na Pulpicie, aby odswiezyc wszystkie dane i
 ---
 
 *Zobacz takze: [Wydatki i przychody](./03-expenses-and-income.md) | [Portfel i wymiana walut](./10-wallet-and-exchange.md) | [Tropiciel wydatkow](./19-fat-finder.md) | [Analizy](./06-analytics.md)*
+
+## Ukrywanie kwot
+
+Dotknij ikony oka u góry ekranu głównego, aby zastąpić wszystkie kwoty znakami ••••. Dotknij ponownie, aby je pokazać. Wybór jest zapamiętywany na tym urządzeniu.

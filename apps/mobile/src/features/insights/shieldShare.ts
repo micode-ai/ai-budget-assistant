@@ -1,4 +1,5 @@
 import type { InflationShieldResponse } from '@budget/shared-types';
+import { withAmountsRevealed } from '@budget/shared-utils';
 
 export interface ShieldShareLine {
   emoji: string;
@@ -23,7 +24,12 @@ interface BuildOpts {
 // but we defensively slice).
 const MAX_ITEMS = 3;
 
-function buildLines(data: InflationShieldResponse, { money, t }: BuildOpts): ShieldShareLine[] {
+// Share output leaves the screen, so privacy mode (an on-screen mask) must not reach it.
+function buildLines(data: InflationShieldResponse, opts: BuildOpts): ShieldShareLine[] {
+  return withAmountsRevealed(() => buildLinesRevealed(data, opts));
+}
+
+function buildLinesRevealed(data: InflationShieldResponse, { money, t }: BuildOpts): ShieldShareLine[] {
   const lines: ShieldShareLine[] = [];
   if (data.savedSoFar > 0) {
     lines.push({ emoji: '💰', label: t('inflationShield.shareSaved', { value: money(data.savedSoFar) }), value: '' });

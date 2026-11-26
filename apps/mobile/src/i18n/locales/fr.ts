@@ -3390,6 +3390,10 @@ export default {
       },
     },
   },
+  privacy: {
+    hide: 'Masquer les montants',
+    show: 'Afficher les montants',
+  },
   wrapped: {
     title: "Rétro de l'année",
     notEnoughData: 'Pas encore assez de données',

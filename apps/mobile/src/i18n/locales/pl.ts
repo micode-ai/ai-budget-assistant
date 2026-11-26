@@ -3402,6 +3402,10 @@ export default {
       },
     },
   },
+  privacy: {
+    hide: 'Ukryj kwoty',
+    show: 'Pokaż kwoty',
+  },
   wrapped: {
     title: 'Podsumowanie roku',
     notEnoughData: 'Wciąż za mało danych',

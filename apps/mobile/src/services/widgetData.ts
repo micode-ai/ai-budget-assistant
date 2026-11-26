@@ -1,7 +1,7 @@
 import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
 import type { Currency } from '@budget/shared-types';
-import { formatCurrency } from '@budget/shared-utils';
+import { formatCurrency, withAmountsRevealed } from '@budget/shared-utils';
 import { filterConsumption } from '@/utils/consumption';
 
 /**
@@ -122,7 +122,8 @@ export class WidgetDataService {
     const maxWeekValue = Math.max(...weeklyExpenses.map((w) => w.amount), 1);
     const labels = getWidgetLabels();
 
-    const data: WidgetLargeData = {
+    // The widget lives outside the app screen: privacy mode masks the in-app view only.
+    const data: WidgetLargeData = withAmountsRevealed(() => ({
       todaySpent: formatCurrency(todayExpenses, currencyCode),
       todayDelta,
       deltaDirection,
@@ -149,7 +150,7 @@ export class WidgetDataService {
         amount: formatCurrency(c.amount, currencyCode),
         icon: c.icon || '📦',
       })),
-    };
+    }));
 
     // Store serialized data for widget consumption
     await SecureStore.setItemAsync(WIDGET_DATA_KEY, JSON.stringify(data));

@@ -3390,6 +3390,10 @@ export default {
       },
     },
   },
+  privacy: {
+    hide: 'Ocultar importes',
+    show: 'Mostrar importes',
+  },
   wrapped: {
     title: 'Resumen del año',
     notEnoughData: 'Todavía no hay suficientes datos',

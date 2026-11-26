@@ -3397,6 +3397,10 @@ export default {
       },
     },
   },
+  privacy: {
+    hide: 'Hide amounts',
+    show: 'Show amounts',
+  },
   wrapped: {
     title: 'Wrapped',
     notEnoughData: 'Not enough data yet',

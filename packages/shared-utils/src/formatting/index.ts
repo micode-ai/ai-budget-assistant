@@ -1,5 +1,6 @@
 import type { Currency } from '@budget/shared-types';
 import { financialMonth } from './financial-month';
+import { AMOUNT_MASK, isAmountMasked } from './amount-mask';
 
 // Currency formatting
 const currencyConfig: Record<Currency, { symbol: string; locale: string; position: 'before' | 'after' }> = {
@@ -20,7 +21,10 @@ const currencyConfig: Record<Currency, { symbol: string; locale: string; positio
   BRL: { symbol: 'R$', locale: 'pt-BR', position: 'before' },
 };
 
+export * from './amount-mask';
+
 export function formatCurrency(amount: number, currency: Currency | string): string {
+  if (isAmountMasked()) return AMOUNT_MASK;
   const config = currencyConfig[currency as Currency];
   if (!config) {
     // Fallback for currencies not in currencyConfig (e.g., CHF, CAD, JPY)
@@ -39,6 +43,7 @@ export function formatCurrency(amount: number, currency: Currency | string): str
 }
 
 export function formatCompactCurrency(amount: number, currency: Currency | string): string {
+  if (isAmountMasked()) return AMOUNT_MASK;
   const config = currencyConfig[currency as Currency];
   const symbol = config?.symbol ?? currency;
   const before = config ? config.position === 'before' : false;

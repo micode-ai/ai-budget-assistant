@@ -3385,6 +3385,10 @@ export default {
       },
     },
   },
+  privacy: {
+    hide: 'Ocultar valores',
+    show: 'Mostrar valores',
+  },
   wrapped: {
     title: 'Resumo do ano',
     notEnoughData: 'Ainda não há dados suficientes',

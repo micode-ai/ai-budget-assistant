@@ -164,3 +164,7 @@ Desliza hacia abajo en cualquier parte del Panel para actualizar todos los datos
 ---
 
 *Ver tambien: [Gastos e Ingresos](./03-expenses-and-income.md) | [Billetera y Cambio](./10-wallet-and-exchange.md) | [Fat Finder](./19-fat-finder.md) | [Analiticas](./06-analytics.md)*
+
+## Ocultar importes
+
+Toca el icono del ojo en la parte superior de la pantalla de inicio para sustituir todos los importes por ••••. Vuelve a tocarlo para mostrarlos. La elección se recuerda en este dispositivo.

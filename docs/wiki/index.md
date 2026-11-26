@@ -296,6 +296,7 @@ the section you came for — it states what must not break and why. A missing se
 - [mobile-native-constraints](features/mobile-native-constraints.md) — `MainActivity`, no keyboard native module, Metro crawl scoping, bottom sheets and the nav bar
 - [shopping-mode](features/shopping-mode.md) — Store Arrival and Shopping Mode, kept off `development` by the foreground-service declaration
 - [bot-shared-i18n](features/bot-shared-i18n.md) — one dictionary and `createBotT` for the copy all three bots share
+- [privacy-mode](features/privacy-mode.md) — one-tap masking of amounts through the shared formatter
 
 ## Health
 

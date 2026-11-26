@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '@budget/shared-utils';
 import type { SafeToSpendResponse } from '@budget/shared-types';
 import { useStyles, type Theme } from '@/theme';
+import { usePrivacyStore } from '@/stores/privacyStore';
 import { AccountSwitcher, CurrencyPill } from '@/components/AccountSwitcher';
 
 interface HomeHeroHeaderProps {
@@ -26,6 +27,8 @@ export function HomeHeroHeader({
 }: HomeHeroHeaderProps) {
   const { t } = useTranslation();
   const styles = useStyles(createStyles);
+  const privacyMode = usePrivacyStore((s) => s.privacyMode);
+  const togglePrivacy = usePrivacyStore((s) => s.toggle);
 
   return (
     <View style={[styles.heroHeader, !showQuickActions && styles.heroHeaderNoStrip]}>
@@ -33,6 +36,14 @@ export function HomeHeroHeader({
         <AccountSwitcher compact showCurrency={false} />
         <CurrencyPill compact />
         <View style={styles.heroTopSpacer} />
+        <TouchableOpacity
+          onPress={togglePrivacy}
+          style={[styles.settingsButton, styles.bellButton]}
+          accessibilityRole="button"
+          accessibilityLabel={t(privacyMode ? 'privacy.show' : 'privacy.hide')}
+        >
+          <Ionicons name={privacyMode ? 'eye-off-outline' : 'eye-outline'} size={22} color="#FFFFFF" />
+        </TouchableOpacity>
         <TouchableOpacity
           onPress={() => router.push('/alerts' as any)}
           style={[styles.settingsButton, styles.bellButton]}

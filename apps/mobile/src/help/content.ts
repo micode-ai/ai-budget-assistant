@@ -351,6 +351,10 @@ Pull down anywhere on the Dashboard to refresh all data and sync with the server
 ---
 
 *See also: Expenses & Income | Wallet & Exchange | Fat Finder | Analytics*
+
+## Hide amounts
+
+Tap the eye icon at the top of the home screen to replace every amount with ••••. Tap it again to show them. The choice is remembered on this device.
 `,
     },
     {
@@ -5941,6 +5945,10 @@ iOS, Android, Web
 ---
 
 *См. также: Расходы и доходы | Кошелёк и обмен валют | Поиск лишних трат | Аналитика*
+
+## Скрытие сумм
+
+Нажмите на значок глаза вверху главного экрана, чтобы заменить все суммы на ••••. Нажмите ещё раз, чтобы показать их. Выбор запоминается на этом устройстве.
 `,
     },
     {
@@ -11508,6 +11516,10 @@ iOS, Android, Web
 ---
 
 *Див. також: Витрати та доходи | Гаманець та обмін валют | Пошук зайвих витрат | Аналітика*
+
+## Приховування сум
+
+Натисніть значок ока вгорі головного екрана, щоб замінити всі суми на ••••. Натисніть ще раз, щоб показати їх. Вибір запам'ятовується на цьому пристрої.
 `,
     },
     {
@@ -17023,6 +17035,10 @@ Przeciagnij w dol w dowolnym miejscu na Pulpicie, aby odswiezyc wszystkie dane i
 ---
 
 *Zobacz takze: Wydatki i przychody | Portfel i wymiana walut | Tropiciel wydatkow | Analizy*
+
+## Ukrywanie kwot
+
+Dotknij ikony oka u góry ekranu głównego, aby zastąpić wszystkie kwoty znakami ••••. Dotknij ponownie, aby je pokazać. Wybór jest zapamiętywany na tym urządzeniu.
 `,
     },
     {
@@ -22534,6 +22550,10 @@ Ziehe auf der Ubersicht nach unten, um alle Daten zu aktualisieren und mit dem S
 ---
 
 *Siehe auch: Ausgaben & Einkommen | Geldborse & Umtausch | Fat Finder | Analysen*
+
+## Beträge ausblenden
+
+Tippe oben auf dem Startbildschirm auf das Augen-Symbol, um alle Beträge durch •••• zu ersetzen. Tippe erneut, um sie wieder anzuzeigen. Die Einstellung bleibt auf diesem Gerät gespeichert.
 `,
     },
     {
@@ -28020,6 +28040,10 @@ Desliza hacia abajo en cualquier parte del Panel para actualizar todos los datos
 ---
 
 *Ver tambien: Gastos e Ingresos | Billetera y Cambio | Fat Finder | Analiticas*
+
+## Ocultar importes
+
+Toca el icono del ojo en la parte superior de la pantalla de inicio para sustituir todos los importes por ••••. Vuelve a tocarlo para mostrarlos. La elección se recuerda en este dispositivo.
 `,
     },
     {
@@ -33495,6 +33519,10 @@ Tirez vers le bas n'importe ou sur le Tableau de bord pour actualiser toutes les
 ---
 
 *Voir aussi : Depenses et revenus | Portefeuille et change | Fat Finder | Analyses*
+
+## Masquer les montants
+
+Touchez l'icône en forme d'œil en haut de l'écran d'accueil pour remplacer tous les montants par ••••. Touchez-la de nouveau pour les réafficher. Le choix est conservé sur cet appareil.
 `,
     },
     {
@@ -38968,6 +38996,10 @@ iOS, Android, Web
 ---
 
 *Гл. таксама: Выдаткі і даходы | Кашалёк і абмен валют | Пошук лішніх выдаткаў | Аналітыка*
+
+## Схаванне сум
+
+Націсніце на значок вока ўверсе галоўнага экрана, каб замяніць усе сумы на ••••. Націсніце яшчэ раз, каб паказаць іх. Выбар запамінаецца на гэтай прыладзе.
 `,
     },
     {
@@ -44405,6 +44437,10 @@ Trek ergens op het Dashboard omlaag om alle gegevens te vernieuwen en met de ser
 ---
 
 *Zie ook: Uitgaven & Inkomsten | Portemonnee & Wissel | Fat Finder | Analyse*
+
+## Bedragen verbergen
+
+Tik bovenaan het startscherm op het oogpictogram om alle bedragen te vervangen door ••••. Tik nogmaals om ze weer te tonen. De keuze wordt op dit apparaat onthouden.
 `,
     },
     {
@@ -49968,6 +50004,10 @@ Puxe para baixo em qualquer ponto do Painel para atualizar todos os dados e sinc
 ---
 
 *Ver também: Despesas e receitas | Carteira e câmbio | Auditoria de despesas | Análise*
+
+## Ocultar valores
+
+Toque no ícone do olho no topo do ecrã inicial para substituir todos os valores por ••••. Toque novamente para os mostrar. A escolha fica guardada neste dispositivo.
 `,
     },
     {
@@ -55558,6 +55598,10 @@ Puxe para baixo em qualquer ponto do Painel para atualizar todos os dados e sinc
 ---
 
 *Veja também: Despesas e receitas | Carteira e câmbio | Auditoria de despesas | Análises*
+
+## Ocultar valores
+
+Toque no ícone do olho no topo da tela inicial para substituir todos os valores por ••••. Toque novamente para mostrá-los. A escolha fica salva neste dispositivo.
 `,
     },
     {

@@ -164,3 +164,7 @@ Puxe para baixo em qualquer ponto do Painel para atualizar todos os dados e sinc
 ---
 
 *Ver também: [Despesas e receitas](./03-expenses-and-income.md) | [Carteira e câmbio](./10-wallet-and-exchange.md) | [Auditoria de despesas](./19-fat-finder.md) | [Análise](./06-analytics.md)*
+
+## Ocultar valores
+
+Toque no ícone do olho no topo do ecrã inicial para substituir todos os valores por ••••. Toque novamente para os mostrar. A escolha fica guardada neste dispositivo.

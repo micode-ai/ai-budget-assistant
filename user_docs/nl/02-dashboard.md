@@ -164,3 +164,7 @@ Trek ergens op het Dashboard omlaag om alle gegevens te vernieuwen en met de ser
 ---
 
 *Zie ook: [Uitgaven & Inkomsten](./03-expenses-and-income.md) | [Portemonnee & Wissel](./10-wallet-and-exchange.md) | [Fat Finder](./19-fat-finder.md) | [Analyse](./06-analytics.md)*
+
+## Bedragen verbergen
+
+Tik bovenaan het startscherm op het oogpictogram om alle bedragen te vervangen door ••••. Tik nogmaals om ze weer te tonen. De keuze wordt op dit apparaat onthouden.

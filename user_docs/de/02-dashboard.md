@@ -164,3 +164,7 @@ Ziehe auf der Ubersicht nach unten, um alle Daten zu aktualisieren und mit dem S
 ---
 
 *Siehe auch: [Ausgaben & Einkommen](./03-expenses-and-income.md) | [Geldborse & Umtausch](./10-wallet-and-exchange.md) | [Fat Finder](./19-fat-finder.md) | [Analysen](./06-analytics.md)*
+
+## Beträge ausblenden
+
+Tippe oben auf dem Startbildschirm auf das Augen-Symbol, um alle Beträge durch •••• zu ersetzen. Tippe erneut, um sie wieder anzuzeigen. Die Einstellung bleibt auf diesem Gerät gespeichert.

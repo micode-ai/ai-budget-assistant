@@ -3370,6 +3370,10 @@ export default {
       },
     },
   },
+  privacy: {
+    hide: 'Схаваць сумы',
+    show: 'Паказаць сумы',
+  },
   wrapped: {
     title: 'Вынікі году',
     notEnoughData: 'Пакуль недастаткова дадзеных',

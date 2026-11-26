@@ -164,3 +164,7 @@ Tirez vers le bas n'importe ou sur le Tableau de bord pour actualiser toutes les
 ---
 
 *Voir aussi : [Depenses et revenus](./03-expenses-and-income.md) | [Portefeuille et change](./10-wallet-and-exchange.md) | [Fat Finder](./19-fat-finder.md) | [Analyses](./06-analytics.md)*
+
+## Masquer les montants
+
+Touchez l'icône en forme d'œil en haut de l'écran d'accueil pour remplacer tous les montants par ••••. Touchez-la de nouveau pour les réafficher. Le choix est conservé sur cet appareil.

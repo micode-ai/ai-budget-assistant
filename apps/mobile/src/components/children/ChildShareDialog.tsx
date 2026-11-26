@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { ActivityIndicator, Share, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import type { Child, ChildBenefitCoverage, ChildCostSummary } from '@budget/shared-types';
+import { withAmountsRevealed } from '@budget/shared-utils';
 import { SheetDialog } from '@/components/SheetDialog';
 import { buildChildSharePayload } from '@/features/children/childShare';
 import { playLinkFor } from '@/features/share/shareApp';
@@ -36,14 +37,17 @@ export function ChildShareDialog({ visible, onClose, child, summary, coverage, c
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState(false);
 
-  const payload = buildChildSharePayload({
-    year,
-    summary,
-    coverage,
-    currency,
-    name: showName ? child.name : null,
-    t,
-  });
+  const makePayload = () =>
+    buildChildSharePayload({
+      year,
+      summary,
+      coverage,
+      currency,
+      name: showName ? child.name : null,
+      t,
+    });
+  // On-screen preview honours privacy mode; the shared image/text carries real figures.
+  const payload = makePayload();
 
   const close = () => {
     setShowName(false);
@@ -54,10 +58,11 @@ export function ChildShareDialog({ visible, onClose, child, summary, coverage, c
   const onShare = async () => {
     setBusy(true);
     setFailed(false);
+    const sharePayload = withAmountsRevealed(makePayload);
     try {
       let ok = false;
       try {
-        ok = (await cardRef.current?.share(payload)) ?? false;
+        ok = (await cardRef.current?.share(sharePayload)) ?? false;
       } catch {
         ok = false;
       }
@@ -65,8 +70,8 @@ export function ChildShareDialog({ visible, onClose, child, summary, coverage, c
         try {
           await Share.share({
             message: [
-              payload.title,
-              ...payload.lines.map((l) => `${l.emoji} ${l.label}: ${l.value}`),
+              sharePayload.title,
+              ...sharePayload.lines.map((l) => `${l.emoji} ${l.label}: ${l.value}`),
               playLinkFor('share-image', 'child'),
             ].join('\n'),
           });

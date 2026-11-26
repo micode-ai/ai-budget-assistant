@@ -30,7 +30,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useStyles, type Theme } from '@/theme';
-import { formatCurrency, formatFinancialMonth } from '@budget/shared-utils';
+import { formatCurrency, formatFinancialMonth, withAmountsRevealed } from '@budget/shared-utils';
 import { getIntlLocale } from '@/i18n';
 import { useWrapped } from '@/features/insights/useWrapped';
 import { maybeAskForReview } from '@/features/review/maybeAskForReview';
@@ -263,7 +263,7 @@ export default function WrappedScreen() {
     // text-only path — the WebView-canvas + expo-sharing file share is
     // unreliable in a browser context.
     if (Platform.OS !== 'web') {
-      const payload = buildSharePayload();
+      const payload = withAmountsRevealed(buildSharePayload);
       if (payload) {
         try {
           const ok = await shareCardRef.current?.share(payload);
@@ -279,7 +279,7 @@ export default function WrappedScreen() {
       }
     }
     try {
-      await Share.share({ message: buildShareMessage() });
+      await Share.share({ message: withAmountsRevealed(buildShareMessage) });
       void maybeAskForReview();
     } catch {
       // user dismissed / share unavailable — no-op

@@ -3390,6 +3390,10 @@ export default {
       },
     },
   },
+  privacy: {
+    hide: 'Bedragen verbergen',
+    show: 'Bedragen tonen',
+  },
   wrapped: {
     title: 'Jaaroverzicht',
     notEnoughData: 'Nog niet genoeg data',

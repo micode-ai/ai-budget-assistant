@@ -1,5 +1,7 @@
 import { AnalyticsView } from '@/components/analytics/AnalyticsView';
 
+import { PrivacyBoundary } from '@/components/PrivacyBoundary';
+
 export default function AnalyticsScreen() {
-  return <AnalyticsView />;
+  return <PrivacyBoundary><AnalyticsView /></PrivacyBoundary>;
 }

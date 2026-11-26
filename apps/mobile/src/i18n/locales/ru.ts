@@ -3402,6 +3402,10 @@ export default {
       },
     },
   },
+  privacy: {
+    hide: 'Скрыть суммы',
+    show: 'Показать суммы',
+  },
   wrapped: {
     title: 'Итоги года',
     notEnoughData: 'Пока недостаточно данных',

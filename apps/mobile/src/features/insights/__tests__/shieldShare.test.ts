@@ -1,4 +1,5 @@
 import { buildShieldSharePayload, buildShieldShareMessage } from '../shieldShare';
+import { formatCurrency, setAmountMask, AMOUNT_MASK } from '@budget/shared-utils';
 import type { InflationShieldResponse } from '@budget/shared-types';
 
 const DATA: InflationShieldResponse = {
@@ -58,5 +59,19 @@ describe('buildShieldShareMessage', () => {
     expect(msg).toContain('42zł');
     expect(msg).toContain('inflationShield.shareCta');
     expect(msg.split('\n').length).toBeGreaterThan(2);
+  });
+});
+
+describe('privacy mode', () => {
+  afterEach(() => setAmountMask(false));
+
+  it('share payload and text carry real amounts while the on-screen mask is on', () => {
+    setAmountMask(true);
+    const opts = { hideAmounts: false, money: (n: number) => formatCurrency(n, 'PLN'), t };
+    const p = buildShieldSharePayload(DATA, opts)!;
+    expect(p.lines.map((l) => l.label).join(' ')).not.toContain(AMOUNT_MASK);
+    expect(buildShieldShareMessage(DATA, opts)).not.toContain(AMOUNT_MASK);
+    // the mask is restored for the on-screen view
+    expect(formatCurrency(1, 'PLN')).toBe(AMOUNT_MASK);
   });
 });

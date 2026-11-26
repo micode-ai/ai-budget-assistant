@@ -3402,6 +3402,10 @@ export default {
       },
     },
   },
+  privacy: {
+    hide: 'Приховати суми',
+    show: 'Показати суми',
+  },
   wrapped: {
     title: 'Підсумки року',
     notEnoughData: 'Поки що недостатньо даних',

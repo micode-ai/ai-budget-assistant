@@ -3390,6 +3390,10 @@ export default {
       },
     },
   },
+  privacy: {
+    hide: 'Beträge ausblenden',
+    show: 'Beträge anzeigen',
+  },
   wrapped: {
     title: 'Jahresrückblick',
     notEnoughData: 'Noch nicht genug Daten',

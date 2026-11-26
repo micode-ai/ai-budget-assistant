@@ -1,5 +1,7 @@
 import { ExpensesView } from '@/components/expenses/ExpensesView';
 
+import { PrivacyBoundary } from '@/components/PrivacyBoundary';
+
 export default function ExpensesScreen() {
-  return <ExpensesView />;
+  return <PrivacyBoundary><ExpensesView /></PrivacyBoundary>;
 }

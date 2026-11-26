@@ -10,6 +10,7 @@
  */
 
 import * as SecureStore from 'expo-secure-store';
+import { setAmountMask, isAmountMasked, AMOUNT_MASK } from '@budget/shared-utils';
 import { refreshWidgetData } from '../widgetData';
 
 jest.mock('expo-secure-store', () => ({
@@ -118,5 +119,17 @@ describe('refreshWidgetData — split-receivable exclusion', () => {
       expense({ amount: 500, isDebt: true, debtContactName: 'Anna' }),
     ]);
     expect(todayBarValue(payload)).toBe(500);
+  });
+});
+
+describe('privacy mode', () => {
+  afterEach(() => setAmountMask(false));
+
+  it('keeps real figures in the widget payload even while the on-screen mask is on', async () => {
+    setAmountMask(true);
+    const payload = await runAndReadPayload([expense({ amount: 12.5 })]);
+    expect(payload.todaySpent).toBe('$12.50');
+    expect(payload.todaySpent).not.toContain(AMOUNT_MASK);
+    expect(isAmountMasked()).toBe(true);
   });
 });
