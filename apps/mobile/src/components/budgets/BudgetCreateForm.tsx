@@ -25,6 +25,7 @@ import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
 import { CreateCategoryModal } from '@/components/CreateCategoryModal';
 import { BudgetCategoryEditor, type BudgetAllocationRow } from '@/components/BudgetCategoryEditor';
 import { trackAction, trackFailure } from '@/services/telemetry';
+import { ReductionTargetPicker } from '@/components/budgets/ReductionTargetPicker';
 import { resolveBudgetName } from '@/features/budgets/defaultBudgetName';
 
 type BudgetMode = 'overall' | 'byCategory';
@@ -305,6 +306,17 @@ export function BudgetCreateForm({ onDone }: BudgetCreateFormProps) {
                   </TouchableOpacity>
                 </View>
               </View>
+
+              {selectedCategory !== '' && (
+                <ReductionTargetPicker
+                  categoryId={selectedCategory}
+                  currencyCode={currencyCode}
+                  onApply={(v) => {
+                    setAmount(String(v));
+                    setPeriod('monthly');
+                  }}
+                />
+              )}
 
               <CreateCategoryModal
                 visible={showCreateCategory}

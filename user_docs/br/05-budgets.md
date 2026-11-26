@@ -129,6 +129,10 @@ O app monitora seus orçamentos automaticamente e envia notificações:
 - **P: O orçamento acompanha despesas em todas as moedas?**
   **R:** Cada orçamento está vinculado a uma moeda. Só as despesas nessa moeda contam para o orçamento.
 
+## Reduzir uma categoria em uma porcentagem
+
+Ao escolher uma categoria ao criar um orçamento, você pode escolher **10 / 20 / 30% a menos** do que no mês passado, a média de 3 meses ou o mesmo mês do ano passado. O valor é preenchido para você; depois é um orçamento normal.
+
 ---
 
 *Veja também: [Painel](./02-dashboard.md) | [Análises](./06-analytics.md)*

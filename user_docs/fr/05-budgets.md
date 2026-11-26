@@ -129,6 +129,10 @@ L'application surveille automatiquement vos budgets et envoie des notifications 
 - **Q : Le budget suit-il les dépenses dans toutes les devises ?**
   **R :** Chaque budget est lié à une devise. Seules les dépenses dans cette devise sont comptabilisées dans le budget.
 
+## Réduire une catégorie d'un pourcentage
+
+Quand vous choisissez une catégorie en créant un budget, choisissez **10 / 20 / 30 % de moins** que le mois dernier, la moyenne sur 3 mois ou le même mois l'an dernier. Le montant est rempli pour vous ; ensuite, c'est un budget ordinaire.
+
 ---
 
 *Voir aussi : [Tableau de bord](./02-dashboard.md) | [Analyses](./06-analytics.md)*

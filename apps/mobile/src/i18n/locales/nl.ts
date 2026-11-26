@@ -750,6 +750,14 @@ export default {
     userPromptPlaceholder: 'Aanvullende instructies voor AI (optioneel)',
   },
   budgetNew: {
+    reduce: {
+      title: 'Verlaag ten opzichte van je eerdere uitgaven',
+      baseline: { lastMonth: 'Vorige maand', avg3Months: 'Gemiddelde van 3 maanden', lastYearSameMonth: 'Dezelfde maand vorig jaar' },
+      percent: '{{percent}}% minder',
+      baselineIs: 'Basis {{baseline}}',
+      result: 'Basis {{baseline}} → doel {{target}}',
+      noHistory: 'Nog geen uitgaven in deze categorie',
+    },
     name: 'Budgetnaam',
     nameOptional: 'Budgetnaam (optioneel)',
     defaultNames: {

@@ -753,6 +753,14 @@ export default {
     userPromptPlaceholder: 'Additional instructions for AI (optional)',
   },
   budgetNew: {
+    reduce: {
+      title: 'Reduce by a share of your past spending',
+      baseline: { lastMonth: 'Last month', avg3Months: '3-month average', lastYearSameMonth: 'Same month last year' },
+      percent: '{{percent}}% less',
+      baselineIs: 'Baseline {{baseline}}',
+      result: 'Baseline {{baseline}} → target {{target}}',
+      noHistory: 'No spending history for this category yet',
+    },
     name: 'Budget Name',
     nameOptional: 'Budget Name (Optional)',
     defaultNames: {

@@ -750,6 +750,14 @@ export default {
     userPromptPlaceholder: 'Instructions supplémentaires pour l\'IA (facultatif)',
   },
   budgetNew: {
+    reduce: {
+      title: 'Réduire selon vos dépenses passées',
+      baseline: { lastMonth: 'Mois dernier', avg3Months: 'Moyenne sur 3 mois', lastYearSameMonth: 'Même mois l\'an dernier' },
+      percent: '{{percent}} % de moins',
+      baselineIs: 'Base {{baseline}}',
+      result: 'Base {{baseline}} → objectif {{target}}',
+      noHistory: 'Pas encore de dépenses dans cette catégorie',
+    },
     name: 'Nom du budget',
     nameOptional: 'Nom du budget (Facultatif)',
     defaultNames: {

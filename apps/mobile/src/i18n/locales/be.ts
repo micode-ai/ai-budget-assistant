@@ -756,6 +756,14 @@ export default {
     userPromptPlaceholder: 'Дадатковыя інструкцыі для ІІ (неабавязкова)',
   },
   budgetNew: {
+    reduce: {
+      title: 'Паменшыць ад мінулых трат',
+      baseline: { lastMonth: 'Мінулы месяц', avg3Months: 'Сярэдняе за 3 месяцы', lastYearSameMonth: 'Той жа месяц год таму' },
+      percent: 'На {{percent}}% менш',
+      baselineIs: 'База {{baseline}}',
+      result: 'База {{baseline}} → мэта {{target}}',
+      noHistory: 'У гэтай катэгорыі пакуль няма трат',
+    },
     name: 'Назва бюджэту',
     nameOptional: 'Назва бюджэту (неабавязкова)',
     defaultNames: {

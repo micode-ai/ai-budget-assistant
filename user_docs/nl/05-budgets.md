@@ -129,6 +129,10 @@ De app bewaakt je budgetten automatisch en stuurt meldingen:
 - **V: Houdt het budget uitgaven in alle valuta's bij?**
   **A:** Elk budget is gekoppeld aan één valuta. Alleen uitgaven in die valuta tellen mee voor het budget.
 
+## Een categorie met een percentage verlagen
+
+Kies je bij het maken van een budget één categorie, dan kun je **10 / 20 / 30% minder** kiezen dan vorige maand, het gemiddelde van 3 maanden of dezelfde maand vorig jaar. Het bedrag wordt ingevuld; daarna is het een gewoon budget.
+
 ---
 
 *Zie ook: [Dashboard](./02-dashboard.md) | [Analyse](./06-analytics.md)*

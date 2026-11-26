@@ -69,6 +69,8 @@ of 4 374 against an 8 000 budget produced a projected overage of 11 674 where th
 was 1 913. A median was rejected on purpose — it collapses to zero once spending happens on fewer
 than half the elapsed days, silently withdrawing the warning from someone who spends in bursts.
 
+**Reduction-target shortcut.** In the create form (overall mode, one category picked) `ReductionTargetPicker` offers "10/20/30% less" against last month, the 3-month average or the same month last year, and fills the Amount with `applyReduction(baseline, %)`. The baseline is `computeReductionBaseline` in `apps/mobile/src/features/budgets/reductionTarget.ts` — split-aware via `attributeToCategories`, calendar months, current month excluded, deleted/planned skipped. It creates an ordinary single-category budget: no new entity, progress, threshold push and history are the existing ones. Not yet built: home widget, period-end result card, "first met target" achievement.
+
 ## Invariants
 
 **Change a duplicated pair on both sides.** `financial-month.ts`, `budget-projection.ts` and
@@ -142,3 +144,4 @@ over a `budgets` array. The public `useBudgetStore` API is unchanged across its 
 ABA-171 (period util) · ABA-314 (category threshold alerts) · ABA-383 (financial month, wave 1) ·
 ABA-523 (projection) · ABA-529 (split-aware progress) · ABA-537 (store split) · category
 hierarchy roll-up [ABA-696](https://github.com/micode-ai/ai-budget-assistant/issues/729) · optional name [ABA-732](https://github.com/micode-ai/ai-budget-assistant/issues/770).
+- [ABA-850](https://github.com/micode-ai/ai-budget-assistant/issues/888) — reduction-target shortcut in budget creation.

@@ -1017,6 +1017,10 @@ The app automatically monitors your budgets and sends notifications:
 - **Q: Does the budget track expenses in all currencies?**
   **A:** Each budget is tied to one currency. Only expenses in that currency count toward the budget.
 
+## Reduce a category by a percentage
+
+When you pick one category while creating a budget, choose **10 / 20 / 30% less** than last month, the 3-month average, or the same month last year. The Amount is filled for you; it is a regular budget afterwards.
+
 ---
 
 *See also: Dashboard | Analytics*
@@ -6614,6 +6618,10 @@ iOS, Android, Web
 - **В: Отслеживает ли бюджет расходы во всех валютах?**
   **О:** Каждый бюджет привязан к одной валюте. Только расходы в этой валюте учитываются в бюджете.
 
+## Снизить категорию на процент
+
+Когда при создании бюджета выбрана одна категория, можно выбрать **на 10 / 20 / 30% меньше**, чем в прошлом месяце, в среднем за 3 месяца или в том же месяце год назад. Сумма подставится сама; дальше это обычный бюджет.
+
 ---
 
 *См. также: Главная | Аналитика*
@@ -12189,6 +12197,10 @@ iOS, Android, Web
 - **П:** Чи відстежує бюджет витрати у всіх валютах?
   **В:** Кожен бюджет прив'язаний до однієї валюти. Лише витрати в цій валюті враховуються у бюджеті.
 
+## Зменшити категорію на відсоток
+
+Коли під час створення бюджету вибрано одну категорію, можна обрати **на 10 / 20 / 30% менше**, ніж минулого місяця, у середньому за 3 місяці або того ж місяця торік. Суму буде підставлено автоматично; далі це звичайний бюджет.
+
 ---
 
 *Див. також: Головна | Аналітика*
@@ -17712,6 +17724,10 @@ Aplikacja automatycznie monitoruje Twoje budżety i wysyła powiadomienia:
 - **P: Czy budżet śledzi wydatki we wszystkich walutach?**
   **O:** Każdy budżet jest powiązany z jedną walutą. Tylko wydatki w tej walucie są wliczane do budżetu.
 
+## Zmniejsz kategorię o procent
+
+Gdy przy tworzeniu budżetu wybierzesz jedną kategorię, możesz wybrać **o 10 / 20 / 30% mniej** niż w zeszłym miesiącu, średnia z 3 miesięcy lub ten sam miesiąc rok temu. Kwota uzupełni się sama; dalej to zwykły budżet.
+
 ---
 
 *Zobacz także: Pulpit | Analityka*
@@ -23231,6 +23247,10 @@ Die App überwacht automatisch deine Budgets und sendet Benachrichtigungen:
 - **F: Verfolgt das Budget Ausgaben in allen Währungen?**
   **A:** Jedes Budget ist an eine Währung gebunden. Nur Ausgaben in dieser Währung werden auf das Budget angerechnet.
 
+## Eine Kategorie prozentual senken
+
+Wählst du beim Erstellen eines Budgets eine Kategorie, kannst du **10 / 20 / 30 % weniger** als im letzten Monat, im 3-Monats-Durchschnitt oder im gleichen Monat des Vorjahres wählen. Der Betrag wird automatisch eingetragen; danach ist es ein normales Budget.
+
 ---
 
 *Siehe auch: Übersicht | Analysen*
@@ -28725,6 +28745,10 @@ La aplicación monitoriza automáticamente tus presupuestos y envía notificacio
 - **P: ¿El presupuesto rastrea gastos en todas las monedas?**
   **R:** Cada presupuesto está vinculado a una moneda. Solo los gastos en esa moneda cuentan para el presupuesto.
 
+## Reducir una categoría en un porcentaje
+
+Al elegir una categoría al crear un presupuesto, puedes escoger **10 / 20 / 30 % menos** que el mes pasado, la media de 3 meses o el mismo mes del año pasado. El importe se rellena solo; después es un presupuesto normal.
+
 ---
 
 *Ver también: Panel | Análisis*
@@ -34208,6 +34232,10 @@ L'application surveille automatiquement vos budgets et envoie des notifications 
 - **Q : Le budget suit-il les dépenses dans toutes les devises ?**
   **R :** Chaque budget est lié à une devise. Seules les dépenses dans cette devise sont comptabilisées dans le budget.
 
+## Réduire une catégorie d'un pourcentage
+
+Quand vous choisissez une catégorie en créant un budget, choisissez **10 / 20 / 30 % de moins** que le mois dernier, la moyenne sur 3 mois ou le même mois l'an dernier. Le montant est rempli pour vous ; ensuite, c'est un budget ordinaire.
+
 ---
 
 *Voir aussi : Tableau de bord | Analyses*
@@ -39689,6 +39717,10 @@ iOS, Android, Web
 - **П: Ці адсочвае бюджэт выдаткі ва ўсіх валютах?**
   **А:** Кожны бюджэт прывязаны да адной валюты. Толькі выдаткі ў гэтай валюце ўлічваюцца ў бюджэце.
 
+## Паменшыць катэгорыю на працэнт
+
+Калі пры стварэнні бюджэту выбрана адна катэгорыя, можна абраць **на 10 / 20 / 30% менш**, чым у мінулым месяцы, у сярэднім за 3 месяцы або ў тым жа месяцы год таму. Сума падставіцца сама; далей гэта звычайны бюджэт.
+
 ---
 
 *Гл. таксама: Галоўная | Аналітыка*
@@ -45133,6 +45165,10 @@ De app bewaakt je budgetten automatisch en stuurt meldingen:
 
 - **V: Houdt het budget uitgaven in alle valuta's bij?**
   **A:** Elk budget is gekoppeld aan één valuta. Alleen uitgaven in die valuta tellen mee voor het budget.
+
+## Een categorie met een percentage verlagen
+
+Kies je bij het maken van een budget één categorie, dan kun je **10 / 20 / 30% minder** kiezen dan vorige maand, het gemiddelde van 3 maanden of dezelfde maand vorig jaar. Het bedrag wordt ingevuld; daarna is het een gewoon budget.
 
 ---
 
@@ -50705,6 +50741,10 @@ A aplicação monitoriza automaticamente os seus orçamentos e envia notificaç�
 
 - **P: O orçamento acompanha despesas em todas as moedas?**
   **R:** Cada orçamento está associado a uma moeda. Só as despesas nessa moeda contam para o orçamento.
+
+## Reduzir uma categoria numa percentagem
+
+Ao escolher uma categoria ao criar um orçamento, pode escolher **menos 10 / 20 / 30%** do que no mês passado, a média de 3 meses ou o mesmo mês do ano passado. O valor é preenchido por si; depois é um orçamento normal.
 
 ---
 
@@ -56303,6 +56343,10 @@ O app monitora seus orçamentos automaticamente e envia notificações:
 
 - **P: O orçamento acompanha despesas em todas as moedas?**
   **R:** Cada orçamento está vinculado a uma moeda. Só as despesas nessa moeda contam para o orçamento.
+
+## Reduzir uma categoria em uma porcentagem
+
+Ao escolher uma categoria ao criar um orçamento, você pode escolher **10 / 20 / 30% a menos** do que no mês passado, a média de 3 meses ou o mesmo mês do ano passado. O valor é preenchido para você; depois é um orçamento normal.
 
 ---
 

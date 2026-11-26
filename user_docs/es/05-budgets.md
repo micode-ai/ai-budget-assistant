@@ -129,6 +129,10 @@ La aplicación monitoriza automáticamente tus presupuestos y envía notificacio
 - **P: ¿El presupuesto rastrea gastos en todas las monedas?**
   **R:** Cada presupuesto está vinculado a una moneda. Solo los gastos en esa moneda cuentan para el presupuesto.
 
+## Reducir una categoría en un porcentaje
+
+Al elegir una categoría al crear un presupuesto, puedes escoger **10 / 20 / 30 % menos** que el mes pasado, la media de 3 meses o el mismo mes del año pasado. El importe se rellena solo; después es un presupuesto normal.
+
 ---
 
 *Ver también: [Panel](./02-dashboard.md) | [Análisis](./06-analytics.md)*

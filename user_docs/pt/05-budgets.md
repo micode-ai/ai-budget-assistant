@@ -129,6 +129,10 @@ A aplicação monitoriza automaticamente os seus orçamentos e envia notificaç�
 - **P: O orçamento acompanha despesas em todas as moedas?**
   **R:** Cada orçamento está associado a uma moeda. Só as despesas nessa moeda contam para o orçamento.
 
+## Reduzir uma categoria numa percentagem
+
+Ao escolher uma categoria ao criar um orçamento, pode escolher **menos 10 / 20 / 30%** do que no mês passado, a média de 3 meses ou o mesmo mês do ano passado. O valor é preenchido por si; depois é um orçamento normal.
+
 ---
 
 *Ver também: [Painel](./02-dashboard.md) | [Análise](./06-analytics.md)*

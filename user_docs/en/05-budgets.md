@@ -129,6 +129,10 @@ The app automatically monitors your budgets and sends notifications:
 - **Q: Does the budget track expenses in all currencies?**
   **A:** Each budget is tied to one currency. Only expenses in that currency count toward the budget.
 
+## Reduce a category by a percentage
+
+When you pick one category while creating a budget, choose **10 / 20 / 30% less** than last month, the 3-month average, or the same month last year. The Amount is filled for you; it is a regular budget afterwards.
+
 ---
 
 *See also: [Dashboard](./02-dashboard.md) | [Analytics](./06-analytics.md)*

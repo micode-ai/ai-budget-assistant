@@ -750,6 +750,14 @@ export default {
     userPromptPlaceholder: 'Zusätzliche Anweisungen für KI (optional)',
   },
   budgetNew: {
+    reduce: {
+      title: 'Um einen Anteil deiner bisherigen Ausgaben senken',
+      baseline: { lastMonth: 'Letzter Monat', avg3Months: '3-Monats-Durchschnitt', lastYearSameMonth: 'Gleicher Monat im Vorjahr' },
+      percent: '{{percent}} % weniger',
+      baselineIs: 'Basis {{baseline}}',
+      result: 'Basis {{baseline}} → Ziel {{target}}',
+      noHistory: 'Noch keine Ausgaben in dieser Kategorie',
+    },
     name: 'Budgetname',
     nameOptional: 'Budgetname (Optional)',
     defaultNames: {

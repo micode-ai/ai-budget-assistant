@@ -758,6 +758,14 @@ export default {
     userPromptPlaceholder: 'Додаткові інструкції для ШІ (необов\'язково)',
   },
   budgetNew: {
+    reduce: {
+      title: 'Зменшити відносно минулих витрат',
+      baseline: { lastMonth: 'Минулий місяць', avg3Months: 'Середнє за 3 місяці', lastYearSameMonth: 'Той самий місяць торік' },
+      percent: 'На {{percent}}% менше',
+      baselineIs: 'База {{baseline}}',
+      result: 'База {{baseline}} → ціль {{target}}',
+      noHistory: 'У цій категорії ще немає витрат',
+    },
     name: 'Назва бюджету',
     nameOptional: "Назва бюджету (необов'язково)",
     defaultNames: {

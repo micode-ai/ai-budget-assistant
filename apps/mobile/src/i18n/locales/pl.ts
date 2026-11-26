@@ -758,6 +758,14 @@ export default {
     userPromptPlaceholder: 'Dodatkowe instrukcje dla AI (opcjonalnie)',
   },
   budgetNew: {
+    reduce: {
+      title: 'Zmniejsz o część dotychczasowych wydatków',
+      baseline: { lastMonth: 'Zeszły miesiąc', avg3Months: 'Średnia z 3 miesięcy', lastYearSameMonth: 'Ten sam miesiąc rok temu' },
+      percent: '{{percent}}% mniej',
+      baselineIs: 'Punkt odniesienia {{baseline}}',
+      result: 'Punkt odniesienia {{baseline}} → cel {{target}}',
+      noHistory: 'Brak historii wydatków w tej kategorii',
+    },
     name: 'Nazwa budżetu',
     nameOptional: 'Nazwa budżetu (opcjonalnie)',
     defaultNames: {

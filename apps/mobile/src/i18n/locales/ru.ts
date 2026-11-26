@@ -758,6 +758,14 @@ export default {
     userPromptPlaceholder: 'Дополнительные инструкции для ИИ (необязательно)',
   },
   budgetNew: {
+    reduce: {
+      title: 'Снизить относительно прошлых трат',
+      baseline: { lastMonth: 'Прошлый месяц', avg3Months: 'Среднее за 3 месяца', lastYearSameMonth: 'Тот же месяц год назад' },
+      percent: 'На {{percent}}% меньше',
+      baselineIs: 'База {{baseline}}',
+      result: 'База {{baseline}} → цель {{target}}',
+      noHistory: 'В этой категории пока нет трат',
+    },
     name: 'Название бюджета',
     nameOptional: 'Название бюджета (необязательно)',
     defaultNames: {

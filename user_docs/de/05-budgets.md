@@ -129,6 +129,10 @@ Die App überwacht automatisch deine Budgets und sendet Benachrichtigungen:
 - **F: Verfolgt das Budget Ausgaben in allen Währungen?**
   **A:** Jedes Budget ist an eine Währung gebunden. Nur Ausgaben in dieser Währung werden auf das Budget angerechnet.
 
+## Eine Kategorie prozentual senken
+
+Wählst du beim Erstellen eines Budgets eine Kategorie, kannst du **10 / 20 / 30 % weniger** als im letzten Monat, im 3-Monats-Durchschnitt oder im gleichen Monat des Vorjahres wählen. Der Betrag wird automatisch eingetragen; danach ist es ein normales Budget.
+
 ---
 
 *Siehe auch: [Übersicht](./02-dashboard.md) | [Analysen](./06-analytics.md)*

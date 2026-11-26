@@ -129,6 +129,10 @@ Aplikacja automatycznie monitoruje Twoje budżety i wysyła powiadomienia:
 - **P: Czy budżet śledzi wydatki we wszystkich walutach?**
   **O:** Każdy budżet jest powiązany z jedną walutą. Tylko wydatki w tej walucie są wliczane do budżetu.
 
+## Zmniejsz kategorię o procent
+
+Gdy przy tworzeniu budżetu wybierzesz jedną kategorię, możesz wybrać **o 10 / 20 / 30% mniej** niż w zeszłym miesiącu, średnia z 3 miesięcy lub ten sam miesiąc rok temu. Kwota uzupełni się sama; dalej to zwykły budżet.
+
 ---
 
 *Zobacz także: [Pulpit](./02-dashboard.md) | [Analityka](./06-analytics.md)*
