@@ -19,13 +19,14 @@ describe('merchant cap helpers', () => {
 
 describe('MerchantCapsService.checkAccount', () => {
   const today = new Date(2026, 10, 26);
-  function make(cap: any, spent: number, claimCount = 1, sendOk = true) {
+  function make(cap: any, spent: number, claimCount = 1, sendOk = true, refunded = 0) {
     const prisma: any = {
       merchantSpendingCap: {
         findMany: jest.fn().mockResolvedValue([cap]),
         updateMany: jest.fn().mockResolvedValue({ count: claimCount }),
       },
       expense: { aggregate: jest.fn().mockResolvedValue({ _sum: { amount: spent } }) },
+      income: { aggregate: jest.fn().mockResolvedValue({ _sum: { amount: refunded } }) },
     };
     const notifications: any = { sendToUser: jest.fn().mockResolvedValue(sendOk) };
     return { svc: new MerchantCapsService(prisma, notifications), prisma, notifications };
@@ -34,6 +35,17 @@ describe('MerchantCapsService.checkAccount', () => {
     id: 'c1', userId: 'u1', accountId: 'a1', merchantNormalized: 'wolt', merchantLabel: 'Wolt',
     amount: 100, currencyCode: 'PLN', lastAlertPeriod: null, lastAlertThreshold: null,
   };
+
+  it('nets same-currency linked refunds from merchant spend', async () => {
+    const { svc, prisma, notifications } = make(base, 100, 1, true, 30);
+    await svc.checkAccount('a1', 'PLN', today);
+    // 100 - 30 = 70% -> below the first threshold
+    expect(notifications.sendToUser).not.toHaveBeenCalled();
+    const where = prisma.income.aggregate.mock.calls[0][0].where;
+    expect(where.currencyCode).toBe('PLN');
+    expect(where.refundOfExpense.isDeleted).toBe(false);
+    expect(where.refundOfExpense.merchant).toEqual({ equals: 'wolt', mode: 'insensitive' });
+  });
 
   it('pushes once at 80%', async () => {
     const { svc, notifications } = make(base, 85);

@@ -8,6 +8,7 @@ import { shiftFinancialMonth } from '../../common/utils/financial-month';
 import { logFireAndForget } from '../../common/utils/fire-and-forget';
 import { attributeToCategories, attributableAmountForCategories } from '../../common/utils/category-attribution';
 import { EXCLUDE_SPLIT_RECEIVABLE, categoryOrSplitFilter } from '../../common/utils/expense-filters';
+import { attributeRefund, loadRefundsInRange, netOfRefunds, sumRefunds } from '../../common/utils/refund-netting';
 import { expandAllocatedCategoryIds, rollUpAllocationSpend } from '../../common/utils/category-tree';
 import { loadExpenseCategoryTree, BudgetTreeCategory } from './budget-category-tree.util';
 
@@ -364,6 +365,18 @@ export class BudgetsService {
         );
       }
 
+      // Refunds dated in this period net the spend (same rule as getProgress).
+      const refunds = await loadRefundsInRange(
+        this.prisma as any,
+        accountId,
+        { gte: periodStart, lte: periodEnd },
+        budget.currencyCode,
+      );
+      actual = netOfRefunds(
+        actual,
+        sumRefunds(refunds, categoryIds ? expandAllocatedCategoryIds(categoryIds, tree) : undefined),
+      );
+
       const limit = Number(budget.amount);
 
       results.push({
@@ -498,6 +511,29 @@ export class BudgetsService {
       }
 
       dailyTotals = [...perDay.values()];
+    }
+
+    // Refunds dated in this period reduce spend in the original's category.
+    // dailyTotals stays gross on purpose: the projection's rate is about when
+    // money left, and a refund has no day-of-spend to subtract from.
+    const refunds = await loadRefundsInRange(
+      this.prisma as any,
+      accountId,
+      { gte: periodStart, lte: periodEnd },
+      budget.currencyCode,
+    );
+    if (refunds.length > 0) {
+      const scope = categoryIds ? expandAllocatedCategoryIds(categoryIds, tree) : undefined;
+      spentAmount = netOfRefunds(spentAmount, sumRefunds(refunds, scope));
+      if (spendingMap && scope) {
+        for (const refund of refunds) {
+          for (const part of attributeRefund(refund)) {
+            if (part.categoryId && scope.has(part.categoryId) && spendingMap.has(part.categoryId)) {
+              spendingMap.set(part.categoryId, Math.max(0, (spendingMap.get(part.categoryId) ?? 0) - part.amount));
+            }
+          }
+        }
+      }
     }
 
     const budgetAmount = Number(budget.amount);

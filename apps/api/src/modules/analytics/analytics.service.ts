@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { CacheService } from '../../common/cache/cache.service';
 import { EXCLUDE_SPLIT_RECEIVABLE } from '../../common/utils/expense-filters';
+import { EXCLUDE_REFUND_INCOME, attributeRefund, loadRefundsInRange, sumRefunds } from '../../common/utils/refund-netting';
 import type { DrillDownLevel, ChartConfig, ChartDataPoint, SavingsSummaryResponse } from '@budget/shared-types';
 import { formatInTimezone, yearMonthIdInTimezone, calendarPartsInTimezone } from '../../common/utils/timezone';
 import { ExchangeRateService } from '../currency-exchange/exchange-rate.service';
@@ -193,6 +194,8 @@ export class AnalyticsService {
         date: { gte: startDate, lte: endDate },
         isDeleted: false,
         ...EXCLUDE_SPLIT_RECEIVABLE,
+        // A refund is money back, not earnings — it nets the spend below instead.
+        ...EXCLUDE_REFUND_INCOME,
       },
       _sum: { amount: true },
     });
@@ -213,7 +216,9 @@ export class AnalyticsService {
       orderBy: { amount: 'desc' },
     });
 
-    const totalExpenses = expenses.reduce((sum: number, e: ExpenseWithCategory) => sum + Number(e.amount), 0);
+    // Refunds dated in this period reduce spend (the refund's month, not the original's).
+    const refunds = await loadRefundsInRange(this.prisma as any, accountId, { gte: startDate, lte: endDate });
+    const grossExpenses = expenses.reduce((sum: number, e: ExpenseWithCategory) => sum + Number(e.amount), 0);
     const totalDiscountSavings = expenses.reduce((sum: number, e: ExpenseWithCategory) => sum + Number(e.discountAmount || 0), 0);
 
     // Group expenses by currency
@@ -227,9 +232,16 @@ export class AnalyticsService {
       });
     }
 
+    // Refunds net per currency (never across currencies), clamped at zero.
+    const refundsByCurrency = new Map<string, number>();
+    for (const r of refunds) {
+      const cur = r.currencyCode || 'USD';
+      refundsByCurrency.set(cur, (refundsByCurrency.get(cur) || 0) + sumRefunds([r]));
+    }
+
     const expensesByCurrency = Array.from(currencyTotals.entries()).map(([currencyCode, data]) => ({
       currencyCode,
-      totalExpenses: data.total,
+      totalExpenses: Math.max(0, data.total - (refundsByCurrency.get(currencyCode) || 0)),
       transactionCount: data.count,
     }));
 
@@ -259,6 +271,20 @@ export class AnalyticsService {
         });
       }
     }
+
+    // The total drops by exactly what the category rows dropped (same clamp), so rows sum to it.
+    let appliedRefund = 0;
+    for (const refund of refunds) {
+      for (const part of attributeRefund(refund)) {
+        const key = part.categoryId || 'uncategorized';
+        const cur = categoryMap.get(key);
+        if (!cur) continue;
+        const reduced = Math.min(cur.amount, part.amount);
+        cur.amount -= reduced;
+        appliedRefund += reduced;
+      }
+    }
+    const totalExpenses = Math.max(0, grossExpenses - appliedRefund);
 
     const expensesByCategory = Array.from(categoryMap.entries())
       .map(([categoryId, data]) => ({

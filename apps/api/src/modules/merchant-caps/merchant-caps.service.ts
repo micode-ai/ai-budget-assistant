@@ -3,6 +3,7 @@ import { PrismaService } from '../../database/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import * as ni18n from '../notifications/notification-i18n';
 import { UpsertMerchantCapDto } from './dto';
+import { sumRefundsForExpenses } from '../../common/utils/refund-netting';
 
 export const MERCHANT_CAP_THRESHOLDS = [80, 100];
 export const MAX_MERCHANT_CAPS_PER_ACCOUNT = 30;
@@ -57,7 +58,15 @@ export class MerchantCapsService {
       },
       _sum: { amount: true },
     });
-    return Number(agg._sum.amount ?? 0);
+    // Linked refunds (same currency, original at this merchant and live) net the spend.
+    const refunded = await sumRefundsForExpenses(
+      this.prisma as any,
+      accountId,
+      { merchant: { equals: cap.merchantNormalized, mode: 'insensitive' } },
+      { gte: start, lte: end },
+      cap.currencyCode,
+    );
+    return Math.max(0, Math.round((Number(agg._sum.amount ?? 0) - refunded) * 100) / 100);
   }
 
   private async toResponse(cap: any, today = new Date()) {

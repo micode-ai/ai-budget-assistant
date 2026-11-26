@@ -4,6 +4,7 @@ import {
   Get,
   Post,
   Patch,
+  Put,
   Delete,
   Body,
   Param,
@@ -13,6 +14,8 @@ import {
 } from '@nestjs/common';
 import { IncomesService } from './incomes.service';
 import { IncomeBulkService } from './income-bulk.service';
+import { IncomeRefundService } from './income-refund.service';
+import { LinkRefundDto } from './dto/link-refund.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
 import { ViewerBlockGuard } from '../accounts/guards/account-role.guard';
@@ -26,6 +29,7 @@ export class IncomesController {
     private readonly incomesService: IncomesService,
     private readonly incomeBulkService: IncomeBulkService,
     private readonly revisionsService: TransactionRevisionsService,
+    private readonly refundService: IncomeRefundService,
   ) {}
 
   @Post()
@@ -47,6 +51,23 @@ export class IncomesController {
   @UseGuards(new ViewerBlockGuard())
   async bulkUpdate(@Req() req: AuthenticatedRequest, @Body() dto: BulkUpdateIncomesDto) {
     return this.incomeBulkService.bulkUpdate(req.accountId, dto);
+  }
+
+  @Get(':id/refund-candidates')
+  async refundCandidates(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+    return this.refundService.candidates(req.accountId, id);
+  }
+
+  @Put(':id/refund-link')
+  @UseGuards(new ViewerBlockGuard())
+  async linkRefund(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() dto: LinkRefundDto) {
+    return this.refundService.link(req.accountId, id, dto.expenseId);
+  }
+
+  @Delete(':id/refund-link')
+  @UseGuards(new ViewerBlockGuard())
+  async unlinkRefund(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+    return this.refundService.unlink(req.accountId, id);
   }
 
   @Get(':id/revisions')

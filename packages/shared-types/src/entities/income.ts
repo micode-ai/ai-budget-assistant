@@ -9,6 +9,8 @@ export interface Income {
   /** Server-side copy of the mobile device's local ID (clientId column in DB). Present on API responses. */
   clientId?: string | null;
   userId: string;
+  /** Set when this income is a refund of an expense; it then nets that expense's category spend and leaves income totals. */
+  refundOfExpenseId?: string | null;
   accountId: string;
   amount: number;
   currencyCode: Currency;
@@ -57,4 +59,18 @@ export interface Income {
   isDeleted: boolean;
   syncStatus: SyncStatus;
   syncVersion: number;
+}
+
+/** One expense a refund income could be linked to (GET /incomes/:id/refund-candidates). */
+export interface RefundCandidate {
+  id: string;
+  description?: string | null;
+  merchant?: string | null;
+  amount: number;
+  currencyCode: string;
+  date: string;
+  categoryId?: string | null;
+  refundedAmount: number;
+  refundableAmount: number;
+  score: number;
 }

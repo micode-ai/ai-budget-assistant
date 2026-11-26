@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { IncomesController } from './incomes.controller';
 import { IncomesService } from './incomes.service';
 import { IncomeBulkService } from './income-bulk.service';
+import { IncomeRefundService } from './income-refund.service';
 import { GamificationModule } from '../gamification/gamification.module';
 import { FamilyFeedModule } from '../family-feed/family-feed.module';
 import { WalletCurrencyModule } from '../wallet/wallet-currency.module';
@@ -12,7 +13,7 @@ import { TransactionRevisionsModule } from '../transaction-revisions/transaction
 @Module({
   imports: [TransactionRevisionsModule, WalletCurrencyModule, GamificationModule, FamilyFeedModule, GroupBudgetMirrorModule],
   controllers: [IncomesController],
-  providers: [IncomesService, IncomeBulkService],
+  providers: [IncomesService, IncomeBulkService, IncomeRefundService],
   exports: [IncomesService, IncomeBulkService],
 })
 export class IncomesModule {}

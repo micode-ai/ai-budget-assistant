@@ -283,6 +283,7 @@ describe('getHistory month stepping', () => {
     };
 
     const prisma: any = {
+      income: { findMany: jest.fn().mockResolvedValue([]) },
       expense: { aggregate: jest.fn().mockResolvedValue({ _sum: { amount: 0 } }) },
     };
     const service = makeHistoryService(prisma);
@@ -318,6 +319,7 @@ describe('getHistory month stepping', () => {
     };
 
     const prisma: any = {
+      income: { findMany: jest.fn().mockResolvedValue([]) },
       expense: { aggregate: jest.fn().mockResolvedValue({ _sum: { amount: 0 } }) },
     };
     const service = makeHistoryService(prisma);
@@ -434,6 +436,7 @@ describe('BudgetsService.getProgress — the projection does not re-spend a lump
           isDeleted: false,
         }),
       },
+      income: { findMany: jest.fn().mockResolvedValue([]) },
       expense: {
         aggregate: jest.fn().mockResolvedValue({ _sum: { amount: spent } }),
         groupBy: jest.fn().mockResolvedValue(
@@ -534,6 +537,7 @@ describe('BudgetsService.getProgress — category budgets count splits', () => {
         }),
       },
       category: { findMany: jest.fn().mockResolvedValue([]) },
+      income: { findMany: jest.fn().mockResolvedValue([]) },
       expense: {
         findMany: jest.fn().mockResolvedValue(rows),
         aggregate: jest.fn().mockResolvedValue({ _sum: { amount: 0 } }),
@@ -676,6 +680,7 @@ describe('BudgetsService.getHistory — periods count splits too', () => {
           isDeleted: false,
         }),
       },
+      income: { findMany: jest.fn().mockResolvedValue([]) },
       expense: {
         findMany: jest.fn().mockResolvedValue([
           {
@@ -714,6 +719,7 @@ describe('BudgetsService.getHistory — periods count splits too', () => {
           isDeleted: false,
         }),
       },
+      income: { findMany: jest.fn().mockResolvedValue([]) },
       expense: {
         findMany: jest.fn().mockResolvedValue([]),
         aggregate: jest.fn().mockResolvedValue({ _sum: { amount: 120 } }),
@@ -767,6 +773,7 @@ describe('BudgetsService — parent allocation rolls up subcategories', () => {
         }),
       },
       category: { findMany: jest.fn().mockResolvedValue(tree) },
+      income: { findMany: jest.fn().mockResolvedValue([]) },
       expense: {
         findMany: jest.fn().mockResolvedValue(rows),
         aggregate: jest.fn().mockResolvedValue({ _sum: { amount: 0 } }),
@@ -910,6 +917,7 @@ describe('BudgetsService.createWithStatus / getProgress period bounds (public AP
           startDate: new Date('2026-09-01T00:00:00Z'), endDate: null, categoryAllocations: [],
         }),
       },
+      income: { findMany: jest.fn().mockResolvedValue([]) },
       expense: {
         aggregate: jest.fn().mockResolvedValue({ _sum: { amount: 0 } }),
         groupBy: jest.fn().mockResolvedValue([]),

@@ -5,6 +5,7 @@ import * as request from 'supertest';
 import { IncomesController } from './incomes.controller';
 import { IncomesService } from './incomes.service';
 import { IncomeBulkService } from './income-bulk.service';
+import { IncomeRefundService } from './income-refund.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
 
@@ -36,6 +37,7 @@ describe('IncomesController routing', () => {
       providers: [
         { provide: IncomesService, useValue: incomesService },
         { provide: IncomeBulkService, useValue: incomeBulkService },
+        { provide: IncomeRefundService, useValue: {} },
         { provide: TransactionRevisionsService, useValue: { list: jest.fn() } },
       ],
     })

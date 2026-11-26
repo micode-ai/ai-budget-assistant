@@ -22,6 +22,8 @@ A monthly cap for a single merchant, with a progress bar on the Merchants settin
 - `checkAccount` never throws (it runs inside the expense write path).
 - Merchant match is `equals` insensitive on the stored value, so a stored name with stray whitespace is not matched.
 
+- Spend at a merchant is net of same-currency refunds linked (ABA-854) to a live expense at that merchant, dated in the period (`sumRefundsForExpenses` in `refund-netting.ts`), floored at zero.
+
 ## Known gaps
 No inline warning at expense entry, no bar in the analytics merchant donut, no Pro limit (hard ceiling 30 per account), calendar month rather than the financial-month anchor.
 

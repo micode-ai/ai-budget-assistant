@@ -53,7 +53,7 @@ describe('AnalyticsService.getSummary', () => {
   it('excludes split receivables from spend but still counts a standalone debt', async () => {
     const prisma: any = {
       account: { findUnique: jest.fn().mockResolvedValue({ encryptionTier: 0 }) },
-      income: { aggregate: jest.fn().mockResolvedValue({ _sum: { amount: 0 } }) },
+      income: { aggregate: jest.fn().mockResolvedValue({ _sum: { amount: 0 } }), findMany: jest.fn().mockResolvedValue([]) },
       expense: {
         findMany: jest.fn().mockResolvedValue([]),
         aggregate: jest.fn().mockResolvedValue({ _sum: { amount: 0 } }),
@@ -73,6 +73,36 @@ describe('AnalyticsService.getSummary', () => {
     // But NOT isDebt: for a standalone cash loan the debt row IS the outflow, so
     // filtering on it would rewrite the numbers of every user tracking debts.
     expect(where.isDebt).toBeUndefined();
+  });
+});
+
+describe('AnalyticsService.getSummary refund netting', () => {
+  it('nets per currency and category rows sum to the total', async () => {
+    const exp = (id: string, amount: number, cur: string, catId: string) => ({
+      id, amount, currencyCode: cur, categoryId: catId, category: { id: catId, name: catId },
+      categorySplits: [], date: new Date('2026-07-05'), description: id, discountAmount: 0,
+    });
+    const orig = { amount: 40, categoryId: 'food', category: { id: 'food', name: 'food' }, categorySplits: [] };
+    const prisma: any = {
+      account: { findUnique: jest.fn().mockResolvedValue({ encryptionTier: 0 }) },
+      income: {
+        aggregate: jest.fn().mockResolvedValue({ _sum: { amount: 0 } }),
+        // refund 100 PLN against a 40 PLN category: clamped, only 40 applies
+        findMany: jest.fn().mockResolvedValue([{ amount: 100, currencyCode: 'PLN', refundOfExpense: orig }]),
+      },
+      expense: {
+        findMany: jest.fn().mockResolvedValue([exp('e1', 40, 'PLN', 'food'), exp('e2', 50, 'EUR', 'misc')]),
+        aggregate: jest.fn().mockResolvedValue({ _sum: { amount: 0 } }),
+      },
+    };
+    const cache: any = { get: jest.fn().mockResolvedValue(null), set: jest.fn().mockResolvedValue(undefined) };
+    const res: any = await new AnalyticsService(prisma, cache).getSummary('a', new Date('2026-07-01'), new Date('2026-07-31'));
+    expect(res.totalExpenses).toBe(50);
+    expect(res.expensesByCategory.reduce((s: number, c: any) => s + c.amount, 0)).toBe(res.totalExpenses);
+    const pln = res.expensesByCurrency.find((c: any) => c.currencyCode === 'PLN');
+    const eur = res.expensesByCurrency.find((c: any) => c.currencyCode === 'EUR');
+    expect(pln.totalExpenses).toBe(0);
+    expect(eur.totalExpenses).toBe(50);
   });
 });
 

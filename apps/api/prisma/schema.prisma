@@ -682,6 +682,7 @@ model Expense {
   groupCashLink        GroupCashLink?
   groupCashSuggestions GroupCashSuggestion[]
   receiptParts         ExpenseReceiptPart[]
+  refunds              Income[]                  @relation("ExpenseRefunds")
 
   @@unique([accountId, clientId])
   @@unique([accountId, externalRef])
@@ -1157,6 +1158,9 @@ model Income {
   /// The public-API OAuth app that created this income (OAuthClient.id, the db id). Server-set only.
   createdByOAuthClientId String?   @map("created_by_oauth_client_id")
   childBenefitChildId    String?   @map("child_benefit_child_id")
+  /// Set when this income is money back for an expense. Spend nets by it in the
+  /// refund's own month and the row leaves income totals (EXCLUDE_REFUND_INCOME).
+  refundOfExpenseId      String?   @map("refund_of_expense_id")
   createdAt              DateTime  @default(now()) @map("created_at")
   updatedAt              DateTime  @updatedAt @map("updated_at")
 
@@ -1164,6 +1168,7 @@ model Income {
   user                 User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
   account              Account               @relation(fields: [accountId], references: [id], onDelete: Cascade)
   category             Category?             @relation(fields: [categoryId], references: [id])
+  refundOfExpense      Expense?              @relation("ExpenseRefunds", fields: [refundOfExpenseId], references: [id], onDelete: SetNull)
   importBatch          ImportBatch?          @relation(fields: [importBatchId], references: [id])
   createdByOAuthClient OAuthClient?          @relation(fields: [createdByOAuthClientId], references: [id], onDelete: SetNull)
   childBenefitChild    Child?                @relation("ChildBenefitIncome", fields: [childBenefitChildId], references: [id], onDelete: SetNull)
@@ -1181,6 +1186,7 @@ model Income {
   @@index([accountId, updatedAt, id])
   @@index([createdByOAuthClientId])
   @@index([childBenefitChildId])
+  @@index([refundOfExpenseId])
   @@map("incomes")
 }
 
