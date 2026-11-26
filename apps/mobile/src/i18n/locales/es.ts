@@ -757,6 +757,7 @@ export default {
       baselineIs: 'Base {{baseline}}',
       result: 'Base {{baseline}} → objetivo {{target}}',
       noHistory: 'Aún no hay gastos en esta categoría',
+      notEnoughHistory: "No hay historial suficiente para fijar una base en este período",
     },
     name: 'Nombre del presupuesto',
     nameOptional: 'Nombre del presupuesto (Opcional)',
@@ -2830,6 +2831,15 @@ export default {
     yoy: "Frente al mismo mes del año pasado: precio {{price}}, consumo {{use}}",
     fxApproximate: "Algunas facturas no cuentan en el coste porque su tipo de cambio es desconocido.",
     allProperties: "Todas las propiedades",
+    reading: {
+      title: "Lectura de suministro",
+      add: "Añadir consumo (kWh, m³, GJ)",
+      property: "Propiedad (opcional)",
+      propertyPlaceholder: "p. ej. Piso, Casa de campo",
+      remove: "Eliminar lectura",
+      saveFailed: "No se pudo guardar la lectura. Comprueba tu conexión e inténtalo de nuevo.",
+      notSyncedYet: "Este gasto aún no se ha sincronizado. Inténtalo de nuevo más tarde.",
+    },
     kinds: {
       electricity: "Electricidad",
       gas: "Gas",
@@ -3906,6 +3916,11 @@ export default {
     editAssignmentTitle: '¿Quién tenía esto?',
     editAssignmentSave: 'Guardar',
     editBlockedConfirmed: 'No se puede cambiar esto: alguien ya confirmó un pago en esta división. Cancélala y vuelve a crearla.',
+  },
+  travelCurrency: {
+    prompt: '¿En {{country}}? Usar {{currency}}',
+    dismiss: 'Ocultar sugerencias para {{country}}',
+    using: "Usando {{currency}} · cambiar a {{base}}",
   },
   receiptCategorySplit: {
     title: 'Dividir por categoría',

@@ -222,6 +222,10 @@ Tap any income entry to view details:
 
 In the amount field you can type a small sum, for example `12.50+3.20*2`. Use `+ − × ÷` and brackets; `,` or `.` both work as a decimal separator. The result appears under the field and that number is saved. If the sum is not valid, Save stays disabled.
 
+### Local currency suggestion
+
+When you add an expense abroad and location access is already allowed, a small chip offers the local currency (for example "In Czechia? Use CZK"). Tap it to switch; it is remembered for 14 days. Tap the cross to stop suggestions for that country. The app never asks for location just for this.
+
 ---
 
 *See also: [Voice Input & Receipt Scanning](./04-voice-and-receipt.md) | [Budgets](./05-budgets.md)*

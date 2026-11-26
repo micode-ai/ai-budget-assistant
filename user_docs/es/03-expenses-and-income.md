@@ -222,6 +222,10 @@ Toca cualquier entrada de ingreso para ver los detalles:
 
 En el campo de importe puedes escribir una operación sencilla, por ejemplo `12.50+3.20*2`. Usa `+ − × ÷` y paréntesis; `,` o `.` sirven como separador decimal. El resultado aparece bajo el campo y ese número se guarda. Si la operación no es válida, Guardar queda desactivado.
 
+### Sugerencia de moneda local
+
+Si registras un gasto en el extranjero y ya permitiste la ubicación, un chip ofrece la moneda local (p. ej. «¿En Chequia? Usar CZK»). Tócalo para cambiar; se recuerda 14 días. Toca la cruz para dejar de sugerir ese país. La app nunca pide la ubicación solo para esto.
+
 ---
 
 *Ver tambien: [Entrada de voz y Escaneo de recibos](./04-voice-and-receipt.md) | [Presupuestos](./05-budgets.md)*

@@ -760,6 +760,7 @@ export default {
       baselineIs: 'Baseline {{baseline}}',
       result: 'Baseline {{baseline}} → target {{target}}',
       noHistory: 'No spending history for this category yet',
+      notEnoughHistory: "Not enough history to set a baseline for this period",
     },
     name: 'Budget Name',
     nameOptional: 'Budget Name (Optional)',
@@ -2837,6 +2838,15 @@ export default {
     yoy: "Versus the same month last year: price {{price}}, consumption {{use}}",
     fxApproximate: "Some bills were left out of the cost because their currency rate is unknown.",
     allProperties: "All properties",
+    reading: {
+      title: "Utility reading",
+      add: "Add consumption (kWh, m³, GJ)",
+      property: "Property (optional)",
+      propertyPlaceholder: "e.g. Flat, Cottage",
+      remove: "Remove reading",
+      saveFailed: "Could not save the reading. Check your connection and try again.",
+      notSyncedYet: "This expense has not synced yet. Try again once it has.",
+    },
     kinds: {
       electricity: "Electricity",
       gas: "Gas",
@@ -3912,6 +3922,11 @@ export default {
     editAssignmentTitle: 'Who had this?',
     editAssignmentSave: 'Save',
     editBlockedConfirmed: "Can't change this — someone has already confirmed a payment on this split. Cancel and recreate instead.",
+  },
+  travelCurrency: {
+    prompt: 'In {{country}}? Use {{currency}}',
+    dismiss: 'Hide suggestions for {{country}}',
+    using: "Using {{currency}} · switch to {{base}}",
   },
   receiptCategorySplit: {
     title: 'Split by category',

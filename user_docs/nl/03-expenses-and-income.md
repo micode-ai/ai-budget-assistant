@@ -222,6 +222,10 @@ Tik op een inkomstenpost om de details te bekijken:
 
 In het bedragveld kun je een kleine som typen, bijvoorbeeld `12.50+3.20*2`. Gebruik `+ − × ÷` en haakjes; `,` of `.` werken als decimaalteken. Het resultaat verschijnt onder het veld en dat getal wordt opgeslagen. Is de som ongeldig, dan blijft Opslaan uitgeschakeld.
 
+### Suggestie voor de lokale valuta
+
+Voeg je een uitgave toe in het buitenland en is locatietoegang al toegestaan, dan stelt een klein label de lokale valuta voor (bijv. "In Tsjechië? Gebruik CZK"). Tik erop om te wisselen; de keuze wordt 14 dagen onthouden. Met het kruisje zet je suggesties voor dat land uit. De app vraagt hier nooit om locatie.
+
 ---
 
 *Zie ook: [Spraakinvoer & Bonnen scannen](./04-voice-and-receipt.md) | [Budgetten](./05-budgets.md)*

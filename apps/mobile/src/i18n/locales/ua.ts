@@ -765,6 +765,7 @@ export default {
       baselineIs: 'База {{baseline}}',
       result: 'База {{baseline}} → ціль {{target}}',
       noHistory: 'У цій категорії ще немає витрат',
+      notEnoughHistory: "Недостатньо історії, щоб визначити базу за цей період",
     },
     name: 'Назва бюджету',
     nameOptional: "Назва бюджету (необов'язково)",
@@ -2842,6 +2843,15 @@ export default {
     yoy: "До того ж місяця торік: ціна {{price}}, споживання {{use}}",
     fxApproximate: "Частину рахунків не враховано у вартості: невідомий курс їхньої валюти.",
     allProperties: "Усі об'єкти",
+    reading: {
+      title: "Показник лічильника",
+      add: "Додати споживання (кВт·год, м³, ГДж)",
+      property: "Об'єкт (необов'язково)",
+      propertyPlaceholder: "напр. Квартира, Дача",
+      remove: "Видалити показник",
+      saveFailed: "Не вдалося зберегти показник. Перевірте з'єднання та спробуйте ще раз.",
+      notSyncedYet: "Ця витрата ще не синхронізована. Спробуйте пізніше.",
+    },
     kinds: {
       electricity: "Електрика",
       gas: "Газ",
@@ -3923,6 +3933,11 @@ export default {
     editAssignmentTitle: 'Хто це замовляв?',
     editAssignmentSave: 'Зберегти',
     editBlockedConfirmed: 'Це не можна змінити — хтось уже підтвердив оплату в цьому розділенні. Замість цього скасуйте та створіть розділення заново.',
+  },
+  travelCurrency: {
+    prompt: 'Ви в країні: {{country}}? Використати {{currency}}',
+    dismiss: 'Сховати підказки для: {{country}}',
+    using: "Використовується {{currency}} · перемкнути на {{base}}",
   },
   receiptCategorySplit: {
     title: 'Розподіл за категоріями',

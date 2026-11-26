@@ -222,6 +222,10 @@ Appuyez sur une entree de revenu pour afficher les details :
 
 Dans le champ du montant, tu peux saisir un petit calcul, par exemple `12.50+3.20*2`. Utilise `+ − × ÷` et les parenthèses ; `,` ou `.` servent de séparateur décimal. Le résultat s'affiche sous le champ et c'est ce nombre qui est enregistré. Si le calcul n'est pas valide, Enregistrer reste désactivé.
 
+### Suggestion de la devise locale
+
+Lorsque vous ajoutez une dépense à l'étranger et que la localisation est déjà autorisée, une pastille propose la devise locale (ex. « En Tchéquie ? Utiliser CZK »). Touchez-la pour changer ; le choix est mémorisé 14 jours. Touchez la croix pour ne plus recevoir de suggestion pour ce pays. L'app ne demande jamais la localisation pour cela.
+
 ---
 
 *Voir aussi : [Saisie vocale et scan de recus](./04-voice-and-receipt.md) | [Budgets](./05-budgets.md)*

@@ -420,6 +420,7 @@ Newest last within each section.
 - 2026-11-26 · [ABA-852](https://github.com/micode-ai/ai-budget-assistant/issues/890) — card statement cycle: standalone `CardCycleSetting` per account (not a WalletBalance field), transaction-date cut-off, duplicated `card-cycle.ts` pair, 3-day due push once per due date; Safe-to-Spend switch left open. Pages: `features/card-statement-cycle.md` (new), `index.md`.
 - 2026-11-26 · [ABA-853](https://github.com/micode-ai/ai-budget-assistant/issues/891) — monthly spending cap per merchant: own table, hook in the expense-write budget alert path, claim-then-push dedup per month; new page `features/merchant-spending-caps.md`.
 - 2026-11-26 · [ABA-854](https://github.com/micode-ai/ai-budget-assistant/issues/892) — refund linked to original expense: `Income.refundOfExpenseId`, central `refund-netting.ts`, link routes, netting in analytics summary + budgets; no UI yet, remaining totals listed on `features/refund-linked-expense.md`.
+- 2026-11-26 · [ABA-855](https://github.com/) — local-currency suggestion on the create form, geo-only and permission-free; new page `features/travel-currency-suggestion.md`.
 
 ## Queries
 

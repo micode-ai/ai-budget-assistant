@@ -757,6 +757,7 @@ export default {
       baselineIs: 'Basis {{baseline}}',
       result: 'Basis {{baseline}} → Ziel {{target}}',
       noHistory: 'Noch keine Ausgaben in dieser Kategorie',
+      notEnoughHistory: "Zu wenig Verlauf für eine Berechnungsgrundlage in diesem Zeitraum",
     },
     name: 'Budgetname',
     nameOptional: 'Budgetname (Optional)',
@@ -2830,6 +2831,15 @@ export default {
     yoy: "Gegenüber dem Vorjahresmonat: Preis {{price}}, Verbrauch {{use}}",
     fxApproximate: "Einige Rechnungen fehlen in den Kosten, weil ihr Wechselkurs unbekannt ist.",
     allProperties: "Alle Objekte",
+    reading: {
+      title: "Verbrauchsangabe",
+      add: "Verbrauch hinzufügen (kWh, m³, GJ)",
+      property: "Objekt (optional)",
+      propertyPlaceholder: "z. B. Wohnung, Ferienhaus",
+      remove: "Angabe entfernen",
+      saveFailed: "Die Angabe konnte nicht gespeichert werden. Prüfe deine Verbindung und versuche es erneut.",
+      notSyncedYet: "Diese Ausgabe wurde noch nicht synchronisiert. Versuche es später erneut.",
+    },
     kinds: {
       electricity: "Strom",
       gas: "Gas",
@@ -3905,6 +3915,11 @@ export default {
     editAssignmentTitle: 'Wer hatte das?',
     editAssignmentSave: 'Speichern',
     editBlockedConfirmed: 'Das kann nicht geändert werden — jemand hat bereits eine Zahlung für diese Aufteilung bestätigt. Storniere sie stattdessen und erstelle sie neu.',
+  },
+  travelCurrency: {
+    prompt: 'In {{country}}? {{currency}} verwenden',
+    dismiss: 'Vorschläge für {{country}} ausblenden',
+    using: "{{currency}} wird verwendet · zu {{base}} wechseln",
   },
   receiptCategorySplit: {
     title: 'Nach Kategorie aufteilen',

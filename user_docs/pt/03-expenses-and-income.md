@@ -222,6 +222,10 @@ Toque em qualquer receita para ver os detalhes:
 
 No campo do valor podes escrever um cálculo simples, por exemplo `12.50+3.20*2`. Usa `+ − × ÷` e parênteses; `,` ou `.` servem de separador decimal. O resultado aparece por baixo do campo e é esse número que fica guardado. Se o cálculo não for válido, Guardar fica desativado.
 
+### Sugestão da moeda local
+
+Quando regista uma despesa no estrangeiro e o acesso à localização já está permitido, um pequeno chip propõe a moeda local (p. ex. «Na Chéquia? Usar CZK»). Toque para mudar; a escolha fica guardada 14 dias. Toque na cruz para deixar de sugerir esse país. A app nunca pede a localização só para isto.
+
 ---
 
 *Ver também: [Entrada por voz e digitalização de talões](./04-voice-and-receipt.md) | [Orçamentos](./05-budgets.md)*

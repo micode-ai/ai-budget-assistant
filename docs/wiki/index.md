@@ -129,6 +129,7 @@ the section you came for — it states what must not break and why. A missing se
 ### Screens and platform surfaces
 - [desktop-web-shell](features/desktop-web-shell.md) — the top bar and content area every desktop
   screen sits in, and the one width gate
+- [travel-currency-suggestion](features/travel-currency-suggestion.md) - local-currency chip on the create form
 - [expense-location-and-map](features/expense-location-and-map.md) — geocoding, the pin picker, and
   a map with no native map module
 - [saved-transaction-views](features/saved-transaction-views.md) — one-tap saved filter combinations on the transactions screen

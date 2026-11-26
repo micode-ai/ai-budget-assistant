@@ -47,10 +47,20 @@ import { MerchantInput } from '@/components/MerchantInput';
 import { DatePicker } from '@/components/DatePicker';
 import { captureCurrentLocation, type CapturedLocation } from '@/services/locationCapture';
 import { trackAction } from '@/services/telemetry';
+import { useTravelCurrencyStore } from '@/features/travelCurrency/travelCurrencyStore';
+import { useTravelCurrencySuggestion, rememberedTravelCurrency } from '@/hooks/useTravelCurrencySuggestion';
 import { maybeAskForReview } from '@/features/review/maybeAskForReview';
 import { MIN_TRANSACTIONS_AFTER_MANUAL_SAVE } from '@/features/review/shouldAskForReview';
 import { useCaptureSuggestionStore } from '@/stores/captureSuggestionStore';
 import { hasUsedFasterCapture } from '@/features/captureSuggestion/captureSuggestion';
+
+function countryDisplayName(code: string): string {
+  try {
+    return new Intl.DisplayNames([getIntlLocale()], { type: 'region' }).of(code) || code;
+  } catch {
+    return code;
+  }
+}
 
 function getContrastTextColor(hexColor: string | undefined): string {
   if (!hexColor || typeof hexColor !== 'string') return '#ffffff';
@@ -112,8 +122,12 @@ export function ExpenseCreateForm({ initial, onDone }: ExpenseCreateFormProps) {
   const { loadProjects } = useProjectStore();
 
   const gpsLocationRef = useRef<CapturedLocation | null>(null);
+  const [gpsFix, setGpsFix] = useState<CapturedLocation | null>(null);
   useEffect(() => {
-    captureCurrentLocation({ askPermission: true }).then((loc) => { gpsLocationRef.current = loc; });
+    captureCurrentLocation({ askPermission: true }).then((loc) => {
+      gpsLocationRef.current = loc;
+      setGpsFix(loc);
+    });
   }, []);
 
   // Trip Expense Splitting (Group Trip Wallet): only relevant for `trip`
@@ -135,10 +149,25 @@ export function ExpenseCreateForm({ initial, onDone }: ExpenseCreateFormProps) {
   const [selectedCategory, setSelectedCategory] = useState(initial?.categoryId || '');
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
-  const [currencyCode, setCurrencyCode] = useState<Currency>(
-    (initial?.currencyCode as Currency) || user?.currencyCode || 'USD',
+  // A remembered travel currency preselects only while the "Using X" chip below says so,
+  // so the user can always see and undo it (e.g. after flying home).
+  const [rememberedCurrency] = useState<Currency | null>(() =>
+    initial?.currencyCode ? null : (rememberedTravelCurrency(currentAccount?.id) as Currency | null),
   );
+  const [currencyCode, setCurrencyCode] = useState<Currency>(
+    (initial?.currencyCode as Currency) || rememberedCurrency || user?.currencyCode || 'USD',
+  );
+  const baseCurrencyCode = (user?.currencyCode || 'USD') as Currency;
+  const showRememberedChip =
+    !!rememberedCurrency && rememberedCurrency !== baseCurrencyCode && currencyCode === rememberedCurrency;
   const [showCurrencyPicker, setShowCurrencyPicker] = useState(false);
+  // Local-currency nudge: uses the fix captured above, never asks for location itself.
+  const travel = useTravelCurrencySuggestion({
+    accountId: currentAccount?.id,
+    baseCurrency: user?.currencyCode || 'USD',
+    currentCurrency: currencyCode,
+    location: gpsFix,
+  });
   // Defaults to today, so the common case stays a zero-tap field; backdating an
   // expense you forgot to log no longer requires saving it and then editing the
   // date on the detail screen. Not clamped to the past — the edit-mode picker in
@@ -326,6 +355,51 @@ export function ExpenseCreateForm({ initial, onDone }: ExpenseCreateFormProps) {
             />
           </View>
           <AmountExpressionHelper value={amount} onChange={setAmount} />
+
+          {showRememberedChip && (
+            <TouchableOpacity
+              style={styles.travelChip}
+              onPress={() => {
+                setCurrencyCode(baseCurrencyCode);
+                if (currentAccount?.id) useTravelCurrencyStore.getState().forget(currentAccount.id);
+              }}
+              accessibilityRole="button"
+            >
+              <Ionicons name="airplane-outline" size={16} color={theme.colors.primary} />
+              <Text style={styles.travelChipText}>
+                {t('travelCurrency.using', { currency: rememberedCurrency, base: baseCurrencyCode })}
+              </Text>
+            </TouchableOpacity>
+          )}
+
+          {travel.suggestion && (
+            <View style={styles.travelChip}>
+              <TouchableOpacity
+                style={styles.travelChipMain}
+                onPress={() => {
+                  setCurrencyCode(travel.suggestion!.currency);
+                  travel.accept();
+                }}
+                accessibilityRole="button"
+              >
+                <Ionicons name="airplane-outline" size={16} color={theme.colors.primary} />
+                <Text style={styles.travelChipText}>
+                  {t('travelCurrency.prompt', {
+                    country: countryDisplayName(travel.suggestion.countryCode),
+                    currency: travel.suggestion.currency,
+                  })}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={travel.dismiss}
+                accessibilityRole="button"
+                accessibilityLabel={t('travelCurrency.dismiss', { country: countryDisplayName(travel.suggestion.countryCode) })}
+                hitSlop={8}
+              >
+                <Ionicons name="close" size={16} color={theme.colors.textSecondary} />
+              </TouchableOpacity>
+            </View>
+          )}
 
           {showCurrencyPicker && (
             <View style={styles.pickerContainer}>
@@ -534,6 +608,22 @@ const createStyles = (theme: Theme) => ({
     marginBottom: theme.spacing[8],
     paddingVertical: theme.spacing[4],
   },
+  travelChip: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'space-between' as const,
+    gap: 8,
+    marginHorizontal: 16,
+    marginBottom: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 12,
+    backgroundColor: theme.colors.surface,
+    borderWidth: 1,
+    borderColor: theme.colors.primary,
+  },
+  travelChipMain: { flex: 1, flexDirection: 'row' as const, alignItems: 'center' as const, gap: 8 },
+  travelChipText: { flex: 1, fontSize: 14, color: theme.colors.textPrimary },
   currencyButton: {
     flexDirection: 'row' as const,
     alignItems: 'center' as const,

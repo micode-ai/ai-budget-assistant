@@ -765,6 +765,7 @@ export default {
       baselineIs: 'Punkt odniesienia {{baseline}}',
       result: 'Punkt odniesienia {{baseline}} → cel {{target}}',
       noHistory: 'Brak historii wydatków w tej kategorii',
+      notEnoughHistory: "Za mało historii, aby ustalić punkt odniesienia dla tego okresu",
     },
     name: 'Nazwa budżetu',
     nameOptional: 'Nazwa budżetu (opcjonalnie)',
@@ -2842,6 +2843,15 @@ export default {
     yoy: "W porównaniu z tym samym miesiącem rok temu: cena {{price}}, zużycie {{use}}",
     fxApproximate: "Część rachunków pominięto w kosztach, bo nie znamy kursu ich waluty.",
     allProperties: "Wszystkie lokale",
+    reading: {
+      title: "Odczyt zużycia",
+      add: "Dodaj zużycie (kWh, m³, GJ)",
+      property: "Lokal (opcjonalnie)",
+      propertyPlaceholder: "np. Mieszkanie, Domek",
+      remove: "Usuń odczyt",
+      saveFailed: "Nie udało się zapisać odczytu. Sprawdź połączenie i spróbuj ponownie.",
+      notSyncedYet: "Ten wydatek nie został jeszcze zsynchronizowany. Spróbuj ponownie później.",
+    },
     kinds: {
       electricity: "Prąd",
       gas: "Gaz",
@@ -3923,6 +3933,11 @@ export default {
     editAssignmentTitle: 'Kto to miał?',
     editAssignmentSave: 'Zapisz',
     editBlockedConfirmed: 'Nie można tego zmienić — ktoś już potwierdził płatność w tym podziale. Zamiast tego anuluj i utwórz podział od nowa.',
+  },
+  travelCurrency: {
+    prompt: 'W kraju: {{country}}? Użyj {{currency}}',
+    dismiss: 'Ukryj podpowiedzi dla: {{country}}',
+    using: "Używasz waluty {{currency}} · przełącz na {{base}}",
   },
   receiptCategorySplit: {
     title: 'Podział na kategorie',

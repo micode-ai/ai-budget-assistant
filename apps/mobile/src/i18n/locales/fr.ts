@@ -757,6 +757,7 @@ export default {
       baselineIs: 'Base {{baseline}}',
       result: 'Base {{baseline}} → objectif {{target}}',
       noHistory: 'Pas encore de dépenses dans cette catégorie',
+      notEnoughHistory: "Historique insuffisant pour fixer une base sur cette période",
     },
     name: 'Nom du budget',
     nameOptional: 'Nom du budget (Facultatif)',
@@ -2830,6 +2831,15 @@ export default {
     yoy: "Par rapport au même mois l'an dernier : prix {{price}}, consommation {{use}}",
     fxApproximate: "Certaines factures sont exclues du coût car leur taux de change est inconnu.",
     allProperties: "Tous les logements",
+    reading: {
+      title: "Relevé de consommation",
+      add: "Ajouter la consommation (kWh, m³, GJ)",
+      property: "Logement (facultatif)",
+      propertyPlaceholder: "p. ex. Appartement, Maison de campagne",
+      remove: "Supprimer le relevé",
+      saveFailed: "Impossible d'enregistrer le relevé. Vérifiez votre connexion et réessayez.",
+      notSyncedYet: "Cette dépense n'est pas encore synchronisée. Réessayez plus tard.",
+    },
     kinds: {
       electricity: "Électricité",
       gas: "Gaz",
@@ -3906,6 +3916,11 @@ export default {
     editAssignmentTitle: 'Qui avait ça ?',
     editAssignmentSave: 'Enregistrer',
     editBlockedConfirmed: "Impossible de modifier ce partage — quelqu'un a déjà confirmé un paiement. Annule-le et recrée-le à la place.",
+  },
+  travelCurrency: {
+    prompt: 'En {{country}} ? Utiliser {{currency}}',
+    dismiss: 'Masquer les suggestions pour {{country}}',
+    using: "Devise {{currency}} utilisée · passer à {{base}}",
   },
   receiptCategorySplit: {
     title: 'Répartir par catégorie',

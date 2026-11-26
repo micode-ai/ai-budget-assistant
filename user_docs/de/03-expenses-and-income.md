@@ -222,6 +222,10 @@ Tippe auf einen beliebigen Einkommensentrag, um Details anzuzeigen:
 
 Im Betragsfeld kannst du eine kleine Rechnung eingeben, z. B. `12.50+3.20*2`. Verwende `+ − × ÷` und Klammern; `,` oder `.` gelten als Dezimaltrennzeichen. Das Ergebnis erscheint unter dem Feld und wird gespeichert. Bei einer ungültigen Rechnung bleibt Speichern deaktiviert.
 
+### Vorschlag der Landeswährung
+
+Wenn du im Ausland eine Ausgabe erfasst und der Standortzugriff bereits erlaubt ist, schlägt ein kleiner Chip die lokale Währung vor (z. B. „In Tschechien? CZK verwenden“). Tippe darauf, um zu wechseln; die Wahl wird 14 Tage gemerkt. Mit dem Kreuz blendest du Vorschläge für dieses Land aus. Die App fragt dafür nie nach dem Standort.
+
 ---
 
 *Siehe auch: [Spracheingabe & Beleg scannen](./04-voice-and-receipt.md) | [Budgets](./05-budgets.md)*

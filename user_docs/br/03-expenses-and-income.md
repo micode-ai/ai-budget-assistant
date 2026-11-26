@@ -222,6 +222,10 @@ Toque em qualquer receita para ver os detalhes:
 
 No campo de valor você pode digitar uma conta simples, por exemplo `12.50+3.20*2`. Use `+ − × ÷` e parênteses; `,` ou `.` funcionam como separador decimal. O resultado aparece abaixo do campo e é esse número que fica salvo. Se a conta não for válida, Salvar fica desativado.
 
+### Sugestão da moeda local
+
+Quando você registra uma despesa no exterior e o acesso à localização já está permitido, um pequeno chip sugere a moeda local (ex.: «Na Tchéquia? Usar CZK»). Toque para trocar; a escolha fica salva por 14 dias. Toque no X para parar de sugerir esse país. O app nunca pede a localização só para isso.
+
 ---
 
 *Veja também: [Entrada por voz e escaneamento de recibos](./04-voice-and-receipt.md) | [Orçamentos](./05-budgets.md)*

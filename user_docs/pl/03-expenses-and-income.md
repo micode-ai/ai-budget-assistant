@@ -222,6 +222,10 @@ Dotknij dowolny wpis przychodu, aby zobaczyc szczegoly:
 
 W polu kwoty możesz wpisać proste działanie, np. `12.50+3.20*2`. Używaj `+ − × ÷` i nawiasów; przecinek lub kropka działają jako separator dziesiętny. Wynik pojawia się pod polem i ta liczba zostaje zapisana. Przy nieprawidłowym działaniu przycisk Zapisz pozostaje wyłączony.
 
+### Podpowiedź waluty lokalnej
+
+Gdy dodajesz wydatek za granicą, a dostęp do lokalizacji jest już włączony, mały chip proponuje walutę kraju (np. „W Czechach? Użyj CZK”). Stuknij, aby zmienić; wybór jest pamiętany przez 14 dni. Krzyżyk wyłącza podpowiedzi dla tego kraju. Aplikacja nigdy nie prosi o lokalizację tylko do tego.
+
 ---
 
 *Zobacz takze: [Wprowadzanie glosowe i skanowanie paragonow](./04-voice-and-receipt.md) | [Budzety](./05-budgets.md)*

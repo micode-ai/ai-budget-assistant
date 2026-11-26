@@ -585,6 +585,10 @@ Tap any income entry to view details:
 
 In the amount field you can type a small sum, for example \`12.50+3.20*2\`. Use \`+ − × ÷\` and brackets; \`,\` or \`.\` both work as a decimal separator. The result appears under the field and that number is saved. If the sum is not valid, Save stays disabled.
 
+### Local currency suggestion
+
+When you add an expense abroad and location access is already allowed, a small chip offers the local currency (for example "In Czechia? Use CZK"). Tap it to switch; it is remembered for 14 days. Tap the cross to stop suggestions for that country. The app never asks for location just for this.
+
 ---
 
 *See also: Voice Input & Receipt Scanning | Budgets*
@@ -6201,6 +6205,10 @@ iOS, Android, Web
 
 В поле суммы можно ввести небольшое выражение, например \`12.50+3.20*2\`. Используйте \`+ − × ÷\` и скобки; разделитель — запятая или точка. Результат показывается под полем, и сохраняется именно он. Если выражение некорректно, кнопка «Сохранить» остаётся неактивной.
 
+### Подсказка местной валюты
+
+Если вы добавляете расход за границей и доступ к геолокации уже разрешён, небольшая плашка предложит местную валюту (например, «В Чехии? Использовать CZK»). Нажмите, чтобы переключить; выбор запоминается на 14 дней. Крестик отключает подсказки для этой страны. Приложение никогда не запрашивает геолокацию ради этого.
+
 ---
 
 *См. также: Голосовой ввод и сканирование чеков | Бюджеты*
@@ -11794,6 +11802,10 @@ iOS, Android, Web
 
 У полі суми можна ввести невеликий вираз, наприклад \`12.50+3.20*2\`. Використовуйте \`+ − × ÷\` і дужки; роздільник — кома або крапка. Результат показується під полем, і зберігається саме він. Якщо вираз некоректний, кнопка «Зберегти» залишається неактивною.
 
+### Підказка місцевої валюти
+
+Якщо ви додаєте витрату за кордоном і доступ до геолокації вже дозволено, невелика плашка запропонує місцеву валюту (наприклад, «У Чехії? Використати CZK»). Натисніть, щоб перемкнути; вибір запам'ятовується на 14 днів. Хрестик вимикає підказки для цієї країни. Застосунок ніколи не просить геолокацію заради цього.
+
 ---
 
 *Див. також: Голосовий ввід та сканування чеків | Бюджети*
@@ -17335,6 +17347,10 @@ Dotknij dowolny wpis przychodu, aby zobaczyc szczegoly:
 
 W polu kwoty możesz wpisać proste działanie, np. \`12.50+3.20*2\`. Używaj \`+ − × ÷\` i nawiasów; przecinek lub kropka działają jako separator dziesiętny. Wynik pojawia się pod polem i ta liczba zostaje zapisana. Przy nieprawidłowym działaniu przycisk Zapisz pozostaje wyłączony.
 
+### Podpowiedź waluty lokalnej
+
+Gdy dodajesz wydatek za granicą, a dostęp do lokalizacji jest już włączony, mały chip proponuje walutę kraju (np. „W Czechach? Użyj CZK”). Stuknij, aby zmienić; wybór jest pamiętany przez 14 dni. Krzyżyk wyłącza podpowiedzi dla tego kraju. Aplikacja nigdy nie prosi o lokalizację tylko do tego.
+
 ---
 
 *Zobacz takze: Wprowadzanie glosowe i skanowanie paragonow | Budzety*
@@ -22872,6 +22888,10 @@ Tippe auf einen beliebigen Einkommensentrag, um Details anzuzeigen:
 
 Im Betragsfeld kannst du eine kleine Rechnung eingeben, z. B. \`12.50+3.20*2\`. Verwende \`+ − × ÷\` und Klammern; \`,\` oder \`.\` gelten als Dezimaltrennzeichen. Das Ergebnis erscheint unter dem Feld und wird gespeichert. Bei einer ungültigen Rechnung bleibt Speichern deaktiviert.
 
+### Vorschlag der Landeswährung
+
+Wenn du im Ausland eine Ausgabe erfasst und der Standortzugriff bereits erlaubt ist, schlägt ein kleiner Chip die lokale Währung vor (z. B. „In Tschechien? CZK verwenden“). Tippe darauf, um zu wechseln; die Wahl wird 14 Tage gemerkt. Mit dem Kreuz blendest du Vorschläge für dieses Land aus. Die App fragt dafür nie nach dem Standort.
+
 ---
 
 *Siehe auch: Spracheingabe & Beleg scannen | Budgets*
@@ -28384,6 +28404,10 @@ Toca cualquier entrada de ingreso para ver los detalles:
 
 En el campo de importe puedes escribir una operación sencilla, por ejemplo \`12.50+3.20*2\`. Usa \`+ − × ÷\` y paréntesis; \`,\` o \`.\` sirven como separador decimal. El resultado aparece bajo el campo y ese número se guarda. Si la operación no es válida, Guardar queda desactivado.
 
+### Sugerencia de moneda local
+
+Si registras un gasto en el extranjero y ya permitiste la ubicación, un chip ofrece la moneda local (p. ej. «¿En Chequia? Usar CZK»). Tócalo para cambiar; se recuerda 14 días. Toca la cruz para dejar de sugerir ese país. La app nunca pide la ubicación solo para esto.
+
 ---
 
 *Ver tambien: Entrada de voz y Escaneo de recibos | Presupuestos*
@@ -33885,6 +33909,10 @@ Appuyez sur une entree de revenu pour afficher les details :
 
 Dans le champ du montant, tu peux saisir un petit calcul, par exemple \`12.50+3.20*2\`. Utilise \`+ − × ÷\` et les parenthèses ; \`,\` ou \`.\` servent de séparateur décimal. Le résultat s'affiche sous le champ et c'est ce nombre qui est enregistré. Si le calcul n'est pas valide, Enregistrer reste désactivé.
 
+### Suggestion de la devise locale
+
+Lorsque vous ajoutez une dépense à l'étranger et que la localisation est déjà autorisée, une pastille propose la devise locale (ex. « En Tchéquie ? Utiliser CZK »). Touchez-la pour changer ; le choix est mémorisé 14 jours. Touchez la croix pour ne plus recevoir de suggestion pour ce pays. L'app ne demande jamais la localisation pour cela.
+
 ---
 
 *Voir aussi : Saisie vocale et scan de recus | Budgets*
@@ -39384,6 +39412,10 @@ iOS, Android, Web
 
 У полі сумы можна ўвесці невялікі выраз, напрыклад \`12.50+3.20*2\`. Выкарыстоўвайце \`+ − × ÷\` і дужкі; падзельнік — коска або кропка. Вынік паказваецца пад полем, і захоўваецца іменна ён. Калі выраз некарэктны, кнопка «Захаваць» застаецца неактыўнай.
 
+### Падказка мясцовай валюты
+
+Калі вы дадаяце расход за мяжой і доступ да геалакацыі ўжо дазволены, невялікая плашка прапануе мясцовую валюту (напрыклад, «У Чэхіі? Выкарыстаць CZK»). Націсніце, каб пераключыць; выбар запамінаецца на 14 дзён. Крыжык адключае падказкі для гэтай краіны. Праграма ніколі не просіць геалакацыю дзеля гэтага.
+
 ---
 
 *Гл. таксама: Галасавы ўвод і сканаванне чэкаў | Бюджэты*
@@ -44846,6 +44878,10 @@ Tik op een inkomstenpost om de details te bekijken:
 ### Rekenen in het bedragveld
 
 In het bedragveld kun je een kleine som typen, bijvoorbeeld \`12.50+3.20*2\`. Gebruik \`+ − × ÷\` en haakjes; \`,\` of \`.\` werken als decimaalteken. Het resultaat verschijnt onder het veld en dat getal wordt opgeslagen. Is de som ongeldig, dan blijft Opslaan uitgeschakeld.
+
+### Suggestie voor de lokale valuta
+
+Voeg je een uitgave toe in het buitenland en is locatietoegang al toegestaan, dan stelt een klein label de lokale valuta voor (bijv. "In Tsjechië? Gebruik CZK"). Tik erop om te wisselen; de keuze wordt 14 dagen onthouden. Met het kruisje zet je suggesties voor dat land uit. De app vraagt hier nooit om locatie.
 
 ---
 
@@ -50435,6 +50471,10 @@ Toque em qualquer receita para ver os detalhes:
 ### Calcular no campo do valor
 
 No campo do valor podes escrever um cálculo simples, por exemplo \`12.50+3.20*2\`. Usa \`+ − × ÷\` e parênteses; \`,\` ou \`.\` servem de separador decimal. O resultado aparece por baixo do campo e é esse número que fica guardado. Se o cálculo não for válido, Guardar fica desativado.
+
+### Sugestão da moeda local
+
+Quando regista uma despesa no estrangeiro e o acesso à localização já está permitido, um pequeno chip propõe a moeda local (p. ex. «Na Chéquia? Usar CZK»). Toque para mudar; a escolha fica guardada 14 dias. Toque na cruz para deixar de sugerir esse país. A app nunca pede a localização só para isto.
 
 ---
 
@@ -56051,6 +56091,10 @@ Toque em qualquer receita para ver os detalhes:
 ### Calcular no campo de valor
 
 No campo de valor você pode digitar uma conta simples, por exemplo \`12.50+3.20*2\`. Use \`+ − × ÷\` e parênteses; \`,\` ou \`.\` funcionam como separador decimal. O resultado aparece abaixo do campo e é esse número que fica salvo. Se a conta não for válida, Salvar fica desativado.
+
+### Sugestão da moeda local
+
+Quando você registra uma despesa no exterior e o acesso à localização já está permitido, um pequeno chip sugere a moeda local (ex.: «Na Tchéquia? Usar CZK»). Toque para trocar; a escolha fica salva por 14 dias. Toque no X para parar de sugerir esse país. O app nunca pede a localização só para isso.
 
 ---
 

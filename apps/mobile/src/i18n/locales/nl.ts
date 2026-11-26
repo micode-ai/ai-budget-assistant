@@ -757,6 +757,7 @@ export default {
       baselineIs: 'Basis {{baseline}}',
       result: 'Basis {{baseline}} → doel {{target}}',
       noHistory: 'Nog geen uitgaven in deze categorie',
+      notEnoughHistory: "Te weinig geschiedenis om een basis voor deze periode te bepalen",
     },
     name: 'Budgetnaam',
     nameOptional: 'Budgetnaam (optioneel)',
@@ -2830,6 +2831,15 @@ export default {
     yoy: "Ten opzichte van dezelfde maand vorig jaar: prijs {{price}}, verbruik {{use}}",
     fxApproximate: "Sommige rekeningen tellen niet mee in de kosten omdat hun wisselkoers onbekend is.",
     allProperties: "Alle woningen",
+    reading: {
+      title: "Verbruiksmeting",
+      add: "Verbruik toevoegen (kWh, m³, GJ)",
+      property: "Woning (optioneel)",
+      propertyPlaceholder: "bijv. Appartement, Zomerhuisje",
+      remove: "Meting verwijderen",
+      saveFailed: "De meting kon niet worden opgeslagen. Controleer je verbinding en probeer het opnieuw.",
+      notSyncedYet: "Deze uitgave is nog niet gesynchroniseerd. Probeer het later opnieuw.",
+    },
     kinds: {
       electricity: "Elektriciteit",
       gas: "Gas",
@@ -3905,6 +3915,11 @@ export default {
     editAssignmentTitle: 'Wie had dit?',
     editAssignmentSave: 'Opslaan',
     editBlockedConfirmed: 'Dit kan niet worden gewijzigd — iemand heeft al een betaling voor deze verdeling bevestigd. Annuleer en maak de verdeling in plaats daarvan opnieuw aan.',
+  },
+  travelCurrency: {
+    prompt: 'In {{country}}? Gebruik {{currency}}',
+    dismiss: 'Suggesties voor {{country}} verbergen',
+    using: "{{currency}} in gebruik · wissel naar {{base}}",
   },
   receiptCategorySplit: {
     title: 'Verdelen op categorie',
