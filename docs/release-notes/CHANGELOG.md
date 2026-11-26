@@ -8,6 +8,65 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.45.0 - 2026-11-27
+
+**Spending**
+
+- Privacy mode: one tap on the eye in the home header hides every amount on screen — handy in a
+  café or on a shared screen. Shared images, texts and the home-screen widget keep real figures
+  (ABA-847).
+- Saved views: save a search or filter on Transactions and bring it back with one tap, on the
+  phone and the desktop (ABA-848).
+- A calculator in the amount field: type `12.50+8*2` and the result is saved (ABA-851).
+- Abroad, the expense form suggests the local currency; once you accept it, a chip shows which
+  currency is in use and switches back in one tap (ABA-855).
+
+**Budgets and limits**
+
+- "Spend less than…": when creating a budget, start from last month, the same month last year or
+  the 3-month average and cut it by a percentage (ABA-850).
+- A monthly cap for a single merchant, with a progress bar on the Merchants screen and a push at
+  80% and 100% (ABA-853).
+
+**Wallet and bills**
+
+- Credit cards: set the statement and payment days and a limit to see this cycle's spend, the
+  dates and a limit bar, with a reminder 3 days before the payment is due (ABA-852).
+- Utility readings: add consumption (kWh, m³, GJ) to a utility bill and follow usage and the unit
+  price over time (ABA-849).
+
+**Notifications**
+
+- Quiet hours: turn them on in notification settings and non-urgent pushes wait until the
+  window ends (22:00–08:00 unless you change it) (ABA-846).
+
+**Chat**
+
+- Ask the assistant how the app works — it answers from the help center with links to the
+  articles (ABA-844).
+
+**Cars**
+
+- Service reminder by kilometres: a service interval, an estimated current mileage, and a reset
+  when you log a service expense (ABA-838).
+
+**Import**
+
+- Statements from German banks: Sparkasse, DKB, ING, N26, Commerzbank, comdirect and more
+  (ABA-843).
+
+**Fixes**
+
+- Transfers made offline are sent as soon as the connection or the app comes back (ABA-839).
+
+**Behind the scenes**
+
+- Server groundwork for a 30-day "Recently deleted" list with restore (ABA-845) and for linking
+  a refund to its original expense so category spend nets out (ABA-854); weekly reporting and
+  wiki housekeeping (ABA-840, ABA-841, ABA-842).
+
+---
+
 ## 1.44.0 - 2026-11-23
 
 **All accounts**
