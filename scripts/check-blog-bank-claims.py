@@ -49,6 +49,13 @@ BANKS = {
     'citi': r'citi',
     'velobank': r'velo-?bank',
     'n26': r'(?<![a-z])n26(?![a-z])',
+    # German banks (ABA-843).
+    'sparkasse': r'sparkasse',
+    'volksbank': r'volksbank|raiffeisen',
+    'dkb': r'(?<![a-z])dkb(?![a-z])',
+    'ing-de': r'ing-?diba|ing-deutschland',
+    'comdirect': r'comdirect',
+    'commerzbank': r'commerzbank',
 }
 TOPIC = re.compile(r'import|wyciag|statement|vypis|kontoauszug|releve|extracto|afschrift|vypisk', re.I)
 # How an honest article about a picker-hidden bank tells the reader to import it.

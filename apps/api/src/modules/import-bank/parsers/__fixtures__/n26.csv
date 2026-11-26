@@ -1,0 +1,3 @@
+"Booking Date","Value Date","Partner Name","Partner Iban",Type,"Payment Reference","Account Name","Amount (EUR)","Original Amount","Original Currency","Exchange Rate"
+"2026-09-05","2026-09-06","Cloud Services Inc.","",Presentment,"-","Main Account",-21.37,-25.00,USD,1.1699
+"2026-09-01","2026-09-01","Erika Mustermann","DE89370400440532013000",Income,"Rent share","Main Account",450.00,,,

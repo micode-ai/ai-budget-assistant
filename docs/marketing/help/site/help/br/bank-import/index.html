@@ -93,7 +93,7 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <nav class="nav"><details class="langmenu"><summary><span class="lang-full">Português (Brasil)</span><span class="lang-short">BR</span> &#9662;</summary><div class="langlist"><a class="" href="https://ai-budget.pl/help/en/bank-import/">English</a><a class="" href="https://ai-budget.pl/help/pl/bank-import/">Polski</a><a class="" href="https://ai-budget.pl/help/de/bank-import/">Deutsch</a><a class="" href="https://ai-budget.pl/help/es/bank-import/">Español</a><a class="" href="https://ai-budget.pl/help/fr/bank-import/">Français</a><a class="" href="https://ai-budget.pl/help/ru/bank-import/">Русский</a><a class="" href="https://ai-budget.pl/help/ua/bank-import/">Українська</a><a class="" href="https://ai-budget.pl/help/be/bank-import/">Беларуская</a><a class="" href="https://ai-budget.pl/help/nl/bank-import/">Nederlands</a><a class="" href="https://ai-budget.pl/help/pt/bank-import/">Português (Portugal)</a><a class="active" href="https://ai-budget.pl/help/br/bank-import/">Português (Brasil)</a></div></details><a href="/blog/br/">Blog</a><a class="btn-login" href="https://app.ai-budget.pl?src=help&amp;loc=nav&amp;lang=pt-BR">Entrar</a></nav></div></header>
 <main class="wrap"><nav class="crumb"><a href="/br/">Início</a> / <a href="/help/br/">Ajuda</a> / <span>Importar transações do seu banco</span></nav><article><h1>Importar transações do seu banco</h1>
 <blockquote>
-<p>Importe transações de um extrato do seu banco em CSV, XLSX ou PDF. Suporta mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise e qualquer outro banco pelo mapeador universal de colunas.</p>
+<p>Importe transações de um extrato do seu banco em CSV, XLSX ou PDF. Suporta mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise, bancos alemães (Sparkasse, Volksbank, DKB, ING, comdirect, Commerzbank, N26) e qualquer outro banco pelo mapeador universal de colunas.</p>
 </blockquote>
 <h2>Bancos suportados</h2>
 <ul>
@@ -103,6 +103,7 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li><strong>Alior Bank</strong> — extrato em PDF</li>
 <li><strong>Revolut</strong> — exportação CSV</li>
 <li><strong>Wise</strong> — exportação CSV (várias moedas; as conversões de moeda são detectadas automaticamente)</li>
+<li><strong>Bancos alemães</strong> — exportação CSV de Sparkasse, Volksbank / Raiffeisenbank, DKB, ING Deutschland, comdirect, Commerzbank, N26. Eles aparecem na lista quando o app está em alemão; <strong>Detectar automaticamente</strong> reconhece os arquivos em qualquer idioma. Lançamentos pendentes (ainda não compensados) são ignorados, para não serem importados duas vezes depois de compensados</li>
 <li><strong>Outro</strong> — qualquer banco, pelo mapeador universal de colunas (CSV)</li>
 <li><strong>Planilhas</strong> — extratos em XLSX também funcionam; o app lê a primeira aba</li>
 </ul>

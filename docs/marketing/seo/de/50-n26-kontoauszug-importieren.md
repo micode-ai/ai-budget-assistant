@@ -1,6 +1,6 @@
 ---
 title: "N26 Umsätze als CSV exportieren und ins Haushaltsbuch"
-meta_description: "So exportierst du deine N26-Kontoaktivität als CSV und importierst sie ins Haushaltsbuch: Schritte laut N26-Hilfe, Spaltenerkennung, Duplikate und Grenzen."
+meta_description: "So exportierst du deine N26-Kontoaktivität als CSV und importierst sie ins Haushaltsbuch: Schritte laut N26-Hilfe, eigener Parser, Duplikate."
 target_keyword: "n26 csv export"
 slug: "n26-kontoauszug-importieren"
 pair: "import-n26"
@@ -12,7 +12,7 @@ date: "2026-11-18"
 
 Deine N26-Umsätze exportierst du im Web-Banking als CSV: Konto oder Space wählen, **Downloads** öffnen, den Bericht über die Kontoaktivität mit Start- und Enddatum anlegen und **CSV** herunterladen. In AI Budget Assistant lädst du die Datei unter **Einstellungen → Transaktionen importieren → Automatisch erkennen (jede Bank)** hoch. Die App erkennt die Spalten, schlägt Kategorien vor und wählt Transaktionen ab, die du schon hast.
 
-Für N26 gibt es in der App keinen eigenen Parser. Die Spalten ordnet beim ersten Mal die KI-Erkennung zu, und das ist für CSV-Dateien kostenlos.
+Für N26 gibt es in der App einen eigenen Parser. Er liest die Datei direkt, deshalb entfallen die KI-Spaltenerkennung und die Zustimmungsabfrage: Es wird nichts an ein Modell gesendet, und der Import ist in jedem Tarif kostenlos.
 
 ## Wie exportiere ich meine N26-Umsätze als CSV?
 
@@ -27,23 +27,19 @@ Die monatlichen Kontoauszüge gibt es bei N26 nur als PDF. Für den Import nimm 
 
 ## Wie importiere ich die N26-CSV in AI Budget Assistant?
 
-1. Öffne **Einstellungen → Transaktionen importieren**.
-2. Wähle **Automatisch erkennen (jede Bank)** und die CSV-Datei.
-3. Beim ersten Mal fragt die App, ob sie die Spalten per KI erkennen darf, und zeigt, was gesendet wird: die Kopfzeile und bis zu zehn Beispielzeilen, nicht die ganze Datei. Die Zustimmung gilt einmal pro Konto.
-4. Prüfe in der Vorschau, welche Spalte Datum, Betrag und Beschreibung ist. Ist etwas falsch, tippst du auf die Zuordnung und korrigierst sie.
-5. Prüfe Kategorien, wähle unnötige Zeilen ab und tippe auf **Importieren**.
-
-Hat schon jemand eine Datei mit derselben Spaltenstruktur importiert, erkennt die App das Layout wieder, ohne die KI zu fragen.
+1. Öffne **Einstellungen → Transaktionen importieren**. Bei deutscher App-Sprache steht **N26** als eigene Zeile in der Schnellauswahl.
+2. Tippe auf **N26** und wähle die CSV-Datei. Alternativ nimmst du **Automatisch erkennen (jede Bank)**, auch dann erkennt die App die N26-Datei.
+3. Prüfe in der Vorschau Datum, Betrag, Beschreibung und die vorgeschlagenen Kategorien, die aus bekannten deutschen Händlern wie REWE, EDEKA oder Lieferando stammen.
+4. Wähle unnötige Zeilen ab und tippe auf **Importieren**.
 
 ## Was passiert mit Duplikaten und Fremdwährungen?
 
 | Frage | Antwort |
 |---|---|
-| Kosten | CSV-Import mit KI-Spaltenerkennung ist kostenlos; nur das Auslesen von PDFs per KI gehört zu Pro |
+| Kosten | Der N26-CSV-Import ist in jedem Tarif kostenlos |
 | Doppelte Umsätze | Die App vergleicht Datum, Betrag und Währung mit vorhandenen Transaktionen und wählt Wiederholungen ab |
 | Bereits per Benachrichtigung erfasst | Eine Ausgabe, die die App schon aus der N26-Benachrichtigung angelegt hat, wird als dieselbe Transaktion erkannt und zum Zusammenführen vorgeschlagen |
 | Rückgängig machen | Den ganzen Import machst du 30 Tage lang im Importverlauf rückgängig |
-| Konten mit voller Verschlüsselung | Die KI-Erkennung ist dort nicht verfügbar; die Spalten ordnest du selbst zu |
 
 Prüfe vor dem Bestätigen ein paar Zeilen mit dem Original, vor allem Vorzeichen und Datumsformat.
 
@@ -51,7 +47,7 @@ Prüfe vor dem Bestätigen ein paar Zeilen mit dem Original, vor allem Vorzeiche
 
 Ja. Auf Android kann die App N26-Zahlungen direkt aus der Push-Benachrichtigung erfassen, lokal auf dem Gerät und ohne Bankzugang. N26 steht auf der Liste der unterstützten Banking-Apps. Mehr dazu in [Ausgaben automatisch erfassen statt alles selbst eintippen](/blog/de/ausgaben-automatisch-erfassen/). Der CSV-Import ist dann vor allem für den Rückblick auf frühere Monate da.
 
-Allgemeiner Leitfaden: [Kontoauszug importieren](/blog/de/kontoauszug-importieren/). Wenn deine Bank auf keiner Liste steht: [Kontoauszug von jeder Bank importieren](/blog/de/kontoauszug-von-jeder-bank-importieren/). Die App testest du auf [ai-budget.pl](https://ai-budget.pl).
+Allgemeiner Leitfaden: [Kontoauszug importieren](/blog/de/kontoauszug-importieren/). Warum die App ohne Bankverbindung arbeitet: [Haushaltsbuch-App ohne Bankverbindung](/blog/de/haushaltsbuch-app-ohne-bankverbindung/). Auch für die klassischen Banken gibt es eigene Seiten, etwa [Sparkasse](/blog/de/sparkasse-kontoauszug-csv/) und [DKB](/blog/de/dkb-kontoauszug-csv/). Wenn deine Bank auf keiner Liste steht: [Kontoauszug von jeder Bank importieren](/blog/de/kontoauszug-von-jeder-bank-importieren/). Die App testest du auf [ai-budget.pl](https://ai-budget.pl).
 
 ## FAQ: N26 CSV-Export
 
@@ -65,7 +61,7 @@ Die N26-Hilfe beschreibt den CSV-Export im Web-Banking. In der App findest du di
 
 **Kostet der Import der N26-CSV etwas?**
 
-Nein. Die KI-Spaltenerkennung für CSV ist im kostenlosen Plan enthalten.
+Nein. Der Import mit dem eigenen N26-Parser ist in jedem Tarif kostenlos, ohne KI und ohne Zustimmungsabfrage.
 
 **Gilt das auch für N26 in Österreich?**
 

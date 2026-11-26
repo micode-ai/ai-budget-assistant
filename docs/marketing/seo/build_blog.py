@@ -369,7 +369,8 @@ PAIR_TO_HELP = {
     "expense-map": "expense-map", "split-bill": "receipt-split", "receipts": "voice-and-receipt",
     "auto-capture": "expenses-and-income", "school": "budgets",
     "tax-refund": "savings-goals",
-    **{f"import-{b}": "bank-import" for b in ("revolut", "mbank", "pko", "ing", "millennium", "pekao", "alior", "erste", "velobank", "n26")},
+    **{f"import-{b}": "bank-import" for b in ("revolut", "mbank", "pko", "ing", "millennium", "pekao", "alior", "erste", "velobank", "n26",
+                                               "sparkasse", "volksbank", "dkb", "ing-de", "comdirect", "commerzbank")},
 }
 
 # Pillar -> its cluster children. Single source of truth for BOTH the generated pillar
@@ -381,6 +382,7 @@ CLUSTERS = {
     "expenses": ["bank-import", "best-apps", "expense-map", "auto-capture", "receipts", "split-bill", "app-abandonment", "switch-apps", "excel-budget", "free-app",
                  "vs-monefy", "vs-wallet", "vs-ynab", "vs-moneymanager",
                  "import-revolut", "import-mbank", "import-pko", "import-ing", "import-millennium", "import-pekao", "import-alior", "import-erste", "import-velobank", "import-n26",
+                 "import-sparkasse", "import-volksbank", "import-dkb", "import-ing-de", "import-comdirect", "import-commerzbank",
                  "no-bank-link"],
     "saving": ["groceries", "emergency-fund", "subscriptions", "debt", "inflation", "wrapped", "inflation-shield", "rate-alert", "multi-currency", "christmas", "black-friday", "tax-refund", "live-on-2000"],
 }

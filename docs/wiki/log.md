@@ -408,6 +408,7 @@ Newest last within each section.
 
 - 2026-11-25 · [ABA-841](https://github.com/micode-ai/ai-budget-assistant/issues/879) — CLAUDE.md slimmed 14.7k → 11.8k words: production stack, deploy guards, backups, release/versioning, native build traps, bot i18n and cache/cron utilities moved verbatim to seven new pages, short rules left behind. Pages: `features/production-operations.md`, `features/prisma-migrations.md`, `features/api-cross-cutting-utilities.md`, `features/android-releases.md`, `features/mobile-native-constraints.md`, `features/shopping-mode.md`, `features/bot-shared-i18n.md`.
 - 2026-11-26 · [ABA-842](https://github.com/micode-ai/ai-budget-assistant/issues/880) — weekly GSC report lists the visible queries of its top 15 pages; RU New Year article retitled around the Christmas-budget query it ranks for, with a late-start section. Pages: `features/marketing-site.md`.
+- 2026-11-26 · [ABA-843](https://github.com/micode-ai/ai-budget-assistant/issues/881) — German bank imports (Sparkasse, Volksbank, DKB, ING-de, comdirect, Commerzbank, N26) with pending rows skipped and detection from metadata lines; German-only bank-export blog pages; de-DE Play copy. Pages: `features/bank-statement-import.md`, `features/marketing-site.md`.
 
 ## Queries
 

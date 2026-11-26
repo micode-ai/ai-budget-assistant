@@ -8,6 +8,7 @@ describe('parser registry', () => {
   it('has all parsers in detection order', () => {
     expect(PARSERS.map((p) => p.id)).toEqual([
       'mbank', 'pko', 'revolut', 'ing', 'millennium', 'pekao', 'erste', 'alior',
+      'sparkasse', 'volksbank', 'dkb', 'ing-de', 'comdirect', 'commerzbank', 'n26',
       'monefy', 'wallet', 'moneymanager', 'universal', 'ai',
     ]);
   });

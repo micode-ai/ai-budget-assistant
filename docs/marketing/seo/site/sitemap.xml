@@ -6,7 +6,7 @@
 <url><loc>https://ai-budget.pl/blog/de/</loc><lastmod>2026-11-18</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
 <url><loc>https://ai-budget.pl/blog/es/</loc><lastmod>2026-10-15</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
 <url><loc>https://ai-budget.pl/blog/fr/</loc><lastmod>2026-10-07</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-<url><loc>https://ai-budget.pl/blog/ru/</loc><lastmod>2026-10-15</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+<url><loc>https://ai-budget.pl/blog/ru/</loc><lastmod>2026-11-26</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
 <url><loc>https://ai-budget.pl/blog/ua/</loc><lastmod>2026-10-07</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
 <url><loc>https://ai-budget.pl/blog/be/</loc><lastmod>2026-10-07</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
 <url><loc>https://ai-budget.pl/blog/nl/</loc><lastmod>2026-10-15</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
@@ -146,6 +146,12 @@
 <url><loc>https://ai-budget.pl/blog/de/steuererstattung-sinnvoll-nutzen/</loc><lastmod>2026-11-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/de/haushaltsbuch-app-ohne-bankverbindung/</loc><lastmod>2026-11-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/de/n26-kontoauszug-importieren/</loc><lastmod>2026-11-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ai-budget.pl/blog/de/sparkasse-kontoauszug-csv/</loc><lastmod>2026-06-19</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ai-budget.pl/blog/de/volksbank-kontoauszug-csv/</loc><lastmod>2026-06-19</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ai-budget.pl/blog/de/dkb-kontoauszug-csv/</loc><lastmod>2026-06-19</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ai-budget.pl/blog/de/ing-kontoauszug-csv/</loc><lastmod>2026-06-19</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ai-budget.pl/blog/de/comdirect-umsaetze-csv/</loc><lastmod>2026-06-19</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ai-budget.pl/blog/de/commerzbank-umsaetze-csv/</loc><lastmod>2026-06-19</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/en/how-to-budget/</loc><lastmod>2026-10-07</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/en/expense-tracker/</loc><lastmod>2026-10-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/en/how-to-save-money/</loc><lastmod>2026-10-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
@@ -339,7 +345,7 @@
 <url><loc>https://ai-budget.pl/blog/ru/besplatnoe-prilozhenie-dlya-ucheta-raskhodov/</loc><lastmod>2026-09-20</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/ru/byudzhet-pri-nestabilnom-dokhode/</loc><lastmod>2026-09-20</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/ru/byudzhet-v-dvukh-valyutakh/</loc><lastmod>2026-09-20</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-<url><loc>https://ai-budget.pl/blog/ru/byudzhet-na-novyy-god/</loc><lastmod>2026-10-02</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ai-budget.pl/blog/ru/byudzhet-na-novyy-god/</loc><lastmod>2026-11-26</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/ru/chernaya-pyatnica-skidki/</loc><lastmod>2026-10-02</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/ru/monefy-sravnenie-ai-budget-assistant/</loc><lastmod>2026-10-07</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/ru/wallet-budgetbakers-sravnenie-ai-budget-assistant/</loc><lastmod>2026-10-07</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>

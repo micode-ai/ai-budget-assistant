@@ -150,7 +150,7 @@ Docelowo 3-6 miesięcy niezbędnych wydatków. Jeśli to zbyt odległy cel, zacz
 - [Metoda kopertowa - jak przestać przepłacać](/blog/pl/metoda-kopertowa/)
 - [Zasada 50/30/20 - praktyczny poradnik](/blog/pl/zasada-50-30-20/)
 - [Kategorie wydatków, które naprawdę działają](/blog/pl/kategorie-wydatkow/)
-- [Budżet domowy z dziećmi, który się spina](/blog/pl/budzet-domowy-z-dziecmi/)
+- [Budżet domowy z dziećmi: przykład dla rodziny 4-osobowej](/blog/pl/budzet-domowy-z-dziecmi/)
 - [AI w zarządzaniu finansami: jak naprawdę pomaga](/blog/pl/ai-w-zarzadzaniu-finansami/)
 - [Wyprawka szkolna: ile kosztuje i jak ją rozplanować](/blog/pl/wyprawka-szkolna-ile-kosztuje/)
 - [Budżet przy nieregularnych dochodach: co działa](/blog/pl/budzet-przy-nieregularnych-dochodach/)

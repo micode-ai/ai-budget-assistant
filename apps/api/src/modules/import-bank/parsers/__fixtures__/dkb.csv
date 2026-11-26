@@ -1,0 +1,9 @@
+﻿"Girokonto";"DE42120300001033738756"
+
+"Kontostand vom 09.12.2025:";"4.093,32 €"
+
+"Buchungsdatum";"Wertstellung";"Status";"Zahlungspflichtige*r";"Zahlungsempfänger*in";"Verwendungszweck";"Umsatztyp";"IBAN";"Betrag (€)";"Gläubiger-ID";"Mandatsreferenz";"Kundenreferenz"
+"09.12.25";"09.12.25";"Vorgemerkt";"ISSUER";"LIDL//BERLIN/DE";"";"Ausgang";"";"-12,40";"";"";""
+"08.12.25";"08.12.25";"Gebucht";"ISSUER";"EDEKA//MUENCHEN/DE";"EDEKA SAGT DANKE";"Ausgang";"DE00000000000000000000";"-8,67";"DE9100112233445566";"";"00000000000000000000000000"
+"08.12.25";"08.12.25";"Gebucht";"Max Mustermann";"Erika Mustermann";"Nebenkosten";"Eingang";"DE89370400440532013000";"200";"";"";""
+"07.12.25";"07.12.25";"Gebucht";"Erika Mustermann";"Vermieter GmbH";"Miete";"Ausgang";"DE89370400440532013000";"-1.450";"";"";""

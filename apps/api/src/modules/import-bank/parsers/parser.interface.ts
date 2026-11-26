@@ -19,7 +19,8 @@ export interface ParserResult {
 }
 
 export interface BankParser {
-  id: 'mbank' | 'pko' | 'revolut' | 'ing' | 'millennium' | 'pekao' | 'erste' | 'alior' | 'universal' | 'ai' | 'monefy' | 'wallet' | 'moneymanager';
+  id: 'mbank' | 'pko' | 'revolut' | 'ing' | 'millennium' | 'pekao' | 'erste' | 'alior' | 'universal' | 'ai' | 'monefy' | 'wallet' | 'moneymanager'
+    | 'sparkasse' | 'volksbank' | 'dkb' | 'ing-de' | 'comdirect' | 'commerzbank' | 'n26';
   displayName: string;
   /**
    * Input format the parser consumes. 'csv' parsers receive decoded CSV text;

@@ -299,6 +299,15 @@ Austria is served by sections inside the German pages, not by `de-AT` copies. Th
 links `/de/about/#impressum` (`IMPRESSUM_DE` in `build_landing.py`, the same company details as the
 Terms; the blog footer adds the link for `de` only, and the help center inherits it).
 
+**German bank-export pages ([ABA-843](https://github.com/micode-ai/ai-budget-assistant/issues/881)).** The Polish per-bank pages carry ~40% of site
+impressions, so Germany got the same cluster once the app could parse German banks: German-only
+pages for Sparkasse, Volksbank, DKB, ING, comdirect and Commerzbank (pairs `import-<bank>`, no
+translations), plus the N26 page, in `FROM_BLOG_PAIRS` like N26 before them. Only the Commerzbank
+steps (and ING's "Exportieren") are quoted from the bank's own help; the others give a general path,
+because the banks' help pages do not describe the CSV export. The de-DE Play listing copy leads with
+"KI-Haushaltsbuch ohne Bankverbindung" to match the site, the one generic query where we already
+rank and get clicks ("ki haushaltsbuch", position 6).
+
 **Definitions for answer engines ([ABA-814](https://github.com/micode-ai/ai-budget-assistant/issues/852)).** A pillar can carry a
 `term:` frontmatter key. `build_blog.py` (`extract_definition`) then takes the first paragraph that
 opens with the term, which sits right under a "Czym jest …?" H2 and runs 40–55 words, and emits
@@ -344,4 +353,4 @@ ABA-686 (diagnosis of the decline: site-wide ranking loss from 2026-09-15, follo
 ABA-688 (weekly Search Console API snapshot per section with a drop alert) ·
 ABA-689 (per-section sitemaps submitted separately) · ABA-690 (site changes listed next to the weekly series). ·
 ABA-710 (developers page, footer link and llms entry for the public API) ·
-ABA-716 (six shipped features added to `FEATURES_EN`; Organization `founder` and Instagram `sameAs`). · [ABA-739](https://github.com/micode-ai/ai-budget-assistant/issues/777) (search-intent titles, Play short descriptions) · [ABA-740](https://github.com/micode-ai/ai-budget-assistant/issues/778) (blog bank-claims check) · [ABA-814](https://github.com/micode-ai/ai-budget-assistant/issues/852) (all 15 currencies in `llms.txt`, verified Erste and VeloBank pages, `DefinedTerm` definitions, Wave 14 language-scope rule) · [ABA-815](https://github.com/micode-ai/ai-budget-assistant/issues/853) (German site on "ohne Bankverbindung", DACH bank coverage, Austria sections, Impressum) · [ABA-842](https://github.com/micode-ai/ai-budget-assistant/issues/880) (top-pages query table in the weekly report; RU holiday article retitled to its query).
+ABA-716 (six shipped features added to `FEATURES_EN`; Organization `founder` and Instagram `sameAs`). · [ABA-739](https://github.com/micode-ai/ai-budget-assistant/issues/777) (search-intent titles, Play short descriptions) · [ABA-740](https://github.com/micode-ai/ai-budget-assistant/issues/778) (blog bank-claims check) · [ABA-814](https://github.com/micode-ai/ai-budget-assistant/issues/852) (all 15 currencies in `llms.txt`, verified Erste and VeloBank pages, `DefinedTerm` definitions, Wave 14 language-scope rule) · [ABA-815](https://github.com/micode-ai/ai-budget-assistant/issues/853) (German site on "ohne Bankverbindung", DACH bank coverage, Austria sections, Impressum) · [ABA-842](https://github.com/micode-ai/ai-budget-assistant/issues/880) (top-pages query table in the weekly report; RU holiday article retitled to its query). · [ABA-843](https://github.com/micode-ai/ai-budget-assistant/issues/881) (German bank-export pages, de-DE Play copy).

@@ -1,6 +1,6 @@
 # Transacties importeren vanaf je bank
 
-> Importeer transacties uit een CSV-, XLSX- of PDF-afschrift van je bank. Ondersteunt mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise en elke andere bank via de universele kolomtoewijzer.
+> Importeer transacties uit een CSV-, XLSX- of PDF-afschrift van je bank. Ondersteunt mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise, Duitse banken (Sparkasse, Volksbank, DKB, ING, comdirect, Commerzbank, N26) en elke andere bank via de universele kolomtoewijzer.
 
 ## Ondersteunde banken
 
@@ -10,6 +10,7 @@
 - **Alior Bank** — PDF-afschrift
 - **Revolut** — CSV-export
 - **Wise** — CSV-export (meerdere valuta's, FX-conversies automatisch gedetecteerd)
+- **Duitse banken** — CSV-export van Sparkasse, Volksbank / Raiffeisenbank, DKB, ING Deutschland, comdirect, Commerzbank, N26. Ze staan in de lijst als de app in het Duits staat; **Automatisch herkennen** herkent de bestanden in elke taal. Openstaande (nog niet geboekte) transacties worden overgeslagen, zodat ze na de boeking niet dubbel worden geïmporteerd
 - **Overig** — elke bank, via de universele kolomtoewijzer (CSV)
 - **Spreadsheets** — XLSX-afschriften werken ook; de app leest het eerste blad
 

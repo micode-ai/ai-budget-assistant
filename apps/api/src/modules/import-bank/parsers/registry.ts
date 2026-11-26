@@ -12,6 +12,13 @@ import { AiStatementParser } from './ai-statement.parser';
 import { MonefyParser } from './monefy.parser';
 import { WalletParser } from './wallet.parser';
 import { MoneyManagerParser } from './moneymanager.parser';
+import { SparkasseParser } from './sparkasse.parser';
+import { VolksbankParser } from './volksbank.parser';
+import { DkbParser } from './dkb.parser';
+import { IngDeParser } from './ing-de.parser';
+import { ComdirectParser } from './comdirect.parser';
+import { CommerzbankParser } from './commerzbank.parser';
+import { N26Parser } from './n26.parser';
 
 export const PARSERS: BankParser[] = [
   new MBankParser(),
@@ -22,6 +29,16 @@ export const PARSERS: BankParser[] = [
   new PekaoParser(),
   new ErsteParser(),
   new AliorParser(),
+  // German banks (ABA-843). Their signatures are German column names no Polish
+  // export carries, so their position relative to the Polish parsers does not
+  // matter; they only have to stay ahead of UniversalParser.
+  new SparkasseParser(),
+  new VolksbankParser(),
+  new DkbParser(),
+  new IngDeParser(),
+  new ComdirectParser(),
+  new CommerzbankParser(),
+  new N26Parser(),
   // Competitor app exports — tried before UniversalParser, which never
   // self-detects, so an unclaimed file still falls through to AI inference.
   new MonefyParser(),

@@ -239,6 +239,7 @@ Wave 14 rules:
 |---|---|---|---|
 | 49 | `no-bank-link` | de only | "Haushaltsbuch-App ohne Bankverbindung": what works without account linking and what does not, plus a dated comparison with Finanzguru, Outbank and MoneyMoney from their own sites. It replaces separate `vs-finanzguru`/`vs-outbank` pages, which would have been thin |
 | 50 | `import-n26` | de only | N26 account-activity CSV (web banking) → auto-detect; steps from N26's help, English menu names flagged as such |
+| 51-56 | `import-sparkasse`, `import-volksbank`, `import-dkb`, `import-ing-de`, `import-comdirect`, `import-commerzbank` | de only (intentional) | German bank CSV pages (ABA-843, 2026-11-26), each on its own parser; export menu steps could not be verified on the banks' help pages, so the text is general and says so. N26 (50) rewritten: own parser, no AI step |
 | 19, 20, 46 | `auto-capture`, `receipts`, `tax-refund` | de edits | DACH bank-app table for notification capture; Austrian Belegerteilungspflicht and the e-Beleg since 2026-10-01; Arbeitnehmerveranlagung (five years, FinanzOnline, antragslos) |
 
 Wave 15 notes:

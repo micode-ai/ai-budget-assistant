@@ -93,7 +93,7 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <nav class="nav"><details class="langmenu"><summary><span class="lang-full">English</span><span class="lang-short">EN</span> &#9662;</summary><div class="langlist"><a class="active" href="https://ai-budget.pl/help/en/bank-import/">English</a><a class="" href="https://ai-budget.pl/help/pl/bank-import/">Polski</a><a class="" href="https://ai-budget.pl/help/de/bank-import/">Deutsch</a><a class="" href="https://ai-budget.pl/help/es/bank-import/">Español</a><a class="" href="https://ai-budget.pl/help/fr/bank-import/">Français</a><a class="" href="https://ai-budget.pl/help/ru/bank-import/">Русский</a><a class="" href="https://ai-budget.pl/help/ua/bank-import/">Українська</a><a class="" href="https://ai-budget.pl/help/be/bank-import/">Беларуская</a><a class="" href="https://ai-budget.pl/help/nl/bank-import/">Nederlands</a><a class="" href="https://ai-budget.pl/help/pt/bank-import/">Português (Portugal)</a><a class="" href="https://ai-budget.pl/help/br/bank-import/">Português (Brasil)</a></div></details><a href="/blog/en/">Blog</a><a class="btn-login" href="https://app.ai-budget.pl?src=help&amp;loc=nav&amp;lang=en">Log in</a></nav></div></header>
 <main class="wrap"><nav class="crumb"><a href="/en/">Home</a> / <a href="/help/en/">Help</a> / <span>Importing transactions from your bank</span></nav><article><h1>Importing transactions from your bank</h1>
 <blockquote>
-<p>Import transactions from a CSV, XLSX or PDF statement of your bank. Supports mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise, and any other bank via the universal column mapper.</p>
+<p>Import transactions from a CSV, XLSX or PDF statement of your bank. Supports mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise, German banks (Sparkasse, Volksbank, DKB, ING, comdirect, Commerzbank, N26), and any other bank via the universal column mapper.</p>
 </blockquote>
 <h2>Supported banks</h2>
 <ul>
@@ -103,6 +103,7 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li><strong>Alior Bank</strong> — PDF statement</li>
 <li><strong>Revolut</strong> — CSV export</li>
 <li><strong>Wise</strong> — CSV export (multi-currency, FX conversions detected automatically)</li>
+<li><strong>German banks</strong> — CSV export from Sparkasse, Volksbank / Raiffeisenbank, DKB, ING Deutschland, comdirect, Commerzbank, N26. These rows appear in the list when the app is in German; <strong>Detect automatically</strong> recognises the files in any language. Pending (not yet booked) transactions are skipped, so they are not imported twice once booked</li>
 <li><strong>Other</strong> — any bank, via the universal column mapper (CSV)</li>
 <li><strong>Spreadsheets</strong> — XLSX statements work too; the app reads the first sheet</li>
 </ul>

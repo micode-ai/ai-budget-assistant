@@ -1,0 +1,16 @@
+Umsatzanzeige;Datei erstellt am: 09.12.2025 15:23
+
+IBAN;DE12 5001 0517 0000 0000 00
+Kontoname;Girokonto
+Bank;ING
+Kunde;Max Mustermann
+Zeitraum;17.11.2025 - 09.12.2025
+Saldo;66.331,90;EUR
+
+Sortierung;Datum absteigend
+
+In der CSV-Datei finden Sie alle bereits gebuchten Umsätze. Die vorgemerkten Umsätze werden nicht aufgenommen, auch wenn sie in Ihrem Internetbanking angezeigt werden.
+
+Buchung;Wertstellungsdatum;Auftraggeber/Empfänger;Buchungstext;Verwendungszweck;Betrag;Währung
+09.12.2025;09.12.2025;VISA ALDI SUED;Lastschrift;NR XXXX 4025 NUERNBERG DE KAUFUMSATZ 05.12 13.98 125423;-13,98;EUR
+08.12.2025;08.12.2025;Gerhard Beispiel;Dauerauftrag / Terminueberweisung;Nebenkosten;-200,00;EUR

@@ -373,17 +373,17 @@ Reprenez le contrôle de votre argent, seul ou à plusieurs. Téléchargez AI Bu
 
 **App name (≤30):**
 ```
-AI Budget: Haushaltsbuch
+AI Budget: KI-Haushaltsbuch
 ```
 
 **Short (≤80):**
 ```
-Haushaltsbuch und gemeinsames Familienbudget mit KI: Belege scannen.
+KI-Haushaltsbuch ohne Bankverbindung: Kassenbon scannen, Kontoauszug laden.
 ```
 
 **Full (≤4000):**
 ```
-Geld im Griff — ohne den lästigen Teil. AI Budget Assistant vereint Ausgaben, Budgets, Ziele, Schulden, Abos und Bankimport in einer App, mit einer KI, die dir die Fleißarbeit abnimmt. Allein oder mit der Familie in Echtzeit.
+Ein Haushaltsbuch mit KI, das nie dein Bankkonto anzapft. AI Budget Assistant vereint Ausgaben, Budgets, Ziele, Schulden, Abos und den Import deiner Kontoauszüge in einer App, ohne Bank-Login, ohne PSD2-Zugriff. Die KI nimmt dir die Fleißarbeit ab. Allein oder mit der Familie in Echtzeit.
 
 Sprich mit deinem Geld:
 „Wie viel habe ich für Lebensmittel ausgegeben?" — Antwort in Sekunden.
@@ -407,8 +407,10 @@ GEMEINSAM BUDGETIEREN
 • Jeden KI-Chat zum Gruppenchat machen, mit @ erwähnen
 • Rollen: Eigentümer, Bearbeiter, Betrachter
 
-BANK IMPORTIEREN
-• Wise, Revolut und Kontoauszüge (CSV oder PDF)
+OHNE BANKVERBINDUNG
+• Kein Bank-Login und kein Kontozugriff: du lädst nur den CSV-Export deiner Bank hoch
+• Sparkasse, Volksbank / Raiffeisenbank, DKB, ING, comdirect, Commerzbank, N26, Revolut und Wise werden direkt erkannt
+• Andere Banken: Spalten automatisch zuordnen, auch PDF-Kontoauszüge
 • Intelligente Dublettenerkennung
 • Jeden Import mit einem Tipp rückgängig machen
 

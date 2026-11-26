@@ -1,6 +1,6 @@
 # Importing transactions from your bank
 
-> Import transactions from a CSV, XLSX or PDF statement of your bank. Supports mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise, and any other bank via the universal column mapper.
+> Import transactions from a CSV, XLSX or PDF statement of your bank. Supports mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise, German banks (Sparkasse, Volksbank, DKB, ING, comdirect, Commerzbank, N26), and any other bank via the universal column mapper.
 
 ## Supported banks
 
@@ -10,6 +10,7 @@
 - **Alior Bank** — PDF statement
 - **Revolut** — CSV export
 - **Wise** — CSV export (multi-currency, FX conversions detected automatically)
+- **German banks** — CSV export from Sparkasse, Volksbank / Raiffeisenbank, DKB, ING Deutschland, comdirect, Commerzbank, N26. These rows appear in the list when the app is in German; **Detect automatically** recognises the files in any language. Pending (not yet booked) transactions are skipped, so they are not imported twice once booked
 - **Other** — any bank, via the universal column mapper (CSV)
 - **Spreadsheets** — XLSX statements work too; the app reads the first sheet
 

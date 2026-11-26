@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
-<url><loc>https://ai-budget.pl/blog/de/</loc><lastmod>2026-10-07</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+<url><loc>https://ai-budget.pl/blog/de/</loc><lastmod>2026-11-18</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
 <url><loc>https://ai-budget.pl/blog/de/haushaltsbuch-fuehren/</loc><lastmod>2026-10-07</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/de/ausgaben-tracken/</loc><lastmod>2026-10-07</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/de/geld-sparen/</loc><lastmod>2026-10-07</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
@@ -19,8 +19,8 @@
 <url><loc>https://ai-budget.pl/blog/de/persoenliche-inflation/</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/de/ausgaben-karte/</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/de/rechnung-teilen-mit-freunden/</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-<url><loc>https://ai-budget.pl/blog/de/ausgaben-automatisch-erfassen/</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-<url><loc>https://ai-budget.pl/blog/de/kassenbons-scannen/</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ai-budget.pl/blog/de/ausgaben-automatisch-erfassen/</loc><lastmod>2026-11-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ai-budget.pl/blog/de/kassenbons-scannen/</loc><lastmod>2026-11-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/de/schulanfang-kosten/</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/de/kontoauszug-von-jeder-bank-importieren/</loc><lastmod>2026-08-21</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/de/warum-haushaltsbuch-apps-schnell-fliegen/</loc><lastmod>2026-08-25</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
@@ -39,7 +39,13 @@
 <url><loc>https://ai-budget.pl/blog/de/ynab-alternative-vergleich/</loc><lastmod>2026-10-07</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/de/money-manager-vergleich-ai-budget-assistant/</loc><lastmod>2026-10-07</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/de/revolut-kontoauszug-importieren/</loc><lastmod>2026-10-07</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-<url><loc>https://ai-budget.pl/blog/de/steuererstattung-sinnvoll-nutzen/</loc><lastmod>2026-10-07</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-<url><loc>https://ai-budget.pl/blog/de/haushaltsbuch-app-ohne-bankverbindung/</loc><lastmod>2026-06-19</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-<url><loc>https://ai-budget.pl/blog/de/n26-kontoauszug-importieren/</loc><lastmod>2026-06-19</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ai-budget.pl/blog/de/steuererstattung-sinnvoll-nutzen/</loc><lastmod>2026-11-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ai-budget.pl/blog/de/haushaltsbuch-app-ohne-bankverbindung/</loc><lastmod>2026-11-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ai-budget.pl/blog/de/n26-kontoauszug-importieren/</loc><lastmod>2026-11-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ai-budget.pl/blog/de/sparkasse-kontoauszug-csv/</loc><lastmod>2026-06-19</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ai-budget.pl/blog/de/volksbank-kontoauszug-csv/</loc><lastmod>2026-06-19</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ai-budget.pl/blog/de/dkb-kontoauszug-csv/</loc><lastmod>2026-06-19</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ai-budget.pl/blog/de/ing-kontoauszug-csv/</loc><lastmod>2026-06-19</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ai-budget.pl/blog/de/comdirect-umsaetze-csv/</loc><lastmod>2026-06-19</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ai-budget.pl/blog/de/commerzbank-umsaetze-csv/</loc><lastmod>2026-06-19</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 </urlset>

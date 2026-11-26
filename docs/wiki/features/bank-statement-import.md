@@ -5,8 +5,8 @@
 
 ## What this is
 
-Importing transactions from bank exports — CSV and PDF statements from Polish banks and Revolut
-(`import-bank`), Wise CSVs (`import-wise`) — with preview, dedup, saved column mappings,
+Importing transactions from bank exports — CSV and PDF statements from Polish banks, German banks
+and Revolut (`import-bank`), Wise CSVs (`import-wise`) — with preview, dedup, saved column mappings,
 rollback, and a request-a-bank path for banks not yet supported.
 
 ## Entry points
@@ -14,7 +14,7 @@ rollback, and a request-a-bank path for banks not yet supported.
 - `apps/api/src/modules/import-bank/` — `import-bank.service.ts` (orchestrator),
   `import-bank-dedup.service.ts`, `ai-preview.service.ts`, `ai-pdf.service.ts`,
   `import-bank-category.util.ts`, `parsers/registry.ts` + `parsers/*.parser.ts`, `utils/`,
-  `merchants/merchants-pl.ts`
+  `merchants/merchants-pl.ts`, `merchants/merchants-de.ts`, `parsers/german-common.ts`
 - `apps/api/src/modules/import-wise/`
 - `apps/api/src/modules/import-batches/` — history and rollback
 - Mobile: `apps/mobile/app/settings/import/` (hub, preview, mapper, request-bank),
@@ -35,6 +35,19 @@ ING, Millennium and Pekao are registered but hidden in `BANKS` until validated a
 exports. mBank and PKO were rewritten against real exports (mBank has a metadata preamble before
 `#Data operacji…#Kwota`; PKO is comma-delimited with one signed `Kwota`). Revolut imports only
 `State=COMPLETED` rows, with per-row currency.
+
+**German banks ([ABA-843](https://github.com/micode-ai/ai-budget-assistant/issues/881)).** Sparkasse (CSV-CAMT V2/V8 and CSV-MT940, also BW-Bank), Volksbank /
+Raiffeisenbank (Atruvia; also Sparda West and GLS), DKB (the 2023 format and the legacy one), ING
+Deutschland (`ing-de`), comdirect, Commerzbank and N26 (three header generations). Each was written
+against real exports published by open-source importers (RechnungsFee, beancount-dkb,
+beancount-n26, Firefly III configs); the fixtures keep each bank's encoding, BOM, quoting and
+metadata lines. They share `german-common.ts` (`parseTable` finds the header below any metadata,
+`parseGermanDate` reads two-digit years, `germanRow` builds the row) and suggest categories from
+`merchants-de.ts`, which matches whole words only so `DM`, `DB` or `JET` cannot fire inside a
+longer word, and leaves out brands that are common surnames (Müller, Otto). Commerzbank's current
+file packs name and purpose into one field with no separator, so it imports with no merchant.
+The app lists these banks only when its language is German (`importEntriesFor`); auto-detect
+recognises them in any language.
 
 **Wise is its own module.** Rows classify as expense (Amount < 0), income (> 0) or `fx` — paired
 conversion rows sharing reference, date and opposite sign, emitted as a `CurrencyExchange`, not an
@@ -71,6 +84,23 @@ before it. `exitImportFlow` (`features/import/importExit.ts`) decides where the 
 settings, or — when `importStore.origin === 'onboarding'` — the end of onboarding.
 
 ## Invariants
+
+**Pending rows are never imported from a German bank (ABA-843).** Sparkasse `Umsatz vorgemerkt`,
+DKB `Vorgemerkt` and comdirect `offen` rows are skipped. The booked row that replaces a pending one
+often carries a different purpose text, so it hashes to a different `externalRef` and both would
+import. ING exports only booked rows anyway.
+
+**A German amount never has a decimal point.** DKB writes whole euros as `-1.450`, which
+`parsePolishAmount` alone reads as -1.45; `parseGermanAmount` strips the thousands dots first. N26
+is the exception (decimal point, ISO dates) and parses with `'standard'`, not with
+`parseGermanAmount`.
+
+**Detection sees the first line and three more, blank lines included.** `peekSampleRows` uses Papa's
+`preview`, which counts blank lines, so a bank whose table starts below metadata must be recognised
+from the metadata: DKB from `Girokonto`/`Kontonummer:` plus an IBAN in the second cell, ING from
+`Umsatzanzeige`, comdirect from `Umsätze …`/`Zeitraum:`/`Neuer Kontostand`.
+
+**`ing` is ING Bank Śląski, `ing-de` is ING Deutschland.** Neither id can be renamed (dedup keys).
 
 **Dedup keys are permanent.** `bank:<bankId>:<isoDate>:<signedAmountCents>:<sha256(desc)[0..8]>`
 and `wise:<TransferWise ID>`, stored as `externalRef` under `@@unique([accountId, externalRef])` on
@@ -160,4 +190,4 @@ rendered in CI; it is unverified until someone looks at the deployed build.
 
 Wise import · ABA-126 (Polish banks) · ABA-116 (Revolut) · ABA-130 (batch history) · ABA-254
 (merchant normalization) · ABA-313 (commit dedup crash) · the service split · ABA-637 (chunked
-commit, repeated rows in one file) · ABA-643 (the post-import report).
+commit, repeated rows in one file) · ABA-643 (the post-import report) · [ABA-843](https://github.com/micode-ai/ai-budget-assistant/issues/881) (German banks).

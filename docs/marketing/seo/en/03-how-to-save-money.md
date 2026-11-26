@@ -160,5 +160,5 @@ Pay down high-interest debt first, because that gives a guaranteed return equal 
 - [Free Exchange Rate Alert: Get Notified at Your Target Rate](/blog/en/exchange-rate-alert/)
 - [Multi-Currency Budgeting: Track Money in Two Currencies](/blog/en/multi-currency-budgeting/)
 - [How Much Does Christmas Cost? A Step-by-Step Budget](/blog/en/christmas-budget/)
-- [Are Black Friday Deals Real? How to Check Before You Buy](/blog/en/black-friday-deals-real/)
+- [Black Friday Budget: Are the Deals Real? Check Before Buying](/blog/en/black-friday-deals-real/)
 - [What to Do With a Tax Refund: A Simple Plan](/blog/en/what-to-do-with-tax-refund/)

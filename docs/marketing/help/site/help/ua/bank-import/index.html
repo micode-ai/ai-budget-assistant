@@ -93,7 +93,7 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <nav class="nav"><details class="langmenu"><summary><span class="lang-full">Українська</span><span class="lang-short">UA</span> &#9662;</summary><div class="langlist"><a class="" href="https://ai-budget.pl/help/en/bank-import/">English</a><a class="" href="https://ai-budget.pl/help/pl/bank-import/">Polski</a><a class="" href="https://ai-budget.pl/help/de/bank-import/">Deutsch</a><a class="" href="https://ai-budget.pl/help/es/bank-import/">Español</a><a class="" href="https://ai-budget.pl/help/fr/bank-import/">Français</a><a class="" href="https://ai-budget.pl/help/ru/bank-import/">Русский</a><a class="active" href="https://ai-budget.pl/help/ua/bank-import/">Українська</a><a class="" href="https://ai-budget.pl/help/be/bank-import/">Беларуская</a><a class="" href="https://ai-budget.pl/help/nl/bank-import/">Nederlands</a><a class="" href="https://ai-budget.pl/help/pt/bank-import/">Português (Portugal)</a><a class="" href="https://ai-budget.pl/help/br/bank-import/">Português (Brasil)</a></div></details><a href="/blog/ua/">Блог</a><a class="btn-login" href="https://app.ai-budget.pl?src=help&amp;loc=nav&amp;lang=uk">Увійти</a></nav></div></header>
 <main class="wrap"><nav class="crumb"><a href="/ua/">Головна</a> / <a href="/help/ua/">Довідка</a> / <span>Імпорт транзакцій з банку</span></nav><article><h1>Імпорт транзакцій з банку</h1>
 <blockquote>
-<p>Імпортуйте транзакції з CSV, XLSX або PDF-виписки вашого банку. Підтримуються mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise та будь-який інший банк через універсальний маппер колонок.</p>
+<p>Імпортуйте транзакції з CSV, XLSX або PDF-виписки вашого банку. Підтримуються mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise, німецькі банки (Sparkasse, Volksbank, DKB, ING, comdirect, Commerzbank, N26) та будь-який інший банк через універсальний маппер колонок.</p>
 </blockquote>
 <h2>Підтримувані банки</h2>
 <ul>
@@ -103,6 +103,7 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li><strong>Alior Bank</strong> — PDF-виписка</li>
 <li><strong>Revolut</strong> — експорт CSV</li>
 <li><strong>Wise</strong> — експорт CSV (мультивалютний, конвертації визначаються автоматично)</li>
+<li><strong>Німецькі банки</strong> — експорт CSV із Sparkasse, Volksbank / Raiffeisenbank, DKB, ING Deutschland, comdirect, Commerzbank, N26. Вони є у списку, коли застосунок німецькою; <strong>Визначити автоматично</strong> розпізнає файли будь-якою мовою. Операції в обробці (ще не проведені) пропускаються, щоб після проведення вони не імпортувалися двічі</li>
 <li><strong>Інший</strong> — будь-який банк, через універсальний маппер колонок (CSV)</li>
 <li><strong>Таблиці</strong> — виписки у форматі XLSX теж працюють; застосунок читає перший аркуш</li>
 </ul>

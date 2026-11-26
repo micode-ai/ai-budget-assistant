@@ -2021,7 +2021,7 @@ Docelowo 3-6 miesięcy niezbędnych wydatków. Jeśli to zbyt odległy cel, zacz
 - [Metoda kopertowa - jak przestać przepłacać](/blog/pl/metoda-kopertowa/)
 - [Zasada 50/30/20 - praktyczny poradnik](/blog/pl/zasada-50-30-20/)
 - [Kategorie wydatków, które naprawdę działają](/blog/pl/kategorie-wydatkow/)
-- [Budżet domowy z dziećmi, który się spina](/blog/pl/budzet-domowy-z-dziecmi/)
+- [Budżet domowy z dziećmi: przykład dla rodziny 4-osobowej](/blog/pl/budzet-domowy-z-dziecmi/)
 - [AI w zarządzaniu finansami: jak naprawdę pomaga](/blog/pl/ai-w-zarzadzaniu-finansami/)
 - [Wyprawka szkolna: ile kosztuje i jak ją rozplanować](/blog/pl/wyprawka-szkolna-ile-kosztuje/)
 - [Budżet przy nieregularnych dochodach: co działa](/blog/pl/budzet-przy-nieregularnych-dochodach/)
@@ -2621,14 +2621,15 @@ Kontrola wydatków odpowiada na pytanie, ile i na co już wydałeś. Budżet to 
 - [Wallet by BudgetBakers czy AI Budget Assistant](/blog/pl/wallet-budgetbakers-porownanie-ai-budget-assistant/)
 - [Alternatywa dla YNAB: YNAB kontra AI Budget Assistant](/blog/pl/ynab-alternatywa-porownanie/)
 - [Money Manager czy AI Budget Assistant: porównanie](/blog/pl/money-manager-porownanie-ai-budget-assistant/)
-- [Import wyciągu z Revolut do aplikacji budżetowej](/blog/pl/import-wyciagu-revolut/)
-- [Import wyciągu mBank do aplikacji budżetowej](/blog/pl/import-wyciagu-mbank/)
-- [Eksport historii z PKO BP do CSV i import do budżetu](/blog/pl/import-wyciagu-pko-bp/)
-- [Import wyciągu z ING Banku Śląskiego do budżetu](/blog/pl/import-wyciagu-ing/)
-- [Import wyciągu z Banku Millennium do budżetu](/blog/pl/import-wyciagu-millennium/)
-- [Import wyciągu z Banku Pekao do budżetu](/blog/pl/import-wyciagu-pekao/)
-- [Import wyciągu PDF z Alior Banku do budżetu](/blog/pl/import-wyciagu-alior-bank/)
-- [Import wyciągu PDF z Erste Bank Polska do budżetu](/blog/pl/import-wyciagu-erste-bank/)
+- [Jak pobrać wyciąg z Revolut (CSV) i dodać go do budżetu](/blog/pl/import-wyciagu-revolut/)
+- [Jak pobrać wyciąg z mBanku (CSV) i dodać go do budżetu](/blog/pl/import-wyciagu-mbank/)
+- [Jak pobrać wyciąg z iPKO (CSV) i dodać go do budżetu](/blog/pl/import-wyciagu-pko-bp/)
+- [Jak pobrać wyciąg z ING (CSV) i dodać go do budżetu](/blog/pl/import-wyciagu-ing/)
+- [Jak pobrać wyciąg z Millennium (CSV) i dodać go do budżetu](/blog/pl/import-wyciagu-millennium/)
+- [Jak pobrać wyciąg z Pekao (CSV) i dodać go do budżetu](/blog/pl/import-wyciagu-pekao/)
+- [Jak pobrać wyciąg z Alior Banku (PDF) i dodać go do budżetu](/blog/pl/import-wyciagu-alior-bank/)
+- [Wyciąg z Erste (ex-Santander): pobierz i dodaj do budżetu](/blog/pl/import-wyciagu-erste-bank/)
+- [Historia rachunku VeloBank (też ex-Citi): pobierz i importuj](/blog/pl/import-wyciagu-velobank/)
 
 ## Mapa wydatków: zobacz na mapie, gdzie wydajesz pieniądze
 URL: https://ai-budget.pl/blog/pl/mapa-wydatkow/
@@ -5094,6 +5095,16 @@ W widoku miesiąca i roku ta karta porównuje okres z tym samym okresem rok wcze
 
 Siatka ostatnich dni — kolumna na tydzień i wiersz na dzień tygodnia — zabarwiona według wydatków danego dnia: im ciemniej, tym więcej (każdy odcień to ćwierć Twoich dni z wydatkami). Na komputerze obejmuje ostatnie 12 miesięcy, na telefonie tyle miesięcy, ile mieści się czytelnie. Stuknij dzień, aby zobaczyć datę i sumę; w przeciwnym razie karta podaje Twój największy dzień. Pod spodem **Średnio według dnia miesiąca** pokazuje, ile średnio wydajesz w każdym dniu miesiąca i które trzy dni kosztują najwięcej. Jeśli konto ma **Miesiąc finansowy**, dzień 1 to jego pierwszy dzień — dzień wypłaty. Aplikacja nie zna godziny zakupów, więc karta działa na dniach, nie godzinach. Pojawia się od 14 dni z wydatkami.
 
+## Wszystkie konta
+
+Otwórz **Wszystkie konta** na karcie Analityka, aby zobaczyć razem wszystkie konta, do których należysz, w walucie wyświetlania. Wybierz okres (ten miesiąc, poprzedni miesiąc, ten rok, poprzedni rok lub własny zakres), a zobaczysz **Wydano**, **Przychody** i **Saldo** wraz z porównaniem do poprzedniego okresu, udział każdego konta, wydatki i przychody według kategorii oraz miesiące jako słupki skumulowane.
+
+- **Włączaj i wyłączaj konta.** Wyłącz konto, którego nie chcesz liczyć - na przykład konto wspólne, które liczy też inny członek. Wybór zapamiętujemy na tym urządzeniu. Konta inwestycyjne są na początku wyłączone.
+- **Kategorie łączą się po nazwie.** "Zakupy spożywcze" na dwóch kontach to jeden wiersz.
+- **Konta szyfrowane.** W pełni zaszyfrowanego konta nie da się odczytać i nie jest uwzględniane. Przy szyfrowaniu tekstu kategoria, którą sam zmieniłeś, widnieje jako **Inne**.
+- **Nie liczą się jako wydatek ani przychód:** wydatki planowane, kwoty, które ktoś ci wisi po podziale rachunku, oraz przelewy między twoimi uwzględnionymi kontami.
+- **Grupy (Pro).** Zapisz zestaw kont jako grupę - na przykład "Wynajem" - i porównuj obok siebie konta w obrębie grupy. Możesz mieć do 20 grup; usunięcie grupy nie rusza twoich kont ani danych. Grupy to funkcja Pro: po zmianie planu na niższy twoje grupy są ukryte (nie usunięte), dopóki znów nie przejdziesz na Pro.
+
 ## Majątek netto
 
 Otwórz go z pozycji **Majątek netto** na karcie Analityka albo stukając kartę **Net Capital** na ekranie głównym. Sumuje wszystko, co masz na wszystkich kontach — pieniądze w każdym portfelu, wartość rynkową inwestycji i pieniądze, które ktoś jest Ci winien — minus Twoje własne długi, w walucie wyświetlania. Widzisz zmianę od poprzedniego miesiąca i od roku, cztery składniki i ostatnie 12 miesięcy na słupkach: każdy miniony miesiąc jest odtwarzany z Twoich zapisów i kursów walut z tego miesiąca, więc historia jest od pierwszego dnia. Jaśniejszy słupek oznacza, że część inwestycji wyceniono po cenie zakupu, bo dla tej daty nie było ceny rynkowej. W sekcji **Konta** możesz wyłączyć konto — np. wspólne konto, które inny członek też wlicza do swojego majątku; wybór zostaje na tym urządzeniu. W pełni zaszyfrowanego konta nie da się odczytać i nie jest liczone.
@@ -6785,6 +6796,16 @@ Otwarcie tego ekranu przyciskiem **Eksportuj raport** na zakladce Analityka prze
 
 Raporty sa przechowywane przez 7 dni, a nastepnie automatycznie usuwane.
 
+## Zakres raportu
+
+W polu **Raport obejmuje** wybierz, co zawiera plik:
+
+- **To konto** - konto, w którym jesteś (domyślnie).
+- **Wszystkie konta** - wszystkie twoje konta, oprócz tych wyłączonych na ekranie Wszystkie konta.
+- **Grupa** - jedna z twoich grup kont (Pro).
+
+Raport z wielu kont ma kolumny **Konto** i **Uwaga** oraz podsumowanie dla każdego konta. Wiersze z uwagą - wydatki planowane, kwoty z podziału rachunku i przelewy między własnymi kontami - są wypisane, żebyś je widział, ale **nie** wchodzą do żadnej sumy. W pełni zaszyfrowane konta są pominięte i wymienione na końcu raportu. Liczby zgadzają się z ekranem Wszystkie konta. Taki raport jest przechowywany 7 dni, jak każdy inny, i otworzysz go z dowolnego konta.
+
 ## Podsumowanie miesieczne
 
 Migawka aktywnosci finansowej biezacego miesiaca:
@@ -7765,7 +7786,7 @@ Chcesz polecić aplikację bez programu poleceń? Otwórz **Ustawienia → Udost
 ## Importowanie transakcji z banku
 URL: https://ai-budget.pl/help/pl/bank-import/
 
-> Importuj transakcje z wyciągu CSV, XLSX lub PDF swojego banku. Obsługiwane: mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise oraz dowolny bank przez uniwersalny mapper kolumn.
+> Importuj transakcje z wyciągu CSV, XLSX lub PDF swojego banku. Obsługiwane: mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise, banki niemieckie (Sparkasse, Volksbank, DKB, ING, comdirect, Commerzbank, N26) oraz dowolny bank przez uniwersalny mapper kolumn.
 
 ## Obsługiwane banki
 
@@ -7775,6 +7796,7 @@ URL: https://ai-budget.pl/help/pl/bank-import/
 - **Alior Bank** — wyciąg PDF
 - **Revolut** — eksport CSV
 - **Wise** — eksport CSV (wielowalutowy, konwersje wykrywane automatycznie)
+- **Banki niemieckie** — eksport CSV z Sparkasse, Volksbank / Raiffeisenbank, DKB, ING Deutschland, comdirect, Commerzbank, N26. Te banki pojawiają się na liście, gdy aplikacja jest po niemiecku; **Rozpoznaj automatycznie** rozpoznaje pliki w każdym języku. Transakcje oczekujące (jeszcze niezaksięgowane) są pomijane, żeby po zaksięgowaniu nie zaimportowały się dwa razy
 - **Inny** — dowolny bank, przez uniwersalny mapper kolumn (CSV)
 - **Arkusze** — wyciągi XLSX też działają; aplikacja czyta pierwszy arkusz
 

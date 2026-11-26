@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="de"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sparkasse Kontoauszug als CSV herunterladen und importieren</title>
+<meta name="description" content="Sparkasse-Umsätze als CSV (CAMT oder MT940) exportieren und ohne Bankverbindung ins Haushaltsbuch importieren: Schritte, Vorgemerktes, Duplikate.">
+<link rel="canonical" href="https://ai-budget.pl/blog/de/sparkasse-kontoauszug-csv/"><meta name="robots" content="index,follow,max-image-preview:large">
+<meta property="og:type" content="article"><meta property="og:site_name" content="AI Budget Assistant">
+<meta property="og:locale" content="de_DE"><meta property="og:title" content="Sparkasse Kontoauszug als CSV herunterladen und importieren">
+<meta property="og:description" content="Sparkasse-Umsätze als CSV (CAMT oder MT940) exportieren und ohne Bankverbindung ins Haushaltsbuch importieren: Schritte, Vorgemerktes, Duplikate."><meta property="og:url" content="https://ai-budget.pl/blog/de/sparkasse-kontoauszug-csv/">
+<meta property="og:image" content="https://ai-budget.pl/blog/de/sparkasse-kontoauszug-csv/og.jpg">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Sparkasse Kontoauszug als CSV herunterladen und importieren">
+<meta name="twitter:description" content="Sparkasse-Umsätze als CSV (CAMT oder MT940) exportieren und ohne Bankverbindung ins Haushaltsbuch importieren: Schritte, Vorgemerktes, Duplikate."><meta name="twitter:image" content="https://ai-budget.pl/blog/de/sparkasse-kontoauszug-csv/og.jpg">
+<link rel="alternate" hreflang="de" href="https://ai-budget.pl/blog/de/sparkasse-kontoauszug-csv/">
+<link rel="alternate" hreflang="x-default" href="https://ai-budget.pl/blog/de/sparkasse-kontoauszug-csv/">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MiCode Sp. z o.o.", "alternateName": ["MICODE sp. z o.o.", "MiCode"], "taxID": "5833510147", "founder": {"@id": "https://ai-budget.pl/#author"}, "url": "https://mi-code.pl/", "sameAs": ["https://mi-code.pl/", "https://github.com/micode-ai", "https://www.instagram.com/micode.development/", "https://www.wikidata.org/wiki/Q141551004"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "Person", "@id": "https://ai-budget.pl/#author", "name": "Mikhail Peraviortkin", "url": "https://ai-budget.pl/de/about/#author", "jobTitle": "Founder", "sameAs": ["https://www.linkedin.com/in/mikhailperaviortkin/", "https://github.com/micode-ai"], "description": "Mikhail Peraviortkin ist Gründer von MiCode Sp. z o.o., dem Unternehmen hinter AI Budget Assistant, und schreibt die Ratgeber in diesem Blog.", "worksFor": {"@id": "https://ai-budget.pl/#organization"}}, {"@type": "Article", "headline": "Sparkasse Kontoauszug als CSV herunterladen und importieren", "description": "Sparkasse-Umsätze als CSV (CAMT oder MT940) exportieren und ohne Bankverbindung ins Haushaltsbuch importieren: Schritte, Vorgemerktes, Duplikate.", "inLanguage": "de", "datePublished": "2026-11-26", "dateModified": "2026-06-19", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/blog/de/sparkasse-kontoauszug-csv/"}, "author": {"@id": "https://ai-budget.pl/#author"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/blog/de/sparkasse-kontoauszug-csv/og.jpg"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://ai-budget.pl/blog/de/"}, {"@type": "ListItem", "position": 3, "name": "Sparkasse Kontoauszug als CSV herunterladen und importieren", "item": "https://ai-budget.pl/blog/de/sparkasse-kontoauszug-csv/"}]}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Welches CSV-Format brauche ich bei der Sparkasse?", "acceptedAnswer": {"@type": "Answer", "text": "Die App liest CSV-CAMT V2, CSV-CAMT V8 und CSV-MT940. Welche davon deine Sparkasse anbietet, siehst du im Export-Dialog des Online-Bankings."}}, {"@type": "Question", "name": "Funktioniert der Import auch mit der BW-Bank?", "acceptedAnswer": {"@type": "Answer", "text": "Ja, die BW-Bank exportiert im gleichen Format wie die Sparkassen."}}, {"@type": "Question", "name": "Warum fehlen vorgemerkte Umsätze?", "acceptedAnswer": {"@type": "Answer", "text": "Die App überspringt Zeilen mit „Umsatz vorgemerkt“ absichtlich, damit nichts doppelt landet, sobald die Zahlung gebucht ist. Exportiere später erneut, dann sind sie dabei."}}, {"@type": "Question", "name": "Muss ich mein Sparkasse-Konto mit der App verbinden?", "acceptedAnswer": {"@type": "Answer", "text": "Nein. Die App verbindet sich nie mit der Bank, es gibt kein Login und kein PSD2 oder FinTS. Du lädst nur die Datei hoch, die du selbst exportiert hast."}}, {"@type": "Question", "name": "Kann ich den Import rückgängig machen?", "acceptedAnswer": {"@type": "Answer", "text": "Ja, im Importverlauf unten auf dem Importbildschirm, 30 Tage lang."}}]}]}</script>
+<style>
+:root{--o:#B45309;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
+*{box-sizing:border-box}
+html,body{overflow-x:hidden}
+body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.7}
+.wrap{max-width:760px;margin:0 auto;padding:0 22px}
+header.site{position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);z-index:10}
+header.site .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+.brand{font-weight:800;color:var(--ink);text-decoration:none;font-size:18px}.brand span{color:var(--o)}
+.nav{display:flex;align-items:center;gap:16px}.nav>a{color:var(--mut);font-weight:600;font-size:15px;text-decoration:none}
+.btn-login{color:#fff!important;background:var(--o);padding:8px 14px;border-radius:8px}
+.langmenu{position:relative}.langmenu>summary{list-style:none;cursor:pointer;color:var(--mut);font-weight:600;font-size:15px}
+.langmenu>summary::-webkit-details-marker{display:none}
+.langlist{position:absolute;top:150%;right:0;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,.12);padding:6px;min-width:170px;z-index:20}
+.langlist a{display:block;padding:9px 12px;border-radius:8px;color:#3a3a42;font-size:14px;font-weight:600;text-decoration:none}
+.langlist a:hover{background:#fff3e6}.langlist a.active{color:var(--o)}
+nav.crumb{font-size:13px;color:var(--mut);padding:16px 0}nav.crumb a{color:var(--mut)}
+article h1{font-size:32px;line-height:1.25;margin:8px 0 16px}
+article h2{font-size:23px;margin:34px 0 10px}article h3{font-size:18px;margin:24px 0 8px}
+article p,article li{font-size:17px;color:#27272e}article a{color:var(--o)}article ul{padding-left:22px}
+article .byline{color:var(--mut);font-size:14px;margin:-6px 0 20px}
+article img{display:block;width:100%;max-width:320px;height:auto;margin:20px auto;border-radius:14px;border:1px solid var(--line)}
+hr{border:0;border-top:1px solid var(--line);margin:32px 0}
+.tablewrap{overflow-x:auto;margin:18px 0}
+article table{border-collapse:collapse;width:100%;font-size:15px}
+article th,article td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top}
+article th{background:#faf6f1;font-weight:700}
+article tbody tr:nth-child(even) td{background:#fafafb}
+.cta{margin:36px 0;padding:22px;border:1px solid var(--line);border-radius:14px;background:#fffaf4}
+.cta h3{margin:0 0 6px}.cta p{margin:0 0 14px;color:var(--mut);font-size:15px}
+.btn{display:inline-block;margin:4px 8px 4px 0;padding:11px 18px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px}
+.btn.p{background:var(--o);color:#fff}.btn.s{background:#fff;color:var(--ink);border:1px solid #e3e3e8}
+.related{margin:36px 0}.related h2{font-size:20px}
+.related a{display:block;padding:12px 0;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink);font-weight:600}
+.card{display:block;padding:18px 0;border-bottom:1px solid var(--line);text-decoration:none}
+.card h2{margin:0 0 6px;font-size:21px;color:var(--ink)}.card p{margin:0;color:var(--mut);font-size:15px}
+.cmeta{font-size:13px;color:var(--mut);margin:0 0 4px!important}
+.cfoot{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px!important}
+.ccat{background:#f1f1f4;color:#3a3a42;border-radius:4px;padding:2px 8px;font-size:12px}
+.more{color:var(--o);font-weight:600;font-size:14px}
+.card:hover h2{text-decoration:underline}
+.blogfilter>input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 4px}
+.chip{background:#f1f1f4;color:#3a3a42;border-radius:999px;padding:5px 13px;font-size:13px;cursor:pointer;user-select:none}
+.chip:hover{background:#e4e4ea}
+#bc-all:checked~.chips label[for=bc-all],#bc-budget:checked~.chips label[for=bc-budget],
+#bc-expenses:checked~.chips label[for=bc-expenses],#bc-saving:checked~.chips label[for=bc-saving]{background:var(--o);color:#fff}
+#bc-budget:checked~.cards>.card:not(.cat-budget),
+#bc-expenses:checked~.cards>.card:not(.cat-expenses),
+#bc-saving:checked~.cards>.card:not(.cat-saving){display:none}
+.blogfilter>input:focus-visible~.chips label{outline:2px solid var(--o);outline-offset:2px}
+footer.site{border-top:1px solid var(--line);background:#fafafb;color:#63636b;font-size:14px;text-align:center;margin-top:48px}
+footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-items:center;gap:16px}
+.f-links{display:flex;gap:18px;flex-wrap:wrap;justify-content:center}.f-links a{color:var(--mut);font-weight:600;text-decoration:none}
+.f-co{display:flex;align-items:center;justify-content:center;gap:12px;border-top:1px solid var(--line);padding-top:16px;width:100%}
+.f-co img{height:30px;width:30px}
+.f-badge{display:flex;justify-content:center;align-items:center;gap:16px;flex-wrap:wrap}.f-badge .b-sf{height:34px;width:108px}.f-badge .b-pp{height:34px;width:120px}.f-badge .b-fo{height:34px;width:88px}.f-badge .b-fz{height:34px;width:144px}.f-badge .b-ls{height:34px;width:109px}.f-badge .b-un{height:34px;width:130px}.f-badge .b-tc{height:34px;width:109px}.f-badge .b-swb{height:34px;width:136px}.f-badge .b-lf{height:34px;width:126px}.f-badge .b-as{height:34px;width:130px}
+.cc{position:fixed;left:16px;right:16px;bottom:16px;max-width:560px;margin:0 auto;background:#1a1a1d;color:#fff;border-radius:14px;padding:16px 18px;box-shadow:0 12px 40px rgba(0,0,0,.35);z-index:60;font-size:14px;display:none}
+.cc.show{display:block}.cc p{margin:0 0 12px;line-height:1.5}
+.cc .row{display:flex;gap:10px;justify-content:flex-end}
+.cc button{cursor:pointer;border:0;border-radius:8px;padding:9px 16px;font-weight:700;font-size:14px}
+.cc .ok{background:var(--o);color:#fff}.cc .no{background:#2e2e33;color:#cfcfd6}
+.lang-short{display:none}
+@media(max-width:760px){header.site .wrap{padding:0 16px}.brand{font-size:16px;white-space:nowrap}.nav{gap:10px}.btn-login{padding:8px 12px}}
+@media(max-width:480px){.lang-full{display:none}.lang-short{display:inline}}
+.calc{border:1px solid #e5e5ea;border-radius:12px;padding:16px 18px;margin:20px 0}.calc h3{margin:0 0 10px}.calc label{display:block;margin:10px 0 4px;font-weight:600}.calc input,.calc select{width:100%;max-width:260px;padding:8px;font-size:16px;border-radius:8px;border:1px solid #ccc}.calc output{display:block;font-size:18px;font-weight:700}</style></head><body>
+<header class="site"><div class="wrap"><a class="brand" href="/de/">AI <span>Budget</span> Assistant</a>
+<nav class="nav"><details class="langmenu"><summary><span class="lang-full">Deutsch</span><span class="lang-short">DE</span> &#9662;</summary><div class="langlist"><a class="" href="/blog/pl/">Polski</a><a class="" href="/blog/en/">English</a><a class="active" href="https://ai-budget.pl/blog/de/sparkasse-kontoauszug-csv/">Deutsch</a><a class="" href="/blog/es/">Español</a><a class="" href="/blog/fr/">Français</a><a class="" href="/blog/ru/">Русский</a><a class="" href="/blog/ua/">Українська</a><a class="" href="/blog/be/">Беларуская</a><a class="" href="/blog/nl/">Nederlands</a><a class="" href="/blog/pt/">Português (Portugal)</a><a class="" href="/blog/br/">Português (Brasil)</a></div></details><a href="/blog/de/">Blog</a><a class="btn-login" href="https://app.ai-budget.pl?src=blog&amp;loc=nav&amp;lang=de">Anmelden</a></nav></div></header>
+<main class="wrap"><nav class="crumb"><a href="/de/">Startseite</a> / <a href="/blog/de/">Blog</a> / <span>Sparkasse Kontoauszug als CSV herunterladen und importieren</span></nav><article><h1>Sparkasse Kontoauszug als CSV herunterladen und ins Haushaltsbuch importieren</h1><p class="byline">Autor: <a href="/de/about/#author" rel="author">Mikhail Peraviortkin</a> &middot; <time datetime="2026-11-26">2026-11-26</time> &middot; Aktualisiert 2026-06-19</p>
+<p>Deine Sparkasse-Umsätze lädst du im Online-Banking als CSV herunter, meist über die Umsatzanzeige mit einer Exportfunktion. AI Budget Assistant liest die Formate <strong>CSV-CAMT V2</strong>, <strong>CSV-CAMT V8</strong> und <strong>CSV-MT940</strong> mit einem eigenen Sparkasse-Parser. Du wählst unter <strong>Einstellungen → Transaktionen importieren</strong> die Zeile <strong>Sparkasse</strong> und die Datei, und die App zeigt dir die Umsätze samt Kategorievorschlägen. Eine Verbindung zu deinem Konto gibt es nicht, du loggst dich nirgends ein.</p>
+<h2>Wie lade ich meine Sparkasse-Umsätze als CSV herunter?</h2>
+<p>Jede Sparkasse ist ein eigenes Institut mit eigenem Online-Banking, deshalb heißen die Menüpunkte nicht überall gleich. Der übliche Weg:</p>
+<ol>
+<li>Melde dich im Online-Banking deiner Sparkasse an und öffne das Girokonto.</li>
+<li>Rufe die <strong>Umsätze</strong> auf und stelle den Zeitraum ein, den du importieren willst.</li>
+<li>Suche in der Umsatzansicht die Exportfunktion und wähle als Format <strong>CSV</strong>. Je nach Institut heißt der Eintrag <strong>CSV-CAMT</strong> (Version 2 oder 8) oder <strong>CSV-MT940</strong>.</li>
+<li>Speichere die Datei auf dem Gerät, auf dem du die App nutzt.</li>
+</ol>
+<p>Findest du den Export nicht, hilft die Hilfe deiner Sparkasse oder der Kundenservice. Die Menünamen und der Platz der Funktion können sich zwischen den Instituten und nach Updates unterscheiden. Die BW-Bank nutzt dasselbe Format und funktioniert ebenfalls.</p>
+<h2>Wie importiere ich die Sparkasse-CSV in AI Budget Assistant?</h2>
+<ol>
+<li>Öffne <strong>Einstellungen → Transaktionen importieren</strong>. Bei deutscher App-Sprache steht <strong>Sparkasse</strong> als eigene Zeile in der Schnellauswahl.</li>
+<li>Tippe auf <strong>Sparkasse</strong> und wähle die CSV-Datei. Alternativ nimmst du <strong>Automatisch erkennen (jede Bank)</strong>, die App erkennt die Sparkasse-Datei auch von selbst.</li>
+<li>In der Vorschau siehst du Datum, Betrag, Beschreibung und die vorgeschlagene Kategorie. Die Vorschläge stammen aus bekannten deutschen Händlern wie REWE, EDEKA, ALDI, LIDL, dm, Rossmann, DB, Aral, Lieferando oder Amazon.</li>
+<li>Wähle Zeilen ab, die du nicht willst, und tippe auf <strong>Importieren</strong>.</li>
+</ol>
+<p>Für die Sparkasse-Dateien liest ein fester Parser die Datei. Es wird keine KI zur Spaltenerkennung eingesetzt, du bestätigst nichts, und es wird nichts an ein Modell gesendet. Der Import ist in jedem Tarif kostenlos.</p>
+<h2>Was passiert mit vorgemerkten Umsätzen?</h2>
+<p>Zeilen mit dem Vermerk <strong>Umsatz vorgemerkt</strong> überspringt die App absichtlich. Ein vorgemerkter Umsatz ist noch nicht endgültig gebucht und taucht später als gebuchte Zeile wieder auf. Importierte die App ihn jetzt, hättest du ihn nach dem nächsten Export doppelt.</p>
+<p>Importiere also gebuchte Umsätze. Willst du auch die zuletzt vorgemerkten Zahlungen, exportierst du die Datei nach ein paar Tagen erneut. Was du schon importiert hast, erkennt die App wieder.</p>
+<h2>Duplikate, Fehler und Rückgängig</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Frage</th>
+<th>Antwort</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Doppelte Umsätze</td>
+<td>Zeilen, die du aus einer früheren Datei schon importiert hast, werden erkannt und abgewählt</td>
+</tr>
+<tr>
+<td>Zeiträume überlappen</td>
+<td>Kein Problem, die Überschneidung wird abgewählt</td>
+</tr>
+<tr>
+<td>Falsch importiert</td>
+<td>Den ganzen Import machst du 30 Tage lang im Importverlauf rückgängig</td>
+</tr>
+<tr>
+<td>Kosten</td>
+<td>Kostenlos in jedem Tarif</td>
+</tr>
+</tbody>
+</table></div>
+<p>Prüfe vor dem Bestätigen ein paar Zeilen mit dem Original, vor allem Vorzeichen und Datum.</p>
+<h2>Und wenn ich lieber nichts hochladen will?</h2>
+<p>Dann geht es ohne Datei: Ausgaben tippst du selbst ein, sprichst sie ein oder scannst Belege. Warum die App bewusst ohne Bankanbindung arbeitet, steht in <a href="/blog/de/haushaltsbuch-app-ohne-bankverbindung/">Haushaltsbuch-App ohne Bankverbindung</a>. Den allgemeinen Ablauf beschreibt <a href="/blog/de/kontoauszug-importieren/">Kontoauszug importieren</a>. Hast du auch ein Konto bei einer Neobank, lies <a href="/blog/de/n26-kontoauszug-importieren/">N26 Umsätze als CSV exportieren</a>. Die App findest du auf <a href="/de/">ai-budget.pl</a>.</p>
+<h2>FAQ: Sparkasse CSV-Export</h2>
+<h3>Welches CSV-Format brauche ich bei der Sparkasse?</h3>
+<p>Die App liest CSV-CAMT V2, CSV-CAMT V8 und CSV-MT940. Welche davon deine Sparkasse anbietet, siehst du im Export-Dialog des Online-Bankings.</p>
+<h3>Funktioniert der Import auch mit der BW-Bank?</h3>
+<p>Ja, die BW-Bank exportiert im gleichen Format wie die Sparkassen.</p>
+<h3>Warum fehlen vorgemerkte Umsätze?</h3>
+<p>Die App überspringt Zeilen mit „Umsatz vorgemerkt“ absichtlich, damit nichts doppelt landet, sobald die Zahlung gebucht ist. Exportiere später erneut, dann sind sie dabei.</p>
+<h3>Muss ich mein Sparkasse-Konto mit der App verbinden?</h3>
+<p>Nein. Die App verbindet sich nie mit der Bank, es gibt kein Login und kein PSD2 oder FinTS. Du lädst nur die Datei hoch, die du selbst exportiert hast.</p>
+<h3>Kann ich den Import rückgängig machen?</h3>
+<p>Ja, im Importverlauf unten auf dem Importbildschirm, 30 Tage lang.</p></article><aside class="cta"><h3>Verwalte dein Geld mit KI</h3><p>Erfasse Ausgaben per Sprache oder Beleg-Foto, behalte Budgets und Sparen im Blick, gemeinsam mit der Familie. Kostenlos starten.</p><a class="btn p" href="https://app.ai-budget.pl?src=blog&amp;loc=cta&amp;lang=de">App öffnen</a><a class="btn s" href="https://play.google.com/store/apps/details?id=com.budget.assistant&amp;referrer=src%3Dblog%26loc%3Dcta%26lang%3Dde%26utm_source%3Dblog%26utm_medium%3Dcta">Bei Google Play laden</a></aside><section class="related"><h2>Ähnliche Artikel</h2><a href="/help/de/bank-import/">Schritt-für-Schritt-Anleitung im Hilfebereich &rarr;</a><a href="/blog/de/haushaltsbuch-fuehren/">Haushaltsbuch führen: Die Methode, die wirklich hält</a><a href="/blog/de/ausgaben-tracken/">Ausgaben tracken: So behältst du die Kontrolle</a><a href="/blog/de/geld-sparen/">Geld sparen: Ein konkreter Plan, der wirklich aufgeht</a><a href="/blog/de/gemeinsames-haushaltsbuch/">Gemeinsames Haushaltsbuch für Paare ohne Streit</a><a href="/blog/de/umschlagmethode/">Umschlagmethode: Das System gegen Mehrausgaben</a><a href="/blog/de/50-30-20-regel/">Die 50-30-20-Regel: Ein praktischer Leitfaden</a><a href="/blog/de/beste-haushaltsbuch-app/">Beste Haushaltsbuch App 2026: Ein ehrlicher Vergleich</a><a href="/blog/de/notgroschen/">Notgroschen: Wie viel du brauchst und wie du ihn aufbaust</a><a href="/blog/de/abos-verwalten/">Abos verwalten, bevor sie dein Konto leerräumen</a><a href="/blog/de/beim-einkaufen-sparen/">Geld sparen beim Einkaufen ohne ständig Coupons</a><a href="/blog/de/ausgabenkategorien/">Ausgabenkategorien, die im Budget wirklich funktionieren</a><a href="/blog/de/schulden-abbezahlen/">Schulden abbezahlen: Schneeball oder Lawine?</a><a href="/blog/de/kontoauszug-importieren/">Kontoauszug importieren statt alles abzutippen</a><a href="/blog/de/familienbudget-mit-kindern/">Familienbudget mit Kindern, das im Alltag hält</a><a href="/blog/de/ki-fuer-die-finanzen/">KI für die Finanzen: weniger Aufwand, mehr Einblick</a><a href="/blog/de/persoenliche-inflation/">Persönliche Inflation berechnen: so geht&#x27;s</a><a href="/blog/de/ausgaben-karte/">Ausgaben-Karte: Sieh, wohin dein Geld wirklich geht</a><a href="/blog/de/rechnung-teilen-mit-freunden/">Rechnung teilen mit Freunden und wirklich zurückbekommen</a><a href="/blog/de/ausgaben-automatisch-erfassen/">Ausgaben automatisch erfassen statt alles selbst eintippen</a><a href="/blog/de/kassenbons-scannen/">Kassenbons scannen: warum die Posten zählen, nicht die Summe</a><a href="/blog/de/schulanfang-kosten/">Schulanfang: Was die Ausstattung wirklich kostet</a><a href="/blog/de/kontoauszug-von-jeder-bank-importieren/">Was passiert, wenn deine Bank nicht auf der Liste steht</a><a href="/blog/de/warum-haushaltsbuch-apps-schnell-fliegen/">Warum Haushaltsbuch-Apps schon nach einer Woche fliegen</a><a href="/blog/de/wechsel-von-monefy-wallet-moneymanager/">Monefy-Alternative: Daten samt Kategorien übernehmen</a><a href="/blog/de/finanzjahr-wrapped/">Dein Finanzjahr, Wrapped: Was es zeigt</a><a href="/blog/de/inflationsschutz-vorrat/">Vorrat anlegen, bevor die Preise steigen: Inflationsschutz</a><a href="/blog/de/wechselkurs-alarm/">Wechselkurs-Alarm: Push bei deinem Zielkurs</a><a href="/blog/de/excel-haushaltsbuch-vorlage/">Excel Haushaltsbuch Vorlage: Aufbau und ihre Grenzen</a><a href="/blog/de/kostenlose-haushaltsbuch-app/">Kostenlose Haushaltsbuch App: Was &#x27;kostenlos&#x27; bedeutet</a><a href="/blog/de/budget-bei-unregelmaessigem-einkommen/">Budget bei unregelmäßigem Einkommen: was hilft</a><a href="/blog/de/budget-in-zwei-waehrungen/">Budget in zwei Währungen: So behältst du den Überblick</a><a href="/blog/de/weihnachtsbudget/">Weihnachtsbudget: Was kostet Weihnachten wirklich?</a><a href="/blog/de/black-friday-fake-rabatte-erkennen/">Black Friday: Fake-Rabatte erkennen und nicht zu viel zahlen</a><a href="/blog/de/monefy-vergleich-ai-budget-assistant/">Monefy vs. AI Budget Assistant: Der Vergleich</a><a href="/blog/de/wallet-budgetbakers-vergleich-ai-budget-assistant/">Wallet by BudgetBakers vs. AI Budget Assistant</a><a href="/blog/de/ynab-alternative-vergleich/">YNAB Alternative: YNAB vs. AI Budget Assistant</a><a href="/blog/de/money-manager-vergleich-ai-budget-assistant/">Money Manager vs. AI Budget Assistant: Der Vergleich</a><a href="/blog/de/revolut-kontoauszug-importieren/">Revolut-Kontoauszug importieren: CSV ins Haushaltsbuch</a><a href="/blog/de/steuererstattung-sinnvoll-nutzen/">Steuererstattung sinnvoll nutzen: der 4-Schritte-Plan</a><a href="/blog/de/haushaltsbuch-app-ohne-bankverbindung/">Haushaltsbuch-App ohne Bankverbindung: Optionen im Vergleich</a><a href="/blog/de/n26-kontoauszug-importieren/">N26 Umsätze als CSV exportieren und ins Haushaltsbuch</a><a href="/blog/de/volksbank-kontoauszug-csv/">Volksbank Kontoauszug als CSV exportieren und importieren</a><a href="/blog/de/dkb-kontoauszug-csv/">DKB Kontoauszug als CSV herunterladen und importieren</a><a href="/blog/de/ing-kontoauszug-csv/">ING Kontoauszug als CSV herunterladen und importieren</a><a href="/blog/de/comdirect-umsaetze-csv/">comdirect Umsätze als CSV exportieren und importieren</a><a href="/blog/de/commerzbank-umsaetze-csv/">Commerzbank Umsätze als CSV exportieren und importieren</a></section></main><footer class="site"><div class="wrap"><div class="f-links"><a href="/blog/de/">Blog</a><a href="/help/de/">Hilfe</a><a href="/de/about/">Über uns</a><a href="/de/about/#impressum">Impressum</a><a href="/de/developers/">API für Entwickler</a><a href="/en/privacy/">Datenschutz</a><a href="/en/terms/">AGB</a><a href="/en/cookies/">Cookies</a><a href="https://app.ai-budget.pl?src=blog&amp;loc=footer&amp;lang=de">Anmelden</a><a href="https://play.google.com/store/apps/details?id=com.budget.assistant&amp;referrer=src%3Dblog%26loc%3Dfooter%26lang%3Dde%26utm_source%3Dblog%26utm_medium%3Dfooter">Google Play</a></div><div class="f-badge"><a href="https://startupfa.me/s/ai-budget?utm_source=ai-budget.pl" target="_blank" rel="nofollow noopener"><img class="b-sf" src="/assets/startup-fame-badge.webp" alt="AI Budget - Featured on Startup Fame" width="108" height="34" loading="lazy"></a><a href="https://peerpush.com/p/ai-budget-assistant" target="_blank" rel="nofollow noopener"><img class="b-pp" src="https://peerpush.com/p/ai-budget-assistant/badge.png" alt="AI Budget Assistant on PeerPush" width="120" height="34" loading="lazy"></a><a href="https://bestaibrands.com/ai-budget-assistant" target="_blank" rel="nofollow noopener" style="text-decoration:none;"><div style="display:inline-flex;flex-direction:column;align-items:center;background:#fff;border:1px solid #eee;border-radius:12px;padding:8px 32px;height:54px;justify-content:center;font-family:sans-serif;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);"><div style="font-size:8px;color:#999;font-weight:bold;text-transform:uppercase;letter-spacing:0.2em;line-height:1;margin-bottom:4px;white-space:nowrap;">Featured On</div><div style="font-size:14px;font-weight:bold;color:#000;letter-spacing:-0.01em;line-height:1;white-space:nowrap;">bestaibrands.com</div></div></a><a href="https://firsto.co/projects/ai-budget-assistant" target="_blank" rel="nofollow noopener"><img class="b-fo" src="https://firsto.co/images/badges/find-us-on-firsto.svg" alt="AI Budget Assistant | Firsto Launch" width="88" height="34" loading="lazy"></a><a href="https://liftoapp.com/product/ai-budget-assistant" target="_blank" rel="nofollow noopener"><img class="b-lf" src="https://liftoapp.com/badges/featured-dark.svg" alt="AI Budget Assistant - Featured on Lifto" width="126" height="34" loading="lazy"></a></div><div class="f-badge"><a href="https://fazier.com/launches/ai-budget.pl" target="_blank" rel="nofollow noopener"><img class="b-fz" src="https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=featured&amp;theme=light" alt="AI Budget Assistant on Fazier" width="144" height="34" loading="lazy"></a><a href="https://launchstag.com/p/tool-1789044587266" target="_blank" rel="nofollow noopener"><img class="b-ls" src="https://launchstag.com/badge-light.svg" alt="AI Budget Assistant - Featured on Launchstag" width="109" height="34" loading="lazy"></a><a href="https://www.uneed.best/tool/ai-budget-assistant" target="_blank" rel="nofollow noopener"><img class="b-un" src="https://www.uneed.best/EMBED3B.png" alt="AI Budget Assistant - Launching Soon on Uneed" width="130" height="34" loading="lazy"></a><a href="https://tools.cafe/p/tool-1789322958894" target="_blank" rel="nofollow noopener"><img class="b-tc" src="https://tools.cafe/b/light.svg" alt="AI Budget Assistant - Featured on tools.cafe" width="109" height="34" loading="lazy"></a><a href="https://sellwithboost.com" target="_blank" rel="nofollow noopener"><img class="b-swb" src="https://sellwithboost.com/badge/listing.svg" alt="AI Budget Assistant - Listed on Sell With Boost" width="136" height="34" loading="lazy"></a><a href="https://alphashot.com/products/ai-budget-assistant?utm_source=alphashot&amp;utm_medium=badge&amp;utm_campaign=embed" target="_blank" rel="nofollow noopener"><img class="b-as" src="https://alphashot.com/badge/ai-budget-assistant.svg" alt="AI Budget Assistant - Featured on AlphaShot" width="130" height="34" loading="lazy"></a></div><div class="f-co"><a href="https://mi-code.pl/" target="_blank" rel="noopener"><img src="/assets/mi_code_logo.svg" alt="MiCode Sp. z o.o." width="30" height="30"></a><span>&copy; 2026 AI Budget Assistant &mdash; <a href="https://mi-code.pl/" target="_blank" rel="noopener" style="color:inherit">MiCode Sp. z o.o.</a>. Alle Rechte vorbehalten.</span></div></div></footer>
+<div class="cc" id="cc"><p>Wir verwenden Cookies, um den Traffic zu messen und die Seite zu verbessern. <a href="/en/cookies/" style="color:#F58320;text-decoration:underline">Mehr</a></p><div class="row"><button class="no" id="cc-no">Ablehnen</button><button class="ok" id="cc-ok">Akzeptieren</button></div></div>
+<script>(function(){var ID="G-WMEFHYETVX",K="cc-consent";function L(){var s=document.createElement("script");s.async=1;s.src="https://www.googletagmanager.com/gtag/js?id="+ID;document.head.appendChild(s);window.dataLayer=window.dataLayer||[];function g(){dataLayer.push(arguments);}window.gtag=g;g("js",new Date());g("config",ID);}var v=localStorage.getItem(K),b=document.getElementById("cc");if(v==="granted"){L();}else if(!v&&b){b.classList.add("show");document.getElementById("cc-ok").onclick=function(){localStorage.setItem(K,"granted");b.classList.remove("show");L();};document.getElementById("cc-no").onclick=function(){localStorage.setItem(K,"denied");b.classList.remove("show");};}})();</script></body></html>

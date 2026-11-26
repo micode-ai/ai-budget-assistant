@@ -1,0 +1,10 @@
+;
+"Umsätze Girokonto";"Zeitraum: 01.04.2022 - 19.05.2022";
+"Neuer Kontostand";"11.222,33 EUR";
+
+"Buchungstag";"Wertstellung (Valuta)";"Vorgang";"Buchungstext";"Umsatz in EUR";
+"offen";"--";"Kartenverfügung";"Kto/IBAN: DE00 Buchungstext: SHOP";"-23,86";
+"11.04.2022";"11.04.2022";"Übertrag / Überweisung";"Empfänger: Max MustermannKto/IBAN: DE123456789123 BLZ/BIC: BMNASMDMNAS  Ref. U277238HAS232/2";"-12.999,00";
+"12.04.2022";"12.04.2022";"Lastschrift / Belastung";"Auftraggeber: PayPal Europe S.a.r.l. et Cie S.C.A Buchungstext: 82927826268/PP.2722.PP/. , Ihr Einkauf bei Ref. UHS22832233/74494";"-23,72";
+
+"Alter Kontostand";"16,89 EUR";

@@ -4403,6 +4403,16 @@ Dans les vues mois et année, cette carte compare la période à la même pério
 
 Une grille de vos derniers jours, une colonne par semaine et une ligne par jour de la semaine, teintée selon vos dépenses du jour — plus c'est foncé, plus vous avez dépensé (chaque teinte est un quart de vos jours de dépense). Sur ordinateur, elle couvre les 12 derniers mois ; sur téléphone, autant de mois qu'il en tient lisiblement. Touchez un jour pour voir sa date et son total ; sinon la carte indique votre plus grosse journée. En dessous, **Moyenne par jour du mois** montre combien vous dépensez en moyenne chaque jour du mois et quels trois jours coûtent le plus. Si votre compte a un **Mois financier**, le jour 1 est son premier jour — le jour de paie. L'app ne connaît pas l'heure des achats : la carte travaille par jours, pas par heures. Elle apparaît dès 14 jours de dépenses.
 
+## Tous les comptes
+
+Ouvrez **Tous les comptes** dans l'onglet Analyses pour voir ensemble tous les comptes dont vous faites partie, dans votre devise d'affichage. Choisissez une période (ce mois-ci, le mois dernier, cette année, l'année dernière ou une plage personnalisée) pour obtenir **Dépensé**, **Revenus** et **Net** avec la comparaison à la période précédente, la part de chaque compte, les dépenses et revenus par catégorie et les mois en barres empilées.
+
+- **Activez ou désactivez des comptes.** Désactivez un compte que vous ne voulez pas compter, par exemple un compte partagé qu'un autre membre compte aussi. Le choix est conservé sur cet appareil. Les comptes d'investissement sont désactivés au départ.
+- **Les catégories sont fusionnées par nom.** « Courses » dans deux comptes devient une seule ligne.
+- **Comptes chiffrés.** Un compte entièrement chiffré ne peut pas être lu et n'est pas inclus. Avec le chiffrement du texte, une catégorie que vous avez renommée apparaît comme **Autre**.
+- **Non comptés comme dépense ou revenu :** les dépenses prévues, les sommes qu'on vous doit après une addition partagée et les virements entre vos propres comptes inclus.
+- **Groupes (Pro).** Enregistrez un ensemble de comptes comme groupe - par exemple « Locations » - et comparez côte à côte les comptes d'un même groupe. Vous pouvez avoir jusqu'à 20 groupes ; supprimer un groupe ne touche jamais vos comptes ni leurs données. Les groupes sont une fonction Pro : après un passage à une offre inférieure, vos groupes sont masqués (pas supprimés) jusqu'à votre prochain abonnement Pro.
+
 ## Patrimoine
 
 Ouvrez-le depuis l'entrée **Patrimoine** de l'onglet Analyses ou en touchant la carte **Net Capital** de l'écran d'accueil. Il additionne tout ce que vous avez sur tous vos comptes — l'argent de chaque portefeuille, la valeur de marché de vos investissements et ce qu'on vous doit — moins vos propres dettes, dans votre devise d'affichage. Vous voyez l'évolution depuis le mois dernier et depuis un an, les quatre composantes et les 12 derniers mois en barres : chaque mois passé est reconstitué à partir de vos données et des taux de change de ce mois, l'historique est donc là dès le premier jour. Une barre plus claire signifie que certains investissements ont été valorisés à leur prix d'achat faute de prix de marché à cette date. Sous **Comptes**, vous pouvez désactiver un compte — par exemple un compte partagé qu'un autre membre compte aussi dans son patrimoine ; ce choix est conservé sur cet appareil. Un compte entièrement chiffré ne peut pas être lu et n'est pas compté.
@@ -6089,6 +6099,16 @@ Si vous ouvrez cet ecran via **Exporter le rapport** dans l'onglet Analyses, la 
 
 Les rapports sont conserves pendant 7 jours puis automatiquement supprimes.
 
+## Périmètre du rapport
+
+Sous **Le rapport couvre**, choisissez ce que le fichier contient :
+
+- **Ce compte** - le compte dans lequel vous êtes (par défaut).
+- **Tous les comptes** - tous vos comptes, sauf ceux que vous avez désactivés sur l'écran Tous les comptes.
+- **Groupe** - l'un de vos groupes de comptes (Pro).
+
+Un rapport sur plusieurs comptes comporte une colonne **Compte** et une colonne **Note**, et affiche un sous-total par compte. Les lignes avec une note - dépenses prévues, montants d'additions partagées et virements entre vos comptes - sont listées pour que vous les voyiez, mais ne sont **pas** incluses dans les totaux. Les comptes entièrement chiffrés sont exclus et nommés à la fin du rapport. Les chiffres correspondent à l'écran Tous les comptes. Ce rapport est conservé 7 jours, comme les autres, et s'ouvre depuis n'importe quel compte.
+
 ## Resume mensuel
 
 Un apercu de votre activite financiere du mois en cours :
@@ -7050,7 +7070,7 @@ Tu veux recommander l’appli sans le programme de parrainage ? Ouvre **Réglage
 ## Importer des transactions depuis votre banque
 URL: https://ai-budget.pl/help/fr/bank-import/
 
-> Importez des transactions depuis un relevé CSV, XLSX ou PDF de votre banque. Compatible avec mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise et toute autre banque via le mappeur universel de colonnes.
+> Importez des transactions depuis un relevé CSV, XLSX ou PDF de votre banque. Compatible avec mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise, les banques allemandes (Sparkasse, Volksbank, DKB, ING, comdirect, Commerzbank, N26) et toute autre banque via le mappeur universel de colonnes.
 
 ## Banques prises en charge
 
@@ -7060,6 +7080,7 @@ URL: https://ai-budget.pl/help/fr/bank-import/
 - **Alior Bank** — relevé PDF
 - **Revolut** — export CSV
 - **Wise** — export CSV (multi-devises, conversions FX détectées automatiquement)
+- **Banques allemandes** — export CSV de Sparkasse, Volksbank / Raiffeisenbank, DKB, ING Deutschland, comdirect, Commerzbank, N26. Elles apparaissent dans la liste quand l’application est en allemand ; **Détection automatique** reconnaît les fichiers dans toutes les langues. Les opérations en attente (pas encore comptabilisées) sont ignorées, pour ne pas être importées deux fois une fois comptabilisées
 - **Autre** — toute banque, via le mappeur universel de colonnes (CSV)
 - **Tableurs** — les relevés XLSX fonctionnent aussi ; l'app lit la première feuille
 

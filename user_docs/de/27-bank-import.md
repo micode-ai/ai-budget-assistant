@@ -1,6 +1,6 @@
 # Transaktionen aus deiner Bank importieren
 
-> Importiere Transaktionen aus einem CSV-, XLSX- oder PDF-Kontoauszug. Unterstützt werden mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise und jede andere Bank über den universellen Spalten-Mapper.
+> Importiere Transaktionen aus einem CSV-, XLSX- oder PDF-Kontoauszug. Unterstützt werden mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise, deutsche Banken (Sparkasse, Volksbank, DKB, ING, comdirect, Commerzbank, N26) und jede andere Bank über den universellen Spalten-Mapper.
 
 ## Unterstützte Banken
 
@@ -10,6 +10,7 @@
 - **Alior Bank** — PDF-Kontoauszug
 - **Revolut** — CSV-Export
 - **Wise** — CSV-Export (mehrsprachig, FX-Konversionen werden automatisch erkannt)
+- **Deutsche Banken** — CSV-Export von Sparkasse, Volksbank / Raiffeisenbank, DKB, ING Deutschland, comdirect, Commerzbank, N26. Die Banken stehen in der Liste, wenn die App auf Deutsch eingestellt ist; **Automatisch erkennen** erkennt die Dateien in jeder Sprache. Vorgemerkte (noch nicht gebuchte) Umsätze werden übersprungen, damit sie nach der Buchung nicht doppelt importiert werden
 - **Andere** — beliebige Bank, über den universellen Spalten-Mapper (CSV)
 - **Tabellen** — XLSX-Kontoauszüge funktionieren ebenfalls; die App liest das erste Blatt
 

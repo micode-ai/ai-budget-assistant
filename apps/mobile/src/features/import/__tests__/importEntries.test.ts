@@ -1,4 +1,4 @@
-import { IMPORT_ENTRIES, importSourceLabel } from '../importEntries';
+import { IMPORT_ENTRIES, importEntriesFor, importSourceLabel } from '../importEntries';
 
 describe('IMPORT_ENTRIES', () => {
   // This is the regression this file exists for. The hub forwards entry.id as
@@ -38,7 +38,24 @@ describe('IMPORT_ENTRIES', () => {
   });
 });
 
+describe('importEntriesFor', () => {
+  it('lists the German banks only for a German UI', () => {
+    const ids = (lang: string) => importEntriesFor(lang).map((e) => e.id);
+    expect(ids('de')).toEqual(expect.arrayContaining(['sparkasse', 'dkb', 'ing-de', 'comdirect', 'n26']));
+    expect(ids('pl')).not.toContain('sparkasse');
+    expect(ids('en')).not.toContain('dkb');
+  });
+
+  it('keeps the auto-detect row first in every language', () => {
+    for (const lang of ['de', 'pl', 'en']) expect(importEntriesFor(lang)[0].id).toBeUndefined();
+  });
+});
+
 describe('importSourceLabel', () => {
+  it('labels a German bank import whatever the current language', () => {
+    expect(importSourceLabel('bank:ing-de')).toBe('ING Deutschland');
+  });
+
   it('maps a bank source to its brand label', () => {
     expect(importSourceLabel('bank:mbank')).toBe('mBank');
     expect(importSourceLabel('bank:pko')).toBe('PKO BP');

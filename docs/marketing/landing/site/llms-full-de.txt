@@ -596,6 +596,14 @@ Tracking beantwortet, wie viel du bereits wofür ausgegeben hast. Ein Haushaltsb
 - [YNAB Alternative: YNAB vs. AI Budget Assistant](/blog/de/ynab-alternative-vergleich/)
 - [Money Manager vs. AI Budget Assistant: Der Vergleich](/blog/de/money-manager-vergleich-ai-budget-assistant/)
 - [Revolut-Kontoauszug importieren: CSV ins Haushaltsbuch](/blog/de/revolut-kontoauszug-importieren/)
+- [N26 Umsätze als CSV exportieren und ins Haushaltsbuch](/blog/de/n26-kontoauszug-importieren/)
+- [Sparkasse Kontoauszug als CSV herunterladen und importieren](/blog/de/sparkasse-kontoauszug-csv/)
+- [Volksbank Kontoauszug als CSV exportieren und importieren](/blog/de/volksbank-kontoauszug-csv/)
+- [DKB Kontoauszug als CSV herunterladen und importieren](/blog/de/dkb-kontoauszug-csv/)
+- [ING Kontoauszug als CSV herunterladen und importieren](/blog/de/ing-kontoauszug-csv/)
+- [comdirect Umsätze als CSV exportieren und importieren](/blog/de/comdirect-umsaetze-csv/)
+- [Commerzbank Umsätze als CSV exportieren und importieren](/blog/de/commerzbank-umsaetze-csv/)
+- [Haushaltsbuch-App ohne Bankverbindung: Optionen im Vergleich](/blog/de/haushaltsbuch-app-ohne-bankverbindung/)
 
 ## Ausgabenkategorien, die im Budget wirklich funktionieren
 URL: https://ai-budget.pl/blog/de/ausgabenkategorien/
@@ -1058,6 +1066,202 @@ Nein. Es ist ein Werkzeug zum Verfolgen von Salden, Umrechnen von Summen und Eri
 ---
 
 *Verwandte Artikel: [Geld sparen: Ein konkreter Plan, der wirklich aufgeht](/blog/de/geld-sparen/) | [Wechselkurs-Alarm: Push bei deinem Zielkurs](/blog/de/wechselkurs-alarm/) | [Persönliche Inflation berechnen: so geht's](/blog/de/persoenliche-inflation/)*
+
+## comdirect Umsätze als CSV exportieren und importieren
+URL: https://ai-budget.pl/blog/de/comdirect-umsaetze-csv/
+
+Bei der comdirect lädst du die Umsätze deines Girokontos als CSV herunter. AI Budget Assistant liest die Datei „Umsätze Girokonto“ mit einem eigenen comdirect-Parser. Unter **Einstellungen → Transaktionen importieren** wählst du **comdirect**, lädst die CSV hoch, prüfst die Vorschau und importierst. Es gibt keine Bankverbindung und kein Login, nur die Datei, die du selbst exportiert hast.
+
+## Wie exportiere ich meine comdirect-Umsätze als CSV?
+
+So gehst du im comdirect-Banking vor:
+
+1. Melde dich im comdirect-Banking an und öffne die **Umsätze** deines Girokontos.
+2. Stelle den Zeitraum ein, den du importieren willst.
+3. Suche in der Umsatzansicht die Download- oder Exportfunktion und wähle **CSV**.
+4. Speichere die Datei auf dem Gerät, auf dem du die App nutzt.
+
+Die Datei heißt bei comdirect typischerweise „Umsätze Girokonto“. Findest du den Export nicht, hilft die comdirect-Hilfe oder der Kundenservice. Die Namen der Menüpunkte können sich ändern.
+
+## Wie importiere ich die comdirect-CSV in AI Budget Assistant?
+
+1. Öffne **Einstellungen → Transaktionen importieren**. Bei deutscher App-Sprache steht **comdirect** als eigene Zeile in der Schnellauswahl.
+2. Tippe auf **comdirect** und wähle die Datei. Alternativ nimmst du **Automatisch erkennen (jede Bank)**, auch dann erkennt die App die Datei.
+3. Prüfe in der Vorschau Datum, Betrag, Beschreibung und Kategorie. Vorschläge kommen von bekannten deutschen Händlern wie REWE, EDEKA, ALDI, LIDL, dm, Rossmann, DB, Aral, Lieferando oder Amazon.
+4. Wähle Zeilen ab, die du nicht willst, und tippe auf **Importieren**.
+
+Bei comdirect steht der Name des Zahlungsempfängers oder Zahlenden im Buchungstext. Die App liest ihn von dort und zeigt ihn als Händler, du musst ihn nicht selbst heraussuchen.
+
+## Was ist mit offenen Kartenumsätzen?
+
+Offene Kartenumsätze (Status **offen**) überspringt die App. Sie sind noch nicht endgültig gebucht und würden nach dem nächsten Export ein zweites Mal erscheinen. Exportiere die Datei später erneut, dann sind sie als gebuchte Umsätze dabei. Was du schon importiert hast, wird erkannt.
+
+Weil ein eigener Parser liest, ist keine KI-Spaltenerkennung beteiligt: keine Zustimmungsabfrage, nichts geht an ein Modell, kostenlos in jedem Tarif.
+
+## Duplikate und Rückgängig
+
+| Frage | Antwort |
+|---|---|
+| Doppelte Umsätze | Zeilen aus einer früheren Datei werden erkannt und abgewählt |
+| Überlappende Zeiträume | Die Überschneidung wird abgewählt |
+| Falsch importiert | Den ganzen Import machst du 30 Tage lang im Importverlauf rückgängig |
+
+Prüfe vor dem Bestätigen ein paar Zeilen mit dem Original, vor allem Vorzeichen und Datum.
+
+## Weiterlesen
+
+Warum die App ohne Bankverbindung auskommt, erklärt [Haushaltsbuch-App ohne Bankverbindung](/blog/de/haushaltsbuch-app-ohne-bankverbindung/). Der allgemeine Ablauf steht in [Kontoauszug importieren](/blog/de/kontoauszug-importieren/). Mehr zu Banken: [Commerzbank Umsätze als CSV](/blog/de/commerzbank-umsaetze-csv/), [ING Kontoauszug als CSV](/blog/de/ing-kontoauszug-csv/) und [N26 CSV-Export](/blog/de/n26-kontoauszug-importieren/). Die App findest du auf [ai-budget.pl](https://ai-budget.pl).
+
+## FAQ: comdirect CSV-Export
+
+**Kann ich comdirect-Umsätze als CSV exportieren?**
+
+Ja, die Umsätze des Girokontos lassen sich als CSV herunterladen. Die Datei heißt typischerweise „Umsätze Girokonto“.
+
+**Warum fehlen offene Kartenumsätze?**
+
+Die App überspringt Zeilen mit dem Status „offen“ absichtlich, damit nichts doppelt landet, sobald die Zahlung gebucht ist.
+
+**Wird der Händlername erkannt?**
+
+Ja. Den Namen des Zahlungsempfängers oder Zahlenden liest die App aus dem Buchungstext.
+
+**Wird etwas an eine KI gesendet?**
+
+Nein. Ein eigener comdirect-Parser liest die Datei, ohne Zustimmungsabfrage.
+
+**Kann ich den Import rückgängig machen?**
+
+Ja, im Importverlauf, 30 Tage lang.
+
+## Commerzbank Umsätze als CSV exportieren und importieren
+URL: https://ai-budget.pl/blog/de/commerzbank-umsaetze-csv/
+
+Bei der Commerzbank exportierst du die Umsätze aus der Umsatzansicht im Online-Banking als CSV. AI Budget Assistant liest diese Datei mit einem eigenen Commerzbank-Parser. Unter **Einstellungen → Transaktionen importieren** wählst du **Commerzbank**, lädst die CSV hoch und importierst nach der Vorschau. Eine Grenze vorab: Einen getrennten Händlernamen liefert die aktuelle Commerzbank-Datei nicht, dazu unten mehr.
+
+## Wie exportiere ich meine Commerzbank-Umsätze als CSV?
+
+Laut Commerzbank-Hilfe (Stand November 2026) geht der Export im Online-Banking so:
+
+1. Melde dich im Online-Banking an und wähle das Konto.
+2. Klicke rechts oben über den Umsätzen auf **PDF/CSV** und wähle **Umsätze exportieren**.
+3. Grenze bei Bedarf Zeitraum, Betrag, Ein- oder Ausgänge und Umsatzart ein.
+4. Wähle als Dateiformat **CSV** und klicke auf **Exportieren**.
+
+Am einfachsten geht das im Online-Banking im Browser. Menünamen können sich nach Updates ändern.
+
+## Wie importiere ich die Commerzbank-CSV in AI Budget Assistant?
+
+1. Öffne **Einstellungen → Transaktionen importieren**. Bei deutscher App-Sprache steht **Commerzbank** als eigene Zeile in der Schnellauswahl.
+2. Tippe auf **Commerzbank** und wähle die Datei. Auch **Automatisch erkennen (jede Bank)** erkennt die Datei.
+3. Prüfe in der Vorschau Datum, Betrag, Beschreibung und Kategorie. Vorschläge kommen von bekannten deutschen Händlern wie REWE, EDEKA, ALDI, LIDL, dm, Rossmann, DB, Aral, Lieferando oder Amazon.
+4. Wähle unnötige Zeilen ab und tippe auf **Importieren**.
+
+Ein eigener Parser liest die Datei. Es gibt keine KI-Spaltenerkennung, keine Zustimmungsabfrage, es geht nichts an ein Modell, und der Import ist in jedem Tarif kostenlos.
+
+## Die Grenze: kein getrennter Händlername
+
+In der aktuellen Commerzbank-Datei stehen Gegenpartei und Verwendungszweck im selben Textfeld. Die App kann sie deshalb nicht sauber trennen und übernimmt den gesamten Text als Beschreibung, ohne separaten Händlernamen. Die Kategorievorschläge funktionieren trotzdem oft, weil bekannte Händler im Text vorkommen. Bei unbekannten Zahlungsempfängern kategorisierst du in der Vorschau von Hand.
+## Duplikate und Rückgängig
+
+| Frage | Antwort |
+|---|---|
+| Doppelte Umsätze | Zeilen aus einer früheren Datei werden erkannt und abgewählt |
+| Überlappende Zeiträume | Die Überschneidung wird abgewählt |
+| Falsch importiert | Den ganzen Import machst du 30 Tage lang im Importverlauf rückgängig |
+
+Prüfe vor dem Bestätigen ein paar Zeilen mit dem Original, besonders Vorzeichen und Datum.
+
+## Weiterlesen
+
+Warum die App ohne Bankverbindung arbeitet, steht in [Haushaltsbuch-App ohne Bankverbindung](/blog/de/haushaltsbuch-app-ohne-bankverbindung/). Den allgemeinen Ablauf beschreibt [Kontoauszug importieren](/blog/de/kontoauszug-importieren/). Mehr Banken: [comdirect Umsätze als CSV](/blog/de/comdirect-umsaetze-csv/), [Sparkasse Kontoauszug als CSV](/blog/de/sparkasse-kontoauszug-csv/) und [N26 CSV-Export](/blog/de/n26-kontoauszug-importieren/). Die App findest du auf [ai-budget.pl](https://ai-budget.pl).
+
+## FAQ: Commerzbank CSV-Export
+
+**Kann ich Commerzbank-Umsätze als CSV exportieren?**
+
+Ja, die Umsatzansicht im Online-Banking bietet einen CSV-Export. Den genauen Menüpunkt findest du in deinem Banking oder in der Commerzbank-Hilfe.
+
+**Warum zeigt die App keinen Händlernamen?**
+
+In der aktuellen Commerzbank-Datei teilen sich Gegenpartei und Verwendungszweck ein Textfeld. Die App importiert es als Beschreibung ohne separaten Händlernamen.
+
+**Werden trotzdem Kategorien vorgeschlagen?**
+
+Oft ja, wenn ein bekannter Händler im Text steht. Sonst wählst du die Kategorie in der Vorschau selbst.
+
+**Wird etwas an eine KI gesendet?**
+
+Nein. Ein eigener Parser liest die Datei, ohne Zustimmungsabfrage.
+
+**Kann ich den Import rückgängig machen?**
+
+Ja, im Importverlauf, 30 Tage lang.
+
+## DKB Kontoauszug als CSV herunterladen und importieren
+URL: https://ai-budget.pl/blog/de/dkb-kontoauszug-csv/
+
+Deine DKB-Umsätze exportierst du im Online-Banking als CSV. AI Budget Assistant hat dafür einen eigenen DKB-Parser, der das aktuelle Exportformat seit der Umstellung des DKB-Bankings 2023 liest und auch das ältere. Du wählst unter **Einstellungen → Transaktionen importieren** die Zeile **DKB**, lädst die Datei hoch, prüfst die Vorschau und importierst. Ohne Bankverbindung, ohne Login.
+
+## Wie lade ich meine DKB-Umsätze als CSV herunter?
+
+Die DKB-Hilfe beschreibt vor allem den Export der Umsatzliste als PDF und das Postfach mit den Kontoauszügen; für den Import brauchst du aber die CSV-Datei der Umsätze aus dem Web-Banking. Der übliche Ablauf:
+
+1. Melde dich im Online-Banking der DKB an und öffne dein Konto mit den Umsätzen.
+2. Stelle den Zeitraum ein, den du importieren willst.
+3. Suche in der Umsatzansicht die Exportfunktion und wähle **CSV**.
+4. Speichere die Datei auf dem Gerät, auf dem du die App nutzt.
+
+Die PDF-Kontoauszüge im Postfach eignen sich nicht für diesen Import, nimm die CSV-Datei. Falls du den Export nicht findest, schau in die DKB-Hilfe oder frag den Kundenservice. Die Namen der Menüpunkte können sich ändern.
+
+## Altes und neues Format
+
+Seit 2023 exportiert die DKB ihre Umsätze mit einem anderen Aufbau als davor. Die App erkennt beide. Hast du also noch eine ältere Datei aus einem früheren Export, kannst du sie ebenfalls importieren und so Monate vor der Umstellung nachtragen.
+
+## Wie importiere ich die DKB-CSV in AI Budget Assistant?
+
+1. Öffne **Einstellungen → Transaktionen importieren**. Bei deutscher App-Sprache steht **DKB** als eigene Zeile in der Schnellauswahl.
+2. Tippe auf **DKB** und wähle die Datei. Auch **Automatisch erkennen (jede Bank)** erkennt die DKB-CSV.
+3. Prüfe in der Vorschau Beträge und Kategorien. Die Vorschläge kommen von bekannten deutschen Händlern wie REWE, EDEKA, ALDI, LIDL, dm, Rossmann, DB, Aral, Lieferando oder Amazon.
+4. Wähle Zeilen ab, die du nicht willst, und tippe auf **Importieren**.
+
+Zeilen mit dem Status **Vorgemerkt** überspringt die App. Sie sind noch nicht endgültig gebucht und würden nach dem nächsten Export doppelt auftauchen. Exportiere später erneut, dann sind sie als gebuchte Umsätze dabei.
+
+Da ein eigener Parser die Datei liest, gibt es keine KI-Spaltenerkennung: keine Zustimmungsabfrage, nichts wird an ein Modell gesendet, kostenlos in jedem Tarif.
+
+## Duplikate und Rückgängig
+
+| Frage | Antwort |
+|---|---|
+| Doppelte Umsätze | Zeilen aus einer früheren Datei werden erkannt und abgewählt |
+| Überlappende Zeiträume | Die Überschneidung wird abgewählt |
+| Falsch importiert | Den ganzen Import machst du 30 Tage lang im Importverlauf rückgängig |
+
+## Weiterlesen
+
+Warum die App ohne Bankverbindung arbeitet, steht in [Haushaltsbuch-App ohne Bankverbindung](/blog/de/haushaltsbuch-app-ohne-bankverbindung/). Den allgemeinen Ablauf erklärt [Kontoauszug importieren](/blog/de/kontoauszug-importieren/). Auch interessant für Direktbank-Kunden: [N26 Umsätze als CSV](/blog/de/n26-kontoauszug-importieren/) und [ING Kontoauszug als CSV](/blog/de/ing-kontoauszug-csv/). Die App findest du auf [ai-budget.pl](https://ai-budget.pl).
+
+## FAQ: DKB CSV-Export
+
+**Kann ich DKB-Umsätze als CSV herunterladen?**
+
+Ja, im Online-Banking lassen sich die Umsätze als CSV exportieren. Die PDF-Kontoauszüge liegen separat im Postfach.
+
+**Liest die App auch alte DKB-Dateien?**
+
+Ja. Der Parser versteht das aktuelle Format seit der Umstellung 2023 und das ältere.
+
+**Warum fehlen Zeilen mit „Vorgemerkt“?**
+
+Die App überspringt vorgemerkte Umsätze absichtlich, damit sie nicht doppelt landen, wenn sie später gebucht werden.
+
+**Wird etwas an eine KI gesendet?**
+
+Nein. Ein eigener DKB-Parser liest die Datei, es gibt keine Zustimmungsabfrage.
+
+**Kann ich den Import rückgängig machen?**
+
+Ja, im Importverlauf, 30 Tage lang.
 
 ## Excel Haushaltsbuch Vorlage: Aufbau und ihre Grenzen
 URL: https://ai-budget.pl/blog/de/excel-haushaltsbuch-vorlage/
@@ -1848,6 +2052,70 @@ Aktuell nicht. Heute arbeitet er ausschließlich mit deiner eigenen Kaufhistorie
 
 *Verwandte Artikel: [Geld sparen](/blog/de/geld-sparen/) | [Persönliche Inflation berechnen](/blog/de/persoenliche-inflation/) | [Dein Finanzjahr, Wrapped](/blog/de/finanzjahr-wrapped/)*
 
+## ING Kontoauszug als CSV herunterladen und importieren
+URL: https://ai-budget.pl/blog/de/ing-kontoauszug-csv/
+
+Bei der ING Deutschland exportierst du die Umsätze aus der Umsatzanzeige im Internetbanking als CSV. AI Budget Assistant liest diese Umsatzanzeige-CSV mit einem eigenen Parser. Unter **Einstellungen → Transaktionen importieren** wählst du **ING Deutschland**, lädst die Datei hoch und bekommst eine Vorschau mit Kategorievorschlägen. Die App verbindet sich nie mit deinem Konto.
+
+## Wie exportiere ich meine ING-Umsätze als CSV?
+
+Du erreichst die Umsatzanzeige, indem du im Internetbanking in der Kontenübersicht dein Konto auswählst. Laut ING-Hilfe speicherst du sie über **Exportieren** unten in der Umsatzanzeige als Datei. Danach:
+
+1. Stelle in der Umsatzanzeige den gewünschten Zeitraum ein.
+2. Klicke unten in der Umsatzanzeige auf **Exportieren** und wähle **CSV**.
+3. Speichere die Datei auf dem Gerät, auf dem du die App nutzt.
+
+Findest du den Export nicht, schau in die ING-Hilfe oder frag den Service. Menünamen können sich ändern. Wichtig: Nimm die CSV der Umsatzanzeige, nicht die PDF-Kontoauszüge aus dem Postfach.
+
+ING exportiert nur gebuchte Umsätze, vorgemerkte tauchen in der Datei nicht auf. Du musst also nichts aussortieren.
+
+## Wie importiere ich die ING-CSV in AI Budget Assistant?
+
+1. Öffne **Einstellungen → Transaktionen importieren**. Bei deutscher App-Sprache steht **ING Deutschland** als eigene Zeile in der Schnellauswahl.
+2. Tippe auf **ING Deutschland** und wähle die Datei. Oder nimm **Automatisch erkennen (jede Bank)**, die App erkennt die ING-Datei auch so.
+3. In der Vorschau siehst du Datum, Betrag, Beschreibung und die vorgeschlagene Kategorie. Vorschläge kommen von bekannten deutschen Händlern wie REWE, EDEKA, ALDI, LIDL, dm, Rossmann, DB, Aral, Lieferando oder Amazon.
+4. Wähle unnötige Zeilen ab und tippe auf **Importieren**.
+
+Kartenzahlungen stehen bei ING als „VISA <Händler>“. Die App zeigt dir den Händlernamen statt des gesamten Buchungstexts, das macht die Kategorisierung genauer.
+
+Da ein eigener Parser liest, ist keine KI-Spaltenerkennung im Spiel: keine Zustimmung, nichts geht an ein Modell, kostenlos in jedem Tarif.
+
+## Duplikate und Rückgängig
+
+| Frage | Antwort |
+|---|---|
+| Doppelte Umsätze | Zeilen aus einer früheren Datei werden erkannt und abgewählt |
+| Überlappende Zeiträume | Die Überschneidung wird abgewählt |
+| Falsch importiert | Den ganzen Import machst du 30 Tage lang im Importverlauf rückgängig |
+
+Prüfe vor dem Bestätigen ein paar Zeilen mit dem Original, besonders Vorzeichen und Datum.
+
+## Weiterlesen
+
+Warum die App ohne Bankverbindung auskommt, steht in [Haushaltsbuch-App ohne Bankverbindung](/blog/de/haushaltsbuch-app-ohne-bankverbindung/). Den allgemeinen Weg beschreibt [Kontoauszug importieren](/blog/de/kontoauszug-importieren/). Weitere Banken: [DKB Kontoauszug als CSV](/blog/de/dkb-kontoauszug-csv/), [comdirect Umsätze als CSV](/blog/de/comdirect-umsaetze-csv/) und [N26 CSV-Export](/blog/de/n26-kontoauszug-importieren/). Die App gibt es auf [ai-budget.pl](https://ai-budget.pl).
+
+## FAQ: ING CSV-Export
+
+**Welche ING-Datei soll ich importieren?**
+
+Die CSV der Umsatzanzeige. Die PDF-Kontoauszüge aus dem Postfach liest dieser Parser nicht.
+
+**Warum stehen keine vorgemerkten Umsätze in der Datei?**
+
+ING exportiert nur gebuchte Transaktionen. Vorgemerktes erscheint erst nach der Buchung in einem späteren Export.
+
+**Wird bei Kartenzahlungen der Händler erkannt?**
+
+Ja. Zahlungen mit dem Muster „VISA <Händler>“ zeigt die App mit dem Händlernamen.
+
+**Wird etwas an eine KI gesendet?**
+
+Nein. Ein eigener Parser liest die Datei, ohne Zustimmungsabfrage.
+
+**Kann ich den Import rückgängig machen?**
+
+Ja, im Importverlauf, 30 Tage lang.
+
 ## Kassenbons scannen: warum die Posten zählen, nicht die Summe
 URL: https://ai-budget.pl/blog/de/kassenbons-scannen/
 
@@ -2366,7 +2634,7 @@ URL: https://ai-budget.pl/blog/de/n26-kontoauszug-importieren/
 
 Deine N26-Umsätze exportierst du im Web-Banking als CSV: Konto oder Space wählen, **Downloads** öffnen, den Bericht über die Kontoaktivität mit Start- und Enddatum anlegen und **CSV** herunterladen. In AI Budget Assistant lädst du die Datei unter **Einstellungen → Transaktionen importieren → Automatisch erkennen (jede Bank)** hoch. Die App erkennt die Spalten, schlägt Kategorien vor und wählt Transaktionen ab, die du schon hast.
 
-Für N26 gibt es in der App keinen eigenen Parser. Die Spalten ordnet beim ersten Mal die KI-Erkennung zu, und das ist für CSV-Dateien kostenlos.
+Für N26 gibt es in der App einen eigenen Parser. Er liest die Datei direkt, deshalb entfallen die KI-Spaltenerkennung und die Zustimmungsabfrage: Es wird nichts an ein Modell gesendet, und der Import ist in jedem Tarif kostenlos.
 
 ## Wie exportiere ich meine N26-Umsätze als CSV?
 
@@ -2381,23 +2649,19 @@ Die monatlichen Kontoauszüge gibt es bei N26 nur als PDF. Für den Import nimm 
 
 ## Wie importiere ich die N26-CSV in AI Budget Assistant?
 
-1. Öffne **Einstellungen → Transaktionen importieren**.
-2. Wähle **Automatisch erkennen (jede Bank)** und die CSV-Datei.
-3. Beim ersten Mal fragt die App, ob sie die Spalten per KI erkennen darf, und zeigt, was gesendet wird: die Kopfzeile und bis zu zehn Beispielzeilen, nicht die ganze Datei. Die Zustimmung gilt einmal pro Konto.
-4. Prüfe in der Vorschau, welche Spalte Datum, Betrag und Beschreibung ist. Ist etwas falsch, tippst du auf die Zuordnung und korrigierst sie.
-5. Prüfe Kategorien, wähle unnötige Zeilen ab und tippe auf **Importieren**.
-
-Hat schon jemand eine Datei mit derselben Spaltenstruktur importiert, erkennt die App das Layout wieder, ohne die KI zu fragen.
+1. Öffne **Einstellungen → Transaktionen importieren**. Bei deutscher App-Sprache steht **N26** als eigene Zeile in der Schnellauswahl.
+2. Tippe auf **N26** und wähle die CSV-Datei. Alternativ nimmst du **Automatisch erkennen (jede Bank)**, auch dann erkennt die App die N26-Datei.
+3. Prüfe in der Vorschau Datum, Betrag, Beschreibung und die vorgeschlagenen Kategorien, die aus bekannten deutschen Händlern wie REWE, EDEKA oder Lieferando stammen.
+4. Wähle unnötige Zeilen ab und tippe auf **Importieren**.
 
 ## Was passiert mit Duplikaten und Fremdwährungen?
 
 | Frage | Antwort |
 |---|---|
-| Kosten | CSV-Import mit KI-Spaltenerkennung ist kostenlos; nur das Auslesen von PDFs per KI gehört zu Pro |
+| Kosten | Der N26-CSV-Import ist in jedem Tarif kostenlos |
 | Doppelte Umsätze | Die App vergleicht Datum, Betrag und Währung mit vorhandenen Transaktionen und wählt Wiederholungen ab |
 | Bereits per Benachrichtigung erfasst | Eine Ausgabe, die die App schon aus der N26-Benachrichtigung angelegt hat, wird als dieselbe Transaktion erkannt und zum Zusammenführen vorgeschlagen |
 | Rückgängig machen | Den ganzen Import machst du 30 Tage lang im Importverlauf rückgängig |
-| Konten mit voller Verschlüsselung | Die KI-Erkennung ist dort nicht verfügbar; die Spalten ordnest du selbst zu |
 
 Prüfe vor dem Bestätigen ein paar Zeilen mit dem Original, vor allem Vorzeichen und Datumsformat.
 
@@ -2405,7 +2669,7 @@ Prüfe vor dem Bestätigen ein paar Zeilen mit dem Original, vor allem Vorzeiche
 
 Ja. Auf Android kann die App N26-Zahlungen direkt aus der Push-Benachrichtigung erfassen, lokal auf dem Gerät und ohne Bankzugang. N26 steht auf der Liste der unterstützten Banking-Apps. Mehr dazu in [Ausgaben automatisch erfassen statt alles selbst eintippen](/blog/de/ausgaben-automatisch-erfassen/). Der CSV-Import ist dann vor allem für den Rückblick auf frühere Monate da.
 
-Allgemeiner Leitfaden: [Kontoauszug importieren](/blog/de/kontoauszug-importieren/). Wenn deine Bank auf keiner Liste steht: [Kontoauszug von jeder Bank importieren](/blog/de/kontoauszug-von-jeder-bank-importieren/). Die App testest du auf [ai-budget.pl](https://ai-budget.pl).
+Allgemeiner Leitfaden: [Kontoauszug importieren](/blog/de/kontoauszug-importieren/). Warum die App ohne Bankverbindung arbeitet: [Haushaltsbuch-App ohne Bankverbindung](/blog/de/haushaltsbuch-app-ohne-bankverbindung/). Auch für die klassischen Banken gibt es eigene Seiten, etwa [Sparkasse](/blog/de/sparkasse-kontoauszug-csv/) und [DKB](/blog/de/dkb-kontoauszug-csv/). Wenn deine Bank auf keiner Liste steht: [Kontoauszug von jeder Bank importieren](/blog/de/kontoauszug-von-jeder-bank-importieren/). Die App testest du auf [ai-budget.pl](https://ai-budget.pl).
 
 ## FAQ: N26 CSV-Export
 
@@ -2419,7 +2683,7 @@ Die N26-Hilfe beschreibt den CSV-Export im Web-Banking. In der App findest du di
 
 **Kostet der Import der N26-CSV etwas?**
 
-Nein. Die KI-Spaltenerkennung für CSV ist im kostenlosen Plan enthalten.
+Nein. Der Import mit dem eigenen N26-Parser ist in jedem Tarif kostenlos, ohne KI und ohne Zustimmungsabfrage.
 
 **Gilt das auch für N26 in Österreich?**
 
@@ -2980,6 +3244,74 @@ Eine App nimmt dir das Pflegen von Tabellen ab und macht den Fortschritt sichtba
 
 *Verwandte Artikel: [Geld sparen mit einem konkreten Plan](/blog/de/geld-sparen/) | [Haushaltsbuch führen - die Methode, die wirklich hält](/blog/de/haushaltsbuch-fuehren/)*
 
+## Sparkasse Kontoauszug als CSV herunterladen und importieren
+URL: https://ai-budget.pl/blog/de/sparkasse-kontoauszug-csv/
+
+Deine Sparkasse-Umsätze lädst du im Online-Banking als CSV herunter, meist über die Umsatzanzeige mit einer Exportfunktion. AI Budget Assistant liest die Formate **CSV-CAMT V2**, **CSV-CAMT V8** und **CSV-MT940** mit einem eigenen Sparkasse-Parser. Du wählst unter **Einstellungen → Transaktionen importieren** die Zeile **Sparkasse** und die Datei, und die App zeigt dir die Umsätze samt Kategorievorschlägen. Eine Verbindung zu deinem Konto gibt es nicht, du loggst dich nirgends ein.
+
+## Wie lade ich meine Sparkasse-Umsätze als CSV herunter?
+
+Jede Sparkasse ist ein eigenes Institut mit eigenem Online-Banking, deshalb heißen die Menüpunkte nicht überall gleich. Der übliche Weg:
+
+1. Melde dich im Online-Banking deiner Sparkasse an und öffne das Girokonto.
+2. Rufe die **Umsätze** auf und stelle den Zeitraum ein, den du importieren willst.
+3. Suche in der Umsatzansicht die Exportfunktion und wähle als Format **CSV**. Je nach Institut heißt der Eintrag **CSV-CAMT** (Version 2 oder 8) oder **CSV-MT940**.
+4. Speichere die Datei auf dem Gerät, auf dem du die App nutzt.
+
+Findest du den Export nicht, hilft die Hilfe deiner Sparkasse oder der Kundenservice. Die Menünamen und der Platz der Funktion können sich zwischen den Instituten und nach Updates unterscheiden. Die BW-Bank nutzt dasselbe Format und funktioniert ebenfalls.
+
+## Wie importiere ich die Sparkasse-CSV in AI Budget Assistant?
+
+1. Öffne **Einstellungen → Transaktionen importieren**. Bei deutscher App-Sprache steht **Sparkasse** als eigene Zeile in der Schnellauswahl.
+2. Tippe auf **Sparkasse** und wähle die CSV-Datei. Alternativ nimmst du **Automatisch erkennen (jede Bank)**, die App erkennt die Sparkasse-Datei auch von selbst.
+3. In der Vorschau siehst du Datum, Betrag, Beschreibung und die vorgeschlagene Kategorie. Die Vorschläge stammen aus bekannten deutschen Händlern wie REWE, EDEKA, ALDI, LIDL, dm, Rossmann, DB, Aral, Lieferando oder Amazon.
+4. Wähle Zeilen ab, die du nicht willst, und tippe auf **Importieren**.
+
+Für die Sparkasse-Dateien liest ein fester Parser die Datei. Es wird keine KI zur Spaltenerkennung eingesetzt, du bestätigst nichts, und es wird nichts an ein Modell gesendet. Der Import ist in jedem Tarif kostenlos.
+
+## Was passiert mit vorgemerkten Umsätzen?
+
+Zeilen mit dem Vermerk **Umsatz vorgemerkt** überspringt die App absichtlich. Ein vorgemerkter Umsatz ist noch nicht endgültig gebucht und taucht später als gebuchte Zeile wieder auf. Importierte die App ihn jetzt, hättest du ihn nach dem nächsten Export doppelt.
+
+Importiere also gebuchte Umsätze. Willst du auch die zuletzt vorgemerkten Zahlungen, exportierst du die Datei nach ein paar Tagen erneut. Was du schon importiert hast, erkennt die App wieder.
+
+## Duplikate, Fehler und Rückgängig
+
+| Frage | Antwort |
+|---|---|
+| Doppelte Umsätze | Zeilen, die du aus einer früheren Datei schon importiert hast, werden erkannt und abgewählt |
+| Zeiträume überlappen | Kein Problem, die Überschneidung wird abgewählt |
+| Falsch importiert | Den ganzen Import machst du 30 Tage lang im Importverlauf rückgängig |
+| Kosten | Kostenlos in jedem Tarif |
+
+Prüfe vor dem Bestätigen ein paar Zeilen mit dem Original, vor allem Vorzeichen und Datum.
+
+## Und wenn ich lieber nichts hochladen will?
+
+Dann geht es ohne Datei: Ausgaben tippst du selbst ein, sprichst sie ein oder scannst Belege. Warum die App bewusst ohne Bankanbindung arbeitet, steht in [Haushaltsbuch-App ohne Bankverbindung](/blog/de/haushaltsbuch-app-ohne-bankverbindung/). Den allgemeinen Ablauf beschreibt [Kontoauszug importieren](/blog/de/kontoauszug-importieren/). Hast du auch ein Konto bei einer Neobank, lies [N26 Umsätze als CSV exportieren](/blog/de/n26-kontoauszug-importieren/). Die App findest du auf [ai-budget.pl](https://ai-budget.pl).
+
+## FAQ: Sparkasse CSV-Export
+
+**Welches CSV-Format brauche ich bei der Sparkasse?**
+
+Die App liest CSV-CAMT V2, CSV-CAMT V8 und CSV-MT940. Welche davon deine Sparkasse anbietet, siehst du im Export-Dialog des Online-Bankings.
+
+**Funktioniert der Import auch mit der BW-Bank?**
+
+Ja, die BW-Bank exportiert im gleichen Format wie die Sparkassen.
+
+**Warum fehlen vorgemerkte Umsätze?**
+
+Die App überspringt Zeilen mit „Umsatz vorgemerkt“ absichtlich, damit nichts doppelt landet, sobald die Zahlung gebucht ist. Exportiere später erneut, dann sind sie dabei.
+
+**Muss ich mein Sparkasse-Konto mit der App verbinden?**
+
+Nein. Die App verbindet sich nie mit der Bank, es gibt kein Login und kein PSD2 oder FinTS. Du lädst nur die Datei hoch, die du selbst exportiert hast.
+
+**Kann ich den Import rückgängig machen?**
+
+Ja, im Importverlauf unten auf dem Importbildschirm, 30 Tage lang.
+
 ## Steuererstattung sinnvoll nutzen: der 4-Schritte-Plan
 URL: https://ai-budget.pl/blog/de/steuererstattung-sinnvoll-nutzen/
 
@@ -3141,6 +3473,73 @@ Sie lösen unterschiedliche Probleme und ergänzen sich gut. Die 50-30-20-Regel 
 ---
 
 *Verwandte Artikel: [Haushaltsbuch führen - die Methode, die wirklich hält](/blog/de/haushaltsbuch-fuehren/) | [Die 50-30-20-Regel erklärt](/blog/de/50-30-20-regel/)*
+
+## Volksbank Kontoauszug als CSV exportieren und importieren
+URL: https://ai-budget.pl/blog/de/volksbank-kontoauszug-csv/
+
+Bei der Volksbank oder Raiffeisenbank exportierst du Umsätze im Online-Banking als CSV-Datei. AI Budget Assistant liest dieses CSV der VR-Banken (Atruvia-Online-Banking) mit einem eigenen Parser. Unter **Einstellungen → Transaktionen importieren** wählst du **Volksbank / Raiffeisenbank**, lädst die Datei hoch, und die App schlägt Kategorien vor. Keine Bankanbindung, kein Login, keine KI.
+
+## Wie exportiere ich meine Volksbank-Umsätze als CSV?
+
+Jede Volksbank und Raiffeisenbank betreibt ihr Online-Banking selbst, deshalb heißen die Menüpunkte nicht überall gleich. Der übliche Ablauf:
+
+1. Melde dich im Online-Banking deiner Bank an und öffne das Konto in der **Umsatzanzeige**.
+2. Stelle den Zeitraum ein.
+3. Suche in der Umsatzansicht die Exportfunktion und wähle **CSV**.
+4. Speichere die Datei auf dem Gerät, auf dem du die App nutzt.
+
+Findest du die Funktion nicht, frag die Hilfe oder den Kundenservice deiner Bank. Die Namen der Menüpunkte unterscheiden sich von Bank zu Bank.
+
+## Welche Banken gehören dazu?
+
+Der Parser liest das CSV-Layout der Volksbanken und Raiffeisenbanken. Dasselbe Layout haben die Exporte der **Sparda-Bank West** und der **GLS Bank**, deshalb funktionieren sie ebenfalls. Bei einer anderen Sparda-Bank probierst du es einfach aus: Die Vorschau zeigt sofort, ob die Spalten stimmen.
+
+## Wie importiere ich die Datei in AI Budget Assistant?
+
+1. Öffne **Einstellungen → Transaktionen importieren**. Bei deutscher App-Sprache steht **Volksbank / Raiffeisenbank** als eigene Zeile in der Schnellauswahl.
+2. Tippe darauf und wähle die CSV. Oder nimm **Automatisch erkennen (jede Bank)**, auch dann erkennt die App die Datei.
+3. Prüfe in der Vorschau Datum, Betrag, Beschreibung und Kategorie. Vorschläge kommen von bekannten deutschen Händlern wie REWE, EDEKA, ALDI, LIDL, dm, Rossmann, DB, Aral, Lieferando oder Amazon.
+4. Wähle unnötige Zeilen ab und tippe auf **Importieren**.
+
+Die SEPA-Referenzen (EREF, MREF, CRED) schneidet die App aus der Beschreibung heraus, damit du lesbaren Text bekommst statt langer Kennungen.
+
+Weil ein fester Parser die Datei liest, entfällt die KI-Spaltenerkennung: keine Zustimmungsabfrage, nichts geht an ein Modell, und der Import ist in jedem Tarif kostenlos.
+
+## Duplikate und Rückgängig
+
+| Frage | Antwort |
+|---|---|
+| Doppelte Umsätze | Zeilen aus einer früheren Datei werden erkannt und abgewählt |
+| Falsch importiert | Den ganzen Import machst du 30 Tage lang im Importverlauf rückgängig |
+| Kosten | Kostenlos in jedem Tarif |
+
+Vergleiche vor dem Bestätigen ein paar Zeilen mit dem Original, besonders Vorzeichen und Datumsformat.
+
+## Weiterlesen
+
+Warum die App ohne Bankverbindung auskommt, erklärt [Haushaltsbuch-App ohne Bankverbindung](/blog/de/haushaltsbuch-app-ohne-bankverbindung/). Der allgemeine Ablauf steht in [Kontoauszug importieren](/blog/de/kontoauszug-importieren/). Für Konten bei Direktbanken: [DKB Kontoauszug als CSV](/blog/de/dkb-kontoauszug-csv/) und [N26 CSV-Export](/blog/de/n26-kontoauszug-importieren/). Die App gibt es auf [ai-budget.pl](https://ai-budget.pl).
+
+## FAQ: Volksbank CSV-Export
+
+**Kann ich bei der Volksbank Umsätze als CSV exportieren?**
+
+Ja, das Online-Banking der VR-Banken bietet in der Umsatzansicht einen CSV-Export. Wo genau der Menüpunkt liegt, hängt von deiner Bank ab.
+
+**Funktioniert der Import auch bei der Raiffeisenbank?**
+
+Ja, Raiffeisenbanken nutzen dasselbe Online-Banking und Layout. Auch Sparda-Bank West und GLS Bank exportieren so.
+
+**Warum sind die EREF- und MREF-Angaben weg?**
+
+Die App schneidet die SEPA-Referenzen (EREF, MREF, CRED) aus der Beschreibung, damit der Verwendungszweck lesbar bleibt.
+
+**Wird dabei etwas an eine KI gesendet?**
+
+Nein. Ein eigener Parser liest die Datei, es gibt keine Zustimmungsabfrage und keine Übertragung an ein Modell.
+
+**Kann ich den Import rückgängig machen?**
+
+Ja, im Importverlauf, 30 Tage lang.
 
 ## Wallet by BudgetBakers vs. AI Budget Assistant
 URL: https://ai-budget.pl/blog/de/wallet-budgetbakers-vergleich-ai-budget-assistant/
@@ -4583,6 +4982,16 @@ In der Monats- und Jahresansicht vergleicht diese Karte den Zeitraum mit demselb
 ## Wann ich ausgebe
 
 Ein Raster deiner letzten Tage, eine Spalte pro Woche und eine Zeile pro Wochentag, eingefärbt nach den Ausgaben des Tages — je dunkler, desto mehr (jede Stufe ist ein Viertel deiner Ausgabentage). Am Computer umfasst es die letzten 12 Monate, auf dem Telefon so viele Monate, wie gut lesbar hineinpassen. Tippe auf einen Tag für Datum und Summe; sonst nennt die Karte deinen größten Tag. Darunter zeigt **Durchschnitt nach Tag des Monats**, wie viel du im Schnitt an jedem Tag des Monats ausgibst und welche drei Tage am meisten kosten. Hat dein Konto einen **Finanzmonat**, ist Tag 1 sein erster Tag — der Zahltag. Die App kennt keine Uhrzeit der Käufe, daher arbeitet die Karte mit Tagen, nicht mit Stunden. Sie erscheint ab 14 Tagen mit Ausgaben.
+
+## Alle Konten
+
+Öffne **Alle Konten** im Analyse-Tab, um alle Konten, in denen du Mitglied bist, zusammen in deiner Anzeigewährung zu sehen. Wähle einen Zeitraum (dieser Monat, letzter Monat, dieses Jahr, letztes Jahr oder eigener Bereich) und du erhältst **Ausgegeben**, **Einnahmen** und **Saldo** mit Vergleich zum Vorzeitraum, den Beitrag jedes Kontos, Ausgaben und Einnahmen nach Kategorie sowie die Monate als gestapelte Balken.
+
+- **Konten ein- und ausschalten.** Schalte ein Konto aus, das nicht mitzählen soll, zum Beispiel ein gemeinsames Konto, das auch ein anderes Mitglied zählt. Die Auswahl wird auf diesem Gerät gespeichert. Anlagekonten sind zunächst ausgeschaltet.
+- **Kategorien werden nach Namen zusammengeführt.** "Lebensmittel" in zwei Konten wird zu einer Zeile.
+- **Verschlüsselte Konten.** Ein vollständig verschlüsseltes Konto kann nicht gelesen werden und ist nicht enthalten. Bei Textverschlüsselung erscheint eine selbst umbenannte Kategorie als **Sonstiges**.
+- **Nicht als Ausgabe oder Einnahme gezählt:** geplante Ausgaben, Beträge, die dir aus einer geteilten Rechnung geschuldet werden, und Übertragungen zwischen deinen eigenen einbezogenen Konten.
+- **Gruppen (Pro).** Speichere mehrere Konten als Gruppe - zum Beispiel "Vermietung" - und vergleiche die Konten innerhalb einer Gruppe nebeneinander. Du kannst bis zu 20 Gruppen anlegen; das Löschen einer Gruppe berührt deine Konten und Daten nicht. Gruppen sind eine Pro-Funktion: nach einem Downgrade werden deine Gruppen ausgeblendet (nicht gelöscht), bis du wieder upgradest.
 
 ## Vermögen
 
@@ -6272,6 +6681,16 @@ Wenn du diesen Bildschirm über **Bericht exportieren** im Analyse-Tab öffnest,
 
 Berichte werden 7 Tage gespeichert und dann automatisch gelöscht.
 
+## Berichtsumfang
+
+Unter **Bericht umfasst** wählst du, was die Datei enthält:
+
+- **Dieses Konto** - das aktuelle Konto (Standard).
+- **Alle Konten** - alle deine Konten, außer denen, die du auf dem Bildschirm Alle Konten ausgeschaltet hast.
+- **Gruppe** - eine deiner Kontogruppen (Pro).
+
+Ein Bericht über mehrere Konten hat eine Spalte **Konto** und eine Spalte **Hinweis** und zeigt je Konto eine Zwischensumme. Zeilen mit Hinweis - geplante Ausgaben, Beträge aus geteilten Rechnungen und Übertragungen zwischen eigenen Konten - werden aufgeführt, aber in **keiner** Summe mitgezählt. Vollständig verschlüsselte Konten fehlen und werden am Ende des Berichts genannt. Die Zahlen stimmen mit dem Bildschirm Alle Konten überein. Ein solcher Bericht wird wie jeder andere 7 Tage aufbewahrt und lässt sich aus jedem Konto öffnen.
+
 ## Monatliche Zusammenfassung
 
 Eine Momentaufnahme deiner aktuellen Monatsfinanzaktivität:
@@ -7243,7 +7662,7 @@ Du möchtest die App ohne das Empfehlungsprogramm weiterempfehlen? Öffne **Eins
 ## Transaktionen aus deiner Bank importieren
 URL: https://ai-budget.pl/help/de/bank-import/
 
-> Importiere Transaktionen aus einem CSV-, XLSX- oder PDF-Kontoauszug. Unterstützt werden mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise und jede andere Bank über den universellen Spalten-Mapper.
+> Importiere Transaktionen aus einem CSV-, XLSX- oder PDF-Kontoauszug. Unterstützt werden mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise, deutsche Banken (Sparkasse, Volksbank, DKB, ING, comdirect, Commerzbank, N26) und jede andere Bank über den universellen Spalten-Mapper.
 
 ## Unterstützte Banken
 
@@ -7253,6 +7672,7 @@ URL: https://ai-budget.pl/help/de/bank-import/
 - **Alior Bank** — PDF-Kontoauszug
 - **Revolut** — CSV-Export
 - **Wise** — CSV-Export (mehrsprachig, FX-Konversionen werden automatisch erkannt)
+- **Deutsche Banken** — CSV-Export von Sparkasse, Volksbank / Raiffeisenbank, DKB, ING Deutschland, comdirect, Commerzbank, N26. Die Banken stehen in der Liste, wenn die App auf Deutsch eingestellt ist; **Automatisch erkennen** erkennt die Dateien in jeder Sprache. Vorgemerkte (noch nicht gebuchte) Umsätze werden übersprungen, damit sie nach der Buchung nicht doppelt importiert werden
 - **Andere** — beliebige Bank, über den universellen Spalten-Mapper (CSV)
 - **Tabellen** — XLSX-Kontoauszüge funktionieren ebenfalls; die App liest das erste Blatt
 

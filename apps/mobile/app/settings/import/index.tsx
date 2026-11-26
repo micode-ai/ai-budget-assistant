@@ -14,7 +14,7 @@ import { useExpenseStore } from '@/stores/expenseStore';
 import { useIncomeStore } from '@/stores/incomeStore';
 import { isTierRequiredError } from '@/services/importErrors';
 import { useUpgradeStore } from '@/stores/upgradeStore';
-import { IMPORT_ENTRIES, MIGRATION_ENTRIES, importSourceLabel } from '@/features/import/importEntries';
+import { MIGRATION_ENTRIES, importEntriesFor, importSourceLabel } from '@/features/import/importEntries';
 
 // Only banks whose parser has been validated against a real export are shown.
 // ING / Millennium / Pekao are temporarily hidden (parsers still in the API
@@ -24,7 +24,7 @@ import { IMPORT_ENTRIES, MIGRATION_ENTRIES, importSourceLabel } from '@/features
 // see the comment there for why the first row deliberately carries no id.
 
 export default function ImportHubScreen() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const [mappings, setMappings] = useState<CsvImportMapping[]>([]);
@@ -196,7 +196,7 @@ export default function ImportHubScreen() {
                 <Text style={styles.rowLabel}>{t('bankImport.analysing')}</Text>
               </View>
             ) : (
-              IMPORT_ENTRIES.map((e) => (
+              importEntriesFor(i18n.language).map((e) => (
                 <TouchableOpacity
                   key={e.id ?? 'auto'}
                   style={styles.row}

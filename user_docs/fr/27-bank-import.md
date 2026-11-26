@@ -1,6 +1,6 @@
 # Importer des transactions depuis votre banque
 
-> Importez des transactions depuis un relevé CSV, XLSX ou PDF de votre banque. Compatible avec mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise et toute autre banque via le mappeur universel de colonnes.
+> Importez des transactions depuis un relevé CSV, XLSX ou PDF de votre banque. Compatible avec mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise, les banques allemandes (Sparkasse, Volksbank, DKB, ING, comdirect, Commerzbank, N26) et toute autre banque via le mappeur universel de colonnes.
 
 ## Banques prises en charge
 
@@ -10,6 +10,7 @@
 - **Alior Bank** — relevé PDF
 - **Revolut** — export CSV
 - **Wise** — export CSV (multi-devises, conversions FX détectées automatiquement)
+- **Banques allemandes** — export CSV de Sparkasse, Volksbank / Raiffeisenbank, DKB, ING Deutschland, comdirect, Commerzbank, N26. Elles apparaissent dans la liste quand l’application est en allemand ; **Détection automatique** reconnaît les fichiers dans toutes les langues. Les opérations en attente (pas encore comptabilisées) sont ignorées, pour ne pas être importées deux fois une fois comptabilisées
 - **Autre** — toute banque, via le mappeur universel de colonnes (CSV)
 - **Tableurs** — les relevés XLSX fonctionnent aussi ; l'app lit la première feuille
 

@@ -30,6 +30,13 @@ export interface ImportEntry {
   labelKey?: string;
   /** Icon name; the auto-detect entry gets its own so it doesn't read as a bank. */
   icon: 'sparkles-outline' | 'business-outline' | 'swap-horizontal-outline';
+  /**
+   * App languages this row is shown in; absent means every language. The
+   * German banks are listed only for a German UI: a Polish user should not
+   * scroll past seven banks they cannot have, and auto-detect still
+   * recognises a German export whatever the language.
+   */
+  languages?: string[];
 }
 
 export const IMPORT_ENTRIES: ImportEntry[] = [
@@ -40,8 +47,20 @@ export const IMPORT_ENTRIES: ImportEntry[] = [
   { id: 'revolut', label: 'Revolut', icon: 'business-outline' },
   { id: 'erste', label: 'Erste Bank (PDF)', icon: 'business-outline' },
   { id: 'alior', label: 'Alior Bank (PDF)', icon: 'business-outline' },
+  { id: 'sparkasse', label: 'Sparkasse', icon: 'business-outline', languages: ['de'] },
+  { id: 'volksbank', label: 'Volksbank / Raiffeisenbank', icon: 'business-outline', languages: ['de'] },
+  { id: 'dkb', label: 'DKB', icon: 'business-outline', languages: ['de'] },
+  { id: 'ing-de', label: 'ING Deutschland', icon: 'business-outline', languages: ['de'] },
+  { id: 'comdirect', label: 'comdirect', icon: 'business-outline', languages: ['de'] },
+  { id: 'commerzbank', label: 'Commerzbank', icon: 'business-outline', languages: ['de'] },
+  { id: 'n26', label: 'N26', icon: 'business-outline', languages: ['de'] },
   { id: 'universal', label: 'Other (custom CSV)', icon: 'business-outline' },
 ];
+
+/** The quick-import rows for the app's current language, in list order. */
+export function importEntriesFor(language: string): ImportEntry[] {
+  return IMPORT_ENTRIES.filter((e) => !e.languages || e.languages.includes(language));
+}
 
 /**
  * Exports from other budgeting apps — the "moving from another app?" card,

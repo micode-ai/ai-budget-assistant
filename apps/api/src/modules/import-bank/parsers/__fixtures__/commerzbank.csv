@@ -1,0 +1,4 @@
+﻿Buchungstag;Wertstellung;Umsatzart;Buchungstext;Betrag;Währung;IBAN Kontoinhaber;Kategorie
+21.01.2025;21.01.2025;Lastschrift;Mail Anbieter GmbH KD-Nr. K12345678 End-to-End-Ref.: 009876584321 Mandatsref: 009876584321 Gläubiger-ID: DE012345678 SEPA-BASISLASTSCHRIFT wiederholend;-12,34;EUR;DE79500400000123456700;
+31.01.2025;31.01.2025;Rechnungsabschluss;Abschluss;0;EUR;DE79500400000123456700;
+02.01.2025;02.01.2025;Gutschrift;Gehalt Januar;4760;EUR;DE79500400000123456700;
