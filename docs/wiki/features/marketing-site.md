@@ -237,6 +237,35 @@ download the run's `gsc-snapshot` artifact and group `by_date_page` by page and 
 the "What changed" list to carry app-feature commits: any commit that regenerates
 `docs/marketing/landing/site/llms-full*.txt` counts as a landing change.
 
+**A section drop can be one page leaving one query cluster (2026-11-26 query).** The 11-16 report showed
+`blog/fr` at -19% and `/blog/fr/monefy-comparatif-ai-budget-assistant/` at 143 → 3. By day the page drew
+20–52 impressions from 10-22 to 11-06, never a click, its position climbing 36 → 9, then fell to about
+one a day on 2026-11-07 and stayed there; nothing on the site changed that day. The page is live, 200,
+self-canonical, `index,follow` and in `/sitemaps/blog-fr.xml` — not technical. The rest of `blog/fr`
+grew over the same weeks (≈8 → ≈35 impressions a day), so the section's "drop" is this page alone.
+Reading: Google trialled the comparison on a competitor-brand query set and withdrew it; with zero
+clicks in the trial, nothing of value was lost, and a rewrite is not indicated. Before acting on a
+section drop, subtract its biggest losing page and look at what is left.
+
+**The weekly report lists the queries behind its top pages ([ABA-842](https://github.com/micode-ai/ai-budget-assistant/issues/880)).** `gsc-snapshot.py` also
+fetches last week by `page, query` (`last_week_page_query` in the JSON) and renders "Top pages last
+week and their queries": the 15 pages with the most impressions, their CTR and position, the top
+five visible queries each, and "Visible" — the share of the page's impressions whose query GSC
+names (the rest are anonymised). A snapshot saved before this has no such key and says so.
+
+**Where the clicks are, 11-16 week.** The PL bank-statement pages carry ~40% of site impressions at
+positions 6.5–9 and a 0.3–0.5% CTR — a how-to-download query the SERP can answer itself; the PL
+life-situation articles (2000 zł a month, a family budget with children) get 2.6–3.7% at positions
+4–6. New PL topics should be of the second kind. The ABA-739 bank-title rewrite (2026-11-09) is
+still to be re-measured from the new query table.
+
+**Seasonal pages: read the query before the calendar.** The RU New Year article drew 471 of its
+impressions from one query, "как составить бюджет на рождество" (position 6.6, no clicks), while
+its title promised "how much to save" for New Year and its opening said to start saving in
+October — useless to a reader arriving in late November. Retitled around the query and given a
+"less than a month to go" section (2026-11-26). The EN, FR, PL and UA Christmas pages had only
+scattered single-digit queries, nothing to act on.
+
 **Search Console can also be read from a session through the Chrome extension** (the user's own signed-in
 browser): the performance URL takes `resource_id=sc-domain%3Aai-budget.pl`, `breakdown=query|page|country`
 and an exact-page filter `page=!<encoded url>`. Set rows per page to 500 by clicking the control —
@@ -315,4 +344,4 @@ ABA-686 (diagnosis of the decline: site-wide ranking loss from 2026-09-15, follo
 ABA-688 (weekly Search Console API snapshot per section with a drop alert) ·
 ABA-689 (per-section sitemaps submitted separately) · ABA-690 (site changes listed next to the weekly series). ·
 ABA-710 (developers page, footer link and llms entry for the public API) ·
-ABA-716 (six shipped features added to `FEATURES_EN`; Organization `founder` and Instagram `sameAs`). · [ABA-739](https://github.com/micode-ai/ai-budget-assistant/issues/777) (search-intent titles, Play short descriptions) · [ABA-740](https://github.com/micode-ai/ai-budget-assistant/issues/778) (blog bank-claims check) · [ABA-814](https://github.com/micode-ai/ai-budget-assistant/issues/852) (all 15 currencies in `llms.txt`, verified Erste and VeloBank pages, `DefinedTerm` definitions, Wave 14 language-scope rule) · [ABA-815](https://github.com/micode-ai/ai-budget-assistant/issues/853) (German site on "ohne Bankverbindung", DACH bank coverage, Austria sections, Impressum)
+ABA-716 (six shipped features added to `FEATURES_EN`; Organization `founder` and Instagram `sameAs`). · [ABA-739](https://github.com/micode-ai/ai-budget-assistant/issues/777) (search-intent titles, Play short descriptions) · [ABA-740](https://github.com/micode-ai/ai-budget-assistant/issues/778) (blog bank-claims check) · [ABA-814](https://github.com/micode-ai/ai-budget-assistant/issues/852) (all 15 currencies in `llms.txt`, verified Erste and VeloBank pages, `DefinedTerm` definitions, Wave 14 language-scope rule) · [ABA-815](https://github.com/micode-ai/ai-budget-assistant/issues/853) (German site on "ohne Bankverbindung", DACH bank coverage, Austria sections, Impressum) · [ABA-842](https://github.com/micode-ai/ai-budget-assistant/issues/880) (top-pages query table in the weekly report; RU holiday article retitled to its query).

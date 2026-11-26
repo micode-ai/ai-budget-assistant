@@ -407,9 +407,11 @@ Newest last within each section.
 - 2026-11-25 · [ABA-840](https://github.com/micode-ai/ai-budget-assistant/issues/878) — growth digest's transactions line split into logged / imported / users who imported (import = `source='import'` or an import batch or an `external_ref`). A 4079 | 161 swing, most likely one import (not yet confirmed). Page: `features/growth-digest.md` (new).
 
 - 2026-11-25 · [ABA-841](https://github.com/micode-ai/ai-budget-assistant/issues/879) — CLAUDE.md slimmed 14.7k → 11.8k words: production stack, deploy guards, backups, release/versioning, native build traps, bot i18n and cache/cron utilities moved verbatim to seven new pages, short rules left behind. Pages: `features/production-operations.md`, `features/prisma-migrations.md`, `features/api-cross-cutting-utilities.md`, `features/android-releases.md`, `features/mobile-native-constraints.md`, `features/shopping-mode.md`, `features/bot-shared-i18n.md`.
+- 2026-11-26 · [ABA-842](https://github.com/micode-ai/ai-budget-assistant/issues/880) — weekly GSC report lists the visible queries of its top 15 pages; RU New Year article retitled around the Christmas-budget query it ranks for, with a late-start section. Pages: `features/marketing-site.md`.
 
 ## Queries
 
+- 2026-11-26 (no issue, query ritual) — GSC 11-16: fr Monefy comparison 143 → 3 is one page dropped from a zero-click query trial on 2026-11-07, not technical; the rest of `blog/fr` grew. Pages: `features/marketing-site.md`.
 - 2026-09-29 — why no merge suggestion for bank push + later receipt scan → `features/bank-notification-capture.md` (Known gaps; corrected a false claim)
 - 2026-09-29 (no issue, query ritual) — purchase-request bot voting is inbound-only: the Telegram/WhatsApp handlers accept `pr_approve`/`pr_reject` but no code sends the buttons ("deferred to Phase 2"), so the page and CLAUDE.md no longer say members vote from the bots. Pages: `features/purchase-requests.md`.
 - 2026-10-26 (no issue, query ritual) — why one budget's groceries and alcohol spread over nine categories: receipt proposals are in the SCANNER's language (the page said owner's — corrected), only exact-name duplicates are rejected, synonyms compete and the winner is frozen as a rule, and `Category.parentId` is honoured by nothing. Pages: `features/receipt-category-split.md`.

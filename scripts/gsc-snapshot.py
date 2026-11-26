@@ -50,6 +50,11 @@ DROP_RATIO = 0.7
 MIN_BASE = 50
 LOSER_MIN_BASE = 5
 LOSERS = 10
+# Top pages of last week and the queries they were shown for (2026-11-26): a
+# page that ranks without clicks can only be judged against what people typed,
+# and the weekly series alone left that to a separate trip into the GSC UI.
+TOP_PAGES = 15
+TOP_QUERIES = 5
 
 
 # ---------- fetching ----------
@@ -105,6 +110,9 @@ def fetch(session, today):
             # search once per property but once per page in a page breakdown.
             "by_date": query(session, start, end, ["date"]),
             "by_date_page": query(session, start, end, ["date", "page"]),
+            # Last week only, so the rows stay few. Anonymised queries are left out
+            # of any query breakdown, so these sum to less than the page's total.
+            "last_week_page_query": query(session, end - dt.timedelta(days=6), end, ["page", "query"]),
             "changes": site_changes(start, end)}
 
 
@@ -225,6 +233,23 @@ def losers(pages):
     return sorted(rows)[:LOSERS]
 
 
+def top_pages(snap, pages):
+    """[(url, clicks, impressions, position, visible impressions, [(query, clicks, impressions, position)])]."""
+    end = dt.date.fromisoformat(snap["end"])
+    first = (end - dt.timedelta(days=6)).isoformat()
+    totals = defaultdict(lambda: {"clicks": 0, "impressions": 0, "pw": 0.0})
+    for row in snap["by_date_page"]:
+        if row["keys"][0] >= first:
+            add(totals[row["keys"][1]], row)
+    queries = defaultdict(list)
+    for row in snap.get("last_week_page_query", []):
+        url, q = row["keys"]
+        queries[url].append((q, row["clicks"], row["impressions"], row["position"]))
+    ranked = sorted(totals.items(), key=lambda kv: -kv[1]["impressions"])[:TOP_PAGES]
+    return [(url, c["clicks"], c["impressions"], position(c), sum(q[2] for q in queries[url]),
+             sorted(queries[url], key=lambda r: -r[2])[:TOP_QUERIES]) for url, c in ranked]
+
+
 # ---------- rendering (pure) ----------
 
 ORDER = ["site", "landing", "help", "blog"] + [f"blog/{l}" for l in LANGS] + ["blog/other"]
@@ -293,6 +318,23 @@ def render(snap):
         if help_n:
             out.append(f"- help content: {help_n} commit{'s' if help_n > 1 else ''}"
                        + (f" ({', '.join(help_ids)})" if help_ids else ""))
+        out.append("")
+
+    out += ["## Top pages last week and their queries", "",
+            "The pages with the most impressions last week. \"Visible\" is the share of the page's "
+            "impressions whose query Search Console names; the rest are anonymised long-tail. "
+            "A page in the top ten with no clicks is judged against these queries, not its title.", ""]
+    if "last_week_page_query" not in snap:
+        out += ["Not in this snapshot (saved before queries were fetched).", ""]
+    else:
+        out += ["| Page | Clicks | Impressions | CTR | Position | Visible | Top queries (impressions · position) |",
+                "|---|---:|---:|---:|---:|---:|---|"]
+        for url, clicks, imps, pos, visible, qs in top_pages(snap, pages):
+            ctr = f"{clicks / imps * 100:.1f}%" if imps else "–"
+            vis = f"{min(visible / imps, 1) * 100:.0f}%" if imps else "–"
+            qtext = "; ".join(f"{q.replace('|', '/')} ({i} · {p:.1f})" for q, _, i, p in qs) or "—"
+            out.append(f"| {url[len(ORIGIN):] or '/'} | {clicks} | {imps} | {ctr} | {fmt_pos(pos)} | "
+                       f"{vis} | {qtext} |")
         out.append("")
 
     lost = losers(pages)
