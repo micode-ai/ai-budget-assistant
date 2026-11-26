@@ -21,6 +21,7 @@ import { ExpenseItemsSection } from '@/components/expenses/detail/ExpenseItemsSe
 import { ReceiptSection } from '@/components/expenses/detail/ReceiptSection';
 import { LocationSection } from '@/components/expenses/detail/LocationSection';
 import { FuelSection } from '@/components/expenses/detail/FuelSection';
+import { UtilityReadingSection } from '@/components/utilities/UtilityReadingSection';
 import { PetSection } from '@/components/expenses/detail/PetSection';
 import { canMoveExpenseRow, isMirrorOwnedRow } from '@/features/groups/groupBudgetMirror';
 
@@ -321,6 +322,9 @@ export default function ExpenseDetailScreen() {
 
         {/* Fill-up (only with a vehicle on the account, ABA-796) */}
         <FuelSection expense={expense} canEdit={canEdit} />
+
+        {/* Utility consumption (editors, or once a reading exists, ABA-849) */}
+        <UtilityReadingSection expense={expense} canEdit={canEdit} />
 
         {/* Pet (only with a pet on the account, ABA-833) */}
         <PetSection expense={expense} canEdit={canEdit} />

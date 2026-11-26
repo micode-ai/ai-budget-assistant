@@ -437,6 +437,7 @@ model Account {
   productChildRules              ProductChildRule[]
   vehicles                       Vehicle[]
   fuelLogs                       FuelLog[]
+  utilityReadings                UtilityReading[]
   vehicleCosts                   VehicleCost[]
   pets                           Pet[]
   petCosts                       PetCost[]
@@ -667,6 +668,7 @@ model Expense {
   expenseTags          ExpenseTag[]
   expenseChildren      ExpenseChild[]
   fuelLog              FuelLog?
+  utilityReading       UtilityReading?
   vehicleCost          VehicleCost?
   petCost              PetCost?
   categorySplits       ExpenseCategorySplit[]
@@ -3381,4 +3383,24 @@ model HeldPush {
   @@index([releaseAt])
   @@index([userId])
   @@map("held_pushes")
+}
+
+/// Consumption on a utility bill (docs/contracts/utility-bill-readings.md): one expense, one reading.
+/// `unitPrice` is amount / consumption in the expense's own currency, derived at save.
+model UtilityReading {
+  id            String   @id @default(uuid())
+  accountId     String   @map("account_id")
+  expenseId     String   @unique @map("expense_id")
+  kind          String
+  consumption   Decimal  @db.Decimal(12, 3)
+  unit          String
+  propertyLabel String?  @map("property_label")
+  unitPrice     Decimal  @map("unit_price") @db.Decimal(14, 5)
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  expense Expense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+
+  @@index([accountId, kind])
+  @@map("utility_readings")
 }

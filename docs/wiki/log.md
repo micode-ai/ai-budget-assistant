@@ -414,6 +414,7 @@ Newest last within each section.
 - 2026-11-26 · [ABA-846](https://github.com/micode-ai/ai-budget-assistant/issues/884) — quiet hours: typed pushes held in `held_pushes` inside the user window and released by a 10-minute cron; untyped security pushes exempt; page `features/notification-quiet-hours.md`.
 - 2026-11-26 · [ABA-847](https://github.com/micode-ai/ai-budget-assistant/issues/885) — privacy mode: mask lives in shared `formatCurrency` (amount-mask.ts), home eye toggle remounts the stack; desktop toggle, hold-to-reveal and non-shared-formatter audit open; page `features/privacy-mode.md`
 - 2026-11-26 · [ABA-848](https://github.com/micode-ai/ai-budget-assistant/issues/886) — saved transaction views: device-local per user+account, relative period, shared bar for phone and desktop; new page `features/saved-transaction-views.md`.
+- 2026-11-26 · [ABA-849](https://github.com/micode-ai/ai-budget-assistant/issues/887) — utility consumption on an expense (`UtilityReading`, `utilities` module, `computeUtilityStats`: monthly unit price, year-over-year at 12+ months, >10% nudge vs 3-month mean) plus a mobile Utilities screen; form field, OCR prefill and desktop layout still open. Page: `features/utility-bill-readings.md`.
 
 ## Queries
 

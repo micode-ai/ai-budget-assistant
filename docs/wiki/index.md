@@ -285,6 +285,7 @@ the section you came for — it states what must not break and why. A missing se
 - [child-costs](features/child-costs.md) — attributing expenses and receipt lines to children, 800+ coverage, share card, Pro statement PDF
 - [tags](features/tags.md) — device-created tags, `clientId`, and using the resolved PK after a lookup
 - [vehicle-fuel-log](features/vehicle-fuel-log.md) — vehicles, fill-ups, l/100 km and cost per km, Settings → Vehicles and the expense Fill-up section
+- [utility-bill-readings](features/utility-bill-readings.md) — kWh/m³ on a utility expense, unit price over time, year-over-year and a price-rise nudge
 - [pet-costs](features/pet-costs.md) — pets and what each costs by month and kind, bulk assign from transactions (API)
 - [merchants](features/merchants.md) — the merchant field, filters, capture reconciliation, rename/merge and grouping suggestions
 - [reference-data-screens](features/reference-data-screens.md) — the shared layout of the four reference-data screens, and the viewer-role UI gate

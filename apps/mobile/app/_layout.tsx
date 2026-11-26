@@ -875,6 +875,13 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="utilities/index"
+          options={{
+            headerShown: true,
+            title: t('utilities.title'),
+          }}
+        />
+        <Stack.Screen
           name="vehicles/[id]"
           options={{
             headerShown: true,

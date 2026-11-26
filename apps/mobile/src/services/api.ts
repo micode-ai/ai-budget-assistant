@@ -31,6 +31,7 @@ import { inboundMailApi } from './inboundMail.api';
 import { developerAppsApi } from './developerApps.api';
 import { childrenApi } from './children.api';
 import { vehiclesApi } from './vehicles.api';
+import { utilitiesApi } from './utilities.api';
 import { petsApi } from './pets.api';
 import { clientErrorsApi } from './clientErrors.api';
 import { allAccountsApi } from './allAccounts.api';
@@ -70,6 +71,7 @@ export const api = {
   ...developerAppsApi,
   ...childrenApi,
   ...vehiclesApi,
+  ...utilitiesApi,
   ...petsApi,
   ...clientErrorsApi,
   ...allAccountsApi,

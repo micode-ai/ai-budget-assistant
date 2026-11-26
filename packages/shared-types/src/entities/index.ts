@@ -33,3 +33,4 @@ export * from './group';
 export * from './inboundMail';
 export * from './leaflet';
 export * from './child';
+export * from './utility';

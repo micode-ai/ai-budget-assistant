@@ -65,6 +65,12 @@ export default function ReferenceDataScreen() {
       route: '/settings/vehicles',
     },
     {
+      icon: 'flash-outline',
+      label: t('utilities.title'),
+      description: t('utilities.settingsDesc'),
+      route: '/utilities',
+    },
+    {
       icon: 'paw-outline',
       label: t('pets.title'),
       description: t('pets.settingsDesc'),
