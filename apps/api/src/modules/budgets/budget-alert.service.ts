@@ -1,4 +1,5 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Optional } from '@nestjs/common';
+import { MerchantCapsService } from '../merchant-caps/merchant-caps.service';
 import { PrismaService } from '../../database/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import * as ni18n from '../notifications/notification-i18n';
@@ -17,9 +18,12 @@ export class BudgetAlertService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly notifications: NotificationsService,
+    @Optional() private readonly merchantCaps?: MerchantCapsService,
   ) {}
 
   async checkBudgetsForAccount(accountId: string, expenseCurrencyCode: string): Promise<void> {
+    // Merchant caps are independent of budgets (the call never throws).
+    await this.merchantCaps?.checkAccount(accountId, expenseCurrencyCode);
     try {
       const budgets = await this.prisma.budget.findMany({
         where: {

@@ -41,6 +41,10 @@ La app aprende de tus correcciones. Cada vez que cambias la categoría de un gas
 - Toca el icono de actualizar junto a una regla para **reaplicarla** — esto busca los gastos de ese comercio ya archivados bajo otra categoría y ofrece moverlos también a la categoría de la regla, para que los gastos antiguos se pongan al día con las reglas que aprendiste más tarde
 - Las reglas se guardan en el servidor y se sincronizan en todos tus dispositivos
 
+### Límites mensuales por comercio
+
+Fija un límite mensual para un comercio en la pantalla Comercios (toca **+** en la tarjeta *Límites mensuales por comercio*). Una barra fina muestra el gasto de este mes y recibes un aviso al 80% y al 100%. Los límites no cambian tus presupuestos.
+
 ## Etiquetas
 
 Las etiquetas permiten marcar gastos con palabras clave libres que van más allá de las categorías.

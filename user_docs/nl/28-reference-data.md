@@ -47,6 +47,10 @@ De app leert van je correcties. Elke keer dat je de categorie wijzigt van een ui
 
 **Voorbeeld:** Je importeert een Revolut-afschrift en corrigeert "AMAZON" → Shopping. Bij de volgende import worden Amazon-transacties automatisch onder Shopping geplaatst.
 
+### Maandlimieten per winkel
+
+Stel op het scherm Winkels een maandlimiet in voor één winkel (tik op **+** in de kaart *Maandlimieten per winkel*). Een dunne balk toont de uitgaven van deze maand en je krijgt een melding bij 80% en 100%. Limieten wijzigen je budgetten niet.
+
 ## Tags
 
 Met tags kun je uitgaven labelen met vrije trefwoorden die categorieën overstijgen.

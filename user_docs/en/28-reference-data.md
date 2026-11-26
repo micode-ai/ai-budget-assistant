@@ -47,6 +47,10 @@ The app learns from your corrections. Every time you change the category of an e
 
 **Example:** You import a Revolut statement and fix "AMAZON" → Shopping. Next month's import automatically puts Amazon transactions in Shopping.
 
+### Monthly merchant caps
+
+Set a monthly cap for one merchant on the Merchants screen (tap **+** in the *Monthly merchant caps* card). A thin bar shows this month's spending at that merchant, and you get a notification at 80% and 100%. Caps do not change your budgets.
+
 ## Tags
 
 Tags let you label expenses with free-form keywords that cut across categories.

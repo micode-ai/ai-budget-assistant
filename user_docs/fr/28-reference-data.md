@@ -41,6 +41,10 @@ L'app apprend de vos corrections. Chaque fois que vous modifiez la catégorie d'
 - Appuyez sur l'icône d'actualisation à côté d'une règle pour la **réappliquer** — cela retrouve les dépenses de ce commerçant déjà classées dans une autre catégorie et propose de les déplacer aussi vers la catégorie de la règle, afin que les anciennes dépenses rattrapent les règles apprises plus tard
 - Les règles sont stockées sur le serveur et synchronisées sur tous vos appareils
 
+### Plafonds mensuels par commerçant
+
+Fixez un plafond mensuel pour un commerçant sur l'écran Commerçants (touchez **+** dans la carte *Plafonds mensuels par commerçant*). Une fine barre montre les dépenses du mois et vous êtes alerté à 80 % et 100 %. Les plafonds ne modifient pas vos budgets.
+
 ## Étiquettes
 
 Les étiquettes permettent de marquer les dépenses avec des mots-clés libres.

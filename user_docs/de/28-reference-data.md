@@ -42,6 +42,10 @@ Die App lernt aus deinen Korrekturen. Jedes Mal, wenn du die Kategorie einer Aus
 - Tippe auf das Aktualisieren-Symbol neben einer Regel, um sie **erneut anzuwenden** — dabei werden die Ausgaben dieses Händlers gesucht, die bereits einer anderen Kategorie zugeordnet sind, und es wird angeboten, sie ebenfalls in die Kategorie der Regel zu verschieben, damit ältere Ausgaben mit später gelernten Regeln nachziehen
 - Regeln werden auf dem Server gespeichert und auf allen Geräten synchronisiert
 
+### Monatliche Händlerlimits
+
+Legen Sie auf dem Händler-Bildschirm ein Monatslimit für einen Händler fest (**+** in der Karte *Monatliche Händlerlimits*). Ein dünner Balken zeigt die Ausgaben dieses Monats, und bei 80 % und 100 % erhalten Sie eine Mitteilung. Limits ändern Ihre Budgets nicht.
+
 ## Tags
 
 Tags ermöglichen die Kennzeichnung von Ausgaben mit freien Schlüsselwörtern.

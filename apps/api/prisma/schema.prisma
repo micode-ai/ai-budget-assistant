@@ -147,78 +147,78 @@ enum FeedEventType {
 // ---- Models ----
 
 model User {
-  transactionRevisions TransactionRevision[]
-  accountGroups        AccountGroup[]
-  id                         String        @id @default(uuid())
-  email                      String        @unique
-  passwordHash               String?       @map("password_hash")
-  googleId                   String?       @unique @map("google_id")
+  transactionRevisions       TransactionRevision[]
+  accountGroups              AccountGroup[]
+  id                         String                @id @default(uuid())
+  email                      String                @unique
+  passwordHash               String?               @map("password_hash")
+  googleId                   String?               @unique @map("google_id")
   name                       String
-  currencyCode               String        @default("USD") @map("currency_code")
-  timezone                   String        @default("UTC")
-  language                   String        @default("en")
-  inflationCountry           String?       @map("inflation_country")
-  pushToken                  String?       @map("push_token")
-  notifyBudgetAlerts         Boolean       @default(true) @map("notify_budget_alerts")
-  notifySharedActivity       Boolean       @default(true) @map("notify_shared_activity")
-  notifyDebtReminders        Boolean       @default(true) @map("notify_debt_reminders")
-  notifyRecurringExpenses    Boolean       @default(true) @map("notify_recurring_expenses")
-  notifySubscriptionRenewals Boolean       @default(true) @map("notify_subscription_renewals")
-  notifyAnomalyAlerts        Boolean       @default(true) @map("notify_anomaly_alerts")
-  notifyTrackingGap          Boolean       @default(true) @map("notify_tracking_gap")
-  notifyPurchaseRequests     Boolean       @default(true) @map("notify_purchase_requests")
-  notifyTripSettleUp         Boolean       @default(true) @map("notify_trip_settle_up")
-  notifyShoppingReminders    Boolean       @default(true) @map("notify_shopping_reminders")
-  notifyShoppingDeals        Boolean       @default(true) @map("notify_shopping_deals")
-  notifyInflationShield      Boolean       @default(true) @map("notify_inflation_shield")
-  notifyMonthlyWrapped       Boolean       @default(true) @map("notify_monthly_wrapped")
+  currencyCode               String                @default("USD") @map("currency_code")
+  timezone                   String                @default("UTC")
+  language                   String                @default("en")
+  inflationCountry           String?               @map("inflation_country")
+  pushToken                  String?               @map("push_token")
+  notifyBudgetAlerts         Boolean               @default(true) @map("notify_budget_alerts")
+  notifySharedActivity       Boolean               @default(true) @map("notify_shared_activity")
+  notifyDebtReminders        Boolean               @default(true) @map("notify_debt_reminders")
+  notifyRecurringExpenses    Boolean               @default(true) @map("notify_recurring_expenses")
+  notifySubscriptionRenewals Boolean               @default(true) @map("notify_subscription_renewals")
+  notifyAnomalyAlerts        Boolean               @default(true) @map("notify_anomaly_alerts")
+  notifyTrackingGap          Boolean               @default(true) @map("notify_tracking_gap")
+  notifyPurchaseRequests     Boolean               @default(true) @map("notify_purchase_requests")
+  notifyTripSettleUp         Boolean               @default(true) @map("notify_trip_settle_up")
+  notifyShoppingReminders    Boolean               @default(true) @map("notify_shopping_reminders")
+  notifyShoppingDeals        Boolean               @default(true) @map("notify_shopping_deals")
+  notifyInflationShield      Boolean               @default(true) @map("notify_inflation_shield")
+  notifyMonthlyWrapped       Boolean               @default(true) @map("notify_monthly_wrapped")
   notifyLeafletPromos        Boolean               @default(true) @map("notify_leaflet_promos")
   leafletConsentNoticeAt     DateTime?             @map("leaflet_consent_notice_at")
-  quietHoursEnabled          Boolean       @default(false) @map("quiet_hours_enabled")
+  quietHoursEnabled          Boolean               @default(false) @map("quiet_hours_enabled")
   // Minutes from local midnight (0-1439) in `timezone`.
-  quietHoursStart            Int           @default(1320) @map("quiet_hours_start")
-  quietHoursEnd              Int           @default(480) @map("quiet_hours_end")
+  quietHoursStart            Int                   @default(1320) @map("quiet_hours_start")
+  quietHoursEnd              Int                   @default(480) @map("quiet_hours_end")
   heldPushes                 HeldPush[]
-  voiceDigestEnabled         Boolean       @default(false) @map("voice_digest_enabled")
-  voiceDigestDay             Int           @default(1) @map("voice_digest_day")
-  voiceDigestHour            Int           @default(8) @map("voice_digest_hour")
-  voiceDigestChannel         String?       @map("voice_digest_channel")
-  voiceDigestLastSentAt      DateTime?     @map("voice_digest_last_sent_at")
+  voiceDigestEnabled         Boolean               @default(false) @map("voice_digest_enabled")
+  voiceDigestDay             Int                   @default(1) @map("voice_digest_day")
+  voiceDigestHour            Int                   @default(8) @map("voice_digest_hour")
+  voiceDigestChannel         String?               @map("voice_digest_channel")
+  voiceDigestLastSentAt      DateTime?             @map("voice_digest_last_sent_at")
   // ABA-335 (Community Price Map, M1): personal, opt-in consent to contribute
   // anonymized receipt price observations to the crowdsourced corpus. Default
   // false (GDPR opt-in). Consent is personal (not an Account setting) — only
   // the human who created a given expense can consent to sharing it.
-  contributeCommunityPrices  Boolean       @default(false) @map("contribute_community_prices")
-  themeMode                  String        @default("system") @map("theme_mode")
-  accentColor                String?       @map("accent_color")
+  contributeCommunityPrices  Boolean               @default(false) @map("contribute_community_prices")
+  themeMode                  String                @default("system") @map("theme_mode")
+  accentColor                String?               @map("accent_color")
   // LEGACY single-pair payment info (receipt-split guest page). `UserPaymentMethod`
   // below is now the authoritative, multi-method source — this pair is kept only as a
   // read-fallback for existing users' data (never dropped/backfilled) and is still
   // mirrored on write so older clients/rows stay consistent. Do not add new callers.
-  paymentMethod              SettleMethod? @map("payment_method")
-  paymentHandle              String?       @map("payment_handle")
-  isActive                   Boolean       @default(true) @map("is_active")
-  isVerified                 Boolean       @default(false) @map("is_verified")
+  paymentMethod              SettleMethod?         @map("payment_method")
+  paymentHandle              String?               @map("payment_handle")
+  isActive                   Boolean               @default(true) @map("is_active")
+  isVerified                 Boolean               @default(false) @map("is_verified")
   /// Bumped to revoke every issued JWT (password reset, e-mail change) — ABA-809.
-  tokenVersion               Int           @default(0) @map("token_version")
-  emailVerificationCode      String?       @map("email_verification_code")
-  emailVerificationExpiresAt DateTime?     @map("email_verification_expires_at")
-  defaultAccountId           String?       @map("default_account_id")
-  lastSyncAt                 DateTime?     @map("last_sync_at")
+  tokenVersion               Int                   @default(0) @map("token_version")
+  emailVerificationCode      String?               @map("email_verification_code")
+  emailVerificationExpiresAt DateTime?             @map("email_verification_expires_at")
+  defaultAccountId           String?               @map("default_account_id")
+  lastSyncAt                 DateTime?             @map("last_sync_at")
   /// The app build that last made an authenticated request (ABA-813): "1.42.0 (123)" native, "1.42.0+abc1234" web.
-  appVersion                 String?       @map("app_version")
+  appVersion                 String?               @map("app_version")
   /// android | ios | web — which client sent `appVersion`.
-  appPlatform                String?       @map("app_platform")
-  passwordResetCode          String?       @map("password_reset_code")
-  passwordResetExpiresAt     DateTime?     @map("password_reset_expires_at")
-  emailChangePending         String?       @map("email_change_pending")
-  emailChangeCode            String?       @map("email_change_code")
-  emailChangeExpiresAt       DateTime?     @map("email_change_expires_at")
-  createdAt                  DateTime      @default(now()) @map("created_at")
-  updatedAt                  DateTime      @updatedAt @map("updated_at")
-  referralCode               String?       @unique @map("referral_code")
-  referralsMade              Referral[]    @relation("ReferralsMade")
-  referredBy                 Referral?     @relation("ReferredBy")
+  appPlatform                String?               @map("app_platform")
+  passwordResetCode          String?               @map("password_reset_code")
+  passwordResetExpiresAt     DateTime?             @map("password_reset_expires_at")
+  emailChangePending         String?               @map("email_change_pending")
+  emailChangeCode            String?               @map("email_change_code")
+  emailChangeExpiresAt       DateTime?             @map("email_change_expires_at")
+  createdAt                  DateTime              @default(now()) @map("created_at")
+  updatedAt                  DateTime              @updatedAt @map("updated_at")
+  referralCode               String?               @unique @map("referral_code")
+  referralsMade              Referral[]            @relation("ReferralsMade")
+  referredBy                 Referral?             @relation("ReferredBy")
 
   // Relations
   leaflets               Leaflet[]
@@ -251,9 +251,9 @@ model User {
   aiModel        String @default("balanced") @map("ai_model")
 
   // Report preferences
-  weeklyEmailEnabled   Boolean @default(false) @map("weekly_email_enabled")
-  weeklyEmailDay       Int     @default(1) @map("weekly_email_day")
-  monthlyDigestEnabled Boolean @default(false) @map("monthly_digest_enabled")
+  weeklyEmailEnabled      Boolean @default(false) @map("weekly_email_enabled")
+  weeklyEmailDay          Int     @default(1) @map("weekly_email_day")
+  monthlyDigestEnabled    Boolean @default(false) @map("monthly_digest_enabled")
   // ABA-738: the one "how to start" e-mail to a user who has logged nothing 3 days after signup.
   // On by default; the signed unsubscribe link in that e-mail turns it off.
   onboardingEmailsEnabled Boolean @default(true) @map("onboarding_emails_enabled")
@@ -312,11 +312,12 @@ model User {
   // groupBy on Json. Nullable everywhere — every user who registered before this, every
   // native install, and anyone arriving without params has all four NULL, which is a
   // legitimate "unknown", not a defect to backfill.
-  acquisitionSource      String? @map("acquisition_source")
-  acquisitionLocation    String? @map("acquisition_location")
-  acquisitionLanguage    String? @map("acquisition_language")
-  acquisitionPlan        String? @map("acquisition_plan")
-  acquisitionReferrerRaw String? @map("acquisition_referrer_raw")
+  acquisitionSource      String?               @map("acquisition_source")
+  acquisitionLocation    String?               @map("acquisition_location")
+  acquisitionLanguage    String?               @map("acquisition_language")
+  acquisitionPlan        String?               @map("acquisition_plan")
+  acquisitionReferrerRaw String?               @map("acquisition_referrer_raw")
+  merchantSpendingCaps   MerchantSpendingCap[]
 
   @@index([acquisitionSource])
   @@index([voiceDigestEnabled])
@@ -391,28 +392,28 @@ model Account {
   accountGroupAccounts AccountGroupAccount[]
   leaflets             Leaflet[]
   transactionRevisions TransactionRevision[]
-  id                   String       @id @default(uuid())
+  id                   String                @id @default(uuid())
   name                 String
   type                 AccountType
-  currencyCode         String       @default("USD") @map("currency_code")
-  ownerId              String       @map("owner_id")
+  currencyCode         String                @default("USD") @map("currency_code")
+  ownerId              String                @map("owner_id")
   icon                 String?
-  isActive             Boolean      @default(true) @map("is_active")
-  encryptionEnabled    Boolean      @default(false) @map("encryption_enabled")
-  encryptionTier       Int          @default(0) @map("encryption_tier")
-  keyRotationNeeded    Boolean      @default(false) @map("key_rotation_needed")
-  createdAt            DateTime     @default(now()) @map("created_at")
-  updatedAt            DateTime     @updatedAt @map("updated_at")
-  purchaseApprovalRule ApprovalRule @default(MAJORITY) @map("purchase_approval_rule")
-  monthAnchorDay       Int?         @map("month_anchor_day")
+  isActive             Boolean               @default(true) @map("is_active")
+  encryptionEnabled    Boolean               @default(false) @map("encryption_enabled")
+  encryptionTier       Int                   @default(0) @map("encryption_tier")
+  keyRotationNeeded    Boolean               @default(false) @map("key_rotation_needed")
+  createdAt            DateTime              @default(now()) @map("created_at")
+  updatedAt            DateTime              @updatedAt @map("updated_at")
+  purchaseApprovalRule ApprovalRule          @default(MAJORITY) @map("purchase_approval_rule")
+  monthAnchorDay       Int?                  @map("month_anchor_day")
   /// Expense categories this account counts as fixed costs (ABA-777). Kept on the account, not
   /// on Category: a system category is ONE global row (accountId null) shared by every account,
   /// so a flag there would leak one account's choice into all of them.
-  fixedCategoryIds     String[]     @default([]) @map("fixed_category_ids")
-  aiImportConsentAt    DateTime?    @map("ai_import_consent_at")
-  tripStartDate        DateTime?    @map("trip_start_date") @db.Date
-  tripEndDate          DateTime?    @map("trip_end_date") @db.Date
-  tripStatus           TripStatus?  @map("trip_status")
+  fixedCategoryIds     String[]              @default([]) @map("fixed_category_ids")
+  aiImportConsentAt    DateTime?             @map("ai_import_consent_at")
+  tripStartDate        DateTime?             @map("trip_start_date") @db.Date
+  tripEndDate          DateTime?             @map("trip_end_date") @db.Date
+  tripStatus           TripStatus?           @map("trip_status")
 
   // Relations
   owner                          User                            @relation("OwnedAccounts", fields: [ownerId], references: [id], onDelete: Cascade)
@@ -426,6 +427,7 @@ model Account {
   syncLogs                       SyncLog[]
   walletBalances                 WalletBalance[]
   cardCycleSetting               CardCycleSetting?
+  merchantSpendingCaps           MerchantSpendingCap[]
   walletAdjustments              WalletAdjustment[]
   currencyExchanges              CurrencyExchange[]
   transfersOut                   AccountTransfer[]               @relation("TransfersOut")
@@ -1126,37 +1128,37 @@ model LeafletNotificationLog {
 }
 
 model Income {
-  id                   String    @id @default(uuid())
-  userId               String    @map("user_id")
-  accountId            String    @map("account_id")
-  clientId             String    @map("client_id")
-  categoryId           String?   @map("category_id")
-  amount               Decimal   @db.Decimal(12, 2)
-  currencyCode         String    @default("USD") @map("currency_code")
-  description          String?
-  notes                String?
-  date                 DateTime  @db.Date
-  source               String    @default("manual")
-  externalRef          String?   @map("external_ref")
-  importBatchId        String?   @map("import_batch_id")
-  isDebt               Boolean   @default(false) @map("is_debt")
-  isDebtRepayment      Boolean   @default(false) @map("is_debt_repayment")
-  debtContactName      String?   @map("debt_contact_name")
-  debtDueDate          DateTime? @map("debt_due_date") @db.Date
-  relatedDebtExpenseId String?   @map("related_debt_expense_id")
-  isDeleted            Boolean   @default(false) @map("is_deleted")
+  id                     String    @id @default(uuid())
+  userId                 String    @map("user_id")
+  accountId              String    @map("account_id")
+  clientId               String    @map("client_id")
+  categoryId             String?   @map("category_id")
+  amount                 Decimal   @db.Decimal(12, 2)
+  currencyCode           String    @default("USD") @map("currency_code")
+  description            String?
+  notes                  String?
+  date                   DateTime  @db.Date
+  source                 String    @default("manual")
+  externalRef            String?   @map("external_ref")
+  importBatchId          String?   @map("import_batch_id")
+  isDebt                 Boolean   @default(false) @map("is_debt")
+  isDebtRepayment        Boolean   @default(false) @map("is_debt_repayment")
+  debtContactName        String?   @map("debt_contact_name")
+  debtDueDate            DateTime? @map("debt_due_date") @db.Date
+  relatedDebtExpenseId   String?   @map("related_debt_expense_id")
+  isDeleted              Boolean   @default(false) @map("is_deleted")
   /// True when the money is accounted for by another row, so the income is
   /// kept out of every income total (the Expense flag's mirror, shared-groups
   /// phase 2 task H1). Nothing sets it yet. Never exclude by `isDebt` instead.
-  isSplitReceivable    Boolean   @default(false) @map("is_split_receivable")
-  syncVersion          Int       @default(0) @map("sync_version")
-  encryptedPayload     String?   @map("encrypted_payload")
-  encryptionKeyVersion Int?      @map("encryption_key_version")
+  isSplitReceivable      Boolean   @default(false) @map("is_split_receivable")
+  syncVersion            Int       @default(0) @map("sync_version")
+  encryptedPayload       String?   @map("encrypted_payload")
+  encryptionKeyVersion   Int?      @map("encryption_key_version")
   /// The public-API OAuth app that created this income (OAuthClient.id, the db id). Server-set only.
-  createdByOAuthClientId String? @map("created_by_oauth_client_id")
-  childBenefitChildId  String?   @map("child_benefit_child_id")
-  createdAt            DateTime  @default(now()) @map("created_at")
-  updatedAt            DateTime  @updatedAt @map("updated_at")
+  createdByOAuthClientId String?   @map("created_by_oauth_client_id")
+  childBenefitChildId    String?   @map("child_benefit_child_id")
+  createdAt              DateTime  @default(now()) @map("created_at")
+  updatedAt              DateTime  @updatedAt @map("updated_at")
 
   // Relations
   user                 User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -1183,33 +1185,33 @@ model Income {
 }
 
 model Budget {
-  id                   String    @id @default(uuid())
-  userId               String    @map("user_id")
-  accountId            String    @map("account_id")
-  clientId             String    @map("client_id")
-  name                 String
-  amount               Decimal   @db.Decimal(12, 2)
-  currencyCode         String    @default("USD") @map("currency_code")
-  period               String    @default("monthly")
-  startDate            DateTime  @map("start_date") @db.Date
-  endDate              DateTime? @map("end_date") @db.Date
-  alertThreshold       Int       @default(80) @map("alert_threshold")
-  isActive             Boolean   @default(true) @map("is_active")
-  isDeleted            Boolean   @default(false) @map("is_deleted")
-  syncVersion          Int       @default(0) @map("sync_version")
-  encryptedPayload     String?   @map("encrypted_payload")
-  encryptionKeyVersion Int?      @map("encryption_key_version")
+  id                     String    @id @default(uuid())
+  userId                 String    @map("user_id")
+  accountId              String    @map("account_id")
+  clientId               String    @map("client_id")
+  name                   String
+  amount                 Decimal   @db.Decimal(12, 2)
+  currencyCode           String    @default("USD") @map("currency_code")
+  period                 String    @default("monthly")
+  startDate              DateTime  @map("start_date") @db.Date
+  endDate                DateTime? @map("end_date") @db.Date
+  alertThreshold         Int       @default(80) @map("alert_threshold")
+  isActive               Boolean   @default(true) @map("is_active")
+  isDeleted              Boolean   @default(false) @map("is_deleted")
+  syncVersion            Int       @default(0) @map("sync_version")
+  encryptedPayload       String?   @map("encrypted_payload")
+  encryptionKeyVersion   Int?      @map("encryption_key_version")
   /// The public-API OAuth app that created this budget (OAuthClient.id, the db id). Server-set only.
-  createdByOAuthClientId String? @map("created_by_oauth_client_id")
-  createdAt            DateTime  @default(now()) @map("created_at")
-  updatedAt            DateTime  @updatedAt @map("updated_at")
+  createdByOAuthClientId String?   @map("created_by_oauth_client_id")
+  createdAt              DateTime  @default(now()) @map("created_at")
+  updatedAt              DateTime  @updatedAt @map("updated_at")
 
   // Relations
-  user                User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  account             Account          @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  createdByOAuthClient OAuthClient?    @relation(fields: [createdByOAuthClientId], references: [id], onDelete: SetNull)
-  alerts              BudgetAlert[]
-  categoryAllocations BudgetCategory[]
+  user                 User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account              Account          @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  createdByOAuthClient OAuthClient?     @relation(fields: [createdByOAuthClientId], references: [id], onDelete: SetNull)
+  alerts               BudgetAlert[]
+  categoryAllocations  BudgetCategory[]
 
   @@unique([accountId, clientId])
   @@index([accountId, isActive])
@@ -1994,7 +1996,7 @@ model GeneratedReport {
   completedAt  DateTime? @map("completed_at")
   createdAt    DateTime  @default(now()) @map("created_at")
 
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   account Account? @relation(fields: [accountId], references: [id], onDelete: Cascade)
 
   @@index([userId, createdAt])
@@ -3174,27 +3176,27 @@ model TransactionRevision {
 }
 
 model Vehicle {
-  id        String   @id @default(uuid())
-  accountId String   @map("account_id")
-  userId    String   @map("user_id")
-  name      String
-  fuelType  String   @default("petrol") @map("fuel_type")
+  id                       String    @id @default(uuid())
+  accountId                String    @map("account_id")
+  userId                   String    @map("user_id")
+  name                     String
+  fuelType                 String    @default("petrol") @map("fuel_type")
   /// Expense categories whose expenses are this vehicle's costs, each with a kind:
   /// `[{ categoryId, kind }]` (ABA-803).
-  categoryRules Json   @default("[]") @map("category_rules")
+  categoryRules            Json      @default("[]") @map("category_rules")
   /// Renewal reminders (ABA-827): optional due dates and a service odometer target.
-  nextInsuranceDate  DateTime? @map("next_insurance_date") @db.Date
-  nextInspectionDate DateTime? @map("next_inspection_date") @db.Date
-  nextServiceDate    DateTime? @map("next_service_date") @db.Date
-  nextServiceOdometer Int?     @map("next_service_odometer")
+  nextInsuranceDate        DateTime? @map("next_insurance_date") @db.Date
+  nextInspectionDate       DateTime? @map("next_inspection_date") @db.Date
+  nextServiceDate          DateTime? @map("next_service_date") @db.Date
+  nextServiceOdometer      Int?      @map("next_service_odometer")
   /// The `nextServiceOdometer` value the odometer nudge already fired for (dedup).
-  serviceOdometerNudgedFor Int? @map("service_odometer_nudged_for")
+  serviceOdometerNudgedFor Int?      @map("service_odometer_nudged_for")
   /// Service every N km from `lastServiceKm`; wins over `nextServiceOdometer`.
-  serviceIntervalKm Int? @map("service_interval_km")
-  lastServiceKm     Int? @map("last_service_km")
-  isDeleted Boolean  @default(false) @map("is_deleted")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  serviceIntervalKm        Int?      @map("service_interval_km")
+  lastServiceKm            Int?      @map("last_service_km")
+  isDeleted                Boolean   @default(false) @map("is_deleted")
+  createdAt                DateTime  @default(now()) @map("created_at")
+  updatedAt                DateTime  @updatedAt @map("updated_at")
 
   account  Account       @relation(fields: [accountId], references: [id], onDelete: Cascade)
   fuelLogs FuelLog[]
@@ -3299,21 +3301,21 @@ model LeafletItem {
 
 /// A pet of an account (pet-costs-tracking). Costs hang on expenses through PetCost.
 model Pet {
-  id        String    @id @default(uuid())
-  accountId String    @map("account_id")
-  userId    String    @map("user_id")
-  name      String
-  species   String    @default("dog")
-  birthday  DateTime? @db.Date
+  id                        String    @id @default(uuid())
+  accountId                 String    @map("account_id")
+  userId                    String    @map("user_id")
+  name                      String
+  species                   String    @default("dog")
+  birthday                  DateTime? @db.Date
   /// Optional reminder dates; the reminder cron is a follow-up.
   nextVaccinationDate       DateTime? @map("next_vaccination_date") @db.Date
   nextParasiteTreatmentDate DateTime? @map("next_parasite_treatment_date") @db.Date
   /// Expense categories whose expenses are this pet's costs, each with a kind:
   /// `[{ categoryId, kind }]` (ABA-833).
-  categoryRules Json @default("[]") @map("category_rules")
-  isDeleted Boolean   @default(false) @map("is_deleted")
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @updatedAt @map("updated_at")
+  categoryRules             Json      @default("[]") @map("category_rules")
+  isDeleted                 Boolean   @default(false) @map("is_deleted")
+  createdAt                 DateTime  @default(now()) @map("created_at")
+  updatedAt                 DateTime  @updatedAt @map("updated_at")
 
   account Account   @relation(fields: [accountId], references: [id], onDelete: Cascade)
   costs   PetCost[]
@@ -3424,4 +3426,27 @@ model CardCycleSetting {
   account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
 
   @@map("card_cycle_settings")
+}
+
+/// Monthly spending cap for one merchant (key = trim + lower-case, as in MerchantCategoryRule).
+/// Server-only; does not touch any Budget. Alert state is (period, highest threshold pushed).
+model MerchantSpendingCap {
+  id                 String   @id @default(uuid())
+  accountId          String   @map("account_id")
+  userId             String   @map("user_id")
+  merchantNormalized String   @map("merchant_normalized")
+  merchantLabel      String   @map("merchant_label")
+  amount             Decimal  @db.Decimal(12, 2)
+  currencyCode       String   @map("currency_code")
+  lastAlertPeriod    String?  @map("last_alert_period")
+  lastAlertThreshold Int?     @map("last_alert_threshold")
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([accountId, merchantNormalized])
+  @@index([accountId])
+  @@map("merchant_spending_caps")
 }

@@ -3,9 +3,10 @@ import { BudgetsController } from './budgets.controller';
 import { BudgetsService } from './budgets.service';
 import { BudgetAlertService } from './budget-alert.service';
 import { GamificationModule } from '../gamification/gamification.module';
+import { MerchantCapsModule } from '../merchant-caps/merchant-caps.module';
 
 @Module({
-  imports: [GamificationModule],
+  imports: [GamificationModule, MerchantCapsModule],
   controllers: [BudgetsController],
   providers: [BudgetsService, BudgetAlertService],
   exports: [BudgetsService, BudgetAlertService],

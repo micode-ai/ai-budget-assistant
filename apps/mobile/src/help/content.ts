@@ -4107,6 +4107,10 @@ The app learns from your corrections. Every time you change the category of an e
 
 **Example:** You import a Revolut statement and fix "AMAZON" → Shopping. Next month's import automatically puts Amazon transactions in Shopping.
 
+### Monthly merchant caps
+
+Set a monthly cap for one merchant on the Merchants screen (tap **+** in the *Monthly merchant caps* card). A thin bar shows this month's spending at that merchant, and you get a notification at 80% and 100%. Caps do not change your budgets.
+
 ## Tags
 
 Tags let you label expenses with free-form keywords that cut across categories.
@@ -9692,6 +9696,10 @@ OCR иногда неверно читает цену, выдумывает ст
 - Нажмите иконку обновления рядом с правилом, чтобы **применить его повторно** — это найдёт расходы этого магазина, уже отнесённые к другой категории, и предложит перенести их в категорию правила тоже, чтобы старые расходы подтянулись под правила, выученные позже
 - Правила хранятся на сервере и синхронизируются на всех устройствах
 
+### Месячные лимиты на магазины
+
+Задайте месячный лимит для магазина на экране «Магазины» (нажмите **+** в карточке *Месячные лимиты на магазины*). Тонкая полоса показывает траты за этот месяц, а уведомление придёт при 80% и 100%. Лимиты не меняют ваши бюджеты.
+
 ## Теги
 
 Теги позволяют маркировать расходы произвольными ключевыми словами, независимо от категорий.
@@ -15240,6 +15248,10 @@ OCR іноді неправильно читає ціну, вигадує ряд
 - Натисніть іконку оновлення поруч із правилом, щоб **застосувати його повторно** — це знайде витрати цього магазину, які вже віднесено до іншої категорії, і запропонує перенести їх також у категорію правила, щоб старіші витрати підтягнулися під правила, вивчені пізніше
 - Правила зберігаються на сервері і синхронізуються на всіх ваших пристроях
 
+### Місячні ліміти на магазини
+
+Задайте місячний ліміт для магазину на екрані «Магазини» (натисніть **+** у картці *Місячні ліміти на магазини*). Тонка смуга показує витрати за цей місяць, а сповіщення прийде при 80% і 100%. Ліміти не змінюють ваші бюджети.
+
 ## Теги
 
 Теги дозволяють маркувати витрати довільними ключовими словами, незалежно від категорій.
@@ -20775,6 +20787,10 @@ Aplikacja uczy się na podstawie Twoich poprawek. Za każdym razem, gdy zmienisz
 - Dotknij ikony odświeżania obok reguły, aby ją **ponownie zastosować** — znajdzie to wydatki tego sklepu już przypisane do innej kategorii i zaproponuje przeniesienie ich także do kategorii reguły, dzięki czemu starsze wydatki nadrobią reguły nauczone później
 - Reguły są przechowywane na serwerze i synchronizowane na wszystkich Twoich urządzeniach
 
+### Miesięczne limity w sklepach
+
+Ustaw miesięczny limit dla sklepu na ekranie Sprzedawcy (dotknij **+** w karcie *Miesięczne limity w sklepach*). Cienki pasek pokazuje wydatki w tym miesiącu, a powiadomienie dostaniesz przy 80% i 100%. Limity nie zmieniają budżetów.
+
 ## Tagi
 
 Tagi pozwalają oznaczać wydatki dowolnymi słowami kluczowymi, niezależnie od kategorii.
@@ -26286,6 +26302,10 @@ Die App lernt aus deinen Korrekturen. Jedes Mal, wenn du die Kategorie einer Aus
 - Tippe auf das Aktualisieren-Symbol neben einer Regel, um sie **erneut anzuwenden** — dabei werden die Ausgaben dieses Händlers gesucht, die bereits einer anderen Kategorie zugeordnet sind, und es wird angeboten, sie ebenfalls in die Kategorie der Regel zu verschieben, damit ältere Ausgaben mit später gelernten Regeln nachziehen
 - Regeln werden auf dem Server gespeichert und auf allen Geräten synchronisiert
 
+### Monatliche Händlerlimits
+
+Legen Sie auf dem Händler-Bildschirm ein Monatslimit für einen Händler fest (**+** in der Karte *Monatliche Händlerlimits*). Ein dünner Balken zeigt die Ausgaben dieses Monats, und bei 80 % und 100 % erhalten Sie eine Mitteilung. Limits ändern Ihre Budgets nicht.
+
 ## Tags
 
 Tags ermöglichen die Kennzeichnung von Ausgaben mit freien Schlüsselwörtern.
@@ -31783,6 +31803,10 @@ La app aprende de tus correcciones. Cada vez que cambias la categoría de un gas
 - Toca el icono de actualizar junto a una regla para **reaplicarla** — esto busca los gastos de ese comercio ya archivados bajo otra categoría y ofrece moverlos también a la categoría de la regla, para que los gastos antiguos se pongan al día con las reglas que aprendiste más tarde
 - Las reglas se guardan en el servidor y se sincronizan en todos tus dispositivos
 
+### Límites mensuales por comercio
+
+Fija un límite mensual para un comercio en la pantalla Comercios (toca **+** en la tarjeta *Límites mensuales por comercio*). Una barra fina muestra el gasto de este mes y recibes un aviso al 80% y al 100%. Los límites no cambian tus presupuestos.
+
 ## Etiquetas
 
 Las etiquetas permiten marcar gastos con palabras clave libres que van más allá de las categorías.
@@ -37278,6 +37302,10 @@ L'app apprend de vos corrections. Chaque fois que vous modifiez la catégorie d'
 - Appuyez sur l'icône d'actualisation à côté d'une règle pour la **réappliquer** — cela retrouve les dépenses de ce commerçant déjà classées dans une autre catégorie et propose de les déplacer aussi vers la catégorie de la règle, afin que les anciennes dépenses rattrapent les règles apprises plus tard
 - Les règles sont stockées sur le serveur et synchronisées sur tous vos appareils
 
+### Plafonds mensuels par commerçant
+
+Fixez un plafond mensuel pour un commerçant sur l'écran Commerçants (touchez **+** dans la carte *Plafonds mensuels par commerçant*). Une fine barre montre les dépenses du mois et vous êtes alerté à 80 % et 100 %. Les plafonds ne modifient pas vos budgets.
+
 ## Étiquettes
 
 Les étiquettes permettent de marquer les dépenses avec des mots-clés libres.
@@ -42742,6 +42770,10 @@ OCR часам няправільна чытае цану, выдумляе ра
 - Націсніце кошык для выдалення правіла
 - Націсніце іконку абнаўлення побач з правілам, каб **ужыць яго паўторна** — гэта знойдзе выдаткі гэтай крамы, якія ўжо аднесены да іншай катэгорыі, і прапануе перанесці іх таксама ў катэгорыю правіла, каб старыя выдаткі падцягнуліся пад правілы, вывучаныя пазней
 - Правілы захоўваюцца на серверы і сінхранізуюцца на ўсіх прыладах
+
+### Месячныя ліміты на крамы
+
+Задайце месячны ліміт для крамы на экране «Крамы» (націсніце **+** у картцы *Месячныя ліміты на крамы*). Тонкая паласа паказвае траты за гэты месяц, а апавяшчэнне прыйдзе пры 80% і 100%. Ліміты не змяняюць вашы бюджэты.
 
 ## Тэгі
 
@@ -48316,6 +48348,10 @@ De app leert van je correcties. Elke keer dat je de categorie wijzigt van een ui
 - Regels worden op de server opgeslagen en gesynchroniseerd op al je apparaten
 
 **Voorbeeld:** Je importeert een Revolut-afschrift en corrigeert "AMAZON" → Shopping. Bij de volgende import worden Amazon-transacties automatisch onder Shopping geplaatst.
+
+### Maandlimieten per winkel
+
+Stel op het scherm Winkels een maandlimiet in voor één winkel (tik op **+** in de kaart *Maandlimieten per winkel*). Een dunne balk toont de uitgaven van deze maand en je krijgt een melding bij 80% en 100%. Limieten wijzigen je budgetten niet.
 
 ## Tags
 
@@ -53921,6 +53957,10 @@ A aplicação aprende com as suas correções. Sempre que altera a categoria de 
 - As regras ficam guardadas no servidor e sincronizam em todos os seus dispositivos
 
 **Exemplo:** Importa um extrato do Revolut e corrige «AMAZON» → Compras. Na importação do mês seguinte, as transações da Amazon vão automaticamente para Compras.
+
+### Limites mensais por comerciante
+
+Defina um limite mensal para um comerciante no ecrã Comerciantes (toque em **+** no cartão *Limites mensais por comerciante*). Uma barra fina mostra os gastos deste mês e recebe um aviso a 80% e 100%. Os limites não alteram os seus orçamentos.
 
 ## Etiquetas
 
@@ -59533,6 +59573,10 @@ O app aprende com as suas correções. Sempre que você muda a categoria de uma 
 - As regras ficam salvas no servidor e são sincronizadas em todos os seus dispositivos
 
 **Exemplo:** Você importa um extrato do Revolut e corrige “AMAZON” → Compras. Na importação do mês seguinte, as transações da Amazon vão automaticamente para Compras.
+
+### Limites mensais por estabelecimento
+
+Defina um limite mensal para um estabelecimento na tela Estabelecimentos (toque em **+** no cartão *Limites mensais por estabelecimento*). Uma barra fina mostra os gastos do mês e você recebe um aviso em 80% e 100%. Os limites não alteram seus orçamentos.
 
 ## Tags
 

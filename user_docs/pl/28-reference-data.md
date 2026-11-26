@@ -42,6 +42,10 @@ Aplikacja uczy się na podstawie Twoich poprawek. Za każdym razem, gdy zmienisz
 - Dotknij ikony odświeżania obok reguły, aby ją **ponownie zastosować** — znajdzie to wydatki tego sklepu już przypisane do innej kategorii i zaproponuje przeniesienie ich także do kategorii reguły, dzięki czemu starsze wydatki nadrobią reguły nauczone później
 - Reguły są przechowywane na serwerze i synchronizowane na wszystkich Twoich urządzeniach
 
+### Miesięczne limity w sklepach
+
+Ustaw miesięczny limit dla sklepu na ekranie Sprzedawcy (dotknij **+** w karcie *Miesięczne limity w sklepach*). Cienki pasek pokazuje wydatki w tym miesiącu, a powiadomienie dostaniesz przy 80% i 100%. Limity nie zmieniają budżetów.
+
 ## Tagi
 
 Tagi pozwalają oznaczać wydatki dowolnymi słowami kluczowymi, niezależnie od kategorii.

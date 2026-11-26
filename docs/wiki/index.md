@@ -291,6 +291,7 @@ the section you came for — it states what must not break and why. A missing se
 - [utility-bill-readings](features/utility-bill-readings.md) — kWh/m³ on a utility expense, unit price over time, year-over-year and a price-rise nudge
 - [pet-costs](features/pet-costs.md) — pets and what each costs by month and kind, bulk assign from transactions (API)
 - [merchants](features/merchants.md) — the merchant field, filters, capture reconciliation, rename/merge and grouping suggestions
+- [merchant-spending-caps](features/merchant-spending-caps.md) — monthly per-merchant cap, progress bar and 80/100% pushes
 - [reference-data-screens](features/reference-data-screens.md) — the shared layout of the four reference-data screens, and the viewer-role UI gate
 
 ### Platform, build and operations

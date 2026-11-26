@@ -25,3 +25,23 @@ export interface UpsertCardCycleDto {
   creditLimit?: number;
   currencyCode: string;
 }
+
+/** One monthly merchant cap with this calendar month's progress (GET /merchant-caps). */
+export interface MerchantSpendingCap {
+  id: string;
+  merchantNormalized: string;
+  merchantLabel: string;
+  amount: number;
+  currencyCode: string;
+  /** Spent at this merchant in the current calendar month, cap currency only. */
+  spent: number;
+  /** spent / amount * 100; can exceed 100. */
+  percentUsed: number;
+}
+
+/** PUT /merchant-caps body. */
+export interface UpsertMerchantCapDto {
+  merchant: string;
+  amount: number;
+  currencyCode: string;
+}

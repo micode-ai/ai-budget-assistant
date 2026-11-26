@@ -47,6 +47,10 @@ O app aprende com as suas correções. Sempre que você muda a categoria de uma 
 
 **Exemplo:** Você importa um extrato do Revolut e corrige “AMAZON” → Compras. Na importação do mês seguinte, as transações da Amazon vão automaticamente para Compras.
 
+### Limites mensais por estabelecimento
+
+Defina um limite mensal para um estabelecimento na tela Estabelecimentos (toque em **+** no cartão *Limites mensais por estabelecimento*). Uma barra fina mostra os gastos do mês e você recebe um aviso em 80% e 100%. Os limites não alteram seus orçamentos.
+
 ## Tags
 
 As tags permitem marcar despesas com palavras-chave livres, independentemente das categorias.

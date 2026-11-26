@@ -20,6 +20,7 @@ import { useMerchantRuleReapply } from '@/hooks/useMerchantRuleReapply';
 import { RenameMerchantModal } from './RenameMerchantModal';
 import { MergeMerchantsModal } from './MergeMerchantsModal';
 import { ReapplyMerchantRuleModal } from './ReapplyMerchantRuleModal';
+import { MerchantCapsCard } from './MerchantCapsCard';
 
 /**
  * The merchants screen's body: the merchant list with its rename / merge /
@@ -241,6 +242,8 @@ export function MerchantsSettings() {
             </TouchableOpacity>
           </BulkActionBar>
         )}
+
+        {!selecting && <MerchantCapsCard suggestions={merchants.map((m) => m.merchant)} />}
 
         <View style={styles.card}>
           {merchants.length === 0 ? (

@@ -47,6 +47,10 @@ A aplicação aprende com as suas correções. Sempre que altera a categoria de 
 
 **Exemplo:** Importa um extrato do Revolut e corrige «AMAZON» → Compras. Na importação do mês seguinte, as transações da Amazon vão automaticamente para Compras.
 
+### Limites mensais por comerciante
+
+Defina um limite mensal para um comerciante no ecrã Comerciantes (toque em **+** no cartão *Limites mensais por comerciante*). Uma barra fina mostra os gastos deste mês e recebe um aviso a 80% e 100%. Os limites não alteram os seus orçamentos.
+
 ## Etiquetas
 
 As etiquetas permitem marcar despesas com palavras-chave livres, independentemente das categorias.
