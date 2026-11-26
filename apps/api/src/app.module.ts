@@ -42,6 +42,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { ReportsModule } from './modules/reports/reports.module';
 import { BackupsModule } from './modules/backups/backups.module';
 import { DebtsModule } from './modules/debts/debts.module';
+import { CardCyclesModule } from './modules/card-cycles/card-cycles.module';
 import { ReferralsModule } from './modules/referrals/referrals.module';
 import { HealthModule } from './modules/health/health.module';
 import { ImportWiseModule } from './modules/import-wise/import-wise.module';
@@ -145,6 +146,7 @@ import { McpModule } from './modules/mcp/mcp.module';
     ReportsModule,
     BackupsModule,
     DebtsModule,
+    CardCyclesModule,
     ReferralsModule,
     HealthModule,
     ImportWiseModule,

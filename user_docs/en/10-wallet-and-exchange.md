@@ -236,6 +236,12 @@ The difference is recorded as a balance adjustment. It is not an expense or an i
 
 Supported currencies also include CZK, SEK, NOK, DKK, HUF, RON and CHF.
 
+## Credit card statement cycle
+
+If an account is a credit card, open the wallet and tap **Set up card cycle**. Enter the statement day, the payment due day and, optionally, the credit limit. The wallet then shows what you have put on the card in the current cycle, the statement and due dates, and a thin utilisation bar when a limit is set. Three days before the due date you get a push with the statement amount. Pay the card with an ordinary account transfer.
+
+> **Note:** Purchases are assigned to a cycle by their transaction date. Banks that cut off by posting date may differ by a day or two. Only the card currency is counted; interest and minimum payments are not calculated.
+
 ---
 
 *See also: [Dashboard](./02-dashboard.md) | [Settings](./11-settings.md)*

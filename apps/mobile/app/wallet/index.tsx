@@ -13,6 +13,7 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import { getIntlLocale } from '@/i18n';
 import { WalletBalanceCard } from '@/components/wallet/WalletBalanceCard';
 import { CorrectBalanceSheet } from '@/components/wallet/CorrectBalanceSheet';
+import { CardCycleSection } from '@/components/wallet/CardCycleSection';
 
 export default function WalletScreen() {
   const [refreshing, setRefreshing] = useState(false);
@@ -265,6 +266,8 @@ export default function WalletScreen() {
               <Text style={styles.navRowText}>{t('exchange.rateAlerts')}</Text>
               <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
             </TouchableOpacity>
+
+            <CardCycleSection />
 
             {exchanges.length > 0 && (
               <View style={styles.section}>

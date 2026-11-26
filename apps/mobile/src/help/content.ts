@@ -2013,6 +2013,12 @@ The difference is recorded as a balance adjustment. It is not an expense or an i
 
 Supported currencies also include CZK, SEK, NOK, DKK, HUF, RON and CHF.
 
+## Credit card statement cycle
+
+If an account is a credit card, open the wallet and tap **Set up card cycle**. Enter the statement day, the payment due day and, optionally, the credit limit. The wallet then shows what you have put on the card in the current cycle, the statement and due dates, and a thin utilisation bar when a limit is set. Three days before the due date you get a push with the statement amount. Pay the card with an ordinary account transfer.
+
+> **Note:** Purchases are assigned to a cycle by their transaction date. Banks that cut off by posting date may differ by a day or two. Only the card currency is counted; interest and minimum payments are not calculated.
+
 ---
 
 *See also: Dashboard | Settings*
@@ -7605,6 +7611,12 @@ iOS, Android, Web
 
 Теперь также поддерживаются CZK, SEK, NOK, DKK, HUF, RON и CHF.
 
+## Расчётный цикл кредитной карты
+
+Если счёт — кредитная карта, откройте кошелёк и нажмите **Настроить цикл карты**. Укажите день выписки, день платежа и, по желанию, кредитный лимит. Кошелёк покажет, сколько вы потратили в текущем цикле, даты выписки и платежа и тонкую полосу использования лимита. За три дня до срока придёт пуш с суммой выписки. Карту погашайте обычным переводом между счетами.
+
+> **Note:** Покупки относятся к циклу по дате транзакции. Банки, считающие по дате проводки, могут отличаться на день-два. Учитывается только валюта карты; проценты и минимальный платёж не рассчитываются.
+
 ---
 
 *См. также: Главная | Настройки*
@@ -13196,6 +13208,12 @@ iOS, Android, Web
 
 Тепер також підтримуються CZK, SEK, NOK, DKK, HUF, RON і CHF.
 
+## Розрахунковий цикл кредитної картки
+
+Якщо рахунок — кредитна картка, відкрийте гаманець і натисніть **Налаштувати цикл картки**. Вкажіть день виписки, день платежу та, за бажанням, кредитний ліміт. Гаманець покаже, скільки ви витратили в поточному циклі, дати виписки й платежу та тонку смугу використання ліміту. За три дні до строку прийде пуш із сумою виписки. Картку погашайте звичайним переказом між рахунками.
+
+> **Note:** Покупки належать до циклу за датою транзакції. Банки, що рахують за датою проведення, можуть відрізнятися на день-два. Враховується лише валюта картки; відсотки та мінімальний платіж не розраховуються.
+
 ---
 
 *Див. також: Головна | Налаштування*
@@ -18721,6 +18739,12 @@ Różnica zapisuje się jako korekta salda. Nie jest wydatkiem ani przychodem, w
 
 Obsługiwane są także CZK, SEK, NOK, DKK, HUF, RON i CHF.
 
+## Cykl rozliczeniowy karty kredytowej
+
+Jeśli konto to karta kredytowa, otwórz portfel i dotknij **Ustaw cykl karty**. Podaj dzień wyciągu, dzień płatności i opcjonalnie limit kredytowy. Portfel pokaże, ile wydano w bieżącym cyklu, daty wyciągu i płatności oraz cienki pasek wykorzystania limitu. Trzy dni przed terminem dostaniesz powiadomienie z kwotą wyciągu. Kartę spłacasz zwykłym przelewem między kontami.
+
+> **Note:** Zakupy trafiają do cyklu według daty transakcji. Banki, które liczą według daty księgowania, mogą się różnić o dzień lub dwa. Liczona jest tylko waluta karty; odsetki i minimalna spłata nie są wyliczane.
+
 ---
 
 *Zobacz takze: Pulpit | Ustawienia*
@@ -24245,6 +24269,12 @@ Die Differenz wird als Saldokorrektur gespeichert. Sie ist weder Ausgabe noch Ei
 
 Unterstützt werden jetzt auch CZK, SEK, NOK, DKK, HUF, RON und CHF.
 
+## Abrechnungszyklus der Kreditkarte
+
+Ist ein Konto eine Kreditkarte, öffne die Wallet und tippe auf **Kartenzyklus einrichten**. Gib den Abrechnungstag, den Zahlungstag und optional das Kreditlimit ein. Die Wallet zeigt dann, was du im aktuellen Zyklus auf die Karte gebucht hast, die Abrechnungs- und Fälligkeitsdaten und bei gesetztem Limit einen dünnen Auslastungsbalken. Drei Tage vor Fälligkeit erhältst du eine Push-Nachricht mit dem Abrechnungsbetrag. Bezahle die Karte mit einer normalen Kontoüberweisung.
+
+> **Note:** Käufe werden nach ihrem Transaktionsdatum einem Zyklus zugeordnet. Banken mit Buchungsdatum als Stichtag können um ein bis zwei Tage abweichen. Nur die Kartenwährung wird gezählt; Zinsen und Mindestzahlungen werden nicht berechnet.
+
 ---
 
 *Siehe auch: Ubersicht | Einstellungen*
@@ -29748,6 +29778,12 @@ La diferencia se guarda como un ajuste de saldo. No es un gasto ni un ingreso, a
 
 También se admiten CZK, SEK, NOK, DKK, HUF, RON y CHF.
 
+## Ciclo de facturación de la tarjeta de crédito
+
+Si una cuenta es una tarjeta de crédito, abre la cartera y toca **Configurar ciclo de tarjeta**. Indica el día de corte, el día de pago y, opcionalmente, el límite de crédito. La cartera mostrará lo gastado en el ciclo actual, las fechas de corte y de pago y una fina barra de utilización si hay límite. Tres días antes del vencimiento recibirás una notificación con el importe del extracto. Paga la tarjeta con una transferencia normal entre cuentas.
+
+> **Note:** Las compras se asignan al ciclo por su fecha de transacción. Los bancos que cortan por fecha de contabilización pueden diferir uno o dos días. Solo se cuenta la moneda de la tarjeta; no se calculan intereses ni pagos mínimos.
+
 ---
 
 *Ver tambien: Panel | Ajustes*
@@ -35236,6 +35272,12 @@ La différence est enregistrée comme un ajustement de solde. Ce n'est ni une d�
 > **Remarque :** la correction du solde nécessite une connexion internet. Les lecteurs et les comptes de voyage archivés ne peuvent pas corriger le solde.
 
 Les devises CZK, SEK, NOK, DKK, HUF, RON et CHF sont aussi prises en charge.
+
+## Cycle de facturation de la carte de crédit
+
+Si un compte est une carte de crédit, ouvrez le portefeuille et touchez **Configurer le cycle de la carte**. Indiquez le jour du relevé, le jour d'échéance et, en option, le plafond. Le portefeuille affiche alors ce que vous avez dépensé sur le cycle en cours, les dates de relevé et d'échéance et une fine barre d'utilisation si un plafond est défini. Trois jours avant l'échéance, vous recevez une notification avec le montant du relevé. Réglez la carte par un virement normal entre comptes.
+
+> **Note:** Les achats sont rattachés à un cycle selon leur date de transaction. Les banques qui arrêtent selon la date de comptabilisation peuvent différer d'un ou deux jours. Seule la devise de la carte est comptée ; les intérêts et paiements minimums ne sont pas calculés.
 
 ---
 
@@ -40728,6 +40770,12 @@ iOS, Android, Web
 
 Цяпер таксама падтрымліваюцца CZK, SEK, NOK, DKK, HUF, RON і CHF.
 
+## Разліковы цыкл крэдытнай карты
+
+Калі рахунак — крэдытная карта, адкрыйце кашалёк і націсніце **Наладзіць цыкл карты**. Укажыце дзень выпіскі, дзень плацяжу і, па жаданні, крэдытны ліміт. Кашалёк пакажа, колькі вы патрацілі ў бягучым цыкле, даты выпіскі і плацяжу і тонкую паласу выкарыстання ліміту. За тры дні да тэрміну прыйдзе пуш з сумай выпіскі. Карту пагашайце звычайным пераводам паміж рахункамі.
+
+> **Note:** Пакупкі адносяцца да цыклу па даце транзакцыі. Банкі, што лічаць па даце праводкі, могуць адрознівацца на дзень-два. Улічваецца толькі валюта карты; працэнты і мінімальны плацёж не разлічваюцца.
+
 ---
 
 *Гл. таксама: Галоўная | Налады*
@@ -46178,6 +46226,12 @@ Het verschil wordt opgeslagen als saldocorrectie. Het is geen uitgave en geen in
 > **Let op:** voor een saldocorrectie is een internetverbinding nodig. Kijkers en gearchiveerde reisrekeningen kunnen het saldo niet corrigeren.
 
 Ook CZK, SEK, NOK, DKK, HUF, RON en CHF worden ondersteund.
+
+## Afrekencyclus van de creditcard
+
+Is een rekening een creditcard, open dan de wallet en tik op **Kaartcyclus instellen**. Vul de afschriftdag, de betaaldag en optioneel het kredietlimiet in. De wallet toont dan wat je in de huidige cyclus hebt uitgegeven, de afschrift- en vervaldatum en bij een limiet een dunne gebruiksbalk. Drie dagen voor de vervaldatum krijg je een melding met het afschriftbedrag. Betaal de kaart met een gewone overboeking tussen rekeningen.
+
+> **Note:** Aankopen worden aan een cyclus toegewezen op transactiedatum. Banken die op boekingsdatum afsluiten kunnen een dag of twee afwijken. Alleen de valuta van de kaart telt mee; rente en minimale betalingen worden niet berekend.
 
 ---
 
@@ -51773,6 +51827,12 @@ A diferença fica registada como um acerto de saldo. Não é uma despesa nem uma
 > **Nota:** corrigir um saldo requer ligação à internet. Os leitores e as contas de viagem arquivadas não podem corrigir um saldo.
 
 As moedas suportadas incluem também CZK, SEK, NOK, DKK, HUF, RON e CHF.
+
+## Ciclo de faturação do cartão de crédito
+
+Se uma conta for um cartão de crédito, abra a carteira e toque em **Configurar ciclo do cartão**. Indique o dia do extrato, o dia de pagamento e, opcionalmente, o limite de crédito. A carteira mostra o que gastou no ciclo atual, as datas do extrato e de pagamento e uma barra fina de utilização se houver limite. Três dias antes do vencimento recebe uma notificação com o valor do extrato. Pague o cartão com uma transferência normal entre contas.
+
+> **Note:** As compras são atribuídas a um ciclo pela data da transação. Os bancos que fecham pela data de lançamento podem diferir um ou dois dias. Só é contada a moeda do cartão; juros e pagamentos mínimos não são calculados.
 
 ---
 
@@ -57379,6 +57439,12 @@ A diferença é registrada como um ajuste de saldo. Não é uma despesa nem uma 
 > **Observação:** corrigir um saldo exige conexão com a internet. Visualizadores e contas de viagem arquivadas não podem corrigir um saldo.
 
 As moedas suportadas também incluem CZK, SEK, NOK, DKK, HUF, RON e CHF.
+
+## Ciclo de fatura do cartão de crédito
+
+Se uma conta for um cartão de crédito, abra a carteira e toque em **Configurar ciclo do cartão**. Informe o dia de fechamento, o dia de vencimento e, opcionalmente, o limite. A carteira mostra quanto você gastou no ciclo atual, as datas de fechamento e vencimento e uma barra fina de uso quando há limite. Três dias antes do vencimento você recebe uma notificação com o valor da fatura. Pague o cartão com uma transferência normal entre contas.
+
+> **Note:** As compras entram no ciclo pela data da transação. Bancos que fecham pela data de lançamento podem diferir um ou dois dias. Só a moeda do cartão é contada; juros e pagamento mínimo não são calculados.
 
 ---
 

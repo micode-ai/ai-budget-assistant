@@ -237,6 +237,12 @@ Die Differenz wird als Saldokorrektur gespeichert. Sie ist weder Ausgabe noch Ei
 
 Unterstützt werden jetzt auch CZK, SEK, NOK, DKK, HUF, RON und CHF.
 
+## Abrechnungszyklus der Kreditkarte
+
+Ist ein Konto eine Kreditkarte, öffne die Wallet und tippe auf **Kartenzyklus einrichten**. Gib den Abrechnungstag, den Zahlungstag und optional das Kreditlimit ein. Die Wallet zeigt dann, was du im aktuellen Zyklus auf die Karte gebucht hast, die Abrechnungs- und Fälligkeitsdaten und bei gesetztem Limit einen dünnen Auslastungsbalken. Drei Tage vor Fälligkeit erhältst du eine Push-Nachricht mit dem Abrechnungsbetrag. Bezahle die Karte mit einer normalen Kontoüberweisung.
+
+> **Note:** Käufe werden nach ihrem Transaktionsdatum einem Zyklus zugeordnet. Banken mit Buchungsdatum als Stichtag können um ein bis zwei Tage abweichen. Nur die Kartenwährung wird gezählt; Zinsen und Mindestzahlungen werden nicht berechnet.
+
 ---
 
 *Siehe auch: [Ubersicht](./02-dashboard.md) | [Einstellungen](./11-settings.md)*

@@ -236,6 +236,12 @@ La différence est enregistrée comme un ajustement de solde. Ce n'est ni une d�
 
 Les devises CZK, SEK, NOK, DKK, HUF, RON et CHF sont aussi prises en charge.
 
+## Cycle de facturation de la carte de crédit
+
+Si un compte est une carte de crédit, ouvrez le portefeuille et touchez **Configurer le cycle de la carte**. Indiquez le jour du relevé, le jour d'échéance et, en option, le plafond. Le portefeuille affiche alors ce que vous avez dépensé sur le cycle en cours, les dates de relevé et d'échéance et une fine barre d'utilisation si un plafond est défini. Trois jours avant l'échéance, vous recevez une notification avec le montant du relevé. Réglez la carte par un virement normal entre comptes.
+
+> **Note:** Les achats sont rattachés à un cycle selon leur date de transaction. Les banques qui arrêtent selon la date de comptabilisation peuvent différer d'un ou deux jours. Seule la devise de la carte est comptée ; les intérêts et paiements minimums ne sont pas calculés.
+
 ---
 
 *Voir aussi : [Tableau de bord](./02-dashboard.md) | [Parametres](./11-settings.md)*

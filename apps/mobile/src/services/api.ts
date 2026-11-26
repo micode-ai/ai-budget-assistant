@@ -35,6 +35,7 @@ import { utilitiesApi } from './utilities.api';
 import { petsApi } from './pets.api';
 import { clientErrorsApi } from './clientErrors.api';
 import { allAccountsApi } from './allAccounts.api';
+import { cardCyclesApi } from './cardCycles.api';
 
 export const api = {
   setAccountIdGetter: (getter: () => string | null) => httpClient.setAccountIdGetter(getter),
@@ -75,6 +76,7 @@ export const api = {
   ...petsApi,
   ...clientErrorsApi,
   ...allAccountsApi,
+  ...cardCyclesApi,
 };
 
 /**

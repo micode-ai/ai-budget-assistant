@@ -50,6 +50,14 @@ interface ReferralQualifiedParams {
   bonus: number;
 }
 
+interface CardPaymentDueParams {
+  accountName: string;
+  amount: string;
+  currencyCode: string;
+  /** Human date, e.g. 27.11 */
+  dueDate: string;
+}
+
 interface DebtUpcomingParams {
   contactName: string;
   days: number;
@@ -226,6 +234,8 @@ const translations: Record<string, {
   subscriptionChargedBody: (p: SubscriptionRenewalParams) => string;
   trackingGapTitle: () => string;
   trackingGapBody: () => string;
+  cardPaymentDueTitle: () => string;
+  cardPaymentDueBody: (p: CardPaymentDueParams) => string;
   activationNudgeTitle: () => string;
   activationNudgeBody: () => string;
   shoppingReminderTitle: () => string;
@@ -331,6 +341,8 @@ const translations: Record<string, {
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} added to your expenses for ${name}`,
     trackingGapTitle: () => 'Time to log your expenses!',
     trackingGapBody: () => "You haven't recorded anything in 3+ days. Add a transaction to keep your budget on track.",
+    cardPaymentDueTitle: () => 'Card payment due in 3 days',
+    cardPaymentDueBody: ({ accountName, amount, currencyCode, dueDate }) => `Expected statement for ${accountName}: ${currencyCode} ${amount}. Due on the ${dueDate}.`,
     activationNudgeTitle: () => "Your first expense takes a few seconds",
     activationNudgeBody: () => "Snap any receipt and we'll fill in the shop, amount and items for you. Or type it in by hand.",
     shoppingReminderTitle: () => 'Time to restock?',
@@ -443,6 +455,8 @@ const translations: Record<string, {
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} добавлено в расходы за ${name}`,
     trackingGapTitle: () => 'Пора записать расходы!',
     trackingGapBody: () => 'Вы не записывали транзакции уже 3+ дня. Добавьте запись, чтобы бюджет был под контролем.',
+    cardPaymentDueTitle: () => 'Платёж по карте через 3 дня',
+    cardPaymentDueBody: ({ accountName, amount, currencyCode, dueDate }) => `Ожидаемая выписка по ${accountName}: ${amount} ${currencyCode}. Срок оплаты — ${dueDate}.`,
     activationNudgeTitle: () => "Первый расход — за пару секунд",
     activationNudgeBody: () => "Сфотографируйте любой чек — магазин, сумму и позиции мы заполним сами. Или введите расход вручную.",
     shoppingReminderTitle: () => 'Пора пополнить запасы?',
@@ -555,6 +569,8 @@ const translations: Record<string, {
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} додано до витрат за ${name}`,
     trackingGapTitle: () => 'Час записати витрати!',
     trackingGapBody: () => 'Ви не записували транзакції вже 3+ дні. Додайте запис, щоб бюджет був під контролем.',
+    cardPaymentDueTitle: () => 'Платіж за карткою за 3 дні',
+    cardPaymentDueBody: ({ accountName, amount, currencyCode, dueDate }) => `Очікувана виписка за ${accountName}: ${amount} ${currencyCode}. Термін оплати — ${dueDate}.`,
     activationNudgeTitle: () => "Перша витрата — за пару секунд",
     activationNudgeBody: () => "Сфотографуйте будь-який чек — магазин, суму й позиції ми заповнимо самі. Або введіть витрату вручну.",
     shoppingReminderTitle: () => 'Час поповнити запаси?',
@@ -667,6 +683,8 @@ const translations: Record<string, {
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} dodano do wydatków za ${name}`,
     trackingGapTitle: () => 'Czas zapisać wydatki!',
     trackingGapBody: () => 'Nie rejestrowałeś transakcji od ponad 3 dni. Dodaj wpis, żeby budżet był pod kontrolą.',
+    cardPaymentDueTitle: () => 'Płatność za kartę za 3 dni',
+    cardPaymentDueBody: ({ accountName, amount, currencyCode, dueDate }) => `Spodziewany wyciąg dla ${accountName}: ${amount} ${currencyCode}. Termin płatności: ${dueDate}.`,
     activationNudgeTitle: () => "Pierwszy wydatek w kilka sekund",
     activationNudgeBody: () => "Zrób zdjęcie dowolnego paragonu — sklep, kwotę i pozycje uzupełnimy sami. Albo wpisz wydatek ręcznie.",
     shoppingReminderTitle: () => 'Czas na uzupełnienie zapasów?',
@@ -779,6 +797,8 @@ const translations: Record<string, {
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} añadido a tus gastos por ${name}`,
     trackingGapTitle: () => '¡Es hora de registrar tus gastos!',
     trackingGapBody: () => 'No has registrado transacciones en más de 3 días. Añade un registro para mantener tu presupuesto al día.',
+    cardPaymentDueTitle: () => 'Pago de la tarjeta en 3 días',
+    cardPaymentDueBody: ({ accountName, amount, currencyCode, dueDate }) => `Extracto previsto de ${accountName}: ${amount} ${currencyCode}. Vence el ${dueDate}.`,
     activationNudgeTitle: () => "Tu primer gasto en unos segundos",
     activationNudgeBody: () => "Haz una foto de cualquier recibo y rellenamos la tienda, el importe y los artículos por ti. O escríbelo a mano.",
     shoppingReminderTitle: () => '¿Hora de reabastecer?',
@@ -891,6 +911,8 @@ const translations: Record<string, {
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} ajouté à vos dépenses pour ${name}`,
     trackingGapTitle: () => "Il est temps d'enregistrer vos dépenses !",
     trackingGapBody: () => "Vous n'avez enregistré aucune transaction depuis plus de 3 jours. Ajoutez une entrée pour rester dans votre budget.",
+    cardPaymentDueTitle: () => 'Paiement de la carte dans 3 jours',
+    cardPaymentDueBody: ({ accountName, amount, currencyCode, dueDate }) => `Relevé prévu pour ${accountName} : ${amount} ${currencyCode}. Échéance le ${dueDate}.`,
     activationNudgeTitle: () => "Votre première dépense en quelques secondes",
     activationNudgeBody: () => "Prenez en photo n'importe quel ticket : on remplit le magasin, le montant et les articles pour vous. Ou saisissez-la à la main.",
     shoppingReminderTitle: () => 'Temps de faire le plein ?',
@@ -1003,6 +1025,8 @@ const translations: Record<string, {
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} zu deinen Ausgaben für ${name} hinzugefügt`,
     trackingGapTitle: () => 'Zeit, deine Ausgaben einzutragen!',
     trackingGapBody: () => 'Du hast seit über 3 Tagen keine Transaktionen erfasst. Trag eine ein, um dein Budget im Blick zu behalten.',
+    cardPaymentDueTitle: () => 'Kartenzahlung in 3 Tagen fällig',
+    cardPaymentDueBody: ({ accountName, amount, currencyCode, dueDate }) => `Erwartete Abrechnung für ${accountName}: ${amount} ${currencyCode}. Fällig am ${dueDate}.`,
     activationNudgeTitle: () => "Deine erste Ausgabe in wenigen Sekunden",
     activationNudgeBody: () => "Fotografiere einen beliebigen Beleg – Geschäft, Betrag und Positionen tragen wir für dich ein. Oder gib sie von Hand ein.",
     shoppingReminderTitle: () => 'Zeit zum Nachkaufen?',
@@ -1115,6 +1139,8 @@ const translations: Record<string, {
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} дададзена ў выдаткі за ${name}`,
     trackingGapTitle: () => 'Час запісаць выдаткі!',
     trackingGapBody: () => 'Вы не запісвалі транзакцыі ўжо 3+ дні. Дадайце запіс, каб бюджэт быў пад кантролем.',
+    cardPaymentDueTitle: () => 'Плацёж па карце праз 3 дні',
+    cardPaymentDueBody: ({ accountName, amount, currencyCode, dueDate }) => `Чаканая выпіска па ${accountName}: ${amount} ${currencyCode}. Тэрмін аплаты — ${dueDate}.`,
     activationNudgeTitle: () => "Першы выдатак — за пару секунд",
     activationNudgeBody: () => "Сфатаграфуйце любы чэк — краму, суму і пазіцыі мы запоўнім самі. Або ўвядзіце выдатак уручную.",
     shoppingReminderTitle: () => 'Час папоўніць запасы?',
@@ -1227,6 +1253,8 @@ const translations: Record<string, {
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} toegevoegd aan je uitgaven voor ${name}`,
     trackingGapTitle: () => 'Tijd om je uitgaven bij te houden!',
     trackingGapBody: () => 'Je hebt al meer dan 3 dagen geen transacties geregistreerd. Voeg er een toe om je budget op koers te houden.',
+    cardPaymentDueTitle: () => 'Kaartbetaling over 3 dagen',
+    cardPaymentDueBody: ({ accountName, amount, currencyCode, dueDate }) => `Verwacht afschrift voor ${accountName}: ${amount} ${currencyCode}. Vervalt op ${dueDate}.`,
     activationNudgeTitle: () => "Je eerste uitgave in een paar seconden",
     activationNudgeBody: () => "Maak een foto van een bon en wij vullen de winkel, het bedrag en de artikelen voor je in. Of voer hem met de hand in.",
     shoppingReminderTitle: () => 'Tijd om bij te vullen?',
@@ -1339,6 +1367,8 @@ const translations: Record<string, {
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} de ${name} adicionados às suas despesas`,
     trackingGapTitle: () => 'Está na hora de registar as suas despesas!',
     trackingGapBody: () => 'Não registou nada há mais de 3 dias. Adicione uma transação para manter o orçamento em dia.',
+    cardPaymentDueTitle: () => 'Pagamento do cartão em 3 dias',
+    cardPaymentDueBody: ({ accountName, amount, currencyCode, dueDate }) => `Extrato previsto de ${accountName}: ${amount} ${currencyCode}. Vence a ${dueDate}.`,
     activationNudgeTitle: () => 'A primeira despesa demora poucos segundos',
     activationNudgeBody: () => 'Fotografe qualquer talão e preenchemos a loja, o valor e os artigos por si. Ou introduza-a à mão.',
     shoppingReminderTitle: () => 'Hora de repor?',
@@ -1451,6 +1481,8 @@ const translations: Record<string, {
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} de ${name} adicionados às suas despesas`,
     trackingGapTitle: () => 'Hora de registrar suas despesas!',
     trackingGapBody: () => 'Você não registra nada há mais de 3 dias. Adicione uma transação para manter seu orçamento em dia.',
+    cardPaymentDueTitle: () => 'Pagamento do cartão em 3 dias',
+    cardPaymentDueBody: ({ accountName, amount, currencyCode, dueDate }) => `Fatura prevista de ${accountName}: ${amount} ${currencyCode}. Vence em ${dueDate}.`,
     activationNudgeTitle: () => 'Sua primeira despesa leva poucos segundos',
     activationNudgeBody: () => 'Fotografe qualquer recibo e nós preenchemos a loja, o valor e os itens para você. Ou digite à mão.',
     shoppingReminderTitle: () => 'Hora de repor?',
@@ -1803,4 +1835,11 @@ export function leafletPromoTitle(lang: Lang): string {
 export function leafletPromoBody(lang: Lang, items: LeafletPromoItemParams[]): string {
   const tr = t(lang);
   return tr.leafletPromoBody(items.map((p) => tr.leafletPromoItem(p)).join('; '));
+}
+
+export function cardPaymentDueTitle(lang: Lang): string {
+  return t(lang).cardPaymentDueTitle();
+}
+export function cardPaymentDueBody(lang: Lang, params: CardPaymentDueParams): string {
+  return t(lang).cardPaymentDueBody(params);
 }

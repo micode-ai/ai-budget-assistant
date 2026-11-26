@@ -240,6 +240,12 @@ Różnica zapisuje się jako korekta salda. Nie jest wydatkiem ani przychodem, w
 
 Obsługiwane są także CZK, SEK, NOK, DKK, HUF, RON i CHF.
 
+## Cykl rozliczeniowy karty kredytowej
+
+Jeśli konto to karta kredytowa, otwórz portfel i dotknij **Ustaw cykl karty**. Podaj dzień wyciągu, dzień płatności i opcjonalnie limit kredytowy. Portfel pokaże, ile wydano w bieżącym cyklu, daty wyciągu i płatności oraz cienki pasek wykorzystania limitu. Trzy dni przed terminem dostaniesz powiadomienie z kwotą wyciągu. Kartę spłacasz zwykłym przelewem między kontami.
+
+> **Note:** Zakupy trafiają do cyklu według daty transakcji. Banki, które liczą według daty księgowania, mogą się różnić o dzień lub dwa. Liczona jest tylko waluta karty; odsetki i minimalna spłata nie są wyliczane.
+
 ---
 
 *Zobacz takze: [Pulpit](./02-dashboard.md) | [Ustawienia](./11-settings.md)*

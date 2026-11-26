@@ -236,6 +236,12 @@ A diferença é registrada como um ajuste de saldo. Não é uma despesa nem uma 
 
 As moedas suportadas também incluem CZK, SEK, NOK, DKK, HUF, RON e CHF.
 
+## Ciclo de fatura do cartão de crédito
+
+Se uma conta for um cartão de crédito, abra a carteira e toque em **Configurar ciclo do cartão**. Informe o dia de fechamento, o dia de vencimento e, opcionalmente, o limite. A carteira mostra quanto você gastou no ciclo atual, as datas de fechamento e vencimento e uma barra fina de uso quando há limite. Três dias antes do vencimento você recebe uma notificação com o valor da fatura. Pague o cartão com uma transferência normal entre contas.
+
+> **Note:** As compras entram no ciclo pela data da transação. Bancos que fecham pela data de lançamento podem diferir um ou dois dias. Só a moeda do cartão é contada; juros e pagamento mínimo não são calculados.
+
 ---
 
 *Veja também: [Painel](./02-dashboard.md) | [Configurações](./11-settings.md)*

@@ -238,6 +238,12 @@ La diferencia se guarda como un ajuste de saldo. No es un gasto ni un ingreso, a
 
 También se admiten CZK, SEK, NOK, DKK, HUF, RON y CHF.
 
+## Ciclo de facturación de la tarjeta de crédito
+
+Si una cuenta es una tarjeta de crédito, abre la cartera y toca **Configurar ciclo de tarjeta**. Indica el día de corte, el día de pago y, opcionalmente, el límite de crédito. La cartera mostrará lo gastado en el ciclo actual, las fechas de corte y de pago y una fina barra de utilización si hay límite. Tres días antes del vencimiento recibirás una notificación con el importe del extracto. Paga la tarjeta con una transferencia normal entre cuentas.
+
+> **Note:** Las compras se asignan al ciclo por su fecha de transacción. Los bancos que cortan por fecha de contabilización pueden diferir uno o dos días. Solo se cuenta la moneda de la tarjeta; no se calculan intereses ni pagos mínimos.
+
 ---
 
 *Ver tambien: [Panel](./02-dashboard.md) | [Ajustes](./11-settings.md)*

@@ -417,6 +417,7 @@ Newest last within each section.
 - 2026-11-26 · [ABA-849](https://github.com/micode-ai/ai-budget-assistant/issues/887) — utility consumption on an expense (`UtilityReading`, `utilities` module, `computeUtilityStats`: monthly unit price, year-over-year at 12+ months, >10% nudge vs 3-month mean) plus a mobile Utilities screen; form field, OCR prefill and desktop layout still open. Page: `features/utility-bill-readings.md`.
 - 2026-11-26 · [ABA-850](https://github.com/micode-ai/ai-budget-assistant/issues/888) — reduction target shipped as a budget-creation shortcut (no new entity); baseline is split-aware calendar months; widget, result card and achievement deferred. Pages: `features/budgets.md`.
 - 2026-11-26 · [ABA-851](https://github.com/micode-ai/ai-budget-assistant/issues/889) — inline calculator in the amount field (safe parser in shared-utils, helper under the field, expense and income create forms); page amount-expression-input.
+- 2026-11-26 · [ABA-852](https://github.com/micode-ai/ai-budget-assistant/issues/890) — card statement cycle: standalone `CardCycleSetting` per account (not a WalletBalance field), transaction-date cut-off, duplicated `card-cycle.ts` pair, 3-day due push once per due date; Safe-to-Spend switch left open. Pages: `features/card-statement-cycle.md` (new), `index.md`.
 
 ## Queries
 

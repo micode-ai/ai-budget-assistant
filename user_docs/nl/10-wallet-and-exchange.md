@@ -236,6 +236,12 @@ Het verschil wordt opgeslagen als saldocorrectie. Het is geen uitgave en geen in
 
 Ook CZK, SEK, NOK, DKK, HUF, RON en CHF worden ondersteund.
 
+## Afrekencyclus van de creditcard
+
+Is een rekening een creditcard, open dan de wallet en tik op **Kaartcyclus instellen**. Vul de afschriftdag, de betaaldag en optioneel het kredietlimiet in. De wallet toont dan wat je in de huidige cyclus hebt uitgegeven, de afschrift- en vervaldatum en bij een limiet een dunne gebruiksbalk. Drie dagen voor de vervaldatum krijg je een melding met het afschriftbedrag. Betaal de kaart met een gewone overboeking tussen rekeningen.
+
+> **Note:** Aankopen worden aan een cyclus toegewezen op transactiedatum. Banken die op boekingsdatum afsluiten kunnen een dag of twee afwijken. Alleen de valuta van de kaart telt mee; rente en minimale betalingen worden niet berekend.
+
 ---
 
 *Zie ook: [Dashboard](./02-dashboard.md) | [Instellingen](./11-settings.md)*

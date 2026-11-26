@@ -425,6 +425,7 @@ model Account {
   categories                     Category[]
   syncLogs                       SyncLog[]
   walletBalances                 WalletBalance[]
+  cardCycleSetting               CardCycleSetting?
   walletAdjustments              WalletAdjustment[]
   currencyExchanges              CurrencyExchange[]
   transfersOut                   AccountTransfer[]               @relation("TransfersOut")
@@ -3403,4 +3404,24 @@ model UtilityReading {
 
   @@index([accountId, kind])
   @@map("utility_readings")
+}
+
+/// Credit-card billing cycle for one account (statement day, payment due day, optional limit).
+/// Standalone, not on WalletBalance (that row is per currency). Server-only: the summary is
+/// computed from expenses by the API, so there is no SQLite mirror.
+model CardCycleSetting {
+  id                  String    @id @default(uuid())
+  accountId           String    @unique @map("account_id")
+  currencyCode        String    @map("currency_code")
+  statementDay        Int       @map("statement_day")
+  dueDay              Int       @map("due_day")
+  creditLimit         Decimal?  @map("credit_limit") @db.Decimal(12, 2)
+  /// Due date the 3-day push was last sent for, so a cycle is reminded at most once.
+  lastRemindedDueDate DateTime? @map("last_reminded_due_date") @db.Date
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime  @updatedAt @map("updated_at")
+
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@map("card_cycle_settings")
 }

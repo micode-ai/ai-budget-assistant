@@ -236,6 +236,12 @@ A diferença fica registada como um acerto de saldo. Não é uma despesa nem uma
 
 As moedas suportadas incluem também CZK, SEK, NOK, DKK, HUF, RON e CHF.
 
+## Ciclo de faturação do cartão de crédito
+
+Se uma conta for um cartão de crédito, abra a carteira e toque em **Configurar ciclo do cartão**. Indique o dia do extrato, o dia de pagamento e, opcionalmente, o limite de crédito. A carteira mostra o que gastou no ciclo atual, as datas do extrato e de pagamento e uma barra fina de utilização se houver limite. Três dias antes do vencimento recebe uma notificação com o valor do extrato. Pague o cartão com uma transferência normal entre contas.
+
+> **Note:** As compras são atribuídas a um ciclo pela data da transação. Os bancos que fecham pela data de lançamento podem diferir um ou dois dias. Só é contada a moeda do cartão; juros e pagamentos mínimos não são calculados.
+
 ---
 
 *Ver também: [Painel](./02-dashboard.md) | [Definições](./11-settings.md)*
