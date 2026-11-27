@@ -104,6 +104,7 @@ export type SettingsLinkKey =
   | 'referral'
   | 'shareApp'
   | 'whatsNew'
+  | 'support'
   | 'admin';
 
 export type SettingsEntryKey = SettingsPaneKey | SettingsLinkKey;
@@ -251,6 +252,9 @@ export const SETTINGS_ENTRIES: readonly SettingsEntry[] = [
   // Opens the system share sheet with a tagged Play link; no screen behind it.
   { kind: 'link', key: 'shareApp', labelKey: 'shareApp.title', route: '/settings', action: 'shareApp' },
   { kind: 'link', key: 'whatsNew', labelKey: 'settingsNav.whatsNew', route: '/whats-new' },
+  // Contact the developer: a conversation, not a control panel, so a link permanently. Carries an
+  // unread dot (developer replies not yet seen); `from=settings` is the route pattern it opens from.
+  { kind: 'link', key: 'support', labelKey: 'support.title', route: '/support?from=settings' },
   { kind: 'link', key: 'admin', labelKey: 'admin.openPanel', route: '/admin', adminOnly: true },
 ];
 

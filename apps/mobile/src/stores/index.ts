@@ -11,3 +11,4 @@ export { useWidgetVisibilityStore } from './widgetVisibilityStore';
 export type { WidgetKey } from './widgetVisibilityStore';
 export { useDeveloperAppsStore } from './developerAppsStore';
 export { useConnectedAppsStore } from './connectedAppsStore';
+export { useSupportStore } from './supportStore';

@@ -6175,6 +6175,36 @@ GET /health/ai
 
 ---
 
+## Поддержка (написать разработчику)
+
+Одна переписка на пользователя, перевод в обе стороны. См. `docs/wiki/features/contact-developer.md`.
+
+Пользовательские маршруты: только JWT (заголовок `X-Account-Id` не нужен).
+
+| Метод | Путь | Назначение |
+|-------|------|------------|
+| `GET` | `/support/thread` | Переписка вызывающего: `{ id, autoTranslate, userUnreadCount, messages, hasMore }`; параметры `before`, `limit` (1-100, по умолчанию 50) листают назад |
+| `POST` | `/support/messages` | Отправить сообщение: `{ "body": "...", "context": { "appVersion", "platform", "locale", ... } }`. `body` до 4000 символов; `context` допускает только `appVersion`, `buildSha`, `platform` (`android`/`ios`/`web`), `osVersion`, `locale`, `tier`, `accountType`, `fromRoute` (лишние ключи дают 400). Лимит 10 сообщений за 24 ч |
+| `POST` | `/support/thread/read` | Отметить ответы разработчика прочитанными. `204` |
+| `PATCH` | `/support/thread` | `{ "autoTranslate": true \| false }` |
+
+Админские маршруты (JWT + `AdminGuard`):
+
+| Метод | Путь | Назначение |
+|-------|------|------------|
+| `GET` | `/admin/support/unread-count` | Число переписок с непрочитанными сообщениями пользователей |
+| `GET` | `/admin/support/threads` | Список; параметр `filter` = `open`, `closed` или `muted` |
+| `GET` | `/admin/support/threads/:id` | Переписка с сообщениями |
+| `POST` | `/admin/support/threads/:id/reply` | `{ "body": "..." }` - переводит, сохраняет и отправляет пуш пользователю |
+| `PATCH` | `/admin/support/threads/:id` | `{ "status": "open" \| "closed", "muted": boolean }` |
+| `POST` | `/admin/support/messages/:id/translate` | Перевести одно сообщение по запросу |
+
+Вебхук (вне `/api/v1`): `POST /support-telegram/webhook` - обновления Telegram для отдельного бота
+поддержки, аутентификация заголовком `X-Telegram-Bot-Api-Secret-Token` (`SUPPORT_TELEGRAM_WEBHOOK_SECRET`).
+Ответ маршрутизируется только по `reply_to_message`. Рунбук: `docs/ops/support-bot.md`.
+
+---
+
 ## Администрирование
 
 Каждый маршрут ниже требует JWT + `AdminGuard` (e-mail вызывающего должен быть в `ADMIN_EMAILS`); используется админ-панелью на Next.js. См. `docs/wiki/admin-dashboard.md` и `docs/wiki/features/admin-revenue-metrics.md`.

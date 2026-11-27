@@ -8,6 +8,7 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import { helpContent, type HelpLanguage } from '@/help/content';
 import { sectionsMeta } from '@/help/sections';
 import { searchHelpSections } from '@/help/helpSearch';
+import { openSupport } from '@/features/support/openSupport';
 
 export default function HelpIndexScreen() {
   const { t, i18n } = useTranslation();
@@ -124,6 +125,27 @@ export default function HelpIndexScreen() {
             );
           })
         )}
+
+        {/* Contact the developer: below the articles, and below "no results" too. */}
+        <TouchableOpacity
+          style={styles.supportCard}
+          onPress={() => openSupport('help/index')}
+          activeOpacity={0.7}
+          accessibilityRole="button"
+        >
+          <View style={[styles.iconContainer, { backgroundColor: theme.colors.primary + '15' }]}>
+            <Ionicons name="mail-outline" size={22} color={theme.colors.primary} />
+          </View>
+          <View style={styles.cardContent}>
+            <Text style={styles.cardTitle} numberOfLines={1}>
+              {t('support.helpButton')}
+            </Text>
+            <Text style={styles.cardDescription} numberOfLines={2}>
+              {t('support.helpButtonDesc')}
+            </Text>
+          </View>
+          <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
+        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
@@ -154,6 +176,17 @@ const createStyles = (theme: Theme) => ({
     borderRadius: theme.borderRadius.lg,
     padding: theme.spacing[4],
     marginBottom: theme.spacing[3],
+    gap: theme.spacing[3],
+  },
+  supportCard: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 1,
+    borderColor: theme.colors.primary + '40',
+    padding: theme.spacing[4],
+    marginTop: theme.spacing[3],
     gap: theme.spacing[3],
   },
   iconContainer: {

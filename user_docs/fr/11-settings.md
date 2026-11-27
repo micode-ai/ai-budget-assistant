@@ -199,6 +199,18 @@ Gerez vos preferences de rapports et d'emails :
 - **Exporter la sauvegarde** — cree une sauvegarde JSON complete des donnees de votre compte
 - **Restaurer la sauvegarde** — importer un fichier de sauvegarde precedemment exporte
 
+### Écrire au développeur
+
+Réglages → **Écrire au développeur**. Posez une question, signalez un bug ou proposez une idée directement au développeur.
+
+Vous pouvez aussi l'ouvrir depuis l'écran **Aide**, via la carte **Écrire au développeur**.
+
+- Écrivez dans **n'importe quelle langue** : le développeur lit chaque message dans sa propre langue.
+- Les réponses arrivent ici et en notification push, **traduites dans votre langue**. Le texte original est à un appui.
+- L'interrupteur **Traduction automatique** détermine si les réponses sont traduites automatiquement.
+- Le développeur répond généralement en environ un jour. Vous pouvez envoyer jusqu'à **10 messages par jour**.
+- Ne collez pas de mots de passe, de numéros de carte ni d'autres données privées.
+
 ## A propos
 
 - **Version** — numero de version actuel de l'application

@@ -199,6 +199,18 @@ Configura la generacion de informes automaticos y exportacion de datos:
 - **Exportar copia de seguridad** — exporta una copia de seguridad JSON completa de los datos de tu cuenta
 - **Restaurar copia de seguridad** — importa una copia de seguridad exportada previamente
 
+### Escribir al desarrollador
+
+Ajustes → **Escribir al desarrollador**. Haz una pregunta, informa de un error o propón una idea directamente al desarrollador.
+
+También puedes abrirlo desde la pantalla **Ayuda**, en la tarjeta **Escribir al desarrollador**.
+
+- Escribe en **cualquier idioma**: el desarrollador lee cada mensaje en su propio idioma.
+- Las respuestas llegan aquí y como notificación push, **traducidas a tu idioma**. El texto original está a un toque.
+- El interruptor **Traducir automáticamente** controla si las respuestas se traducen solas.
+- El desarrollador suele responder en aproximadamente un día. Puedes enviar hasta **10 mensajes al día**.
+- No pegues contraseñas, números de tarjeta ni otros datos privados.
+
 ## Acerca de
 
 - **Version** — numero de version actual de la aplicacion

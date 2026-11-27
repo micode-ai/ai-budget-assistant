@@ -143,6 +143,10 @@ export function handleNotificationResponse(
       // receipt scanner, the entry the phone's get-started screen now leads with.
       router.push('/expense/receipt' as any);
       break;
+    case 'support_reply':
+      // A developer reply to the user's support thread ("Write to the developer").
+      router.push('/support' as any);
+      break;
     case 'spending_anomaly':
       router.push('/alerts' as any);
       break;

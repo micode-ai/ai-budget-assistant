@@ -212,6 +212,18 @@ Gerencie suas preferências de relatórios e de e-mail:
 - **Criar backup** — cria um backup completo em JSON dos dados da sua conta
 - **Importar backup** — importa um arquivo de backup exportado anteriormente
 
+### Escrever para o desenvolvedor
+
+Configurações → **Escrever para o desenvolvedor**. Faça uma pergunta, relate um bug ou sugira uma ideia diretamente ao desenvolvedor.
+
+Você também pode abrir pela tela **Ajuda**, no cartão **Escrever para o desenvolvedor**.
+
+- Escreva em **qualquer idioma** — o desenvolvedor lê cada mensagem no próprio idioma.
+- As respostas chegam aqui e como notificação push, **traduzidas para o seu idioma**. O texto original está a um toque.
+- A chave **Tradução automática** define se as respostas são traduzidas automaticamente.
+- O desenvolvedor costuma responder em cerca de um dia. Você pode enviar até **10 mensagens por dia**.
+- Não cole senhas, números de cartão nem outros dados privados.
+
 ## Sobre
 
 - **Versão** — número da versão atual do app

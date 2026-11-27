@@ -263,4 +263,14 @@ export class UsageTrackingService {
       this.logger.warn(`recordAdditionalUsage failed for ${featureType}: ${error}`);
     }
   }
+
+  /**
+   * Records a `usage_logs` row without touching the monthly quota or limits —
+   * for system-initiated costs the user did not trigger as an AI request
+   * (support-thread translation). May throw; callers decide how to handle it.
+   */
+  async logUsageWithoutLimit(userId: string, featureType: string, costUnits: number): Promise<void> {
+    const sub = await this.subscriptions.getOrCreateSubscription(userId);
+    await this.logUsage(sub.id, userId, featureType, costUnits);
+  }
 }

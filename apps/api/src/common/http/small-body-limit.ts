@@ -17,6 +17,7 @@ export const SMALL_BODY_PATHS = [
   '/api/v1/auth',
   '/webhooks/stripe',
   '/telegram/webhook',
+  '/support-telegram/webhook',
   '/whatsapp/webhook',
   '/slack/events',
   '/slack/interactivity',

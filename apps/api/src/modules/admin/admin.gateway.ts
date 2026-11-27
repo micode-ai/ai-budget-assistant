@@ -8,6 +8,7 @@ import {
   ConnectedSocket,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import type { SupportMessageAuthor } from '@budget/shared-types';
 import { Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -139,5 +140,13 @@ export class AdminGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   emitError(data: { message: string; stack?: string; timestamp: string }) {
     this.server?.to(ADMIN_ROOM).emit('admin:error', data);
+  }
+
+  emitSupportMessage(data: { threadId: string; messageId: string; author: SupportMessageAuthor }) {
+    this.server?.to(ADMIN_ROOM).emit('admin:support-message', data);
+  }
+
+  emitSupportUnread(data: { total: number }) {
+    this.server?.to(ADMIN_ROOM).emit('admin:support-unread', data);
   }
 }

@@ -212,6 +212,18 @@ Faça a gestão das preferências de relatórios e de e-mail:
 - **Criar cópia de segurança** — cria uma cópia de segurança completa em JSON dos dados da sua conta
 - **Importar cópia de segurança** — importa um ficheiro de cópia de segurança exportado anteriormente
 
+### Escrever ao programador
+
+Definições → **Escrever ao programador**. Faça uma pergunta, comunique um erro ou sugira uma ideia diretamente ao programador.
+
+Também pode abri-lo no ecrã **Ajuda**, no cartão **Escrever ao programador**.
+
+- Escreva em **qualquer língua** — o programador lê cada mensagem na sua própria língua.
+- As respostas chegam aqui e como notificação push, **traduzidas para a sua língua**. O texto original está a um toque.
+- O interruptor **Tradução automática** define se as respostas são traduzidas automaticamente.
+- O programador costuma responder em cerca de um dia. Pode enviar até **10 mensagens por dia**.
+- Não cole palavras-passe, números de cartão nem outros dados privados.
+
 ## Sobre
 
 - **Versão** — número da versão atual da aplicação

@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { useInboundReceiptStore } from '@/stores/inboundReceiptStore';
 import { useDeveloperAppsStore } from '@/stores/developerAppsStore';
+import { useSupportStore } from '@/stores/supportStore';
 import { shareApp } from '@/features/share/shareApp';
 import { SETTINGS_NAV_WIDTH } from '@/components/webLayout.constants';
 import {
@@ -53,6 +54,11 @@ export function SettingsNav({ selectedKey, isAdmin, pendingPurchaseRequests }: P
   useEffect(() => {
     void useDeveloperAppsStore.getState().probe();
   }, []);
+  // Unread developer replies: a dot on the "Write to the developer" row.
+  const supportUnread = useSupportStore((s) => s.unreadCount > 0);
+  useEffect(() => {
+    void useSupportStore.getState().refreshUnread();
+  }, []);
   const entries = visibleSettingsEntries(isAdmin, { inboundMail, publicApi });
   const panes = entries.filter(isPaneEntry);
   const links = entries.filter(isLinkEntry);
@@ -63,6 +69,7 @@ export function SettingsNav({ selectedKey, isAdmin, pendingPurchaseRequests }: P
       entry={entry}
       selected={isCurrentSelection(entry, selectedKey)}
       badge={entry.key === 'purchaseRequests' ? pendingPurchaseRequests : 0}
+      dot={entry.key === 'support' && supportUnread}
     />
   );
 
@@ -79,10 +86,13 @@ function SettingsNavRow({
   entry,
   selected,
   badge,
+  dot,
 }: {
   entry: SettingsEntry;
   selected: boolean;
   badge: number;
+  /** An unread marker with no count (support replies). */
+  dot?: boolean;
 }) {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -117,6 +127,7 @@ function SettingsNavRow({
           <Text style={styles.badgeText}>{badge}</Text>
         </View>
       )}
+      {dot && <View style={styles.dot} accessibilityLabel={t('support.unread')} />}
       {isLinkEntry(entry) && (
         // The outbound arrow is half the pane/link mechanism — it is what says
         // this row leaves settings rather than opening beside the list.
@@ -179,6 +190,12 @@ const createStyles = (theme: Theme) => ({
     justifyContent: 'center' as const,
     alignItems: 'center' as const,
     paddingHorizontal: theme.spacing[1],
+  },
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: theme.colors.primary,
   },
   badgeText: {
     ...theme.textStyles.bodySm,

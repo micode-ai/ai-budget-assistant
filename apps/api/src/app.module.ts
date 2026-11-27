@@ -28,6 +28,7 @@ import { InsightsModule } from './modules/insights/insights.module';
 import { AllAccountsModule } from './modules/all-accounts/all-accounts.module';
 import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module';
 import { AdminModule } from './modules/admin/admin.module';
+import { SupportModule } from './modules/support/support.module';
 import { TagsModule } from './modules/tags/tags.module';
 import { ChildrenModule } from './modules/children/children.module';
 import { VehiclesModule } from './modules/vehicles/vehicles.module';
@@ -132,6 +133,7 @@ import { McpModule } from './modules/mcp/mcp.module';
     AllAccountsModule,
     SubscriptionsModule,
     AdminModule,
+    SupportModule,
     AnomalyModule,
     MerchantRulesModule,
     TagsModule,

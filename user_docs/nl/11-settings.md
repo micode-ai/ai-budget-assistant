@@ -212,6 +212,18 @@ Beheer je rapport- en e-mailvoorkeuren:
 - **Back-up exporteren** — maakt een volledige JSON-back-up van je accountgegevens
 - **Back-up herstellen** — importeer een eerder geëxporteerd back-upbestand
 
+### Schrijf de ontwikkelaar
+
+Instellingen → **Schrijf de ontwikkelaar**. Stel een vraag, meld een bug of stel een idee voor, rechtstreeks aan de ontwikkelaar.
+
+Je kunt het ook openen via het scherm **Help**, met de kaart **Schrijf de ontwikkelaar**.
+
+- Schrijf in **elke taal** — de ontwikkelaar leest elk bericht in zijn eigen taal.
+- Antwoorden komen hier binnen en als pushmelding, **vertaald naar jouw taal**. De originele tekst is één tik weg.
+- Met de schakelaar **Automatisch vertalen** bepaal je of antwoorden automatisch worden vertaald.
+- De ontwikkelaar antwoordt meestal binnen ongeveer een dag. Je kunt maximaal **10 berichten per dag** sturen.
+- Plak geen wachtwoorden, kaartnummers of andere privégegevens.
+
 ## Over
 
 - **Versie** — huidig versienummer van de app

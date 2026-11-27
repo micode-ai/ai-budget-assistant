@@ -212,6 +212,18 @@ Manage your report and email preferences:
 - **Export Backup** — creates a full JSON backup of your account data
 - **Restore Backup** — import a previously exported backup file
 
+### Write to the developer
+
+Settings → **Write to the developer**. Ask a question, report a bug or suggest an idea directly to the developer.
+
+You can also open it from the **Help** screen via the **Write to the developer** card.
+
+- Write in **any language** — the developer reads every message in his own language.
+- Replies arrive here and as a push notification, **translated into your language**. The original text is one tap away.
+- The **Auto-translate** toggle controls whether replies are translated automatically.
+- The developer usually replies within about a day. You can send up to **10 messages per day**.
+- Do not paste passwords, card numbers or other private data.
+
 ## About
 
 - **Version** — current app version number

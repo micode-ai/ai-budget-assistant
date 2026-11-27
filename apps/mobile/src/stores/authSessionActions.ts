@@ -30,6 +30,7 @@ import { useGroupBudgetStore } from './groupBudgetStore';
 import { useInboundReceiptStore } from './inboundReceiptStore';
 import { useDeveloperAppsStore } from './developerAppsStore';
 import { useConnectedAppsStore } from './connectedAppsStore';
+import { useSupportStore } from './supportStore';
 import { useChatStore } from './chatStore';
 import { useChildStore } from './childStore';
 import { petsCache } from '@/features/pets/petsCache';
@@ -693,6 +694,8 @@ export async function logoutAction(set: AuthStoreSet): Promise<void> {
     // the connected-apps list are per user - neither may survive into the next session.
     useDeveloperAppsStore.getState().reset();
     useConnectedAppsStore.getState().reset();
+    // Support (contact the developer): the unread dot is per user.
+    useSupportStore.getState().reset();
     // `accountStore` also clears this on an account switch (ABA-513) — this
     // call is deliberately redundant with that, not a duplicate to prune. A
     // conversation can carry another person's name, amounts, anything the

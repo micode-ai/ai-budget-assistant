@@ -6240,6 +6240,36 @@ Public. `/health` runs `SELECT 1` and returns `{ "status": "ok", "db": "ok", "up
 
 ---
 
+## Support (contact the developer)
+
+One thread per user, translated both ways. See `docs/wiki/features/contact-developer.md`.
+
+User routes: JWT only (no `X-Account-Id` needed).
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `GET` | `/support/thread` | The caller's thread: `{ id, autoTranslate, userUnreadCount, messages, hasMore }`; query `before`, `limit` (1-100, default 50) page backwards |
+| `POST` | `/support/messages` | Send a message: `{ "body": "...", "context": { "appVersion", "platform", "locale", ... } }`. `body` up to 4000 chars; `context` allows only `appVersion`, `buildSha`, `platform` (`android`/`ios`/`web`), `osVersion`, `locale`, `tier`, `accountType`, `fromRoute` (unknown keys are a 400). Limit 10 messages per 24 h |
+| `POST` | `/support/thread/read` | Mark the developer's replies read. `204` |
+| `PATCH` | `/support/thread` | `{ "autoTranslate": true \| false }` |
+
+Admin routes (JWT + `AdminGuard`):
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `GET` | `/admin/support/unread-count` | Threads with unread user messages |
+| `GET` | `/admin/support/threads` | List; query `filter` = `open`, `closed` or `muted` |
+| `GET` | `/admin/support/threads/:id` | A thread with its messages |
+| `POST` | `/admin/support/threads/:id/reply` | `{ "body": "..." }` - translates, stores and pushes to the user |
+| `PATCH` | `/admin/support/threads/:id` | `{ "status": "open" \| "closed", "muted": boolean }` |
+| `POST` | `/admin/support/messages/:id/translate` | Translate one message on demand |
+
+Webhook (outside `/api/v1`): `POST /support-telegram/webhook` - Telegram updates for the separate
+support bot, authenticated by the `X-Telegram-Bot-Api-Secret-Token` header
+(`SUPPORT_TELEGRAM_WEBHOOK_SECRET`). A reply is routed only by `reply_to_message`. Runbook: `docs/ops/support-bot.md`.
+
+---
+
 ## Admin
 
 Every route below requires JWT + `AdminGuard` (the caller's e-mail must be listed in `ADMIN_EMAILS`); used by the Next.js admin dashboard. See `docs/wiki/admin-dashboard.md` and `docs/wiki/features/admin-revenue-metrics.md`.

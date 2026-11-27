@@ -87,6 +87,9 @@ export const api = {
  */
 export { oauthApi } from './oauth.api';
 
+/** Namespaced for the same reason: `send`/`markRead` are too generic for the flat `api`. */
+export { supportApi } from './support.api';
+
 export function getApiBaseUrl(): string {
   return httpClient.baseUrl;
 }

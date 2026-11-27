@@ -360,6 +360,7 @@ describe('UsersService.deactivate (ABA-650)', () => {
   it('anonymizes the group identity and updates the account inside the ownership transaction', async () => {
     const order: string[] = [];
     const tx = {
+      supportThread: { deleteMany: jest.fn(async () => ({ count: 0 })) },
       user: {
         update: jest.fn(async () => {
           order.push('update');
@@ -390,5 +391,38 @@ describe('UsersService.deactivate (ABA-650)', () => {
     tx.user.update.mockClear();
     await expect(service.deactivate('u1')).rejects.toThrow('db down');
     expect(tx.user.update).not.toHaveBeenCalled();
+  });
+
+  it('deletes the support thread (messages cascade) before the account update, in the same transaction', async () => {
+    const order: string[] = [];
+    const tx = {
+      supportThread: {
+        deleteMany: jest.fn(async () => {
+          order.push('support');
+          return { count: 1 };
+        }),
+      },
+      user: {
+        update: jest.fn(async () => {
+          order.push('update');
+          return { id: 'u1', isActive: false };
+        }),
+      },
+    };
+    const groupOwnership = {
+      leavePlatform: jest.fn(async (_id: string, _opts: any, then: (t: any) => Promise<any>) => then(tx)),
+    };
+    const module = await Test.createTestingModule({
+      providers: [
+        UsersService,
+        { provide: PrismaService, useValue: {} },
+        { provide: GroupOwnershipService, useValue: groupOwnership },
+      ],
+    }).compile();
+    const service = module.get(UsersService);
+    const result = await service.deactivate('u1');
+    expect(tx.supportThread.deleteMany).toHaveBeenCalledWith({ where: { userId: 'u1' } });
+    expect(order).toEqual(['support', 'update']);
+    expect(result).toEqual({ id: 'u1', isActive: false });
   });
 });

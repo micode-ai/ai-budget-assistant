@@ -147,6 +147,7 @@ enum FeedEventType {
 // ---- Models ----
 
 model User {
+  supportThread              SupportThread?
   transactionRevisions       TransactionRevision[]
   accountGroups              AccountGroup[]
   id                         String                @id @default(uuid())
@@ -3455,4 +3456,40 @@ model MerchantSpendingCap {
   @@unique([accountId, merchantNormalized])
   @@index([accountId])
   @@map("merchant_spending_caps")
+}
+
+model SupportThread {
+  id                   String           @id @default(uuid())
+  userId               String           @unique @map("user_id")
+  status               String           @default("open")
+  muted                Boolean          @default(false)
+  autoTranslate        Boolean          @default(true) @map("auto_translate")
+  lastMessageAt        DateTime         @default(now()) @map("last_message_at")
+  userUnreadCount      Int              @default(0) @map("user_unread_count")
+  developerUnreadCount Int              @default(0) @map("developer_unread_count")
+  createdAt            DateTime         @default(now()) @map("created_at")
+  user                 User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages             SupportMessage[]
+
+  @@index([status, lastMessageAt])
+  @@map("support_threads")
+}
+
+model SupportMessage {
+  id                String        @id @default(uuid())
+  threadId          String        @map("thread_id")
+  author            String
+  body              String
+  bodyLang          String        @map("body_lang")
+  translatedBody    String?       @map("translated_body")
+  translatedLang    String?       @map("translated_lang")
+  context           Json?
+  telegramMessageId BigInt?       @unique @map("telegram_message_id")
+  via               String
+  readAt            DateTime?     @map("read_at")
+  createdAt         DateTime      @default(now()) @map("created_at")
+  thread            SupportThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+
+  @@index([threadId, createdAt])
+  @@map("support_messages")
 }

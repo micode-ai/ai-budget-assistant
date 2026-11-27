@@ -199,6 +199,18 @@ Verwalte Berichts- und E-Mail-Einstellungen:
 - **Backup exportieren** — vollständige JSON-Sicherung aller Kontodaten
 - **Backup wiederherstellen** — importiere ein zuvor exportiertes Backup
 
+### An den Entwickler schreiben
+
+Einstellungen → **An den Entwickler schreiben**. Stelle direkt eine Frage, melde einen Fehler oder schlage eine Idee vor.
+
+Du kannst es auch im Bereich **Hilfe** über die Karte **An den Entwickler schreiben** öffnen.
+
+- Schreibe in **jeder Sprache** — der Entwickler liest jede Nachricht in seiner eigenen Sprache.
+- Antworten erscheinen hier und als Push-Benachrichtigung, **in deine Sprache übersetzt**. Der Originaltext ist einen Tipp entfernt.
+- Mit dem Schalter **Automatisch übersetzen** legst du fest, ob Antworten automatisch übersetzt werden.
+- Der Entwickler antwortet in der Regel innerhalb eines Tages. Du kannst bis zu **10 Nachrichten pro Tag** senden.
+- Füge keine Passwörter, Kartennummern oder andere private Daten ein.
+
 ## Uber
 
 - **Version** — aktuelle App-Versionsnummer

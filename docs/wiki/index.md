@@ -222,6 +222,7 @@ the section you came for — it states what must not break and why. A missing se
   Manager exports, carrying the user's own categories across
 
 ### Alerts and insights
+- [contact-developer](features/contact-developer.md) — one support thread per user to the developer, translated both ways, answered from the admin page or a separate Telegram bot
 - [exchange-rate-alerts](features/exchange-rate-alerts.md) — a personal one-shot watch on a currency
   pair
 - [community-prices](features/community-prices.md) — the k-anonymized crowdsourced price map,

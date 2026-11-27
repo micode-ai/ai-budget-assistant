@@ -199,6 +199,18 @@ Skonfiguruj automatyczne raporty e-mail i zarzadzaj eksportami danych:
 - **Eksportuj kopie zapasowa** — utworz pelna kopie zapasowa JSON wszystkich danych Twojego konta
 - **Przywroc kopie zapasowa** — importuj wczesniej wyeksportowana kopie zapasowa
 
+### Napisz do twórcy
+
+Ustawienia → **Napisz do twórcy**. Zadaj pytanie, zgłoś błąd lub podsuń pomysł bezpośrednio twórcy aplikacji.
+
+Możesz też otworzyć je na ekranie **Pomoc**, w karcie **Napisz do twórcy**.
+
+- Pisz w **dowolnym języku** — twórca czyta każdą wiadomość w swoim języku.
+- Odpowiedzi przychodzą tutaj i jako powiadomienie push, **przetłumaczone na Twój język**. Oryginał jest o jedno stuknięcie dalej.
+- Przełącznik **Tłumacz automatycznie** decyduje, czy odpowiedzi są tłumaczone automatycznie.
+- Twórca zwykle odpowiada w ciągu około doby. Możesz wysłać do **10 wiadomości dziennie**.
+- Nie wklejaj haseł, numerów kart ani innych prywatnych danych.
+
 ## Informacje
 
 - **Wersja** — aktualny numer wersji aplikacji

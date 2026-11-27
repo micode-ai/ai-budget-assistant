@@ -307,13 +307,17 @@ export class UsersService {
    * Self-service account deletion is SOFT (isActive=false, nothing cascades). Groups the user owns
    * are handed on FIRST (ABA-650), or they would be left headless: nobody could rotate, archive,
    * reset or remove anyone. A failure there aborts before the account changes.
+   *
+   * The user's support thread is hard-deleted here (its messages cascade by FK) in the same
+   * transaction, so a deactivated account leaves no support conversation behind.
    */
   async deactivate(id: string) {
     // ABA-650: one transaction. Owned groups pass on and the user's group identity is anonymized
     // (like the admin hard delete) together with the account change, so nothing is left half-done.
-    return this.groupOwnership.leavePlatform(id, { anonymize: true }, (tx) =>
-      tx.user.update({ where: { id }, data: { isActive: false } }),
-    );
+    return this.groupOwnership.leavePlatform(id, { anonymize: true }, async (tx) => {
+      await tx.supportThread.deleteMany({ where: { userId: id } });
+      return tx.user.update({ where: { id }, data: { isActive: false } });
+    });
   }
 
   /** Every account this user belongs to — used to bust per-account real-salary caches. */

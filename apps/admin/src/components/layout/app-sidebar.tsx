@@ -22,6 +22,7 @@ import {
   KeyRound,
   TrendingUp,
   Newspaper,
+  LifeBuoy,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -30,6 +31,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useState } from "react";
+import { useSupportUnread } from "@/hooks/use-support";
 
 export const navItems = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -40,6 +42,7 @@ export const navItems = [
   { href: "/users", label: "Users", icon: Users },
   { href: "/ai-usage", label: "AI Usage", icon: BrainCircuit },
   { href: "/subscriptions", label: "Subscriptions", icon: CreditCard },
+  { href: "/support", label: "Support", icon: LifeBuoy },
   { href: "/communications", label: "Communications", icon: MessageSquare },
   { href: "/app-versions", label: "App Versions", icon: Smartphone },
   { href: "/leaflets", label: "Leaflets", icon: Newspaper },
@@ -49,6 +52,22 @@ export const navItems = [
   { href: "/audit-log", label: "Audit Log", icon: ScrollText },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
+
+function UnreadBadge({ href, collapsed }: { href: string; collapsed?: boolean }) {
+  const { data } = useSupportUnread();
+  const total = href === "/support" ? (data?.total ?? 0) : 0;
+  if (total <= 0) return null;
+  return (
+    <span
+      className={cn(
+        "rounded-full bg-primary px-1.5 text-[11px] font-semibold text-primary-foreground",
+        collapsed ? "absolute right-1 top-0" : "ml-auto"
+      )}
+    >
+      {total}
+    </span>
+  );
+}
 
 export function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
@@ -76,6 +95,7 @@ export function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
           >
             <item.icon className="h-5 w-5 shrink-0" />
             <span>{item.label}</span>
+            <UnreadBadge href={item.href} />
           </Link>
         );
       })}
@@ -132,7 +152,7 @@ export function AppSidebar() {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                "relative flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
                 active
                   ? "bg-sidebar-accent text-sidebar-accent-foreground"
                   : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground",
@@ -141,6 +161,7 @@ export function AppSidebar() {
             >
               <item.icon className="h-5 w-5 shrink-0" />
               {!collapsed && <span>{item.label}</span>}
+              <UnreadBadge href={item.href} collapsed={collapsed} />
             </Link>
           );
 

@@ -628,6 +628,13 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="support"
+          options={{
+            headerShown: true,
+            title: t('support.title'),
+          }}
+        />
+        <Stack.Screen
           name="whats-new"
           options={{
             headerShown: true,

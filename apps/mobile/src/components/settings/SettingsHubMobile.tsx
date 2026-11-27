@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -8,6 +8,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { usePurchaseRequestStore } from '@/stores/purchaseRequestStore';
 import { useInboundReceiptStore } from '@/stores/inboundReceiptStore';
 import { useDeveloperAppsStore } from '@/stores/developerAppsStore';
+import { useSupportStore } from '@/stores/supportStore';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { SettingsProfileCard, SettingsLogoutButton } from './SettingsIdentity';
 import { PendingSyncChip } from './PendingSyncChip';
@@ -24,6 +25,8 @@ interface SettingsCategory {
   onPress?: () => void;
   iconColor?: string;
   badge?: number;
+  /** An unread marker with no count (support replies). */
+  dot?: boolean;
 }
 
 /**
@@ -60,6 +63,15 @@ export function SettingsHubMobile() {
   useEffect(() => {
     void useDeveloperAppsStore.getState().probe();
   }, []);
+
+  // Unread developer replies: a dot on the "Write to the developer" row.
+  const supportUnread = useSupportStore((s) => s.unreadCount > 0);
+  // On focus, not mount: the settings tab stays mounted while a reply arrives.
+  useFocusEffect(
+    useCallback(() => {
+      void useSupportStore.getState().refreshUnread();
+    }, []),
+  );
 
   const categories: SettingsCategory[] = [
     {
@@ -200,6 +212,13 @@ export function SettingsHubMobile() {
         ]
       : []),
     {
+      icon: 'mail-outline',
+      label: t('support.title'),
+      description: t('support.settingsSubtitle'),
+      route: '/support?from=settings',
+      dot: supportUnread,
+    },
+    {
       icon: 'information-circle-outline',
       label: t('settingsNav.about'),
       description: t('settingsNav.aboutDesc'),
@@ -258,6 +277,7 @@ export function SettingsHubMobile() {
                     {category.description}
                   </Text>
                 </View>
+                {category.dot && <View style={styles.dot} accessibilityLabel={t('support.unread')} />}
                 {category.badge !== undefined && (
                   <View style={styles.badge}>
                     <Text style={styles.badgeText}>{category.badge}</Text>
@@ -373,6 +393,13 @@ const createStyles = (theme: Theme) => ({
     alignItems: 'center' as const,
     paddingHorizontal: theme.spacing[1],
     marginRight: theme.spacing[1],
+  },
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: theme.colors.primary,
+    marginRight: theme.spacing[2],
   },
   badgeText: {
     ...theme.textStyles.bodySm,

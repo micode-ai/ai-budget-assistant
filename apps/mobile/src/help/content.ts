@@ -2246,6 +2246,18 @@ Manage your report and email preferences:
 - **Export Backup** — creates a full JSON backup of your account data
 - **Restore Backup** — import a previously exported backup file
 
+### Write to the developer
+
+Settings → **Write to the developer**. Ask a question, report a bug or suggest an idea directly to the developer.
+
+You can also open it from the **Help** screen via the **Write to the developer** card.
+
+- Write in **any language** — the developer reads every message in his own language.
+- Replies arrive here and as a push notification, **translated into your language**. The original text is one tap away.
+- The **Auto-translate** toggle controls whether replies are translated automatically.
+- The developer usually replies within about a day. You can send up to **10 messages per day**.
+- Do not paste passwords, card numbers or other private data.
+
 ## About
 
 - **Version** — current app version number
@@ -7850,6 +7862,18 @@ Email обновляется мгновенно, выдаются новые т�
 - **Создать резервную копию** — создаёт полную JSON-копию данных аккаунта
 - **Импортировать резервную копию** — загрузка и восстановление данных из ранее созданной копии
 
+### Написать разработчику
+
+Настройки → **Написать разработчику**. Задайте вопрос, сообщите об ошибке или предложите идею напрямую разработчику.
+
+Также можно открыть его на экране **Помощь** — карточка **Написать разработчику**.
+
+- Пишите на **любом языке** — разработчик читает каждое сообщение на своём языке.
+- Ответы приходят сюда и пуш-уведомлением, **переведённые на ваш язык**. Оригинал — в одно касание.
+- Переключатель **Автоперевод** определяет, переводятся ли ответы автоматически.
+- Разработчик обычно отвечает примерно за сутки. Можно отправить до **10 сообщений в день**.
+- Не отправляйте пароли, номера карт и другие личные данные.
+
 ## О приложении
 
 - **Версия** — номер текущей версии приложения
@@ -13442,6 +13466,18 @@ iOS, Android, Web
 - **Створити резервну копію** — створює повну JSON-копію даних акаунту
 - **Імпортувати резервну копію** — завантаження та відновлення даних із раніше створеної копії
 
+### Написати розробнику
+
+Налаштування → **Написати розробнику**. Поставте запитання, повідомте про помилку або запропонуйте ідею безпосередньо розробнику.
+
+Також можна відкрити його на екрані **Довідка** — картка **Написати розробнику**.
+
+- Пишіть **будь-якою мовою** — розробник читає кожне повідомлення своєю мовою.
+- Відповіді приходять сюди та push-сповіщенням, **перекладені вашою мовою**. Оригінал — одним дотиком.
+- Перемикач **Автопереклад** визначає, чи перекладаються відповіді автоматично.
+- Розробник зазвичай відповідає приблизно за добу. Можна надіслати до **10 повідомлень на день**.
+- Не надсилайте паролі, номери карток та інші приватні дані.
+
 ## Про додаток
 
 - **Версія** — поточний номер версії додатку
@@ -18983,6 +19019,18 @@ Skonfiguruj automatyczne raporty e-mail i zarzadzaj eksportami danych:
 - **Eksportuj kopie zapasowa** — utworz pelna kopie zapasowa JSON wszystkich danych Twojego konta
 - **Przywroc kopie zapasowa** — importuj wczesniej wyeksportowana kopie zapasowa
 
+### Napisz do twórcy
+
+Ustawienia → **Napisz do twórcy**. Zadaj pytanie, zgłoś błąd lub podsuń pomysł bezpośrednio twórcy aplikacji.
+
+Możesz też otworzyć je na ekranie **Pomoc**, w karcie **Napisz do twórcy**.
+
+- Pisz w **dowolnym języku** — twórca czyta każdą wiadomość w swoim języku.
+- Odpowiedzi przychodzą tutaj i jako powiadomienie push, **przetłumaczone na Twój język**. Oryginał jest o jedno stuknięcie dalej.
+- Przełącznik **Tłumacz automatycznie** decyduje, czy odpowiedzi są tłumaczone automatycznie.
+- Twórca zwykle odpowiada w ciągu około doby. Możesz wysłać do **10 wiadomości dziennie**.
+- Nie wklejaj haseł, numerów kart ani innych prywatnych danych.
+
 ## Informacje
 
 - **Wersja** — aktualny numer wersji aplikacji
@@ -24521,6 +24569,18 @@ Verwalte Berichts- und E-Mail-Einstellungen:
 - **Backup exportieren** — vollständige JSON-Sicherung aller Kontodaten
 - **Backup wiederherstellen** — importiere ein zuvor exportiertes Backup
 
+### An den Entwickler schreiben
+
+Einstellungen → **An den Entwickler schreiben**. Stelle direkt eine Frage, melde einen Fehler oder schlage eine Idee vor.
+
+Du kannst es auch im Bereich **Hilfe** über die Karte **An den Entwickler schreiben** öffnen.
+
+- Schreibe in **jeder Sprache** — der Entwickler liest jede Nachricht in seiner eigenen Sprache.
+- Antworten erscheinen hier und als Push-Benachrichtigung, **in deine Sprache übersetzt**. Der Originaltext ist einen Tipp entfernt.
+- Mit dem Schalter **Automatisch übersetzen** legst du fest, ob Antworten automatisch übersetzt werden.
+- Der Entwickler antwortet in der Regel innerhalb eines Tages. Du kannst bis zu **10 Nachrichten pro Tag** senden.
+- Füge keine Passwörter, Kartennummern oder andere private Daten ein.
+
 ## Uber
 
 - **Version** — aktuelle App-Versionsnummer
@@ -30038,6 +30098,18 @@ Configura la generacion de informes automaticos y exportacion de datos:
 - **Exportar copia de seguridad** — exporta una copia de seguridad JSON completa de los datos de tu cuenta
 - **Restaurar copia de seguridad** — importa una copia de seguridad exportada previamente
 
+### Escribir al desarrollador
+
+Ajustes → **Escribir al desarrollador**. Haz una pregunta, informa de un error o propón una idea directamente al desarrollador.
+
+También puedes abrirlo desde la pantalla **Ayuda**, en la tarjeta **Escribir al desarrollador**.
+
+- Escribe en **cualquier idioma**: el desarrollador lee cada mensaje en su propio idioma.
+- Las respuestas llegan aquí y como notificación push, **traducidas a tu idioma**. El texto original está a un toque.
+- El interruptor **Traducir automáticamente** controla si las respuestas se traducen solas.
+- El desarrollador suele responder en aproximadamente un día. Puedes enviar hasta **10 mensajes al día**.
+- No pegues contraseñas, números de tarjeta ni otros datos privados.
+
 ## Acerca de
 
 - **Version** — numero de version actual de la aplicacion
@@ -35540,6 +35612,18 @@ Gerez vos preferences de rapports et d'emails :
 - **Generer un rapport** — ouvre l'ecran Export et rapports
 - **Exporter la sauvegarde** — cree une sauvegarde JSON complete des donnees de votre compte
 - **Restaurer la sauvegarde** — importer un fichier de sauvegarde precedemment exporte
+
+### Écrire au développeur
+
+Réglages → **Écrire au développeur**. Posez une question, signalez un bug ou proposez une idée directement au développeur.
+
+Vous pouvez aussi l'ouvrir depuis l'écran **Aide**, via la carte **Écrire au développeur**.
+
+- Écrivez dans **n'importe quelle langue** : le développeur lit chaque message dans sa propre langue.
+- Les réponses arrivent ici et en notification push, **traduites dans votre langue**. Le texte original est à un appui.
+- L'interrupteur **Traduction automatique** détermine si les réponses sont traduites automatiquement.
+- Le développeur répond généralement en environ un jour. Vous pouvez envoyer jusqu'à **10 messages par jour**.
+- Ne collez pas de mots de passe, de numéros de carte ni d'autres données privées.
 
 ## A propos
 
@@ -41046,6 +41130,18 @@ iOS, Android, Web
 - **Стварыць рэзервовую копію** — стварыце поўную JSON рэзервовую копію даных вашага рахунку
 - **Імпартаваць рэзервовую копію** — загрузка і аднаўленне даных з раней створанай копіі
 
+### Напісаць распрацоўшчыку
+
+Налады → **Напісаць распрацоўшчыку**. Задайце пытанне, паведаміце пра памылку або прапануйце ідэю наўпрост распрацоўшчыку.
+
+Таксама можна адкрыць яго на экране **Даведка** — картка **Напісаць распрацоўшчыку**.
+
+- Пішыце на **любой мове** — распрацоўшчык чытае кожнае паведамленне на сваёй мове.
+- Адказы прыходзяць сюды і push-апавяшчэннем, **перакладзеныя на вашу мову**. Арыгінал — адным націскам.
+- Пераключальнік **Аўтапераклад** вызначае, ці перакладаюцца адказы аўтаматычна.
+- Распрацоўшчык звычайна адказвае прыкладна за суткі. Можна адправіць да **10 паведамленняў у дзень**.
+- Не дасылайце паролі, нумары картак і іншыя прыватныя даныя.
+
 ## Пра праграму
 
 - **Версія** — нумар бягучай версіі праграмы
@@ -46523,6 +46619,18 @@ Beheer je rapport- en e-mailvoorkeuren:
 - **Rapport genereren** — opent het scherm Export & Rapporten
 - **Back-up exporteren** — maakt een volledige JSON-back-up van je accountgegevens
 - **Back-up herstellen** — importeer een eerder geëxporteerd back-upbestand
+
+### Schrijf de ontwikkelaar
+
+Instellingen → **Schrijf de ontwikkelaar**. Stel een vraag, meld een bug of stel een idee voor, rechtstreeks aan de ontwikkelaar.
+
+Je kunt het ook openen via het scherm **Help**, met de kaart **Schrijf de ontwikkelaar**.
+
+- Schrijf in **elke taal** — de ontwikkelaar leest elk bericht in zijn eigen taal.
+- Antwoorden komen hier binnen en als pushmelding, **vertaald naar jouw taal**. De originele tekst is één tik weg.
+- Met de schakelaar **Automatisch vertalen** bepaal je of antwoorden automatisch worden vertaald.
+- De ontwikkelaar antwoordt meestal binnen ongeveer een dag. Je kunt maximaal **10 berichten per dag** sturen.
+- Plak geen wachtwoorden, kaartnummers of andere privégegevens.
 
 ## Over
 
@@ -52132,6 +52240,18 @@ Faça a gestão das preferências de relatórios e de e-mail:
 - **Gerar relatório** — abre o ecrã Exportação e relatórios
 - **Criar cópia de segurança** — cria uma cópia de segurança completa em JSON dos dados da sua conta
 - **Importar cópia de segurança** — importa um ficheiro de cópia de segurança exportado anteriormente
+
+### Escrever ao programador
+
+Definições → **Escrever ao programador**. Faça uma pergunta, comunique um erro ou sugira uma ideia diretamente ao programador.
+
+Também pode abri-lo no ecrã **Ajuda**, no cartão **Escrever ao programador**.
+
+- Escreva em **qualquer língua** — o programador lê cada mensagem na sua própria língua.
+- As respostas chegam aqui e como notificação push, **traduzidas para a sua língua**. O texto original está a um toque.
+- O interruptor **Tradução automática** define se as respostas são traduzidas automaticamente.
+- O programador costuma responder em cerca de um dia. Pode enviar até **10 mensagens por dia**.
+- Não cole palavras-passe, números de cartão nem outros dados privados.
 
 ## Sobre
 
@@ -57752,6 +57872,18 @@ Gerencie suas preferências de relatórios e de e-mail:
 - **Gerar relatório** — abre a tela Exportação e relatórios
 - **Criar backup** — cria um backup completo em JSON dos dados da sua conta
 - **Importar backup** — importa um arquivo de backup exportado anteriormente
+
+### Escrever para o desenvolvedor
+
+Configurações → **Escrever para o desenvolvedor**. Faça uma pergunta, relate um bug ou sugira uma ideia diretamente ao desenvolvedor.
+
+Você também pode abrir pela tela **Ajuda**, no cartão **Escrever para o desenvolvedor**.
+
+- Escreva em **qualquer idioma** — o desenvolvedor lê cada mensagem no próprio idioma.
+- As respostas chegam aqui e como notificação push, **traduzidas para o seu idioma**. O texto original está a um toque.
+- A chave **Tradução automática** define se as respostas são traduzidas automaticamente.
+- O desenvolvedor costuma responder em cerca de um dia. Você pode enviar até **10 mensagens por dia**.
+- Não cole senhas, números de cartão nem outros dados privados.
 
 ## Sobre
 

@@ -40,6 +40,23 @@ export function useRealtime() {
       handleEvent({ type: "subscription_change", data, timestamp: new Date().toISOString() })
     );
 
+    // Support: refetch thread lists, the open thread and the unread badge.
+    // The unread event must never invalidate the open thread: opening a thread
+    // can itself emit it, which would refetch in a loop.
+    const refreshSupportMessage = (data?: { threadId?: string }) => {
+      queryClient.invalidateQueries({ queryKey: ["support", "threads"] });
+      queryClient.invalidateQueries({ queryKey: ["support", "unread"] });
+      if (data?.threadId) {
+        queryClient.invalidateQueries({ queryKey: ["support", "thread", data.threadId] });
+      }
+    };
+    const refreshSupportUnread = () => {
+      queryClient.invalidateQueries({ queryKey: ["support", "threads"] });
+      queryClient.invalidateQueries({ queryKey: ["support", "unread"] });
+    };
+    socket.on("admin:support-message", refreshSupportMessage);
+    socket.on("admin:support-unread", refreshSupportUnread);
+
     // Server pushes fresh KPI figures every 30 s; merge them into the overview query
     // that feeds the dashboard KPI cards (no refetch).
     socket.on(
@@ -60,6 +77,8 @@ export function useRealtime() {
 
     return () => {
       socket.off("admin:stats");
+      socket.off("admin:support-message", refreshSupportMessage);
+      socket.off("admin:support-unread", refreshSupportUnread);
       disconnectSocket();
       socketRef.current = null;
     };

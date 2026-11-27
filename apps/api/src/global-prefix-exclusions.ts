@@ -27,6 +27,8 @@
 export const GLOBAL_PREFIX_EXCLUDED_ROUTES: string[] = [
   'webhooks/stripe',
   'telegram/webhook',
+  // Support bot (contact-the-developer): its own Telegram bot and webhook.
+  'support-telegram/webhook',
   'whatsapp/webhook',
   'slack/events',
   'slack/interactivity',
