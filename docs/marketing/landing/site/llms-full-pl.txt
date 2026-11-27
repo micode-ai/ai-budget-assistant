@@ -4623,6 +4623,14 @@ Dotknij dowolny wpis przychodu, aby zobaczyc szczegoly:
 - **P: Dlaczego zakladka Transakcje otwiera sie natychmiast, nawet bez internetu?**
   **O:** Aplikacja przechowuje Twoje transakcje lokalnie na urzadzeniu. Po otwarciu zakladki lista jest natychmiast wyswietlana z tej lokalnej kopii, a nowe zmiany z serwera sa wczytywane w tle. Jesli lista jest pusta przy pierwszym uruchomieniu, zobaczysz krotki wskaznik ladowania, podczas gdy urzadzenie pobiera Twoje dane.
 
+### Liczenie w polu kwoty
+
+W polu kwoty możesz wpisać proste działanie, np. `12.50+3.20*2`. Używaj `+ − × ÷` i nawiasów; przecinek lub kropka działają jako separator dziesiętny. Wynik pojawia się pod polem i ta liczba zostaje zapisana. Przy nieprawidłowym działaniu przycisk Zapisz pozostaje wyłączony.
+
+### Podpowiedź waluty lokalnej
+
+Gdy dodajesz wydatek za granicą, a dostęp do lokalizacji jest już włączony, mały chip proponuje walutę kraju (np. „W Czechach? Użyj CZK”). Stuknij, aby zmienić; wybór jest pamiętany przez 14 dni. Krzyżyk wyłącza podpowiedzi dla tego kraju. Aplikacja nigdy nie prosi o lokalizację tylko do tego.
+
 ---
 
 *Zobacz takze: [Wprowadzanie glosowe i skanowanie paragonow](./04-voice-and-receipt.md) | [Budzety](./05-budgets.md)*
@@ -5046,6 +5054,10 @@ Aplikacja automatycznie monitoruje Twoje budżety i wysyła powiadomienia:
 
 - **P: Czy budżet śledzi wydatki we wszystkich walutach?**
   **O:** Każdy budżet jest powiązany z jedną walutą. Tylko wydatki w tej walucie są wliczane do budżetu.
+
+## Zmniejsz kategorię o procent
+
+Gdy przy tworzeniu budżetu wybierzesz jedną kategorię, możesz wybrać **o 10 / 20 / 30% mniej** niż w zeszłym miesiącu, średnia z 3 miesięcy lub ten sam miesiąc rok temu. Kwota uzupełni się sama; dalej to zwykły budżet.
 
 ---
 
@@ -5997,6 +6009,12 @@ Różnica zapisuje się jako korekta salda. Nie jest wydatkiem ani przychodem, w
 
 Obsługiwane są także CZK, SEK, NOK, DKK, HUF, RON i CHF.
 
+## Cykl rozliczeniowy karty kredytowej
+
+Jeśli konto to karta kredytowa, otwórz portfel i dotknij **Ustaw cykl karty**. Podaj dzień wyciągu, dzień płatności i opcjonalnie limit kredytowy. Portfel pokaże, ile wydano w bieżącym cyklu, daty wyciągu i płatności oraz cienki pasek wykorzystania limitu. Trzy dni przed terminem dostaniesz powiadomienie z kwotą wyciągu. Kartę spłacasz zwykłym przelewem między kontami.
+
+> **Note:** Zakupy trafiają do cyklu według daty transakcji. Banki, które liczą według daty księgowania, mogą się różnić o dzień lub dwa. Liczona jest tylko waluta karty; odsetki i minimalna spłata nie są wyliczane.
+
 ---
 
 *Zobacz takze: [Pulpit](./02-dashboard.md) | [Ustawienia](./11-settings.md)*
@@ -6200,6 +6218,18 @@ Skonfiguruj automatyczne raporty e-mail i zarzadzaj eksportami danych:
 - **Generuj raport** — otworz ekran [Eksport i raporty](./16-export-reports.md), aby wygenerowac raporty PDF, Excel lub CSV
 - **Eksportuj kopie zapasowa** — utworz pelna kopie zapasowa JSON wszystkich danych Twojego konta
 - **Przywroc kopie zapasowa** — importuj wczesniej wyeksportowana kopie zapasowa
+
+### Napisz do twórcy
+
+Ustawienia → **Napisz do twórcy**. Zadaj pytanie, zgłoś błąd lub podsuń pomysł bezpośrednio twórcy aplikacji.
+
+Możesz też otworzyć je na ekranie **Pomoc**, w karcie **Napisz do twórcy**.
+
+- Pisz w **dowolnym języku** — twórca czyta każdą wiadomość w swoim języku.
+- Odpowiedzi przychodzą tutaj i jako powiadomienie push, **przetłumaczone na Twój język**. Oryginał jest o jedno stuknięcie dalej.
+- Przełącznik **Tłumacz automatycznie** decyduje, czy odpowiedzi są tłumaczone automatycznie.
+- Twórca zwykle odpowiada w ciągu około doby. Możesz wysłać do **10 wiadomości dziennie**.
+- Nie wklejaj haseł, numerów kart ani innych prywatnych danych.
 
 ## Informacje
 
@@ -7955,6 +7985,10 @@ Aplikacja uczy się na podstawie Twoich poprawek. Za każdym razem, gdy zmienisz
 - Dotknij ikony kosza, aby usunąć regułę
 - Dotknij ikony odświeżania obok reguły, aby ją **ponownie zastosować** — znajdzie to wydatki tego sklepu już przypisane do innej kategorii i zaproponuje przeniesienie ich także do kategorii reguły, dzięki czemu starsze wydatki nadrobią reguły nauczone później
 - Reguły są przechowywane na serwerze i synchronizowane na wszystkich Twoich urządzeniach
+
+### Miesięczne limity w sklepach
+
+Ustaw miesięczny limit dla sklepu na ekranie Sprzedawcy (dotknij **+** w karcie *Miesięczne limity w sklepach*). Cienki pasek pokazuje wydatki w tym miesiącu, a powiadomienie dostaniesz przy 80% i 100%. Limity nie zmieniają budżetów.
 
 ## Tagi
 

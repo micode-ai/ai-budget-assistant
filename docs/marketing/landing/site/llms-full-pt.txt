@@ -1164,6 +1164,14 @@ Toque em qualquer receita para ver os detalhes:
 - **P: Porque é que o separador Transações abre de imediato, mesmo sem Internet?**
   **R:** A aplicação guarda as transações localmente no dispositivo. Quando abre o separador, a lista aparece logo a partir desta cópia local, e as alterações novas do servidor são carregadas em segundo plano. Se a lista estiver vazia na primeira utilização, aparece um breve indicador de carregamento enquanto o dispositivo obtém os dados.
 
+### Calcular no campo do valor
+
+No campo do valor podes escrever um cálculo simples, por exemplo `12.50+3.20*2`. Usa `+ − × ÷` e parênteses; `,` ou `.` servem de separador decimal. O resultado aparece por baixo do campo e é esse número que fica guardado. Se o cálculo não for válido, Guardar fica desativado.
+
+### Sugestão da moeda local
+
+Quando regista uma despesa no estrangeiro e o acesso à localização já está permitido, um pequeno chip propõe a moeda local (p. ex. «Na Chéquia? Usar CZK»). Toque para mudar; a escolha fica guardada 14 dias. Toque na cruz para deixar de sugerir esse país. A app nunca pede a localização só para isto.
+
 ---
 
 *Ver também: [Entrada por voz e digitalização de talões](./04-voice-and-receipt.md) | [Orçamentos](./05-budgets.md)*
@@ -1588,6 +1596,10 @@ A aplicação monitoriza automaticamente os seus orçamentos e envia notificaç�
 
 - **P: O orçamento acompanha despesas em todas as moedas?**
   **R:** Cada orçamento está associado a uma moeda. Só as despesas nessa moeda contam para o orçamento.
+
+## Reduzir uma categoria numa percentagem
+
+Ao escolher uma categoria ao criar um orçamento, pode escolher **menos 10 / 20 / 30%** do que no mês passado, a média de 3 meses ou o mesmo mês do ano passado. O valor é preenchido por si; depois é um orçamento normal.
 
 ---
 
@@ -2550,6 +2562,12 @@ A diferença fica registada como um acerto de saldo. Não é uma despesa nem uma
 
 As moedas suportadas incluem também CZK, SEK, NOK, DKK, HUF, RON e CHF.
 
+## Ciclo de faturação do cartão de crédito
+
+Se uma conta for um cartão de crédito, abra a carteira e toque em **Configurar ciclo do cartão**. Indique o dia do extrato, o dia de pagamento e, opcionalmente, o limite de crédito. A carteira mostra o que gastou no ciclo atual, as datas do extrato e de pagamento e uma barra fina de utilização se houver limite. Três dias antes do vencimento recebe uma notificação com o valor do extrato. Pague o cartão com uma transferência normal entre contas.
+
+> **Note:** As compras são atribuídas a um ciclo pela data da transação. Os bancos que fecham pela data de lançamento podem diferir um ou dois dias. Só é contada a moeda do cartão; juros e pagamentos mínimos não são calculados.
+
 ---
 
 *Ver também: [Painel](./02-dashboard.md) | [Definições](./11-settings.md)*
@@ -2766,6 +2784,18 @@ Faça a gestão das preferências de relatórios e de e-mail:
 - **Gerar relatório** — abre o ecrã [Exportação e relatórios](./16-export-reports.md)
 - **Criar cópia de segurança** — cria uma cópia de segurança completa em JSON dos dados da sua conta
 - **Importar cópia de segurança** — importa um ficheiro de cópia de segurança exportado anteriormente
+
+### Escrever ao programador
+
+Definições → **Escrever ao programador**. Faça uma pergunta, comunique um erro ou sugira uma ideia diretamente ao programador.
+
+Também pode abri-lo no ecrã **Ajuda**, no cartão **Escrever ao programador**.
+
+- Escreva em **qualquer língua** — o programador lê cada mensagem na sua própria língua.
+- As respostas chegam aqui e como notificação push, **traduzidas para a sua língua**. O texto original está a um toque.
+- O interruptor **Tradução automática** define se as respostas são traduzidas automaticamente.
+- O programador costuma responder em cerca de um dia. Pode enviar até **10 mensagens por dia**.
+- Não cole palavras-passe, números de cartão nem outros dados privados.
 
 ## Sobre
 
@@ -4565,6 +4595,10 @@ A aplicação aprende com as suas correções. Sempre que altera a categoria de 
 - As regras ficam guardadas no servidor e sincronizam em todos os seus dispositivos
 
 **Exemplo:** Importa um extrato do Revolut e corrige «AMAZON» → Compras. Na importação do mês seguinte, as transações da Amazon vão automaticamente para Compras.
+
+### Limites mensais por comerciante
+
+Defina um limite mensal para um comerciante no ecrã Comerciantes (toque em **+** no cartão *Limites mensais por comerciante*). Uma barra fina mostra os gastos deste mês e recebe um aviso a 80% e 100%. Os limites não alteram os seus orçamentos.
 
 ## Etiquetas
 

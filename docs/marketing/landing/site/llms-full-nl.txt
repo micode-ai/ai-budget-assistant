@@ -3946,6 +3946,14 @@ Tik op een inkomstenpost om de details te bekijken:
 - **V: Waarom opent het tabblad Transacties direct, zelfs zonder internet?**
   **A:** De app slaat je transacties lokaal op je apparaat op. Wanneer je het tabblad opent, wordt de lijst direct getoond vanuit deze lokale kopie, en eventuele nieuwe wijzigingen van de server worden op de achtergrond geladen. Als de lijst bij de eerste keer leeg is, zie je kort een laadspinner terwijl het apparaat je gegevens ophaalt.
 
+### Rekenen in het bedragveld
+
+In het bedragveld kun je een kleine som typen, bijvoorbeeld `12.50+3.20*2`. Gebruik `+ − × ÷` en haakjes; `,` of `.` werken als decimaalteken. Het resultaat verschijnt onder het veld en dat getal wordt opgeslagen. Is de som ongeldig, dan blijft Opslaan uitgeschakeld.
+
+### Suggestie voor de lokale valuta
+
+Voeg je een uitgave toe in het buitenland en is locatietoegang al toegestaan, dan stelt een klein label de lokale valuta voor (bijv. "In Tsjechië? Gebruik CZK"). Tik erop om te wisselen; de keuze wordt 14 dagen onthouden. Met het kruisje zet je suggesties voor dat land uit. De app vraagt hier nooit om locatie.
+
 ---
 
 *Zie ook: [Spraakinvoer & Bonnen scannen](./04-voice-and-receipt.md) | [Budgetten](./05-budgets.md)*
@@ -4369,6 +4377,10 @@ De app bewaakt je budgetten automatisch en stuurt meldingen:
 
 - **V: Houdt het budget uitgaven in alle valuta's bij?**
   **A:** Elk budget is gekoppeld aan één valuta. Alleen uitgaven in die valuta tellen mee voor het budget.
+
+## Een categorie met een percentage verlagen
+
+Kies je bij het maken van een budget één categorie, dan kun je **10 / 20 / 30% minder** kiezen dan vorige maand, het gemiddelde van 3 maanden of dezelfde maand vorig jaar. Het bedrag wordt ingevuld; daarna is het een gewoon budget.
 
 ---
 
@@ -5316,6 +5328,12 @@ Het verschil wordt opgeslagen als saldocorrectie. Het is geen uitgave en geen in
 
 Ook CZK, SEK, NOK, DKK, HUF, RON en CHF worden ondersteund.
 
+## Afrekencyclus van de creditcard
+
+Is een rekening een creditcard, open dan de wallet en tik op **Kaartcyclus instellen**. Vul de afschriftdag, de betaaldag en optioneel het kredietlimiet in. De wallet toont dan wat je in de huidige cyclus hebt uitgegeven, de afschrift- en vervaldatum en bij een limiet een dunne gebruiksbalk. Drie dagen voor de vervaldatum krijg je een melding met het afschriftbedrag. Betaal de kaart met een gewone overboeking tussen rekeningen.
+
+> **Note:** Aankopen worden aan een cyclus toegewezen op transactiedatum. Banken die op boekingsdatum afsluiten kunnen een dag of twee afwijken. Alleen de valuta van de kaart telt mee; rente en minimale betalingen worden niet berekend.
+
 ---
 
 *Zie ook: [Dashboard](./02-dashboard.md) | [Instellingen](./11-settings.md)*
@@ -5532,6 +5550,18 @@ Beheer je rapport- en e-mailvoorkeuren:
 - **Rapport genereren** — opent het scherm [Export & Rapporten](./16-export-reports.md)
 - **Back-up exporteren** — maakt een volledige JSON-back-up van je accountgegevens
 - **Back-up herstellen** — importeer een eerder geëxporteerd back-upbestand
+
+### Schrijf de ontwikkelaar
+
+Instellingen → **Schrijf de ontwikkelaar**. Stel een vraag, meld een bug of stel een idee voor, rechtstreeks aan de ontwikkelaar.
+
+Je kunt het ook openen via het scherm **Help**, met de kaart **Schrijf de ontwikkelaar**.
+
+- Schrijf in **elke taal** — de ontwikkelaar leest elk bericht in zijn eigen taal.
+- Antwoorden komen hier binnen en als pushmelding, **vertaald naar jouw taal**. De originele tekst is één tik weg.
+- Met de schakelaar **Automatisch vertalen** bepaal je of antwoorden automatisch worden vertaald.
+- De ontwikkelaar antwoordt meestal binnen ongeveer een dag. Je kunt maximaal **10 berichten per dag** sturen.
+- Plak geen wachtwoorden, kaartnummers of andere privégegevens.
 
 ## Over
 
@@ -7327,6 +7357,10 @@ De app leert van je correcties. Elke keer dat je de categorie wijzigt van een ui
 - Regels worden op de server opgeslagen en gesynchroniseerd op al je apparaten
 
 **Voorbeeld:** Je importeert een Revolut-afschrift en corrigeert "AMAZON" → Shopping. Bij de volgende import worden Amazon-transacties automatisch onder Shopping geplaatst.
+
+### Maandlimieten per winkel
+
+Stel op het scherm Winkels een maandlimiet in voor één winkel (tik op **+** in de kaart *Maandlimieten per winkel*). Een dunne balk toont de uitgaven van deze maand en je krijgt een melding bij 80% en 100%. Limieten wijzigen je budgetten niet.
 
 ## Tags
 

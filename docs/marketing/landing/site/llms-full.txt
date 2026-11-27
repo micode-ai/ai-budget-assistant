@@ -3936,6 +3936,14 @@ Tap any income entry to view details:
 - **Q: Why does the Transactions tab open instantly, even with no internet?**
   **A:** The app stores your transactions locally on your device. When you open the tab, the list is shown immediately from this local copy, and any new changes from the server are loaded in the background. If the list is empty on first launch, you'll see a brief loading spinner while the device fetches your data.
 
+### Calculate in the amount field
+
+In the amount field you can type a small sum, for example `12.50+3.20*2`. Use `+ − × ÷` and brackets; `,` or `.` both work as a decimal separator. The result appears under the field and that number is saved. If the sum is not valid, Save stays disabled.
+
+### Local currency suggestion
+
+When you add an expense abroad and location access is already allowed, a small chip offers the local currency (for example "In Czechia? Use CZK"). Tap it to switch; it is remembered for 14 days. Tap the cross to stop suggestions for that country. The app never asks for location just for this.
+
 ---
 
 *See also: [Voice Input & Receipt Scanning](./04-voice-and-receipt.md) | [Budgets](./05-budgets.md)*
@@ -4360,6 +4368,10 @@ The app automatically monitors your budgets and sends notifications:
 
 - **Q: Does the budget track expenses in all currencies?**
   **A:** Each budget is tied to one currency. Only expenses in that currency count toward the budget.
+
+## Reduce a category by a percentage
+
+When you pick one category while creating a budget, choose **10 / 20 / 30% less** than last month, the 3-month average, or the same month last year. The Amount is filled for you; it is a regular budget afterwards.
 
 ---
 
@@ -5322,6 +5334,12 @@ The difference is recorded as a balance adjustment. It is not an expense or an i
 
 Supported currencies also include CZK, SEK, NOK, DKK, HUF, RON and CHF.
 
+## Credit card statement cycle
+
+If an account is a credit card, open the wallet and tap **Set up card cycle**. Enter the statement day, the payment due day and, optionally, the credit limit. The wallet then shows what you have put on the card in the current cycle, the statement and due dates, and a thin utilisation bar when a limit is set. Three days before the due date you get a push with the statement amount. Pay the card with an ordinary account transfer.
+
+> **Note:** Purchases are assigned to a cycle by their transaction date. Banks that cut off by posting date may differ by a day or two. Only the card currency is counted; interest and minimum payments are not calculated.
+
 ---
 
 *See also: [Dashboard](./02-dashboard.md) | [Settings](./11-settings.md)*
@@ -5538,6 +5556,18 @@ Manage your report and email preferences:
 - **Generate Report** — opens the [Export & Reports](./16-export-reports.md) screen
 - **Export Backup** — creates a full JSON backup of your account data
 - **Restore Backup** — import a previously exported backup file
+
+### Write to the developer
+
+Settings → **Write to the developer**. Ask a question, report a bug or suggest an idea directly to the developer.
+
+You can also open it from the **Help** screen via the **Write to the developer** card.
+
+- Write in **any language** — the developer reads every message in his own language.
+- Replies arrive here and as a push notification, **translated into your language**. The original text is one tap away.
+- The **Auto-translate** toggle controls whether replies are translated automatically.
+- The developer usually replies within about a day. You can send up to **10 messages per day**.
+- Do not paste passwords, card numbers or other private data.
 
 ## About
 
@@ -7337,6 +7367,10 @@ The app learns from your corrections. Every time you change the category of an e
 - Rules are stored on the server and sync across all your devices
 
 **Example:** You import a Revolut statement and fix "AMAZON" → Shopping. Next month's import automatically puts Amazon transactions in Shopping.
+
+### Monthly merchant caps
+
+Set a monthly cap for one merchant on the Merchants screen (tap **+** in the *Monthly merchant caps* card). A thin bar shows this month's spending at that merchant, and you get a notification at 80% and 100%. Caps do not change your budgets.
 
 ## Tags
 

@@ -3931,6 +3931,14 @@ Appuyez sur une entree de revenu pour afficher les details :
 - **Q : Pourquoi l'onglet Transactions s'ouvre-t-il instantanement, meme sans internet ?**
   **R :** L'application stocke vos transactions localement sur votre appareil. Quand vous ouvrez l'onglet, la liste s'affiche immediatement depuis cette copie locale, et les nouveaux changements du serveur sont charges en arriere-plan. Si la liste est vide au premier lancement, un bref indicateur de chargement apparait pendant que l'appareil recupere vos donnees.
 
+### Calculer dans le champ du montant
+
+Dans le champ du montant, tu peux saisir un petit calcul, par exemple `12.50+3.20*2`. Utilise `+ − × ÷` et les parenthèses ; `,` ou `.` servent de séparateur décimal. Le résultat s'affiche sous le champ et c'est ce nombre qui est enregistré. Si le calcul n'est pas valide, Enregistrer reste désactivé.
+
+### Suggestion de la devise locale
+
+Lorsque vous ajoutez une dépense à l'étranger et que la localisation est déjà autorisée, une pastille propose la devise locale (ex. « En Tchéquie ? Utiliser CZK »). Touchez-la pour changer ; le choix est mémorisé 14 jours. Touchez la croix pour ne plus recevoir de suggestion pour ce pays. L'app ne demande jamais la localisation pour cela.
+
 ---
 
 *Voir aussi : [Saisie vocale et scan de recus](./04-voice-and-receipt.md) | [Budgets](./05-budgets.md)*
@@ -4354,6 +4362,10 @@ L'application surveille automatiquement vos budgets et envoie des notifications 
 
 - **Q : Le budget suit-il les dépenses dans toutes les devises ?**
   **R :** Chaque budget est lié à une devise. Seules les dépenses dans cette devise sont comptabilisées dans le budget.
+
+## Réduire une catégorie d'un pourcentage
+
+Quand vous choisissez une catégorie en créant un budget, choisissez **10 / 20 / 30 % de moins** que le mois dernier, la moyenne sur 3 mois ou le même mois l'an dernier. Le montant est rempli pour vous ; ensuite, c'est un budget ordinaire.
 
 ---
 
@@ -5301,6 +5313,12 @@ La différence est enregistrée comme un ajustement de solde. Ce n'est ni une d�
 
 Les devises CZK, SEK, NOK, DKK, HUF, RON et CHF sont aussi prises en charge.
 
+## Cycle de facturation de la carte de crédit
+
+Si un compte est une carte de crédit, ouvrez le portefeuille et touchez **Configurer le cycle de la carte**. Indiquez le jour du relevé, le jour d'échéance et, en option, le plafond. Le portefeuille affiche alors ce que vous avez dépensé sur le cycle en cours, les dates de relevé et d'échéance et une fine barre d'utilisation si un plafond est défini. Trois jours avant l'échéance, vous recevez une notification avec le montant du relevé. Réglez la carte par un virement normal entre comptes.
+
+> **Note:** Les achats sont rattachés à un cycle selon leur date de transaction. Les banques qui arrêtent selon la date de comptabilisation peuvent différer d'un ou deux jours. Seule la devise de la carte est comptée ; les intérêts et paiements minimums ne sont pas calculés.
+
 ---
 
 *Voir aussi : [Tableau de bord](./02-dashboard.md) | [Parametres](./11-settings.md)*
@@ -5504,6 +5522,18 @@ Gerez vos preferences de rapports et d'emails :
 - **Generer un rapport** — ouvre l'ecran [Export et rapports](./16-export-reports.md)
 - **Exporter la sauvegarde** — cree une sauvegarde JSON complete des donnees de votre compte
 - **Restaurer la sauvegarde** — importer un fichier de sauvegarde precedemment exporte
+
+### Écrire au développeur
+
+Réglages → **Écrire au développeur**. Posez une question, signalez un bug ou proposez une idée directement au développeur.
+
+Vous pouvez aussi l'ouvrir depuis l'écran **Aide**, via la carte **Écrire au développeur**.
+
+- Écrivez dans **n'importe quelle langue** : le développeur lit chaque message dans sa propre langue.
+- Les réponses arrivent ici et en notification push, **traduites dans votre langue**. Le texte original est à un appui.
+- L'interrupteur **Traduction automatique** détermine si les réponses sont traduites automatiquement.
+- Le développeur répond généralement en environ un jour. Vous pouvez envoyer jusqu'à **10 messages par jour**.
+- Ne collez pas de mots de passe, de numéros de carte ni d'autres données privées.
 
 ## A propos
 
@@ -7228,6 +7258,10 @@ L'app apprend de vos corrections. Chaque fois que vous modifiez la catégorie d'
 - Appuyez sur la corbeille pour supprimer une règle
 - Appuyez sur l'icône d'actualisation à côté d'une règle pour la **réappliquer** — cela retrouve les dépenses de ce commerçant déjà classées dans une autre catégorie et propose de les déplacer aussi vers la catégorie de la règle, afin que les anciennes dépenses rattrapent les règles apprises plus tard
 - Les règles sont stockées sur le serveur et synchronisées sur tous vos appareils
+
+### Plafonds mensuels par commerçant
+
+Fixez un plafond mensuel pour un commerçant sur l'écran Commerçants (touchez **+** dans la carte *Plafonds mensuels par commerçant*). Une fine barre montre les dépenses du mois et vous êtes alerté à 80 % et 100 %. Les plafonds ne modifient pas vos budgets.
 
 ## Étiquettes
 

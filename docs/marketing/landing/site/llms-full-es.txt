@@ -3951,6 +3951,14 @@ Toca cualquier entrada de ingreso para ver los detalles:
 - **P: Por que la pestana de Transacciones se abre al instante, incluso sin internet?**
   **R:** La aplicacion guarda tus transacciones localmente en tu dispositivo. Al abrir la pestana, la lista se muestra de inmediato desde esa copia local, y los cambios nuevos del servidor se cargan en segundo plano. Si la lista esta vacia en el primer inicio, veras brevemente un indicador de carga mientras el dispositivo obtiene tus datos.
 
+### Calcular en el campo de importe
+
+En el campo de importe puedes escribir una operación sencilla, por ejemplo `12.50+3.20*2`. Usa `+ − × ÷` y paréntesis; `,` o `.` sirven como separador decimal. El resultado aparece bajo el campo y ese número se guarda. Si la operación no es válida, Guardar queda desactivado.
+
+### Sugerencia de moneda local
+
+Si registras un gasto en el extranjero y ya permitiste la ubicación, un chip ofrece la moneda local (p. ej. «¿En Chequia? Usar CZK»). Tócalo para cambiar; se recuerda 14 días. Toca la cruz para dejar de sugerir ese país. La app nunca pide la ubicación solo para esto.
+
 ---
 
 *Ver tambien: [Entrada de voz y Escaneo de recibos](./04-voice-and-receipt.md) | [Presupuestos](./05-budgets.md)*
@@ -4374,6 +4382,10 @@ La aplicación monitoriza automáticamente tus presupuestos y envía notificacio
 
 - **P: ¿El presupuesto rastrea gastos en todas las monedas?**
   **R:** Cada presupuesto está vinculado a una moneda. Solo los gastos en esa moneda cuentan para el presupuesto.
+
+## Reducir una categoría en un porcentaje
+
+Al elegir una categoría al crear un presupuesto, puedes escoger **10 / 20 / 30 % menos** que el mes pasado, la media de 3 meses o el mismo mes del año pasado. El importe se rellena solo; después es un presupuesto normal.
 
 ---
 
@@ -5323,6 +5335,12 @@ La diferencia se guarda como un ajuste de saldo. No es un gasto ni un ingreso, a
 
 También se admiten CZK, SEK, NOK, DKK, HUF, RON y CHF.
 
+## Ciclo de facturación de la tarjeta de crédito
+
+Si una cuenta es una tarjeta de crédito, abre la cartera y toca **Configurar ciclo de tarjeta**. Indica el día de corte, el día de pago y, opcionalmente, el límite de crédito. La cartera mostrará lo gastado en el ciclo actual, las fechas de corte y de pago y una fina barra de utilización si hay límite. Tres días antes del vencimiento recibirás una notificación con el importe del extracto. Paga la tarjeta con una transferencia normal entre cuentas.
+
+> **Note:** Las compras se asignan al ciclo por su fecha de transacción. Los bancos que cortan por fecha de contabilización pueden diferir uno o dos días. Solo se cuenta la moneda de la tarjeta; no se calculan intereses ni pagos mínimos.
+
 ---
 
 *Ver tambien: [Panel](./02-dashboard.md) | [Ajustes](./11-settings.md)*
@@ -5526,6 +5544,18 @@ Configura la generacion de informes automaticos y exportacion de datos:
 - **Generar informe** — crea informes PDF, Excel o CSV bajo demanda
 - **Exportar copia de seguridad** — exporta una copia de seguridad JSON completa de los datos de tu cuenta
 - **Restaurar copia de seguridad** — importa una copia de seguridad exportada previamente
+
+### Escribir al desarrollador
+
+Ajustes → **Escribir al desarrollador**. Haz una pregunta, informa de un error o propón una idea directamente al desarrollador.
+
+También puedes abrirlo desde la pantalla **Ayuda**, en la tarjeta **Escribir al desarrollador**.
+
+- Escribe en **cualquier idioma**: el desarrollador lee cada mensaje en su propio idioma.
+- Las respuestas llegan aquí y como notificación push, **traducidas a tu idioma**. El texto original está a un toque.
+- El interruptor **Traducir automáticamente** controla si las respuestas se traducen solas.
+- El desarrollador suele responder en aproximadamente un día. Puedes enviar hasta **10 mensajes al día**.
+- No pegues contraseñas, números de tarjeta ni otros datos privados.
 
 ## Acerca de
 
@@ -7250,6 +7280,10 @@ La app aprende de tus correcciones. Cada vez que cambias la categoría de un gas
 - Toca el icono de papelera para eliminar una regla
 - Toca el icono de actualizar junto a una regla para **reaplicarla** — esto busca los gastos de ese comercio ya archivados bajo otra categoría y ofrece moverlos también a la categoría de la regla, para que los gastos antiguos se pongan al día con las reglas que aprendiste más tarde
 - Las reglas se guardan en el servidor y se sincronizan en todos tus dispositivos
+
+### Límites mensuales por comercio
+
+Fija un límite mensual para un comercio en la pantalla Comercios (toca **+** en la tarjeta *Límites mensuales por comercio*). Una barra fina muestra el gasto de este mes y recibes un aviso al 80% y al 100%. Los límites no cambian tus presupuestos.
 
 ## Etiquetas
 

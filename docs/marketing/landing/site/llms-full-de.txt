@@ -4511,6 +4511,14 @@ Tippe auf einen beliebigen Einkommensentrag, um Details anzuzeigen:
 - **F: Warum offnet sich der Tab "Transaktionen" sofort, sogar ohne Internet?**
   **A:** Die App speichert deine Transaktionen lokal auf deinem Gerat. Wenn du den Tab offnest, wird die Liste sofort aus dieser lokalen Kopie angezeigt, und neue Anderungen vom Server werden im Hintergrund geladen. Ist die Liste beim ersten Start leer, siehst du kurz einen Ladeindikator, wahrend das Gerat deine Daten abruft.
 
+### Rechnen im Betragsfeld
+
+Im Betragsfeld kannst du eine kleine Rechnung eingeben, z. B. `12.50+3.20*2`. Verwende `+ − × ÷` und Klammern; `,` oder `.` gelten als Dezimaltrennzeichen. Das Ergebnis erscheint unter dem Feld und wird gespeichert. Bei einer ungültigen Rechnung bleibt Speichern deaktiviert.
+
+### Vorschlag der Landeswährung
+
+Wenn du im Ausland eine Ausgabe erfasst und der Standortzugriff bereits erlaubt ist, schlägt ein kleiner Chip die lokale Währung vor (z. B. „In Tschechien? CZK verwenden“). Tippe darauf, um zu wechseln; die Wahl wird 14 Tage gemerkt. Mit dem Kreuz blendest du Vorschläge für dieses Land aus. Die App fragt dafür nie nach dem Standort.
+
 ---
 
 *Siehe auch: [Spracheingabe & Beleg scannen](./04-voice-and-receipt.md) | [Budgets](./05-budgets.md)*
@@ -4934,6 +4942,10 @@ Die App überwacht automatisch deine Budgets und sendet Benachrichtigungen:
 
 - **F: Verfolgt das Budget Ausgaben in allen Währungen?**
   **A:** Jedes Budget ist an eine Währung gebunden. Nur Ausgaben in dieser Währung werden auf das Budget angerechnet.
+
+## Eine Kategorie prozentual senken
+
+Wählst du beim Erstellen eines Budgets eine Kategorie, kannst du **10 / 20 / 30 % weniger** als im letzten Monat, im 3-Monats-Durchschnitt oder im gleichen Monat des Vorjahres wählen. Der Betrag wird automatisch eingetragen; danach ist es ein normales Budget.
 
 ---
 
@@ -5882,6 +5894,12 @@ Die Differenz wird als Saldokorrektur gespeichert. Sie ist weder Ausgabe noch Ei
 
 Unterstützt werden jetzt auch CZK, SEK, NOK, DKK, HUF, RON und CHF.
 
+## Abrechnungszyklus der Kreditkarte
+
+Ist ein Konto eine Kreditkarte, öffne die Wallet und tippe auf **Kartenzyklus einrichten**. Gib den Abrechnungstag, den Zahlungstag und optional das Kreditlimit ein. Die Wallet zeigt dann, was du im aktuellen Zyklus auf die Karte gebucht hast, die Abrechnungs- und Fälligkeitsdaten und bei gesetztem Limit einen dünnen Auslastungsbalken. Drei Tage vor Fälligkeit erhältst du eine Push-Nachricht mit dem Abrechnungsbetrag. Bezahle die Karte mit einer normalen Kontoüberweisung.
+
+> **Note:** Käufe werden nach ihrem Transaktionsdatum einem Zyklus zugeordnet. Banken mit Buchungsdatum als Stichtag können um ein bis zwei Tage abweichen. Nur die Kartenwährung wird gezählt; Zinsen und Mindestzahlungen werden nicht berechnet.
+
 ---
 
 *Siehe auch: [Ubersicht](./02-dashboard.md) | [Einstellungen](./11-settings.md)*
@@ -6085,6 +6103,18 @@ Verwalte Berichts- und E-Mail-Einstellungen:
 - **Bericht generieren** — erstelle PDF-, Excel- oder CSV-Berichte deiner Finanzdaten
 - **Backup exportieren** — vollständige JSON-Sicherung aller Kontodaten
 - **Backup wiederherstellen** — importiere ein zuvor exportiertes Backup
+
+### An den Entwickler schreiben
+
+Einstellungen → **An den Entwickler schreiben**. Stelle direkt eine Frage, melde einen Fehler oder schlage eine Idee vor.
+
+Du kannst es auch im Bereich **Hilfe** über die Karte **An den Entwickler schreiben** öffnen.
+
+- Schreibe in **jeder Sprache** — der Entwickler liest jede Nachricht in seiner eigenen Sprache.
+- Antworten erscheinen hier und als Push-Benachrichtigung, **in deine Sprache übersetzt**. Der Originaltext ist einen Tipp entfernt.
+- Mit dem Schalter **Automatisch übersetzen** legst du fest, ob Antworten automatisch übersetzt werden.
+- Der Entwickler antwortet in der Regel innerhalb eines Tages. Du kannst bis zu **10 Nachrichten pro Tag** senden.
+- Füge keine Passwörter, Kartennummern oder andere private Daten ein.
 
 ## Uber
 
@@ -7821,6 +7851,10 @@ Die App lernt aus deinen Korrekturen. Jedes Mal, wenn du die Kategorie einer Aus
 - Tippe auf den Mülleimer, um eine Regel zu löschen
 - Tippe auf das Aktualisieren-Symbol neben einer Regel, um sie **erneut anzuwenden** — dabei werden die Ausgaben dieses Händlers gesucht, die bereits einer anderen Kategorie zugeordnet sind, und es wird angeboten, sie ebenfalls in die Kategorie der Regel zu verschieben, damit ältere Ausgaben mit später gelernten Regeln nachziehen
 - Regeln werden auf dem Server gespeichert und auf allen Geräten synchronisiert
+
+### Monatliche Händlerlimits
+
+Legen Sie auf dem Händler-Bildschirm ein Monatslimit für einen Händler fest (**+** in der Karte *Monatliche Händlerlimits*). Ein dünner Balken zeigt die Ausgaben dieses Monats, und bei 80 % und 100 % erhalten Sie eine Mitteilung. Limits ändern Ihre Budgets nicht.
 
 ## Tags
 

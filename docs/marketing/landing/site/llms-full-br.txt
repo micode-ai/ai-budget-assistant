@@ -1165,6 +1165,14 @@ Toque em qualquer receita para ver os detalhes:
 - **P: Por que a aba Transações abre na hora, mesmo sem internet?**
   **R:** O app guarda suas transações localmente no dispositivo. Quando você abre a aba, a lista aparece imediatamente a partir dessa cópia local, e as novidades do servidor são carregadas em segundo plano. Se a lista estiver vazia no primeiro uso, aparece rapidamente um indicador de carregamento enquanto o dispositivo busca seus dados.
 
+### Calcular no campo de valor
+
+No campo de valor você pode digitar uma conta simples, por exemplo `12.50+3.20*2`. Use `+ − × ÷` e parênteses; `,` ou `.` funcionam como separador decimal. O resultado aparece abaixo do campo e é esse número que fica salvo. Se a conta não for válida, Salvar fica desativado.
+
+### Sugestão da moeda local
+
+Quando você registra uma despesa no exterior e o acesso à localização já está permitido, um pequeno chip sugere a moeda local (ex.: «Na Tchéquia? Usar CZK»). Toque para trocar; a escolha fica salva por 14 dias. Toque no X para parar de sugerir esse país. O app nunca pede a localização só para isso.
+
 ---
 
 *Veja também: [Entrada por voz e escaneamento de recibos](./04-voice-and-receipt.md) | [Orçamentos](./05-budgets.md)*
@@ -1589,6 +1597,10 @@ O app monitora seus orçamentos automaticamente e envia notificações:
 
 - **P: O orçamento acompanha despesas em todas as moedas?**
   **R:** Cada orçamento está vinculado a uma moeda. Só as despesas nessa moeda contam para o orçamento.
+
+## Reduzir uma categoria em uma porcentagem
+
+Ao escolher uma categoria ao criar um orçamento, você pode escolher **10 / 20 / 30% a menos** do que no mês passado, a média de 3 meses ou o mesmo mês do ano passado. O valor é preenchido para você; depois é um orçamento normal.
 
 ---
 
@@ -2551,6 +2563,12 @@ A diferença é registrada como um ajuste de saldo. Não é uma despesa nem uma 
 
 As moedas suportadas também incluem CZK, SEK, NOK, DKK, HUF, RON e CHF.
 
+## Ciclo de fatura do cartão de crédito
+
+Se uma conta for um cartão de crédito, abra a carteira e toque em **Configurar ciclo do cartão**. Informe o dia de fechamento, o dia de vencimento e, opcionalmente, o limite. A carteira mostra quanto você gastou no ciclo atual, as datas de fechamento e vencimento e uma barra fina de uso quando há limite. Três dias antes do vencimento você recebe uma notificação com o valor da fatura. Pague o cartão com uma transferência normal entre contas.
+
+> **Note:** As compras entram no ciclo pela data da transação. Bancos que fecham pela data de lançamento podem diferir um ou dois dias. Só a moeda do cartão é contada; juros e pagamento mínimo não são calculados.
+
 ---
 
 *Veja também: [Painel](./02-dashboard.md) | [Configurações](./11-settings.md)*
@@ -2767,6 +2785,18 @@ Gerencie suas preferências de relatórios e de e-mail:
 - **Gerar relatório** — abre a tela [Exportação e relatórios](./16-export-reports.md)
 - **Criar backup** — cria um backup completo em JSON dos dados da sua conta
 - **Importar backup** — importa um arquivo de backup exportado anteriormente
+
+### Escrever para o desenvolvedor
+
+Configurações → **Escrever para o desenvolvedor**. Faça uma pergunta, relate um bug ou sugira uma ideia diretamente ao desenvolvedor.
+
+Você também pode abrir pela tela **Ajuda**, no cartão **Escrever para o desenvolvedor**.
+
+- Escreva em **qualquer idioma** — o desenvolvedor lê cada mensagem no próprio idioma.
+- As respostas chegam aqui e como notificação push, **traduzidas para o seu idioma**. O texto original está a um toque.
+- A chave **Tradução automática** define se as respostas são traduzidas automaticamente.
+- O desenvolvedor costuma responder em cerca de um dia. Você pode enviar até **10 mensagens por dia**.
+- Não cole senhas, números de cartão nem outros dados privados.
 
 ## Sobre
 
@@ -4566,6 +4596,10 @@ O app aprende com as suas correções. Sempre que você muda a categoria de uma 
 - As regras ficam salvas no servidor e são sincronizadas em todos os seus dispositivos
 
 **Exemplo:** Você importa um extrato do Revolut e corrige “AMAZON” → Compras. Na importação do mês seguinte, as transações da Amazon vão automaticamente para Compras.
+
+### Limites mensais por estabelecimento
+
+Defina um limite mensal para um estabelecimento na tela Estabelecimentos (toque em **+** no cartão *Limites mensais por estabelecimento*). Uma barra fina mostra os gastos do mês e você recebe um aviso em 80% e 100%. Os limites não alteram seus orçamentos.
 
 ## Tags
 
