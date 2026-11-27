@@ -1,5 +1,5 @@
-import React, { useCallback, useMemo } from 'react';
-import { View, Text, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import { View, Text, FlatList, ActivityIndicator, TouchableOpacity, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import type { SupportMessageView } from '@budget/shared-types';
@@ -27,6 +27,24 @@ export function SupportTranscript({ support, columnWidth }: Props) {
   const { thread, loading, error, refresh, loadOlder, loadingOlder } = support;
   const messages = useMemo(() => thread?.messages ?? [], [thread?.messages]);
   const autoTranslate = thread?.autoTranslate ?? true;
+  const listRef = useRef<FlatList<SupportMessageView>>(null);
+
+  // Web only: opt the transcript out of the browser's page translator. The screen already
+  // translates every reply (with the original one tap away), and a translator rewriting text
+  // nodes React owns makes the next commit throw "removeChild … not a child of this node"
+  // (React #11538) — it did, on the poll that appended a developer reply. `translate` is not a
+  // prop react-native-web forwards, so it is set on the scroll node. Re-applied after every
+  // render because react-native-web owns `className` and may rewrite it.
+  useEffect(() => {
+    if (Platform.OS !== 'web') return;
+    const node = (listRef.current as unknown as { getScrollableNode?: () => unknown } | null)?.getScrollableNode?.() as
+      | HTMLElement
+      | null
+      | undefined;
+    if (!node || typeof node.setAttribute !== 'function') return;
+    if (node.getAttribute('translate') !== 'no') node.setAttribute('translate', 'no');
+    if (!node.classList.contains('notranslate')) node.classList.add('notranslate');
+  });
 
   const inverted = useMemo(() => [...messages].reverse(), [messages]);
   const status = lastUserStatus(messages);
@@ -84,6 +102,7 @@ export function SupportTranscript({ support, columnWidth }: Props) {
 
   return (
     <FlatList
+      ref={listRef}
       data={inverted}
       inverted
       renderItem={renderItem}

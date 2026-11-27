@@ -1,10 +1,10 @@
 import React, { memo, useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Platform } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import type { SupportMessageView } from '@budget/shared-types';
 import { useStyles, type Theme } from '@/theme';
 import { getIntlLocale } from '@/i18n';
-import { bubbleText } from '@/features/support/supportDisplay';
+import { bubbleText, bubbleLang } from '@/features/support/supportDisplay';
 
 interface Props {
   message: SupportMessageView;
@@ -45,12 +45,16 @@ export const SupportMessageBubble = memo(function SupportMessageBubble({
   const [showAlt, setShowAlt] = useState(false);
   const mine = message.author === 'user';
   const text = bubbleText(message, autoTranslate, showAlt);
+  // Web only: react-native-web renders `lang` onto the element, so the browser knows the
+  // language of each text instead of guessing the page is foreign (see `documentLang.ts`).
+  // Native Text has no `lang` prop and gets nothing.
+  const langTag = Platform.OS === 'web' ? bubbleLang(message, autoTranslate, showAlt) : undefined;
 
   return (
     <View style={[styles.row, mine ? styles.rowMine : styles.rowTheirs]}>
       {!mine && <Text style={styles.author}>{t('support.developer')}</Text>}
       <View style={[styles.bubble, mine ? styles.bubbleMine : styles.bubbleTheirs]}>
-        <Text style={[styles.body, mine && styles.bodyMine]} selectable>
+        <Text style={[styles.body, mine && styles.bodyMine]} selectable {...(langTag ? ({ lang: langTag } as object) : {})}>
           {text.primary}
         </Text>
       </View>

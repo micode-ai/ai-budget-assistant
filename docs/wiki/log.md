@@ -423,6 +423,7 @@ Newest last within each section.
 - 2026-11-26 · [ABA-855](https://github.com/) — local-currency suggestion on the create form, geo-only and permission-free; new page `features/travel-currency-suggestion.md`.
 - 2026-11-27 · [ABA-856](https://github.com/micode-ai/ai-budget-assistant/issues/894) — contact the developer: user-scoped support thread, translated both ways, reply from admin or a separate Telegram support bot; new page `features/contact-developer.md`, runbook `docs/ops/support-bot.md`.
 - 2026-11-28 · [ABA-857](https://github.com/micode-ai/ai-budget-assistant/issues/895) — e-mail fallback for unread support replies: immediate without push, else after 12 h; one per unread batch via claim-before-send; purpose-scoped unsubscribe; page `features/contact-developer.md`.
+- 2026-11-28 · [ABA-858](https://github.com/micode-ai/ai-budget-assistant/issues/896) — web `removeChild` crash on the support reply poll, caused by browser page translation mutating React-owned DOM: `<html lang>` now follows the UI language, the support transcript is `translate="no"` and bubbles carry `lang`. Pages: `features/web-build-and-hosting.md`, `features/contact-developer.md`.
 
 ## Queries
 

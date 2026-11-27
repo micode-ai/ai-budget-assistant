@@ -1,4 +1,5 @@
 import type { SupportMessageView } from '@budget/shared-types';
+import { appLanguageTag } from '@/i18n/documentLang';
 
 /** Max characters in one message — the API's `@MaxLength(4000)` on `SendSupportMessageDto.body`. */
 export const SUPPORT_MESSAGE_MAX_LENGTH = 4000;
@@ -30,6 +31,30 @@ export function bubbleText(msg: SupportMessageView, autoTranslate: boolean, show
   return translatedFirst
     ? { primary: translation, secondary: null, altLabelKey: 'support.showOriginal' }
     : { primary: msg.body, secondary: null, altLabelKey: 'support.showTranslation' };
+}
+
+/**
+ * The `lang` of the text a bubble shows (the same pick as `bubbleText`), or
+ * `undefined` when unknown. `bodyLang` is the translator's ISO 639-1 code
+ * (`'und'` on failure); `translatedLang` is the target — an app language code
+ * (`ua`, `br`, …) for a developer reply. On web it tells the browser what the
+ * text is, so a mixed-language transcript is not taken for a foreign page.
+ */
+export function bubbleLang(msg: SupportMessageView, autoTranslate: boolean, showAlt: boolean): string | undefined {
+  // `showOriginal` is offered exactly when the translation is the text on screen.
+  const showingTranslation = bubbleText(msg, autoTranslate, showAlt).altLabelKey === 'support.showOriginal';
+  return showingTranslation ? supportLangTag(msg.translatedLang) : isoLangTag(msg.bodyLang);
+}
+
+/** An app language code or an ISO 639 code as a BCP-47 tag; `und`, empty or malformed → `undefined`. */
+export function supportLangTag(code: string | null | undefined): string | undefined {
+  return appLanguageTag(code) ?? isoLangTag(code);
+}
+
+function isoLangTag(code: string | null | undefined): string | undefined {
+  const c = code?.trim().toLowerCase();
+  if (!c || c === 'und' || !/^[a-z]{2,3}$/.test(c)) return undefined;
+  return c;
 }
 
 /** The status line under the last user message: `read` once the developer opened it. */

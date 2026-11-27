@@ -104,6 +104,16 @@ the old path.
 shared with several unrelated projects; the volumes include the production database and
 unused-but-tagged images are another project's rollback target.
 
+**`<html lang>` follows the UI language.** The served `index.html` always says `lang="en"`; at
+startup and on every i18next `languageChanged`, `src/i18n/index.ts` (web only, `Platform.OS` guard)
+calls `applyDocumentLang` from `src/i18n/documentLang.ts`, which writes the BCP-47 tag (`ua`→`uk`,
+`pt`→`pt-PT`, `br`→`pt-BR`, unknown→`en`; never raw `br`). Why: a page declared English that renders
+Polish or Russian makes Chrome offer to translate it, and the translator rewrites text nodes React
+owns — the next commit then throws `Failed to execute 'removeChild' on 'Node'` (React #11538), as
+it did on the support screen. Screens that do their own translation also opt out with
+`translate="no"` (`features/contact-developer.md`). Do not answer this crash with a global
+`Node.prototype.removeChild` patch.
+
 ## Known gaps
 
 - Offline-first flows are inert on web: `db/client.web.ts` returns `[]` for every read, so anything

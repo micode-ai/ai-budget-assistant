@@ -109,6 +109,19 @@ nothing else. The onboarding token (`unsubscribe:onboarding:`) does not verify t
 (both directions are tested); the endpoint answers the same for a valid and an invalid token.
 `/api/v1/mail/unsubscribe` is in `SMALL_BODY_PATHS` (prefix match, public routes).
 
+**Web: the transcript is `translate="no"` and every bubble carries `lang`.** The screen does its
+own translation (with the original one tap away), so the browser's page translator adds nothing and
+breaks React: Chrome Translate wraps React-owned text nodes in `<font>`, and the next commit — the
+20 s poll appending a reply — throws `removeChild … not a child of this node` (React #11538; seen in
+production on web 1.46.0, `support`, UI `pl`). `SupportTranscript` sets `translate="no"` and the
+`notranslate` class on the list's scroll node through a ref on web (react-native-web does not
+forward `translate`; the effect re-applies after each render because RNW owns `className`), and
+`SupportMessageBubble` passes `lang` = `bubbleLang(...)` on web only — `bodyLang` (ISO 639-1) when
+the original is shown, `translatedLang` (an app code, mapped `ua`→`uk`, `br`→`pt-BR`) when the
+translation is; `und`/unknown sets nothing. Do not "fix" this class of crash with a global
+`Node.prototype.removeChild` patch. The page-level half is `<html lang>` following the UI language
+(`features/web-build-and-hosting.md`).
+
 ## Known gaps
 
 - The developer language is one env value, not per admin.
@@ -118,3 +131,4 @@ nothing else. The onboarding token (`unsubscribe:onboarding:`) does not verify t
 
 - 2026-11-27 — [ABA-856](https://github.com/micode-ai/ai-budget-assistant/issues/894): module, admin page, app screen, separate support bot. Concept chosen from three (thread inbox / AI-chat escalation / per-screen feedback); Telegram replies go through a dedicated bot because the ops bot is shared with other projects and Telegram allows one webhook per bot. Design: `docs/superpowers/specs/2026-11-27-contact-developer-design.md`.
 - 2026-11-28 — [ABA-857](https://github.com/micode-ai/ai-budget-assistant/issues/895): e-mail fallback for unread replies (addendum to the design doc): three `support_threads` columns, `SupportEmailService`, hourly `SupportEmailCron`, purpose-scoped unsubscribe.
+- 2026-11-28 — [ABA-858](https://github.com/micode-ai/ai-budget-assistant/issues/896): the support transcript opts out of browser page translation on web and bubbles carry `lang`, after a `removeChild` crash on the reply poll (see Invariants).

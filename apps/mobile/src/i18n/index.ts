@@ -1,4 +1,5 @@
 import i18n from 'i18next';
+import { Platform } from 'react-native';
 import { initReactI18next } from 'react-i18next';
 import { getLocales } from 'expo-localization';
 import { secureStorage } from '@/services/secureStorage';
@@ -16,6 +17,7 @@ import be from './locales/be';
 import nl from './locales/nl';
 import pt from './locales/pt';
 import br from './locales/br';
+import { applyDocumentLang } from './documentLang';
 
 export const SUPPORTED_LANGUAGES = [
   { code: 'en', label: 'English', flag: 'EN' },
@@ -78,6 +80,13 @@ i18n.use(initReactI18next).init({
     escapeValue: false,
   },
 });
+
+// Web: keep `<html lang>` equal to the UI language, or the browser offers to translate the page
+// and its translator breaks React's DOM (see `documentLang.ts`). Native has no document.
+if (Platform.OS === 'web') {
+  applyDocumentLang(i18n.language);
+  i18n.on('languageChanged', applyDocumentLang);
+}
 
 // i18next picks plural forms with `new Intl.PluralRules(lng)`. Raw `br` is Breton to Intl
 // (one/two/few/many/other — "2 weeks" would fall through to English) and bare `pt` is ICU's
