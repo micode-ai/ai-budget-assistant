@@ -6,7 +6,7 @@ const now = new Date('2026-11-27T10:00:00Z');
 function makeThread(over: Record<string, unknown> = {}) {
   return {
     id: 't1', userId: 'u1', status: 'open', muted: false, developerUnreadCount: 2, lastMessageAt: now,
-    user: { id: 'u1', name: 'Ann', email: 'a@b.c', language: 'en', isActive: true },
+    user: { id: 'u1', name: 'Ann', email: 'a@b.c', language: 'en', isActive: true, pushToken: 'ExponentPushToken[x]' },
     messages: [{ body: 'Hello' }],
     ...over,
   };
@@ -18,6 +18,7 @@ describe('SupportAdminService', () => {
   let notifications: { sendToUser: jest.Mock };
   let gateway: { emitSupportMessage: jest.Mock; emitSupportUnread: jest.Mock };
   let service: SupportAdminService;
+  let supportEmail: { sendUnreadReplyEmail: jest.Mock };
 
   beforeEach(() => {
     prisma = {
@@ -26,6 +27,7 @@ describe('SupportAdminService', () => {
         findUnique: jest.fn().mockResolvedValue(makeThread()),
         update: jest.fn().mockImplementation(({ data }) => Promise.resolve(makeThread(data))),
         aggregate: jest.fn().mockResolvedValue({ _sum: { developerUnreadCount: 3 } }),
+        updateMany: jest.fn().mockResolvedValue({ count: 1 }),
       },
       supportMessage: {
         create: jest.fn().mockImplementation(({ data }) =>
@@ -41,10 +43,44 @@ describe('SupportAdminService', () => {
     translation = { translate: jest.fn().mockResolvedValue({ detectedLang: 'ru', translation: 'Hi there' }) };
     notifications = { sendToUser: jest.fn().mockResolvedValue(true) };
     gateway = { emitSupportMessage: jest.fn(), emitSupportUnread: jest.fn() };
-    service = new SupportAdminService(prisma, { get: jest.fn() } as never, translation as never, notifications as never, gateway as never);
+    supportEmail = { sendUnreadReplyEmail: jest.fn().mockResolvedValue(true) };
+    service = new SupportAdminService(prisma, { get: jest.fn() } as never, translation as never, notifications as never, gateway as never, supportEmail as never);
   });
 
   const flush = () => new Promise((r) => setImmediate(r));
+
+  describe('reply e-mail fallback', () => {
+    it('e-mails immediately when the user has no pushToken', async () => {
+      prisma.supportThread.findUnique.mockResolvedValue(makeThread({ userUnreadCount: 0, user: { id: 'u1', name: 'Ann', email: 'a@b.c', language: 'en', isActive: true, pushToken: null } }));
+      await service.reply('t1', 'Hi', 'telegram');
+      await flush();
+      expect(supportEmail.sendUnreadReplyEmail).toHaveBeenCalledWith('t1');
+    });
+
+    it('does not e-mail immediately when the user has a push token', async () => {
+      await service.reply('t1', 'Hi', 'admin');
+      await flush();
+      expect(supportEmail.sendUnreadReplyEmail).not.toHaveBeenCalled();
+    });
+
+    it('does not fail the reply when the e-mail send rejects', async () => {
+      prisma.supportThread.findUnique.mockResolvedValue(makeThread({ user: { id: 'u1', name: 'Ann', email: 'a@b.c', language: 'en', isActive: true, pushToken: null } }));
+      supportEmail.sendUnreadReplyEmail.mockRejectedValue(new Error('smtp'));
+      await expect(service.reply('t1', 'Hi', 'admin')).resolves.toBeDefined();
+      await flush();
+    });
+
+    it('sets firstUnreadReplyAt inside the transaction only where it is null, regardless of the pre-read count', async () => {
+      // Pre-read count > 0 (stale: the user read during translation) but the field is null in the DB.
+      prisma.supportThread.findUnique.mockResolvedValue(makeThread({ userUnreadCount: 3 }));
+      await service.reply('t1', 'Hi', 'admin');
+      expect(prisma.supportThread.updateMany).toHaveBeenCalledWith({
+        where: { id: 't1', firstUnreadReplyAt: null },
+        data: { firstUnreadReplyAt: expect.any(Date) },
+      });
+      expect(prisma.supportThread.update.mock.calls[0][0].data).not.toHaveProperty('firstUnreadReplyAt');
+    });
+  });
 
   describe('reply', () => {
     it('rejects an inactive user and stores/pushes nothing', async () => {

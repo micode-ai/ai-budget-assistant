@@ -3,7 +3,7 @@ import { SMALL_BODY_PATHS, smallBodyLimit } from './small-body-limit';
 describe('smallBodyLimit (ABA-809)', () => {
   it('covers sign-in and every inbound webhook', () => {
     expect(SMALL_BODY_PATHS).toEqual(
-      expect.arrayContaining(['/api/v1/auth', '/webhooks/stripe', '/telegram/webhook', '/support-telegram/webhook', '/whatsapp/webhook', '/slack/events', '/slack/interactivity']),
+      expect.arrayContaining(['/api/v1/auth', '/webhooks/stripe', '/telegram/webhook', '/support-telegram/webhook', '/whatsapp/webhook', '/slack/events', '/slack/interactivity', '/api/v1/mail/unsubscribe']),
     );
   });
 

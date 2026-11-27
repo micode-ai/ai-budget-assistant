@@ -109,7 +109,7 @@ export class SupportService {
   }
 
   async markReadByUser(userId: string): Promise<void> {
-    await this.prisma.supportThread.updateMany({ where: { userId }, data: { userUnreadCount: 0 } });
+    await this.prisma.supportThread.updateMany({ where: { userId }, data: { userUnreadCount: 0, firstUnreadReplyAt: null, lastEmailedAt: null } });
   }
 
   async setAutoTranslate(userId: string, value: boolean): Promise<void> {

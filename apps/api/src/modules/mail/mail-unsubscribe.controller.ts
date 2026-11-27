@@ -2,8 +2,9 @@ import { Controller, Get, Header, HttpCode, Post, Query, UseGuards } from '@nest
 import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../../database/prisma.service';
-import { verifyUnsubscribeToken } from './email-unsubscribe';
+import { verifySupportUnsubscribeToken, verifyUnsubscribeToken } from './email-unsubscribe';
 import { onboardingEmailCopy } from './onboarding-email-i18n';
+import { supportEmailCopy } from '../support/support-email-i18n';
 
 function escapeHtml(v: string): string {
   return String(v)
@@ -12,6 +13,10 @@ function escapeHtml(v: string): string {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
+}
+
+function unsubscribedPage(title: string, body: string): string {
+  return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>${escapeHtml(title)}</title></head><body style="margin:0;background:#F8FAFB;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;"><div style="max-width:440px;margin:64px auto;padding:32px;background:#fff;border-radius:12px;text-align:center;"><h1 style="margin:0 0 12px;color:#1A1D26;font-size:20px;">${escapeHtml(title)}</h1><p style="margin:0;color:#5E6272;font-size:15px;line-height:1.5;">${escapeHtml(body)}</p></div></body></html>`;
 }
 
 /**
@@ -38,7 +43,7 @@ export class MailUnsubscribeController {
   async unsubscribeLink(@Query('u') userId?: string, @Query('t') token?: string): Promise<string> {
     const lang = await this.unsubscribe(userId, token);
     const copy = onboardingEmailCopy(lang);
-    return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>${escapeHtml(copy.unsubscribedTitle)}</title></head><body style="margin:0;background:#F8FAFB;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;"><div style="max-width:440px;margin:64px auto;padding:32px;background:#fff;border-radius:12px;text-align:center;"><h1 style="margin:0 0 12px;color:#1A1D26;font-size:20px;">${escapeHtml(copy.unsubscribedTitle)}</h1><p style="margin:0;color:#5E6272;font-size:15px;line-height:1.5;">${escapeHtml(copy.unsubscribedBody)}</p></div></body></html>`;
+    return unsubscribedPage(copy.unsubscribedTitle, copy.unsubscribedBody);
   }
 
   @Post()
@@ -46,6 +51,31 @@ export class MailUnsubscribeController {
   async oneClick(@Query('u') userId?: string, @Query('t') token?: string): Promise<{ ok: true }> {
     await this.unsubscribe(userId, token);
     return { ok: true };
+  }
+
+  /** Support-reply e-mails: same behaviour, its own token purpose, turns off `SupportThread.emailEnabled` only. */
+  @Get('support')
+  @Header('Content-Type', 'text/html; charset=utf-8')
+  async supportUnsubscribeLink(@Query('u') userId?: string, @Query('t') token?: string): Promise<string> {
+    const lang = await this.unsubscribeSupport(userId, token);
+    const copy = supportEmailCopy(lang);
+    return unsubscribedPage(copy.unsubscribedTitle, copy.unsubscribedBody);
+  }
+
+  @Post('support')
+  @HttpCode(200)
+  async supportOneClick(@Query('u') userId?: string, @Query('t') token?: string): Promise<{ ok: true }> {
+    await this.unsubscribeSupport(userId, token);
+    return { ok: true };
+  }
+
+  private async unsubscribeSupport(userId?: string, token?: string): Promise<string | null> {
+    const secret = this.config.get<string>('JWT_SECRET') ?? '';
+    if (!userId || !token || !verifySupportUnsubscribeToken(userId, token, secret)) return null;
+    const rows = await this.prisma.supportThread.updateMany({ where: { userId }, data: { emailEnabled: false } });
+    if (rows.count === 0) return null;
+    const user = await this.prisma.user.findUnique({ where: { id: userId }, select: { language: true } });
+    return user?.language ?? null;
   }
 
   /** Turns the flag off when the token is valid; returns the user's language for the page. */

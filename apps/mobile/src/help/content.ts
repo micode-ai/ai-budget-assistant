@@ -2253,7 +2253,7 @@ Settings → **Write to the developer**. Ask a question, report a bug or suggest
 You can also open it from the **Help** screen via the **Write to the developer** card.
 
 - Write in **any language** — the developer reads every message in his own language.
-- Replies arrive here and as a push notification, **translated into your language**. The original text is one tap away.
+- Replies arrive here and as a push notification, **translated into your language**. The original text is one tap away. If you have not opened a reply, it also reaches you by e-mail (one e-mail per batch of unread replies; the e-mail has an unsubscribe link).
 - The **Auto-translate** toggle controls whether replies are translated automatically.
 - The developer usually replies within about a day. You can send up to **10 messages per day**.
 - Do not paste passwords, card numbers or other private data.
@@ -7869,7 +7869,7 @@ Email обновляется мгновенно, выдаются новые т�
 Также можно открыть его на экране **Помощь** — карточка **Написать разработчику**.
 
 - Пишите на **любом языке** — разработчик читает каждое сообщение на своём языке.
-- Ответы приходят сюда и пуш-уведомлением, **переведённые на ваш язык**. Оригинал — в одно касание.
+- Ответы приходят сюда и пуш-уведомлением, **переведённые на ваш язык**. Оригинал — в одно касание. Если вы не открыли ответ, он придёт и на почту (одно письмо на пачку непрочитанных ответов, со ссылкой для отписки).
 - Переключатель **Автоперевод** определяет, переводятся ли ответы автоматически.
 - Разработчик обычно отвечает примерно за сутки. Можно отправить до **10 сообщений в день**.
 - Не отправляйте пароли, номера карт и другие личные данные.
@@ -13473,7 +13473,7 @@ iOS, Android, Web
 Також можна відкрити його на екрані **Довідка** — картка **Написати розробнику**.
 
 - Пишіть **будь-якою мовою** — розробник читає кожне повідомлення своєю мовою.
-- Відповіді приходять сюди та push-сповіщенням, **перекладені вашою мовою**. Оригінал — одним дотиком.
+- Відповіді приходять сюди та push-сповіщенням, **перекладені вашою мовою**. Оригінал — одним дотиком. Якщо ви не відкрили відповідь, вона надійде й на пошту (один лист на пачку непрочитаних відповідей, з посиланням для відписки).
 - Перемикач **Автопереклад** визначає, чи перекладаються відповіді автоматично.
 - Розробник зазвичай відповідає приблизно за добу. Можна надіслати до **10 повідомлень на день**.
 - Не надсилайте паролі, номери карток та інші приватні дані.
@@ -19026,7 +19026,7 @@ Ustawienia → **Napisz do twórcy**. Zadaj pytanie, zgłoś błąd lub podsuń 
 Możesz też otworzyć je na ekranie **Pomoc**, w karcie **Napisz do twórcy**.
 
 - Pisz w **dowolnym języku** — twórca czyta każdą wiadomość w swoim języku.
-- Odpowiedzi przychodzą tutaj i jako powiadomienie push, **przetłumaczone na Twój język**. Oryginał jest o jedno stuknięcie dalej.
+- Odpowiedzi przychodzą tutaj i jako powiadomienie push, **przetłumaczone na Twój język**. Oryginał jest o jedno stuknięcie dalej. Jeśli nie otworzysz odpowiedzi, dotrze ona także e-mailem (jeden e-mail na każdą porcję nieprzeczytanych odpowiedzi, z linkiem do wypisania się).
 - Przełącznik **Tłumacz automatycznie** decyduje, czy odpowiedzi są tłumaczone automatycznie.
 - Twórca zwykle odpowiada w ciągu około doby. Możesz wysłać do **10 wiadomości dziennie**.
 - Nie wklejaj haseł, numerów kart ani innych prywatnych danych.
@@ -24576,7 +24576,7 @@ Einstellungen → **An den Entwickler schreiben**. Stelle direkt eine Frage, mel
 Du kannst es auch im Bereich **Hilfe** über die Karte **An den Entwickler schreiben** öffnen.
 
 - Schreibe in **jeder Sprache** — der Entwickler liest jede Nachricht in seiner eigenen Sprache.
-- Antworten erscheinen hier und als Push-Benachrichtigung, **in deine Sprache übersetzt**. Der Originaltext ist einen Tipp entfernt.
+- Antworten erscheinen hier und als Push-Benachrichtigung, **in deine Sprache übersetzt**. Der Originaltext ist einen Tipp entfernt. Hast du eine Antwort nicht geöffnet, erreicht sie dich auch per E-Mail (eine E-Mail pro Stapel ungelesener Antworten, mit Abmeldelink).
 - Mit dem Schalter **Automatisch übersetzen** legst du fest, ob Antworten automatisch übersetzt werden.
 - Der Entwickler antwortet in der Regel innerhalb eines Tages. Du kannst bis zu **10 Nachrichten pro Tag** senden.
 - Füge keine Passwörter, Kartennummern oder andere private Daten ein.
@@ -30105,7 +30105,7 @@ Ajustes → **Escribir al desarrollador**. Haz una pregunta, informa de un error
 También puedes abrirlo desde la pantalla **Ayuda**, en la tarjeta **Escribir al desarrollador**.
 
 - Escribe en **cualquier idioma**: el desarrollador lee cada mensaje en su propio idioma.
-- Las respuestas llegan aquí y como notificación push, **traducidas a tu idioma**. El texto original está a un toque.
+- Las respuestas llegan aquí y como notificación push, **traducidas a tu idioma**. El texto original está a un toque. Si no has abierto una respuesta, también te llega por correo (un correo por cada grupo de respuestas sin leer, con enlace para darte de baja).
 - El interruptor **Traducir automáticamente** controla si las respuestas se traducen solas.
 - El desarrollador suele responder en aproximadamente un día. Puedes enviar hasta **10 mensajes al día**.
 - No pegues contraseñas, números de tarjeta ni otros datos privados.
@@ -35620,7 +35620,7 @@ Réglages → **Écrire au développeur**. Posez une question, signalez un bug o
 Vous pouvez aussi l'ouvrir depuis l'écran **Aide**, via la carte **Écrire au développeur**.
 
 - Écrivez dans **n'importe quelle langue** : le développeur lit chaque message dans sa propre langue.
-- Les réponses arrivent ici et en notification push, **traduites dans votre langue**. Le texte original est à un appui.
+- Les réponses arrivent ici et en notification push, **traduites dans votre langue**. Le texte original est à un appui. Si vous n’avez pas ouvert une réponse, elle vous parvient aussi par e-mail (un e-mail par lot de réponses non lues, avec un lien de désabonnement).
 - L'interrupteur **Traduction automatique** détermine si les réponses sont traduites automatiquement.
 - Le développeur répond généralement en environ un jour. Vous pouvez envoyer jusqu'à **10 messages par jour**.
 - Ne collez pas de mots de passe, de numéros de carte ni d'autres données privées.
@@ -41137,7 +41137,7 @@ iOS, Android, Web
 Таксама можна адкрыць яго на экране **Даведка** — картка **Напісаць распрацоўшчыку**.
 
 - Пішыце на **любой мове** — распрацоўшчык чытае кожнае паведамленне на сваёй мове.
-- Адказы прыходзяць сюды і push-апавяшчэннем, **перакладзеныя на вашу мову**. Арыгінал — адным націскам.
+- Адказы прыходзяць сюды і push-апавяшчэннем, **перакладзеныя на вашу мову**. Арыгінал — адным націскам. Калі вы не адкрылі адказ, ён прыйдзе і на пошту (адзін ліст на пачак непрачытаных адказаў, са спасылкай для адпіскі).
 - Пераключальнік **Аўтапераклад** вызначае, ці перакладаюцца адказы аўтаматычна.
 - Распрацоўшчык звычайна адказвае прыкладна за суткі. Можна адправіць да **10 паведамленняў у дзень**.
 - Не дасылайце паролі, нумары картак і іншыя прыватныя даныя.
@@ -46627,7 +46627,7 @@ Instellingen → **Schrijf de ontwikkelaar**. Stel een vraag, meld een bug of st
 Je kunt het ook openen via het scherm **Help**, met de kaart **Schrijf de ontwikkelaar**.
 
 - Schrijf in **elke taal** — de ontwikkelaar leest elk bericht in zijn eigen taal.
-- Antwoorden komen hier binnen en als pushmelding, **vertaald naar jouw taal**. De originele tekst is één tik weg.
+- Antwoorden komen hier binnen en als pushmelding, **vertaald naar jouw taal**. De originele tekst is één tik weg. Als je een antwoord niet hebt geopend, krijg je het ook per e-mail (één e-mail per reeks ongelezen antwoorden, met een uitschrijflink).
 - Met de schakelaar **Automatisch vertalen** bepaal je of antwoorden automatisch worden vertaald.
 - De ontwikkelaar antwoordt meestal binnen ongeveer een dag. Je kunt maximaal **10 berichten per dag** sturen.
 - Plak geen wachtwoorden, kaartnummers of andere privégegevens.
@@ -52248,7 +52248,7 @@ Definições → **Escrever ao programador**. Faça uma pergunta, comunique um e
 Também pode abri-lo no ecrã **Ajuda**, no cartão **Escrever ao programador**.
 
 - Escreva em **qualquer língua** — o programador lê cada mensagem na sua própria língua.
-- As respostas chegam aqui e como notificação push, **traduzidas para a sua língua**. O texto original está a um toque.
+- As respostas chegam aqui e como notificação push, **traduzidas para a sua língua**. O texto original está a um toque. Se não abriu uma resposta, ela também chega por e-mail (um e-mail por lote de respostas por ler, com ligação para cancelar a subscrição).
 - O interruptor **Tradução automática** define se as respostas são traduzidas automaticamente.
 - O programador costuma responder em cerca de um dia. Pode enviar até **10 mensagens por dia**.
 - Não cole palavras-passe, números de cartão nem outros dados privados.
@@ -57880,7 +57880,7 @@ Configurações → **Escrever para o desenvolvedor**. Faça uma pergunta, relat
 Você também pode abrir pela tela **Ajuda**, no cartão **Escrever para o desenvolvedor**.
 
 - Escreva em **qualquer idioma** — o desenvolvedor lê cada mensagem no próprio idioma.
-- As respostas chegam aqui e como notificação push, **traduzidas para o seu idioma**. O texto original está a um toque.
+- As respostas chegam aqui e como notificação push, **traduzidas para o seu idioma**. O texto original está a um toque. Se você não abriu uma resposta, ela também chega por e-mail (um e-mail por lote de respostas não lidas, com link para cancelar a inscrição).
 - A chave **Tradução automática** define se as respostas são traduzidas automaticamente.
 - O desenvolvedor costuma responder em cerca de um dia. Você pode enviar até **10 mensagens por dia**.
 - Não cole senhas, números de cartão nem outros dados privados.

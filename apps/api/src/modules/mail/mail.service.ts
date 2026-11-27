@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
 import type { Transporter } from 'nodemailer';
 import { APP_CONNECTED_LANGS, appConnectedCopy } from './app-connected-email-i18n';
+import { supportEmailCopy } from '../support/support-email-i18n';
 import { onboardingEmailCopy } from './onboarding-email-i18n';
 import { toIntlLocale } from '../../common/utils/app-locale';
 
@@ -490,6 +491,71 @@ export class MailService {
               <p style="margin:0 0 16px;color:#5E6272;font-size:15px;line-height:1.6;">${escapeHtml(copy.intro)}</p>
               <ul style="margin:0 0 24px;padding-left:20px;color:#1A1D26;font-size:15px;line-height:1.5;">${tips}</ul>
               <div style="text-align:center;">
+                <a href="${ctaUrl}" style="display:inline-block;background:#E37F2B;color:#ffffff;text-decoration:none;font-weight:600;font-size:15px;padding:12px 24px;border-radius:8px;">${escapeHtml(copy.cta)}</a>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:20px 40px;border-top:1px solid #eee;text-align:center;">
+              <p style="margin:0 0 8px;color:#9CA3B4;font-size:12px;line-height:1.5;">${escapeHtml(copy.footer)}</p>
+              <p style="margin:0;font-size:12px;"><a href="${unsubscribeUrl}" style="color:#9CA3B4;">${escapeHtml(copy.unsubscribe)}</a></p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+
+    return this.sendMail(params.to, copy.subject, html, params.unsubscribeUrl);
+  }
+
+  /**
+   * Contact-developer e-mail fallback: the unread developer replies of one thread, translation
+   * first and the original under it only when a translation exists. Carries a signed,
+   * support-scoped unsubscribe link in the body and in `List-Unsubscribe`.
+   */
+  async sendSupportReplyEmail(params: {
+    to: string;
+    lang: string | null | undefined;
+    name: string;
+    replies: { text: string; original: string | null }[];
+    ctaUrl: string;
+    unsubscribeUrl: string;
+  }): Promise<boolean> {
+    const copy = supportEmailCopy(params.lang);
+    const ctaUrl = escapeHtml(params.ctaUrl);
+    const unsubscribeUrl = escapeHtml(params.unsubscribeUrl);
+    const replies = params.replies
+      .map((r) => {
+        const original = r.original
+          ? `<p style="margin:8px 0 0;color:#9CA3B4;font-size:13px;line-height:1.5;white-space:pre-wrap;"><span style="font-weight:600;">${escapeHtml(copy.original)}:</span> ${escapeHtml(r.original)}</p>`
+          : '';
+        return `<div style="margin:0 0 16px;padding:12px 16px;background:#F8FAFB;border-left:3px solid #E37F2B;border-radius:6px;"><p style="margin:0;color:#1A1D26;font-size:15px;line-height:1.5;white-space:pre-wrap;">${escapeHtml(r.text)}</p>${original}</div>`;
+      })
+      .join('');
+
+    const html = `
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"></head>
+<body style="margin:0;padding:0;background:#F8FAFB;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#F8FAFB;padding:40px 20px;">
+    <tr>
+      <td align="center">
+        <table width="480" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;">
+          <tr>
+            <td style="background:#E37F2B;padding:32px 40px;text-align:center;">
+              <h1 style="margin:0;color:#ffffff;font-size:22px;font-weight:600;">${escapeHtml(copy.heading)}</h1>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:32px 40px;">
+              <p style="margin:0 0 12px;color:#1A1D26;font-size:16px;line-height:1.5;">${escapeHtml(copy.greeting(params.name))}</p>
+              <p style="margin:0 0 16px;color:#5E6272;font-size:15px;line-height:1.6;">${escapeHtml(copy.intro)}</p>
+              ${replies}
+              <div style="text-align:center;margin-top:24px;">
                 <a href="${ctaUrl}" style="display:inline-block;background:#E37F2B;color:#ffffff;text-decoration:none;font-weight:600;font-size:15px;padding:12px 24px;border-radius:8px;">${escapeHtml(copy.cta)}</a>
               </div>
             </td>

@@ -206,7 +206,7 @@ Einstellungen → **An den Entwickler schreiben**. Stelle direkt eine Frage, mel
 Du kannst es auch im Bereich **Hilfe** über die Karte **An den Entwickler schreiben** öffnen.
 
 - Schreibe in **jeder Sprache** — der Entwickler liest jede Nachricht in seiner eigenen Sprache.
-- Antworten erscheinen hier und als Push-Benachrichtigung, **in deine Sprache übersetzt**. Der Originaltext ist einen Tipp entfernt.
+- Antworten erscheinen hier und als Push-Benachrichtigung, **in deine Sprache übersetzt**. Der Originaltext ist einen Tipp entfernt. Hast du eine Antwort nicht geöffnet, erreicht sie dich auch per E-Mail (eine E-Mail pro Stapel ungelesener Antworten, mit Abmeldelink).
 - Mit dem Schalter **Automatisch übersetzen** legst du fest, ob Antworten automatisch übersetzt werden.
 - Der Entwickler antwortet in der Regel innerhalb eines Tages. Du kannst bis zu **10 Nachrichten pro Tag** senden.
 - Füge keine Passwörter, Kartennummern oder andere private Daten ein.

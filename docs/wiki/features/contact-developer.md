@@ -43,6 +43,15 @@ lets the message through.
 **Context.** Every send carries a `SupportContext` (app version, platform, locale, tier, account
 type, source route) shown on the developer's card.
 
+**E-mail fallback for unread replies.** A reply nobody has seen must not sit there: a web user has
+no push token and a push can be dismissed. `SupportAdminService.reply` (admin and Telegram paths
+alike) stamps `firstUnreadReplyAt` when `userUnreadCount` goes 0 to 1 and, for a user with no
+`pushToken`, calls `SupportEmailService.sendUnreadReplyEmail` fire-and-forget after the transaction
+commits. A user with push gets it from `SupportEmailCron` (hourly, `paginateById`) once the reply has
+been unread for 12 hours. The e-mail lists every unread developer reply, translation first with the
+original under it, and links to the web app's `/support`. Eligibility, everywhere: unread count > 0,
+`lastEmailedAt` null, `emailEnabled`, not muted, user active with an e-mail address.
+
 ## Invariants
 
 **The thread is user-scoped.** The controller is `JwtAuthGuard` only — never `AccountContextGuard` —
@@ -85,6 +94,21 @@ an extra key is a 400 and the user cannot send at all.
 re-fetched the thread, which emitted again — a refetch loop. `getThread` emits only when the unread
 count actually changed.
 
+**One e-mail per unread batch.** `lastEmailedAt` is set when an e-mail goes out and cleared only by
+`SupportService.markReadByUser` (together with `firstUnreadReplyAt`). A second reply before the user
+reads does not send; the next batch after a read does.
+
+**Claim before send.** The e-mail is claimed with a conditional `updateMany` (`lastEmailedAt: null` in
+the `where`) BEFORE the send, so the reply-time send and the cron (or two API instances) cannot both
+win. A send that returns false or throws releases the claim (`lastEmailedAt` back to null, matched on
+our own stamp) so the next run retries. Do not move the stamp after the send.
+
+**The unsubscribe is purpose-scoped.** Support e-mails carry `GET`/`POST /mail/unsubscribe/support`
+with an HMAC over `unsubscribe:support:<userId>`; it sets `SupportThread.emailEnabled = false` and
+nothing else. The onboarding token (`unsubscribe:onboarding:`) does not verify there and vice versa
+(both directions are tested); the endpoint answers the same for a valid and an invalid token.
+`/api/v1/mail/unsubscribe` is in `SMALL_BODY_PATHS` (prefix match, public routes).
+
 ## Known gaps
 
 - The developer language is one env value, not per admin.
@@ -93,3 +117,4 @@ count actually changed.
 ## History
 
 - 2026-11-27 — [ABA-856](https://github.com/micode-ai/ai-budget-assistant/issues/894): module, admin page, app screen, separate support bot. Concept chosen from three (thread inbox / AI-chat escalation / per-screen feedback); Telegram replies go through a dedicated bot because the ops bot is shared with other projects and Telegram allows one webhook per bot. Design: `docs/superpowers/specs/2026-11-27-contact-developer-design.md`.
+- 2026-11-28 — [ABA-857](https://github.com/micode-ai/ai-budget-assistant/issues/895): e-mail fallback for unread replies (addendum to the design doc): three `support_threads` columns, `SupportEmailService`, hourly `SupportEmailCron`, purpose-scoped unsubscribe.

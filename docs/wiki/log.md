@@ -422,6 +422,7 @@ Newest last within each section.
 - 2026-11-26 · [ABA-854](https://github.com/micode-ai/ai-budget-assistant/issues/892) — refund linked to original expense: `Income.refundOfExpenseId`, central `refund-netting.ts`, link routes, netting in analytics summary + budgets; no UI yet, remaining totals listed on `features/refund-linked-expense.md`.
 - 2026-11-26 · [ABA-855](https://github.com/) — local-currency suggestion on the create form, geo-only and permission-free; new page `features/travel-currency-suggestion.md`.
 - 2026-11-27 · [ABA-856](https://github.com/micode-ai/ai-budget-assistant/issues/894) — contact the developer: user-scoped support thread, translated both ways, reply from admin or a separate Telegram support bot; new page `features/contact-developer.md`, runbook `docs/ops/support-bot.md`.
+- 2026-11-28 · [ABA-857](https://github.com/micode-ai/ai-budget-assistant/issues/895) — e-mail fallback for unread support replies: immediate without push, else after 12 h; one per unread batch via claim-before-send; purpose-scoped unsubscribe; page `features/contact-developer.md`.
 
 ## Queries
 

@@ -223,3 +223,21 @@ Module `modules/support/`.
 Exact component breakdown, message page size, admin layout details, the
 translation prompt wording, Telegram card formatting, and whether the developer's
 "original first" switch is cheap enough for v1.
+
+## Addendum 2026-11-28 — e-mail fallback for unread replies (approved)
+
+Why: a web user has no push, and a push can be dismissed or disabled; a reply must not sit unseen.
+
+- **When:** a user with no `pushToken` gets the e-mail right after the developer's reply. A user
+  with push gets it only if the reply is still unread **12 hours** later (hourly cron, `paginateById`).
+- **One e-mail per unread batch:** several replies before the user opens the thread → one e-mail.
+  The next e-mail is possible only after the user has read the thread (`markReadByUser` resets it).
+- **Never** to a muted thread, an inactive user, or a user who unsubscribed from these e-mails.
+- **Content:** subject "Reply from the developer" in the user's language; every unread developer
+  reply, translation first with the original under it; a button "Open the conversation" to the web
+  app's `/support`; a signed one-click unsubscribe link (body + `List-Unsubscribe`), scoped to this
+  list only (purpose-scoped HMAC like the onboarding e-mail, ABA-738), so it can never turn off
+  another list.
+- **Data:** `SupportThread.firstUnreadReplyAt` (set when `userUnreadCount` goes 0→1, cleared on
+  read), `lastEmailedAt` (cleared on read), `emailEnabled` (default true). Migration in the same commit.
+- Non-goals: e-mails about the user's own messages, digests.

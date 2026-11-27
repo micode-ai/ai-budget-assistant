@@ -3467,6 +3467,9 @@ model SupportThread {
   lastMessageAt        DateTime         @default(now()) @map("last_message_at")
   userUnreadCount      Int              @default(0) @map("user_unread_count")
   developerUnreadCount Int              @default(0) @map("developer_unread_count")
+  firstUnreadReplyAt   DateTime?        @map("first_unread_reply_at")
+  lastEmailedAt        DateTime?        @map("last_emailed_at")
+  emailEnabled         Boolean          @default(true) @map("email_enabled")
   createdAt            DateTime         @default(now()) @map("created_at")
   user                 User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   messages             SupportMessage[]

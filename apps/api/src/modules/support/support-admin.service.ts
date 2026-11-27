@@ -7,12 +7,13 @@ import { logFireAndForget } from '../../common/utils/fire-and-forget';
 import { AdminGateway } from '../admin/admin.gateway';
 import { NotificationsService } from '../notifications/notifications.service';
 import { SupportTranslationService } from './support-translation.service';
+import { SupportEmailService } from './support-email.service';
 import { supportReplyTitle } from './support-i18n';
 import { developerUnreadTotal } from './support-unread';
 import { toSupportMessageView } from './support.service';
 
 type ThreadWithUser = SupportThread & {
-  user: { id: string; name: string; email: string; language: string; isActive: boolean };
+  user: { id: string; name: string; email: string; language: string; isActive: boolean; pushToken?: string | null };
   messages?: { body: string }[];
 };
 
@@ -41,6 +42,7 @@ export class SupportAdminService {
     private readonly notifications: NotificationsService,
     @Optional() @Inject(forwardRef(() => AdminGateway))
     private readonly adminGateway?: AdminGateway | null,
+    @Optional() private readonly supportEmail?: SupportEmailService | null,
   ) {}
 
   async listThreads(filter: 'open' | 'closed' | 'muted'): Promise<AdminSupportThreadSummary[]> {
@@ -110,6 +112,10 @@ export class SupportAdminService {
           ...(thread.muted ? {} : { developerUnreadCount: 0 }),
         },
       }),
+      // First unread reply of a batch: the 12 h e-mail fallback clock starts here. Set only when the
+      // field is null, inside the transaction, so it never depends on the count read before the
+      // (slow) translation - a markRead in that window would otherwise leave the batch unclocked.
+      this.prisma.supportThread.updateMany({ where: { id: threadId, firstUnreadReplyAt: null }, data: { firstUnreadReplyAt: new Date() } }),
       ...(thread.muted
         ? []
         : [this.prisma.supportMessage.updateMany({ where: { threadId, author: 'user', readAt: null }, data: { readAt: new Date() } })]),
@@ -120,6 +126,13 @@ export class SupportAdminService {
     void this.notifications
       .sendToUser(thread.userId, (l) => supportReplyTitle(l), () => pushBody, { threadId }, 'support_reply')
       .catch(logFireAndForget(this.logger, 'SupportAdminService.pushReply'));
+    // No push token: nothing else will tell the user, so e-mail right away. A user with push gets
+    // it from the hourly cron only if the reply is still unread 12 h later.
+    if (!thread.user.pushToken && this.supportEmail) {
+      void this.supportEmail
+        .sendUnreadReplyEmail(threadId)
+        .catch(logFireAndForget(this.logger, 'SupportAdminService.emailReply'));
+    }
     this.adminGateway?.emitSupportMessage({ threadId, messageId: message.id, author: 'developer' });
     this.emitUnread();
     return toAdminMessageView(message);
@@ -165,7 +178,7 @@ export class SupportAdminService {
     const thread = await this.prisma.supportThread.findUnique({
       where: { id: threadId },
       include: {
-        user: { select: { id: true, name: true, email: true, language: true, isActive: true } },
+        user: { select: { id: true, name: true, email: true, language: true, isActive: true, pushToken: true } },
         messages: { orderBy: { createdAt: 'desc' }, take: 1, select: { body: true } },
       },
     });

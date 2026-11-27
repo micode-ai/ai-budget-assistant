@@ -206,7 +206,7 @@ Ajustes → **Escribir al desarrollador**. Haz una pregunta, informa de un error
 También puedes abrirlo desde la pantalla **Ayuda**, en la tarjeta **Escribir al desarrollador**.
 
 - Escribe en **cualquier idioma**: el desarrollador lee cada mensaje en su propio idioma.
-- Las respuestas llegan aquí y como notificación push, **traducidas a tu idioma**. El texto original está a un toque.
+- Las respuestas llegan aquí y como notificación push, **traducidas a tu idioma**. El texto original está a un toque. Si no has abierto una respuesta, también te llega por correo (un correo por cada grupo de respuestas sin leer, con enlace para darte de baja).
 - El interruptor **Traducir automáticamente** controla si las respuestas se traducen solas.
 - El desarrollador suele responder en aproximadamente un día. Puedes enviar hasta **10 mensajes al día**.
 - No pegues contraseñas, números de tarjeta ni otros datos privados.

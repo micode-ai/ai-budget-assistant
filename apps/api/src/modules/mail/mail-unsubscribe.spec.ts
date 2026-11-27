@@ -1,4 +1,5 @@
-import { buildUnsubscribeUrl, signUnsubscribeToken, verifyUnsubscribeToken } from './email-unsubscribe';
+import { buildSupportUnsubscribeUrl, buildUnsubscribeUrl, signSupportUnsubscribeToken, signUnsubscribeToken, verifySupportUnsubscribeToken, verifyUnsubscribeToken } from './email-unsubscribe';
+import { supportEmailCopy } from '../support/support-email-i18n';
 import { MailUnsubscribeController } from './mail-unsubscribe.controller';
 import { onboardingEmailCopy, ONBOARDING_EMAIL_LANGS } from './onboarding-email-i18n';
 
@@ -66,5 +67,61 @@ describe('onboardingEmailCopy', () => {
     for (const l of ['xx', '', null, undefined, 'constructor', '__proto__']) {
       expect(onboardingEmailCopy(l as string)).toBe(onboardingEmailCopy('en'));
     }
+  });
+});
+
+describe('support unsubscribe (purpose-scoped)', () => {
+  it('a support token cannot verify as onboarding and vice versa', () => {
+    const sup = signSupportUnsubscribeToken('u1', SECRET);
+    const onb = signUnsubscribeToken('u1', SECRET);
+    expect(sup).not.toBe(onb);
+    expect(verifySupportUnsubscribeToken('u1', sup, SECRET)).toBe(true);
+    expect(verifyUnsubscribeToken('u1', sup, SECRET)).toBe(false);
+    expect(verifySupportUnsubscribeToken('u1', onb, SECRET)).toBe(false);
+    expect(verifySupportUnsubscribeToken('u2', sup, SECRET)).toBe(false);
+  });
+
+  it('builds a link to the support endpoint', () => {
+    expect(buildSupportUnsubscribeUrl('https://api.example.com/', 'u1', SECRET)).toBe(
+      `https://api.example.com/api/v1/mail/unsubscribe/support?u=u1&t=${signSupportUnsubscribeToken('u1', SECRET)}`,
+    );
+  });
+
+  function make() {
+    const prisma = {
+      user: { updateMany: jest.fn(), findUnique: jest.fn().mockResolvedValue({ language: 'de' }) },
+      supportThread: { updateMany: jest.fn().mockResolvedValue({ count: 1 }) },
+    } as any;
+    const config = { get: jest.fn().mockReturnValue(SECRET) } as any;
+    return { ctrl: new MailUnsubscribeController(prisma, config), prisma };
+  }
+
+  it('GET with a support token turns emailEnabled off, touches no onboarding flag', async () => {
+    const { ctrl, prisma } = make();
+    const html = await ctrl.supportUnsubscribeLink('u1', signSupportUnsubscribeToken('u1', SECRET));
+    expect(prisma.supportThread.updateMany).toHaveBeenCalledWith({ where: { userId: 'u1' }, data: { emailEnabled: false } });
+    expect(prisma.user.updateMany).not.toHaveBeenCalled();
+    expect(html).toContain(supportEmailCopy('de').unsubscribedTitle);
+  });
+
+  it('POST one-click works the same', async () => {
+    const { ctrl, prisma } = make();
+    await expect(ctrl.supportOneClick('u1', signSupportUnsubscribeToken('u1', SECRET))).resolves.toEqual({ ok: true });
+    expect(prisma.supportThread.updateMany).toHaveBeenCalled();
+  });
+
+  it('an onboarding token does nothing on the support endpoint, same answer', async () => {
+    const { ctrl, prisma } = make();
+    const html = await ctrl.supportUnsubscribeLink('u1', signUnsubscribeToken('u1', SECRET));
+    expect(prisma.supportThread.updateMany).not.toHaveBeenCalled();
+    expect(html).toContain('<h1');
+  });
+
+  it('a support token does nothing on the onboarding endpoint', async () => {
+    const { ctrl, prisma } = make();
+    await ctrl.unsubscribeLink('u1', signSupportUnsubscribeToken('u1', SECRET));
+    await ctrl.oneClick('u1', signSupportUnsubscribeToken('u1', SECRET));
+    expect(prisma.user.updateMany).not.toHaveBeenCalled();
+    expect(prisma.supportThread.updateMany).not.toHaveBeenCalled();
   });
 });

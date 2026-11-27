@@ -143,9 +143,9 @@ describe('SupportService', () => {
     });
   });
 
-  it('markReadByUser zeroes userUnreadCount', async () => {
+  it('markReadByUser zeroes userUnreadCount and resets the e-mail batch', async () => {
     await service.markReadByUser('u1');
-    expect(prisma.supportThread.updateMany).toHaveBeenCalledWith({ where: { userId: 'u1' }, data: { userUnreadCount: 0 } });
+    expect(prisma.supportThread.updateMany).toHaveBeenCalledWith({ where: { userId: 'u1' }, data: { userUnreadCount: 0, firstUnreadReplyAt: null, lastEmailedAt: null } });
   });
 
   it('setAutoTranslate updates the user thread', async () => {

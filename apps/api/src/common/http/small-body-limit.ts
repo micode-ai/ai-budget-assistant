@@ -12,7 +12,7 @@ import { json, urlencoded, type NextFunction, type Request, type RequestHandler,
  */
 export const SMALL_BODY_LIMIT_BYTES = 1024 * 1024;
 
-/** Unauthenticated routes, as mounted (prefix match): sign-in and the inbound webhooks. */
+/** Unauthenticated routes, as mounted (prefix match): sign-in, the inbound webhooks and unsubscribe links. */
 export const SMALL_BODY_PATHS = [
   '/api/v1/auth',
   '/webhooks/stripe',
@@ -21,6 +21,8 @@ export const SMALL_BODY_PATHS = [
   '/whatsapp/webhook',
   '/slack/events',
   '/slack/interactivity',
+  // Public one-click unsubscribe links (onboarding and support lists); the body is empty.
+  '/api/v1/mail/unsubscribe',
 ];
 
 export function smallBodyLimit(limit = SMALL_BODY_LIMIT_BYTES): RequestHandler {

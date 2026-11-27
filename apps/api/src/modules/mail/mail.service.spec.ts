@@ -66,3 +66,34 @@ describe('MailService.sendAppConnectedEmail', () => {
     expect(sendMail.mock.calls[1][2]).toContain('to the account “Personal”');
   });
 });
+
+describe('MailService.sendSupportReplyEmail', () => {
+  const params = {
+    to: 'a@x.pl', lang: 'en', name: 'Ann',
+    replies: [{ text: 'Hi <b>there</b>', original: 'Привет & пока' }, { text: 'Second', original: null }],
+    ctaUrl: 'https://app.ai-budget.pl/support?a=1&b=2',
+    unsubscribeUrl: 'https://api.ai-budget.pl/api/v1/mail/unsubscribe/support?u=1&t=2',
+  };
+
+  it('sends the localized subject and passes the unsubscribe URL as List-Unsubscribe', async () => {
+    const { svc, sendMail } = build();
+    await svc.sendSupportReplyEmail({ ...params, lang: 'pl' });
+    const [to, subject, html, unsub] = sendMail.mock.calls[0];
+    expect(to).toBe('a@x.pl');
+    expect(subject).toBe('Odpowiedź od dewelopera');
+    expect(html).toContain('Otwórz rozmowę');
+    expect(unsub).toBe(params.unsubscribeUrl);
+  });
+
+  it('HTML-escapes user and developer text and URLs, and shows the original only when present', async () => {
+    const { svc, sendMail } = build();
+    await svc.sendSupportReplyEmail({ ...params, name: '<img src=x>' });
+    const html = sendMail.mock.calls[0][2];
+    expect(html).not.toContain('<b>there</b>');
+    expect(html).not.toContain('<img');
+    expect(html).toContain('Hi &lt;b&gt;there&lt;/b&gt;');
+    expect(html).toContain('Привет &amp; пока');
+    expect(html).toContain('href="https://app.ai-budget.pl/support?a=1&amp;b=2"');
+    expect(html.match(/Original/g)?.length).toBe(1);
+  });
+});
