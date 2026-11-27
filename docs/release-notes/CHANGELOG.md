@@ -8,6 +8,17 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.46.0 - 2026-11-27
+
+**Help and support**
+
+- Write to the developer from inside the app: Settings → "Write to the developer" (or the card on
+  the Help screen). Write in any language; replies arrive in your app language with the original
+  one tap away, and a push tells you when one comes in. Works on the phone and on the web
+  (ABA-856).
+
+---
+
 ## 1.45.0 - 2026-11-27
 
 **Spending**
