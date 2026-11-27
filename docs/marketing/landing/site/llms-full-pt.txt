@@ -2792,7 +2792,7 @@ Definições → **Escrever ao programador**. Faça uma pergunta, comunique um e
 Também pode abri-lo no ecrã **Ajuda**, no cartão **Escrever ao programador**.
 
 - Escreva em **qualquer língua** — o programador lê cada mensagem na sua própria língua.
-- As respostas chegam aqui e como notificação push, **traduzidas para a sua língua**. O texto original está a um toque.
+- As respostas chegam aqui e como notificação push, **traduzidas para a sua língua**. O texto original está a um toque. Se não abriu uma resposta, ela também chega por e-mail (um e-mail por lote de respostas por ler, com ligação para cancelar a subscrição).
 - O interruptor **Tradução automática** define se as respostas são traduzidas automaticamente.
 - O programador costuma responder em cerca de um dia. Pode enviar até **10 mensagens por dia**.
 - Não cole palavras-passe, números de cartão nem outros dados privados.

@@ -2793,7 +2793,7 @@ Configurações → **Escrever para o desenvolvedor**. Faça uma pergunta, relat
 Você também pode abrir pela tela **Ajuda**, no cartão **Escrever para o desenvolvedor**.
 
 - Escreva em **qualquer idioma** — o desenvolvedor lê cada mensagem no próprio idioma.
-- As respostas chegam aqui e como notificação push, **traduzidas para o seu idioma**. O texto original está a um toque.
+- As respostas chegam aqui e como notificação push, **traduzidas para o seu idioma**. O texto original está a um toque. Se você não abriu uma resposta, ela também chega por e-mail (um e-mail por lote de respostas não lidas, com link para cancelar a inscrição).
 - A chave **Tradução automática** define se as respostas são traduzidas automaticamente.
 - O desenvolvedor costuma responder em cerca de um dia. Você pode enviar até **10 mensagens por dia**.
 - Não cole senhas, números de cartão nem outros dados privados.

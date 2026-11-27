@@ -5558,7 +5558,7 @@ Instellingen → **Schrijf de ontwikkelaar**. Stel een vraag, meld een bug of st
 Je kunt het ook openen via het scherm **Help**, met de kaart **Schrijf de ontwikkelaar**.
 
 - Schrijf in **elke taal** — de ontwikkelaar leest elk bericht in zijn eigen taal.
-- Antwoorden komen hier binnen en als pushmelding, **vertaald naar jouw taal**. De originele tekst is één tik weg.
+- Antwoorden komen hier binnen en als pushmelding, **vertaald naar jouw taal**. De originele tekst is één tik weg. Als je een antwoord niet hebt geopend, krijg je het ook per e-mail (één e-mail per reeks ongelezen antwoorden, met een uitschrijflink).
 - Met de schakelaar **Automatisch vertalen** bepaal je of antwoorden automatisch worden vertaald.
 - De ontwikkelaar antwoordt meestal binnen ongeveer een dag. Je kunt maximaal **10 berichten per dag** sturen.
 - Plak geen wachtwoorden, kaartnummers of andere privégegevens.
