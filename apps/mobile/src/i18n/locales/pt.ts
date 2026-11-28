@@ -3162,7 +3162,7 @@ export default {
     notifications: 'Notificações e integrações',
     notificationsDesc: 'Alertas push, bot do Telegram',
     security: 'Segurança e encriptação',
-    securityDesc: 'Configuração da encriptação ponto a ponto',
+    securityDesc: "Encriptação ponto a ponto, estatísticas de utilização",
     data: 'Dados e relatórios',
     dataDesc: 'Sincronização, relatórios por e-mail, cópia de segurança e restauro',
     about: 'Sobre',
@@ -4252,5 +4252,10 @@ export default {
     unread: "Resposta não lida",
     helpButton: "Escrever ao programador",
     helpButtonDesc: "Não encontrou resposta? Pergunte diretamente ao programador.",
+  },
+  usageStatistics: {
+    sectionTitle: "Privacidade",
+    toggle: "Partilhar estatísticas de utilização",
+    toggleDesc: "Que ecrãs abre e se ações como adicionar uma despesa são concluídas. Nunca valores nem o que escreve.",
   },
 } as const;

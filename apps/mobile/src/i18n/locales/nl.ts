@@ -3166,7 +3166,7 @@ export default {
     notifications: 'Meldingen & integraties',
     notificationsDesc: 'Pushmeldingen, Telegram-bot',
     security: 'Beveiliging & versleuteling',
-    securityDesc: 'End-to-end-versleuteling instellen',
+    securityDesc: "End-to-end-versleuteling, gebruiksstatistieken",
     data: 'Gegevens & rapporten',
     dataDesc: 'Synchronisatie, e-mailrapporten, back-up & herstel',
     about: 'Over',
@@ -4257,5 +4257,10 @@ export default {
     unread: "Ongelezen antwoord",
     helpButton: "Schrijf de ontwikkelaar",
     helpButtonDesc: "Geen antwoord gevonden? Vraag het de ontwikkelaar direct.",
+  },
+  usageStatistics: {
+    sectionTitle: "Privacy",
+    toggle: "Gebruiksstatistieken delen",
+    toggleDesc: "Welke schermen je opent en of acties zoals een uitgave toevoegen lukken. Nooit bedragen of wat je schrijft.",
   },
 } as const;

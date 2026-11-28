@@ -7,16 +7,19 @@ import {
   FunnelStatus,
   FORM_FACTORS,
   FormFactor,
+  TELEMETRY_PLATFORMS,
+  TelemetryPlatform,
 } from './telemetry.validator';
 import { parseAdminEmails } from '../admin/admin-emails.util';
 import type {
   TelemetryFunnelResponse,
   TelemetryFunnelRow,
   TelemetryScreenRow,
+  TelemetryScreenUsageRow,
   TelemetryFormFactorRow,
 } from '@budget/shared-types';
 
-const KNOWN_PLATFORMS = new Set(['web', 'ios', 'android']);
+const KNOWN_PLATFORMS: ReadonlySet<string> = new Set(TELEMETRY_PLATFORMS);
 const SESSION_ID_MAX = 64;
 const MAX_WINDOW_DAYS = 90; // never longer than what retention keeps
 
@@ -47,6 +50,8 @@ export interface FunnelOptions {
   maxRows?: number;
   /** Only sessions on this device class (ABA-683). Absent: every session. */
   formFactor?: FormFactor;
+  /** Only events from this client platform. Absent: every platform. */
+  platform?: TelemetryPlatform;
 }
 
 const FORM_FACTOR_SET: ReadonlySet<string> = new Set(FORM_FACTORS);
@@ -54,6 +59,13 @@ const FORM_FACTOR_SET: ReadonlySet<string> = new Set(FORM_FACTORS);
 /** A query-string value narrowed to a known device class, else undefined (no filter). */
 export function parseFormFactor(value: unknown): FormFactor | undefined {
   return typeof value === 'string' && FORM_FACTOR_SET.has(value) ? (value as FormFactor) : undefined;
+}
+
+/** A query-string value narrowed to a known platform, else undefined (no filter). */
+export function parsePlatform(value: unknown): TelemetryPlatform | undefined {
+  return typeof value === 'string' && KNOWN_PLATFORMS.has(value)
+    ? (value as TelemetryPlatform)
+    : undefined;
 }
 
 export { MAX_FUNNEL_ROWS };
@@ -91,7 +103,7 @@ export class TelemetryService {
    */
   async getFunnel(
     days: number,
-    { includeInternal = false, maxRows = MAX_FUNNEL_ROWS, formFactor }: FunnelOptions = {},
+    { includeInternal = false, maxRows = MAX_FUNNEL_ROWS, formFactor, platform }: FunnelOptions = {},
   ): Promise<TelemetryFunnelResponse> {
     const window = Math.min(Math.max(Math.trunc(days) || 30, 1), MAX_WINDOW_DAYS);
     const since = new Date(Date.now() - window * 86_400_000);
@@ -105,6 +117,9 @@ export class TelemetryService {
     const rows = await this.prisma.telemetryEvent.findMany({
       where: {
         createdAt: { gte: since },
+        // A plain column, so the platform filter goes into SQL and the row
+        // ceiling then applies to that platform's rows alone.
+        ...(platform ? { platform } : {}),
         ...(internalIds.length > 0 ? { userId: { notIn: internalIds } } : {}),
       },
       select: {
@@ -161,6 +176,8 @@ export class TelemetryService {
 
     const flows = new Map<string, TelemetryFunnelRow>();
     const screens = new Map<string, number>();
+    // Distinct users per screen, for the least-used-screens table.
+    const screenUsers = new Map<string, Set<string>>();
     // The latest screen_view seen per session, so far.
     const lastPerSession = new Map<string, { screen: string; at: number }>();
     const users = new Set<string>();
@@ -171,6 +188,9 @@ export class TelemetryService {
       if (row.name === 'screen_view') {
         if (!row.screen) continue;
         screens.set(row.screen, (screens.get(row.screen) ?? 0) + 1);
+        const seenBy = screenUsers.get(row.screen) ?? new Set<string>();
+        seenBy.add(row.userId);
+        screenUsers.set(row.screen, seenBy);
         const at = row.createdAt.getTime();
         const seen = lastPerSession.get(row.sessionId);
         if (!seen || at >= seen.at) lastPerSession.set(row.sessionId, { screen: row.screen, at });
@@ -199,6 +219,14 @@ export class TelemetryService {
         .map(([screen, views]) => ({ screen, views }))
         .sort((a, b) => b.views - a.views);
 
+    // Least-used first: the question this table answers is "which screens does
+    // nobody open". Ties break on views, then name, so the order is stable.
+    const screenUsage: TelemetryScreenUsageRow[] = Array.from(screenUsers.entries())
+      .map(([screen, ids]) => ({ screen, users: ids.size, views: screens.get(screen) ?? 0 }))
+      .sort(
+        (a, b) => a.users - b.users || a.views - b.views || a.screen.localeCompare(b.screen),
+      );
+
     return {
       days: window,
       truncated,
@@ -206,9 +234,11 @@ export class TelemetryService {
       excludedAccounts: internalIds.length,
       users: users.size,
       formFactor: formFactor ?? null,
+      platform: platform ?? null,
       formFactors,
       flows: Array.from(flows.values()),
       screens: byViewsDesc(screens),
+      screenUsage,
       lastScreens: byViewsDesc(lastScreens),
     };
   }

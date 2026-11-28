@@ -9,8 +9,10 @@ export interface TelemetryEventPayload {
 }
 
 export interface IngestTelemetryRequest {
-  platform: 'web';
-  /** Random per app load, memory only — no cross-session identifier exists. */
+  /** `Platform.OS`. The server stores anything else as `unknown`. */
+  platform: 'web' | 'android' | 'ios';
+  /** Random per session, never persisted as an identifier: per page load on
+   *  web; per cold launch (or return after 30 min in background) on native. */
   sessionId: string;
   events: TelemetryEventPayload[];
 }
@@ -38,6 +40,13 @@ export interface TelemetryScreenRow {
   views: number;
 }
 
+/** One screen's reach in the window: how many distinct users opened it. */
+export interface TelemetryScreenUsageRow {
+  screen: string;
+  users: number;
+  views: number;
+}
+
 export interface TelemetryFunnelResponse {
   days: number;
   /**
@@ -59,11 +68,17 @@ export interface TelemetryFunnelResponse {
   users: number;
   /** The device class the figures are filtered to, or null for every session (ABA-683). */
   formFactor: 'phone' | 'tablet' | 'desktop' | null;
-  /** Sessions and users per device class across the whole window, unfiltered. */
+  /** The client platform the figures are filtered to, or null for every platform. */
+  platform: 'web' | 'android' | 'ios' | null;
+  /** Sessions and users per device class across the whole window, NOT narrowed
+   *  by the device filter (the platform filter does apply). */
   formFactors: TelemetryFormFactorRow[];
   flows: TelemetryFunnelRow[];
   /** Most-viewed screens in the window. */
   screens: TelemetryScreenRow[];
+  /** Every screen with its distinct users and views, LEAST-used first — which
+   *  screens nobody opens. */
+  screenUsage: TelemetryScreenUsageRow[];
   /** The screen each session ended on, most frequent first — where people leave. */
   lastScreens: TelemetryScreenRow[];
 }

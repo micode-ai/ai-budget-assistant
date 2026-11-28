@@ -15,6 +15,7 @@ import { useEncryptionStore } from '@/stores/encryptionStore';
 import { useAccountStore } from '@/stores/accountStore';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { SheetDialog } from '@/components/SheetDialog';
+import { UsageStatisticsCard } from './UsageStatisticsCard';
 
 /**
  * Stable accessible-name id for the recovery-key sheet's title, wired to the
@@ -24,7 +25,8 @@ import { SheetDialog } from '@/components/SheetDialog';
 const RECOVERY_KEY_SHEET_TITLE_ID = 'recovery-key-sheet-title';
 
 /**
- * Security settings: end-to-end encryption setup, unlock, lock and reset.
+ * Security settings: end-to-end encryption setup, unlock, lock and reset, and
+ * below it the "Share usage statistics" switch (`UsageStatisticsCard`).
  *
  * Moved out of `app/settings/security.tsx` unchanged so the desktop shell can
  * host it as a pane — `src/` may not import from `app/`. The route is now a
@@ -285,6 +287,8 @@ export function SecuritySettings() {
             </>
           )}
         </View>
+
+        <UsageStatisticsCard />
       </SettingsScreenKeyboardScroll>
 
       {/* Recovery Key — deliberately undismissable except by its own button;

@@ -3173,7 +3173,7 @@ export default {
     notifications: 'Notifications & Integrations',
     notificationsDesc: 'Push alerts, Telegram bot',
     security: 'Security & Encryption',
-    securityDesc: 'End-to-end encryption setup',
+    securityDesc: "End-to-end encryption, usage statistics",
     data: 'Data & Reports',
     dataDesc: 'Sync, email reports, backup & restore',
     about: 'About',
@@ -4264,5 +4264,10 @@ export default {
     unread: "Unread reply",
     helpButton: "Write to the developer",
     helpButtonDesc: "No answer here? Ask the developer directly.",
+  },
+  usageStatistics: {
+    sectionTitle: "Privacy",
+    toggle: "Share usage statistics",
+    toggleDesc: "Which screens you open and whether actions such as adding an expense succeed. Never amounts or what you write.",
   },
 } as const;

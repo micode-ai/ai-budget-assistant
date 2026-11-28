@@ -1,7 +1,7 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AdminGuard } from '../admin/admin.guard';
-import { TelemetryService, parseFormFactor } from './telemetry.service';
+import { TelemetryService, parseFormFactor, parsePlatform } from './telemetry.service';
 
 /**
  * A second controller rather than another route on the ingest one: the ingest
@@ -18,10 +18,12 @@ export class TelemetryAdminController {
     @Query('days') days?: string,
     @Query('includeInternal') includeInternal?: string,
     @Query('formFactor') formFactor?: string,
+    @Query('platform') platform?: string,
   ) {
     return this.service.getFunnel(Number(days), {
       includeInternal: includeInternal === 'true',
       formFactor: parseFormFactor(formFactor),
+      platform: parsePlatform(platform),
     });
   }
 }

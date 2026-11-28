@@ -3166,7 +3166,7 @@ export default {
     notifications: 'Notificaciones e integraciones',
     notificationsDesc: 'Alertas push, bot de Telegram',
     security: 'Seguridad y cifrado',
-    securityDesc: 'Cifrado de extremo a extremo (E2EE)',
+    securityDesc: "Cifrado de extremo a extremo (E2EE), estadísticas de uso",
     data: 'Datos e informes',
     dataDesc: 'Sincronización, informes por email, copia de seguridad',
     about: 'Acerca de',
@@ -4258,5 +4258,10 @@ export default {
     unread: "Respuesta sin leer",
     helpButton: "Escribir al desarrollador",
     helpButtonDesc: "¿No encuentras la respuesta? Pregunta directamente al desarrollador.",
+  },
+  usageStatistics: {
+    sectionTitle: "Privacidad",
+    toggle: "Compartir estadísticas de uso",
+    toggleDesc: "Qué pantallas abres y si acciones como añadir un gasto se completan. Nunca importes ni lo que escribes.",
   },
 } as const;

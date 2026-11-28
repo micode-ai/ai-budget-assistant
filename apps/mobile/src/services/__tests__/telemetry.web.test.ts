@@ -11,7 +11,9 @@ import {
   flushTelemetry,
   resetTelemetry,
   formFactorForWidth,
+  setTelemetryEnabled,
 } from '../telemetry.web';
+import { isTelemetryEnabled } from '../telemetryPreference';
 
 /**
  * Microtasks only — deliberately NOT `setImmediate`, which `jest.useFakeTimers()`
@@ -28,6 +30,7 @@ describe('telemetry (web)', () => {
 
   beforeEach(() => {
     jest.useFakeTimers();
+    setTelemetryEnabled(true);
     resetTelemetry();
     fetchMock = jest.fn().mockResolvedValue({ ok: true });
     (global as unknown as { fetch: unknown }).fetch = fetchMock;
@@ -233,5 +236,33 @@ describe('telemetry (web)', () => {
     expect(body.events[0].props).toEqual({ formFactor: 'phone', display: 'standalone' });
     expect(matchMedia).toHaveBeenCalledWith('(display-mode: standalone)');
     Object.defineProperty(window, 'matchMedia', { configurable: true, value: undefined });
+  });
+
+  it('opt-out drops the buffer and buffers nothing until turned back on', async () => {
+    trackScreen('expenses');
+    setTelemetryEnabled(false);
+    expect(isTelemetryEnabled()).toBe(false);
+
+    trackScreen('analytics');
+    trackAction('expense_manual', 'started');
+    flushTelemetry();
+    await flushMicrotasks();
+    expect(fetchMock).not.toHaveBeenCalled();
+
+    setTelemetryEnabled(true);
+    trackScreen('budgets');
+    flushTelemetry();
+    await flushMicrotasks();
+
+    const body = JSON.parse(fetchMock.mock.calls[0][1].body);
+    // Turning it back on opens a fresh session that repeats the current
+    // screen (like native), before anything tracked afterwards.
+    expect(body.events.map((e: { name: string }) => e.name)).toEqual([
+      'session_start',
+      'screen_view',
+      'screen_view',
+    ]);
+    expect(body.events[1].screen).toBe('analytics');
+    expect(body.events[2].screen).toBe('budgets');
   });
 });

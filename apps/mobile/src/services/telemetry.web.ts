@@ -1,5 +1,6 @@
 import { secureStorage } from '@/services/secureStorage';
 import { DESKTOP_MIN_WIDTH } from '@/components/webLayout.constants';
+import { isTelemetryEnabled, writeTelemetryPreference } from './telemetryPreference';
 import type {
   TelemetryDisplay,
   TelemetryFailReason,
@@ -29,6 +30,9 @@ let buffer: BufferedEvent[] = [];
 let sessionId = newSessionId();
 let timer: ReturnType<typeof setInterval> | null = null;
 let listenersBound = false;
+/** The last screen reported, so a session reopened by the opt-in switch can
+ *  say where the user is, like native. */
+let lastScreen: string | null = null;
 
 /** Random per app load, memory only — no cross-session identifier exists. */
 function newSessionId(): string {
@@ -66,6 +70,8 @@ function deviceProps(): { formFactor: TelemetryFormFactor; display: TelemetryDis
 }
 
 function push(event: BufferedEvent): void {
+  // The "Share usage statistics" switch: off means nothing is even buffered.
+  if (!isTelemetryEnabled()) return;
   // Drop the oldest rather than grow without bound: a lost statistic is
   // strictly preferable to unbounded memory in a long-lived tab.
   if (buffer.length >= MAX_BUFFERED) buffer.shift();
@@ -82,11 +88,14 @@ function ensureTimers(): void {
   });
 }
 
-export function startTelemetrySession(): void {
+/** `_ownerId` is for the native queue, which outlives a sign-in; the web buffer
+ *  is memory only and cleared by `resetTelemetry` on sign-out. */
+export function startTelemetrySession(_ownerId?: string): void {
   push({ name: 'session_start', ts: Date.now() });
 }
 
 export function trackScreen(screen: string): void {
+  lastScreen = screen;
   push({ name: 'screen_view', screen, ts: Date.now() });
 }
 
@@ -111,10 +120,28 @@ export function trackFailure(flow: TelemetryFlow, reason: TelemetryFailReason): 
  *  bound once for the document's lifetime and must never be double-bound. */
 export function resetTelemetry(): void {
   buffer = [];
+  lastScreen = null;
   sessionId = newSessionId();
   if (timer !== null) {
     clearInterval(timer);
     timer = null;
+  }
+}
+
+/** The "Share usage statistics" switch. Off drops the buffer and stops
+ *  buffering at once; turning it back on opens a fresh session, because the
+ *  current one may have lost its `session_start` while it was off. */
+export function setTelemetryEnabled(enabled: boolean): void {
+  const wasEnabled = isTelemetryEnabled();
+  writeTelemetryPreference(enabled);
+  if (!enabled) {
+    buffer = [];
+    return;
+  }
+  if (!wasEnabled) {
+    sessionId = newSessionId();
+    startTelemetrySession();
+    if (lastScreen !== null) push({ name: 'screen_view', screen: lastScreen, ts: Date.now() });
   }
 }
 

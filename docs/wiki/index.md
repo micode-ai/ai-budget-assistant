@@ -279,7 +279,7 @@ the section you came for — it states what must not break and why. A missing se
 - [trip-wallet](features/trip-wallet.md) — the trip account type, multi-way splitting, settle-up
 
 ### Instrumentation
-- [web-telemetry](features/web-telemetry.md) — first-party product analytics for the web build only
+- [web-telemetry](features/web-telemetry.md) — first-party product analytics for the web build and the native app, with a "Share usage statistics" opt-out
 - [client-error-reporting](features/client-error-reporting.md) — render and global JS errors from the app, stored and alerted to ops
 
 ### Categories

@@ -3166,7 +3166,7 @@ export default {
     notifications: 'Benachrichtigungen & Integrationen',
     notificationsDesc: 'Push-Benachrichtigungen, Telegram-Bot',
     security: 'Sicherheit & Verschlüsselung',
-    securityDesc: 'Ende-zu-Ende-Verschlüsselung (E2EE)',
+    securityDesc: "Ende-zu-Ende-Verschlüsselung (E2EE), Nutzungsstatistiken",
     data: 'Daten & Berichte',
     dataDesc: 'Synchronisierung, E-Mail-Berichte, Sicherung & Wiederherstellung',
     about: 'Über',
@@ -4257,5 +4257,10 @@ export default {
     unread: "Ungelesene Antwort",
     helpButton: "An den Entwickler schreiben",
     helpButtonDesc: "Keine Antwort gefunden? Frag direkt den Entwickler.",
+  },
+  usageStatistics: {
+    sectionTitle: "Datenschutz",
+    toggle: "Nutzungsstatistiken teilen",
+    toggleDesc: "Welche Bildschirme du öffnest und ob Aktionen wie das Hinzufügen einer Ausgabe gelingen. Nie Beträge oder was du schreibst.",
   },
 } as const;

@@ -34,6 +34,15 @@ export type FunnelStatus = (typeof FUNNEL_STATUSES)[number];
 export const FORM_FACTORS = ['phone', 'tablet', 'desktop'] as const;
 export type FormFactor = (typeof FORM_FACTORS)[number];
 
+/** The one list of client platforms (`Platform.OS`). Ingest stores anything
+ *  else as `unknown`; the funnel's `?platform=` filter validates against it. */
+export const TELEMETRY_PLATFORMS = ['web', 'android', 'ios'] as const;
+export type TelemetryPlatform = (typeof TELEMETRY_PLATFORMS)[number];
+
+/** `standalone`/`browser` are the web build's display modes (ABA-683); `app` is
+ *  every event from the native app, which has no browser chrome to speak of. */
+export const DISPLAYS = ['standalone', 'browser', 'app'] as const;
+
 /** Allow-listed prop keys and, for string keys, their enumerated values. */
 const STRING_PROPS: Record<string, ReadonlySet<string>> = {
   flow: new Set([
@@ -55,11 +64,11 @@ const STRING_PROPS: Record<string, ReadonlySet<string>> = {
     'gazetka',
   ]),
   status: new Set(FUNNEL_STATUSES),
-  // ABA-683: a coarse device class and the display mode, stamped by the web
-  // client on every event. Three buckets of window width, never the raw size or
+  // ABA-683: a coarse device class and the display mode, stamped by the
+  // client on every event (the native app stamps `display: 'app'`). Three buckets of window width, never the raw size or
   // the user agent, so the pair cannot fingerprint anyone.
   formFactor: new Set(FORM_FACTORS),
-  display: new Set(['standalone', 'browser']),
+  display: new Set(DISPLAYS),
   // ABA-732: which check a `failed` tripped. A closed list, never an error message.
   reason: new Set(['amount', 'categories', 'save']),
 };

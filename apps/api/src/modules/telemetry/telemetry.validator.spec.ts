@@ -205,3 +205,24 @@ describe('sanitizeEvents — device props', () => {
     expect(event?.props).toBeNull();
   });
 });
+
+// Native telemetry: the app stamps `display: 'app'` and a phone/tablet class.
+describe('sanitizeEvents — native app display', () => {
+  it('keeps the native display value', () => {
+    const [event] = sanitizeEvents([
+      { name: 'session_start', props: { formFactor: 'tablet', display: 'app' } },
+    ]);
+    expect(event?.props).toEqual({ formFactor: 'tablet', display: 'app' });
+  });
+
+  it('still drops device details a native client could be tempted to send', () => {
+    const [event] = sanitizeEvents([
+      {
+        name: 'screen_view',
+        screen: '(tabs)/index',
+        props: { display: 'app', model: 'Pixel 8', os: '14', screenWidth: 412 },
+      },
+    ]);
+    expect(event?.props).toEqual({ display: 'app' });
+  });
+});

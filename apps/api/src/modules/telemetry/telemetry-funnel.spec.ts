@@ -1,4 +1,4 @@
-import { TelemetryService, MAX_FUNNEL_ROWS, parseFormFactor } from './telemetry.service';
+import { TelemetryService, MAX_FUNNEL_ROWS, parseFormFactor, parsePlatform } from './telemetry.service';
 
 type Row = {
   userId?: string;
@@ -306,6 +306,132 @@ describe('parseFormFactor', () => {
     expect(parseFormFactor('tablet')).toBe('tablet');
     expect(parseFormFactor('unknown')).toBeUndefined();
     expect(parseFormFactor(undefined)).toBeUndefined();
+  });
+});
+
+// Native telemetry: the admin page filters by client platform.
+describe('TelemetryService.getFunnel — platform', () => {
+  const original = process.env.ADMIN_EMAILS;
+  beforeEach(() => {
+    process.env.ADMIN_EMAILS = '';
+  });
+  afterEach(() => {
+    process.env.ADMIN_EMAILS = original;
+  });
+
+  it('adds no platform clause by default and reports null', async () => {
+    const { service, prisma } = makeService([]);
+
+    const out = await service.getFunnel(30);
+
+    expect(prisma.telemetryEvent.findMany.mock.calls[0][0].where.platform).toBeUndefined();
+    expect(out.platform).toBeNull();
+  });
+
+  it('filters on the platform column in the query, so the row ceiling applies to it alone', async () => {
+    const { service, prisma } = makeService([]);
+
+    const out = await service.getFunnel(30, { platform: 'android' });
+
+    const args = prisma.telemetryEvent.findMany.mock.calls[0][0];
+    expect(args.where.platform).toBe('android');
+    expect(args.take).toBe(MAX_FUNNEL_ROWS);
+    expect(out.platform).toBe('android');
+  });
+
+  it('combines the platform filter with the internal-accounts exclusion', async () => {
+    process.env.ADMIN_EMAILS = 'owner@example.com';
+    const { service, prisma } = makeService([], [{ id: 'u-owner' }]);
+
+    await service.getFunnel(30, { platform: 'ios' });
+
+    const where = prisma.telemetryEvent.findMany.mock.calls[0][0].where;
+    expect(where.platform).toBe('ios');
+    expect(where.userId).toEqual({ notIn: ['u-owner'] });
+  });
+});
+
+describe('parsePlatform', () => {
+  it('accepts web, android and ios and ignores anything else', () => {
+    expect(parsePlatform('web')).toBe('web');
+    expect(parsePlatform('android')).toBe('android');
+    expect(parsePlatform('ios')).toBe('ios');
+    expect(parsePlatform('unknown')).toBeUndefined();
+    expect(parsePlatform('ANDROID')).toBeUndefined();
+    expect(parsePlatform(undefined)).toBeUndefined();
+  });
+});
+
+// Which screens nobody opens: distinct users per route pattern, least-used first.
+describe('TelemetryService.getFunnel — screen usage', () => {
+  const original = process.env.ADMIN_EMAILS;
+  beforeEach(() => {
+    process.env.ADMIN_EMAILS = '';
+  });
+  afterEach(() => {
+    process.env.ADMIN_EMAILS = original;
+  });
+
+  it('counts distinct users and views per screen, fewest users first', async () => {
+    const { service } = makeService([
+      { userId: 'a', name: 'screen_view', screen: '(tabs)/index', props: null, sessionId: 's1', createdAt: at(9) },
+      { userId: 'b', name: 'screen_view', screen: '(tabs)/index', props: null, sessionId: 's2', createdAt: at(8) },
+      { userId: 'c', name: 'screen_view', screen: '(tabs)/index', props: null, sessionId: 's3', createdAt: at(7) },
+      { userId: 'a', name: 'screen_view', screen: 'fat-finder', props: null, sessionId: 's1', createdAt: at(6) },
+      { userId: 'a', name: 'screen_view', screen: 'fat-finder', props: null, sessionId: 's1', createdAt: at(5) },
+      { userId: 'a', name: 'screen_view', screen: 'fat-finder', props: null, sessionId: 's1', createdAt: at(4) },
+      { userId: 'b', name: 'screen_view', screen: 'debts/index', props: null, sessionId: 's2', createdAt: at(3) },
+      { userId: 'c', name: 'screen_view', screen: 'debts/index', props: null, sessionId: 's3', createdAt: at(2) },
+      { userId: 'b', name: 'screen_view', screen: 'wallet/index', props: null, sessionId: 's2', createdAt: at(1) },
+      { userId: 'b', name: 'session_start', screen: null, props: null, sessionId: 's2', createdAt: at(0) },
+    ]);
+
+    const out = await service.getFunnel(30);
+
+    expect(out.screenUsage).toEqual([
+      // One user each: fewer views first.
+      { screen: 'wallet/index', users: 1, views: 1 },
+      { screen: 'fat-finder', users: 1, views: 3 },
+      { screen: 'debts/index', users: 2, views: 2 },
+      { screen: '(tabs)/index', users: 3, views: 3 },
+    ]);
+    // The views-descending table is unchanged alongside it.
+    expect(out.screens[out.screens.length - 1]).toEqual({ screen: 'wallet/index', views: 1 });
+  });
+
+  it('breaks a full tie on the screen name, so the order is stable', async () => {
+    const { service } = makeService([
+      { userId: 'a', name: 'screen_view', screen: 'zeta', props: null, sessionId: 's', createdAt: at(2) },
+      { userId: 'a', name: 'screen_view', screen: 'alpha', props: null, sessionId: 's', createdAt: at(1) },
+    ]);
+
+    const out = await service.getFunnel(30);
+
+    expect(out.screenUsage.map((r) => r.screen)).toEqual(['alpha', 'zeta']);
+  });
+
+  it('honours the device filter, like every other funnel figure', async () => {
+    const { service } = makeService([
+      { userId: 'a', name: 'screen_view', screen: 'expenses', props: { formFactor: 'tablet', display: 'app' }, sessionId: 't', createdAt: at(2) },
+      { userId: 'b', name: 'screen_view', screen: 'analytics', props: { formFactor: 'phone', display: 'app' }, sessionId: 'p', createdAt: at(1) },
+    ]);
+
+    const out = await service.getFunnel(30, { formFactor: 'phone' });
+
+    expect(out.screenUsage).toEqual([{ screen: 'analytics', users: 1, views: 1 }]);
+  });
+
+  it('is built only from rows the query returned, so excluded internal accounts never appear', async () => {
+    process.env.ADMIN_EMAILS = 'owner@example.com';
+    const { service, prisma } = makeService(
+      [{ userId: 'real', name: 'screen_view', screen: 'expenses', props: null, sessionId: 's', createdAt: at(1) }],
+      [{ id: 'u-owner' }],
+    );
+
+    const out = await service.getFunnel(30);
+
+    expect(prisma.telemetryEvent.findMany.mock.calls[0][0].where.userId).toEqual({ notIn: ['u-owner'] });
+    expect(out.screenUsage).toEqual([{ screen: 'expenses', users: 1, views: 1 }]);
   });
 });
 

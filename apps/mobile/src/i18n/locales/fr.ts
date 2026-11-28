@@ -3166,7 +3166,7 @@ export default {
     notifications: 'Notifications et intégrations',
     notificationsDesc: 'Alertes push, bot Telegram',
     security: 'Sécurité et chiffrement',
-    securityDesc: 'Chiffrement de bout en bout (E2EE)',
+    securityDesc: "Chiffrement de bout en bout (E2EE), statistiques d'utilisation",
     data: 'Données et rapports',
     dataDesc: 'Synchronisation, rapports par e-mail, sauvegarde et restauration',
     about: 'À propos',
@@ -4258,5 +4258,10 @@ export default {
     unread: "Réponse non lue",
     helpButton: "Écrire au développeur",
     helpButtonDesc: "Pas de réponse ici ? Demandez directement au développeur.",
+  },
+  usageStatistics: {
+    sectionTitle: "Confidentialité",
+    toggle: "Partager les statistiques d'utilisation",
+    toggleDesc: "Les écrans que vous ouvrez et si des actions comme l'ajout d'une dépense aboutissent. Jamais les montants ni ce que vous écrivez.",
   },
 } as const;

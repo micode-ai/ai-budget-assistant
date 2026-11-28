@@ -2197,6 +2197,8 @@ Link your Telegram account to receive notifications and manage expenses via the 
 
 Set up end-to-end encryption (E2EE) to protect your financial data. See Encryption for details.
 
+**Share usage statistics.** Below encryption, this switch decides whether the app records which screens you open and whether actions such as adding an expense succeed. It never records amounts, names or anything you type. The statistics are linked to your account, help us see which features are used, and are kept for 90 days. It is on by default and applies to this device only; turning it off also deletes anything not yet sent.
+
 ## Categories
 
 Access via **Settings → Reference data → Categories**.
@@ -7835,6 +7837,8 @@ Email обновляется мгновенно, выдаются новые т�
 
 Настройте сквозное шифрование (E2EE) для защиты ваших финансовых данных. См. Шифрование для подробностей.
 
+**Делиться статистикой использования.** Под шифрованием этот переключатель определяет, записывает ли приложение, какие экраны вы открываете и удаются ли действия вроде добавления расхода. Суммы, названия и то, что вы вводите, не записываются никогда. Статистика связана с вашим аккаунтом, показывает нам, какими функциями пользуются, и хранится 90 дней. По умолчанию переключатель включён и действует только на этом устройстве; при выключении удаляется и всё, что ещё не отправлено.
+
 ## Категории
 
 Доступ: **Настройки → Справочники → Категории**.
@@ -13459,6 +13463,8 @@ iOS, Android, Web
 
 Налаштуйте наскрізне шифрування (E2EE) для захисту ваших фінансових даних. Див. Шифрування для деталей.
 
+**Ділитися статистикою використання.** Під шифруванням цей перемикач визначає, чи записує застосунок, які екрани ви відкриваєте і чи вдаються дії на кшталт додавання витрати. Суми, назви й те, що ви вводите, не записуються ніколи. Статистика пов'язана з вашим акаунтом, показує нам, якими функціями користуються, і зберігається 90 днів. За замовчуванням перемикач увімкнений і діє лише на цьому пристрої; вимкнення також видаляє все, що ще не надіслано.
+
 ## Категорії
 
 Доступ: **Налаштування → Довідники → Категорії**.
@@ -19030,6 +19036,8 @@ Polacz swoje konto Telegram, aby otrzymywac powiadomienia i zarzadzac wydatkami 
 
 Skonfiguruj szyfrowanie end-to-end (E2EE), aby chronic swoje dane finansowe. Zobacz Szyfrowanie, aby uzyskac szczegoly.
 
+**Udostępniaj statystyki użytkowania.** Pod szyfrowaniem ten przełącznik decyduje, czy aplikacja zapisuje, które ekrany otwierasz i czy działania takie jak dodanie wydatku się udają. Nigdy nie zapisuje kwot, nazw ani tego, co wpisujesz. Statystyki są powiązane z Twoim kontem, pokazują nam, z których funkcji się korzysta, i są przechowywane przez 90 dni. Przełącznik jest domyślnie włączony i dotyczy tylko tego urządzenia; wyłączenie usuwa też to, co nie zostało jeszcze wysłane.
+
 ## Kategorie
 
 Dostep przez **Ustawienia → Słowniki → Kategorie**.
@@ -24600,6 +24608,8 @@ Verknupfe dein Telegram-Konto, um Benachrichtigungen zu erhalten und Ausgaben ub
 
 Richte Ende-zu-Ende-Verschlusselung (E2EE) ein, um deine Finanzdaten zu schutzen. Siehe Verschlusselung fur Details.
 
+**Nutzungsstatistiken teilen.** Unter der Verschlüsselung legt dieser Schalter fest, ob die App erfasst, welche Bildschirme du öffnest und ob Aktionen wie das Hinzufügen einer Ausgabe gelingen. Beträge, Namen oder deine Eingaben werden nie erfasst. Die Statistiken sind mit deinem Konto verknüpft, zeigen uns, welche Funktionen genutzt werden, und werden 90 Tage aufbewahrt. Der Schalter ist standardmäßig an und gilt nur für dieses Gerät; beim Ausschalten wird auch alles noch nicht Gesendete gelöscht.
+
 ## Kategorien
 
 Zugriff uber **Einstellungen → Stammdaten → Kategorien**.
@@ -30149,6 +30159,8 @@ Vincula tu cuenta de Telegram para recibir notificaciones y gestionar gastos a t
 
 Configura el cifrado de extremo a extremo (E2EE) para proteger tus datos financieros. Consulta Cifrado para mas detalles.
 
+**Compartir estadísticas de uso.** Debajo del cifrado, este interruptor decide si la app registra qué pantallas abres y si acciones como añadir un gasto se completan. Nunca registra importes, nombres ni nada de lo que escribes. Las estadísticas están vinculadas a tu cuenta, nos ayudan a ver qué funciones se usan y se conservan 90 días. Está activado por defecto y solo afecta a este dispositivo; al desactivarlo también se borra lo que aún no se haya enviado.
+
 ## Categorias
 
 Accede desde **Ajustes → Datos de referencia → Categorias**.
@@ -35683,6 +35695,8 @@ Liez votre compte Telegram pour recevoir des notifications et gerer vos depenses
 ## Securite et chiffrement
 
 Configurez le chiffrement de bout en bout (E2EE) pour proteger vos donnees financieres. Voir Chiffrement pour plus de details.
+
+**Partager les statistiques d'utilisation.** Sous le chiffrement, cet interrupteur détermine si l'application enregistre les écrans que vous ouvrez et si des actions comme l'ajout d'une dépense aboutissent. Elle n'enregistre jamais de montants, de noms ni ce que vous saisissez. Les statistiques sont liées à votre compte, nous montrent quelles fonctions sont utilisées et sont conservées 90 jours. Il est activé par défaut et ne concerne que cet appareil ; le désactiver supprime aussi ce qui n'a pas encore été envoyé.
 
 ## Categories
 
@@ -41221,6 +41235,8 @@ iOS, Android, Web
 
 Наладзьце скразное шыфраванне (E2EE) для абароны вашых фінансавых даных. Гл. Шыфраванне для падрабязнасцей.
 
+**Дзяліцца статыстыкай выкарыстання.** Пад шыфраваннем гэты пераключальнік вызначае, ці запісвае праграма, якія экраны вы адкрываеце і ці ўдаюцца дзеянні накшталт дадавання выдатку. Сумы, назвы і тое, што вы ўводзіце, не запісваюцца ніколі. Статыстыка звязана з вашым акаўнтам, паказвае нам, якімі функцыямі карыстаюцца, і захоўваецца 90 дзён. Па змаўчанні пераключальнік уключаны і дзейнічае толькі на гэтай прыладзе; выключэнне таксама выдаляе ўсё, што яшчэ не адпраўлена.
+
 ## Катэгорыі
 
 Доступ: **Налады → Даведнікі → Катэгорыі**.
@@ -46730,6 +46746,8 @@ Koppel je Telegram-account om meldingen te ontvangen en uitgaven te beheren via 
 ## Beveiliging & Versleuteling
 
 Stel end-to-end-versleuteling (E2EE) in om je financiële gegevens te beschermen. Zie Versleuteling voor details.
+
+**Gebruiksstatistieken delen.** Onder de versleuteling bepaalt deze schakelaar of de app bijhoudt welke schermen je opent en of acties zoals een uitgave toevoegen lukken. Bedragen, namen of wat je typt worden nooit vastgelegd. De statistieken zijn gekoppeld aan je account, laten ons zien welke functies worden gebruikt en worden 90 dagen bewaard. De schakelaar staat standaard aan en geldt alleen voor dit apparaat; uitzetten wist ook wat nog niet verzonden is.
 
 ## Categorieën
 
@@ -52371,6 +52389,8 @@ Associe a sua conta do Telegram para receber notificações e gerir despesas atr
 ## Segurança e encriptação
 
 Configure a encriptação ponto a ponto (E2EE) para proteger os seus dados financeiros. Consulte Encriptação para mais detalhes.
+
+**Partilhar estatísticas de utilização.** Abaixo da encriptação, este interruptor decide se a app regista que ecrãs abre e se ações como adicionar uma despesa são concluídas. Nunca regista valores, nomes nem o que escreve. As estatísticas estão associadas à sua conta, mostram-nos que funcionalidades são usadas e são guardadas durante 90 dias. Está ativado por predefinição e aplica-se apenas a este dispositivo; desativá-lo também apaga o que ainda não foi enviado.
 
 ## Categorias
 
@@ -58023,6 +58043,8 @@ Vincule sua conta do Telegram para receber notificações e gerenciar despesas p
 ## Segurança e criptografia
 
 Configure a criptografia de ponta a ponta (E2EE) para proteger seus dados financeiros. Veja Criptografia para mais detalhes.
+
+**Compartilhar estatísticas de uso.** Abaixo da criptografia, esta chave decide se o app registra quais telas você abre e se ações como adicionar uma despesa dão certo. Nunca registra valores, nomes nem o que você digita. As estatísticas ficam vinculadas à sua conta, mostram para nós quais recursos são usados e são guardadas por 90 dias. Ela vem ligada por padrão e vale só para este dispositivo; desligá-la também apaga o que ainda não foi enviado.
 
 ## Categorias
 

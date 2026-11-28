@@ -163,6 +163,8 @@ Associe a sua conta do Telegram para receber notificações e gerir despesas atr
 
 Configure a encriptação ponto a ponto (E2EE) para proteger os seus dados financeiros. Consulte [Encriptação](./15-encryption.md) para mais detalhes.
 
+**Partilhar estatísticas de utilização.** Abaixo da encriptação, este interruptor decide se a app regista que ecrãs abre e se ações como adicionar uma despesa são concluídas. Nunca regista valores, nomes nem o que escreve. As estatísticas estão associadas à sua conta, mostram-nos que funcionalidades são usadas e são guardadas durante 90 dias. Está ativado por predefinição e aplica-se apenas a este dispositivo; desativá-lo também apaga o que ainda não foi enviado.
+
 ## Categorias
 
 Aceda através de **Definições → Dados de referência → Categorias**.

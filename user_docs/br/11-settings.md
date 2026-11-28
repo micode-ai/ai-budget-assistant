@@ -163,6 +163,8 @@ Vincule sua conta do Telegram para receber notificações e gerenciar despesas p
 
 Configure a criptografia de ponta a ponta (E2EE) para proteger seus dados financeiros. Veja [Criptografia](./15-encryption.md) para mais detalhes.
 
+**Compartilhar estatísticas de uso.** Abaixo da criptografia, esta chave decide se o app registra quais telas você abre e se ações como adicionar uma despesa dão certo. Nunca registra valores, nomes nem o que você digita. As estatísticas ficam vinculadas à sua conta, mostram para nós quais recursos são usados e são guardadas por 90 dias. Ela vem ligada por padrão e vale só para este dispositivo; desligá-la também apaga o que ainda não foi enviado.
+
 ## Categorias
 
 Acesse em **Configurações → Dados de referência → Categorias**.

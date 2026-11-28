@@ -79,4 +79,16 @@ describe('TelemetryService.ingest', () => {
 
     expect(prisma.telemetryEvent.createMany.mock.calls[0][0].data[0].sessionId).toHaveLength(64);
   });
+
+  it.each(['web', 'android', 'ios'])('records the %s platform as sent', async (platform) => {
+    const { service, prisma } = makeService();
+
+    await service.ingest('user-1', {
+      platform,
+      sessionId: 'sess-1',
+      events: [{ name: 'session_start' }],
+    } as never);
+
+    expect(prisma.telemetryEvent.createMany.mock.calls[0][0].data[0].platform).toBe(platform);
+  });
 });

@@ -531,6 +531,9 @@ export async function biometricLoginAction(set: AuthStoreSet): Promise<void> {
         await secureStorage.removeItem('refreshToken');
         await secureStorage.removeItem('user');
         await secureStorage.removeItem('biometricEnabled');
+        // The saved session is dead: its queued telemetry belongs to a run
+        // that has ended, exactly as on sign-out.
+        resetTelemetry();
         set({
           user: null,
           accessToken: null,

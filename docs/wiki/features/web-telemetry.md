@@ -1,18 +1,24 @@
-# Web product telemetry
+# Product telemetry (web and native app)
 
 *Hub: [mobile-app](../mobile-app.md) · [admin-dashboard](../admin-dashboard.md)*
 
 ## What this is
 
-First-party product-usage analytics for the **web build only**, so the admin can see which screens
-are opened and whether a key flow completed. No PostHog, no GA-in-app, no third party.
+First-party product-usage analytics for the **web build** (since ABA-497) **and the native app**
+(Android, iOS-safe; added on `feature/mobile-telemetry`), so the admin can see which screens are
+opened — and which are not — and whether a key flow completed. No PostHog, no GA-in-app, no third
+party, no SDK. The page path keeps its old `web-telemetry` name so existing links stay valid.
 
 ## Entry points
 
 - `apps/api/src/modules/telemetry/` — ingest controller, `telemetry.validator.ts`, cleanup cron
 - `apps/api/src/modules/telemetry/telemetry-admin.controller.ts` — kept physically apart from ingest
-- `apps/mobile/src/services/telemetry.{ts,web.ts,types.ts}` — `telemetry.ts` is a real native no-op
-- `apps/mobile/src/hooks/useTelemetryScreenViews.ts`
+- `apps/mobile/src/services/telemetry.web.ts` — web implementation (in-memory buffer, `keepalive`)
+- `apps/mobile/src/services/telemetry.native.ts` — native implementation (MMKV-persisted queue)
+- `apps/mobile/src/services/telemetry.ts` — the platform-blind **no-op** stub; `telemetry.types.ts`
+- `apps/mobile/src/services/telemetryPreference.ts` — the "Share usage statistics" switch (MMKV,
+  default on), shown by `apps/mobile/src/components/settings/security/UsageStatisticsCard.tsx`
+- `apps/mobile/src/hooks/useTelemetryScreenViews.ts` — one file for every platform
 - Admin page `/telemetry`
 
 Table `telemetry_events`; daily cleanup at 03:00 deletes rows older than 90 days.
@@ -38,13 +44,50 @@ iPhone install card is shown, `completed` on a standalone iOS launch — the rat
 of the guide. `capture_suggestion` (ABA-682): `started` when the one-time faster-capture suggestion appears,
 `completed` when one of its options is chosen — see [faster-capture-suggestion](faster-capture-suggestion.md).
 
+**The native transport.** Events queue in memory and are persisted in MMKV (`telemetry-queue`) —
+debounced to one write per 2 s, and written synchronously on every flush and on background — so an
+app killed in the background sends them on the next launch. Entries read back from storage are
+filtered to well-formed ones (an object with a string `sid` and `name`). The queue is capped at 500,
+dropping the oldest. It flushes every 15 s while active (the interval stops in the background and
+restarts on return), on `AppState` → `background`, and when a session starts (the next launch).
+Each request is bounded by a 10 s abort timeout, so a hung request cannot hold the flush lock. A flush sends at most five requests of at most 40 events
+(the server's per-batch cap), each batch the leading run of ONE session's events, so the 30/min
+ingest throttle holds while a backlog drains. Outcomes: 2xx removes the batch; a network error,
+5xx, 408 or 429 keeps it for the next scheduled flush (never a tight retry loop); **401 drops it**
+(expired token, the same deliberate loss as web); any other 4xx drops it too, because it would be
+refused identically forever and block every event behind it. `platform` is `Platform.OS`.
+
+**A native session** starts when the signed-in cold-start gate opens (`useTelemetryScreenViews`
+calls `startTelemetrySession`) and again when the app returns to the foreground after **30 minutes
+or more** in the background; the restarted session re-states the current screen. Before the gate
+opens and after sign-out every event is dropped — there is no pre-login telemetry.
+
+**The "Share usage statistics" switch** (Settings → Security & Encryption, phone and desktop pane)
+is device-local and default on, and both implementations honour it: off clears whatever is queued
+and stops queuing at once; on opens a fresh session that repeats the current screen (both
+platforms keep the last reported screen for this). It **fails closed**: if the preference cannot be
+read (MMKV — `localStorage` on web — throws), `isTelemetryEnabled()` answers false, so the web
+client goes quiet as well as the native one rather than sending for a user who may have opted out. The copy never says "anonymous" — events are
+linked to the signed-in account, as the privacy policy states. It is not viewer-gated: it is a
+preference about this device, not a write to an account.
+
 **Every event carries the device class (ABA-683).** `formFactor` (`phone` below 768 px, `tablet`
 to 1023, `desktop` from `DESKTOP_MIN_WIDTH` = 1024, where the desktop shell starts) and `display`
 (`standalone` for the installed PWA, else `browser`) ride in each event's `props`, read at push time.
 The funnel classes a session by its LATEST stamped value, so a window resized across a breakpoint
-counts once, where it ended; unstamped sessions read `unknown`. `GET /admin/telemetry/funnel` takes
-`?formFactor=` to filter, and always returns the unfiltered `formFactors` breakdown (sessions, users,
-installed sessions) so the reader sees how much each slice weighs.
+counts once, where it ended; unstamped sessions read `unknown`. The native app stamps `formFactor` `phone` or `tablet` by the
+screen's **shortest side** (600 dp and up is a tablet, so rotating does not reclassify) and
+`display: 'app'`. `GET /admin/telemetry/funnel` takes `?formFactor=` to filter, and always returns
+the `formFactors` breakdown unfiltered by device class (sessions, users, installed sessions) so the
+reader sees how much each slice weighs.
+
+**Platform filter and least-used screens.** The funnel also takes `?platform=web|android|ios`
+(validated against `TELEMETRY_PLATFORMS` in the validator, the same list ingest uses; anything else
+means no filter). It is a column filter in the query, so the row ceiling applies to that platform
+alone, and it narrows every figure including the device breakdown. `screenUsage` lists every screen
+opened in the window with its distinct users and views, **least-used first** (ties on views, then
+name) — the admin page's "Screens, least used first" table. A screen nobody opened is absent, not a
+zero row: there is no list of all routes to compare against.
 
 **A `failed` can say why ([ABA-732](https://github.com/micode-ai/ai-budget-assistant/issues/770)).** `trackFailure(flow, reason)` sends the
 same `failed` action plus `reason` from a closed list — `amount`, `categories`, `save` — mirrored by
@@ -56,12 +99,17 @@ has been left cannot run code to report itself.
 
 ## Invariants
 
-**`telemetry.ts` (extensionless) is a real native no-op, not a stub re-exporting `.web`.** The
-`secureStorage` / `attribution` / `fileExport` trio each have a genuine `.native.ts` **and** a
-`.web.ts`, so their extensionless stub's content is arbitrary. Telemetry has no `.native.ts` — and
-must not gain one, which would make the extensionless file dead code and reopen the hole. A
-re-exporting stub would pull `document`, `fetch` and a live network send into the native bundle;
-the no-op fails safe, which is what makes "mobile sends nothing" structural rather than a promise.
+**`telemetry.ts` (extensionless) stays a no-op, never a re-export.** Until the native app sent
+telemetry, that file WAS the native implementation and the rule was "no `.native.ts`". Now both
+platforms have a real file — `telemetry.native.ts` and `telemetry.web.ts` — and Metro picks one at
+bundle time (the Android export contains the native queue and the web export does not; checked by
+grepping both bundles). The extensionless file is what a platform-blind resolver sees (TypeScript),
+so it decides what a resolution surprise does: a re-export of either sibling would make that
+surprise a live network send, while the empty bodies fail safe. `telemetry.stub.test.ts` pins the
+empty bodies. **Note for tests:** jest-expo resolves with React Native's haste platforms (`ios`,
+then `native`), so a bare `'../telemetry'` in Jest reaches `telemetry.native.ts`, not the stub; the
+stub test requires `'../telemetry.ts'` by full name. Nothing in the native file runs at import time
+(no timer, listener or storage read), which is why the rest of the suite is unaffected.
 
 **`isSafeScreen`'s three per-segment checks are all load-bearing.** A segment must start like a
 route segment, must not be 8+ characters of contiguous hex, and must not be a hyphenated UUID. The
@@ -91,10 +139,30 @@ away, which would count completions as abandonments.
 headers and the JWT lives in `secureStorage`, not a cookie, so it would have to go in the request
 body — landing the bearer token in every access log.
 
-**`send()` reads the token directly and does NOT go through `HttpClient`.** It therefore gets none
+**`send()` reads the token directly and does NOT go through `HttpClient`** — on both platforms. It therefore gets none
 of the 401-refresh-and-retry machinery, and while the stored JWT is expired every batch is silently
 lost. That is deliberate — telemetry must never force a refresh, still less trigger `HttpClient`'s
 401 → logout — and it is the one place the loss is systematic rather than random. Do not "fix" it.
+The native client keeps a batch on a network error (it persists anyway), but drops it on a 401 for
+exactly this reason.
+
+**The native queue has an owner and never sends another user's events.** The queue is stored
+with the user id it was recorded for (`owner`); `useTelemetryScreenViews` passes the signed-in
+user's id to `startTelemetrySession`, which clears the queue when the stored owner differs or
+either is unknown. Sign-out alone was not enough: a biometric saved-session whose tokens turn out
+invalid is dropped without a sign-out, and the next password login would otherwise have sent the
+old user's backlog under the new token (that branch of `biometricLoginAction` now also calls
+`resetTelemetry`). The session id lives on each queued event only to be lifted to the batch; it
+never appears inside an event on the wire.
+
+**A drain never outlives a sign-out.** `resetTelemetry` and an owner change bump a module
+`generation`; a drain captures it at its start and gives up after every `await` once it differs,
+and it reads the token per request rather than once per drain. Without both, a request in flight
+across a sign-out was followed by the next user's events posted with the previous user's token.
+
+**No device details beyond the two buckets.** Native sends no model, OS version or raw screen size —
+the shortest-side bucket and `display: 'app'` only. Adding any of them would fingerprint, and the
+validator would drop them anyway (`telemetry.validator.spec.ts` pins that).
 
 **The funnel read has a hard row ceiling.** Aggregation happens in JS (grouping by a JSON field
 would need raw SQL), so the query takes 200 000 rows newest-first and sets `truncated` when it hits
@@ -164,12 +232,27 @@ window width `1280`) fails whenever a `ts` happens to include those digits — i
   guard holds in practice.
 - **Only `ADMIN_EMAILS` counts as internal.** A test account outside that list is still in the
   funnel.
-- No pre-login telemetry (needs a public throttled endpoint with its own abuse design), no mobile
-  telemetry (needs a Play Data-safety decision), no cohort breakdowns.
+- No pre-login telemetry (needs a public throttled endpoint with its own abuse design), no cohort
+  breakdowns.
+- **Native event times can be hours or days late.** A queue persisted while offline or killed is
+  stored with the server's `createdAt` at the eventual flush, so an offline evening reads as the next
+  morning. The client `ts` is sent but not stored.
+- **A native session is not a web session.** Web: one page load. Native: one cold launch, or a
+  return after 30+ minutes in the background. Compare session counts across platforms with that open.
+- **Only instrumented flows report actions.** Native screens report screen views automatically, but
+  flow events come only from the call sites already instrumented for web (`TelemetryFlow`).
+- **Opted-out users are invisible**, not zero: the funnel cannot tell how many there are.
+- **A queue recorded without a known user id is cleared on the next start**, so a cold start
+  that opens the gate before the user object is loaded would lose that backlog — the safe
+  direction, never sending it under the wrong account.
+- **Not yet observed on a device** at the time of writing: the transport is covered by
+  `telemetry.native.test.ts` and both bundles build, but no Android/iOS run has been watched sending
+  a batch.
 
 ## History
 
 ABA-497 · [ABA-732](https://github.com/micode-ai/ai-budget-assistant/issues/770) (`reason` on `failed`) · ABA-645 (`ios_install` flow) · ABA-643 (`import_report` flow) ·
 [ABA-680](https://github.com/micode-ai/ai-budget-assistant/issues/710) (internal accounts excluded
 from the funnel) · [ABA-683](https://github.com/micode-ai/ai-budget-assistant/issues/713) (device
-class and display mode on every event).
+class and display mode on every event) · native app telemetry, the "Share usage statistics" switch,
+the admin platform filter and least-used screens table ([ABA-859](https://github.com/micode-ai/ai-budget-assistant/issues/897), 2026-11-28).

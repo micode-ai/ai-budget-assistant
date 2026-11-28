@@ -163,6 +163,8 @@ Link your Telegram account to receive notifications and manage expenses via the 
 
 Set up end-to-end encryption (E2EE) to protect your financial data. See [Encryption](./15-encryption.md) for details.
 
+**Share usage statistics.** Below encryption, this switch decides whether the app records which screens you open and whether actions such as adding an expense succeed. It never records amounts, names or anything you type. The statistics are linked to your account, help us see which features are used, and are kept for 90 days. It is on by default and applies to this device only; turning it off also deletes anything not yet sent.
+
 ## Categories
 
 Access via **Settings → Reference data → Categories**.
