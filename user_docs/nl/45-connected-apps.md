@@ -60,6 +60,18 @@ Wordt degene die de app gekoppeld heeft later alleen-lezer, of verlaat die een r
 
 Wat elk niveau omvat, lees je in [End-to-end-versleuteling](./15-encryption.md).
 
+## Een AI-assistent koppelen (MCP)
+
+Je kunt een AI-assistent zoals Claude of ChatGPT toestaan je AI Budget-gegevens te lezen en vragen te beantwoorden zoals "hoeveel heb ik vorige maand aan boodschappen uitgegeven?".
+
+1. Voeg in de assistent een eigen connector toe (in Claude: **Instellingen → Connectors → Eigen connector toevoegen**) en voer het adres `https://api.ai-budget.pl/mcp` in.
+2. De assistent opent een AI Budget-pagina waar je zoals gewoonlijk inlogt. Daarop staan de naam van de assistent en de opmerking **automatisch geregistreerd door een AI-assistent** — zo'n assistent hebben we niet gecontroleerd, koppel dus alleen een assistent die je zelf hebt gestart. Vink de rekeningen aan die hij mag gebruiken en tik op **Toestaan**.
+3. Stel je vraag in de assistent.
+
+De assistent heeft **alleen leestoegang**: hij leest uitgaven, inkomsten, categorieën, budgetten en uitgavetotalen, maar kan niets toevoegen, wijzigen of verwijderen en downloadt geen bonfoto's. Rekeningen met volledige versleuteling kunnen niet worden gekoppeld, en bij rekeningen met tekstversleuteling blijven versleutelde teksten verborgen, net als bij elke gekoppelde app.
+
+Om een assistent los te koppelen open je **Instellingen → Gekoppelde apps** en tik je ernaast op **Ontkoppelen**. Hij verliest direct de toegang.
+
 ## Voor ontwikkelaars
 
 Je kunt je eigen app bouwen op de AI Budget API – gratis. Open **Instellingen → Ontwikkelaars** en tik op **App maken**: geef een naam, een website en de redirect-adressen die hij gebruikt, en kies **Server-app** of **Mobiele of browser-app**. De **Client-ID** krijg je meteen; een server-app krijgt daarnaast een client secret die **maar één keer** getoond wordt – kopieer hem direct.

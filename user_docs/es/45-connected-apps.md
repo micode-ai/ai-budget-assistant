@@ -60,6 +60,18 @@ Si la persona que conectó la app pasa después a solo lectura o sale de una cue
 
 Qué cubre cada nivel se explica en [Cifrado de extremo a extremo](./15-encryption.md).
 
+## Conectar un asistente de IA (MCP)
+
+Puedes permitir que un asistente de IA como Claude o ChatGPT lea tus datos de AI Budget y responda preguntas como «¿cuánto gasté en comida el mes pasado?».
+
+1. En el asistente, añade un conector personalizado (en Claude: **Ajustes → Conectores → Añadir conector personalizado**) e introduce la dirección `https://api.ai-budget.pl/mcp`.
+2. El asistente abre una página de AI Budget en la que inicias sesión como siempre. Muestra el nombre del asistente y la nota **registrado automáticamente por un asistente de IA**: no hemos verificado a ese asistente, así que conecta solo uno que hayas iniciado tú. Marca las cuentas que puede usar y toca **Permitir**.
+3. Haz tu pregunta en el asistente.
+
+El asistente tiene acceso **de solo lectura**: lee gastos, ingresos, categorías, presupuestos y totales de gasto, pero no puede añadir, cambiar ni borrar nada ni descargar fotos de recibos. Las cuentas con cifrado completo no se pueden conectar, y las cuentas con cifrado de texto ocultan sus textos cifrados, igual que con cualquier app conectada.
+
+Para desconectar un asistente, abre **Ajustes → Apps conectadas** y toca **Desconectar** junto a él. Pierde el acceso al instante.
+
 ## Para desarrolladores
 
 Puedes crear tu propia app sobre la API de AI Budget, gratis. Abre **Ajustes → Desarrolladores** y pulsa **Crear app**: ponle un nombre, una web y las direcciones de redirección que usará, y elige **App de servidor** o **App móvil o de navegador**. El **Client ID** lo recibes al momento; una app de servidor recibe además un client secret que se muestra **una sola vez**: cópialo enseguida.

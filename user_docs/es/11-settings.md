@@ -179,6 +179,14 @@ También cuentan otros gastos del coche. En cualquier gasto, la sección **Coche
 
 **Vencimientos.** En la ficha del vehículo indica la próxima renovación del seguro, la próxima ITV, la próxima revisión y el kilometraje de la próxima revisión (todo opcional; la cruz borra una fecha). Recibirás un aviso 14 y 2 días antes de cada fecha, y una vez cuando el kilometraje de un repostaje quede a menos de 500 km de la revisión. Los vencimientos de los próximos 30 días o ya pasados aparecen como etiquetas en la tarjeta del vehículo y en su pantalla, donde la tarjeta **Vencimientos** muestra todas las fechas. Al marcar un gasto como seguro o revisión, la app ofrece mover ese vencimiento un año; nada cambia sin tu confirmación.
 
+## Suministros
+
+Descubre si una factura de suministros subió porque consumiste más o porque subió el precio. Accede desde **Ajustes → Datos de referencia → Suministros**.
+
+**Añadir una lectura.** Abre un gasto de suministros: electricidad, gas, agua o calefacción. Debajo de los detalles toca **Añadir consumo (kWh, m³, GJ)**, elige el tipo, introduce el consumo de la factura y su unidad y, si pagas facturas de más de un sitio, opcionalmente una **Propiedad** (por ejemplo, «Piso» o «Casa de campo»). La app calcula el precio por unidad a partir del importe del gasto. Para cambiar o eliminar una lectura, vuelve a abrir el gasto. Un gasto recién añadido tiene que sincronizarse primero; si aún no lo ha hecho, la app te pide que lo intentes de nuevo en un momento. Quienes solo pueden ver una cuenta compartida ven las lecturas, pero no pueden añadirlas.
+
+**Qué muestra la pantalla.** Para cada tipo: el precio por unidad mes a mes y el consumo. Cuando el precio unitario del último mes supera en más de un 10 % la media de los tres meses anteriores, un aviso lo indica. Cuando un tipo tiene lecturas de un año, cada mes se compara con el mismo mes del año anterior, tanto el precio como el consumo. Si tienes varias propiedades, elige una arriba o velas todas juntas. Los costes se muestran en tu moneda de visualización; una factura en una moneda cuyo tipo de cambio se desconoce queda fuera del coste, y la pantalla lo indica. Los gastos planificados no se cuentan.
+
 ## Datos e informes
 
 ### Datos y sincronizacion

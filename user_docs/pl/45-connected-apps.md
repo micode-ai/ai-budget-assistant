@@ -60,6 +60,18 @@ Jeśli osoba, która połączyła aplikację, straci później prawo edycji albo
 
 Co obejmuje każdy poziom, opisaliśmy w [Szyfrowaniu end-to-end](./15-encryption.md).
 
+## Połącz asystenta AI (MCP)
+
+Możesz pozwolić asystentowi AI, takiemu jak Claude czy ChatGPT, czytać Twoje dane z AI Budżet i odpowiadać na pytania typu „ile wydałem na zakupy spożywcze w zeszłym miesiącu?”.
+
+1. W asystencie dodaj własny konektor (w Claude: **Ustawienia → Konektory → Dodaj własny konektor**) i wpisz adres `https://api.ai-budget.pl/mcp`.
+2. Asystent otworzy stronę AI Budżet, na której zalogujesz się jak zwykle. Zobaczysz na niej nazwę asystenta i dopisek **zarejestrowany automatycznie przez asystenta AI** — takiego asystenta nie sprawdzaliśmy, więc łącz tylko tego, którego sam uruchomiłeś. Zaznacz konta, z których może korzystać, i dotknij **Zezwól**.
+3. Zadaj pytanie w asystencie.
+
+Asystent ma dostęp **tylko do odczytu**: czyta wydatki, przychody, kategorie, budżety i podsumowania wydatków, ale nie może niczego dodawać, zmieniać ani usuwać i nie pobiera zdjęć paragonów. Konta z pełnym szyfrowaniem nie da się połączyć, a konta z szyfrowaniem tekstów ukrywają zaszyfrowane teksty — tak samo jak w każdej połączonej aplikacji.
+
+Aby odciąć asystenta, otwórz **Ustawienia → Połączone aplikacje** i dotknij **Rozłącz** przy nim. Traci dostęp natychmiast.
+
 ## Dla deweloperów
 
 Możesz zbudować własną aplikację na API AI Budget — za darmo. Otwórz **Ustawienia → Dla deweloperów** i dotknij **Utwórz aplikację**: podaj nazwę, stronę domową i adresy przekierowania (redirect URI), a potem wybierz **Aplikacja serwerowa** albo **Aplikacja mobilna lub przeglądarkowa**. **Client ID** dostajesz od razu; aplikacja serwerowa dostaje też client secret, który wyświetlamy **tylko raz** — skopiuj go natychmiast.

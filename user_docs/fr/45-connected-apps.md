@@ -60,6 +60,18 @@ Si la personne qui a connecté l'application passe ensuite en lecture seule ou q
 
 Le détail de chaque niveau est dans [Chiffrement de bout en bout](./15-encryption.md).
 
+## Connecter un assistant IA (MCP)
+
+Vous pouvez autoriser un assistant IA comme Claude ou ChatGPT à lire vos données AI Budget et à répondre à des questions comme « combien ai-je dépensé en courses le mois dernier ? ».
+
+1. Dans l'assistant, ajoutez un connecteur personnalisé (dans Claude : **Paramètres → Connecteurs → Ajouter un connecteur personnalisé**) et saisissez l'adresse `https://api.ai-budget.pl/mcp`.
+2. L'assistant ouvre une page AI Budget où vous vous connectez comme d'habitude. Elle affiche le nom de l'assistant et la mention **enregistré automatiquement par un assistant IA** : nous n'avons pas vérifié cet assistant, ne connectez donc que celui que vous avez lancé vous-même. Cochez les comptes qu'il peut utiliser et touchez **Autoriser**.
+3. Posez votre question dans l'assistant.
+
+L'assistant a un accès **en lecture seule** : il lit les dépenses, revenus, catégories, budgets et totaux de dépenses, mais ne peut rien ajouter, modifier ni supprimer, et ne télécharge pas les photos de reçus. Les comptes à chiffrement complet ne peuvent pas être connectés, et les comptes à chiffrement du texte masquent leurs textes chiffrés, comme pour toute application connectée.
+
+Pour déconnecter un assistant, ouvrez **Paramètres → Applications connectées** et touchez **Déconnecter** à côté de lui. Il perd l'accès immédiatement.
+
 ## Pour les développeurs
 
 Vous pouvez créer votre propre application sur l'API AI Budget, gratuitement. Ouvrez **Paramètres → Développeurs** et touchez **Créer une app** : donnez-lui un nom, un site et les adresses de redirection qu'elle utilisera, puis choisissez **App serveur** ou **App mobile ou navigateur**. Vous recevez aussitôt un **Client ID** ; une app serveur reçoit en plus un client secret affiché **une seule fois** — copiez-le immédiatement.

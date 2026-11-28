@@ -5531,6 +5531,14 @@ Ook andere autokosten tellen mee. Bij elke uitgave kies je in het onderdeel **Au
 
 **Vervaldata.** Stel in het voertuigblad de volgende verlenging van de verzekering, de volgende APK, de volgende onderhoudsbeurt en de kilometerstand voor het volgende onderhoud in (alles optioneel; het kruisje wist een datum). Je krijgt een herinnering 14 en 2 dagen voor elke datum, en één keer wanneer de kilometerstand van een tankbeurt binnen 500 km van het onderhoud komt. Vervaldata binnen 30 dagen of al verstreken verschijnen als labels op de voertuigkaart en op het voertuigscherm, waar de kaart **Vervaldata** alle data toont. Markeer je een uitgave als verzekering of onderhoud, dan biedt de app aan die vervaldatum een jaar op te schuiven; zonder jouw bevestiging verandert er niets.
 
+## Energie en water
+
+Zie of een energierekening hoger werd doordat je meer verbruikte of doordat de prijs steeg. Ga naar **Instellingen → Referentiegegevens → Energie en water**.
+
+**Een meting toevoegen.** Open een uitgave voor energie of water — elektriciteit, gas, water of verwarming. Tik onder de details op **Verbruik toevoegen (kWh, m³, GJ)**, kies het soort, vul het verbruik van de rekening en de eenheid in, en eventueel een **Woning** (bijvoorbeeld "Appartement" of "Zomerhuisje") als je rekeningen voor meer dan één plek betaalt. De app berekent de prijs per eenheid uit het bedrag van de uitgave. Om een meting te wijzigen of te verwijderen, open je de uitgave opnieuw. Een net toegevoegde uitgave moet eerst gesynchroniseerd zijn; is dat nog niet gebeurd, dan vraagt de app je het zo meteen opnieuw te proberen. Kijkers van een gedeeld account zien de metingen, maar kunnen ze niet toevoegen.
+
+**Wat het scherm laat zien.** Per soort: de prijs per eenheid maand na maand, en het verbruik. Ligt de eenheidsprijs van de laatste maand meer dan 10% boven het gemiddelde van de drie maanden ervoor, dan meldt een notitie dat. Zodra een soort een jaar aan metingen heeft, wordt elke maand vergeleken met dezelfde maand vorig jaar — zowel de prijs als het verbruik. Met meerdere woningen kies je er bovenaan één of bekijk je ze allemaal samen. Kosten staan in je weergavevaluta; een rekening in een valuta met een onbekende wisselkoers telt niet mee in de kosten, en het scherm zegt dat. Geplande uitgaven tellen niet mee.
+
 ## Gegevens & Rapporten
 
 ### Gegevens & Synchronisatie
@@ -8706,6 +8714,18 @@ Wordt degene die de app gekoppeld heeft later alleen-lezer, of verlaat die een r
 - Een rekening met **tekstversleuteling** kan **alleen-lezen** gekoppeld worden: de app ziet bedragen, datums en categorieën, maar omschrijvingen, notities, winkels, artikelnamen, tags en andere versleutelde tekst blijven verborgen, en hij kan geen uitgaven toevoegen of wijzigen.
 
 Wat elk niveau omvat, lees je in [End-to-end-versleuteling](./15-encryption.md).
+
+## Een AI-assistent koppelen (MCP)
+
+Je kunt een AI-assistent zoals Claude of ChatGPT toestaan je AI Budget-gegevens te lezen en vragen te beantwoorden zoals "hoeveel heb ik vorige maand aan boodschappen uitgegeven?".
+
+1. Voeg in de assistent een eigen connector toe (in Claude: **Instellingen → Connectors → Eigen connector toevoegen**) en voer het adres `https://api.ai-budget.pl/mcp` in.
+2. De assistent opent een AI Budget-pagina waar je zoals gewoonlijk inlogt. Daarop staan de naam van de assistent en de opmerking **automatisch geregistreerd door een AI-assistent** — zo'n assistent hebben we niet gecontroleerd, koppel dus alleen een assistent die je zelf hebt gestart. Vink de rekeningen aan die hij mag gebruiken en tik op **Toestaan**.
+3. Stel je vraag in de assistent.
+
+De assistent heeft **alleen leestoegang**: hij leest uitgaven, inkomsten, categorieën, budgetten en uitgavetotalen, maar kan niets toevoegen, wijzigen of verwijderen en downloadt geen bonfoto's. Rekeningen met volledige versleuteling kunnen niet worden gekoppeld, en bij rekeningen met tekstversleuteling blijven versleutelde teksten verborgen, net als bij elke gekoppelde app.
+
+Om een assistent los te koppelen open je **Instellingen → Gekoppelde apps** en tik je ernaast op **Ontkoppelen**. Hij verliest direct de toegang.
 
 ## Voor ontwikkelaars
 

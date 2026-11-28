@@ -179,6 +179,14 @@ Les autres frais de voiture comptent aussi. Sur n'importe quelle dépense, la se
 
 **Échéances.** Dans la fiche du véhicule, indiquez le prochain renouvellement de l'assurance, le prochain contrôle technique, le prochain entretien et le kilométrage du prochain entretien (tout est facultatif ; la croix efface une date). Un rappel arrive 14 et 2 jours avant chaque date, et une fois quand le compteur d'un plein arrive à moins de 500 km de l'entretien. Les échéances dans les 30 jours ou déjà passées s'affichent en pastilles sur la carte du véhicule et sur son écran, dont la carte **Échéances** liste toutes les dates. Quand vous marquez une dépense comme assurance ou entretien, l'application propose de repousser cette échéance d'un an ; rien ne change sans votre confirmation.
 
+## Factures d'énergie
+
+Voyez si une facture d'énergie a augmenté parce que vous avez consommé davantage ou parce que le prix a monté. Accès via **Paramètres → Données de référence → Factures d'énergie**.
+
+**Ajouter un relevé.** Ouvrez une dépense d'énergie — électricité, gaz, eau ou chauffage. Sous les détails, touchez **Ajouter la consommation (kWh, m³, GJ)**, choisissez le type, saisissez la consommation indiquée sur la facture et son unité, et éventuellement un **Logement** (par exemple « Appartement » ou « Maison de campagne ») si vous payez des factures pour plusieurs endroits. L'application calcule le prix unitaire à partir du montant de la dépense. Pour modifier ou supprimer un relevé, rouvrez la dépense. Une dépense qui vient d'être ajoutée doit d'abord être synchronisée ; si ce n'est pas encore le cas, l'application vous demande de réessayer dans un instant. Les lecteurs d'un compte partagé voient les relevés mais ne peuvent pas en ajouter.
+
+**Ce que montre l'écran.** Pour chaque type : le prix unitaire mois par mois, et la consommation. Lorsque le prix unitaire du dernier mois dépasse de plus de 10 % la moyenne des trois mois précédents, une note le signale. Dès qu'un type a un an de relevés, chaque mois est comparé au même mois de l'année précédente — le prix comme la consommation. Avec plusieurs logements, choisissez-en un en haut ou affichez-les tous ensemble. Les coûts sont affichés dans votre devise d'affichage ; une facture dans une devise dont le taux de change est inconnu est exclue du coût, et l'écran le signale. Les dépenses prévues ne sont pas comptées.
+
 ## Donnees et rapports
 
 ### Donnees et synchronisation

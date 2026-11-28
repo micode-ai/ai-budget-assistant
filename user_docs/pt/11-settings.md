@@ -192,6 +192,14 @@ Os outros custos do carro também contam. Em qualquer despesa, a secção **Carr
 
 **Prazos.** Na ficha do veículo, defina a próxima renovação do seguro, a próxima inspeção, a próxima revisão e a quilometragem da próxima revisão (tudo opcional; a cruz limpa uma data). Recebe um lembrete 14 e 2 dias antes de cada data, e uma vez quando a quilometragem de um abastecimento ficar a menos de 500 km da revisão. Os prazos nos próximos 30 dias ou já ultrapassados aparecem como etiquetas no cartão do veículo e no seu ecrã, onde o cartão **Prazos** mostra todas as datas. Quando marca uma despesa como seguro ou revisão, a app propõe adiar esse prazo um ano; nada muda sem a sua confirmação.
 
+## Serviços domésticos
+
+Perceba se uma fatura de serviços subiu porque consumiu mais ou porque o preço aumentou. Aceda em **Definições → Dados de referência → Serviços domésticos**.
+
+**Adicionar uma leitura.** Abra uma despesa de serviços — eletricidade, gás, água ou aquecimento. Por baixo dos detalhes, toque em **Adicionar consumo (kWh, m³, GJ)**, escolha o tipo, introduza o consumo indicado na fatura e a respetiva unidade e, se paga faturas de mais do que um sítio, opcionalmente um **Imóvel** (por exemplo, «Apartamento» ou «Casa de campo»). A aplicação calcula o preço por unidade a partir do valor da despesa. Para alterar ou remover uma leitura, volte a abrir a despesa. Uma despesa acabada de adicionar tem de ser sincronizada primeiro; se ainda não o foi, a aplicação pede-lhe que tente novamente daqui a pouco. Quem só pode ver uma conta partilhada vê as leituras, mas não as pode adicionar.
+
+**O que o ecrã mostra.** Para cada tipo: o preço por unidade mês a mês e o consumo. Quando o preço unitário do último mês fica mais de 10% acima da média dos três meses anteriores, uma nota assinala-o. Quando um tipo tem leituras de um ano, cada mês é comparado com o mesmo mês do ano anterior — tanto o preço como o consumo. Com vários imóveis, escolha um no topo ou veja-os todos em conjunto. Os custos aparecem na sua moeda de apresentação; uma fatura numa moeda cuja taxa de câmbio é desconhecida fica de fora do custo, e o ecrã indica-o. As despesas planeadas não são contabilizadas.
+
 ## Dados e relatórios
 
 ### Dados e sincronização

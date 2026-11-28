@@ -12,7 +12,7 @@ A 30-day window in which a soft-deleted expense or income can be listed and rest
 
 ## Invariants
 - Ids resolve as `OR:[{id},{clientId}]` and the resolved server PK is written — device-created rows are addressed by clientId.
-- Every query filters by `accountId`; restore is never behind the `:accountId`-path trap since the account comes from the guard.
+- Every query filters by `accountId` (the one exception, the linked-transfer lookup in `restoreOne`, runs only on an income already resolved inside the account); restore is never behind the `:accountId`-path trap since the account comes from the guard.
 - A debt repayment is not restored while its debt is still deleted (`debt_deleted`), or it would count against a debt that no longer exists.
 - An income is not restored while the `AccountTransfer` linked to it is deleted (`transfer_deleted`), nor while the expense it repays is deleted (`debt_deleted`). Expenses have no transfer link.
 - Restore bumps `syncVersion` so other devices pull the row back.

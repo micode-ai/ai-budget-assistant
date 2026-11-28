@@ -60,6 +60,18 @@ Wird die Person, die die App verbunden hat, später zur reinen Betrachterin oder
 
 Was jede Stufe umfasst, steht unter [Ende-zu-Ende-Verschlüsselung](./15-encryption.md).
 
+## KI-Assistenten verbinden (MCP)
+
+Du kannst einem KI-Assistenten wie Claude oder ChatGPT erlauben, deine AI-Budget-Daten zu lesen und Fragen zu beantworten wie „Wie viel habe ich letzten Monat für Lebensmittel ausgegeben?“.
+
+1. Füge im Assistenten einen eigenen Connector hinzu (in Claude: **Einstellungen → Connectors → Eigenen Connector hinzufügen**) und gib die Adresse `https://api.ai-budget.pl/mcp` ein.
+2. Der Assistent öffnet eine AI-Budget-Seite, auf der du dich wie gewohnt anmeldest. Sie zeigt den Namen des Assistenten und den Hinweis **automatisch von einem KI-Assistenten registriert** — einen solchen Assistenten haben wir nicht geprüft, verbinde also nur einen, den du selbst gestartet hast. Wähle die Konten, die er nutzen darf, und tippe auf **Erlauben**.
+3. Stelle deine Frage im Assistenten.
+
+Der Assistent hat **nur Lesezugriff**: Er liest Ausgaben, Einnahmen, Kategorien, Budgets und Ausgabensummen, kann aber nichts hinzufügen, ändern oder löschen und lädt keine Belegfotos herunter. Konten mit voller Verschlüsselung lassen sich nicht verbinden, und bei Konten mit Textverschlüsselung bleiben verschlüsselte Texte verborgen — wie bei jeder verbundenen App.
+
+Um einen Assistenten zu trennen, öffne **Einstellungen → Verbundene Apps** und tippe daneben auf **Trennen**. Er verliert den Zugriff sofort.
+
 ## Für Entwickler
 
 Du kannst eigene Apps auf der AI Budget API bauen – kostenlos. Öffne **Einstellungen → Entwickler** und tippe auf **App erstellen**: Gib einen Namen, eine Website und die Weiterleitungsadressen (Redirect-URIs) an und wähle **Server-App** oder **Mobile oder Browser-App**. Die **Client-ID** bekommst du sofort; eine Server-App erhält zusätzlich ein Client-Secret, das **nur ein einziges Mal** angezeigt wird – kopiere es gleich.

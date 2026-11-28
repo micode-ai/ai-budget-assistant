@@ -15,7 +15,7 @@ writes a `TransactionRevision` row with the editor and a `{field: {from, to}}` d
 
 ## Invariants
 - Recorded inside the update `$transaction` (`ExpensesService.update`, `IncomesService.update`), never fire-and-forget.
-- Both update paths must receive the editor id: controller `req.user.id` and the `/sync` handlers' `userId`. A new caller of `update()` that omits it records nothing, silently.
+- Both update paths must receive the editor id: controller `req.user.id` and the `/sync` handlers' `userId` — the handlers call `ExpensesService.update`/`IncomesService.update`, so revisions are always written inside those two services. A new caller of `update()` that omits it records nothing, silently.
 - A row with `encryptedPayload` on either side is skipped: its plaintext columns are zeroed, and plaintext history must never copy E2EE values.
 - Single-member accounts record nothing.
 - On an account at `encryptionTier >= 1`, `description` and `merchant` hold client-side ciphertext with no `encryptedPayload`, so `diffTransaction(..., { textEncrypted: true })` leaves them out; amount, currency, category and date are still recorded.

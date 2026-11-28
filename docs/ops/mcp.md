@@ -134,6 +134,8 @@ docker logs --since 1h shared-nginx 2>&1 | grep 'POST /oauth/register' | awk '{p
 
 ### 5. Publish the help section (paste the text below first)
 
+**Done 2026-11-28:** the section below is in `user_docs/<lang>/45-connected-apps.md` for all 11 locales (pt and br translated then). Kept here as the source text.
+
 The "Connect an AI assistant (MCP)" section is deliberately **not** in `user_docs/` while MCP is dark (R9):
 `45-connected-apps` is registered and live, so the next `npm run generate:help` by any task would publish
 instructions for a feature that answers 404. Paste it now, at launch:

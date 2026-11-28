@@ -2211,6 +2211,553 @@ app/investment/
 - **Локализация**: Поддерживает все 9 языков приложения
 - **Графики**: Каждый инсайт включает соответствующую визуализацию (donut, bar, line)
 
+## Связь с разработчиком (чат поддержки)
+
+Одна переписка на пользователя между приложением и разработчиком (ABA-856, ABA-857, ABA-858). Пользователь пишет на любом языке; разработчик читает и отвечает на своём (`SUPPORT_DEVELOPER_LANGUAGE`, по умолчанию `ru`) — в админ-панели или ответом на карточку в **отдельном** Telegram-боте поддержки. Каждая сторона видит текст другой в переводе, оригинал открывается одним нажатием. Устройство и инварианты: `docs/wiki/features/contact-developer.md`; ранбук бота: `docs/ops/support-bot.md`.
+
+### Поток сообщений
+
+```
+Приложение (Настройки → Написать разработчику или карточка на экране «Помощь»)
+  │ POST /support/messages { body, context }
+  ▼
+SupportService ── сохраняет SupportMessage (author=user, bodyLang, translatedBody)
+  │                └─ лимит: 10 сообщений за 24 ч на пользователя (окно в Redis, при сбое пропускает)
+  ├─► admin:support-unread (Socket.io) → страница /support в админ-панели
+  └─► SupportForwarder (= SupportTelegramService, опциональная инъекция)
+         └─ карточка в SUPPORT_TELEGRAM_CHAT_ID; её message_id → SupportMessage.telegramMessageId
+
+Ответ разработчика
+  ├─ админка: POST /admin/support/threads/:id/reply
+  └─ Telegram: «Ответить» на карточку → POST /support-telegram/webhook
+         └─ переписка определяется ТОЛЬКО по reply_to_message.message_id
+  ▼
+SupportAdminService.reply ── переводит на язык пользователя, сохраняет, отправляет пуш
+  └─ письмо, если ответ не прочитан (см. ниже)
+```
+
+### Компоненты
+
+| Часть | Где |
+|---|---|
+| Пользовательские маршруты (только `JwtAuthGuard`) | `apps/api/src/modules/support/support.controller.ts` |
+| Админские маршруты (`JwtAuthGuard` + `AdminGuard`) | `support-admin.controller.ts`, `support-admin.service.ts` |
+| Вебхук Telegram (вне `/api/v1`) | `support-telegram.controller.ts`, `support-telegram.service.ts` |
+| Перевод | `support-translation.service.ts` — учитывается как `support_translation` через `logUsageWithoutLimit` и поэтому не расходует AI-лимит пользователя |
+| Письма о непрочитанных ответах | `support-email.service.ts`, `support-email.cron.ts` (раз в час, в :15) |
+| Отписка | `modules/mail/mail-unsubscribe.controller.ts` — `GET`/`POST /mail/unsubscribe/support` |
+| Страница админки | `apps/admin/src/app/support/page.tsx` |
+| Экран приложения | `apps/mobile/app/support.tsx`, `src/components/support/` (телефон + десктоп-веб), `src/features/support/` (`useSupportThread`, `collectSupportContext`, `supportPolling`, `openSupport`) |
+
+### Таблицы базы данных
+
+- `support_threads` (`SupportThread`) — одна на пользователя (уникальный `userId`, удаляется каскадно вместе с `User`): `status` (`open`/`closed`), `muted`, `autoTranslate`, счётчики непрочитанного для обеих сторон, `firstUnreadReplyAt`, `lastEmailedAt`, `emailEnabled`
+- `support_messages` (`SupportMessage`) — `author`, `body` (оригинал, никогда не перезаписывается), `bodyLang`, `translatedBody`, `context` (JSON), уникальный `telegramMessageId`, `readAt`
+
+### Ключевые правила
+
+- **Переписка привязана к пользователю, а не к аккаунту**: `AccountContextGuard` не используется, каждый запрос фильтрует по `userId`. Приложение отправляет запросы с `skipAccountScope`, чтобы устаревший `X-Account-Id` не мешал написать разработчику.
+- **Строгий DTO контекста**: `context` принимает только `appVersion`, `buildSha`, `platform`, `osVersion`, `locale`, `tier`, `accountType`, `fromRoute` — лишний ключ даёт 400.
+- **Адресата ответа в Telegram не угадываем**: запасного варианта «последняя активная переписка» нет; на сообщение, которое не является ответом на карточку, бот подсказывает «ответьте на карточку». Слушается только `SUPPORT_TELEGRAM_CHAT_ID`.
+- **Вебхук**: секрет сверяется через `timingSafeEqual` (если не задан — случайный секрет на процесс), сначала отдаётся 200, обновления дедуплицируются по `update_id` (`support-tg:update:<id>`, 24 ч). Путь обязан оставаться в `global-prefix-exclusions.ts` и `SMALL_BODY_PATHS`.
+- **Теневой мьют**: в заглушённой переписке сообщения сохраняются, но никуда не пересылаются и не увеличивают счётчики; пользователь получает тот же ответ, что и без мьюта.
+- **Деактивация** физически удаляет переписку; на ответ неактивному пользователю разработчик получает уведомление «пользователь неактивен».
+- **Отдельный бот**: бот поддержки никогда не использует `OPS_TELEGRAM_*` и бота-ассистента.
+
+### Письма о непрочитанных ответах
+
+Непрочитанный ответ не должен потеряться: у веб-пользователя нет push-токена, а пуш можно смахнуть.
+
+- Когда `userUnreadCount` переходит из 0 в 1, ставится `firstUnreadReplyAt`. Пользователю **без** push-токена письмо уходит сразу после коммита транзакции ответа (fire-and-forget).
+- Пользователю **с** пушами письмо отправляет `SupportEmailCron` (`paginateById`), если ответ не прочитан 12 часов.
+- Одно письмо на пачку непрочитанного: отправка закрепляется условным `updateMany` по `lastEmailedAt: null` **до** отправки (при ошибке отметка снимается) и сбрасывается, только когда пользователь прочитал переписку.
+- Условия: непрочитанных больше нуля, `lastEmailedAt` пуст, `emailEnabled`, переписка не в мьюте, пользователь активен и у него есть e-mail.
+- Отписка действует только на письма поддержки: HMAC от `unsubscribe:support:<userId>` выставляет лишь `SupportThread.emailEnabled = false`; токены онбординговых писем здесь не принимаются, и наоборот.
+
+### Особенности веба
+
+Лента сообщений помечена `translate="no"` / `notranslate`, у каждого пузыря есть `lang`: экран переводит сам, а переводчик страниц Chrome оборачивал текстовые узлы React в `<font>`, и 20-секундный опрос ответов падал с `removeChild` (ABA-858).
+
+## Публичный API, сервер OAuth и MCP-коннектор
+
+Версионируемый публичный REST API (`/public/v1`), через который другие продукты работают от имени пользователя, собственный сервер авторизации OAuth 2.0 перед ним (ABA-707, ABA-709, ABA-713) и MCP-эндпоинт только для чтения (`/mcp`), через который AI-ассистенты (Claude, ChatGPT) читают те же данные через тот же сервер (ABA-750). Зарегистрировать приложение может любой пользователь; доступ к API бесплатный, но тариф самого пользователя продолжает действовать. Всё закрыто флагом `PUBLIC_API_ENABLED`, MCP-часть — дополнительно `MCP_ENABLED` (оба должны быть в точности `true`). Устройство и инварианты: `docs/wiki/features/public-api.md`, `docs/wiki/features/mcp-connector.md`; ранбуки `docs/ops/public-api.md`, `docs/ops/mcp.md`.
+
+### Поток
+
+```
+Стороннее приложение                     AI-ассистент (MCP)
+  │                                        │ POST /mcp (без токена) → 401 + resource_metadata
+  │                                        │ GET /.well-known/oauth-protected-resource/mcp
+  │                                        │ GET /.well-known/oauth-authorization-server
+  │                                        │ POST /oauth/register → публичный клиент (source=mcp_dcr)
+  ▼                                        ▼
+app.ai-budget.pl/authorize  (страница согласия, PKCE S256 для любого клиента; MCP добавляет resource=)
+  │ GET  /api/v1/oauth/authorize/preview   (JWT пользователя)
+  │ POST /api/v1/oauth/authorize/approve   → OAuthGrant (+ строки OAuthGrantAccount)
+  │                                         одноразовый код в Redis на 10 мин (несёт resource)
+  ▼
+POST /oauth/token  → access на 1 ч + refresh на 90 дн (непрозрачные, хранятся как SHA-256), привязаны к resource
+  │
+  ├─ resource = null ──────────► /public/v1/*   PublicApiAuthGuard ─┐
+  └─ resource = MCP_RESOURCE_URL ► /mcp (инструменты) authenticateMcp ┤
+                                                                    ▼
+                         PublicApiAuthorizer.authorize(token, {scopes, account, resource, …})
+                         читает из БД токен, грант, клиента, пользователя, членство, уровень шифрования
+                                                                    ▼
+                         public-read.views.ts / адаптеры записи → ExpensesService, IncomesService, BudgetsService
+```
+
+### Компоненты
+
+| Часть | Где |
+|---|---|
+| Бэкенд согласия, приложения разработчика, подключённые приложения (`/api/v1`, `JwtAuthGuard`) | `apps/api/src/modules/oauth/oauth.module.ts` — `oauth-authorize.controller.ts`, `developer-apps.controller.ts`, `connected-apps.controller.ts` |
+| Эндпоинт токенов (`/oauth/token`, `/oauth/revoke`, вне `/api/v1`) | `oauth-public.module.ts`, `oauth-token.controller.ts`, `oauth-token.service.ts` (обмен кода, ротация refresh, отзыв) |
+| Гранты, клиенты, scopes, коды | `oauth-grants.service.ts`, `oauth-clients.service.ts`, `oauth-scopes.ts`, `oauth-code.ts`, `oauth-crypto.util.ts`, `redirect-uri.util.ts`, `app-name.util.ts` |
+| Флаги | `oauth.config.ts` (`isPublicApiEnabled`), `mcp.config.ts` (`isMcpEnabled`, значения по умолчанию для issuer, resource и URL согласия), `guards/public-api-enabled.guard.ts`, `guards/mcp-enabled.guard.ts` |
+| Дополнения сервера авторизации для MCP | `oauth-metadata.controller.ts` (`.well-known`), `oauth-register.controller.ts` + `oauth-register.service.ts` (DCR), `oauth-resource.util.ts`, `oauth-scope-policy.ts`, `ip-bucket.util.ts`, `register-body-limit.ts` |
+| Крон очистки | `oauth-token-cleanup.cron.ts` — ежедневно в 03:30: истёкшие токены, гранты без аккаунтов, неиспользуемые DCR-клиенты |
+| Ресурсный сервер | `apps/api/src/modules/public-api/` — контроллеры аккаунта(ов), категорий, расходов, доходов, бюджетов, аналитики |
+| Общая авторизация | `public-api-authorizer.service.ts`; `guards/public-api-auth.guard.ts` (тонкий адаптер для REST), `guards/public-write.guard.ts`, декораторы `@RequireScopes`, `@TokenOnly`, `@ConnectionLevel`, `@PublicWrite` |
+| Чтение и запись | `public-read.views.ts` (общие для REST и MCP), `public-*.query.ts`, `public-*-write.adapter.ts`, `public-analytics.service.ts`, `public-idempotency.util.ts`, `list-feed.util.ts`, `cursor.util.ts`, `public-encryption-fields.ts` |
+| Ошибки и лимиты | `public-api-error.ts`, `filters/public-api-exception.filter.ts`, `public-api-rate-limit.service.ts` |
+| Справочник | `public-api/docs/` — Swagger UI на каждом языке (`texts.{en,pl,ru}.ts`, `guide.{en,pl,ru}.md`), `openapi.ts`, `public-docs.controller.ts` |
+| MCP-эндпоинт | `apps/api/src/modules/mcp/` — `mcp.controller.ts` (без состояния, новый SDK-сервер на каждый запрос), `mcp-auth.ts`, `mcp-body-limit.ts`, `mcp-server.factory.ts`, `mcp-tools.ts` (девять инструментов чтения) |
+| Раздел «API apps» в админке | `apps/api/src/modules/admin/admin-oauth-clients.controller.ts`, `apps/admin/src/app/api-apps/page.tsx` |
+| Экраны приложения | `apps/mobile/app/authorize.tsx` поверх `src/components/oauth-consent/`, `src/features/oauth-consent/`, `src/hooks/useOAuthConsentResume.ts`; `app/settings/developers.tsx`, `app/settings/connected-apps.tsx`; сторы `developerAppsStore.ts`, `connectedAppsStore.ts` |
+| Маршрутизация и CORS | `apps/api/src/global-prefix-exclusions.ts` (`public/(.*)` и каждый путь OAuth/MCP отдельно), `apps/api/src/cors-options.ts`, nginx `docker/nginx/api-public.conf` |
+
+### Таблицы БД
+
+- `oauth_clients` (`OAuthClient`) — публичный `clientId` (`aba_ci_…`), `secretHash` (null у публичных клиентов), `redirectUris`, `status` (`active`/`blocked`), `isVerified`, переопределённые лимиты клиента, `source` (`manual`/`mcp_dcr`), допускающий null `ownerUserId` (null у самостоятельно зарегистрированных клиентов), мягкое удаление `deletedAt`
+- `oauth_grants` (`OAuthGrant`) — пара «клиент × пользователь», `scopes`, `lastUsedAt`, `revokedAt`, `revokedBy` (`user`/`client`/`admin`/`reuse_detected`/`client_deleted`); один активный грант на пару обеспечивает частичный уникальный индекс `oauth_grants_active_client_user_key`, который существует только в SQL миграции
+- `oauth_grant_accounts` (`OAuthGrantAccount`) — аккаунты, к которым может обращаться подключение
+- `oauth_tokens` (`OAuthToken`) — `kind` (`access`/`refresh`), уникальный `tokenHash`, `expiresAt`, `rotatedAt`, `resource`
+- Коды авторизации живут только в Redis (`oauth:code:<sha256>`). У `Expense`, `Income` и `Budget` есть `createdByOAuthClientId`; в `ExpenseSource`/`IncomeSource` добавлен `api`
+
+### Ключевые правила
+
+- **Одно ядро авторизации.** Решает, может ли bearer-токен что-то сделать, только `PublicApiAuthorizer.authorize`; REST-guard передаёт `resource: null`, `/mcp` — `MCP_RESOURCE_URL`. Вторую проверку в слое MCP не добавлять.
+- **Непрозрачные токены, читаются из БД на каждом запросе, без кэша** — строка токена, `revokedAt` гранта, статус клиента, `isActive` пользователя, текущее членство выдавшего доступ, уровень шифрования, — поэтому отзыв, блокировка или понижение роли останавливают доступ уже на следующем запросе. Токены, коды и секреты хранятся только как хэши SHA-256 и никогда не логируются; `scrubSentryEvent` вырезает их из Sentry.
+- **Токен работает ровно на одной поверхности.** Без resource — только `/public/v1`; с `MCP_RESOURCE_URL` — только `/mcp`; любой другой `resource` — `invalid_target`. Самостоятельно зарегистрированный клиент обязан передавать `resource`, поэтому до REST API он не дотянется никогда.
+- **Грант действует, только пока выдавший его остаётся owner или editor** адресуемого аккаунта; это перепроверяется на каждом запросе и на эндпоинте токенов.
+- **Scopes запрещают всё по умолчанию.** Маршрут `/public/v1` без `@RequireScopes` отклоняется; `@TokenOnly()` ставится на отдельные методы, никогда на класс. Действуют текущие scopes гранта, а не токена.
+- **Коды одноразовые и при сбое отказывают** (`setStrict` / `takeOnce`); refresh ротирует оба токена, а повторное использование ротированного refresh-токена отзывает весь грант.
+- **Уровни шифрования.** Уровень ≥ 2 отклоняется; уровень 1 — только чтение, каждое текстовое поле уровня 1 возвращается как `null` и перечисляется в `encrypted_fields` (`public-encryption-fields.ts`, его стережёт свой spec).
+- **Запись идёт через сервисы приложения**, поэтому проверки аномалий, семейная лента и сброс кэшей срабатывают так же, как при записи из приложения. `createdByOAuthClientId` выставляет только сервер, это никогда не поле DTO; `Idempotency-Key` действует в пределах приложения и аккаунта.
+- **Лента изменений** листается по ключу `(updated_at, id)` с отставанием 10 секунд по часам БД; любая правка дочерней записи поднимает `updatedAt` родителя через `touchExpenses` / `touchIncomes`.
+- **`/mcp` только для чтения из-за набора инструментов**, а не из-за проверки scope: прежде чем добавить пишущий инструмент, нужно решение о политике scopes. Каждый вызов инструмента стоит одну единицу лимита (предварительная проверка подключения передаёт `consumeRateLimit: false`); `initialize` и `tools/list` не учитываются.
+- **DCR ограничена от злоупотреблений и при сбое отказывает**: 10 в час на IP (IPv6 — на /64), 300 в час глобально, через `CacheService.incrementWindow`; название продукта (с похожими символами) в `client_name` запрещено. Страница согласия никогда не показывает логотип и ссылку на сайт самостоятельно зарегистрированного клиента — только проверенный хост redirect URI.
+- **Выключено — значит 404**, включая собственные парсеры тела у `/mcp` (128 КБ) и `/oauth/register` (16 КБ), которые проверяют флаг на каждом запросе. В опубликованный документ OpenAPI входят только `PublicApiModule` и `OAuthPublicModule`.
+- **Страницу согласия нельзя встраивать во фрейм** (`frame-ancestors 'none'`, `X-Frame-Options: DENY` на `app.ai-budget.pl`).
+
+## Общие группы расходов
+
+Постоянные группы (квартира, поездка, общие продукты): их создаёт пользователь приложения, а друзья **без аккаунта** пользуются ими по ссылке в браузере (ABA-640 … ABA-661). Бесплатно на любом тарифе; от злоупотреблений защищают жёсткие лимиты и потолки записей, а не платный доступ. Устройство и инварианты: `docs/wiki/features/shared-groups.md`.
+
+Группы — **отдельная модель, а не `AccountType`**. Участник — это строка `ExpenseGroupMember` с необязательным `userId` (NULL — гость), и любой плательщик, доля или расчёт ссылаются на id участника. `Account` потянул бы за собой категории, бюджеты, кошелёк, `/sync`, аналитику и AI-контекст, а его пользовательские колонки — обязательные FK, которые гость заполнить не может. Поэтому группы не привязаны к аккаунту: вместо `AccountContextGuard` работает `GroupMemberGuard`, а журнал группы не создаёт ни одной строки `Expense` или `Income` — деньги группы не попадают ни в один личный итог.
+
+### Точки входа
+
+```
+Приложение (JWT)                Гость в браузере (без аккаунта)     Боты (Telegram / WhatsApp / Slack)
+  /groups/*                       /g/:token  (HTML без скриптов)      "group <сумма> …"
+  GroupMemberGuard → 404            cookie abg_m → участник             GroupBotService
+       │                            CSRF + потолки записей (Redis)           │
+       └──────────────┬─────────────────┘                                    │
+                      ▼                                                      │
+               GroupsService (фасад) ◄───────────────────────────────────────┘
+                 ├─ GroupSettlementsService, GroupItemizedExpenseService (создаются фасадом)
+                 ├─ group-ledger.ts (чистые функции: доли, балансы, simplifyDebts)
+                 └─ каждая запись в журнал: одна $transaction, увеличивающая ExpenseGroup.ledgerVersion
+                      │ после коммита (только по желанию участника)
+                      ▼
+               GroupBudgetMirrorService → моя доля строками Expense в моём аккаунте
+```
+
+Расчёты журнала используют калькуляторы поездок (`resolveShares`, `computeBalances`, `simplifyDebts`), подставляя id участника вместо id пользователя; неаннулированный расчёт подаётся как синтетическая запись и гасится в тех же балансах. Расход в чужой валюте конвертируется один раз, при записи, через существующий синглтон `ExchangeRateService`.
+
+### Компоненты
+
+| Часть | Где |
+|---|---|
+| Маршруты приложения (`JwtAuthGuard` + `GroupMemberGuard` / `GroupOwnerGuard` / `GroupActiveGuard`) | `apps/api/src/modules/groups/groups.controller.ts` |
+| Фасад: жизненный цикл, участники, обычные расходы, коды привязки, пуш `group_activity`, примитивы журнала | `groups.service.ts` |
+| Расчёты; постатейные расходы | `group-settlements.service.ts`, `group-itemized-expense.service.ts` |
+| Чистая математика журнала и валют | `group-ledger.ts`, `group-fx.ts` (+ `group-fx.service.ts`) |
+| Позиции и их разбор (калькулятор разделения чека, импортированный) | `group-items.ts`, `group-items.service.ts` |
+| Передача владения, наследование, группы без владельца | `group-ownership.service.ts` |
+| Слияние участников | `group-merge.ts`, `group-merge.service.ts` |
+| Крон напоминаний о балансе (`0 17 * * *`) | `group-reminder.cron.ts`, `group-reminder.ts` |
+| Гостевая страница (вне `/api/v1`, `'g/(.*)'`) | `group-guest.controller.ts`, `group-guest.service.ts`, `helpers/group-guest-page*.ts` (11 языков) |
+| Боты | `group-bot.service.ts`, `group-bot.ts`; отрисовка — `handlers/group.handler.ts` каждого бота |
+| Зеркало в бюджет (свой модуль; проход `30 3 * * *`) | `group-budget-mirror.*.ts` |
+| Общие типы | `packages/shared-types/src/entities/group.ts`, `packages/shared-types/src/dto/group.ts` |
+| Приложение | `apps/mobile/app/groups/`, `src/components/groups/` (телефон + десктоп), `src/stores/groupStore.ts` (только сервер, только онлайн), `src/features/groups/` |
+
+### Таблицы базы данных
+
+- `expense_groups` (`ExpenseGroup`) — `name`, `currencyCode`, `status` (`active`/`archived`), `guestToken` (128-битный токен-пропуск), `guestAccess`, `ownerUserId` (FK `SetNull`), `orphanedAt`, `ledgerVersion`, `archivedAt`
+- `expense_group_members` (`ExpenseGroupMember`) — необязательный `userId`, `displayName`, `claimTokenHash` (sha256 секрета гостевой cookie), реквизиты для получения денег, состояние напоминаний, `removedAt`, `mergedIntoMemberId`, настройки зеркала в бюджет
+- `group_expenses`, `group_expense_shares` — расход (всегда в валюте группы; исходная сумма и курс хранятся для показа) и доля каждого участника
+- `group_expense_items`, `group_item_claims` — позиции постатейного расхода и кто их забрал
+- `group_settlements` — платежи; аннулируются, но не удаляются
+- `group_member_events` — `owner_transferred`, `member_merged`, `claim_reset`
+- `group_cash_links`, `group_cash_suggestions` — зеркало в бюджет: связи денежных движений группы с личными записями и ожидающие предложения
+
+### Ключевые правила
+
+- **Не встраивать группы в `Account`/`Expense`.** Запись в журнал никогда не создаёт личную строку; единственное исключение — зеркало в бюджет, которое включают по желанию и которое работает после коммита для того участника, который его включил.
+- **Любой входящий id участника, расхода, расчёта и позиции заново привязывается к группе** (`{ id, groupId }`, у участников ещё `removedAt: null`). Группа берётся из гарда (приложение) или токена (гость), никогда из тела запроса.
+- **Гость определяется только по хэшу секрета из cookie `abg_m`**, никогда по полю формы. Код восстановления передаётся в теле POST, никогда в URL; GET ничего не меняет. Неизвестный, отключённый и удалённый токены отдают побайтно одинаковые страницы.
+- **Расчёт** проверяется по текущим балансам до любой записи и фиксируется через CAS по `ledgerVersion`. Платёж только уменьшает оба баланса и никогда не меняет их знак (сумма сохраняется урезанной). Каждая запись в журнал увеличивает `ledgerVersion` внутри своей транзакции.
+- **Потолки гостевых записей при сбое закрываются** (`CacheService.incrementWindow`) и списываются только после проверки участника и CSRF.
+- **Смена ссылки сбрасывает все привязки**; сброс привязки затрагивает только одну строку.
+- **Группа не удаляется каскадом вместе с владельцем**: любой путь, завершающий аккаунт, сначала вызывает `GroupOwnershipService`, а каждая смена владельца — CAS по текущему `ownerUserId`.
+- **Валюта конвертируется один раз, при записи, и никогда при чтении**; при неизвестном курсе запись отклоняется (`FX_RATE_UNAVAILABLE`), ручной курс ограничен трёхкратным отклонением от курса провайдера.
+- **Разбор позиций превращается в обычные строки долей** в той же транзакции, что увеличивает `ledgerVersion`; журнал позиции не читает.
+- **Напоминания** — только пользователям приложения (гостям никогда), не больше одного пуша на пользователя в сутки по UTC, раз в неделю на эпизод, не больше 4 за эпизод; крон никогда не пишет в журнал.
+- **Тексты никогда не обещают «минимальное число переводов»** — `simplifyDebts` жадный.
+
+
+## Недавно удалённые
+
+30 дней, в течение которых мягко удалённый расход или доход можно увидеть в списке и восстановить. Серверная часть работает, интерфейса в приложении пока нет. Подробнее: `docs/wiki/features/recently-deleted.md`.
+
+### Компоненты
+
+| Часть | Где |
+|---|---|
+| Маршруты (`JwtAuthGuard` + `AccountContextGuard`; восстановление добавляет `ViewerBlockGuard`) | `apps/api/src/modules/recently-deleted/recently-deleted.controller.ts` |
+| Список и восстановление | `recently-deleted.service.ts` |
+| Срок хранения (30 дней) | `recently-deleted.constants.ts` |
+
+### Таблицы базы данных
+
+Своих нет. Читаются строки `expenses` и `incomes` с `isDeleted = true`; колонки `deletedAt` нет — временем удаления служит `updatedAt`, потому что каждый путь удаления его обновляет, а удалённую строку больше никто не правит.
+
+### Ключевые правила
+
+- **Окончательного удаления нет намеренно**: мягко удалённые строки — это ещё и надгробия синхронизации, а жёсткое удаление упёрлось бы в FK с `Restrict` (`AccountTransfer.linkedIncome`, `PurchaseRequest.plannedExpense`). Строки старше 30 дней просто перестают показываться и восстанавливаться.
+- **Не писать в мягко удалённую строку**, иначе её 30 дней начнутся заново.
+- Id ищутся как `OR: [{ id }, { clientId }]`, а записывается найденный серверный PK.
+- Погашение не восстанавливается, пока его долг удалён (`debt_deleted`); доход не восстанавливается, пока удалён связанный с ним `AccountTransfer` (`transfer_deleted`).
+- Восстановление увеличивает `syncVersion`, чтобы другие устройства снова подтянули строку.
+- Известные пробелы: у восстановленной суммы по разделённому чеку гостевые ссылки не оживают, и восстановление не пишет ревизию.
+
+
+## История правок транзакций
+
+В общем аккаунте (от 2 участников) каждая правка расхода или дохода, затронувшая отслеживаемое поле — `amount`, `currencyCode`, `categoryId`, `description`, `merchant`, `date`, — сохраняет ревизию с автором и разницей `{ поле: { from, to } }`, чтобы участники видели «Анна изменила: 12 → 15». Пока есть только API, интерфейса в приложении нет. Подробнее: `docs/wiki/features/transaction-edit-history.md`.
+
+### Компоненты
+
+| Часть | Где |
+|---|---|
+| Запись и выдача (`TransactionRevisionsService`, своего контроллера нет) | `apps/api/src/modules/transaction-revisions/transaction-revisions.service.ts` |
+| Чистое сравнение отслеживаемых полей | `transaction-revision.util.ts` |
+| Маршруты чтения `GET /expenses/:id/revisions`, `GET /incomes/:id/revisions` | `expenses.controller.ts`, `incomes.controller.ts` |
+| Кто вызывает `record()` | `ExpensesService.update`, `IncomesService.update` — из контроллеров и из обработчиков `/sync` (`sync/handlers/expense.handler.ts`, `income.handler.ts`) |
+
+### Таблицы базы данных
+
+- `transaction_revisions` (`TransactionRevision`) — `accountId` (каскад), `entityType` (`expense`/`income`), `entityId`, `userId` (`SetNull`), `changes` (JSON), `createdAt`; для каждой транзакции хранятся только 20 последних
+
+### Ключевые правила
+
+- **Пишется внутри `$transaction` обновления**, никогда в фоне без ожидания.
+- **Оба пути обновления обязаны передавать id автора** (`req.user.id` в контроллере, `userId` в обработчиках `/sync`); вызов без него молча ничего не записывает.
+- **Зашифрованные строки пропускаются**: у строки с `encryptedPayload` с любой стороны открытые колонки обнулены, и история в открытом виде не должна копировать зашифрованные значения. При `encryptionTier >= 1` `description` и `merchant` — шифротекст, и в разницу они не попадают.
+- В аккаунтах с одним участником ничего не пишется.
+- Сервис внедряется как `@Optional()` в оба сервиса, чтобы спеки, создающие их позиционно, продолжали компилироваться.
+
+
+## Аналитика по всем аккаунтам
+
+Расходы и доходы по всем аккаунтам, в которых состоит пользователь, в валюте отображения за выбранный период: итоги со сравнением с прошлым периодом, строка на каждый аккаунт, категории, объединённые по названию, помесячные столбцы, необязательные **группы аккаунтов** (Pro) и один сводный отчёт PDF / Excel / CSV с теми же цифрами, что на экране. Подробнее: `docs/wiki/features/all-accounts-analytics.md`.
+
+### Компоненты
+
+| Часть | Где |
+|---|---|
+| `GET /all-accounts/analytics`, `POST /all-accounts/reports` (только `JwtAuthGuard`) | `apps/api/src/modules/all-accounts/all-accounts.controller.ts` (период не длиннее 1096 дней) |
+| CRUD `/account-groups` и аналитика по группе (`@RequireTier('pro')`) | `account-groups.controller.ts`, `account-groups.service.ts` |
+| Загрузка журнала (`loadLedger`, кэш 120 с) | `all-accounts.service.ts` |
+| Чистая агрегация (`aggregateLedger`) | `all-accounts.util.ts` |
+| Сводный отчёт | `consolidated-report.service.ts` |
+| Общие типы | `packages/shared-types/src/dto/all-accounts.ts` |
+| Приложение | `app/all-accounts` → `src/components/all-accounts/` (телефон + десктоп), `src/features/all-accounts/`, `src/components/reports/ReportScopePicker.tsx` |
+
+### Таблицы базы данных
+
+- `account_groups` (`AccountGroup`) — принадлежит пользователю (каскад), `name`; не больше 20 на пользователя
+- `account_group_accounts` (`AccountGroupAccount`) — связка `(groupId, accountId)`, каскад с обеих сторон
+- Сводный отчёт — обычная строка `generated_reports` (`GeneratedReport`) с `accountId = null`, владелец — `userId`, срок жизни 7 дней
+
+### Ключевые правила
+
+- **Единственная граница доступа — членство.** У контроллеров нет `AccountContextGuard`; `exclude` и аккаунты группы только сужают набор аккаунтов пользователя и никогда не служат белым списком.
+- **Экран и файл строятся из одних и тех же `loadLedger` + `aggregateLedger`** — второго способа считать итоги быть не должно.
+- **Строки с пометкой** (запланированные, суммы по разделённым чекам, переводы между двумя включёнными аккаунтами) показываются, но в итоги не входят.
+- Категории объединяются по **отображаемому названию**, никогда по id; подкатегория сворачивается в родительскую.
+- Аккаунты с шифрованием уровня 2 перечисляются, но не запрашиваются.
+- Группы — Pro на каждом маршруте (сервис отчётов повторяет проверку для `groupId`); после понижения тарифа группы сохраняются, но скрыты до следующего повышения.
+- Суммы конвертируются через `common/utils/fx.ts`; сумма без курса не учитывается и выставляет `fxApproximate`.
+
+
+## Чистый капитал
+
+Деньги + инвестиции + долги перед пользователем − долги самого пользователя по всем аккаунтам, в которых он состоит: сейчас и на конец каждого из 12 последних месяцев, в валюте отображения (ABA-799). Виджет «Чистый капитал» на главной (только кошелёк текущего аккаунта) открывает этот экран. Подробнее: `docs/wiki/features/net-worth.md`.
+
+### Компоненты
+
+| Часть | Где |
+|---|---|
+| `GET /net-worth?exclude=` (только `JwtAuthGuard`) | `apps/api/src/modules/insights/net-worth.controller.ts` |
+| Восстановление истории и конвертация (кэш 10 мин под ключом `nw:{userId}:{currency}:{excluded}`) | `net-worth.service.ts`, чистый `net-worth.util.ts` |
+| Приложение | `app/net-worth.tsx` → `src/components/net-worth/NetWorthView.tsx`, `src/features/net-worth/` |
+
+### Таблицы базы данных
+
+Своих нет. **История не хранится, а восстанавливается**: баланс на конец месяца — это сегодняшний баланс кошелька минус все движения с более поздней датой; активы восстанавливаются из `InvestmentTransaction` и оцениваются по `AssetPriceHistory` (иначе по средней цене покупки, и месяц помечается `approximate`); долги учитываются с даты возникновения за вычетом погашений к этому моменту.
+
+### Ключевые правила
+
+- **Никогда не читать `req.accountId`** и не считать `exclude` белым списком — граница доступа это членство. Аккаунты уровня шифрования 2 перечисляются, но не суммируются.
+- **Источники движений должны совпадать с `buildWalletBalanceRow`**, иначе история и сегодняшняя цифра разойдутся на текущем месяце.
+- Прошлые месяцы конвертируются по курсам на конец того месяца (`HistoricalRateService.getMonthEndRates`); сумма с неизвестным курсом не учитывается и выставляет `fxApproximate`.
+- Инвестиции оцениваются по сохранённой `Asset.currentPrice`; к Twelve Data на этом пути обращений нет.
+
+## Расходы домохозяйства (автомобили, питомцы, дети, коммунальные услуги)
+
+Четыре модуля отвечают на вопрос «во сколько мне это обходится»: машина (`vehicles`), питомец (`pets`), ребёнок (`children`) и коммунальные счета жилья (`utilities`). Собственных денег ни один из них не создаёт — каждый прикрепляет типизированную запись к **уже существующему расходу** и считает итоги по нему. Страницы фич: `docs/wiki/features/vehicle-fuel-log.md`, `docs/wiki/features/pet-costs.md`, `docs/wiki/features/child-costs.md`, `docs/wiki/features/utility-bill-readings.md`.
+
+### Общая схема
+
+```
+Expense (шифруется при E2EE, на горячем пути синхронизации — не меняется)
+  ├─ FuelLog        1:1  литры, пробег, полный бак          (vehicles)
+  ├─ VehicleCost    1:1  kind: fuel|service|insurance|...   (vehicles)
+  ├─ PetCost        1:1  kind: food|vet|grooming|...        (pets)
+  ├─ UtilityReading 1:1  потребление, единица, unitPrice    (utilities)
+  ├─ ExpenseChild   n:m  доля на каждого ребёнка            (children)
+  └─ ExpenseItem.childId  одна строка чека → один ребёнок   (children)
+
+Правила категорий (vehicles, pets, children):
+  entity.categoryRules / Child.categoryIds
+    └─ apply*CategoryRules ── пишет строки с source = 'category'
+         ├─ после создания / изменения / массовой правки расхода и push синхронизации (fire-and-forget)
+         └─ ежедневный догоняющий крон — для импортов и других кронов
+```
+
+- **Отдельные таблицы, а не колонки `Expense`**: строка расхода зашифрована и постоянно синхронизируется, поэтому запись фичи живёт рядом и не может сломать список транзакций.
+- **Автомобили, питомцы и дети — три намеренно параллельные реализации**, а не общий слой «отслеживаемых сущностей»: такой рефакторинг затрагивает работающие фичи и вынесен в отдельную задачу.
+- **Автомобили, питомцы и коммуналка в приложении работают только онлайн** (без зеркала в SQLite; неудачная загрузка — это ошибка с повтором, а не пустой список и не ноль). **Дети — offline-first**: таблицы SQLite, очередь `sync_queue` на устройстве и pull/push через `/sync`.
+
+### Компоненты
+
+| Часть | Расположение |
+|---|---|
+| Автомобили | `apps/api/src/modules/vehicles/` — `vehicles.service.ts`, чистые `fuel-stats.util.ts`, `vehicle-history.util.ts`, `vehicle-cost-rules.util.ts`, `service-interval.util.ts`, `vehicle-renewal.util.ts` |
+| Кроны автомобилей | `vehicle-cost-rules.cron.ts` (04:40), `vehicle-renewal.cron.ts` (08:00 — даты страховки, техосмотра и сервиса, напоминание по пробегу) |
+| Журнал заправок из ботов | `apps/api/src/common/bot-receipt-fuel.ts` — кнопка «Добавить в журнал заправок» после отсканированного чека АЗС в Telegram, WhatsApp и Slack |
+| Питомцы | `apps/api/src/modules/pets/` — `pets.service.ts`, `pet-history.util.ts`, `pet-cost-rules.util.ts` |
+| Кроны питомцев | `pet-cost-rules.cron.ts` (04:45), `pet-reminder.cron.ts` (08:15 — даты прививок и обработки от паразитов) |
+| Дети | `apps/api/src/modules/children/` — `children.service.ts`, `child-product-rules.service.ts`, `child-statement.service.ts` + `child-statement.pdf.ts`; `ExpenseChildrenController` вешает маршруты отнесения на `/expenses` |
+| Крон и синхронизация детей | `child-category-rules.cron.ts` (04:30); `modules/sync/handlers/child.handler.ts`, `expense-child.handler.ts` |
+| Расчёт отнесения на детей | `apps/api/src/common/utils/child-attribution.ts`, зеркало в `packages/shared-utils` |
+| Коммунальные услуги | `apps/api/src/modules/utilities/` — `utilities.service.ts`, чистый `utility-stats.util.ts` |
+| Приложение | `src/components/{vehicles,pets,children}/` (телефон + `desktop/`), `src/features/{vehicles,pets,children}/`, `app/utilities/index.tsx`; списки автомобилей и питомцев используют общий `src/utils/accountListCache.ts` |
+
+### Таблицы базы данных
+
+- `vehicles` (`Vehicle`) — `name`, `fuelType`, `categoryRules` (JSON `[{ categoryId, kind }]`), даты продления, `nextServiceOdometer`, `serviceOdometerNudgedFor`, `serviceIntervalKm`, `lastServiceKm`, `isDeleted`
+- `fuel_logs` (`FuelLog`) — уникальный `expenseId`, `vehicleId`, `liters`, `odometerKm`, `isFullTank`
+- `vehicle_costs` (`VehicleCost`) — уникальный `expenseId`, `vehicleId`, `kind`, `source`
+- `pets` (`Pet`) — `name`, `species`, `birthday`, `nextVaccinationDate`, `nextParasiteTreatmentDate`, `categoryRules`, `isDeleted`
+- `pet_costs` (`PetCost`) — уникальный `expenseId`, `petId`, `kind`, `source`
+- `children` (`Child`) — `name` (шифруется на уровне 1), `color`, `archivedAt`, `categoryIds`, `clientId`, поля синхронизации и шифрования; уникальные `(accountId, name)` и `(accountId, clientId)`
+- `expense_children` (`ExpenseChild`) — уникальная пара `(expenseId, childId)`, `share` (доли одного расхода в сумме дают 1), `source`, мягкое удаление
+- `product_child_rules` (`ProductChildRule`) — выученная подсказка «товар → ребёнок», уникальная `(accountId, productKey)`; хранится только на сервере
+- `expense_items.child_id` — отнесение строки чека
+- `utility_readings` (`UtilityReading`) — уникальный `expenseId`, `kind`, `consumption`, `unit`, `propertyLabel`, `unitPrice`
+
+### Ключевые правила
+
+- **Привязка к аккаунту**: каждый запрос фильтрует по `accountId`; id расхода принимается как PK или `clientId`, а записывается **найденный PK**, никогда не сырой параметр маршрута. Все изменения закрыты `ViewerBlockGuard`.
+- **Валюта отображения — от вызывающего**: итоги переводятся в `req.user.currencyCode` через `common/utils/fx.ts`; сумма без известного курса показывается в списке, но не входит ни в один итог и выставляет `fxApproximate`. Мягко удалённые расходы не учитываются никогда; коммуналка и дети не считают и запланированные расходы, дети — ещё и split-дебиторку (`isSplitReceivable`, но не `isDebt`).
+- **Решение человека не отменяется**: ручная запись хранит `source: null`; правило трогает только расходы без записи или с записью `source = 'category'`. Снятие оставляет принадлежащую человеку строку с `kind = 'none'` (у детей — мягко удалённую), чтобы правило её не вернуло: у автомобилей всегда, у питомцев — только если категорию забирает правило живого питомца. `none` исключается из всех цифр.
+- **Один расход — одна запись по машине**: расход либо заправка, либо другой расход на машину, но не то и другое сразу — каждая запись удаляет вторую строку. Чтение заправок фильтрует ещё и по текущему `accountId` расхода, поэтому расход, перенесённый в другой аккаунт, уходит из статистики исходного.
+- **Отнесение целого расхода и отдельных строк на детей взаимоисключающи** в пределах одного расхода; побеждает последняя запись.
+- **У детей самые строгие требования к приватности**: `Child` хранит только имя, цвет и признак архива; имя никогда не пишется в логи и не уходит в телеметрию, модель или общие (community) слои, а на зашифрованном аккаунте сервер видит только `enc:<clientId>`. Модель в фиче не вызывается нигде; выученные правила по товарам — только подсказки.
+- **Выписка по ребёнку**: Pro, только редакторы, `encryptionTier === 0`, не больше 24 месяцев, отправляется один раз через `@Res()`; приложение с чеками ограничено 150 чеками, 40 МБ всего и 3 МБ на изображение. Это сводка введённых пользователем данных, а не юридический документ.
+- **Перенос в другой аккаунт** (автомобили, дети): только сущность, на которую ничего не отнесено на живых расходах, и только в аккаунт, где вызывающий владелец или редактор; правила категорий и правила по товарам не переносятся.
+- **Порядок маршрутов**: `GET`/`DELETE /vehicles/fuel-logs/:expenseId`, `DELETE /vehicles/costs/:expenseId` и `GET`/`DELETE /pets/costs/:expenseId` объявлены раньше `:id`.
+- **Напоминания** (автомобили, питомцы) листают таблицу через `paginateById`, отправляют пуши под переключателем `subscription_renewal`, а метод с `@Cron` не принимает аргументов: библиотека кронов вызывает его со своими аргументами, и параметр `today` со значением по умолчанию получил бы один из них. Прошедшие даты не срабатывают; сервер даты вперёд не переносит.
+
+## Расчётный цикл кредитной карты
+
+Аккаунт можно пометить как кредитную карту: день выписки, день платежа и необязательный кредитный лимит. Экран кошелька показывает траты текущего цикла, даты выписки и платежа и полоску использования лимита; за 3 дня до срока платежа API присылает напоминание с суммой закрытой выписки. Погашение карты — обычный перевод между аккаунтами. Устройство и инварианты: `docs/wiki/features/card-statement-cycle.md`.
+
+### Компоненты
+
+| Часть | Где |
+|---|---|
+| Маршруты `GET`/`PUT`/`DELETE /card-cycles` (`JwtAuthGuard` + `AccountContextGuard`, запись — `ViewerBlockGuard`) | `apps/api/src/modules/card-cycles/card-cycles.controller.ts` |
+| Сводка (текущий цикл, траты, использование лимита, срок платежа, закрытая выписка) | `card-cycles.service.ts` |
+| Напоминание (ежедневно в 09:00, `paginateById`, пуш владельцу аккаунта) | `card-cycle-reminder.cron.ts` |
+| Правила дат цикла (дублированная пара) | `apps/api/src/common/utils/card-cycle.ts` ↔ `packages/shared-utils/src/formatting/card-cycle.ts`, паритет в `cardCycleParity.test.ts` |
+| Приложение | `apps/mobile/src/components/wallet/CardCycleSection.tsx` |
+
+### Таблицы базы данных
+
+- `card_cycle_settings` (`CardCycleSetting`) — одна строка на аккаунт (уникальный `accountId`, удаляется каскадно вместе с `Account`): `currencyCode`, `statementDay`, `dueDay`, `creditLimit` (может быть пустым), `lastRemindedDueDate`
+
+### Ключевые правила
+
+- **Отдельная таблица, а не поле `WalletBalance`**: строка баланса заводится на валюту, карта — на аккаунт. Только на сервере: зеркала в SQLite нет, поэтому веб работает без изменений.
+- **Граница цикла — дата операции (`Expense.date`)**; у банков, которые режут по дате проводки, расхождение может составить день-два.
+- **День выписки 29–31 сдвигается на последний день месяца**; сам день выписки относится к закрывающемуся циклу.
+- **Траты** не включают удалённые, запланированные и split-receivable строки и считаются только в валюте карты — без пересчёта.
+- **Напоминание приходит не больше одного раза на срок платежа**: `lastRemindedDueDate` записывается ДО отправки пуша, чтобы потерянный пуш не повторялся каждый день; при изменении расписания отметка сбрасывается. Пустая выписка не даёт пуша. Используется тип `debt_reminder`, так что напоминание подчиняется переключателю напоминаний о долгах.
+- **`card-cycle.ts` — дублированная пара** (API не может импортировать shared-utils во время выполнения) — менять обе копии.
+- Никаких советов про проценты и минимальный платёж.
+
+## Лимиты трат по продавцам
+
+Месячный лимит для одного продавца: полоска прогресса на экране «Продавцы» в настройках и пуш на 80% и 100%. От бюджетов не зависит: не меняет ни одной суммы бюджета и не пишет расходы. Устройство и инварианты: `docs/wiki/features/merchant-spending-caps.md`.
+
+### Компоненты
+
+| Часть | Где |
+|---|---|
+| Маршруты `GET`/`PUT /merchant-caps`, `DELETE /merchant-caps/:id` (`JwtAuthGuard` + `AccountContextGuard`, запись — `ViewerBlockGuard`) | `apps/api/src/modules/merchant-caps/merchant-caps.controller.ts` |
+| CRUD, прогресс, хук оповещений `checkAccount` | `merchant-caps.service.ts` |
+| Вызов хука (при каждой записи расхода, инъекция через `@Optional()`) | `apps/api/src/modules/budgets/budget-alert.service.ts` — `checkBudgetsForAccount` |
+| Тексты пуша | `merchantCapTitle` / `merchantCapBody` в `notification-i18n.ts` |
+| Приложение | `apps/mobile/src/components/settings/merchants/MerchantCapsCard.tsx`, `src/features/merchants/` |
+
+### Таблицы базы данных
+
+- `merchant_spending_caps` (`MerchantSpendingCap`) — уникальная пара `(accountId, merchantNormalized)`: `merchantLabel`, `amount`, `currencyCode`, `userId` (получатель пуша), состояние оповещений `lastAlertPeriod` (`YYYY-MM`) + `lastAlertThreshold`
+
+### Ключевые правила
+
+- **Ключ продавца** — `trim().toLowerCase()`, как у правил категорий по продавцу; запрос трат сравнивает `merchant` через `equals` без учёта регистра.
+- **Траты** — полная сумма `Expense.amount` в валюте лимита за календарный месяц (разбивка по категориям не используется) за вычетом привязанных возвратов в той же валюте (`sumRefundsForExpenses`), не ниже нуля; удалённые, запланированные и split-receivable строки исключены.
+- **Оповещение закрепляется до пуша**: условный `updateMany` по предыдущему состоянию работает как CAS, поэтому при параллельных записях пуш уходит один раз; если отправка не удалась, отметка откатывается. Тип пуша `budget_alert` — действуют тихие часы и переключатель оповещений о бюджете.
+- **`checkAccount` никогда не бросает исключений** — он выполняется внутри записи расхода.
+- Каждый запрос фильтрует по `accountId`; удаление ищет по `{id, accountId}`. Жёсткий потолок — 30 лимитов на аккаунт, без ограничений по тарифу.
+
+## Gazetka match (промо-газетки)
+
+Пользователь присылает скриншоты или PDF рекламной газетки магазина; сервер распознаёт акции vision-моделью, а приложение показывает **только акции на товары, которые этот пользователь и так покупает**, рядом с его обычной ценой. Админ может загрузить газетку из админ-панели, проверить и опубликовать; при включённом общем слое подтверждённые акции превращаются в ежедневный пуш. Сам сервер газетки никогда не скачивает. Устройство и инварианты: `docs/wiki/features/gazetka-match.md`; ранбук: `docs/ops/leaflets.md`.
+
+### Поток
+
+```
+Приложение («Проверить газетку» в списке покупок, меню «Поделиться» Android, зона перетаскивания на десктопе)
+  │ POST /leaflets → POST /leaflets/:id/pages (по одному изображению)  или  POST /leaflets/:id/pdf (202, в фоне)
+  ▼
+LeafletsService ── проверки аккаунта (уровень >= 2 и пустая корзина — отказ)
+  │                └─ потолок 10 страниц, затем LeafletBudgetService.consume (админы освобождены)
+  ▼
+LeafletReaderService (vision) ── сеть, срок действия, строки акций
+  └─ сопоставление с пронумерованной обычной корзиной (индекс или null) → строки LeafletItem
+  └─ CommunityPromoService.contribute (если COMMUNITY_PROMOS_ENABLED и есть согласие)
+
+Админ-панель → POST /admin/leaflets (изображения или один PDF) → проверка → публикация
+  └─ строки CommunityPromoObservation (isAdmin, подтверждают сами по себе)
+
+LeafletPromoPushCron (09:00) ── подтверждённые акции, действующие сегодня
+  └─ пользователи с notifyLeafletPromos, покупавшие в этой сети за 90 дней, ≤ 1 пуша в день
+```
+
+### Компоненты
+
+| Часть | Где |
+|---|---|
+| Пользовательские маршруты (`JwtAuthGuard` + `AccountContextGuard`, без блокировки зрителей) | `apps/api/src/modules/leaflets/leaflets.controller.ts`, `leaflets.service.ts` |
+| Админские маршруты (`JwtAuthGuard` + `AdminGuard`, отдельный контроллер) | `leaflets-admin.controller.ts`, `leaflets-admin.service.ts` |
+| Распознавание | `leaflet-reader.service.ts`, `leaflet-page.util.ts` |
+| Обычная корзина, обычная цена, сопоставление по закрытому списку | `leaflet-basket.util.ts`, `leaflet-basket.loader.ts` |
+| Лимит страниц (`LEAFLET_PAGES_FREE`/`PRO`/`BUSINESS`, по умолчанию 20/200/500) | `leaflet-budget.service.ts` |
+| Общий слой | `community-promo.service.ts`, `community-promo.util.ts` |
+| Пуш | `leaflet-promo-push.cron.ts` (09:00; чистка журнала в 03:15, 90 дней), `leaflet-push-match.service.ts`, `leaflet-notification-ledger.service.ts` |
+| Очистка (03:30: истёкшие личные газетки, закончившиеся акции) | `leaflet-prune.cron.ts` |
+| Приложение | `apps/mobile/app/leaflets/index.tsx`, `src/components/leaflets/` (телефон + десктоп), `src/features/leaflets/`, `src/services/leaflets.api.ts` |
+| Страница админки | `apps/admin/src/app/leaflets/page.tsx`, `components/leaflets/` |
+
+### Таблицы базы данных
+
+- `leaflets` (`Leaflet`) — `kind` `personal` (привязана к аккаунту) или `admin` (`accountId` пуст); `source`, `chain`, `validFrom`/`validTo`, `status` (`reading`/`done`/`failed`), счётчики страниц, `publishedAt`/`unpublishedAt`, `expiresAt`
+- `leaflet_items` (`LeafletItem`) — распознанные акции: `canonicalName`, `promoPrice`, `regularPrice`, `condition`, `basketName`, `usualPrice`, `addedToListAt`
+- `community_promo_observations` (`CommunityPromoObservation`) — без id аккаунта и пользователя: сеть, товар, цена, срок, односторонний `contributorKey`, `trusted`, `isAdmin`, `adminLeafletId`; уникальна для пары «участник — акция»; удаляется на следующий день после `validTo`
+- `leaflet_notification_log` (`LeafletNotificationLog`) — одна строка на (аккаунт, акция), о которой ушёл пуш; `id` служит `pushKey` пуша, `openedAt`
+
+### Ключевые правила
+
+- **Газетку никогда не скачиваем** с сайта сети или агрегатора: на входе только то, что загрузил пользователь или админ. **Изображения не сохраняются** — только извлечённые факты.
+- **Сопоставление по закрытому списку**: индекс в пронумерованной корзине или `null`, никакого запасного поиска по похожести строк. Товар, который пользователь не покупает, не показывается никогда.
+- **Лимит страниц отделён от AI-лимита**, а потолок в 10 страниц проверяется до списания. Админы (`ADMIN_EMAILS`) лимит не расходуют и строку COGS не пишут.
+- **Ключ участника для админа выводится на каждую газетку** (`<adminUserId>:<leafletId>`); с ключом «на админа» две газетки одного админа конфликтовали по уникальному ограничению.
+- **Опубликованная админская газетка доступна только для чтения**: сначала снять с публикации, потом править.
+- **Газетка в `reading` без прогресса 30 минут считается неудачной** — прогресс хранится в памяти и рассчитан на один экземпляр API.
+- **`COMMUNITY_PROMOS_ENABLED` по умолчанию выключен**: ничего не собирается, не подтверждается и не рассылается; публикации админа всё равно пишут строки, которые ждут флага. Для подтверждения нужно `COMMUNITY_PROMO_K` (3) участников, из них `COMMUNITY_PROMO_MIN_TRUSTED` (2) доверенных.
+- **У пуша порог 20 часов, а не календарные сутки**, поэтому крон в 09:00 с дрейфом всё равно шлёт пуш каждый день, но не чаще раза. Аккаунты уровня 1 не совпадают (продавец зашифрован); уровень 2 отклоняется при распознавании.
+- **Тексты** говорят «по данным газетки — проверьте в магазине», никогда «купите сейчас».
+
+## Чеки по e-mail (входящая почта)
+
+Пересылка электронных чеков по почте (ABA-644). Пользователь создаёт личный адрес (`<token>@in.ai-budget.pl`) и настраивает на него правило пересылки в своём ящике; каждое пересланное письмо становится элементом **на подтверждении** во входящих приложения и сохраняется, только когда пользователь его подтвердит. Почту принимает наш собственный SMTP-контейнер, работающий только на приём. **Функция выключена**: `INBOUND_MAIL_ENABLED` по умолчанию не задан, а профиль контейнера запускается только при `INBOUND_MAIL_CONTAINER=true`. Устройство и инварианты: `docs/wiki/features/inbound-e-receipts.md`; ранбук: `docs/ops/inbound-mail.md`.
+
+### Поток письма
+
+```
+MTA отправителя ──SMTP :25──▶ контейнер inbound-mail (только inbound-mail-net, без очереди)
+   RCPT TO → POST /api/v1/internal/inbound-mail/rcpt { token, remoteIp } → accept | unknown | limited
+   DATA    → лимиты размера → SPF/DKIM/DMARC/ARC → разбор MIME в воркере → выбор ОДНОГО документа
+           → POST /api/v1/internal/inbound-mail/messages
+   ответ   → 250 только после 202 / 409 / 422; 451, если API недоступен; 452 — лимит; 550 — неизвестный токен / провал проверки
+API → InboundReceipt(status=received) → process() в режиме fire-and-forget:
+        дедупликация → текстовый предфильтр → списание одного сканирования → распознавание (OCR) → pending + пуш
+Приложение → баннер / пуш → входящие → карточка подтверждения чека → обычное создание расхода
+    → POST /inbound-receipts/:id/confirm { expenseId }
+```
+
+### Компоненты
+
+| Часть | Где |
+|---|---|
+| Пользовательские маршруты (`InboundMailEnabledGuard` + `JwtAuthGuard` + `AccountContextGuard`, запись — `ViewerBlockGuard`) | `apps/api/src/modules/inbound-mail/inbound-mail.controller.ts` |
+| Внутренние маршруты (`InternalSecretGuard`: секрет, адрес сокета из частной подсети, без прокси-заголовков) | `inbound-mail-internal.controller.ts`, `guards/internal-secret.guard.ts` |
+| Адрес и решение на RCPT | `inbound-mail-address.service.ts` |
+| Приём, входящие, подтверждение, отклонение, повтор | `inbound-receipt.service.ts` |
+| Дедупликация, предфильтр, квота, распознавание | `inbound-receipt-processor.service.ts` |
+| Кроны (повтор зависших каждые 10 мин; очистка ежедневно в 03:30, в том числе при выключенном флаге) | `inbound-mail.cron.ts` |
+| Лимиты и сроки хранения | `inbound-mail.config.ts` |
+| SMTP-контейнер | `apps/inbound-mail/`, `docker/Dockerfile.inbound-mail`, сервис `inbound-mail` (профиль `inbound-mail`) в `docker-compose.prod.yml` |
+| Приложение | `app/settings/email-receipts.tsx`, `app/inbox/email-receipts.tsx`, `app/inbox/email-receipt.tsx`, `src/components/inboundMail/`, `src/stores/inboundReceiptStore.ts` |
+
+### Таблицы базы данных
+
+- `inbound_mail_addresses` (`InboundMailAddress`) — один на пользователя (уникальные `userId` и 16-символьный `token`), `targetAccountId`, `disabledAt`, `rotatedAt`
+- `inbound_receipts` (`InboundReceipt`) — `kind` (`receipt`/`forwarding_verification`), `status` (`received` → `processing` → `pending` → `confirmed`/`dismissed` или `duplicate`, `not_a_receipt`, `quota_exceeded`, `unsupported`, `failed`), уникальная пара `(userId, messageIdHash)`, результаты проверок подлинности, единственный выбранный `document`/`documentText` (обнуляется при подтверждении/отклонении), `extraction`, `verificationCode`, `expenseId`, `expiresAt`; в резервные копии аккаунта не попадает
+
+### Ключевые правила
+
+- **Расход из письма никогда не сохраняется автоматически.** Письмо может написать кто угодно; граница безопасности — подтверждение пользователя, а расход создаёт клиент (`source: 'ocr'`) обычным offline-first путём.
+- **SMTP-ответ `250` — только после того, как API сохранил письмо**: очереди у контейнера нет, а `451` ничего не стоит, потому что отправитель повторит попытку. **Никаких bounce-писем** — все отказы даются внутри сессии.
+- **Внутренний API защищён трижды**: nginx отвечает 404 на `/api/v1/internal/` по **регулярному выражению без учёта регистра**; `InternalSecretGuard` берёт адрес собеседника из сокета, а не из заголовка; контейнер делит с API только сеть `inbound-mail-net`.
+- **Лимиты адреса (20 в час, 60 в сутки) резервируются через `incrementWindow` до сравнения и при сбое закрываются**: недоступный Redis даёт `503` → SMTP `451`.
+- **Ни одного AI-запроса до дедупликации и текстового предфильтра**; за результат «не чек» списание возвращается.
+- **Ничего из упомянутого в письме не скачивается, а тема письма никогда не попадает в модель.**
+- **Ключ дедупликации — хеш Message-ID вместе с содержимым**, чтобы повторно использованный Message-ID не глушил последующие чеки.
+- **Код подтверждения пересылки Gmail** принимается только после строгих проверок заголовков и DKIM, хранится 30 минут и показывается только в настройках — никогда в пуше.
+- **Шифрование уровня 2 не поддерживается** — отказ при создании адреса, на RCPT и при обработке; повышение аккаунта до уровня 2 отключает его адреса в той же транзакции. Уровень 1 разрешён, но срок хранения — 7 дней вместо 30.
+- **Каждый пользовательский маршрут с `:id` фильтрует по `id AND userId AND accountId`**; промах — `404`.
+- **Очистка по сроку хранения работает и при выключенном флаге.**
+
 ## Безопасность
 
 ### Поток аутентификации

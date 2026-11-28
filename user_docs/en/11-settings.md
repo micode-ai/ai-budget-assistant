@@ -192,6 +192,14 @@ Other car costs count too. On any expense, the **Car** section lets you pick the
 
 **Renewals.** In the vehicle's sheet, set the next insurance renewal, the next inspection, the next service date and the odometer reading for the next service (all optional; tap the cross to clear one). You get a reminder 14 and 2 days before each date, and once when a fill-up's odometer comes within 500 km of the service target. Dates due within 30 days or already past appear as chips on the vehicle's card and on its screen, which also has a **Renewals** card listing every date. When you mark an expense as insurance or service, the app offers to move that renewal a year forward; nothing changes unless you confirm.
 
+## Utilities
+
+See whether a utility bill went up because you used more or because the price rose. Access via **Settings → Reference data → Utilities**.
+
+**Adding a reading.** Open a utility bill expense — electricity, gas, water or heating. Under the details tap **Add consumption (kWh, m³, GJ)**, pick the kind, enter the consumption from the bill and its unit, and optionally a **Property** (for example "Flat" or "Cottage") if you pay bills for more than one place. The app works out the price per unit from the expense amount. To change or remove a reading, open the expense again. A newly added expense must sync first; if it has not yet, the app asks you to try again in a moment. Viewers of a shared account see readings but cannot add them.
+
+**What the screen shows.** For each kind: the price per unit month by month, and the consumption. When the latest month's unit price is more than 10% above the average of the three months before it, a note says so. Once a kind has a year of readings, each month is compared with the same month last year — both the price and the consumption. With several properties, pick one at the top or see them all together. Costs are shown in your display currency; a bill in a currency whose exchange rate is unknown is left out of the cost, and the screen says so. Planned expenses are not counted.
+
 ## Data & Reports
 
 ### Data & Sync

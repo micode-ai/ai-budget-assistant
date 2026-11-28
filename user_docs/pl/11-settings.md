@@ -179,6 +179,14 @@ Liczą się też inne koszty auta. Przy dowolnym wydatku sekcja **Samochód** po
 
 **Terminy.** W karcie pojazdu ustaw termin odnowienia ubezpieczenia, następnego przeglądu, następnego serwisu oraz przebieg, przy którym wypada serwis (wszystko opcjonalne; krzyżyk czyści termin). Przypomnienie przychodzi 14 i 2 dni przed każdą datą oraz raz, gdy przebieg z tankowania zbliży się na 500 km do serwisu. Terminy przypadające w ciągu 30 dni lub już minione widać jako etykiety na karcie pojazdu i na jego ekranie, gdzie karta **Terminy** pokazuje wszystkie daty. Gdy oznaczysz wydatek jako ubezpieczenie lub serwis, aplikacja zaproponuje przesunięcie tego terminu o rok; nic się nie zmienia bez Twojego potwierdzenia.
 
+## Media
+
+Sprawdź, czy rachunek za media wzrósł, bo zużyłeś więcej, czy dlatego, że podrożało. Dostęp: **Ustawienia → Słowniki → Media**.
+
+**Dodawanie odczytu.** Otwórz wydatek za media — prąd, gaz, wodę lub ogrzewanie. Pod szczegółami stuknij **Dodaj zużycie (kWh, m³, GJ)**, wybierz rodzaj, wpisz zużycie z rachunku i jego jednostkę, a jeśli płacisz rachunki za więcej niż jedno miejsce — opcjonalnie **Lokal** (np. „Mieszkanie” lub „Domek”). Aplikacja sama wylicza cenę za jednostkę z kwoty wydatku. Aby zmienić lub usunąć odczyt, otwórz wydatek ponownie. Nowo dodany wydatek musi się najpierw zsynchronizować; jeśli jeszcze tego nie zrobił, aplikacja poprosi, by spróbować za chwilę. Osoby z dostępem tylko do podglądu konta współdzielonego widzą odczyty, ale nie mogą ich dodawać.
+
+**Co pokazuje ekran.** Dla każdego rodzaju: cenę za jednostkę miesiąc po miesiącu oraz zużycie. Gdy cena jednostkowa z ostatniego miesiąca jest o ponad 10% wyższa od średniej z trzech poprzednich miesięcy, pojawia się o tym informacja. Gdy rodzaj ma odczyty z całego roku, każdy miesiąc jest porównywany z tym samym miesiącem rok wcześniej — zarówno cena, jak i zużycie. Przy kilku lokalach wybierz jeden u góry albo zobacz wszystkie razem. Koszty są podane w Twojej walucie wyświetlania; rachunek w walucie o nieznanym kursie jest pomijany w kosztach, o czym ekran informuje. Wydatki planowane nie są liczone.
+
 ## Dane i raporty
 
 ### Dane i synchronizacja

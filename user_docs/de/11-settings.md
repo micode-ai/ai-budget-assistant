@@ -179,6 +179,14 @@ Auch andere Autokosten zählen. Bei jeder Ausgabe wählst du im Abschnitt **Auto
 
 **Fristen.** Lege im Fahrzeugblatt die nächste Versicherungsverlängerung, die nächste Hauptuntersuchung, den nächsten Service und den Kilometerstand für den nächsten Service fest (alles optional; das Kreuz löscht ein Datum). Du wirst 14 und 2 Tage vor jedem Datum erinnert und einmal, wenn der Kilometerstand einer Tankfüllung weniger als 500 km vor dem Service liegt. Fristen in den nächsten 30 Tagen oder bereits überschrittene erscheinen als Chips auf der Fahrzeugkarte und auf dem Fahrzeugbildschirm, wo die Karte **Fristen** alle Daten auflistet. Wenn du eine Ausgabe als Versicherung oder Service markierst, bietet die App an, diese Frist um ein Jahr zu verschieben; ohne deine Bestätigung ändert sich nichts.
 
+## Nebenkosten
+
+Erkenne, ob eine Nebenkostenrechnung gestiegen ist, weil du mehr verbraucht hast oder weil der Preis gestiegen ist. Aufruf über **Einstellungen → Stammdaten → Nebenkosten**.
+
+**Verbrauch eintragen.** Öffne eine Ausgabe für Nebenkosten — Strom, Gas, Wasser oder Heizung. Tippe unter den Details auf **Verbrauch hinzufügen (kWh, m³, GJ)**, wähle die Art, gib den Verbrauch von der Rechnung und seine Einheit ein und optional ein **Objekt** (zum Beispiel „Wohnung“ oder „Ferienhaus“), wenn du Rechnungen für mehr als einen Ort bezahlst. Die App berechnet den Preis pro Einheit aus dem Betrag der Ausgabe. Um eine Angabe zu ändern oder zu entfernen, öffne die Ausgabe erneut. Eine neu angelegte Ausgabe muss zuerst synchronisiert werden; ist sie es noch nicht, bittet dich die App, es gleich noch einmal zu versuchen. Betrachter eines geteilten Kontos sehen die Angaben, können aber keine hinzufügen.
+
+**Was der Bildschirm zeigt.** Für jede Art: den Preis pro Einheit Monat für Monat und den Verbrauch. Liegt der Einheitspreis des letzten Monats um mehr als 10 % über dem Durchschnitt der drei Monate davor, weist ein Hinweis darauf hin. Sobald eine Art Angaben über ein ganzes Jahr hat, wird jeder Monat mit demselben Monat des Vorjahres verglichen — Preis und Verbrauch. Bei mehreren Objekten wählst du oben eines aus oder siehst alle zusammen. Die Kosten werden in deiner Anzeigewährung gezeigt; eine Rechnung in einer Währung mit unbekanntem Wechselkurs fließt nicht in die Kosten ein, und der Bildschirm sagt das. Geplante Ausgaben werden nicht mitgezählt.
+
 ## Daten & Berichte
 
 ### Daten & Synchronisierung

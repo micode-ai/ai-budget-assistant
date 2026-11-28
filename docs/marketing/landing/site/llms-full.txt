@@ -5537,6 +5537,14 @@ Other car costs count too. On any expense, the **Car** section lets you pick the
 
 **Renewals.** In the vehicle's sheet, set the next insurance renewal, the next inspection, the next service date and the odometer reading for the next service (all optional; tap the cross to clear one). You get a reminder 14 and 2 days before each date, and once when a fill-up's odometer comes within 500 km of the service target. Dates due within 30 days or already past appear as chips on the vehicle's card and on its screen, which also has a **Renewals** card listing every date. When you mark an expense as insurance or service, the app offers to move that renewal a year forward; nothing changes unless you confirm.
 
+## Utilities
+
+See whether a utility bill went up because you used more or because the price rose. Access via **Settings → Reference data → Utilities**.
+
+**Adding a reading.** Open a utility bill expense — electricity, gas, water or heating. Under the details tap **Add consumption (kWh, m³, GJ)**, pick the kind, enter the consumption from the bill and its unit, and optionally a **Property** (for example "Flat" or "Cottage") if you pay bills for more than one place. The app works out the price per unit from the expense amount. To change or remove a reading, open the expense again. A newly added expense must sync first; if it has not yet, the app asks you to try again in a moment. Viewers of a shared account see readings but cannot add them.
+
+**What the screen shows.** For each kind: the price per unit month by month, and the consumption. When the latest month's unit price is more than 10% above the average of the three months before it, a note says so. Once a kind has a year of readings, each month is compared with the same month last year — both the price and the consumption. With several properties, pick one at the top or see them all together. Costs are shown in your display currency; a bill in a currency whose exchange rate is unknown is left out of the cost, and the screen says so. Planned expenses are not counted.
+
 ## Data & Reports
 
 ### Data & Sync
@@ -8723,6 +8731,18 @@ If the person who connected an app later becomes a viewer or leaves an account, 
 - An account with **text encryption** can be connected **read-only**: the app sees amounts, dates and categories, but descriptions, notes, merchants, item names, tags and other encrypted text stay hidden, and it cannot add or change expenses.
 
 See [End-to-End Encryption](./15-encryption.md) for what each level covers.
+
+## Connect an AI assistant (MCP)
+
+You can let an AI assistant such as Claude or ChatGPT read your AI Budget data and answer questions like "what did I spend on groceries last month?".
+
+1. In the assistant, add a custom connector (in Claude: **Settings → Connectors → Add custom connector**) and enter the address `https://api.ai-budget.pl/mcp`.
+2. The assistant opens an AI Budget page where you sign in as usual. It shows the assistant's own name and the note **registered automatically by an AI assistant** — we have not checked such an assistant, so only connect one you started yourself. Tick the accounts it may use and tap **Allow**.
+3. Ask your question in the assistant.
+
+An assistant has **read-only** access: it can read expenses, income, categories, budgets and spending totals, but it cannot add, change or delete anything and it cannot download receipt photos. Accounts with full encryption cannot be connected, and text-encrypted accounts hide their encrypted text, exactly as for any connected app.
+
+To cut an assistant off, open **Settings → Connected apps** and tap **Disconnect** next to it. It loses access at once.
 
 ## For developers
 

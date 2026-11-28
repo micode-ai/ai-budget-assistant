@@ -60,6 +60,18 @@ Se a pessoa que ligou uma aplicação passar depois a leitor ou sair de uma cont
 
 Consulte [Encriptação ponto a ponto](./15-encryption.md) para saber o que cada nível abrange.
 
+## Ligar um assistente de IA (MCP)
+
+Pode permitir que um assistente de IA, como o Claude ou o ChatGPT, leia os seus dados do AI Budget e responda a perguntas como «quanto gastei em supermercado no mês passado?».
+
+1. No assistente, adicione um conector personalizado (no Claude: **Definições → Conectores → Adicionar conector personalizado**) e introduza o endereço `https://api.ai-budget.pl/mcp`.
+2. O assistente abre uma página do AI Budget onde inicia sessão como habitualmente. A página mostra o nome do próprio assistente e a nota **registada automaticamente por um assistente de IA** — não verificámos esse assistente, por isso ligue apenas um que tenha sido o próprio a iniciar. Marque as contas que ele pode usar e toque em **Permitir**.
+3. Faça a sua pergunta no assistente.
+
+Um assistente tem acesso **só de leitura**: pode ler despesas, receitas, categorias, orçamentos e totais de gastos, mas não pode adicionar, alterar nem eliminar nada, nem transferir as fotografias dos talões. As contas com encriptação total não podem ser ligadas, e as contas com encriptação de texto ocultam o texto encriptado, tal como acontece com qualquer aplicação ligada.
+
+Para cortar o acesso a um assistente, abra **Definições → Aplicações ligadas** e toque em **Desligar** ao lado dele. Perde o acesso de imediato.
+
 ## Para programadores
 
 Pode criar a sua própria aplicação sobre a API do AI Budget — é gratuito. Abra **Definições → Programadores** e toque em **Criar aplicação**: dê-lhe um nome, uma página inicial e os endereços de redirecionamento que vai usar, e escolha **Aplicação de servidor** ou **Aplicação móvel ou de navegador**. Recebe de imediato um **Client ID**; uma aplicação de servidor recebe também um client secret, mostrado **uma única vez** — copie-o imediatamente.

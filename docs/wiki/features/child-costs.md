@@ -84,7 +84,7 @@ footer and the "data as of" stamp.
 **Delete, archive and the encryption lock** ([ABA-800](https://github.com/micode-ai/ai-budget-assistant/issues/838)). `DELETE /children/:id` soft-deletes a child only
 when nothing is attributed (live `ExpenseChild` on a live expense, live line `childId`, live benefit
 income); otherwise 409 `CHILD_IN_USE` and the screen offers Archive. On an encrypted account every child
-write needs `canEncryptFor(accountId)` — checked up front by `assertCanWriteChild`, which raises
+write needs `canEncryptFor(accountId)` — checked up front IN THE APP by `assertCanWriteChild` (`apps/mobile/src/stores/childStore.ts`; the API has no such check), which raises
 `ENCRYPTION_LOCKED` (shown as "unlock in Settings → Security") instead of the old generic save error on
 the web and an indefinitely queued change on a phone; when the tier cannot be read (offline) the check is
 skipped and the phone queues as before. The screen names the account: children are per account, and a

@@ -98,6 +98,18 @@ OPS_TELEGRAM_CHAT_ID=
 # Optional prefix so a shared ops channel can tell projects apart
 OPS_PROJECT_NAME=AI Budget
 
+# Contact the developer — a SEPARATE support bot (own token, chat and webhook), never
+# the assistant or ops bot. Unset token = forwarding skipped. Runbook: docs/ops/support-bot.md
+SUPPORT_TELEGRAM_BOT_TOKEN=
+SUPPORT_TELEGRAM_CHAT_ID=
+# Public API base without /api/v1; <url>/support-telegram/webhook is registered at start
+SUPPORT_TELEGRAM_WEBHOOK_URL=https://api.ai-budget.pl
+# Telegram secret_token; unset = random per-process secret (works, changes on restart)
+SUPPORT_TELEGRAM_WEBHOOK_SECRET=
+# App locale code the developer reads, and the admin link base on forwarded cards
+SUPPORT_DEVELOPER_LANGUAGE=ru
+SUPPORT_ADMIN_URL=https://admin.ai-budget.pl
+
 # WhatsApp Business Cloud API (Meta). Token scope: whatsapp_business_messaging.
 WHATSAPP_ACCESS_TOKEN=your-meta-access-token
 WHATSAPP_PHONE_NUMBER_ID=your-phone-number-id
@@ -141,6 +153,43 @@ TWELVE_DATA_API_KEY=
 RESTORE_CREDENTIAL_CERT_FINGERPRINTS=
 RESTORE_CREDENTIAL_RP_ID=ai-budget.pl
 RESTORE_CREDENTIAL_RP_NAME=
+
+# Expense-group share/QR links (ABA-649). Unset = APP_PUBLIC_URL, else https://api.ai-budget.pl.
+# Production uses https://ai-budget.pl (an nginx 302 to the API guest page): docs/ops/group-short-link.md
+GROUP_SHARE_BASE_URL=
+
+# Public API + OAuth platform. Default OFF: unless exactly "true", every /public/* and /oauth/* route 404s.
+PUBLIC_API_ENABLED=false
+# MCP connector for AI assistants. Needs PUBLIC_API_ENABLED=true too; otherwise /mcp,
+# /oauth/register and /.well-known/oauth-* 404. Runbook: docs/ops/mcp.md
+MCP_ENABLED=false
+# Optional overrides (absolute URLs; an invalid value is logged and the default used)
+MCP_RESOURCE_URL=https://api.ai-budget.pl/mcp
+OAUTH_ISSUER=https://api.ai-budget.pl
+OAUTH_AUTHORIZE_URL=https://app.ai-budget.pl/authorize
+
+# E-receipts by e-mail forwarding (ABA-644). Default OFF. Runbook: docs/ops/inbound-mail.md
+INBOUND_MAIL_ENABLED=false
+INBOUND_MAIL_DOMAIN=in.ai-budget.pl
+# Sent by the SMTP container as X-Inbound-Secret; >= 32 chars or every internal call is rejected
+INBOUND_MAIL_SHARED_SECRET=
+# TCP peers the internal routes accept (socket address, never a header); unset = RFC1918
+INBOUND_MAIL_INTERNAL_CIDR=
+# Read only by the SMTP container / deploy scripts, never by the API
+INBOUND_MAIL_HOSTNAME=mail-in.ai-budget.pl
+INBOUND_MAIL_CONTAINER=false
+
+# Promo leaflets (gazetka match): monthly page budget per tier, separate from the AI limit
+LEAFLET_PAGES_FREE=20
+LEAFLET_PAGES_PRO=200
+LEAFLET_PAGES_BUSINESS=500
+# Admin upload caps (nginx must allow the body size too)
+LEAFLET_ADMIN_MAX_PAGES=60
+LEAFLET_ADMIN_MAX_MB=50
+# Community promos (confirm + daily push). Default OFF; needs COMMUNITY_PRICE_SALT as well
+COMMUNITY_PROMOS_ENABLED=
+COMMUNITY_PROMO_K=3
+COMMUNITY_PROMO_MIN_TRUSTED=2
 
 # Sentry (optional, for production error capture)
 SENTRY_DSN=https://<key>@<org>.ingest.<region>.sentry.io/<project>
@@ -720,6 +769,9 @@ docker exec -e SENTRY_DSN="$DSN" budget-api-prod node -e \
 | `TELEGRAM_CHAT_ID` | Legacy, no longer read by the API | — |
 | `OPS_TELEGRAM_BOT_TOKEN`, `OPS_TELEGRAM_CHAT_ID` | Ops bot for system alerts (no fallback to the assistant bot) | optional |
 | `OPS_PROJECT_NAME` | Prefix on every ops message | optional |
+| `SUPPORT_TELEGRAM_BOT_TOKEN`, `SUPPORT_TELEGRAM_CHAT_ID` | Separate support bot and the developer's private chat for "Write to the developer"; unset = forwarding skipped | optional |
+| `SUPPORT_TELEGRAM_WEBHOOK_URL`, `SUPPORT_TELEGRAM_WEBHOOK_SECRET` | Public API base (no `/api/v1`) for the support webhook, and its `secret_token` (unset = random per process) | with the support bot |
+| `SUPPORT_DEVELOPER_LANGUAGE`, `SUPPORT_ADMIN_URL` | Language the developer reads; admin link base on forwarded cards | `ru`, `https://admin.ai-budget.pl` |
 | `WHATSAPP_ACCESS_TOKEN` | Meta Cloud API access token (`whatsapp_business_messaging` scope) | optional |
 | `WHATSAPP_PHONE_NUMBER_ID` | WhatsApp phone number ID | optional |
 | `WHATSAPP_BUSINESS_ACCOUNT_ID` | WhatsApp Business Account ID | optional |
@@ -733,6 +785,18 @@ docker exec -e SENTRY_DSN="$DSN" budget-api-prod node -e \
 | `SLACK_TOKEN_ENC_KEY` | 32-byte key encrypting stored workspace tokens | required with Slack OAuth |
 | `RESTORE_CREDENTIAL_CERT_FINGERPRINTS` | Signing-cert SHA-256 fingerprints allowed to use restore credentials | required for the feature |
 | `RESTORE_CREDENTIAL_RP_ID`, `RESTORE_CREDENTIAL_RP_NAME` | WebAuthn relying party | `ai-budget.pl`, `AI Budget Assistant` |
+| `GROUP_SHARE_BASE_URL` | Base of expense-group guest/share/QR links; production uses the `https://ai-budget.pl` short link | `APP_PUBLIC_URL` |
+| `PUBLIC_API_ENABLED` | Turns on `/public/*`, OAuth, developer apps and connected apps; anything but `true` = 404 | off |
+| `MCP_ENABLED` | Read-only MCP endpoint for AI assistants; also needs `PUBLIC_API_ENABLED=true` | off |
+| `MCP_RESOURCE_URL`, `OAUTH_ISSUER`, `OAUTH_AUTHORIZE_URL` | MCP resource identifier, OAuth issuer, consent page | `https://api.ai-budget.pl/mcp`, `https://api.ai-budget.pl`, `https://app.ai-budget.pl/authorize` |
+| `INBOUND_MAIL_ENABLED` | E-receipts by e-mail forwarding; anything but `true` = routes 404 | off |
+| `INBOUND_MAIL_DOMAIN` | Receiving subdomain (`<token>@<domain>`) | `in.ai-budget.pl` |
+| `INBOUND_MAIL_SHARED_SECRET` | `X-Inbound-Secret` of the SMTP container, at least 32 characters | required for the feature |
+| `INBOUND_MAIL_INTERNAL_CIDR` | TCP peers allowed on `/internal/inbound-mail/*` | RFC1918 |
+| `INBOUND_MAIL_HOSTNAME`, `INBOUND_MAIL_CONTAINER` | SMTP banner host; whether `deploy.sh` starts the `inbound-mail` profile (not read by the API) | `mail-in.ai-budget.pl`, `false` |
+| `LEAFLET_PAGES_FREE`, `LEAFLET_PAGES_PRO`, `LEAFLET_PAGES_BUSINESS` | Monthly promo-leaflet page budget per tier | `20`, `200`, `500` |
+| `LEAFLET_ADMIN_MAX_PAGES`, `LEAFLET_ADMIN_MAX_MB` | Admin leaflet upload caps | `60`, `50` |
+| `COMMUNITY_PROMOS_ENABLED`, `COMMUNITY_PROMO_K`, `COMMUNITY_PROMO_MIN_TRUSTED` | Community promos and their confirmation threshold | off, `3`, `2` |
 | `TWELVE_DATA_API_KEY` | Market data for investments | optional |
 | `AI_CATEGORIZE_MAX_PER_DAY` | Daily model passes of categorize-uncategorized per account | `5` |
 | `AI_IMPORT_MAX_PDF_PAGES`, `AI_IMPORT_MAX_INFERENCES_PER_DAY` | AI statement-import limits | `20`, `20` |

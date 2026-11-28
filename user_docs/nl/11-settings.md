@@ -192,6 +192,14 @@ Ook andere autokosten tellen mee. Bij elke uitgave kies je in het onderdeel **Au
 
 **Vervaldata.** Stel in het voertuigblad de volgende verlenging van de verzekering, de volgende APK, de volgende onderhoudsbeurt en de kilometerstand voor het volgende onderhoud in (alles optioneel; het kruisje wist een datum). Je krijgt een herinnering 14 en 2 dagen voor elke datum, en één keer wanneer de kilometerstand van een tankbeurt binnen 500 km van het onderhoud komt. Vervaldata binnen 30 dagen of al verstreken verschijnen als labels op de voertuigkaart en op het voertuigscherm, waar de kaart **Vervaldata** alle data toont. Markeer je een uitgave als verzekering of onderhoud, dan biedt de app aan die vervaldatum een jaar op te schuiven; zonder jouw bevestiging verandert er niets.
 
+## Energie en water
+
+Zie of een energierekening hoger werd doordat je meer verbruikte of doordat de prijs steeg. Ga naar **Instellingen → Referentiegegevens → Energie en water**.
+
+**Een meting toevoegen.** Open een uitgave voor energie of water — elektriciteit, gas, water of verwarming. Tik onder de details op **Verbruik toevoegen (kWh, m³, GJ)**, kies het soort, vul het verbruik van de rekening en de eenheid in, en eventueel een **Woning** (bijvoorbeeld "Appartement" of "Zomerhuisje") als je rekeningen voor meer dan één plek betaalt. De app berekent de prijs per eenheid uit het bedrag van de uitgave. Om een meting te wijzigen of te verwijderen, open je de uitgave opnieuw. Een net toegevoegde uitgave moet eerst gesynchroniseerd zijn; is dat nog niet gebeurd, dan vraagt de app je het zo meteen opnieuw te proberen. Kijkers van een gedeeld account zien de metingen, maar kunnen ze niet toevoegen.
+
+**Wat het scherm laat zien.** Per soort: de prijs per eenheid maand na maand, en het verbruik. Ligt de eenheidsprijs van de laatste maand meer dan 10% boven het gemiddelde van de drie maanden ervoor, dan meldt een notitie dat. Zodra een soort een jaar aan metingen heeft, wordt elke maand vergeleken met dezelfde maand vorig jaar — zowel de prijs als het verbruik. Met meerdere woningen kies je er bovenaan één of bekijk je ze allemaal samen. Kosten staan in je weergavevaluta; een rekening in een valuta met een onbekende wisselkoers telt niet mee in de kosten, en het scherm zegt dat. Geplande uitgaven tellen niet mee.
+
 ## Gegevens & Rapporten
 
 ### Gegevens & Synchronisatie

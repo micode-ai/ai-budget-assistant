@@ -60,6 +60,18 @@ If the person who connected an app later becomes a viewer or leaves an account, 
 
 See [End-to-End Encryption](./15-encryption.md) for what each level covers.
 
+## Connect an AI assistant (MCP)
+
+You can let an AI assistant such as Claude or ChatGPT read your AI Budget data and answer questions like "what did I spend on groceries last month?".
+
+1. In the assistant, add a custom connector (in Claude: **Settings → Connectors → Add custom connector**) and enter the address `https://api.ai-budget.pl/mcp`.
+2. The assistant opens an AI Budget page where you sign in as usual. It shows the assistant's own name and the note **registered automatically by an AI assistant** — we have not checked such an assistant, so only connect one you started yourself. Tick the accounts it may use and tap **Allow**.
+3. Ask your question in the assistant.
+
+An assistant has **read-only** access: it can read expenses, income, categories, budgets and spending totals, but it cannot add, change or delete anything and it cannot download receipt photos. Accounts with full encryption cannot be connected, and text-encrypted accounts hide their encrypted text, exactly as for any connected app.
+
+To cut an assistant off, open **Settings → Connected apps** and tap **Disconnect** next to it. It loses access at once.
+
 ## For developers
 
 You can build your own app on the AI Budget API — it's free. Open **Settings → Developers** and tap **Create app**: give it a name, a homepage and the redirect addresses it will use, and choose **Server app** or **Mobile or browser app**. You get a **Client ID** right away; a server app also gets a client secret, shown **only once** — copy it immediately.

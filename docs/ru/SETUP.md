@@ -99,6 +99,18 @@ OPS_TELEGRAM_CHAT_ID=
 # Необязательный префикс, чтобы в общем ops-канале различать проекты
 OPS_PROJECT_NAME=AI Budget
 
+# Связь с разработчиком — ОТДЕЛЬНЫЙ бот поддержки (свой токен, чат и вебхук), никогда
+# не бот-ассистент и не ops-бот. Без токена пересылка пропускается. Ранбук: docs/ops/support-bot.md
+SUPPORT_TELEGRAM_BOT_TOKEN=
+SUPPORT_TELEGRAM_CHAT_ID=
+# Публичный адрес API без /api/v1; при старте регистрируется <url>/support-telegram/webhook
+SUPPORT_TELEGRAM_WEBHOOK_URL=https://api.ai-budget.pl
+# secret_token Telegram; не задан — случайный секрет на процесс (работает, меняется при рестарте)
+SUPPORT_TELEGRAM_WEBHOOK_SECRET=
+# Код локали, на котором читает разработчик, и база ссылки в админку на карточке
+SUPPORT_DEVELOPER_LANGUAGE=ru
+SUPPORT_ADMIN_URL=https://admin.ai-budget.pl
+
 # WhatsApp Business Cloud API (Meta). Scope токена: whatsapp_business_messaging.
 WHATSAPP_ACCESS_TOKEN=your-meta-access-token
 WHATSAPP_PHONE_NUMBER_ID=your-phone-number-id
@@ -142,6 +154,43 @@ TWELVE_DATA_API_KEY=
 RESTORE_CREDENTIAL_CERT_FINGERPRINTS=
 RESTORE_CREDENTIAL_RP_ID=ai-budget.pl
 RESTORE_CREDENTIAL_RP_NAME=
+
+# Ссылки и QR общих групп расходов (ABA-649). Не задан — APP_PUBLIC_URL, иначе https://api.ai-budget.pl.
+# В проде https://ai-budget.pl (302 nginx на гостевую страницу API): docs/ops/group-short-link.md
+GROUP_SHARE_BASE_URL=
+
+# Публичный API и OAuth-платформа. По умолчанию ВЫКЛ.: если не ровно "true", все /public/* и /oauth/* отдают 404.
+PUBLIC_API_ENABLED=false
+# MCP-коннектор для AI-ассистентов. Нужен ещё PUBLIC_API_ENABLED=true; иначе /mcp,
+# /oauth/register и /.well-known/oauth-* отдают 404. Ранбук: docs/ops/mcp.md
+MCP_ENABLED=false
+# Необязательные переопределения (абсолютные URL; неверное значение логируется, берётся умолчание)
+MCP_RESOURCE_URL=https://api.ai-budget.pl/mcp
+OAUTH_ISSUER=https://api.ai-budget.pl
+OAUTH_AUTHORIZE_URL=https://app.ai-budget.pl/authorize
+
+# Электронные чеки пересылкой на e-mail (ABA-644). По умолчанию ВЫКЛ. Ранбук: docs/ops/inbound-mail.md
+INBOUND_MAIL_ENABLED=false
+INBOUND_MAIL_DOMAIN=in.ai-budget.pl
+# SMTP-контейнер шлёт его в X-Inbound-Secret; не короче 32 символов, иначе все внутренние вызовы отклоняются
+INBOUND_MAIL_SHARED_SECRET=
+# TCP-адреса, с которых принимаются внутренние маршруты (адрес сокета, не заголовок); не задано — RFC1918
+INBOUND_MAIL_INTERNAL_CIDR=
+# Читаются только SMTP-контейнером и скриптами деплоя, не API
+INBOUND_MAIL_HOSTNAME=mail-in.ai-budget.pl
+INBOUND_MAIL_CONTAINER=false
+
+# Промо-газетки: месячный бюджет страниц по тарифам, отдельно от AI-лимита
+LEAFLET_PAGES_FREE=20
+LEAFLET_PAGES_PRO=200
+LEAFLET_PAGES_BUSINESS=500
+# Ограничения загрузки в админке (nginx тоже должен пропускать такой размер тела)
+LEAFLET_ADMIN_MAX_PAGES=60
+LEAFLET_ADMIN_MAX_MB=50
+# Промо от сообщества (подтверждение + ежедневный пуш). По умолчанию ВЫКЛ.; нужен и COMMUNITY_PRICE_SALT
+COMMUNITY_PROMOS_ENABLED=
+COMMUNITY_PROMO_K=3
+COMMUNITY_PROMO_MIN_TRUSTED=2
 
 # Sentry (опционально, для сбора ошибок в продакшене)
 SENTRY_DSN=https://<key>@<org>.ingest.<region>.sentry.io/<project>
@@ -723,6 +772,9 @@ docker exec -e SENTRY_DSN="$DSN" budget-api-prod node -e \
 | `TELEGRAM_CHAT_ID` | Устаревшая, API её больше не читает | — |
 | `OPS_TELEGRAM_BOT_TOKEN`, `OPS_TELEGRAM_CHAT_ID` | Ops-бот для системных алертов (без отката на бота-ассистента) | опционально |
 | `OPS_PROJECT_NAME` | Префикс каждого ops-сообщения | опционально |
+| `SUPPORT_TELEGRAM_BOT_TOKEN`, `SUPPORT_TELEGRAM_CHAT_ID` | Отдельный бот поддержки и личный чат разработчика для «Написать разработчику»; не заданы — пересылка пропускается | опционально |
+| `SUPPORT_TELEGRAM_WEBHOOK_URL`, `SUPPORT_TELEGRAM_WEBHOOK_SECRET` | Публичный адрес API (без `/api/v1`) для вебхука бота поддержки и его `secret_token` (не задан — случайный на процесс) | вместе с ботом поддержки |
+| `SUPPORT_DEVELOPER_LANGUAGE`, `SUPPORT_ADMIN_URL` | Язык, на котором читает разработчик; база ссылки в админку на карточке | `ru`, `https://admin.ai-budget.pl` |
 | `WHATSAPP_ACCESS_TOKEN` | Access-токен Meta Cloud API (scope `whatsapp_business_messaging`) | опционально |
 | `WHATSAPP_PHONE_NUMBER_ID` | ID номера телефона WhatsApp | опционально |
 | `WHATSAPP_BUSINESS_ACCOUNT_ID` | ID бизнес-аккаунта WhatsApp | опционально |
@@ -736,6 +788,18 @@ docker exec -e SENTRY_DSN="$DSN" budget-api-prod node -e \
 | `SLACK_TOKEN_ENC_KEY` | 32-байтный ключ шифрования сохранённых токенов workspace | обязательно вместе с Slack OAuth |
 | `RESTORE_CREDENTIAL_CERT_FINGERPRINTS` | SHA-256 отпечатки сертификатов подписи, которым разрешены учётные данные восстановления | обязательно для функции |
 | `RESTORE_CREDENTIAL_RP_ID`, `RESTORE_CREDENTIAL_RP_NAME` | Relying party WebAuthn | `ai-budget.pl`, `AI Budget Assistant` |
+| `GROUP_SHARE_BASE_URL` | База гостевых ссылок и QR общих групп; в проде короткая ссылка `https://ai-budget.pl` | `APP_PUBLIC_URL` |
+| `PUBLIC_API_ENABLED` | Включает `/public/*`, OAuth, приложения разработчиков и подключённые приложения; всё, кроме `true`, — 404 | выкл. |
+| `MCP_ENABLED` | MCP-эндпоинт только для чтения для AI-ассистентов; нужен ещё `PUBLIC_API_ENABLED=true` | выкл. |
+| `MCP_RESOURCE_URL`, `OAUTH_ISSUER`, `OAUTH_AUTHORIZE_URL` | Идентификатор ресурса MCP, issuer OAuth, страница согласия | `https://api.ai-budget.pl/mcp`, `https://api.ai-budget.pl`, `https://app.ai-budget.pl/authorize` |
+| `INBOUND_MAIL_ENABLED` | Электронные чеки пересылкой на e-mail; всё, кроме `true`, — маршруты отдают 404 | выкл. |
+| `INBOUND_MAIL_DOMAIN` | Принимающий поддомен (`<token>@<domain>`) | `in.ai-budget.pl` |
+| `INBOUND_MAIL_SHARED_SECRET` | `X-Inbound-Secret` SMTP-контейнера, не короче 32 символов | обязательно для функции |
+| `INBOUND_MAIL_INTERNAL_CIDR` | TCP-адреса, допущенные к `/internal/inbound-mail/*` | RFC1918 |
+| `INBOUND_MAIL_HOSTNAME`, `INBOUND_MAIL_CONTAINER` | Хост SMTP-баннера; запускает ли `deploy.sh` профиль `inbound-mail` (API их не читает) | `mail-in.ai-budget.pl`, `false` |
+| `LEAFLET_PAGES_FREE`, `LEAFLET_PAGES_PRO`, `LEAFLET_PAGES_BUSINESS` | Месячный бюджет страниц промо-газеток по тарифам | `20`, `200`, `500` |
+| `LEAFLET_ADMIN_MAX_PAGES`, `LEAFLET_ADMIN_MAX_MB` | Ограничения загрузки газеток в админке | `60`, `50` |
+| `COMMUNITY_PROMOS_ENABLED`, `COMMUNITY_PROMO_K`, `COMMUNITY_PROMO_MIN_TRUSTED` | Промо от сообщества и порог их подтверждения | выкл., `3`, `2` |
 | `TWELVE_DATA_API_KEY` | Рыночные данные для инвестиций | опционально |
 | `AI_CATEGORIZE_MAX_PER_DAY` | Суточное число проходов модели для категоризации без категории на аккаунт | `5` |
 | `AI_IMPORT_MAX_PDF_PAGES`, `AI_IMPORT_MAX_INFERENCES_PER_DAY` | Лимиты AI-импорта выписок | `20`, `20` |

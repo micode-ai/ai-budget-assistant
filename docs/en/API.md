@@ -4,7 +4,7 @@ Last updated: 2026-09-27
 
 Base URL: `/api/v1`
 
-A handful of routes are served **without** the `/api/v1` prefix because their URL is registered with a third party or handed to people outside the app. The authoritative list is `GLOBAL_PREFIX_EXCLUDED_ROUTES` in `apps/api/src/global-prefix-exclusions.ts`: the Stripe, Telegram, WhatsApp and Slack webhooks (`/webhooks/stripe`, `/telegram/webhook`, `/whatsapp/webhook`, `/slack/events`, `/slack/interactivity`), the Slack install flow (`/slack/install`, `/slack/oauth/callback`), and two guest-page subtrees covered by wildcards — `/s/...` (receipt-split guest links) and `/sl/...` (shopping-list guest links).
+A handful of routes are served **without** the `/api/v1` prefix because their URL is registered with a third party or handed to people outside the app. The authoritative list is `GLOBAL_PREFIX_EXCLUDED_ROUTES` in `apps/api/src/global-prefix-exclusions.ts`: the Stripe, Telegram, support-bot, WhatsApp and Slack webhooks (`/webhooks/stripe`, `/telegram/webhook`, `/support-telegram/webhook`, `/whatsapp/webhook`, `/slack/events`, `/slack/interactivity`), the Slack install flow (`/slack/install`, `/slack/oauth/callback`), three guest-page subtrees covered by wildcards — `/s/...` (receipt-split guest links), `/sl/...` (shopping-list guest links) and `/g/...` (shared-group guest pages) — and the public API platform: `/public/...` (`/public/v1/*`, `/public/docs/*`), `/oauth/token`, `/oauth/revoke`, `/oauth/register`, `/mcp` and the three `/.well-known/oauth-*` documents.
 
 Guard vocabulary used below: **JWT** = `JwtAuthGuard`; **account context** = `AccountContextGuard` (needs `X-Account-Id`); **viewer-blocked** = `ViewerBlockGuard` (403 for the `viewer` role); **Pro** = `SubscriptionTierGuard` + `@RequireTier('pro')` (403 with `code: "TIER_REQUIRED"`); **AI-metered** = `AiUsageGuard` + `@TrackAiUsage(feature, cost)` (counts against the monthly AI quota).
 
@@ -6267,6 +6267,678 @@ Admin routes (JWT + `AdminGuard`):
 Webhook (outside `/api/v1`): `POST /support-telegram/webhook` - Telegram updates for the separate
 support bot, authenticated by the `X-Telegram-Bot-Api-Secret-Token` header
 (`SUPPORT_TELEGRAM_WEBHOOK_SECRET`). A reply is routed only by `reply_to_message`. Runbook: `docs/ops/support-bot.md`.
+
+**E-mail fallback (ABA-857).** A developer reply the user has not read is e-mailed once per unread batch: immediately for a user with no push token, otherwise by an hourly cron after 12 hours unread. Each e-mail carries a support-only unsubscribe link:
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `GET` / `POST` | `/mail/unsubscribe/support` | Public. HMAC token over `unsubscribe:support:<userId>`; sets only `SupportThread.emailEnabled = false`. Same answer for a valid and an invalid token |
+
+---
+
+## Public API and OAuth
+
+A versioned REST API (`/public/v1`) that third-party apps call on a user's behalf, with our own OAuth 2.0 authorization server in front of it. See `docs/wiki/features/public-api.md`; enable/rollback runbook `docs/ops/public-api.md`.
+
+Everything is dark behind `PUBLIC_API_ENABLED` (anything but `true` is off): with it off, every route in this section except `/admin/oauth-clients` answers `404`. `/public/*`, `/oauth/token` and `/oauth/revoke` are served **without** the `/api/v1` prefix and with `Access-Control-Allow-Origin: *` (no credentials). The interactive reference (Swagger UI, English/Polish/Russian) is generated from `PublicApiModule` and `OAuthPublicModule` only:
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `GET` | `/public/docs` | `302` to `/public/docs/{en,pl,ru}` by `Accept-Language` (else `en`) |
+| `GET` | `/public/docs/{en,pl,ru}` | Swagger UI; the document is at `/public/docs/<lang>/openapi.json` (and `openapi.yaml`). Registered at boot only while the flag is on |
+| `GET` | `/public/docs/oauth2-redirect.html` | Swagger UI's "Authorize" popup landing page — one redirect URI for all three languages |
+
+### Authorization flow
+
+PKCE S256 is required for every client, confidential or public. Scopes: `expenses:read`, `expenses:write`, `receipts:read`, `categories:read`, `incomes:read`, `incomes:write`, `budgets:read`, `budgets:write`, `analytics:read`.
+
+1. The app sends the user to the consent page `https://app.ai-budget.pl/authorize?response_type=code&client_id&redirect_uri&scope&state&code_challenge&code_challenge_method=S256` (optional `resource`, see [MCP Connector](#mcp-connector)).
+2. The page calls the consent backend (below) with the user's JWT; Allow returns the redirect URL with a one-time `code` (Redis, 10 min); Deny returns `redirect_uri?error=access_denied&state=…`.
+3. The app exchanges the code at `POST /oauth/token`.
+
+Consent backend — `/api/v1`, JWT (the user's own), no `X-Account-Id`:
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `GET` | `/oauth/authorize/preview` | Query = the OAuth request (`client_id`, `redirect_uri`, `scope`, `code_challenge`, `code_challenge_method`, `response_type`, `state`, `resource`). Returns the app (name, logo, homepage, verified badge, developer name), plain-language scopes and the user's accounts with a per-account disabled reason (viewer, encryption tier ≥ 2) and a `connected` flag. An unknown client or unregistered `redirect_uri` is an error, never a redirect |
+| `POST` | `/oauth/authorize/approve` | Same OAuth fields plus `decision` (`allow`/`deny`) and `account_ids` (≤ 50; the phase-1 single `account_id` is still accepted). Upserts one active grant per client × user (re-consent replaces the account set) and returns the redirect URL. Throttled 20/min |
+
+### Token endpoint
+
+```http
+POST /oauth/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=authorization_code&code=aba_ac_...&redirect_uri=https://app.example.com/cb&code_verifier=...&client_id=aba_ci_...
+```
+
+Public by design (no JWT). Client authentication: HTTP Basic or `client_id`/`client_secret` in the body; a public client sends `client_id` only (PKCE alone). Form-encoded and JSON bodies are both accepted. `grant_type` is `authorization_code` or `refresh_token` (optional `scope` subset; optional `resource`).
+
+**Response** `200 OK` (`Cache-Control: no-store`)
+```json
+{
+  "access_token": "aba_at_...",
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "refresh_token": "aba_rt_...",
+  "scope": "expenses:read categories:read",
+  "account_ids": ["uuid"],
+  "account_id": "uuid"
+}
+```
+
+Access token 1 h, refresh token 90 days; `account_id` is present only when the connection has exactly one account. Refresh **rotates** both tokens; reusing a rotated refresh token revokes the whole grant. Errors are RFC 6749 `{ "error", "error_description" }` (`invalid_grant`, `invalid_client`, `unsupported_grant_type`, `invalid_scope`, `invalid_target`, `slow_down` with `Retry-After: 60`, …). Limit 30/min per client, counted for a public client only on a request that presents its own valid code or refresh token.
+
+`POST /oauth/revoke` — RFC 7009, same client authentication, body `token` (`token_type_hint` accepted and ignored). Revokes the whole grant; `200`.
+
+### Resource API
+
+Bearer token (`Authorization: Bearer aba_at_...`), never a JWT. A connection can hold several accounts, so each request names one in `X-Account-Id`: optional when exactly one account is granted, otherwise a missing header is `400 account_required` and an account outside the grant is `403 account_not_granted`. Responses carry `X-RateLimit-Limit` / `X-RateLimit-Remaining`; defaults 120/min per grant and 1,200/min per client (per-app overrides), `429 rate_limited` with `Retry-After`.
+
+| Method | Path | Scope | Purpose |
+|--------|------|-------|---------|
+| `GET` | `/public/v1/accounts` | token only | Every granted account: `{ data: [{ id, name, type, base_currency, access, active, reason }] }` (`access` = `read`/`read_write`; `reason` = `role`/`encrypted`/`archived`/null). The one connection-level route — no `X-Account-Id` |
+| `GET` | `/public/v1/account` | token only | The addressed account: `{ id, name, type, base_currency, role, encryption (none/text/full), read_only, user: { id, name, base_currency } }`. No e-mail |
+| `GET` | `/public/v1/categories` | `categories:read` | Account categories; `type` = `expense` (default) or `income` |
+| `GET` | `/public/v1/expenses` | `expenses:read` | List: `date_from`, `date_to`, `category_id`, `merchant`, `project_id`, `search`, `limit` (1–200, default 50), `cursor` → `{ data, next_cursor, has_more }` |
+| `GET` | `/public/v1/expenses/changes` | `expenses:read` | Incremental feed since `cursor` (`limit` 1–200, default 200): `{ changes: [{ type: "upsert", expense } \| { type: "delete", id, deleted_at }], next_cursor, has_more }` |
+| `GET` | `/public/v1/expenses/:id` | `expenses:read` | One expense with line items |
+| `GET` | `/public/v1/expenses/:id/receipt` | `receipts:read` | Original receipt bytes (content type sniffed, `Cache-Control: private, no-store`); `403 account_encrypted` on any encrypted account |
+| `POST` | `/public/v1/expenses` | `expenses:write` | Create. `Idempotency-Key` header required; `201`, or `200` with the row this app already created under that key |
+| `PATCH` | `/public/v1/expenses/:id` | `expenses:write` | Partial update (nullable fields may be cleared with `null`) |
+| `DELETE` | `/public/v1/expenses/:id` | `expenses:write` | Soft delete, `204` |
+| `GET` | `/public/v1/incomes` | `incomes:read` | List: `date_from`, `date_to`, `category_id`, `project_id`, `search`, `limit`, `cursor` |
+| `GET` | `/public/v1/incomes/changes` | `incomes:read` | Incremental feed, same shape as the expense feed (`income` instead of `expense`) |
+| `GET` | `/public/v1/incomes/:id` | `incomes:read` | One income |
+| `POST` / `PATCH` / `DELETE` | `/public/v1/incomes[/:id]` | `incomes:write` | Create (`Idempotency-Key`), update, soft delete. A transfer-linked income (`is_transfer`) is read-only (`422`) |
+| `GET` | `/public/v1/budgets` | `budgets:read` | Budgets with allocations and current-period `progress` (`period_start`, `period_end`, `spent`, `remaining`, `percent_used`, `projected_total`) |
+| `GET` | `/public/v1/budgets/:id` | `budgets:read` | One budget |
+| `POST` / `PATCH` / `DELETE` | `/public/v1/budgets[/:id]` | `budgets:write` | Create (`Idempotency-Key`), update, delete. `period` ∈ `daily`/`weekly`/`monthly`/`yearly`/`custom`; `allocations` (≤ 100) replace the old set; a repeated category is `422` |
+| `GET` | `/public/v1/analytics/summary` | `analytics:read` | `from`, `to` (≤ 366 days), `currency` → `total_income`, `total_expenses`, `net`, `transaction_count` |
+| `GET` | `/public/v1/analytics/by-category` | `analytics:read` | Same range, `type` = `expense` (default) / `income` → `data: [{ category_id, category_name, amount, share }]` |
+| `GET` | `/public/v1/analytics/monthly` | `analytics:read` | At most 24 calendar months → `data: [{ month, income, expenses, net }]`, every month present |
+
+Expense create body (amounts are decimal **strings**):
+
+```json
+{
+  "amount": "42.50",
+  "currency": "PLN",
+  "date": "2026-11-20",
+  "time": "18:30",
+  "category_id": "uuid",
+  "description": "Groceries",
+  "merchant": "Biedronka",
+  "notes": "",
+  "location": { "lat": 52.23, "lng": 21.01, "name": "Warsaw" },
+  "tag_ids": ["uuid"],
+  "project_id": "uuid",
+  "items": [{ "description": "Milk", "quantity": "2", "unit_price": "3.49", "total_price": "6.98" }]
+}
+```
+
+Only `amount` and `date` are required. Limits: description 500, merchant 120, notes 2,000, location name 200, tags 50, items 500. Analytics amounts are converted into `currency` (default: the grantor's display currency); a row with no known rate is left out and the envelope says `fx_approximate: true`.
+
+Rules worth knowing:
+- **Encryption.** Tier ≥ 2 accounts are `403 account_encrypted`. Tier 1 is read-only (writes and the `merchant`/`search` filters are `403 account_encrypted`), and every tier-1 text field comes back `null` and is listed in the row's `encrypted_fields`.
+- **Writes** (`@PublicWrite()`) are also refused for a viewer (`403 viewer_read_only`) and an archived trip (`403 trip_archived`), and go through the app's own services. Rows created by an app carry `created_by_app` and `source: "api"`.
+- **`Idempotency-Key`** is scoped to the app and the account; a key that matches another origin's row, another row's id or a deleted row is `409 idempotency_key_conflict`.
+- **Planned expenses are invisible**; debts and split receivables are shown with `is_debt` / `is_split_receivable`. Group-mirror rows refuse `amount`, `currency` and `date` (`422`).
+- **The changes feed** pages on `(updated_at, id)` with a 10-second lag on the DB clock; a deleted row, or one that turned planned, arrives as `type: "delete"`.
+- **Errors** are `{ "error": { "code", "message", "details"? } }` with a stable `code` (`invalid_token`, `grant_inactive`, `insufficient_scope`, `account_required`, `account_not_granted`, `account_encrypted`, `validation_failed`, `invalid_cursor`, `idempotency_key_conflict`, `rate_limited`, `not_found`, …). A malformed request is `400 validation_failed`; `422` means it parsed but cannot be honoured.
+
+### Developer apps and connected apps
+
+`/api/v1`, JWT, no `X-Account-Id` (apps belong to a user; connections span accounts).
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `GET` | `/developer/apps` | The caller's own apps: `{ apps }` (manually registered only) |
+| `POST` | `/developer/apps` | Register: `name` (1–60, no control characters, may not be or start with "AI Budget"/"AI Budżet"/"MiCode" → `app_name_reserved`), `description` (≤ 500), `homepageUrl` (https, required), `logoUrl`, `privacyPolicyUrl`, `redirectUris` (1–10; https, or `http://localhost`/`127.0.0.1`/`[::1]`), `isConfidential` (default `true`). Returns `{ app, clientSecret? }` — the secret (`aba_cs_…`) is shown once. Throttled 20/min |
+| `PATCH` | `/developer/apps/:id` | Update the same fields (except `isConfidential`). Throttled 20/min |
+| `POST` | `/developer/apps/:id/rotate-secret` | New client secret `{ clientSecret }`. Throttled 20/min |
+| `DELETE` | `/developer/apps/:id` | Soft delete, `204`: revokes every grant of the app (`client_deleted`) and deletes its tokens. Throttled 20/min |
+| `GET` | `/connected-apps` | One row per connection (grant) with the accounts it holds; a co-owner sees only the granted accounts they own or edit |
+| `DELETE` | `/connected-apps/:grantId` | Disconnect, `204`. The grantor revokes the whole grant; a co-owner removes only their own accounts |
+| `DELETE` | `/connected-apps/:grantId/accounts/:accountId` | Remove one account from a connection, `204`; an emptied grant is revoked |
+
+Admin ("API apps", JWT + `AdminGuard`; not behind the flag):
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `GET` | `/admin/oauth-clients` | Paged list, newest first: `source` (`manual`/`mcp_dcr`), `page`, `limit` (default 50, max 200) → `{ items, total, page, limit, totalPages }`; each item carries owner, active grants, requests in the last minute, status, verified flag, rate-limit overrides |
+| `PATCH` | `/admin/oauth-clients/:id` | `status` (`active`/`blocked`, `blockedReason` ≤ 300 required to block), `isVerified`, `rateLimitPerGrant` / `rateLimitPerClient` (1–100,000 or `null`). Audited as `oauth_client.update`. Blocking stops every token on the next request without revoking grants |
+
+---
+
+## MCP Connector
+
+A read-only [Model Context Protocol](https://modelcontextprotocol.io) endpoint so a user can add `https://api.ai-budget.pl/mcp` as a custom connector in Claude, ChatGPT and other assistants. It sits behind the same OAuth server as the [public API](#public-api-and-oauth). See `docs/wiki/features/mcp-connector.md`; runbook `docs/ops/mcp.md`.
+
+All routes below answer `404` unless **both** `PUBLIC_API_ENABLED` and `MCP_ENABLED` are exactly `true`; they are served without the `/api/v1` prefix, with public CORS, and are not in the published OpenAPI document.
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `GET` | `/.well-known/oauth-authorization-server` | RFC 8414 metadata: `issuer` (`OAUTH_ISSUER`), `authorization_endpoint` (`OAUTH_AUTHORIZE_URL`, the consent page), token/revocation/registration endpoints, the five read scopes, `code` + S256, auth methods `none`/`client_secret_basic`/`client_secret_post` |
+| `GET` | `/.well-known/oauth-protected-resource` | RFC 9728 metadata: `resource` (`MCP_RESOURCE_URL`), `authorization_servers`, `scopes_supported`, `bearer_methods_supported: ["header"]` |
+| `GET` | `/.well-known/oauth-protected-resource/mcp` | Same document, path-suffixed form |
+| `POST` | `/oauth/register` | RFC 7591 dynamic client registration (public, no JWT) |
+| `POST` | `/mcp` | The MCP endpoint (Streamable HTTP, stateless, JSON responses) |
+| `GET` / `DELETE` | `/mcp` | `405`, `Allow: POST` — no SSE stream, no session |
+
+### Dynamic registration
+
+```http
+POST /oauth/register
+Content-Type: application/json
+
+{
+  "client_name": "Claude",
+  "redirect_uris": ["https://assistant.example.com/oauth/callback"],
+  "grant_types": ["authorization_code", "refresh_token"]
+}
+```
+
+**Response** `201 Created` — `{ client_id, client_id_issued_at, client_name, redirect_uris, grant_types, response_types: ["code"], token_endpoint_auth_method: "none", scope }`. Always a public client with no owner (`source = mcp_dcr`); `grant_types` defaults to both and must include `authorization_code`; `scope` is optional (unknown or non-read scopes are dropped, nothing left → the five read scopes). `client_name` is required, ≤ 80 characters, and may not contain the product name (confusables folded; a trailing `(…)` label is not checked when something precedes it). Redirect URIs: 1–5, `https://` or loopback `http://localhost|127.0.0.1|[::1]`, no custom schemes or whitespace. Errors are `400 { error: "invalid_client_metadata" | "invalid_redirect_uri", error_description }`. Limits: 10/hour per client IP (IPv6 per /64) plus 300/hour globally, `429` with `Retry-After` (a Redis outage is also a 429); body ≤ 16 KB.
+
+### Calling `/mcp`
+
+Without a valid token `/mcp` answers `401` with `WWW-Authenticate: Bearer resource_metadata="<issuer>/.well-known/oauth-protected-resource/mcp"`. A token works only if it was issued for `resource=MCP_RESOURCE_URL` (pass `resource` at authorize and token); a token with no resource is `/public/v1`-only, and vice versa. A self-registered client must send `resource` and may hold only `expenses:read`, `categories:read`, `incomes:read`, `budgets:read`, `analytics:read` (the default when `scope` is omitted); `receipts:read` and every `*:write` are `invalid_scope`.
+
+Tools (all read-only): `list_accounts`, `list_expenses`, `get_expense`, `list_incomes`, `get_income`, `list_categories`, `list_budgets`, `get_budget`, `get_spending_summary` (`from`, `to`, `group_by` = `total`/`category`/`month`). Every tool except `list_accounts` takes `account_id` when the connection holds several accounts; list tools take `limit` (1–200, default 50) and `cursor`.
+
+Limits: body ≤ 128 KB; a JSON-RPC batch (array body) is `400` / `-32600`. Each tool call costs one unit of the same per-grant / per-client rate limit as REST; `initialize` and `tools/list` are not metered.
+
+---
+
+## Shared Groups
+
+Ongoing expense groups (a flat, a trip, shared groceries) that an app user creates and friends **without an account** use from a browser link: who paid, balances, "who pays whom", settling. Free on every tier. See `docs/wiki/features/shared-groups.md`.
+
+Groups are **not account-scoped**: every route is `JwtAuthGuard` only, `X-Account-Id` is ignored, and `AccountContextGuard` / `ViewerBlockGuard` do not run. Routes under `/groups/:groupId` add `GroupMemberGuard` (the caller's live member row; a non-member gets `404`, never `403`), and where noted `GroupOwnerGuard` (owner only; an orphaned group passes nobody) and `GroupActiveGuard` (an archived group is read-only: `403 GROUP_ARCHIVED`). Every member, expense, settlement and item id in a body or path is re-scoped to the group in the service. Most write responses return the refreshed `GroupDetail` (`packages/shared-types/src/dto/group.ts`).
+
+Caps: 20 active groups owned per user (`GROUP_LIMIT`), 50 members per group (`GROUP_MEMBER_LIMIT`), 5000 expenses per group (`EXPENSE_LIMIT`), 20 shares per expense.
+
+### Groups and membership
+
+| Method | Path | Guards | Purpose |
+|--------|------|--------|---------|
+| `GET` | `/groups` | — | The caller's groups: `GroupSummary[]` (`id`, `name`, `emoji`, `currencyCode`, `status`, `memberCount`, `myBalance`) |
+| `POST` | `/groups` | — | Create: `{ name (1-60), emoji?, currencyCode, myDisplayName? (1-40), memberNames?: string[] (≤49) }` → `GroupDetail` |
+| `GET` | `/groups/preview?guestToken=` | throttle 20/min | What the app shows before joining by link: `GroupJoinPreview` (name, status, `alreadyMember`, unclaimed names) |
+| `POST` | `/groups/join` | throttle 10/min | `{ guestToken, memberId?, displayName? }` — take over an unclaimed name or join as a new member. `409 MEMBER_TAKEN` on a lost race |
+| `POST` | `/groups/link-guest` | throttle 10/min | `{ code, merge? }` — redeem the single-use code minted by `POST /g/:token/link`, binding the caller to that guest member. `410 LINK_CODE_INVALID`; `409 ALREADY_MEMBER` (retry with `merge: true` to merge the guest row into the caller's) |
+| `GET` | `/groups/:groupId` | member | `GroupDetail`: members, balances, `suggestedTransfers`, `ledgerVersion`, `guestUrl`, `myShareThisMonth`, `hasOpenItemClaims` |
+| `GET` | `/groups/:groupId/activity?before=&limit=` | member | `GroupActivityPage` (expenses, settlements, member events), newest first; `limit` 1-100, cursor `nextBefore` |
+| `GET` | `/groups/:groupId/fx-preview?currency=` | member, throttle 30/min | `GroupFxPreview`: provider rate of 1 `currency` in the group currency, `null` when unknown |
+| `PATCH` | `/groups/:groupId` | owner, active | `{ name?, emoji?, guestAccess?, currencyCode? }` (`CURRENCY_LOCKED` once the group has expenses) |
+| `POST` | `/groups/:groupId/rotate-link` | owner | New guest token; **clears every guest claim**. → `{ guestUrl }` |
+| `POST` | `/groups/:groupId/owner` | owner, active, throttle 10/min | `{ memberId }` — transfer ownership to a live app-user member |
+| `POST` | `/groups/:groupId/adopt` | member, active, throttle 10/min | Adopt an orphaned group (only members who were live before it was orphaned) |
+| `POST` | `/groups/:groupId/archive` | owner | `{ force? }` — `409 OPEN_BALANCES` unless settled or `force: true` |
+| `DELETE` | `/groups/:groupId` | owner | Delete the group. `204` |
+| `POST` | `/groups/:groupId/members` | member, active | `{ displayName }` — add a placeholder (guest) member → `GroupMember` |
+| `PATCH` | `/groups/:groupId/members/:memberId` | member, active | `{ displayName?, paymentMethod?, paymentHandle? }` — rename (self or owner); payment info only by the member themself |
+| `DELETE` | `/groups/:groupId/members/:memberId` | member, active | Remove (self, or the owner for anyone). `OWNER_CANNOT_LEAVE`, `NONZERO_BALANCE`, `MEMBER_HAS_OPEN_CLAIMS`. `204` |
+| `POST` | `/groups/:groupId/members/:memberId/reset-claim` | owner, active, throttle 10/min | Free a claimed guest name (and its payout details) without rotating the link; app-user rows are refused |
+| `POST` | `/groups/:groupId/members/:memberId/merge` | member, active, throttle 10/min | `{ intoMemberId }` — merge two member rows; the survivor is always the app-user row |
+
+### Expenses, claims, settlements
+
+| Method | Path | Guards | Purpose |
+|--------|------|--------|---------|
+| `POST` | `/groups/:groupId/expenses` | member, active | Create (see body below) → `GroupDetail` |
+| `PATCH` | `/groups/:groupId/expenses/:expenseId` | member, active | Edit; creator, payer or owner only |
+| `DELETE` | `/groups/:groupId/expenses/:expenseId` | member, active | Delete; creator, payer or owner only → `GroupDetail` |
+| `GET` | `/groups/:groupId/expenses/:expenseId/items` | member | Line items and claims of an itemised expense: `GroupExpenseItemsView` |
+| `PUT` | `/groups/:groupId/expenses/:expenseId/claims/me` | member, active, throttle 30/min | `{ itemIds }` — the caller's own lines (any live member while the 7-day window is open) |
+| `PUT` | `/groups/:groupId/expenses/:expenseId/claims` | member, active, throttle 30/min | `{ claims: [{ memberId, itemIds, shareBp? }] }` (1-50) — anyone's claims; payer, creator or owner |
+| `POST` | `/groups/:groupId/expenses/:expenseId/claims/close` | member, active, throttle 10/min | `{ reopen? }` — close or reopen claims; payer, creator or owner |
+| `POST` | `/groups/:groupId/settlements` | member, active | Record a payment (see below) |
+| `DELETE` | `/groups/:groupId/settlements/:settlementId` | member, active | Void a payment (recorder, receiver or owner); it stays in the history |
+
+```http
+POST /groups/:groupId/expenses
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "clientRequestId": "b1f0c2d9-7a1e",
+  "description": "Groceries",
+  "amount": 120.00,
+  "date": "2026-11-20",
+  "paidByMemberId": "member-uuid",
+  "splitType": "equal",
+  "shares": [{ "memberId": "member-uuid" }, { "memberId": "member-uuid-2" }],
+  "currencyCode": "EUR",
+  "fxRate": 4.27
+}
+```
+
+`clientRequestId` (8-64 chars, must not start with `bot:`) makes the create idempotent. `splitType`: `equal`, `exact`, `percentage`, `shares` (`value` per share where the type needs it). An **itemised** expense sends `items: [{ name, totalPrice, lineDiscount? }]` (1-100) and an optional `discountAmount` instead of `splitType`/`shares`; members then claim lines for 7 days, and whatever nobody claims stays with the payer. `currencyCode` other than the group's is converted **once, at write time**, into the group currency (`amount` is always stored in the group currency); `fxRate` is an optional manual rate, bounded to 3× the provider's (`FX_RATE_IMPLAUSIBLE`). An unknown rate is `400 FX_RATE_UNAVAILABLE` and nothing is written.
+
+```http
+POST /groups/:groupId/settlements
+Content-Type: application/json
+
+{ "clientRequestId": "c4a7e1f2-90bd", "fromMemberId": "member-uuid", "toMemberId": "member-uuid-2", "amount": 40.00, "method": "blik", "ledgerVersion": 17 }
+```
+
+The caller must be `from` or `to`. `from` must owe and `to` must be owed; the amount is checked against the **current** balances and stored clamped to `min(owed, owed-to)`, so a payment never flips a sign (`400 SETTLEMENT_EXCEEDS_BALANCE` with a `reason`). `ledgerVersion` is the version the form was computed against: a changed ledger is `409 LEDGER_CHANGED`. `method`: `blik`, `revolut`, `paypal`, `cash`, `other`.
+
+### Count my share in my budget (opt-in mirror)
+
+Writes the caller's share of each group expense into one of their own accounts as personal expenses, and links their real group cash movements so they are not counted twice. `JwtAuthGuard` + `GroupMemberGuard` + per-route throttles; **no** `GroupActiveGuard` (an archived group can still be turned off, linked or unlinked). The target account is re-checked on every write: the caller must be owner or editor, the account active and not end-to-end encrypted.
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `GET` | `/groups/:groupId/budget-mirror` | `GroupBudgetMirrorView` (`status`: `off` / `active` / `paused`, with a pause reason) |
+| `PUT` | `/groups/:groupId/budget-mirror` | `{ accountId, categoryId? }` — turn on or retarget |
+| `DELETE` | `/groups/:groupId/budget-mirror` | Turn off: removes the share rows and every link flag in one transaction. `204` |
+| `GET` | `/groups/:groupId/budget-links` | `GroupBudgetLinksView`: linked legs, suggestions, personal rows |
+| `POST` | `/groups/:groupId/budget-links` | `{ kind: "payer_expense" \| "settlement_out" \| "settlement_in", groupExpenseId?, settlementId?, expenseId?, incomeId? }` — link a group leg to a personal row |
+| `POST` | `/groups/:groupId/budget-links/suggestions/:suggestionId/accept` | Accept a suggested link |
+| `POST` | `/groups/:groupId/budget-links/suggestions/:suggestionId/reject` | Reject it (never suggested again) |
+| `DELETE` | `/groups/:groupId/budget-links/:linkId` | Unlink |
+
+### Guest page (`/g/:token`)
+
+Public, **unauthenticated**, server-rendered HTML with no script, outside `/api/v1` (`'g/(.*)'` in `global-prefix-exclusions.ts`); a sibling of `/s/` (receipt splitting) and `/sl/` (shopping list). Every POST is a plain form that answers `303` back to `/g/:token`. The guest's identity is the `abg_m` cookie only (a random device secret; the database stores its sha256), path-scoped to `/g/<token>`, never a form field. Cookie-authenticated forms carry a CSRF field; join and restore are checked by `Sec-Fetch-Site` / `Origin` instead. Writes are charged against hourly per-member and per-group ceilings in Redis that fail closed. An unknown token, a group with `guestAccess = false` and a deleted group render byte-identical not-found pages.
+
+| Method | Path | Throttle | Purpose |
+|--------|------|----------|---------|
+| `GET` | `/g/:token` | 30/min | The group page (read-only when archived) |
+| `GET` | `/g/:token/activity?before=` | 30/min | Older history |
+| `POST` | `/g/:token/join` | 5/min | Pick a name or join as a new guest; sets the cookie and shows the restore code once |
+| `POST` | `/g/:token/restore` | 5/min | Restore the identity on another device; the restore code travels in the body, never the URL |
+| `POST` | `/g/:token/expenses` | 10/min | Add an expense (equal or exact split) |
+| `POST` | `/g/:token/expenses/:expenseId/delete` | 10/min | Delete an expense |
+| `POST` | `/g/:token/expenses/:expenseId/claims` | 10/min | Claim the caller's lines of an open itemised expense |
+| `POST` | `/g/:token/settle` | 10/min | Record a payment |
+| `POST` | `/g/:token/settlements/:settlementId/void` | 10/min | Void a payment (recorder or receiver) |
+| `POST` | `/g/:token/payment-info` | 10/min | Set the guest's own payout details |
+| `POST` | `/g/:token/link` | 5/min | Mint a single-use code (10 min) and hand off to the app / web app, which redeems it with `POST /groups/link-guest` |
+| `POST` | `/g/:token/forget` | 10/min | "Not me": clear the cookie and this member's claim |
+
+The links the API hands out are built on `GROUP_SHARE_BASE_URL` (since 2026-10-13 `https://ai-budget.pl`, an nginx 302 to the API page), else `APP_PUBLIC_URL`, else `https://api.ai-budget.pl`. Runbook: `docs/ops/group-short-link.md`.
+
+---
+
+## Recently Deleted
+
+A 30-day window in which a soft-deleted expense or income can be listed and restored. See `docs/wiki/features/recently-deleted.md`.
+
+JWT + `X-Account-Id` (`JwtAuthGuard + AccountContextGuard`). Viewers may read the list; restore is viewer-blocked.
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `GET` | `/recently-deleted?limit=100` | Soft-deleted expenses and incomes of the account deleted in the last 30 days, newest first. `limit` 1-200 (default 100). → `{ data: [{ entityType, id, clientId, amount, currencyCode, description, date, categoryId, ..., encryptedPayload, deletedAt }], retentionDays: 30 }` |
+| `POST` | `/recently-deleted/restore` | `{ "items": [{ "entityType": "expense" \| "income", "id": "<id or clientId>" }] }` (1-200 items) → `{ restored: [...], skipped: [{ entityType, id, reason }] }` |
+
+There is no `deletedAt` column: `updatedAt` is the deletion time. `id` may be the server PK or the device `clientId`. `reason` for a skipped item: `not_found`, `expired` (older than 30 days), `debt_deleted` (a repayment whose debt is still deleted), `transfer_deleted` (an income whose account transfer is still deleted). A restore bumps `syncVersion` so other devices pull the row back. Nothing is ever purged: rows past the window just stop being listed.
+
+---
+
+## Transaction Edit History
+
+On a shared account (2+ members), each edit of an expense or income that changes a tracked field (`amount`, `currencyCode`, `categoryId`, `description`, `merchant`, `date`) is recorded with the editor and a diff. See `docs/wiki/features/transaction-edit-history.md`.
+
+JWT + `X-Account-Id` (`JwtAuthGuard + AccountContextGuard`).
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `GET` | `/expenses/:id/revisions` | Edit history of an expense |
+| `GET` | `/incomes/:id/revisions` | Edit history of an income |
+
+`:id` is the server PK or the device `clientId`. **Response** `200 OK` — newest first, at most 20 (only the newest 20 per transaction are kept):
+
+```json
+[
+  {
+    "id": "revision-uuid",
+    "userId": "user-uuid",
+    "userName": "Anna",
+    "createdAt": "2026-11-20T10:15:00.000Z",
+    "changes": {
+      "amount": { "from": 12, "to": 15 },
+      "categoryId": { "from": "Groceries", "to": "Restaurants" }
+    }
+  }
+]
+```
+
+`categoryId` values are resolved to category names. Single-member accounts and end-to-end encrypted rows record nothing; on an account at encryption tier 1 or above, `description` and `merchant` are left out of the diff.
+
+---
+
+## Net Worth
+
+Cash + investments + money owed to the user − the user's debts, across every account the user belongs to, now and at the last 12 month-ends, in the caller's display currency. See `docs/wiki/features/net-worth.md`.
+
+```http
+GET /net-worth?exclude=<account-id>,<account-id>
+Authorization: Bearer <token>
+```
+
+User-scoped: `JwtAuthGuard` only, no `X-Account-Id`. `exclude` is a comma-separated list of account ids the user switched off (at most 100 are read); it narrows the caller's memberships and is never an allow-list. Accounts at encryption tier 2 are listed but never summed. Cached for 10 minutes per user, currency and exclusion set (a write does not invalidate it).
+
+**Response** `200 OK` — `NetWorthResponse` (`packages/shared-types/src/dto/insights.ts`):
+
+```json
+{
+  "currencyCode": "PLN",
+  "current": { "cash": 12500, "investments": 8300, "owedToMe": 400, "debts": 1200, "net": 20000 },
+  "history": [
+    { "month": "2025-12", "cash": 11000, "investments": 7600, "owedToMe": 0, "debts": 1500, "net": 17100, "approximate": false }
+  ],
+  "accounts": [
+    { "id": "account-uuid", "name": "Personal", "type": "personal", "included": true, "encrypted": false, "net": 18000 }
+  ],
+  "fxApproximate": false,
+  "computedAt": "2026-11-28T09:00:00.000Z"
+}
+```
+
+`history` has 12 entries, oldest first; the last one is the current month as of now. A month is `approximate` when a holding had no price for that month-end and was valued at average cost. Past months convert at that month's closing rates; an amount with no rate is left out and sets `fxApproximate`. An account's `net` is `null` when it is excluded or encrypted.
+
+---
+
+## Vehicles
+
+Vehicles per account, fill-ups (`FuelLog`) and other car costs (`VehicleCost`) attached to existing expenses, consumption and cost-of-ownership figures. See `docs/wiki/features/vehicle-fuel-log.md`.
+
+JWT + account context on every route; every write is viewer-blocked (`ViewerBlockGuard`). An `:expenseId` is accepted as the server PK or the device `clientId`; the resolved PK is what gets written. Money figures come back in the caller's `user.currencyCode`; an amount with no known rate is left out of the totals and sets `fxApproximate: true`.
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `GET` | `/vehicles` | The account's live vehicles, oldest first |
+| `POST` | `/vehicles` | Create: `{ "name": "Golf", "fuelType": "diesel" }`. `name` up to 60 chars; `fuelType` one of `petrol` (default), `diesel`, `lpg`, `electric`, `hybrid`, `other` |
+| `PATCH` | `/vehicles/:id` | Update `name`, `fuelType`, the renewal dates `nextInsuranceDate`, `nextInspectionDate`, `nextServiceDate` (`YYYY-MM-DD`), `nextServiceOdometer`, `serviceIntervalKm` (≥ 1), `lastServiceKm`. `null` clears a field. Send only the changed fields: re-sending `nextServiceOdometer` re-arms an odometer nudge already sent |
+| `DELETE` | `/vehicles/:id` | Soft delete. `{ "success": true }` |
+| `POST` | `/vehicles/:id/move` | `{ "targetAccountId": "uuid" }` — to another account where the caller is owner or editor. `409 VEHICLE_IN_USE` while the vehicle has a fill-up or a cost on a live expense; category rules do not travel |
+| `GET` | `/vehicles/:id/stats` | l/100 km (full-tank method), cost per km and per 100 km, last price per litre, a per-interval series, `ownership` (last 12 calendar months by kind, monthly average, km, cost per km), `latestOdometerKm`, `serviceForecast` |
+| `GET` | `/vehicles/:id/history?months=12` | The vehicle screen for one period: `months` is `3`, `6`, `12` (default), `24` or `0` (all time), anything else `400`. Every month of the window by kind, total, `perMonth`, km, consumption segments ending in the window, every fill-up and cost newest first, plus `latestOdometerKm` and `serviceForecast` |
+| `GET` | `/vehicles/:id/fuel-logs` | Fill-ups on live expenses, highest odometer first |
+| `PUT` | `/vehicles/:id/fuel-logs/:expenseId` | Record or replace the fill-up on an expense: `{ "liters": 42.5, "odometerKm": 123456, "isFullTank": true }`. `isFullTank` defaults to `true`. Removes any `VehicleCost` on that expense |
+| `GET` | `/vehicles/fuel-logs/:expenseId` | The expense's `{ "fuelLog": ..., "cost": { vehicleId, kind, source } }`, each `null` when absent — never a 404 |
+| `DELETE` | `/vehicles/fuel-logs/:expenseId` | Remove the fill-up from an expense |
+| `GET` | `/vehicles/:id/costs` | The vehicle's non-fuel costs |
+| `PUT` | `/vehicles/:id/costs/:expenseId` | Mark an expense as a car cost: `{ "kind": "service" }`. `kind`: `fuel` (an amount without litres), `service`, `insurance`, `parking`, `tax`, `other`. Removes any fill-up on that expense; `service` resets the km service counter |
+| `POST` | `/vehicles/:id/costs/bulk` | `{ "expenseIds": [...], "kind": "parking" }` (up to 500 ids). Expenses with a fill-up are skipped. Returns `{ assigned, skipped, notFound }` |
+| `DELETE` | `/vehicles/costs/:expenseId` | Take the car cost off an expense. The row stays as a `kind: "none"` tombstone so a category rule does not put it back |
+| `GET` | `/vehicles/:id/category-rules` | `{ "rules": [{ categoryId, kind, ids }] }`; `ids` lists the PK and the `clientId` so the phone can match its local category ids |
+| `PUT` | `/vehicles/:id/category-rules` | Replace the rules: `{ "rules": [{ "categoryId": "...", "kind": "insurance" }] }` (up to 30). Each category must be a live expense category of the account or a global one; stored as the PK and applied at once. Returns the rules plus `{ attributed, released }` |
+
+`/vehicles/fuel-logs/:expenseId` and `/vehicles/costs/:expenseId` are declared before the `:id` routes on purpose.
+
+---
+
+## Pets
+
+Pets per account and pet costs (`PetCost`) — one expense, one pet, one kind. See `docs/wiki/features/pet-costs.md`.
+
+JWT + account context; every write is viewer-blocked. Expense ids are PK or `clientId`, the resolved PK is written. Costs are in the caller's display currency with `fxApproximate` as for vehicles.
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `GET` | `/pets` | The account's live pets |
+| `POST` | `/pets` | Create: `{ "name": "Yoka", "species": "dog", "birthday": "2022-04-01", "nextVaccinationDate": "...", "nextParasiteTreatmentDate": "...", "categoryRules": [...] }`. `name` up to 60 chars; `species` `dog`, `cat` or `other` |
+| `PATCH` | `/pets/:id` | Update the same fields; `null` clears a date. `categoryRules` (`[{ categoryId, kind }]`, up to 30) replaces the rules and applies them at once |
+| `DELETE` | `/pets/:id` | Soft delete; its rule rows are released. `{ "success": true }` |
+| `GET` | `/pets/:id/history?months=12` | Cost by calendar month and kind, total, monthly average, `yearTotal` (this year, independent of the period). `months`: `3`, `6`, `12` (default), `24`, `0` = all time; anything else `400` |
+| `GET` | `/pets/:id/costs` | The pet's costs |
+| `PUT` | `/pets/:id/costs/:expenseId` | `{ "kind": "vet" }` — `food`, `vet`, `grooming`, `supplies`, `insurance`, `other` |
+| `POST` | `/pets/:id/costs/bulk` | `{ "expenseIds": [...], "kind": "food" }` (up to 500). Returns `{ assigned, notFound }` |
+| `GET` | `/pets/costs/:expenseId` | `{ "cost": { petId, kind, source } \| null }` — never a tombstone, never a 404 |
+| `DELETE` | `/pets/costs/:expenseId` | Take the pet cost off an expense. When a live pet's rule claims the expense's category, a `kind: "none"` tombstone stays so the rule does not put it back; otherwise the row is deleted. Removing a tombstone again is a `404` |
+| `GET` | `/pets/:id/category-rules` | `{ "rules": [{ categoryId, kind, ids }] }` (`ids` = PK + `clientId`). Rules are written through `POST`/`PATCH /pets/:id` |
+
+`POST`/`PATCH` responses carry `rulesApplied: { attributed, released }`. A daily cron (08:15 UTC) pushes 14 and 2 days before the vaccination and parasite-treatment dates, under the `subscription_renewal` notification switch.
+
+---
+
+## Children
+
+Child costs: attribute whole expenses (with shares) or single receipt lines to a child. Totals are computed on the device; the server holds the links and builds the Pro statement PDF. No model call anywhere. See `docs/wiki/features/child-costs.md`.
+
+JWT + account context. Viewers read (and may ask for suggestions); every other write is viewer-blocked. Children are also synced through `/sync` (`child`, `expense_child`).
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `GET` | `/children?includeArchived=true` | The account's children; archived ones only with `includeArchived=true` |
+| `POST` | `/children` | `{ "name": "Ola", "color": "#FF8800", "clientId": "..." }`. `name` up to 40 chars, `color` `#RRGGBB`. Idempotent on `clientId`; on an encrypted account the server stores `enc:<clientId>` and never the plaintext name |
+| `PATCH` | `/children/:id` | `name`, `color`, `archived: true \| false`. `409` on a duplicate name |
+| `DELETE` | `/children/:id` | Soft delete, only when nothing is attributed; otherwise `409 CHILD_IN_USE` (archive instead) |
+| `POST` | `/children/:id/move` | `{ "targetAccountId", "name" }` or, for an encrypted target, `{ "targetAccountId", "encryptedPayload", "encryptionKeyVersion" }` (else `400 ENCRYPTION_REQUIRED`). Only a child with nothing attributed (`409 CHILD_IN_USE`), only to an account the caller can edit; `409 NAME_TAKEN` on a name clash. Product rules are dropped |
+| `GET` | `/children/:id/categories` | `{ categoryIds, matchIds }` — the categories the child claims; `matchIds` adds their `clientId`s |
+| `PUT` | `/children/:id/categories` | `{ "categoryIds": [...] }` (up to 50, live expense categories of the account or global). Replaces them and attributes matching expenses at once; returns `{ categoryIds, matchIds, attributed, released }` |
+| `POST` | `/children/suggestions` | `{ "names": ["Pampers 4", ...] }` (up to 500) → learned product → child suggestions keyed by normalized name. `200`; a read, so viewers may call it. Never applied silently |
+| `POST` | `/children/:id/statement` | The PDF statement ("zestawienie"): `{ "from": "2026-01-01", "to": "2026-06-30", "locale": "pl" }`. **Pro** (`SubscriptionTierGuard`), editors and owners only, at most 24 months, and only when the account's `encryptionTier` is 0 (else `403 ENCRYPTED_ACCOUNT`). Currency is the user's `currencyCode`. Answers `application/pdf` as an attachment |
+| `PUT` | `/expenses/:id/children` | Whole-expense attribution: `{ "childIds": [...], "shares": [0.5, 0.5] }` (up to 20). Shares default to equal, each in (0, 1] and summing to 1. Clears any line attribution on the expense. Returns `[{ expenseId, childId, share }]` |
+| `PATCH` | `/expenses/:expenseId/items/:itemId/child` | Line attribution: `{ "childId": "..." \| null }`. Setting a child soft-deletes the expense's whole-expense links and teaches a product → child rule. `204` |
+
+Receipt appendix caps: `CHILD_STATEMENT_MAX_RECEIPTS` (150), `CHILD_STATEMENT_MAX_RECEIPT_BYTES` (40 MB), `CHILD_STATEMENT_MAX_RECEIPT_IMAGE_BYTES` (3 MB).
+
+---
+
+## Utilities
+
+Consumption readings on utility bills (electricity, gas, water, heating), so a higher bill can be split into "used more" and "price rose". See `docs/wiki/features/utility-bill-readings.md`.
+
+JWT + account context; writes are viewer-blocked. Expense ids are PK or `clientId`, the resolved PK is written.
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `GET` | `/utilities/summary?property=Flat` | Per kind: months with consumption, cost (in the caller's `currencyCode`) and unit price; `yearOverYear` once a kind spans 12+ months; `priceNudge` when the latest month's unit price is more than 10% above the mean of up to three months before it (needs two priced months). Plus `properties` (every label) and `fxApproximate`. `property` filters by label. Planned and deleted expenses are left out |
+| `GET` | `/utilities/readings/:expenseId` | The expense's reading, or `null` |
+| `PUT` | `/utilities/readings/:expenseId` | `{ "kind": "electricity", "consumption": 212.4, "unit": "kwh", "propertyLabel": "Flat" }`. `kind`: `electricity`, `gas`, `water`, `heating`; `unit`: `kwh`, `m3`, `gj`; `propertyLabel` up to 60 chars. Stores `unitPrice` = amount / consumption in the expense's own currency |
+| `DELETE` | `/utilities/readings/:expenseId` | Remove the reading. `{ "success": true }` |
+
+---
+
+## Card Cycles
+
+Credit card statement cycle: mark an account as a credit card with a statement day, a payment due day and an optional credit limit. See `docs/wiki/features/card-statement-cycle.md`.
+
+All routes require `Authorization: Bearer <token>` + `X-Account-Id`. Writes are blocked for viewers (`ViewerBlockGuard`). One setting per account; no tier guard.
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `GET` | `/card-cycles` | The account's card summary as a list: `[]` when no setting exists, otherwise one `CardCycleSummary` |
+| `PUT` | `/card-cycles` | Create or replace the setting: `{ "statementDay": 1-31, "dueDay": 1-31, "creditLimit"?: number \| null, "currencyCode": "PLN" }`. `creditLimit` 0.01-1,000,000,000, 2 decimals. Returns the summary. Resets the reminder state |
+| `DELETE` | `/card-cycles` | Remove the setting. `{ "success": true }` |
+
+**`CardCycleSummary`**
+```json
+{
+  "accountId": "uuid",
+  "currencyCode": "PLN",
+  "statementDay": 25,
+  "dueDay": 15,
+  "creditLimit": 5000,
+  "cycleStart": "2026-10-26",
+  "cycleEnd": "2026-11-25",
+  "spent": 1240.5,
+  "utilisation": 0.2481,
+  "dueDate": "2026-12-15",
+  "daysToDue": 17,
+  "statementAmount": 980.0
+}
+```
+
+- `cycleEnd` is the statement day; a statement day 29-31 clamps to the month's last day. The cut-off is the transaction date (`Expense.date`).
+- `spent` counts only expenses in the card's currency; soft-deleted, planned and split-receivable rows are excluded. No FX conversion.
+- `utilisation` is `spent / creditLimit` (can exceed 1), `null` without a limit.
+- `statementAmount` is what the closed statement came to while its due date is still ahead (or today), else `null`.
+
+A daily cron (09:00) pushes the account owner 3 days before the due date with the closed statement's amount — at most once per due date, nothing for an empty statement. It uses the `debt_reminder` notification type.
+
+---
+
+## Merchant Caps
+
+A monthly spending cap for one merchant, with a push at 80% and 100%. Independent of budgets. See `docs/wiki/features/merchant-spending-caps.md`.
+
+All routes require `Authorization: Bearer <token>` + `X-Account-Id`. Writes are blocked for viewers (`ViewerBlockGuard`).
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `GET` | `/merchant-caps` | The account's caps with this calendar month's progress, ordered by merchant |
+| `PUT` | `/merchant-caps` | Create or update the cap for a merchant: `{ "merchant": "Biedronka", "amount": 600, "currencyCode": "PLN" }`. `merchant` 1-120 chars, `amount` 0.01-1,000,000,000 (2 decimals). Upserts on `trim().toLowerCase()` of the merchant; resets the alert state. At most 30 caps per account (`400`) |
+| `DELETE` | `/merchant-caps/:id` | Delete a cap. `{ "success": true }`; `404` when it is not in the account |
+
+**Cap response**
+```json
+{
+  "id": "uuid",
+  "merchantNormalized": "biedronka",
+  "merchantLabel": "Biedronka",
+  "amount": 600,
+  "currencyCode": "PLN",
+  "spent": 412.3,
+  "percentUsed": 68.72
+}
+```
+
+`spent` is the full `Expense.amount` at that merchant (case-insensitive exact match) in the cap's currency for the calendar month, net of linked same-currency refunds and floored at zero; deleted, planned and split-receivable rows are excluded. Alerts are checked on every expense write and pushed as `budget_alert`, once per threshold per month.
+
+---
+
+## Promo Leaflets
+
+Gazetka match: the user hands in screenshots or a PDF of a store promo leaflet, the server reads it with the vision model and returns only the promos on products this user already buys, next to the usual price. Admins can upload, review and publish leaflets that feed the community promo push. See `docs/wiki/features/gazetka-match.md`; ops `docs/ops/leaflets.md`.
+
+### User routes
+
+`Authorization: Bearer <token>` + `X-Account-Id`. No `ViewerBlockGuard`: viewers may read leaflets. Bodies are validated with Zod; a bad body is `400`.
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `POST` | `/leaflets` | Start a leaflet: `{ "source": "share" \| "picker" \| "upload" \| "pdf", "platform"?: "android" \| "web" \| "ios" \| null }` → `{ id }`. Personal leaflets expire after 7 days (or the day after the leaflet's `validTo`) |
+| `GET` | `/leaflets/budget` | The monthly page budget: `{ used, limit, resetAt }` |
+| `GET` | `/leaflets` | The account's active personal leaflets (`LeafletResult[]`) |
+| `GET` | `/leaflets/:id` | One leaflet with its matches (`LeafletResult`) |
+| `POST` | `/leaflets/:id/pages` | Read one page: `{ "imageBase64": "...", "mimeType"?: "image/jpeg" }` → `200` `LeafletPageResult` |
+| `POST` | `/leaflets/:id/pdf` | Read a PDF in the background: `{ "pdfBase64": "..." }` → `202` `{ id }`; poll `GET /leaflets/:id` |
+| `POST` | `/leaflets/items/:itemId/added` | Mark a matched item as added to the shopping list. `204` |
+| `POST` | `/leaflets/push-opened` | `{ "pushKey": "<uuid>" }` — the community push was opened; scoped to the caller's own push log. `204` either way |
+
+**`LeafletResult`**
+```json
+{
+  "id": "uuid",
+  "chain": "Lidl",
+  "validFrom": "2026-11-27",
+  "validTo": "2026-11-30",
+  "status": "done",
+  "pagesRead": 4,
+  "pagesUnreadable": 0,
+  "pagesDropped": 0,
+  "matches": [
+    {
+      "itemId": "uuid",
+      "name": "Masło extra 200 g",
+      "promoPrice": 5.99,
+      "regularPrice": 7.49,
+      "currencyCode": "PLN",
+      "condition": "przy zakupie 2 szt.",
+      "basketName": "maslo extra 200g",
+      "usualPrice": 7.2
+    }
+  ],
+  "unmatchedCount": 37
+}
+```
+
+`status` is `reading`, `done` or `failed`; a `reading` leaflet with no progress for 30 minutes is reported as `failed`. `LeafletPageResult` is `{ page, readable, matches, unmatchedCount }`.
+
+**Limits and errors**
+
+| Code | Status | When |
+|------|--------|------|
+| `PAGE_CAP` | `409` | More than 10 pages in one leaflet (checked before the budget, so the page is not charged) |
+| `LEAFLET_LIMIT` | `403` | The monthly page budget is used up: Free 20 / Pro 200 / Business 500 (`LEAFLET_PAGES_FREE`/`PRO`/`BUSINESS`), separate from the AI limit. The PDF route refuses up front. `ADMIN_EMAILS` users are exempt |
+| `PDF_TOO_LARGE` | `413` | PDF over 10 MB raw |
+| `ENCRYPTED_ACCOUNT` | `403` | Account at `encryptionTier >= 2` — usual prices cannot be computed |
+| `EMPTY_BASKET` | `422` | The account has no usual basket yet (scan receipts first) |
+
+### Admin routes
+
+JWT + `AdminGuard`. Admin leaflets have no account (`accountId: null`).
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `POST` | `/admin/leaflets` | Multipart upload, field `files`: PNG/JPEG/WebP images or exactly one PDF, up to `LEAFLET_ADMIN_MAX_PAGES` (60) pages and `LEAFLET_ADMIN_MAX_MB` (50) MB → `202` `{ id }`; read in the background |
+| `GET` | `/admin/leaflets` | List (`AdminLeafletSummary[]`) |
+| `GET` | `/admin/leaflets/stats` | Personal-leaflet usage and community pushes, `ADMIN_EMAILS` excluded; query `days` (default 30) |
+| `GET` | `/admin/leaflets/:id` | A leaflet with its items (`AdminLeafletDetail`) |
+| `GET` | `/admin/leaflets/:id/recipients` | How many users the push would reach: `{ users }` |
+| `PATCH` | `/admin/leaflets/:id` | `{ chain?, validFrom?, validTo? }` (`YYYY-MM-DD`, nullable) |
+| `PATCH` | `/admin/leaflets/:id/items/:itemId` | `{ name?, canonicalName?, promoPrice?, regularPrice?, condition? }` |
+| `DELETE` | `/admin/leaflets/:id/items/:itemId` | Remove a row. `204` |
+| `POST` | `/admin/leaflets/:id/publish` | Publish: writes the community promo rows, confirmed at once → `AdminLeafletDetail` + `promosWritten` |
+| `POST` | `/admin/leaflets/:id/unpublish` | Withdraw the leaflet's promos |
+
+A published leaflet is read-only (`409 LEAFLET_PUBLISHED`): unpublish, edit, publish again. Publishing a leaflet still being read is `409 LEAFLET_READING`.
+
+**Community promos.** Behind `COMMUNITY_PROMOS_ENABLED` (default **off**): with it off nothing contributes, confirms or pushes. A promo is confirmed by `COMMUNITY_PROMO_K` (default 3) distinct contributors, at least `COMMUNITY_PROMO_MIN_TRUSTED` (default 2) of them trusted; admin rows confirm alone. A daily cron (09:00) pushes promos valid today to users with `notifyLeafletPromos` on who bought at that chain in the last 90 days — at most one push a day per user.
+
+### Community price re-scan (admin)
+
+Part of the community price map (`docs/wiki/features/community-prices.md`), served by `modules/ai/receipt-rescan.admin.controller.ts`. JWT + `AdminGuard`.
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `POST` | `/admin/community-prices/rescan` | Start a background re-read of recent stored receipt images of consenting users so they contribute: `{ "emails"?: string[] (max 50), "dryRun"?: boolean }` → `{ started, alreadyRunning?, candidates }`. Refuses to run twice at once |
+| `GET` | `/admin/community-prices/rescan` | The last run's report: `{ startedAt, finishedAt, dryRun, candidates, outcomes, perUser }`, or `null` |
+
+---
+
+## E-mail Receipts
+
+E-receipts by e-mail forwarding: each user gets a private address (`<token>@in.ai-budget.pl`), every forwarded message becomes a **pending** item, and nothing is saved until the user confirms it in the app. See `docs/wiki/features/inbound-e-receipts.md`; ops `docs/ops/inbound-mail.md`.
+
+**Feature-flagged off.** Unless `INBOUND_MAIL_ENABLED` is exactly `true`, every route below answers `404` (`InboundMailEnabledGuard`), and the app hides the feature.
+
+### User routes
+
+`Authorization: Bearer <token>` + `X-Account-Id`. Writes are blocked for viewers (`ViewerBlockGuard`). The address belongs to the user; receipts are filtered by user AND account, and a miss is `404`.
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `GET` | `/inbound-mail/address` | The caller's address or `null`: `{ address, targetAccountId, enabled, pendingVerification?: { code, receivedAt } }` |
+| `POST` | `/inbound-mail/address` | Create the address, targeting the current account (owner/editor only) |
+| `PATCH` | `/inbound-mail/address` | Retarget: `{ "targetAccountId": "uuid" }` (owner/editor of the target) |
+| `POST` | `/inbound-mail/address/rotate` | Issue a new token; the old one stops working at once |
+| `DELETE` | `/inbound-mail/address` | Disable the address. `204` |
+| `GET` | `/inbound-receipts` | Inbox; query `status` = `pending` (default) or `handled` (`duplicate`, `not_a_receipt`, `quota_exceeded`, `unsupported`, `failed`) |
+| `GET` | `/inbound-receipts/count` | `{ pending }` |
+| `GET` | `/inbound-receipts/:id` | Detail: the list fields plus `extraction`, `possibleDuplicate` (recomputed at read time), `hasDocument`, `documentMimeType`, `expenseId`, `senderVerified` |
+| `GET` | `/inbound-receipts/:id/document` | The stored document bytes (inline, `no-store`, sandboxing CSP) |
+| `POST` | `/inbound-receipts/:id/confirm` | `{ "expenseId": "<id or clientId>" }` — link the expense the app created from this item. `204`. `409` if the item is not pending or the expense is already linked |
+| `POST` | `/inbound-receipts/:id/dismiss` | Dismiss; the document is deleted. `204` |
+| `POST` | `/inbound-receipts/:id/retry` | Re-run a `quota_exceeded` or `failed` item; charged as one receipt scan (`AiUsageGuard`) → detail |
+
+Tier 2 encryption is unsupported: creating or retargeting an address onto such an account is `400 E2EE_UNSUPPORTED`.
+
+### Internal routes (SMTP container only)
+
+`/api/v1/internal/inbound-mail/*` — no JWT. `InternalSecretGuard` requires the `X-Inbound-Secret` header (`INBOUND_MAIL_SHARED_SECRET`, at least 32 characters), a TCP peer inside `INBOUND_MAIL_INTERNAL_CIDR`, and no `X-Forwarded-For`/`X-Real-IP`. The public nginx vhost answers `404` for this prefix.
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `POST` | `/internal/inbound-mail/rcpt` | `{ token, remoteIp }` → `{ result: "accept" \| "unknown" \| "limited" }` |
+| `POST` | `/internal/inbound-mail/messages` | Hand off one parsed message (`InboundMailHandoffPayload`) → `202` `{ id }`. `409` already stored, `422` recorded as unsupported, `429` per-address cap (20/hour, 60/day), `503` Redis unavailable, `404` unknown token or flag off |
+
+---
+
+## Mail
+
+Public, unauthenticated unsubscribe from the onboarding e-mails (ABA-738); throttled to 20 requests a minute. The support-reply variant is under [Support](#support-contact-the-developer).
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `GET` / `POST` | `/mail/unsubscribe?u=<userId>&t=<token>` | HMAC token; sets `User.onboardingEmailsEnabled = false`. `GET` returns an HTML page (the link in the e-mail), `POST` is RFC 8058 one-click → `{ "ok": true }`. Same answer for a valid and an invalid token |
 
 ---
 

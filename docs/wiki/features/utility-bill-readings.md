@@ -13,7 +13,7 @@ electricity, gas, water or heating. It answers "is the bill higher because I use
 - Schema: `UtilityReading` (migration `20261126110000_utility_readings`)
 - Shared types: `packages/shared-types/src/entities/utility.ts`
 - Tests: `utility-stats.util.spec.ts`, `utilities.service.spec.ts`
-- Mobile: `app/utilities/index.tsx` (header registered in `app/_layout.tsx`), `src/services/utilities.api.ts`; reached from the Settings reference list
+- Mobile: `app/utilities/index.tsx` (header registered in `app/_layout.tsx`), `src/services/utilities.api.ts`, `src/components/utilities/UtilityReadingSection.tsx` (the reading form on the expense detail screen `app/expense/[id].tsx` and the desktop `ExpenseDialog`; hidden for viewers when there is no reading); reached from the Settings reference list. User docs: `user_docs/<lang>/11-settings.md`, section *Utilities*
 
 ## Key concepts
 
@@ -33,7 +33,7 @@ and can filter by one.
 
 ## Known gaps
 
-No expense-form field set yet (readings are written through the API), no OCR/PDF prefill, no desktop-web layout,
+No field on the expense CREATE form (a reading is added on the expense detail screen, once the expense has synced), no OCR/PDF prefill, no desktop-web layout of the summary screen,
 no chart library (the screen draws bars from plain views), no bot support.
 
 ## History

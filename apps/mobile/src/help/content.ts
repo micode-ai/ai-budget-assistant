@@ -2226,6 +2226,14 @@ Other car costs count too. On any expense, the **Car** section lets you pick the
 
 **Renewals.** In the vehicle's sheet, set the next insurance renewal, the next inspection, the next service date and the odometer reading for the next service (all optional; tap the cross to clear one). You get a reminder 14 and 2 days before each date, and once when a fill-up's odometer comes within 500 km of the service target. Dates due within 30 days or already past appear as chips on the vehicle's card and on its screen, which also has a **Renewals** card listing every date. When you mark an expense as insurance or service, the app offers to move that renewal a year forward; nothing changes unless you confirm.
 
+## Utilities
+
+See whether a utility bill went up because you used more or because the price rose. Access via **Settings → Reference data → Utilities**.
+
+**Adding a reading.** Open a utility bill expense — electricity, gas, water or heating. Under the details tap **Add consumption (kWh, m³, GJ)**, pick the kind, enter the consumption from the bill and its unit, and optionally a **Property** (for example "Flat" or "Cottage") if you pay bills for more than one place. The app works out the price per unit from the expense amount. To change or remove a reading, open the expense again. A newly added expense must sync first; if it has not yet, the app asks you to try again in a moment. Viewers of a shared account see readings but cannot add them.
+
+**What the screen shows.** For each kind: the price per unit month by month, and the consumption. When the latest month's unit price is more than 10% above the average of the three months before it, a note says so. Once a kind has a year of readings, each month is compared with the same month last year — both the price and the consumption. With several properties, pick one at the top or see them all together. Costs are shown in your display currency; a bill in a currency whose exchange rate is unknown is left out of the cost, and the screen says so. Planned expenses are not counted.
+
 ## Data & Reports
 
 ### Data & Sync
@@ -5548,6 +5556,18 @@ If the person who connected an app later becomes a viewer or leaves an account, 
 
 See End-to-End Encryption for what each level covers.
 
+## Connect an AI assistant (MCP)
+
+You can let an AI assistant such as Claude or ChatGPT read your AI Budget data and answer questions like "what did I spend on groceries last month?".
+
+1. In the assistant, add a custom connector (in Claude: **Settings → Connectors → Add custom connector**) and enter the address \`https://api.ai-budget.pl/mcp\`.
+2. The assistant opens an AI Budget page where you sign in as usual. It shows the assistant's own name and the note **registered automatically by an AI assistant** — we have not checked such an assistant, so only connect one you started yourself. Tick the accounts it may use and tap **Allow**.
+3. Ask your question in the assistant.
+
+An assistant has **read-only** access: it can read expenses, income, categories, budgets and spending totals, but it cannot add, change or delete anything and it cannot download receipt photos. Accounts with full encryption cannot be connected, and text-encrypted accounts hide their encrypted text, exactly as for any connected app.
+
+To cut an assistant off, open **Settings → Connected apps** and tap **Disconnect** next to it. It loses access at once.
+
 ## For developers
 
 You can build your own app on the AI Budget API — it's free. Open **Settings → Developers** and tap **Create app**: give it a name, a homepage and the redirect addresses it will use, and choose **Server app** or **Mobile or browser app**. You get a **Client ID** right away; a server app also gets a client secret, shown **only once** — copy it immediately.
@@ -7843,6 +7863,14 @@ Email обновляется мгновенно, выдаются новые т�
 Учитываются и другие расходы на машину. В любой трате блок **Машина** позволяет выбрать машину и вид расхода: топливо, сервис, страховка, парковка, налоги и сборы или другое (литры и пробег нужны только для топлива). В окне машины **Категории этой машины** делают это автоматически: выберите вид, нажмите на категории (например, «Страховка авто» как страховку), и их траты начнут считаться для машины — прошлые сразу после сохранения, новые по мере появления. Карточка покажет последние 12 месяцев: итог, в среднем в месяц, каждый вид и все расходы на километр. Для машин нужен интернет. При удалении машины траты остаются; удаляются только машина и её статистика. Сразу много: на экране «Транзакции» найдите траты поиском (например, «Benzyna» или «Parking»), выделите их и выберите **Отнести к машине**, затем машину и вид расхода. Заправки, у которых уже есть литры, останутся как есть.
 
 **Сроки.** В карточке машины укажите дату продления страховки, следующего техосмотра, следующего ТО и пробег, на котором нужно следующее ТО (всё необязательно; крестик очищает дату). Напоминание придёт за 14 и 2 дня до каждой даты и один раз, когда пробег по заправке подойдёт к ТО ближе чем на 500 км. Сроки в ближайшие 30 дней или уже прошедшие видны метками на карточке машины и на её экране, где карточка **Сроки** показывает все даты. Когда вы отмечаете расход как страховку или ТО, приложение предложит перенести этот срок на год вперёд; без вашего подтверждения ничего не меняется.
+
+## Коммунальные
+
+Узнайте, вырос ли счёт за коммунальные услуги потому, что вы больше потратили, или потому, что подорожал тариф. Открыть: **Настройки → Справочники → Коммунальные**.
+
+**Как добавить показание.** Откройте расход на коммунальные услуги — электричество, газ, воду или отопление. Под подробностями нажмите **Добавить потребление (кВт·ч, м³, ГДж)**, выберите вид, введите потребление из счёта и его единицу, а если вы платите за несколько мест — при желании укажите **Объект** (например, «Квартира» или «Дача»). Цену за единицу приложение посчитает само по сумме расхода. Чтобы изменить или удалить показание, снова откройте расход. Только что добавленный расход должен сначала синхронизироваться; если этого ещё не произошло, приложение попросит повторить попытку чуть позже. Участники общего аккаунта с правом только на просмотр видят показания, но добавлять их не могут.
+
+**Что показывает экран.** Для каждого вида — цену за единицу по месяцам и потребление. Если цена за единицу в последнем месяце больше чем на 10% выше средней за три предыдущих месяца, появится заметка об этом. Когда по виду накопится год показаний, каждый месяц сравнивается с тем же месяцем прошлого года — и по цене, и по потреблению. Если объектов несколько, выберите один вверху или смотрите все вместе. Стоимость показана в валюте отображения; счёт в валюте с неизвестным курсом не входит в стоимость, и экран об этом сообщает. Запланированные расходы не учитываются.
 
 ## Данные и отчёты
 
@@ -11146,6 +11174,18 @@ OCR иногда неверно читает цену, выдумывает ст
 
 Что входит в каждый уровень, описано в разделе Сквозное шифрование.
 
+## Подключить ИИ-ассистента (MCP)
+
+Вы можете разрешить ИИ-ассистенту, например Claude или ChatGPT, читать ваши данные в AI Budget и отвечать на вопросы вроде «сколько я потратил на продукты в прошлом месяце?».
+
+1. В ассистенте добавьте собственный коннектор (в Claude: **Настройки → Коннекторы → Добавить свой коннектор**) и введите адрес \`https://api.ai-budget.pl/mcp\`.
+2. Ассистент откроет страницу AI Budget, где вы войдёте как обычно. На ней видно имя ассистента и пометку **зарегистрирован автоматически ИИ-ассистентом** — такого ассистента мы не проверяли, поэтому подключайте только того, которого запустили сами. Отметьте счета, которые он может использовать, и нажмите **Разрешить**.
+3. Задайте вопрос в ассистенте.
+
+У ассистента доступ **только на чтение**: он читает расходы, доходы, категории, бюджеты и итоги трат, но не может ничего добавлять, менять или удалять и не скачивает фото чеков. Счета с полным шифрованием подключить нельзя, а у счетов с шифрованием текста зашифрованные тексты скрыты — как в любом подключённом приложении.
+
+Чтобы отключить ассистента, откройте **Настройки → Подключённые приложения** и нажмите **Отключить** рядом с ним. Доступ пропадает сразу.
+
 ## Разработчикам
 
 Вы можете сделать собственное приложение на API AI Budget — бесплатно. Откройте **Настройки → Разработчикам** и нажмите **Создать приложение**: укажите название, сайт и адреса перенаправления (redirect URI) и выберите **Серверное приложение** или **Мобильное или браузерное приложение**. **Client ID** вы получите сразу; серверному приложению выдаётся ещё и client secret, который показывается **только один раз** — скопируйте его сразу.
@@ -13447,6 +13487,14 @@ iOS, Android, Web
 Враховуються й інші витрати на авто. У будь-якій витраті блок **Автомобіль** дає змогу вибрати авто й вид витрати: пальне, сервіс, страховка, паркування, податки та збори або інше (літри й пробіг потрібні лише для пального). У вікні авто **Категорії цього авто** роблять це автоматично: виберіть вид, натисніть на категорії (наприклад, «Страховка авто» як страховку), і їхні витрати рахуватимуться для авто — минулі одразу після збереження, нові в міру появи. Картка покаже останні 12 місяців: підсумок, у середньому на місяць, кожен вид і всі витрати на кілометр. Для авто потрібен інтернет. Під час видалення авто витрати залишаються; видаляються лише авто та його статистика. Одразу багато: на екрані «Транзакції» знайдіть витрати пошуком (наприклад, «Benzyna» або «Parking»), виділіть їх і виберіть **Віднести до авто**, потім авто й вид витрати. Заправки, що вже мають літри, лишаться як є.
 
 **Терміни.** У картці авто вкажіть дату продовження страховки, наступного техогляду, наступного ТО і пробіг, на якому потрібне наступне ТО (усе необов'язково; хрестик очищає дату). Нагадування прийде за 14 і 2 дні до кожної дати й один раз, коли пробіг із заправки наблизиться до ТО менш ніж на 500 км. Терміни найближчих 30 днів або вже минулі видно мітками на картці авто та на його екрані, де картка **Терміни** показує всі дати. Коли ви позначаєте витрату як страховку або ТО, застосунок запропонує перенести цей термін на рік уперед; без вашого підтвердження нічого не змінюється.
+
+## Комунальні
+
+Дізнайтеся, чи зріс рахунок за комунальні послуги через те, що ви більше спожили, чи через те, що подорожчав тариф. Відкрити: **Налаштування → Довідники → Комунальні**.
+
+**Як додати показник.** Відкрийте витрату на комунальні послуги — електрику, газ, воду чи опалення. Під подробицями натисніть **Додати споживання (кВт·год, м³, ГДж)**, виберіть вид, введіть споживання з рахунку та його одиницю, а якщо ви платите за кілька місць — за бажанням вкажіть **Об'єкт** (наприклад, «Квартира» чи «Дача»). Ціну за одиницю застосунок порахує сам із суми витрати. Щоб змінити або видалити показник, знову відкрийте витрату. Щойно додана витрата має спершу синхронізуватися; якщо цього ще не сталося, застосунок попросить спробувати трохи згодом. Учасники спільного акаунта з правом лише на перегляд бачать показники, але додавати їх не можуть.
+
+**Що показує екран.** Для кожного виду — ціну за одиницю по місяцях і споживання. Якщо ціна за одиницю в останньому місяці більш ніж на 10% вища за середню за три попередні місяці, з'явиться примітка про це. Коли для виду набереться рік показників, кожен місяць порівнюється з тим самим місяцем торік — і за ціною, і за споживанням. Якщо об'єктів кілька, виберіть один угорі або дивіться всі разом. Вартість показано у валюті відображення; рахунок у валюті з невідомим курсом не входить у вартість, і екран про це повідомляє. Заплановані витрати не враховуються.
 
 ## Дані та звіти
 
@@ -16714,6 +16762,18 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 Що входить до кожного рівня, описано в розділі Наскрізне шифрування.
 
+## Підключити ШІ-асистента (MCP)
+
+Ви можете дозволити ШІ-асистенту, наприклад Claude або ChatGPT, читати ваші дані в AI Budget і відповідати на питання на кшталт «скільки я витратив на продукти минулого місяця?».
+
+1. В асистенті додайте власний конектор (у Claude: **Налаштування → Конектори → Додати власний конектор**) і введіть адресу \`https://api.ai-budget.pl/mcp\`.
+2. Асистент відкриє сторінку AI Budget, де ви увійдете як зазвичай. На ній видно ім'я асистента та примітку **зареєстровано автоматично ШІ-асистентом** — такого асистента ми не перевіряли, тож підключайте лише того, якого запустили самі. Позначте рахунки, які він може використовувати, і натисніть **Дозволити**.
+3. Поставте питання в асистенті.
+
+У асистента доступ **лише для читання**: він читає витрати, доходи, категорії, бюджети та підсумки витрат, але не може нічого додавати, змінювати чи видаляти й не завантажує фото чеків. Рахунки з повним шифруванням підключити не можна, а в рахунків із шифруванням тексту зашифровані тексти приховані — як у будь-якому підключеному застосунку.
+
+Щоб відключити асистента, відкрийте **Налаштування → Підключені застосунки** і натисніть **Відключити** поруч із ним. Доступ зникає одразу.
+
 ## Розробникам
 
 Ви можете зробити власний застосунок на API AI Budget — безкоштовно. Відкрийте **Налаштування → Розробникам** і натисніть **Створити застосунок**: вкажіть назву, сайт і адреси перенаправлення (redirect URI) та оберіть **Серверний застосунок** або **Мобільний або браузерний застосунок**. **Client ID** ви отримаєте одразу; серверному застосунку видається ще й client secret, який показується **лише один раз** — скопіюйте його одразу.
@@ -18998,6 +19058,14 @@ Aby zapisać tankowanie, otwórz wydatek na paliwo: jeśli konto ma pojazd, wyda
 Liczą się też inne koszty auta. Przy dowolnym wydatku sekcja **Samochód** pozwala wybrać pojazd i rodzaj: paliwo, serwis, ubezpieczenie, parkowanie, podatki i opłaty albo inne (litry i przebieg są potrzebne tylko przy paliwie). W oknie pojazdu **Kategorie tego pojazdu** robią to automatycznie: wybierz rodzaj, stuknij kategorie (np. „Ubezpieczenie auta” jako ubezpieczenie), a ich wydatki liczą się dla auta — wcześniejsze po zapisaniu, nowe na bieżąco. Karta pokazuje wtedy ostatnie 12 miesięcy: sumę, średnią miesięczną, każdy rodzaj i wszystkie koszty za kilometr. Pojazdy wymagają połączenia z internetem. Usunięcie pojazdu zachowuje wydatki; znikają tylko pojazd i jego statystyki. Wiele naraz: na ekranie Transakcje wyszukaj (np. „Benzyna” lub „Parking”), zaznacz wydatki i wybierz **Przypisz do pojazdu**, a potem pojazd i rodzaj. Tankowania z litrami pozostają bez zmian.
 
 **Terminy.** W karcie pojazdu ustaw termin odnowienia ubezpieczenia, następnego przeglądu, następnego serwisu oraz przebieg, przy którym wypada serwis (wszystko opcjonalne; krzyżyk czyści termin). Przypomnienie przychodzi 14 i 2 dni przed każdą datą oraz raz, gdy przebieg z tankowania zbliży się na 500 km do serwisu. Terminy przypadające w ciągu 30 dni lub już minione widać jako etykiety na karcie pojazdu i na jego ekranie, gdzie karta **Terminy** pokazuje wszystkie daty. Gdy oznaczysz wydatek jako ubezpieczenie lub serwis, aplikacja zaproponuje przesunięcie tego terminu o rok; nic się nie zmienia bez Twojego potwierdzenia.
+
+## Media
+
+Sprawdź, czy rachunek za media wzrósł, bo zużyłeś więcej, czy dlatego, że podrożało. Dostęp: **Ustawienia → Słowniki → Media**.
+
+**Dodawanie odczytu.** Otwórz wydatek za media — prąd, gaz, wodę lub ogrzewanie. Pod szczegółami stuknij **Dodaj zużycie (kWh, m³, GJ)**, wybierz rodzaj, wpisz zużycie z rachunku i jego jednostkę, a jeśli płacisz rachunki za więcej niż jedno miejsce — opcjonalnie **Lokal** (np. „Mieszkanie” lub „Domek”). Aplikacja sama wylicza cenę za jednostkę z kwoty wydatku. Aby zmienić lub usunąć odczyt, otwórz wydatek ponownie. Nowo dodany wydatek musi się najpierw zsynchronizować; jeśli jeszcze tego nie zrobił, aplikacja poprosi, by spróbować za chwilę. Osoby z dostępem tylko do podglądu konta współdzielonego widzą odczyty, ale nie mogą ich dodawać.
+
+**Co pokazuje ekran.** Dla każdego rodzaju: cenę za jednostkę miesiąc po miesiącu oraz zużycie. Gdy cena jednostkowa z ostatniego miesiąca jest o ponad 10% wyższa od średniej z trzech poprzednich miesięcy, pojawia się o tym informacja. Gdy rodzaj ma odczyty z całego roku, każdy miesiąc jest porównywany z tym samym miesiącem rok wcześniej — zarówno cena, jak i zużycie. Przy kilku lokalach wybierz jeden u góry albo zobacz wszystkie razem. Koszty są podane w Twojej walucie wyświetlania; rachunek w walucie o nieznanym kursie jest pomijany w kosztach, o czym ekran informuje. Wydatki planowane nie są liczone.
 
 ## Dane i raporty
 
@@ -22267,6 +22335,18 @@ Jeśli osoba, która połączyła aplikację, straci później prawo edycji albo
 
 Co obejmuje każdy poziom, opisaliśmy w Szyfrowaniu end-to-end.
 
+## Połącz asystenta AI (MCP)
+
+Możesz pozwolić asystentowi AI, takiemu jak Claude czy ChatGPT, czytać Twoje dane z AI Budżet i odpowiadać na pytania typu „ile wydałem na zakupy spożywcze w zeszłym miesiącu?”.
+
+1. W asystencie dodaj własny konektor (w Claude: **Ustawienia → Konektory → Dodaj własny konektor**) i wpisz adres \`https://api.ai-budget.pl/mcp\`.
+2. Asystent otworzy stronę AI Budżet, na której zalogujesz się jak zwykle. Zobaczysz na niej nazwę asystenta i dopisek **zarejestrowany automatycznie przez asystenta AI** — takiego asystenta nie sprawdzaliśmy, więc łącz tylko tego, którego sam uruchomiłeś. Zaznacz konta, z których może korzystać, i dotknij **Zezwól**.
+3. Zadaj pytanie w asystencie.
+
+Asystent ma dostęp **tylko do odczytu**: czyta wydatki, przychody, kategorie, budżety i podsumowania wydatków, ale nie może niczego dodawać, zmieniać ani usuwać i nie pobiera zdjęć paragonów. Konta z pełnym szyfrowaniem nie da się połączyć, a konta z szyfrowaniem tekstów ukrywają zaszyfrowane teksty — tak samo jak w każdej połączonej aplikacji.
+
+Aby odciąć asystenta, otwórz **Ustawienia → Połączone aplikacje** i dotknij **Rozłącz** przy nim. Traci dostęp natychmiast.
+
 ## Dla deweloperów
 
 Możesz zbudować własną aplikację na API AI Budget — za darmo. Otwórz **Ustawienia → Dla deweloperów** i dotknij **Utwórz aplikację**: podaj nazwę, stronę domową i adresy przekierowania (redirect URI), a potem wybierz **Aplikacja serwerowa** albo **Aplikacja mobilna lub przeglądarkowa**. **Client ID** dostajesz od razu; aplikacja serwerowa dostaje też client secret, który wyświetlamy **tylko raz** — skopiuj go natychmiast.
@@ -24548,6 +24628,14 @@ Um einen Tankvorgang zu erfassen, öffne eine Kraftstoff-Ausgabe: Hat das Konto 
 Auch andere Autokosten zählen. Bei jeder Ausgabe wählst du im Abschnitt **Auto** das Fahrzeug und die Art: Kraftstoff, Werkstatt, Versicherung, Parken, Steuern & Gebühren oder Sonstiges (Liter und Kilometerstand nur bei Kraftstoff). Im Fahrzeugfenster macht **Kategorien dieses Fahrzeugs** das automatisch: Art wählen, Kategorien antippen (etwa „Kfz-Versicherung“ als Versicherung), und ihre Ausgaben zählen für das Auto — frühere beim Speichern, neue beim Eintreffen. Die Karte zeigt dann die letzten 12 Monate: Summe, Monatsdurchschnitt, jede Art und alle Kosten pro km. Fahrzeuge brauchen eine Internetverbindung. Beim Löschen eines Fahrzeugs bleiben die Ausgaben erhalten; nur das Fahrzeug und seine Statistik verschwinden. Viele auf einmal: Suche auf dem Bildschirm Transaktionen (etwa „Benzyna“ oder „Parking“), wähle die Ausgaben aus und tippe auf **Fahrzeug zuordnen**, dann Fahrzeug und Art. Tankvorgänge mit Litern bleiben, wie sie sind.
 
 **Fristen.** Lege im Fahrzeugblatt die nächste Versicherungsverlängerung, die nächste Hauptuntersuchung, den nächsten Service und den Kilometerstand für den nächsten Service fest (alles optional; das Kreuz löscht ein Datum). Du wirst 14 und 2 Tage vor jedem Datum erinnert und einmal, wenn der Kilometerstand einer Tankfüllung weniger als 500 km vor dem Service liegt. Fristen in den nächsten 30 Tagen oder bereits überschrittene erscheinen als Chips auf der Fahrzeugkarte und auf dem Fahrzeugbildschirm, wo die Karte **Fristen** alle Daten auflistet. Wenn du eine Ausgabe als Versicherung oder Service markierst, bietet die App an, diese Frist um ein Jahr zu verschieben; ohne deine Bestätigung ändert sich nichts.
+
+## Nebenkosten
+
+Erkenne, ob eine Nebenkostenrechnung gestiegen ist, weil du mehr verbraucht hast oder weil der Preis gestiegen ist. Aufruf über **Einstellungen → Stammdaten → Nebenkosten**.
+
+**Verbrauch eintragen.** Öffne eine Ausgabe für Nebenkosten — Strom, Gas, Wasser oder Heizung. Tippe unter den Details auf **Verbrauch hinzufügen (kWh, m³, GJ)**, wähle die Art, gib den Verbrauch von der Rechnung und seine Einheit ein und optional ein **Objekt** (zum Beispiel „Wohnung“ oder „Ferienhaus“), wenn du Rechnungen für mehr als einen Ort bezahlst. Die App berechnet den Preis pro Einheit aus dem Betrag der Ausgabe. Um eine Angabe zu ändern oder zu entfernen, öffne die Ausgabe erneut. Eine neu angelegte Ausgabe muss zuerst synchronisiert werden; ist sie es noch nicht, bittet dich die App, es gleich noch einmal zu versuchen. Betrachter eines geteilten Kontos sehen die Angaben, können aber keine hinzufügen.
+
+**Was der Bildschirm zeigt.** Für jede Art: den Preis pro Einheit Monat für Monat und den Verbrauch. Liegt der Einheitspreis des letzten Monats um mehr als 10 % über dem Durchschnitt der drei Monate davor, weist ein Hinweis darauf hin. Sobald eine Art Angaben über ein ganzes Jahr hat, wird jeder Monat mit demselben Monat des Vorjahres verglichen — Preis und Verbrauch. Bei mehreren Objekten wählst du oben eines aus oder siehst alle zusammen. Die Kosten werden in deiner Anzeigewährung gezeigt; eine Rechnung in einer Währung mit unbekanntem Wechselkurs fließt nicht in die Kosten ein, und der Bildschirm sagt das. Geplante Ausgaben werden nicht mitgezählt.
 
 ## Daten & Berichte
 
@@ -27795,6 +27883,18 @@ Wird die Person, die die App verbunden hat, später zur reinen Betrachterin oder
 
 Was jede Stufe umfasst, steht unter Ende-zu-Ende-Verschlüsselung.
 
+## KI-Assistenten verbinden (MCP)
+
+Du kannst einem KI-Assistenten wie Claude oder ChatGPT erlauben, deine AI-Budget-Daten zu lesen und Fragen zu beantworten wie „Wie viel habe ich letzten Monat für Lebensmittel ausgegeben?“.
+
+1. Füge im Assistenten einen eigenen Connector hinzu (in Claude: **Einstellungen → Connectors → Eigenen Connector hinzufügen**) und gib die Adresse \`https://api.ai-budget.pl/mcp\` ein.
+2. Der Assistent öffnet eine AI-Budget-Seite, auf der du dich wie gewohnt anmeldest. Sie zeigt den Namen des Assistenten und den Hinweis **automatisch von einem KI-Assistenten registriert** — einen solchen Assistenten haben wir nicht geprüft, verbinde also nur einen, den du selbst gestartet hast. Wähle die Konten, die er nutzen darf, und tippe auf **Erlauben**.
+3. Stelle deine Frage im Assistenten.
+
+Der Assistent hat **nur Lesezugriff**: Er liest Ausgaben, Einnahmen, Kategorien, Budgets und Ausgabensummen, kann aber nichts hinzufügen, ändern oder löschen und lädt keine Belegfotos herunter. Konten mit voller Verschlüsselung lassen sich nicht verbinden, und bei Konten mit Textverschlüsselung bleiben verschlüsselte Texte verborgen — wie bei jeder verbundenen App.
+
+Um einen Assistenten zu trennen, öffne **Einstellungen → Verbundene Apps** und tippe daneben auf **Trennen**. Er verliert den Zugriff sofort.
+
 ## Für Entwickler
 
 Du kannst eigene Apps auf der AI Budget API bauen – kostenlos. Öffne **Einstellungen → Entwickler** und tippe auf **App erstellen**: Gib einen Namen, eine Website und die Weiterleitungsadressen (Redirect-URIs) an und wähle **Server-App** oder **Mobile oder Browser-App**. Die **Client-ID** bekommst du sofort; eine Server-App erhält zusätzlich ein Client-Secret, das **nur ein einziges Mal** angezeigt wird – kopiere es gleich.
@@ -30077,6 +30177,14 @@ Para registrar un repostaje, abre un gasto de combustible: si la cuenta tiene un
 También cuentan otros gastos del coche. En cualquier gasto, la sección **Coche** permite elegir el vehículo y el tipo: combustible, taller, seguro, aparcamiento, impuestos y tasas u otro (los litros y el cuentakilómetros solo se piden para el combustible). En la ficha del vehículo, **Categorías de este vehículo** lo hace automático: elige un tipo, toca las categorías (por ejemplo «Seguro del coche» como seguro) y sus gastos cuentan para el coche: los anteriores al guardar y los nuevos según llegan. La tarjeta muestra entonces los últimos 12 meses: el total, la media mensual, cada tipo y todos los gastos por km. Los vehículos necesitan conexión a internet. Al eliminar un vehículo se conservan los gastos; solo desaparecen el vehículo y sus estadísticas. Varios a la vez: en Transacciones, busca (por ejemplo «Benzyna» o «Parking»), selecciona los gastos y elige **Asignar a vehículo**, luego el vehículo y el tipo. Los repostajes que ya tienen litros no cambian.
 
 **Vencimientos.** En la ficha del vehículo indica la próxima renovación del seguro, la próxima ITV, la próxima revisión y el kilometraje de la próxima revisión (todo opcional; la cruz borra una fecha). Recibirás un aviso 14 y 2 días antes de cada fecha, y una vez cuando el kilometraje de un repostaje quede a menos de 500 km de la revisión. Los vencimientos de los próximos 30 días o ya pasados aparecen como etiquetas en la tarjeta del vehículo y en su pantalla, donde la tarjeta **Vencimientos** muestra todas las fechas. Al marcar un gasto como seguro o revisión, la app ofrece mover ese vencimiento un año; nada cambia sin tu confirmación.
+
+## Suministros
+
+Descubre si una factura de suministros subió porque consumiste más o porque subió el precio. Accede desde **Ajustes → Datos de referencia → Suministros**.
+
+**Añadir una lectura.** Abre un gasto de suministros: electricidad, gas, agua o calefacción. Debajo de los detalles toca **Añadir consumo (kWh, m³, GJ)**, elige el tipo, introduce el consumo de la factura y su unidad y, si pagas facturas de más de un sitio, opcionalmente una **Propiedad** (por ejemplo, «Piso» o «Casa de campo»). La app calcula el precio por unidad a partir del importe del gasto. Para cambiar o eliminar una lectura, vuelve a abrir el gasto. Un gasto recién añadido tiene que sincronizarse primero; si aún no lo ha hecho, la app te pide que lo intentes de nuevo en un momento. Quienes solo pueden ver una cuenta compartida ven las lecturas, pero no pueden añadirlas.
+
+**Qué muestra la pantalla.** Para cada tipo: el precio por unidad mes a mes y el consumo. Cuando el precio unitario del último mes supera en más de un 10 % la media de los tres meses anteriores, un aviso lo indica. Cuando un tipo tiene lecturas de un año, cada mes se compara con el mismo mes del año anterior, tanto el precio como el consumo. Si tienes varias propiedades, elige una arriba o velas todas juntas. Los costes se muestran en tu moneda de visualización; una factura en una moneda cuyo tipo de cambio se desconoce queda fuera del coste, y la pantalla lo indica. Los gastos planificados no se cuentan.
 
 ## Datos e informes
 
@@ -33312,6 +33420,18 @@ Si la persona que conectó la app pasa después a solo lectura o sale de una cue
 
 Qué cubre cada nivel se explica en Cifrado de extremo a extremo.
 
+## Conectar un asistente de IA (MCP)
+
+Puedes permitir que un asistente de IA como Claude o ChatGPT lea tus datos de AI Budget y responda preguntas como «¿cuánto gasté en comida el mes pasado?».
+
+1. En el asistente, añade un conector personalizado (en Claude: **Ajustes → Conectores → Añadir conector personalizado**) e introduce la dirección \`https://api.ai-budget.pl/mcp\`.
+2. El asistente abre una página de AI Budget en la que inicias sesión como siempre. Muestra el nombre del asistente y la nota **registrado automáticamente por un asistente de IA**: no hemos verificado a ese asistente, así que conecta solo uno que hayas iniciado tú. Marca las cuentas que puede usar y toca **Permitir**.
+3. Haz tu pregunta en el asistente.
+
+El asistente tiene acceso **de solo lectura**: lee gastos, ingresos, categorías, presupuestos y totales de gasto, pero no puede añadir, cambiar ni borrar nada ni descargar fotos de recibos. Las cuentas con cifrado completo no se pueden conectar, y las cuentas con cifrado de texto ocultan sus textos cifrados, igual que con cualquier app conectada.
+
+Para desconectar un asistente, abre **Ajustes → Apps conectadas** y toca **Desconectar** junto a él. Pierde el acceso al instante.
+
 ## Para desarrolladores
 
 Puedes crear tu propia app sobre la API de AI Budget, gratis. Abre **Ajustes → Desarrolladores** y pulsa **Crear app**: ponle un nombre, una web y las direcciones de redirección que usará, y elige **App de servidor** o **App móvil o de navegador**. El **Client ID** lo recibes al momento; una app de servidor recibe además un client secret que se muestra **una sola vez**: cópialo enseguida.
@@ -35592,6 +35712,14 @@ Pour saisir un plein, ouvrez une dépense de carburant : si le compte a un véhi
 Les autres frais de voiture comptent aussi. Sur n'importe quelle dépense, la section **Voiture** permet de choisir le véhicule et le type : carburant, entretien, assurance, stationnement, taxes et frais ou autre (litres et compteur ne sont demandés que pour le carburant). Dans la fiche du véhicule, **Catégories de ce véhicule** l'automatise : choisissez un type, touchez les catégories (par exemple « Assurance auto » comme assurance), et leurs dépenses comptent pour la voiture — les anciennes dès l'enregistrement, les nouvelles à leur arrivée. La carte affiche alors les 12 derniers mois : le total, la moyenne mensuelle, chaque type et tous les frais par km. Les véhicules nécessitent une connexion internet. Supprimer un véhicule conserve les dépenses ; seuls le véhicule et ses statistiques disparaissent. Plusieurs à la fois : sur l'écran Transactions, recherchez (par exemple « Benzyna » ou « Parking »), sélectionnez les dépenses et choisissez **Attribuer au véhicule**, puis le véhicule et le type. Les pleins qui ont déjà des litres ne changent pas.
 
 **Échéances.** Dans la fiche du véhicule, indiquez le prochain renouvellement de l'assurance, le prochain contrôle technique, le prochain entretien et le kilométrage du prochain entretien (tout est facultatif ; la croix efface une date). Un rappel arrive 14 et 2 jours avant chaque date, et une fois quand le compteur d'un plein arrive à moins de 500 km de l'entretien. Les échéances dans les 30 jours ou déjà passées s'affichent en pastilles sur la carte du véhicule et sur son écran, dont la carte **Échéances** liste toutes les dates. Quand vous marquez une dépense comme assurance ou entretien, l'application propose de repousser cette échéance d'un an ; rien ne change sans votre confirmation.
+
+## Factures d'énergie
+
+Voyez si une facture d'énergie a augmenté parce que vous avez consommé davantage ou parce que le prix a monté. Accès via **Paramètres → Données de référence → Factures d'énergie**.
+
+**Ajouter un relevé.** Ouvrez une dépense d'énergie — électricité, gaz, eau ou chauffage. Sous les détails, touchez **Ajouter la consommation (kWh, m³, GJ)**, choisissez le type, saisissez la consommation indiquée sur la facture et son unité, et éventuellement un **Logement** (par exemple « Appartement » ou « Maison de campagne ») si vous payez des factures pour plusieurs endroits. L'application calcule le prix unitaire à partir du montant de la dépense. Pour modifier ou supprimer un relevé, rouvrez la dépense. Une dépense qui vient d'être ajoutée doit d'abord être synchronisée ; si ce n'est pas encore le cas, l'application vous demande de réessayer dans un instant. Les lecteurs d'un compte partagé voient les relevés mais ne peuvent pas en ajouter.
+
+**Ce que montre l'écran.** Pour chaque type : le prix unitaire mois par mois, et la consommation. Lorsque le prix unitaire du dernier mois dépasse de plus de 10 % la moyenne des trois mois précédents, une note le signale. Dès qu'un type a un an de relevés, chaque mois est comparé au même mois de l'année précédente — le prix comme la consommation. Avec plusieurs logements, choisissez-en un en haut ou affichez-les tous ensemble. Les coûts sont affichés dans votre devise d'affichage ; une facture dans une devise dont le taux de change est inconnu est exclue du coût, et l'écran le signale. Les dépenses prévues ne sont pas comptées.
 
 ## Donnees et rapports
 
@@ -38827,6 +38955,18 @@ Si la personne qui a connecté l'application passe ensuite en lecture seule ou q
 
 Le détail de chaque niveau est dans Chiffrement de bout en bout.
 
+## Connecter un assistant IA (MCP)
+
+Vous pouvez autoriser un assistant IA comme Claude ou ChatGPT à lire vos données AI Budget et à répondre à des questions comme « combien ai-je dépensé en courses le mois dernier ? ».
+
+1. Dans l'assistant, ajoutez un connecteur personnalisé (dans Claude : **Paramètres → Connecteurs → Ajouter un connecteur personnalisé**) et saisissez l'adresse \`https://api.ai-budget.pl/mcp\`.
+2. L'assistant ouvre une page AI Budget où vous vous connectez comme d'habitude. Elle affiche le nom de l'assistant et la mention **enregistré automatiquement par un assistant IA** : nous n'avons pas vérifié cet assistant, ne connectez donc que celui que vous avez lancé vous-même. Cochez les comptes qu'il peut utiliser et touchez **Autoriser**.
+3. Posez votre question dans l'assistant.
+
+L'assistant a un accès **en lecture seule** : il lit les dépenses, revenus, catégories, budgets et totaux de dépenses, mais ne peut rien ajouter, modifier ni supprimer, et ne télécharge pas les photos de reçus. Les comptes à chiffrement complet ne peuvent pas être connectés, et les comptes à chiffrement du texte masquent leurs textes chiffrés, comme pour toute application connectée.
+
+Pour déconnecter un assistant, ouvrez **Paramètres → Applications connectées** et touchez **Déconnecter** à côté de lui. Il perd l'accès immédiatement.
+
 ## Pour les développeurs
 
 Vous pouvez créer votre propre application sur l'API AI Budget, gratuitement. Ouvrez **Paramètres → Développeurs** et touchez **Créer une app** : donnez-lui un nom, un site et les adresses de redirection qu'elle utilisera, puis choisissez **App serveur** ou **App mobile ou navigateur**. Vous recevez aussitôt un **Client ID** ; une app serveur reçoit en plus un client secret affiché **une seule fois** — copiez-le immédiatement.
@@ -41109,6 +41249,14 @@ iOS, Android, Web
 Улічваюцца і іншыя выдаткі на аўто. У любым выдатку блок **Аўтамабіль** дазваляе выбраць аўто і від выдатку: паліва, сэрвіс, страхоўка, паркоўка, падаткі і зборы або іншае (літры і прабег патрэбныя толькі для паліва). У акне аўто **Катэгорыі гэтага аўто** робяць гэта аўтаматычна: выберыце від, націсніце на катэгорыі (напрыклад, «Страхоўка аўто» як страхоўку), і іх выдаткі будуць лічыцца для аўто — мінулыя адразу пасля захавання, новыя па меры з’яўлення. Картка пакажа апошнія 12 месяцаў: вынік, у сярэднім у месяц, кожны від і ўсе выдаткі на кіламетр. Для аўто патрэбны інтэрнэт. Пры выдаленні аўто выдаткі застаюцца; выдаляюцца толькі аўто і яго статыстыка. Адразу шмат: на экране «Транзакцыі» знайдзіце выдаткі пошукам (напрыклад, «Benzyna» або «Parking»), вылучыце іх і выберыце **Аднесці да аўто**, потым аўто і від выдатку. Запраўкі, у якіх ужо ёсць літры, застануцца як ёсць.
 
 **Тэрміны.** У картцы машыны пазначце дату падаўжэння страхоўкі, наступнага тэхагляду, наступнага ТА і прабег, на якім патрэбна наступнае ТА (усё неабавязкова; крыжык ачышчае дату). Напамін прыйдзе за 14 і 2 дні да кожнай даты і адзін раз, калі прабег з запраўкі наблізіцца да ТА менш чым на 500 км. Тэрміны бліжэйшых 30 дзён або ўжо мінулыя відаць меткамі на картцы машыны і на яе экране, дзе картка **Тэрміны** паказвае ўсе даты. Калі вы адзначаеце выдатак як страхоўку або ТА, праграма прапануе перанесці гэты тэрмін на год наперад; без вашага пацверджання нічога не мяняецца.
+
+## Камунальныя
+
+Даведайцеся, ці вырас рахунак за камунальныя паслугі таму, што вы больш спажылі, ці таму, што падаражэў тарыф. Адкрыць: **Налады → Даведнікі → Камунальныя**.
+
+**Як дадаць паказанне.** Адкрыйце расход на камунальныя паслугі — электрычнасць, газ, ваду ці ацяпленне. Пад падрабязнасцямі націсніце **Дадаць спажыванне (кВт·г, м³, ГДж)**, выберыце від, увядзіце спажыванне з рахунку і яго адзінку, а калі вы плаціце за некалькі месцаў — пры жаданні пазначце **Аб'ект** (напрыклад, «Кватэра» ці «Дача»). Цану за адзінку праграма падлічыць сама па суме расходу. Каб змяніць або выдаліць паказанне, зноў адкрыйце расход. Толькі што дададзены расход павінен спачатку сінхранізавацца; калі гэтага яшчэ не адбылося, праграма папросіць паспрабаваць крыху пазней. Удзельнікі агульнага акаўнта з правам толькі на прагляд бачаць паказанні, але дадаваць іх не могуць.
+
+**Што паказвае экран.** Для кожнага віду — цану за адзінку па месяцах і спажыванне. Калі цана за адзінку ў апошнім месяцы больш чым на 10% вышэйшая за сярэднюю за тры папярэднія месяцы, з'явіцца нататка пра гэта. Калі па відзе назбіраецца год паказанняў, кожны месяц параўноўваецца з тым самым месяцам летась — і па цане, і па спажыванні. Калі аб'ектаў некалькі, выберыце адзін уверсе або глядзіце ўсе разам. Кошт паказаны ў валюце адлюстравання; рахунак у валюце з невядомым курсам не ўваходзіць у кошт, і экран пра гэта паведамляе. Запланаваныя расходы не ўлічваюцца.
 
 ## Даныя і справаздачы
 
@@ -44306,6 +44454,18 @@ OCR часам няправільна чытае цану, выдумляе ра
 
 Што ўваходзіць у кожны ўзровень, апісана ў раздзеле Скразное шыфраванне.
 
+## Падключыць ШІ-асістэнта (MCP)
+
+Вы можаце дазволіць ШІ-асістэнту, напрыклад Claude або ChatGPT, чытаць вашы даныя ў AI Budget і адказваць на пытанні кшталту «колькі я патраціў на прадукты ў мінулым месяцы?».
+
+1. У асістэнце дадайце ўласны канектар (у Claude: **Налады → Канектары → Дадаць уласны канектар**) і ўвядзіце адрас \`https://api.ai-budget.pl/mcp\`.
+2. Асістэнт адкрые старонку AI Budget, дзе вы ўвойдзеце як звычайна. На ёй бачна імя асістэнта і прыпіска **зарэгістраваны аўтаматычна ШІ-асістэнтам** — такога асістэнта мы не правяралі, таму падключайце толькі таго, якога запусцілі самі. Адзначце рахункі, якія ён можа выкарыстоўваць, і націсніце **Дазволіць**.
+3. Задайце пытанне ў асістэнце.
+
+У асістэнта доступ **толькі для чытання**: ён чытае выдаткі, даходы, катэгорыі, бюджэты і вынікі выдаткаў, але не можа нічога дадаваць, змяняць або выдаляць і не спампоўвае фота чэкаў. Рахункі з поўным шыфраваннем падключыць нельга, а ў рахункаў з шыфраваннем тэксту зашыфраваныя тэксты схаваныя — як у любой падключанай праграме.
+
+Каб адключыць асістэнта, адкрыйце **Налады → Падключаныя праграмы** і націсніце **Адключыць** побач з ім. Доступ знікае адразу.
+
 ## Распрацоўшчыкам
 
 Вы можаце зрабіць уласную праграму на API AI Budget — бясплатна. Адкрыйце **Налады → Распрацоўшчыкам** і націсніце **Стварыць праграму**: пазначце назву, сайт і адрасы перанакіравання (redirect URI) і выберыце **Серверная праграма** або **Мабільная або браўзерная праграма**. **Client ID** вы атрымаеце адразу; сервернай праграме выдаецца яшчэ і client secret, які паказваецца **толькі адзін раз** — скапіруйце яго адразу.
@@ -46599,6 +46759,14 @@ Open een brandstofuitgave om een tankbeurt vast te leggen: heeft het account een
 Ook andere autokosten tellen mee. Bij elke uitgave kies je in het onderdeel **Auto** het voertuig en de soort: brandstof, onderhoud, verzekering, parkeren, belastingen & heffingen of overig (liters en kilometerstand alleen bij brandstof). In het voertuigvenster maakt **Categorieën van dit voertuig** het automatisch: kies een soort, tik op de categorieën (bijvoorbeeld "Autoverzekering" als verzekering) en hun uitgaven tellen voor de auto — eerdere bij het opslaan, nieuwe zodra ze binnenkomen. De kaart toont dan de afgelopen 12 maanden: het totaal, het maandgemiddelde, elke soort en alle kosten per km. Voertuigen hebben een internetverbinding nodig. Een voertuig verwijderen laat de uitgaven staan; alleen het voertuig en zijn statistieken verdwijnen. Veel tegelijk: zoek op het scherm Transacties (bijvoorbeeld "Benzyna" of "Parking"), selecteer de uitgaven en kies **Aan voertuig toewijzen**, daarna het voertuig en de soort. Tankbeurten die al liters hebben, blijven zoals ze zijn.
 
 **Vervaldata.** Stel in het voertuigblad de volgende verlenging van de verzekering, de volgende APK, de volgende onderhoudsbeurt en de kilometerstand voor het volgende onderhoud in (alles optioneel; het kruisje wist een datum). Je krijgt een herinnering 14 en 2 dagen voor elke datum, en één keer wanneer de kilometerstand van een tankbeurt binnen 500 km van het onderhoud komt. Vervaldata binnen 30 dagen of al verstreken verschijnen als labels op de voertuigkaart en op het voertuigscherm, waar de kaart **Vervaldata** alle data toont. Markeer je een uitgave als verzekering of onderhoud, dan biedt de app aan die vervaldatum een jaar op te schuiven; zonder jouw bevestiging verandert er niets.
+
+## Energie en water
+
+Zie of een energierekening hoger werd doordat je meer verbruikte of doordat de prijs steeg. Ga naar **Instellingen → Referentiegegevens → Energie en water**.
+
+**Een meting toevoegen.** Open een uitgave voor energie of water — elektriciteit, gas, water of verwarming. Tik onder de details op **Verbruik toevoegen (kWh, m³, GJ)**, kies het soort, vul het verbruik van de rekening en de eenheid in, en eventueel een **Woning** (bijvoorbeeld "Appartement" of "Zomerhuisje") als je rekeningen voor meer dan één plek betaalt. De app berekent de prijs per eenheid uit het bedrag van de uitgave. Om een meting te wijzigen of te verwijderen, open je de uitgave opnieuw. Een net toegevoegde uitgave moet eerst gesynchroniseerd zijn; is dat nog niet gebeurd, dan vraagt de app je het zo meteen opnieuw te proberen. Kijkers van een gedeeld account zien de metingen, maar kunnen ze niet toevoegen.
+
+**Wat het scherm laat zien.** Per soort: de prijs per eenheid maand na maand, en het verbruik. Ligt de eenheidsprijs van de laatste maand meer dan 10% boven het gemiddelde van de drie maanden ervoor, dan meldt een notitie dat. Zodra een soort een jaar aan metingen heeft, wordt elke maand vergeleken met dezelfde maand vorig jaar — zowel de prijs als het verbruik. Met meerdere woningen kies je er bovenaan één of bekijk je ze allemaal samen. Kosten staan in je weergavevaluta; een rekening in een valuta met een onbekende wisselkoers telt niet mee in de kosten, en het scherm zegt dat. Geplande uitgaven tellen niet mee.
 
 ## Gegevens & Rapporten
 
@@ -49911,6 +50079,18 @@ Wordt degene die de app gekoppeld heeft later alleen-lezer, of verlaat die een r
 
 Wat elk niveau omvat, lees je in End-to-end-versleuteling.
 
+## Een AI-assistent koppelen (MCP)
+
+Je kunt een AI-assistent zoals Claude of ChatGPT toestaan je AI Budget-gegevens te lezen en vragen te beantwoorden zoals "hoeveel heb ik vorige maand aan boodschappen uitgegeven?".
+
+1. Voeg in de assistent een eigen connector toe (in Claude: **Instellingen → Connectors → Eigen connector toevoegen**) en voer het adres \`https://api.ai-budget.pl/mcp\` in.
+2. De assistent opent een AI Budget-pagina waar je zoals gewoonlijk inlogt. Daarop staan de naam van de assistent en de opmerking **automatisch geregistreerd door een AI-assistent** — zo'n assistent hebben we niet gecontroleerd, koppel dus alleen een assistent die je zelf hebt gestart. Vink de rekeningen aan die hij mag gebruiken en tik op **Toestaan**.
+3. Stel je vraag in de assistent.
+
+De assistent heeft **alleen leestoegang**: hij leest uitgaven, inkomsten, categorieën, budgetten en uitgavetotalen, maar kan niets toevoegen, wijzigen of verwijderen en downloadt geen bonfoto's. Rekeningen met volledige versleuteling kunnen niet worden gekoppeld, en bij rekeningen met tekstversleuteling blijven versleutelde teksten verborgen, net als bij elke gekoppelde app.
+
+Om een assistent los te koppelen open je **Instellingen → Gekoppelde apps** en tik je ernaast op **Ontkoppelen**. Hij verliest direct de toegang.
+
 ## Voor ontwikkelaars
 
 Je kunt je eigen app bouwen op de AI Budget API – gratis. Open **Instellingen → Ontwikkelaars** en tik op **App maken**: geef een naam, een website en de redirect-adressen die hij gebruikt, en kies **Server-app** of **Mobiele of browser-app**. De **Client-ID** krijg je meteen; een server-app krijgt daarnaast een client secret die **maar één keer** getoond wordt – kopieer hem direct.
@@ -52220,6 +52400,14 @@ Para registar um abastecimento, abra uma despesa de combustível: se a conta tiv
 Os outros custos do carro também contam. Em qualquer despesa, a secção **Carro** permite escolher o veículo e o tipo: combustível, manutenção, seguro, estacionamento, impostos e taxas ou outro (litros e conta-quilómetros só são pedidos para o combustível). Na ficha do veículo, **Categorias deste veículo** torna isto automático: escolha um tipo, toque nas categorias (por exemplo «Seguro automóvel» como seguro) e as despesas delas contam para o carro — as anteriores assim que guarda, as novas à medida que chegam. O cartão mostra então os últimos 12 meses: o total, a média mensal, cada tipo e todos os custos por km. Os veículos precisam de ligação à internet. Eliminar um veículo mantém as despesas; só desaparecem o veículo e as estatísticas. Vários de uma vez: no ecrã Transações, pesquise (por exemplo «Benzyna» ou «Parking»), selecione as despesas e escolha **Atribuir ao veículo**, depois o veículo e o tipo. Os abastecimentos que já têm litros ficam como estão.
 
 **Prazos.** Na ficha do veículo, defina a próxima renovação do seguro, a próxima inspeção, a próxima revisão e a quilometragem da próxima revisão (tudo opcional; a cruz limpa uma data). Recebe um lembrete 14 e 2 dias antes de cada data, e uma vez quando a quilometragem de um abastecimento ficar a menos de 500 km da revisão. Os prazos nos próximos 30 dias ou já ultrapassados aparecem como etiquetas no cartão do veículo e no seu ecrã, onde o cartão **Prazos** mostra todas as datas. Quando marca uma despesa como seguro ou revisão, a app propõe adiar esse prazo um ano; nada muda sem a sua confirmação.
+
+## Serviços domésticos
+
+Perceba se uma fatura de serviços subiu porque consumiu mais ou porque o preço aumentou. Aceda em **Definições → Dados de referência → Serviços domésticos**.
+
+**Adicionar uma leitura.** Abra uma despesa de serviços — eletricidade, gás, água ou aquecimento. Por baixo dos detalhes, toque em **Adicionar consumo (kWh, m³, GJ)**, escolha o tipo, introduza o consumo indicado na fatura e a respetiva unidade e, se paga faturas de mais do que um sítio, opcionalmente um **Imóvel** (por exemplo, «Apartamento» ou «Casa de campo»). A aplicação calcula o preço por unidade a partir do valor da despesa. Para alterar ou remover uma leitura, volte a abrir a despesa. Uma despesa acabada de adicionar tem de ser sincronizada primeiro; se ainda não o foi, a aplicação pede-lhe que tente novamente daqui a pouco. Quem só pode ver uma conta partilhada vê as leituras, mas não as pode adicionar.
+
+**O que o ecrã mostra.** Para cada tipo: o preço por unidade mês a mês e o consumo. Quando o preço unitário do último mês fica mais de 10% acima da média dos três meses anteriores, uma nota assinala-o. Quando um tipo tem leituras de um ano, cada mês é comparado com o mesmo mês do ano anterior — tanto o preço como o consumo. Com vários imóveis, escolha um no topo ou veja-os todos em conjunto. Os custos aparecem na sua moeda de apresentação; uma fatura numa moeda cuja taxa de câmbio é desconhecida fica de fora do custo, e o ecrã indica-o. As despesas planeadas não são contabilizadas.
 
 ## Dados e relatórios
 
@@ -55543,6 +55731,18 @@ Se a pessoa que ligou uma aplicação passar depois a leitor ou sair de uma cont
 
 Consulte Encriptação ponto a ponto para saber o que cada nível abrange.
 
+## Ligar um assistente de IA (MCP)
+
+Pode permitir que um assistente de IA, como o Claude ou o ChatGPT, leia os seus dados do AI Budget e responda a perguntas como «quanto gastei em supermercado no mês passado?».
+
+1. No assistente, adicione um conector personalizado (no Claude: **Definições → Conectores → Adicionar conector personalizado**) e introduza o endereço \`https://api.ai-budget.pl/mcp\`.
+2. O assistente abre uma página do AI Budget onde inicia sessão como habitualmente. A página mostra o nome do próprio assistente e a nota **registada automaticamente por um assistente de IA** — não verificámos esse assistente, por isso ligue apenas um que tenha sido o próprio a iniciar. Marque as contas que ele pode usar e toque em **Permitir**.
+3. Faça a sua pergunta no assistente.
+
+Um assistente tem acesso **só de leitura**: pode ler despesas, receitas, categorias, orçamentos e totais de gastos, mas não pode adicionar, alterar nem eliminar nada, nem transferir as fotografias dos talões. As contas com encriptação total não podem ser ligadas, e as contas com encriptação de texto ocultam o texto encriptado, tal como acontece com qualquer aplicação ligada.
+
+Para cortar o acesso a um assistente, abra **Definições → Aplicações ligadas** e toque em **Desligar** ao lado dele. Perde o acesso de imediato.
+
 ## Para programadores
 
 Pode criar a sua própria aplicação sobre a API do AI Budget — é gratuito. Abra **Definições → Programadores** e toque em **Criar aplicação**: dê-lhe um nome, uma página inicial e os endereços de redirecionamento que vai usar, e escolha **Aplicação de servidor** ou **Aplicação móvel ou de navegador**. Recebe de imediato um **Client ID**; uma aplicação de servidor recebe também um client secret, mostrado **uma única vez** — copie-o imediatamente.
@@ -57852,6 +58052,14 @@ Para registrar um abastecimento, abra uma despesa de combustível: se a conta ti
 Os outros custos do carro também contam. Em qualquer despesa, a seção **Carro** permite escolher o veículo e o tipo: combustível, manutenção, seguro, estacionamento, impostos e taxas ou outro (litros e hodômetro só são pedidos para combustível). Na tela do veículo, **Categorias deste veículo** deixa isso automático: escolha um tipo, toque nas categorias (por exemplo "Seguro do carro" como seguro) e as despesas delas contam para o carro — as anteriores assim que você salva, as novas conforme chegam. O cartão então mostra os últimos 12 meses: o total, a média mensal, cada tipo e todos os custos por km. Os veículos precisam de conexão com a internet. Excluir um veículo mantém as despesas; só o veículo e as estatísticas são excluídos. Vários de uma vez: na tela Transações, pesquise (por exemplo "Benzyna" ou "Parking"), selecione as despesas e escolha **Atribuir ao veículo**, depois o veículo e o tipo. Abastecimentos que já têm litros continuam como estão.
 
 **Vencimentos.** Na ficha do veículo, defina a próxima renovação do seguro, a próxima vistoria, a próxima revisão e a quilometragem da próxima revisão (tudo opcional; o X limpa uma data). Você recebe um lembrete 14 e 2 dias antes de cada data, e uma vez quando a quilometragem de um abastecimento ficar a menos de 500 km da revisão. Vencimentos nos próximos 30 dias ou já passados aparecem como etiquetas no cartão do veículo e na tela dele, onde o cartão **Vencimentos** mostra todas as datas. Quando você marca uma despesa como seguro ou revisão, o app oferece adiar esse vencimento em um ano; nada muda sem a sua confirmação.
+
+## Contas de consumo
+
+Descubra se uma conta de consumo subiu porque você consumiu mais ou porque o preço aumentou. Acesse em **Configurações → Dados de referência → Contas de consumo**.
+
+**Adicionando uma leitura.** Abra uma despesa de conta de consumo — energia elétrica, gás, água ou aquecimento. Abaixo dos detalhes, toque em **Adicionar consumo (kWh, m³, GJ)**, escolha o tipo, informe o consumo da conta e a unidade e, se você paga contas de mais de um lugar, opcionalmente um **Imóvel** (por exemplo, “Apartamento” ou “Casa de campo”). O app calcula o preço por unidade a partir do valor da despesa. Para alterar ou remover uma leitura, abra a despesa de novo. Uma despesa recém-adicionada precisa ser sincronizada primeiro; se isso ainda não aconteceu, o app pede para você tentar de novo daqui a pouco. Quem só pode visualizar uma conta compartilhada vê as leituras, mas não pode adicioná-las.
+
+**O que a tela mostra.** Para cada tipo: o preço por unidade mês a mês e o consumo. Quando o preço unitário do último mês fica mais de 10% acima da média dos três meses anteriores, um aviso informa isso. Quando um tipo tem um ano de leituras, cada mês é comparado com o mesmo mês do ano anterior — tanto o preço quanto o consumo. Com vários imóveis, escolha um no topo ou veja todos juntos. Os custos aparecem na sua moeda de exibição; uma conta em uma moeda cuja taxa de câmbio é desconhecida fica fora do custo, e a tela avisa. Despesas planejadas não são contadas.
 
 ## Dados e relatórios
 
@@ -61174,6 +61382,18 @@ Se a pessoa que conectou um app depois virar visualizador ou sair de uma conta, 
 - Uma conta com **criptografia de texto** pode ser conectada como **somente leitura**: o app vê valores, datas e categorias, mas descrições, notas, estabelecimentos, nomes de itens, tags e outros textos criptografados ficam ocultos, e ele não pode adicionar nem alterar despesas.
 
 Veja Criptografia de ponta a ponta para saber o que cada nível cobre.
+
+## Conectar um assistente de IA (MCP)
+
+Você pode permitir que um assistente de IA, como o Claude ou o ChatGPT, leia seus dados do AI Budget e responda a perguntas como “quanto eu gastei com mercado no mês passado?”.
+
+1. No assistente, adicione um conector personalizado (no Claude: **Configurações → Conectores → Adicionar conector personalizado**) e informe o endereço \`https://api.ai-budget.pl/mcp\`.
+2. O assistente abre uma página do AI Budget onde você entra normalmente. Ela mostra o nome do próprio assistente e o aviso **registrado automaticamente por um assistente de IA** — nós não verificamos esse assistente, então só conecte um que você mesmo tenha iniciado. Marque as contas que ele pode usar e toque em **Permitir**.
+3. Faça sua pergunta no assistente.
+
+Um assistente tem acesso **somente leitura**: ele pode ler despesas, receitas, categorias, orçamentos e totais de gastos, mas não pode adicionar, alterar nem excluir nada, nem baixar as fotos dos recibos. Contas com criptografia total não podem ser conectadas, e contas com criptografia de texto ocultam o texto criptografado, exatamente como acontece com qualquer app conectado.
+
+Para cortar o acesso de um assistente, abra **Configurações → Apps conectados** e toque em **Desconectar** ao lado dele. Ele perde o acesso na hora.
 
 ## Para desenvolvedores
 

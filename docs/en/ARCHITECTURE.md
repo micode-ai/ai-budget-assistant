@@ -2185,6 +2185,553 @@ The investment module includes GPT-4-powered portfolio insights that analyze hol
 - **Localization**: Supports all 9 app languages
 - **Charts**: Each insight includes appropriate visualization (donut, bar, line)
 
+## Contact the Developer (Support Chat)
+
+A one-thread-per-user support chat from the app to the developer (ABA-856, ABA-857, ABA-858). The user writes in any language; the developer reads and answers in his own language (`SUPPORT_DEVELOPER_LANGUAGE`, default `ru`) — in the admin dashboard or by replying to a card in a **separate** Telegram support bot. Each side sees the other's text translated, with the original one tap away. Design and invariants: `docs/wiki/features/contact-developer.md`; bot runbook: `docs/ops/support-bot.md`.
+
+### Message Flow
+
+```
+App (Settings → Write to the developer, or the Help screen card)
+  │ POST /support/messages { body, context }
+  ▼
+SupportService ── stores SupportMessage (author=user, bodyLang, translatedBody)
+  │                └─ rate limit: 10 messages / 24 h per user (Redis window, fails open)
+  ├─► admin:support-unread (Socket.io) → admin dashboard /support
+  └─► SupportForwarder (= SupportTelegramService, optional injection)
+         └─ card to SUPPORT_TELEGRAM_CHAT_ID; its message_id → SupportMessage.telegramMessageId
+
+Developer reply
+  ├─ admin: POST /admin/support/threads/:id/reply
+  └─ Telegram: "reply" to a card → POST /support-telegram/webhook
+         └─ thread resolved ONLY via reply_to_message.message_id
+  ▼
+SupportAdminService.reply ── translates into the user's language, stores, sends a push
+  └─ e-mail fallback for unread replies (see below)
+```
+
+### Components
+
+| Part | Location |
+|---|---|
+| User routes (`JwtAuthGuard` only) | `apps/api/src/modules/support/support.controller.ts` |
+| Admin routes (`JwtAuthGuard` + `AdminGuard`) | `support-admin.controller.ts`, `support-admin.service.ts` |
+| Telegram webhook (outside `/api/v1`) | `support-telegram.controller.ts`, `support-telegram.service.ts` |
+| Translation | `support-translation.service.ts` — logged as `support_translation` through `logUsageWithoutLimit`, so it never counts against the user's AI limit |
+| E-mail fallback | `support-email.service.ts`, `support-email.cron.ts` (hourly, at minute 15) |
+| Unsubscribe | `modules/mail/mail-unsubscribe.controller.ts` — `GET`/`POST /mail/unsubscribe/support` |
+| Admin page | `apps/admin/src/app/support/page.tsx` |
+| App screen | `apps/mobile/app/support.tsx`, `src/components/support/` (phone + desktop web), `src/features/support/` (`useSupportThread`, `collectSupportContext`, `supportPolling`, `openSupport`) |
+
+### Database Tables
+
+- `support_threads` (`SupportThread`) — one per user (unique `userId`, cascades from `User`): `status` (`open`/`closed`), `muted`, `autoTranslate`, unread counters for both sides, `firstUnreadReplyAt`, `lastEmailedAt`, `emailEnabled`
+- `support_messages` (`SupportMessage`) — `author`, `body` (the original, never overwritten), `bodyLang`, `translatedBody`, `context` (JSON), unique `telegramMessageId`, `readAt`
+
+### Key Rules
+
+- **User-scoped, not account-scoped**: no `AccountContextGuard`, every query filters by `userId`; the app sends `skipAccountScope` so a stale `X-Account-Id` cannot block the user.
+- **Strict context DTO**: `context` accepts only `appVersion`, `buildSha`, `platform`, `osVersion`, `locale`, `tier`, `accountType`, `fromRoute` — an extra key is a 400.
+- **Never guess a Telegram reply's recipient**: there is no "last active thread" fallback; an unrelated message gets a "reply to a card" hint. Only `SUPPORT_TELEGRAM_CHAT_ID` is listened to.
+- **Webhook**: the secret is checked with `timingSafeEqual` (unset → a random per-process secret), 200 is ACKed first, updates are deduplicated on `update_id` (`support-tg:update:<id>`, 24 h). The path stays in `global-prefix-exclusions.ts` and `SMALL_BODY_PATHS`.
+- **Shadow mute**: a muted thread stores messages but forwards nothing and bumps no counters; the user sees exactly the same response as when unmuted.
+- **Deactivation** hard-deletes the thread; a reply to an inactive user returns an "inactive" notice to the developer.
+- **Separate bot**: the support bot never uses `OPS_TELEGRAM_*` or the assistant bot.
+
+### E-mail Fallback for Unread Replies
+
+An unread reply must not stay unseen: a web user has no push token, and a push can be dismissed.
+
+- When `userUnreadCount` goes 0 → 1, `firstUnreadReplyAt` is stamped. A user **without** a push token gets the e-mail right after the reply transaction commits (fire-and-forget).
+- A user **with** push gets it from `SupportEmailCron` (`paginateById`) once the reply has been unread for 12 hours.
+- One e-mail per unread batch: claimed with a conditional `updateMany` on `lastEmailedAt: null` **before** sending (released on failure), and cleared only when the user reads the thread.
+- Eligibility: unread > 0, `lastEmailedAt` null, `emailEnabled`, not muted, user active with an e-mail address.
+- The unsubscribe is purpose-scoped: an HMAC over `unsubscribe:support:<userId>` sets only `SupportThread.emailEnabled = false`; onboarding tokens are not accepted there, and vice versa.
+
+### Web Specifics
+
+The transcript is marked `translate="no"` / `notranslate` and every bubble carries `lang`: the screen translates on its own, and Chrome's page translator wrapped React text nodes in `<font>`, crashing the 20-second reply poll with `removeChild` (ABA-858).
+
+## Public API, OAuth Server and MCP Connector
+
+A versioned public REST API (`/public/v1`) that other products use on a user's behalf, our own OAuth 2.0 authorization server in front of it (ABA-707, ABA-709, ABA-713), and a read-only MCP endpoint (`/mcp`) that lets AI assistants (Claude, ChatGPT) read the same data through the same server (ABA-750). Any user can register an app; API access is free, the user's own tier still applies. Gated by `PUBLIC_API_ENABLED`, and the MCP half additionally by `MCP_ENABLED` (both must be exactly `true`). Design and invariants: `docs/wiki/features/public-api.md`, `docs/wiki/features/mcp-connector.md`; runbooks `docs/ops/public-api.md`, `docs/ops/mcp.md`.
+
+### Flow
+
+```
+Third-party app                          AI assistant (MCP)
+  │                                        │ POST /mcp (no token) → 401 + resource_metadata
+  │                                        │ GET /.well-known/oauth-protected-resource/mcp
+  │                                        │ GET /.well-known/oauth-authorization-server
+  │                                        │ POST /oauth/register → public client (source=mcp_dcr)
+  ▼                                        ▼
+app.ai-budget.pl/authorize  (consent page, PKCE S256 for every client; MCP adds resource=)
+  │ GET  /api/v1/oauth/authorize/preview   (user's JWT)
+  │ POST /api/v1/oauth/authorize/approve   → OAuthGrant (+ OAuthGrantAccount rows)
+  │                                         one-time code in Redis, 10 min (carries the resource)
+  ▼
+POST /oauth/token  → access 1 h + refresh 90 d (opaque, stored as SHA-256), bound to a resource
+  │
+  ├─ resource = null ──────────► /public/v1/*   PublicApiAuthGuard ─┐
+  └─ resource = MCP_RESOURCE_URL ► /mcp (tools)  authenticateMcp ───┤
+                                                                    ▼
+                         PublicApiAuthorizer.authorize(token, {scopes, account, resource, …})
+                         reads token, grant, client, user, membership, encryption tier from the DB
+                                                                    ▼
+                         public-read.views.ts / write adapters → ExpensesService, IncomesService, BudgetsService
+```
+
+### Components
+
+| Part | Location |
+|---|---|
+| Consent backend, developer apps, connected apps (`/api/v1`, `JwtAuthGuard`) | `apps/api/src/modules/oauth/oauth.module.ts` — `oauth-authorize.controller.ts`, `developer-apps.controller.ts`, `connected-apps.controller.ts` |
+| Token endpoint (`/oauth/token`, `/oauth/revoke`, outside `/api/v1`) | `oauth-public.module.ts`, `oauth-token.controller.ts`, `oauth-token.service.ts` (code exchange, refresh rotation, revoke) |
+| Grants, clients, scopes, codes | `oauth-grants.service.ts`, `oauth-clients.service.ts`, `oauth-scopes.ts`, `oauth-code.ts`, `oauth-crypto.util.ts`, `redirect-uri.util.ts`, `app-name.util.ts` |
+| Flags | `oauth.config.ts` (`isPublicApiEnabled`), `mcp.config.ts` (`isMcpEnabled`, issuer/resource/authorize URL defaults), `guards/public-api-enabled.guard.ts`, `guards/mcp-enabled.guard.ts` |
+| MCP additions on the auth server | `oauth-metadata.controller.ts` (`.well-known`), `oauth-register.controller.ts` + `oauth-register.service.ts` (DCR), `oauth-resource.util.ts`, `oauth-scope-policy.ts`, `ip-bucket.util.ts`, `register-body-limit.ts` |
+| Cleanup cron | `oauth-token-cleanup.cron.ts` — daily 03:30: expired token rows, zero-account grants, unused DCR clients |
+| Resource server | `apps/api/src/modules/public-api/` — controllers for account(s), categories, expenses, incomes, budgets, analytics |
+| Shared authorization | `public-api-authorizer.service.ts`; `guards/public-api-auth.guard.ts` (thin REST adapter), `guards/public-write.guard.ts`, decorators `@RequireScopes`, `@TokenOnly`, `@ConnectionLevel`, `@PublicWrite` |
+| Reads and writes | `public-read.views.ts` (shared by REST and MCP), `public-*.query.ts`, `public-*-write.adapter.ts`, `public-analytics.service.ts`, `public-idempotency.util.ts`, `list-feed.util.ts`, `cursor.util.ts`, `public-encryption-fields.ts` |
+| Errors and limits | `public-api-error.ts`, `filters/public-api-exception.filter.ts`, `public-api-rate-limit.service.ts` |
+| Reference docs | `public-api/docs/` — Swagger UI per language (`texts.{en,pl,ru}.ts`, `guide.{en,pl,ru}.md`), `openapi.ts`, `public-docs.controller.ts` |
+| MCP endpoint | `apps/api/src/modules/mcp/` — `mcp.controller.ts` (stateless, one SDK server per request), `mcp-auth.ts`, `mcp-body-limit.ts`, `mcp-server.factory.ts`, `mcp-tools.ts` (nine read tools) |
+| Admin "API apps" | `apps/api/src/modules/admin/admin-oauth-clients.controller.ts`, `apps/admin/src/app/api-apps/page.tsx` |
+| App screens | `apps/mobile/app/authorize.tsx` over `src/components/oauth-consent/`, `src/features/oauth-consent/`, `src/hooks/useOAuthConsentResume.ts`; `app/settings/developers.tsx`, `app/settings/connected-apps.tsx`; stores `developerAppsStore.ts`, `connectedAppsStore.ts` |
+| Routing and CORS | `apps/api/src/global-prefix-exclusions.ts` (`public/(.*)` plus each OAuth/MCP path named one by one), `apps/api/src/cors-options.ts`, nginx `docker/nginx/api-public.conf` |
+
+### Database Tables
+
+- `oauth_clients` (`OAuthClient`) — public `clientId` (`aba_ci_…`), `secretHash` (null for public clients), `redirectUris`, `status` (`active`/`blocked`), `isVerified`, per-client rate-limit overrides, `source` (`manual`/`mcp_dcr`), nullable `ownerUserId` (null for self-registered clients), soft `deletedAt`
+- `oauth_grants` (`OAuthGrant`) — client × user, `scopes`, `lastUsedAt`, `revokedAt`, `revokedBy` (`user`/`client`/`admin`/`reuse_detected`/`client_deleted`); one active grant per client × user through the partial unique index `oauth_grants_active_client_user_key`, which exists only in migration SQL
+- `oauth_grant_accounts` (`OAuthGrantAccount`) — the accounts a connection may address
+- `oauth_tokens` (`OAuthToken`) — `kind` (`access`/`refresh`), unique `tokenHash`, `expiresAt`, `rotatedAt`, `resource`
+- Authorization codes live only in Redis (`oauth:code:<sha256>`). `Expense`, `Income` and `Budget` gain `createdByOAuthClientId`; `ExpenseSource`/`IncomeSource` gain `api`
+
+### Key Rules
+
+- **One authorization core.** `PublicApiAuthorizer.authorize` is the only thing that decides whether a bearer may act; the REST guard passes `resource: null`, `/mcp` passes `MCP_RESOURCE_URL`. Never add a second check in the MCP layer.
+- **Opaque tokens, read from the DB on every request, never cached** — token row, grant `revokedAt`, client status, user `isActive`, the grantor's current membership, the encryption tier — so a revoke, block or demotion stops access on the next request. Tokens, codes and secrets are stored only as SHA-256 hashes and never logged; `scrubSentryEvent` strips them from Sentry.
+- **A token works on exactly one surface.** No resource = `/public/v1` only; `MCP_RESOURCE_URL` = `/mcp` only; any other `resource` is `invalid_target`. A self-registered client must send `resource`, so it can never reach the REST API.
+- **A grant works only while its grantor is owner or editor** of the addressed account, re-checked per request and at the token endpoint.
+- **Scopes are deny-by-default.** A `/public/v1` route without `@RequireScopes` is refused; `@TokenOnly()` sits on individual methods, never at class level. The grant's current scopes, not the token's, are authoritative.
+- **Codes are single-use and fail closed** (`setStrict` / `takeOnce`); refresh rotates both tokens, and reuse of a rotated refresh token revokes the whole grant.
+- **Encryption tiers.** Tier ≥ 2 is refused; tier 1 is read-only and every tier-1 text field is returned `null` and listed in `encrypted_fields` (`public-encryption-fields.ts`, guarded by its spec).
+- **Writes go through the app's services**, so anomaly checks, family feed and cache busts fire as for an app write. `createdByOAuthClientId` is set by the server only, never a DTO field; `Idempotency-Key` is scoped to the app and the account.
+- **The changes feed** is keyset on `(updated_at, id)` with a 10-second DB-clock lag; every child edit bumps the parent through `touchExpenses` / `touchIncomes`.
+- **`/mcp` is read-only because of its tool set**, not a scope check — adding a write tool needs a scope-policy decision first. Each tool call costs one rate-limit unit (the connection pre-check passes `consumeRateLimit: false`); `initialize` and `tools/list` are unmetered.
+- **DCR is abuse-bounded and fails closed**: 10/hour per IP (IPv6 per /64), 300/hour globally, through `CacheService.incrementWindow`; the product name (with confusables) is refused in `client_name`. The consent page never shows a self-registered client's logo or homepage link, only the validated redirect host.
+- **Dark means 404**, including the route-scoped body parsers of `/mcp` (128 KB) and `/oauth/register` (16 KB), which check the flag per request. The published OpenAPI document includes only `PublicApiModule` and `OAuthPublicModule`.
+- **The consent page must not be framable** (`frame-ancestors 'none'`, `X-Frame-Options: DENY` on `app.ai-budget.pl`).
+
+## Shared Expense Groups
+
+Ongoing groups (a flat, a trip, shared groceries) that an app user creates and friends **without an account** use from a browser link (ABA-640 … ABA-661). Free on every tier; abuse is bounded by hard caps and write ceilings, not a paywall. Design and invariants: `docs/wiki/features/shared-groups.md`.
+
+Groups are a **standalone model, not an `AccountType`**. A member is an `ExpenseGroupMember` row whose `userId` is nullable (NULL = guest), and every payer, share and settlement references a member id. An `Account` would have dragged in categories, budgets, wallet, `/sync`, analytics and the AI context, and its user columns are non-null FKs a guest could not fill. So groups are not account-scoped: `GroupMemberGuard` replaces `AccountContextGuard`, and the group ledger writes no `Expense` or `Income` row — no personal total ever sees group money.
+
+### Surfaces
+
+```
+App (JWT)                       Browser guest (no account)          Bots (Telegram / WhatsApp / Slack)
+  /groups/*                       /g/:token  (HTML, no script)        "group <amount> …"
+  GroupMemberGuard → 404            abg_m cookie → member               GroupBotService
+       │                            CSRF + write ceilings (Redis)            │
+       └──────────────┬─────────────────┘                                    │
+                      ▼                                                      │
+               GroupsService (facade) ◄──────────────────────────────────────┘
+                 ├─ GroupSettlementsService, GroupItemizedExpenseService (built by the facade)
+                 ├─ group-ledger.ts (pure: shares, balances, simplifyDebts)
+                 └─ every ledger write: one $transaction that bumps ExpenseGroup.ledgerVersion
+                      │ post-commit (opt-in only)
+                      ▼
+               GroupBudgetMirrorService → my share as Expense rows in my own account
+```
+
+Ledger math reuses the trip calculators (`resolveShares`, `computeBalances`, `simplifyDebts`) with the member id as the opaque user id; a non-voided settlement is fed in as a synthetic entry so it nets into the same balances. A foreign-currency expense is converted once, at write time, through the existing `ExchangeRateService` singleton.
+
+### Components
+
+| Part | Location |
+|---|---|
+| App routes (`JwtAuthGuard` + `GroupMemberGuard` / `GroupOwnerGuard` / `GroupActiveGuard`) | `apps/api/src/modules/groups/groups.controller.ts` |
+| Facade: lifecycle, membership, plain expenses, link codes, `group_activity` push, ledger primitives | `groups.service.ts` |
+| Settlements; itemised expenses | `group-settlements.service.ts`, `group-itemized-expense.service.ts` |
+| Pure ledger and currency math | `group-ledger.ts`, `group-fx.ts` (+ `group-fx.service.ts`) |
+| Line items and claims (receipt-split's calculator, imported) | `group-items.ts`, `group-items.service.ts` |
+| Ownership transfer, succession, orphan adoption | `group-ownership.service.ts` |
+| Member merge | `group-merge.ts`, `group-merge.service.ts` |
+| Balance reminder cron (`0 17 * * *`) | `group-reminder.cron.ts`, `group-reminder.ts` |
+| Guest page (outside `/api/v1`, `'g/(.*)'`) | `group-guest.controller.ts`, `group-guest.service.ts`, `helpers/group-guest-page*.ts` (11 locales) |
+| Bots | `group-bot.service.ts`, `group-bot.ts`; rendered by each bot's `handlers/group.handler.ts` |
+| Budget mirror (own module; sweep `30 3 * * *`) | `group-budget-mirror.*.ts` |
+| Shared types | `packages/shared-types/src/entities/group.ts`, `packages/shared-types/src/dto/group.ts` |
+| App | `apps/mobile/app/groups/`, `src/components/groups/` (phone + desktop), `src/stores/groupStore.ts` (server-only, online-only), `src/features/groups/` |
+
+### Database Tables
+
+- `expense_groups` (`ExpenseGroup`) — `name`, `currencyCode`, `status` (`active`/`archived`), `guestToken` (128-bit bearer credential), `guestAccess`, `ownerUserId` (FK `SetNull`), `orphanedAt`, `ledgerVersion`, `archivedAt`
+- `expense_group_members` (`ExpenseGroupMember`) — nullable `userId`, `displayName`, `claimTokenHash` (sha256 of the guest cookie secret), payout details, reminder state, `removedAt`, `mergedIntoMemberId`, budget-mirror opt-in
+- `group_expenses`, `group_expense_shares` — the expense (always in the group currency; original amount and rate kept for display) and one share per member
+- `group_expense_items`, `group_item_claims` — lines of an itemised expense and who claimed them
+- `group_settlements` — payments, voidable, never deleted
+- `group_member_events` — `owner_transferred`, `member_merged`, `claim_reset`
+- `group_cash_links`, `group_cash_suggestions` — budget mirror: links between group cash legs and personal rows, and pending suggestions
+
+### Key Rules
+
+- **Never fold groups into `Account`/`Expense`.** A ledger write never creates a personal row; the only exception is the opt-in budget mirror, run after the commit for the member who asked for it.
+- **Every incoming member, expense, settlement and item id is re-scoped to the group** (`{ id, groupId }`, members also `removedAt: null`). The group comes from the guard (app) or the token (guest), never a body field.
+- **The guest actor comes only from the hashed `abg_m` cookie secret**, never a form field. The restore code travels in a POST body, never a URL; nothing mutates on a GET. Unknown, disabled and deleted tokens render byte-identical pages.
+- **Settling**: validated against the current balances before any write and committed with a CAS on `ledgerVersion`. A payment only shrinks both balances and never flips a sign (stored clamped). Every ledger write bumps `ledgerVersion` inside its transaction.
+- **Guest write ceilings fail closed** (`CacheService.incrementWindow`) and are charged only after the actor and CSRF checks.
+- **Rotation resets every claim**; a claim reset touches one row only.
+- **A group never cascades away with its owner**: every path that ends an account calls `GroupOwnershipService` first, and every owner change is a CAS on the current `ownerUserId`.
+- **FX is converted once, at write time, never on read**; an unknown rate is refused (`FX_RATE_UNAVAILABLE`), a manual rate is bounded to 3× the provider's.
+- **Claims are materialised as ordinary share rows** in the same transaction that bumps `ledgerVersion`; the ledger never reads items.
+- **Reminders**: app users only (never guests), at most one push per user per UTC day, weekly per episode, 4 per episode; the cron never writes the ledger.
+- **Copy never promises "the minimum number of transfers"** — `simplifyDebts` is greedy.
+
+
+## Recently Deleted
+
+A 30-day window in which a soft-deleted expense or income can be listed and restored. The server side is live; the app UI is not built yet. Details: `docs/wiki/features/recently-deleted.md`.
+
+### Components
+
+| Part | Location |
+|---|---|
+| Routes (`JwtAuthGuard` + `AccountContextGuard`; restore adds `ViewerBlockGuard`) | `apps/api/src/modules/recently-deleted/recently-deleted.controller.ts` |
+| List and restore | `recently-deleted.service.ts` |
+| Retention constant (30 days) | `recently-deleted.constants.ts` |
+
+### Database Tables
+
+None of its own. It reads `expenses` and `incomes` rows with `isDeleted = true`; there is no `deletedAt` column — `updatedAt` is the deletion time, because every delete path bumps it and a deleted row is never edited afterwards.
+
+### Key Rules
+
+- **No purge, on purpose**: soft-deleted rows are also sync tombstones, and a hard delete would hit `Restrict` FKs (`AccountTransfer.linkedIncome`, `PurchaseRequest.plannedExpense`). Rows past 30 days just stop being listed or restorable.
+- **Do not write to a soft-deleted row**, or its window restarts.
+- Ids resolve as `OR: [{ id }, { clientId }]` and the resolved server PK is written.
+- A repayment is not restored while its debt is still deleted (`debt_deleted`); an income is not restored while its linked `AccountTransfer` is deleted (`transfer_deleted`).
+- Restore bumps `syncVersion` so other devices pull the row back.
+- Known gaps: a restored split receivable does not revive its guest links, and a restore writes no transaction revision.
+
+
+## Transaction Edit History
+
+On a shared account (2+ members), every edit that changes a tracked field of an expense or income — `amount`, `currencyCode`, `categoryId`, `description`, `merchant`, `date` — writes a revision with the editor and a `{ field: { from, to } }` diff, so members can see "edited by Anna, 12 → 15". API only; the app UI is not built yet. Details: `docs/wiki/features/transaction-edit-history.md`.
+
+### Components
+
+| Part | Location |
+|---|---|
+| Recording and listing (`TransactionRevisionsService`, no controller of its own) | `apps/api/src/modules/transaction-revisions/transaction-revisions.service.ts` |
+| Pure diff of tracked fields | `transaction-revision.util.ts` |
+| Read routes `GET /expenses/:id/revisions`, `GET /incomes/:id/revisions` | `expenses.controller.ts`, `incomes.controller.ts` |
+| Callers of `record()` | `ExpensesService.update`, `IncomesService.update` — reached from the controllers and from the `/sync` handlers (`sync/handlers/expense.handler.ts`, `income.handler.ts`) |
+
+### Database Tables
+
+- `transaction_revisions` (`TransactionRevision`) — `accountId` (cascade), `entityType` (`expense`/`income`), `entityId`, `userId` (`SetNull`), `changes` (JSON), `createdAt`; only the newest 20 per transaction are kept
+
+### Key Rules
+
+- **Recorded inside the update `$transaction`**, never fire-and-forget.
+- **Both update paths must pass the editor id** (controller `req.user.id`, the `/sync` handlers' `userId`); a caller that omits it silently records nothing.
+- **E2EE rows are skipped**: a row with `encryptedPayload` on either side has zeroed plaintext columns, and plaintext history must never copy encrypted values. At `encryptionTier >= 1`, `description` and `merchant` are ciphertext and are left out of the diff.
+- Single-member accounts record nothing.
+- The service is `@Optional()` in both services so positionally constructed specs still compile.
+
+
+## All-Accounts Analytics
+
+Spending and income across every account the user belongs to, in the display currency, for a chosen period: totals with a previous-period comparison, a row per account, categories merged by name, monthly bars, optional **account groups** (Pro), and one consolidated PDF / Excel / CSV report whose figures match the screen. Details: `docs/wiki/features/all-accounts-analytics.md`.
+
+### Components
+
+| Part | Location |
+|---|---|
+| `GET /all-accounts/analytics`, `POST /all-accounts/reports` (`JwtAuthGuard` only) | `apps/api/src/modules/all-accounts/all-accounts.controller.ts` (period capped at 1096 days) |
+| `/account-groups` CRUD and per-group analytics (`@RequireTier('pro')`) | `account-groups.controller.ts`, `account-groups.service.ts` |
+| Ledger loading (`loadLedger`, cached 120 s) | `all-accounts.service.ts` |
+| Pure aggregation (`aggregateLedger`) | `all-accounts.util.ts` |
+| Consolidated report | `consolidated-report.service.ts` |
+| Shared types | `packages/shared-types/src/dto/all-accounts.ts` |
+| App | `app/all-accounts` → `src/components/all-accounts/` (phone + desktop), `src/features/all-accounts/`, `src/components/reports/ReportScopePicker.tsx` |
+
+### Database Tables
+
+- `account_groups` (`AccountGroup`) — per user (cascade), `name`; at most 20 per user
+- `account_group_accounts` (`AccountGroupAccount`) — `(groupId, accountId)` join, cascading from both sides
+- A consolidated report is an ordinary `generated_reports` (`GeneratedReport`) row with `accountId = null`, owned by `userId`, expiring after 7 days
+
+### Key Rules
+
+- **Membership is the only scope.** The controllers have no `AccountContextGuard`; `exclude` and a group's account ids only narrow the caller's memberships, never act as an allow-list.
+- **Screen and file come from the same `loadLedger` + `aggregateLedger`** — never compute totals a second way.
+- **Noted rows** (planned, split receivable, transfer between two included accounts) are listed but never totalled.
+- Categories merge by **displayed name**, never by id; a subcategory rolls up to its parent.
+- Tier-2 encrypted accounts are listed but never queried.
+- Groups are Pro on every route (the report service repeats the check for `groupId`); a downgraded user keeps their groups, hidden until they upgrade.
+- Amounts convert through `common/utils/fx.ts`; one without a rate is left out and flags `fxApproximate`.
+
+
+## Net Worth
+
+Cash + investments + money owed to the user − the user's debts, across every account the user belongs to, now and at the last 12 month-ends, in the display currency (ABA-799). The home Net Capital widget (current account's wallet only) opens this screen. Details: `docs/wiki/features/net-worth.md`.
+
+### Components
+
+| Part | Location |
+|---|---|
+| `GET /net-worth?exclude=` (`JwtAuthGuard` only) | `apps/api/src/modules/insights/net-worth.controller.ts` |
+| History reconstruction and conversion (cached 10 min under `nw:{userId}:{currency}:{excluded}`) | `net-worth.service.ts`, pure `net-worth.util.ts` |
+| App | `app/net-worth.tsx` → `src/components/net-worth/NetWorthView.tsx`, `src/features/net-worth/` |
+
+### Database Tables
+
+None of its own. **History is rebuilt, not stored**: a month-end balance is today's wallet balance minus every movement dated after it; holdings are rebuilt from `InvestmentTransaction` and priced from `AssetPriceHistory` (else average cost, and the month is `approximate`); debts count from their date minus repayments made by then.
+
+### Key Rules
+
+- **Never read `req.accountId`**, and never treat `exclude` as an allow-list — memberships are the scope. Tier-2 accounts are listed, never summed.
+- **The movement sources must stay identical to `buildWalletBalanceRow`**, or the history and today's figure stop meeting at the current month.
+- Past months convert at that month's closing rates (`HistoricalRateService.getMonthEndRates`); an unknown rate leaves the amount out and sets `fxApproximate`.
+- Investments use the stored `Asset.currentPrice`; no Twelve Data call on this path.
+
+## Household Costs (Vehicles, Pets, Children, Utilities)
+
+Four modules answer "what does this thing cost me": a car (`vehicles`), a pet (`pets`), a child (`children`) and the utility bills of a home (`utilities`). None of them creates money of its own — each attaches a typed record to an **existing expense** and reads totals back from it. Feature pages: `docs/wiki/features/vehicle-fuel-log.md`, `docs/wiki/features/pet-costs.md`, `docs/wiki/features/child-costs.md`, `docs/wiki/features/utility-bill-readings.md`.
+
+### The Shared Pattern
+
+```
+Expense (encrypted under E2EE, on the sync hot path — never altered)
+  ├─ FuelLog        1:1  litres, odometer, full tank        (vehicles)
+  ├─ VehicleCost    1:1  kind: fuel|service|insurance|...   (vehicles)
+  ├─ PetCost        1:1  kind: food|vet|grooming|...        (pets)
+  ├─ UtilityReading 1:1  consumption, unit, unitPrice       (utilities)
+  ├─ ExpenseChild   n:m  share per child                    (children)
+  └─ ExpenseItem.childId  one receipt line → one child      (children)
+
+Category rules (vehicles, pets, children):
+  entity.categoryRules / Child.categoryIds
+    └─ apply*CategoryRules ── writes rows with source = 'category'
+         ├─ after expense create / update / bulk and sync pushes (fire-and-forget)
+         └─ daily catch-up cron for imports and other crons
+```
+
+- **Side tables, not `Expense` columns**: the expense row is encrypted and synced constantly, so a feature record beside it cannot break the transactions list.
+- **Vehicles, pets and children are three deliberately parallel implementations**, not one generalised "tracked entity" layer; that refactor touches live features and is a separate task.
+- **Vehicles, pets and utilities are online-only** in the app (no SQLite mirror; a failed load is an error with a retry, never an empty list or a zero). **Children are offline-first**: SQLite tables, the device `sync_queue` and `/sync` pull/push.
+
+### Components
+
+| Part | Location |
+|---|---|
+| Vehicles | `apps/api/src/modules/vehicles/` — `vehicles.service.ts`, pure `fuel-stats.util.ts`, `vehicle-history.util.ts`, `vehicle-cost-rules.util.ts`, `service-interval.util.ts`, `vehicle-renewal.util.ts` |
+| Vehicle crons | `vehicle-cost-rules.cron.ts` (04:40), `vehicle-renewal.cron.ts` (08:00 — insurance / inspection / service dates and the km service nudge) |
+| Bot fuel log | `apps/api/src/common/bot-receipt-fuel.ts` — "Add to fuel log" after a scanned fuel receipt in Telegram, WhatsApp and Slack |
+| Pets | `apps/api/src/modules/pets/` — `pets.service.ts`, `pet-history.util.ts`, `pet-cost-rules.util.ts` |
+| Pet crons | `pet-cost-rules.cron.ts` (04:45), `pet-reminder.cron.ts` (08:15 — vaccination and parasite-treatment dates) |
+| Children | `apps/api/src/modules/children/` — `children.service.ts`, `child-product-rules.service.ts`, `child-statement.service.ts` + `child-statement.pdf.ts`; `ExpenseChildrenController` mounts the attribution routes under `/expenses` |
+| Child crons and sync | `child-category-rules.cron.ts` (04:30); `modules/sync/handlers/child.handler.ts`, `expense-child.handler.ts` |
+| Child attribution maths | `apps/api/src/common/utils/child-attribution.ts`, mirrored in `packages/shared-utils` |
+| Utilities | `apps/api/src/modules/utilities/` — `utilities.service.ts`, pure `utility-stats.util.ts` |
+| App | `src/components/{vehicles,pets,children}/` (phone + `desktop/`), `src/features/{vehicles,pets,children}/`, `app/utilities/index.tsx`; vehicle and pet lists share `src/utils/accountListCache.ts` |
+
+### Database Tables
+
+- `vehicles` (`Vehicle`) — `name`, `fuelType`, `categoryRules` (JSON `[{ categoryId, kind }]`), renewal dates, `nextServiceOdometer`, `serviceOdometerNudgedFor`, `serviceIntervalKm`, `lastServiceKm`, `isDeleted`
+- `fuel_logs` (`FuelLog`) — unique `expenseId`, `vehicleId`, `liters`, `odometerKm`, `isFullTank`
+- `vehicle_costs` (`VehicleCost`) — unique `expenseId`, `vehicleId`, `kind`, `source`
+- `pets` (`Pet`) — `name`, `species`, `birthday`, `nextVaccinationDate`, `nextParasiteTreatmentDate`, `categoryRules`, `isDeleted`
+- `pet_costs` (`PetCost`) — unique `expenseId`, `petId`, `kind`, `source`
+- `children` (`Child`) — `name` (tier-1 encrypted), `color`, `archivedAt`, `categoryIds`, `clientId`, sync and encryption fields; unique `(accountId, name)` and `(accountId, clientId)`
+- `expense_children` (`ExpenseChild`) — unique `(expenseId, childId)`, `share` (shares on one expense sum to 1), `source`, soft delete
+- `product_child_rules` (`ProductChildRule`) — learned product → child suggestion, unique `(accountId, productKey)`; server-only
+- `expense_items.child_id` — line attribution
+- `utility_readings` (`UtilityReading`) — unique `expenseId`, `kind`, `consumption`, `unit`, `propertyLabel`, `unitPrice`
+
+### Key Rules
+
+- **Account-scoped**: every query filters by `accountId`; an expense id is accepted as PK or `clientId` and the **resolved PK** is written, never the raw route param. Every write is behind `ViewerBlockGuard`.
+- **Display currency from the caller**: totals convert to `req.user.currencyCode` through `common/utils/fx.ts`; an amount with no known rate is listed but left out of every total and flags `fxApproximate`. Soft-deleted expenses never count; utilities and children also drop planned expenses, children drop split receivables (`isSplitReceivable`, never `isDebt`).
+- **Never undo a person's decision**: a manual write stores `source: null`; a rule only touches rows with no record or a `source = 'category'` one. A removal leaves a `kind = 'none'` (or soft-deleted, for children) person-owned row so the rule does not put it back — vehicles always, pets only when a live pet's rule claims the category. `none` is filtered out of every figure.
+- **One expense, one vehicle record**: an expense is a fill-up or another car cost, never both — each write deletes the other row. Fuel-log reads also filter on the expense's current `accountId`, so an expense moved to another account leaves the source account's stats.
+- **Whole and line child attribution are mutually exclusive** per expense; the last write wins.
+- **Children carry the strictest privacy**: `Child` stores only name, colour and archive state; the name is never logged or sent to telemetry, a model or the community layers, and on an encrypted account the server holds only `enc:<clientId>`. No model call anywhere in the feature; learned product rules are only suggestions.
+- **Child statement**: Pro, editors only, `encryptionTier === 0`, at most 24 months, sent once through `@Res()`; receipt appendix capped at 150 receipts, 40 MB in all, 3 MB per image. It states what the user entered and is not a legal document.
+- **Move to another account** (vehicles, children): only an entity with nothing attributed on live expenses, only to an account where the caller is owner or editor; category rules and product rules do not travel.
+- **Route order**: `GET`/`DELETE /vehicles/fuel-logs/:expenseId`, `DELETE /vehicles/costs/:expenseId` and `GET`/`DELETE /pets/costs/:expenseId` are declared before `:id`.
+- **Reminders** (vehicles, pets) page with `paginateById`, push under the `subscription_renewal` switch, and the `@Cron` method takes no argument — the cron library calls its tick with its own arguments, so a defaulted `today` parameter would receive one of them. Past dates never fire; dates are not rolled forward by the server.
+
+## Credit Card Statement Cycle
+
+An account can be marked as a credit card: a statement day, a payment due day and an optional credit limit. The wallet screen shows this cycle's spend, the statement and due dates and a utilisation bar; the API pushes a reminder 3 days before the due date with the closed statement's amount. Paying the card stays an ordinary account transfer. Design and invariants: `docs/wiki/features/card-statement-cycle.md`.
+
+### Components
+
+| Part | Location |
+|---|---|
+| Routes `GET`/`PUT`/`DELETE /card-cycles` (`JwtAuthGuard` + `AccountContextGuard`, writes `ViewerBlockGuard`) | `apps/api/src/modules/card-cycles/card-cycles.controller.ts` |
+| Summary (current cycle, spend, utilisation, due date, closed statement) | `card-cycles.service.ts` |
+| Reminder (daily 09:00, `paginateById`, push to the account owner) | `card-cycle-reminder.cron.ts` |
+| Cycle date rules (duplicated pair) | `apps/api/src/common/utils/card-cycle.ts` ↔ `packages/shared-utils/src/formatting/card-cycle.ts`, parity in `cardCycleParity.test.ts` |
+| App | `apps/mobile/src/components/wallet/CardCycleSection.tsx` |
+
+### Database Tables
+
+- `card_cycle_settings` (`CardCycleSetting`) — one row per account (unique `accountId`, cascades from `Account`): `currencyCode`, `statementDay`, `dueDay`, `creditLimit` (nullable), `lastRemindedDueDate`
+
+### Key Rules
+
+- **Its own table, not a field on `WalletBalance`**: a balance row is per currency, a card is per account. Server-only — no SQLite mirror, so web works unchanged.
+- **The cut-off is the transaction date (`Expense.date`)**; banks that cut off by posting date may differ by a day or two.
+- **A statement day 29–31 clamps to the month's last day**; the statement day itself belongs to the closing cycle.
+- **Spend** excludes soft-deleted, planned and split-receivable rows and counts only the card's currency — no conversion.
+- **The reminder fires at most once per due date**: `lastRemindedDueDate` is written BEFORE the push, so a lost push does not repeat daily; a schedule edit resets it. An empty statement sends nothing. It reuses the `debt_reminder` type, so the debt-reminders switch gates it.
+- **`card-cycle.ts` is a duplicated pair** (the API cannot import shared-utils at runtime) — change both.
+- No interest or minimum-payment advice.
+
+## Merchant Spending Caps
+
+A monthly cap for one merchant, with a progress bar on the Merchants settings screen and a push at 80% and 100%. Independent of budgets: it changes no budget total and writes no expense. Design and invariants: `docs/wiki/features/merchant-spending-caps.md`.
+
+### Components
+
+| Part | Location |
+|---|---|
+| Routes `GET`/`PUT /merchant-caps`, `DELETE /merchant-caps/:id` (`JwtAuthGuard` + `AccountContextGuard`, writes `ViewerBlockGuard`) | `apps/api/src/modules/merchant-caps/merchant-caps.controller.ts` |
+| CRUD, progress, the alert hook `checkAccount` | `merchant-caps.service.ts` |
+| Hook caller (on every expense write, `@Optional()` injection) | `apps/api/src/modules/budgets/budget-alert.service.ts` — `checkBudgetsForAccount` |
+| Push copy | `merchantCapTitle` / `merchantCapBody` in `notification-i18n.ts` |
+| App | `apps/mobile/src/components/settings/merchants/MerchantCapsCard.tsx`, `src/features/merchants/` |
+
+### Database Tables
+
+- `merchant_spending_caps` (`MerchantSpendingCap`) — unique `(accountId, merchantNormalized)`: `merchantLabel`, `amount`, `currencyCode`, `userId` (push recipient), alert state `lastAlertPeriod` (`YYYY-MM`) + `lastAlertThreshold`
+
+### Key Rules
+
+- **Merchant key** is `trim().toLowerCase()`, the same as the merchant category rules; the spend query matches `merchant` with a case-insensitive `equals`.
+- **Spend** is the full `Expense.amount` in the cap's currency for the calendar month (category splits are not used), net of linked same-currency refunds (`sumRefundsForExpenses`), floored at zero; deleted, planned and split-receivable rows excluded.
+- **Alert claim before the push**: a conditional `updateMany` on the previous alert state is the CAS, so concurrent writes push once; it is rolled back if the send fails. Push type `budget_alert`, so quiet hours and the budget-alert switch apply.
+- **`checkAccount` never throws** — it runs inside the expense write path.
+- Every query filters by `accountId`; delete matches `{id, accountId}`. Hard ceiling 30 caps per account, no tier gate.
+
+## Gazetka Match (Promo Leaflets)
+
+The user shares screenshots or a PDF of a store promo leaflet; the server reads the promo lines with the vision model and the app shows **only the promos on products this user already buys**, next to what they usually pay. Admins can upload a leaflet from the dashboard, review it and publish it; an opt-in community layer turns confirmed promos into a daily push. The server never fetches a leaflet itself. Design and invariants: `docs/wiki/features/gazetka-match.md`; runbook: `docs/ops/leaflets.md`.
+
+### Flow
+
+```
+App (shopping list "Check a leaflet", Android share chooser, desktop drop zone)
+  │ POST /leaflets → POST /leaflets/:id/pages (one image each)  or  POST /leaflets/:id/pdf (202, background)
+  ▼
+LeafletsService ── account checks (tier >= 2 refused, empty basket refused)
+  │                └─ 10-page cap, then LeafletBudgetService.consume (admins exempt)
+  ▼
+LeafletReaderService (vision) ── chain, validity, promo lines
+  └─ closed-set match against the numbered usual basket (index or null) → LeafletItem rows
+  └─ CommunityPromoService.contribute (if COMMUNITY_PROMOS_ENABLED and the user consented)
+
+Admin dashboard → POST /admin/leaflets (images or one PDF) → review → publish
+  └─ CommunityPromoObservation rows (isAdmin, confirm alone)
+
+LeafletPromoPushCron (09:00) ── confirmed promos valid today
+  └─ users with notifyLeafletPromos who bought at that chain in 90 days, ≤ 1 push/day
+```
+
+### Components
+
+| Part | Location |
+|---|---|
+| User routes (`JwtAuthGuard` + `AccountContextGuard`, no viewer block) | `apps/api/src/modules/leaflets/leaflets.controller.ts`, `leaflets.service.ts` |
+| Admin routes (`JwtAuthGuard` + `AdminGuard`, a separate controller) | `leaflets-admin.controller.ts`, `leaflets-admin.service.ts` |
+| Vision read | `leaflet-reader.service.ts`, `leaflet-page.util.ts` |
+| Usual basket, usual price, closed-set match | `leaflet-basket.util.ts`, `leaflet-basket.loader.ts` |
+| Page budget (`LEAFLET_PAGES_FREE`/`PRO`/`BUSINESS`, default 20/200/500) | `leaflet-budget.service.ts` |
+| Community layer | `community-promo.service.ts`, `community-promo.util.ts` |
+| Push | `leaflet-promo-push.cron.ts` (09:00; log cleanup 03:15, 90 days), `leaflet-push-match.service.ts`, `leaflet-notification-ledger.service.ts` |
+| Prune (03:30: expired personal leaflets, ended promos) | `leaflet-prune.cron.ts` |
+| App | `apps/mobile/app/leaflets/index.tsx`, `src/components/leaflets/` (phone + desktop), `src/features/leaflets/`, `src/services/leaflets.api.ts` |
+| Admin page | `apps/admin/src/app/leaflets/page.tsx`, `components/leaflets/` |
+
+### Database Tables
+
+- `leaflets` (`Leaflet`) — `kind` `personal` (account-scoped) or `admin` (`accountId` null); `source`, `chain`, `validFrom`/`validTo`, `status` (`reading`/`done`/`failed`), page counters, `publishedAt`/`unpublishedAt`, `expiresAt`
+- `leaflet_items` (`LeafletItem`) — extracted promo lines: `canonicalName`, `promoPrice`, `regularPrice`, `condition`, `basketName`, `usualPrice`, `addedToListAt`
+- `community_promo_observations` (`CommunityPromoObservation`) — no account or user id: chain, product, price, validity, a one-way `contributorKey`, `trusted`, `isAdmin`, `adminLeafletId`; unique per contributor per promo; pruned the day after `validTo`
+- `leaflet_notification_log` (`LeafletNotificationLog`) — one row per (account, promo) pushed; `id` is the push's `pushKey`, `openedAt`
+
+### Key Rules
+
+- **Never fetch a leaflet** from a retailer or aggregator site; input is only what a user or admin uploads. **Images are never stored** — only extracted facts.
+- **Matching is closed-set**: an index into the numbered basket or `null`, never a string-similarity fallback. A product the user does not buy is never shown.
+- **The page budget is separate from the AI limit**, and the 10-page cap is checked before the budget is consumed. Admins (`ADMIN_EMAILS`) skip the budget and write no COGS row.
+- **The admin contributor key is derived per leaflet** (`<adminUserId>:<leafletId>`); a per-admin key made two leaflets collide on the unique constraint.
+- **A published admin leaflet is read-only**: unpublish first, then edit.
+- **A `reading` leaflet with no progress for 30 minutes is treated as failed** — progress is in memory and assumes one API instance.
+- **`COMMUNITY_PROMOS_ENABLED` defaults off**: nothing contributes, confirms or pushes; admin publishes still write rows that wait. Confirmation needs `COMMUNITY_PROMO_K` (3) contributors, `COMMUNITY_PROMO_MIN_TRUSTED` (2) of them trusted.
+- **The push has a 20-hour floor**, not a calendar day, so a drifting 09:00 cron still pushes daily but at most once. Tier-1 accounts never match (encrypted merchant); tier 2 is refused in the reader.
+- **Copy** says "according to a leaflet — check in store", never "buy now".
+
+## E-mail Receipts (Inbound Mail)
+
+Forwarding e-receipts by e-mail (ABA-644). A user creates a private address (`<token>@in.ai-budget.pl`) and points a mailbox forwarding rule at it; every forwarded message becomes a **pending** item in an in-app inbox and is saved only when the user confirms it. Mail is received by our own receive-only SMTP container. **It ships dark**: `INBOUND_MAIL_ENABLED` defaults off and the container profile runs only with `INBOUND_MAIL_CONTAINER=true`. Design and invariants: `docs/wiki/features/inbound-e-receipts.md`; runbook: `docs/ops/inbound-mail.md`.
+
+### Message Flow
+
+```
+sender MTA ──SMTP :25──▶ inbound-mail container (inbound-mail-net only, no spool)
+   RCPT TO → POST /api/v1/internal/inbound-mail/rcpt { token, remoteIp } → accept | unknown | limited
+   DATA    → byte caps → SPF/DKIM/DMARC/ARC → MIME parse in a worker → pick ONE document
+           → POST /api/v1/internal/inbound-mail/messages
+   reply   → 250 only after 202 / 409 / 422; 451 on API down; 452 cap; 550 unknown token / auth fail
+API → InboundReceipt(status=received) → fire-and-forget process():
+        dedup → text pre-filter → charge one scan → extract (OCR) → pending + push
+App → banner / push → inbox → receipt confirm card → normal expense create
+    → POST /inbound-receipts/:id/confirm { expenseId }
+```
+
+### Components
+
+| Part | Location |
+|---|---|
+| User routes (`InboundMailEnabledGuard` + `JwtAuthGuard` + `AccountContextGuard`, writes `ViewerBlockGuard`) | `apps/api/src/modules/inbound-mail/inbound-mail.controller.ts` |
+| Internal routes (`InternalSecretGuard`: secret, private-CIDR socket peer, no proxy headers) | `inbound-mail-internal.controller.ts`, `guards/internal-secret.guard.ts` |
+| Address and the RCPT decision | `inbound-mail-address.service.ts` |
+| Ingest, inbox, confirm, dismiss, retry | `inbound-receipt.service.ts` |
+| Dedup, pre-filter, quota, extraction | `inbound-receipt-processor.service.ts` |
+| Crons (requeue every 10 min; purge daily 03:30, also with the flag off) | `inbound-mail.cron.ts` |
+| Limits and retention | `inbound-mail.config.ts` |
+| SMTP container | `apps/inbound-mail/`, `docker/Dockerfile.inbound-mail`, service `inbound-mail` (profile `inbound-mail`) in `docker-compose.prod.yml` |
+| App | `app/settings/email-receipts.tsx`, `app/inbox/email-receipts.tsx`, `app/inbox/email-receipt.tsx`, `src/components/inboundMail/`, `src/stores/inboundReceiptStore.ts` |
+
+### Database Tables
+
+- `inbound_mail_addresses` (`InboundMailAddress`) — one per user (unique `userId`, unique 16-char `token`), `targetAccountId`, `disabledAt`, `rotatedAt`
+- `inbound_receipts` (`InboundReceipt`) — `kind` (`receipt`/`forwarding_verification`), `status` (`received` → `processing` → `pending` → `confirmed`/`dismissed`, or `duplicate`, `not_a_receipt`, `quota_exceeded`, `unsupported`, `failed`), unique `(userId, messageIdHash)`, auth verdicts, the one chosen `document`/`documentText` (nulled at confirm/dismiss), `extraction`, `verificationCode`, `expenseId`, `expiresAt`; excluded from account backups
+
+### Key Rules
+
+- **Never auto-save an expense from mail.** Mail is attacker-writable; the user's confirm is the security boundary, and the client creates the expense (`source: 'ocr'`) through the normal offline-first path.
+- **The SMTP reply is `250` only after the API persisted the message**; the container has no queue, and a `451` costs nothing because the sender retries. **Never bounce** — rejections happen in-session.
+- **The internal API is protected three ways**: nginx answers 404 for `/api/v1/internal/` with a **case-insensitive regex**; `InternalSecretGuard` reads the peer from the socket, never a header; the container shares only `inbound-mail-net` with the API.
+- **Per-address caps (20/hour, 60/day) reserve with `incrementWindow` before comparing and fail closed** — a Redis outage is `503` → SMTP `451`.
+- **No AI request before dedup and the text pre-filter**; a "not a receipt" result is refunded.
+- **Nothing named in a mail is fetched, and the subject never reaches the model.**
+- **The dedup key hashes Message-ID and content**, so a reused Message-ID cannot suppress a later receipt.
+- **A Gmail forwarding code** is trusted only after strict header and DKIM checks, kept 30 minutes and shown only in Settings — never in a push.
+- **Tier-2 encryption is refused** at create, at RCPT and at processing; raising an account to tier 2 disables its addresses in the same transaction. Tier 1 is allowed, with a 7-day retention instead of 30.
+- **Every user-facing `:id` route filters on `id AND userId AND accountId`**; a miss is `404`.
+- **The expiry purge keeps running with the flag off.**
+
 ## Security
 
 ### Authentication Flow

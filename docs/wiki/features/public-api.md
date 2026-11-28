@@ -115,8 +115,8 @@ one in `global-prefix-exclusions.ts`, never `oauth/(.*)`, so the consent page's 
 **Data model.** `OAuthClient` (public `clientId` `aba_ci_…`, `secretHash` null for public clients,
 `redirectUris`, `status` active/blocked, `isVerified`, per-client rate-limit overrides, soft
 `deletedAt`), `OAuthGrant` (client × user, `scopes`, `lastUsedAt`, `revokedAt`,
-`revokedBy` user/client/admin/reuse_detected), `OAuthToken` (`kind` access/refresh, unique
-`tokenHash`, `expiresAt`, `rotatedAt`). `OAuthGrantAccount` (table `oauth_grant_accounts`, grant ↔ account, the set of accounts a
+`revokedBy` user/client/admin/reuse_detected/client_deleted), `OAuthToken` (`kind` access/refresh, unique
+`tokenHash`, `expiresAt`, `rotatedAt`, nullable `resource` — the MCP binding, see `mcp-connector.md`). `OAuthGrantAccount` (table `oauth_grant_accounts`, grant ↔ account, the set of accounts a
 connection may address; migration `20261102000000_public_api_multi_account` copied the old
 `oauth_grants.account_id` rows into it and merged duplicate active grants). Codes live only in Redis (`oauth:code:<sha256>`).
 `Expense.createdByOAuthClientId` plus the index `expenses (account_id, updated_at, id)`;
@@ -223,7 +223,7 @@ token: re-consent in another tab changes what every existing token can do. Refre
 
 **Scope checks are deny-by-default.** A `/public/v1` route with no `@RequireScopes` is refused
 (`insufficient_scope`); the only opt-out is an explicit `@TokenOnly()` and it sits on the
-`GET /account` method only — never at class level, where it would silently exempt every unscoped
+`GET /account` and `GET /accounts` methods only (the latter with `@ConnectionLevel()`) — never at class level, where it would silently exempt every unscoped
 route added later. The scope is the consent boundary the user saw.
 
 **Authorization codes are single use and fail closed.** Stored with `CacheService.setStrict`

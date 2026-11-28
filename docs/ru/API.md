@@ -4,7 +4,7 @@
 
 Базовый URL: `/api/v1`
 
-Несколько маршрутов обслуживаются **без** префикса `/api/v1`, потому что их URL зарегистрирован у третьей стороны или передаётся людям вне приложения. Авторитетный список — `GLOBAL_PREFIX_EXCLUDED_ROUTES` в `apps/api/src/global-prefix-exclusions.ts`: вебхуки Stripe, Telegram, WhatsApp и Slack (`/webhooks/stripe`, `/telegram/webhook`, `/whatsapp/webhook`, `/slack/events`, `/slack/interactivity`), установка Slack (`/slack/install`, `/slack/oauth/callback`) и два поддерева гостевых страниц, покрытых шаблонами — `/s/...` (гостевые ссылки разделения чека) и `/sl/...` (гостевые ссылки списка покупок).
+Несколько маршрутов обслуживаются **без** префикса `/api/v1`, потому что их URL зарегистрирован у третьей стороны или передаётся людям вне приложения. Авторитетный список — `GLOBAL_PREFIX_EXCLUDED_ROUTES` в `apps/api/src/global-prefix-exclusions.ts`: вебхуки Stripe, Telegram, бота поддержки, WhatsApp и Slack (`/webhooks/stripe`, `/telegram/webhook`, `/support-telegram/webhook`, `/whatsapp/webhook`, `/slack/events`, `/slack/interactivity`), установка Slack (`/slack/install`, `/slack/oauth/callback`), три поддерева гостевых страниц, покрытых шаблонами, — `/s/...` (гостевые ссылки разделения чека), `/sl/...` (гостевые ссылки списка покупок) и `/g/...` (гостевые страницы общих групп), — а также платформа публичного API: `/public/...` (`/public/v1/*`, `/public/docs/*`), `/oauth/token`, `/oauth/revoke`, `/oauth/register`, `/mcp` и три документа `/.well-known/oauth-*`.
 
 Обозначения гардов ниже: **JWT** = `JwtAuthGuard`; **контекст аккаунта** = `AccountContextGuard` (нужен `X-Account-Id`); **закрыто для viewer** = `ViewerBlockGuard` (403 для роли `viewer`); **Pro** = `SubscriptionTierGuard` + `@RequireTier('pro')` (403 с `code: "TIER_REQUIRED"`); **с учётом AI** = `AiUsageGuard` + `@TrackAiUsage(feature, cost)` (списывается из месячной квоты AI-запросов).
 
@@ -6202,6 +6202,678 @@ GET /health/ai
 Вебхук (вне `/api/v1`): `POST /support-telegram/webhook` - обновления Telegram для отдельного бота
 поддержки, аутентификация заголовком `X-Telegram-Bot-Api-Secret-Token` (`SUPPORT_TELEGRAM_WEBHOOK_SECRET`).
 Ответ маршрутизируется только по `reply_to_message`. Рунбук: `docs/ops/support-bot.md`.
+
+**Письма о непрочитанных ответах (ABA-857).** Непрочитанный ответ разработчика отправляется письмом один раз на пачку непрочитанного: сразу, если у пользователя нет push-токена, иначе почасовым кроном через 12 часов. В каждом письме есть ссылка отписки, действующая только на письма поддержки:
+
+| Метод | Путь | Назначение |
+|-------|------|------------|
+| `GET` / `POST` | `/mail/unsubscribe/support` | Публичный. HMAC-токен от `unsubscribe:support:<userId>`; выставляет только `SupportThread.emailEnabled = false`. Ответ одинаков для верного и неверного токена |
+
+---
+
+## Публичный API и OAuth
+
+Версионируемый REST API (`/public/v1`), через который сторонние приложения работают от имени пользователя, и наш собственный сервер авторизации OAuth 2.0 перед ним. См. `docs/wiki/features/public-api.md`; ранбук включения и отката — `docs/ops/public-api.md`.
+
+Всё скрыто за `PUBLIC_API_ENABLED` (любое значение, кроме `true`, означает «выключено»): пока флаг выключен, все маршруты этого раздела, кроме `/admin/oauth-clients`, отвечают `404`. `/public/*`, `/oauth/token` и `/oauth/revoke` обслуживаются **без** префикса `/api/v1` и с `Access-Control-Allow-Origin: *` (без credentials). Интерактивный справочник (Swagger UI на английском, польском и русском) строится только из `PublicApiModule` и `OAuthPublicModule`:
+
+| Метод | Путь | Назначение |
+|-------|------|------------|
+| `GET` | `/public/docs` | `302` на `/public/docs/{en,pl,ru}` по `Accept-Language` (иначе `en`) |
+| `GET` | `/public/docs/{en,pl,ru}` | Swagger UI; сам документ — `/public/docs/<lang>/openapi.json` (и `openapi.yaml`). Регистрируется при старте и только при включённом флаге |
+| `GET` | `/public/docs/oauth2-redirect.html` | Страница, на которую возвращается окно «Authorize» в Swagger UI, — один redirect URI на все три языка |
+
+### Поток авторизации
+
+PKCE S256 обязателен для любого клиента, конфиденциального или публичного. Scopes: `expenses:read`, `expenses:write`, `receipts:read`, `categories:read`, `incomes:read`, `incomes:write`, `budgets:read`, `budgets:write`, `analytics:read`.
+
+1. Приложение отправляет пользователя на страницу согласия `https://app.ai-budget.pl/authorize?response_type=code&client_id&redirect_uri&scope&state&code_challenge&code_challenge_method=S256` (необязательный `resource` — см. [MCP-коннектор](#mcp-коннектор)).
+2. Страница обращается к бэкенду согласия (ниже) с JWT пользователя. «Разрешить» возвращает redirect URL с одноразовым `code` (Redis, 10 мин); «Отклонить» — `redirect_uri?error=access_denied&state=…`.
+3. Приложение обменивает код в `POST /oauth/token`.
+
+Бэкенд страницы согласия — под `/api/v1`, JWT самого пользователя, без `X-Account-Id`:
+
+| Метод | Путь | Назначение |
+|-------|------|------------|
+| `GET` | `/oauth/authorize/preview` | Query — параметры OAuth-запроса (`client_id`, `redirect_uri`, `scope`, `code_challenge`, `code_challenge_method`, `response_type`, `state`, `resource`). Возвращает приложение (название, логотип, сайт, отметку о проверке, имя разработчика), понятные описания scopes и аккаунты пользователя с причиной недоступности для каждого (viewer, шифрование уровня ≥ 2) и флагом `connected`. Неизвестный клиент или незарегистрированный `redirect_uri` — это ошибка, а не редирект |
+| `POST` | `/oauth/authorize/approve` | Те же поля OAuth плюс `decision` (`allow`/`deny`) и `account_ids` (≤ 50; одиночный `account_id` из первой фазы по-прежнему принимается). Создаёт или обновляет единственный активный грант на пару «клиент × пользователь» (повторное согласие заменяет набор аккаунтов) и возвращает redirect URL. Лимит 20 в минуту |
+
+### Эндпоинт токенов
+
+```http
+POST /oauth/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=authorization_code&code=aba_ac_...&redirect_uri=https://app.example.com/cb&code_verifier=...&client_id=aba_ci_...
+```
+
+Публичный по замыслу (без JWT). Аутентификация клиента — HTTP Basic или `client_id`/`client_secret` в теле; публичный клиент передаёт только `client_id` (защищает его один PKCE). Принимаются и form-urlencoded, и JSON. `grant_type` — `authorization_code` или `refresh_token` (необязательные подмножество `scope` и `resource`).
+
+**Ответ** `200 OK` (`Cache-Control: no-store`)
+```json
+{
+  "access_token": "aba_at_...",
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "refresh_token": "aba_rt_...",
+  "scope": "expenses:read categories:read",
+  "account_ids": ["uuid"],
+  "account_id": "uuid"
+}
+```
+
+Access-токен живёт 1 ч, refresh-токен — 90 дней; `account_id` есть в ответе, только если в подключении ровно один аккаунт. Refresh **ротирует** оба токена; повторное использование уже ротированного refresh-токена отзывает весь грант. Ошибки — в формате RFC 6749 `{ "error", "error_description" }` (`invalid_grant`, `invalid_client`, `unsupported_grant_type`, `invalid_scope`, `invalid_target`, `slow_down` с `Retry-After: 60` и т. д.). Лимит 30 в минуту на клиента; у публичного клиента считаются только запросы с его собственным действующим кодом или refresh-токеном.
+
+`POST /oauth/revoke` — RFC 7009, та же аутентификация клиента, в теле `token` (`token_type_hint` принимается и игнорируется). Отзывает весь грант; `200`.
+
+### Ресурсный API
+
+Bearer-токен (`Authorization: Bearer aba_at_...`), никогда не JWT. Подключение может охватывать несколько аккаунтов, поэтому каждый запрос называет нужный в `X-Account-Id`: при одном выданном аккаунте заголовок необязателен, иначе его отсутствие даёт `400 account_required`, а аккаунт вне гранта — `403 account_not_granted`. В ответах есть `X-RateLimit-Limit` / `X-RateLimit-Remaining`; по умолчанию 120 в минуту на грант и 1 200 в минуту на клиента (для отдельных приложений настраивается), превышение — `429 rate_limited` с `Retry-After`.
+
+| Метод | Путь | Scope | Назначение |
+|-------|------|-------|------------|
+| `GET` | `/public/v1/accounts` | только токен | Все выданные аккаунты: `{ data: [{ id, name, type, base_currency, access, active, reason }] }` (`access` — `read`/`read_write`; `reason` — `role`/`encrypted`/`archived`/null). Единственный маршрут уровня подключения — без `X-Account-Id` |
+| `GET` | `/public/v1/account` | только токен | Адресуемый аккаунт: `{ id, name, type, base_currency, role, encryption (none/text/full), read_only, user: { id, name, base_currency } }`. Без e-mail |
+| `GET` | `/public/v1/categories` | `categories:read` | Категории аккаунта; `type` — `expense` (по умолчанию) или `income` |
+| `GET` | `/public/v1/expenses` | `expenses:read` | Список: `date_from`, `date_to`, `category_id`, `merchant`, `project_id`, `search`, `limit` (1–200, по умолчанию 50), `cursor` → `{ data, next_cursor, has_more }` |
+| `GET` | `/public/v1/expenses/changes` | `expenses:read` | Инкрементальная лента с `cursor` (`limit` 1–200, по умолчанию 200): `{ changes: [{ type: "upsert", expense } \| { type: "delete", id, deleted_at }], next_cursor, has_more }` |
+| `GET` | `/public/v1/expenses/:id` | `expenses:read` | Один расход с позициями чека |
+| `GET` | `/public/v1/expenses/:id/receipt` | `receipts:read` | Исходный файл чека (тип определяется по байтам, `Cache-Control: private, no-store`); для любого зашифрованного аккаунта — `403 account_encrypted` |
+| `POST` | `/public/v1/expenses` | `expenses:write` | Создать. Заголовок `Idempotency-Key` обязателен; `201` или `200` с записью, которую это приложение уже создало с тем же ключом |
+| `PATCH` | `/public/v1/expenses/:id` | `expenses:write` | Частичное обновление (поля, допускающие null, очищаются через `null`) |
+| `DELETE` | `/public/v1/expenses/:id` | `expenses:write` | Мягкое удаление, `204` |
+| `GET` | `/public/v1/incomes` | `incomes:read` | Список: `date_from`, `date_to`, `category_id`, `project_id`, `search`, `limit`, `cursor` |
+| `GET` | `/public/v1/incomes/changes` | `incomes:read` | Инкрементальная лента той же формы, что у расходов (`income` вместо `expense`) |
+| `GET` | `/public/v1/incomes/:id` | `incomes:read` | Один доход |
+| `POST` / `PATCH` / `DELETE` | `/public/v1/incomes[/:id]` | `incomes:write` | Создание (`Idempotency-Key`), обновление, мягкое удаление. Доход, связанный с переводом (`is_transfer`), только для чтения (`422`) |
+| `GET` | `/public/v1/budgets` | `budgets:read` | Бюджеты с распределением по категориям и `progress` текущего периода (`period_start`, `period_end`, `spent`, `remaining`, `percent_used`, `projected_total`) |
+| `GET` | `/public/v1/budgets/:id` | `budgets:read` | Один бюджет |
+| `POST` / `PATCH` / `DELETE` | `/public/v1/budgets[/:id]` | `budgets:write` | Создание (`Idempotency-Key`), обновление, удаление. `period` ∈ `daily`/`weekly`/`monthly`/`yearly`/`custom`; `allocations` (≤ 100) заменяют прежний набор; повтор категории — `422` |
+| `GET` | `/public/v1/analytics/summary` | `analytics:read` | `from`, `to` (≤ 366 дней), `currency` → `total_income`, `total_expenses`, `net`, `transaction_count` |
+| `GET` | `/public/v1/analytics/by-category` | `analytics:read` | Тот же диапазон, `type` — `expense` (по умолчанию) / `income` → `data: [{ category_id, category_name, amount, share }]` |
+| `GET` | `/public/v1/analytics/monthly` | `analytics:read` | Не больше 24 календарных месяцев → `data: [{ month, income, expenses, net }]`, каждый месяц присутствует |
+
+Тело создания расхода (суммы — десятичные **строки**):
+
+```json
+{
+  "amount": "42.50",
+  "currency": "PLN",
+  "date": "2026-11-20",
+  "time": "18:30",
+  "category_id": "uuid",
+  "description": "Groceries",
+  "merchant": "Biedronka",
+  "notes": "",
+  "location": { "lat": 52.23, "lng": 21.01, "name": "Warsaw" },
+  "tag_ids": ["uuid"],
+  "project_id": "uuid",
+  "items": [{ "description": "Milk", "quantity": "2", "unit_price": "3.49", "total_price": "6.98" }]
+}
+```
+
+Обязательны только `amount` и `date`. Ограничения: описание 500 символов, продавец 120, заметки 2 000, название места 200, тегов 50, позиций 500. Суммы аналитики пересчитываются в `currency` (по умолчанию — валюта отображения того, кто выдал доступ); строка без известного курса не учитывается, и в ответе стоит `fx_approximate: true`.
+
+Что важно знать:
+- **Шифрование.** Аккаунты уровня ≥ 2 дают `403 account_encrypted`. Уровень 1 — только чтение (запись и фильтры `merchant`/`search` дают `403 account_encrypted`), а каждое текстовое поле уровня 1 приходит как `null` и перечислено в `encrypted_fields` записи.
+- **Запись** (`@PublicWrite()`) также запрещена viewer'у (`403 viewer_read_only`) и в архивной поездке (`403 trip_archived`) и идёт через сервисы самого приложения. Записи, созданные приложением, несут `created_by_app` и `source: "api"`.
+- **`Idempotency-Key`** действует в пределах приложения и аккаунта; ключ, совпавший с записью другого происхождения, с id другой записи или с удалённой записью, даёт `409 idempotency_key_conflict`.
+- **Запланированные расходы не видны**; долги и доли разделённых чеков показываются с флагами `is_debt` / `is_split_receivable`. Зеркальные записи групп не дают менять `amount`, `currency` и `date` (`422`).
+- **Лента изменений** листается по `(updated_at, id)` с отставанием 10 секунд по часам БД; удалённая запись или ставшая запланированной приходит как `type: "delete"`.
+- **Ошибки** — `{ "error": { "code", "message", "details"? } }` со стабильным `code` (`invalid_token`, `grant_inactive`, `insufficient_scope`, `account_required`, `account_not_granted`, `account_encrypted`, `validation_failed`, `invalid_cursor`, `idempotency_key_conflict`, `rate_limited`, `not_found` и др.). Некорректный запрос — `400 validation_failed`; `422` значит, что запрос разобран, но выполнить его нельзя.
+
+### Приложения разработчика и подключённые приложения
+
+Под `/api/v1`, JWT, без `X-Account-Id` (приложения принадлежат пользователю, подключения охватывают несколько аккаунтов).
+
+| Метод | Путь | Назначение |
+|-------|------|------------|
+| `GET` | `/developer/apps` | Собственные приложения вызывающего: `{ apps }` (только зарегистрированные вручную) |
+| `POST` | `/developer/apps` | Регистрация: `name` (1–60, без управляющих символов; не может совпадать с «AI Budget»/«AI Budżet»/«MiCode» или начинаться с них → `app_name_reserved`), `description` (≤ 500), `homepageUrl` (https, обязателен), `logoUrl`, `privacyPolicyUrl`, `redirectUris` (1–10; https или `http://localhost`/`127.0.0.1`/`[::1]`), `isConfidential` (по умолчанию `true`). Возвращает `{ app, clientSecret? }` — секрет (`aba_cs_…`) показывается один раз. Лимит 20 в минуту |
+| `PATCH` | `/developer/apps/:id` | Изменение тех же полей (кроме `isConfidential`). Лимит 20 в минуту |
+| `POST` | `/developer/apps/:id/rotate-secret` | Новый секрет клиента `{ clientSecret }`. Лимит 20 в минуту |
+| `DELETE` | `/developer/apps/:id` | Мягкое удаление, `204`: отзывает все гранты приложения (`client_deleted`) и удаляет их токены. Лимит 20 в минуту |
+| `GET` | `/connected-apps` | По строке на подключение (грант) с его аккаунтами; совладелец видит только те выданные аккаунты, где он сам owner или editor |
+| `DELETE` | `/connected-apps/:grantId` | Отключить, `204`. Выдавший доступ отзывает грант целиком; совладелец убирает только свои аккаунты |
+| `DELETE` | `/connected-apps/:grantId/accounts/:accountId` | Убрать из подключения один аккаунт, `204`; опустевший грант отзывается |
+
+Админка («API apps», JWT + `AdminGuard`; флаг на неё не действует):
+
+| Метод | Путь | Назначение |
+|-------|------|------------|
+| `GET` | `/admin/oauth-clients` | Список по страницам, новые сверху: `source` (`manual`/`mcp_dcr`), `page`, `limit` (по умолчанию 50, максимум 200) → `{ items, total, page, limit, totalPages }`; в каждом элементе — владелец, число активных грантов, запросов за последнюю минуту, статус, отметка о проверке, переопределённые лимиты |
+| `PATCH` | `/admin/oauth-clients/:id` | `status` (`active`/`blocked`; для блокировки нужен `blockedReason` ≤ 300), `isVerified`, `rateLimitPerGrant` / `rateLimitPerClient` (1–100 000 или `null`). Пишется в аудит как `oauth_client.update`. Блокировка останавливает все токены на следующем же запросе, не отзывая гранты |
+
+---
+
+## MCP-коннектор
+
+Эндпоинт [Model Context Protocol](https://modelcontextprotocol.io) только для чтения: пользователь добавляет `https://api.ai-budget.pl/mcp` как собственный коннектор в Claude, ChatGPT и других ассистентах. Работает через тот же сервер OAuth, что и [публичный API](#публичный-api-и-oauth). См. `docs/wiki/features/mcp-connector.md`; ранбук — `docs/ops/mcp.md`.
+
+Все маршруты ниже отвечают `404`, если **оба** флага `PUBLIC_API_ENABLED` и `MCP_ENABLED` не равны в точности `true`; они обслуживаются без префикса `/api/v1`, с публичным CORS и не входят в опубликованный документ OpenAPI.
+
+| Метод | Путь | Назначение |
+|-------|------|------------|
+| `GET` | `/.well-known/oauth-authorization-server` | Метаданные RFC 8414: `issuer` (`OAUTH_ISSUER`), `authorization_endpoint` (`OAUTH_AUTHORIZE_URL`, страница согласия), эндпоинты токенов, отзыва и регистрации, пять scopes на чтение, `code` + S256, методы аутентификации `none`/`client_secret_basic`/`client_secret_post` |
+| `GET` | `/.well-known/oauth-protected-resource` | Метаданные RFC 9728: `resource` (`MCP_RESOURCE_URL`), `authorization_servers`, `scopes_supported`, `bearer_methods_supported: ["header"]` |
+| `GET` | `/.well-known/oauth-protected-resource/mcp` | Тот же документ, вариант с суффиксом пути |
+| `POST` | `/oauth/register` | Динамическая регистрация клиента по RFC 7591 (публичный маршрут, без JWT) |
+| `POST` | `/mcp` | Сам MCP-эндпоинт (Streamable HTTP, без состояния, ответы в JSON) |
+| `GET` / `DELETE` | `/mcp` | `405`, `Allow: POST` — ни SSE-потока, ни сессий нет |
+
+### Динамическая регистрация
+
+```http
+POST /oauth/register
+Content-Type: application/json
+
+{
+  "client_name": "Claude",
+  "redirect_uris": ["https://assistant.example.com/oauth/callback"],
+  "grant_types": ["authorization_code", "refresh_token"]
+}
+```
+
+**Ответ** `201 Created` — `{ client_id, client_id_issued_at, client_name, redirect_uris, grant_types, response_types: ["code"], token_endpoint_auth_method: "none", scope }`. Всегда публичный клиент без владельца (`source = mcp_dcr`); `grant_types` по умолчанию оба и обязательно включают `authorization_code`; `scope` необязателен (неизвестные scopes и scopes не на чтение отбрасываются, если ничего не осталось — выдаются пять scopes на чтение). `client_name` обязателен, не длиннее 80 символов и не может содержать название продукта (с учётом похожих символов; завершающая метка `(…)` не проверяется, если перед ней что-то есть). Redirect URI: от 1 до 5, `https://` или loopback `http://localhost|127.0.0.1|[::1]`, без собственных схем и пробелов. Ошибки — `400 { error: "invalid_client_metadata" | "invalid_redirect_uri", error_description }`. Лимиты: 10 в час на IP клиента (IPv6 — на /64) и 300 в час глобально, `429` с `Retry-After` (сбой Redis — тоже 429); тело ≤ 16 КБ.
+
+### Вызов `/mcp`
+
+Без действующего токена `/mcp` отвечает `401` с `WWW-Authenticate: Bearer resource_metadata="<issuer>/.well-known/oauth-protected-resource/mcp"`. Токен подходит, только если выдан для `resource=MCP_RESOURCE_URL` (передайте `resource` и при авторизации, и при получении токена); токен без resource годится только для `/public/v1`, и наоборот. Самостоятельно зарегистрированный клиент обязан передавать `resource` и может получить только `expenses:read`, `categories:read`, `incomes:read`, `budgets:read`, `analytics:read` (они же выдаются, если `scope` не указан); `receipts:read` и любой `*:write` дают `invalid_scope`.
+
+Инструменты (все только для чтения): `list_accounts`, `list_expenses`, `get_expense`, `list_incomes`, `get_income`, `list_categories`, `list_budgets`, `get_budget`, `get_spending_summary` (`from`, `to`, `group_by` = `total`/`category`/`month`). Все инструменты, кроме `list_accounts`, принимают `account_id`, если в подключении несколько аккаунтов; инструменты-списки принимают `limit` (1–200, по умолчанию 50) и `cursor`.
+
+Ограничения: тело ≤ 128 КБ; пакет JSON-RPC (тело-массив) — `400` / `-32600`. Каждый вызов инструмента расходует одну единицу того же лимита на грант и на клиента, что и REST; `initialize` и `tools/list` не учитываются.
+
+---
+
+## Общие группы
+
+Постоянные группы расходов (квартира, поездка, общие продукты): их создаёт пользователь приложения, а друзья **без аккаунта** пользуются ими по ссылке в браузере — кто платил, балансы, «кто кому должен», расчёты. Бесплатно на любом тарифе. См. `docs/wiki/features/shared-groups.md`.
+
+Группы **не привязаны к аккаунту**: на всех маршрутах только `JwtAuthGuard`, заголовок `X-Account-Id` игнорируется, `AccountContextGuard` и `ViewerBlockGuard` не применяются. Маршруты под `/groups/:groupId` добавляют `GroupMemberGuard` (действующая запись участника вызывающего; не участник получает `404`, а не `403`), а там, где указано, — `GroupOwnerGuard` (только владелец; группу без владельца не проходит никто) и `GroupActiveGuard` (архивная группа доступна только на чтение: `403 GROUP_ARCHIVED`). Любой id участника, расхода, расчёта или позиции из тела или пути сервис заново привязывает к группе. Большинство изменяющих запросов возвращает обновлённый `GroupDetail` (`packages/shared-types/src/dto/group.ts`).
+
+Лимиты: не больше 20 активных групп во владении (`GROUP_LIMIT`), 50 участников в группе (`GROUP_MEMBER_LIMIT`), 5000 расходов в группе (`EXPENSE_LIMIT`), 20 долей в одном расходе.
+
+### Группы и участники
+
+| Метод | Путь | Гарды | Назначение |
+|-------|------|-------|------------|
+| `GET` | `/groups` | — | Группы вызывающего: `GroupSummary[]` (`id`, `name`, `emoji`, `currencyCode`, `status`, `memberCount`, `myBalance`) |
+| `POST` | `/groups` | — | Создать: `{ name (1-60), emoji?, currencyCode, myDisplayName? (1-40), memberNames?: string[] (≤49) }` → `GroupDetail` |
+| `GET` | `/groups/preview?guestToken=` | лимит 20/мин | Что приложение показывает перед вступлением по ссылке: `GroupJoinPreview` (название, статус, `alreadyMember`, свободные имена) |
+| `POST` | `/groups/join` | лимит 10/мин | `{ guestToken, memberId?, displayName? }` — занять свободное имя или вступить новым участником. `409 MEMBER_TAKEN`, если имя успели занять |
+| `POST` | `/groups/link-guest` | лимит 10/мин | `{ code, merge? }` — погасить одноразовый код из `POST /g/:token/link` и привязать вызывающего к этому гостю. `410 LINK_CODE_INVALID`; `409 ALREADY_MEMBER` (повтор с `merge: true` сливает гостевую запись с записью вызывающего) |
+| `GET` | `/groups/:groupId` | участник | `GroupDetail`: участники, балансы, `suggestedTransfers`, `ledgerVersion`, `guestUrl`, `myShareThisMonth`, `hasOpenItemClaims` |
+| `GET` | `/groups/:groupId/activity?before=&limit=` | участник | `GroupActivityPage` (расходы, расчёты, события участников), сначала новые; `limit` 1-100, курсор `nextBefore` |
+| `GET` | `/groups/:groupId/fx-preview?currency=` | участник, лимит 30/мин | `GroupFxPreview`: курс провайдера — сколько стоит 1 `currency` в валюте группы; `null`, если курс неизвестен |
+| `PATCH` | `/groups/:groupId` | владелец, активна | `{ name?, emoji?, guestAccess?, currencyCode? }` (после первого расхода валюту сменить нельзя: `CURRENCY_LOCKED`) |
+| `POST` | `/groups/:groupId/rotate-link` | владелец | Новый гостевой токен; **сбрасывает все привязки гостей**. → `{ guestUrl }` |
+| `POST` | `/groups/:groupId/owner` | владелец, активна, лимит 10/мин | `{ memberId }` — передать владение действующему участнику с аккаунтом в приложении |
+| `POST` | `/groups/:groupId/adopt` | участник, активна, лимит 10/мин | Забрать группу, оставшуюся без владельца (только тем, кто состоял в ней до этого) |
+| `POST` | `/groups/:groupId/archive` | владелец | `{ force? }` — `409 OPEN_BALANCES`, пока балансы не сведены, если не передан `force: true` |
+| `DELETE` | `/groups/:groupId` | владелец | Удалить группу. `204` |
+| `POST` | `/groups/:groupId/members` | участник, активна | `{ displayName }` — добавить участника-заглушку (гостя) → `GroupMember` |
+| `PATCH` | `/groups/:groupId/members/:memberId` | участник, активна | `{ displayName?, paymentMethod?, paymentHandle? }` — переименовать (сам участник или владелец); платёжные реквизиты меняет только сам участник |
+| `DELETE` | `/groups/:groupId/members/:memberId` | участник, активна | Удалить (себя, а владелец — любого). `OWNER_CANNOT_LEAVE`, `NONZERO_BALANCE`, `MEMBER_HAS_OPEN_CLAIMS`. `204` |
+| `POST` | `/groups/:groupId/members/:memberId/reset-claim` | владелец, активна, лимит 10/мин | Освободить занятое гостем имя (вместе с его реквизитами) без смены ссылки; для участников с аккаунтом запрещено |
+| `POST` | `/groups/:groupId/members/:memberId/merge` | участник, активна, лимит 10/мин | `{ intoMemberId }` — слить две записи участников; остаётся всегда запись с аккаунтом |
+
+### Расходы, позиции, расчёты
+
+| Метод | Путь | Гарды | Назначение |
+|-------|------|-------|------------|
+| `POST` | `/groups/:groupId/expenses` | участник, активна | Создать (тело ниже) → `GroupDetail` |
+| `PATCH` | `/groups/:groupId/expenses/:expenseId` | участник, активна | Изменить; только автор, плательщик или владелец |
+| `DELETE` | `/groups/:groupId/expenses/:expenseId` | участник, активна | Удалить; только автор, плательщик или владелец → `GroupDetail` |
+| `GET` | `/groups/:groupId/expenses/:expenseId/items` | участник | Позиции и их разбор в постатейном расходе: `GroupExpenseItemsView` |
+| `PUT` | `/groups/:groupId/expenses/:expenseId/claims/me` | участник, активна, лимит 30/мин | `{ itemIds }` — свои позиции (любой действующий участник, пока открыто 7-дневное окно) |
+| `PUT` | `/groups/:groupId/expenses/:expenseId/claims` | участник, активна, лимит 30/мин | `{ claims: [{ memberId, itemIds, shareBp? }] }` (1-50) — позиции любого участника; плательщик, автор или владелец |
+| `POST` | `/groups/:groupId/expenses/:expenseId/claims/close` | участник, активна, лимит 10/мин | `{ reopen? }` — закрыть или снова открыть разбор; плательщик, автор или владелец |
+| `POST` | `/groups/:groupId/settlements` | участник, активна | Записать платёж (см. ниже) |
+| `DELETE` | `/groups/:groupId/settlements/:settlementId` | участник, активна | Аннулировать платёж (кто записал, получатель или владелец); в истории он остаётся |
+
+```http
+POST /groups/:groupId/expenses
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "clientRequestId": "b1f0c2d9-7a1e",
+  "description": "Продукты",
+  "amount": 120.00,
+  "date": "2026-11-20",
+  "paidByMemberId": "member-uuid",
+  "splitType": "equal",
+  "shares": [{ "memberId": "member-uuid" }, { "memberId": "member-uuid-2" }],
+  "currencyCode": "EUR",
+  "fxRate": 4.27
+}
+```
+
+`clientRequestId` (8-64 символа, не может начинаться с `bot:`) делает создание идемпотентным. `splitType`: `equal`, `exact`, `percentage`, `shares` (у доли есть `value`, если тип этого требует). **Постатейный** расход вместо `splitType`/`shares` передаёт `items: [{ name, totalPrice, lineDiscount? }]` (1-100) и необязательный `discountAmount`; участники разбирают позиции 7 дней, а всё неразобранное остаётся за плательщиком. Сумма в валюте, отличной от валюты группы, конвертируется **один раз, при записи** (`amount` всегда хранится в валюте группы); `fxRate` — необязательный ручной курс, не дальше чем в 3 раза от курса провайдера (`FX_RATE_IMPLAUSIBLE`). Если курс неизвестен — `400 FX_RATE_UNAVAILABLE`, ничего не записывается.
+
+```http
+POST /groups/:groupId/settlements
+Content-Type: application/json
+
+{ "clientRequestId": "c4a7e1f2-90bd", "fromMemberId": "member-uuid", "toMemberId": "member-uuid-2", "amount": 40.00, "method": "blik", "ledgerVersion": 17 }
+```
+
+Вызывающий должен быть `from` или `to`. `from` должен быть должен, `to` — ждать денег; сумма сверяется с **текущими** балансами и сохраняется урезанной до `min(долг, причитающееся)`, так что платёж никогда не меняет знак баланса (`400 SETTLEMENT_EXCEEDS_BALANCE` с полем `reason`). `ledgerVersion` — версия, по которой считалась форма: если журнал успел измениться, ответ `409 LEDGER_CHANGED`. `method`: `blik`, `revolut`, `paypal`, `cash`, `other`.
+
+### Учитывать мою долю в бюджете (зеркало по желанию)
+
+Записывает долю вызывающего в каждом расходе группы в один из его собственных аккаунтов как личные расходы и связывает его реальные денежные движения по группе, чтобы они не считались дважды. `JwtAuthGuard` + `GroupMemberGuard` + лимиты на каждом маршруте; `GroupActiveGuard` **нет** (в архивной группе зеркало всё ещё можно выключить, связать или отвязать). Целевой аккаунт проверяется при каждой записи: вызывающий — владелец или редактор, аккаунт активен и без сквозного шифрования.
+
+| Метод | Путь | Назначение |
+|-------|------|------------|
+| `GET` | `/groups/:groupId/budget-mirror` | `GroupBudgetMirrorView` (`status`: `off` / `active` / `paused`, с причиной паузы) |
+| `PUT` | `/groups/:groupId/budget-mirror` | `{ accountId, categoryId? }` — включить или сменить аккаунт |
+| `DELETE` | `/groups/:groupId/budget-mirror` | Выключить: строки долей и все пометки связей снимаются одной транзакцией. `204` |
+| `GET` | `/groups/:groupId/budget-links` | `GroupBudgetLinksView`: связанные движения, предложения, личные записи |
+| `POST` | `/groups/:groupId/budget-links` | `{ kind: "payer_expense" \| "settlement_out" \| "settlement_in", groupExpenseId?, settlementId?, expenseId?, incomeId? }` — связать движение по группе с личной записью |
+| `POST` | `/groups/:groupId/budget-links/suggestions/:suggestionId/accept` | Принять предложенную связь |
+| `POST` | `/groups/:groupId/budget-links/suggestions/:suggestionId/reject` | Отклонить (больше не предлагается) |
+| `DELETE` | `/groups/:groupId/budget-links/:linkId` | Отвязать |
+
+### Гостевая страница (`/g/:token`)
+
+Публичная, **без аутентификации**: HTML рендерится на сервере, без скриптов, вне `/api/v1` (`'g/(.*)'` в `global-prefix-exclusions.ts`); соседи — `/s/` (разделение чека) и `/sl/` (список покупок). Каждый POST — обычная форма, ответ `303` обратно на `/g/:token`. Гостя определяет только cookie `abg_m` (случайный секрет устройства; в базе лежит его sha256) с путём `/g/<token>`, и никогда — поле формы. Формы с cookie несут поле CSRF; вступление и восстановление вместо этого проверяются по `Sec-Fetch-Site` / `Origin`. Каждая запись списывается с почасовых лимитов на участника и на группу в Redis; при сбое Redis запись отклоняется. Неизвестный токен, группа с `guestAccess = false` и удалённая группа отдают побайтно одинаковую страницу «не найдено».
+
+| Метод | Путь | Лимит | Назначение |
+|-------|------|-------|------------|
+| `GET` | `/g/:token` | 30/мин | Страница группы (у архивной — только чтение) |
+| `GET` | `/g/:token/activity?before=` | 30/мин | Более старая история |
+| `POST` | `/g/:token/join` | 5/мин | Выбрать имя или вступить новым гостем; ставит cookie и один раз показывает код восстановления |
+| `POST` | `/g/:token/restore` | 5/мин | Восстановить себя на другом устройстве; код передаётся в теле, никогда в URL |
+| `POST` | `/g/:token/expenses` | 10/мин | Добавить расход (поровну или точными суммами) |
+| `POST` | `/g/:token/expenses/:expenseId/delete` | 10/мин | Удалить расход |
+| `POST` | `/g/:token/expenses/:expenseId/claims` | 10/мин | Отметить свои позиции в открытом постатейном расходе |
+| `POST` | `/g/:token/settle` | 10/мин | Записать платёж |
+| `POST` | `/g/:token/settlements/:settlementId/void` | 10/мин | Аннулировать платёж (кто записал или получатель) |
+| `POST` | `/g/:token/payment-info` | 10/мин | Указать свои реквизиты для получения денег |
+| `POST` | `/g/:token/link` | 5/мин | Выпустить одноразовый код (10 мин) и передать его в приложение или веб-приложение, которое гасит его через `POST /groups/link-guest` |
+| `POST` | `/g/:token/forget` | 10/мин | «Это не я»: стереть cookie и привязку этого участника |
+
+Ссылки, которые выдаёт API, строятся от `GROUP_SHARE_BASE_URL` (с 2026-10-13 это `https://ai-budget.pl` — nginx отвечает 302 на страницу API), иначе от `APP_PUBLIC_URL`, иначе от `https://api.ai-budget.pl`. Ранбук: `docs/ops/group-short-link.md`.
+
+---
+
+## Недавно удалённые
+
+30 дней, в течение которых мягко удалённый расход или доход можно увидеть в списке и восстановить. См. `docs/wiki/features/recently-deleted.md`.
+
+JWT + `X-Account-Id` (`JwtAuthGuard + AccountContextGuard`). Наблюдатели видят список, но восстанавливать не могут.
+
+| Метод | Путь | Назначение |
+|-------|------|------------|
+| `GET` | `/recently-deleted?limit=100` | Мягко удалённые расходы и доходы аккаунта за последние 30 дней, сначала свежие. `limit` 1-200 (по умолчанию 100). → `{ data: [{ entityType, id, clientId, amount, currencyCode, description, date, categoryId, ..., encryptedPayload, deletedAt }], retentionDays: 30 }` |
+| `POST` | `/recently-deleted/restore` | `{ "items": [{ "entityType": "expense" \| "income", "id": "<id или clientId>" }] }` (1-200 элементов) → `{ restored: [...], skipped: [{ entityType, id, reason }] }` |
+
+Колонки `deletedAt` нет: временем удаления считается `updatedAt`. `id` — серверный PK или `clientId` с устройства. `reason` у пропущенного элемента: `not_found`, `expired` (старше 30 дней), `debt_deleted` (погашение, чей долг всё ещё удалён), `transfer_deleted` (доход, чей перевод между аккаунтами всё ещё удалён). Восстановление увеличивает `syncVersion`, чтобы другие устройства снова подтянули запись. Ничего не удаляется окончательно: записи старше 30 дней просто пропадают из списка.
+
+---
+
+## История правок транзакций
+
+В общем аккаунте (от 2 участников) каждая правка расхода или дохода, затронувшая отслеживаемое поле (`amount`, `currencyCode`, `categoryId`, `description`, `merchant`, `date`), сохраняется вместе с автором и разницей значений. См. `docs/wiki/features/transaction-edit-history.md`.
+
+JWT + `X-Account-Id` (`JwtAuthGuard + AccountContextGuard`).
+
+| Метод | Путь | Назначение |
+|-------|------|------------|
+| `GET` | `/expenses/:id/revisions` | История правок расхода |
+| `GET` | `/incomes/:id/revisions` | История правок дохода |
+
+`:id` — серверный PK или `clientId` с устройства. **Ответ** `200 OK` — сначала новые, не больше 20 (для каждой транзакции хранятся только 20 последних):
+
+```json
+[
+  {
+    "id": "revision-uuid",
+    "userId": "user-uuid",
+    "userName": "Anna",
+    "createdAt": "2026-11-20T10:15:00.000Z",
+    "changes": {
+      "amount": { "from": 12, "to": 15 },
+      "categoryId": { "from": "Продукты", "to": "Рестораны" }
+    }
+  }
+]
+```
+
+Вместо id в `categoryId` возвращаются названия категорий. В аккаунтах с одним участником и для зашифрованных записей ничего не сохраняется; в аккаунте с шифрованием уровня 1 и выше `description` и `merchant` в разницу не попадают.
+
+---
+
+## Чистый капитал
+
+Деньги + инвестиции + долги перед пользователем − долги самого пользователя по всем аккаунтам, в которых он состоит: сейчас и на конец каждого из 12 последних месяцев, в валюте отображения. См. `docs/wiki/features/net-worth.md`.
+
+```http
+GET /net-worth?exclude=<account-id>,<account-id>
+Authorization: Bearer <token>
+```
+
+Привязка к пользователю: только `JwtAuthGuard`, заголовок `X-Account-Id` не нужен. `exclude` — список id аккаунтов через запятую, которые пользователь отключил (учитываются первые 100); он сужает набор аккаунтов, где пользователь состоит, и никогда не служит белым списком. Аккаунты с шифрованием уровня 2 перечисляются, но не суммируются. Результат кэшируется на 10 минут по пользователю, валюте и набору исключений (запись кэш не сбрасывает).
+
+**Ответ** `200 OK` — `NetWorthResponse` (`packages/shared-types/src/dto/insights.ts`):
+
+```json
+{
+  "currencyCode": "PLN",
+  "current": { "cash": 12500, "investments": 8300, "owedToMe": 400, "debts": 1200, "net": 20000 },
+  "history": [
+    { "month": "2025-12", "cash": 11000, "investments": 7600, "owedToMe": 0, "debts": 1500, "net": 17100, "approximate": false }
+  ],
+  "accounts": [
+    { "id": "account-uuid", "name": "Personal", "type": "personal", "included": true, "encrypted": false, "net": 18000 }
+  ],
+  "fxApproximate": false,
+  "computedAt": "2026-11-28T09:00:00.000Z"
+}
+```
+
+В `history` 12 записей, от старых к новым; последняя — текущий месяц на сейчас. Месяц помечен `approximate`, если на его конец у какого-то актива не было цены и он оценён по средней цене покупки. Прошлые месяцы пересчитываются по курсам на конец того месяца; сумма без курса не учитывается и выставляет `fxApproximate`. `net` у аккаунта равен `null`, если он исключён или зашифрован.
+
+---
+
+## Автомобили
+
+Автомобили аккаунта, заправки (`FuelLog`) и прочие расходы на машину (`VehicleCost`), привязанные к уже существующим расходам, а также расход топлива и стоимость владения. См. `docs/wiki/features/vehicle-fuel-log.md`.
+
+На всех маршрутах JWT + контекст аккаунта; все изменяющие запросы закрыты для наблюдателей (`ViewerBlockGuard`). `:expenseId` принимается как серверный PK или как `clientId` устройства; записывается всегда найденный PK. Суммы возвращаются в валюте пользователя (`user.currencyCode`); сумма без известного курса в итоги не попадает и выставляет `fxApproximate: true`.
+
+| Метод | Путь | Назначение |
+|-------|------|------------|
+| `GET` | `/vehicles` | Активные автомобили аккаунта, от старых к новым |
+| `POST` | `/vehicles` | Создать: `{ "name": "Golf", "fuelType": "diesel" }`. `name` до 60 символов; `fuelType` — `petrol` (по умолчанию), `diesel`, `lpg`, `electric`, `hybrid`, `other` |
+| `PATCH` | `/vehicles/:id` | Изменить `name`, `fuelType`, даты продления `nextInsuranceDate`, `nextInspectionDate`, `nextServiceDate` (`YYYY-MM-DD`), `nextServiceOdometer`, `serviceIntervalKm` (≥ 1), `lastServiceKm`. `null` очищает поле. Отправляйте только изменённые поля: повторно присланный `nextServiceOdometer` заново взводит уже отправленное напоминание по пробегу |
+| `DELETE` | `/vehicles/:id` | Мягкое удаление. `{ "success": true }` |
+| `POST` | `/vehicles/:id/move` | `{ "targetAccountId": "uuid" }` — в другой аккаунт, где вызывающий владелец или редактор. `409 VEHICLE_IN_USE`, пока у машины есть заправка или расход на живом расходе; правила категорий не переносятся |
+| `GET` | `/vehicles/:id/stats` | л/100 км (метод полного бака), стоимость километра и 100 км, последняя цена литра, ряд по интервалам, `ownership` (последние 12 календарных месяцев по видам, среднее в месяц, км, стоимость км), `latestOdometerKm`, `serviceForecast` |
+| `GET` | `/vehicles/:id/history?months=12` | Экран автомобиля за один период: `months` — `3`, `6`, `12` (по умолчанию), `24` или `0` (всё время), иное — `400`. Каждый месяц окна по видам, итог, `perMonth`, км, отрезки расхода топлива, заканчивающиеся в окне, все заправки и расходы от новых к старым, а также `latestOdometerKm` и `serviceForecast` |
+| `GET` | `/vehicles/:id/fuel-logs` | Заправки на живых расходах, от большего пробега к меньшему |
+| `PUT` | `/vehicles/:id/fuel-logs/:expenseId` | Записать или заменить заправку на расходе: `{ "liters": 42.5, "odometerKm": 123456, "isFullTank": true }`. `isFullTank` по умолчанию `true`. Удаляет `VehicleCost` этого расхода, если он был |
+| `GET` | `/vehicles/fuel-logs/:expenseId` | `{ "fuelLog": ..., "cost": { vehicleId, kind, source } }` для расхода; отсутствующее — `null`, никогда не 404 |
+| `DELETE` | `/vehicles/fuel-logs/:expenseId` | Убрать заправку с расхода |
+| `GET` | `/vehicles/:id/costs` | Нетопливные расходы автомобиля |
+| `PUT` | `/vehicles/:id/costs/:expenseId` | Отметить расход как расход на машину: `{ "kind": "service" }`. `kind`: `fuel` (сумма без литров), `service`, `insurance`, `parking`, `tax`, `other`. Удаляет заправку этого расхода; `service` сбрасывает счётчик сервисного интервала |
+| `POST` | `/vehicles/:id/costs/bulk` | `{ "expenseIds": [...], "kind": "parking" }` (до 500 id). Расходы с заправкой пропускаются. Ответ `{ assigned, skipped, notFound }` |
+| `DELETE` | `/vehicles/costs/:expenseId` | Снять расход на машину с расхода. Строка остаётся «надгробием» с `kind: "none"`, чтобы правило категории не вернуло её |
+| `GET` | `/vehicles/:id/category-rules` | `{ "rules": [{ categoryId, kind, ids }] }`; в `ids` — PK и `clientId`, чтобы телефон сопоставил свои локальные id категорий |
+| `PUT` | `/vehicles/:id/category-rules` | Заменить правила: `{ "rules": [{ "categoryId": "...", "kind": "insurance" }] }` (до 30). Категория должна быть живой категорией расходов аккаунта или глобальной; хранится как PK и применяется сразу. Ответ — правила и `{ attributed, released }` |
+
+`/vehicles/fuel-logs/:expenseId` и `/vehicles/costs/:expenseId` намеренно объявлены раньше маршрутов с `:id`.
+
+---
+
+## Питомцы
+
+Питомцы аккаунта и расходы на них (`PetCost`): один расход — один питомец — один вид. См. `docs/wiki/features/pet-costs.md`.
+
+JWT + контекст аккаунта; все изменяющие запросы закрыты для наблюдателей. Id расхода — PK или `clientId`, записывается найденный PK. Суммы в валюте пользователя, с `fxApproximate`, как у автомобилей.
+
+| Метод | Путь | Назначение |
+|-------|------|------------|
+| `GET` | `/pets` | Активные питомцы аккаунта |
+| `POST` | `/pets` | Создать: `{ "name": "Yoka", "species": "dog", "birthday": "2022-04-01", "nextVaccinationDate": "...", "nextParasiteTreatmentDate": "...", "categoryRules": [...] }`. `name` до 60 символов; `species` — `dog`, `cat` или `other` |
+| `PATCH` | `/pets/:id` | Те же поля; `null` очищает дату. `categoryRules` (`[{ categoryId, kind }]`, до 30) заменяет правила и сразу их применяет |
+| `DELETE` | `/pets/:id` | Мягкое удаление; строки, созданные его правилами, освобождаются. `{ "success": true }` |
+| `GET` | `/pets/:id/history?months=12` | Расходы по календарным месяцам и видам, итог, среднее в месяц, `yearTotal` (текущий год, не зависит от периода). `months`: `3`, `6`, `12` (по умолчанию), `24`, `0` — всё время; иное — `400` |
+| `GET` | `/pets/:id/costs` | Расходы питомца |
+| `PUT` | `/pets/:id/costs/:expenseId` | `{ "kind": "vet" }` — `food`, `vet`, `grooming`, `supplies`, `insurance`, `other` |
+| `POST` | `/pets/:id/costs/bulk` | `{ "expenseIds": [...], "kind": "food" }` (до 500). Ответ `{ assigned, notFound }` |
+| `GET` | `/pets/costs/:expenseId` | `{ "cost": { petId, kind, source } \| null }` — никогда не «надгробие» и не 404 |
+| `DELETE` | `/pets/costs/:expenseId` | Снять расход на питомца с расхода. Если категорию расхода забирает правило живого питомца, остаётся «надгробие» `kind: "none"`, чтобы правило не вернуло строку; иначе строка удаляется. Повторное удаление «надгробия» — `404` |
+| `GET` | `/pets/:id/category-rules` | `{ "rules": [{ categoryId, kind, ids }] }` (`ids` = PK + `clientId`). Правила записываются через `POST`/`PATCH /pets/:id` |
+
+Ответы `POST`/`PATCH` содержат `rulesApplied: { attributed, released }`. Ежедневный крон (08:15 UTC) присылает пуш за 14 и за 2 дня до даты прививки и обработки от паразитов — под переключателем уведомлений `subscription_renewal`.
+
+---
+
+## Дети
+
+Расходы на детей: целый расход (с долями) или отдельная строка чека относится к ребёнку. Итоги считает устройство; сервер хранит связи и собирает PDF-выписку для Pro. Модель нигде не вызывается. См. `docs/wiki/features/child-costs.md`.
+
+JWT + контекст аккаунта. Наблюдатели читают (и могут запрашивать подсказки); остальные изменения закрыты для них. Дети также синхронизируются через `/sync` (`child`, `expense_child`).
+
+| Метод | Путь | Назначение |
+|-------|------|------------|
+| `GET` | `/children?includeArchived=true` | Дети аккаунта; архивные — только с `includeArchived=true` |
+| `POST` | `/children` | `{ "name": "Ola", "color": "#FF8800", "clientId": "..." }`. `name` до 40 символов, `color` — `#RRGGBB`. Идемпотентен по `clientId`; на зашифрованном аккаунте сервер хранит `enc:<clientId>` и никогда — имя открытым текстом |
+| `PATCH` | `/children/:id` | `name`, `color`, `archived: true \| false`. `409` при повторяющемся имени |
+| `DELETE` | `/children/:id` | Мягкое удаление, только если на ребёнка ничего не отнесено; иначе `409 CHILD_IN_USE` (нужно архивировать) |
+| `POST` | `/children/:id/move` | `{ "targetAccountId", "name" }`, а для зашифрованного аккаунта-получателя — `{ "targetAccountId", "encryptedPayload", "encryptionKeyVersion" }` (иначе `400 ENCRYPTION_REQUIRED`). Только ребёнок без отнесённых расходов (`409 CHILD_IN_USE`), только в аккаунт, который вызывающий может редактировать; `409 NAME_TAKEN` при совпадении имени. Правила по товарам сбрасываются |
+| `GET` | `/children/:id/categories` | `{ categoryIds, matchIds }` — категории ребёнка; `matchIds` добавляет их `clientId` |
+| `PUT` | `/children/:id/categories` | `{ "categoryIds": [...] }` (до 50, живые категории расходов аккаунта или глобальные). Заменяет их и сразу относит подходящие расходы; ответ `{ categoryIds, matchIds, attributed, released }` |
+| `POST` | `/children/suggestions` | `{ "names": ["Pampers 4", ...] }` (до 500) → выученные подсказки «товар → ребёнок» по нормализованному названию. `200`; это чтение, поэтому доступно и наблюдателям. Сами не применяются никогда |
+| `POST` | `/children/:id/statement` | PDF-выписка («zestawienie»): `{ "from": "2026-01-01", "to": "2026-06-30", "locale": "pl" }`. **Pro** (`SubscriptionTierGuard`), только редакторы и владельцы, не больше 24 месяцев и только при `encryptionTier` аккаунта 0 (иначе `403 ENCRYPTED_ACCOUNT`). Валюта — `currencyCode` пользователя. Ответ — `application/pdf` вложением |
+| `PUT` | `/expenses/:id/children` | Отнесение целого расхода: `{ "childIds": [...], "shares": [0.5, 0.5] }` (до 20). По умолчанию доли равные; каждая в (0, 1], сумма 1. Снимает отнесение строк этого расхода. Ответ `[{ expenseId, childId, share }]` |
+| `PATCH` | `/expenses/:expenseId/items/:itemId/child` | Отнесение строки чека: `{ "childId": "..." \| null }`. Выбор ребёнка мягко удаляет связи целого расхода и обучает правило «товар → ребёнок». `204` |
+
+Ограничения приложения с чеками: `CHILD_STATEMENT_MAX_RECEIPTS` (150), `CHILD_STATEMENT_MAX_RECEIPT_BYTES` (40 МБ), `CHILD_STATEMENT_MAX_RECEIPT_IMAGE_BYTES` (3 МБ).
+
+---
+
+## Коммунальные услуги
+
+Показания потребления по коммунальным счетам (электричество, газ, вода, отопление): по ним видно, вырос счёт из-за большего потребления или из-за цены. См. `docs/wiki/features/utility-bill-readings.md`.
+
+JWT + контекст аккаунта; изменения закрыты для наблюдателей. Id расхода — PK или `clientId`, записывается найденный PK.
+
+| Метод | Путь | Назначение |
+|-------|------|------------|
+| `GET` | `/utilities/summary?property=Flat` | По каждому виду: месяцы с потреблением, стоимостью (в `currencyCode` пользователя) и ценой за единицу; `yearOverYear`, когда вид охватывает 12+ месяцев; `priceNudge`, когда цена за единицу в последнем месяце больше чем на 10% выше средней за предыдущие (до трёх) месяцы — нужно хотя бы два месяца с ценой. Плюс `properties` (все метки объектов) и `fxApproximate`. `property` фильтрует по метке. Запланированные и удалённые расходы не учитываются |
+| `GET` | `/utilities/readings/:expenseId` | Показание расхода или `null` |
+| `PUT` | `/utilities/readings/:expenseId` | `{ "kind": "electricity", "consumption": 212.4, "unit": "kwh", "propertyLabel": "Flat" }`. `kind`: `electricity`, `gas`, `water`, `heating`; `unit`: `kwh`, `m3`, `gj`; `propertyLabel` до 60 символов. Сохраняет `unitPrice` = сумма / потребление в валюте самого расхода |
+| `DELETE` | `/utilities/readings/:expenseId` | Удалить показание. `{ "success": true }` |
+
+---
+
+## Расчётный цикл карты
+
+Расчётный цикл кредитной карты: аккаунт помечается как кредитная карта — день выписки, день платежа и необязательный кредитный лимит. См. `docs/wiki/features/card-statement-cycle.md`.
+
+Все маршруты требуют `Authorization: Bearer <token>` + `X-Account-Id`. Запись для зрителей закрыта (`ViewerBlockGuard`). Одна настройка на аккаунт; ограничений по тарифу нет.
+
+| Метод | Путь | Назначение |
+|-------|------|------------|
+| `GET` | `/card-cycles` | Сводка по карте аккаунта в виде списка: `[]`, если настройки нет, иначе один `CardCycleSummary` |
+| `PUT` | `/card-cycles` | Создать или заменить настройку: `{ "statementDay": 1-31, "dueDay": 1-31, "creditLimit"?: number \| null, "currencyCode": "PLN" }`. `creditLimit` от 0.01 до 1 000 000 000, 2 знака после запятой. Возвращает сводку и сбрасывает состояние напоминания |
+| `DELETE` | `/card-cycles` | Удалить настройку. `{ "success": true }` |
+
+**`CardCycleSummary`**
+```json
+{
+  "accountId": "uuid",
+  "currencyCode": "PLN",
+  "statementDay": 25,
+  "dueDay": 15,
+  "creditLimit": 5000,
+  "cycleStart": "2026-10-26",
+  "cycleEnd": "2026-11-25",
+  "spent": 1240.5,
+  "utilisation": 0.2481,
+  "dueDate": "2026-12-15",
+  "daysToDue": 17,
+  "statementAmount": 980.0
+}
+```
+
+- `cycleEnd` — день выписки; день 29–31 в коротком месяце сдвигается на последний день месяца. Граница цикла считается по дате операции (`Expense.date`).
+- `spent` учитывает только расходы в валюте карты; удалённые, запланированные и split-receivable строки исключены. Пересчёта валют нет.
+- `utilisation` — это `spent / creditLimit` (может быть больше 1), без лимита — `null`.
+- `statementAmount` — сумма закрытой выписки, пока срок её оплаты не прошёл (или наступает сегодня), иначе `null`.
+
+Ежедневный крон (09:00) за 3 дня до срока платежа отправляет владельцу аккаунта пуш с суммой закрытой выписки — не чаще одного раза на срок, при пустой выписке ничего не отправляется. Используется тип уведомлений `debt_reminder`.
+
+---
+
+## Лимиты по продавцам
+
+Месячный лимит трат у одного продавца с пушем на 80% и 100%. От бюджетов не зависит. См. `docs/wiki/features/merchant-spending-caps.md`.
+
+Все маршруты требуют `Authorization: Bearer <token>` + `X-Account-Id`. Запись для зрителей закрыта (`ViewerBlockGuard`).
+
+| Метод | Путь | Назначение |
+|-------|------|------------|
+| `GET` | `/merchant-caps` | Лимиты аккаунта с расходом за текущий календарный месяц, по алфавиту продавцов |
+| `PUT` | `/merchant-caps` | Создать или изменить лимит для продавца: `{ "merchant": "Biedronka", "amount": 600, "currencyCode": "PLN" }`. `merchant` 1–120 символов, `amount` от 0.01 до 1 000 000 000 (2 знака). Upsert по `trim().toLowerCase()` имени продавца; состояние оповещений сбрасывается. Не больше 30 лимитов на аккаунт (`400`) |
+| `DELETE` | `/merchant-caps/:id` | Удалить лимит. `{ "success": true }`; `404`, если в аккаунте его нет |
+
+**Ответ по лимиту**
+```json
+{
+  "id": "uuid",
+  "merchantNormalized": "biedronka",
+  "merchantLabel": "Biedronka",
+  "amount": 600,
+  "currencyCode": "PLN",
+  "spent": 412.3,
+  "percentUsed": 68.72
+}
+```
+
+`spent` — полная сумма `Expense.amount` у этого продавца (точное совпадение без учёта регистра) в валюте лимита за календарный месяц, за вычетом привязанных возвратов в той же валюте и не ниже нуля; удалённые, запланированные и split-receivable строки исключены. Проверка идёт при каждой записи расхода, пуш отправляется с типом `budget_alert`, по одному разу на порог в месяц.
+
+---
+
+## Промо-газетки
+
+Gazetka match: пользователь присылает скриншоты или PDF рекламной газетки магазина, сервер распознаёт её vision-моделью и возвращает только акции на товары, которые этот пользователь и так покупает, рядом с его обычной ценой. Админы могут загружать, проверять и публиковать газетки, из которых строится общий пуш об акциях. См. `docs/wiki/features/gazetka-match.md`; эксплуатация — `docs/ops/leaflets.md`.
+
+### Пользовательские маршруты
+
+`Authorization: Bearer <token>` + `X-Account-Id`. `ViewerBlockGuard` нет: зрители тоже могут читать газетки. Тела запросов проверяются Zod; некорректное тело даёт `400`.
+
+| Метод | Путь | Назначение |
+|-------|------|------------|
+| `POST` | `/leaflets` | Начать газетку: `{ "source": "share" \| "picker" \| "upload" \| "pdf", "platform"?: "android" \| "web" \| "ios" \| null }` → `{ id }`. Личная газетка живёт 7 дней (или до дня после её `validTo`) |
+| `GET` | `/leaflets/budget` | Месячный лимит страниц: `{ used, limit, resetAt }` |
+| `GET` | `/leaflets` | Активные личные газетки аккаунта (`LeafletResult[]`) |
+| `GET` | `/leaflets/:id` | Одна газетка с совпадениями (`LeafletResult`) |
+| `POST` | `/leaflets/:id/pages` | Распознать одну страницу: `{ "imageBase64": "...", "mimeType"?: "image/jpeg" }` → `200` `LeafletPageResult` |
+| `POST` | `/leaflets/:id/pdf` | Распознать PDF в фоне: `{ "pdfBase64": "..." }` → `202` `{ id }`; результат опрашивается через `GET /leaflets/:id` |
+| `POST` | `/leaflets/items/:itemId/added` | Отметить найденный товар как добавленный в список покупок. `204` |
+| `POST` | `/leaflets/push-opened` | `{ "pushKey": "<uuid>" }` — пользователь открыл общий пуш; действует только в пределах его собственного журнала пушей. Всегда `204` |
+
+**`LeafletResult`**
+```json
+{
+  "id": "uuid",
+  "chain": "Lidl",
+  "validFrom": "2026-11-27",
+  "validTo": "2026-11-30",
+  "status": "done",
+  "pagesRead": 4,
+  "pagesUnreadable": 0,
+  "pagesDropped": 0,
+  "matches": [
+    {
+      "itemId": "uuid",
+      "name": "Masło extra 200 g",
+      "promoPrice": 5.99,
+      "regularPrice": 7.49,
+      "currencyCode": "PLN",
+      "condition": "przy zakupie 2 szt.",
+      "basketName": "maslo extra 200g",
+      "usualPrice": 7.2
+    }
+  ],
+  "unmatchedCount": 37
+}
+```
+
+`status` — `reading`, `done` или `failed`; газетка в `reading` без прогресса 30 минут отдаётся как `failed`. `LeafletPageResult` — это `{ page, readable, matches, unmatchedCount }`.
+
+**Ограничения и ошибки**
+
+| Код | Статус | Когда |
+|-----|--------|-------|
+| `PAGE_CAP` | `409` | Больше 10 страниц в одной газетке (проверяется до списания лимита, поэтому страница не списывается) |
+| `LEAFLET_LIMIT` | `403` | Месячный лимит страниц исчерпан: Free 20 / Pro 200 / Business 500 (`LEAFLET_PAGES_FREE`/`PRO`/`BUSINESS`), отдельно от AI-лимита. Маршрут PDF отказывает сразу. На пользователей из `ADMIN_EMAILS` лимит не распространяется |
+| `PDF_TOO_LARGE` | `413` | PDF больше 10 МБ в сыром виде |
+| `ENCRYPTED_ACCOUNT` | `403` | Аккаунт с `encryptionTier >= 2` — обычную цену посчитать невозможно |
+| `EMPTY_BASKET` | `422` | У аккаунта ещё нет обычной корзины (сначала нужно отсканировать чеки) |
+
+### Админские маршруты
+
+JWT + `AdminGuard`. Админские газетки не привязаны к аккаунту (`accountId: null`).
+
+| Метод | Путь | Назначение |
+|-------|------|------------|
+| `POST` | `/admin/leaflets` | Загрузка multipart, поле `files`: изображения PNG/JPEG/WebP или ровно один PDF, до `LEAFLET_ADMIN_MAX_PAGES` (60) страниц и `LEAFLET_ADMIN_MAX_MB` (50) МБ → `202` `{ id }`; распознаётся в фоне |
+| `GET` | `/admin/leaflets` | Список (`AdminLeafletSummary[]`) |
+| `GET` | `/admin/leaflets/stats` | Использование личных газеток и общих пушей без учёта `ADMIN_EMAILS`; параметр `days` (по умолчанию 30) |
+| `GET` | `/admin/leaflets/:id` | Газетка с позициями (`AdminLeafletDetail`) |
+| `GET` | `/admin/leaflets/:id/recipients` | Сколько пользователей получит пуш: `{ users }` |
+| `PATCH` | `/admin/leaflets/:id` | `{ chain?, validFrom?, validTo? }` (`YYYY-MM-DD`, допускается null) |
+| `PATCH` | `/admin/leaflets/:id/items/:itemId` | `{ name?, canonicalName?, promoPrice?, regularPrice?, condition? }` |
+| `DELETE` | `/admin/leaflets/:id/items/:itemId` | Удалить позицию. `204` |
+| `POST` | `/admin/leaflets/:id/publish` | Опубликовать: записывает строки общих акций, которые сразу считаются подтверждёнными → `AdminLeafletDetail` + `promosWritten` |
+| `POST` | `/admin/leaflets/:id/unpublish` | Отозвать акции газетки |
+
+Опубликованная газетка доступна только для чтения (`409 LEAFLET_PUBLISHED`): снимите с публикации, отредактируйте и опубликуйте снова. Публикация газетки, которая ещё распознаётся, даёт `409 LEAFLET_READING`.
+
+**Общие акции.** Работают за флагом `COMMUNITY_PROMOS_ENABLED` (по умолчанию **выключен**): пока он выключен, ничего не собирается, не подтверждается и не рассылается. Акция подтверждается, когда её прислали `COMMUNITY_PROMO_K` (по умолчанию 3) разных участников, из них не меньше `COMMUNITY_PROMO_MIN_TRUSTED` (по умолчанию 2) доверенных; строки админа подтверждают акцию сами по себе. Ежедневный крон (09:00) рассылает действующие сегодня акции пользователям с включённым `notifyLeafletPromos`, которые покупали в этой сети за последние 90 дней, — не больше одного пуша в день на пользователя.
+
+### Пересканирование для общей карты цен (админ)
+
+Относится к общей карте цен (`docs/wiki/features/community-prices.md`), обслуживается `modules/ai/receipt-rescan.admin.controller.ts`. JWT + `AdminGuard`.
+
+| Метод | Путь | Назначение |
+|-------|------|------------|
+| `POST` | `/admin/community-prices/rescan` | Запустить фоновое повторное распознавание недавних сохранённых фото чеков пользователей, давших согласие, чтобы они попали в общую карту: `{ "emails"?: string[] (до 50), "dryRun"?: boolean }` → `{ started, alreadyRunning?, candidates }`. Два запуска одновременно не допускаются |
+| `GET` | `/admin/community-prices/rescan` | Отчёт о последнем запуске: `{ startedAt, finishedAt, dryRun, candidates, outcomes, perUser }` или `null` |
+
+---
+
+## Чеки по e-mail
+
+Пересылка электронных чеков по почте: у каждого пользователя свой личный адрес (`<token>@in.ai-budget.pl`), каждое пересланное письмо становится элементом **на подтверждении**, и ничего не сохраняется, пока пользователь не подтвердит его в приложении. См. `docs/wiki/features/inbound-e-receipts.md`; эксплуатация — `docs/ops/inbound-mail.md`.
+
+**Выключено флагом.** Пока `INBOUND_MAIL_ENABLED` не равен ровно `true`, все маршруты ниже отвечают `404` (`InboundMailEnabledGuard`), а приложение скрывает функцию.
+
+### Пользовательские маршруты
+
+`Authorization: Bearer <token>` + `X-Account-Id`. Запись для зрителей закрыта (`ViewerBlockGuard`). Адрес принадлежит пользователю; чеки фильтруются по пользователю И аккаунту, при промахе — `404`.
+
+| Метод | Путь | Назначение |
+|-------|------|------------|
+| `GET` | `/inbound-mail/address` | Адрес вызывающего или `null`: `{ address, targetAccountId, enabled, pendingVerification?: { code, receivedAt } }` |
+| `POST` | `/inbound-mail/address` | Создать адрес с текущим аккаунтом в качестве целевого (только владелец/редактор) |
+| `PATCH` | `/inbound-mail/address` | Сменить целевой аккаунт: `{ "targetAccountId": "uuid" }` (нужна роль владельца/редактора в нём) |
+| `POST` | `/inbound-mail/address/rotate` | Выдать новый токен; старый перестаёт работать сразу |
+| `DELETE` | `/inbound-mail/address` | Отключить адрес. `204` |
+| `GET` | `/inbound-receipts` | Входящие; параметр `status` = `pending` (по умолчанию) или `handled` (`duplicate`, `not_a_receipt`, `quota_exceeded`, `unsupported`, `failed`) |
+| `GET` | `/inbound-receipts/count` | `{ pending }` |
+| `GET` | `/inbound-receipts/:id` | Подробности: поля списка плюс `extraction`, `possibleDuplicate` (пересчитывается при чтении), `hasDocument`, `documentMimeType`, `expenseId`, `senderVerified` |
+| `GET` | `/inbound-receipts/:id/document` | Байты сохранённого документа (inline, `no-store`, CSP с песочницей) |
+| `POST` | `/inbound-receipts/:id/confirm` | `{ "expenseId": "<id или clientId>" }` — привязать расход, созданный приложением из этого элемента. `204`. `409`, если элемент не на подтверждении или расход уже привязан к другому чеку |
+| `POST` | `/inbound-receipts/:id/dismiss` | Отклонить; документ удаляется. `204` |
+| `POST` | `/inbound-receipts/:id/retry` | Повторить обработку элемента в `quota_exceeded` или `failed`; списывается как одно сканирование чека (`AiUsageGuard`) → подробности |
+
+Шифрование уровня 2 не поддерживается: создание адреса или перенаправление на такой аккаунт даёт `400 E2EE_UNSUPPORTED`.
+
+### Внутренние маршруты (только для SMTP-контейнера)
+
+`/api/v1/internal/inbound-mail/*` — без JWT. `InternalSecretGuard` требует заголовок `X-Inbound-Secret` (`INBOUND_MAIL_SHARED_SECRET`, не короче 32 символов), TCP-адрес собеседника внутри `INBOUND_MAIL_INTERNAL_CIDR` и отсутствие `X-Forwarded-For`/`X-Real-IP`. Публичный vhost nginx отвечает `404` на этот префикс.
+
+| Метод | Путь | Назначение |
+|-------|------|------------|
+| `POST` | `/internal/inbound-mail/rcpt` | `{ token, remoteIp }` → `{ result: "accept" \| "unknown" \| "limited" }` |
+| `POST` | `/internal/inbound-mail/messages` | Передать одно разобранное письмо (`InboundMailHandoffPayload`) → `202` `{ id }`. `409` — уже сохранено, `422` — записано как unsupported, `429` — лимит адреса (20 в час, 60 в сутки), `503` — Redis недоступен, `404` — неизвестный токен или флаг выключен |
+
+---
+
+## Почта
+
+Публичная отписка от онбординговых писем без аутентификации (ABA-738); ограничение — 20 запросов в минуту. Вариант для писем поддержки описан в разделе [Поддержка](#поддержка-написать-разработчику).
+
+| Метод | Путь | Назначение |
+|-------|------|------------|
+| `GET` / `POST` | `/mail/unsubscribe?u=<userId>&t=<token>` | HMAC-токен; выставляет `User.onboardingEmailsEnabled = false`. `GET` отдаёт HTML-страницу (ссылка из письма), `POST` — отписка в один клик по RFC 8058 → `{ "ok": true }`. Ответ одинаков для верного и неверного токена |
 
 ---
 

@@ -2765,6 +2765,14 @@ Os outros custos do carro também contam. Em qualquer despesa, a secção **Carr
 
 **Prazos.** Na ficha do veículo, defina a próxima renovação do seguro, a próxima inspeção, a próxima revisão e a quilometragem da próxima revisão (tudo opcional; a cruz limpa uma data). Recebe um lembrete 14 e 2 dias antes de cada data, e uma vez quando a quilometragem de um abastecimento ficar a menos de 500 km da revisão. Os prazos nos próximos 30 dias ou já ultrapassados aparecem como etiquetas no cartão do veículo e no seu ecrã, onde o cartão **Prazos** mostra todas as datas. Quando marca uma despesa como seguro ou revisão, a app propõe adiar esse prazo um ano; nada muda sem a sua confirmação.
 
+## Serviços domésticos
+
+Perceba se uma fatura de serviços subiu porque consumiu mais ou porque o preço aumentou. Aceda em **Definições → Dados de referência → Serviços domésticos**.
+
+**Adicionar uma leitura.** Abra uma despesa de serviços — eletricidade, gás, água ou aquecimento. Por baixo dos detalhes, toque em **Adicionar consumo (kWh, m³, GJ)**, escolha o tipo, introduza o consumo indicado na fatura e a respetiva unidade e, se paga faturas de mais do que um sítio, opcionalmente um **Imóvel** (por exemplo, «Apartamento» ou «Casa de campo»). A aplicação calcula o preço por unidade a partir do valor da despesa. Para alterar ou remover uma leitura, volte a abrir a despesa. Uma despesa acabada de adicionar tem de ser sincronizada primeiro; se ainda não o foi, a aplicação pede-lhe que tente novamente daqui a pouco. Quem só pode ver uma conta partilhada vê as leituras, mas não as pode adicionar.
+
+**O que o ecrã mostra.** Para cada tipo: o preço por unidade mês a mês e o consumo. Quando o preço unitário do último mês fica mais de 10% acima da média dos três meses anteriores, uma nota assinala-o. Quando um tipo tem leituras de um ano, cada mês é comparado com o mesmo mês do ano anterior — tanto o preço como o consumo. Com vários imóveis, escolha um no topo ou veja-os todos em conjunto. Os custos aparecem na sua moeda de apresentação; uma fatura numa moeda cuja taxa de câmbio é desconhecida fica de fora do custo, e o ecrã indica-o. As despesas planeadas não são contabilizadas.
+
 ## Dados e relatórios
 
 ### Dados e sincronização
@@ -5951,6 +5959,18 @@ Se a pessoa que ligou uma aplicação passar depois a leitor ou sair de uma cont
 - Uma conta com **encriptação de texto** pode ser ligada **só de leitura**: a aplicação vê os valores, as datas e as categorias, mas as descrições, notas, comerciantes, nomes de artigos, etiquetas e outro texto encriptado ficam ocultos, e não pode adicionar nem alterar despesas.
 
 Consulte [Encriptação ponto a ponto](./15-encryption.md) para saber o que cada nível abrange.
+
+## Ligar um assistente de IA (MCP)
+
+Pode permitir que um assistente de IA, como o Claude ou o ChatGPT, leia os seus dados do AI Budget e responda a perguntas como «quanto gastei em supermercado no mês passado?».
+
+1. No assistente, adicione um conector personalizado (no Claude: **Definições → Conectores → Adicionar conector personalizado**) e introduza o endereço `https://api.ai-budget.pl/mcp`.
+2. O assistente abre uma página do AI Budget onde inicia sessão como habitualmente. A página mostra o nome do próprio assistente e a nota **registada automaticamente por um assistente de IA** — não verificámos esse assistente, por isso ligue apenas um que tenha sido o próprio a iniciar. Marque as contas que ele pode usar e toque em **Permitir**.
+3. Faça a sua pergunta no assistente.
+
+Um assistente tem acesso **só de leitura**: pode ler despesas, receitas, categorias, orçamentos e totais de gastos, mas não pode adicionar, alterar nem eliminar nada, nem transferir as fotografias dos talões. As contas com encriptação total não podem ser ligadas, e as contas com encriptação de texto ocultam o texto encriptado, tal como acontece com qualquer aplicação ligada.
+
+Para cortar o acesso a um assistente, abra **Definições → Aplicações ligadas** e toque em **Desligar** ao lado dele. Perde o acesso de imediato.
 
 ## Para programadores
 

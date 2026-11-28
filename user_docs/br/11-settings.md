@@ -192,6 +192,14 @@ Os outros custos do carro também contam. Em qualquer despesa, a seção **Carro
 
 **Vencimentos.** Na ficha do veículo, defina a próxima renovação do seguro, a próxima vistoria, a próxima revisão e a quilometragem da próxima revisão (tudo opcional; o X limpa uma data). Você recebe um lembrete 14 e 2 dias antes de cada data, e uma vez quando a quilometragem de um abastecimento ficar a menos de 500 km da revisão. Vencimentos nos próximos 30 dias ou já passados aparecem como etiquetas no cartão do veículo e na tela dele, onde o cartão **Vencimentos** mostra todas as datas. Quando você marca uma despesa como seguro ou revisão, o app oferece adiar esse vencimento em um ano; nada muda sem a sua confirmação.
 
+## Contas de consumo
+
+Descubra se uma conta de consumo subiu porque você consumiu mais ou porque o preço aumentou. Acesse em **Configurações → Dados de referência → Contas de consumo**.
+
+**Adicionando uma leitura.** Abra uma despesa de conta de consumo — energia elétrica, gás, água ou aquecimento. Abaixo dos detalhes, toque em **Adicionar consumo (kWh, m³, GJ)**, escolha o tipo, informe o consumo da conta e a unidade e, se você paga contas de mais de um lugar, opcionalmente um **Imóvel** (por exemplo, “Apartamento” ou “Casa de campo”). O app calcula o preço por unidade a partir do valor da despesa. Para alterar ou remover uma leitura, abra a despesa de novo. Uma despesa recém-adicionada precisa ser sincronizada primeiro; se isso ainda não aconteceu, o app pede para você tentar de novo daqui a pouco. Quem só pode visualizar uma conta compartilhada vê as leituras, mas não pode adicioná-las.
+
+**O que a tela mostra.** Para cada tipo: o preço por unidade mês a mês e o consumo. Quando o preço unitário do último mês fica mais de 10% acima da média dos três meses anteriores, um aviso informa isso. Quando um tipo tem um ano de leituras, cada mês é comparado com o mesmo mês do ano anterior — tanto o preço quanto o consumo. Com vários imóveis, escolha um no topo ou veja todos juntos. Os custos aparecem na sua moeda de exibição; uma conta em uma moeda cuja taxa de câmbio é desconhecida fica fora do custo, e a tela avisa. Despesas planejadas não são contadas.
+
 ## Dados e relatórios
 
 ### Dados e sincronização

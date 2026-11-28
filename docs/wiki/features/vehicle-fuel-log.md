@@ -33,11 +33,11 @@ full fill is only a baseline, partial fills fold into the next full interval, an
 
 **Costs are in the display currency** (ABA-796): `getStats` takes `req.user.currencyCode` from the controller,
 converts each fill-up's expense amount with `common/utils/fx.ts`, and a fill-up with no known rate adds no cost
-and sets `fxApproximate` — never summed unconverted. `GET /vehicles/fuel-logs/:expenseId` answers `{ fuelLog: null }`
+and sets `fxApproximate` — never summed unconverted. `GET /vehicles/fuel-logs/:expenseId` answers `{ fuelLog, cost }` (`cost` = `{vehicleId, kind, source}` or null; both null for an expense with neither)
 rather than 404, because the expense screen asks it for every expense with a vehicle on the account.
 
 **Per account, and the screen says so** ([ABA-800](https://github.com/micode-ai/ai-budget-assistant/issues/838)): Settings → Vehicles names the current account.
-`POST /vehicles/:id/move` ([ABA-801](https://github.com/micode-ai/ai-budget-assistant/issues/839)) moves a vehicle with no fill-ups on live expenses to an account the caller
+`POST /vehicles/:id/move` ([ABA-801](https://github.com/micode-ai/ai-budget-assistant/issues/839)) moves a vehicle with no fill-ups AND no live non-`none` `VehicleCost` on live expenses (either one is 409 `VEHICLE_IN_USE`, whose message still says only "has fill-ups") to an account the caller
 can edit — fill-ups hang on expenses that stay in the source account. The app drops the target's cached list
 (`forgetVehicles`) instead of refetching it under the current account's header.
 

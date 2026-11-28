@@ -5503,6 +5503,14 @@ Les autres frais de voiture comptent aussi. Sur n'importe quelle dépense, la se
 
 **Échéances.** Dans la fiche du véhicule, indiquez le prochain renouvellement de l'assurance, le prochain contrôle technique, le prochain entretien et le kilométrage du prochain entretien (tout est facultatif ; la croix efface une date). Un rappel arrive 14 et 2 jours avant chaque date, et une fois quand le compteur d'un plein arrive à moins de 500 km de l'entretien. Les échéances dans les 30 jours ou déjà passées s'affichent en pastilles sur la carte du véhicule et sur son écran, dont la carte **Échéances** liste toutes les dates. Quand vous marquez une dépense comme assurance ou entretien, l'application propose de repousser cette échéance d'un an ; rien ne change sans votre confirmation.
 
+## Factures d'énergie
+
+Voyez si une facture d'énergie a augmenté parce que vous avez consommé davantage ou parce que le prix a monté. Accès via **Paramètres → Données de référence → Factures d'énergie**.
+
+**Ajouter un relevé.** Ouvrez une dépense d'énergie — électricité, gaz, eau ou chauffage. Sous les détails, touchez **Ajouter la consommation (kWh, m³, GJ)**, choisissez le type, saisissez la consommation indiquée sur la facture et son unité, et éventuellement un **Logement** (par exemple « Appartement » ou « Maison de campagne ») si vous payez des factures pour plusieurs endroits. L'application calcule le prix unitaire à partir du montant de la dépense. Pour modifier ou supprimer un relevé, rouvrez la dépense. Une dépense qui vient d'être ajoutée doit d'abord être synchronisée ; si ce n'est pas encore le cas, l'application vous demande de réessayer dans un instant. Les lecteurs d'un compte partagé voient les relevés mais ne peuvent pas en ajouter.
+
+**Ce que montre l'écran.** Pour chaque type : le prix unitaire mois par mois, et la consommation. Lorsque le prix unitaire du dernier mois dépasse de plus de 10 % la moyenne des trois mois précédents, une note le signale. Dès qu'un type a un an de relevés, chaque mois est comparé au même mois de l'année précédente — le prix comme la consommation. Avec plusieurs logements, choisissez-en un en haut ou affichez-les tous ensemble. Les coûts sont affichés dans votre devise d'affichage ; une facture dans une devise dont le taux de change est inconnu est exclue du coût, et l'écran le signale. Les dépenses prévues ne sont pas comptées.
+
 ## Donnees et rapports
 
 ### Donnees et synchronisation
@@ -8602,6 +8610,18 @@ Si la personne qui a connecté l'application passe ensuite en lecture seule ou q
 - Un compte en **chiffrement du texte** peut être connecté **en lecture seule** : l'application voit les montants, les dates et les catégories, mais les descriptions, notes, commerçants, noms d'articles, étiquettes et autres textes chiffrés restent masqués, et elle ne peut ni ajouter ni modifier de dépenses.
 
 Le détail de chaque niveau est dans [Chiffrement de bout en bout](./15-encryption.md).
+
+## Connecter un assistant IA (MCP)
+
+Vous pouvez autoriser un assistant IA comme Claude ou ChatGPT à lire vos données AI Budget et à répondre à des questions comme « combien ai-je dépensé en courses le mois dernier ? ».
+
+1. Dans l'assistant, ajoutez un connecteur personnalisé (dans Claude : **Paramètres → Connecteurs → Ajouter un connecteur personnalisé**) et saisissez l'adresse `https://api.ai-budget.pl/mcp`.
+2. L'assistant ouvre une page AI Budget où vous vous connectez comme d'habitude. Elle affiche le nom de l'assistant et la mention **enregistré automatiquement par un assistant IA** : nous n'avons pas vérifié cet assistant, ne connectez donc que celui que vous avez lancé vous-même. Cochez les comptes qu'il peut utiliser et touchez **Autoriser**.
+3. Posez votre question dans l'assistant.
+
+L'assistant a un accès **en lecture seule** : il lit les dépenses, revenus, catégories, budgets et totaux de dépenses, mais ne peut rien ajouter, modifier ni supprimer, et ne télécharge pas les photos de reçus. Les comptes à chiffrement complet ne peuvent pas être connectés, et les comptes à chiffrement du texte masquent leurs textes chiffrés, comme pour toute application connectée.
+
+Pour déconnecter un assistant, ouvrez **Paramètres → Applications connectées** et touchez **Déconnecter** à côté de lui. Il perd l'accès immédiatement.
 
 ## Pour les développeurs
 
