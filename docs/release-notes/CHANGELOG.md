@@ -8,6 +8,30 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.47.0 - 2026-11-28
+
+**Help and support**
+
+- A reply from the developer you have not read also arrives by e-mail: right away if the app
+  can't send you a push, otherwise after 12 hours. One e-mail per batch of replies, with a
+  one-click unsubscribe (ABA-857).
+- The help center gains the AI assistant connector (MCP) and Utilities sections, and the Settings
+  page explains the new options (ABA-860).
+
+**Privacy**
+
+- "Share usage statistics" in Settings → Security & Encryption: the app now records which screens
+  you open and whether actions such as adding an expense succeed — never amounts or what you write
+  — so we can see which features are used. On by default; turn it off any time and nothing is
+  recorded (ABA-859).
+
+**Web**
+
+- The support chat no longer breaks when the browser offers to translate the page; the page now
+  declares the app's language (ABA-858).
+
+---
+
 ## 1.46.0 - 2026-11-27
 
 **Help and support**
