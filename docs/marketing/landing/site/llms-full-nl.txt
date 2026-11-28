@@ -5502,6 +5502,8 @@ Koppel je Telegram-account om meldingen te ontvangen en uitgaven te beheren via 
 
 Stel end-to-end-versleuteling (E2EE) in om je financiële gegevens te beschermen. Zie [Versleuteling](./15-encryption.md) voor details.
 
+**Gebruiksstatistieken delen.** Onder de versleuteling bepaalt deze schakelaar of de app bijhoudt welke schermen je opent en of acties zoals een uitgave toevoegen lukken. Bedragen, namen of wat je typt worden nooit vastgelegd. De statistieken zijn gekoppeld aan je account, laten ons zien welke functies worden gebruikt en worden 90 dagen bewaard. De schakelaar staat standaard aan en geldt alleen voor dit apparaat; uitzetten wist ook wat nog niet verzonden is.
+
 ## Categorieën
 
 Open via **Instellingen → Referentiegegevens → Categorieën**.

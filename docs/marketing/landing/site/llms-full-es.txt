@@ -5496,6 +5496,8 @@ Vincula tu cuenta de Telegram para recibir notificaciones y gestionar gastos a t
 
 Configura el cifrado de extremo a extremo (E2EE) para proteger tus datos financieros. Consulta [Cifrado](./15-encryption.md) para mas detalles.
 
+**Compartir estadísticas de uso.** Debajo del cifrado, este interruptor decide si la app registra qué pantallas abres y si acciones como añadir un gasto se completan. Nunca registra importes, nombres ni nada de lo que escribes. Las estadísticas están vinculadas a tu cuenta, nos ayudan a ver qué funciones se usan y se conservan 90 días. Está activado por defecto y solo afecta a este dispositivo; al desactivarlo también se borra lo que aún no se haya enviado.
+
 ## Categorias
 
 Accede desde **Ajustes → Datos de referencia → Categorias**.

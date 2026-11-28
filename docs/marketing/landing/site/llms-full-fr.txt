@@ -5474,6 +5474,8 @@ Liez votre compte Telegram pour recevoir des notifications et gerer vos depenses
 
 Configurez le chiffrement de bout en bout (E2EE) pour proteger vos donnees financieres. Voir [Chiffrement](./15-encryption.md) pour plus de details.
 
+**Partager les statistiques d'utilisation.** Sous le chiffrement, cet interrupteur détermine si l'application enregistre les écrans que vous ouvrez et si des actions comme l'ajout d'une dépense aboutissent. Elle n'enregistre jamais de montants, de noms ni ce que vous saisissez. Les statistiques sont liées à votre compte, nous montrent quelles fonctions sont utilisées et sont conservées 90 jours. Il est activé par défaut et ne concerne que cet appareil ; le désactiver supprime aussi ce qui n'a pas encore été envoyé.
+
 ## Categories
 
 Acces via **Parametres → Données de référence → Categories**.

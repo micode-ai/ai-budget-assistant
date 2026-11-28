@@ -6170,6 +6170,8 @@ Polacz swoje konto Telegram, aby otrzymywac powiadomienia i zarzadzac wydatkami 
 
 Skonfiguruj szyfrowanie end-to-end (E2EE), aby chronic swoje dane finansowe. Zobacz [Szyfrowanie](./15-encryption.md), aby uzyskac szczegoly.
 
+**Udostępniaj statystyki użytkowania.** Pod szyfrowaniem ten przełącznik decyduje, czy aplikacja zapisuje, które ekrany otwierasz i czy działania takie jak dodanie wydatku się udają. Nigdy nie zapisuje kwot, nazw ani tego, co wpisujesz. Statystyki są powiązane z Twoim kontem, pokazują nam, z których funkcji się korzysta, i są przechowywane przez 90 dni. Przełącznik jest domyślnie włączony i dotyczy tylko tego urządzenia; wyłączenie usuwa też to, co nie zostało jeszcze wysłane.
+
 ## Kategorie
 
 Dostep przez **Ustawienia → Słowniki → Kategorie**.

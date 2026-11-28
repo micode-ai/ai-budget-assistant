@@ -6055,6 +6055,8 @@ Verknupfe dein Telegram-Konto, um Benachrichtigungen zu erhalten und Ausgaben ub
 
 Richte Ende-zu-Ende-Verschlusselung (E2EE) ein, um deine Finanzdaten zu schutzen. Siehe [Verschlusselung](./15-encryption.md) fur Details.
 
+**Nutzungsstatistiken teilen.** Unter der Verschlüsselung legt dieser Schalter fest, ob die App erfasst, welche Bildschirme du öffnest und ob Aktionen wie das Hinzufügen einer Ausgabe gelingen. Beträge, Namen oder deine Eingaben werden nie erfasst. Die Statistiken sind mit deinem Konto verknüpft, zeigen uns, welche Funktionen genutzt werden, und werden 90 Tage aufbewahrt. Der Schalter ist standardmäßig an und gilt nur für dieses Gerät; beim Ausschalten wird auch alles noch nicht Gesendete gelöscht.
+
 ## Kategorien
 
 Zugriff uber **Einstellungen → Stammdaten → Kategorien**.
